@@ -12,7 +12,8 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxCheckBox;
@@ -33,9 +34,11 @@ public:
    double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
 };
 
-class EffectBassTreble final : public Effect
+class EffectBassTreble final : public StatefulPerTrackEffect
 {
 public:
+   static inline EffectBassTreble *
+   FetchParameters(EffectBassTreble &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectBassTreble();
@@ -51,10 +54,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -67,19 +66,18 @@ public:
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
-
 
    // Effect Implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
-   bool CheckWhetherSkipEffect() override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
 private:
    // EffectBassTreble implementation
@@ -123,7 +121,17 @@ private:
 
    wxCheckBox  *mLinkCheckBox;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Bass{ &EffectBassTreble::mBass,
+   L"Bass",          0.0,     -30.0,   30.0,    1  };
+static constexpr EffectParameter Treble{ &EffectBassTreble::mTreble,
+   L"Treble",        0.0,     -30.0,   30.0,    1  };
+static constexpr EffectParameter Gain{ &EffectBassTreble::mGain,
+   L"Gain",          0.0,     -30.0,   30.0,    1  };
+static constexpr EffectParameter Link{ &EffectBassTreble::mLink,
+   L"Link Sliders",  false,    false,  true,    1  };
 };
 
 #endif

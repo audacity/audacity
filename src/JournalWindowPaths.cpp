@@ -38,7 +38,7 @@ inline auto HasName( const wxString &name )
       // name as the related control.  Those windows are non-interactive so
       // don't interest us for journalling.
       !dynamic_cast<const wxStaticText *>( pWindow2 ) &&
-      // Also excluse this special window type defined in Audacity.
+      // Also exclude this special window type defined in Audacity.
       !dynamic_cast<const auStaticText *>( pWindow2 ) &&
       pWindow2->GetName() == name; };
 }

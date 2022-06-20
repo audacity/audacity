@@ -85,6 +85,8 @@ WaveClip::WaveClip(const WaveClip& orig,
    // Copy only a range of the other WaveClip
 
    mSequenceOffset = orig.mSequenceOffset;
+   mTrimLeft = orig.mTrimLeft + (t0 > orig.GetPlayStartTime()? t0 - orig.GetPlayStartTime() : 0);
+   mTrimRight = orig.mTrimRight + (t1 < orig.GetPlayEndTime()? orig.GetPlayEndTime() - t1 : 0);
    
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
@@ -94,13 +96,9 @@ WaveClip::WaveClip(const WaveClip& orig,
    auto s0 = orig.TimeToSequenceSamples(t0);
    auto s1 = orig.TimeToSequenceSamples(t1);
 
-   mSequence = orig.mSequence->Copy(factory, s0, s1);
+   mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
 
-   mEnvelope = std::make_unique<Envelope>(
-      *orig.mEnvelope,
-      GetSequenceStartTime() + s0.as_double()/mRate,
-      GetSequenceStartTime() + s1.as_double()/mRate
-   );
+   mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    if ( copyCutlines )
       // Copy cutline clips that fall in the range

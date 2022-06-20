@@ -190,7 +190,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
          // iter not used outside this scope.
          auto iter = channels.begin();
          for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c)
-            *iter = trackFactory->NewWaveTrack(format, rate);
+            *iter = trackFactory->Create(format, rate);
       }
       const auto firstChannel = channels.begin()->get();
       auto maxBlockSize = firstChannel->GetMaxBlockSize();

@@ -54,13 +54,13 @@
 
 /**
 \brief CommandParameters, derived from wxFileConfig, is essentially doing 
-the same things as the Shuttle classes.  It does text <-> binary conversions of
+the same things as the SettingsVisitor classes.  It does text <-> binary conversions of
 parameters.  It does not seem to be using actual file read/writing.  
 
-Should it be converted to using Shuttle?  Probably yes.  Shuttle leads to shorter code.  
-And Shuttle is more multi-functional since Shuttle can report on signature, do the work of 
+Should it be converted to using SettingsVisitor?  Probably yes.  SettingsVisitor leads to shorter code.
+And SettingsVisitor is more multi-functional since SettingsVisitor can report on signature, do the work of
 wxWidget validators, and can create default dialogs.  However until that conversion is 
-done, we need this class, and we use a pointer to one from within a Shuttle when interfacing
+done, we need this class, and we use a pointer to one from within a SettingsVisitor when interfacing
 with the code that still uses it.
 */
 class COMPONENTS_API CommandParameters final : public wxFileConfig
@@ -234,13 +234,14 @@ public:
       return (*val >= min && *val <= max);
    }
 
-   bool ReadAndVerify(const wxString & key, bool *val, bool defVal) const
+   bool ReadAndVerify(const wxString & key, bool *val, bool defVal, bool = false, bool = false) const
    {
       Read(key, val, defVal);
       return true;
    }
 
-   bool ReadAndVerify(const wxString & key, wxString *val, const wxString & defVal) const
+   bool ReadAndVerify(const wxString & key, wxString *val, const wxString & defVal,
+      const wxString& = {}, const wxString& = {} ) const
    {
       Read(key, val, defVal);
       return true;

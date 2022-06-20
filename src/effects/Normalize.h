@@ -14,15 +14,18 @@
 
 #include "Effect.h"
 #include "Biquad.h"
+#include "../ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxStaticText;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectNormalize final : public Effect
+class EffectNormalize final : public StatefulEffect
 {
 public:
+   static inline EffectNormalize *
+   FetchParameters(EffectNormalize &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectNormalize();
@@ -37,19 +40,14 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
@@ -86,8 +84,17 @@ private:
    wxCheckBox *mStereoIndCheckBox;
    bool mCreating;
 
-
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter PeakLevel{ &EffectNormalize::mPeakLevel,
+   L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
+static constexpr EffectParameter RemoveDC{ &EffectNormalize::mDC,
+   L"RemoveDcOffset",      true,    false,   true, 1  };
+static constexpr EffectParameter ApplyGain{ &EffectNormalize::mGain,
+   L"ApplyGain",           true,    false,   true, 1  };
+static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
+   L"StereoIndependent",   false,   false,   true, 1  };
 };
 
 #endif

@@ -100,7 +100,7 @@ private:
  Intended for single-threaded use only.
  Move-only; allows type-erased custom allocation.
 
- @tparam Message the type of mesage
+ @tparam Message the type of message
  @tparam NotifyAll if true, callback return values are ignored; else, a callback
    returning true causes earlier subscribed callbacks to be skipped
  */
@@ -137,7 +137,7 @@ public:
 
     @pre `callback != nullptr`
     */
-   Subscription Subscribe(Callback callback);
+   [[nodiscard]] Subscription Subscribe(Callback callback);
 
    //! Overload of Subscribe takes an object and pointer-to-member-function
    template<typename Object, typename Return, typename... Args>

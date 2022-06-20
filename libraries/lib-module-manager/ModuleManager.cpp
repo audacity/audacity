@@ -87,7 +87,7 @@ bool Module::Load(wxString &deferredErrorMessage)
    auto ShortName = wxFileName(mName).GetName();
 
    if (!mLib->Load(mName, wxDL_NOW | wxDL_QUIET | wxDL_GLOBAL)) {
-      // For this failure path, only, there is a possiblity of retrial
+      // For this failure path, only, there is a possibility of retrial
       // after some other dependency of this module is loaded.  So the
       // error is not immediately reported.
       deferredErrorMessage = wxString(wxSysErrorMsg());

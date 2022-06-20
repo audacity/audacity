@@ -74,17 +74,13 @@ int WrappedType::ReadAsInt()
       long l;
       mpStr->ToLong(&l);
       return (int) l;
-      break;
    }
    case eWrappedInt:
       return *mpInt;
-      break;
    case eWrappedDouble:
       return (int)*mpDouble;
-      break;
    case eWrappedBool:
       return (* mpBool) ? 1 : 0;
-      break;
    case eWrappedEnum:
       wxASSERT( false );
       break;

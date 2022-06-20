@@ -22,6 +22,7 @@
 #endif
 
 #include "SoundTouchEffect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxCheckBox;
@@ -31,6 +32,8 @@ class ShuttleGui;
 class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
+   static inline EffectChangeTempo *
+   FetchParameters(EffectChangeTempo &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectChangeTempo();
@@ -46,22 +49,17 @@ public:
 
    EffectType GetType() const override;
    bool SupportsAutomation() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
    bool Init() override;
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) override;
+      const EffectSettings &settings, double previewLength) const override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
@@ -103,7 +101,13 @@ private:
    wxCheckBox *   mUseSBSMSCheckBox;
 #endif
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Percentage{ &EffectChangeTempo::m_PercentChange,
+   L"Percentage", 0.0,  -95.0,   3000.0,  1  };
+static constexpr EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
+   L"SBSMS",     false, false,   true,    1  };
 };
 
 #endif // __AUDACITY_EFFECT_CHANGETEMPO__

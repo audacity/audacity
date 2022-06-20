@@ -51,6 +51,10 @@ if( ${_OPT}has_tests )
       add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES} "${CMAKE_SOURCE_DIR}/tests/Catch2Main.cpp")
       target_link_libraries( ${test_executable_name} ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
 
+      set( OPTIONS )
+      audacity_append_common_compiler_options( OPTIONS NO )
+      target_compile_options( ${test_executable_name} ${OPTIONS} )
+
       set_target_properties(
          ${test_executable_name}
          PROPERTIES
@@ -92,7 +96,7 @@ if( ${_OPT}has_tests )
       elseif( APPLE )
          # We target an old version of macOS, disable std::uncaught_exceptions
          target_compile_definitions( ${test_executable_name} PRIVATE CATCH_CONFIG_NO_CPP17_UNCAUGHT_EXCEPTIONS )
-         # Similar to Windows, but uses DYLD_FALLBACK_LIBRARY_PATH istead of PATH
+         # Similar to Windows, but uses DYLD_FALLBACK_LIBRARY_PATH instead of PATH
          set_tests_properties(
             ${ADD_UNIT_TEST_NAME}
             PROPERTIES
@@ -100,6 +104,8 @@ if( ${_OPT}has_tests )
          )
       endif()
    endfunction()
+
+   set( JOURNAL_TEST_TIMEOUT_SECONDS 180 )
 
    #[[
       add_journal_test(journal_file)
@@ -115,6 +121,14 @@ if( ${_OPT}has_tests )
          # On macOS CMake will generate a placeholder that CTest fails to handle correctly,
          # so we have to setup the path manually
          set( audacity_target "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/Audacity.app/Contents/MacOS/Audacity" )
+      elseif (WIN32)
+         set( audacity_target
+            powershell
+               -ExecutionPolicy Bypass
+               -File "${CMAKE_SOURCE_DIR}/tests/journals/test_runner.ps1"
+               "$<TARGET_FILE:Audacity>"
+               --timeout ${JOURNAL_TEST_TIMEOUT_SECONDS}
+         )
       else()
          set( audacity_target "$<TARGET_FILE:Audacity>" )
       endif()
@@ -129,9 +143,10 @@ if( ${_OPT}has_tests )
       )
 
       set_tests_properties(
-         ${ADD_UNIT_TEST_NAME}
+         ${test_name}
          PROPERTIES
             LABELS "journal_tests"
+            TIMEOUT ${JOURNAL_TEST_TIMEOUT_SECONDS}
       )
    endfunction()
 else()

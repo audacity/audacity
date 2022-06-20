@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "EffectInterface.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -40,12 +40,30 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
-class LadspaEffect final : public wxEvtHandler,
-                     public EffectUIClientInterface
+struct LadspaEffectSettings {
+   explicit LadspaEffectSettings(size_t nPorts = 0)
+      : controls( nPorts )
+   {}
+
+   // Allocate as many slots as there are ports, although some may correspond
+   // to audio, not control, ports and so rest unused
+   std::vector<float> controls;
+};
+
+class LadspaEffect final
+   : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
 public:
    LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
+
+   static bool LoadUseLatency(const EffectDefinitionInterface &effect);
+   static bool SaveUseLatency(
+      const EffectDefinitionInterface &effect, bool value);
+
+   EffectSettings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    // ComponentInterface implementation
 
@@ -64,66 +82,44 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, EffectSettings &settings) const override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
-
-   // EffectProcessor implementation
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
-
-   void SetSampleRate(double rate) override;
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-   sampleCount GetLatency() override;
-   size_t GetTailSize() override;
-
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &) noexcept override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
    bool InitializePlugin();
+   bool FullyInitializePlugin();
+   bool InitializeControls(LadspaEffectSettings &settings) const;
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(EffectHostInterface* host) override;
-   std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+   struct Instance;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+   struct Validator;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
-   bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
-   void ImportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -134,65 +130,43 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool LoadParameters(
+      const RegistryPath & group, EffectSettings &settings) const;
+   bool SaveParameters(
+      const RegistryPath & group, const EffectSettings &settings) const;
 
-   LADSPA_Handle InitInstance(float sampleRate);
-   void FreeInstance(LADSPA_Handle handle);
-
-   void OnCheckBox(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnTextCtrl(wxCommandEvent & evt);
-   void RefreshControls(bool outputOnly = false);
+   LADSPA_Handle InitInstance(
+      float sampleRate, LadspaEffectSettings &settings) const;
+   void FreeInstance(LADSPA_Handle handle) const;
 
 private:
 
-   wxString mPath;
-   int mIndex;
-   EffectHostInterface *mHost{};
+   const wxString mPath;
+   const int mIndex;
 
    wxDynamicLibrary mLib;
-   const LADSPA_Descriptor *mData;
+   const LADSPA_Descriptor *mData{};
 
    wxString pluginName;
 
-   bool mReady;
+   double mSampleRate{ 44100.0 };
+   size_t mBlockSize{ 0 };
 
-   LADSPA_Handle mMaster;
+   bool mInteractive{ false };
 
-   double mSampleRate;
-   size_t mBlockSize;
-
-   bool mInteractive;
-
-   unsigned mAudioIns;
+   unsigned mAudioIns{ 0 };
+   // Mapping from input channel number to audio port number
    ArrayOf<unsigned long> mInputPorts;
 
-   unsigned mAudioOuts;
+   unsigned mAudioOuts{ 0 };
+   // Mapping from output channel number to audio port number
    ArrayOf<unsigned long> mOutputPorts;
 
-   int mNumInputControls;
-   Floats mInputControls;
-   int mNumOutputControls;
-   Floats mOutputControls;
+   int mNumInputControls{ 0 };
+   int mNumOutputControls{ 0 };
 
-   bool mUseLatency;
-   int mLatencyPort;
-   bool mLatencyDone;
-
-   // Realtime processing
-   std::vector<LADSPA_Handle> mSlaves;
-
-   NumericTextCtrl *mDuration;
-   wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent;
-   ArrayOf<wxSlider*> mSliders;
-   ArrayOf<wxTextCtrl*> mFields;
-   ArrayOf<wxStaticText*> mLabels;
-   ArrayOf<wxCheckBox*> mToggles;
-   ArrayOf<LadspaEffectMeter *> mMeters;
-
-   DECLARE_EVENT_TABLE()
+   bool mUseLatency{ true };
+   int mLatencyPort{ -1 };
 
    friend class LadspaEffectsModule;
 };
@@ -242,4 +216,3 @@ public:
 
    FilePaths GetSearchPaths();
 };
-

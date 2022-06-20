@@ -30,7 +30,6 @@
 #include <wx/stattext.h>
 
 #include "../LabelTrack.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../WaveTrack.h"
@@ -39,10 +38,13 @@
 
 #include "LoadEffects.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type  Key             Def  Min   Max      Scale
-Param( Count,  int,  wxT("Count"),    1,  1,    INT_MAX, 1  );
+const EffectParameterMethods& EffectRepeat::Parameters() const
+{
+   static CapturedParameters<EffectRepeat,
+      Count
+   > parameters;
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectRepeat::Symbol
 { XO("Repeat") };
@@ -55,8 +57,7 @@ END_EVENT_TABLE()
 
 EffectRepeat::EffectRepeat()
 {
-   repeatCount = DEF_Count;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -88,31 +89,9 @@ EffectType EffectRepeat::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-bool EffectRepeat::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( repeatCount, Count );
-   return true;
-}
-
-bool EffectRepeat::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_Count, repeatCount);
-
-   return true;
-}
-
-bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyInt(Count);
-
-   repeatCount = Count;
-
-   return true;
-}
-
 // Effect implementation
 
-bool EffectRepeat::Process(EffectSettings &)
+bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
@@ -176,16 +155,15 @@ bool EffectRepeat::Process(EffectSettings &)
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectRepeat::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
       mRepeatCount = S.Validator<IntegerValidator<int>>(
             &repeatCount, NumValidatorStyle::DEFAULT,
-            MIN_Count, 2147483647 / mProjectRate
-         )
-         .AddTextBox(XXO("&Number of repeats to add:"), wxT(""), 12);
+            Count.min, 2147483647 / mProjectRate )
+         .AddTextBox(XXO("&Number of repeats to add:"), L"", 12);
    }
    S.EndHorizontalLay();
 

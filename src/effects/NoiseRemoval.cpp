@@ -148,7 +148,7 @@ bool EffectNoiseRemoval::Init()
    return gPrefs->Flush();
 }
 
-bool EffectNoiseRemoval::CheckWhetherSkipEffect()
+bool EffectNoiseRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (mLevel == 0);
 }
@@ -161,7 +161,7 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
  the framework for managing settings of other effects. */
 int EffectNoiseRemoval::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &,
-   EffectSettingsAccess &access,
+   EffectInstance &, EffectSettingsAccess &access,
    bool forceModal )
 {
    // to do: use forceModal correctly
@@ -175,7 +175,7 @@ int EffectNoiseRemoval::ShowHostInterface(
    dlog.mKeepNoise->SetValue(mbLeaveNoise);
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog
+   // from a macro editing dialog
    bool bAllowTwiddleSettings = forceModal;
 
    if (mHasProfile || bAllowTwiddleSettings) {
@@ -213,7 +213,7 @@ int EffectNoiseRemoval::ShowHostInterface(
    return returnCode;
 }
 
-bool EffectNoiseRemoval::Process(EffectSettings &)
+bool EffectNoiseRemoval::Process(EffectInstance &, EffectSettings &)
 {
    Initialize();
 
@@ -791,10 +791,10 @@ bool NoiseRemovalDialog::TransferDataToWindow()
    mKeepNoise->SetValue(mbLeaveNoise);
    mKeepSignal->SetValue(!mbLeaveNoise);
 
-   mSensitivityS->SetValue(TrapLong(mSensitivity*100.0 + (SENSITIVITY_MAX-SENSITIVITY_MIN+1)/2.0, SENSITIVITY_MIN, SENSITIVITY_MAX));
-   mGainS->SetValue(TrapLong(mGain, GAIN_MIN, GAIN_MAX));
-   mFreqS->SetValue(TrapLong(mFreq / 10, FREQ_MIN, FREQ_MAX));
-   mTimeS->SetValue(TrapLong(mTime * TIME_MAX + 0.5, TIME_MIN, TIME_MAX));
+   mSensitivityS->SetValue(std::clamp<long>(mSensitivity*100.0 + (SENSITIVITY_MAX-SENSITIVITY_MIN+1)/2.0, SENSITIVITY_MIN, SENSITIVITY_MAX));
+   mGainS->SetValue(std::clamp<long>(mGain, GAIN_MIN, GAIN_MAX));
+   mFreqS->SetValue(std::clamp<long>(mFreq / 10, FREQ_MIN, FREQ_MAX));
+   mTimeS->SetValue(std::clamp<long>(mTime * TIME_MAX + 0.5, TIME_MIN, TIME_MAX));
 
    return true;
 }
@@ -808,25 +808,25 @@ bool NoiseRemovalDialog::TransferDataFromWindow()
 void NoiseRemovalDialog::OnSensitivityText(wxCommandEvent & WXUNUSED(event))
 {
    mSensitivityT->GetValue().ToDouble(&mSensitivity);
-   mSensitivityS->SetValue(TrapLong(mSensitivity*100.0 + (SENSITIVITY_MAX-SENSITIVITY_MIN+1)/2.0, SENSITIVITY_MIN, SENSITIVITY_MAX));
+   mSensitivityS->SetValue(std::clamp<long>(mSensitivity*100.0 + (SENSITIVITY_MAX-SENSITIVITY_MIN+1)/2.0, SENSITIVITY_MIN, SENSITIVITY_MAX));
 }
 
 void NoiseRemovalDialog::OnGainText(wxCommandEvent & WXUNUSED(event))
 {
    mGainT->GetValue().ToDouble(&mGain);
-   mGainS->SetValue(TrapLong(mGain, GAIN_MIN, GAIN_MAX));
+   mGainS->SetValue(std::clamp<long>(mGain, GAIN_MIN, GAIN_MAX));
 }
 
 void NoiseRemovalDialog::OnFreqText(wxCommandEvent & WXUNUSED(event))
 {
    mFreqT->GetValue().ToDouble(&mFreq);
-   mFreqS->SetValue(TrapLong(mFreq / 10, FREQ_MIN, FREQ_MAX));
+   mFreqS->SetValue(std::clamp<long>(mFreq / 10, FREQ_MIN, FREQ_MAX));
 }
 
 void NoiseRemovalDialog::OnTimeText(wxCommandEvent & WXUNUSED(event))
 {
    mTimeT->GetValue().ToDouble(&mTime);
-   mTimeS->SetValue(TrapLong(mTime * TIME_MAX + 0.5, TIME_MIN, TIME_MAX));
+   mTimeS->SetValue(std::clamp<long>(mTime * TIME_MAX + 0.5, TIME_MIN, TIME_MAX));
 }
 
 void NoiseRemovalDialog::OnSensitivitySlider(wxCommandEvent & WXUNUSED(event))

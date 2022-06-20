@@ -32,7 +32,9 @@ class HistoryDialog final : public wxDialogWrapper,
  public:
    HistoryDialog(AudacityProject * parent, UndoManager *manager);
 
-   void UpdateDisplay(wxEvent &e);
+   void UpdateDisplayForClipboard(wxEvent &);
+   void UpdateDisplay(struct UndoRedoMessage);
+   void DoUpdateDisplay();
    
    bool Show( bool show = true ) override;
 
@@ -56,7 +58,9 @@ class HistoryDialog final : public wxDialogWrapper,
    // PrefsListener implementation
    void UpdatePrefs() override;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mAudioIOSubscription
+      , mUndoSubscription
+   ;
 
    AudacityProject   *mProject;
    UndoManager       *mManager;

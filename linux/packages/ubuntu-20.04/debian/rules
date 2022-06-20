@@ -14,12 +14,13 @@ override_dh_auto_configure:
 	dh_auto_configure -- \
 	-DCMAKE_BUILD_TYPE=Release \
 	-Daudacity_conan_allow_prebuilt_binaries=no \
+   -D audacity_conan_force_build_dependencies=yes \
 	-Daudacity_lib_preference=system \
 	-Daudacity_obey_system_dependencies=On \
 	-Daudacity_use_pch=no \
 	-Daudacity_use_wxwidgets=local \
 	-Daudacity_use_vamp=local \
-	-Daudacity_use_sbsms=local 
+	-Daudacity_use_sbsms=local
 
 # tests fails with system portaudio
 override_dh_auto_test:

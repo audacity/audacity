@@ -51,7 +51,7 @@ Header Header::Parse (const std::string& header)
 {
     const size_t colonPosition = header.find (": ");
 
-    if (colonPosition == std::string::npos) // This can happen when we receieve the first line of the response
+    if (colonPosition == std::string::npos) // This can happen when we receive the first line of the response
         return { header, std::string () };
 
     return {

@@ -8,6 +8,12 @@
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
 
+const RegistryPath &EffectSettingsExtra::DurationKey()
+{
+   static wxString key("LastUsedDuration");
+   return key;
+}
+
 EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
@@ -20,6 +26,15 @@ const EffectSettings &SimpleEffectSettingsAccess::Get()
 void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
 {
    mSettings = std::move(settings);
+}
+
+bool SimpleEffectSettingsAccess::IsSameAs(
+   const EffectSettingsAccess &other) const
+{
+   if (auto pOther =
+      dynamic_cast<const SimpleEffectSettingsAccess*>(&other))
+      return &this->mSettings == &pOther->mSettings;
+   return false;
 }
 
 Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
@@ -70,113 +85,132 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
-auto EffectDefinitionInterfaceEx::MakeSettings() const -> Settings
+EffectSettingsManager::~EffectSettingsManager() = default;
+
+bool EffectSettingsManager::VisitSettings(
+   SettingsVisitor &, EffectSettings &)
 {
-   // Temporary default implementation just saves self
-   // Cast away const! Capture pointer to self
-   return Settings( const_cast<EffectDefinitionInterfaceEx*>(this) );
+   return false;
 }
 
-bool EffectDefinitionInterfaceEx::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+bool EffectSettingsManager::VisitSettings(
+   ConstSettingsVisitor &, const EffectSettings &) const
 {
-   //! No real copy, just a sanity check on common origin
-   return FindMe(src) && FindMe(dst);
+   return false;
 }
 
-bool EffectDefinitionInterfaceEx::SaveSettings(
-   const Settings &settings, CommandParameters & parms) const
+auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 {
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->GetAutomationParameters(parms);
-   else
-      return false;
+   return {};
 }
 
-bool EffectDefinitionInterfaceEx::LoadSettings(
-   CommandParameters & parms, Settings &settings) const
+bool EffectSettingsManager::CopySettingsContents(
+   const EffectSettings &, EffectSettings &) const
 {
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SetAutomationParameters(parms);
-   else
-      return false;
+   return true;
 }
 
-bool EffectDefinitionInterfaceEx::LoadUserPreset(
-   const RegistryPath & name, Settings &settings) const
+EffectInstance::~EffectInstance() = default;
+
+bool EffectInstance::Init()
 {
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadUserPreset(name);
-   else
-      return false;
+   return true;
 }
 
-bool EffectDefinitionInterfaceEx::SaveUserPreset(
-   const RegistryPath & name, const Settings &settings) const
+bool EffectInstance::RealtimeInitialize(EffectSettings &)
 {
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SaveUserPreset(name);
-   else
-      return false;
+   return false;
 }
 
-bool EffectDefinitionInterfaceEx::LoadFactoryPreset(
-   int id, Settings &settings) const
+bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
 {
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadFactoryPreset(id);
-   else
-      return false;
+   return true;
 }
 
-bool EffectDefinitionInterfaceEx::LoadFactoryDefaults(
-   Settings &settings) const
+bool EffectInstance::RealtimeSuspend()
 {
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadFactoryDefaults();
-   else
-      return false;
+   return true;
 }
 
-EffectDefinitionInterfaceEx *
-EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
+bool EffectInstance::RealtimeResume()
 {
-   if (auto ppEffect = settings.cast<EffectDefinitionInterfaceEx*>();
-       ppEffect && *ppEffect == this)
-      return *ppEffect;
-   return nullptr;
+   return true;
 }
 
-//bool EffectDefinitionInterface::DefineParams(ShuttleParams & S)
-//{
-//   return false;
-//}
+bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+{
+   return true;
+}
 
-EffectProcessor::~EffectProcessor() = default;
+size_t EffectInstance::RealtimeProcess(size_t, EffectSettings &,
+   const float *const *, float *const *, size_t)
+{
+   return 0;
+}
 
-EffectUIValidator::~EffectUIValidator() = default;
+bool EffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeFinalize(EffectSettings &) noexcept
+{
+   return true;
+}
+
+size_t EffectInstance::GetTailSize() const
+{
+   return 0;
+}
+
+EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
+
+size_t EffectInstanceWithBlockSize::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
+size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
+{
+   return (mBlockSize = maxBlockSize);
+}
+
+EffectInstanceWithSampleRate::~EffectInstanceWithSampleRate() = default;
+
+void EffectInstanceWithSampleRate::SetSampleRate(double rate)
+{
+   mSampleRate = rate;
+}
+
+EffectInstanceFactory::~EffectInstanceFactory() = default;
+
+int EffectInstanceFactory::GetMidiInCount() const
+{
+   return 0;
+}
+
+int EffectInstanceFactory::GetMidiOutCount() const
+{
+   return 0;
+}
+
+EffectUIValidator::EffectUIValidator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access)
+   : mEffect{effect}
+   , mAccess{access}
+{}
+
+EffectUIValidator::~EffectUIValidator()
+{
+   mEffect.CloseUI();
+}
 
 bool EffectUIValidator::UpdateUI()
 {
    return true;
 }
 
-DefaultEffectUIValidator::DefaultEffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access)
-   : mEffect{effect}
-   , mAccess{access}
-{}
-
-DefaultEffectUIValidator::~DefaultEffectUIValidator()
-{
-   mEffect.CloseUI();
-}
+DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
 
 bool DefaultEffectUIValidator::ValidateUI()
 {

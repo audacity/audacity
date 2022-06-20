@@ -36,6 +36,11 @@ deps=(
    libjpeg-turbo
    libsm
    ffmpeg
+   harfbuzz
+   freetype2
+   fontconfig
+   mesa
+   mpg123
 )
 
 pacman -Syu --noconfirm \

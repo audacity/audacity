@@ -65,8 +65,8 @@ EffectType EffectSilence::GetType() const
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator>
-EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> EffectSilence::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    S.StartVerticalLay();
    {
@@ -78,7 +78,7 @@ EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
             NumericTextCtrl(S.GetParent(), wxID_ANY,
                               NumericConverter::TIME,
                               extra.GetDurationFormat(),
-                              GetDuration(),
+                              extra.GetDuration(),
                                mProjectRate,
                                NumericTextCtrl::Options{}
                                   .AutoPos(true));
@@ -93,23 +93,23 @@ EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
    return nullptr;
 }
 
-bool EffectSilence::TransferDataToWindow(const EffectSettings &)
+bool EffectSilence::TransferDataToWindow(const EffectSettings &settings)
 {
-   mDurationT->SetValue(GetDuration());
+   mDurationT->SetValue(settings.extra.GetDuration());
 
    return true;
 }
 
-bool EffectSilence::TransferDataFromWindow(EffectSettings &)
+bool EffectSilence::TransferDataFromWindow(EffectSettings &settings)
 {
-   SetDuration(mDurationT->GetValue());
+   settings.extra.SetDuration(mDurationT->GetValue());
 
    return true;
 }
 
-bool EffectSilence::GenerateTrack(EffectSettings &,
+bool EffectSilence::GenerateTrack(EffectSettings &settings,
    WaveTrack *tmp, const WaveTrack &, int)
 {
-   tmp->InsertSilence(0.0, GetDuration());
+   tmp->InsertSilence(0.0, settings.extra.GetDuration());
    return true;
 }

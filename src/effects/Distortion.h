@@ -13,11 +13,13 @@
 
 #include <queue>
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxStaticText;
 class wxCheckBox;
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 
@@ -42,9 +44,12 @@ public:
    double queuetotal;
 };
 
-class EffectDistortion final : public Effect
+class EffectDistortion final : public StatefulPerTrackEffect
 {
 public:
+   struct Params;
+   static inline Params *
+   FetchParameters(EffectDistortion &e, EffectSettings &) { return &e.mParams; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDistortion();
@@ -71,12 +76,9 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-
-   // EffectProcessor implementation
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -89,15 +91,15 @@ public:
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -213,7 +215,42 @@ private:
 
    Params mParams;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+   enum kTableType
+   {
+      kHardClip,
+      kSoftClip,
+      kHalfSinCurve,
+      kExpCurve,
+      kLogCurve,
+      kCubic,
+      kEvenHarmonics,
+      kSinCurve,
+      kLeveller,
+      kRectifier,
+      kHardLimiter,
+      nTableTypes
+   };
+
+   static const EnumValueSymbol kTableTypeStrings[nTableTypes];
+
+// (Note: 'Repeats' is the total number of times the effect is applied.)
+static constexpr EnumParameter TableTypeIndx{ &EffectDistortion::Params::mTableChoiceIndx,
+   L"Type",           0,       0,      nTableTypes-1,    1, kTableTypeStrings, nTableTypes    };
+static constexpr EffectParameter DCBlock{ &EffectDistortion::Params::mDCBlock,
+   L"DC Block",      false,   false,   true,                1    };
+static constexpr EffectParameter Threshold_dB{ &EffectDistortion::Params::mThreshold_dB,
+   L"Threshold dB",  -6.0,  -100.0,     0.0,             1000.0f };
+static constexpr EffectParameter NoiseFloor{ &EffectDistortion::Params::mNoiseFloor,
+   L"Noise Floor",   -70.0,  -80.0,   -20.0,                1    };
+static constexpr EffectParameter Param1{ &EffectDistortion::Params::mParam1,
+   L"Parameter 1",    50.0,    0.0,   100.0,                1    };
+static constexpr EffectParameter Param2{ &EffectDistortion::Params::mParam2,
+   L"Parameter 2",    50.0,    0.0,   100.0,                1    };
+static constexpr EffectParameter Repeats{ &EffectDistortion::Params::mRepeats,
+   L"Repeats",        1,       0,       5,                  1    };
 };
 
 #endif

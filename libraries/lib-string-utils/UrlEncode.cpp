@@ -3,7 +3,7 @@
  Audacity: A Digital Audio Editor
 
  @file UrlEncode.cpp
- @brief Define a function to perfom URL encoding of a string.
+ @brief Define a function to perform URL encoding of a string.
 
  Dmitry Vedenko
  **********************************************************************/

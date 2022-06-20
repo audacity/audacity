@@ -88,6 +88,7 @@
 #include <wx/utils.h>
 
 #include "AColor.h"
+#include "ConfigInterface.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
@@ -146,20 +147,12 @@ enum
    ID_Slider,   // needs to come last
 };
 
-enum kInterpolations
-{
-   kBspline,
-   kCosine,
-   kCubic,
-   nInterpolations
-};
-
 // Increment whenever EQCurves.xml is updated
 #define EQCURVES_VERSION   1
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const EnumValueSymbol kInterpStrings[nInterpolations] =
+const EnumValueSymbol EffectEqualization::kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -176,17 +169,29 @@ static const double kThirdOct[] =
    2500., 3150., 4000., 5000., 6300., 8000., 10000., 12500., 16000., 20000.,
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name          Type        Key                     Def      Min      Max      Scale
-Param( FilterLength, int,     wxT("FilterLength"),        8191,    21,      8191,    0      );
-Param( CurveName,    wxChar*, wxT("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
-Param( InterpLin,    bool,    wxT("InterpolateLin"),      false,   false,   true,    false  );
-Param( InterpMeth,   int,     wxT("InterpolationMethod"), 0,       0,       0,       0      );
-Param( DrawMode,     bool,    wxT(""),                   true,    false,   true,    false  );
-Param( DrawGrid,     bool,    wxT(""),                   true,    false,   true,    false  );
-Param( dBMin,        float,   wxT(""),                   -30.0,   -120.0,  -10.0,   0      );
-Param( dBMax,        float,   wxT(""),                   30.0,    0.0,     60.0,    0      );
+const EffectParameterMethods& EffectEqualization::Parameters() const
+{
+   static CapturedParameters<EffectEqualization,
+      FilterLength,
+      // CurveName,
+      InterpLin,
+      // Pretty sure the interpolation name shouldn't have been interpreted when
+      // specified in chains, but must keep it that way for compatibility.
+      InterpMeth
+   > parameters {
+      [](EffectEqualization &, EffectSettings &, EffectEqualization &effect,
+         bool updating){
+         if (updating) {
+            if (effect.mInterp >= nInterpolations)
+               effect.mInterp -= nInterpolations;
+            effect.mEnvelope =
+               (effect.mLin ? effect.mLinEnvelope : effect.mLogEnvelope).get();
+         }
+         return true;
+      }
+   };
+   return parameters;
+}
 
 ///----------------------------------------------------------------------------
 // EffectEqualization
@@ -246,6 +251,8 @@ EffectEqualization::EffectEqualization(int Options)
    , mFilterFuncR{ windowSize }
    , mFilterFuncI{ windowSize }
 {
+   Parameters().Reset(*this);
+
    mOptions = Options;
    mGraphic = NULL;
    mDraw = NULL;
@@ -257,29 +264,26 @@ EffectEqualization::EffectEqualization(int Options)
 
    SetLinearEffectFlag(true);
 
-   mM = DEF_FilterLength;
-   mLin = DEF_InterpLin;
-   mInterp = DEF_InterpMeth;
-   mCurveName = DEF_CurveName;
+   mCurveName = CurveName.def;
 
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, dBMin.def);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, dBMax.def);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DrawMode.def);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DrawGrid.def);
 
    mLogEnvelope = std::make_unique<Envelope>
       (false,
-       MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
        0.0);
    mLogEnvelope->SetTrackLen(1.0);
 
    mLinEnvelope = std::make_unique<Envelope>
       (false,
-       MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
        0.0);
    mLinEnvelope->SetTrackLen(1.0);
 
@@ -370,28 +374,34 @@ EffectType EffectEqualization::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-bool EffectEqualization::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mM, FilterLength );
-   //S.SHUTTLE_PARAM( mCurveName, CurveName);
-   S.SHUTTLE_PARAM( mLin, InterpLin);
-   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
+bool EffectEqualization::VisitSettings(
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
+{
+   Effect::VisitSettings(visitor, settings);
 
-   // if saving the preferences...
-   if( dynamic_cast<ShuttleGetAutomation*>(&S))
-   {
+   // Curve point parameters -- how many isn't known statically
+   if( dynamic_cast<ShuttleGetAutomation*>(&visitor)) {
       int numPoints = mCurves[ 0 ].points.size();
       int point;
       for( point = 0; point < numPoints; point++ )
       {
          const wxString nameFreq = wxString::Format("f%i",point);
          const wxString nameVal = wxString::Format("v%i",point);
-         S.Define( mCurves[ 0 ].points[ point ].Freq,  nameFreq, 0.0,  0.0, 0.0, 0.0 );
-         S.Define( mCurves[ 0 ].points[ point ].dB,    nameVal,  0.0, 0.0, 0.0, 0.0 );
+         visitor.Define( mCurves[ 0 ].points[ point ].Freq, nameFreq,
+            0.0, 0.0, 0.0, 0.0 );
+         visitor.Define( mCurves[ 0 ].points[ point ].dB, nameVal,
+            0.0, 0.0, 0.0, 0.0 );
       }
-
    }
-   else
+   return true;
+}
+
+bool EffectEqualization::VisitSettings(
+   SettingsVisitor &visitor, EffectSettings &settings)
+{
+   Effect::VisitSettings(visitor, settings);
+
+   // Curve point parameters -- how many isn't known statically
    {
       mCurves[0].points.clear();
    
@@ -401,67 +411,36 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
          const wxString nameVal = wxString::Format("v%i",i);
          double f = -1000.0;
          double d = 0.0;
-         S.Define( f,  nameFreq, 0.0,  -10000.0, 1000000.0, 0.0 );
-         S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
+         visitor.Define( f, nameFreq, 0.0,  -10000.0, 1000000.0, 0.0 );
+         visitor.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
          if( f <= 0.0 )
             break;
          mCurves[0].points.push_back( EQPoint( f,d ));
       }
       setCurve( 0 );
    }
-
    return true;
 }
 
-bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
+bool EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
 {
-   parms.Write(KEY_FilterLength, (unsigned long)mM);
-   //parms.Write(KEY_CurveName, mCurveName);
-   parms.Write(KEY_InterpLin, mLin);
-   parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
-
-   return true;
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectEqualization&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
+bool EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
 {
-   // Pretty sure the interpolation name shouldn't have been interpreted when
-   // specified in chains, but must keep it that way for compatibility.
-
-   ReadAndVerifyInt(FilterLength);
-   //ReadAndVerifyString(CurveName);
-   ReadAndVerifyBool(InterpLin);
-   ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
-
-   mM = FilterLength;
-   //mCurveName = CurveName;
-   mLin = InterpLin;
-   mInterp = InterpMeth;
-
-   if (InterpMeth >= nInterpolations)
-   {
-      InterpMeth -= nInterpolations;
-   }
-
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
-
-   return true;
-}
-
-// This function Apparently not used anymore.
-bool EffectEqualization::LoadFactoryDefaults()
-{
-   mdBMin = DEF_dBMin;
-   mdBMax = DEF_dBMax;
-   mDrawMode = DEF_DrawMode;
-   mDrawGrid = DEF_DrawGrid;
+   mdBMin = dBMin.def;
+   mdBMax = dBMax.def;
+   mDrawMode = DrawMode.def;
+   mDrawGrid = DrawGrid.def;
 
    if( mOptions == kEqOptionCurve)
       mDrawMode = true;
    if( mOptions == kEqOptionGraphic)
       mDrawMode = false;
 
-   return Effect::LoadFactoryDefaults();
+   return Effect::LoadFactoryDefaults(settings);
 }
 
 // Constants determining who the prests are for.
@@ -506,7 +485,7 @@ RegistryPaths EffectEqualization::GetFactoryPresets() const
    return names;
 }
 
-bool EffectEqualization::LoadFactoryPreset(int id)
+bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    int index = -1;
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
@@ -527,7 +506,8 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    CommandParameters eap(params);
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
-   DefineParams( S );
+   // To do: externalize state so const_cast isn't needed
+   const_cast<EffectEqualization*>(this)->VisitSettings(S, settings);
    return true;
 }
 
@@ -573,6 +553,7 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    }
    SaveCurves();
 
+   // TODO: just visit these effect settings the default way
    SetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
    SetConfig(GetDefinition(), PluginSettings::Private,
@@ -647,7 +628,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process(EffectSettings &)
+bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    if(mEffectEqualization48x) {
@@ -697,11 +678,13 @@ bool EffectEqualization::CloseUI()
    return Effect::CloseUI();
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
-      LoadUserPreset(CurrentSettingsGroup());
+      access.ModifySettings([&](EffectSettings &settings){
+         LoadUserPreset(CurrentSettingsGroup(), settings);
+      });
 
    //LoadCurves();
 

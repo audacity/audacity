@@ -37,7 +37,7 @@ FileConfig::FileConfig(const wxString& appName,
    mLocalFilename(localFilename),
    mGlobalFilename(globalFilename),
    mStyle(style),
-   mConv(conv),
+   mConv(conv.Clone()),//pass to Init() instead?
    mDirty(false)
 {
 }
@@ -47,7 +47,7 @@ void FileConfig::Init()
    while (true)
    {
       mConfig = std::make_unique<wxFileConfig>
-         (mAppName, mVendorName, mLocalFilename, mGlobalFilename, mStyle, mConv);
+         (mAppName, mVendorName, mLocalFilename, mGlobalFilename, mStyle, *mConv);
 
       // Prevent wxFileConfig from attempting a Flush() during object deletion. This happens
       // because we don't use the wxFileConfig::Flush() method and so the wxFileConfig dirty
@@ -284,3 +284,7 @@ bool FileConfig::DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf)
    return res;
 }
 #endif // wxUSE_BASE64
+
+void FileConfig::Warn()
+{
+}

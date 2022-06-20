@@ -37,15 +37,6 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
    const auto currentTool = settings.GetTool();
    const bool isMultiTool = ( currentTool == multiTool );
 
-   if ( !isMultiTool && currentTool == zoomTool ) {
-      // Zoom tool is a non-selecting tool that takes precedence in all tracks
-      // over all other tools, no matter what detail you point at.
-      result = ZoomHandle::HitAnywhere(
-         BackgroundCell::Get( *pProject ).mZoomHandle );
-      results.push_back(result);
-      return results;
-   }
-
    // In other tools, let subclasses determine detailed hits.
    results =
       DetailedHitTest( st, pProject, currentTool, isMultiTool );

@@ -17,10 +17,13 @@ class wxString;
 class LabelTrack;
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
-class EffectFindClipping final : public Effect
+class EffectFindClipping final : public StatefulEffect
 {
 public:
+   static inline EffectFindClipping *
+   FetchParameters(EffectFindClipping &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectFindClipping();
@@ -36,17 +39,12 @@ public:
 
    EffectType GetType() const override;
 
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
    // Effect implementation
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    void DoPopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access);
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -58,11 +56,17 @@ private:
    bool ProcessOne(LabelTrack *lt, int count, const WaveTrack * wt,
                    sampleCount start, sampleCount len);
 
-private:
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
    // To do: eliminate this
    EffectSettingsAccessPtr mpAccess;
+
+   const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter Start{ &EffectFindClipping::mStart,
+   L"Duty Cycle Start",  3,    1,    INT_MAX, 1   };
+static constexpr EffectParameter Stop{ &EffectFindClipping::mStop,
+   L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

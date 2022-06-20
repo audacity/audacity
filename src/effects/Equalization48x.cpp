@@ -726,7 +726,7 @@ bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
 
    auto blockCount=bufferInfo->mBufferLength/mBlockSize;
 
-   __m128 *readBlocks[4]; // some temps so we dont destroy the vars in the struct
+   __m128 *readBlocks[4]; // some temps so we don't destroy the vars in the struct
    __m128 *writeBlocks[4];
    for(int i=0;i<4;i++) {
       readBlocks[i]=(__m128 *)bufferInfo->mBufferSouce[i];
@@ -899,7 +899,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
 
    if(blockCount<16) // it's not worth 4x processing do a regular process
       return ProcessOne4x(count, t, start, len);
-   if(mThreadCount<=0 || blockCount<256) // dont do it without cores or big data
+   if(mThreadCount<=0 || blockCount<256) // don't do it without cores or big data
       return ProcessOne4x(count, t, start, len);
 
    for(int i=0;i<mThreadCount;i++)
@@ -1031,7 +1031,7 @@ bool EffectEqualization48x::ProcessBuffer8x(BufferInfo *bufferInfo)
 
    auto blockCount=bufferInfo->mBufferLength/mBlockSize;
 
-   __m128 *readBlocks[8]; // some temps so we dont destroy the vars in the struct
+   __m128 *readBlocks[8]; // some temps so we don't destroy the vars in the struct
    __m128 *writeBlocks[8];
    for(int i=0;i<8;i++) {
       readBlocks[i]=(__m128 *)bufferInfo->mBufferSouce[i];
@@ -1200,7 +1200,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
 
    if(blockCount<16) // it's not worth 4x processing do a regular process
       return ProcessOne4x(count, t, start, len);
-   if(mThreadCount<=0 || blockCount<256) // dont do it without cores or big data
+   if(mThreadCount<=0 || blockCount<256) // don't do it without cores or big data
       return ProcessOne4x(count, t, start, len);
 
    auto output = t->EmptyCopy();

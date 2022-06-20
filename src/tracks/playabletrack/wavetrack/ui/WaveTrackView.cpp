@@ -27,7 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../commands/CommandContext.h"
 #include "../../../../HitTestResult.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../SyncLock.h"
 #include "../../../../TrackArtist.h"
@@ -1464,53 +1464,6 @@ std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
    wxASSERT( false );
    return {};
 }
-
-#undef PROFILE_WAVEFORM
-#ifdef PROFILE_WAVEFORM
-#ifdef __WXMSW__
-#include <time.h>
-#else
-#include <sys/time.h>
-#endif
-double gWaveformTimeTotal = 0;
-int gWaveformTimeCount = 0;
-
-namespace {
-   struct Profiler {
-      Profiler()
-      {
-#   ifdef __WXMSW__
-         _time64(&tv0);
-#   else
-         gettimeofday(&tv0, NULL);
-#   endif
-      }
-      
-      ~Profiler()
-      {
-#   ifdef __WXMSW__
-         _time64(&tv1);
-         double elapsed = _difftime64(tv1, tv0);
-#   else
-         gettimeofday(&tv1, NULL);
-         double elapsed =
-         (tv1.tv_sec + tv1.tv_usec*0.000001) -
-         (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-         gWaveformTimeTotal += elapsed;
-         gWaveformTimeCount++;
-         wxPrintf(wxT("Avg waveform drawing time: %f\n"),
-                  gWaveformTimeTotal / gWaveformTimeCount);
-      }
-      
-#   ifdef __WXMSW__
-      __time64_t tv0, tv1;
-#else
-      struct timeval tv0, tv1;
-#endif
-   };
-}
-#endif
 
 namespace
 {

@@ -44,19 +44,7 @@ public:
    //to be a valid plugin path. modulePath and effectUIDString are written if
    //provided.
    static bool ParsePluginPath(const wxString& pluginPath, wxString* modulePath, std::string* effectUIDString);
-
-   /*! Builds a "plain" plugin interface with wx components.
-    * editController is used to extract current values from
-    * the parameters, and handler is used to update them
-    * \param parent Where all parameter controls will be placed (not null)
-    * \param editController Effect controller (not null)
-    * \param handler Where to report parameter changes (not null) 
-    */
-   static void BuildPlainUI(
-      wxWindow* parent,
-      Steinberg::Vst::IEditController* editController,
-      Steinberg::Vst::IComponentHandler* handler);
-
+   
    static wxString ToWxString(const Steinberg::Vst::TChar* str);
 
    //Builds a string key suitable to use as an Audacity macro param

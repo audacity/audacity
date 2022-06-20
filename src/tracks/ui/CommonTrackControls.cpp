@@ -15,7 +15,7 @@ Paul Licameli split from TrackControls.cpp
 #include "AColor.h"
 #include "../../RefreshCode.h"
 #include "Project.h"
-#include "../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../ProjectWindows.h"
 #include "../../TrackArtist.h"
 #include "../../TrackInfo.h"
@@ -194,7 +194,7 @@ public:
    ComponentInterfaceSymbol GetSymbol() const override
    { return Symbol; }
    //TranslatableString GetDescription() override {return XO("Sets the track name.");};
-   //bool DefineParams( ShuttleParams & S ) override;
+   //bool VisitSettings( SettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    //bool Apply(const CommandContext & context) override;
 

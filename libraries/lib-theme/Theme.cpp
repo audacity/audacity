@@ -286,14 +286,13 @@ void ThemeBase::LoadTheme( teThemeType Theme )
 
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
-   // ApplyUpdatedImages();
+   // AColor::ApplyUpdatedImages();
 
    // The next step doesn't post-process the theme data.  It only modifies
    // system settings.  So it is not necessary to make it conditional on
    // preferences, for avoidance of errors in the use of Theme preferences.
    // (See commit 2020217)
-   if (mOnPreferredSystemAppearanceChanged)
-      mOnPreferredSystemAppearanceChanged(mPreferredSystemAppearance);
+   Publish({ mPreferredSystemAppearance });
 }
 
 void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
@@ -1387,16 +1386,6 @@ ChoiceSetting &GUITheme()
    };
 
    return setting;
-}
-
-ThemeBase::OnPreferredSystemAppearanceChanged
-ThemeBase::SetOnPreferredSystemAppearanceChanged(OnPreferredSystemAppearanceChanged handler)
-{
-   auto previous = std::move(mOnPreferredSystemAppearanceChanged);
-
-   mOnPreferredSystemAppearanceChanged = std::move(handler);
-
-   return std::move(previous);
 }
 
 BoolSetting GUIBlendThemes{ wxT("/GUI/BlendThemes"), true };

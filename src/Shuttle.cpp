@@ -315,34 +315,89 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
 // on the pOptionalFlag.  They 'use it up' and clear it down for the next parameter.
 
 
+template<bool Const>
+SettingsVisitorBase<Const>::~SettingsVisitorBase() = default;
+
+template<bool Const>
+auto SettingsVisitorBase<Const>::Optional( [[maybe_unused]] Ref<bool> var )
+   -> SettingsVisitorBase &
+{
+   pOptionalFlag = nullptr;
+   return *this;
+}
+
+template<bool Const>
+auto SettingsVisitorBase<Const>::OptionalY( Ref<bool> var )
+   -> SettingsVisitorBase &
+{
+   return Optional( var );
+}
+
+template<bool Const>
+auto SettingsVisitorBase<Const>::OptionalN( Ref<bool> var )
+   -> SettingsVisitorBase &
+{
+   return Optional( var );
+}
+
 // Tests for parameter being optional.
 // Prepares for next parameter by clearing the pointer.
 // Reports on whether the parameter should be set, i.e. should set 
 // if it was chosen to be set, or was not optional.
-bool ShuttleParams::ShouldSet(){
+template<bool Const>
+bool SettingsVisitorBase<Const>::ShouldSet()
+{
    if( !pOptionalFlag )
       return true;
    bool result = *pOptionalFlag;
    pOptionalFlag = NULL;
    return result;
 }
+
 // These are functions to override.  They do nothing.
-void ShuttleParams::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl){;};
-void ShuttleParams::Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
-void ShuttleParams::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
-void ShuttleParams::Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
-void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
-void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
-void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings ){;};
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(Arg<bool>, const wxChar *,
+   bool, bool, bool, bool)
+{}
 
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(Arg<size_t>, const wxChar *,
+   int, int, int, int)
+{}
 
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(Arg<int>, const wxChar *,
+   int, int, int, int)
+{}
 
-/*
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings )
-{
-}
-*/
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(
+   Arg<float>, const wxChar *, float, float, float, float)
+{}
+
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(
+   Arg<double>, const wxChar *, float, float, float, float )
+{}
+
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(
+   Arg<double>, const wxChar *, double, double, double, double)
+{}
+
+template<bool Const>
+void SettingsVisitorBase<Const>::Define(
+   Ref<wxString>, const wxChar *, wxString, wxString, wxString, wxString)
+{}
+
+template<bool Const>
+void SettingsVisitorBase<Const>::DefineEnum(
+   Arg<int>, const wxChar *, int, const EnumValueSymbol [], size_t)
+{}
+
+// Explicit instantiations
+template class SettingsVisitorBase<false>;
+template class SettingsVisitorBase<true>;
 
 #ifdef _MSC_VER
 // If this is compiled with MSVC (Visual Studio)

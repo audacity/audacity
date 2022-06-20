@@ -40,6 +40,7 @@ explicitly code all three.
 #include "../TrackPanel.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "Track.h"
 #include "../effects/Effect.h"
 #include "ViewInfo.h"
 #include "CommandContext.h"
@@ -63,7 +64,8 @@ static const EnumValueSymbol kRelativeTo[nRelativeTos] =
    { wxT("SelectionEnd"), XO("Selection End") }
 };
 
-bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
+template<bool Const>
+bool SelectTimeCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    // Allow selection down to -ve 100seconds.
    // Typically used to expand/contract selections by a small amount.
    S.OptionalY( bHasT0           ).Define( mT0, wxT("Start"), 0.0, -100.0, (double)FLT_MAX);
@@ -71,6 +73,12 @@ bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasRelativeSpec ).DefineEnum( mRelativeTo,   wxT("RelativeTo"), 0, kRelativeTo, nRelativeTos );
    return true;
 }
+
+bool SelectTimeCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SelectTimeCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SelectTimeCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -147,11 +155,18 @@ const ComponentInterfaceSymbol SelectFrequenciesCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SelectFrequenciesCommand > reg2; }
 
-bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
+template<bool Const>
+bool SelectFrequenciesCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.OptionalN( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
    S.OptionalN( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
    return true;
 }
+
+bool SelectFrequenciesCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SelectFrequenciesCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SelectFrequenciesCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -197,13 +212,20 @@ static const EnumValueSymbol kModes[nModes] =
    { XO("Remove") },
 };
 
-bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
+template<bool Const>
+bool SelectTracksCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("Track"), 0.0, 0.0, 100.0);
    S.OptionalN( bHasNumTracks ).Define( mNumTracks,  wxT("TrackCount"),  1.0, 0.0, 100.0);
    S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, kModes, nModes );
    
    return true;
 }
+
+bool SelectTracksCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SelectTracksCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SelectTracksCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -271,3 +293,22 @@ const ComponentInterfaceSymbol SelectCommand::Symbol
 { XO("Select") };
 
 namespace{ BuiltinCommandsModule::Registration< SelectCommand > reg4; }
+
+template<bool Const>
+bool SelectCommand::VisitSettings( SettingsVisitorBase<Const> &S )
+{
+   return
+      mSelTime.VisitSettings(S) &&
+      mSelFreq.VisitSettings(S) &&
+      mSelTracks.VisitSettings(S);
+}
+
+bool SelectCommand::VisitSettings( SettingsVisitor & S )
+{
+   return VisitSettings<false>(S);
+}
+
+bool SelectCommand::VisitSettings( ConstSettingsVisitor & S )
+{
+   return VisitSettings<true>(S);
+}

@@ -372,7 +372,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    const auto t =
       WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
-         .NewWaveTrack(SampleFormat);
+         .Create(SampleFormat, mRate.GetRate());
 
    t->SetRate(1);
 

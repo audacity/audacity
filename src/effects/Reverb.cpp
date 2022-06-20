@@ -25,44 +25,25 @@
 #include <wx/spinctrl.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
 #include "Reverb_libSoX.h"
 
-enum 
-{
-   ID_RoomSize = 10000,
-   ID_PreDelay,
-   ID_Reverberance,
-   ID_HfDamping,
-   ID_ToneLow,
-   ID_ToneHigh,
-   ID_WetGain,
-   ID_DryGain,
-   ID_StereoWidth,
-   ID_WetOnly
-};
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name          Type     Key                  Def      Min      Max   Scale
-Param( RoomSize,     double,  wxT("RoomSize"),      75,      0,       100,  1  );
-Param( PreDelay,     double,  wxT("Delay"),         10,      0,       200,  1  );
-Param( Reverberance, double,  wxT("Reverberance"),  50,      0,       100,  1  );
-Param( HfDamping,    double,  wxT("HfDamping"),     50,      0,       100,  1  );
-Param( ToneLow,      double,  wxT("ToneLow"),       100,     0,       100,  1  );
-Param( ToneHigh,     double,  wxT("ToneHigh"),      100,     0,       100,  1  );
-Param( WetGain,      double,  wxT("WetGain"),       -1,      -20,     10,   1  );
-Param( DryGain,      double,  wxT("DryGain"),       -1,      -20,     10,   1  );
-Param( StereoWidth,  double,  wxT("StereoWidth"),   100,     0,       100,  1  );
-Param( WetOnly,      bool,    wxT("WetOnly"),       false,   false,   true, 1  );
+const EffectParameterMethods& EffectReverb::Parameters() const
+{
+   static CapturedParameters<EffectReverb,
+      RoomSize, PreDelay, Reverberance, HfDamping, ToneLow, ToneHigh,
+      WetGain, DryGain, StereoWidth, WetOnly
+   > parameters;
+   return parameters;
+}
 
 static const struct
 {
    const TranslatableString name;
-   EffectReverb::Params params;
+   EffectReverbSettings preset;
 }
 FactoryPresets[] =
 {
@@ -86,6 +67,22 @@ struct Reverb_priv_t
    float *wet[2];
 };
 
+struct Reverb_priv_ex : Reverb_priv_t
+{
+   Reverb_priv_ex() : Reverb_priv_t{} {}
+   ~Reverb_priv_ex()
+   {
+      reverb_delete(&reverb);
+   }
+};
+
+struct EffectReverbState
+{
+   unsigned                          mNumChans{};
+   std::unique_ptr<Reverb_priv_ex[]> mP{};
+};
+
+
 //
 // EffectReverb
 //
@@ -95,41 +92,172 @@ const ComponentInterfaceSymbol EffectReverb::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
 
-BEGIN_EVENT_TABLE(EffectReverb, wxEvtHandler)
 
-#define SpinSliderEvent(n) \
-   EVT_SLIDER(ID_ ## n, EffectReverb::On ## n ## Slider) \
-   EVT_TEXT(ID_ ## n, EffectReverb::On ## n ## Text)
+struct EffectReverb::Validator
+   : EffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+      EffectSettingsAccess& access, const EffectReverbSettings& settings)
+      : EffectUIValidator{ effect, access }
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
 
-   SpinSliderEvent(RoomSize)
-   SpinSliderEvent(PreDelay)
-   SpinSliderEvent(Reverberance)
-   SpinSliderEvent(HfDamping)
-   SpinSliderEvent(ToneLow)
-   SpinSliderEvent(ToneHigh)
-   SpinSliderEvent(WetGain)
-   SpinSliderEvent(DryGain)
-   SpinSliderEvent(StereoWidth)
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
-#undef SpinSliderEvent 
+   bool ValidateUI() override;
+   bool UpdateUI() override;
 
-END_EVENT_TABLE()
+   void PopulateOrExchange(ShuttleGui& S);
+
+   EffectReverbSettings mSettings;
+
+   bool mProcessingEvent = false;
+
+#define SpinSlider(n) \
+   wxSpinCtrl  *m ## n ## T; \
+   wxSlider    *m ## n ## S;
+
+   SpinSlider(RoomSize)
+   SpinSlider(PreDelay)
+   SpinSlider(Reverberance)
+   SpinSlider(HfDamping)
+   SpinSlider(ToneLow)
+   SpinSlider(ToneHigh)
+   SpinSlider(WetGain)
+   SpinSlider(DryGain)
+   SpinSlider(StereoWidth)
+
+#undef SpinSlider
+
+   wxCheckBox* mWetOnlyC;
+
+
+#define SpinSliderHandlers(n) \
+   void On ## n ## Slider(wxCommandEvent & evt); \
+   void On ## n ## Text(wxCommandEvent & evt);
+
+   SpinSliderHandlers(RoomSize)
+   SpinSliderHandlers(PreDelay)
+   SpinSliderHandlers(Reverberance)
+   SpinSliderHandlers(HfDamping)
+   SpinSliderHandlers(ToneLow)
+   SpinSliderHandlers(ToneHigh)
+   SpinSliderHandlers(WetGain)
+   SpinSliderHandlers(DryGain)
+   SpinSliderHandlers(StereoWidth)
+
+#undef SpinSliderHandlers
+
+   void OnCheckbox(wxCommandEvent &evt);
+
+};
+
+
+bool EffectReverb::Validator::ValidateUI()
+{
+   auto& rs = mSettings;
+
+   rs.mRoomSize     = mRoomSizeS->GetValue();
+   rs.mPreDelay     = mPreDelayS->GetValue();
+   rs.mReverberance = mReverberanceS->GetValue();
+   rs.mHfDamping    = mHfDampingS->GetValue();
+   rs.mToneLow      = mToneLowS->GetValue();
+   rs.mToneHigh     = mToneHighS->GetValue();
+   rs.mWetGain      = mWetGainS->GetValue();
+   rs.mDryGain      = mDryGainS->GetValue();
+   rs.mStereoWidth  = mStereoWidthS->GetValue();
+   rs.mWetOnly      = mWetOnlyC->GetValue();
+
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+      {
+         // pass back the modified settings to the MessageBuffer
+
+         EffectReverb::GetSettings(settings) = mSettings;
+      }
+   );
+
+   return true;
+}
+
+
+struct EffectReverb::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+   , public EffectInstanceWithSampleRate
+
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool ProcessFinalize(void) override; // not every effect needs this
+
+   // Realtime section
+
+   bool RealtimeInitialize(EffectSettings& settings) override
+   {
+      SetBlockSize(512);
+      mSlaves.clear();
+      return true;
+   }
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override
+   {
+      EffectReverbState slave;
+
+      // The notion of ChannelNames is unavailable here,
+      // so we'll have to force the stereo init, if this is the case
+      //
+      InstanceInit(settings, slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
+
+      mSlaves.push_back( std::move(slave) );
+      return true;
+   }
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override
+   {
+      mSlaves.clear();
+      return true;
+   }
+
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples) override
+   {
+      if (group >= mSlaves.size())
+         return 0;
+      return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+   }
+
+   bool InstanceInit(EffectSettings& settings, EffectReverbState& data, ChannelNames chanMap, bool forceStereo);
+
+   size_t InstanceProcess(EffectSettings& settings, EffectReverbState& data,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+   EffectReverbState mMaster;
+   std::vector<EffectReverbState> mSlaves;
+};
+
+
+
+std::shared_ptr<EffectInstance>
+EffectReverb::MakeInstance() const
+{
+   return std::make_shared<Instance>(*this);
+}
+
 
 EffectReverb::EffectReverb()
 {
-   mParams.mRoomSize = DEF_RoomSize;
-   mParams.mPreDelay = DEF_PreDelay;
-   mParams.mReverberance = DEF_Reverberance;
-   mParams.mHfDamping = DEF_HfDamping;
-   mParams.mToneLow = DEF_ToneLow;
-   mParams.mToneHigh = DEF_ToneHigh;
-   mParams.mWetGain = DEF_WetGain;
-   mParams.mDryGain = DEF_DryGain;
-   mParams.mStereoWidth = DEF_StereoWidth;
-   mParams.mWetOnly = DEF_WetOnly;
-
-   mProcessingEvent = false;
-
    SetLinearEffectFlag(true);
 }
 
@@ -161,101 +289,110 @@ EffectType EffectReverb::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectReverb::GetAudioInCount() const
 {
-   return mParams.mStereoWidth ? 2 : 1;
+   return 2;
 }
 
 unsigned EffectReverb::GetAudioOutCount() const
 {
-   return mParams.mStereoWidth ? 2 : 1;
+   return 2;
 }
 
 static size_t BLOCK = 16384;
 
-bool EffectReverb::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+bool EffectReverb::Instance::ProcessInitialize(
+   EffectSettings& settings, sampleCount, ChannelNames chanMap)
 {
+   return InstanceInit(settings, mMaster, chanMap, /* forceStereo = */ false);
+}
+
+
+bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverbState& state,
+                                          ChannelNames chanMap, bool forceStereo)
+{   
+   auto& rs = GetSettings(settings);   
+
    bool isStereo = false;
-   mNumChans = 1;
-   if (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
+   state.mNumChans = 1;
+   if (    (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
+        || forceStereo )
    {
       isStereo = true;
-      mNumChans = 2;
+      state.mNumChans = 2;
    }
 
-   mP = (Reverb_priv_t *) calloc(sizeof(*mP), mNumChans);
+   state.mP = std::make_unique<Reverb_priv_ex[]>(state.mNumChans);
 
-   for (unsigned int i = 0; i < mNumChans; i++)
+   for (unsigned int i = 0; i < state.mNumChans; i++)
    {
-      reverb_create(&mP[i].reverb,
+      reverb_create(&state.mP[i].reverb,
                     mSampleRate,
-                    mParams.mWetGain,
-                    mParams.mRoomSize,
-                    mParams.mReverberance,
-                    mParams.mHfDamping,
-                    mParams.mPreDelay,
-                    mParams.mStereoWidth * (isStereo ? 1 : 0),
-                    mParams.mToneLow,
-                    mParams.mToneHigh,
+                    rs.mWetGain,
+                    rs.mRoomSize,
+                    rs.mReverberance,
+                    rs.mHfDamping,
+                    rs.mPreDelay,
+                    rs.mStereoWidth * (isStereo ? 1 : 0),
+                    rs.mToneLow,
+                    rs.mToneHigh,
                     BLOCK,
-                    mP[i].wet);
+                    state.mP[i].wet);
    }
 
    return true;
 }
 
-bool EffectReverb::ProcessFinalize()
+bool EffectReverb::Instance::ProcessFinalize()
 {
-   for (unsigned int i = 0; i < mNumChans; i++)
-   {
-      reverb_delete(&mP[i].reverb);
-   }
-
-   free(mP);
-
    return true;
 }
 
-size_t EffectReverb::ProcessBlock(EffectSettings &,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+}
+
+size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectReverbState& state,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
+{
+   auto& rs = GetSettings(settings);
+
    const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
 
-   for (unsigned int c = 0; c < mNumChans; c++)
+   for (unsigned int c = 0; c < state.mNumChans; c++)
    {
       ichans[c] = inBlock[c];
       ochans[c] = outBlock[c];
    }
    
-   float const dryMult = mParams.mWetOnly ? 0 : dB_to_linear(mParams.mDryGain);
+   float const dryMult = rs.mWetOnly ? 0 : dB_to_linear(rs.mDryGain);
 
    auto remaining = blockLen;
 
    while (remaining)
    {
       auto len = std::min(remaining, decltype(remaining)(BLOCK));
-      for (unsigned int c = 0; c < mNumChans; c++)
+      for (unsigned int c = 0; c < state.mNumChans; c++)
       {
          // Write the input samples to the reverb fifo.  Returned value is the address of the
          // fifo buffer which contains a copy of the input samples.
-         mP[c].dry = (float *) fifo_write(&mP[c].reverb.input_fifo, len, ichans[c]);
-         reverb_process(&mP[c].reverb, len);
+         state.mP[c].dry = (float *) fifo_write(&state.mP[c].reverb.input_fifo, len, ichans[c]);
+         reverb_process(&state.mP[c].reverb, len);
       }
 
-      if (mNumChans == 2)
+      if (state.mNumChans == 2)
       {
          for (decltype(len) i = 0; i < len; i++)
          {
             for (int w = 0; w < 2; w++)
             {
                ochans[w][i] = dryMult *
-                              mP[w].dry[i] +
+                              state.mP[w].dry[i] +
                               0.5 *
-                              (mP[0].wet[w][i] + mP[1].wet[w][i]);
+                              (state.mP[0].wet[w][i] + state.mP[1].wet[w][i]);
             }
          }
       }
@@ -264,14 +401,14 @@ size_t EffectReverb::ProcessBlock(EffectSettings &,
          for (decltype(len) i = 0; i < len; i++)
          {
             ochans[0][i] = dryMult * 
-                           mP[0].dry[i] +
-                           mP[0].wet[0][i];
+                           state.mP[0].dry[i] +
+                           state.mP[0].wet[0][i];
          }
       }
 
       remaining -= len;
 
-      for (unsigned int c = 0; c < mNumChans; c++)
+      for (unsigned int c = 0; c < state.mNumChans; c++)
       {
          ichans[c] += len;
          ochans[c] += len;
@@ -279,62 +416,6 @@ size_t EffectReverb::ProcessBlock(EffectSettings &,
    }
 
    return blockLen;
-}
-bool EffectReverb::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mParams.mRoomSize,       RoomSize );
-   S.SHUTTLE_PARAM( mParams.mPreDelay,       PreDelay );
-   S.SHUTTLE_PARAM( mParams.mReverberance,   Reverberance );
-   S.SHUTTLE_PARAM( mParams.mHfDamping,      HfDamping );
-   S.SHUTTLE_PARAM( mParams.mToneLow,        ToneLow );
-   S.SHUTTLE_PARAM( mParams.mToneHigh,       ToneHigh );
-   S.SHUTTLE_PARAM( mParams.mWetGain,        WetGain );
-   S.SHUTTLE_PARAM( mParams.mDryGain,        DryGain );
-   S.SHUTTLE_PARAM( mParams.mStereoWidth,    StereoWidth );
-   S.SHUTTLE_PARAM( mParams.mWetOnly,        WetOnly );
-   return true;
-}
-
-bool EffectReverb::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_RoomSize, mParams.mRoomSize);
-   parms.Write(KEY_PreDelay, mParams.mPreDelay);
-   parms.Write(KEY_Reverberance, mParams.mReverberance);
-   parms.Write(KEY_HfDamping, mParams.mHfDamping);
-   parms.Write(KEY_ToneLow, mParams.mToneLow);
-   parms.Write(KEY_ToneHigh, mParams.mToneHigh);
-   parms.Write(KEY_WetGain, mParams.mWetGain);
-   parms.Write(KEY_DryGain, mParams.mDryGain);
-   parms.Write(KEY_StereoWidth, mParams.mStereoWidth);
-   parms.Write(KEY_WetOnly, mParams.mWetOnly);
-
-   return true;
-}
-
-bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyDouble(RoomSize);
-   ReadAndVerifyDouble(PreDelay);
-   ReadAndVerifyDouble(Reverberance);
-   ReadAndVerifyDouble(HfDamping);
-   ReadAndVerifyDouble(ToneLow);
-   ReadAndVerifyDouble(ToneHigh);
-   ReadAndVerifyDouble(WetGain);
-   ReadAndVerifyDouble(DryGain);
-   ReadAndVerifyDouble(StereoWidth);
-   ReadAndVerifyBool(WetOnly);
-
-   mParams.mRoomSize = RoomSize;
-   mParams.mPreDelay = PreDelay;
-   mParams.mReverberance = Reverberance;
-   mParams.mHfDamping = HfDamping;
-   mParams.mToneLow = ToneLow;
-   mParams.mToneHigh = ToneHigh;
-   mParams.mWetGain = WetGain;
-   mParams.mDryGain = DryGain;
-   mParams.mStereoWidth = StereoWidth;
-   mParams.mWetOnly = WetOnly;
-
-   return true;
 }
 
 RegistryPaths EffectReverb::GetFactoryPresets() const
@@ -349,21 +430,33 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
    return names;
 }
 
-bool EffectReverb::LoadFactoryPreset(int id)
+
+bool EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
       return false;
    }
 
-   mParams = FactoryPresets[id].params;
+   EffectReverb::GetSettings(settings) = FactoryPresets[id].preset;
+
    return true;
 }
 
 // Effect implementation
+std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
+   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
+{
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
 
-std::unique_ptr<EffectUIValidator>
-EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   result->PopulateOrExchange(S);
+   return result;
+}
+
+
+void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
@@ -372,12 +465,11 @@ EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       S.SetStretchyCol(2);
 
 #define SpinSlider(n, p) \
-      m ## n ## T = S.Id(ID_ ## n). \
-         AddSpinCtrl( p, DEF_ ## n, MAX_ ## n, MIN_ ## n); \
-      S; \
-      m ## n ## S = S.Id(ID_ ## n) \
-         .Style(wxSL_HORIZONTAL) \
-         .AddSlider( {}, DEF_ ## n, MAX_ ## n, MIN_ ## n);
+      m ## n ## T = S.AddSpinCtrl( p, n.def, n.max, n.min); \
+      BindTo(*m ## n ## T, wxEVT_SPINCTRL, &Validator::On ## n ## Text);\
+      \
+      m ## n ## S = S.Style(wxSL_HORIZONTAL).AddSlider( {}, n.def, n.max, n.min); \
+      BindTo(*m ## n ## S, wxEVT_SLIDER, &Validator::On ## n ## Slider);
 
       SpinSlider(RoomSize,       XXO("&Room Size (%):"))
       SpinSlider(PreDelay,       XXO("&Pre-delay (ms):"))
@@ -396,19 +488,24 @@ EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
    S.StartHorizontalLay(wxCENTER, false);
    {
-      mWetOnlyC = S.Id(ID_WetOnly).
-         AddCheckBox(XXO("Wet O&nly"), DEF_WetOnly);
+      mWetOnlyC =
+      S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);
+      BindTo(*mWetOnlyC, wxEVT_CHECKBOX, &Validator::OnCheckbox);
    }
    S.EndHorizontalLay();
 
-   return nullptr;
 }
 
-bool EffectReverb::TransferDataToWindow(const EffectSettings &)
+bool EffectReverb::Validator::UpdateUI()
 {
+   // get the settings from the MessageBuffer and write them to our local copy
+   mSettings = GetSettings(mAccess.Get());
+
+   auto& rs = mSettings;
+
 #define SetSpinSlider(n) \
-   m ## n ## S->SetValue((int) mParams.m ## n); \
-   m ## n ## T->SetValue(wxString::Format(wxT("%d"), (int) mParams.m ## n));
+   m ## n ## S->SetValue((int) rs.m ## n); \
+   m ## n ## T->SetValue(wxString::Format(wxT("%d"), (int) rs.m ## n));
 
    SetSpinSlider(RoomSize);
    SetSpinSlider(PreDelay);
@@ -422,41 +519,28 @@ bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 
 #undef SetSpinSlider
 
-   mWetOnlyC->SetValue((int) mParams.mWetOnly);
+   mWetOnlyC->SetValue((int) rs.mWetOnly);
 
    return true;
 }
 
-bool EffectReverb::TransferDataFromWindow(EffectSettings &)
-{
-   mParams.mRoomSize = mRoomSizeS->GetValue();
-   mParams.mPreDelay = mPreDelayS->GetValue();
-   mParams.mReverberance = mReverberanceS->GetValue();
-   mParams.mHfDamping = mHfDampingS->GetValue();
-   mParams.mToneLow = mToneLowS->GetValue();
-   mParams.mToneHigh = mToneHighS->GetValue();
-   mParams.mWetGain = mWetGainS->GetValue();
-   mParams.mDryGain = mDryGainS->GetValue();
-   mParams.mStereoWidth = mStereoWidthS->GetValue();
-   mParams.mWetOnly = mWetOnlyC->GetValue();
-
-   return true;
-}
 
 #define SpinSliderHandlers(n) \
-   void EffectReverb::On ## n ## Slider(wxCommandEvent & evt) \
+   void EffectReverb::Validator::On ## n ## Slider(wxCommandEvent & evt) \
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
       m ## n ## T->SetValue(wxString::Format(wxT("%d"), evt.GetInt())); \
       mProcessingEvent = false; \
+      ValidateUI(); \
    } \
-   void EffectReverb::On ## n ## Text(wxCommandEvent & evt) \
+   void EffectReverb::Validator::On ## n ## Text(wxCommandEvent & evt) \
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
-      m ## n ## S->SetValue(TrapLong(evt.GetInt(), MIN_ ## n, MAX_ ## n)); \
+      m ## n ## S->SetValue(std::clamp<long>(evt.GetInt(), n.min, n.max)); \
       mProcessingEvent = false; \
+      ValidateUI(); \
    }
 
 SpinSliderHandlers(RoomSize)
@@ -468,5 +552,10 @@ SpinSliderHandlers(ToneHigh)
 SpinSliderHandlers(WetGain)
 SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
+
+void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
+{
+   ValidateUI();
+}
 
 #undef SpinSliderHandlers

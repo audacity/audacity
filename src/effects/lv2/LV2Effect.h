@@ -9,45 +9,43 @@
 
 *********************************************************************/
 
+#ifndef __AUDACITY_LV2_EFFECT__
+#define __AUDACITY_LV2_EFFECT__
 
 
 #if USE_LV2
 
 class wxArrayString;
 
+#include <thread>
 #include <vector>
 
 #include <wx/event.h> // to inherit
 #include <wx/msgqueue.h>
-#include <wx/thread.h>
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
-#include "lv2/log/log.h"
-#include "lv2/midi/midi.h"
-#include "lv2/options/options.h"
 #include "lv2/state/state.h"
-#include "lv2/time/time.h"
-#include "lv2/uri-map/uri-map.h"
-#include "lv2/urid/urid.h"
 #include "lv2/worker/worker.h"
-#include "lv2/ui/ui.h"
-
-#include <lilv/lilv.h>
 #include <suil/suil.h>
+#include "lv2_external_ui.h"
 
+#include "LV2FeaturesList.h"
+#include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
-#include "LoadLV2.h"
 #include "NativeWindow.h"
 
-#include "lv2_external_ui.h"
-#include "zix/ring.h"
-
 #include <unordered_map>
+
+using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
+using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
+using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
+using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
+using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 
 // We use deprecated LV2 interfaces to remain compatible with older
 // plug-ins, so disable warnings
@@ -64,197 +62,15 @@ class NumericTextCtrl;
 
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 
-class LV2Port
-{
-public:
-   LV2Port(const LilvPort *port,
-           int index,
-           bool isInput,
-           const wxString & symbol,
-           const wxString & name,
-           const wxString & group)
-   :  mPort(port),
-      mIndex(index),
-      mIsInput(isInput),
-      mSymbol(symbol),
-      mName(name),
-      mGroup(group)
-   {
-   };
-   LV2Port(const LV2Port &) = default;
-   LV2Port &operator = (const LV2Port &) = default;
-
-   const LilvPort *mPort;
-
-   uint32_t mIndex;
-   bool mIsInput;
-
-   wxString mSymbol;
-   wxString mName;
-   wxString mGroup;
-};
-
-class LV2AudioPort : public LV2Port
-{
-public:
-   LV2AudioPort(const LilvPort *port,
-               int index,
-               bool isInput,
-               const wxString & symbol,
-               const wxString & name,
-               const wxString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-   }
-};
-using LV2AudioPortPtr = std::shared_ptr<LV2AudioPort>;
-using LV2AudioPortArray = std::vector<LV2AudioPortPtr>;
-
-class LV2AtomPort : public LV2Port
-{
-public:
-   LV2AtomPort(const LilvPort *port,
-               int index,
-               bool isInput,
-               const wxString & symbol,
-               const wxString & name,
-               const wxString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-  
-      mIsMidi = false;
-      mWantsPosition = false;
-      mMinimumSize = 1024;
-      mRing = NULL;
-   }
-   virtual ~LV2AtomPort()
-   {
-      if (mRing)
-      {
-         zix_ring_free(mRing);
-      }
-   }
-
-   uint32_t mMinimumSize;
-   bool mIsMidi;
-   bool mWantsPosition;
-
-   std::vector<uint8_t> mBuffer;
-   ZixRing *mRing;
-};
-using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
-using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;
-
-class LV2CVPort : public LV2Port
-{
-public:
-   LV2CVPort(const LilvPort *port,
-             int index,
-             bool isInput,
-             const wxString & symbol,
-             const wxString & name,
-             const wxString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-      mMin = 0.0;
-      mMax = 1.0;
-      mDef = 0.0;
-      mHasLo = false;
-      mHasHi = false;
-   };
-
-   float mMin;
-   float mMax;
-   float mDef;
-   bool mHasLo;
-   bool mHasHi;
-
-   Floats mBuffer;
-};
-using LV2CVPortPtr = std::shared_ptr<LV2CVPort>;
-using LV2CVPortArray = std::vector<LV2CVPortPtr>;
-
 class LV2EffectMeter;
-
-/** A structure that contains information about a single LV2 plugin port. */
-class LV2ControlPort : public LV2Port
-{
-public:
-   LV2ControlPort(const LilvPort *port,
-                  int index,
-                  bool isInput,
-                  const wxString & symbol,
-                  const wxString & name,
-                  const wxString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-      mMin = 0.0;
-      mMax = 0.0;
-      mDef = 0.0;
-      mVal = 0.0;
-      mLst = 0.0;
-      mTmp = 0.0;
-      mDmy = 0.0;
-      mLo = 0.0;
-      mHi = 0.0;
-      mHasLo = false;
-      mHasHi = false;
-      mToggle = false;
-      mTrigger = false;
-      mInteger = false;
-      mSampleRate = false;
-      mEnumeration = false;
-      mLogarithmic = false;
-      mNotOnGui = false;
-      mCtrl.button = NULL;
-      mText = NULL;
-   };
- 
-   wxString mUnits;
-   float mMin;
-   float mMax;
-   float mDef;
-   float mVal;
-   float mLst;
-   float mTmp;
-   float mDmy;
-   float mLo;
-   float mHi;
-   bool mHasLo;
-   bool mHasHi;
-   bool mToggle;
-   bool mTrigger;
-   bool mInteger;
-   bool mSampleRate;
-   bool mEnumeration;
-   bool mLogarithmic;
-   bool mNotOnGui;
-
-   // ScalePoints
-   std::vector<double> mScaleValues;
-   wxArrayString mScaleLabels;
-
-   // UI
-   wxTextCtrl *mText;
-   union
-   {
-      wxButton *button;
-      wxCheckBox *checkbox;
-      wxChoice *choice;
-      LV2EffectMeter *meter;
-      wxSlider *slider;
-   } mCtrl;
-};
-using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
-using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
-
-class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-using URIDMap = std::vector<MallocString<>>;
+struct LV2EffectSettings {
+   //! vector of values in correspondence with the control ports
+   std::vector<float> values;
+};
 
-class LV2Effect final : public wxEvtHandler,
-                        public EffectUIClientInterface
+class LV2Effect final : public LV2FeaturesList
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -277,30 +93,32 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, EffectSettings &settings) const override;
+   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
+   bool SaveUserPreset(
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
-
-   // EffectProcessor implementation
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
@@ -314,9 +132,9 @@ public:
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
+   bool RealtimeResume() override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
@@ -328,16 +146,18 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(EffectHostInterface* host) override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
-   void ImportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -345,21 +165,14 @@ public:
    // LV2Effect implementation
 
 private:
-   bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   struct PlainUIControl;
 
-   LV2Wrapper *InitInstance(float sampleRate);
-   void FreeInstance(LV2Wrapper *wrapper);
+   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool SaveParameters(
+      const RegistryPath & group, const EffectSettings &settings) const;
 
-   static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
-                             const char *map,
-                             const char *uri);
-   static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
-   LV2_URID URID_Map(const char *uri);
-   static LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
-
-   static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
-   const char *URID_Unmap(LV2_URID urid);
+   std::unique_ptr<LV2Wrapper>
+   InitInstance(const EffectSettings &settings, float sampleRate);
 
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
@@ -367,28 +180,16 @@ private:
    static void ui_closed(LV2UI_Controller controller);
    void UIClosed();
 
-   static int log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...);
-   static int log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap);
-   int LogVPrintf(LV2_URID type, const char *fmt, va_list ap);
-
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *win);
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
-   bool ValidateOptions(const LilvNode *subject);
-   bool CheckOptions(const LilvNode *subject, const LilvNode *predicate, bool required);
-
-   LV2_Feature *AddFeature(const char *uri, void *data);
-   bool ValidateFeatures(const LilvNode *subject);
-   bool CheckFeatures(const LilvNode *subject, const LilvNode *predicate, bool required);
-
-   bool BuildFancy();
+   bool BuildFancy(const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
-   bool TransferDataToWindow() /* not override */;
-   void SetSlider(const LV2ControlPortPtr & port);
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -434,131 +235,129 @@ private:
                      uint32_t type);
 
 private:
- 
-   // Declare the global and local URI maps
-   static URIDMap gURIDMap;
-   URIDMap mURIDMap;
+   size_t mUserBlockSize{ mBlockSize };
 
-   // Declare the static LILV URI nodes
-#undef NODE
-#define NODE(n, u) static LilvNode *node_##n;
-   NODELIST
-
-   // Declare the static URIDs
-#undef URID
-#define URID(n, u) static LV2_URID urid_##n;
-   URIDLIST
-
-   const LilvPlugin *mPlug;
-
-   EffectHostInterface *mHost;
-
-   float mSampleRate;
-   int mBlockSize;
-   int mSeqSize;
-
-   int mMinBlockSize;
-   int mMaxBlockSize;
-   int mUserBlockSize;
-
-   std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
+   //! Mapping from index number among all ports, to position
+   //! among the control ports only
+   std::unordered_map<uint32_t, size_t> mControlPortMap;
    LV2ControlPortArray mControlPorts;
+   LV2ControlPortStateArray mControlPortStates;
+   LV2EffectSettings mSettings;
+
+   //! This ignores its argument while we transition to statelessness
+   //! but will later be rewritten as a static member function
+   LV2EffectSettings &GetSettings(EffectSettings &) const {
+      return const_cast<LV2EffectSettings &>(mSettings);
+   }
+   //! This ignores its argument while we transition to statelessness
+   //! but will later be rewritten as a static member function
+   const LV2EffectSettings &GetSettings(const EffectSettings &) const {
+      return mSettings;
+   }
 
    LV2AudioPortArray mAudioPorts;
-   unsigned mAudioIn;
-   unsigned mAudioOut;
+   unsigned mAudioIn{ 0 };
+   unsigned mAudioOut{ 0 };
 
    LV2AtomPortArray mAtomPorts;
-   LV2AtomPortPtr mControlIn;
-   LV2AtomPortPtr mControlOut;
-   unsigned mMidiIn;
-   unsigned mMidiOut;
+   LV2AtomPortStateArray mAtomPortStates;
+
+   LV2AtomPortStatePtr mControlIn;
+   LV2AtomPortStatePtr mControlOut;
+   unsigned mMidiIn{ 0 };
+   unsigned mMidiOut{ 0 };
 
    LV2CVPortArray mCVPorts;
+   LV2CVPortStateArray mCVPortStates;
    unsigned mCVIn;
    unsigned mCVOut;
 
-   std::unordered_map<wxString, std::vector<int>> mGroupMap;
-   wxArrayString mGroups;
+   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
+   TranslatableStrings mGroups;
 
-   bool mWantsOptionsInterface;
-   bool mWantsStateInterface;
-   bool mWantsWorkerInterface;
-   bool mNoResize;
+   bool mWantsOptionsInterface{ false };
+   bool mWantsStateInterface{ false };
 
-   bool mUseLatency;
-   int mLatencyPort;
-   bool mLatencyDone;
-   bool mRolling;
-   bool mActivated;
+   bool mUseLatency{ false };
+   bool mLatencyDone{ false };
+   bool mRolling{ false };
 
-   LV2Wrapper *mMaster;
-   LV2Wrapper *mProcess;
-   std::vector<LV2Wrapper *> mSlaves;
+   //! Holds lv2 library state needed for the user interface
+   std::unique_ptr<LV2Wrapper> mMaster;
+   //! Holds lv2 library state for destructive processing
+   std::unique_ptr<LV2Wrapper> mProcess;
+   //! Each holds lv2 library state for realtime processing of one track
+   std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
-   FloatBuffers mMasterIn;
-   size_t mNumSamples;
-   size_t mFramePos;
+   size_t mNumSamples{};
+   size_t mFramePos{};
 
    FloatBuffers mCVInBuffers;
    FloatBuffers mCVOutBuffers;
 
    // Position info
-   float mPositionSpeed;
-   float mPositionFrame;
+   float mPositionSpeed{ 1.0f };
+   float mPositionFrame{ 0.0f };
 
-   double mLength;
+   double mLength{};
 
    wxTimer mTimer;
 
    wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent;
+   wxWindow *mParent{};
 
-   bool mUseGUI;
+   bool mUseGUI{};
 
-   // Features we support
-   LV2_URI_Map_Feature mUriMapFeature;
-   LV2_URID_Map mURIDMapFeature;
-   LV2_URID_Unmap mURIDUnmapFeature;
-   LV2UI_Resize mUIResizeFeature;
-   LV2_Log_Log mLogFeature;
-   LV2_Extension_Data_Feature mExtensionDataFeature;
+   // These objects contain C-style virtual function tables that we fill in
+   const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
+   // Not const, filled in when making a dialog
+   LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   LV2_External_UI_Host mExternalUIHost;
-   LV2_External_UI_Widget* mExternalWidget;
-   bool mExternalUIClosed;
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(mPlug) };
+   const LV2_External_UI_Host mExternalUIHost{
+      LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
 
-   LV2_Atom_Forge mForge;
-   
-   std::vector<LV2_Options_Option> mOptions;
-   size_t mBlockSizeOption;
-   size_t mSampleRateOption;
-   bool mSupportsNominalBlockLength;
-   bool mSupportsSampleRate;
+   LV2_External_UI_Widget* mExternalWidget{};
+   bool mExternalUIClosed{ false };
 
-   std::vector<std::unique_ptr<LV2_Feature>> mFeatures;
+   LV2_Atom_Forge mForge{};
 
-   LV2_Feature *mInstanceAccessFeature;
-   LV2_Feature *mParentFeature;
-   LV2_Feature *mWorkerScheduleFeature;
+   //! Index into m_features
+   size_t mInstanceAccessFeature{};
+   //! Index into m_features
+   size_t mParentFeature{};
+   LV2_Feature *mWorkerScheduleFeature{};
 
-   bool mFreewheeling;
+   // UI
+   struct PlainUIControl {
+      wxTextCtrl *mText{};
+      //! Discriminate this union according to corresponding port's properties
+      union {
+         wxButton *button;
+         wxCheckBox *checkbox;
+         wxChoice *choice;
+         LV2EffectMeter *meter;
+         wxSlider *slider;
+      };
+   };
+   //! Array in correspondence with the control ports
+   std::vector<PlainUIControl> mPlainUIControls;
 
-   SuilHost *mSuilHost;
-   SuilInstance *mSuilInstance;
+   SuilHostPtr mSuilHost;
+   SuilInstancePtr mSuilInstance;
 
-   NativeWindow *mNativeWin;
-   wxSize mNativeWinInitialSize;
-   wxSize mNativeWinLastSize;
-   bool mResizing;
+   NativeWindow *mNativeWin{};
+   wxSize mNativeWinInitialSize{ wxDefaultSize };
+   wxSize mNativeWinLastSize{ wxDefaultSize };
+   bool mResizing{ false };
 #if defined(__WXGTK__)
-   bool mResized;
+   bool mResized{ false };
 #endif
 
-   LV2UI_Idle_Interface *mUIIdleInterface;
-   LV2UI_Show_Interface *mUIShowInterface;
+   const LV2UI_Idle_Interface *mUIIdleInterface{};
+   const LV2UI_Show_Interface *mUIShowInterface{};
 
-   NumericTextCtrl *mDuration;
+   NumericTextCtrl *mDuration{};
 
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };
@@ -568,93 +367,74 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class LV2Wrapper;
-   friend class LV2EffectSettingsDialog;
-   friend class LV2EffectsModule;
 };
 
-inline wxString LilvString(const LilvNode *node)
-{
-   return wxString::FromUTF8(lilv_node_as_string(node));
-};
-
-inline wxString LilvString(LilvNode *node, bool free)
-{
-   wxString str = LilvString(node);
-   if (free)
-   {
-      lilv_node_free(node);
-   }
-
-   return str;
-};
-
-class LV2Wrapper : public wxThreadHelper
+class LV2Wrapper final
 {
 public:
-   typedef struct LV2Work
-   {
-      uint32_t size;
-      const void *data;
-   } LV2Work;
+   struct LV2Work {
+      uint32_t size{};
+      const void *data{};
+   };
 
 public:
-   LV2Wrapper(LV2Effect *effect);
-   virtual ~LV2Wrapper();
-
-   LilvInstance *Instantiate(const LilvPlugin *plugin,
-                             double sampleRrate,
-                             std::vector<std::unique_ptr<LV2_Feature>> & features);
-
-   void *Entry();
-
-   LilvInstance *GetInstance();
-   
-   LV2_Handle GetHandle();
-
-   float GetLatency();
-
+   //! May spawn a thread
+   LV2Wrapper(const LV2FeaturesList &featuresList,
+      const LilvPlugin *plugin, double sampleRate);
+   //! If a thread was started, joins it
+   ~LV2Wrapper();
+   void Activate();
+   void Deactivate();
+   LilvInstance *GetInstance() const;
+   LV2_Handle GetHandle() const;
+   float GetLatency() const;
    void SetFreeWheeling(bool enable);
-
    void SetSampleRate();
-
    void SetBlockSize();
-
-   void ConnectPorts(float **inbuf, float **outbuf);
-
-   void SendResponses();
-
+   void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
                                           uint32_t size,
                                           const void *data);
    LV2_Worker_Status ScheduleWork(uint32_t size, const void *data);
-
    static LV2_Worker_Status respond(LV2_Worker_Respond_Handle handle,
                                     uint32_t size,
                                     const void *data);
-
    LV2_Worker_Status Respond(uint32_t size, const void *data);
 
 private:
-   LV2Effect *mEffect;
-   LilvInstance *mInstance;
-   LV2_Handle mHandle;
+   void ThreadFunction();
+
+   std::thread mThread;
+
+   const LV2FeaturesList &mFeaturesList;
+   LilvInstancePtr mInstance;
+   LV2_Handle mHandle{};
 
    wxMessageQueue<LV2Work> mRequests;
    wxMessageQueue<LV2Work> mResponses;
 
    // Options extension
-   LV2_Options_Interface *mOptionsInterface;
+   const LV2_Options_Interface *mOptionsInterface{};
 
    // State extension
-   LV2_State_Interface *mStateInterface;
+   const LV2_State_Interface *mStateInterface{};
 
    // Worker extension
-   LV2_Worker_Interface *mWorkerInterface;
-   LV2_Worker_Schedule mWorkerSchedule;
+   const LV2_Worker_Interface *mWorkerInterface{};
+   // Another object with an explicit virtual function table
+   LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
 
-   float mLatency;
-   bool mFreeWheeling;
-   bool mStopWorker;
+   float mLatency{ 0.0 };
+
+   //! If true, do not spawn extra worker threads
+   bool mFreeWheeling{ false };
+
+   //! Written by main thread, read by worker, but atomic isn't needed because
+   //! mRequests provides synchronization
+   bool mStopWorker{ false };
+
+   bool mActivated{ false };
 };
 
+#endif
 #endif

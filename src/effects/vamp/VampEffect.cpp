@@ -137,15 +137,13 @@ bool VampEffect::IsDefault() const
    return false;
 }
 
-
-// EffectProcessor implementation
-
 unsigned VampEffect::GetAudioInCount() const
 {
    return mPlugin->getMaxChannelCount();
 }
 
-bool VampEffect::GetAutomationParameters(CommandParameters & parms)
+bool VampEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
    {
@@ -191,7 +189,8 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool VampEffect::SetAutomationParameters(CommandParameters & parms)
+bool VampEffect::LoadSettings(
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass verifies values
    for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
@@ -341,7 +340,7 @@ bool VampEffect::Init()
    return true;
 }
 
-bool VampEffect::Process(EffectSettings &)
+bool VampEffect::Process(EffectInstance &, EffectSettings &)
 {
    if (!mPlugin)
    {
@@ -527,13 +526,8 @@ bool VampEffect::Process(EffectSettings &)
    return true;
 }
 
-void VampEffect::End()
-{
-   mPlugin.reset();
-}
-
-std::unique_ptr<EffectUIValidator>
-VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    Vamp::Plugin::ProgramList programs = mPlugin->getPrograms();
 

@@ -213,6 +213,8 @@ ExportFFmpegAC3Options::~ExportFFmpegAC3Options()
 ///
 void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
 {
+   IntSetting Setting{ L"/FileFormats/AC3BitRate", 160000 };
+
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
@@ -220,12 +222,7 @@ void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             S.TieNumberAsChoice(
-               XXO("Bit Rate:"),
-               {wxT("/FileFormats/AC3BitRate"),
-                160000},
-               AC3BitRateNames,
-               &AC3BitRateValues
-            );
+               XXO("Bit Rate:"), Setting, AC3BitRateNames, &AC3BitRateValues);
          }
          S.EndMultiColumn();
       }
@@ -368,19 +365,15 @@ ExportFFmpegAMRNBOptions::~ExportFFmpegAMRNBOptions()
 ///
 void ExportFFmpegAMRNBOptions::PopulateOrExchange(ShuttleGui & S)
 {
+   IntSetting Setting{ L"/FileFormats/AMRNBBitRate", 12200 };
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieNumberAsChoice(
-               XXO("Bit Rate:"),
-               {wxT("/FileFormats/AMRNBBitRate"),
-                12200},
-               AMRNBBitRateNames,
-               &AMRNBBitRateValues
-            );
+            S.TieNumberAsChoice(XXO("Bit Rate:"), Setting,
+               AMRNBBitRateNames, &AMRNBBitRateValues);
          }
          S.EndMultiColumn();
       }
@@ -727,19 +720,15 @@ ExportFFmpegWMAOptions::~ExportFFmpegWMAOptions()
 ///
 void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
 {
+   IntSetting Setting{ L"/FileFormats/WMABitRate", 128000 };
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieNumberAsChoice(
-               XXO("Bit Rate:"),
-               {wxT("/FileFormats/WMABitRate"),
-                128000},
-               WMABitRateNames,
-               &WMABitRateValues
-            );
+            S.TieNumberAsChoice(XXO("Bit Rate:"),
+               Setting, WMABitRateNames, &WMABitRateValues);
          }
          S.EndMultiColumn();
       }
@@ -1819,6 +1808,9 @@ void ExportFFmpegOptions::FetchCodecList()
 ///
 void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
 {
+   IntSetting PredictionOrderSetting{ L"/FileFormats/FFmpegPredOrderMethod",
+      4 };  // defaults to Full search
+
    S.StartVerticalLay(1);
    S.StartMultiColumn(1, wxEXPAND);
    {
@@ -1935,8 +1927,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                      .MinSize( { 100, -1 } )
                      .TieNumberAsChoice(
                         XXO("PdO Method:"),
-                        {wxT("/FileFormats/FFmpegPredOrderMethod"),
-                         4}, // Full search
+                        PredictionOrderSetting,
                         PredictionOrderMethodNames
                      );
 

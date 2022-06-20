@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../RefreshCode.h"
 #include "../../TimeTrack.h"
 #include "../../TrackArt.h"
@@ -150,7 +150,9 @@ UIHandlePtr EnvelopeHandle::HitEnvelope
    // For amplification using the envelope we introduced the idea of contours.
    // The contours have the same shape as the envelope, which may be partially off-screen.
    // The contours are closer in to the center line.
-   int ContourSpacing = (int)(rect.height / (2 * (zoomMax - zoomMin)));
+   // Beware very short rectangles!  Make this at least 1
+   int ContourSpacing = std::max(1,
+      static_cast<int>(rect.height / (2 * (zoomMax - zoomMin))));
    const int MaxContours = 2;
 
    // Adding ContourSpacing/2 selects a region either side of the contour.

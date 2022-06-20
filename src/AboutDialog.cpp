@@ -138,18 +138,23 @@ void AboutDialog::CreateCreditsList()
 
    // The Audacity Team: developers and support
 
+   AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
+   AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Pavel Penikov"), testerFormat, roleTeamMember);
+   AddCredit(wxT("Pietro Marcello"), developerFormat, roleTeamMember);
+   AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
    
    // Former Musers
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleExMuse);
    AddCredit(wxT("Jouni Helminen"), designerFormat, roleExMuse);
+   AddCredit(wxT("Pavel Penikov"), testerFormat, roleExMuse);
    
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
@@ -407,6 +412,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << GetCreditsByRole(roleTeamMember)
 	  
 	  << wxT("<p><b>")
+	  /* i18n-hint: Musers are people working at Muse Group */
       << XO("Former Musers")
       << wxT("</b><br>")
       << GetCreditsByRole(roleExMuse)
@@ -638,9 +644,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       << wxT("<table>");   // start table of file formats supported
 
 
-   #ifdef USE_LIBMAD
+   #if defined(USE_LIBMAD)
    /* i18n-hint: This is what the library (libmad) does - imports MP3 files */
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), enabled);
+   #elif defined(USE_LIBID3TAG)
+   AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Importing"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
    #endif

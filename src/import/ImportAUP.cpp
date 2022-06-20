@@ -901,7 +901,7 @@ bool AUPImportFileHandle::HandleWaveTrack(XMLTagHandler *&handler)
 {
    auto &trackFactory = WaveTrackFactory::Get(mProject);
    handler = mWaveTrack =
-      TrackList::Get(mProject).Add(trackFactory.NewWaveTrack());
+      TrackList::Get(mProject).Add(trackFactory.Create());
 
    // No active clip.  In early versions of Audacity, there was a single
    // implied clip so we'll create a clip when the first "sequence" is

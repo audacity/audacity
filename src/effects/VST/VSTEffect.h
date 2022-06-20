@@ -12,7 +12,8 @@
 
 #if USE_VST
 
-#include "EffectInterface.h"
+#include "../StatefulPerTrackEffect.h"
+#include "CFResources.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -29,7 +30,6 @@ class NumericTextCtrl;
 class VSTControl;
 #include "VSTControl.h"
 
-#define VSTCMDKEY wxT("-checkvst")
 /* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
    developed by Steinberg GmbH */
 #define VSTPLUGINTYPE XO("VST")
@@ -86,14 +86,14 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffect is an Audacity EffectProcessor that forwards actual 
+/// VSTEffect is an Audacity effect that forwards actual
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class VSTEffect final : public wxEvtHandler,
-                  public EffectUIClientInterface,
-                  public XMLTagHandler,
-                  public VSTEffectLink
+class VSTEffect final
+   : public StatefulPerTrackEffect
+   , public XMLTagHandler
+   , public VSTEffectLink
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
@@ -116,26 +116,28 @@ class VSTEffect final : public wxEvtHandler,
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, EffectSettings &settings) const override;
+   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
+   bool SaveUserPreset(
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
-
-   // EffectProcessor implementation
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -155,9 +157,9 @@ class VSTEffect final : public wxEvtHandler,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
+   bool RealtimeResume() override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
@@ -169,16 +171,18 @@ class VSTEffect final : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(EffectHostInterface* host) override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
-   void ImportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -202,8 +206,9 @@ private:
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
-   bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool SaveParameters(
+       const RegistryPath & group, const EffectSettings &settings) const;
 
    // Realtime
    unsigned GetChannelCount();
@@ -232,10 +237,10 @@ private:
    bool LoadFXP(const wxFileName & fn);
    bool LoadXML(const wxFileName & fn);
    bool LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun);
-   void SaveFXB(const wxFileName & fn);
-   void SaveFXP(const wxFileName & fn);
-   void SaveXML(const wxFileName & fn);
-   void SaveFXProgram(wxMemoryBuffer & buf, int index);
+   void SaveFXB(const wxFileName & fn) const;
+   void SaveFXP(const wxFileName & fn) const;
+   void SaveXML(const wxFileName & fn) const;
+   void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
@@ -264,10 +269,12 @@ private:
 
    intptr_t callDispatcher(int opcode, int index,
                            intptr_t value, void *ptr, float opt) override;
+   intptr_t constCallDispatcher(int opcode, int index,
+                           intptr_t value, void *ptr, float opt) const;
    void callProcessReplacing(
       const float *const *inputs, float *const *outputs, int sampleframes);
    void callSetParameter(int index, float value);
-   float callGetParameter(int index);
+   float callGetParameter(int index) const;
    void callSetProgram(int index);
    void callSetChunk(bool isPgm, int len, void *buf);
    void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);
@@ -283,7 +290,6 @@ private:
    using ModuleHandle = std::unique_ptr < char, ModuleDeleter > ;
 #endif
 
-   EffectHostInterface *mHost{};
    PluginID mID;
    PluginPath mPath;
    unsigned mAudioIns;
@@ -309,12 +315,7 @@ private:
 #if defined(__WXMAC__)
    // These members must be ordered after mModule
 
-   struct BundleDeleter {
-      void operator() (void*) const;
-   };
-   using BundleHandle = std::unique_ptr<
-      __CFBundle, BundleDeleter
-   >;
+   using BundleHandle = CF_ptr<CFBundleRef>;
 
    BundleHandle mBundleRef;
 
@@ -425,10 +426,6 @@ public:
 
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginPath & path) override;
-
-   // VSTEffectModule implementation
-
-   static void Check(const wxChar *path);
 };
 
 #endif // USE_VST

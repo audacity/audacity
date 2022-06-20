@@ -122,6 +122,7 @@ namespace FileNames
    FILES_API FilePath MacroDir();
    FILES_API FilePath NRPDir();
    FILES_API FilePath NRPFile();
+   FILES_API FilePath Configuration();
    FILES_API FilePath PluginRegistry();
    FILES_API FilePath PluginSettings();
 

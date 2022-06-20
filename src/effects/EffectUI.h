@@ -19,7 +19,7 @@
 #include <optional>
 
 #include "Identifier.h"
-#include "EffectHostInterface.h"
+#include "EffectPlugin.h"
 #include "Observer.h"
 #include "PluginInterface.h"
 #include "effects/RealtimeEffectManager.h"
@@ -42,11 +42,10 @@ class EffectUIHost final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   EffectUIHost(wxWindow *parent,
-                AudacityProject &project,
-                EffectUIHostInterface &effect,
-                EffectUIClientInterface &client,
-                EffectSettingsAccess &access);
+   EffectUIHost(wxWindow *parent, AudacityProject &project,
+      EffectPlugin &effect, EffectUIClientInterface &client,
+      EffectInstance &instance, EffectSettingsAccess &access,
+      const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
@@ -54,6 +53,7 @@ public:
 
    int ShowModal() override;
 
+   void InitializeRealtime();
    bool Initialize();
 
 private:
@@ -88,51 +88,54 @@ private:
    wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
    void LoadUserPresets();
 
-   void InitializeRealtime();
    void CleanupRealtime();
 
 private:
    Observer::Subscription mSubscription;
 
    AudacityProject &mProject;
-   wxWindow *mParent;
-   EffectUIHostInterface &mEffectUIHost;
+   wxWindow *const mParent;
+   EffectPlugin &mEffectUIHost;
    EffectUIClientInterface &mClient;
    //! @invariant not null
-   const EffectUIHostInterface::EffectSettingsAccessPtr mpAccess;
-   RealtimeEffectState *mpState{ nullptr };
+   const std::shared_ptr<EffectInstance> mpInstance;
+   //! @invariant not null
+   const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
+   EffectPlugin::EffectSettingsAccessPtr mpAccess;
+   EffectPlugin::EffectSettingsAccessPtr mpAccess2;
+   std::shared_ptr<RealtimeEffectState> mpState{};
    std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;
-   bool mInitialized;
-   bool mSupportsRealtime;
-   bool mIsGUI;
-   bool mIsBatch;
+   bool mInitialized{ false };
+   const bool mSupportsRealtime;
+   bool mIsGUI{};
+   bool mIsBatch{};
 
-   wxButton *mApplyBtn;
-   wxButton *mCloseBtn;
-   wxButton *mMenuBtn;
-   wxButton *mPlayBtn;
-   wxButton *mRewindBtn;
-   wxButton *mFFwdBtn;
-   wxCheckBox *mEnableCb;
+   wxButton *mApplyBtn{};
+   wxButton *mCloseBtn{};
+   wxButton *mMenuBtn{};
+   wxButton *mPlayBtn{};
+   wxButton *mRewindBtn{};
+   wxButton *mFFwdBtn{};
+   wxCheckBox *mEnableCb{};
 
-   wxButton *mEnableToggleBtn;
-   wxButton *mPlayToggleBtn;
+   wxButton *mEnableToggleBtn{};
+   wxButton *mPlayToggleBtn{};
 
    wxBitmap mPlayBM;
    wxBitmap mPlayDisabledBM;
    wxBitmap mStopBM;
    wxBitmap mStopDisabledBM;
 
-   bool mEnabled;
+   bool mEnabled{ true };
 
-   bool mDisableTransport;
-   bool mPlaying;
-   bool mCapturing;
+   bool mDisableTransport{ true };
+   bool mPlaying{};
+   bool mCapturing{};
 
    SelectedRegion mRegion;
-   double mPlayPos;
+   double mPlayPos{ 0.0 };
 
    bool mDismissed{};
    std::optional<RealtimeEffects::SuspensionScope> mSuspensionScope;
@@ -150,8 +153,9 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   wxDialog *DialogFactory( wxWindow &parent, EffectUIHostInterface &host,
-      EffectUIClientInterface &client, EffectSettingsAccess &access);
+   wxDialog *DialogFactory( wxWindow &parent, EffectPlugin &host,
+      EffectUIClientInterface &client, EffectInstance &instance,
+      EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

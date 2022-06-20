@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-02-16 04:52+0000\n"
+"PO-Revision-Date: 2022-05-31 21:02+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -9984,11 +9984,11 @@ msgstr "Bieżący program został zmodyfikowany.\nPorzucić zmiany?"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "File could not be loaded"
-msgstr "Plik nie może być wczytany"
+msgstr "Plik nie może zostać wczytany"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "File could not be saved"
-msgstr "Plik nie może być zapisany"
+msgstr "Plik nie może zostać zapisany"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format

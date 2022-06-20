@@ -762,15 +762,27 @@ void ToolBar::Detach( wxSizer *sizer )
    mHSizer->Detach( sizer );
 }
 
-void ToolBar::MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn )
+void ToolBar::MakeMacRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
    theTheme.ReplaceImage( eBmpOut, &theTheme.Image( eBmpIn ));
+}
+
+void ToolBar::MakeMacRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size)
+{
+   MakeMacRecoloredImage( eBmpOut, eBmpIn );
+   theTheme.Image( eBmpOut ).Rescale( size.GetWidth(), size.GetHeight() );
 }
 
 void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
    // Don't recolour the buttons...
    MakeMacRecoloredImage( eBmpOut, eBmpIn );
+}
+
+void ToolBar::MakeRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size)
+{
+   MakeRecoloredImage( eBmpOut, eBmpIn );
+   theTheme.Image( eBmpOut ).Rescale( size.GetWidth(), size.GetHeight() );
 }
 
 void ToolBar:: MakeButtonBackgroundsLarge()
@@ -867,6 +879,43 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
             *disable2, processdownevents);
 
    return button;
+}
+
+// This is a convenience function that allows for button creation in
+// MakeButtons() with fewer arguments
+/// @param parent            Parent window for the button.
+/// @param eEnabledUp        Background for when button is Up.
+/// @param eEnabledDown      Background for when button is Down.
+/// @param eDisabled         Foreground when disabled.
+/// @param id                Windows Id.
+/// @param processdownevents true iff button handles down events.
+/// @param label             Button label
+AButton * ToolBar::MakeButton(ToolBar *parent,
+                              teBmps eEnabledUp,
+                              teBmps eEnabledDown,
+                              teBmps eDisabled,
+                              int id,
+                              bool processdownevents,
+                              const TranslatableString &label)
+{
+   AButton *r = ToolBar::MakeButton(parent,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
+      eEnabledUp, eEnabledDown, eDisabled,
+      wxWindowID( id ),
+      wxDefaultPosition, processdownevents,
+      theTheme.ImageSize( bmpRecoloredUpLarge ));
+   r->SetLabel( label );
+   enum {
+      deflation =
+#ifdef __WXMAC__
+      6
+#else
+      12
+#endif
+   };
+   r->SetFocusRect( r->GetClientRect().Deflate( deflation, deflation ) );
+
+   return r;
 }
 
 //static

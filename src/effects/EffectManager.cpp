@@ -28,6 +28,7 @@ effects.
 
 #include "../widgets/AudacityMessageBox.h"
 
+#include "ConfigInterface.h"
 #include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
 #include "../commands/AudacityCommand.h"
@@ -57,16 +58,11 @@ EffectManager::~EffectManager()
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
 const PluginID & EffectManager::RegisterEffect(
-   std::unique_ptr<EffectUIHostInterface> uEffect)
+   std::unique_ptr<EffectPlugin> uEffect)
 {
    auto pEffect = uEffect.get();
-   // Change the "grip" on the object
-   // uEffect is expected to be a self-hosting Nyquist effect
-   auto uDefinition = std::unique_ptr<EffectDefinitionInterface>(
-      dynamic_cast<EffectUIClientInterface*>(uEffect.release()));
-   wxASSERT(uDefinition);
    const PluginID & ID =
-      PluginManager::Get().RegisterPlugin(std::move(uDefinition), PluginTypeEffect);
+      PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
    mEffects[ID] = { pEffect, {} };
    return ID;
 }
@@ -111,6 +107,9 @@ TranslatableString EffectManager::GetCommandName(const PluginID & ID)
 
 TranslatableString EffectManager::GetEffectFamilyName(const PluginID & ID)
 {
+   if(auto description = PluginManager::Get().GetPlugin(ID))
+      return TranslatableString { description->GetEffectFamily(), {} };
+
    auto effect = GetEffect(ID);
    if (effect)
       return effect->GetDefinition().GetFamily().Msgid();
@@ -119,6 +118,9 @@ TranslatableString EffectManager::GetEffectFamilyName(const PluginID & ID)
 
 TranslatableString EffectManager::GetVendorName(const PluginID & ID)
 {
+   if(auto description = PluginManager::Get().GetPlugin(ID))
+      return TranslatableString { description->GetVendor(), {} };
+   
    auto effect = GetEffect(ID);
    if (effect)
       return effect->GetDefinition().GetVendor().Msgid();
@@ -166,19 +168,27 @@ TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   ComponentInterface *command = nullptr;
-   if (auto effect = GetEffect(ID))
-      // Fixing this will be a large and difficult thing, so for the time being we only cast the constness away
-      command = const_cast<EffectDefinitionInterface*>(&effect->GetDefinition());
-   if( !command )
+   const EffectSettingsManager *effect = nullptr;
+   const EffectSettings *settings;
+   AudacityCommand *command = nullptr;
+
+   if (auto [edi, pSettings] = GetEffectAndDefaultSettings(ID); edi) {
+      effect = &edi->GetDefinition();
+      assert(pSettings); // postcondition
+      settings = pSettings;
+   }
+   else
       command = GetAudacityCommand( ID );
-   if( !command )
+   if ( !effect && !command )
       return;
 
-   ShuttleParams NullShuttle;
+   ConstSettingsVisitor NullShuttle;
+
    // Test if it defines any parameters at all.
-   bool bHasParams = command->DefineParams( NullShuttle );
-   if( (flags ==0) && !bHasParams )
+   bool bHasParams = command
+      ? command->VisitSettings( NullShuttle )
+      : effect->VisitSettings( NullShuttle, *settings );
+   if ( (flags == 0) && !bHasParams )
       return;
 
    // This is capturing the output context into the shuttle.
@@ -189,10 +199,12 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    // to (more sophisticated) users
    S.AddItem( GetCommandIdentifier( ID ).GET(), "id" );
    S.AddItem( GetCommandName( ID ).Translation(), "name" );
-   if( bHasParams ){
+   if ( bHasParams ) {
       S.StartField( "params" );
       S.StartArray();
-      command->DefineParams( S );
+      command
+         ? command->VisitSettings( S )
+         : effect->VisitSettings( S, *settings );
       S.EndArray();
       S.EndField();
    }
@@ -233,12 +245,15 @@ bool EffectManager::SupportsAutomation(const PluginID & ID)
    return false;
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetEffectParameters(const PluginID & ID)
 {
-   if (auto effect = GetEffect(ID)) {
+   auto pair = GetEffectAndDefaultSettings(ID);
+   if (auto effect = pair.first) {
+      assert(pair.second); // postcondition
       wxString parms;
 
-      effect->GetAutomationParametersAsString(parms);
+      effect->SaveSettingsAsString(*pair.second, parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -256,7 +271,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    {
       wxString parms;
 
-      command->GetAutomationParametersAsString(parms);
+      command->SaveSettingsAsString(parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -270,18 +285,24 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    return wxEmptyString;
 }
 
-bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & params)
+// This function is used only in the macro programming user interface
+bool EffectManager::SetEffectParameters(
+   const PluginID & ID, const wxString & params)
 {
-   if (auto effect = GetEffect(ID)) {
+   auto pair = GetEffectAndDefaultSettings(ID);
+   if (auto effect = pair.first) {
+      assert(pair.second); // postcondition
+      auto &settings = *pair.second;
       CommandParameters eap(params);
 
+      // Check first for what GetDefaultPreset() might have written
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return effect
-            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
+         return effect->LoadSettingsFromString(
+            eap.Read(wxT("Use Preset")), settings);
       }
 
-      return effect->SetAutomationParametersFromString(params);
+      return effect->LoadSettingsFromString(params, settings);
    }
    AudacityCommand *command = GetAudacityCommand(ID);
    
@@ -291,13 +312,14 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
       command->Init(); 
       CommandParameters eap(params);
 
+      // Check first for what GetDefaultPreset() might have written
       if (eap.HasEntry(wxT("Use Preset")))
       {
          return command
-            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
+            ->LoadSettingsFromString(eap.Read(wxT("Use Preset")));
       }
 
-      return command->SetAutomationParametersFromString(params);
+      return command->LoadSettingsFromString(params);
    }
    return false;
 }
@@ -313,10 +335,10 @@ bool EffectManager::PromptUser(
    if (auto effect = GetEffect(ID)) {
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
-      auto pSettings = GetDefaultSettings(ID);
-      if (pSettings)
+      if (const auto pSettings = GetDefaultSettings(ID))
          result = effect->ShowHostInterface(
             parent, factory,
+            *effect->MakeInstance(), // short-lived object
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;
       return result;
@@ -333,19 +355,19 @@ bool EffectManager::PromptUser(
    return result;
 }
 
-static bool HasCurrentSettings(EffectHostInterface &host)
+static bool HasCurrentSettings(EffectPlugin &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup());
 }
 
-static bool HasFactoryDefaults(EffectHostInterface &host)
+static bool HasFactoryDefaults(EffectPlugin &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
       FactoryDefaultsGroup());
 }
 
-static RegistryPaths GetUserPresets(EffectHostInterface &host)
+static RegistryPaths GetUserPresets(EffectPlugin &host)
 {
    RegistryPaths presets;
    GetConfigSubgroups(host.GetDefinition(), PluginSettings::Private,
@@ -384,7 +406,7 @@ namespace {
 class EffectPresetsDialog final : public wxDialogWrapper
 {
 public:
-   EffectPresetsDialog(wxWindow *parent, EffectUIHostInterface *effect);
+   EffectPresetsDialog(wxWindow *parent, EffectPlugin *effect);
    virtual ~EffectPresetsDialog();
 
    wxString GetSelected() const;
@@ -422,7 +444,7 @@ BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 EffectPresetsDialog::EffectPresetsDialog(
-   wxWindow *parent, EffectUIHostInterface *effect)
+   wxWindow *parent, EffectPlugin *effect)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Select Preset"))
 {
    ShuttleGui S(this, eIsCreating);
@@ -483,21 +505,21 @@ wxString EffectPresetsDialog::GetSelected() const
 void EffectPresetsDialog::SetSelected(const wxString & parms)
 {
    wxString preset = parms;
-   if (preset.StartsWith(EffectUIHostInterface::kUserPresetIdent))
+   if (preset.StartsWith(EffectPlugin::kUserPresetIdent))
    {
-      preset.Replace(EffectUIHostInterface::kUserPresetIdent, wxEmptyString, false);
+      preset.Replace(EffectPlugin::kUserPresetIdent, wxEmptyString, false);
       SetPrefix(XO("User Presets"), preset);
    }
-   else if (preset.StartsWith(EffectUIHostInterface::kFactoryPresetIdent))
+   else if (preset.StartsWith(EffectPlugin::kFactoryPresetIdent))
    {
-      preset.Replace(EffectUIHostInterface::kFactoryPresetIdent, wxEmptyString, false);
+      preset.Replace(EffectPlugin::kFactoryPresetIdent, wxEmptyString, false);
       SetPrefix(XO("Factory Presets"), preset);
    }
-   else if (preset.StartsWith(EffectUIHostInterface::kCurrentSettingsIdent))
+   else if (preset.StartsWith(EffectPlugin::kCurrentSettingsIdent))
    {
       SetPrefix(XO("Current Settings"), wxEmptyString);
    }
-   else if (preset.StartsWith(EffectUIHostInterface::kFactoryDefaultsIdent))
+   else if (preset.StartsWith(EffectPlugin::kFactoryDefaultsIdent))
    {
       SetPrefix(XO("Factory Defaults"), wxEmptyString);
    }
@@ -519,7 +541,7 @@ void EffectPresetsDialog::SetPrefix(
       {
          mPresets->SetSelection(0);
       }
-      mSelection = EffectUIHostInterface::kUserPresetIdent
+      mSelection = EffectPlugin::kUserPresetIdent
          + mPresets->GetStringSelection();
    }
    else if (type == XO("Factory Presets"))
@@ -540,20 +562,20 @@ void EffectPresetsDialog::SetPrefix(
       {
          mPresets->SetSelection(0);
       }
-      mSelection = EffectUIHostInterface::kFactoryPresetIdent
+      mSelection = EffectPlugin::kFactoryPresetIdent
          + mPresets->GetStringSelection();
    }
    else if (type == XO("Current Settings"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
-      mSelection = EffectUIHostInterface::kCurrentSettingsIdent;
+      mSelection = EffectPlugin::kCurrentSettingsIdent;
    }
    else if (type == XO("Factory Defaults"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
-      mSelection = EffectUIHostInterface::kFactoryDefaultsIdent;
+      mSelection = EffectPlugin::kFactoryDefaultsIdent;
    }
 }
 
@@ -580,7 +602,7 @@ void EffectPresetsDialog::UpdateUI()
          mPresets->Append(preset);
       mPresets->Enable(true);
       mPresets->SetSelection(selected);
-      mSelection = EffectUIHostInterface::kUserPresetIdent
+      mSelection = EffectPlugin::kUserPresetIdent
          + mPresets->GetString(selected);
    }
    else if (type == _("Factory Presets"))
@@ -603,20 +625,20 @@ void EffectPresetsDialog::UpdateUI()
       }
       mPresets->Enable(true);
       mPresets->SetSelection(selected);
-      mSelection = EffectUIHostInterface::kFactoryPresetIdent
+      mSelection = EffectPlugin::kFactoryPresetIdent
          + mPresets->GetString(selected);
    }
    else if (type == _("Current Settings"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
-      mSelection = EffectUIHostInterface::kCurrentSettingsIdent;
+      mSelection = EffectPlugin::kCurrentSettingsIdent;
    }
    else if (type == _("Factory Defaults"))
    {
       mPresets->Clear();
       mPresets->Enable(false);
-      mSelection = EffectUIHostInterface::kFactoryDefaultsIdent;
+      mSelection = EffectPlugin::kFactoryDefaultsIdent;
    }
 }
 
@@ -641,6 +663,7 @@ void EffectPresetsDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent)
 {
    auto effect = GetEffect(ID);
@@ -686,6 +709,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
    return preset;
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetDefaultPreset(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
@@ -698,11 +722,11 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    wxString preset;
    if (HasCurrentSettings(*effect))
    {
-      preset = EffectUIHostInterface::kCurrentSettingsIdent;
+      preset = EffectPlugin::kCurrentSettingsIdent;
    }
    else if (HasFactoryDefaults(*effect))
    {
-      preset = EffectUIHostInterface::kFactoryDefaultsIdent;
+      preset = EffectPlugin::kFactoryDefaultsIdent;
    }
 
    if (!preset.empty())
@@ -716,25 +740,23 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    return preset;
 }
 
-void EffectManager::SetBatchProcessing(const PluginID & ID, bool start)
+void EffectManager::BatchProcessingOn(const PluginID & ID)
 {
-   auto effect = GetEffect(ID);
-   if (effect)
-   {
-      effect->SetBatchProcessing(start);
-      return;
-   }
-
-   AudacityCommand *command = GetAudacityCommand(ID);
-   if (command)
-   {
-      command->SetBatchProcessing(start);
-      return;
-   }
-
+   if (auto effect = GetEffect(ID))
+      effect->SetBatchProcessing();
+   else if (auto command = GetAudacityCommand(ID))
+      command->SetBatchProcessing(true);
 }
 
-EffectUIHostInterface *EffectManager::GetEffect(const PluginID & ID)
+void EffectManager::BatchProcessingOff(const PluginID & ID)
+{
+   if (auto effect = GetEffect(ID))
+      effect->UnsetBatchProcessing();
+   else if (auto command = GetAudacityCommand(ID))
+      command->SetBatchProcessing(false);
+}
+
+EffectPlugin *EffectManager::GetEffect(const PluginID & ID)
 {
    return DoGetEffect(ID).effect;
 }
@@ -744,42 +766,47 @@ EffectSettings *EffectManager::GetDefaultSettings(const PluginID & ID)
    return GetEffectAndDefaultSettings(ID).second;
 }
 
-std::pair<EffectUIHostInterface *, EffectSettings *>
+std::pair<EffectPlugin *, EffectSettings *>
 EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 {
    auto &results = DoGetEffect(ID);
-   if (results.effect) {
-      auto &settings = results.settings;
-      if (!settings.has_value())
-         // Create on demand
-         settings = results.effect->GetDefinition().MakeSettings();
-      return {results.effect, &settings};
-   }
-   return {nullptr, nullptr};
+   if (results.effect)
+      return {results.effect, &results.settings};
+   else
+      return {nullptr, nullptr};
 }
 
 namespace {
-void InitializePreset(EffectDefinitionInterfaceEx &definition) {
-   bool haveDefaults;
-   GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
-      wxT("Initialized"), haveDefaults, false);
-   if (!haveDefaults)
-   {
-      definition.SaveUserPreset(FactoryDefaultsGroup());
-      SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
-         wxT("Initialized"), true);
+// Before: settings are as defaulted by `manager.MakeSettings()`
+// Do as needed (once, persistently, when the plug-in is first used): store
+// those default values into the config under "FactoryDefaults" preset
+// After: settings are loaded for the "CurrentSettings" preset
+void InitializePreset(
+   EffectSettingsManager &manager, EffectSettings &settings) {
+   // Config key remembering whether we already stored FactoryDefaults
+   constexpr auto InitializedKey = L"Initialized";
+   if (bool haveDefaults{};
+      GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
+         InitializedKey, haveDefaults, false),
+      !haveDefaults
+   ) {
+      manager.SaveUserPreset(FactoryDefaultsGroup(), settings);
+      SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
+         InitializedKey, true);
    }
-   definition.LoadUserPreset(CurrentSettingsGroup());
+   manager.LoadUserPreset(CurrentSettingsGroup(), settings);
 }
 
-ComponentInterface *LoadComponent(const PluginID &ID)
+std::pair<ComponentInterface *, EffectSettings>
+LoadComponent(const PluginID &ID)
 {
-   if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
+   if (auto result = dynamic_cast<EffectSettingsManager*>(
       PluginManager::Get().Load(ID))) {
-      InitializePreset(*result);
-      return result;
+      auto settings = result->MakeSettings();
+      InitializePreset(*result, settings);
+      return { result, std::move(settings) };
    }
-   return nullptr;
+   return { nullptr, {} };
 }
 }
 
@@ -798,21 +825,19 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    if (auto iter = mEffects.find(ID); iter != mEffects.end())
       return iter->second;
    else {
-      std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      const auto component = LoadComponent(ID);
+      auto [component, settings] = LoadComponent(ID);
       if (!component)
          return empty;
 
-      if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
-          effect && effect->Startup(nullptr))
-         // Self-hosting or "legacy" effect objects
-         return (mEffects[ID] = { effect, {} });
-      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
-          client && (hostEffect = std::make_shared<Effect>())->Startup(client))
-         // plugin that inherits only EffectUIClientInterface needs a host
-         return (mEffects[ID] =
-            { (mHostEffects[ID] = move(hostEffect)).get(), {} });
+      if (auto effect = dynamic_cast<EffectPlugin *>(component))
+         return (mEffects[ID] = { effect, std::move(settings) });
+      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component)) {
+         // Nothing inherits EffectUIClientInterface now that does not also
+         // inherit EffectPlugin
+         wxASSERT(false);
+         return empty;
+      }
       else {
          if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
@@ -877,26 +902,8 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
    return empty;
 }
 
-/* TODO:  fix the effect management so that repeated calls with the same ID
- give Effect objects with independent state for effect settings.
- */
-std::unique_ptr<EffectProcessor>
-EffectManager::NewEffect(const PluginID & ID)
+const EffectInstanceFactory *
+EffectManager::GetInstanceFactory(const PluginID &ID)
 {
-   // Must have a "valid" ID
-   if (ID.empty())
-      return nullptr;
-
-   // This will instantiate the effect client if it hasn't already been done
-   // But it only makes a unique object for a given ID
-   auto component = LoadComponent(ID);
-   if (!component)
-      return nullptr;
-
-   auto effect = std::make_unique<Effect>();
-   auto client = dynamic_cast<EffectUIClientInterface *>(component);
-   if (client && effect->Startup(client))
-      return effect;
-   else
-      return nullptr;
+   return Get().GetEffect(ID);
 }

@@ -12,15 +12,18 @@
 #define __AUDACITY_EFFECT_REPEAT__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxTextCtrl;
 class ShuttleGui;
 
 class wxStaticText;
 
-class EffectRepeat final : public Effect
+class EffectRepeat final : public StatefulEffect
 {
 public:
+   static inline EffectRepeat *
+   FetchParameters(EffectRepeat &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectRepeat();
@@ -35,18 +38,13 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -56,14 +54,17 @@ private:
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
 
-private:
    int repeatCount;
 
    wxTextCtrl   *mRepeatCount;
    wxStaticText *mCurrentTime;
    wxStaticText *mTotalTime;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
+   L"Count",1,  1,    INT_MAX,  1  };
 };
 
 #endif

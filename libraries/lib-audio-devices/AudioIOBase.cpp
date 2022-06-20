@@ -938,6 +938,8 @@ DoubleSetting AudioIOLatencyDuration{
    L"/AudioIO/LatencyDuration", 100.0 };
 StringSetting AudioIOPlaybackDevice{
    L"/AudioIO/PlaybackDevice", L"" };
+StringSetting AudioIOPlaybackSource{
+   L"/AudioIO/PlaybackSource", L"" };
 DoubleSetting AudioIOPlaybackVolume {
    L"/AudioIO/PlaybackVolume", 1.0 };
 IntSetting AudioIORecordChannels{

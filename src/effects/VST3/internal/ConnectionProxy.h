@@ -16,7 +16,7 @@
 namespace internal
 {
    //!Host's proxy object between connection points
-   /*! Though it's not neccessary to place proxy, it's recommended to do so.
+   /*! Though it's not necessary to place proxy, it's recommended to do so.
     * Right now the only "useful" task performed by this proxy is ensuring
     * that messages are sent on the same thread on which proxy object itself
     * was created

@@ -246,7 +246,7 @@ function( audacity_append_common_compiler_options var use_pch )
 
          # This renames a good use of this C++ keyword that we don't need
 	      # to review when hunting for leaks because of naked new and delete.
-	 -DPROHIBITED==delete
+	      -DPROHIBITED==delete
 
          # Reviewed, certified, non-leaky uses of NEW that immediately entrust
 	      # their results to RAII objects.
@@ -262,17 +262,18 @@ function( audacity_append_common_compiler_options var use_pch )
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=defaulted-function-deleted>
 	      # Yes, CMake will change -D to /D as needed for Windows:
          -DWXINTL_NO_GETTEXT_MACRO
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
          $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
 
          # Define/undefine _DEBUG
-	 # Yes, -U to /U too as needed for Windows:
-	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
+         # Yes, -U to /U too as needed for Windows:
+         $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
 
          $<$<PLATFORM_ID:Darwin>:-DUSE_AQUA_THEME>
-   )   
+   )
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
       list( APPEND ${var} -DIS_ALPHA -DUSE_ALPHA_MANUAL )
@@ -281,7 +282,7 @@ function( audacity_append_common_compiler_options var use_pch )
    else()
       list( APPEND ${var} -DIS_RELEASE )
    endif()
-  
+
    set( ${var} "${${var}}" PARENT_SCOPE )
 endfunction()
 

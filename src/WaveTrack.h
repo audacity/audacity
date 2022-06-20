@@ -105,14 +105,14 @@ private:
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
-
+   
    double GetOffset() const override;
    void SetOffset(double o) override;
    ChannelType GetChannelIgnoringPan() const override;
    ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
-   bool LinkConsistencyCheck() override;
+   bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
    /** @brief Get the time at which the first clip in the track starts
     *
@@ -177,13 +177,19 @@ private:
 
    Track::Holder Cut(double t0, double t1) override;
 
-   // Make another track copying format, rate, color, etc. but containing no
-   // clips
-   // It is important to pass the correct factory (that for the project
-   // which will own the copy) in the unusual case that a track is copied from
-   // another project or the clipboard.  For copies within one project, the
-   // default will do.
-   Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {} ) const;
+   //! Make another track copying format, rate, color, etc. but containing no
+   //! clips
+   /*!
+    It is important to pass the correct factory (that for the project
+    which will own the copy) in the unusual case that a track is copied from
+    another project or the clipboard.  For copies within one project, the
+    default will do.
+
+    @param keepLink if false, make the new track mono.  But always preserve
+    any other track group data.
+    */
+   Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
+      bool keepLink = true) const;
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
@@ -596,8 +602,8 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs = nullptr);
 
 // Non-mutating version of the above
-void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
-   SampleBlockIDSet *pIDs = nullptr);
+void InspectBlocks(const TrackList &tracks,
+   BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
 class ProjectRate;
 
@@ -623,14 +629,23 @@ class AUDACITY_DLL_API WaveTrackFactory final
    const SampleBlockFactoryPtr &GetSampleBlockFactory() const
    { return mpFactory; }
 
+   /**
+    * \brief Creates an unnamed empty WaveTrack with default sample format and default rate
+    * \return Orphaned WaveTrack
+    */
+   std::shared_ptr<WaveTrack> Create();
+
+   /**
+    * \brief Creates an unnamed empty WaveTrack with custom sample format and custom rate
+    * \param format Desired sample format
+    * \param rate Desired sample rate
+    * \return Orphaned WaveTrack
+    */
+   std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate);
+
  private:
    const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
- public:
-   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
-   std::shared_ptr<WaveTrack> NewWaveTrack(
-      sampleFormat format = (sampleFormat)0,
-      double rate = 0);
 };
 
 extern AUDACITY_DLL_API BoolSetting

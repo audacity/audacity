@@ -85,5 +85,7 @@ class DeviceToolBar final : public ToolBar {
    DECLARE_EVENT_TABLE()
 };
 
+int DeviceToolbarPrefsID();
+
 #endif
 

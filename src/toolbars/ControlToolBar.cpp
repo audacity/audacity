@@ -150,33 +150,6 @@ void ControlToolBar::Create(wxWindow * parent)
    UpdatePrefs();
 }
 
-// This is a convenience function that allows for button creation in
-// MakeButtons() with fewer arguments
-AButton *ControlToolBar::MakeButton(ControlToolBar *pBar,
-                                    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-                                    int id,
-                                    bool processdownevents,
-                                    const TranslatableString &label)
-{
-   AButton *r = ToolBar::MakeButton(pBar,
-      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
-      eEnabledUp, eEnabledDown, eDisabled,
-      wxWindowID(id),
-      wxDefaultPosition, processdownevents,
-      theTheme.ImageSize( bmpRecoloredUpLarge ));
-   r->SetLabel(label);
-   enum { deflation =
-#ifdef __WXMAC__
-      6
-#else
-      12
-#endif
-   };
-   r->SetFocusRect( r->GetClientRect().Deflate( deflation, deflation ) );
-
-   return r;
-}
-
 // static
 void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
                                          teBmps eEnabledUp,

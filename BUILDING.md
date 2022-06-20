@@ -124,7 +124,7 @@ Generally, steps 1-5 are only needed the first-time you configure. Then, after y
 
 ### Building with ASIO support on Windows
 
-To enable ASIO support, please select `audacity_has_asio_support=On` in CMake after the intial configuration and then run select **Configure** again as described above. ASIO is only supported on Windows and only for 64-bit builds.
+To enable ASIO support, please select `audacity_has_asio_support=On` in CMake after the initial configuration and then run select **Configure** again as described above. ASIO is only supported on Windows and only for 64-bit builds.
 
 ## macOS
 
@@ -244,8 +244,9 @@ This option implies `-Daudacity_obey_system_dependencies=On` and disables `local
 
 ### Disabling pre-built binaries downloads for Conan
 
-It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. This option will trigger rebuild every
-time CMake configuration changes.
+It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. 
+
+Additionally, passing `-Daudacity_conan_force_build_dependencies=On` will force Conan to rebuild all the packaged during *every* configuration. This can be usefull for the offline builds against the Conan download cache.
 
 ### Troubleshooting Conan issues
 

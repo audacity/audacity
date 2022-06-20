@@ -20,10 +20,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../CellularPanel.h"
 #include "Project.h"
 #include "../../../../ProjectAudioIO.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"
+#include "Theme.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelAx.h"
@@ -891,7 +892,6 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   const auto linkType = pTrack->GetLinkType();
    auto channels = TrackList::Channels( pTrack );
    if (channels.size() != 2)
       return;
@@ -902,18 +902,16 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 
    auto partner = *channels.rbegin();
 
-   SplitStereo(false);
+   if (TrackList::SwapChannels(*pTrack)) {
+      auto &tracks = TrackList::Get( *project );
+      if (hasFocus)
+         trackFocus.Set(partner);
 
-   auto &tracks = TrackList::Get( *project );
-   tracks.MoveUp(partner);
-   tracks.MakeMultiChannelTrack(*partner, 2, linkType == Track::LinkType::Aligned);
-   if (hasFocus)
-      trackFocus.Set(partner);
-
-   ProjectHistory::Get( *project ).PushState(
-      /* i18n-hint: The string names a track  */
-      XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
-      XO("Swap Channels"));
+      ProjectHistory::Get( *project ).PushState(
+         /* i18n-hint: The string names a track  */
+         XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
+         XO("Swap Channels"));
+   }
 
    mpData->result = RefreshCode::RefreshAll;
 }
@@ -1077,7 +1075,7 @@ using TCPLine = TrackInfo::TCPLine;
 static const struct WaveTrackTCPLines
    : TCPLines { WaveTrackTCPLines() {
    (TCPLines&)*this =
-      PlayableTrackControls::StaticTCPLines();
+      PlayableTrackControls::StaticWaveTCPLines();
    insert( end(), {
 
       { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
@@ -1145,11 +1143,8 @@ LWSlider * WaveTrackControls::GainSlider
 (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
    static std::once_flag flag;
-   std::call_once( flag, [] {
-      wxCommandEvent dummy;
-      ReCreateGainSlider( dummy );
-      wxTheApp->Bind(EVT_THEME_CHANGE, ReCreateGainSlider);
-   } );
+   std::call_once( flag, []{ ReCreateGainSlider({}); });
+   static auto subscription = theTheme.Subscribe(ReCreateGainSlider);
 
    wxPoint pos = sliderRect.GetPosition();
    float gain = t ? t->GetGain() : 1.0;
@@ -1164,10 +1159,10 @@ LWSlider * WaveTrackControls::GainSlider
    return slider;
 }
 
-void WaveTrackControls::ReCreateGainSlider( wxEvent &event )
+void WaveTrackControls::ReCreateGainSlider(ThemeChangeMessage message)
 {
-   event.Skip();
-
+   if (message.appearance)
+      return;
    const wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetGainRect(point, sliderRect);
@@ -1201,11 +1196,8 @@ LWSlider * WaveTrackControls::PanSlider
 (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
    static std::once_flag flag;
-   std::call_once( flag, [] {
-      wxCommandEvent dummy;
-      ReCreatePanSlider( dummy );
-      wxTheApp->Bind(EVT_THEME_CHANGE, ReCreatePanSlider);
-   } );
+   std::call_once( flag, []{ ReCreatePanSlider({}); });
+   static auto subscription = theTheme.Subscribe(ReCreatePanSlider);
 
    wxPoint pos = sliderRect.GetPosition();
    float pan = t ? t->GetPan() : 0.0;
@@ -1220,10 +1212,10 @@ LWSlider * WaveTrackControls::PanSlider
    return slider;
 }
 
-void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
+void WaveTrackControls::ReCreatePanSlider(ThemeChangeMessage message)
 {
-   event.Skip();
-
+   if (message.appearance)
+      return;
    const wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetPanRect(point, sliderRect);

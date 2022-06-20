@@ -46,6 +46,7 @@
 
 #include <wx/menu.h>
 #include <wx/windowptr.h>
+#include <wx/log.h>
 
 MenuCreator::MenuCreator()
 {
@@ -81,17 +82,12 @@ MenuManager::MenuManager( AudacityProject &project )
    : mProject{ project }
 {
    UpdatePrefs();
-   mProject.Bind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
-   mProject.Bind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
-   mProject.Bind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
-   mProject.Bind( EVT_UNDO_RENAMED, &MenuManager::OnUndoRedo, this );
+   mUndoSubscription = UndoManager::Get(project)
+      .Subscribe(*this, &MenuManager::OnUndoRedo);
 }
 
 MenuManager::~MenuManager()
 {
-   mProject.Unbind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
-   mProject.Unbind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
-   mProject.Unbind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
 }
 
 void MenuManager::UpdatePrefs()
@@ -439,6 +435,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 void MenuManager::Visit( ToolbarMenuVisitor &visitor )
 {
    static const auto menuTree = MenuTable::Items( MenuPathStart );
+
+   wxLogNull nolog;
    Registry::Visit( visitor, menuTree.get(), &sRegistry() );
 }
 
@@ -512,9 +510,17 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
    CreateMenusAndCommands(project);
 }
 
-void MenuManager::OnUndoRedo( wxCommandEvent &evt )
+void MenuManager::OnUndoRedo(UndoRedoMessage message)
 {
-   evt.Skip();
+   switch (message.type) {
+   case UndoRedoMessage::UndoOrRedo:
+   case UndoRedoMessage::Reset:
+   case UndoRedoMessage::Pushed:
+   case UndoRedoMessage::Renamed:
+      break;
+   default:
+      return;
+   }
    ModifyUndoMenuItems( mProject );
    UpdateMenus();
 }

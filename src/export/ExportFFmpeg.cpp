@@ -199,7 +199,7 @@ ExportFFmpeg::ExportFFmpeg()
    for (newfmt = 0; newfmt < FMT_LAST; newfmt++)
    {
       wxString shortname(ExportFFmpegOptions::fmts[newfmt].shortname);
-      //Don't hide export types when there's no av-libs, and don't hide FMT_OTHER
+      // Don't hide export types when there's no av-libs, and don't hide FMT_OTHER
       if (newfmt < FMT_OTHER && mFFmpeg)
       {
          // Format/Codec support is compiled in?
@@ -864,7 +864,7 @@ static int encode_audio(const FFmpegFunctions& ffmpeg, AVCodecContextWrapper*avc
       return ret;
    }
 
-   pkt->ResetTimestamps(); // we dont set frame timestamps thus dont trust the AVPacket timestamps
+   pkt->ResetTimestamps(); // We don't set frame timestamps thus don't trust the AVPacket timestamps
 
    return got_output;
 }

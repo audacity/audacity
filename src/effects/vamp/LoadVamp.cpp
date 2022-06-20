@@ -17,6 +17,7 @@
 #include <wx/filename.h>
 
 #include "VampEffect.h"
+#include "wxArrayStringEx.h"
 
 #include <iostream>
 #include <map>

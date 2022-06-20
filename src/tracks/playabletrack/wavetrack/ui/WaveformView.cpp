@@ -34,6 +34,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/WaveformSettings.h"
 
+#include "FrameStatistics.h"
+
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
@@ -352,6 +354,9 @@ void DrawMinMaxRMS(
 
    long pixAnimOffset = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10)) +
       wxDateTime::Now().GetMillisecond() / 100; //10 pixels a second
+
+   const auto ms = wxDateTime::Now().GetMillisecond();
+   const auto ticks = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10));
 
    bool drawStripes = true;
    bool drawWaveform = true;
@@ -681,9 +686,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
 
-#ifdef PROFILE_WAVEFORM
-   Profiler profiler;
-#endif
+   auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
    bool highlightEnvelope = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -881,6 +884,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
                  0, // 1.0 / rate,
 
                  env2, rectPortion.width, leftOffset, zoomInfo );
+
             DrawMinMaxRMS( context, rectPortion, env2,
                zoomMin, zoomMax,
                dB, dBRange,
@@ -1076,7 +1080,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include "WaveTrackControls.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../ProjectAudioIO.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 
 //=============================================================================

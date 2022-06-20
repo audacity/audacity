@@ -74,8 +74,9 @@ protected:
 #endif // wxUSE_BASE64
 
 protected:
-   //! Override to notify the user of error conditions involving writability of config files
-   virtual void Warn() = 0;
+   //! Override to notify the user of error conditions involving writability of
+   //! config files.  Default implementation does nothing
+   virtual void Warn();
 
    const FilePath &GetFilePath() const { return mLocalFilename; }
 
@@ -85,7 +86,7 @@ private:
    const wxString mLocalFilename;
    const wxString mGlobalFilename;
    const long mStyle;
-   const wxMBConv & mConv;
+   std::unique_ptr<wxMBConv> mConv;
 
    std::unique_ptr<wxFileConfig> mConfig;
 

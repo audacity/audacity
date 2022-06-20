@@ -19,6 +19,9 @@
 
 #include "Effect.h"
 #include "RealFFTf.h"
+#include "../ShuttleAutomation.h"
+#include "../widgets/wxPanelWrapper.h"
+#include "XMLTagHandler.h"
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;
@@ -91,10 +94,12 @@ using EQCurveArray = std::vector<EQCurve>;
 class EffectEqualization48x;
 #endif
 
-class EffectEqualization : public Effect,
+class EffectEqualization : public StatefulEffect,
                            public XMLTagHandler
 {
 public:
+   static inline EffectEqualization *
+   FetchParameters(EffectEqualization &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEqualization(int Options = kEqLegacy);
@@ -106,17 +111,20 @@ public:
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
    ManualPageID ManualPage() const override;
-   bool DefineParams( ShuttleParams & S ) override;
+   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
+      override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryDefaults(EffectSettings &settings) const override;
+   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
 
    // EffectUIClientInterface implementation
 
@@ -125,11 +133,12 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
    bool CloseUI() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
@@ -202,7 +211,6 @@ private:
    void OnBench( wxCommandEvent & event );
 #endif
 
-private:
    int mOptions;
    HFFT hFFT;
    Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;
@@ -274,10 +282,39 @@ private:
    wxBoxSizer *szrM;
 #endif
 
+   const EffectParameterMethods& Parameters() const override;
+
    DECLARE_EVENT_TABLE()
 
    friend class EqualizationPanel;
    friend class EditCurvesDialog;
+
+   enum kInterpolations
+   {
+      kBspline,
+      kCosine,
+      kCubic,
+      nInterpolations
+   };
+   static const EnumValueSymbol kInterpStrings[nInterpolations];
+
+// Not all of these are visited now
+static constexpr EffectParameter FilterLength{ &EffectEqualization::mM,
+   L"FilterLength",        8191,    21,      8191,    0      };
+static constexpr EffectParameter CurveName{ &EffectEqualization::mCurveName,
+   L"CurveName",           L"unnamed", L"", L"", L""};
+static constexpr EffectParameter InterpLin{ &EffectEqualization::mLin,
+   L"InterpolateLin",      false,   false,   true,    false  };
+static constexpr EnumParameter InterpMeth{ &EffectEqualization::mInterp,
+   L"InterpolationMethod", 0,       0,       0,       0, kInterpStrings, nInterpolations      };
+static constexpr EffectParameter DrawMode{ &EffectEqualization::mDrawMode,
+   L"",                   true,    false,   true,    false  };
+static constexpr EffectParameter DrawGrid{ &EffectEqualization::mDrawGrid,
+   L"",                   true,    false,   true,    false  };
+static constexpr EffectParameter dBMin{ &EffectEqualization::mdBMin,
+   L"",                   -30.0f,   -120.0,  -10.0,   0      };
+static constexpr EffectParameter dBMax{ &EffectEqualization::mdBMax,
+   L"",                   30.0f,    0.0,     60.0,    0      };
 };
 
 class EffectEqualizationCurve final : public EffectEqualization

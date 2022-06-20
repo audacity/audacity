@@ -156,19 +156,15 @@ ExportMP2Options::~ExportMP2Options()
 ///
 void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
 {
+   IntSetting Setting{ L"/FileFormats/MP2Bitrate", 160 };
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxCENTER);
       {
          S.StartMultiColumn(2, wxCENTER);
          {
-            S.TieNumberAsChoice(
-               XXO("Bit Rate:"),
-               {wxT("/FileFormats/MP2Bitrate"),
-                160},
-               BitRateNames,
-               &BitRateValues
-            );
+            S.TieNumberAsChoice(XXO("Bit Rate:"), Setting,
+               BitRateNames, &BitRateValues);
          }
          S.EndMultiColumn();
       }

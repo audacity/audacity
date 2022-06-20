@@ -21,6 +21,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <utility>
 #include <wx/atomic.h> // member variable
 
@@ -36,7 +37,6 @@ class RingBuffer;
 class Mixer;
 class RealtimeEffectState;
 class Resample;
-class AudioThread;
 
 class AudacityProject;
 
@@ -259,7 +259,8 @@ public:
    unsigned short mAILALastChangeType;  //0 - no change, 1 - increase change, 2 - decrease change
 #endif
 
-   std::unique_ptr<AudioThread> mThread;
+   std::thread mAudioThread;
+   std::atomic<bool> mFinishAudioThread{ false };
 
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
@@ -344,8 +345,6 @@ protected:
     */
    std::weak_ptr< AudioIOListener > mListener;
 
-   friend class AudioThread;
-
    bool mUsingAlsa { false };
 
    // For cacheing supported sample rates
@@ -408,18 +407,22 @@ class AUDACITY_DLL_API AudioIO final
 
    AudioIO();
    ~AudioIO();
+   void StartThread();
 
 public:
    // This might return null during application startup or shutdown
    static AudioIO *Get();
 
    //! Forwards to RealtimeEffectManager::AddState with proper init scope
-   RealtimeEffectState *AddState(AudacityProject &project,
-      Track *pTrack, const PluginID & id);
+   /*!
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
+   std::shared_ptr<RealtimeEffectState>
+   AddState(AudacityProject &project, Track *pTrack, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
-      Track *pTrack, RealtimeEffectState &state);
+      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
 
    RealtimeEffects::SuspensionScope SuspensionScope();
 
@@ -540,7 +543,7 @@ public:
     */
    double GetStreamTime();
 
-   friend class AudioThread;
+   static void AudioThread(std::atomic<bool> &finish);
 
    static void Init();
    static void Deinit();

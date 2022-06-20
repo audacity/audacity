@@ -17,15 +17,18 @@
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;
 class Envelope;
 class ShuttleGui;
 
-class EffectClickRemoval final : public Effect
+class EffectClickRemoval final : public StatefulEffect
 {
 public:
+   static inline EffectClickRemoval *
+   FetchParameters(EffectClickRemoval &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectClickRemoval();
@@ -40,19 +43,14 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
 
 private:
    bool ProcessOne(int count, WaveTrack * track,
@@ -79,7 +77,13 @@ private:
    wxTextCtrl *mWidthT;
    wxTextCtrl *mThreshT;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
+   L"Threshold",  200,     0,       900,     1  };
+static constexpr EffectParameter Width{ &EffectClickRemoval::mClickWidth,
+   L"Width",      20,      0,       40,      1  };
 };
 
 #endif

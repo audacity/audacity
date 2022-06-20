@@ -22,6 +22,8 @@ Paul Licameli split from TrackInfo.cpp
 
 #include <wx/dc.h>
 
+#include "effects/RealtimeEffectList.h"
+
 using TCPLine = TrackInfo::TCPLine;
 
 namespace {
@@ -113,7 +115,8 @@ void EffectsDrawFunction
   bool sel, bool hit )
 {   
    wxCoord textWidth, textHeight;
-   const auto str = XO("Effects").Translation();
+   
+   const auto str = _("Effects");
 
    const auto selected = pTrack ? pTrack->GetSelected() : true;
 
@@ -250,8 +253,21 @@ void PlayableTrackControls::GetEffectsRect
 
 }
 
-#include <mutex>
-const TCPLines& PlayableTrackControls::StaticTCPLines()
+const TCPLines& PlayableTrackControls::StaticNoteTCPLines()
+{
+   static TCPLines playableTrackTCPLines;
+   static std::once_flag flag;
+   std::call_once( flag, []{
+      playableTrackTCPLines = CommonTrackControls::StaticTCPLines();
+      playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+         MuteAndSoloDrawFunction },
+      } );
+   } );
+   return playableTrackTCPLines;
+}
+
+const TCPLines& PlayableTrackControls::StaticWaveTCPLines()
 {
    static TCPLines playableTrackTCPLines;
    static std::once_flag flag;

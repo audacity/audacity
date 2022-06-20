@@ -208,7 +208,18 @@ void XMLFileReader::startElement(void *userData, const char *name,
    }
 
    if (XMLTagHandler *& handler = handlers.back()) {
-      if (!handler->ReadXMLTag(name, atts)) {
+      This->mCurrentTagAttributes.clear();
+
+      while(*atts)
+      {
+         const char* name = *atts++;
+         const char* value = *atts++;
+
+         This->mCurrentTagAttributes.emplace_back(
+            std::string_view(name), XMLAttributeValueView(std::string_view(value)));
+      }
+
+      if (!handler->HandleXMLTag(name, This->mCurrentTagAttributes)) {
          handler = nullptr;
          if (handlers.size() == 1)
             This->mBaseHandler = nullptr;

@@ -16,7 +16,8 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;
@@ -39,9 +40,11 @@ public:
    int laststages;
 };
 
-class EffectPhaser final : public Effect
+class EffectPhaser final : public StatefulPerTrackEffect
 {
 public:
+   static inline EffectPhaser *
+   FetchParameters(EffectPhaser &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPhaser();
@@ -57,10 +60,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -73,15 +72,15 @@ public:
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -119,7 +118,6 @@ private:
                                -100 = -100% FeedBack)
 */
 
-private:
    EffectPhaserState mMaster;
    std::vector<EffectPhaserState> mSlaves;
 
@@ -148,7 +146,23 @@ private:
    wxSlider *mFeedbackS;
    wxSlider *mOutGainS;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Stages{ &EffectPhaser::mStages,
+   L"Stages",     2,    2,    NUM_STAGES, 1  };
+static constexpr EffectParameter DryWet{ &EffectPhaser::mDryWet,
+   L"DryWet",     128,  0,    255,        1  };
+static constexpr EffectParameter Freq{ &EffectPhaser::mFreq,
+   L"Freq",       0.4,  0.001,4.0,        10.0 };
+static constexpr EffectParameter Phase{ &EffectPhaser::mPhase,
+   L"Phase",      0.0,  0.0,  360.0,      1  };
+static constexpr EffectParameter Depth{ &EffectPhaser::mDepth,
+   L"Depth",      100,  0,    255,        1  };
+static constexpr EffectParameter Feedback{ &EffectPhaser::mFeedback,
+   L"Feedback",   0,    -100, 100,        1  };
+static constexpr EffectParameter OutGain{ &EffectPhaser::mOutGain,
+   L"Gain",      -6.0,    -30.0,    30.0,    1   };
 };
 
 #endif

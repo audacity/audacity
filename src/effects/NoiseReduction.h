@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-class EffectNoiseReduction final : public Effect {
+class EffectNoiseReduction final : public StatefulEffect {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
@@ -39,11 +39,10 @@ public:
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectSettingsAccess &access, bool forceModal = false) override;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      bool forceModal = false) override;
 
-   bool Init() override;
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
    class Settings;
    class Statistics;

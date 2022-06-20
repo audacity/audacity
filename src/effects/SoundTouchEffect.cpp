@@ -124,8 +124,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
-            mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
-            initer(mSoundTouch.get());
+            const auto pSoundTouch = std::make_unique<soundtouch::SoundTouch>();
+            initer(pSoundTouch.get());
 
             // TODO: more-than-two-channels
             auto channels = TrackList::Channels(leftTrack);
@@ -148,10 +148,11 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                auto end = leftTrack->TimeToLongSamples(mCurT1);
 
                //Inform soundtouch there's 2 channels
-               mSoundTouch->setChannels(2);
+               pSoundTouch->setChannels(2);
 
                //ProcessStereo() (implemented below) processes a stereo track
-               if (!ProcessStereo(leftTrack, rightTrack, start, end, warper))
+               if (!ProcessStereo(pSoundTouch.get(),
+                  leftTrack, rightTrack, start, end, warper))
                   bGoodResult = false;
                mCurTrackNum++; // Increment for rightTrack, too.
             } else {
@@ -160,14 +161,13 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                auto end = leftTrack->TimeToLongSamples(mCurT1);
 
                //Inform soundtouch there's a single channel
-               mSoundTouch->setChannels(1);
+               pSoundTouch->setChannels(1);
 
                //ProcessOne() (implemented below) processes a single track
-               if (!ProcessOne(leftTrack, start, end, warper))
+               if (!ProcessOne(pSoundTouch.get(), leftTrack, start, end, warper))
                   bGoodResult = false;
             }
-
-            mSoundTouch.reset();
+            // pSoundTouch is destroyed here
          }
          mCurTrackNum++;
       },
@@ -185,18 +185,14 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
    return bGoodResult;
 }
 
-void EffectSoundTouch::End()
-{
-   mSoundTouch.reset();
-}
-
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
-bool EffectSoundTouch::ProcessOne(WaveTrack *track,
-                                  sampleCount start, sampleCount end,
-                                  const TimeWarper &warper)
+bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
+   WaveTrack *track,
+   sampleCount start, sampleCount end,
+   const TimeWarper &warper)
 {
-   mSoundTouch->setSampleRate((unsigned int)(track->GetRate()+0.5));
+   pSoundTouch->setSampleRate((unsigned int)(track->GetRate()+0.5));
 
    auto outputTrack = track->EmptyCopy();
 
@@ -222,13 +218,13 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
          track->GetFloats(buffer.get(), s, block);
 
          //Add samples to SoundTouch
-         mSoundTouch->putSamples(buffer.get(), block);
+         pSoundTouch->putSamples(buffer.get(), block);
 
          //Get back samples from SoundTouch
-         unsigned int outputCount = mSoundTouch->numSamples();
+         unsigned int outputCount = pSoundTouch->numSamples();
          if (outputCount > 0) {
             Floats buffer2{ outputCount };
-            mSoundTouch->receiveSamples(buffer2.get(), outputCount);
+            pSoundTouch->receiveSamples(buffer2.get(), outputCount);
             outputTrack->Append((samplePtr)buffer2.get(), floatSample, outputCount);
          }
 
@@ -241,12 +237,12 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
       }
 
       // Tell SoundTouch to finish processing any remaining samples
-      mSoundTouch->flush();   // this should only be used for changeTempo - it dumps data otherwise with pRateTransposer->clear();
+      pSoundTouch->flush();   // this should only be used for changeTempo - it dumps data otherwise with pRateTransposer->clear();
 
-      unsigned int outputCount = mSoundTouch->numSamples();
+      unsigned int outputCount = pSoundTouch->numSamples();
       if (outputCount > 0) {
          Floats buffer2{ outputCount };
-         mSoundTouch->receiveSamples(buffer2.get(), outputCount);
+         pSoundTouch->receiveSamples(buffer2.get(), outputCount);
          outputTrack->Append((samplePtr)buffer2.get(), floatSample, outputCount);
       }
 
@@ -264,11 +260,11 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereo(
+bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
    WaveTrack* leftTrack, WaveTrack* rightTrack,
    sampleCount start, sampleCount end, const TimeWarper &warper)
 {
-   mSoundTouch->setSampleRate((unsigned int)(leftTrack->GetRate() + 0.5));
+   pSoundTouch->setSampleRate((unsigned int)(leftTrack->GetRate() + 0.5));
 
    auto outputLeftTrack = leftTrack->EmptyCopy();
    auto outputRightTrack = rightTrack->EmptyCopy();
@@ -310,12 +306,13 @@ bool EffectSoundTouch::ProcessStereo(
          }
 
          //Add samples to SoundTouch
-         mSoundTouch->putSamples(soundTouchBuffer.get(), blockSize);
+         pSoundTouch->putSamples(soundTouchBuffer.get(), blockSize);
 
          //Get back samples from SoundTouch
-         unsigned int outputCount = mSoundTouch->numSamples();
+         unsigned int outputCount = pSoundTouch->numSamples();
          if (outputCount > 0)
-            this->ProcessStereoResults(outputCount, outputLeftTrack.get(), outputRightTrack.get());
+            this->ProcessStereoResults(pSoundTouch,
+               outputCount, outputLeftTrack.get(), outputRightTrack.get());
 
          //Increment sourceSampleCount one blockfull of samples
          sourceSampleCount += blockSize;
@@ -337,11 +334,12 @@ bool EffectSoundTouch::ProcessStereo(
       }
 
       // Tell SoundTouch to finish processing any remaining samples
-      mSoundTouch->flush();
+      pSoundTouch->flush();
 
-      unsigned int outputCount = mSoundTouch->numSamples();
+      unsigned int outputCount = pSoundTouch->numSamples();
       if (outputCount > 0)
-         this->ProcessStereoResults(outputCount, outputLeftTrack.get(), outputRightTrack.get());
+         this->ProcessStereoResults(pSoundTouch,
+            outputCount, outputLeftTrack.get(), outputRightTrack.get());
 
       // Flush the output WaveTracks (since they're buffered, too)
       outputLeftTrack->Flush();
@@ -363,12 +361,13 @@ bool EffectSoundTouch::ProcessStereo(
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereoResults(const size_t outputCount,
-                                            WaveTrack* outputLeftTrack,
-                                            WaveTrack* outputRightTrack)
+bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
+   const size_t outputCount,
+   WaveTrack* outputLeftTrack,
+   WaveTrack* outputRightTrack)
 {
    Floats outputSoundTouchBuffer{ outputCount * 2 };
-   mSoundTouch->receiveSamples(outputSoundTouchBuffer.get(), outputCount);
+   pSoundTouch->receiveSamples(outputSoundTouchBuffer.get(), outputCount);
 
    // Dis-interleave outputSoundTouchBuffer into separate track buffers.
    Floats outputLeftBuffer{ outputCount };

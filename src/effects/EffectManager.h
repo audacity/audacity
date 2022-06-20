@@ -17,7 +17,7 @@
 
 #include <unordered_map>
 #include "EffectInterface.h"
-#include "EffectHostInterface.h" // for EffectDialogFactory
+#include "EffectPlugin.h" // for EffectDialogFactory
 #include "Identifier.h"
 
 class AudacityCommand;
@@ -33,13 +33,13 @@ typedef wxString PluginID;
 #include "EffectInterface.h"
 
 struct EffectAndDefaultSettings{
-   EffectUIHostInterface *effect{};
+   EffectPlugin *effect{};
    EffectSettings settings{};
 };
 
 using EffectMap = std::unordered_map<wxString, EffectAndDefaultSettings>;
 using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
-using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectUIHostInterface> >;
+using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectPlugin> >;
 
 class AudacityCommand;
 
@@ -63,8 +63,9 @@ public:
       kRepeatNyquistPrompt = 0x10,
    };
 
-   /*! Create a new instance of an effect by its ID. */
-   static std::unique_ptr<EffectProcessor> NewEffect(const PluginID &ID);
+   /*! Find the singleton EffectInstanceFactory for ID. */
+   static
+   const EffectInstanceFactory *GetInstanceFactory(const PluginID &ID);
 
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */
@@ -83,7 +84,7 @@ public:
    //! Here solely for the purpose of Nyquist Workbench until a better solution is devised.
    /** Register an effect so it can be executed.
      uEffect is expected to be a self-hosting Nyquist effect */
-   const PluginID & RegisterEffect(std::unique_ptr<EffectUIHostInterface> uEffect);
+   const PluginID & RegisterEffect(std::unique_ptr<EffectPlugin> uEffect);
    //! Used only by Nyquist Workbench module
    void UnregisterEffect(const PluginID & ID);
 
@@ -119,19 +120,26 @@ public:
    wxString GetDefaultPreset(const PluginID & ID);
 
 private:
-   void SetBatchProcessing(const PluginID & ID, bool start);
+   void BatchProcessingOn(const PluginID & ID);
+   void BatchProcessingOff(const PluginID & ID);
+   //! A custom deleter for std::unique_ptr
    struct UnsetBatchProcessing {
       PluginID mID;
       void operator () (EffectManager *p) const
-         { if(p) p->SetBatchProcessing(mID, false); }
+         { if(p) p->BatchProcessingOff(mID); }
    };
    using BatchProcessingScope =
       std::unique_ptr< EffectManager, UnsetBatchProcessing >;
 public:
-   // RAII for the function above
+   //! Begin a scope that ends when the returned object is destroyed
+   /*!
+    Within this scope, "batch" (i.e. macro) processing happens, and
+    Effects that are not yet stateless may change their state temporarily,
+    but it is restored afterward
+    */
    BatchProcessingScope SetBatchProcessing(const PluginID &ID)
    {
-      SetBatchProcessing(ID, true); return BatchProcessingScope{ this, {ID} };
+      BatchProcessingOn(ID); return BatchProcessingScope{ this, {ID} };
    }
 
    /** Allow effects to disable saving the state at run time */
@@ -141,13 +149,17 @@ public:
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
    /*! Return an effect by its ID. */
-   EffectUIHostInterface *GetEffect(const PluginID & ID);
+   EffectPlugin *GetEffect(const PluginID & ID);
 
-   /*! Get default settings by effect ID. */
+   /*! Get default settings by effect ID.  May return nullptr */
    EffectSettings *GetDefaultSettings(const PluginID & ID);
 
    /*! Get effect and default settings by effect ID. */
-   std::pair<EffectUIHostInterface *, EffectSettings *>
+   /*!
+    @post `result: !result.first || result.second`
+    (if first member is not null, then the second is not null)
+    */
+   std::pair<EffectPlugin *, EffectSettings *>
    GetEffectAndDefaultSettings(const PluginID & ID);
 
 private:

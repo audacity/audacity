@@ -313,6 +313,11 @@ FilePath FileNames::PlugInDir()
    return FileNames::MkDir( wxFileName( DataDir(), wxT("Plug-Ins") ).GetFullPath() );
 }
 
+FilePath FileNames::Configuration()
+{
+   return wxFileName( DataDir(), wxT("audacity.cfg") ).GetFullPath();
+}
+
 FilePath FileNames::PluginRegistry()
 {
    return wxFileName( DataDir(), wxT("pluginregistry.cfg") ).GetFullPath();

@@ -17,11 +17,13 @@ Paul Licameli split from AudacityProject.h
 #include "Prefs.h"
 #include "Observer.h"
 
+class CommandContext;
 class Track;
 
 class wxScrollBar;
 class wxPanel;
 class wxSplitterWindow;
+class RealtimeEffectPanel;
 
 class ProjectWindow;
 void InitProjectWindow( ProjectWindow &window );
@@ -38,6 +40,8 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
 
+   static void OnResetWindow(const CommandContext& context);
+
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
@@ -52,6 +56,8 @@ public:
 
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
+
+   void Reset();
 
    /**
     * \brief Effect window contains list off effects assigned to
@@ -125,8 +131,8 @@ public:
    void ZoomAfterImport(Track *pTrack);
    double GetZoomOfToFit() const;
    void DoZoomFit();
-
-   void ShowEffectsPanel(Track* track = nullptr);
+   
+   void ShowEffectsPanel(AudacityProject& project, Track* track = nullptr);
    void HideEffectsPanel();
 
    void ApplyUpdatedTheme();
@@ -172,7 +178,7 @@ public:
 
  private:
 
-   void OnThemeChange(wxCommandEvent & evt);
+   void OnThemeChange(struct ThemeChangeMessage);
 
    // PrefsListener implementation
    void UpdatePrefs() override;
@@ -196,9 +202,9 @@ public:
    void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
-   void OnUndoPushedModified( wxCommandEvent & );
-   void OnUndoRedo( wxCommandEvent & );
-   void OnUndoReset( wxCommandEvent & );
+   void OnUndoPushedModified();
+   void OnUndoRedo();
+   void OnUndoReset();
 
    bool mbInitializingScrollbar{ false };
 
@@ -207,7 +213,7 @@ private:
 
    wxPanel *mTopPanel{};
    wxSplitterWindow* mContainerWindow;
-   wxWindow* mEffectsWindow{};
+   RealtimeEffectPanel* mEffectsWindow{};
    wxWindow* mTrackListWindow{};
    
    wxScrollBar *mHsbar{};
@@ -226,12 +232,27 @@ private:
 
 private:
 
+   Observer::Subscription mUndoSubscription
+      , mThemeChangeSubscription;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+
+   Observer::Subscription mFocusChangeSubscription;
 
    DECLARE_EVENT_TABLE()
 };
 
 void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
+
+extern AUDACITY_DLL_API BoolSetting ProjectWindowMaximized;
+extern AUDACITY_DLL_API BoolSetting ProjectWindowIconized;
+extern AUDACITY_DLL_API IntSetting ProjectWindowX;
+extern AUDACITY_DLL_API IntSetting ProjectWindowY;
+extern AUDACITY_DLL_API IntSetting ProjectWindowWidth;
+extern AUDACITY_DLL_API IntSetting ProjectWindowHeight;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalX;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalY;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalWidth;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalHeight;
 
 #endif

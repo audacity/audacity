@@ -13,6 +13,7 @@
 
 #include "../Effect.h"
 #include "FileNames.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 #include "nyx.h"
 
@@ -60,8 +61,16 @@ public:
    int ticks;
 };
 
+struct NyquistSettings {
+   // other settings, for the Nyquist prompt; else null
+   EffectSettings proxySettings;
+   bool proxyDebug{ false };
 
-class AUDACITY_DLL_API NyquistEffect final : public Effect
+   // Other fields, to do
+};
+
+class AUDACITY_DLL_API NyquistEffect final
+   : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
 
@@ -91,26 +100,33 @@ public:
    bool IsDefault() const override;
    bool EnablesDebug() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, EffectSettings &settings) const override;
+   bool DoLoadSettings(
+      const CommandParameters & parms, EffectSettings &settings);
 
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
-   int SetLispVarsFromParameters(CommandParameters & parms, bool bTestOnly);
+   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
+      override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override;
+   int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation
 
    bool Init() override;
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectSettingsAccess &access, bool forceModal = false) override;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      bool forceModal = false) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(Settings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // NyquistEffect implementation
    // For Nyquist Workbench support
@@ -184,7 +200,7 @@ private:
                            wxString *pExtraString = nullptr);
    static wxString UnQuote(const wxString &s, bool allowParens = true,
                            wxString *pExtraString = nullptr);
-   double GetCtrlValue(const wxString &s);
+   static double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
@@ -196,7 +212,7 @@ private:
    void OnTime(wxCommandEvent & evt);
    void OnFileButton(wxCommandEvent & evt);
 
-   void resolveFilePath(wxString & path, FileExtension extension = {});
+   static void resolveFilePath(wxString & path, FileExtension extension = {});
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 

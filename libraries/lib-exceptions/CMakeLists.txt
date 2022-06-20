@@ -29,6 +29,14 @@ set( LIBRARIES
    PRIVATE
    wxBase
 )
+
+if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")
+   set( DEFINITIONS
+      PUBLIC
+         -DUNCAUGHT_EXCEPTIONS_UNAVAILABLE
+   )
+endif()
+
 audacity_library( lib-exceptions "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "${DEFINITIONS}" ""
 )

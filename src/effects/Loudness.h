@@ -21,14 +21,25 @@
 #include "Effect.h"
 #include "Biquad.h"
 #include "EBUR128.h"
+#include "../ShuttleAutomation.h"
+#include "Track.h"
 
 class wxChoice;
 class wxSimplebook;
 class ShuttleGui;
 
-class EffectLoudness final : public Effect
+class EffectLoudness final : public StatefulEffect
 {
 public:
+   enum kNormalizeTargets
+   {
+      kLoudness,
+      kRMS,
+      nAlgos
+   };
+
+   static inline EffectLoudness *
+   FetchParameters(EffectLoudness &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectLoudness();
@@ -43,19 +54,13 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
@@ -108,7 +113,19 @@ private:
    size_t mTrackBufferCapacity;
    bool   mProcStereo;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter StereoInd{ &EffectLoudness::mStereoInd,
+   L"StereoIndependent",   false,      false,   true,     1  };
+static constexpr EffectParameter LUFSLevel{ &EffectLoudness::mLUFSLevel,
+   L"LUFSLevel",           -23.0,      -145.0,  0.0,      1  };
+static constexpr EffectParameter RMSLevel{ &EffectLoudness::mRMSLevel,
+   L"RMSLevel",            -20.0,      -145.0,  0.0,      1  };
+static constexpr EffectParameter DualMono{ &EffectLoudness::mDualMono,
+   L"DualMono",            true,       false,   true,     1  };
+static constexpr EffectParameter NormalizeTo{ &EffectLoudness::mNormalizeTo,
+   L"NormalizeTo",         (int)kLoudness , 0    ,   nAlgos-1, 1  };
 };
 
 #endif

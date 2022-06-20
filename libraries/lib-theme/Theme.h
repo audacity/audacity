@@ -17,11 +17,13 @@
 #include <map>
 #include <unordered_set>
 #include <vector>
+#include <optional>
 #include <wx/arrstr.h>
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
 #include "ComponentInterfaceSymbol.h"
 
+#include "Observer.h"
 #include "Prefs.h"
 
 //! A choice of theme such as "Light", "Dark", ...
@@ -106,7 +108,14 @@ struct ThemeSet
    bool bRecolourOnLoad = false;  // Request to recolour.
 };
 
+struct ThemeChangeMessage {
+   std::optional<PreferredSystemAppearance> appearance; /*!<
+      An enum value when preferred system appearance changes, or nullopt
+      for change of the image set */
+};
+
 class THEME_API ThemeBase /* not final */
+   : public Observer::Publisher<ThemeChangeMessage>
 {
 public:
    ThemeBase(void);
@@ -182,10 +191,6 @@ public:
    // Utility function that takes a 32 bit bitmap and makes it into an image.
    wxImage MakeImageWithAlpha( wxBitmap & Bmp );
 
-   using OnPreferredSystemAppearanceChanged = std::function<void (PreferredSystemAppearance)>;
-   OnPreferredSystemAppearanceChanged
-   SetOnPreferredSystemAppearanceChanged(OnPreferredSystemAppearanceChanged handler);
-
    // Reclaim resources after finished with theme editing
    void DeleteUnusedThemes();
 
@@ -197,7 +202,6 @@ protected:
    wxArrayString mColourNames;
 
    PreferredSystemAppearance mPreferredSystemAppearance { PreferredSystemAppearance::Light };
-   OnPreferredSystemAppearanceChanged mOnPreferredSystemAppearanceChanged;
 
    std::map<Identifier, ThemeSet> mSets;
    ThemeSet *mpSet = nullptr;
@@ -205,6 +209,7 @@ protected:
 
 class THEME_API Theme final : public ThemeBase
 {
+   friend class AColor; // So it can publish
 public:
    Theme(void);
 public:

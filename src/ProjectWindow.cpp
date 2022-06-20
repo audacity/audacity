@@ -27,6 +27,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "commands/CommandContext.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
@@ -35,11 +36,33 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/WindowAccessible.h"
 
+#include "ThemedWrappers.h"
+#include "RealtimeEffectPanel.h"
+
 #include <wx/app.h>
 #include <wx/display.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
+#include <wx/wupdlock.h>
+
+#include "TrackPanel.h"
+
+namespace {
+   constexpr int DEFAULT_WINDOW_WIDTH = 1200;
+   constexpr int DEFAULT_WINDOW_HEIGHT = 674;
+}
+
+BoolSetting ProjectWindowMaximized{ L"/Window/Maximized", false };
+BoolSetting ProjectWindowIconized{ L"/Window/Iconized", false };
+IntSetting ProjectWindowX{ L"/Window/X", 0 };
+IntSetting ProjectWindowY{ L"/Window/Y", 0 };
+IntSetting ProjectWindowWidth{ L"/Window/Width", DEFAULT_WINDOW_WIDTH };
+IntSetting ProjectWindowHeight{ L"/Window/Height", DEFAULT_WINDOW_HEIGHT };
+IntSetting ProjectWindowNormalX{ L"/Window/Normal_X", 0 };
+IntSetting ProjectWindowNormalY{ L"/Window/Normal_Y", 0 };
+IntSetting ProjectWindowNormalWidth{ L"/Window/Normal_Width", DEFAULT_WINDOW_WIDTH };
+IntSetting ProjectWindowNormalHeight{ L"/Window/Normal_Height", DEFAULT_WINDOW_HEIGHT };
 
 // Returns the screen containing a rectangle, or -1 if none does.
 int ScreenContaining( wxRect & r ){
@@ -94,8 +117,8 @@ void GetDefaultWindowRect(wxRect *defRect)
 {
    *defRect = wxGetClientDisplayRect();
 
-   int width = 940;
-   int height = 674;
+   int width = DEFAULT_WINDOW_WIDTH;
+   int height = DEFAULT_WINDOW_HEIGHT;
 
    //These conditional values assist in improving placement and size
    //of NEW windows on different platforms.
@@ -144,20 +167,20 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    wxRect defaultRect;
    GetDefaultWindowRect(&defaultRect);
 
-   gPrefs->Read(wxT("/Window/Maximized"), pMaximized, false);
-   gPrefs->Read(wxT("/Window/Iconized"), pIconized, false);
+   *pMaximized = ProjectWindowMaximized.Read();
+   *pIconized = ProjectWindowIconized.Read();
 
    wxRect windowRect;
-   gPrefs->Read(wxT("/Window/X"), &windowRect.x, defaultRect.x);
-   gPrefs->Read(wxT("/Window/Y"), &windowRect.y, defaultRect.y);
-   gPrefs->Read(wxT("/Window/Width"), &windowRect.width, defaultRect.width);
-   gPrefs->Read(wxT("/Window/Height"), &windowRect.height, defaultRect.height);
+   windowRect.x = ProjectWindowX.ReadWithDefault(defaultRect.x);
+   windowRect.y = ProjectWindowY.ReadWithDefault(defaultRect.y);
+   windowRect.width = ProjectWindowWidth.ReadWithDefault(defaultRect.width);
+   windowRect.height = ProjectWindowHeight.ReadWithDefault(defaultRect.height);
 
    wxRect normalRect;
-   gPrefs->Read(wxT("/Window/Normal_X"), &normalRect.x, defaultRect.x);
-   gPrefs->Read(wxT("/Window/Normal_Y"), &normalRect.y, defaultRect.y);
-   gPrefs->Read(wxT("/Window/Normal_Width"), &normalRect.width, defaultRect.width);
-   gPrefs->Read(wxT("/Window/Normal_Height"), &normalRect.height, defaultRect.height);
+   normalRect.x = ProjectWindowNormalX.ReadWithDefault(defaultRect.x);
+   normalRect.y = ProjectWindowNormalY.ReadWithDefault(defaultRect.y);
+   normalRect.width = ProjectWindowNormalWidth.ReadWithDefault(defaultRect.width);
+   normalRect.height = ProjectWindowNormalHeight.ReadWithDefault(defaultRect.height);
 
    // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but let's just
    // validate for all rects and plats
@@ -545,6 +568,14 @@ const ProjectWindow *ProjectWindow::Find( const AudacityProject *pProject )
    return Find( const_cast< AudacityProject * >( pProject ) );
 }
 
+void ProjectWindow::OnResetWindow(const CommandContext& context)
+{
+   auto& project = context.project;
+   auto& window = ProjectWindow::Get(project);
+
+   window.Reset();
+}
+
 int ProjectWindow::NextWindowID()
 {
    return mNextWindowID++;
@@ -592,7 +623,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    auto container = safenew wxSplitterWindow(this, wxID_ANY,
       wxDefaultPosition,
       wxDefaultSize,
-      wxNO_BORDER | wxSP_LIVE_UPDATE);
+      wxNO_BORDER | wxSP_LIVE_UPDATE | wxSP_THIN_SASH);
    container->Bind(wxEVT_SPLITTER_DOUBLECLICKED, [](wxSplitterEvent& event){
       //"The default behaviour is to unsplit the window"
       event.Veto();//do noting instead
@@ -607,9 +638,16 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mTrackListWindow->SetLabel("Main Panel");// Not localized.
    mTrackListWindow->SetLayoutDirection(wxLayout_LeftToRight);
 
-   mEffectsWindow = safenew wxWindow(mContainerWindow, wxID_ANY, wxDefaultPosition, wxSize(250, 20));
-   mEffectsWindow->Hide();//initially hidden
    mContainerWindow->Initialize(mTrackListWindow);
+
+   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mContainerWindow, wxID_ANY);
+   effectsPanel->SetBackgroundColorIndex(clrMedium);
+   effectsPanel->Hide();//initially hidden
+   effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&)
+   {
+      HideEffectsPanel();
+   });
+   mEffectsWindow = effectsPanel;
 
 #ifdef EXPERIMENTAL_DA2
    mTrackListWindow->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -637,12 +675,34 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
 
-   project.Bind( EVT_UNDO_MODIFIED, &ProjectWindow::OnUndoPushedModified, this );
-   project.Bind( EVT_UNDO_PUSHED, &ProjectWindow::OnUndoPushedModified, this );
-   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
-   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
+   mUndoSubscription = UndoManager::Get(project)
+      .Subscribe([this](UndoRedoMessage message){
+         switch (message.type) {
+         case UndoRedoMessage::Pushed:
+         case UndoRedoMessage::Modified:
+            return OnUndoPushedModified();
+         case UndoRedoMessage::UndoOrRedo:
+            return OnUndoRedo();
+         case UndoRedoMessage::Reset:
+            return OnUndoReset();
+         default:
+            return;
+         }
+      });
 
-   wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
+   mThemeChangeSubscription =
+      theTheme.Subscribe(*this, &ProjectWindow::OnThemeChange);
+
+   mFocusChangeSubscription = TrackFocus::Get(project)
+      .Subscribe([this](const TrackFocusChangeMessage& msg) {
+         if(mEffectsWindow->IsShown())
+         {
+            auto& project = GetProject();
+            auto& trackFocus = TrackFocus::Get(project);
+            ShowEffectsPanel(project, trackFocus.Get());
+         }
+      });
+
 }
 
 ProjectWindow::~ProjectWindow()
@@ -703,9 +763,10 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
    });
 }
 
-void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
+void ProjectWindow::OnThemeChange(ThemeChangeMessage message)
 {
-   evt.Skip();
+   if (message.appearance)
+      return;
    auto &project = mProject;
    this->ApplyUpdatedTheme();
    auto &toolManager = ToolManager::Get( project );
@@ -1219,7 +1280,13 @@ wxPanel* ProjectWindow::GetTopPanel() noexcept
    return mTopPanel;
 }
 
+void ProjectWindow::Reset()
+{
+   wxRect defaultRect;
+   GetDefaultWindowRect(&defaultRect);
 
+   SetSize(defaultRect.width, defaultRect.height);
+}
 
 void ProjectWindow::UpdateStatusWidths()
 {
@@ -1391,22 +1458,19 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
-void ProjectWindow::OnUndoPushedModified( wxCommandEvent &evt )
+void ProjectWindow::OnUndoPushedModified()
 {
-   evt.Skip();
    RedrawProject();
 }
 
-void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
+void ProjectWindow::OnUndoRedo()
 {
-   evt.Skip();
    HandleResize();
    RedrawProject();
 }
 
-void ProjectWindow::OnUndoReset( wxCommandEvent &evt )
+void ProjectWindow::OnUndoReset()
 {
-   evt.Skip();
    HandleResize();
    // RedrawProject();  // Should we do this here too?
 }
@@ -1842,10 +1906,17 @@ void ProjectWindow::DoZoomFit()
    window.TP_ScrollWindow(start);
 }
 
-void ProjectWindow::ShowEffectsPanel(Track* track)
+void ProjectWindow::ShowEffectsPanel(AudacityProject& project, Track* track)
 {
    if(track == nullptr)
+   {
+      mEffectsWindow->ResetTrack();
       return;
+   }
+
+   wxWindowUpdateLocker freeze(this);
+
+   mEffectsWindow->SetTrack(project, track->shared_from_this());
 
    if(mContainerWindow->GetWindow1() != mEffectsWindow)
    {
@@ -1855,10 +1926,18 @@ void ProjectWindow::ShowEffectsPanel(Track* track)
          mTrackListWindow,
          mEffectsWindow->GetSize().GetWidth());
    }
+   Layout();
 }
 
 void ProjectWindow::HideEffectsPanel()
 {
+   wxWindowUpdateLocker freeze(this);
+
+   if(mContainerWindow->GetWindow2() == nullptr)
+      //only effects panel is present, restore split positions before removing effects panel
+      //Workaround: ::Replace and ::Initialize do not work here...
+      mContainerWindow->SplitVertically(mEffectsWindow, mTrackListWindow);
+
    mContainerWindow->Unsplit(mEffectsWindow);
    Layout();
 }

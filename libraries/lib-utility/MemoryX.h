@@ -486,6 +486,27 @@ NonInterferingBase {
 #endif
 };
 
+//! Workaround for std::make_shared not working on macOs with over-alignment
+/*!
+ Defines a static member function to use as an alternative to that in std::
+ */
+template<typename T> // CRTP
+struct SharedNonInterfering : NonInterferingBase
+{
+   template<typename... Args>
+   static std::shared_ptr<T> make_shared(Args &&...args)
+   {
+      return std::
+#ifdef __APPLE__
+         // shared_ptr must be constructed from unique_ptr on Mac
+         make_unique
+#else
+         make_shared
+#endif
+                    <T>(std::forward<Args>(args)...);
+   }
+};
+
 /*! Given a structure type T, derive a structure with sufficient padding so that there is not false sharing of
  cache lines between successive elements of an array of those structures.
  */
@@ -494,6 +515,18 @@ template< typename T > struct NonInterfering
    , T
 {
    using T::T;
+
+   //! Allow assignment from default-aligned base type
+   void Set(const T &other)
+   {
+      T::operator =(other);
+   }
+
+   //! Allow assignment from default-aligned base type
+   void Set(T &&other)
+   {
+      T::operator =(std::move(other));
+   }
 };
 
 // These macros are used widely, so declared here.
@@ -573,5 +606,29 @@ auto Visit(Visitor &&vis, Variant &&var)
    return VisitHelper( std::make_index_sequence<size>{},
       std::forward<Visitor>(vis), std::forward<Variant>(var) );
 }
+
+//! Atomic unique pointer (for nonarray type only) with a destructor;
+//! It doesn't copy or move
+template<typename T>
+struct AtomicUniquePointer : public std::atomic<T*> {
+   static_assert(AtomicUniquePointer::is_always_lock_free);
+   using std::atomic<T*>::atomic;
+   //! Reassign the pointer with release ordering,
+   //! then destroy any previously held object
+   /*!
+    Like `std::unique_ptr`, does not check for reassignment of the same pointer */
+   void reset(T *p = nullptr) {
+      delete this->exchange(p, std::memory_order_release);
+   }
+   //! reset to a pointer to a new object with given ctor arguments
+   template<typename... Args> void emplace(Args &&... args) {
+      reset(safenew T(std::forward<Args>(args)...));
+   }
+   ~AtomicUniquePointer() { reset(); }
+private:
+   //! Disallow pointer arithmetic
+   using std::atomic<T*>::fetch_add;
+   using std::atomic<T*>::fetch_sub;
+};
 
 #endif // __AUDACITY_MEMORY_X_H__

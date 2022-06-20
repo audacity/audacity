@@ -1,31 +1,33 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  AudioUnitEffect.h
+  @file AudioUnitEffect.h
 
   Dominic Mazzoni
   Leland Lucius
 
 **********************************************************************/
 #ifndef AUDACITY_AUDIOUNIT_EFFECT_H
+#define AUDACITY_AUDIOUNIT_EFFECT_H
 
 
 
 #if USE_AUDIO_UNITS
 
+#include "AudioUnitWrapper.h"
+
 #include "MemoryX.h"
+#include <functional>
+#include <type_traits>
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
-#include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "EffectInterface.h"
-#include "PluginProvider.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginInterface.h"
 
-#include "AUControl.h"
 #include <wx/weakref.h>
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
@@ -35,17 +37,19 @@ class AudioUnitEffect;
 
 using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
-class AudioUnitEffectExportDialog;
-class AudioUnitEffectImportDialog;
+class AUControl;
 
-class AudioUnitEffect : public wxEvtHandler,
-                        public EffectUIClientInterface
+class AudioUnitEffect final
+   : public StatefulPerTrackEffect
+   , public AudioUnitWrapper
 {
 public:
+   using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
+
    AudioUnitEffect(const PluginPath & path,
-                   const wxString & name,
-                   AudioComponent component,
-                   AudioUnitEffect *master = NULL);
+      const wxString & name, AudioComponent component,
+      Parameters *pParameters = nullptr,
+      AudioUnitEffect *master = nullptr);
    virtual ~AudioUnitEffect();
 
    // ComponentInterface implementation
@@ -65,30 +69,33 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   EffectSettings MakeSettings() const override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, EffectSettings &settings) const override;
+
+   bool LoadUserPreset(
+      const RegistryPath & name, EffectSettings &settings) const override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
-
-   // EffectProcessor implementation
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
+   // size_t GetTailSize() const override;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
@@ -102,9 +109,9 @@ public:
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
+   bool RealtimeResume() override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
@@ -112,21 +119,23 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
-   bool MakeListener();
+   bool InitializeInstance();
    bool InitializePlugin();
+   bool FullyInitializePlugin();
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(EffectHostInterface* host) override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
-   void ImportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -136,15 +145,18 @@ public:
 private:
    bool SetRateAndChannels();
 
-   bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
-   TranslatableString Export(const wxString & path);
-   TranslatableString Import(const wxString & path);
-   void Notify(AudioUnit unit, AudioUnitParameterID parm);
+   TranslatableString Export(
+      const AudioUnitEffectSettings &settings, const wxString & path) const;
+   TranslatableString Import(
+      AudioUnitEffectSettings &settings, const wxString & path) const;
+   /*!
+    @param path only for formatting error messages
+    @return error message
+    */
+   TranslatableString SaveBlobToConfig(const RegistryPath &group,
+      const wxString &path, const void *blob, size_t len,
+      bool allowEmpty = true) const;
 
-   // Realtime
-   unsigned GetChannelCount();
-   void SetChannelCount(unsigned numChannels);
-   
    static OSStatus RenderCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *inActionFlags,
                                   const AudioTimeStamp *inTimeStamp,
@@ -157,18 +169,13 @@ private:
                    UInt32 inNumFrames,
                    AudioBufferList *ioData);
 
-   static void EventListenerCallback(void *inCallbackRefCon,
-                                     void *inObject,
-                                     const AudioUnitEvent *inEvent,
-                                     UInt64 inEventHostTime,
-                                     AudioUnitParameterValue inParameterValue);
-   void EventListener(const AudioUnitEvent *inEvent,
-                      AudioUnitParameterValue inParameterValue);
-
    void GetChannelCounts();
 
-   bool LoadPreset(const RegistryPath & group);
-   bool SavePreset(const RegistryPath & group);
+   bool MigrateOldConfigFile(
+      const RegistryPath & group, EffectSettings &settings) const;
+   bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
+   bool SavePreset(const RegistryPath & group,
+      const AudioUnitEffectSettings &settings) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);
@@ -177,98 +184,47 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
+   AudioUnitEffectSettings mSettings;
 
-   PluginPath mPath;
-   wxString mName;
-   wxString mVendor;
-   AudioComponent mComponent;
-   AudioUnit mUnit;
-   bool mUnitInitialized;
-
-   bool mSupportsMono;
-   bool mSupportsStereo;
-
-   EffectHostInterface *mHost{};
-   unsigned mAudioIns;
-   unsigned mAudioOuts;
-   bool mInteractive;
-   bool mLatencyDone;
-   UInt32 mBlockSize;
-   double mSampleRate;
-
-   int mBufferSize;
-   bool mUseLatency;
-
-   AudioTimeStamp mTimeStamp;
-
-   ArrayOf<AudioBufferList> mInputList;
-   ArrayOf<AudioBufferList> mOutputList;
-
-   wxWindow *mParent;
-   wxWeakRef<wxDialog> mDialog;
-   wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
-   bool mIsGraphical;
-
-   AudioUnitEffect *mMaster;     // non-NULL if a slave
-   AudioUnitEffectArray mSlaves;
-   unsigned mNumChannels;
-
-   AUEventListenerRef mEventListenerRef;
-
-   AUControl *mpControl{};
-
-   friend class AudioUnitEffectExportDialog;
-   friend class AudioUnitEffectImportDialog;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AudioUnitEffectsModule
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class AudioUnitEffectsModule final : public PluginProvider
-{
 public:
-   AudioUnitEffectsModule();
-   virtual ~AudioUnitEffectsModule();
+   //! This function will be rewritten when the effect is really stateless
+   AudioUnitEffectSettings &GetSettings(EffectSettings &) const
+      { return const_cast<AudioUnitEffect*>(this)->mSettings; }
+   //! This function will be rewritten when the effect is really stateless
+   const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
+      { return mSettings; }
 
-   // ComponentInterface implementation
+private:
+   const PluginPath mPath;
+   const wxString mName;
+   const wxString mVendor;
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+   AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
-   // PluginProvider implementation
+   // Initialized in GetChannelCounts()
+   unsigned mAudioIns{ 2 };
+   unsigned mAudioOuts{ 2 };
 
-   bool Initialize() override;
-   void Terminate() override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
+   bool mInteractive{ false };
+   bool mLatencyDone{ false };
+   UInt32 mBlockSize{ 0 };
+   Float64 mSampleRate{ 44100.0 };
 
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
+   bool mUseLatency{ true };
 
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
+   AudioTimeStamp mTimeStamp{};
 
-   bool IsPluginValid(const PluginPath & path, bool bFast) override;
+   PackedArray::Ptr<AudioBufferList> mInputList;
+   PackedArray::Ptr<AudioBufferList> mOutputList;
 
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
+   wxWindow *mParent{};
+   wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
+   bool mIsGraphical{ false };
 
-   // AudioUnitEffectModule implementation
-
-   void LoadAudioUnitsOfType(OSType inAUType, PluginPaths & effects);
-   AudioComponent FindAudioUnit(const PluginPath & path, wxString & name);
-
-   wxString FromOSType(OSType type);
-   OSType ToOSType(const wxString & type);
+   AudioUnitEffect *const mMaster;     // non-NULL if a slave
+public:
+   AudioUnitEffectArray mSlaves;
+   mutable bool mInitialFetchDone{ false };
 };
 
 #endif

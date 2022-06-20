@@ -17,20 +17,26 @@ Paul Licameli split from Mix.cpp
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
-                  double rate, sampleFormat format,
-                  double startTime, double endTime,
-                  WaveTrack::Holder &uLeft, WaveTrack::Holder &uRight)
+void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
+   const Mixer::WarpOptions &warpOptions,
+   const wxString &newTrackName,
+   WaveTrackFactory *trackFactory,
+   double rate, sampleFormat format,
+   double startTime, double endTime,
+   WaveTrack::Holder &uLeft, WaveTrack::Holder &uRight)
 {
    uLeft.reset(), uRight.reset();
+   if (trackRange.empty())
+      return;
 
    // This function was formerly known as "Quick Mix".
    bool mono = false;   /* flag if output can be mono without losing anything*/
    bool oneinput = false;  /* flag set to true if there is only one input track
                               (mono or stereo) */
 
-   const auto trackRange = tracks->Selected< const WaveTrack >();
    auto first = *trackRange.begin();
+   assert(first); // because the range is known to be nonempty
+
    // this only iterates tracks which are relevant to this function, i.e.
    // selected WaveTracks. The tracklist is (confusingly) the list of all
    // tracks in the project
@@ -87,18 +93,23 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   auto mixLeft = trackFactory->NewWaveTrack(format, rate);
+   // EmptyCopy carries over any interesting channel group information
+   // But make sure the left is unlinked before we re-link
+   auto mixLeft =
+      first->EmptyCopy(trackFactory->GetSampleBlockFactory(), false);
+   mixLeft->SetRate(rate);
+   mixLeft->ConvertToSampleFormat(format);
    if (oneinput)
       mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
    else
       /* i18n-hint: noun, means a track, made by mixing other tracks */
-      mixLeft->SetName(_("Mix"));
+      mixLeft->SetName(newTrackName);
    mixLeft->SetOffset(mixStartTime);
 
    // TODO: more-than-two-channels
    decltype(mixLeft) mixRight{};
    if ( !mono ) {
-      mixRight = trackFactory->NewWaveTrack(format, rate);
+      mixRight = trackFactory->Create(format, rate);
       if (oneinput) {
          auto channels = TrackList::Channels(first);
          if (channels.size() > 1)
@@ -107,7 +118,7 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
             mixRight->SetName(first->GetName());   /* set name to that of sole input channel */
       }
       else
-         mixRight->SetName(_("Mix"));
+         mixRight->SetName(newTrackName);
       mixRight->SetOffset(mixStartTime);
    }
 
@@ -123,8 +134,7 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
 
    Mixer mixer(waveArray,
       // Throw to abort mix-and-render if read fails:
-      true,
-      Mixer::WarpOptions{*tracks},
+      true, warpOptions,
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
 

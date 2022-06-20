@@ -17,6 +17,8 @@ set( SOURCES
    FileIO.h
    FileNames.cpp
    FileNames.h
+   PathList.cpp
+   PathList.h
    PlatformCompatibility.cpp
    PlatformCompatibility.h
    TempDirectory.cpp

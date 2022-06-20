@@ -36,7 +36,6 @@ the pitch without changing the tempo.
 #include <wx/valtext.h>
 
 #include "../PitchName.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Spectrum.h"
 #include "../WaveTrack.h"
@@ -70,11 +69,23 @@ enum {
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name          Type     Key               Def   Min      Max      Scale
-Param( Percentage,   double,  wxT("Percentage"), 0.0,  -99.0,   3000.0,  1  );
-Param( UseSBSMS,     bool,    wxT("SBSMS"),     false, false,   true,    1  );
+const EffectParameterMethods& EffectChangePitch::Parameters() const
+{
+   static CapturedParameters<EffectChangePitch,
+      // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
+      // Only m_dSemitonesChange is used in Process().
+      // PRL 2022: but that is so only when USE_SBSMS is not defined
+      Percentage, UseSBSMS
+   > parameters{
+      [](EffectChangePitch &, EffectSettings &,
+         EffectChangePitch &e, bool updating){
+         if (updating)
+            e.Calc_SemitonesChange_fromPercentChange();
+         return true;
+      },
+   };
+   return parameters;
+}
 
 // We warp the slider to go up to 400%, but user can enter up to 3000%
 static const double kSliderMax = 100.0;          // warped above zero to actually go up to 400%
@@ -104,16 +115,13 @@ END_EVENT_TABLE()
 
 EffectChangePitch::EffectChangePitch()
 {
-   m_dPercentChange = DEF_Percentage;
+   // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
+   // is defined
+   Parameters().Reset(*this);
+
    m_dSemitonesChange = 0.0;
    m_dStartFrequency = 0.0; // 0.0 => uninitialized
    m_bLoopDetect = false;
-
-#if USE_SBSMS
-   mUseSBSMS = DEF_UseSBSMS;
-#else
-   mUseSBSMS = false;
-#endif
 
    // NULL out these control members because there are some cases where the
    // event table handlers get called during this method, and those handlers that
@@ -162,55 +170,22 @@ EffectType EffectChangePitch::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-bool EffectChangePitch::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( m_dPercentChange, Percentage );
-   S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
-   return true;
-}
-
-bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms)
+bool EffectChangePitch::LoadFactoryDefaults(EffectSettings &settings) const
 {
-   parms.Write(KEY_Percentage, m_dPercentChange);
-   parms.Write(KEY_UseSBSMS, mUseSBSMS);
-
-   return true;
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectChangePitch&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectChangePitch::SetAutomationParameters(CommandParameters & parms)
-{
-   // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
-   // Only m_dSemitonesChange is used in Process().
-   ReadAndVerifyDouble(Percentage);
-
-   m_dPercentChange = Percentage;
-   Calc_SemitonesChange_fromPercentChange();
-
-#if USE_SBSMS
-   ReadAndVerifyBool(UseSBSMS);
-   mUseSBSMS = UseSBSMS;
-#else
-   mUseSBSMS = false;
-#endif
-
-   return true;
-}
-
-bool EffectChangePitch::LoadFactoryDefaults()
+bool EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    DeduceFrequencies();
 
-   return Effect::LoadFactoryDefaults();
+   return Effect::LoadFactoryDefaults(settings);
 }
 
 // Effect implementation
 
-bool EffectChangePitch::Init()
-{
-   return true;
-}
-
-bool EffectChangePitch::Process(EffectSettings &settings)
+bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -220,7 +195,7 @@ bool EffectChangePitch::Process(EffectSettings &settings)
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
       //! Already processing; don't make a dialog
-      return Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
+      return Delegate(proxy, settings);
    }
    else
 #endif
@@ -251,13 +226,13 @@ bool EffectChangePitch::Process(EffectSettings &settings)
    }
 }
 
-bool EffectChangePitch::CheckWhetherSkipEffect()
+bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_dPercentChange == 0.0);
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
@@ -355,9 +330,8 @@ EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                .Validator<FloatingPointValidator<double>>(
                   3, &m_dPercentChange,
                   NumValidatorStyle::THREE_TRAILING_ZEROES,
-                  MIN_Percentage, MAX_Percentage
-               )
-               .AddTextBox(XXO("Percent C&hange:"), wxT(""), 12);
+                  Percentage.min, Percentage.max )
+               .AddTextBox(XXO("Percent C&hange:"), L"", 12);
          }
          S.EndHorizontalLay();
 
@@ -366,7 +340,7 @@ EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             m_pSlider_PercentChange = S.Id(ID_PercentChange)
                .Name(XO("Percent Change"))
                .Style(wxSL_HORIZONTAL)
-               .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
+               .AddSlider( {}, 0, (int)kSliderMax, (int)Percentage.min);
          }
          S.EndHorizontalLay();
       }
@@ -734,7 +708,7 @@ void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
    // Success. Make sure OK and Preview are disabled if percent change is out of bounds.
    // Can happen while editing.
    // If the value is good, might also need to re-enable because of above clause.
-   bool bIsGoodValue = (m_dPercentChange > MIN_Percentage) && (m_dPercentChange <= MAX_Percentage);
+   bool bIsGoodValue = (m_dPercentChange > Percentage.min) && (m_dPercentChange <= Percentage.max);
    EnableApply(bIsGoodValue);
 }
 

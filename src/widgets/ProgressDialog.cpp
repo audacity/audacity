@@ -1517,8 +1517,9 @@ void ProgressDialog::SetMessage(const TranslatableString & message)
       wxClientDC dc(mMessage);
       dc.GetMultiLineTextExtent(message.Translation(), &w, &h);
 
-      bool sizeUpdated = false;
-      wxSize ds = GetClientSize();
+      auto sizeUpdated = false;
+      const auto currentSize = GetClientSize();
+      auto ds = currentSize;
 
       // TODO: make the following work in case of message tables
       if (w > mLastW)
@@ -1545,6 +1546,7 @@ void ProgressDialog::SetMessage(const TranslatableString & message)
          // to the existing dimensions.
          ds.x = wxMax(wxMax(ds.x, mLastW), wxMax(ds.y, mLastH));
          SetClientSize(ds);
+         SetPosition(GetPosition() - (ds - currentSize) / 2);
          wxDialogWrapper::Update();
       }
    }
