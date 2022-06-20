@@ -18,6 +18,8 @@ Paul Licameli split from AudioIO.cpp
 #include "Meter.h"
 #include "Prefs.h"
 
+#include "portaudio.h"
+
 #if USE_PORTMIXER
 #include "portmixer.h"
 #endif
