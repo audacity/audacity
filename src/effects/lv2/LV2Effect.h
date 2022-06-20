@@ -99,6 +99,13 @@ public:
    int mLatencyPort{ -1 };
 };
 
+class LV2PortStates {
+public:
+   explicit LV2PortStates(const LV2Ports &ports);
+   LV2AtomPortStateArray mAtomPortStates;
+   LV2CVPortStateArray mCVPortStates;
+};
+
 class LV2Effect final : public LV2FeaturesList
 {
 public:
@@ -192,8 +199,8 @@ public:
    // LV2Effect implementation
 
 private:
-   void InitializePortStates(const LV2Ports &ports);
-   void InitializePortUIStates(const LV2Ports &ports);
+   void InitializePortUIStates(
+      const LV2PortStates &portStates, const LV2Ports &ports);
    void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
 
    struct PlainUIControl;
@@ -257,6 +264,7 @@ public:
 
 private:
    const LV2Ports mPorts{ mPlug };
+   LV2PortStates mPortStates{ mPorts };
 
    size_t mUserBlockSize{ mBlockSize };
 
@@ -274,14 +282,8 @@ private:
       return mSettings;
    }
 
-   LV2AtomPortStateArray mAtomPortStates;
-
    LV2AtomPortStatePtr mControlIn;
    LV2AtomPortStatePtr mControlOut;
-
-   LV2CVPortStateArray mCVPortStates;
-   unsigned mCVIn;
-   unsigned mCVOut;
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };

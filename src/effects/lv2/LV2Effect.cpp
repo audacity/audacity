@@ -224,8 +224,7 @@ bool LV2Effect::InitializePlugin()
       }
    }
 
-   InitializePortStates(mPorts);
-   InitializePortUIStates(mPorts);
+   InitializePortUIStates(mPortStates, mPorts);
    InitializeSettings(mPorts, mSettings);
    return true;
 }
@@ -417,7 +416,7 @@ LV2Ports::LV2Ports(const LilvPlugin &plug)
    }
 }
 
-void LV2Effect::InitializePortStates(const LV2Ports &ports)
+LV2PortStates::LV2PortStates(const LV2Ports &ports)
 {
    for (auto &atomPort : ports.mAtomPorts)
       mAtomPortStates.emplace_back(
@@ -427,12 +426,13 @@ void LV2Effect::InitializePortStates(const LV2Ports &ports)
       mCVPortStates.emplace_back(cvPort);
 }
 
-void LV2Effect::InitializePortUIStates(const LV2Ports &ports)
+void LV2Effect::InitializePortUIStates(
+   const LV2PortStates &portStates, const LV2Ports &ports)
 {
    // Ignore control designation if one of them is missing
    if (ports.mControlInIdx && ports.mControlOutIdx) {
-      mControlIn = mAtomPortStates[*ports.mControlInIdx];
-      mControlOut = mAtomPortStates[*ports.mControlOutIdx];
+      mControlIn = portStates.mAtomPortStates[*ports.mControlInIdx];
+      mControlOut = portStates.mAtomPortStates[*ports.mControlOutIdx];
    }
 
    for (auto &controlPort : ports.mControlPorts) {
@@ -536,7 +536,7 @@ bool LV2Effect::ProcessInitialize(
    mProcess = InitInstance(settings, mSampleRate);
    if (!mProcess)
       return false;
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    mProcess->Activate();
    mLatencyDone = false;
@@ -571,7 +571,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       const auto buf = state->mBuffer.data();
       if (port->mIsInput) {
@@ -619,7 +619,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // Main thread consumes responses
    mProcess->ConsumeResponses();
 
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       if (!port->mIsInput) {
          state->mBuffer.resize(port->mMinimumSize);
@@ -634,7 +634,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
 bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    return true;
 }
@@ -643,7 +643,7 @@ bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    mSlaves.clear();
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reset();
    return true;
 });
@@ -688,7 +688,7 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       const auto buf = state->mBuffer.data();
       if (port->mIsInput) {
@@ -785,7 +785,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
 
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       auto buf = state->mBuffer.data();
       if (!port->mIsInput) {
@@ -811,7 +811,7 @@ return GuardedCall<bool>([&]{
       return true;
    }
 
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       if (!state->mpPort->mIsInput) {
          const auto ring = state->mRing.get();
          LV2_ATOM_SEQUENCE_FOREACH(
@@ -1153,12 +1153,12 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    }
 
    // Connect all atom ports
-   for (auto & state : mAtomPortStates)
+   for (auto & state : mPortStates.mAtomPortStates)
       lilv_instance_connect_port(instance,
          state->mpPort->mIndex, state->mBuffer.data());
 
    // We don't fully support CV ports, so connect them to dummy buffers for now.
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       lilv_instance_connect_port(instance, state.mpPort->mIndex,
          state.mBuffer.get());
 
@@ -1167,7 +1167,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    lilv_instance_activate(instance);
    lilv_instance_deactivate(instance);
 
-   for (auto & state : mAtomPortStates)
+   for (auto & state : mPortStates.mAtomPortStates)
       if (!state->mpPort->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
             reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
