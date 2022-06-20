@@ -17,7 +17,6 @@
 
 class wxArrayString;
 
-#include <memory>
 #include <thread>
 #include <vector>
 
@@ -34,12 +33,11 @@ class wxArrayString;
 #include "lv2_external_ui.h"
 
 #include "LV2FeaturesList.h"
+#include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
 #include "NativeWindow.h"
-
-#include "zix/ring.h"
 
 #include <unordered_map>
 
@@ -64,184 +62,13 @@ class NumericTextCtrl;
 
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 
-class LV2Port
-{
-public:
-   LV2Port(const LilvPort *port,
-           int index,
-           bool isInput,
-           const wxString & symbol,
-           const wxString & name,
-           TranslatableString group)
-   :  mPort(port),
-      mIndex(index),
-      mIsInput(isInput),
-      mSymbol(symbol),
-      mName(name),
-      mGroup(std::move(group))
-   {
-   };
-   LV2Port(const LV2Port &) = default;
-   LV2Port &operator = (const LV2Port &) = default;
-
-   const LilvPort *mPort;
-
-   uint32_t mIndex;
-   bool mIsInput;
-
-   wxString mSymbol;
-   wxString mName;
-   TranslatableString mGroup;
-};
-
-class LV2AudioPort : public LV2Port
-{
-public:
-   LV2AudioPort(const LilvPort *port,
-               int index,
-               bool isInput,
-               const wxString & symbol,
-               const wxString & name,
-               const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-   }
-};
-using LV2AudioPortPtr = std::shared_ptr<LV2AudioPort>;
-using LV2AudioPortArray = std::vector<LV2AudioPortPtr>;
-
-class LV2AtomPort : public LV2Port
-{
-public:
-   LV2AtomPort(const LilvPort *port,
-               int index,
-               bool isInput,
-               const wxString & symbol,
-               const wxString & name,
-               const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-  
-      mIsMidi = false;
-      mWantsPosition = false;
-      mMinimumSize = 1024;
-   }
-   virtual ~LV2AtomPort() = default;
-
-   uint32_t mMinimumSize;
-   bool mIsMidi;
-   bool mWantsPosition;
-
-   std::vector<uint8_t> mBuffer;
-   Lilv_ptr<ZixRing, zix_ring_free> mRing;
-};
-using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
-using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;
-
-class LV2CVPort : public LV2Port
-{
-public:
-   LV2CVPort(const LilvPort *port,
-             int index,
-             bool isInput,
-             const wxString & symbol,
-             const wxString & name,
-             const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-      mMin = 0.0;
-      mMax = 1.0;
-      mDef = 0.0;
-      mHasLo = false;
-      mHasHi = false;
-   };
-
-   float mMin;
-   float mMax;
-   float mDef;
-   bool mHasLo;
-   bool mHasHi;
-
-   Floats mBuffer;
-};
-using LV2CVPortPtr = std::shared_ptr<LV2CVPort>;
-using LV2CVPortArray = std::vector<LV2CVPortPtr>;
-
 class LV2EffectMeter;
-
-/** A structure that contains information about a single LV2 plugin port. */
-class LV2ControlPort : public LV2Port
-{
-public:
-   LV2ControlPort(const LilvPort *port,
-                  int index,
-                  bool isInput,
-                  const wxString & symbol,
-                  const wxString & name,
-                  const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-      mMin = 0.0;
-      mMax = 0.0;
-      mDef = 0.0;
-      mVal = 0.0;
-      mLst = 0.0;
-      mTmp = 0.0;
-      mDmy = 0.0;
-      mLo = 0.0;
-      mHi = 0.0;
-      mHasLo = false;
-      mHasHi = false;
-      mToggle = false;
-      mTrigger = false;
-      mInteger = false;
-      mSampleRate = false;
-      mEnumeration = false;
-      mLogarithmic = false;
-      mNotOnGui = false;
-      mCtrl.button = NULL;
-      mText = NULL;
-   };
- 
-   wxString mUnits;
-   float mMin;
-   float mMax;
-   float mDef;
-   float mVal;
-   float mLst;
-   float mTmp;
-   float mDmy;
-   float mLo;
-   float mHi;
-   bool mHasLo;
-   bool mHasHi;
-   bool mToggle;
-   bool mTrigger;
-   bool mInteger;
-   bool mSampleRate;
-   bool mEnumeration;
-   bool mLogarithmic;
-   bool mNotOnGui;
-
-   // ScalePoints
-   std::vector<double> mScaleValues;
-   wxArrayString mScaleLabels;
-
-   // UI
-   wxTextCtrl *mText;
-   union
-   {
-      wxButton *button;
-      wxCheckBox *checkbox;
-      wxChoice *choice;
-      LV2EffectMeter *meter;
-      wxSlider *slider;
-   } mCtrl;
-};
-using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
-using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
-
 class LV2Wrapper;
+
+struct LV2EffectSettings {
+   //! vector of values in correspondence with the control ports
+   std::vector<float> values;
+};
 
 class LV2Effect final : public LV2FeaturesList
 {
@@ -338,11 +165,14 @@ public:
    // LV2Effect implementation
 
 private:
+   struct PlainUIControl;
+
    bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   std::unique_ptr<LV2Wrapper> InitInstance(float sampleRate);
+   std::unique_ptr<LV2Wrapper>
+   InitInstance(const EffectSettings &settings, float sampleRate);
 
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
@@ -355,11 +185,11 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy();
+   bool BuildFancy(const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
-   bool TransferDataToWindow() /* not override */;
-   void SetSlider(const LV2ControlPortPtr & port);
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -407,20 +237,38 @@ private:
 private:
    size_t mUserBlockSize{ mBlockSize };
 
-   std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
+   //! Mapping from index number among all ports, to position
+   //! among the control ports only
+   std::unordered_map<uint32_t, size_t> mControlPortMap;
    LV2ControlPortArray mControlPorts;
+   LV2ControlPortStateArray mControlPortStates;
+   LV2EffectSettings mSettings;
+
+   //! This ignores its argument while we transition to statelessness
+   //! but will later be rewritten as a static member function
+   LV2EffectSettings &GetSettings(EffectSettings &) const {
+      return const_cast<LV2EffectSettings &>(mSettings);
+   }
+   //! This ignores its argument while we transition to statelessness
+   //! but will later be rewritten as a static member function
+   const LV2EffectSettings &GetSettings(const EffectSettings &) const {
+      return mSettings;
+   }
 
    LV2AudioPortArray mAudioPorts;
    unsigned mAudioIn{ 0 };
    unsigned mAudioOut{ 0 };
 
    LV2AtomPortArray mAtomPorts;
-   LV2AtomPortPtr mControlIn;
-   LV2AtomPortPtr mControlOut;
+   LV2AtomPortStateArray mAtomPortStates;
+
+   LV2AtomPortStatePtr mControlIn;
+   LV2AtomPortStatePtr mControlOut;
    unsigned mMidiIn{ 0 };
    unsigned mMidiOut{ 0 };
 
    LV2CVPortArray mCVPorts;
+   LV2CVPortStateArray mCVPortStates;
    unsigned mCVIn;
    unsigned mCVOut;
 
@@ -480,6 +328,21 @@ private:
    size_t mParentFeature{};
    LV2_Feature *mWorkerScheduleFeature{};
 
+   // UI
+   struct PlainUIControl {
+      wxTextCtrl *mText{};
+      //! Discriminate this union according to corresponding port's properties
+      union {
+         wxButton *button;
+         wxCheckBox *checkbox;
+         wxChoice *choice;
+         LV2EffectMeter *meter;
+         wxSlider *slider;
+      };
+   };
+   //! Array in correspondence with the control ports
+   std::vector<PlainUIControl> mPlainUIControls;
+
    SuilHostPtr mSuilHost;
    SuilInstancePtr mSuilInstance;
 
@@ -504,23 +367,6 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class LV2Wrapper;
-};
-
-//! Use when lilv.h comments "must not be freed" or we use the node elsewhere,
-//! or the node pointer is from iterating a LilvNodes collection
-inline wxString LilvString(const LilvNode *node)
-{
-   return wxString::FromUTF8(lilv_node_as_string(node));
-};
-
-//! Use when lilv.h comments "Returned value must be freed by the caller."
-//! We free it in this function.
-//! Name suggests C++ move semantics applied to `node`, but only C types used
-inline wxString LilvStringMove(LilvNode *node)
-{
-   LilvNodePtr temp{ node };
-   wxString str = LilvString(node);
-   return str;
 };
 
 class LV2Wrapper final

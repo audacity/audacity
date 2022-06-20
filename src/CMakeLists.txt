@@ -601,10 +601,15 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_LV2}>:
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
+         effects/lv2/LV2EffectMeter.cpp
+         effects/lv2/LV2EffectMeter.h
          effects/lv2/LV2FeaturesList.cpp
          effects/lv2/LV2FeaturesList.h
+         effects/lv2/LV2Ports.cpp
+         effects/lv2/LV2Ports.h
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
+         effects/lv2/LV2Utils.h
          effects/lv2/LoadLV2.cpp
          effects/lv2/LoadLV2.h
          effects/lv2/NativeWindow.h

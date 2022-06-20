@@ -22,6 +22,7 @@
 #endif
 
 #include "LV2Effect.h"
+#include "LV2EffectMeter.h"
 #include "SampleCount.h"
 
 #include <cmath>
@@ -30,7 +31,6 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/dcbuffer.h>
 #include <wx/dialog.h>
 #include <wx/log.h>
 #include <wx/msgqueue.h>
@@ -66,103 +66,6 @@
 
 static inline void free_chars (char *p) { lilv_free(p); }
 using LilvCharsPtr = Lilv_ptr<char, free_chars>;
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2EffectMeter
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LV2EffectMeter final : public wxWindow
-{
-public:
-   LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr ctrl);
-   virtual ~LV2EffectMeter();
-
-private:
-   void OnErase(wxEraseEvent &evt);
-   void OnPaint(wxPaintEvent &evt);
-   void OnIdle(wxIdleEvent &evt);
-   void OnSize(wxSizeEvent &evt);
-
-private:
-   const LV2ControlPortPtr mControlPort;
-   float mLastValue;
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
-   EVT_IDLE(LV2EffectMeter::OnIdle)
-   EVT_ERASE_BACKGROUND(LV2EffectMeter::OnErase)
-   EVT_PAINT(LV2EffectMeter::OnPaint)
-   EVT_SIZE(LV2EffectMeter::OnSize)
-END_EVENT_TABLE()
-
-LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr port)
-:  wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxDEFAULT_CONTROL_BORDER),
-   mControlPort(port)
-{
-   mLastValue = -mControlPort->mVal;
-
-   SetBackgroundColour(*wxWHITE);
-}
-
-LV2EffectMeter::~LV2EffectMeter()
-{
-}
-
-void LV2EffectMeter::OnIdle(wxIdleEvent &evt)
-{
-   evt.Skip();
-   if (mLastValue != mControlPort->mVal)
-   {
-      Refresh(false);
-   }
-}
-
-void LV2EffectMeter::OnErase(wxEraseEvent &WXUNUSED(evt))
-{
-   // Just ignore it to prevent flashing
-}
-
-void LV2EffectMeter::OnPaint(wxPaintEvent &WXUNUSED(evt))
-{
-   std::unique_ptr<wxDC> dc {wxAutoBufferedPaintDCFactory(this)};
-
-   // Cache some metrics
-   wxRect r = GetClientRect();
-   wxCoord x = r.GetLeft();
-   wxCoord y = r.GetTop();
-   wxCoord w = r.GetWidth();
-   wxCoord h = r.GetHeight();
-
-   // These use unscaled value, min, and max
-   float val = mControlPort->mVal;
-   if (val > mControlPort->mMax)
-   {
-      val = mControlPort->mMax;
-   }
-   if (val < mControlPort->mMin)
-   {
-      val = mControlPort->mMin;
-   }
-   val -= mControlPort->mMin;
-
-   // Setup for erasing the background
-   dc->SetPen(*wxTRANSPARENT_PEN);
-   dc->SetBrush(wxColour(100, 100, 220));
-
-   dc->Clear();
-   dc->DrawRectangle(x, y, (w * (val / fabs(mControlPort->mMax - mControlPort->mMin))), h);
-
-   mLastValue = mControlPort->mVal;
-}
-
-void LV2EffectMeter::OnSize(wxSizeEvent &WXUNUSED(evt))
-{
-   Refresh(false);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -525,133 +428,134 @@ bool LV2Effect::InitializePlugin()
             mGroups.push_back(groupName);
          mGroupMap[groupName].push_back(mControlPorts.size());
 
-         mControlPorts.push_back(std::make_shared<LV2ControlPort>(
-            port, index, isInput, symbol, name, groupName));
-         const auto controlPort = mControlPorts.back();
-
+         wxString units;
          // Get any unit descriptor
          if (LilvNodePtr unit{ lilv_port_get(mPlug, port, node_Unit) })
             // Really should use lilv_world_get_symbol()
-            if(LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
-               controlPort->mUnits = LilvString(symbol.get());
+            if (LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
+               units = LilvString(symbol.get());
+
+         // Collect the value and range info
+         bool hasLo = !std::isnan(minimumVals[i]);
+         bool hasHi = !std::isnan(maximumVals[i]);
+         float min = hasLo ? minimumVals[i] : 0.0f;
+         float max = hasHi ? maximumVals[i] : 1.0f;
+         float def = !std::isnan(defaultVals[i])
+            ? defaultVals[i]
+            : hasLo
+               ? min
+               : hasHi
+                  ? max
+                  : 0.0f;
+   
+         // Figure out the type of port we have
+         bool toggle = isInput &&
+            lilv_port_has_property(mPlug, port, node_Toggled);
+         bool enumeration = isInput &&
+            lilv_port_has_property(mPlug, port, node_Enumeration);
+         bool integer = isInput &&
+            lilv_port_has_property(mPlug, port, node_Integer);
+         bool sampleRate = isInput &&
+            lilv_port_has_property(mPlug, port, node_SampleRate);
+         // Trigger properties can be combined with other types, but it
+         // seems mostly to be combined with toggle.  So, we turn the
+         // checkbox into a button.
+         bool trigger = isInput &&
+            lilv_port_has_property(mPlug, port, node_Trigger);
+         // We'll make the slider logarithmic
+         bool logarithmic = isInput &&
+            lilv_port_has_property(mPlug, port, node_Logarithmic);
 
          // Get the scale points
+         std::vector<double> scaleValues;
+         wxArrayString scaleLabels;
          {
             LilvScalePointsPtr points{
                lilv_port_get_scale_points(mPlug, port) };
             LILV_FOREACH(scale_points, j, points.get()) {
                const auto point = lilv_scale_points_get(points.get(), j);
-               controlPort->mScaleValues.push_back(
+               scaleValues.push_back(
                   lilv_node_as_float(lilv_scale_point_get_value(point)));
-               controlPort->mScaleLabels.push_back(
+               scaleLabels.push_back(
                   LilvString(lilv_scale_point_get_label(point)));
             }
          }
 
-         // Collect the value and range info
-         controlPort->mHasLo = !std::isnan(minimumVals[i]);
-         controlPort->mHasHi = !std::isnan(maximumVals[i]);
-         controlPort->mMin = controlPort->mHasLo ? minimumVals[i] : 0.0;
-         controlPort->mMax = controlPort->mHasHi ? maximumVals[i] : 1.0;
-         controlPort->mLo = controlPort->mMin;
-         controlPort->mHi = controlPort->mMax;
-         controlPort->mDef = !std::isnan(defaultVals[i])
-            ? defaultVals[i]
-            : controlPort->mHasLo
-                 ? controlPort->mLo
-                 : controlPort->mHasHi
-                    ? controlPort->mHi
-                    : 0.0;
-         controlPort->mVal = controlPort->mDef;
-         controlPort->mLst = controlPort->mVal;
+         mControlPorts.push_back(std::make_shared<LV2ControlPort>(
+            port, index, isInput, symbol, name, groupName,
+            move(scaleValues), std::move(scaleLabels), units,
+            min, max, def, hasLo, hasHi,
+            toggle, enumeration, integer, sampleRate,
+            trigger, logarithmic));
+         const auto &controlPort = mControlPorts.back();
+         mControlPortStates.emplace_back(controlPort);
+         auto &state = mControlPortStates.back();
+         auto &value = mSettings.values.emplace_back();
+
+         state.mLo = controlPort->mMin;
+         state.mHi = controlPort->mMax;
+         value = controlPort->mDef;
+         state.mLst = value;
 
          // Figure out the type of port we have
-         if (isInput) {
-            if (lilv_port_has_property(mPlug, port, node_Toggled))
-               controlPort->mToggle = true;
-            else if (lilv_port_has_property(mPlug, port, node_Enumeration))
-               controlPort->mEnumeration = true;
-            else if (lilv_port_has_property(mPlug, port, node_Integer))
-               controlPort->mInteger = true;
-            else if (lilv_port_has_property(mPlug, port, node_SampleRate))
-               controlPort->mSampleRate = true;
-
-            // Trigger properties can be combined with other types, but it
-            // seems mostly to be combined with toggle.  So, we turn the
-            // checkbox into a button.
-            if (lilv_port_has_property(mPlug, port, node_Trigger))
-               controlPort->mTrigger = true;
-
-            // We'll make the slider logarithmic
-            if (lilv_port_has_property(mPlug, port, node_Logarithmic))
-               controlPort->mLogarithmic = true;
-
-            if (lilv_port_has_property(mPlug, port, node_Enumeration))
-               controlPort->mEnumeration = true;
-
-            mControlPortMap[controlPort->mIndex] = controlPort;
-         }
+         if (isInput)
+            mControlPortMap[controlPort->mIndex] = mControlPorts.size() - 1;
          else if (controlPort->mIndex == latencyIndex)
             mLatencyPort = i;
       }
       // Check for atom ports
       else if (lilv_port_is_a(mPlug, port, node_AtomPort)) {
-         mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
-            port, index, isInput, symbol, name, groupName));
-         const auto atomPort = mAtomPorts.back();
-
-         atomPort->mMinimumSize = 8192;
+         uint32_t minimumSize = 8192;
          if (LilvNodePtr min{ lilv_port_get(mPlug, port, node_MinimumSize) }
             ; lilv_node_is_int(min.get())
          ){
             if (auto value = lilv_node_as_int(min.get())
                ; value > 0
             )
-               atomPort->mMinimumSize =
-                  std::max<uint32_t>(atomPort->mMinimumSize, value);
+               minimumSize = std::max<uint32_t>(minimumSize, value);
          }
-
-         atomPort->mBuffer.resize(atomPort->mMinimumSize);
-         atomPort->mRing.reset(zix_ring_new(atomPort->mMinimumSize));
-         zix_ring_mlock(atomPort->mRing.get());
-
-         if (lilv_port_supports_event(mPlug, port, node_Position))
-            atomPort->mWantsPosition = true;
-
-         if (lilv_port_supports_event(mPlug, port, node_MidiEvent)) {
-            atomPort->mIsMidi = true;
+         bool wantsPosition =
+            lilv_port_supports_event(mPlug, port, node_Position);
+         bool isMidi = lilv_port_supports_event(mPlug, port, node_MidiEvent);
+         if (isMidi)
             (isInput ? mMidiIn : mMidiOut) += 1;
-         }
+         mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
+            port, index, isInput, symbol, name, groupName,
+            minimumSize, isMidi, wantsPosition));
+         mAtomPortStates
+            .push_back(std::make_shared<LV2AtomPortState>(mAtomPorts.back()));
+         const auto &atomPortState = mAtomPortStates.back();
 
          bool isControl = lilv_node_equals(designation.get(), node_Control);
          if (isInput) {
             if (!mControlIn || isControl)
-               mControlIn = atomPort;
+               mControlIn = atomPortState;
          }
          else if (!mControlOut || isControl)
-            mControlOut = atomPort;
+            mControlOut = atomPortState;
       }
       // Check for CV ports
       else if (lilv_port_is_a(mPlug, port, node_CVPort)) {
-         mCVPorts.push_back(std::make_shared<LV2CVPort>(
-            port, index, isInput, symbol, name, groupName));
-         const auto cvPort = mCVPorts.back();
-      
          // Collect the value and range info
-         if (!std::isnan(minimumVals[i])) {
-            cvPort->mHasLo = true;
-            cvPort->mMin = minimumVals[i];
-         }
-         if (!std::isnan(maximumVals[i])) {
-            cvPort->mHasHi = true;
-            cvPort->mMax = maximumVals[i];
-         }
+         float min = 0;
+         float max = 1;
+         float def = 0;
+         bool hasLo = false;
+         bool hasHi = false;
+         if (!std::isnan(minimumVals[i]))
+            hasLo = true, min = minimumVals[i];
+         if (!std::isnan(maximumVals[i]))
+            hasHi = true, max = maximumVals[i];
          if (!std::isnan(defaultVals[i]))
-            cvPort->mDef = defaultVals[i];
-         else if (cvPort->mHasLo)
-            cvPort->mDef = cvPort->mMin;
-         else if (cvPort->mHasHi)
-            cvPort->mDef = cvPort->mMax;
+            def = defaultVals[i];
+         else if (hasLo)
+            def = min;
+         else if (hasHi)
+            def = max;
+         mCVPorts.push_back(std::make_shared<LV2CVPort>(
+            port, index, isInput, symbol, name, groupName,
+            min, max, def, hasLo, hasHi));
+         mCVPortStates.emplace_back(mCVPorts.back());
       }
    }
    }
@@ -763,23 +667,15 @@ sampleCount LV2Effect::GetLatency()
 }
 
 bool LV2Effect::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+   EffectSettings &settings, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(mSampleRate);
+   mProcess = InitInstance(settings, mSampleRate);
    if (!mProcess)
-   {
       return false;
-   }
-
-   for (auto & port : mCVPorts)
-   {
-      port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
-   }
-
+   for (auto & state : mCVPortStates)
+      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    mProcess->Activate();
-
    mLatencyDone = false;
-
    return true;
 }
 
@@ -811,24 +707,16 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & port : mAtomPorts)
-   {
-      uint8_t *buf = port->mBuffer.data();
-
-      if (port->mIsInput)
-      {
-         lv2_atom_forge_set_buffer(&mForge,
-                                   buf,
-                                   port->mBuffer.size());
-
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      const auto buf = state->mBuffer.data();
+      if (port->mIsInput) {
+         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
          LV2_Atom_Forge_Frame seqFrame;
-         LV2_Atom_Sequence *seq = ( LV2_Atom_Sequence *)
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0);
-
-         if (port->mWantsPosition)
-         {
+         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
+            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
+         if (port->mWantsPosition) {
             lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
             LV2_Atom_Forge_Frame posFrame;
             lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
             lv2_atom_forge_key(&mForge, urid_Speed);
@@ -837,37 +725,28 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
             lv2_atom_forge_long(&mForge, mPositionFrame);
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
-
-         const auto ring = port->mRing.get();
+         const auto ring = state->mRing.get();
          LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom)))
-         {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size < mForge.size)
-            {
+         while (zix_ring_read(ring, &atom, sizeof(atom))) {
+            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
+               < mForge.size
+            ){
                lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
                lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
                zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
                mForge.offset += atom.size;
                seq->atom.size += atom.size;
             }
-            else
-            {
+            else {
                zix_ring_skip(ring, atom.size);
                wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
-
          lv2_atom_forge_pop(&mForge, &seqFrame);
       }
-      else
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-         *(( LV2_Atom *) buf) =
-         {
-            port->mMinimumSize,
-            urid_Chunk
-         };
+      else {
+         state->mBuffer.resize(port->mMinimumSize);
+         *reinterpret_cast<LV2_Atom*>(buf) = { port->mMinimumSize, urid_Chunk };
       }
    }
 
@@ -876,13 +755,11 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // Main thread consumes responses
    mProcess->ConsumeResponses();
 
-   for (auto & port : mAtomPorts)
-   {
-      if (!port->mIsInput)
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-
-         LV2_Atom *chunk = ( LV2_Atom *) port->mBuffer.data();
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      if (!port->mIsInput) {
+         state->mBuffer.resize(port->mMinimumSize);
+         auto chunk = reinterpret_cast<LV2_Atom *>(state->mBuffer.data());
          chunk->size = port->mMinimumSize;
          chunk->type = urid_Chunk;
       }
@@ -893,8 +770,8 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
 bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
-   for (auto & port : mCVPorts)
-      port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
+   for (auto & state : mCVPortStates)
+      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    return true;
 }
 
@@ -902,16 +779,16 @@ bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    mSlaves.clear();
-   for (auto & port : mCVPorts)
-      port->mBuffer.reset();
+   for (auto & state : mCVPortStates)
+      state.mBuffer.reset();
    return true;
 });
 }
 
 bool LV2Effect::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto pInstance = InitInstance(sampleRate);
+   auto pInstance = InitInstance(settings, sampleRate);
    if (!pInstance)
       return false;
    pInstance->Activate();
@@ -947,24 +824,16 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & port : mAtomPorts)
-   {
-      uint8_t *buf = port->mBuffer.data();
-
-      if (port->mIsInput)
-      {
-         lv2_atom_forge_set_buffer(&mForge,
-                                   buf,
-                                   port->mBuffer.size());
-
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      const auto buf = state->mBuffer.data();
+      if (port->mIsInput) {
+         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
          LV2_Atom_Forge_Frame seqFrame;
-         LV2_Atom_Sequence *seq = (LV2_Atom_Sequence *)
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0);
-
-         if (port->mWantsPosition)
-         {
+         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
+            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
+         if (port->mWantsPosition) {
             lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
             LV2_Atom_Forge_Frame posFrame;
             lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
             lv2_atom_forge_key(&mForge, urid_Speed);
@@ -973,43 +842,35 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
             lv2_atom_forge_long(&mForge, mPositionFrame);
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
-
-         const auto ring = port->mRing.get();
+         const auto ring = state->mRing.get();
          LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom)))
-         {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size < mForge.size)
-            {
+         while (zix_ring_read(ring, &atom, sizeof(atom))) {
+            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
+               < mForge.size
+            ){
                lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
                lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
                zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
                mForge.offset += atom.size;
                seq->atom.size += atom.size;
             }
-            else
-            {
+            else {
                zix_ring_skip(ring, atom.size);
                wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
          lv2_atom_forge_pop(&mForge, &seqFrame);
 #if 0
-         LV2_ATOM_SEQUENCE_FOREACH(seq, ev)
-         {
-            LV2_Atom_Object *o = (LV2_Atom_Object *) &ev->body;
+         LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
+            auto o = reinterpret_cast<LV2_Atom_Object *>(&ev->body);
             wxLogDebug(wxT("ev = %lld ev.size %d ev.type %d"), ev->time.frames, ev->body.size, ev->body.type);
          }
 #endif
       }
-      else
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-         *((LV2_Atom *) buf) =
-         {
-            port->mMinimumSize,
-            urid_Chunk
-         };
+      else {
+         state->mBuffer.resize(port->mMinimumSize);
+         *reinterpret_cast<LV2_Atom *>(buf) =
+            { port->mMinimumSize, urid_Chunk };
       }
    }
 
@@ -1060,24 +921,19 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
 
-   for (auto & port : mAtomPorts)
-   {
-      uint8_t *buf = port->mBuffer.data();
-
-      if (!port->mIsInput)
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-
-         LV2_Atom *chunk = ( LV2_Atom *) buf;
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      auto buf = state->mBuffer.data();
+      if (!port->mIsInput) {
+         state->mBuffer.resize(port->mMinimumSize);
+         auto chunk = reinterpret_cast<LV2_Atom *>(buf);
          chunk->size = port->mMinimumSize;
          chunk->type = LV2Symbols::urid_Chunk;
       }
    }
 
    if (group == 0)
-   {
       mPositionFrame += numSamples;
-   }
 
    return numSamples;
 }
@@ -1091,16 +947,13 @@ return GuardedCall<bool>([&]{
       return true;
    }
 
-   for (auto & port : mAtomPorts)
-   {
-      if (!port->mIsInput)
-      {
-         const auto ring = port->mRing.get();
-
-         LV2_ATOM_SEQUENCE_FOREACH((LV2_Atom_Sequence *) port->mBuffer.data(), ev)
-         {
+   for (auto & state : mAtomPortStates) {
+      if (!state->mpPort->mIsInput) {
+         const auto ring = state->mRing.get();
+         LV2_ATOM_SEQUENCE_FOREACH(
+            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
+         )
             zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
-         }
       }
    }
 
@@ -1135,19 +988,16 @@ int LV2Effect::ShowClientInterface(
 }
 
 bool LV2Effect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+   const EffectSettings &settings, CommandParameters & parms) const
 {
-   for (auto & port : mControlPorts)
-   {
+   auto &values = GetSettings(settings).values;
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       if (port->mIsInput)
-      {
-         if (!parms.Write(port->mName, port->mVal))
-         {
+         if (!parms.Write(port->mName, values[index]))
             return false;
-         }
-      }
+      ++index;
    }
-
    return true;
 }
 
@@ -1155,38 +1005,28 @@ bool LV2Effect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
-   for (auto & port : mControlPorts)
-   {
-      if (port->mIsInput)
-      {
+   for (auto & port : mControlPorts) {
+      if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
-         {
             return false;
-         }
-
          // Use unscaled range here
          if (d < port->mMin || d > port->mMax)
-         {
             return false;
-         }
       }
    }
 
    // Second pass actually sets the values
-   for (auto & port : mControlPorts)
-   {
-      if (port->mIsInput)
-      {
+   auto &values = GetSettings(settings).values;
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
+      if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
-         {
             return false;
-         }
-
-         port->mVal = d;
-         port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
+         values[index] = d;
       }
+      ++index;
    }
 
    return true;
@@ -1199,6 +1039,7 @@ bool LV2Effect::LoadSettings(
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    EffectInstance &, EffectSettingsAccess &access)
 {
+   auto &settings = access.Get();
    auto parent = S.GetParent();
    mParent = parent;
 
@@ -1207,7 +1048,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(mSampleRate);
+   mMaster = InitInstance(settings, mSampleRate);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -1222,17 +1063,12 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    // Until I figure out where to put the "Duration" control in the
    // graphical editor, force usage of plain editor.
    if (GetType() == EffectTypeGenerate)
-   {
       mUseGUI = false;
-   }
 
    if (mUseGUI)
-   {
-      mUseGUI = BuildFancy();
-   }
+      mUseGUI = BuildFancy(settings);
 
-   if (!mUseGUI)
-   {
+   if (!mUseGUI) {
       if (!BuildPlain(access))
          return nullptr;
    }
@@ -1262,32 +1098,24 @@ bool LV2Effect::CloseUI()
 #endif
 
    mParent->RemoveEventHandler(this);
-
-   if (mSuilInstance)
-   {
-      if (mNativeWin)
-      {
+   if (mSuilInstance) {
+      if (mNativeWin) {
          mNativeWin->Destroy();
-         mNativeWin = NULL;
+         mNativeWin = nullptr;
       }
-
       mUIIdleInterface = nullptr;
       mUIShowInterface = nullptr;
       mExternalWidget = nullptr;
-
       mSuilInstance.reset();
    }
-
    mSuilHost.reset();
-
    mMaster.reset();
-
-   mParent = NULL;
-   mDialog = NULL;
+   mParent = nullptr;
+   mDialog = nullptr;
 
    // Restore initial state
    mExtensionDataFeature = {};
-
+   mPlainUIControls.clear();
    return true;
 }
 
@@ -1302,11 +1130,8 @@ bool LV2Effect::DoLoadUserPreset(
    const RegistryPath &name, EffectSettings &settings)
 {
    if (!LoadParameters(name, settings))
-   {
       return false;
-   }
-
-   return TransferDataToWindow();
+   return true;
 }
 
 bool LV2Effect::SaveUserPreset(
@@ -1368,7 +1193,6 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
       lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
       lilv_state_restore(
          state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
-      TransferDataToWindow();
       return true;
    }
    else
@@ -1446,7 +1270,8 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
+std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
+   const EffectSettings &settings, float sampleRate)
 {
    auto wrapper = std::make_unique<LV2Wrapper>(*this, mPlug, sampleRate);
    auto instance = wrapper->GetInstance();
@@ -1456,41 +1281,54 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
    wrapper->SetBlockSize();
    wrapper->SetSampleRate();
 
+   static float blackHole;
+
    // Connect all control ports
-   for (auto & port : mControlPorts)
+   auto &values = GetSettings(settings).values;
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       // If it's not an input port and master has already been created
       // then connect the port to a dummy field since slave output port
       // values are unwanted as the master values will be used.
       //
       // Otherwise, connect it to the real value field.
       lilv_instance_connect_port(instance, port->mIndex,
-         !port->mIsInput && mMaster ? &port->mDmy : &port->mVal);
+         !port->mIsInput && mMaster
+            ? &blackHole
+            // Treat settings slot corresponding to an output port as mutable
+            // Otherwise those for input ports must still pass to the library
+            // as nominal pointers to non-const
+            : &const_cast<float&>(values[index]));
+      ++index;
+   }
 
    // Connect all atom ports
-   for (auto & port : mAtomPorts)
-      lilv_instance_connect_port(instance, port->mIndex, port->mBuffer.data());
+   for (auto & state : mAtomPortStates)
+      lilv_instance_connect_port(instance,
+         state->mpPort->mIndex, state->mBuffer.data());
 
    // We don't fully support CV ports, so connect them to dummy buffers for now.
-   for (auto & port : mCVPorts)
-      lilv_instance_connect_port(instance, port->mIndex, port->mBuffer.get());
+   for (auto & state : mCVPortStates)
+      lilv_instance_connect_port(instance, state.mpPort->mIndex,
+         state.mBuffer.get());
 
    // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
    // this before it can be safely deleted.
    lilv_instance_activate(instance);
    lilv_instance_deactivate(instance);
 
-   for (auto & port : mAtomPorts)
-      if (!port->mIsInput)
+   for (auto & state : mAtomPortStates)
+      if (!state->mpPort->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(port->mBuffer.data()), ev) {
-            zix_ring_write(port->mRing.get(),
+            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
+         )
+            zix_ring_write(state->mRing.get(),
                &ev->body, ev->body.size + sizeof(LV2_Atom));
-         }
 
    return wrapper;
 }
 
-bool LV2Effect::BuildFancy()
+bool LV2Effect::BuildFancy(const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -1693,7 +1531,7 @@ bool LV2Effect::BuildFancy()
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
    }
 
-   TransferDataToWindow();
+   TransferDataToWindow(settings);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -1710,299 +1548,236 @@ bool LV2Effect::BuildFancy()
 
 bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
+   auto &settings = access.Get();
+   auto &values = GetSettings(settings).values;
+   mPlainUIControls.resize(mControlPorts.size());
+
    int numCols = 5;
    wxSizer *innerSizer;
 
-   wxASSERT(mParent); // To justify safenew
-   wxScrolledWindow *const w = safenew 
-      wxScrolledWindow(mParent,
-                       wxID_ANY,
-                       wxDefaultPosition,
-                       wxDefaultSize,
-                       wxVSCROLL | wxTAB_TRAVERSAL);
+   assert(mParent); // To justify safenew
+   const auto w = safenew wxScrolledWindow(mParent,
+      wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL | wxTAB_TRAVERSAL);
 
    {
       auto outerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       w->SetScrollRate(0, 20);
-
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       w->SetName(wxT("\a"));
       w->SetLabel(wxT("\a"));
-
       outerSizer->Add(w, 1, wxEXPAND);
 
-      {
-         auto uInnerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-         innerSizer = uInnerSizer.get();
+      auto uInnerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      innerSizer = uInnerSizer.get();
 
-         if (GetType() == EffectTypeGenerate)
-         {
-            // Add the length control
-            auto groupSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
-
-            auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-            wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
-            sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
-            auto &extra = access.Get().extra;
-            mDuration = safenew
-               NumericTextCtrl(w, ID_Duration,
-                               NumericConverter::TIME,
-                               extra.GetDurationFormat(),
-                               extra.GetDuration(),
-                               mSampleRate,
-                               NumericTextCtrl::Options {}
-            .AutoPos(true));
-            mDuration->SetName( XO("Duration") );
-            sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
-
-            groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
-            innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
-         }
-
-         std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
-
-         for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
-         {
-            const auto &label = mGroups[i];
-            auto groupSizer = std::make_unique<wxStaticBoxSizer>(
-               wxVERTICAL, w, label.Translation());
-
-            auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
-            gridSizer->AddGrowableCol(3);
-
-            for (auto & p : mGroupMap[mGroups[i]])
-            {
-               auto & port = mControlPorts[p];
-
-               if (port->mNotOnGui)
-               {
-                  continue;
-               }
-
-               wxString labelText = port->mName;
-               if (!port->mUnits.empty())
-               {
-                  labelText += wxT(" (") + port->mUnits + wxT(")");
-               }
-
-               if (port->mTrigger)
-               {
-                  gridSizer->Add(1, 1, 0);
-
-                  wxASSERT(w); // To justify safenew
-                  wxButton *b = safenew wxButton(w, ID_Triggers + p, labelText);
-                  gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mCtrl.button = b;
-
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  continue;
-               }
-
-               wxWindow *item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
-                                                     wxDefaultPosition, wxDefaultSize,
-                                                     wxALIGN_RIGHT);
-               gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-
-               if (port->mToggle)
-               {
-                  wxCheckBox *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
-                  c->SetName(labelText);
-                  c->SetValue(port->mVal > 0);
-                  gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mCtrl.checkbox = c;
-
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-               }
-               else if (port->mEnumeration)      // Check before integer
-               {
-                  int s;
-                  for (s = (int) port->mScaleValues.size() - 1; s >= 0; s--)
-                  {
-                     if (port->mVal >= port->mScaleValues[s])
-                     {
-                        break;
-                     }
-                  }
-
-                  if (s < 0)
-                  {
-                     s = 0;
-                  }
-
-                  wxChoice *c = safenew wxChoice(w, ID_Choices + p);
-                  c->SetName(labelText);
-                  c->Append(port->mScaleLabels);
-                  c->SetSelection(s);
-                  gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mCtrl.choice = c;
-
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-               }
-               else if (!port->mIsInput)
-               {
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-
-                  LV2EffectMeter *m = safenew LV2EffectMeter(w, port);
-                  gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-                  port->mCtrl.meter = m;
-
-                  gridSizer->Add(1, 1, 0);
-               }
-               else
-               {
-                  wxTextCtrl *t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
-                  t->SetName(labelText);
-                  gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mText = t;
-
-                  float rate = port->mSampleRate ? mSampleRate : 1.0;
-
-                  port->mLo = port->mMin * rate;
-                  port->mHi = port->mMax * rate;
-                  port->mTmp = port->mVal * rate;
-
-                  if (port->mInteger)
-                  {
-                     IntegerValidator<float> vld(&port->mTmp);
-                     vld.SetRange(port->mLo, port->mHi);
-                     t->SetValidator(vld);
-                  }
-                  else
-                  {
-                     FloatingPointValidator<float> vld(6, &port->mTmp);
-                     vld.SetRange(port->mLo, port->mHi);
-
-                     // Set number of decimal places
-                     float range = port->mHi - port->mLo;
-                     auto style = range < 10
-                                  ? NumValidatorStyle::THREE_TRAILING_ZEROES
-                                  : range < 100
-                                    ? NumValidatorStyle::TWO_TRAILING_ZEROES
-                                    : NumValidatorStyle::ONE_TRAILING_ZERO;
-                     vld.SetStyle(style);
-
-                     t->SetValidator(vld);
-                  }
-
-                  if (port->mHasLo)
-                  {
-                     wxString str;
-                     if (port->mInteger || port->mSampleRate)
-                     {
-                        str.Printf(wxT("%d"), (int) lrintf(port->mLo));
-                     }
-                     else
-                     {
-                        str = Internat::ToDisplayString(port->mLo);
-                     }
-                     item = safenew wxStaticText(w, wxID_ANY, str);
-                     gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-                  }
-                  else
-                  {
-                     gridSizer->Add(1, 1, 0);
-                  }
-
-                  wxSlider *s = safenew wxSliderWrapper(w, ID_Sliders + p,
-                                                        0, 0, 1000,
-                                                        wxDefaultPosition,
-                                                        wxSize(150, -1));
-                  s->SetName(labelText);
-                  gridSizer->Add(s, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-                  port->mCtrl.slider = s;
-
-                  if (port->mHasHi)
-                  {
-                     wxString str;
-                     if (port->mInteger || port->mSampleRate)
-                     {
-                        str.Printf(wxT("%d"), (int) lrintf(port->mHi));
-                     }
-                     else
-                     {
-                        str = Internat::ToDisplayString(port->mHi);
-                     }
-                     item = safenew wxStaticText(w, wxID_ANY, str);
-                     gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  }
-                  else
-                  {
-                     gridSizer->Add(1, 1, 0);
-                  }
-               }
-            }
-
-            groupSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
-            innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
-         }
-
-         innerSizer->Layout();
-
-         // Calculate the maximum width of all columns (bypass Generator sizer)
-         std::vector<int> widths(numCols);
-
-         size_t cnt = innerSizer->GetChildren().GetCount();
-         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
-         {
-            wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
-
-            size_t items = gridSizer->GetChildren().GetCount();
-            int cols = gridSizer->GetCols();
-
-            for (size_t j = 0; j < items; j++)
-            {
-               wxSizerItem *item = gridSizer->GetItem(j);
-               widths[j % cols] = wxMax(widths[j % cols], item->GetSize().GetWidth());
-            }
-         }
-
-         // Set each column in all of the groups to the same width.
-         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
-         {
-            wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
-
-            size_t items = gridSizer->GetChildren().GetCount();
-            int cols = gridSizer->GetCols();
-
-            for (size_t j = 0; j < items; j++)
-            {
-               wxSizerItem *item = gridSizer->GetItem(j);
-
-               int flags = item->GetFlag();
-               if (flags & wxEXPAND)
-               {
-                  continue;
-               }
-
-               if (flags & wxALIGN_RIGHT)
-               {
-                  flags = (flags & ~wxALL) | wxLEFT;
-               }
-               else
-               {
-                  flags = (flags & ~wxALL) | wxRIGHT;
-               }
-               item->SetFlag(flags);
-
-               item->SetBorder(widths[j % cols] - item->GetMinSize().GetWidth());
-            }
-         }
-
-         w->SetSizer(uInnerSizer.release());
+      // Add the duration control, if a generator
+      if (GetType() == EffectTypeGenerate) {
+         auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         auto item = safenew wxStaticText(w, 0, _("&Duration:"));
+         sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
+         auto &extra = settings.extra;
+         mDuration = safenew NumericTextCtrl(w, ID_Duration,
+            NumericConverter::TIME, extra.GetDurationFormat(),
+            extra.GetDuration(), mSampleRate,
+            NumericTextCtrl::Options{}.AutoPos(true));
+         mDuration->SetName( XO("Duration") );
+         sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
+         auto groupSizer =
+            std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
+         groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
+         innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
       }
 
+      // Make other controls, grouped into static boxes that are named
+      // according to certain control port metadata
+      std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
+      for (auto &label: mGroups) {
+         auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
+         gridSizer->AddGrowableCol(3);
+         for (auto & p : mGroupMap[label]) {
+            auto &state = mControlPortStates[p];
+            auto &port = state.mpPort;
+            auto &ctrl = mPlainUIControls[p];
+            const auto &value = values[p];
+            auto labelText = port->mName;
+            if (!port->mUnits.empty())
+               labelText += XO("(%s)").Format(port->mUnits).Translation();
+
+            // A "trigger" port gets a row with just a pushbutton
+            if (port->mTrigger) {
+               gridSizer->Add(1, 1, 0);
+
+               assert(w); // To justify safenew
+               auto b = safenew wxButton(w, ID_Triggers + p, labelText);
+               gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               ctrl.button = b;
+
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               continue;
+            }
+
+            // Any other kind of port gets a name text...
+            auto item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
+               wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+            gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+
+            // ... then appropriate controls and static texts in other columns
+            if (port->mToggle) {
+               // Toggle port gets a checkbox
+               auto c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
+               c->SetName(labelText);
+               c->SetValue(value > 0);
+               gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               ctrl.checkbox = c;
+
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+            }
+            else if (port->mEnumeration) {
+               // Enumeration port gets a choice control
+               // Discretize the value (all ports hold a float value) to
+               // determine the intial selection
+               auto s = port->Discretize(value);
+               auto c = safenew wxChoice(w, ID_Choices + p);
+               c->SetName(labelText);
+               c->Append(port->mScaleLabels);
+               c->SetSelection(s);
+               gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               ctrl.choice = c;
+
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+            }
+            else if (!port->mIsInput) {
+               // Real-valued output gets a meter control
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+
+               //! Captures a const reference to value!
+               auto m = safenew LV2EffectMeter(w, port, value);
+               gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+               ctrl.meter = m;
+
+               gridSizer->Add(1, 1, 0);
+            }
+            else {
+               // Numerical input gets a text input, with a validator...
+               auto t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
+               t->SetName(labelText);
+               gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               ctrl.mText = t;
+               auto rate = port->mSampleRate ? mSampleRate : 1.0f;
+               state.mLo = port->mMin * rate;
+               state.mHi = port->mMax * rate;
+               state.mTmp = value * rate;
+               if (port->mInteger) {
+                  IntegerValidator<float> vld(&state.mTmp);
+                  vld.SetRange(state.mLo, state.mHi);
+                  t->SetValidator(vld);
+               }
+               else {
+                  FloatingPointValidator<float> vld(6, &state.mTmp);
+                  vld.SetRange(state.mLo, state.mHi);
+
+                  // Set number of decimal places
+                  float range = state.mHi - state.mLo;
+                  auto style = range < 10
+                     ? NumValidatorStyle::THREE_TRAILING_ZEROES
+                     : range < 100
+                        ? NumValidatorStyle::TWO_TRAILING_ZEROES
+                        : NumValidatorStyle::ONE_TRAILING_ZERO;
+                  vld.SetStyle(style);
+                  t->SetValidator(vld);
+               }
+
+               // ... optional lower-bound static text ...
+               if (port->mHasLo) {
+                  wxString str;
+                  if (port->mInteger || port->mSampleRate)
+                     str.Printf(wxT("%d"), (int) lrintf(state.mLo));
+                  else
+                     str = Internat::ToDisplayString(state.mLo);
+                  item = safenew wxStaticText(w, wxID_ANY, str);
+                  gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+               }
+               else
+                  gridSizer->Add(1, 1, 0);
+
+               // ... a slider ...
+               auto s = safenew wxSliderWrapper(w, ID_Sliders + p,
+                  0, 0, 1000, wxDefaultPosition, { 150, -1 });
+               s->SetName(labelText);
+               gridSizer->Add(s, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+               ctrl.slider = s;
+
+               // ... and optional upper-bound static text
+               if (port->mHasHi) {
+                  wxString str;
+                  if (port->mInteger || port->mSampleRate)
+                     str.Printf(wxT("%d"), (int) lrintf(state.mHi));
+                  else
+                     str = Internat::ToDisplayString(state.mHi);
+                  item = safenew wxStaticText(w, wxID_ANY, str);
+                  gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               }
+               else
+                  gridSizer->Add(1, 1, 0);
+            }
+         }
+
+         auto groupSizer = std::make_unique<wxStaticBoxSizer>(
+            wxVERTICAL, w, label.Translation());
+         groupSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
+         innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
+      }
+
+      innerSizer->Layout();
+
+      //! Function to revisit the controls just added above
+      auto VisitCells = [&, cnt = innerSizer->GetChildren().GetCount()](auto f){
+         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; ++i) {
+            // For each group (skipping duration) visit the grid sizer
+            auto groupSizer = innerSizer->GetItem(i)->GetSizer();
+            auto gridSizer = static_cast<wxFlexGridSizer *>(
+               groupSizer->GetItem(size_t{0})->GetSizer());
+            auto items = gridSizer->GetChildren().GetCount();
+            size_t cols = gridSizer->GetCols();
+            for (size_t j = 0; j < items; ++j) {
+               // For each grid item
+               auto item = gridSizer->GetItem(j);
+               f(item, j, cols);
+            }
+         }
+      };
+
+      // Calculate the maximum width of all columns (bypass Generator sizer)
+      std::vector<int> widths(numCols);
+      VisitCells([&](wxSizerItem *item, size_t j, size_t cols){
+         auto &width = widths[j % cols];
+         width = std::max(width, item->GetSize().GetWidth());
+      });
+
+      // Set each column in all of the groups to the same width.
+      VisitCells([&](wxSizerItem *item, size_t j, size_t cols){
+         int flags = item->GetFlag();
+         if (flags & wxEXPAND)
+            return;
+         if (flags & wxALIGN_RIGHT)
+            flags = (flags & ~wxALL) | wxLEFT;
+         else
+            flags = (flags & ~wxALL) | wxRIGHT;
+         item->SetFlag(flags);
+         item->SetBorder(widths[j % cols] - item->GetMinSize().GetWidth());
+      });
+
+      w->SetSizer(uInnerSizer.release());
+
       mParent->SetSizer(outerSizer.release());
-   }
+   } // scope of unique_ptrs of sizers
 
    // Try to give the window a sensible default/minimum size
    wxSize sz1 = innerSizer->GetMinSize();
@@ -2012,144 +1787,127 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
    // And let the parent reduce to the NEW minimum if possible
    mParent->SetMinSize(w->GetMinSize());
 
-   TransferDataToWindow();
-
+   TransferDataToWindow(settings);
    return true;
 }
 
-bool LV2Effect::TransferDataToWindow()
+bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
-   if (mUseGUI)
+   auto &values = GetSettings(settings).values;
    {
-      if (mSuilInstance)
-         for (auto & port : mControlPorts)
-            if (port->mIsInput)
-               suil_instance_port_event(mSuilInstance.get(),
-                  port->mIndex, sizeof(float), 0, &port->mVal);
-      return true;
-   }
-
-   for (auto & group : mGroups)
-   {
-      const auto & params = mGroupMap[group];
-      for (auto & param : params)
-      {
-         auto & port = mControlPorts[param];
-
-         if (port->mTrigger)
-         {
-            continue;
-         }
-
-         if (port->mToggle)
-         {
-            port->mCtrl.checkbox->SetValue(port->mVal > 0);
-         }
-         else if (port->mEnumeration)      // Check before integer
-         {
-            int s;
-            for (s = (int) port->mScaleValues.size() - 1; s >= 0; s--)
-            {
-               if (port->mVal >= port->mScaleValues[s])
-               {
-                  break;
-               }
-            }
-
-            if (s < 0)
-            {
-               s = 0;
-            }
-
-            port->mCtrl.choice->SetSelection(s);
-         }
-         else if (port->mIsInput)
-         {
-            port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
-            SetSlider(port);
-         }
+      size_t index = 0; for (auto & state : mControlPortStates) {
+         auto &port = state.mpPort;
+         if (port->mIsInput)
+            state.mTmp =
+               values[index] * (port->mSampleRate ? mSampleRate : 1.0);
+         ++index;
       }
    }
 
-   if (mParent && !mParent->TransferDataToWindow())
-   {
-      return false;
+   if (mUseGUI) {
+      // fancy UI
+      if (mSuilInstance) {
+         size_t index = 0;
+         for (auto & port : mControlPorts) {
+            if (port->mIsInput)
+               suil_instance_port_event(mSuilInstance.get(),
+                  port->mIndex, sizeof(float), 0, &values[index]);
+            ++index;
+         }
+      }
+      return true;
    }
 
+   // else plain UI
+   // Visiting controls in same sequence as their creation
+   for (auto & group : mGroups) {
+      const auto & params = mGroupMap[group];
+      for (auto & param : params) { auto & state = mControlPortStates[param];
+         auto &port = state.mpPort;
+         auto &ctrl = mPlainUIControls[param];
+         auto &value = values[param];
+         if (port->mTrigger)
+            continue;
+         else if (port->mToggle)
+            ctrl.checkbox->SetValue(value > 0);
+         else if (port->mEnumeration)      // Check before integer
+            ctrl.choice->SetSelection(port->Discretize(value));
+         else if (port->mIsInput) {
+            state.mTmp = value * (port->mSampleRate ? mSampleRate : 1.0f);
+            SetSlider(state, ctrl);
+         }
+      }
+   }
+   if (mParent && !mParent->TransferDataToWindow())
+      return false;
    return true;
 }
 
-void LV2Effect::SetSlider(const LV2ControlPortPtr & port)
+void LV2Effect::SetSlider(
+   const LV2ControlPortState &state, const PlainUIControl &ctrl)
 {
-   float lo = port->mLo;
-   float hi = port->mHi;
-   float val = port->mTmp;
-
-   if (port->mLogarithmic)
-   {
+   float lo = state.mLo;
+   float hi = state.mHi;
+   float val = state.mTmp;
+   if (state.mpPort->mLogarithmic) {
       lo = logf(lo);
       hi = logf(hi);
       val = logf(val);
    }
-
-   port->mCtrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
+   ctrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
 void LV2Effect::OnTrigger(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Triggers];
-
-   port->mVal = port->mDef;
+   size_t idx = evt.GetId() - ID_Triggers;
+   auto & port = mControlPorts[idx];
+   mSettings.values[idx] = port->mDef;
 }
 
 void LV2Effect::OnToggle(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Toggles];
-
-   port->mVal = evt.GetInt() ? 1.0 : 0.0;
+   size_t idx = evt.GetId() - ID_Toggles;
+   auto & port = mControlPorts[idx];
+   mSettings.values[idx] = evt.GetInt() ? 1.0 : 0.0;
 }
 
 void LV2Effect::OnChoice(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Choices];
-
-   port->mVal = port->mScaleValues[evt.GetInt()];
+   size_t idx = evt.GetId() - ID_Choices;
+   auto & port = mControlPorts[idx];
+   mSettings.values[idx] = port->mScaleValues[evt.GetInt()];
 }
 
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Texts];
-
-   if (port->mText->GetValidator()->TransferFromWindow())
-   {
-      port->mVal = port->mSampleRate ? port->mTmp / mSampleRate : port->mTmp;
-
-      SetSlider(port);
+   size_t idx = evt.GetId() - ID_Texts;
+   auto &state = mControlPortStates[idx];
+   auto &port = state.mpPort;
+   auto & ctrl = mPlainUIControls[idx];
+   if (ctrl.mText->GetValidator()->TransferFromWindow()) {
+      mSettings.values[idx] =
+         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      SetSlider(state, ctrl);
    }
 }
 
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Sliders];
-
-   float lo = port->mLo;
-   float hi = port->mHi;
-
-   if (port->mLogarithmic)
-   {
+   size_t idx = evt.GetId() - ID_Sliders;
+   auto &state = mControlPortStates[idx];
+   auto &port = state.mpPort;
+   float lo = state.mLo;
+   float hi = state.mHi;
+   if (port->mLogarithmic) {
       lo = logf(lo);
       hi = logf(hi);
    }
-
-   port->mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
-   port->mTmp = port->mLogarithmic ? expf(port->mTmp) : port->mTmp;
-
-   port->mTmp = port->mTmp < port->mLo ? port->mLo : port->mTmp;
-   port->mTmp = port->mTmp > port->mHi ? port->mHi : port->mTmp;
-
-   port->mVal = port->mSampleRate ? port->mTmp / mSampleRate : port->mTmp;
-
-   port->mText->GetValidator()->TransferToWindow();
+   state.mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
+   state.mTmp = std::clamp(state.mTmp, lo, hi);
+   state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
+   mSettings.values[idx] =
+      port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+   mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
 void LV2Effect::OnTimer(wxTimerEvent &evt)
@@ -2165,71 +1923,57 @@ void LV2Effect::OnTimer(wxTimerEvent &evt)
 void LV2Effect::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
-
    if (!mSuilInstance)
-   {
       return;
-   }
 
-   if (mExternalUIClosed)
-   {
+   if (mExternalUIClosed) {
       mExternalUIClosed = false;
       mDialog->Close();
       return;
    }
 
-   if (mUIIdleInterface)
-   {
+   if (mUIIdleInterface) {
       const auto handle = suil_instance_get_handle(mSuilInstance.get());
-      if (mUIIdleInterface->idle(handle))
-      {
+      if (mUIIdleInterface->idle(handle)) {
          if (mUIShowInterface)
-         {
             mUIShowInterface->hide(handle);
-         }
          mDialog->Close();
          return;
       }
    }
 
-   if (mControlOut)
-   {
+   if (mControlOut) {
       const auto ring = mControlOut->mRing.get();
-
-      LV2_Atom *atom = (LV2_Atom *) malloc(mControlOut->mMinimumSize);
-      if (atom)
-      {
-         while (zix_ring_read(ring, atom, sizeof(LV2_Atom)))
-         {
-            uint32_t size = lv2_atom_total_size(atom);
-
-            if (size < mControlOut->mMinimumSize)
-            {
-               zix_ring_read(ring,
-                  LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
-               suil_instance_port_event(mSuilInstance.get(),
-                  mControlOut->mIndex, size,
-                  LV2Symbols::urid_EventTransfer, atom);
-            }
-            else
-            {
-               zix_ring_skip(ring, atom->size);
-               wxLogError(wxT("LV2 sequence buffer overflow"));
-            }
+      const auto minimumSize = mControlOut->mpPort->mMinimumSize;
+      const auto space = std::make_unique<char[]>(minimumSize);
+      auto atom = reinterpret_cast<LV2_Atom*>(space.get());
+      while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
+         uint32_t size = lv2_atom_total_size(atom);
+         if (size < minimumSize) {
+            zix_ring_read(ring,
+               LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
+            suil_instance_port_event(mSuilInstance.get(),
+               mControlOut->mpPort->mIndex, size,
+               LV2Symbols::urid_EventTransfer, atom);
          }
-         free(atom);
+         else {
+            zix_ring_skip(ring, atom->size);
+            wxLogError(wxT("LV2 sequence buffer overflow"));
+         }
       }
    }
 
-   for (auto & port : mControlPorts)
-   {
+   size_t index = 0;
+   for (auto &state : mControlPortStates) {
+      auto &port = state.mpPort;
+      const auto &value = mSettings.values[index];
       // Let UI know that a port's value has changed
-      if (port->mVal != port->mLst)
-      {
+      if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
-            port->mIndex, sizeof(port->mVal), 0, &port->mVal);
-         port->mLst = port->mVal;
+            port->mIndex, sizeof(value), 0, &value);
+         state.mLst = value;
       }
+      ++index;
    }
 }
 
@@ -2348,11 +2092,11 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    if (protocol == 0 && buffer_size == sizeof(float)) {
       if (auto it = mControlPortMap.find(port_index);
          it != mControlPortMap.end())
-         it->second->mVal = *static_cast<const float *>(buffer);
+         mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
-      if (mControlIn && port_index == mControlIn->mIndex)
+      if (mControlIn && port_index == mControlIn->mpPort->mIndex)
          zix_ring_write(mControlIn->mRing.get(), buffer, buffer_size);
    }
 }
@@ -2376,6 +2120,7 @@ uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
 }
 
 // static callback
+// This function isn't used?
 const void *LV2Effect::get_value_func(
    const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
 {
@@ -2387,12 +2132,15 @@ const void *LV2Effect::GetPortValue(
    const char *port_symbol, uint32_t *size, uint32_t *type)
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
-   for (auto & port : mControlPorts)
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
-         return &port->mVal;
+         return &mSettings.values[index];
       }
+      ++index;
+   }
    *size = 0;
    *type = 0;
    return nullptr;
@@ -2411,21 +2159,25 @@ void LV2Effect::SetPortValue(
    const char *port_symbol, const void *value, uint32_t size, uint32_t type)
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
-   for (auto & port : mControlPorts)
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       if (port->mSymbol == symbol) {
+         auto &dst = mSettings.values[index];
          using namespace LV2Symbols;
          if (type == urid_Bool && size == sizeof(bool))
-            port->mVal = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
+            dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
          else if (type == urid_Double && size == sizeof(double))
-            port->mVal = *static_cast<const double *>(value);
+            dst = *static_cast<const double *>(value);
          else if (type == urid_Float && size == sizeof(float))
-            port->mVal = *static_cast<const float *>(value);
+            dst = *static_cast<const float *>(value);
          else if (type == urid_Int && size == sizeof(int32_t))
-            port->mVal = *static_cast<const int32_t *>(value);
+            dst = *static_cast<const int32_t *>(value);
          else if (type == urid_Long && size == sizeof(int64_t))
-            port->mVal = *static_cast<const int64_t *>(value);
+            dst = *static_cast<const int64_t *>(value);
          break;
       }
+      ++index;
+   }
 }
 
 #if defined(__WXGTK__)
