@@ -17,7 +17,6 @@
 
 class wxArrayString;
 
-#include <optional>
 #include <thread>
 #include <vector>
 
@@ -40,10 +39,7 @@ class wxArrayString;
 
 #include "NativeWindow.h"
 
-#include <unordered_map>
-
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
-using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
 using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
 using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
 using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
@@ -71,47 +67,6 @@ struct LV2EffectSettings {
    std::vector<float> values;
    //! Result of last load of a preset; may be null
    mutable std::shared_ptr<const LilvState> mpState;
-};
-
-class LV2Ports {
-public:
-   //! @post every member of `mGroups` occurs as a key in `mGroupMap`
-   explicit LV2Ports(const LilvPlugin &plug);
-
-   LV2AudioPortArray mAudioPorts;
-   unsigned mAudioIn{ 0 };
-   unsigned mAudioOut{ 0 };
-
-   LV2AtomPortArray mAtomPorts;
-   std::optional<size_t> mControlInIdx{};
-   std::optional<size_t> mControlOutIdx{};
-   unsigned mMidiIn{ 0 };
-   unsigned mMidiOut{ 0 };
-
-   LV2CVPortArray mCVPorts;
-
-   LV2ControlPortArray mControlPorts;
-   TranslatableStrings mGroups;
-   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
-   //! Mapping from index number among all ports, to position
-   //! among the control ports only
-   std::unordered_map<uint32_t, size_t> mControlPortMap;
-   int mLatencyPort{ -1 };
-};
-
-class LV2PortStates {
-public:
-   explicit LV2PortStates(const LV2Ports &ports);
-   LV2AtomPortStateArray mAtomPortStates;
-   LV2CVPortStateArray mCVPortStates;
-};
-
-class LV2PortUIStates {
-public:
-   LV2PortUIStates(const LV2PortStates &states, const LV2Ports &ports);
-   LV2AtomPortStatePtr mControlIn;
-   LV2AtomPortStatePtr mControlOut;
-   LV2ControlPortStateArray mControlPortStates;
 };
 
 class LV2Effect final : public LV2FeaturesList
