@@ -14,11 +14,9 @@
 
 **********************************************************************/
 
-#ifdef USE_WAVPACK
 
 #include "Export.h"
 #include "wxFileNameWrapper.h"
-#include "FileIO.h"
 #include "Prefs.h"
 #include "Mix.h"
 
@@ -56,8 +54,7 @@ public:
    void OnHybridMode(wxCommandEvent& evt);
 
 private:
-   wxCheckBox *mHybridMode;
-   wxCheckBox *mCreateCorrectionFile;
+   wxCheckBox *mCreateCorrectionFile { nullptr };
    wxChoice   *mBitRate;
 
    DECLARE_EVENT_TABLE()
@@ -82,9 +79,9 @@ ExportWavPackOptions::~ExportWavPackOptions()
 }
 
 const TranslatableStrings ExportQualityNames{
-   XO("Low Quality(Fast)") ,
-   XO("High Quality(Slow)") ,
-   XO("Very High Quality(Slowest)") ,
+   XO("Low Quality (Fast)") ,
+   XO("High Quality (Slow)") ,
+   XO("Very High Quality (Slowest)") ,
 };
 
 const std::vector< int > ExportQualityValues{
@@ -93,12 +90,32 @@ const std::vector< int > ExportQualityValues{
    2,
 };
 
+namespace {
+
+const TranslatableStrings ExportBitDepthNames{
+   XO("16 bit") ,
+   XO("24 bit") ,
+   XO("32 bit float ") ,
+};
+
+const std::vector< int > ExportBitDepthValues{
+   16,
+   24,
+   32,
+};
+
+IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
+IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 160 };
+IntSetting BitDepthSetting{ L"/FileFormats/WavPackBitDepth", 16 };
+
+BoolSetting HybridModeSetting{ L"/FileFormats/WavPackHybridMode", false };
+BoolSetting CreateCorrectionFileSetting{ L"/FileFormats/WavPackCreateCorrectionFile", false };
+
 /* 
 Copied from ExportMP2.cpp by
    Joshua Haberman
    Markus Meyer
 */
-namespace {
 
 // i18n-hint kbps abbreviates "thousands of bits per second"
 inline TranslatableString n_kbps( int n ) { return XO("%d kbps").Format( n ); }
@@ -147,13 +164,7 @@ const std::vector< int > BitRateValues {
 
 void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
 {
-   bool hybridMode = false;
-   bool createCorrectionFile = false;
-   IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
-   IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 160 };
-
-   gPrefs->Read(wxT("/FileFormats/WavPackHybridMode"), &hybridMode, 0);
-   gPrefs->Read(wxT("/FileFormats/WavPackCreateCorrectionFile"), &createCorrectionFile, 0);
+   bool hybridMode = HybridModeSetting.Read();
 
    S.StartVerticalLay();
    {
@@ -169,8 +180,15 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
                &ExportQualityValues
             );
 
-            mHybridMode = S.Id(ID_HYBRID_MODE).TieCheckBox( XXO("Hybrid Mode"), hybridMode);
-            mCreateCorrectionFile = S.Disable(!hybridMode).TieCheckBox( XXO("Create Correction(.wvc) File"), createCorrectionFile);
+            S.TieNumberAsChoice(
+               XXO("Bit Depth"),
+               BitDepthSetting,
+               ExportBitDepthNames,
+               &ExportBitDepthValues
+            );
+
+            S.Id(ID_HYBRID_MODE).TieCheckBox( XXO("Hybrid Mode"), HybridModeSetting);
+            mCreateCorrectionFile = S.Disable(!hybridMode).TieCheckBox( XXO("Create Correction(.wvc) File"), CreateCorrectionFileSetting);
 
             mBitRate = S.Disable(!hybridMode).TieNumberAsChoice(
                XXO("Bit Rate:"),
@@ -196,32 +214,28 @@ bool ExportWavPackOptions::TransferDataFromWindow()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
-   gPrefs->Write(wxT("/FileFormats/WavPackCreateCorrectionFile"), mCreateCorrectionFile->GetValue());
-   gPrefs->Flush();
+   CreateCorrectionFileSetting.Write( mCreateCorrectionFile->GetValue() );
 
    return true;
 }
 
 void ExportWavPackOptions::OnHybridMode(wxCommandEvent&)
 {
-   bool hybridMode = false;
-   hybridMode = mHybridMode->GetValue();
+   const auto hybridMode = HybridModeSetting.Toggle();
    mCreateCorrectionFile->Enable(hybridMode);
    mBitRate->Enable(hybridMode);
-
-   gPrefs->Write(wxT("/FileFormats/WavPackHybridMode"), hybridMode);
-   gPrefs->Flush();
 };
 
 //---------------------------------------------------------------------------
 // ExportWavPack
 //---------------------------------------------------------------------------
 
-typedef struct {
-   uint32_t bytesWritten, firstBlockSize;
-   std::unique_ptr<FileIO> file;
-   int error;
-} WriteId;
+struct WriteId final
+{
+   uint32_t bytesWritten {};
+   uint32_t firstBlockSize {};
+   std::unique_ptr<wxFile> file;
+};
 
 class ExportWavPack final : public ExportPlugin
 {
@@ -267,28 +281,36 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
                        const Tags *metadata,
                        int WXUNUSED(subformat))
 {
-   WavpackConfig config = {0};
-   WriteId outWvFile = {NULL}, outWvcFile = {NULL};
-   outWvFile.file = std::make_unique< FileIO >(fName, FileIO::Output);
+   WavpackConfig config = {};
+   WriteId outWvFile, outWvcFile;
+   outWvFile.file = std::make_unique< wxFile >();
 
-   if (!outWvFile.file.get()->IsOpened()) {
+   if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file.get()->IsOpened()) {
       AudacityMessageBox( XO("Unable to open target file for writing") );
-      return ProgressResult::Cancelled;
+      return ProgressResult::Failed;
    }
    
    double rate = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
-   int quality = gPrefs->Read(wxT("/FileFormats/WavPackEncodeQuality"), 1);
-   bool hybridMode = gPrefs->ReadBool(wxT("/FileFormats/WavPackHybridMode"), false);
-   bool createCorrectionFile = gPrefs->ReadBool(wxT("/FileFormats/WavPackCreateCorrectionFile"), false);
-   int bitRate = gPrefs->Read(wxT("/FileFormats/WavPackBitrate"), 160);
+   int quality = QualitySetting.Read();
+   bool hybridMode = HybridModeSetting.Read();
+   bool createCorrectionFile = CreateCorrectionFileSetting.Read();
+   int bitRate = BitrateSetting.Read();
+   int bitDepth = BitDepthSetting.Read();
+   
+   sampleFormat format = int16Sample;
+   if (bitDepth == 24) {
+      format = int24Sample;
+   } else if (bitDepth == 32) {
+      format = floatSample;
+   }
 
    config.num_channels = numChannels;
    config.sample_rate = rate;
    config.channel_mask = config.num_channels == 1 ? 4 : 3; // Microsoft standard, mono = 4, stereo = 3
-   config.bits_per_sample = 16;
-   config.bytes_per_sample = 2;
+   config.bits_per_sample = bitDepth;
+   config.bytes_per_sample = bitDepth/8;
 
    if (quality == 0) {
       config.flags |= CONFIG_FAST_FLAG;
@@ -305,32 +327,39 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
       if (createCorrectionFile) {
          config.flags |= CONFIG_CREATE_WVC;
-         outWvcFile.file = std::make_unique< FileIO >(fName.GetFullPath().Append("c"), FileIO::Output);
+
+         outWvcFile.file = std::make_unique< wxFile >();
+         if (!outWvcFile.file->Create(fName.GetFullPath().Append("c"), true)) {
+            AudacityMessageBox( XO("Unable to create target file for writing") );
+            return ProgressResult::Failed;
+         }
       }
    }
 
-   WavpackContext *wpc = WavpackOpenFileOutput(this->WriteBlock, &outWvFile, createCorrectionFile ? &outWvcFile : NULL);
-   if (!WavpackSetConfiguration64(wpc, &config, -1, NULL) || !WavpackPackInit(wpc)) {
-      WavpackCloseFile(wpc);
+   WavpackContext *wpc = WavpackOpenFileOutput(WriteBlock, &outWvFile, createCorrectionFile ? &outWvcFile : nullptr);
+   auto closeWavPackContext = finally([wpc]() { WavpackCloseFile(wpc); });
+
+   if (!WavpackSetConfiguration64(wpc, &config, -1, nullptr) || !WavpackPackInit(wpc)) {
+      ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
       return ProgressResult::Failed;
    }
 
-// Samples to write per run
-#define SAMPLES_PER_RUN 8192u
+   // Samples to write per run
+   constexpr size_t SAMPLES_PER_RUN = 8192u;
 
-   uint32_t bufferSize = SAMPLES_PER_RUN * numChannels;
+   const size_t bufferSize = SAMPLES_PER_RUN * numChannels;
    ArrayOf<int32_t> wavpackBuffer{ bufferSize };
    auto updateResult = ProgressResult::Success;
    {
       auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, true,
-         rate, int16Sample, mixerSpec);
+         rate, format, mixerSpec);
 
       InitProgress( pDialog, fName,
          selectionOnly
-            ? XO("Exporting selected audio as Wavpack file")
-            : XO("Exporting the audio as Wavpack file") );
+            ? XO("Exporting selected audio as WavPack")
+            : XO("Exporting the audio as WavPack") );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
@@ -338,18 +367,30 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
          if (samplesThisRun == 0)
             break;
-
-         char *mixed = (char *)(const char*)mixer->GetBuffer();
-         for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-            for (size_t i = 0; i < numChannels; i++) {
-               int32_t value = *mixed++ & 0xff;
-               value += *mixed++ << 8;
-               wavpackBuffer[j*numChannels + i] = value;
+         
+         if (format == int16Sample) {
+            const char *mixed = mixer->GetBuffer();
+            for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+               for (size_t i = 0; i < numChannels; i++) {
+                  int32_t value = *mixed++ & 0xff;
+                  value += *mixed++ << 8;
+                  wavpackBuffer[j*numChannels + i] = value;
+               }
+            }
+         } else {
+            const int *mixed = (const int *)mixer->GetBuffer();
+            for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+               for (size_t i = 0; i < numChannels; i++) {
+                  int32_t value = *mixed++;
+                  wavpackBuffer[j*numChannels + i] = value;
+               }
             }
          }
 
-         if (!WavpackPackSamples(wpc, wavpackBuffer.get(), samplesThisRun))
-            updateResult = ProgressResult::Cancelled;
+         if (!WavpackPackSamples(wpc, wavpackBuffer.get(), samplesThisRun)) {
+            ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
+            return ProgressResult::Failed;
+         }
 
          if (updateResult == ProgressResult::Success)
             updateResult =
@@ -358,7 +399,8 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
    }
 
    if (!WavpackFlushSamples(wpc)) {
-      updateResult = ProgressResult::Cancelled;
+      ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
+      return ProgressResult::Failed;
    } else {
       if (metadata == NULL)
          metadata = &Tags::Get( *project );
@@ -371,21 +413,39 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
             n = wxT("DATE");
          }
          WavpackAppendTagItem(wpc,
-                              (char *) (const char *) n.mb_str(wxConvUTF8),
-                              (char *) (const char *) v.mb_str(wxConvUTF8),
-                              (int) v.length());
+                              n.mb_str(wxConvUTF8),
+                              v.mb_str(wxConvUTF8),
+                              static_cast<int>( v.length() ));
       }
 
       if (!WavpackWriteTag(wpc)) {
-         // Not sure what to do
+         ShowExportErrorDialog( WavpackGetErrorMessage(wpc) );
+         return ProgressResult::Failed;
       }
    }
 
-   WavpackCloseFile(wpc);
-
    if ( !outWvFile.file.get()->Close()
       || ( outWvcFile.file && outWvcFile.file.get() && !outWvcFile.file.get()->Close())) {
-      updateResult = ProgressResult::Cancelled;
+      return ProgressResult::Failed;
+   }
+
+   // wxFile::Create opens the file with only write access
+   // So, need to open the file again with both read and write access
+   if (!outWvFile.file->Open(fName.GetFullPath(), wxFile::read_write)) {
+      ShowExportErrorDialog( "Unable to update the actual length of the file" );
+      return ProgressResult::Failed;
+   }
+
+   ArrayOf<int32_t> firstBlockBuffer { outWvFile.firstBlockSize };
+   size_t bytesRead = outWvFile.file->Read(firstBlockBuffer.get(), outWvFile.firstBlockSize);
+
+   // Update the first block written with the actual number of samples written
+   WavpackUpdateNumSamples(wpc, firstBlockBuffer.get());
+   outWvFile.file->Seek(0);
+   size_t bytesWritten = outWvFile.file->Write(firstBlockBuffer.get(), outWvFile.firstBlockSize);
+
+   if ( !outWvFile.file.get()->Close() ) {
+      return ProgressResult::Failed;
    }
 
    return updateResult;
@@ -395,27 +455,28 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 // src: https://github.com/dbry/WavPack/blob/master/cli/wavpack.c
 int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
 {
-   WriteId *outId = (WriteId *) id;
+    if (id == nullptr || data == nullptr || length == 0)
+        return true; // This is considered to be success in wavpack.c reference code
 
-   uint32_t bcount;
+    WriteId *outId = static_cast<WriteId*>(id);
 
-   if (outId->error)
-      return FALSE;
+    if (!outId->file)
+        // This does not match the wavpack.c but in our case if file is nullptr - 
+        // the stream error has occured
+        return false; 
 
-   if (outId && outId->file && outId->file.get() && data && length) {
-      if ( outId->file.get()->Write(data, length).GetLastError() ) {
-         outId->file = NULL;
-         outId->error = 1;
-         return FALSE;
-      } else {
-         outId->bytesWritten += length;
+   //  if (!outId->file->Write(data, length).IsOk()) {
+    if (outId->file->Write(data, length) != length) {
+        outId->file.reset();
+        return false;
+    }
 
-         if (!outId->firstBlockSize)
-               outId->firstBlockSize = length;
-      }
-   }
+    outId->bytesWritten += length;
 
-   return TRUE;
+    if (outId->firstBlockSize == 0)
+        outId->firstBlockSize = length;
+
+    return true;
 }
 
 void ExportWavPack::OptionsCreate(ShuttleGui &S, int format)
@@ -426,5 +487,3 @@ void ExportWavPack::OptionsCreate(ShuttleGui &S, int format)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",
    []{ return std::make_unique< ExportWavPack >(); }
 };
-
-#endif
