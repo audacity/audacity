@@ -21,11 +21,7 @@
 #include "ClientData.h"
 #include "Observer.h"
 #include "PluginProvider.h" // for PluginID
-
-class AudacityProject;
-class RealtimeEffectList;
-class RealtimeEffectState;
-class Track;
+#include "RealtimeEffectList.h"
 
 namespace RealtimeEffects {
    class InitializationScope;
@@ -118,15 +114,34 @@ private:
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
    RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
-   using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
+   // Type that state visitor functions would have for out-of-line definition
+   // of VisitGroup and VisitAll
+   // using StateVisitor =
+      // std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
    //! Visit the per-project states first, then states for leader if not null
-   void VisitGroup(Track &leader, StateVisitor func);
+   template<typename StateVisitor>
+   void VisitGroup(Track &leader, const StateVisitor &func)
+   {
+      // Call the function for each effect on the master list
+      RealtimeEffectList::Get(mProject).Visit(func);
+
+      // Call the function for each effect on the track list
+      RealtimeEffectList::Get(leader).Visit(func);
+   }
 
    //! Visit the per-project states first, then all tracks from AddTrack
    /*! Tracks are visited in unspecified order */
-   void VisitAll(StateVisitor func);
+   template<typename StateVisitor>
+   void VisitAll(const StateVisitor &func)
+   {
+      // Call the function for each effect on the master list
+      RealtimeEffectList::Get(mProject).Visit(func);
+
+      // And all track lists
+      for (auto leader : mGroupLeaders)
+         RealtimeEffectList::Get(*leader).Visit(func);
+   }
 
    AudacityProject &mProject;
 

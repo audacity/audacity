@@ -72,11 +72,18 @@ public:
    static RealtimeEffectList &Get(Track &track);
    static const RealtimeEffectList &Get(const Track &track);
 
-   using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool listIsActive)>;
+   // Type that state visitor functions would have for out-of-line definition
+   // of Visit
+   // using StateVisitor =
+      // std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
    //! Apply the function to all states sequentially.
-   void Visit(StateVisitor func);
+   template<typename StateVisitor>
+   void Visit(const StateVisitor &func)
+   {
+      for (auto &state : mStates)
+         func(*state, IsActive());
+   }
 
    //! Use only in the main thread
    //! Returns true for success.

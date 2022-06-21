@@ -10,7 +10,6 @@
 
 
 #include "RealtimeEffectManager.h"
-#include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
 #include <memory>
@@ -224,15 +223,6 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
    });
 }
 
-void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
-{
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
-
-   // Call the function for each effect on the track list
-   RealtimeEffectList::Get(leader).Visit(func);
-}
-
 RealtimeEffectManager::
 AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
    : mpManager{ pManager }
@@ -273,16 +263,6 @@ void RealtimeEffectManager::AllListsLock::Reset()
          RealtimeEffectList::Get(*leader).GetLock().unlock();
       mpManager = nullptr;
    }
-}
-
-void RealtimeEffectManager::VisitAll(StateVisitor func)
-{
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
-
-   // And all track lists
-   for (auto leader : mGroupLeaders)
-      RealtimeEffectList::Get(*leader).Visit(func);
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
