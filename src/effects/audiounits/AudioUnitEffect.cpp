@@ -562,8 +562,17 @@ bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
 bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto slave = std::make_unique<AudioUnitEffect>(
+   auto *slave = this;
+   std::unique_ptr<AudioUnitEffect> uSlave;
+   if (!mRecruited)
+      // Assign self to the first processor
+      mRecruited = true;
+   else {
+      // Assign another instance with independent state to other processors
+      uSlave = std::make_unique<AudioUnitEffect>(
       mPath, mName, mComponent, &mParameters, this);
+      slave = uSlave.get();
+   }
    if (!slave->InitializeInstance())
       return false;
 
@@ -572,22 +581,20 @@ bool AudioUnitEffect::RealtimeAddProcessor(
 
    if (!slave->StoreSettings(GetSettings(settings)))
       return false;
-
    if (!slave->ProcessInitialize(settings, 0, nullptr))
       return false;
-
-   mSlaves.push_back(std::move(slave));
+   if (uSlave)
+      mSlaves.push_back(move(uSlave));
    return true;
 }
 
 bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      mSlaves[i]->ProcessFinalize();
-   }
+   for (auto &pSlave : mSlaves)
+      pSlave->ProcessFinalize();
    mSlaves.clear();
+   mRecruited = false;
    return ProcessFinalize();
 });
 }
@@ -595,18 +602,10 @@ return GuardedCall<bool>([&]{
 bool AudioUnitEffect::RealtimeSuspend()
 {
    if (!BypassEffect(true))
-   {
       return false;
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      if (!mSlaves[i]->BypassEffect(true))
-      {
+   for (auto &pSlave : mSlaves)
+      if (!pSlave->BypassEffect(true))
          return false;
-      }
-   }
-
    return true;
 }
 
@@ -614,12 +613,9 @@ bool AudioUnitEffect::RealtimeResume()
 {
    if (!BypassEffect(false))
       return false;
-
-   for (auto &slave: mSlaves) {
-      if (!slave->BypassEffect(false))
+   for (auto &pSlave: mSlaves)
+      if (!pSlave->BypassEffect(false))
          return false;
-   }
-
    return true;
 }
 
@@ -632,9 +628,18 @@ size_t AudioUnitEffect::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-   if (group >= mSlaves.size())
+   // Interpret the group number consistently with RealtimeAddProcessor
+   if (!mRecruited)
       return 0;
-   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   decltype(this) pSlave{};
+   if (group == 0)
+      pSlave = this;
+   else if (--group < mSlaves.size())
+      pSlave = mSlaves[group].get();
+   if (pSlave)
+      return pSlave->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   else
+      return 0;
 }
 
 bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept

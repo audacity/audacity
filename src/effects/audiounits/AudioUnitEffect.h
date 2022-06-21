@@ -223,6 +223,8 @@ private:
 
    AudioUnitEffect *const mMaster;     // non-NULL if a slave
 public:
+   //! Whether the master instance is now allocated to a group number
+   bool mRecruited{ false };
    AudioUnitEffectArray mSlaves;
    mutable bool mInitialFetchDone{ false };
 };
