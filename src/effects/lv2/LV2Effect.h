@@ -39,10 +39,7 @@ class wxArrayString;
 
 #include "NativeWindow.h"
 
-#include <unordered_map>
-
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
-using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
 using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
 using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
 using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
@@ -75,7 +72,7 @@ struct LV2EffectSettings {
 class LV2Effect final : public LV2FeaturesList
 {
 public:
-   LV2Effect(const LilvPlugin *plug);
+   LV2Effect(const LilvPlugin &plug);
    virtual ~LV2Effect();
 
    // ComponentInterface implementation
@@ -165,6 +162,8 @@ public:
    // LV2Effect implementation
 
 private:
+   void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
+
    struct PlainUIControl;
 
    bool LoadParameters(
@@ -225,13 +224,12 @@ public:
       const void *value, uint32_t size, uint32_t type) const;
 
 private:
+   const LV2Ports mPorts{ mPlug };
+   LV2PortStates mPortStates{ mPorts };
+   LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
+
    size_t mUserBlockSize{ mBlockSize };
 
-   //! Mapping from index number among all ports, to position
-   //! among the control ports only
-   std::unordered_map<uint32_t, size_t> mControlPortMap;
-   LV2ControlPortArray mControlPorts;
-   LV2ControlPortStateArray mControlPortStates;
    LV2EffectSettings mSettings;
 
    //! This ignores its argument while we transition to statelessness
@@ -244,26 +242,6 @@ private:
    const LV2EffectSettings &GetSettings(const EffectSettings &) const {
       return mSettings;
    }
-
-   LV2AudioPortArray mAudioPorts;
-   unsigned mAudioIn{ 0 };
-   unsigned mAudioOut{ 0 };
-
-   LV2AtomPortArray mAtomPorts;
-   LV2AtomPortStateArray mAtomPortStates;
-
-   LV2AtomPortStatePtr mControlIn;
-   LV2AtomPortStatePtr mControlOut;
-   unsigned mMidiIn{ 0 };
-   unsigned mMidiOut{ 0 };
-
-   LV2CVPortArray mCVPorts;
-   LV2CVPortStateArray mCVPortStates;
-   unsigned mCVIn;
-   unsigned mCVOut;
-
-   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
-   TranslatableStrings mGroups;
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
@@ -303,7 +281,7 @@ private:
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   const LilvNodePtr mHumanId{ lilv_plugin_get_name(mPlug) };
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
    const LV2_External_UI_Host mExternalUIHost{
       LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
 
@@ -369,8 +347,8 @@ public:
 
 public:
    //! May spawn a thread
-   LV2Wrapper(const LV2FeaturesList &featuresList,
-      const LilvPlugin *plugin, double sampleRate);
+   LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
+      const LilvPlugin &plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
    void Activate();

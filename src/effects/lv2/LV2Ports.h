@@ -17,6 +17,9 @@
 
 #if USE_LV2
 
+#include <optional>
+#include <unordered_map>
+
 #include "lilv/lilv.h"
 #include "LV2Utils.h"
 #include "MemoryX.h"
@@ -185,6 +188,47 @@ struct LV2ControlPortState final {
 };
 //! No need yet for extra indirection
 using LV2ControlPortStateArray = std::vector<LV2ControlPortState>;
+
+class LV2Ports {
+public:
+   //! @post every member of `mGroups` occurs as a key in `mGroupMap`
+   explicit LV2Ports(const LilvPlugin &plug);
+
+   LV2AudioPortArray mAudioPorts;
+   unsigned mAudioIn{ 0 };
+   unsigned mAudioOut{ 0 };
+
+   LV2AtomPortArray mAtomPorts;
+   std::optional<size_t> mControlInIdx{};
+   std::optional<size_t> mControlOutIdx{};
+   unsigned mMidiIn{ 0 };
+   unsigned mMidiOut{ 0 };
+
+   LV2CVPortArray mCVPorts;
+
+   LV2ControlPortArray mControlPorts;
+   TranslatableStrings mGroups;
+   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
+   //! Mapping from index number among all ports, to position
+   //! among the control ports only
+   std::unordered_map<uint32_t, size_t> mControlPortMap;
+   int mLatencyPort{ -1 };
+};
+
+class LV2PortStates {
+public:
+   explicit LV2PortStates(const LV2Ports &ports);
+   LV2AtomPortStateArray mAtomPortStates;
+   LV2CVPortStateArray mCVPortStates;
+};
+
+class LV2PortUIStates {
+public:
+   LV2PortUIStates(const LV2PortStates &states, const LV2Ports &ports);
+   LV2AtomPortStatePtr mControlIn;
+   LV2AtomPortStatePtr mControlOut;
+   LV2ControlPortStateArray mControlPortStates;
+};
 
 #endif
 #endif

@@ -31,7 +31,7 @@ using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 
 class LV2FeaturesList : public StatefulPerTrackEffect {
 public:
-   explicit LV2FeaturesList(const LilvPlugin *plug);
+   explicit LV2FeaturesList(const LilvPlugin &plug);
 
    //! @return success
    bool InitializeOptions();
@@ -46,7 +46,7 @@ public:
 
    //! @return whether our host should reciprocally supply the
    //! LV2_Worker_Schedule interface to the plug-in
-   static bool SuppliesWorkerInterface(const LilvPlugin *plug);
+   static bool SuppliesWorkerInterface(const LilvPlugin &plug);
 
    //! @return whether our host should reciprocally supply the
    //! LV2_Worker_Schedule interface to the plug-in
@@ -55,8 +55,6 @@ public:
    const LV2_Options_Option *NominalBlockLengthOption() const;
    //! @return may be null
    const LV2_Options_Option *SampleRateOption() const;
-   //! @return a port number, or a negative
-   int LatencyPort() const { return mLatencyPort; }
 
    size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
 
@@ -89,7 +87,7 @@ public:
    bool CheckFeatures(const LilvNode *subject, bool required);
 
 protected:
-   const LilvPlugin *const mPlug;
+   const LilvPlugin &mPlug;
 
    // lv2 functions require a pointer to non-const in places, but presumably
    // have no need to mutate the members of this structure
@@ -132,8 +130,6 @@ protected:
 
    size_t mMinBlockSize{ 1 };
    size_t mMaxBlockSize{ mBlockSize };
-
-   int mLatencyPort{ -1 };
 
    const bool mSuppliesWorkerInterface;
    bool mSupportsNominalBlockLength{ false };
