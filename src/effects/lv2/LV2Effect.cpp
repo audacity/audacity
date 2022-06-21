@@ -65,6 +65,13 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
+LV2Instance::~LV2Instance()
+{
+   // Some temporary ugliness until real statelessness
+   const_cast<LV2Effect&>(static_cast<const LV2Effect&>(mProcessor))
+      .mMaster.reset();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2Effect
@@ -253,7 +260,7 @@ std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
    LV2Preferences::GetUseLatency(*this, mUseLatency);
    LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
-   return std::make_shared<Instance>(*this);
+   return std::make_shared<LV2Instance>(*this);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -612,7 +619,6 @@ bool LV2Effect::CloseUI()
       mSuilInstance.reset();
    }
    mSuilHost.reset();
-   mMaster.reset();
    mParent = nullptr;
    mDialog = nullptr;
 

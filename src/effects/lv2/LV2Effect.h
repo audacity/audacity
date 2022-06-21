@@ -311,7 +311,13 @@ private:
 
    DECLARE_EVENT_TABLE()
 
-   friend class LV2Wrapper;
+   friend class LV2Instance; // Remove this later
+};
+
+class LV2Instance final : public StatefulPerTrackEffect::Instance {
+public:
+   using Instance::Instance;
+   ~LV2Instance() override;
 };
 
 #endif
