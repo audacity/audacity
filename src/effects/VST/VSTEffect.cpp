@@ -1434,6 +1434,8 @@ bool VSTEffect::ValidateUI(EffectSettings &settings)
    if (GetType() == EffectTypeGenerate)
       settings.extra.SetDuration(mDuration->GetValue());
 
+   FetchSettings(GetSettings(settings));
+
    return true;
 }
 
@@ -1531,7 +1533,7 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets(EffectSettings &)
+void VSTEffect::ImportPresets(EffectSettings& settings)
 {
    wxString path;
 
@@ -1594,6 +1596,8 @@ void VSTEffect::ImportPresets(EffectSettings &)
    }
 
    RefreshParameters();
+
+   FetchSettings(GetSettings(settings));
 
    return;
 }
@@ -1959,6 +1963,7 @@ bool VSTEffect::LoadParameters(
       if (len)
       {
          callSetChunk(true, len, buf.get(), &info);
+         FetchSettings(GetSettings(settings));
       }
 
       return true;
@@ -1977,7 +1982,11 @@ bool VSTEffect::LoadParameters(
       return false;
    }
 
-   return StoreCommandParameters(eap);
+   const bool storeOK = StoreCommandParameters(eap);
+   if (storeOK)
+     FetchSettings(GetSettings(settings));
+
+   return storeOK;
 }
 
 bool VSTEffect::SaveParameters(
