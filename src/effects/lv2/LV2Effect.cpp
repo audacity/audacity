@@ -301,7 +301,7 @@ size_t LV2Effect::GetBlockSize() const
 
 sampleCount LV2Effect::GetLatency()
 {
-   if (mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
+   if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
       return sampleCount(mMaster->GetLatency());
    }
@@ -330,6 +330,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    using namespace LV2Symbols;
    wxASSERT(size <= ( size_t) mBlockSize);
 
+   assert(mMaster); // else ProcessInitialize() returned false, I'm not called
    const auto instance = &mMaster->GetInstance();
 
    int i = 0;
@@ -829,6 +830,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
 #endif
    }
 
+   assert(mMaster); // PopulateUI() guarantees this
    const auto instance = &mMaster->GetInstance();
    mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(instance);
    mExtensionDataFeature =
