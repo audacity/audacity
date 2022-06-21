@@ -2002,17 +2002,21 @@ bool VSTEffect::LoadParameters(
    return storeOK;
 }
 
+bool VSTEffectWrapper::SupportsChunk() const
+{
+   return (mAEffect->flags & effFlagsProgramChunks);
+}
+
 bool VSTEffect::SaveParameters(
    const RegistryPath & group, const EffectSettings &settings) const
 {
-   SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
-      mAEffect->uniqueID);
-   SetConfig(*this, PluginSettings::Private, group, wxT("Version"),
-      mAEffect->version);
-   SetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
-      mAEffect->numParams);
+   const auto& vstSettings = GetSettings(settings);
 
-   if (mAEffect->flags & effFlagsProgramChunks)
+   SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"), vstSettings.mUniqueID );
+   SetConfig(*this, PluginSettings::Private, group, wxT("Version"),  vstSettings.mVersion  );
+   SetConfig(*this, PluginSettings::Private, group, wxT("Elements"), vstSettings.mNumParams);
+
+   if ( SupportsChunk() )
    {
       void *chunk = NULL;
       int clen = (int) constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);

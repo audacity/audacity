@@ -137,6 +137,8 @@ struct VSTEffectWrapper : public VSTEffectLink
 
    bool IsCompatible(const VstPatchChunkInfo&) const;
 
+   bool SupportsChunk() const;
+
    VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
 
    //! This function will be rewritten when the effect is really stateless
