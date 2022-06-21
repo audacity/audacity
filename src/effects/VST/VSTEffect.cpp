@@ -1934,12 +1934,27 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
+
+VstPatchChunkInfo VSTEffectWrapper::GetChunkInfo() const
+{
+   VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+   return info;
+}
+
+bool VSTEffectWrapper::IsCompatible(const VstPatchChunkInfo& info) const
+{
+   return  (info.pluginUniqueID == mAEffect->uniqueID) &&
+           (info.pluginVersion  == mAEffect->version) &&
+           (info.numElements    == mAEffect->numParams);
+}
+
 bool VSTEffect::LoadParameters(
    const RegistryPath & group, EffectSettings &settings)
 {
    wxString value;
 
-   VstPatchChunkInfo info = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, ""};
+   auto info = GetChunkInfo();
+
    GetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       info.pluginUniqueID, info.pluginUniqueID);
    GetConfig(*this, PluginSettings::Private, group, wxT("Version"),
@@ -1947,9 +1962,7 @@ bool VSTEffect::LoadParameters(
    GetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
       info.numElements, info.numElements);
 
-   if ((info.pluginUniqueID != mAEffect->uniqueID) ||
-       (info.pluginVersion != mAEffect->version) ||
-       (info.numElements != mAEffect->numParams))
+   if ( ! IsCompatible(info) )
    {
       return false;
    }

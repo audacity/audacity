@@ -133,6 +133,9 @@ struct VSTEffectWrapper : public VSTEffectLink
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
+   VstPatchChunkInfo GetChunkInfo() const;
+
+   bool IsCompatible(const VstPatchChunkInfo&) const;
 
    VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
 
