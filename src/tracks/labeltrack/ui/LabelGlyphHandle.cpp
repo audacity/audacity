@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "../../../SelectionState.h"
 #include "../../../ProjectAudioIO.h"
-#include "../../../images/Cursors.h"
+#include "../../../../images/Cursors.h"
 #include "../../../tracks/ui/TimeShiftHandle.h"
 
 #include <wx/cursor.h>
