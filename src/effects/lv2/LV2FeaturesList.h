@@ -22,9 +22,7 @@
 
 #include "../StatefulPerTrackEffect.h"
 #include "LV2Symbols.h"
-
-// Define a maximum block size in number of samples (not bytes)
-#define DEFAULT_BLOCKSIZE 1048576
+#include "LV2Preferences.h" // for DEFAULT_BLOCKSIZE
 
 // Define a reasonable default sequence size in bytes
 #define DEFAULT_SEQSIZE 8192
@@ -129,7 +127,7 @@ protected:
    std::vector<LV2_Feature> mFeatures;
 
    float mSampleRate{ 44100 };
-   size_t mBlockSize{ DEFAULT_BLOCKSIZE };
+   size_t mBlockSize{ LV2Preferences::DEFAULT_BLOCKSIZE };
    int mSeqSize{ DEFAULT_SEQSIZE };
 
    size_t mMinBlockSize{ 1 };

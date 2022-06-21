@@ -68,6 +68,8 @@ class LV2Wrapper;
 struct LV2EffectSettings {
    //! vector of values in correspondence with the control ports
    std::vector<float> values;
+   //! Result of last load of a preset; may be null
+   mutable std::shared_ptr<const LilvState> mpState;
 };
 
 class LV2Effect final : public LV2FeaturesList
@@ -100,13 +102,11 @@ public:
 
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -167,7 +167,8 @@ public:
 private:
    struct PlainUIControl;
 
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool LoadParameters(
+      const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
@@ -216,23 +217,12 @@ private:
                                     const char *port_symbol);
    uint32_t SuilPortIndex(const char *port_symbol);
 
-   static const void *get_value_func(const char *port_symbol,
-                                     void *user_data,
-                                     uint32_t *size,
-                                     uint32_t *type);
-   const void *GetPortValue(const char *port_symbol,
-                            uint32_t *size,
-                            uint32_t *type);
+public:
+   const void *GetPortValue(const LV2EffectSettings &settings,
+      const char *port_symbol, uint32_t *size, uint32_t *type) const;
 
-   static void set_value_func(const char *port_symbol,
-                              void *user_data,
-                              const void *value,
-                              uint32_t size,
-                              uint32_t type);
-   void SetPortValue(const char *port_symbol,
-                     const void *value,
-                     uint32_t size,
-                     uint32_t type);
+   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
+      const void *value, uint32_t size, uint32_t type) const;
 
 private:
    size_t mUserBlockSize{ mBlockSize };

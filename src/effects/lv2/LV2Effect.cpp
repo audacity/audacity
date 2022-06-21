@@ -51,7 +51,6 @@
 #include "ConfigInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "lv2/instance-access/instance-access.h"
@@ -66,156 +65,6 @@
 
 static inline void free_chars (char *p) { lilv_free(p); }
 using LilvCharsPtr = Lilv_ptr<char, free_chars>;
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2EffectSettingsDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LV2EffectSettingsDialog final : public wxDialogWrapper
-{
-public:
-   LV2EffectSettingsDialog(wxWindow *parent, EffectDefinitionInterface &effect);
-   virtual ~LV2EffectSettingsDialog();
-
-   void PopulateOrExchange(ShuttleGui &S);
-
-   void OnOk(wxCommandEvent &evt);
-
-private:
-   EffectDefinitionInterface &mEffect;
-   int mBufferSize{};
-   bool mUseLatency{};
-   bool mUseGUI{};
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, LV2EffectSettingsDialog::OnOk)
-END_EVENT_TABLE()
-
-LV2EffectSettingsDialog::LV2EffectSettingsDialog(
-   wxWindow *parent, EffectDefinitionInterface &effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
-, mEffect{ effect }
-{
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), mBufferSize, 8192);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseGUI"), mUseGUI, true);
-
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
-}
-
-LV2EffectSettingsDialog::~LV2EffectSettingsDialog()
-{
-}
-
-void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
-{
-   S.SetBorder(5);
-   S.StartHorizontalLay(wxEXPAND, 1);
-   {
-      S.StartVerticalLay(false);
-      {
-         // This really shouldn't be required for LV2 plugins because they have the ability
-         // to specify their exact requirements in the TTL file and/or to check the host
-         // supplied min/max values.  However, I've run across one (Harrison Consoles XT-EQ)
-         // that crashed on sizes greater than 8192.
-         S.StartStatic(XO("Buffer Size"));
-         {
-            IntegerValidator<int> vld(&mBufferSize);
-            vld.SetRange(8, DEFAULT_BLOCKSIZE);
-
-            S.AddVariableText( XO(
-"The buffer size controls the number of samples sent to the effect "
-"on each iteration. Smaller values will cause slower processing and "
-"some effects require 8192 samples or less to work properly. However "
-"most effects can accept large buffers and using them will greatly "
-"reduce processing time."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               wxTextCtrl *t;
-               t = S.TieNumericTextBox(
-                  XXO("&Buffer Size (8 to %d) samples:")
-                     .Format( DEFAULT_BLOCKSIZE ),
-                  mBufferSize,
-                  12);
-               t->SetMinSize(wxSize(100, -1));
-               t->SetValidator(vld);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("Latency Compensation"));
-         {
-            S.AddVariableText( XO(
-"As part of their processing, some LV2 effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
-"notice that small silences have been inserted into the audio. "
-"Enabling this setting will provide that compensation, but it may "
-"not work for all LV2 effects."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               S.TieCheckBox(XXO("Enable &compensation"),
-                             mUseLatency);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("Graphical Mode"));
-         {
-            S.AddVariableText( XO(
-"LV2 effects can have a graphical interface for setting parameter values."
-" A basic text-only method is also available. "
-" Reopen the effect for this to take effect."),
-               false, 0, 650);
-            S.TieCheckBox(XXO("Enable &graphical interface"),
-                          mUseGUI);
-         }
-         S.EndStatic();
-      }
-      S.EndVerticalLay();
-   }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   Center();
-}
-
-void LV2EffectSettingsDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
-{
-   if (!Validate())
-   {
-      return;
-   }
-
-   ShuttleGui S(this, eIsGettingFromDialog);
-   PopulateOrExchange(S);
-
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), mBufferSize);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseGUI"), mUseGUI);
-
-   EndModal(wxID_OK);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -591,18 +440,13 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    int userBlockSize;
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), userBlockSize, 8192);
+   LV2Preferences::GetBufferSize(*this, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
    mBlockSize = mUserBlockSize;
 
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
-      mUseGUI, true);
-
+   LV2Preferences::GetUseLatency(*this, mUseLatency);
+   LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
-
    return std::make_shared<Instance>(*this);
 }
 
@@ -1055,10 +899,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    }
 
    // Determine if the GUI editor is supposed to be used or not
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-                          wxT("UseGUI"),
-                          mUseGUI,
-                          true);
+   LV2Preferences::GetUseGUI(*this, mUseGUI);
 
    // Until I figure out where to put the "Duration" control in the
    // graphical editor, force usage of plain editor.
@@ -1122,16 +963,7 @@ bool LV2Effect::CloseUI()
 bool LV2Effect::LoadUserPreset(
    const RegistryPath &name, EffectSettings &settings) const
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name, settings);
-}
-
-bool LV2Effect::DoLoadUserPreset(
-   const RegistryPath &name, EffectSettings &settings)
-{
-   if (!LoadParameters(name, settings))
-      return false;
-   return true;
+   return LoadParameters(name, settings);
 }
 
 bool LV2Effect::SaveUserPreset(
@@ -1170,19 +1002,22 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &) const
+namespace {
+struct SetValueData { const LV2Effect &effect; LV2EffectSettings &settings; };
+void set_value_func(
+   const char *port_symbol, void *user_data,
+   const void *value, uint32_t size, uint32_t type)
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadFactoryPreset(id);
+   auto &[effect, settings] = *static_cast<SetValueData*>(user_data);
+   effect.SetPortValue(settings, port_symbol, value, size, type);
+}
 }
 
-bool LV2Effect::DoLoadFactoryPreset(int id)
+bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
-   {
       return false;
-   }
 
    LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
@@ -1190,9 +1025,14 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
    if (LilvStatePtr state{
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
-      lilv_state_restore(
-         state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
+   }){
+      auto &mySettings = GetSettings(settings);
+      SetValueData data{ *this, mySettings };
+      // Get the control port values from the state into settings
+      lilv_state_emit_port_values(state.get(), set_value_func, &data);
+      // Save the state, for whatever might not be contained in port values
+      mySettings.mpState = move(state);
       return true;
    }
    else
@@ -1219,17 +1059,7 @@ bool LV2Effect::HasOptions()
 
 void LV2Effect::ShowOptions()
 {
-   LV2EffectSettingsDialog dlg(mParent, *this);
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      // Reinitialize configuration settings
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("BufferSize"), userBlockSize, DEFAULT_BLOCKSIZE);
-      mUserBlockSize = std::max(1, userBlockSize);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("UseLatency"), mUseLatency, true);
-   }
+   LV2Preferences::Dialog{ mParent, *this }.ShowModal();
 }
 
 // ============================================================================
@@ -1237,27 +1067,26 @@ void LV2Effect::ShowOptions()
 // ============================================================================
 
 bool LV2Effect::LoadParameters(
-   const RegistryPath &group, EffectSettings &settings)
+   const RegistryPath &group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
-   {
       return false;
-   }
-
    CommandParameters eap;
    if (!eap.SetParameters(parms))
-   {
       return false;
-   }
-
    return LoadSettings(eap, settings);
 }
 
 bool LV2Effect::SaveParameters(
    const RegistryPath &group, const EffectSettings &settings) const
 {
+   // PRL: This function just dumps the several control port values to the
+   // config files.  Should it be reimplemented with
+   // lilv_state_new_from_instance to capture -- I don't know what -- other
+   // important state?
+
    CommandParameters eap;
    if (!SaveSettings(settings, eap))
       return false;
@@ -1793,7 +1622,18 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
-   auto &values = GetSettings(settings).values;
+   auto &mySettings = GetSettings(settings);
+
+   if (mMaster && mySettings.mpState) {
+      // Maybe there are other important side effects on the instance besides
+      // changes of port values
+      lilv_state_restore(mySettings.mpState.get(), mMaster->GetInstance(),
+         nullptr, nullptr, 0, nullptr);
+      // Destroy the short lived carrier of preset state
+      mySettings.mpState.reset();
+   }
+
+   auto &values = mySettings.values;
    {
       size_t index = 0; for (auto & state : mControlPortStates) {
          auto &port = state.mpPort;
@@ -2119,17 +1959,22 @@ uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
    return LV2UI_INVALID_PORT_INDEX;
 }
 
-// static callback
-// This function isn't used?
-const void *LV2Effect::get_value_func(
+namespace {
+struct GetValueData {
+   const LV2Effect &effect; const LV2EffectSettings &settings;
+};
+//! This function isn't used yet, but if we ever need to call
+//! lilv_state_new_from_instance, we will give it this callback
+const void *get_value_func(
    const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
 {
-   return static_cast<LV2Effect *>(user_data)
-      ->GetPortValue(port_symbol, size, type);
+   auto &[effect, settings] = *static_cast<GetValueData*>(user_data);
+   return effect.GetPortValue(settings, port_symbol, size, type);
+}
 }
 
-const void *LV2Effect::GetPortValue(
-   const char *port_symbol, uint32_t *size, uint32_t *type)
+const void *LV2Effect::GetPortValue(const LV2EffectSettings &settings,
+   const char *port_symbol, uint32_t *size, uint32_t *type) const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
@@ -2137,7 +1982,7 @@ const void *LV2Effect::GetPortValue(
       if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
-         return &mSettings.values[index];
+         return &settings.values[index];
       }
       ++index;
    }
@@ -2146,23 +1991,15 @@ const void *LV2Effect::GetPortValue(
    return nullptr;
 }
 
-// static callback
-void LV2Effect::set_value_func(
-   const char *port_symbol, void *user_data,
-   const void *value, uint32_t size, uint32_t type)
-{
-   static_cast<LV2Effect *>(user_data)
-      ->SetPortValue(port_symbol, value, size, type);
-}
-
-void LV2Effect::SetPortValue(
+void LV2Effect::SetPortValue(LV2EffectSettings &settings,
    const char *port_symbol, const void *value, uint32_t size, uint32_t type)
+const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
    for (auto & port : mControlPorts) {
       if (port->mSymbol == symbol) {
-         auto &dst = mSettings.values[index];
+         auto &dst = settings.values[index];
          using namespace LV2Symbols;
          if (type == urid_Bool && size == sizeof(bool))
             dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
