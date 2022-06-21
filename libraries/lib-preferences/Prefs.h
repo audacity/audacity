@@ -251,22 +251,24 @@ public:
    //! Write value to config and return true if successful
    bool Write( const T &value )
    {
+      const auto config = this->GetConfig();
+      
+      if (config == nullptr)
+         return false;
+      
       switch ( SettingScope::Add( *this ) ) {
          // Eager writes, but not flushed, when there is no transaction
          default:
          case SettingTransaction::NotAdded: {
-            const auto config = this->GetConfig();
-            if ( config ) {
-               this->mCurrentValue = value;
-               return DoWrite();
-            }
-            return false;
+            this->mCurrentValue = value;
+            return DoWrite();
          }
 
          // Deferred writes, with flush, if there is a commit later
          case SettingTransaction::Added:
          case SettingTransaction::PreviouslyAdded:
             this->mCurrentValue = value;
+            this->mValid = true;
             return true;
       }
    }
