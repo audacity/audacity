@@ -46,6 +46,12 @@ public:
    void SetID(const PluginID & id);
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
+
+   //! Expose a pointer to the state's instance (making one as needed).
+   /*!
+    @post `true` (no promise result is not null)
+    */
+   std::shared_ptr<EffectInstance> GetInstance();
    
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
@@ -125,6 +131,7 @@ private:
 
    //! Stateful instance made by the plug-in
    std::weak_ptr<EffectInstance> mwInstance;
+   bool mInitialized{ false };
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.

@@ -241,15 +241,18 @@ RealtimeEffectState::EnsureInstance(double rate)
       return {};
 
    auto pInstance = mwInstance.lock();
-   if (!pInstance) {
+   if (!mInitialized) {
       //! copying settings in the main thread while worker isn't yet running
       mWorkerSettings = mMainSettings;
       mLastActive = IsActive();
       
-      mwInstance = pInstance = mPlugin->MakeInstance();
+      //! If there was already an instance, recycle it; else make one here
+      if (!pInstance)
+         mwInstance = pInstance = mPlugin->MakeInstance();
       if (!pInstance)
          return {};
-      
+
+      mInitialized = true;
       pInstance->SetSampleRate(rate);
       
       // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
@@ -261,6 +264,15 @@ RealtimeEffectState::EnsureInstance(double rate)
       return pInstance;
    }
    pInstance->SetSampleRate(rate);
+   return pInstance;
+}
+
+std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
+{
+   //! If there was already an instance, recycle it; else make one here
+   auto pInstance = mwInstance.lock();
+   if (!pInstance)
+      mwInstance = pInstance = mPlugin->MakeInstance();
    return pInstance;
 }
 
@@ -541,6 +553,7 @@ bool RealtimeEffectState::Finalize() noexcept
       return false;
 
    auto result = pInstance->RealtimeFinalize(mMainSettings);
+   mInitialized = false;
    return result;
 }
 
