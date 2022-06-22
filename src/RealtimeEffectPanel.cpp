@@ -311,7 +311,6 @@ namespace
          auto enableButton = safenew ThemedButtonWrapper<wxBitmapButton>(this, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
          enableButton->SetBitmapIndex(bmpEffectOn);
          enableButton->SetBackgroundColorIndex(clrEffectListItemBackground);
-         enableButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnEnableButtonClicked, this);
          mEnableButton = enableButton;
 
          enableButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
@@ -456,14 +455,6 @@ namespace
 
          ShowSelectEffectMenu(mChangeButton, this);
          //TODO: replace effect
-      }
-
-      void OnEnableButtonClicked(wxCommandEvent&)
-      {
-         if(mEffectState == nullptr)
-            return;//not initialized
-
-         //TODO: implement
       }
 
       void OnPaint(wxPaintEvent&)
