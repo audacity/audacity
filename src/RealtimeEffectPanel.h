@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <wx/scrolwin.h>
+#include <wx/weakref.h>
 
 #include "ThemedWrappers.h"
 
@@ -34,6 +35,7 @@ class RealtimeEffectPanel : public wxWindow
    ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
+   wxWeakRef<AudacityProject> mProject;
 public:
    RealtimeEffectPanel(wxWindow *parent,
                 wxWindowID id,

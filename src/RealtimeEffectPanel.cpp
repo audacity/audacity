@@ -863,6 +863,8 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
             mEffectList->EnableEffects(!wasEnabled);
          }
          pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+         if (mProject)
+            ProjectHistory::Get(*mProject).ModifyState(false);
       });
    
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
@@ -918,6 +920,7 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
             : bmpEffectOff
       );
       mEffectList->SetTrack(project, track);
+      mProject = &project;
    }
    else
       ResetTrack();
@@ -929,4 +932,5 @@ void RealtimeEffectPanel::ResetTrack()
    mToggleEffects->SetBitmapIndex(bmpEffectOff);
    mToggleEffects->Enable(false);
    mEffectList->ResetTrack();
+   mProject = nullptr;
 }

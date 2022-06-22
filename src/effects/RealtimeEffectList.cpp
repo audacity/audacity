@@ -26,6 +26,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
       result->mStates.push_back(RealtimeEffectState::make_shared(*pState));
+   result->SetActive(this->IsActive());
    return result;
 }
 
