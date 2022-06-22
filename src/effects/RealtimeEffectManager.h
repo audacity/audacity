@@ -23,6 +23,8 @@
 #include "PluginProvider.h" // for PluginID
 #include "RealtimeEffectList.h"
 
+class EffectInstance;
+
 namespace RealtimeEffects {
    class InitializationScope;
    class SuspensionScope;
@@ -88,10 +90,11 @@ private:
    friend RealtimeEffects::SuspensionScope;
 
    //! Main thread begins to define a set of tracks for playback
-   void Initialize(double rate);
+   void Initialize(RealtimeEffects::InitializationScope &scope, double rate);
    //! Main thread adds one track (passing the first of one or more
    //! channels), still before playback
-   void AddTrack(Track &track, unsigned chans, float rate);
+   void AddTrack(RealtimeEffects::InitializationScope &scope,
+      Track &track, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
@@ -175,7 +178,7 @@ public:
       : mwProject{ move(wProject) }
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).Initialize(rate);
+         RealtimeEffectManager::Get(*pProject).Initialize(*this, rate);
    }
    InitializationScope( InitializationScope &&other ) = default;
    InitializationScope& operator=( InitializationScope &&other ) = default;
@@ -188,8 +191,11 @@ public:
    void AddTrack(Track &track, unsigned chans, float rate)
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).AddTrack(track, chans, rate);
+         RealtimeEffectManager::Get(*pProject)
+            .AddTrack(*this, track, chans, rate);
    }
+
+   std::vector<std::shared_ptr<EffectInstance>> mInstances;
 
 private:
    std::weak_ptr<AudacityProject> mwProject;

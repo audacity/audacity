@@ -51,7 +51,8 @@ bool RealtimeEffectManager::IsActive() const noexcept
    return mActive;
 }
 
-void RealtimeEffectManager::Initialize(double rate)
+void RealtimeEffectManager::Initialize(
+   RealtimeEffects::InitializationScope &scope, double rate)
 {
    // Remember the rate
    mRate = rate;
@@ -66,15 +67,17 @@ void RealtimeEffectManager::Initialize(double rate)
    mActive = true;
 
    // Tell each state to get ready for action
-   VisitAll([rate](RealtimeEffectState &state, bool){
-      state.Initialize(rate);
+   VisitAll([&scope, rate](RealtimeEffectState &state, bool){
+      scope.mInstances.push_back(state.Initialize(rate));
    });
 
    // Leave suspended state
    Resume();
 }
 
-void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
+void RealtimeEffectManager::AddTrack(
+   RealtimeEffects::InitializationScope &scope,
+   Track &track, unsigned chans, float rate)
 {
    auto leader = *track.GetOwner()->FindLeader(&track);
    // This should never return a null
@@ -85,7 +88,7 @@ void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
 
    VisitGroup(*leader,
       [&](RealtimeEffectState & state, bool) {
-         state.AddTrack(*leader, chans, rate);
+         scope.mInstances.push_back(state.AddTrack(*leader, chans, rate));
       }
    );
 }
@@ -285,10 +288,11 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
    
-   if (mActive)
+   if (pScope && mActive)
    {
       // Adding a state while playback is in-flight
-      state.Initialize(mRate);
+      auto pInstance = state.Initialize(mRate);
+      pScope->mInstances.push_back(pInstance);
 
       for (auto &leader : mGroupLeaders) {
          // Add all tracks to a per-project state, but add only the same track
@@ -299,7 +303,9 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
          auto chans = mChans[leader];
          auto rate = mRates[leader];
 
-         state.AddTrack(*leader, chans, rate);
+         auto pInstance2 = state.AddTrack(*leader, chans, rate);
+         if (pInstance2 != pInstance)
+            pScope->mInstances.push_back(pInstance2);
       }
    }
 

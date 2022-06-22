@@ -234,33 +234,41 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
    return mPlugin;
 }
 
-bool RealtimeEffectState::EnsureInstance(double rate)
+std::shared_ptr<EffectInstance>
+RealtimeEffectState::EnsureInstance(double rate)
 {
-   if (!mInstance) {
+   if (!mPlugin)
+      return {};
+
+   auto pInstance = mwInstance.lock();
+   if (!pInstance) {
       //! copying settings in the main thread while worker isn't yet running
       mWorkerSettings = mMainSettings;
       mLastActive = IsActive();
       
-      mInstance = mPlugin->MakeInstance();
-      if (!mInstance)
-         return false;
+      mwInstance = pInstance = mPlugin->MakeInstance();
+      if (!pInstance)
+         return {};
       
-      mInstance->SetSampleRate(rate);
+      pInstance->SetSampleRate(rate);
       
       // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
       // number was important
-      mInstance->SetBlockSize(512);
+      pInstance->SetBlockSize(512);
       
-      return mInstance->RealtimeInitialize(mMainSettings);
+      if (!pInstance->RealtimeInitialize(mMainSettings))
+         return {};
+      return pInstance;
    }
-   mInstance->SetSampleRate(rate);
-   return true;
+   pInstance->SetSampleRate(rate);
+   return pInstance;
 }
 
-bool RealtimeEffectState::Initialize(double rate)
+std::shared_ptr<EffectInstance>
+RealtimeEffectState::Initialize(double rate)
 {
    if (!mPlugin)
-      return false;
+      return {};
 
    mCurrentProcessor = 0;
    mGroups.clear();
@@ -269,13 +277,15 @@ bool RealtimeEffectState::Initialize(double rate)
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
-bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
+std::shared_ptr<EffectInstance>
+RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 {
-   if (!EnsureInstance(rate))
-      return false;
+   auto pInstance = EnsureInstance(rate);
+   if (!pInstance)
+      return {};
 
-   if (!mPlugin || !mInstance)
-      return false;
+   if (!mPlugin)
+      return {};
 
    auto ichans = chans;
    auto ochans = chans;
@@ -325,7 +335,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       // Add a NEW processor
       // Pass reference to worker settings, not main -- such as, for connecting
       // Ladspa ports to the proper addresses.
-      if (mInstance->RealtimeAddProcessor(mWorkerSettings, gchans, rate))
+      if (pInstance->RealtimeAddProcessor(mWorkerSettings, gchans, rate))
          mCurrentProcessor++;
       else
          break;
@@ -333,9 +343,9 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 
    if (mCurrentProcessor > first) {
       mGroups[&track] = first;
-      return true;
+      return pInstance;
    }
-   return false;
+   return {};
 }
 
 bool RealtimeEffectState::ProcessStart(bool running)
@@ -348,23 +358,24 @@ bool RealtimeEffectState::ProcessStart(bool running)
       pAccessState->WorkerRead();
    
    // Detect transitions of activity state
+   auto pInstance = mwInstance.lock();
    bool active = IsActive() && running;
    if (active != mLastActive) {
-      if (mInstance) {
+      if (pInstance) {
          bool success = active
-            ? mInstance->RealtimeResume()
-            : mInstance->RealtimeSuspend();
+            ? pInstance->RealtimeResume()
+            : pInstance->RealtimeSuspend();
          if (!success)
             return false;
       }
       mLastActive = active;
    }
 
-   if (!mInstance || !active)
+   if (!pInstance || !active)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
-   return mInstance->RealtimeProcessStart(mWorkerSettings);
+   return pInstance->RealtimeProcessStart(mWorkerSettings);
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -374,7 +385,8 @@ size_t RealtimeEffectState::Process(Track &track,
    const float *const *inbuf, float *const *outbuf, float *dummybuf,
    size_t numSamples)
 {
-   if (!mPlugin || !mInstance) {
+   auto pInstance = mwInstance.lock();
+   if (!mPlugin || !pInstance) {
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
       return numSamples; // consider all samples to be trivially processed
@@ -469,12 +481,12 @@ size_t RealtimeEffectState::Process(Track &track,
 
       // Finally call the plugin to process the block
       len = 0;
-      const auto blockSize = mInstance->GetBlockSize();
+      const auto blockSize = pInstance->GetBlockSize();
       for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
       {
          auto cnt = std::min(numSamples - block, blockSize);
          // Assuming we are in a processing scope, use the worker settings
-         len += mInstance->RealtimeProcess(processor,
+         len += pInstance->RealtimeProcess(processor,
             mWorkerSettings, clientIn, clientOut, cnt);
 
          for (size_t i = 0 ; i < numAudioIn; i++)
@@ -495,9 +507,10 @@ size_t RealtimeEffectState::Process(Track &track,
 
 bool RealtimeEffectState::ProcessEnd(bool running)
 {
-   bool result = mInstance && IsActive() && running &&
+   auto pInstance = mwInstance.lock();
+   bool result = pInstance && IsActive() && running &&
       // Assuming we are in a processing scope, use the worker settings
-      mInstance->RealtimeProcessEnd(mWorkerSettings);
+      pInstance->RealtimeProcessEnd(mWorkerSettings);
 
    if (auto pAccessState = TestAccessState())
       // Always done, regardless of activity
@@ -523,11 +536,11 @@ bool RealtimeEffectState::Finalize() noexcept
    mGroups.clear();
    mCurrentProcessor = 0;
 
-   if (!mInstance)
+   auto pInstance = mwInstance.lock();
+   if (!pInstance)
       return false;
 
-   auto result = mInstance->RealtimeFinalize(mMainSettings);
-   mInstance.reset();
+   auto result = pInstance->RealtimeFinalize(mMainSettings);
    return result;
 }
 
