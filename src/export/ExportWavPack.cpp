@@ -214,7 +214,7 @@ bool ExportWavPackOptions::TransferDataFromWindow()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
-   CreateCorrectionFileSetting.Write( mCreateCorrectionFile->GetValue() );
+   gPrefs->Flush();
 
    return true;
 }
@@ -377,12 +377,25 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
                   wavpackBuffer[j*numChannels + i] = value;
                }
             }
-         } else {
-            const int *mixed = (const int *)mixer->GetBuffer();
+         } else if (format == int24Sample) {
+            const int *mixed = reinterpret_cast<const int*>(mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < numChannels; i++) {
-                  int32_t value = *mixed++;
-                  wavpackBuffer[j*numChannels + i] = value;
+                  wavpackBuffer[j*numChannels + i] = *mixed++;
+               }
+            }
+         } else {
+            const float *mixed = reinterpret_cast<const float*>(mixer->GetBuffer());
+            for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+               for (size_t i = 0; i < numChannels; i++) {
+                  int64_t intValue = (*mixed++) * (1u << 31);
+
+                  intValue = std::clamp<int64_t>(
+                     intValue,
+                     std::numeric_limits<int32_t>::min(),
+                     std::numeric_limits<int32_t>::max());
+
+                  wavpackBuffer[j*numChannels + i] = static_cast<int32_t>(intValue);
                }
             }
          }

@@ -25,31 +25,19 @@
 
 #include<wx/string.h>
 #include<stdlib.h>
+#include<wavpack/wavpack.h>
 
 #include "Prefs.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
+#include "CodeConversions.h"
 
 #define DESC XO("WavPack files")
 
 static const auto exts = {
    wxT("wv")
 };
-
-#ifndef USE_WAVPACK
-
-static Importer::RegisteredUnusableImportPlugin registered
-{
-   std::make_unique<UnusableImportPlugin>(DESC, FileExtensions(exts.begin(), exts.end()))
-};
-
-#else
-
-extern "C" {
-#include<wavpack/wavpack.h>
-}
-
 
 class WavPackImportPlugin final : public ImportPlugin
 {
@@ -140,14 +128,13 @@ static Importer::RegisteredImportPlugin registered{ "WavPack",
 WavPackImportFileHandle::WavPackImportFileHandle(const FilePath &filename,
                                                 WavpackContext *wavpackContext)
 :  ImportFileHandle(filename),
-   mWavPackContext(wavpackContext)
+   mWavPackContext(wavpackContext),
+   mNumChannels(WavpackGetNumChannels(mWavPackContext)),
+   mSampleRate(WavpackGetSampleRate(mWavPackContext)),
+   mBitsPerSample(WavpackGetBitsPerSample(mWavPackContext)),
+   mBytesPerSample(WavpackGetBytesPerSample(mWavPackContext)),
+   mNumSamples(WavpackGetNumSamples64(mWavPackContext))
 {
-   mNumChannels = WavpackGetNumChannels(mWavPackContext);
-   mSampleRate = WavpackGetSampleRate(mWavPackContext);
-   mBitsPerSample = WavpackGetBitsPerSample(mWavPackContext);
-   mBytesPerSample = WavpackGetBytesPerSample(mWavPackContext);
-   mNumSamples = WavpackGetNumSamples64(mWavPackContext);
-
    if (mBitsPerSample <= 16) {
       mFormat = int16Sample;
    } else if (mBitsPerSample <= 24) {
@@ -181,23 +168,47 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          *iter = NewWaveTrack(*trackFactory, mFormat, mSampleRate);
    }
 
-/* The number of samples to read in each loop */
-#define SAMPLES_TO_READ 100000
+   /* The number of samples to read in each loop */
+   const size_t SAMPLES_TO_READ = mChannels.begin()->get()->GetMaxBlockSize();
    auto updateResult = ProgressResult::Success;
    uint32_t totalSamplesRead = 0;
 
    {
-      uint32_t bufferSize = mNumChannels * SAMPLES_TO_READ;
+      const uint32_t bufferSize = mNumChannels * SAMPLES_TO_READ;
       ArrayOf<int32_t> wavpackBuffer{ bufferSize };
       uint32_t samplesRead = 0;
 
       do {
          samplesRead = WavpackUnpackSamples(mWavPackContext, wavpackBuffer.get(), SAMPLES_TO_READ);
 
-         for (int64_t c = 0; c<samplesRead * mNumChannels;) {
-            auto iter = mChannels.begin();
-            for (unsigned chn = 0; chn<mNumChannels; ++iter, ++c, ++chn) {
-               iter->get()->Append((char *)&wavpackBuffer[c], mFormat, 1);
+         if (mFormat == int16Sample) {
+            ArrayOf<int16_t> tempBuffer{ bufferSize };
+            for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
+               tempBuffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
+
+            for (unsigned channel = 0; channel < mNumChannels; channel++) {
+               mChannels[channel]->Append(
+                  reinterpret_cast<constSamplePtr>(tempBuffer.get() + channel),
+                  mFormat, samplesRead, mNumChannels);
+            }
+
+         } else if (mFormat == int24Sample) {
+
+            for (unsigned channel = 0; channel < mNumChannels; channel++) {
+               mChannels[channel]->Append(
+                  reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + channel),
+                  mFormat, samplesRead, mNumChannels);
+            }
+
+         } else {
+            ArrayOf<float> tempBuffer{ bufferSize };
+            for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
+               tempBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>((1u << 31)));
+
+            for (unsigned channel = 0; channel < mNumChannels; channel++) {
+               mChannels[channel]->Append(
+                  reinterpret_cast<constSamplePtr>(tempBuffer.get() + channel),
+                  mFormat, samplesRead, mNumChannels);
             }
          }
 
@@ -206,7 +217,8 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
       } while (updateResult == ProgressResult::Success && samplesRead != 0);
    }
 
-   if (updateResult != ProgressResult::Stopped && totalSamplesRead < mNumSamples)
+   if (updateResult != ProgressResult::Stopped && updateResult != ProgressResult::Cancelled
+         && totalSamplesRead < mNumSamples)
       updateResult = ProgressResult::Failed;
 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
@@ -227,29 +239,28 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          tags->Clear();
          for (int i = 0; i < numItems; i++) {
             int itemLen = 0, valueLen = 0;
-            char *item, *itemValue;
             wxString value, name;
 
             // Get the actual length of the item key at this index i
             itemLen = WavpackGetTagItemIndexed(mWavPackContext, i, NULL, 0);
-            item = (char *)malloc(itemLen + 1);
-            WavpackGetTagItemIndexed(mWavPackContext, i, item, itemLen + 1);
-            name = UTF8CTOWX(item);
+            std::string item (itemLen + 1, '\0');
+            WavpackGetTagItemIndexed(mWavPackContext, i, item.data(), itemLen + 1);
+            name = audacity::ToWXString(item);
 
             // Get the actual length of the value for this item key
-            valueLen = WavpackGetTagItem(mWavPackContext, item, NULL, 0);
-            itemValue = (char *)malloc(valueLen + 1);
-            WavpackGetTagItem(mWavPackContext, item, itemValue, valueLen + 1);
+            valueLen = WavpackGetTagItem(mWavPackContext, item.data(), NULL, 0);
+            std::string itemValue (valueLen + 1, '\0');
+            WavpackGetTagItem(mWavPackContext, item.data(), itemValue.data(), valueLen + 1);
 
             if (apeTag) {
                for (int j = 0; j < valueLen; j++) {
                   // APEv2 text tags can have multiple NULL separated string values
                   if (!itemValue[j]) {
-                     itemValue[j] = '\\';
+                     itemValue[j] = '\n';
                   }
                }
             }
-            value = UTF8CTOWX(itemValue);
+            value = audacity::ToWXString(itemValue);
 
             if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
                long val;
@@ -259,9 +270,6 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             }
 
             tags->SetTag(name, value);
-
-            free(item);
-            free(itemValue);
          }
       }
    }
@@ -288,5 +296,3 @@ WavPackImportFileHandle::~WavPackImportFileHandle()
 {
    WavpackCloseFile(mWavPackContext);
 }
-
-#endif
