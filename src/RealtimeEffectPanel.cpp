@@ -289,7 +289,7 @@ namespace
       std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
-      wxButton* mEnableButton{nullptr};
+      ThemedButtonWrapper<wxBitmapButton>* mEnableButton{nullptr};
       wxWindow *mOptionsButton{};
 
    public:
@@ -382,6 +382,12 @@ namespace
          }
          else
             mSettingsAccess.reset();
+         if (mEnableButton)
+            mEnableButton->SetBitmapIndex(
+               (mSettingsAccess && mSettingsAccess->Get().extra.GetActive())
+                  ? bmpEffectOn
+                  : bmpEffectOff
+            );
          mChangeButton->SetTranslatableLabel(label);
          if (mOptionsButton)
             mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
