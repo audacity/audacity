@@ -26,6 +26,8 @@ public:
       : mEffect{ effect }
       , mWorkerSettings{ workerSettings }
    {
+      // Clean initial state of the counter
+      mainSettings.extra.SetCounter(0);
       // Initialize each message buffer with two copies of settings
       mChannelToMain.Write(ToMainSlot{ mainSettings });
       mChannelToMain.Write(ToMainSlot{ mainSettings });
@@ -61,6 +63,7 @@ public:
    }
 
    EffectSettings mLastSettings;
+   const EffectSettings &MainThreadCache() const { return mMainThreadCache; }
 
 private:
    struct ToMainSlot {
@@ -130,35 +133,36 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    {
    }
    ~Access() override = default;
+   // Try once to detect that the worker thread has echoed the last write
+   static const EffectSettings *FlushAttempt(AccessState &state) {
+      auto &lastSettings = state.mLastSettings;
+      auto pResult = &state.MainRead();
+      if (!lastSettings.has_value() ||
+         pResult->extra.GetCounter() ==
+         lastSettings.extra.GetCounter()
+      ){
+         // First time test, or echo is completed
+         return pResult;
+      }
+      else if (auto pAudioIO = AudioIOBase::Get()
+         ; !(pAudioIO && pAudioIO->IsStreamActive())
+      ){
+         // not relying on the other thread to make progress
+         // and no fear of data races
+         return &state.MainWriteThrough(lastSettings);
+      }
+      return nullptr;
+   }
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            FlushAttempt(*pAccessState); // try once, ignore success
             auto &lastSettings = pAccessState->mLastSettings;
-            const EffectSettings *pResult{};
-            do {
-               pResult = &pAccessState->MainRead();
-               if (!lastSettings.has_value() ||
-                   pResult->extra.GetCounter() ==
-                   lastSettings.extra.GetCounter()) {
-                  // First-time Get(), or else, echo is completed
-                  break;
-               }
-               else if (auto pAudioIO = AudioIOBase::Get()
-                  ; !(pAudioIO && pAudioIO->IsStreamActive())
-               ){
-                  // not relying on the other thread to make progress
-                  // and no fear of data races
-                  pResult = &pAccessState->MainWriteThrough(lastSettings);
-                  break;
-               }
-               else {
-                  using namespace std::chrono;
-                  std::this_thread::sleep_for(50ms);
-               }
-            } while( true );
-            assert(pResult); // It was surely assigned non-null
-            pState->mMainSettings.Set(*pResult); // Update the state
-            return *pResult;
+            return lastSettings.has_value()
+               ? lastSettings
+               // If no value there yet, then FlushAttempt did MainRead which
+               // has copied the initial value given to the constructor
+               : pAccessState->MainThreadCache();
          }
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
@@ -176,6 +180,20 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             // move a copy to there
             pAccessState->MainWrite(EffectSettings{ lastSettings });
          }
+   }
+   void Flush() override {
+      if (auto pState = mwState.lock()) {
+         if (auto pAccessState = pState->GetAccessState()) {
+            auto &lastSettings = pAccessState->mLastSettings;
+            const EffectSettings *pResult{};
+            while (!(pResult = FlushAttempt(*pAccessState))) {
+               // Wait for progress of audio thread
+               using namespace std::chrono;
+               std::this_thread::sleep_for(50ms);
+            }
+            pState->mMainSettings.Set(*pResult); // Update the state
+         }
+      }
    }
    bool IsSameAs(const EffectSettingsAccess &other) const override {
       if (auto pOther = dynamic_cast<const Access*>(&other)) {

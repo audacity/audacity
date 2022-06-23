@@ -322,6 +322,7 @@ namespace
                mSettingsAccess->ModifySettings([&](EffectSettings &settings){
                   settings.extra.SetActive(!wasEnabled);
                });
+               mSettingsAccess->Flush();
             }
             pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
          });
