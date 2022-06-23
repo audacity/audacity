@@ -13,10 +13,13 @@
 #include <memory>
 #include <wx/scrolwin.h>
 
+#include "ThemedWrappers.h"
+
 class Track;
 
 class wxButton;
 class wxStaticText;
+class wxBitmapButton;
 
 class RealtimeEffectListWindow;
 class AudacityProject;
@@ -28,7 +31,7 @@ class AudacityProject;
  */
 class RealtimeEffectPanel : public wxWindow
 {
-   wxButton* mToggleEffects{nullptr};
+   ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
 public:

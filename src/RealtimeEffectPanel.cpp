@@ -35,7 +35,6 @@
 #include "ProjectWindow.h"
 #include "Track.h"
 #include "WaveTrack.h"
-#include "ThemedWrappers.h"
 #include "effects/EffectUI.h"
 #include "effects/EffectManager.h"
 #include "effects/RealtimeEffectList.h"
@@ -913,6 +912,11 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
    {
       mTrackTitle->SetLabel(track->GetName());
       mToggleEffects->Enable(true);
+      mToggleEffects->SetBitmapIndex(
+         (track && RealtimeEffectList::Get(*track).IsActive())
+            ? bmpEffectOn
+            : bmpEffectOff
+      );
       mEffectList->SetTrack(project, track);
    }
    else
@@ -922,6 +926,7 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
 void RealtimeEffectPanel::ResetTrack()
 {
    mTrackTitle->SetLabel(wxEmptyString);
+   mToggleEffects->SetBitmapIndex(bmpEffectOff);
    mToggleEffects->Enable(false);
    mEffectList->ResetTrack();
 }
