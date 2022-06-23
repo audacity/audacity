@@ -302,7 +302,6 @@ AudioIO::AudioIO()
    mPreviousHWPlaythrough = -1.0;
    HandleDeviceChange();
 #else
-   mEmulateMixerOutputVol = true;
    mInputMixerWorks = false;
 #endif
 
