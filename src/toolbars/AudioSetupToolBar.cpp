@@ -315,7 +315,7 @@ void AudioSetupToolBar::UpdatePrefs()
       desc = devName + wxT(": ") + sourceName;
 
    auto selectedInput = GetSelectedRadioItemLabel(*mInput);
-   if (*selectedInput != desc) {
+   if (selectedInput && *selectedInput != desc) {
       if (auto item = mInput->FindItem(desc); item != wxNOT_FOUND) {
          mInput->FindChildItem(item)->Check();
          FillInputChannels();
@@ -356,7 +356,7 @@ void AudioSetupToolBar::UpdatePrefs()
       desc = devName + wxT(": ") + sourceName;
 
    auto selectedOutput = GetSelectedRadioItemLabel(*mOutput);
-   if (*selectedOutput != desc) {
+   if (selectedOutput && *selectedOutput != desc) {
       if (auto item = mOutput->FindItem(desc); item != wxNOT_FOUND) {
          mOutput->FindChildItem(item)->Check();
       }
