@@ -364,7 +364,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          // should now be treated the same way.
          return false;
       }
-      wxASSERT(processed == curBlockSize);
+      if (processed != curBlockSize)
+         return false;
       wxUnusedVar(processed);
 
       // Bump to next input buffer position
