@@ -161,9 +161,14 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
  the framework for managing settings of other effects. */
 int EffectNoiseRemoval::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &,
-   EffectInstance &, EffectSettingsAccess &access,
+   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal )
 {
+   // Assign the out parameter
+   pInstance = MakeInstance();
+   if (pInstance && !pInstance->Init())
+      pInstance.reset();
+
    // to do: use forceModal correctly
    NoiseRemovalDialog dlog(this, access, &parent);
    dlog.mSensitivity = mSensitivity;

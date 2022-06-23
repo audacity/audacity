@@ -38,7 +38,23 @@ PlaybackPolicy::BufferTimes
 PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
    using namespace std::chrono;
+#if 1
+   // Shorter times than in the default policy so that responses, to changes of
+   // loop region or speed slider or other such controls, don't lag too much
+   return { 0.05s, 0.05s, 0.25s };
+#else
+/*
+The old values, going very far back.
+
+There are old comments in the code about larger batches of work filling the
+queue with samples, to reduce CPU usage.  Maybe this doesn't matter with most
+modern machines, or maybe there will prove to be a need to choose the numbers
+more smartly than these hardcoded values.  Maybe we will need to figure out
+adaptiveness of the buffer size by detecting how long the work takes.  Maybe
+we can afford even smaller times.
+*/
    return { 4.0s, 4.0s, 10.0s };
+#endif
 }
 
 bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)

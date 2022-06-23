@@ -29,9 +29,14 @@ class EffectPlugin;
 
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
+   /*
+    @param[out] pInstance may construct
+    (and then must call Init() with success), or leave null for failure
+    */
 using EffectDialogFactory = std::function< wxDialog* (
    wxWindow &parent, EffectPlugin &, EffectUIClientInterface &,
-   EffectInstance &, EffectSettingsAccess & ) >;
+   std::shared_ptr<EffectInstance> &,
+   EffectSettingsAccess & ) >;
 
 class TrackList;
 class WaveTrackFactory;
@@ -62,8 +67,9 @@ public:
    /*!
     But there are a few unusual overrides for historical reasons
 
-    @param instance is only guaranteed to have lifetime suitable for a modal
-    dialog, unless the dialog stores instance.shared_from_this()
+    @param pInstance may be passed to factory, and is only guaranteed to have
+    lifetime suitable for a modal dialog, unless the dialog stores a copy of
+    pInstance
 
     @param access is only guaranteed to have lifetime suitable for a modal
     dialog, unless the dialog stores access.shared_from_this()
@@ -73,7 +79,7 @@ public:
     */
    virtual int ShowHostInterface(
       wxWindow &parent, const EffectDialogFactory &factory,
-      EffectInstance &instance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) = 0;
 
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;

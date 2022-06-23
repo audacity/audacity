@@ -484,6 +484,8 @@ public:
     and reloaded from files.
 
     @param settings may be assumed to have a lifetime enclosing the instance's
+
+    @post `true` (no promises that the result isn't null)
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 

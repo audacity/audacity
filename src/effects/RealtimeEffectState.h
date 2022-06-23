@@ -47,12 +47,17 @@ public:
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
-   bool EnsureInstance(double rate);
+   //! Expose a pointer to the state's instance (making one as needed).
+   /*!
+    @post `true` (no promise result is not null)
+    */
+   std::shared_ptr<EffectInstance> GetInstance();
    
    //! Main thread sets up for playback
-   bool Initialize(double rate);
+   std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
-   bool AddTrack(Track &track, unsigned chans, float rate);
+   std::shared_ptr<EffectInstance>
+   AddTrack(Track &track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
@@ -88,6 +93,8 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+   std::shared_ptr<EffectInstance> EnsureInstance(double rate);
+
    struct Access;
    struct AccessState;
 
@@ -123,7 +130,8 @@ private:
    wxString mParameters;  // Used only during deserialization
 
    //! Stateful instance made by the plug-in
-   std::shared_ptr<EffectInstance> mInstance;
+   std::weak_ptr<EffectInstance> mwInstance;
+   bool mInitialized{ false };
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.

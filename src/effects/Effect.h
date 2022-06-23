@@ -116,7 +116,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectInstance &instance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;

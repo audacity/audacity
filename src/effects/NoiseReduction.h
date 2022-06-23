@@ -39,7 +39,7 @@ public:
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectInstance &instance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
