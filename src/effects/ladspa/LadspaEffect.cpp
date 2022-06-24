@@ -875,7 +875,8 @@ struct LadspaEffect::Instance
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   sampleCount GetLatency(const EffectSettings &settings) override;
+   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+      override;
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
@@ -927,7 +928,8 @@ int LadspaEffect::GetMidiOutCount() const
    return 0;
 }
 
-sampleCount LadspaEffect::Instance::GetLatency(const EffectSettings &settings)
+sampleCount LadspaEffect::Instance::GetLatency(
+   const EffectSettings &settings, double)
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;

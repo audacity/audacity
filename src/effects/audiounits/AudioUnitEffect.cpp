@@ -217,7 +217,8 @@ public:
 
 private:
    size_t InitialBlockSize() const;
-   sampleCount GetLatency(const EffectSettings &settings) override;
+   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+      override;
 
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -512,14 +513,15 @@ size_t AudioUnitInstance::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount AudioUnitInstance::GetLatency(const EffectSettings &)
+sampleCount AudioUnitInstance::GetLatency(
+   const EffectSettings &, double sampleRate)
 {
    // Retrieve the latency (can be updated via an event)
    if (mUseLatency && !mLatencyDone) {
       Float64 latency = 0.0;
       if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
          mLatencyDone = true;
-         return sampleCount{ latency * mSampleRate };
+         return sampleCount{ latency * sampleRate };
       }
    }
    return 0;

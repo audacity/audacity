@@ -41,7 +41,8 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
    return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
-sampleCount StatefulPerTrackEffect::Instance::GetLatency(const EffectSettings &)
+sampleCount StatefulPerTrackEffect::Instance::GetLatency(
+   const EffectSettings &, double)
 {
    return GetEffect().GetLatency();
 }

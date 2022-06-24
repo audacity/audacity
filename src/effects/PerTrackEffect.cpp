@@ -43,7 +43,8 @@ bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
    return true;
 }
 
-sampleCount PerTrackEffect::Instance::GetLatency(const EffectSettings &)
+sampleCount PerTrackEffect::Instance::GetLatency(
+   const EffectSettings &, double)
 {
    return 0;
 }
@@ -251,7 +252,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto inPos = start;
    auto outPos = start;
    auto inputRemaining = len;
-   decltype(instance.GetLatency(settings)) curDelay = 0, delayRemaining = 0;
+   decltype(instance.GetLatency(settings, sampleRate))
+      curDelay = 0, delayRemaining = 0;
    decltype(blockSize) curBlockSize = 0;
    decltype(bufferSize) inputBufferCnt = 0;
    decltype(bufferSize) outputBufferCnt = 0;
@@ -383,7 +385,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       // Get the current number of delayed samples and accumulate
       if (isProcessor) {
          {
-            auto delay = instance.GetLatency(settings);
+            auto delay = instance.GetLatency(settings, sampleRate);
             curDelay += delay;
             delayRemaining += delay;
          }
