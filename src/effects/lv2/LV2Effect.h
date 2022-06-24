@@ -117,7 +117,7 @@ public:
 
    sampleCount GetLatency() override;
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,

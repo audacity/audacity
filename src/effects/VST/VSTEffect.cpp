@@ -1032,12 +1032,12 @@ bool VSTEffect::IsReady()
 }
 
 bool VSTEffect::ProcessInitialize(
-   EffectSettings &settings, sampleCount count, ChannelNames names)
+   EffectSettings &, double, sampleCount, ChannelNames)
 {
-   return DoProcessInitialize(count, names);
+   return DoProcessInitialize();
 }
 
-bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
+bool VSTEffect::DoProcessInitialize()
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
@@ -1059,7 +1059,6 @@ bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
    SetBufferDelay(mAEffect->initialDelay);
 
    mReady = true;
-
    return true;
 }
 
@@ -1098,9 +1097,9 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-bool VSTEffect::RealtimeInitialize(EffectSettings &settings, double)
+bool VSTEffect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, 0, nullptr);
 }
 
 bool VSTEffect::RealtimeAddProcessor(
@@ -1113,30 +1112,21 @@ bool VSTEffect::RealtimeAddProcessor(
    slave->SetSampleRate(sampleRate);
 
    int clen = 0;
-   if (mAEffect->flags & effFlagsProgramChunks)
-   {
+   if (mAEffect->flags & effFlagsProgramChunks) {
       void *chunk = NULL;
-
       clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0); // get master's chunk, for the program only
       if (clen != 0)
-      {
          slave->callSetChunk(true, clen, chunk); // copy state to slave, for the program only
-      }
    }
 
-   if (clen == 0)
-   {
+   if (clen == 0) {
       callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-
       for (int i = 0; i < mAEffect->numParams; i++)
-      {
          slave->callSetParameter(i, callGetParameter(i));
-      }
-
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   if (!slave->ProcessInitialize(settings, 0, nullptr))
+   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
       return false;
 
    mSlaves.emplace_back(move(slave));
@@ -1233,7 +1223,7 @@ int VSTEffect::ShowClientInterface(
       // No settings here!  Is this call really needed?  It appears to be
       // redundant with later calls that reach process initialization from the
       // dialog, either with the Apply or Play buttons.
-      DoProcessInitialize(0, nullptr);
+      DoProcessInitialize();
    }
 
    // Remember the dialog with a weak pointer, but don't control its lifetime

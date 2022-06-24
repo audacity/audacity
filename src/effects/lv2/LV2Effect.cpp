@@ -316,7 +316,7 @@ sampleCount LV2Effect::GetLatency()
 }
 
 bool LV2Effect::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames chanMap)
+   EffectSettings &settings, double, sampleCount, ChannelNames chanMap)
 {
    mProcess = InitInstance(settings, mSampleRate);
    if (!mProcess)

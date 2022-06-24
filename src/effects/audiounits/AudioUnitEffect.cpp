@@ -222,7 +222,7 @@ private:
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
@@ -537,7 +537,7 @@ size_t AudioUnitInstance::GetTailSize() const
 #endif
 
 bool AudioUnitInstance::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames chanMap)
+   EffectSettings &settings, double, sampleCount, ChannelNames chanMap)
 {
    StoreSettings(// Change this when GetSettings becomes a static function
       static_cast<const AudioUnitEffect&>(mProcessor).GetSettings(settings));
@@ -614,9 +614,10 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool AudioUnitInstance::RealtimeInitialize(EffectSettings &settings, double)
+bool AudioUnitInstance::RealtimeInitialize(
+   EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, 0, nullptr);
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
@@ -641,7 +642,7 @@ bool AudioUnitInstance::RealtimeAddProcessor(
 
    if (!slave->StoreSettings(effect.GetSettings(settings)))
       return false;
-   if (!slave->ProcessInitialize(settings, 0, nullptr))
+   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
       return false;
    if (uSlave)
       mSlaves.push_back(move(uSlave));

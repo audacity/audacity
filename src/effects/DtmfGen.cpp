@@ -135,7 +135,7 @@ struct EffectDtmf::Instance
       , mT0{ t0 }
    {}
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
@@ -154,7 +154,7 @@ struct EffectDtmf::Instance
 };
 
 bool EffectDtmf::Instance::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames)
+   EffectSettings &settings, double, sampleCount, ChannelNames)
 {
    auto &dtmfSettings = GetSettings(settings);
    if (dtmfSettings.dtmfNTones == 0) {   // Bail if no DTFM sequence.

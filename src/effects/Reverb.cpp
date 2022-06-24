@@ -193,7 +193,7 @@ struct EffectReverb::Instance
       : PerTrackEffect::Instance{ effect }
    {}
 
-   bool ProcessInitialize(EffectSettings& settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
@@ -302,7 +302,7 @@ unsigned EffectReverb::GetAudioOutCount() const
 static size_t BLOCK = 16384;
 
 bool EffectReverb::Instance::ProcessInitialize(
-   EffectSettings& settings, sampleCount, ChannelNames chanMap)
+   EffectSettings& settings, double, sampleCount, ChannelNames chanMap)
 {
    return InstanceInit(settings, mMaster, chanMap, /* forceStereo = */ false);
 }

@@ -144,9 +144,9 @@ class VSTEffect final
    size_t GetBlockSize() const override;
 
    bool IsReady();
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
-   bool DoProcessInitialize(sampleCount totalLen, ChannelNames chanMap);
+   bool DoProcessInitialize();
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)

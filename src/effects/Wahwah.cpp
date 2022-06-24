@@ -137,7 +137,7 @@ struct EffectWahwah::Instance
       : PerTrackEffect::Instance{ effect }
    {}
 
-   bool ProcessInitialize(EffectSettings& settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
@@ -221,15 +221,11 @@ unsigned EffectWahwah::GetAudioOutCount() const
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(
-   EffectSettings & settings, sampleCount, ChannelNames chanMap)
+   EffectSettings & settings, double, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(settings, mMaster, mSampleRate);
-
    if (chanMap[0] == ChannelNameFrontRight)
-   {
       mMaster.phase += M_PI;
-   }
-
    return true;
 }
 
