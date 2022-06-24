@@ -243,7 +243,7 @@ private:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   bool SetRateAndChannels();
+   bool SetRateAndChannels(double sampleRate);
 
    static OSStatus RenderCallback(void *inRefCon,
       AudioUnitRenderActionFlags *inActionFlags,
@@ -286,7 +286,6 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
 {
    CreateAudioUnit();
    mSampleRate = 44100;
-   SetRateAndChannels();
 }
 
 size_t AudioUnitInstance::InitialBlockSize() const
@@ -538,8 +537,8 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-bool AudioUnitInstance::ProcessInitialize(
-   EffectSettings &settings, double, sampleCount, ChannelNames chanMap)
+bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
    StoreSettings(// Change this when GetSettings becomes a static function
       static_cast<const AudioUnitEffect&>(mProcessor).GetSettings(settings));
@@ -554,7 +553,7 @@ bool AudioUnitInstance::ProcessInitialize(
                                // accumulate the number of frames processed so far
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-   if (!SetRateAndChannels())
+   if (!SetRateAndChannels(sampleRate))
       return false;
 
    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
@@ -1119,12 +1118,12 @@ bool AudioUnitEffect::SavePreset(
    return true;
 }
 
-bool AudioUnitInstance::SetRateAndChannels()
+bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
 {
    mInitialization.reset();
    AudioUnitUtils::StreamBasicDescription streamFormat{
       // Float64 mSampleRate;
-      mSampleRate,
+      sampleRate,
 
       // UInt32  mFormatID;
       kAudioFormatLinearPCM,
@@ -1160,7 +1159,7 @@ bool AudioUnitInstance::SetRateAndChannels()
    };
    for (const auto &[nChannels, scope, msg] : infos) {
       if (nChannels) {
-         if (SetProperty(kAudioUnitProperty_SampleRate, mSampleRate, scope)) {
+         if (SetProperty(kAudioUnitProperty_SampleRate, sampleRate, scope)) {
             wxLogError("%ls Didn't accept sample rate on %s\n",
                // Exposing internal name only in logging
                mIdentifier.wx_str(), msg);
