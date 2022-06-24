@@ -521,7 +521,6 @@ static struct DefaultConfigEntry {
    { AudioSetupBarID,        EditBarID,              NoBarID                },
    { RecordMeterBarID,       AudioSetupBarID,        NoBarID                },
    { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
-   { MixerBarID,             NoBarID,                TransportBarID         },
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
