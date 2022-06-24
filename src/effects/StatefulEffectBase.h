@@ -28,8 +28,6 @@ public:
 
       bool Init() override;
 
-      void SetSampleRate(double rate) override;
-   
       size_t GetBlockSize() const override;
       size_t SetBlockSize(size_t maxBlockSize) override;
    
@@ -60,12 +58,6 @@ public:
     @copydoc EffectInstance::Process
     */
    virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
-
-   /*!
-     @copydoc EffectInstance::SetSampleRate()
-     Default implementation assigns mSampleRate
-   */
-   virtual void SetSampleRate(double rate);
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeInitialize()
@@ -129,9 +121,6 @@ public:
    */
    virtual size_t GetBlockSize() const;
 
-protected:
-
-   double         mSampleRate{};
 private:
 
    size_t mEffectBlockSize{ 0 };

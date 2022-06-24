@@ -130,8 +130,6 @@ bool EffectWahwah::Validator::ValidateUI()
 struct EffectWahwah::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
-   , public EffectInstanceWithSampleRate
-
 {
    explicit Instance(const PerTrackEffect& effect)
       : PerTrackEffect::Instance{ effect }
@@ -220,10 +218,10 @@ unsigned EffectWahwah::GetAudioOutCount() const
    return 1;
 }
 
-bool EffectWahwah::Instance::ProcessInitialize(
-   EffectSettings & settings, double, sampleCount, ChannelNames chanMap)
+bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(settings, mMaster, mSampleRate);
+   InstanceInit(settings, mMaster, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
       mMaster.phase += M_PI;
    return true;

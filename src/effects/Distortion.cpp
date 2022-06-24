@@ -204,9 +204,9 @@ unsigned EffectDistortion::GetAudioOutCount() const
 }
 
 bool EffectDistortion::ProcessInitialize(
-   EffectSettings &, double, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, mSampleRate);
+   InstanceInit(mMaster, sampleRate);
    return true;
 }
 

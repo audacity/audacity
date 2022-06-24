@@ -58,6 +58,7 @@ private:
 
    void OnControlUpdate(wxCommandEvent & evt);
 
+   double mSampleRate{};
    const bool mChirp;
 
    // mSample is an external placeholder to remember the last "buffer"

@@ -804,7 +804,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mAudioOuts = 0;
    mMidiIns = 0;
    mMidiOuts = 0;
-   mSampleRate = 44100;
    mBlockSize = mUserBlockSize = 8192;
    mBufferDelay = 0;
    mProcessLevel = 1;         // in GUI thread
@@ -1008,11 +1007,6 @@ size_t VSTEffect::GetBlockSize() const
    return mBlockSize;
 }
 
-void VSTEffect::SetSampleRate(double rate)
-{
-   mSampleRate = (float) rate;
-}
-
 sampleCount VSTEffect::GetLatency()
 {
    if (mUseLatency)
@@ -1032,16 +1026,16 @@ bool VSTEffect::IsReady()
 }
 
 bool VSTEffect::ProcessInitialize(
-   EffectSettings &, double, sampleCount, ChannelNames)
+   EffectSettings &, double sampleRate, sampleCount, ChannelNames)
 {
-   return DoProcessInitialize();
+   return DoProcessInitialize(sampleRate);
 }
 
-bool VSTEffect::DoProcessInitialize()
+bool VSTEffect::DoProcessInitialize(double sampleRate)
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
-   mTimeInfo.sampleRate = mSampleRate;
+   mTimeInfo.sampleRate = sampleRate;
    mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    mTimeInfo.tempo = 120.0;
    mTimeInfo.timeSigNumerator = 4;
@@ -1049,7 +1043,7 @@ bool VSTEffect::DoProcessInitialize()
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid | kVstTransportPlaying;
 
    // Set processing parameters...power must be off for this
-   callDispatcher(effSetSampleRate, 0, 0, NULL, mSampleRate);
+   callDispatcher(effSetSampleRate, 0, 0, NULL, sampleRate);
    callDispatcher(effSetBlockSize, 0, mBlockSize, NULL, 0.0);
 
    // Turn on the power
@@ -1109,7 +1103,6 @@ bool VSTEffect::RealtimeAddProcessor(
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
-   slave->SetSampleRate(sampleRate);
 
    int clen = 0;
    if (mAEffect->flags & effFlagsProgramChunks) {
@@ -1214,15 +1207,12 @@ int VSTEffect::ShowClientInterface(
 {
    //   mProcessLevel = 1;      // in GUI thread
 
-   // Set some defaults since some VSTs need them...these will be reset when
-   // normal or realtime processing begins
    if (!IsReady())
    {
+      // Set some defaults since some VSTs need them...these will be reset when
+      // normal or realtime processing begins
       mBlockSize = 8192;
-      // No settings here!  Is this call really needed?  It appears to be
-      // redundant with later calls that reach process initialization from the
-      // dialog, either with the Apply or Play buttons.
-      DoProcessInitialize();
+      DoProcessInitialize(mProjectRate);
    }
 
    // Remember the dialog with a weak pointer, but don't control its lifetime

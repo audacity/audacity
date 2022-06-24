@@ -204,7 +204,6 @@ bool AudioUnitEffect::SupportsAutomation() const
 
 class AudioUnitInstance : public PerTrackEffect::Instance
    , public AudioUnitWrapper
-   , EffectInstanceWithSampleRate
 {
 public:
    AudioUnitInstance(const PerTrackEffect &effect,
@@ -285,7 +284,6 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    , mAudioIns{ audioIns }, mAudioOuts{ audioOuts }, mUseLatency{ useLatency }
 {
    CreateAudioUnit();
-   mSampleRate = 44100;
 }
 
 size_t AudioUnitInstance::InitialBlockSize() const
@@ -486,11 +484,6 @@ int AudioUnitEffect::GetMidiOutCount() const
    return 0;
 }
 
-void AudioUnitEffect::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
 size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
 {
    return mBlockSize;
@@ -639,7 +632,6 @@ bool AudioUnitInstance::RealtimeAddProcessor(
    }
 
    slave->SetBlockSize(mBlockSize);
-   slave->SetSampleRate(sampleRate);
 
    if (!slave->StoreSettings(effect.GetSettings(settings)))
       return false;

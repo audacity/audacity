@@ -55,11 +55,6 @@ bool StatefulEffectBase::Instance::Init()
    return GetEffect().Init();
 }
 
-void StatefulEffectBase::Instance::SetSampleRate(double rate)
-{
-   GetEffect().SetSampleRate(rate);
-}
-
 bool StatefulEffectBase::Instance::RealtimeInitialize(
    EffectSettings &settings, double sampleRate)
 {
@@ -113,11 +108,6 @@ size_t StatefulEffectBase::Instance::GetBlockSize() const
 size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
 {
    return GetEffect().SetBlockSize(maxBlockSize);
-}
-
-void StatefulEffectBase::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
 }
 
 size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)

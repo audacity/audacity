@@ -90,7 +90,8 @@ private:
    friend RealtimeEffects::SuspensionScope;
 
    //! Main thread begins to define a set of tracks for playback
-   void Initialize(RealtimeEffects::InitializationScope &scope, double rate);
+   void Initialize(RealtimeEffects::InitializationScope &scope,
+      double sampleRate);
    //! Main thread adds one track (passing the first of one or more
    //! channels), still before playback
    void AddTrack(RealtimeEffects::InitializationScope &scope,

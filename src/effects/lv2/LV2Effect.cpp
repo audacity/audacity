@@ -275,21 +275,6 @@ int LV2Effect::GetMidiOutCount() const
    return mPorts.mMidiOut;
 }
 
-void LV2Effect::SetSampleRate(double rate)
-{
-   mSampleRate = (float) rate;
-
-   if (mMaster)
-   {
-      mMaster->SetSampleRate();
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      mSlaves[i]->SetSampleRate();
-   }
-}
-
 size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = std::max(mMinBlockSize,
@@ -315,10 +300,10 @@ sampleCount LV2Effect::GetLatency()
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(
-   EffectSettings &settings, double, sampleCount, ChannelNames chanMap)
+bool LV2Effect::ProcessInitialize(EffectSettings &settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(settings, mSampleRate);
+   mProcess = InitInstance(settings, sampleRate);
    if (!mProcess)
       return false;
    for (auto & state : mPortStates.mCVPortStates)

@@ -144,9 +144,6 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          const auto sampleRate = left->GetRate();
 
-         // Let the client know the sample rate
-         instance.SetSampleRate(sampleRate);
-
          // Get the block size the client wants to use
          auto max = left->GetMaxBlockSize() * 2;
          blockSize = instance.SetBlockSize(max);

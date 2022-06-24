@@ -865,7 +865,6 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
 struct LadspaEffect::Instance
    : PerTrackEffect::Instance
    , EffectInstanceWithBlockSize
-   , EffectInstanceWithSampleRate
 {
    using PerTrackEffect::Instance::Instance;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
@@ -941,13 +940,13 @@ sampleCount LadspaEffect::Instance::GetLatency(
 }
 
 bool LadspaEffect::Instance::ProcessInitialize(
-   EffectSettings &settings, double, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
 {
    /* Instantiate the plugin */
    if (!mReady) {
       auto &effect = GetEffect();
       auto &ladspaSettings = GetSettings(settings);
-      mMaster = effect.InitInstance(mSampleRate, ladspaSettings);
+      mMaster = effect.InitInstance(sampleRate, ladspaSettings);
       if (!mMaster)
          return false;
       mReady = true;

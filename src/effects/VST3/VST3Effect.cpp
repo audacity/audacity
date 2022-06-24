@@ -587,11 +587,6 @@ int VST3Effect::GetMidiOutCount() const
    return 0;
 }
 
-void VST3Effect::SetSampleRate(double rate)
-{
-   mSetup.sampleRate = rate;
-}
-
 size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
 {
    mSetup.maxSamplesPerBlock = 
@@ -618,8 +613,9 @@ sampleCount VST3Effect::GetLatency()
 }
 
 bool VST3Effect::ProcessInitialize(
-   EffectSettings &settings, double, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
 {
+   mSetup.sampleRate = sampleRate;
    using namespace Steinberg;
 
    if(mAudioProcessor->canProcessSampleSize(mSetup.symbolicSampleSize) ==kResultTrue &&
@@ -749,8 +745,9 @@ size_t VST3Effect::ProcessBlock(EffectSettings &,
    return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
-bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double)
+bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
+   mSetup.sampleRate = sampleRate;
    //reload current parameters form the editor into parameter queues
    SyncParameters(settings);
    return true;

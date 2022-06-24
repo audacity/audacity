@@ -139,14 +139,13 @@ class VSTEffect final
 
    sampleCount GetLatency() override;
 
-   void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    bool IsReady();
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
-   bool DoProcessInitialize();
+   bool DoProcessInitialize(double sampleRate);
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
@@ -298,7 +297,6 @@ private:
    int mMidiIns;
    int mMidiOuts;
    bool mAutomatable;
-   float mSampleRate;
    size_t mUserBlockSize;
    wxString mName;
    wxString mVendor;
