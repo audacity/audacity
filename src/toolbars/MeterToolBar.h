@@ -36,6 +36,9 @@ class MeterToolBar final : public ToolBar {
    MeterToolBar(AudacityProject &project, int type);
    virtual ~MeterToolBar();
 
+   static MeterToolBar & Get(AudacityProject &project, bool forPlayMeterToolBar);
+   static const MeterToolBar & Get(const AudacityProject &project, bool forPlayMeterToolBar);
+
    void Create(wxWindow *parent) override;
 
    void Populate() override;
@@ -54,6 +57,12 @@ class MeterToolBar final : public ToolBar {
       return GetSmartDockedSize();
    };
    virtual void SetDocked(ToolDock *dock, bool pushed)override;
+
+   void ShowOutputGainDialog();
+   void ShowInputGainDialog();
+
+   void AdjustOutputGain(int adj);
+   void AdjustInputGain(int adj);
 
  private:
    void RegenerateTooltips() override;

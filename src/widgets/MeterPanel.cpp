@@ -933,6 +933,43 @@ void MeterPanel::SetMixer(wxCommandEvent & WXUNUSED(event))
 #endif // USE_PORTMIXER
 }
 
+bool MeterPanel::ShowDialog()
+{
+   if (!mSlider)
+      return false;
+
+   auto changed = mSlider->ShowDialog();
+   if (changed)
+   {
+      wxCommandEvent e;
+      SetMixer(e);
+   }
+
+   return changed;
+}
+
+void MeterPanel::Increase(float steps)
+{
+   if (mSlider)
+   {
+      wxCommandEvent e;
+
+      mSlider->Increase(steps);
+      SetMixer(e);
+   }
+}
+
+void MeterPanel::Decrease(float steps)
+{
+   if (mSlider)
+   {
+      wxCommandEvent e;
+
+      mSlider->Decrease(steps);
+      SetMixer(e);
+   }
+}
+
 void MeterPanel::Reset(double sampleRate, bool resetClipping)
 {
    mT = 0;

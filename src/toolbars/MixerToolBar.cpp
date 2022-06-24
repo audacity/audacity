@@ -264,48 +264,6 @@ void MixerToolBar::SetMixer(wxCommandEvent & WXUNUSED(event))
 #endif // USE_PORTMIXER
 }
 
-void MixerToolBar::ShowOutputGainDialog()
-{
-   mOutputSlider->ShowDialog();
-   wxCommandEvent e;
-   SetMixer(e);
-   UpdateControls();
-}
-
-void MixerToolBar::ShowInputGainDialog()
-{
-   mInputSlider->ShowDialog();
-   wxCommandEvent e;
-   SetMixer(e);
-   UpdateControls();
-}
-
-void MixerToolBar::AdjustOutputGain(int adj)
-{
-   if (adj < 0) {
-      mOutputSlider->Decrease(-adj);
-   }
-   else {
-      mOutputSlider->Increase(adj);
-   }
-   wxCommandEvent e;
-   SetMixer(e);
-   UpdateControls();
-}
-
-void MixerToolBar::AdjustInputGain(int adj)
-{
-   if (adj < 0) {
-      mInputSlider->Decrease(-adj);
-   }
-   else {
-      mInputSlider->Increase(adj);
-   }
-   wxCommandEvent e;
-   SetMixer(e);
-   UpdateControls();
-}
-
 void MixerToolBar::SetToolTips()
 {
    if (mInputSlider->IsEnabled()) {

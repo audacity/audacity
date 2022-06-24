@@ -50,12 +50,6 @@ class MixerToolBar final : public ToolBar {
 
    void OnAudioCapture(AudioIOEvent);
 
-   void ShowOutputGainDialog();
-   void ShowInputGainDialog();
-
-   void AdjustOutputGain(int adj);
-   void AdjustInputGain(int adj);
-
    void RegenerateTooltips() override {};
 
  protected:

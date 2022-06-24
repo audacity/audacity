@@ -194,6 +194,9 @@ class AUDACITY_DLL_API MeterPanel final
 
    int GetDBRange() const override { return mDB ? mDBRange : -1; }
 
+   bool ShowDialog();
+   void Increase(float steps);
+   void Decrease(float steps);
    void UpdateSliderControl();
 
  private:
