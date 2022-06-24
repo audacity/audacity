@@ -68,7 +68,8 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;

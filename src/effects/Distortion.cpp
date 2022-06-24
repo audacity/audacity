@@ -216,12 +216,10 @@ size_t EffectDistortion::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize(EffectSettings &)
+bool EffectDistortion::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

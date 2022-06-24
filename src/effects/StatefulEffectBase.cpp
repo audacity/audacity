@@ -60,9 +60,10 @@ void StatefulEffectBase::Instance::SetSampleRate(double rate)
    GetEffect().SetSampleRate(rate);
 }
 
-bool StatefulEffectBase::Instance::RealtimeInitialize(EffectSettings &settings)
+bool StatefulEffectBase::Instance::RealtimeInitialize(
+   EffectSettings &settings, double sampleRate)
 {
-   return GetEffect().RealtimeInitialize(settings);
+   return GetEffect().RealtimeInitialize(settings, sampleRate);
 }
 
 bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
@@ -130,7 +131,7 @@ size_t StatefulEffectBase::GetBlockSize() const
    return mEffectBlockSize;
 }
 
-bool StatefulEffectBase::RealtimeInitialize(EffectSettings &settings)
+bool StatefulEffectBase::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }

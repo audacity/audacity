@@ -749,7 +749,7 @@ size_t VST3Effect::ProcessBlock(EffectSettings &,
    return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
-bool VST3Effect::RealtimeInitialize(EffectSettings &settings)
+bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double)
 {
    //reload current parameters form the editor into parameter queues
    SyncParameters(settings);

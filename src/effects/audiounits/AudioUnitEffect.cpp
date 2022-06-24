@@ -229,7 +229,8 @@ private:
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
@@ -613,7 +614,7 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool AudioUnitInstance::RealtimeInitialize(EffectSettings &settings)
+bool AudioUnitInstance::RealtimeInitialize(EffectSettings &settings, double)
 {
    return ProcessInitialize(settings, 0, nullptr);
 }

@@ -391,7 +391,7 @@ public:
     Other member functions related to realtime return true or zero, but will not
     be called, unless a derived class overrides RealtimeInitialize.
     */
-   virtual bool RealtimeInitialize(EffectSettings &settings);
+   virtual bool RealtimeInitialize(EffectSettings &settings, double sampleRate);
 
    /*!
     @return success

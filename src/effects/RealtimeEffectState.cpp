@@ -259,7 +259,7 @@ RealtimeEffectState::EnsureInstance(double rate)
       // number was important
       pInstance->SetBlockSize(512);
       
-      if (!pInstance->RealtimeInitialize(mMainSettings))
+      if (!pInstance->RealtimeInitialize(mMainSettings, rate))
          return {};
       return pInstance;
    }

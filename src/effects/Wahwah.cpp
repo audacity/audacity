@@ -145,7 +145,7 @@ struct EffectWahwah::Instance
 
    //bool ProcessFinalize(void) override;
 
-   bool RealtimeInitialize(EffectSettings& settings) override;
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
 
    bool RealtimeAddProcessor(EffectSettings& settings,
       unsigned numChannels, float sampleRate) override;
@@ -239,12 +239,10 @@ size_t EffectWahwah::Instance::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &)
+bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

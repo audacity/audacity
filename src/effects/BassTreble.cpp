@@ -137,12 +137,10 @@ size_t EffectBassTreble::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
+bool EffectBassTreble::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

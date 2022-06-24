@@ -203,7 +203,7 @@ struct EffectReverb::Instance
 
    // Realtime section
 
-   bool RealtimeInitialize(EffectSettings& settings) override
+   bool RealtimeInitialize(EffectSettings& settings, double) override
    {
       SetBlockSize(512);
       mSlaves.clear();

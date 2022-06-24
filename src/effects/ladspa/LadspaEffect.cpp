@@ -877,7 +877,8 @@ struct LadspaEffect::Instance
 
    sampleCount GetLatency(const EffectSettings &settings) override;
 
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(
       EffectSettings &settings, unsigned numChannels, float sampleRate)
    override;
@@ -979,7 +980,7 @@ size_t LadspaEffect::Instance::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &)
+bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    return true;
 }

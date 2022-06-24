@@ -1098,7 +1098,7 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-bool VSTEffect::RealtimeInitialize(EffectSettings &settings)
+bool VSTEffect::RealtimeInitialize(EffectSettings &settings, double)
 {
    return ProcessInitialize(settings, 0, nullptr);
 }

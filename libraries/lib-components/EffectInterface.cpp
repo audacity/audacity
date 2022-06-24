@@ -117,7 +117,7 @@ bool EffectInstance::Init()
    return true;
 }
 
-bool EffectInstance::RealtimeInitialize(EffectSettings &)
+bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }

@@ -157,12 +157,10 @@ size_t EffectPhaser::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::RealtimeInitialize(EffectSettings &)
+bool EffectPhaser::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 
