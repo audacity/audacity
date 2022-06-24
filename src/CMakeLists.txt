@@ -667,6 +667,10 @@ list( APPEND SOURCES
          export/ExportMP2.cpp
       >
 
+      $<$<BOOL:${USE_WAVPACK}>:
+         export/ExportWavPack.cpp
+      >
+      
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
@@ -720,6 +724,10 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_LIBMPG123}>:
          import/ImportMP3_MPG123.cpp
+      >
+
+      $<$<BOOL:${USE_WAVPACK}>:
+         import/ImportWavPack.cpp
       >
 
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
@@ -1186,6 +1194,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBMPG123}>:MPG123::libmpg123>
+      $<$<BOOL:${USE_WAVPACK}>:WavPack::WavPack>
       $<$<BOOL:${USE_LIBOGG}>:Ogg::ogg>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbis>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisfile>

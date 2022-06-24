@@ -38,6 +38,7 @@ depends=(zlib
    fontconfig
    mesa
    mpg123
+   wavpack
 )
 
 makedepends=(

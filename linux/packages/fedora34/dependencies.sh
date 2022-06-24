@@ -53,6 +53,7 @@ deps=(
    fontconfig-devel
    mesa-libEGL-devel
    mpg123-devel
+   wavpack-devel
 )
 
 dnf install -y \
