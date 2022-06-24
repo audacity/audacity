@@ -156,6 +156,8 @@ auto WavPackImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 
 ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags)
 {
+   const int wavpackMode = WavpackGetMode(mWavPackContext);
+
    outTracks.clear();
 
    CreateProgress();
@@ -192,8 +194,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
                   mFormat, samplesRead, mNumChannels);
             }
 
-         } else if (mFormat == int24Sample) {
-
+         } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + channel),
@@ -203,7 +204,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          } else {
             ArrayOf<float> tempBuffer{ bufferSize };
             for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
-               tempBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>((1u << 31)));
+               tempBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
@@ -230,7 +231,6 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
    if (!mChannels.empty())
       outTracks.push_back(std::move(mChannels));
 
-   int wavpackMode = WavpackGetMode(mWavPackContext);
    if (wavpackMode & MODE_VALID_TAG) {
       bool apeTag = wavpackMode & MODE_APETAG;
       int numItems = WavpackGetNumTagItems(mWavPackContext);

@@ -298,7 +298,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
    bool createCorrectionFile = CreateCorrectionFileSetting.Read();
    int bitRate = BitrateSetting.Read();
    int bitDepth = BitDepthSetting.Read();
-   
+
    sampleFormat format = int16Sample;
    if (bitDepth == 24) {
       format = int24Sample;
@@ -311,6 +311,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
    config.channel_mask = config.num_channels == 1 ? 4 : 3; // Microsoft standard, mono = 4, stereo = 3
    config.bits_per_sample = bitDepth;
    config.bytes_per_sample = bitDepth/8;
+   config.float_norm_exp = format == floatSample ? 127 : 0;
 
    if (quality == 0) {
       config.flags |= CONFIG_FAST_FLAG;
@@ -377,7 +378,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
                   wavpackBuffer[j*numChannels + i] = value;
                }
             }
-         } else if (format == int24Sample) {
+         } else if (format == int24Sample || (WavpackGetMode(wpc) & MODE_FLOAT) == MODE_FLOAT) {
             const int *mixed = reinterpret_cast<const int*>(mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < numChannels; i++) {
@@ -388,7 +389,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
             const float *mixed = reinterpret_cast<const float*>(mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < numChannels; i++) {
-                  int64_t intValue = (*mixed++) * (1u << 31);
+                  int64_t intValue = (*mixed++) * (std::numeric_limits<int32_t>::max());
 
                   intValue = std::clamp<int64_t>(
                      intValue,
