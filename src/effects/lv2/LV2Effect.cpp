@@ -341,9 +341,9 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // In addition, reset the output Atom ports.
    for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
-      const auto buf = state->mBuffer.data();
+      const auto buf = state->mBuffer.get();
       if (port->mIsInput) {
-         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
+         lv2_atom_forge_set_buffer(&mForge, buf, port->mMinimumSize);
          LV2_Atom_Forge_Frame seqFrame;
          const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
             lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
@@ -376,10 +376,8 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
          }
          lv2_atom_forge_pop(&mForge, &seqFrame);
       }
-      else {
-         state->mBuffer.resize(port->mMinimumSize);
+      else
          *reinterpret_cast<LV2_Atom*>(buf) = { port->mMinimumSize, urid_Chunk };
-      }
    }
 
    lilv_instance_run(instance, size);
@@ -390,8 +388,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       if (!port->mIsInput) {
-         state->mBuffer.resize(port->mMinimumSize);
-         auto chunk = reinterpret_cast<LV2_Atom *>(state->mBuffer.data());
+         auto chunk = reinterpret_cast<LV2_Atom *>(state->mBuffer.get());
          chunk->size = port->mMinimumSize;
          chunk->type = urid_Chunk;
       }
@@ -459,9 +456,9 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    // In addition, reset the output Atom ports.
    for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
-      const auto buf = state->mBuffer.data();
+      const auto buf = state->mBuffer.get();
       if (port->mIsInput) {
-         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
+         lv2_atom_forge_set_buffer(&mForge, buf, port->mMinimumSize);
          LV2_Atom_Forge_Frame seqFrame;
          const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
             lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
@@ -500,11 +497,9 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
          }
 #endif
       }
-      else {
-         state->mBuffer.resize(port->mMinimumSize);
-         *reinterpret_cast<LV2_Atom *>(buf) =
-            { port->mMinimumSize, urid_Chunk };
-      }
+      else
+         *reinterpret_cast<LV2_Atom *>(buf) = {
+            port->mMinimumSize, urid_Chunk };
    }
 
    return true;
@@ -546,9 +541,8 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
 
    for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
-      auto buf = state->mBuffer.data();
+      auto buf = state->mBuffer.get();
       if (!port->mIsInput) {
-         state->mBuffer.resize(port->mMinimumSize);
          auto chunk = reinterpret_cast<LV2_Atom *>(buf);
          chunk->size = port->mMinimumSize;
          chunk->type = LV2Symbols::urid_Chunk;
@@ -574,7 +568,7 @@ return GuardedCall<bool>([&]{
       if (!state->mpPort->mIsInput) {
          const auto ring = state->mRing.get();
          LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
+            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.get()), ev
          )
             zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
       }

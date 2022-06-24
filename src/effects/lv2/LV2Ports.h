@@ -78,14 +78,14 @@ struct LV2AtomPortState final {
    explicit LV2AtomPortState(LV2AtomPortPtr pPort)
       : mpPort{ move(pPort) }
       , mRing{ zix_ring_new(mpPort->mMinimumSize) }
-      , mBuffer( mpPort->mMinimumSize )
+      , mBuffer{ safenew uint8_t[mpPort->mMinimumSize] }
    {
       assert(mpPort);
       zix_ring_mlock(mRing.get());
    }
    const LV2AtomPortPtr mpPort;
    const Lilv_ptr<ZixRing, zix_ring_free> mRing;
-   std::vector<uint8_t> mBuffer;
+   const std::unique_ptr<uint8_t[]> mBuffer;
 };
 using LV2AtomPortStatePtr = std::shared_ptr<LV2AtomPortState>;
 using LV2AtomPortStateArray = std::vector<LV2AtomPortStatePtr>;
