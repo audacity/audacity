@@ -1218,7 +1218,6 @@ int VSTEffect::ShowClientInterface(
    // normal or realtime processing begins
    if (!IsReady())
    {
-      mSampleRate = 44100;
       mBlockSize = 8192;
       // No settings here!  Is this call really needed?  It appears to be
       // redundant with later calls that reach process initialization from the
@@ -2355,7 +2354,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
-                  mSampleRate,
+                  mProjectRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
             mDuration->SetName( XO("Duration") );

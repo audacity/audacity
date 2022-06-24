@@ -697,7 +697,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(settings, mSampleRate);
+   mMaster = InitInstance(settings, mProjectRate);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -1073,6 +1073,9 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
       lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr)
    };
 
+   // Reassign the sample rate, which is pointed to by options, which are
+   // pointed to by features, before we tell the library the features
+   mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
@@ -1213,7 +1216,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto &extra = settings.extra;
          mDuration = safenew NumericTextCtrl(w, ID_Duration,
             NumericConverter::TIME, extra.GetDurationFormat(),
-            extra.GetDuration(), mSampleRate,
+            extra.GetDuration(), mProjectRate,
             NumericTextCtrl::Options{}.AutoPos(true));
          mDuration->SetName( XO("Duration") );
          sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
@@ -1306,7 +1309,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                t->SetName(labelText);
                gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                ctrl.mText = t;
-               auto rate = port->mSampleRate ? mSampleRate : 1.0f;
+               auto rate = port->mSampleRate ? mProjectRate : 1.0f;
                state.mLo = port->mMin * rate;
                state.mHi = port->mMax * rate;
                state.mTmp = value * rate;
@@ -1446,7 +1449,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
-               values[index] * (port->mSampleRate ? mSampleRate : 1.0);
+               values[index] * (port->mSampleRate ? mProjectRate : 1.0);
          ++index;
       }
    }
@@ -1481,7 +1484,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          else if (port->mEnumeration)      // Check before integer
             ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
-            state.mTmp = value * (port->mSampleRate ? mSampleRate : 1.0f);
+            state.mTmp = value * (port->mSampleRate ? mProjectRate : 1.0f);
             SetSlider(state, ctrl);
          }
       }
@@ -1534,7 +1537,7 @@ void LV2Effect::OnText(wxCommandEvent &evt)
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       mSettings.values[idx] =
-         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+         port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
       SetSlider(state, ctrl);
    }
 }
@@ -1554,7 +1557,7 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
    mSettings.values[idx] =
-      port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 

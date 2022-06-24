@@ -731,7 +731,7 @@ bool LadspaEffect::SupportsAutomation() const
 
 namespace {
 std::pair<float, float>
-InputCountrolPortBounds(const LADSPA_PortRangeHint &hint, double sampleRate)
+InputControlPortBounds(const LADSPA_PortRangeHint &hint, double sampleRate)
 {
    // Find lower and upper bound values for ths hint
    const auto multiplier =
@@ -751,7 +751,7 @@ float InputControlPortDefaultValue(
    const LADSPA_PortRangeHint &hint, double sampleRate)
 {
    // See comments in library header ladspa.h about interpretation of macros
-   const auto bounds = InputCountrolPortBounds(hint, sampleRate);
+   const auto bounds = InputControlPortBounds(hint, sampleRate);
 
    // Function to find low, middle, or high default values
    const auto combine = [bounds,
@@ -855,7 +855,7 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
       if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
          // Determine the port's default value
          controls[p] = InputControlPortDefaultValue(
-            mData->PortRangeHints[p], mSampleRate);
+            mData->PortRangeHints[p], mProjectRate);
       else
          controls[p] = 0;
    }
@@ -1448,7 +1448,7 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access)
 {
    auto result =
-      std::make_unique<Validator>(*this, access, mSampleRate, GetType());
+      std::make_unique<Validator>(*this, access, mProjectRate, GetType());
    result->PopulateUI(S);
    return result;
 }
