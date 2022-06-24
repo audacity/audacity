@@ -111,20 +111,20 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
@@ -357,7 +357,6 @@ public:
    LV2_Handle GetHandle() const;
    float GetLatency() const;
    void SetFreeWheeling(bool enable);
-   void SetSampleRate();
    void SetBlockSize();
    void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,

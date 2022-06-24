@@ -88,7 +88,6 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
@@ -163,7 +162,6 @@ private:
 
    bool mInteractive{ false };
    UInt32 mBlockSize{ 0 };
-   Float64 mSampleRate{ 44100.0 };
 
    bool mUseLatency{ true };
 

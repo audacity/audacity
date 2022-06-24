@@ -32,8 +32,8 @@ bool PerTrackEffect::Instance::Process(EffectSettings &settings)
    return mProcessor.Process(*this, settings);
 }
 
-bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
-   sampleCount totalLen, ChannelNames chanMap)
+bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &,
+   double, sampleCount, ChannelNames)
 {
    return true;
 }
@@ -43,7 +43,8 @@ bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
    return true;
 }
 
-sampleCount PerTrackEffect::Instance::GetLatency(const EffectSettings &)
+sampleCount PerTrackEffect::Instance::GetLatency(
+   const EffectSettings &, double)
 {
    return 0;
 }
@@ -141,8 +142,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          else
             mSampleCnt = left->TimeToLongSamples(duration);
 
-         // Let the client know the sample rate
-         instance.SetSampleRate(left->GetRate());
+         const auto sampleRate = left->GetRate();
 
          // Get the block size the client wants to use
          auto max = left->GetMaxBlockSize() * 2;
@@ -189,7 +189,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          }
 
          // Go process the track(s)
-         bGoodResult = ProcessTrack(instance, settings,
+         bGoodResult = ProcessTrack(instance, settings, sampleRate,
             count, map, left, right, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, blockSize,
             numChannels);
@@ -211,22 +211,18 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 }
 
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
-   int count,
-   ChannelNames map,
-   WaveTrack *left,
-   WaveTrack *right,
-   sampleCount start,
-   sampleCount len,
-   FloatBuffers &inBuffer,
-   FloatBuffers &outBuffer,
-   ArrayOf< float * > &inBufPos,
-   ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
+   double sampleRate, int count, ChannelNames map,
+   WaveTrack *left, WaveTrack *right,
+   sampleCount start, sampleCount len,
+   FloatBuffers &inBuffer, FloatBuffers &outBuffer,
+   ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,
+   size_t bufferSize, size_t blockSize,
    unsigned numChannels) const
 {
    bool rc = true;
 
    // Give the plugin a chance to initialize
-   if (!instance.ProcessInitialize(settings, len, map))
+   if (!instance.ProcessInitialize(settings, sampleRate, len, map))
       return false;
 
    { // Start scope for cleanup
@@ -253,7 +249,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto inPos = start;
    auto outPos = start;
    auto inputRemaining = len;
-   decltype(instance.GetLatency(settings)) curDelay = 0, delayRemaining = 0;
+   decltype(instance.GetLatency(settings, sampleRate))
+      curDelay = 0, delayRemaining = 0;
    decltype(blockSize) curBlockSize = 0;
    decltype(bufferSize) inputBufferCnt = 0;
    decltype(bufferSize) outputBufferCnt = 0;
@@ -385,7 +382,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       // Get the current number of delayed samples and accumulate
       if (isProcessor) {
          {
-            auto delay = instance.GetLatency(settings);
+            auto delay = instance.GetLatency(settings, sampleRate);
             curDelay += delay;
             delayRemaining += delay;
          }

@@ -57,7 +57,7 @@ public:
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
    std::shared_ptr<EffectInstance>
-   AddTrack(Track &track, unsigned chans, float rate);
+   AddTrack(Track &track, unsigned chans, float sampleRate);
    //! Worker thread begins a batch of samples
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);

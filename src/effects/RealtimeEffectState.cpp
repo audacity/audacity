@@ -235,7 +235,7 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 }
 
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::EnsureInstance(double rate)
+RealtimeEffectState::EnsureInstance(double sampleRate)
 {
    if (!mPlugin)
       return {};
@@ -253,17 +253,15 @@ RealtimeEffectState::EnsureInstance(double rate)
          return {};
 
       mInitialized = true;
-      pInstance->SetSampleRate(rate);
       
       // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
       // number was important
       pInstance->SetBlockSize(512);
       
-      if (!pInstance->RealtimeInitialize(mMainSettings))
+      if (!pInstance->RealtimeInitialize(mMainSettings, sampleRate))
          return {};
       return pInstance;
    }
-   pInstance->SetSampleRate(rate);
    return pInstance;
 }
 
@@ -277,22 +275,22 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
 }
 
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::Initialize(double rate)
+RealtimeEffectState::Initialize(double sampleRate)
 {
    if (!mPlugin)
       return {};
 
    mCurrentProcessor = 0;
    mGroups.clear();
-   return EnsureInstance(rate);
+   return EnsureInstance(sampleRate);
 }
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
+RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
 {
-   auto pInstance = EnsureInstance(rate);
+   auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
       return {};
 
@@ -347,7 +345,7 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       // Add a NEW processor
       // Pass reference to worker settings, not main -- such as, for connecting
       // Ladspa ports to the proper addresses.
-      if (pInstance->RealtimeAddProcessor(mWorkerSettings, gchans, rate))
+      if (pInstance->RealtimeAddProcessor(mWorkerSettings, gchans, sampleRate))
          mCurrentProcessor++;
       else
          break;

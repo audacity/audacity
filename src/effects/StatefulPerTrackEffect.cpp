@@ -22,10 +22,12 @@
 
 StatefulPerTrackEffect::Instance::~Instance() = default;
 
-bool StatefulPerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
+bool StatefulPerTrackEffect::Instance::ProcessInitialize(
+   EffectSettings &settings, double sampleRate,
    sampleCount totalLen, ChannelNames chanMap)
 {
-   return GetEffect().ProcessInitialize(settings, totalLen, chanMap);
+   return GetEffect()
+      .ProcessInitialize(settings, sampleRate, totalLen, chanMap);
 }
 
 bool StatefulPerTrackEffect::Instance::ProcessFinalize() /* noexcept */
@@ -39,7 +41,8 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
    return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
-sampleCount StatefulPerTrackEffect::Instance::GetLatency(const EffectSettings &)
+sampleCount StatefulPerTrackEffect::Instance::GetLatency(
+   const EffectSettings &, double)
 {
    return GetEffect().GetLatency();
 }
@@ -78,7 +81,7 @@ sampleCount StatefulPerTrackEffect::GetLatency()
 }
 
 bool StatefulPerTrackEffect::ProcessInitialize(
-   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
+   EffectSettings &, double, sampleCount, ChannelNames)
 {
    return true;
 }

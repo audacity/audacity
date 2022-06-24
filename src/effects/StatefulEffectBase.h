@@ -28,12 +28,11 @@ public:
 
       bool Init() override;
 
-      void SetSampleRate(double rate) override;
-   
       size_t GetBlockSize() const override;
       size_t SetBlockSize(size_t maxBlockSize) override;
    
-      bool RealtimeInitialize(EffectSettings &settings) override;
+      bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+         override;
       bool RealtimeAddProcessor(EffectSettings &settings,
          unsigned numChannels, float sampleRate) override;
       bool RealtimeSuspend() override;
@@ -61,76 +60,67 @@ public:
    virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
 
    /*!
-     @copydoc EffectInstance::SetSampleRate()
-     Default implementation assigns mSampleRate
-   */
-   virtual void SetSampleRate(double rate);
-
-   /*!
-     @copydoc RealtimeInitialize::RealtimeInitialize()
+     @copydoc StatefulEffectBase::Instance::RealtimeInitialize()
      Default implementation does nothing, returns false
    */
-   virtual bool RealtimeInitialize(EffectSettings &settings);
+   virtual bool RealtimeInitialize(EffectSettings &settings, double sampleRate);
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeAddProcessor()
+     @copydoc StatefulEffectBase::Instance::RealtimeAddProcessor()
      Default implementation does nothing, returns true
    */
    virtual bool RealtimeAddProcessor(
       EffectSettings &settings, unsigned numChannels, float sampleRate);
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeSuspend()
+     @copydoc StatefulEffectBase::Instance::RealtimeSuspend()
      Default implementation does nothing, returns true
    */
    virtual bool RealtimeSuspend();
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeResume()
+     @copydoc StatefulEffectBase::Instance::RealtimeResume()
      Default implementation does nothing, returns true
    */
    virtual bool RealtimeResume();
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeProcessStart()
+     @copydoc StatefulEffectBase::Instance::RealtimeProcessStart()
      Default implementation does nothing, returns true
    */
    virtual bool RealtimeProcessStart(EffectSettings &settings);
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeProcess()
+     @copydoc StatefulEffectBase::Instance::RealtimeProcess()
      Default implementation does nothing, returns 0
    */
    virtual size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples);
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeProcessEnd()
+     @copydoc StatefulEffectBase::Instance::RealtimeProcessEnd()
      Default implementation does nothing, returns true
    */
    virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept;
 
    /*!
-     @copydoc RealtimeInitialize::RealtimeFinalize()
+     @copydoc StatefulEffectBase::Instance::RealtimeFinalize()
      Default implementation does nothing, returns false
    */
    virtual bool RealtimeFinalize(EffectSettings &settings) noexcept;
 
    /*!
-     @copydoc RealtimeInitialize::SetBlockSize()
+     @copydoc StatefulEffectBase::Instance::SetBlockSize()
      Default implementation assigns mEffectBlockSize, returns it
    */
    virtual size_t SetBlockSize(size_t maxBlockSize);
 
    /*!
-     @copydoc RealtimeInitialize::GetBlockSize()
+     @copydoc StatefulEffectBase::Instance::GetBlockSize()
      Default implementation returns mEffectBlockSize
    */
    virtual size_t GetBlockSize() const;
 
-protected:
-
-   double         mSampleRate{};
 private:
 
    size_t mEffectBlockSize{ 0 };

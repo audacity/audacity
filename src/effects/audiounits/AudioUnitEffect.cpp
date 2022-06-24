@@ -204,7 +204,6 @@ bool AudioUnitEffect::SupportsAutomation() const
 
 class AudioUnitInstance : public PerTrackEffect::Instance
    , public AudioUnitWrapper
-   , EffectInstanceWithSampleRate
 {
 public:
    AudioUnitInstance(const PerTrackEffect &effect,
@@ -217,19 +216,21 @@ public:
 
 private:
    size_t InitialBlockSize() const;
-   sampleCount GetLatency(const EffectSettings &settings) override;
+   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+      override;
 
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
@@ -241,7 +242,7 @@ private:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   bool SetRateAndChannels();
+   bool SetRateAndChannels(double sampleRate);
 
    static OSStatus RenderCallback(void *inRefCon,
       AudioUnitRenderActionFlags *inActionFlags,
@@ -283,8 +284,6 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    , mAudioIns{ audioIns }, mAudioOuts{ audioOuts }, mUseLatency{ useLatency }
 {
    CreateAudioUnit();
-   mSampleRate = 44100;
-   SetRateAndChannels();
 }
 
 size_t AudioUnitInstance::InitialBlockSize() const
@@ -485,11 +484,6 @@ int AudioUnitEffect::GetMidiOutCount() const
    return 0;
 }
 
-void AudioUnitEffect::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
 size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
 {
    return mBlockSize;
@@ -511,14 +505,15 @@ size_t AudioUnitInstance::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount AudioUnitInstance::GetLatency(const EffectSettings &)
+sampleCount AudioUnitInstance::GetLatency(
+   const EffectSettings &, double sampleRate)
 {
    // Retrieve the latency (can be updated via an event)
    if (mUseLatency && !mLatencyDone) {
       Float64 latency = 0.0;
       if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
          mLatencyDone = true;
-         return sampleCount{ latency * mSampleRate };
+         return sampleCount{ latency * sampleRate };
       }
    }
    return 0;
@@ -535,8 +530,8 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-bool AudioUnitInstance::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames chanMap)
+bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
    StoreSettings(// Change this when GetSettings becomes a static function
       static_cast<const AudioUnitEffect&>(mProcessor).GetSettings(settings));
@@ -551,7 +546,7 @@ bool AudioUnitInstance::ProcessInitialize(
                                // accumulate the number of frames processed so far
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-   if (!SetRateAndChannels())
+   if (!SetRateAndChannels(sampleRate))
       return false;
 
    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
@@ -613,9 +608,10 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool AudioUnitInstance::RealtimeInitialize(EffectSettings &settings)
+bool AudioUnitInstance::RealtimeInitialize(
+   EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, 0, nullptr);
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
@@ -636,11 +632,10 @@ bool AudioUnitInstance::RealtimeAddProcessor(
    }
 
    slave->SetBlockSize(mBlockSize);
-   slave->SetSampleRate(sampleRate);
 
    if (!slave->StoreSettings(effect.GetSettings(settings)))
       return false;
-   if (!slave->ProcessInitialize(settings, 0, nullptr))
+   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
       return false;
    if (uSlave)
       mSlaves.push_back(move(uSlave));
@@ -1115,12 +1110,12 @@ bool AudioUnitEffect::SavePreset(
    return true;
 }
 
-bool AudioUnitInstance::SetRateAndChannels()
+bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
 {
    mInitialization.reset();
    AudioUnitUtils::StreamBasicDescription streamFormat{
       // Float64 mSampleRate;
-      mSampleRate,
+      sampleRate,
 
       // UInt32  mFormatID;
       kAudioFormatLinearPCM,
@@ -1156,7 +1151,7 @@ bool AudioUnitInstance::SetRateAndChannels()
    };
    for (const auto &[nChannels, scope, msg] : infos) {
       if (nChannels) {
-         if (SetProperty(kAudioUnitProperty_SampleRate, mSampleRate, scope)) {
+         if (SetProperty(kAudioUnitProperty_SampleRate, sampleRate, scope)) {
             wxLogError("%ls Didn't accept sample rate on %s\n",
                // Exposing internal name only in logging
                mIdentifier.wx_str(), msg);

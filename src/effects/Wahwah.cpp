@@ -130,14 +130,12 @@ bool EffectWahwah::Validator::ValidateUI()
 struct EffectWahwah::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
-   , public EffectInstanceWithSampleRate
-
 {
    explicit Instance(const PerTrackEffect& effect)
       : PerTrackEffect::Instance{ effect }
    {}
 
-   bool ProcessInitialize(EffectSettings& settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
@@ -145,7 +143,7 @@ struct EffectWahwah::Instance
 
    //bool ProcessFinalize(void) override;
 
-   bool RealtimeInitialize(EffectSettings& settings) override;
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
 
    bool RealtimeAddProcessor(EffectSettings& settings,
       unsigned numChannels, float sampleRate) override;
@@ -220,16 +218,12 @@ unsigned EffectWahwah::GetAudioOutCount() const
    return 1;
 }
 
-bool EffectWahwah::Instance::ProcessInitialize(
-   EffectSettings & settings, sampleCount, ChannelNames chanMap)
+bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(settings, mMaster, mSampleRate);
-
+   InstanceInit(settings, mMaster, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
-   {
       mMaster.phase += M_PI;
-   }
-
    return true;
 }
 
@@ -239,12 +233,10 @@ size_t EffectWahwah::Instance::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &)
+bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

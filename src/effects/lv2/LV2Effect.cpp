@@ -275,21 +275,6 @@ int LV2Effect::GetMidiOutCount() const
    return mPorts.mMidiOut;
 }
 
-void LV2Effect::SetSampleRate(double rate)
-{
-   mSampleRate = (float) rate;
-
-   if (mMaster)
-   {
-      mMaster->SetSampleRate();
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      mSlaves[i]->SetSampleRate();
-   }
-}
-
 size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = std::max(mMinBlockSize,
@@ -315,10 +300,10 @@ sampleCount LV2Effect::GetLatency()
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames chanMap)
+bool LV2Effect::ProcessInitialize(EffectSettings &settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(settings, mSampleRate);
+   mProcess = InitInstance(settings, sampleRate);
    if (!mProcess)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
@@ -417,7 +402,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize(EffectSettings &)
+bool LV2Effect::RealtimeInitialize(EffectSettings &, double)
 {
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
@@ -697,7 +682,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(settings, mSampleRate);
+   mMaster = InitInstance(settings, mProjectRate);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -914,7 +899,6 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
       return nullptr;
 
    wrapper->SetBlockSize();
-   wrapper->SetSampleRate();
 
    static float blackHole;
 
@@ -1073,6 +1057,9 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
       lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr)
    };
 
+   // Reassign the sample rate, which is pointed to by options, which are
+   // pointed to by features, before we tell the library the features
+   mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
@@ -1213,7 +1200,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto &extra = settings.extra;
          mDuration = safenew NumericTextCtrl(w, ID_Duration,
             NumericConverter::TIME, extra.GetDurationFormat(),
-            extra.GetDuration(), mSampleRate,
+            extra.GetDuration(), mProjectRate,
             NumericTextCtrl::Options{}.AutoPos(true));
          mDuration->SetName( XO("Duration") );
          sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
@@ -1306,7 +1293,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                t->SetName(labelText);
                gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                ctrl.mText = t;
-               auto rate = port->mSampleRate ? mSampleRate : 1.0f;
+               auto rate = port->mSampleRate ? mProjectRate : 1.0f;
                state.mLo = port->mMin * rate;
                state.mHi = port->mMax * rate;
                state.mTmp = value * rate;
@@ -1446,7 +1433,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
-               values[index] * (port->mSampleRate ? mSampleRate : 1.0);
+               values[index] * (port->mSampleRate ? mProjectRate : 1.0);
          ++index;
       }
    }
@@ -1481,7 +1468,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          else if (port->mEnumeration)      // Check before integer
             ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
-            state.mTmp = value * (port->mSampleRate ? mSampleRate : 1.0f);
+            state.mTmp = value * (port->mSampleRate ? mProjectRate : 1.0f);
             SetSlider(state, ctrl);
          }
       }
@@ -1534,7 +1521,7 @@ void LV2Effect::OnText(wxCommandEvent &evt)
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       mSettings.values[idx] =
-         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+         port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
       SetSlider(state, ctrl);
    }
 }
@@ -1554,7 +1541,7 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
    mSettings.values[idx] =
-      port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
@@ -1878,6 +1865,9 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
    const LilvPlugin &plugin, double sampleRate)
 :  mFeaturesList{ featuresList }
 {
+   // Reassign the sample rate, which is pointed to by options, which are
+   // pointed to by features, before we tell the library the features
+   mFeaturesList.SetSampleRate(sampleRate);
    auto features = mFeaturesList.GetFeaturePointers();
    LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
    if (mFeaturesList.SuppliesWorkerInterface())
@@ -1958,16 +1948,6 @@ float LV2Wrapper::GetLatency() const
 void LV2Wrapper::SetFreeWheeling(bool enable)
 {
    mFreeWheeling = enable;
-}
-
-void LV2Wrapper::SetSampleRate()
-{
-   if (auto pOption = mFeaturesList.SampleRateOption()
-      ; pOption && mOptionsInterface && mOptionsInterface->set
-   ){
-      LV2_Options_Option options[2]{ *pOption, {} };
-      mOptionsInterface->set(mHandle, options);
-   }
 }
 
 void LV2Wrapper::SetBlockSize()

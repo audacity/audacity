@@ -138,13 +138,13 @@ AudioIO *AudioIO::Get()
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
       const WaveTrackArray &playbackTracks,
-      unsigned numPlaybackChannels, double rate)
+      unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
           pOwningProject && numPlaybackChannels > 0) {
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         mpRealtimeInitialization.emplace(move(wOwningProject), rate);
+         mpRealtimeInitialization.emplace(move(wOwningProject), sampleRate);
          // The following adds a new effect processor for each logical track.
          for (size_t i = 0, cnt = playbackTracks.size(); i < cnt;) {
             // An array of non-nulls only should be given to us
@@ -155,8 +155,8 @@ struct AudioIoCallback::TransportState {
             }
             unsigned chanCnt = TrackList::Channels(vt).size();
             i += chanCnt; // Visit leaders only
-            mpRealtimeInitialization->AddTrack(
-               *vt, std::min(numPlaybackChannels, chanCnt), rate);
+            mpRealtimeInitialization->AddTrack(*vt,
+               std::min(numPlaybackChannels, chanCnt), sampleRate);
          }
       }
    }

@@ -36,13 +36,14 @@ public:
          , PerTrackEffect::Instance{ effect }
       {}
       ~Instance() override;
-      bool ProcessInitialize(EffectSettings &settings,
+      bool ProcessInitialize(EffectSettings &settings, double sampleRate,
          sampleCount totalLen, ChannelNames chanMap) override;
       bool ProcessFinalize() /* noexcept */ override;
       size_t ProcessBlock(EffectSettings &settings,
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-      sampleCount GetLatency(const EffectSettings &settings) override;
+      sampleCount GetLatency(
+         const EffectSettings &settings, double sampleRate) override;
 
    protected:
       StatefulPerTrackEffect &GetEffect() const
@@ -66,7 +67,7 @@ public:
    /*!
     @copydoc PerTrackEffect::Instance::ProcessInitialize()
     */
-   virtual bool ProcessInitialize(EffectSettings &settings,
+   virtual bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap = nullptr);
 
    /*!
