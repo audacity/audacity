@@ -52,11 +52,8 @@ bool RealtimeEffectManager::IsActive() const noexcept
 }
 
 void RealtimeEffectManager::Initialize(
-   RealtimeEffects::InitializationScope &scope, double rate)
+   RealtimeEffects::InitializationScope &scope, double sampleRate)
 {
-   // Remember the rate
-   mRate = rate;
-
    // (Re)Set processor parameters
    mChans.clear();
    mRates.clear();
@@ -67,8 +64,8 @@ void RealtimeEffectManager::Initialize(
    mActive = true;
 
    // Tell each state to get ready for action
-   VisitAll([&scope, rate](RealtimeEffectState &state, bool){
-      scope.mInstances.push_back(state.Initialize(rate));
+   VisitAll([&scope, sampleRate](RealtimeEffectState &state, bool) {
+      scope.mInstances.push_back(state.Initialize(sampleRate));
    });
 
    // Leave suspended state
@@ -291,7 +288,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    if (pScope && mActive)
    {
       // Adding a state while playback is in-flight
-      auto pInstance = state.Initialize(mRate);
+      auto pInstance = state.Initialize(pScope->mSampleRate);
       pScope->mInstances.push_back(pInstance);
 
       for (auto &leader : mGroupLeaders) {

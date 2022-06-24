@@ -147,10 +147,7 @@ private:
    }
 
    AudacityProject &mProject;
-
    Latency mLatency{ 0 };
-
-   double mRate;
 
    std::atomic<bool> mSuspended{ true };
    bool GetSuspended() const
@@ -174,11 +171,12 @@ class InitializationScope {
 public:
    InitializationScope() {}
    explicit InitializationScope(
-      std::weak_ptr<AudacityProject> wProject, double rate)
-      : mwProject{ move(wProject) }
+      std::weak_ptr<AudacityProject> wProject, double sampleRate)
+      : mSampleRate{ sampleRate }
+      , mwProject{ move(wProject) }
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).Initialize(*this, rate);
+         RealtimeEffectManager::Get(*pProject).Initialize(*this, sampleRate);
    }
    InitializationScope( InitializationScope &&other ) = default;
    InitializationScope& operator=( InitializationScope &&other ) = default;
@@ -196,6 +194,7 @@ public:
    }
 
    std::vector<std::shared_ptr<EffectInstance>> mInstances;
+   double mSampleRate;
 
 private:
    std::weak_ptr<AudacityProject> mwProject;
