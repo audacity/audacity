@@ -72,6 +72,22 @@ MeterToolBar::~MeterToolBar()
 {
 }
 
+MeterToolBars MeterToolBar::GetToolBars(AudacityProject &project)
+{
+   return MeterToolBars{
+      Get(project, true),
+      Get(project, false)
+   };
+}
+
+ConstMeterToolBars MeterToolBar::GetToolBars(const AudacityProject &project)
+{
+   return ConstMeterToolBars{
+      Get(project, true),
+      Get(project, false)
+   };
+}
+
 MeterToolBar & MeterToolBar::Get(AudacityProject &project, bool forPlayMeterToolBar)
 {
    auto& toolManager = ToolManager::Get(project);
@@ -178,6 +194,15 @@ void MeterToolBar::UpdatePrefs()
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
+}
+
+void MeterToolBar::UpdateControls()
+{
+   if ( mPlayMeter )
+      mPlayMeter->UpdateSliderControl();
+
+   if ( mRecordMeter )
+      mRecordMeter->UpdateSliderControl();
 }
 
 void MeterToolBar::RegenerateTooltips()

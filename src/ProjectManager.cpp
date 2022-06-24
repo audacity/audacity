@@ -40,7 +40,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
 #include "QualitySettings.h"
-#include "toolbars/MixerToolBar.h"
+#include "toolbars/MeterToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/TimeToolBar.h"
@@ -800,8 +800,10 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   auto mixerToolBar = &MixerToolBar::Get( project );
-   mixerToolBar->UpdateControls();
+   auto meterToolBars = MeterToolBar::GetToolBars( project );
+
+   for (auto& meterToolBar : meterToolBars)
+      meterToolBar.get().UpdateControls();
    
    auto gAudioIO = AudioIO::Get();
    // gAudioIO->GetNumCaptureChannels() should only be positive
