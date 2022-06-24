@@ -389,7 +389,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
             const float *mixed = reinterpret_cast<const float*>(mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < numChannels; i++) {
-                  int64_t intValue = (*mixed++) * (std::numeric_limits<int32_t>::max());
+                  int64_t intValue = static_cast<int64_t>((*mixed++) * (std::numeric_limits<int32_t>::max()));
 
                   intValue = std::clamp<int64_t>(
                      intValue,

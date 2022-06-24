@@ -178,19 +178,26 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
    {
       const uint32_t bufferSize = mNumChannels * SAMPLES_TO_READ;
       ArrayOf<int32_t> wavpackBuffer{ bufferSize };
+      ArrayOf<int16_t> int16Buffer;
+      ArrayOf<float> floatBuffer;
       uint32_t samplesRead = 0;
+
+      if (mFormat == int16Sample) {
+         int16Buffer.reinit(bufferSize);
+      } else if (mFormat == floatSample && (wavpackMode & MODE_FLOAT) != MODE_FLOAT) {
+         floatBuffer.reinit(bufferSize);
+      }
 
       do {
          samplesRead = WavpackUnpackSamples(mWavPackContext, wavpackBuffer.get(), SAMPLES_TO_READ);
 
          if (mFormat == int16Sample) {
-            ArrayOf<int16_t> tempBuffer{ bufferSize };
             for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
-               tempBuffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
+               int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
-                  reinterpret_cast<constSamplePtr>(tempBuffer.get() + channel),
+                  reinterpret_cast<constSamplePtr>(int16Buffer.get() + channel),
                   mFormat, samplesRead, mNumChannels);
             }
 
@@ -202,13 +209,12 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             }
 
          } else {
-            ArrayOf<float> tempBuffer{ bufferSize };
             for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
-               tempBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
+               floatBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
-                  reinterpret_cast<constSamplePtr>(tempBuffer.get() + channel),
+                  reinterpret_cast<constSamplePtr>(floatBuffer.get() + channel),
                   mFormat, samplesRead, mNumChannels);
             }
          }
