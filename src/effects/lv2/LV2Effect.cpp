@@ -899,7 +899,6 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
       return nullptr;
 
    wrapper->SetBlockSize();
-   wrapper->SetSampleRate();
 
    static float blackHole;
 
@@ -1866,6 +1865,9 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
    const LilvPlugin &plugin, double sampleRate)
 :  mFeaturesList{ featuresList }
 {
+   // Reassign the sample rate, which is pointed to by options, which are
+   // pointed to by features, before we tell the library the features
+   mFeaturesList.SetSampleRate(sampleRate);
    auto features = mFeaturesList.GetFeaturePointers();
    LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
    if (mFeaturesList.SuppliesWorkerInterface())
@@ -1946,16 +1948,6 @@ float LV2Wrapper::GetLatency() const
 void LV2Wrapper::SetFreeWheeling(bool enable)
 {
    mFreeWheeling = enable;
-}
-
-void LV2Wrapper::SetSampleRate()
-{
-   if (auto pOption = mFeaturesList.SampleRateOption()
-      ; pOption && mOptionsInterface && mOptionsInterface->set
-   ){
-      LV2_Options_Option options[2]{ *pOption, {} };
-      mOptionsInterface->set(mHandle, options);
-   }
 }
 
 void LV2Wrapper::SetBlockSize()

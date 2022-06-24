@@ -357,7 +357,6 @@ public:
    LV2_Handle GetHandle() const;
    float GetLatency() const;
    void SetFreeWheeling(bool enable);
-   void SetSampleRate();
    void SetBlockSize();
    void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,

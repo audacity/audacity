@@ -48,7 +48,7 @@ bool LV2FeaturesList::InitializeOptions()
    // Two options are reset later
    mBlockSizeOption = AddOption(urid_NominalBlockLength,
       sizeof(mBlockSize), urid_Int, &mBlockSize);
-   mSampleRateOption = AddOption(urid_SampleRate,
+   AddOption(urid_SampleRate,
       sizeof(mSampleRate), urid_Float, &mSampleRate);
    AddOption(0, 0, 0, nullptr);
    if (!ValidateOptions(lilv_plugin_get_uri(&mPlug)))
@@ -151,14 +151,6 @@ const LV2_Options_Option *LV2FeaturesList::NominalBlockLengthOption() const
       return nullptr;
 }
 
-const LV2_Options_Option *LV2FeaturesList::SampleRateOption() const
-{
-   if (mSupportsSampleRate)
-      return &mOptions[mSampleRateOption];
-   else
-      return nullptr;
-}
-
 bool LV2FeaturesList::ValidateFeatures(const LilvNode *subject)
 {
    return CheckFeatures(subject, true) && CheckFeatures(subject, false);
@@ -214,8 +206,8 @@ bool LV2FeaturesList::CheckOptions(const LilvNode *subject, bool required)
          const auto urid = URID_Map(uri);
          if (urid == urid_NominalBlockLength)
             mSupportsNominalBlockLength = true;
-         else if (urid == urid_SampleRate)
-            mSupportsSampleRate = true;
+         // else if (urid == urid_SampleRate)
+            // mSupportsSampleRate = true; // supports changing sample rate
          else if (required) {
             const auto end = mOptions.end();
             supported = (end != std::find_if(mOptions.begin(), end,

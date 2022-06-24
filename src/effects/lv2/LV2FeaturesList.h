@@ -53,8 +53,6 @@ public:
    bool SuppliesWorkerInterface() const { return mSuppliesWorkerInterface; }
    //! @return may be null
    const LV2_Options_Option *NominalBlockLengthOption() const;
-   //! @return may be null
-   const LV2_Options_Option *SampleRateOption() const;
 
    size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
 
@@ -85,6 +83,9 @@ public:
     @return true only if `!required` or else all checked features are supported
     */
    bool CheckFeatures(const LilvNode *subject, bool required);
+
+   //! May be needed before exposing features and options to the plugin
+   void SetSampleRate(float sampleRate) const { mSampleRate = sampleRate; }
 
 protected:
    const LilvPlugin &mPlug;
@@ -119,12 +120,11 @@ protected:
    LV2Symbols::URIDMap mURIDMap;
 
    std::vector<LV2_Options_Option> mOptions;
-   size_t mSampleRateOption{};
    size_t mBlockSizeOption{};
 
    std::vector<LV2_Feature> mFeatures;
 
-   float mSampleRate{ 44100 };
+   mutable float mSampleRate{ 44100 };
    size_t mBlockSize{ LV2Preferences::DEFAULT_BLOCKSIZE };
    int mSeqSize{ DEFAULT_SEQSIZE };
 
@@ -133,7 +133,6 @@ protected:
 
    const bool mSuppliesWorkerInterface;
    bool mSupportsNominalBlockLength{ false };
-   bool mSupportsSampleRate{ false };
 
    bool mNoResize{ false };
 };
