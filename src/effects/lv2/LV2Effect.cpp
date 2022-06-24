@@ -327,16 +327,14 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    using namespace LV2Symbols;
    wxASSERT(size <= ( size_t) mBlockSize);
 
-   LilvInstance *instance = mProcess->GetInstance();
+   const auto instance = &mProcess->GetInstance();
 
    int i = 0;
    int o = 0;
    for (auto & port : mPorts.mAudioPorts)
-   {
       lilv_instance_connect_port(instance,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
-   }
 
    // Transfer incoming events from the ring buffer to the event buffer for each
    // atom input port.  These will be made available to each slave in the chain and
@@ -527,33 +525,23 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    }
 
    const auto slave = mSlaves[group].get();
-   LilvInstance *instance = slave->GetInstance();
+   const auto instance = &slave->GetInstance();
 
    int i = 0;
    int o = 0;
    for (auto & port : mPorts.mAudioPorts)
-   {
       lilv_instance_connect_port(instance,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
-   }
 
    mNumSamples = wxMax(numSamples, mNumSamples);
 
    if (mRolling)
-   {
       lilv_instance_run(instance, numSamples);
-   }
    else
-   {
       while (--i >= 0)
-      {
          for (decltype(numSamples) s = 0; s < numSamples; s++)
-         {
             outbuf[i][s] = inbuf[i][s];
-         }
-      }
-   }
 
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
@@ -908,7 +896,7 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
       return nullptr;
    }
 
-   auto instance = wrapper->GetInstance();
+   const auto instance = &wrapper->GetInstance();
    wrapper->SetBlockSize();
    wrapper->ConnectPorts(ports, portStates, settings, useOutput);
 
@@ -931,7 +919,7 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
 void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
    const LV2EffectSettings &settings, bool useOutput)
 {
-   auto instance = GetInstance();
+   const auto instance = &GetInstance();
    static float blackHole;
 
    // Connect all control ports
@@ -1043,7 +1031,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
 #endif
    }
 
-   LilvInstance *instance = mMaster->GetInstance();
+   const auto instance = &mMaster->GetInstance();
    mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(instance);
    mExtensionDataFeature =
       { lilv_instance_get_descriptor(instance)->extension_data };
@@ -1440,7 +1428,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    if (mMaster && mySettings.mpState) {
       // Maybe there are other important side effects on the instance besides
       // changes of port values
-      lilv_state_restore(mySettings.mpState.get(), mMaster->GetInstance(),
+      lilv_state_restore(mySettings.mpState.get(), &mMaster->GetInstance(),
          nullptr, nullptr, 0, nullptr);
       // Destroy the short lived carrier of preset state
       mySettings.mpState.reset();
@@ -1934,7 +1922,7 @@ LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
 void LV2Wrapper::Activate()
 {
    if (!mActivated) {
-      lilv_instance_activate(GetInstance());
+      lilv_instance_activate(&GetInstance());
       mActivated = true;
    }
 }
@@ -1942,14 +1930,14 @@ void LV2Wrapper::Activate()
 void LV2Wrapper::Deactivate()
 {
    if (mActivated) {
-      lilv_instance_deactivate(GetInstance());
+      lilv_instance_deactivate(&GetInstance());
       mActivated = false;
    }
 }
 
-LilvInstance *LV2Wrapper::GetInstance() const
+LilvInstance &LV2Wrapper::GetInstance() const
 {
-   return mInstance.get();
+   return *mInstance;
 }
 
 LV2_Handle LV2Wrapper::GetHandle() const

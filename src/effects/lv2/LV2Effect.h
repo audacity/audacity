@@ -364,8 +364,7 @@ public:
       bool useOutput);
    void Activate();
    void Deactivate();
-   //! @post result: `result != nullptr`
-   LilvInstance *GetInstance() const;
+   LilvInstance &GetInstance() const;
    LV2_Handle GetHandle() const;
    float GetLatency() const;
    void SetFreeWheeling(bool enable);
