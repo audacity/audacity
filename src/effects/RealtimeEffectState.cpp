@@ -227,9 +227,12 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 {
    if (!mPlugin) {
       mPlugin = EffectFactory::Call(mID);
-      if (mPlugin)
-         // Also make EffectSettings
+      if (mPlugin) {
+         // Also make EffectSettings, but preserve activation
+         auto wasActive = mMainSettings.extra.GetActive();
          mMainSettings.Set(mPlugin->MakeSettings());
+         mMainSettings.extra.SetActive(wasActive);
+      }
    }
    return mPlugin;
 }
@@ -586,6 +589,8 @@ bool RealtimeEffectState::HandleXMLTag(
          else if (attr == versionAttribute) {
          }
          else if (attr == activeAttribute)
+            // Updating the EffectSettingsExtra although we haven't yet built
+            // the settings
             mMainSettings.extra.SetActive(value.Get<bool>());
       }
       return true;
