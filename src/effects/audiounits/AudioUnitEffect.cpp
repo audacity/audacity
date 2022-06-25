@@ -1298,6 +1298,9 @@ void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
       }
       return;
    }
+   
+   if (inEvent->mEventType != kAudioUnitEvent_ParameterValueChange)
+      return;
 
    // Only parameter changes at this point
    const auto parameterStorer = [inParameterValue,
