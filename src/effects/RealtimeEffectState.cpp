@@ -417,7 +417,7 @@ size_t RealtimeEffectState::Process(Track &track,
    size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
-   if (!mPlugin || !pInstance) {
+   if (!mPlugin || !pInstance || !mLastActive) {
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
       return numSamples; // consider all samples to be trivially processed
@@ -536,10 +536,10 @@ size_t RealtimeEffectState::Process(Track &track,
    return len;
 }
 
-bool RealtimeEffectState::ProcessEnd(bool running)
+bool RealtimeEffectState::ProcessEnd()
 {
    auto pInstance = mwInstance.lock();
-   bool result = pInstance && IsActive() && running &&
+   bool result = pInstance && IsActive() && mLastActive &&
       // Assuming we are in a processing scope, use the worker settings
       pInstance->RealtimeProcessEnd(mWorkerSettings);
 

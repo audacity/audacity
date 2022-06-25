@@ -181,11 +181,8 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // Tracks how many processors were called
    size_t called = 0;
    VisitGroup(track,
-      [&](RealtimeEffectState &state, bool listIsActive)
+      [&](RealtimeEffectState &state, bool)
       {
-         if (!(listIsActive && state.IsActive()))
-            return;
-
          state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
          for (auto i = 0; i < chans; ++i)
             std::swap(ibuf[i], obuf[i]);
@@ -218,8 +215,8 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 {
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
-      state.ProcessEnd(!suspended && listIsActive);
+   VisitAll([suspended](RealtimeEffectState &state, bool){
+      state.ProcessEnd();
    });
 }
 
