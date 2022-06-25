@@ -196,15 +196,10 @@ XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 
 void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
 {
-   if (mStates.size() == 0)
-      return;
-
    xmlFile.StartTag(XMLTag());
    xmlFile.WriteAttr(activeAttribute, IsActive());
-
    for (const auto & state : mStates)
       state->WriteXML(xmlFile);
-   
    xmlFile.EndTag(XMLTag());
 }
 
