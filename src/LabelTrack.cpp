@@ -369,7 +369,9 @@ double LabelTrack::GetEndTime() const
 
 Track::Holder LabelTrack::Clone() const
 {
-   return std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
+   auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
+   result->Init(*this);
+   return result;
 }
 
 // Adjust label's left or right boundary, depending which is requested.

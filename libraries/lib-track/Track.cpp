@@ -57,7 +57,6 @@ Track::Track(const Track &orig, ProtectedCreationArg&&)
 : vrulerSize( orig.vrulerSize )
 {
    mIndex = 0;
-   Init(orig);
    mOffset = orig.mOffset;
 }
 
