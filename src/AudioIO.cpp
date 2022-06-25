@@ -138,13 +138,13 @@ AudioIO *AudioIO::Get()
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
       const WaveTrackArray &playbackTracks,
-      unsigned numPlaybackChannels, double rate)
+      unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
           pOwningProject && numPlaybackChannels > 0) {
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         mpRealtimeInitialization.emplace(move(wOwningProject), rate);
+         mpRealtimeInitialization.emplace(move(wOwningProject), sampleRate);
          // The following adds a new effect processor for each logical track.
          for (size_t i = 0, cnt = playbackTracks.size(); i < cnt;) {
             // An array of non-nulls only should be given to us
@@ -155,8 +155,8 @@ struct AudioIoCallback::TransportState {
             }
             unsigned chanCnt = TrackList::Channels(vt).size();
             i += chanCnt; // Visit leaders only
-            mpRealtimeInitialization->AddTrack(
-               *vt, std::min(numPlaybackChannels, chanCnt), rate);
+            mpRealtimeInitialization->AddTrack(*vt,
+               std::min(numPlaybackChannels, chanCnt), sampleRate);
          }
       }
    }
@@ -302,7 +302,6 @@ AudioIO::AudioIO()
    mPreviousHWPlaythrough = -1.0;
    HandleDeviceChange();
 #else
-   mEmulateMixerOutputVol = true;
    mInputMixerWorks = false;
 #endif
 
@@ -1782,6 +1781,11 @@ void AudioIO::TrackBufferExchange()
 
 void AudioIO::FillPlayBuffers()
 {
+   std::optional<RealtimeEffects::ProcessingScope> pScope;
+   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
+      pScope.emplace(
+         *mpTransportState->mpRealtimeInitialization, mOwningProject);
+
    if (mNumPlaybackChannels == 0)
       return;
 
@@ -1867,7 +1871,7 @@ void AudioIO::FillPlayBuffers()
 
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per track, after all the little slices have been written.
-   TransformPlayBuffers();
+   TransformPlayBuffers(pScope);
 
    /* The flushing of all the Puts to the RingBuffers is lifted out of the
    do-loop above, and also after transformation of the stream for realtime
@@ -1881,7 +1885,8 @@ void AudioIO::FillPlayBuffers()
       mPlaybackBuffers[i]->Flush();
 }
 
-void AudioIO::TransformPlayBuffers()
+void AudioIO::TransformPlayBuffers(
+   std::optional<RealtimeEffects::ProcessingScope> &pScope)
 {
    // Transform written but un-flushed samples in the RingBuffers in-place.
 
@@ -1889,10 +1894,6 @@ void AudioIO::TransformPlayBuffers()
    auto pointers =
       static_cast<float**>(alloca(mNumPlaybackChannels * sizeof(float*)));
 
-   std::optional<RealtimeEffects::ProcessingScope> pScope;
-   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
-      pScope.emplace(
-         *mpTransportState->mpRealtimeInitialization, mOwningProject);
    const auto numPlaybackTracks = mPlaybackTracks.size();
    for (unsigned t = 0; t < numPlaybackTracks; ++t) {
       const auto vt = mPlaybackTracks[t].get();

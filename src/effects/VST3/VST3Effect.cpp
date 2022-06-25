@@ -587,11 +587,6 @@ int VST3Effect::GetMidiOutCount() const
    return 0;
 }
 
-void VST3Effect::SetSampleRate(double rate)
-{
-   mSetup.sampleRate = rate;
-}
-
 size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
 {
    mSetup.maxSamplesPerBlock = 
@@ -618,8 +613,9 @@ sampleCount VST3Effect::GetLatency()
 }
 
 bool VST3Effect::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
 {
+   mSetup.sampleRate = sampleRate;
    using namespace Steinberg;
 
    if(mAudioProcessor->canProcessSampleSize(mSetup.symbolicSampleSize) ==kResultTrue &&
@@ -749,8 +745,9 @@ size_t VST3Effect::ProcessBlock(EffectSettings &,
    return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
-bool VST3Effect::RealtimeInitialize(EffectSettings &settings)
+bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
+   mSetup.sampleRate = sampleRate;
    //reload current parameters form the editor into parameter queues
    SyncParameters(settings);
    return true;
@@ -766,7 +763,7 @@ bool VST3Effect::RealtimeAddProcessor(
       auto effect = std::make_unique<VST3Effect>(*this);
       effect->mSetup.processMode = Vst::kRealtime;
       effect->mSetup.sampleRate = sampleRate;
-      if(!effect->ProcessInitialize(settings, {0}, nullptr))
+      if(!effect->ProcessInitialize(settings, sampleRate, {0}, nullptr))
          throw std::runtime_error { "VST3 realtime initialization failed" };
 
       mRealtimeGroupProcessors.push_back(std::move(effect));

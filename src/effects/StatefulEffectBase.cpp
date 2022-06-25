@@ -55,14 +55,10 @@ bool StatefulEffectBase::Instance::Init()
    return GetEffect().Init();
 }
 
-void StatefulEffectBase::Instance::SetSampleRate(double rate)
+bool StatefulEffectBase::Instance::RealtimeInitialize(
+   EffectSettings &settings, double sampleRate)
 {
-   GetEffect().SetSampleRate(rate);
-}
-
-bool StatefulEffectBase::Instance::RealtimeInitialize(EffectSettings &settings)
-{
-   return GetEffect().RealtimeInitialize(settings);
+   return GetEffect().RealtimeInitialize(settings, sampleRate);
 }
 
 bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
@@ -114,11 +110,6 @@ size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
    return GetEffect().SetBlockSize(maxBlockSize);
 }
 
-void StatefulEffectBase::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
 size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 {
    mEffectBlockSize = maxBlockSize;
@@ -130,7 +121,7 @@ size_t StatefulEffectBase::GetBlockSize() const
    return mEffectBlockSize;
 }
 
-bool StatefulEffectBase::RealtimeInitialize(EffectSettings &settings)
+bool StatefulEffectBase::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }

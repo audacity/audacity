@@ -21,11 +21,9 @@
 #include "ClientData.h"
 #include "Observer.h"
 #include "PluginProvider.h" // for PluginID
+#include "RealtimeEffectList.h"
 
-class AudacityProject;
-class RealtimeEffectList;
-class RealtimeEffectState;
-class Track;
+class EffectInstance;
 
 namespace RealtimeEffects {
    class InitializationScope;
@@ -92,10 +90,12 @@ private:
    friend RealtimeEffects::SuspensionScope;
 
    //! Main thread begins to define a set of tracks for playback
-   void Initialize(double rate);
+   void Initialize(RealtimeEffects::InitializationScope &scope,
+      double sampleRate);
    //! Main thread adds one track (passing the first of one or more
    //! channels), still before playback
-   void AddTrack(Track &track, unsigned chans, float rate);
+   void AddTrack(RealtimeEffects::InitializationScope &scope,
+      Track &track, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
@@ -118,21 +118,37 @@ private:
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
    RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
-   using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
+   // Type that state visitor functions would have for out-of-line definition
+   // of VisitGroup and VisitAll
+   // using StateVisitor =
+      // std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
    //! Visit the per-project states first, then states for leader if not null
-   void VisitGroup(Track &leader, StateVisitor func);
+   template<typename StateVisitor>
+   void VisitGroup(Track &leader, const StateVisitor &func)
+   {
+      // Call the function for each effect on the master list
+      RealtimeEffectList::Get(mProject).Visit(func);
+
+      // Call the function for each effect on the track list
+      RealtimeEffectList::Get(leader).Visit(func);
+   }
 
    //! Visit the per-project states first, then all tracks from AddTrack
    /*! Tracks are visited in unspecified order */
-   void VisitAll(StateVisitor func);
+   template<typename StateVisitor>
+   void VisitAll(const StateVisitor &func)
+   {
+      // Call the function for each effect on the master list
+      RealtimeEffectList::Get(mProject).Visit(func);
+
+      // And all track lists
+      for (auto leader : mGroupLeaders)
+         RealtimeEffectList::Get(*leader).Visit(func);
+   }
 
    AudacityProject &mProject;
-
    Latency mLatency{ 0 };
-
-   double mRate;
 
    std::atomic<bool> mSuspended{ true };
    bool GetSuspended() const
@@ -156,11 +172,12 @@ class InitializationScope {
 public:
    InitializationScope() {}
    explicit InitializationScope(
-      std::weak_ptr<AudacityProject> wProject, double rate)
-      : mwProject{ move(wProject) }
+      std::weak_ptr<AudacityProject> wProject, double sampleRate)
+      : mSampleRate{ sampleRate }
+      , mwProject{ move(wProject) }
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).Initialize(rate);
+         RealtimeEffectManager::Get(*pProject).Initialize(*this, sampleRate);
    }
    InitializationScope( InitializationScope &&other ) = default;
    InitializationScope& operator=( InitializationScope &&other ) = default;
@@ -173,8 +190,12 @@ public:
    void AddTrack(Track &track, unsigned chans, float rate)
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).AddTrack(track, chans, rate);
+         RealtimeEffectManager::Get(*pProject)
+            .AddTrack(*this, track, chans, rate);
    }
+
+   std::vector<std::shared_ptr<EffectInstance>> mInstances;
+   double mSampleRate;
 
 private:
    std::weak_ptr<AudacityProject> mwProject;

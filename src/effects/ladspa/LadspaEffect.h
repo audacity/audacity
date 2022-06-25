@@ -149,7 +149,6 @@ private:
 
    wxString pluginName;
 
-   double mSampleRate{ 44100.0 };
    size_t mBlockSize{ 0 };
 
    bool mInteractive{ false };

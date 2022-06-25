@@ -61,6 +61,7 @@ deps=(
    libfontconfig-dev
    libegl1-mesa-dev
    libmpg123-dev
+   libwavpack-dev
 )
 
 apt-get update

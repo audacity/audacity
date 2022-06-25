@@ -41,6 +41,7 @@ deps=(
    fontconfig
    mesa
    mpg123
+   wavpack
 )
 
 pacman -Syu --noconfirm \

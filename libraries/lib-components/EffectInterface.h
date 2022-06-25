@@ -377,8 +377,6 @@ public:
     */
    virtual bool Process(EffectSettings &settings) = 0;
 
-   virtual void SetSampleRate(double rate) = 0;
-
    virtual size_t GetBlockSize() const = 0;
 
    // Suggest a block size, but the return is the size that was really set:
@@ -391,7 +389,7 @@ public:
     Other member functions related to realtime return true or zero, but will not
     be called, unless a derived class overrides RealtimeInitialize.
     */
-   virtual bool RealtimeInitialize(EffectSettings &settings);
+   virtual bool RealtimeInitialize(EffectSettings &settings, double sampleRate);
 
    /*!
     @return success
@@ -456,17 +454,6 @@ protected:
    size_t mBlockSize{ 0 };
 };
 
-//! Inherit to add a state variable to an EffectInstance subclass
-class COMPONENTS_API EffectInstanceWithSampleRate
-   : public virtual EffectInstance
-{
-public:
-   ~EffectInstanceWithSampleRate() override;
-   void SetSampleRate(double rate) override;
-protected:
-   double mSampleRate{ 0 };
-};
-
 /***************************************************************************//**
 \class EffectInstanceFactory
 *******************************************************************************/
@@ -484,6 +471,8 @@ public:
     and reloaded from files.
 
     @param settings may be assumed to have a lifetime enclosing the instance's
+
+    @post `true` (no promises that the result isn't null)
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 

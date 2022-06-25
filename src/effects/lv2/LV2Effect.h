@@ -39,10 +39,7 @@ class wxArrayString;
 
 #include "NativeWindow.h"
 
-#include <unordered_map>
-
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
-using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
 using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
 using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
 using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
@@ -68,12 +65,14 @@ class LV2Wrapper;
 struct LV2EffectSettings {
    //! vector of values in correspondence with the control ports
    std::vector<float> values;
+   //! Result of last load of a preset; may be null
+   mutable std::shared_ptr<const LilvState> mpState;
 };
 
 class LV2Effect final : public LV2FeaturesList
 {
 public:
-   LV2Effect(const LilvPlugin *plug);
+   LV2Effect(const LilvPlugin &plug);
    virtual ~LV2Effect();
 
    // ComponentInterface implementation
@@ -100,13 +99,11 @@ public:
 
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -114,20 +111,20 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(EffectSettings &settings,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
@@ -165,9 +162,12 @@ public:
    // LV2Effect implementation
 
 private:
+   void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
+
    struct PlainUIControl;
 
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool LoadParameters(
+      const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
@@ -216,32 +216,20 @@ private:
                                     const char *port_symbol);
    uint32_t SuilPortIndex(const char *port_symbol);
 
-   static const void *get_value_func(const char *port_symbol,
-                                     void *user_data,
-                                     uint32_t *size,
-                                     uint32_t *type);
-   const void *GetPortValue(const char *port_symbol,
-                            uint32_t *size,
-                            uint32_t *type);
+public:
+   const void *GetPortValue(const LV2EffectSettings &settings,
+      const char *port_symbol, uint32_t *size, uint32_t *type) const;
 
-   static void set_value_func(const char *port_symbol,
-                              void *user_data,
-                              const void *value,
-                              uint32_t size,
-                              uint32_t type);
-   void SetPortValue(const char *port_symbol,
-                     const void *value,
-                     uint32_t size,
-                     uint32_t type);
+   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
+      const void *value, uint32_t size, uint32_t type) const;
 
 private:
+   const LV2Ports mPorts{ mPlug };
+   LV2PortStates mPortStates{ mPorts };
+   LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
+
    size_t mUserBlockSize{ mBlockSize };
 
-   //! Mapping from index number among all ports, to position
-   //! among the control ports only
-   std::unordered_map<uint32_t, size_t> mControlPortMap;
-   LV2ControlPortArray mControlPorts;
-   LV2ControlPortStateArray mControlPortStates;
    LV2EffectSettings mSettings;
 
    //! This ignores its argument while we transition to statelessness
@@ -254,26 +242,6 @@ private:
    const LV2EffectSettings &GetSettings(const EffectSettings &) const {
       return mSettings;
    }
-
-   LV2AudioPortArray mAudioPorts;
-   unsigned mAudioIn{ 0 };
-   unsigned mAudioOut{ 0 };
-
-   LV2AtomPortArray mAtomPorts;
-   LV2AtomPortStateArray mAtomPortStates;
-
-   LV2AtomPortStatePtr mControlIn;
-   LV2AtomPortStatePtr mControlOut;
-   unsigned mMidiIn{ 0 };
-   unsigned mMidiOut{ 0 };
-
-   LV2CVPortArray mCVPorts;
-   LV2CVPortStateArray mCVPortStates;
-   unsigned mCVIn;
-   unsigned mCVOut;
-
-   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
-   TranslatableStrings mGroups;
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
@@ -313,7 +281,7 @@ private:
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   const LilvNodePtr mHumanId{ lilv_plugin_get_name(mPlug) };
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
    const LV2_External_UI_Host mExternalUIHost{
       LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
 
@@ -379,8 +347,8 @@ public:
 
 public:
    //! May spawn a thread
-   LV2Wrapper(const LV2FeaturesList &featuresList,
-      const LilvPlugin *plugin, double sampleRate);
+   LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
+      const LilvPlugin &plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
    void Activate();
@@ -389,7 +357,6 @@ public:
    LV2_Handle GetHandle() const;
    float GetLatency() const;
    void SetFreeWheeling(bool enable);
-   void SetSampleRate();
    void SetBlockSize();
    void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,

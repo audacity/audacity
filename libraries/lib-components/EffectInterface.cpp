@@ -117,7 +117,7 @@ bool EffectInstance::Init()
    return true;
 }
 
-bool EffectInstance::RealtimeInitialize(EffectSettings &)
+bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }
@@ -173,13 +173,6 @@ size_t EffectInstanceWithBlockSize::GetBlockSize() const
 size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
 {
    return (mBlockSize = maxBlockSize);
-}
-
-EffectInstanceWithSampleRate::~EffectInstanceWithSampleRate() = default;
-
-void EffectInstanceWithSampleRate::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
 }
 
 EffectInstanceFactory::~EffectInstanceFactory() = default;

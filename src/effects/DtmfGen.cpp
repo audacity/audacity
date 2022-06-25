@@ -128,20 +128,20 @@ unsigned EffectDtmf::GetAudioOutCount() const
 struct EffectDtmf::Instance
    : PerTrackEffect::Instance
    , EffectInstanceWithBlockSize
-   , EffectInstanceWithSampleRate
 {
    Instance(const PerTrackEffect &effect, double t0)
       : PerTrackEffect::Instance{ effect }
       , mT0{ t0 }
    {}
 
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    override;
 
    const double mT0;
+   double mSampleRate{};
 
    sampleCount numSamplesSequence;  // total number of samples to generate
    sampleCount numSamplesTone;      // number of samples in a tone block
@@ -154,8 +154,10 @@ struct EffectDtmf::Instance
 };
 
 bool EffectDtmf::Instance::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
 {
+   mSampleRate = sampleRate;
+
    auto &dtmfSettings = GetSettings(settings);
    if (dtmfSettings.dtmfNTones == 0) {   // Bail if no DTFM sequence.
       // TODO:  don't use mProcessor for this

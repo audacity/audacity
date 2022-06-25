@@ -22,7 +22,7 @@ set( SOURCES
 )
 set( LIBRARIES
    PortAudio::PortAudio
-   portmixer
+   $<$<BOOL:${USE_PORTMIXER}>:portmixer>
    lib-preferences-interface
    PRIVATE
    wxBase

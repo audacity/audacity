@@ -48,14 +48,14 @@ namespace
    ){
       return [=](wxWindow &parent,
          EffectPlugin &host, EffectUIClientInterface &client,
-         EffectInstance &instance, EffectSettingsAccess &access)
-         -> wxDialog *
-      {
+         std::shared_ptr<EffectInstance> &pInstance,
+         EffectSettingsAccess &access
+      ) -> wxDialog * {
          // Make sure there is an associated project, whose lifetime will
          // govern the lifetime of the dialog
          if (auto project = FindProjectFromWindow(&parent)) {
             if (Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{
-                  &parent, *project, host, client, instance, access,
+                  &parent, *project, host, client, pInstance, access,
                   pEffectState } }
                ; dlg->Initialize()
             )  // release() is safe because parent will own it
@@ -311,7 +311,6 @@ namespace
          auto enableButton = safenew ThemedButtonWrapper<wxBitmapButton>(this, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
          enableButton->SetBitmapIndex(bmpEffectOn);
          enableButton->SetBackgroundColorIndex(clrEffectListItemBackground);
-         enableButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnEnableButtonClicked, this);
          mEnableButton = enableButton;
 
          enableButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
@@ -424,13 +423,14 @@ namespace
          auto initialSettings = access->Get();
          auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
 
+         std::shared_ptr<EffectInstance> pInstance;
+
          // Like the call in EffectManager::PromptUser, but access causes
          // the necessary inter-thread communication of settings changes
          // if play is in progress
          bool changed = effectPlugin->ShowHostInterface(
             ProjectWindow::Get( *mProject), DialogFactory(mEffectState),
-            *effectPlugin->MakeInstance(), // short-lived object
-            *access, true );
+            pInstance, *access, true );
 
          if (changed)
          {
@@ -455,14 +455,6 @@ namespace
 
          ShowSelectEffectMenu(mChangeButton, this);
          //TODO: replace effect
-      }
-
-      void OnEnableButtonClicked(wxCommandEvent&)
-      {
-         if(mEffectState == nullptr)
-            return;//not initialized
-
-         //TODO: implement
       }
 
       void OnPaint(wxPaintEvent&)
@@ -625,6 +617,7 @@ public:
       rootSizer->Add(addEffectTutorialLink, 0, wxLEFT | wxRIGHT | wxEXPAND, 20);
 
       SetSizer(rootSizer.release());
+      SetMinSize({});
 
       Bind(EVT_MOVABLE_CONTROL_DRAG_STARTED, [dropHintLine](const MovableControlEvent& event)
       {

@@ -46,14 +46,12 @@ namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 struct EffectEcho::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
-   , public EffectInstanceWithSampleRate
-
 {
    Instance(const PerTrackEffect& effect)
       : PerTrackEffect::Instance{ effect }
    {}
 
-   bool ProcessInitialize(EffectSettings& settings,
+   bool ProcessInitialize(EffectSettings& settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
@@ -120,17 +118,14 @@ unsigned EffectEcho::GetAudioOutCount() const
 }
 
 bool EffectEcho::Instance::ProcessInitialize(
-   EffectSettings& settings, sampleCount, ChannelNames)
+   EffectSettings& settings, double sampleRate, sampleCount, ChannelNames)
 {
-   auto& echoSettings = GetSettings(settings);
-  
+   auto& echoSettings = GetSettings(settings);  
    if (echoSettings.delay == 0.0)
-   {
       return false;
-   }
 
    histPos = 0;
-   auto requestedHistLen = (sampleCount) (mSampleRate * echoSettings.delay);
+   auto requestedHistLen = (sampleCount) (sampleRate * echoSettings.delay);
 
    // Guard against extreme delay values input by the user
    try {

@@ -53,7 +53,10 @@ struct PaStreamCallbackTimeInfo;
 typedef unsigned long PaStreamCallbackFlags;
 typedef int PaError;
 
-namespace RealtimeEffects { class SuspensionScope; }
+namespace RealtimeEffects {
+   class ProcessingScope;
+   class SuspensionScope;
+}
 
 bool ValidateDeviceNames();
 
@@ -588,7 +591,8 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
-   void TransformPlayBuffers();
+   void TransformPlayBuffers(
+      std::optional<RealtimeEffects::ProcessingScope> &scope);
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();

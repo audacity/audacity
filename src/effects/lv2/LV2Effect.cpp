@@ -51,7 +51,6 @@
 #include "ConfigInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "lv2/instance-access/instance-access.h"
@@ -66,156 +65,6 @@
 
 static inline void free_chars (char *p) { lilv_free(p); }
 using LilvCharsPtr = Lilv_ptr<char, free_chars>;
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2EffectSettingsDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LV2EffectSettingsDialog final : public wxDialogWrapper
-{
-public:
-   LV2EffectSettingsDialog(wxWindow *parent, EffectDefinitionInterface &effect);
-   virtual ~LV2EffectSettingsDialog();
-
-   void PopulateOrExchange(ShuttleGui &S);
-
-   void OnOk(wxCommandEvent &evt);
-
-private:
-   EffectDefinitionInterface &mEffect;
-   int mBufferSize{};
-   bool mUseLatency{};
-   bool mUseGUI{};
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, LV2EffectSettingsDialog::OnOk)
-END_EVENT_TABLE()
-
-LV2EffectSettingsDialog::LV2EffectSettingsDialog(
-   wxWindow *parent, EffectDefinitionInterface &effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
-, mEffect{ effect }
-{
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), mBufferSize, 8192);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseGUI"), mUseGUI, true);
-
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
-}
-
-LV2EffectSettingsDialog::~LV2EffectSettingsDialog()
-{
-}
-
-void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
-{
-   S.SetBorder(5);
-   S.StartHorizontalLay(wxEXPAND, 1);
-   {
-      S.StartVerticalLay(false);
-      {
-         // This really shouldn't be required for LV2 plugins because they have the ability
-         // to specify their exact requirements in the TTL file and/or to check the host
-         // supplied min/max values.  However, I've run across one (Harrison Consoles XT-EQ)
-         // that crashed on sizes greater than 8192.
-         S.StartStatic(XO("Buffer Size"));
-         {
-            IntegerValidator<int> vld(&mBufferSize);
-            vld.SetRange(8, DEFAULT_BLOCKSIZE);
-
-            S.AddVariableText( XO(
-"The buffer size controls the number of samples sent to the effect "
-"on each iteration. Smaller values will cause slower processing and "
-"some effects require 8192 samples or less to work properly. However "
-"most effects can accept large buffers and using them will greatly "
-"reduce processing time."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               wxTextCtrl *t;
-               t = S.TieNumericTextBox(
-                  XXO("&Buffer Size (8 to %d) samples:")
-                     .Format( DEFAULT_BLOCKSIZE ),
-                  mBufferSize,
-                  12);
-               t->SetMinSize(wxSize(100, -1));
-               t->SetValidator(vld);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("Latency Compensation"));
-         {
-            S.AddVariableText( XO(
-"As part of their processing, some LV2 effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
-"notice that small silences have been inserted into the audio. "
-"Enabling this setting will provide that compensation, but it may "
-"not work for all LV2 effects."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               S.TieCheckBox(XXO("Enable &compensation"),
-                             mUseLatency);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("Graphical Mode"));
-         {
-            S.AddVariableText( XO(
-"LV2 effects can have a graphical interface for setting parameter values."
-" A basic text-only method is also available. "
-" Reopen the effect for this to take effect."),
-               false, 0, 650);
-            S.TieCheckBox(XXO("Enable &graphical interface"),
-                          mUseGUI);
-         }
-         S.EndStatic();
-      }
-      S.EndVerticalLay();
-   }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   Center();
-}
-
-void LV2EffectSettingsDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
-{
-   if (!Validate())
-   {
-      return;
-   }
-
-   ShuttleGui S(this, eIsGettingFromDialog);
-   PopulateOrExchange(S);
-
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), mBufferSize);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseGUI"), mUseGUI);
-
-   EndModal(wxID_OK);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -245,7 +94,7 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin *plug) : LV2FeaturesList{ plug }
+LV2Effect::LV2Effect(const LilvPlugin &plug) : LV2FeaturesList{ plug }
 {
 }
 
@@ -259,17 +108,17 @@ LV2Effect::~LV2Effect()
 
 PluginPath LV2Effect::GetPath() const
 {
-   return LilvString(lilv_plugin_get_uri(mPlug));
+   return LilvString(lilv_plugin_get_uri(&mPlug));
 }
 
 ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
-   return LilvStringMove(lilv_plugin_get_name(mPlug));
+   return LilvStringMove(lilv_plugin_get_name(&mPlug));
 }
 
 VendorSymbol LV2Effect::GetVendor() const
 {
-   wxString vendor = LilvStringMove(lilv_plugin_get_author_name(mPlug));
+   wxString vendor = LilvStringMove(lilv_plugin_get_author_name(&mPlug));
 
    if (vendor.empty())
    {
@@ -320,7 +169,7 @@ EffectFamilySymbol LV2Effect::GetFamily() const
 
 bool LV2Effect::IsInteractive() const
 {
-   return mControlPorts.size() != 0;
+   return mPorts.mControlPorts.size() != 0;
 }
 
 bool LV2Effect::IsDefault() const
@@ -342,8 +191,6 @@ bool LV2Effect::SupportsAutomation() const
 
 bool LV2Effect::InitializePlugin()
 {
-   using namespace LV2Symbols;
-
    // To be set up later when making a dialog:
    mExtensionDataFeature = {};
 
@@ -360,216 +207,13 @@ bool LV2Effect::InitializePlugin()
    mInstanceAccessFeature = mFeatures.size();
    AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
    mParentFeature = mFeatures.size();
-   if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
+   if (!ValidateFeatures(lilv_plugin_get_uri(&mPlug)))
       return false;
-
-   // Collect information in mAudioPorts, mControlPorts, mAtomPorts, mCVPorts
-   {
-   // Retrieve the port ranges for all ports (some values may be NaN)
-   auto numPorts = lilv_plugin_get_num_ports(mPlug);
-   Floats minimumVals {numPorts};
-   Floats maximumVals {numPorts};
-   Floats defaultVals {numPorts};
-   lilv_plugin_get_port_ranges_float(mPlug,
-      minimumVals.get(), maximumVals.get(), defaultVals.get());
-
-   for (size_t i = 0; i < numPorts; ++i) {
-      const auto port = lilv_plugin_get_port_by_index(mPlug, i);
-      int index = lilv_port_get_index(mPlug, port);
-
-      // It must be input or output, anything else is bogus
-      bool isInput;
-      if (lilv_port_is_a(mPlug, port, node_InputPort))
-         isInput = true;
-      else if (lilv_port_is_a(mPlug, port, node_OutputPort))
-         isInput = false;
-      else {
-         assert(false);
-         return false;
-      }
-
-      // Get the port name and symbol
-      const auto symbol = LilvString(lilv_port_get_symbol(mPlug, port));
-      const auto name = LilvStringMove(lilv_port_get_name(mPlug, port));
-
-      // Get the group to which this port belongs or default to the main group
-      TranslatableString groupName{};
-      if (LilvNodePtr group{ lilv_port_get(mPlug, port, node_Group) }) {
-         // lilv.h does not say whether return of lilv_world_get() needs to
-         // be freed, but that is easily seen to be so from source
-         auto groupMsg = LilvStringMove(
-            lilv_world_get(gWorld, group.get(), node_Label, nullptr));
-         if (groupMsg.empty())
-            groupMsg = LilvStringMove(
-               lilv_world_get(gWorld, group.get(), node_Name, nullptr));
-         if (groupMsg.empty())
-            groupMsg = LilvString(group.get());
-         groupName = Verbatim(groupMsg);
-      }
-      else
-         groupName = XO("Effect Settings");
-
-      // Get the latency port
-      const auto latencyIndex = lilv_plugin_get_latency_port_index(mPlug);
-
-      // Get the ports designation (must be freed)
-      LilvNodePtr designation{ lilv_port_get(mPlug, port, node_Designation) };
-
-      // Check for audio ports
-      if (lilv_port_is_a(mPlug, port, node_AudioPort)) {
-         mAudioPorts.push_back(std::make_shared<LV2AudioPort>(
-            port, index, isInput, symbol, name, groupName));
-         isInput ? mAudioIn++ : mAudioOut++;
-      }
-      // Check for Control ports
-      else if (lilv_port_is_a(mPlug, port, node_ControlPort)) {
-         // Add group if not previously done
-         if (mGroupMap.find(groupName) == mGroupMap.end())
-            mGroups.push_back(groupName);
-         mGroupMap[groupName].push_back(mControlPorts.size());
-
-         wxString units;
-         // Get any unit descriptor
-         if (LilvNodePtr unit{ lilv_port_get(mPlug, port, node_Unit) })
-            // Really should use lilv_world_get_symbol()
-            if (LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
-               units = LilvString(symbol.get());
-
-         // Collect the value and range info
-         bool hasLo = !std::isnan(minimumVals[i]);
-         bool hasHi = !std::isnan(maximumVals[i]);
-         float min = hasLo ? minimumVals[i] : 0.0f;
-         float max = hasHi ? maximumVals[i] : 1.0f;
-         float def = !std::isnan(defaultVals[i])
-            ? defaultVals[i]
-            : hasLo
-               ? min
-               : hasHi
-                  ? max
-                  : 0.0f;
-   
-         // Figure out the type of port we have
-         bool toggle = isInput &&
-            lilv_port_has_property(mPlug, port, node_Toggled);
-         bool enumeration = isInput &&
-            lilv_port_has_property(mPlug, port, node_Enumeration);
-         bool integer = isInput &&
-            lilv_port_has_property(mPlug, port, node_Integer);
-         bool sampleRate = isInput &&
-            lilv_port_has_property(mPlug, port, node_SampleRate);
-         // Trigger properties can be combined with other types, but it
-         // seems mostly to be combined with toggle.  So, we turn the
-         // checkbox into a button.
-         bool trigger = isInput &&
-            lilv_port_has_property(mPlug, port, node_Trigger);
-         // We'll make the slider logarithmic
-         bool logarithmic = isInput &&
-            lilv_port_has_property(mPlug, port, node_Logarithmic);
-
-         // Get the scale points
-         std::vector<double> scaleValues;
-         wxArrayString scaleLabels;
-         {
-            LilvScalePointsPtr points{
-               lilv_port_get_scale_points(mPlug, port) };
-            LILV_FOREACH(scale_points, j, points.get()) {
-               const auto point = lilv_scale_points_get(points.get(), j);
-               scaleValues.push_back(
-                  lilv_node_as_float(lilv_scale_point_get_value(point)));
-               scaleLabels.push_back(
-                  LilvString(lilv_scale_point_get_label(point)));
-            }
-         }
-
-         mControlPorts.push_back(std::make_shared<LV2ControlPort>(
-            port, index, isInput, symbol, name, groupName,
-            move(scaleValues), std::move(scaleLabels), units,
-            min, max, def, hasLo, hasHi,
-            toggle, enumeration, integer, sampleRate,
-            trigger, logarithmic));
-         const auto &controlPort = mControlPorts.back();
-         mControlPortStates.emplace_back(controlPort);
-         auto &state = mControlPortStates.back();
-         auto &value = mSettings.values.emplace_back();
-
-         state.mLo = controlPort->mMin;
-         state.mHi = controlPort->mMax;
-         value = controlPort->mDef;
-         state.mLst = value;
-
-         // Figure out the type of port we have
-         if (isInput)
-            mControlPortMap[controlPort->mIndex] = mControlPorts.size() - 1;
-         else if (controlPort->mIndex == latencyIndex)
-            mLatencyPort = i;
-      }
-      // Check for atom ports
-      else if (lilv_port_is_a(mPlug, port, node_AtomPort)) {
-         uint32_t minimumSize = 8192;
-         if (LilvNodePtr min{ lilv_port_get(mPlug, port, node_MinimumSize) }
-            ; lilv_node_is_int(min.get())
-         ){
-            if (auto value = lilv_node_as_int(min.get())
-               ; value > 0
-            )
-               minimumSize = std::max<uint32_t>(minimumSize, value);
-         }
-         bool wantsPosition =
-            lilv_port_supports_event(mPlug, port, node_Position);
-         bool isMidi = lilv_port_supports_event(mPlug, port, node_MidiEvent);
-         if (isMidi)
-            (isInput ? mMidiIn : mMidiOut) += 1;
-         mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
-            port, index, isInput, symbol, name, groupName,
-            minimumSize, isMidi, wantsPosition));
-         mAtomPortStates
-            .push_back(std::make_shared<LV2AtomPortState>(mAtomPorts.back()));
-         const auto &atomPortState = mAtomPortStates.back();
-
-         bool isControl = lilv_node_equals(designation.get(), node_Control);
-         if (isInput) {
-            if (!mControlIn || isControl)
-               mControlIn = atomPortState;
-         }
-         else if (!mControlOut || isControl)
-            mControlOut = atomPortState;
-      }
-      // Check for CV ports
-      else if (lilv_port_is_a(mPlug, port, node_CVPort)) {
-         // Collect the value and range info
-         float min = 0;
-         float max = 1;
-         float def = 0;
-         bool hasLo = false;
-         bool hasHi = false;
-         if (!std::isnan(minimumVals[i]))
-            hasLo = true, min = minimumVals[i];
-         if (!std::isnan(maximumVals[i]))
-            hasHi = true, max = maximumVals[i];
-         if (!std::isnan(defaultVals[i]))
-            def = defaultVals[i];
-         else if (hasLo)
-            def = min;
-         else if (hasHi)
-            def = max;
-         mCVPorts.push_back(std::make_shared<LV2CVPort>(
-            port, index, isInput, symbol, name, groupName,
-            min, max, def, hasLo, hasHi));
-         mCVPortStates.emplace_back(mCVPorts.back());
-      }
-   }
-   }
-
-   // Ignore control designation if one of them is missing
-   if ((mControlIn && !mControlOut) || (!mControlIn && mControlOut)) {
-      mControlIn.reset();
-      mControlOut.reset();
-   }
 
    // Determine available extensions
    mWantsOptionsInterface = false;
    mWantsStateInterface = false;
-   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(mPlug) }) {
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(&mPlug) }) {
       LILV_FOREACH(nodes, i, extdata.get()) {
          const auto node = lilv_nodes_get(extdata.get(), i);
          const auto uri = lilv_node_as_string(node);
@@ -580,7 +224,17 @@ bool LV2Effect::InitializePlugin()
       }
    }
 
+   InitializeSettings(mPorts, mSettings);
    return true;
+}
+
+void LV2Effect::InitializeSettings(
+   const LV2Ports &ports, LV2EffectSettings &settings)
+{
+   for (auto &controlPort : ports.mControlPorts) {
+      auto &value = settings.values.emplace_back();
+      value = controlPort->mDef;
+   }
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
@@ -591,54 +245,34 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    int userBlockSize;
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), userBlockSize, 8192);
+   LV2Preferences::GetBufferSize(*this, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
    mBlockSize = mUserBlockSize;
 
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
-      mUseGUI, true);
-
+   LV2Preferences::GetUseLatency(*this, mUseLatency);
+   LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
-
    return std::make_shared<Instance>(*this);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
 {
-   return mAudioIn;
+   return mPorts.mAudioIn;
 }
 
 unsigned LV2Effect::GetAudioOutCount() const
 {
-   return mAudioOut;
+   return mPorts.mAudioOut;
 }
 
 int LV2Effect::GetMidiInCount() const
 {
-   return mMidiIn;
+   return mPorts.mMidiIn;
 }
 
 int LV2Effect::GetMidiOutCount() const
 {
-   return mMidiOut;
-}
-
-void LV2Effect::SetSampleRate(double rate)
-{
-   mSampleRate = (float) rate;
-
-   if (mMaster)
-   {
-      mMaster->SetSampleRate();
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      mSlaves[i]->SetSampleRate();
-   }
+   return mPorts.mMidiOut;
 }
 
 size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
@@ -659,20 +293,20 @@ size_t LV2Effect::GetBlockSize() const
 
 sampleCount LV2Effect::GetLatency()
 {
-   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone) {
+   if (mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
       return sampleCount(mMaster->GetLatency());
    }
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames chanMap)
+bool LV2Effect::ProcessInitialize(EffectSettings &settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(settings, mSampleRate);
+   mProcess = InitInstance(settings, sampleRate);
    if (!mProcess)
       return false;
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    mProcess->Activate();
    mLatencyDone = false;
@@ -695,7 +329,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
    int i = 0;
    int o = 0;
-   for (auto & port : mAudioPorts)
+   for (auto & port : mPorts.mAudioPorts)
    {
       lilv_instance_connect_port(instance,
          port->mIndex,
@@ -707,7 +341,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       const auto buf = state->mBuffer.data();
       if (port->mIsInput) {
@@ -755,7 +389,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // Main thread consumes responses
    mProcess->ConsumeResponses();
 
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       if (!port->mIsInput) {
          state->mBuffer.resize(port->mMinimumSize);
@@ -768,9 +402,9 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize(EffectSettings &)
+bool LV2Effect::RealtimeInitialize(EffectSettings &, double)
 {
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    return true;
 }
@@ -779,7 +413,7 @@ bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    mSlaves.clear();
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reset();
    return true;
 });
@@ -824,7 +458,7 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       const auto buf = state->mBuffer.data();
       if (port->mIsInput) {
@@ -894,7 +528,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
 
    int i = 0;
    int o = 0;
-   for (auto & port : mAudioPorts)
+   for (auto & port : mPorts.mAudioPorts)
    {
       lilv_instance_connect_port(instance,
          port->mIndex,
@@ -921,7 +555,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
 
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       auto &port = state->mpPort;
       auto buf = state->mBuffer.data();
       if (!port->mIsInput) {
@@ -947,7 +581,7 @@ return GuardedCall<bool>([&]{
       return true;
    }
 
-   for (auto & state : mAtomPortStates) {
+   for (auto & state : mPortStates.mAtomPortStates) {
       if (!state->mpPort->mIsInput) {
          const auto ring = state->mRing.get();
          LV2_ATOM_SEQUENCE_FOREACH(
@@ -992,7 +626,7 @@ bool LV2Effect::SaveSettings(
 {
    auto &values = GetSettings(settings).values;
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mIsInput)
          if (!parms.Write(port->mName, values[index]))
             return false;
@@ -1005,7 +639,7 @@ bool LV2Effect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
@@ -1019,7 +653,7 @@ bool LV2Effect::LoadSettings(
    // Second pass actually sets the values
    auto &values = GetSettings(settings).values;
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
@@ -1048,17 +682,14 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(settings, mSampleRate);
+   mMaster = InitInstance(settings, mProjectRate);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
    }
 
    // Determine if the GUI editor is supposed to be used or not
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-                          wxT("UseGUI"),
-                          mUseGUI,
-                          true);
+   LV2Preferences::GetUseGUI(*this, mUseGUI);
 
    // Until I figure out where to put the "Duration" control in the
    // graphical editor, force usage of plain editor.
@@ -1122,16 +753,7 @@ bool LV2Effect::CloseUI()
 bool LV2Effect::LoadUserPreset(
    const RegistryPath &name, EffectSettings &settings) const
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name, settings);
-}
-
-bool LV2Effect::DoLoadUserPreset(
-   const RegistryPath &name, EffectSettings &settings)
-{
-   if (!LoadParameters(name, settings))
-      return false;
-   return true;
+   return LoadParameters(name, settings);
 }
 
 bool LV2Effect::SaveUserPreset(
@@ -1146,7 +768,7 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    if (mFactoryPresetsLoaded)
       return mFactoryPresetNames;
 
-   if (LilvNodesPtr presets{ lilv_plugin_get_related(mPlug, node_Preset) }) {
+   if (LilvNodesPtr presets{ lilv_plugin_get_related(&mPlug, node_Preset) }) {
       LILV_FOREACH(nodes, i, presets.get()) {
          const auto preset = lilv_nodes_get(presets.get(), i);
 
@@ -1170,19 +792,22 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &) const
+namespace {
+struct SetValueData { const LV2Effect &effect; LV2EffectSettings &settings; };
+void set_value_func(
+   const char *port_symbol, void *user_data,
+   const void *value, uint32_t size, uint32_t type)
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadFactoryPreset(id);
+   auto &[effect, settings] = *static_cast<SetValueData*>(user_data);
+   effect.SetPortValue(settings, port_symbol, value, size, type);
+}
 }
 
-bool LV2Effect::DoLoadFactoryPreset(int id)
+bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
-   {
       return false;
-   }
 
    LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
@@ -1190,9 +815,14 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
    if (LilvStatePtr state{
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
-      lilv_state_restore(
-         state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
+   }){
+      auto &mySettings = GetSettings(settings);
+      SetValueData data{ *this, mySettings };
+      // Get the control port values from the state into settings
+      lilv_state_emit_port_values(state.get(), set_value_func, &data);
+      // Save the state, for whatever might not be contained in port values
+      mySettings.mpState = move(state);
       return true;
    }
    else
@@ -1219,17 +849,7 @@ bool LV2Effect::HasOptions()
 
 void LV2Effect::ShowOptions()
 {
-   LV2EffectSettingsDialog dlg(mParent, *this);
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      // Reinitialize configuration settings
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("BufferSize"), userBlockSize, DEFAULT_BLOCKSIZE);
-      mUserBlockSize = std::max(1, userBlockSize);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("UseLatency"), mUseLatency, true);
-   }
+   LV2Preferences::Dialog{ mParent, *this }.ShowModal();
 }
 
 // ============================================================================
@@ -1237,27 +857,26 @@ void LV2Effect::ShowOptions()
 // ============================================================================
 
 bool LV2Effect::LoadParameters(
-   const RegistryPath &group, EffectSettings &settings)
+   const RegistryPath &group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
-   {
       return false;
-   }
-
    CommandParameters eap;
    if (!eap.SetParameters(parms))
-   {
       return false;
-   }
-
    return LoadSettings(eap, settings);
 }
 
 bool LV2Effect::SaveParameters(
    const RegistryPath &group, const EffectSettings &settings) const
 {
+   // PRL: This function just dumps the several control port values to the
+   // config files.  Should it be reimplemented with
+   // lilv_state_new_from_instance to capture -- I don't know what -- other
+   // important state?
+
    CommandParameters eap;
    if (!SaveSettings(settings, eap))
       return false;
@@ -1273,20 +892,20 @@ bool LV2Effect::SaveParameters(
 std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    const EffectSettings &settings, float sampleRate)
 {
-   auto wrapper = std::make_unique<LV2Wrapper>(*this, mPlug, sampleRate);
+   auto wrapper = std::make_unique<LV2Wrapper>(
+      *this, mPorts.mLatencyPort, mPlug, sampleRate);
    auto instance = wrapper->GetInstance();
    if (!instance)
       return nullptr;
 
    wrapper->SetBlockSize();
-   wrapper->SetSampleRate();
 
    static float blackHole;
 
    // Connect all control ports
    auto &values = GetSettings(settings).values;
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       // If it's not an input port and master has already been created
       // then connect the port to a dummy field since slave output port
       // values are unwanted as the master values will be used.
@@ -1303,12 +922,12 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    }
 
    // Connect all atom ports
-   for (auto & state : mAtomPortStates)
+   for (auto & state : mPortStates.mAtomPortStates)
       lilv_instance_connect_port(instance,
          state->mpPort->mIndex, state->mBuffer.data());
 
    // We don't fully support CV ports, so connect them to dummy buffers for now.
-   for (auto & state : mCVPortStates)
+   for (auto & state : mPortStates.mCVPortStates)
       lilv_instance_connect_port(instance, state.mpPort->mIndex,
          state.mBuffer.get());
 
@@ -1317,7 +936,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    lilv_instance_activate(instance);
    lilv_instance_deactivate(instance);
 
-   for (auto & state : mAtomPortStates)
+   for (auto & state : mPortStates.mAtomPortStates)
       if (!state->mpPort->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
             reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
@@ -1346,7 +965,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
    // Determine if the plugin has a supported UI
    const LilvUI *ui = nullptr;
    const LilvNode *uiType = nullptr;
-   LilvUIsPtr uis{ lilv_plugin_get_uis(mPlug) };
+   LilvUIsPtr uis{ lilv_plugin_get_uis(&mPlug) };
    if (uis) {
       if (LilvNodePtr containerType{ lilv_new_uri(gWorld, nativeType) }) {
          LILV_FOREACH(uis, iter, uis.get()) {
@@ -1438,8 +1057,11 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
       lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr)
    };
 
+   // Reassign the sample rate, which is pointed to by options, which are
+   // pointed to by features, before we tell the library the features
+   mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
-      lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
+      lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
 
@@ -1550,7 +1172,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
-   mPlainUIControls.resize(mControlPorts.size());
+   mPlainUIControls.resize(mPorts.mControlPorts.size());
 
    int numCols = 5;
    wxSizer *innerSizer;
@@ -1578,7 +1200,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto &extra = settings.extra;
          mDuration = safenew NumericTextCtrl(w, ID_Duration,
             NumericConverter::TIME, extra.GetDurationFormat(),
-            extra.GetDuration(), mSampleRate,
+            extra.GetDuration(), mProjectRate,
             NumericTextCtrl::Options{}.AutoPos(true));
          mDuration->SetName( XO("Duration") );
          sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
@@ -1590,12 +1212,13 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
       // Make other controls, grouped into static boxes that are named
       // according to certain control port metadata
-      std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
-      for (auto &label: mGroups) {
+      auto groups = mPorts.mGroups; // mutable copy
+      std::sort(groups.begin(), groups.end(), TranslationLess);
+      for (auto &label: groups) {
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
-         for (auto & p : mGroupMap[label]) {
-            auto &state = mControlPortStates[p];
+         for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
+            auto &state = mPortUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
             const auto &value = values[p];
@@ -1670,7 +1293,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                t->SetName(labelText);
                gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                ctrl.mText = t;
-               auto rate = port->mSampleRate ? mSampleRate : 1.0f;
+               auto rate = port->mSampleRate ? mProjectRate : 1.0f;
                state.mLo = port->mMin * rate;
                state.mHi = port->mMax * rate;
                state.mTmp = value * rate;
@@ -1793,13 +1416,24 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
-   auto &values = GetSettings(settings).values;
+   auto &mySettings = GetSettings(settings);
+
+   if (mMaster && mySettings.mpState) {
+      // Maybe there are other important side effects on the instance besides
+      // changes of port values
+      lilv_state_restore(mySettings.mpState.get(), mMaster->GetInstance(),
+         nullptr, nullptr, 0, nullptr);
+      // Destroy the short lived carrier of preset state
+      mySettings.mpState.reset();
+   }
+
+   auto &values = mySettings.values;
    {
-      size_t index = 0; for (auto & state : mControlPortStates) {
+      size_t index = 0; for (auto & state : mPortUIStates.mControlPortStates) {
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
-               values[index] * (port->mSampleRate ? mSampleRate : 1.0);
+               values[index] * (port->mSampleRate ? mProjectRate : 1.0);
          ++index;
       }
    }
@@ -1808,7 +1442,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
       // fancy UI
       if (mSuilInstance) {
          size_t index = 0;
-         for (auto & port : mControlPorts) {
+         for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
                suil_instance_port_event(mSuilInstance.get(),
                   port->mIndex, sizeof(float), 0, &values[index]);
@@ -1819,10 +1453,11 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    }
 
    // else plain UI
-   // Visiting controls in same sequence as their creation
-   for (auto & group : mGroups) {
-      const auto & params = mGroupMap[group];
-      for (auto & param : params) { auto & state = mControlPortStates[param];
+   // Visiting controls by groups
+   for (auto & group : mPorts.mGroups) {
+      const auto & params = mPorts.mGroupMap.at(group); /* won't throw */
+      for (auto & param : params) {
+         auto &state = mPortUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
          auto &value = values[param];
@@ -1833,7 +1468,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          else if (port->mEnumeration)      // Check before integer
             ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
-            state.mTmp = value * (port->mSampleRate ? mSampleRate : 1.0f);
+            state.mTmp = value * (port->mSampleRate ? mProjectRate : 1.0f);
             SetSlider(state, ctrl);
          }
       }
@@ -1860,33 +1495,33 @@ void LV2Effect::SetSlider(
 void LV2Effect::OnTrigger(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Triggers;
-   auto & port = mControlPorts[idx];
+   auto & port = mPorts.mControlPorts[idx];
    mSettings.values[idx] = port->mDef;
 }
 
 void LV2Effect::OnToggle(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Toggles;
-   auto & port = mControlPorts[idx];
+   auto & port = mPorts.mControlPorts[idx];
    mSettings.values[idx] = evt.GetInt() ? 1.0 : 0.0;
 }
 
 void LV2Effect::OnChoice(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Choices;
-   auto & port = mControlPorts[idx];
+   auto & port = mPorts.mControlPorts[idx];
    mSettings.values[idx] = port->mScaleValues[evt.GetInt()];
 }
 
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Texts;
-   auto &state = mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
-   auto & ctrl = mPlainUIControls[idx];
+   auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       mSettings.values[idx] =
-         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+         port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
       SetSlider(state, ctrl);
    }
 }
@@ -1894,7 +1529,7 @@ void LV2Effect::OnText(wxCommandEvent &evt)
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Sliders;
-   auto &state = mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    float lo = state.mLo;
    float hi = state.mHi;
@@ -1906,7 +1541,7 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
    mSettings.values[idx] =
-      port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
@@ -1942,9 +1577,9 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
-   if (mControlOut) {
-      const auto ring = mControlOut->mRing.get();
-      const auto minimumSize = mControlOut->mpPort->mMinimumSize;
+   if (auto &atomState = mPortUIStates.mControlOut) {
+      const auto ring = atomState->mRing.get();
+      const auto minimumSize = atomState->mpPort->mMinimumSize;
       const auto space = std::make_unique<char[]>(minimumSize);
       auto atom = reinterpret_cast<LV2_Atom*>(space.get());
       while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
@@ -1953,7 +1588,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
             zix_ring_read(ring,
                LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
             suil_instance_port_event(mSuilInstance.get(),
-               mControlOut->mpPort->mIndex, size,
+               atomState->mpPort->mIndex, size,
                LV2Symbols::urid_EventTransfer, atom);
          }
          else {
@@ -1964,7 +1599,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    }
 
    size_t index = 0;
-   for (auto &state : mControlPortStates) {
+   for (auto &state : mPortUIStates.mControlPortStates) {
       auto &port = state.mpPort;
       const auto &value = mSettings.values[index];
       // Let UI know that a port's value has changed
@@ -2090,14 +1725,15 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
 {
    // Handle implicit floats
    if (protocol == 0 && buffer_size == sizeof(float)) {
-      if (auto it = mControlPortMap.find(port_index);
-         it != mControlPortMap.end())
+      if (auto it = mPorts.mControlPortMap.find(port_index);
+         it != mPorts.mControlPortMap.end())
          mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
-      if (mControlIn && port_index == mControlIn->mpPort->mIndex)
-         zix_ring_write(mControlIn->mRing.get(), buffer, buffer_size);
+      auto &atomPortState = mPortUIStates.mControlIn;
+      if (atomPortState && port_index == atomPortState->mpPort->mIndex)
+         zix_ring_write(atomPortState->mRing.get(), buffer, buffer_size);
    }
 }
 
@@ -2110,34 +1746,39 @@ uint32_t LV2Effect::suil_port_index_func(
 
 uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
 {
-   for (size_t i = 0, cnt = lilv_plugin_get_num_ports(mPlug); i < cnt; ++i) {
-      const auto port = lilv_plugin_get_port_by_index(mPlug, i);
+   for (size_t i = 0, cnt = lilv_plugin_get_num_ports(&mPlug); i < cnt; ++i) {
+      const auto port = lilv_plugin_get_port_by_index(&mPlug, i);
       if (strcmp(port_symbol,
-            lilv_node_as_string(lilv_port_get_symbol(mPlug, port))) == 0)
-         return lilv_port_get_index(mPlug, port);
+            lilv_node_as_string(lilv_port_get_symbol(&mPlug, port))) == 0)
+         return lilv_port_get_index(&mPlug, port);
    }
    return LV2UI_INVALID_PORT_INDEX;
 }
 
-// static callback
-// This function isn't used?
-const void *LV2Effect::get_value_func(
+namespace {
+struct GetValueData {
+   const LV2Effect &effect; const LV2EffectSettings &settings;
+};
+//! This function isn't used yet, but if we ever need to call
+//! lilv_state_new_from_instance, we will give it this callback
+const void *get_value_func(
    const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
 {
-   return static_cast<LV2Effect *>(user_data)
-      ->GetPortValue(port_symbol, size, type);
+   auto &[effect, settings] = *static_cast<GetValueData*>(user_data);
+   return effect.GetPortValue(settings, port_symbol, size, type);
+}
 }
 
-const void *LV2Effect::GetPortValue(
-   const char *port_symbol, uint32_t *size, uint32_t *type)
+const void *LV2Effect::GetPortValue(const LV2EffectSettings &settings,
+   const char *port_symbol, uint32_t *size, uint32_t *type) const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
-         return &mSettings.values[index];
+         return &settings.values[index];
       }
       ++index;
    }
@@ -2146,23 +1787,15 @@ const void *LV2Effect::GetPortValue(
    return nullptr;
 }
 
-// static callback
-void LV2Effect::set_value_func(
-   const char *port_symbol, void *user_data,
-   const void *value, uint32_t size, uint32_t type)
-{
-   static_cast<LV2Effect *>(user_data)
-      ->SetPortValue(port_symbol, value, size, type);
-}
-
-void LV2Effect::SetPortValue(
+void LV2Effect::SetPortValue(LV2EffectSettings &settings,
    const char *port_symbol, const void *value, uint32_t size, uint32_t type)
+const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mSymbol == symbol) {
-         auto &dst = mSettings.values[index];
+         auto &dst = settings.values[index];
          using namespace LV2Symbols;
          if (type == urid_Bool && size == sizeof(bool))
             dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
@@ -2228,10 +1861,13 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
-   const LilvPlugin *plugin, double sampleRate)
+LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
+   const LilvPlugin &plugin, double sampleRate)
 :  mFeaturesList{ featuresList }
 {
+   // Reassign the sample rate, which is pointed to by options, which are
+   // pointed to by features, before we tell the library the features
+   mFeaturesList.SetSampleRate(sampleRate);
    auto features = mFeaturesList.GetFeaturePointers();
    LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
    if (mFeaturesList.SuppliesWorkerInterface())
@@ -2245,7 +1881,7 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
    // as the main DLL, so add this plugin's path to the DLL search order.
-   const auto libNode = lilv_plugin_get_library_uri(plugin);
+   const auto libNode = lilv_plugin_get_library_uri(&plugin);
    const auto libUri = lilv_node_as_uri(libNode);
    LilvCharsPtr libPath{ lilv_file_uri_parse(libUri, nullptr) };
    const auto path = wxPathOnly(libPath.get());
@@ -2253,7 +1889,7 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
 #endif
 
    mInstance.reset(
-      lilv_plugin_instantiate(plugin, sampleRate, features.data()));
+      lilv_plugin_instantiate(&plugin, sampleRate, features.data()));
 
 #if defined(__WXMSW__)
    SetDllDirectory(nullptr);
@@ -2269,8 +1905,8 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
       lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
       lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
-   if (mFeaturesList.LatencyPort() >= 0)
-      lilv_instance_connect_port(mInstance.get(), mFeaturesList.LatencyPort(), &mLatency);
+   if (latencyPort >= 0)
+      lilv_instance_connect_port(mInstance.get(), latencyPort, &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
@@ -2312,16 +1948,6 @@ float LV2Wrapper::GetLatency() const
 void LV2Wrapper::SetFreeWheeling(bool enable)
 {
    mFreeWheeling = enable;
-}
-
-void LV2Wrapper::SetSampleRate()
-{
-   if (auto pOption = mFeaturesList.SampleRateOption()
-      ; pOption && mOptionsInterface && mOptionsInterface->set
-   ){
-      LV2_Options_Option options[2]{ *pOption, {} };
-      mOptionsInterface->set(mHandle, options);
-   }
 }
 
 void LV2Wrapper::SetBlockSize()

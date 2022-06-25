@@ -76,12 +76,6 @@ const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
    return Get(const_cast<Track &>(track));
 }
 
-void RealtimeEffectList::Visit(StateVisitor func)
-{
-   for (auto &state : mStates)
-      func(*state, IsActive());
-}
-
 bool
 RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
 {

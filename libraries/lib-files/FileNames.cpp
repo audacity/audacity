@@ -30,6 +30,7 @@ used throughout Audacity into this one place.
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
+#include <wx/utils.h>
 #include "BasicUI.h"
 #include "Prefs.h"
 #include "Internat.h"
@@ -44,8 +45,6 @@ used throughout Audacity into this one place.
 #if defined(__WXMSW__)
 #include <windows.h>
 #endif
-
-static wxString gDataDir;
 
 const FileNames::FileType
      FileNames::AllFiles{ XO("All files"), { wxT("") } }
@@ -224,13 +223,67 @@ wxString FileNames::LowerCaseAppNameInPath( const wxString & dirIn){
    return dir;
 }
 
-FilePath FileNames::DataDir()
+namespace // Implementation for user directories
 {
-   // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
-   //       between wxStandardPaths and wxConfig under Linux.  The latter
-   //       creates a normal file as "$HOME/.audacity", while the former
-   //       expects the ".audacity" portion to be a directory.
-   if (gDataDir.empty())
+enum class DirTarget
+{
+   Cache,
+   Config,
+   Data,
+   State,
+   _targetCount,
+};
+
+static FilePath gTargetDirs[size_t(DirTarget::_targetCount)] = {};
+
+#if defined(__WXGTK__)
+struct XDGDirConfig final
+{
+   wxString dirEnvVar;
+   FilePath dirDefault;
+};
+
+const XDGDirConfig gXDGUnixDirs[] = {
+   {wxT("XDG_CACHE_HOME"),  wxT("/.cache")      },
+   {wxT("XDG_CONFIG_HOME"), wxT("/.config")     },
+   {wxT("XDG_DATA_HOME"),   wxT("/.local/share")},
+   {wxT("XDG_STATE_HOME"),  wxT("/.local/state")}
+};
+
+static_assert(
+   sizeof(gXDGUnixDirs) / sizeof(*gXDGUnixDirs) == size_t(DirTarget::_targetCount),
+   "Not all DirTarget cases were implemented!"
+);
+
+FilePath GetXDGTargetDir(DirTarget target)
+{
+   static const auto oldUnixDataDir = wxFileName::GetHomeDir() + wxT("/.audacity-data");
+   static const auto oldUnixDataDirExists = wxDirExists(oldUnixDataDir);
+   // Compatibility: Use old user data dir folder, if it already exists
+   if (oldUnixDataDirExists)
+      return oldUnixDataDir;
+
+   // see if the XDG_*_HOME env var is defined. if it is, use its value.
+   // if it isn't, use the default XDG-specified value.
+   wxString newDir;
+   const auto [dirEnvVar, dirDefault] = gXDGUnixDirs[size_t(target)];
+   if (!wxGetEnv(dirEnvVar, &newDir) || newDir.empty())
+      newDir = wxFileName::GetHomeDir() + dirDefault;
+
+#ifdef AUDACITY_NAME
+   newDir = newDir + wxT("/" AUDACITY_NAME);
+#else
+   newDir = newDir + wxT("/audacity");
+#endif
+
+   return newDir;
+}
+#endif
+
+FilePath GetUserTargetDir(DirTarget target)
+{
+   auto& dir = gTargetDirs[size_t(target)];
+   if (dir.empty())
    {
       // If there is a directory "Portable Settings" relative to the
       // executable's EXE file, the prefs are stored in there, otherwise
@@ -248,19 +301,27 @@ FilePath FileNames::DataDir()
       if (::wxDirExists(portablePrefsPath.GetFullPath()))
       {
          // Use "Portable Settings" folder
-         gDataDir = portablePrefsPath.GetFullPath();
+         dir = portablePrefsPath.GetFullPath();
       } else
       {
+#if defined(__WXGTK__)
+         // Use XDG Base Directory compliant folders
+         wxString newDir(GetXDGTargetDir(target));
+#else
          // Use OS-provided user data dir folder
-         wxString dataDir( LowerCaseAppNameInPath( wxStandardPaths::Get().GetUserDataDir() ));
-#if defined( __WXGTK__ )
-         dataDir = dataDir + wxT("-data");
+         wxString newDir( FileNames::LowerCaseAppNameInPath( wxStandardPaths::Get().GetUserDataDir() ));
 #endif
-         gDataDir = FileNames::MkDir(dataDir);
+         dir = FileNames::MkDir(newDir);
       }
    }
-   return gDataDir;
+   return dir;
 }
+} // End of implementation for user directories
+
+FilePath FileNames::CacheDir() { return GetUserTargetDir(DirTarget::Cache); }
+FilePath FileNames::ConfigDir() { return GetUserTargetDir(DirTarget::Config); }
+FilePath FileNames::DataDir() { return GetUserTargetDir(DirTarget::Data); }
+FilePath FileNames::StateDir() { return GetUserTargetDir(DirTarget::State); }
 
 FilePath FileNames::ResourcesDir(){
    wxString resourcesDir( LowerCaseAppNameInPath( wxStandardPaths::Get().GetResourcesDir() ));
@@ -315,17 +376,17 @@ FilePath FileNames::PlugInDir()
 
 FilePath FileNames::Configuration()
 {
-   return wxFileName( DataDir(), wxT("audacity.cfg") ).GetFullPath();
+   return wxFileName( ConfigDir(), wxT("audacity.cfg") ).GetFullPath();
 }
 
 FilePath FileNames::PluginRegistry()
 {
-   return wxFileName( DataDir(), wxT("pluginregistry.cfg") ).GetFullPath();
+   return wxFileName( ConfigDir(), wxT("pluginregistry.cfg") ).GetFullPath();
 }
 
 FilePath FileNames::PluginSettings()
 {
-   return wxFileName( DataDir(), wxT("pluginsettings.cfg") ).GetFullPath();
+   return wxFileName( ConfigDir(), wxT("pluginsettings.cfg") ).GetFullPath();
 }
 
 FilePath FileNames::BaseDir()

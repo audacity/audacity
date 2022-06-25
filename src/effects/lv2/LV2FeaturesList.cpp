@@ -30,7 +30,7 @@
 #include "lv2_external_ui.h"
 #include "lv2/worker/worker.h"
 
-LV2FeaturesList::LV2FeaturesList(const LilvPlugin *plug) : mPlug{ plug }
+LV2FeaturesList::LV2FeaturesList(const LilvPlugin &plug) : mPlug{ plug }
    , mSuppliesWorkerInterface{ SuppliesWorkerInterface(plug) }
 {
 }
@@ -48,15 +48,15 @@ bool LV2FeaturesList::InitializeOptions()
    // Two options are reset later
    mBlockSizeOption = AddOption(urid_NominalBlockLength,
       sizeof(mBlockSize), urid_Int, &mBlockSize);
-   mSampleRateOption = AddOption(urid_SampleRate,
+   AddOption(urid_SampleRate,
       sizeof(mSampleRate), urid_Float, &mSampleRate);
    AddOption(0, 0, 0, nullptr);
-   if (!ValidateOptions(lilv_plugin_get_uri(mPlug)))
+   if (!ValidateOptions(lilv_plugin_get_uri(&mPlug)))
       return false;
 
    // Adjust the values in the block size features according to the plugin
    if (LilvNodePtr minLength{ lilv_world_get(gWorld,
-         lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr) }
+         lilv_plugin_get_uri(&mPlug), node_MinBlockLength, nullptr) }
       ; lilv_node_is_int(minLength.get())
    ){
       if (auto value = lilv_node_as_int(minLength.get())
@@ -65,7 +65,7 @@ bool LV2FeaturesList::InitializeOptions()
          mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
    }
    if (LilvNodePtr maxLength{ lilv_world_get(gWorld,
-         lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr) }
+         lilv_plugin_get_uri(&mPlug), node_MaxBlockLength, nullptr) }
       ; lilv_node_is_int(maxLength.get())
    ){
       if (auto value = lilv_node_as_int(maxLength.get())
@@ -100,10 +100,10 @@ bool LV2FeaturesList::InitializeFeatures()
    return true;
 }
 
-bool LV2FeaturesList::SuppliesWorkerInterface(const LilvPlugin *plug)
+bool LV2FeaturesList::SuppliesWorkerInterface(const LilvPlugin &plug)
 {
    bool result = false;
-   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(plug) }) {
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(&plug) }) {
       LILV_FOREACH(nodes, i, extdata.get()) {
          const auto node = lilv_nodes_get(extdata.get(), i);
          const auto uri = lilv_node_as_string(node);
@@ -151,14 +151,6 @@ const LV2_Options_Option *LV2FeaturesList::NominalBlockLengthOption() const
       return nullptr;
 }
 
-const LV2_Options_Option *LV2FeaturesList::SampleRateOption() const
-{
-   if (mSupportsSampleRate)
-      return &mOptions[mSampleRateOption];
-   else
-      return nullptr;
-}
-
 bool LV2FeaturesList::ValidateFeatures(const LilvNode *subject)
 {
    return CheckFeatures(subject, true) && CheckFeatures(subject, false);
@@ -186,7 +178,7 @@ bool LV2FeaturesList::CheckFeatures(const LilvNode *subject, bool required)
                [&](auto &feature){ return strcmp(feature.URI, uri) == 0; }));
             if (!supported) {
                wxLogError(wxT("%s requires unsupported feature %s"),
-                  lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
+                  lilv_node_as_string(lilv_plugin_get_uri(&mPlug)), uri);
                break;
             }
          }
@@ -214,15 +206,15 @@ bool LV2FeaturesList::CheckOptions(const LilvNode *subject, bool required)
          const auto urid = URID_Map(uri);
          if (urid == urid_NominalBlockLength)
             mSupportsNominalBlockLength = true;
-         else if (urid == urid_SampleRate)
-            mSupportsSampleRate = true;
+         // else if (urid == urid_SampleRate)
+            // mSupportsSampleRate = true; // supports changing sample rate
          else if (required) {
             const auto end = mOptions.end();
             supported = (end != std::find_if(mOptions.begin(), end,
                [&](const auto &option){ return option.key == urid; }));
             if (!supported) {
                wxLogError(wxT("%s requires unsupported option %s"),
-                  lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
+                  lilv_node_as_string(lilv_plugin_get_uri(&mPlug)), uri);
                break;
             }
          }

@@ -10,7 +10,6 @@
 
 
 #include "RealtimeEffectManager.h"
-#include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
 #include <memory>
@@ -52,11 +51,9 @@ bool RealtimeEffectManager::IsActive() const noexcept
    return mActive;
 }
 
-void RealtimeEffectManager::Initialize(double rate)
+void RealtimeEffectManager::Initialize(
+   RealtimeEffects::InitializationScope &scope, double sampleRate)
 {
-   // Remember the rate
-   mRate = rate;
-
    // (Re)Set processor parameters
    mChans.clear();
    mRates.clear();
@@ -67,15 +64,17 @@ void RealtimeEffectManager::Initialize(double rate)
    mActive = true;
 
    // Tell each state to get ready for action
-   VisitAll([rate](RealtimeEffectState &state, bool){
-      state.Initialize(rate);
+   VisitAll([&scope, sampleRate](RealtimeEffectState &state, bool) {
+      scope.mInstances.push_back(state.Initialize(sampleRate));
    });
 
    // Leave suspended state
    Resume();
 }
 
-void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
+void RealtimeEffectManager::AddTrack(
+   RealtimeEffects::InitializationScope &scope,
+   Track &track, unsigned chans, float rate)
 {
    auto leader = *track.GetOwner()->FindLeader(&track);
    // This should never return a null
@@ -86,7 +85,7 @@ void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
 
    VisitGroup(*leader,
       [&](RealtimeEffectState & state, bool) {
-         state.AddTrack(*leader, chans, rate);
+         scope.mInstances.push_back(state.AddTrack(*leader, chans, rate));
       }
    );
 }
@@ -224,15 +223,6 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
    });
 }
 
-void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
-{
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
-
-   // Call the function for each effect on the track list
-   RealtimeEffectList::Get(leader).Visit(func);
-}
-
 RealtimeEffectManager::
 AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
    : mpManager{ pManager }
@@ -275,16 +265,6 @@ void RealtimeEffectManager::AllListsLock::Reset()
    }
 }
 
-void RealtimeEffectManager::VisitAll(StateVisitor func)
-{
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
-
-   // And all track lists
-   for (auto leader : mGroupLeaders)
-      RealtimeEffectList::Get(*leader).Visit(func);
-}
-
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const PluginID & id)
@@ -305,10 +285,11 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
    
-   if (mActive)
+   if (pScope && mActive)
    {
       // Adding a state while playback is in-flight
-      state.Initialize(mRate);
+      auto pInstance = state.Initialize(pScope->mSampleRate);
+      pScope->mInstances.push_back(pInstance);
 
       for (auto &leader : mGroupLeaders) {
          // Add all tracks to a per-project state, but add only the same track
@@ -319,7 +300,9 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
          auto chans = mChans[leader];
          auto rate = mRates[leader];
 
-         state.AddTrack(*leader, chans, rate);
+         auto pInstance2 = state.AddTrack(*leader, chans, rate);
+         if (pInstance2 != pInstance)
+            pScope->mInstances.push_back(pInstance2);
       }
    }
 
