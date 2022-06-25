@@ -88,9 +88,9 @@ LabelTrack::LabelTrack():
 {
 }
 
-LabelTrack::LabelTrack(const LabelTrack &orig) :
-   Track(orig),
-   mClipLen(0.0)
+LabelTrack::LabelTrack(const LabelTrack &orig, ProtectedCreationArg &&a)
+   : Track(orig, std::move(a))
+   , mClipLen(0.0)
 {
    for (auto &original: orig.mLabels) {
       LabelStruct l { original.selectedRegion, original.title };
@@ -369,7 +369,7 @@ double LabelTrack::GetEndTime() const
 
 Track::Holder LabelTrack::Clone() const
 {
-   return std::make_shared<LabelTrack>( *this );
+   return std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
 }
 
 // Adjust label's left or right boundary, depending which is requested.

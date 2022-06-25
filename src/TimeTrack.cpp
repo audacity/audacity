@@ -79,8 +79,9 @@ void TimeTrack::CleanState()
    mRuler->SetFormat(Ruler::TimeFormat);
 }
 
-TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
-   : Track(orig)
+TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
+   double *pT0, double *pT1
+)  : Track(orig, std::move(a))
    , mZoomInfo(orig.mZoomInfo)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
@@ -189,7 +190,7 @@ Track::Holder TimeTrack::Cut( double t0, double t1 )
 
 Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
 {
-   return std::make_shared<TimeTrack>( *this, &t0, &t1 );
+   return std::make_shared<TimeTrack>(*this, ProtectedCreationArg{}, &t0, &t1);
 }
 
 namespace {
@@ -232,7 +233,7 @@ void TimeTrack::InsertSilence(double t, double len)
 
 Track::Holder TimeTrack::Clone() const
 {
-   return std::make_shared<TimeTrack>(*this);
+   return std::make_shared<TimeTrack>(*this, ProtectedCreationArg{});
 }
 
 bool TimeTrack::GetInterpolateLog() const

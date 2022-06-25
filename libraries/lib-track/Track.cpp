@@ -53,7 +53,7 @@ Track::Track()
    mChannel = MonoChannel;
 }
 
-Track::Track(const Track &orig)
+Track::Track(const Track &orig, ProtectedCreationArg&&)
 : vrulerSize( orig.vrulerSize )
 {
    mIndex = 0;
@@ -299,6 +299,25 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
       // Remove from the track
       Clear(newT1, oldT1);
    }
+}
+
+AudioTrack::AudioTrack() : Track{}
+{
+}
+
+AudioTrack::AudioTrack(const Track &orig, ProtectedCreationArg &&a)
+   : Track{ orig, std::move(a) }
+{
+}
+
+PlayableTrack::PlayableTrack() : AudioTrack{}
+{
+}
+
+PlayableTrack::PlayableTrack(
+   const PlayableTrack &orig, ProtectedCreationArg &&a
+)  : AudioTrack{ orig, std::move(a) }
+{
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
