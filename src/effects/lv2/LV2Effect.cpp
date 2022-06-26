@@ -864,7 +864,11 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
    mSampleRate = mProjectRate;
-   mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
+   mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
+      // The void* that the instance passes back to our write and index
+      // callback functions, which were given to suil_host_new:
+      this,
+      containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
@@ -1249,7 +1253,9 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
                suil_instance_port_event(mSuilInstance.get(),
-                  port->mIndex, sizeof(float), 0, &values[index]);
+                  port->mIndex, sizeof(float),
+                  /* Means this event sends a float: */ 0,
+                  &values[index]);
             ++index;
          }
       }
@@ -1386,6 +1392,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       const auto minimumSize = atomState->mpPort->mMinimumSize;
       const auto space = std::make_unique<char[]>(minimumSize);
       auto atom = reinterpret_cast<LV2_Atom*>(space.get());
+      // Consume messages from the processing thread and pass to the
+      // foreign UI code, for updating output displays
       while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
          uint32_t size = lv2_atom_total_size(atom);
          if (size < minimumSize) {
@@ -1393,6 +1401,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
                LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
             suil_instance_port_event(mSuilInstance.get(),
                atomState->mpPort->mIndex, size,
+               // Means this event sends some structured data:
                LV2Symbols::urid_EventTransfer, atom);
          }
          else {
@@ -1402,6 +1411,9 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
+   // Is this idle time polling for changes of input redundant with
+   // TransferDataToWindow or is it really needed?  Probably harmless.
+   // In case of output control port values though, it is needed for metering.
    size_t index = 0;
    for (auto &state : mPortUIStates.mControlPortStates) {
       auto &port = state.mpPort;
@@ -1409,7 +1421,9 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       // Let UI know that a port's value has changed
       if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
-            port->mIndex, sizeof(value), 0, &value);
+            port->mIndex, sizeof(value),
+            /* Means this event sends a float: */ 0,
+            &value);
          state.mLst = value;
       }
       ++index;
@@ -1516,6 +1530,7 @@ void LV2Effect::UIClosed()
 }
 
 // static callback
+// Foreign UI code wants to send a value or event to me, the host
 void LV2Effect::suil_port_write_func(SuilController controller,
    uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
    const void *buffer)
@@ -1529,14 +1544,16 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
 {
    // Handle implicit floats
    if (protocol == 0 && buffer_size == sizeof(float)) {
-      if (auto it = mPorts.mControlPortMap.find(port_index);
-         it != mPorts.mControlPortMap.end())
+      if (auto it = mPorts.mControlPortMap.find(port_index)
+         ; it != mPorts.mControlPortMap.end()
+      )
          mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
       auto &atomPortState = mPortUIStates.mControlIn;
       if (atomPortState && port_index == atomPortState->mpPort->mIndex)
+         // Send event information blob from the UI to the processing thread
          zix_ring_write(atomPortState->mRing.get(), buffer, buffer_size);
    }
 }

@@ -44,6 +44,8 @@ void LV2AtomPortState::SendToInstance(
          lv2_atom_forge_long(&forge, frameTime);
          lv2_atom_forge_pop(&forge, &posFrame);
       }
+      // Copy event information from the UI thread into plugin's atom input,
+      // inserting frame time
       const auto ring = mRing.get();
       LV2_Atom atom;
       while (zix_ring_read(ring, &atom, sizeof(atom))) {
