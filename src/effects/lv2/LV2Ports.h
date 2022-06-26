@@ -20,7 +20,6 @@
 #include <optional>
 #include <unordered_map>
 
-#include "lilv/lilv.h"
 #include "LV2Utils.h"
 #include "MemoryX.h"
 #include "TranslatableString.h"

@@ -64,9 +64,6 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
-static inline void free_chars (char *p) { lilv_free(p); }
-using LilvCharsPtr = Lilv_ptr<char, free_chars>;
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2Effect
