@@ -168,7 +168,15 @@ public:
 using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
 using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 
-//! State of an instance of an LV2 Control port
+//! Storage locations to be connected to LV2 control ports
+struct LV2EffectSettings final {
+   //! vector of values in correspondence with the control ports
+   std::vector<float> values;
+   //! Result of last load of a preset; may be null
+   mutable std::shared_ptr<const LilvState> mpState;
+};
+
+//! Other UI related state of an instance of an LV2 Control port
 struct LV2ControlPortState final {
    //! @pre `pPort != nullptr`
    explicit LV2ControlPortState(LV2ControlPortPtr pPort)
