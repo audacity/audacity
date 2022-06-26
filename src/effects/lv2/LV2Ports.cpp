@@ -68,7 +68,18 @@ void LV2AtomPortState::SendToInstance(
 #endif
    }
    else
+      // PRL:  I'm not sure why this must be done both before lilv_instance_run
+      // and after, but that's the legacy
+      ResetForInstanceOutput();
+}
+
+void LV2AtomPortState::ResetForInstanceOutput() {
+   using namespace LV2Symbols;
+   auto &port = mpPort;
+   if (!port->mIsInput) {
+      const auto buf = mBuffer.get();
       *reinterpret_cast<LV2_Atom *>(buf) = { port->mMinimumSize, urid_Chunk };
+   }
 }
 
 size_t LV2ControlPort::Discretize(float value) const

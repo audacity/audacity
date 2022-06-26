@@ -91,6 +91,7 @@ struct LV2AtomPortState final {
     In addition, reset the output Atom ports.
    */
    void SendToInstance(LV2_Atom_Forge &forge, int64_t frameTime, float speed);
+   void ResetForInstanceOutput();
 
    const LV2AtomPortPtr mpPort;
    const Lilv_ptr<ZixRing, zix_ring_free> mRing;

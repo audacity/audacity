@@ -342,14 +342,8 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // Main thread consumes responses
    mProcess->ConsumeResponses();
 
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      if (!port->mIsInput) {
-         auto chunk = reinterpret_cast<LV2_Atom *>(state->mBuffer.get());
-         chunk->size = port->mMinimumSize;
-         chunk->type = urid_Chunk;
-      }
-   }
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->ResetForInstanceOutput();
 
    return size;
 }
@@ -443,15 +437,8 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
 
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      auto buf = state->mBuffer.get();
-      if (!port->mIsInput) {
-         auto chunk = reinterpret_cast<LV2_Atom *>(buf);
-         chunk->size = port->mMinimumSize;
-         chunk->type = LV2Symbols::urid_Chunk;
-      }
-   }
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->ResetForInstanceOutput();
 
    if (group == 0)
       mPositionFrame += numSamples;
