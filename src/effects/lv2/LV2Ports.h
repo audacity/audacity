@@ -201,6 +201,15 @@ public:
    //! @post every member of `mGroups` occurs as a key in `mGroupMap`
    explicit LV2Ports(const LilvPlugin &plug);
 
+   void EmitPortValues(
+      const LilvState &state, LV2EffectSettings &settings) const;
+
+   const void *GetPortValue(const LV2EffectSettings &settings,
+      const char *port_symbol, uint32_t *size, uint32_t *type) const;
+
+   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
+      const void *value, uint32_t size, uint32_t type) const;
+
    LV2AudioPortArray mAudioPorts;
    unsigned mAudioIn{ 0 };
    unsigned mAudioOut{ 0 };

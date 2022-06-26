@@ -215,6 +215,83 @@ LV2Ports::LV2Ports(const LilvPlugin &plug)
    }
 }
 
+namespace {
+struct GetValueData {
+   const LV2Ports &ports; const LV2EffectSettings &settings;
+};
+//! This function isn't used yet, but if we ever need to call
+//! lilv_state_new_from_instance, we will give it this callback
+const void *get_value_func(
+   const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
+{
+   auto &[ports, settings] = *static_cast<GetValueData*>(user_data);
+   return ports.GetPortValue(settings, port_symbol, size, type);
+}
+}
+
+const void *LV2Ports::GetPortValue(const LV2EffectSettings &settings,
+   const char *port_symbol, uint32_t *size, uint32_t *type) const
+{
+   wxString symbol = wxString::FromUTF8(port_symbol);
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
+      if (port->mSymbol == symbol) {
+         *size = sizeof(float);
+         *type = LV2Symbols::urid_Float;
+         return &settings.values[index];
+      }
+      ++index;
+   }
+   *size = 0;
+   *type = 0;
+   return nullptr;
+}
+
+namespace {
+struct SetValueData { const LV2Ports &ports; LV2EffectSettings &settings; };
+void set_value_func(
+   const char *port_symbol, void *user_data,
+   const void *value, uint32_t size, uint32_t type)
+{
+   auto &[ports, settings] = *static_cast<SetValueData*>(user_data);
+   ports.SetPortValue(settings, port_symbol, value, size, type);
+}
+}
+
+void LV2Ports::SetPortValue(LV2EffectSettings &settings,
+   const char *port_symbol, const void *value, uint32_t size, uint32_t type)
+const
+{
+   wxString symbol = wxString::FromUTF8(port_symbol);
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
+      if (port->mSymbol == symbol) {
+         auto &dst = settings.values[index];
+         using namespace LV2Symbols;
+         if (type == urid_Bool && size == sizeof(bool))
+            dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
+         else if (type == urid_Double && size == sizeof(double))
+            dst = *static_cast<const double *>(value);
+         else if (type == urid_Float && size == sizeof(float))
+            dst = *static_cast<const float *>(value);
+         else if (type == urid_Int && size == sizeof(int32_t))
+            dst = *static_cast<const int32_t *>(value);
+         else if (type == urid_Long && size == sizeof(int64_t))
+            dst = *static_cast<const int64_t *>(value);
+         break;
+      }
+      ++index;
+   }
+}
+
+void LV2Ports::EmitPortValues(
+   const LilvState &state, LV2EffectSettings &settings) const
+{
+   SetValueData data{ *this, settings };
+   // Get the control port values from the state into settings
+   lilv_state_emit_port_values(&state, set_value_func, &data);
+}
+
 LV2PortStates::LV2PortStates(const LV2Ports &ports)
 {
    for (auto &atomPort : ports.mAtomPorts)

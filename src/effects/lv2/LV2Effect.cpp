@@ -782,17 +782,6 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-namespace {
-struct SetValueData { const LV2Effect &effect; LV2EffectSettings &settings; };
-void set_value_func(
-   const char *port_symbol, void *user_data,
-   const void *value, uint32_t size, uint32_t type)
-{
-   auto &[effect, settings] = *static_cast<SetValueData*>(user_data);
-   effect.SetPortValue(settings, port_symbol, value, size, type);
-}
-}
-
 bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
@@ -808,9 +797,7 @@ bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
       lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
    }){
       auto &mySettings = GetSettings(settings);
-      SetValueData data{ *this, mySettings };
-      // Get the control port values from the state into settings
-      lilv_state_emit_port_values(state.get(), set_value_func, &data);
+      mPorts.EmitPortValues(*state, mySettings);
       // Save the state, for whatever might not be contained in port values
       mySettings.mpState = move(state);
       return true;
@@ -1685,64 +1672,6 @@ uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
          return lilv_port_get_index(&mPlug, port);
    }
    return LV2UI_INVALID_PORT_INDEX;
-}
-
-namespace {
-struct GetValueData {
-   const LV2Effect &effect; const LV2EffectSettings &settings;
-};
-//! This function isn't used yet, but if we ever need to call
-//! lilv_state_new_from_instance, we will give it this callback
-const void *get_value_func(
-   const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
-{
-   auto &[effect, settings] = *static_cast<GetValueData*>(user_data);
-   return effect.GetPortValue(settings, port_symbol, size, type);
-}
-}
-
-const void *LV2Effect::GetPortValue(const LV2EffectSettings &settings,
-   const char *port_symbol, uint32_t *size, uint32_t *type) const
-{
-   wxString symbol = wxString::FromUTF8(port_symbol);
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mSymbol == symbol) {
-         *size = sizeof(float);
-         *type = LV2Symbols::urid_Float;
-         return &settings.values[index];
-      }
-      ++index;
-   }
-   *size = 0;
-   *type = 0;
-   return nullptr;
-}
-
-void LV2Effect::SetPortValue(LV2EffectSettings &settings,
-   const char *port_symbol, const void *value, uint32_t size, uint32_t type)
-const
-{
-   wxString symbol = wxString::FromUTF8(port_symbol);
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mSymbol == symbol) {
-         auto &dst = settings.values[index];
-         using namespace LV2Symbols;
-         if (type == urid_Bool && size == sizeof(bool))
-            dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
-         else if (type == urid_Double && size == sizeof(double))
-            dst = *static_cast<const double *>(value);
-         else if (type == urid_Float && size == sizeof(float))
-            dst = *static_cast<const float *>(value);
-         else if (type == urid_Int && size == sizeof(int32_t))
-            dst = *static_cast<const int32_t *>(value);
-         else if (type == urid_Long && size == sizeof(int64_t))
-            dst = *static_cast<const int64_t *>(value);
-         break;
-      }
-      ++index;
-   }
 }
 
 #if defined(__WXGTK__)
