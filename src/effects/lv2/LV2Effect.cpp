@@ -26,6 +26,7 @@
 #include "SampleCount.h"
 
 #include <cmath>
+#include <exception>
 #include <functional>
 
 #include <wx/button.h>
@@ -899,12 +900,15 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
 {
    auto &plug = featuresList.mPlug;
 
-   auto wrapper = std::make_unique<LV2Wrapper>(CreateToken{},
-      featuresList, plug, sampleRate);
-   auto instance = wrapper->GetInstance();
-   if (!instance)
+   std::unique_ptr<LV2Wrapper> wrapper;
+   try {
+      wrapper = std::make_unique<LV2Wrapper>(CreateToken{},
+         featuresList, plug, sampleRate);
+   } catch(const std::exception&) {
       return nullptr;
+   }
 
+   auto instance = wrapper->GetInstance();
    wrapper->SetBlockSize();
    wrapper->ConnectPorts(ports, portStates, settings, useOutput);
 
@@ -1879,19 +1883,22 @@ LV2Wrapper::~LV2Wrapper()
 LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
    const LilvPlugin &plugin, double sampleRate
 )  : mFeaturesList{ featuresList }
+, mInstance{
+   [&featuresList, &plugin, sampleRate, pWorkerSchedule = &mWorkerSchedule]()
 {
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   mFeaturesList.SetSampleRate(sampleRate);
-   auto features = mFeaturesList.GetFeaturePointers();
-   LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
-   if (mFeaturesList.SuppliesWorkerInterface())
-      // Insert another pointer before the null
+   featuresList.SetSampleRate(sampleRate);
+   auto features = featuresList.GetFeaturePointers();
+   if (featuresList.SuppliesWorkerInterface()) {
+      LV2_Feature tempFeature{ LV2_WORKER__schedule, pWorkerSchedule };
       // Append a feature to the array, only for the plugin instantiation
+      // Insert another pointer before the null
       // (features are also used elsewhere to instantiate the UI in the
       // suil_* functions)
       // It informs the plugin how to send work to another thread
       features.insert(features.end() - 1, &tempFeature);
+   }
 
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
@@ -1901,25 +1908,23 @@ LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
    LilvCharsPtr libPath{ lilv_file_uri_parse(libUri, nullptr) };
    const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
+   auto cleanup = finally([]{ SetDllDirectory(nullptr); });
 #endif
 
-   mInstance.reset(
-      lilv_plugin_instantiate(&plugin, sampleRate, features.data()));
-
-#if defined(__WXMSW__)
-   SetDllDirectory(nullptr);
-#endif
-
-   if (!mInstance)
-      return;
-
-   mHandle = lilv_instance_get_handle(mInstance.get());
-   mOptionsInterface = static_cast<const LV2_Options_Interface *>(
-      lilv_instance_get_extension_data(mInstance.get(), LV2_OPTIONS__interface));
-   mStateInterface = static_cast<const LV2_State_Interface *>(
-      lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
-   mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
-      lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
+   auto result = lilv_plugin_instantiate(&plugin, sampleRate, features.data());
+   return result ? result : throw std::exception{};
+}()}
+, mHandle{ lilv_instance_get_handle(mInstance.get()) }
+, mOptionsInterface{ static_cast<const LV2_Options_Interface *>(
+   lilv_instance_get_extension_data(mInstance.get(), LV2_OPTIONS__interface))
+}
+, mStateInterface{ static_cast<const LV2_State_Interface *>(
+   lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface))
+}
+, mWorkerInterface{ static_cast<const LV2_Worker_Interface *>(
+   lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface))
+}
+{
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)

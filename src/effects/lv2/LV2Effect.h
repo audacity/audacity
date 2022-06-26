@@ -291,7 +291,6 @@ private:
    size_t mInstanceAccessFeature{};
    //! Index into m_features
    size_t mParentFeature{};
-   LV2_Feature *mWorkerScheduleFeature{};
 
    // UI
    struct PlainUIControl {
@@ -334,6 +333,7 @@ private:
    friend class LV2Wrapper;
 };
 
+//! Manager of a handle to an LV2 plug-in instantiation
 class LV2Wrapper final
 {
    //! To compel use of the factory
@@ -364,6 +364,7 @@ public:
       bool useOutput);
    void Activate();
    void Deactivate();
+   //! @post result: `result != nullptr`
    LilvInstance *GetInstance() const;
    LV2_Handle GetHandle() const;
    float GetLatency() const;
@@ -382,26 +383,27 @@ public:
 private:
    void ThreadFunction();
 
-   std::thread mThread;
-
    const LV2FeaturesList &mFeaturesList;
-   LilvInstancePtr mInstance;
-   LV2_Handle mHandle{};
 
-   wxMessageQueue<LV2Work> mRequests;
-   wxMessageQueue<LV2Work> mResponses;
-
-   // Options extension
-   const LV2_Options_Interface *mOptionsInterface{};
-
-   // State extension
-   const LV2_State_Interface *mStateInterface{};
-
-   // Worker extension
-   const LV2_Worker_Interface *mWorkerInterface{};
    // Another object with an explicit virtual function table
    LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
 
+   //! @invariant not null
+   const LilvInstancePtr mInstance;
+   const LV2_Handle mHandle;
+
+   // Pointers to extension interfaces that the foreign plug-in instance
+   // may expose:
+   // Options extension
+   const LV2_Options_Interface *const mOptionsInterface;
+   // State extension
+   const LV2_State_Interface *const mStateInterface;
+   // Worker extension
+   const LV2_Worker_Interface *const mWorkerInterface;
+
+   std::thread mThread;
+   wxMessageQueue<LV2Work> mRequests;
+   wxMessageQueue<LV2Work> mResponses;
    float mLatency{ 0.0 };
 
    //! If true, do not spawn extra worker threads
@@ -410,7 +412,6 @@ private:
    //! Written by main thread, read by worker, but atomic isn't needed because
    //! mRequests provides synchronization
    bool mStopWorker{ false };
-
    bool mActivated{ false };
 };
 
