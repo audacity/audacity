@@ -900,16 +900,41 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    auto &plug = featuresList.mPlug;
 
    auto wrapper = std::make_unique<LV2Wrapper>(CreateToken{},
-      featuresList, ports.mLatencyPort, plug, sampleRate);
+      featuresList, plug, sampleRate);
    auto instance = wrapper->GetInstance();
    if (!instance)
       return nullptr;
 
    wrapper->SetBlockSize();
+   wrapper->ConnectPorts(ports, portStates, settings, useOutput);
 
+   // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
+   // this before it can be safely deleted.
+   lilv_instance_activate(instance);
+   lilv_instance_deactivate(instance);
+
+   for (auto & state : portStates.mAtomPortStates)
+      if (!state->mpPort->mIsInput)
+         LV2_ATOM_SEQUENCE_FOREACH(
+            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
+         )
+            zix_ring_write(state->mRing.get(),
+               &ev->body, ev->body.size + sizeof(LV2_Atom));
+
+   return wrapper;
+}
+
+void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
+   const LV2EffectSettings &settings, bool useOutput)
+{
+   auto instance = GetInstance();
    static float blackHole;
 
    // Connect all control ports
+   const auto latencyPort = ports.mLatencyPort;
+   if (latencyPort >= 0)
+      lilv_instance_connect_port(instance, latencyPort, &mLatency);
+
    auto &values = settings.values;
    size_t index = 0;
    for (auto & port : ports.mControlPorts) {
@@ -935,21 +960,6 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    for (auto & state : portStates.mCVPortStates)
       lilv_instance_connect_port(instance, state.mpPort->mIndex,
          state.mBuffer.get());
-
-   // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
-   // this before it can be safely deleted.
-   lilv_instance_activate(instance);
-   lilv_instance_deactivate(instance);
-
-   for (auto & state : portStates.mAtomPortStates)
-      if (!state->mpPort->mIsInput)
-         LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
-         )
-            zix_ring_write(state->mRing.get(),
-               &ev->body, ev->body.size + sizeof(LV2_Atom));
-
-   return wrapper;
 }
 
 bool LV2Effect::BuildFancy(const EffectSettings &settings)
@@ -1866,10 +1876,9 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(CreateToken&&,
-   const LV2FeaturesList &featuresList, int latencyPort,
-   const LilvPlugin &plugin, double sampleRate)
-:  mFeaturesList{ featuresList }
+LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
+   const LilvPlugin &plugin, double sampleRate
+)  : mFeaturesList{ featuresList }
 {
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
@@ -1911,8 +1920,6 @@ LV2Wrapper::LV2Wrapper(CreateToken&&,
       lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
       lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
-   if (latencyPort >= 0)
-      lilv_instance_connect_port(mInstance.get(), latencyPort, &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)

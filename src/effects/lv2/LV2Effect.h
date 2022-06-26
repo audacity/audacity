@@ -353,11 +353,15 @@ public:
 
    //! Constructor may spawn a thread
    LV2Wrapper(CreateToken&&,
-      const LV2FeaturesList &featuresList, int latencyPort,
+      const LV2FeaturesList &featuresList,
       const LilvPlugin &plugin, double sampleRate);
 
    //! If a thread was started, joins it
    ~LV2Wrapper();
+
+   void ConnectPorts(const LV2Ports &ports,
+      LV2PortStates &portStates, const LV2EffectSettings &settings,
+      bool useOutput);
    void Activate();
    void Deactivate();
    LilvInstance *GetInstance() const;
