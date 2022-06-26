@@ -1860,6 +1860,8 @@ LV2Wrapper::~LV2Wrapper()
 {
    if (mInstance) {
       if (mThread.joinable()) {
+         // Even if we have been freewheeling, this unblocks the unused thread
+         // so it can be joined
          mStopWorker = true;
          mRequests.Post({ 0, NULL });  // Must do after writing mStopWorker
          mThread.join();
@@ -1973,6 +1975,8 @@ void LV2Wrapper::ThreadFunction()
       // Must test mStopWorker only after reading mRequests
       mRequests.Receive(work) == wxMSGQUEUE_NO_ERROR && !mStopWorker;
    )
+      // Call foreign instance code in this thread, which is neither the
+      // main nor the audio thread
       mWorkerInterface->work(mHandle, respond, this, work.size, work.data);
 }
 
@@ -1981,8 +1985,11 @@ void LV2Wrapper::ConsumeResponses()
    if (mWorkerInterface) {
       LV2Work work{};
       while (mResponses.ReceiveTimeout(0, work) == wxMSGQUEUE_NO_ERROR)
+         // Invoke foreign instance code in main (destructive) or
+         // audio thread (real-time) processing
          mWorkerInterface->work_response(mHandle, work.size, work.data);
       if (mWorkerInterface->end_run)
+         // More foreign code
          mWorkerInterface->end_run(mHandle);
    }
 }
@@ -2001,13 +2008,15 @@ LV2_Worker_Status LV2Wrapper::ScheduleWork(uint32_t size, const void *data)
       return mWorkerInterface->work(mHandle, respond, this, size, data);
    else {
       // Put in the queue for the worker thread
+      // which will then do mWorkerInterface->work
       const auto err = mRequests.Post({ size, data });
       return (err == wxMSGQUEUE_NO_ERROR)
          ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
    }
 }
 
-// static callback
+// static callback given to mWorkerInterface->work and
+// called back by the foreign instance code
 LV2_Worker_Status LV2Wrapper::respond(
    LV2_Worker_Respond_Handle handle, uint32_t size, const void *data)
 {
@@ -2016,8 +2025,8 @@ LV2_Worker_Status LV2Wrapper::respond(
 
 LV2_Worker_Status LV2Wrapper::Respond(uint32_t size, const void *data)
 {
-   // Put in the queue, for another thread (if not "freewheeling")
-   // (not necessarily the main thread)
+   // Put in the queue, for another thread -- when not "freewheeling."
+   // Otherwise it is just roundabout communication within a thread
    const auto err = mResponses.Post({ size, data });
    return (err == wxMSGQUEUE_NO_ERROR)
       ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
