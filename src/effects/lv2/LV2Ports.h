@@ -83,6 +83,14 @@ struct LV2AtomPortState final {
       , mBuffer{ safenew uint8_t[mpPort->mMinimumSize] }
    {
       assert(mpPort);
+      /*
+       There is no complementary munlock anywhere in the library!
+       Are we mis-using a class meant for plugin implementation?
+       Do we make a resource leak of physical memory pages?
+       Should we just skip this call?
+       Or is mlock a good idea we should implement in our own RingBuffer,
+       which we can also munlock in its destructor?
+       */
       zix_ring_mlock(mRing.get());
    }
 
