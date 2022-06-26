@@ -87,9 +87,9 @@ public:
    //! May be needed before exposing features and options to the plugin
    void SetSampleRate(float sampleRate) const { mSampleRate = sampleRate; }
 
-protected:
    const LilvPlugin &mPlug;
 
+protected:
    // lv2 functions require a pointer to non-const in places, but presumably
    // have no need to mutate the members of this structure
    LV2_URID_Map *URIDMapFeature() const

@@ -171,9 +171,6 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   std::unique_ptr<LV2Wrapper>
-   InitInstance(const EffectSettings &settings, float sampleRate);
-
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
 
@@ -339,6 +336,8 @@ private:
 
 class LV2Wrapper final
 {
+   //! To compel use of the factory
+   struct CreateToken{};
 public:
    struct LV2Work {
       uint32_t size{};
@@ -346,9 +345,17 @@ public:
    };
 
 public:
-   //! May spawn a thread
-   LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
+   //! Factory
+   static std::unique_ptr<LV2Wrapper> Create(
+      const LV2FeaturesList &featuresList,
+      const LV2Ports &ports, LV2PortStates &portStates,
+      const LV2EffectSettings &settings, float sampleRate, bool useOutput);
+
+   //! Constructor may spawn a thread
+   LV2Wrapper(CreateToken&&,
+      const LV2FeaturesList &featuresList, int latencyPort,
       const LilvPlugin &plugin, double sampleRate);
+
    //! If a thread was started, joins it
    ~LV2Wrapper();
    void Activate();

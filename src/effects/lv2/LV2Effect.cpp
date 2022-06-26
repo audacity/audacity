@@ -303,7 +303,8 @@ sampleCount LV2Effect::GetLatency()
 bool LV2Effect::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(settings, sampleRate);
+   mProcess = LV2Wrapper::Create(*this,
+      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!mProcess)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
@@ -422,7 +423,8 @@ return GuardedCall<bool>([&]{
 bool LV2Effect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto pInstance = InitInstance(settings, sampleRate);
+   auto pInstance = LV2Wrapper::Create(*this,
+      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!pInstance)
       return false;
    pInstance->Activate();
@@ -682,7 +684,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(settings, mProjectRate);
+   mMaster = LV2Wrapper::Create(*this,
+      mPorts, mPortStates, GetSettings(settings), mProjectRate, true);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -889,11 +892,15 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
-   const EffectSettings &settings, float sampleRate)
+std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
+   const LV2FeaturesList &featuresList,
+   const LV2Ports &ports, LV2PortStates &portStates,
+   const LV2EffectSettings &settings, float sampleRate, bool useOutput)
 {
-   auto wrapper = std::make_unique<LV2Wrapper>(
-      *this, mPorts.mLatencyPort, mPlug, sampleRate);
+   auto &plug = featuresList.mPlug;
+
+   auto wrapper = std::make_unique<LV2Wrapper>(CreateToken{},
+      featuresList, ports.mLatencyPort, plug, sampleRate);
    auto instance = wrapper->GetInstance();
    if (!instance)
       return nullptr;
@@ -903,16 +910,14 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    static float blackHole;
 
    // Connect all control ports
-   auto &values = GetSettings(settings).values;
+   auto &values = settings.values;
    size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      // If it's not an input port and master has already been created
-      // then connect the port to a dummy field since slave output port
-      // values are unwanted as the master values will be used.
-      //
+   for (auto & port : ports.mControlPorts) {
+      // If it's not an input port and output values are unwanted,
+      // then connect the port to a dummy.
       // Otherwise, connect it to the real value field.
       lilv_instance_connect_port(instance, port->mIndex,
-         !port->mIsInput && mMaster
+         !port->mIsInput && useOutput
             ? &blackHole
             // Treat settings slot corresponding to an output port as mutable
             // Otherwise those for input ports must still pass to the library
@@ -922,12 +927,12 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    }
 
    // Connect all atom ports
-   for (auto & state : mPortStates.mAtomPortStates)
+   for (auto & state : portStates.mAtomPortStates)
       lilv_instance_connect_port(instance,
          state->mpPort->mIndex, state->mBuffer.data());
 
    // We don't fully support CV ports, so connect them to dummy buffers for now.
-   for (auto & state : mPortStates.mCVPortStates)
+   for (auto & state : portStates.mCVPortStates)
       lilv_instance_connect_port(instance, state.mpPort->mIndex,
          state.mBuffer.get());
 
@@ -936,7 +941,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    lilv_instance_activate(instance);
    lilv_instance_deactivate(instance);
 
-   for (auto & state : mPortStates.mAtomPortStates)
+   for (auto & state : portStates.mAtomPortStates)
       if (!state->mpPort->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
             reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
@@ -1861,7 +1866,8 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
+LV2Wrapper::LV2Wrapper(CreateToken&&,
+   const LV2FeaturesList &featuresList, int latencyPort,
    const LilvPlugin &plugin, double sampleRate)
 :  mFeaturesList{ featuresList }
 {
