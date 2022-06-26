@@ -25,9 +25,6 @@
 #include "LV2FeaturesList.h"
 #include "LV2Ports.h"
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/util.h"
-
 #if defined(__WXMSW__)
 #include <wx/msw/wrapwin.h>
 #endif
@@ -56,13 +53,9 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    lilv_instance_activate(instance);
    lilv_instance_deactivate(instance);
 
+   // Send to the dialog whatever was the result of that "pulse"
    for (auto & state : portStates.mAtomPortStates)
-      if (!state->mpPort->mIsInput)
-         LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.get()), ev
-         )
-            zix_ring_write(state->mRing.get(),
-               &ev->body, ev->body.size + sizeof(LV2_Atom));
+      state->ReceiveFromInstance();
 
    return wrapper;
 }

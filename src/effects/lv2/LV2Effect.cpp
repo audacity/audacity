@@ -455,15 +455,10 @@ return GuardedCall<bool>([&]{
       return true;
    }
 
-   for (auto & state : mPortStates.mAtomPortStates) {
-      if (!state->mpPort->mIsInput) {
-         const auto ring = state->mRing.get();
-         LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.get()), ev
-         )
-            zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
-      }
-   }
+   // Why is this not also done on the destructive processing path?
+   // Because it is soon dimissing the modal dialog anyway.
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->ReceiveFromInstance();
 
    mNumSamples = 0;
 

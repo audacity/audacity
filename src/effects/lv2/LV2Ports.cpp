@@ -84,6 +84,17 @@ void LV2AtomPortState::ResetForInstanceOutput() {
    }
 }
 
+void LV2AtomPortState::ReceiveFromInstance()
+{
+   if (!mpPort->mIsInput) {
+      const auto ring = mRing.get();
+      LV2_ATOM_SEQUENCE_FOREACH(
+         reinterpret_cast<LV2_Atom_Sequence *>(mBuffer.get()), ev
+      )
+         zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
+   }
+}
+
 size_t LV2ControlPort::Discretize(float value) const
 {
    auto s = mScaleValues.size();
