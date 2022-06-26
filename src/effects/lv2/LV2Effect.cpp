@@ -386,7 +386,7 @@ bool LV2Effect::RealtimeAddProcessor(
 bool LV2Effect::RealtimeSuspend()
 {
    mPositionSpeed = 0.0;
-   mPositionFrame = 0.0;
+   mPositionFrame = 0;
    mRolling = false;
 
    return true;
@@ -395,7 +395,7 @@ bool LV2Effect::RealtimeSuspend()
 bool LV2Effect::RealtimeResume()
 {
    mPositionSpeed = 1.0;
-   mPositionFrame = 0.0;
+   mPositionFrame = 0;
    mRolling = true;
 
    return true;

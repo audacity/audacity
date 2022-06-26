@@ -90,7 +90,7 @@ struct LV2AtomPortState final {
     These will be made available to each slave in the chain.
     In addition, reset the output Atom ports.
    */
-   void SendToInstance(LV2_Atom_Forge &forge, float frameTime, float speed);
+   void SendToInstance(LV2_Atom_Forge &forge, int64_t frameTime, float speed);
 
    const LV2AtomPortPtr mpPort;
    const Lilv_ptr<ZixRing, zix_ring_free> mRing;

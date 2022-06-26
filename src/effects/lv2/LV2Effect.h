@@ -243,7 +243,7 @@ private:
 
    // Position info
    float mPositionSpeed{ 1.0f };
-   float mPositionFrame{ 0.0f };
+   int64_t mPositionFrame{ 0 };
 
    double mLength{};
 

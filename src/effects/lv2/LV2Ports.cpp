@@ -19,7 +19,7 @@
 #include <cmath>
 
 void LV2AtomPortState::SendToInstance(
-   LV2_Atom_Forge &forge, const float frameTime, const float speed
+   LV2_Atom_Forge &forge, const int64_t frameTime, const float speed
 ){
    using namespace LV2Symbols;
    auto &port = mpPort;
