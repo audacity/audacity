@@ -15,7 +15,61 @@
 #include "LV2Symbols.h"
 #include "Internat.h"
 
+#include <wx/log.h>
 #include <cmath>
+
+void LV2AtomPortState::SendToInstance(
+   LV2_Atom_Forge &forge, const float frameTime, const float speed
+){
+   using namespace LV2Symbols;
+   auto &port = mpPort;
+   const auto buf = mBuffer.get();
+   if (port->mIsInput) {
+      // TAKE from an inter-thread ring buffer;
+      // PUT to an "atom forge" which is a serializer of structured information
+      // and the forge populates the buffer that the atom port was connected to
+      // and it also receives other information about speed and accumulated
+      // number of samples
+      lv2_atom_forge_set_buffer(&forge, buf, port->mMinimumSize);
+      LV2_Atom_Forge_Frame seqFrame;
+      const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
+         lv2_atom_forge_sequence_head(&forge, &seqFrame, 0));
+      if (port->mWantsPosition) {
+         lv2_atom_forge_frame_time(&forge, frameTime);
+         LV2_Atom_Forge_Frame posFrame;
+         lv2_atom_forge_object(&forge, &posFrame, 0, urid_Position);
+         lv2_atom_forge_key(&forge, urid_Speed);
+         lv2_atom_forge_float(&forge, speed);
+         lv2_atom_forge_key(&forge, urid_Frame);
+         lv2_atom_forge_long(&forge, frameTime);
+         lv2_atom_forge_pop(&forge, &posFrame);
+      }
+      const auto ring = mRing.get();
+      LV2_Atom atom;
+      while (zix_ring_read(ring, &atom, sizeof(atom))) {
+         if (forge.offset + sizeof(LV2_Atom_Event) + atom.size < forge.size){
+            lv2_atom_forge_frame_time(&forge, frameTime);
+            lv2_atom_forge_write(&forge, &atom, sizeof(atom));
+            zix_ring_read(ring, &forge.buf[forge.offset], atom.size);
+            forge.offset += atom.size;
+            seq->atom.size += atom.size;
+         }
+         else {
+            zix_ring_skip(ring, atom.size);
+            wxLogError(wxT("LV2 sequence buffer overflow"));
+         }
+      }
+      lv2_atom_forge_pop(&forge, &seqFrame);
+#if 0
+      LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
+         auto o = reinterpret_cast<LV2_Atom_Object *>(&ev->body);
+         wxLogDebug(wxT("ev = %lld ev.size %d ev.type %d"), ev->time.frames, ev->body.size, ev->body.type);
+      }
+#endif
+   }
+   else
+      *reinterpret_cast<LV2_Atom *>(buf) = { port->mMinimumSize, urid_Chunk };
+}
 
 size_t LV2ControlPort::Discretize(float value) const
 {

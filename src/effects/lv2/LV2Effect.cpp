@@ -446,62 +446,9 @@ bool LV2Effect::RealtimeResume()
 
 bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
-   using namespace LV2Symbols;
    mNumSamples = 0;
-
-   // Transfer incoming events from the ring buffer to the event buffer for each
-   // atom input port.  These will be made available to each slave in the chain and
-   // to the master once all slaves have run.
-   //
-   // In addition, reset the output Atom ports.
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      const auto buf = state->mBuffer.get();
-      if (port->mIsInput) {
-         lv2_atom_forge_set_buffer(&mForge, buf, port->mMinimumSize);
-         LV2_Atom_Forge_Frame seqFrame;
-         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
-         if (port->mWantsPosition) {
-            lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-            LV2_Atom_Forge_Frame posFrame;
-            lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
-            lv2_atom_forge_key(&mForge, urid_Speed);
-            lv2_atom_forge_float(&mForge, mPositionSpeed);
-            lv2_atom_forge_key(&mForge, urid_Frame);
-            lv2_atom_forge_long(&mForge, mPositionFrame);
-            lv2_atom_forge_pop(&mForge, &posFrame);
-         }
-         const auto ring = state->mRing.get();
-         LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom))) {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
-               < mForge.size
-            ){
-               lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-               lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
-               zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
-               mForge.offset += atom.size;
-               seq->atom.size += atom.size;
-            }
-            else {
-               zix_ring_skip(ring, atom.size);
-               wxLogError(wxT("LV2 sequence buffer overflow"));
-            }
-         }
-         lv2_atom_forge_pop(&mForge, &seqFrame);
-#if 0
-         LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
-            auto o = reinterpret_cast<LV2_Atom_Object *>(&ev->body);
-            wxLogDebug(wxT("ev = %lld ev.size %d ev.type %d"), ev->time.frames, ev->body.size, ev->body.type);
-         }
-#endif
-      }
-      else
-         *reinterpret_cast<LV2_Atom *>(buf) = {
-            port->mMinimumSize, urid_Chunk };
-   }
-
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
    return true;
 }
 
@@ -527,7 +474,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
 
-   mNumSamples = wxMax(numSamples, mNumSamples);
+   mNumSamples = std::max(numSamples, mNumSamples);
 
    if (mRolling)
       lilv_instance_run(instance, numSamples);

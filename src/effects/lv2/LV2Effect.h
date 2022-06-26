@@ -23,7 +23,6 @@ class wxArrayString;
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
-#include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
 #include <suil/suil.h>
 #include "lv2_external_ui.h"

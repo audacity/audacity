@@ -24,6 +24,7 @@
 #include "MemoryX.h"
 #include "TranslatableString.h"
 #include <wx/arrstr.h>
+#include "lv2/atom/forge.h"
 #include "zix/ring.h"
 
 using Floats = ArrayOf<float>;
@@ -83,6 +84,14 @@ struct LV2AtomPortState final {
       assert(mpPort);
       zix_ring_mlock(mRing.get());
    }
+
+   //! Transfer incoming events from the ring buffer to the event buffer.
+   /*!
+    These will be made available to each slave in the chain.
+    In addition, reset the output Atom ports.
+   */
+   void SendToInstance(LV2_Atom_Forge &forge, float frameTime, float speed);
+
    const LV2AtomPortPtr mpPort;
    const Lilv_ptr<ZixRing, zix_ring_free> mRing;
    const std::unique_ptr<uint8_t[]> mBuffer;
