@@ -84,6 +84,29 @@ void LV2AtomPortState::ResetForInstanceOutput() {
    }
 }
 
+void LV2AtomPortState::SendToDialog(
+   std::function<void(const LV2_Atom *atom, uint32_t size)> handler)
+{
+   const auto ring = mRing.get();
+   const auto minimumSize = mpPort->mMinimumSize;
+   const auto space = std::make_unique<char[]>(minimumSize);
+   auto atom = reinterpret_cast<LV2_Atom*>(space.get());
+   // Consume messages from the processing thread and pass to the
+   // foreign UI code, for updating output displays
+   while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
+      uint32_t size = lv2_atom_total_size(atom);
+      if (size < minimumSize) {
+         zix_ring_read(ring,
+            LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
+         handler(atom, size);
+      }
+      else {
+         zix_ring_skip(ring, atom->size);
+         wxLogError(wxT("LV2 sequence buffer overflow"));
+      }
+   }
+}
+
 void LV2AtomPortState::ReceiveFromInstance()
 {
    if (!mpPort->mIsInput) {
@@ -93,6 +116,13 @@ void LV2AtomPortState::ReceiveFromInstance()
       )
          zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
    }
+}
+
+void LV2AtomPortState::ReceiveFromDialog(
+   const void *buffer, uint32_t buffer_size)
+{
+   // Send event information blob from the UI to the processing thread
+   zix_ring_write(mRing.get(), buffer, buffer_size);
 }
 
 size_t LV2ControlPort::Discretize(float value) const

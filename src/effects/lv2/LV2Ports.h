@@ -17,6 +17,7 @@
 
 #if USE_LV2
 
+#include <functional>
 #include <optional>
 #include <unordered_map>
 
@@ -95,6 +96,16 @@ struct LV2AtomPortState final {
 
    //! Take responses from the instance and send cross-thread for the dialog
    void ReceiveFromInstance();
+
+   //! Dialog can poll one ring buffer for messages at idle time
+   /*!
+    Given function may be called multiple times
+    */
+   void SendToDialog(
+      std::function<void(const LV2_Atom *atom, uint32_t size)> handler);
+
+   //! Dialog pushes to other ring buffer when it gets a user interface event
+   void ReceiveFromDialog(const void *buffer, uint32_t buffer_size);
 
    const LV2AtomPortPtr mpPort;
    const Lilv_ptr<ZixRing, zix_ring_free> mRing;

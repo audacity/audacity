@@ -1383,27 +1383,12 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    }
 
    if (auto &atomState = mPortUIStates.mControlOut) {
-      const auto ring = atomState->mRing.get();
-      const auto minimumSize = atomState->mpPort->mMinimumSize;
-      const auto space = std::make_unique<char[]>(minimumSize);
-      auto atom = reinterpret_cast<LV2_Atom*>(space.get());
-      // Consume messages from the processing thread and pass to the
-      // foreign UI code, for updating output displays
-      while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
-         uint32_t size = lv2_atom_total_size(atom);
-         if (size < minimumSize) {
-            zix_ring_read(ring,
-               LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
-            suil_instance_port_event(mSuilInstance.get(),
-               atomState->mpPort->mIndex, size,
-               // Means this event sends some structured data:
-               LV2Symbols::urid_EventTransfer, atom);
-         }
-         else {
-            zix_ring_skip(ring, atom->size);
-            wxLogError(wxT("LV2 sequence buffer overflow"));
-         }
-      }
+      atomState->SendToDialog([&](const LV2_Atom *atom, uint32_t size){
+         suil_instance_port_event(mSuilInstance.get(),
+            atomState->mpPort->mIndex, size,
+            // Means this event sends some structured data:
+            LV2Symbols::urid_EventTransfer, atom);
+      });
    }
 
    // Is this idle time polling for changes of input redundant with
@@ -1548,8 +1533,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    else if (protocol == LV2Symbols::urid_EventTransfer) {
       auto &atomPortState = mPortUIStates.mControlIn;
       if (atomPortState && port_index == atomPortState->mpPort->mIndex)
-         // Send event information blob from the UI to the processing thread
-         zix_ring_write(atomPortState->mRing.get(), buffer, buffer_size);
+         atomPortState->ReceiveFromDialog(buffer, buffer_size);
    }
 }
 
