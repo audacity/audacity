@@ -154,7 +154,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(XO("Real-time Conversion"));
+   S.StartStatic(XO("Realtime Conversion"));
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
