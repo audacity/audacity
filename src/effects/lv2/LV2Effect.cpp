@@ -67,11 +67,15 @@
 
 LV2Instance::LV2Instance(
    StatefulPerTrackEffect &effect, const LV2Ports &ports
-)  : StatefulEffectBase::Instance{ effect }
-   , PerTrackEffect::Instance{ effect }
+)  : PerTrackEffect::Instance{ effect }
    , mPorts{ ports }
 {
    LV2Preferences::GetUseLatency(effect, mUseLatency);
+
+   int userBlockSize;
+   LV2Preferences::GetBufferSize(effect, userBlockSize);
+   mUserBlockSize = std::max(1, userBlockSize);
+   mBlockSize = mUserBlockSize;
 }
 
 LV2Instance::~LV2Instance()
@@ -275,11 +279,6 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
-   int userBlockSize;
-   LV2Preferences::GetBufferSize(*this, userBlockSize);
-   mUserBlockSize = std::max(1, userBlockSize);
-   mBlockSize = mUserBlockSize;
-
    LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
    return std::make_shared<LV2Instance>(*this, mPorts);
@@ -305,18 +304,20 @@ int LV2Effect::GetMidiOutCount() const
    return mPorts.mMidiOut;
 }
 
-size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
+size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 {
-   mBlockSize = std::max(mMinBlockSize,
-      std::min({maxBlockSize, mUserBlockSize, mMaxBlockSize}));
-   if (mMaster)
-      mMaster->SetBlockSize();
+   auto pWrapper = GetWrapper();
+   const auto &featuresList = GetEffect();
+   mBlockSize = std::max(featuresList.mMinBlockSize,
+      std::min({maxBlockSize, mUserBlockSize, featuresList.mMaxBlockSize}));
+   if (pWrapper)
+      pWrapper->SetBlockSize();
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
       mSlaves[i]->SetBlockSize();
    return mBlockSize;
 }
 
-size_t LV2Effect::GetBlockSize() const
+size_t LV2Instance::GetBlockSize() const
 {
    return mBlockSize;
 }
@@ -336,7 +337,6 @@ bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
    auto &mPortStates = GetEffect().mPortStates;
-   auto &mBlockSize = GetEffect().mBlockSize;
    if (!GetWrapper())
       MakeWrapper(settings, sampleRate, false);
    const auto pWrapper = GetWrapper();
@@ -353,12 +353,9 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    using namespace LV2Symbols;
-   auto &mBlockSize = GetEffect().mBlockSize;
    auto pWrapper = GetWrapper();
    auto &mPortStates = GetEffect().mPortStates;
    auto &mForge = GetEffect().mForge;
-   auto &mPositionFrame = GetEffect().mPositionFrame;
-   auto &mPositionSpeed = GetEffect().mPositionSpeed;
 
    assert(size <= mBlockSize);
    assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
@@ -385,16 +382,18 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize(EffectSettings &, double)
+bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
 {
+   auto &mPortStates = GetEffect().mPortStates;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
+bool LV2Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
+   auto &mPortStates = GetEffect().mPortStates;
    mSlaves.clear();
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reset();
@@ -402,10 +401,12 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool LV2Effect::RealtimeAddProcessor(
+bool LV2Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto pInstance = LV2Wrapper::Create(*this,
+   auto &featuresList = GetEffect();
+   auto &mPortStates = GetEffect().mPortStates;
+   auto pInstance = LV2Wrapper::Create(featuresList,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!pInstance)
       return false;
@@ -414,7 +415,7 @@ bool LV2Effect::RealtimeAddProcessor(
    return true;
 }
 
-bool LV2Effect::RealtimeSuspend()
+bool LV2Instance::RealtimeSuspend()
 {
    mPositionSpeed = 0.0;
    mPositionFrame = 0;
@@ -423,7 +424,7 @@ bool LV2Effect::RealtimeSuspend()
    return true;
 }
 
-bool LV2Effect::RealtimeResume()
+bool LV2Instance::RealtimeResume()
 {
    mPositionSpeed = 1.0;
    mPositionFrame = 0;
@@ -432,17 +433,21 @@ bool LV2Effect::RealtimeResume()
    return true;
 }
 
-bool LV2Effect::RealtimeProcessStart(EffectSettings &)
+bool LV2Instance::RealtimeProcessStart(EffectSettings &)
 {
+   auto &mPortStates = GetEffect().mPortStates;
+   auto &mForge = GetEffect().mForge;
    mNumSamples = 0;
    for (auto & state : mPortStates.mAtomPortStates)
       state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
+size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
+   auto &mPortStates = GetEffect().mPortStates;
+
    if (group >= mSlaves.size())
       return 0;
    wxASSERT(numSamples <= (size_t) mBlockSize);
@@ -483,9 +488,10 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd(EffectSettings &) noexcept
+bool LV2Instance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
+   auto &mPortStates = GetEffect().mPortStates;
    // Nothing to do if we did process any samples
    if (mNumSamples == 0)
    {
