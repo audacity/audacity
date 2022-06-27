@@ -315,6 +315,19 @@ class LV2Instance final : public StatefulPerTrackEffect::Instance {
 public:
    using Instance::Instance;
    ~LV2Instance() override;
+
+private:
+   LV2Effect &GetEffect() const {
+      // Tolerate const_cast in this class while it sun-sets
+      return static_cast<LV2Effect &>(
+         const_cast<PerTrackEffect &>(mProcessor));
+   }
+   LV2EffectSettings &GetSettings(EffectSettings &settings) const {
+      return GetEffect().GetSettings(settings);
+   }
+   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const {
+      return GetEffect().GetSettings(settings);
+   }
 };
 
 #endif
