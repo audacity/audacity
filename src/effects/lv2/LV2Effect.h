@@ -169,7 +169,7 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(const EffectSettings &settings);
+   bool BuildFancy(LilvInstance &instance, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -313,8 +313,15 @@ private:
 
 class LV2Instance final : public StatefulPerTrackEffect::Instance {
 public:
-   using Instance::Instance;
+   LV2Instance(StatefulPerTrackEffect &effect, const LV2Ports &ports);
    ~LV2Instance() override;
+
+   LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
+
+   //! Do nothing if there is already an LV2Wrapper.  Else try to make one
+   //! but this may fail.  The wrapper object remains until this is destroyed.
+   void MakeWrapper(const EffectSettings &settings,
+      double projectRate, bool useOutput);
 
 private:
    LV2Effect &GetEffect() const {
@@ -328,6 +335,8 @@ private:
    const LV2EffectSettings &GetSettings(const EffectSettings &settings) const {
       return GetEffect().GetSettings(settings);
    }
+
+   const LV2Ports &mPorts;
 };
 
 #endif

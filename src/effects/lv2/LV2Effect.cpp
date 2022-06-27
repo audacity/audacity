@@ -65,11 +65,32 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
+LV2Instance::LV2Instance(
+   StatefulPerTrackEffect &effect, const LV2Ports &ports
+)  : StatefulPerTrackEffect::Instance{ effect }
+   , mPorts{ ports }
+{
+}
+
 LV2Instance::~LV2Instance()
 {
    // Some temporary ugliness until real statelessness
    const_cast<LV2Effect&>(static_cast<const LV2Effect&>(mProcessor))
       .mMaster.reset();
+}
+
+void LV2Instance::MakeWrapper(const EffectSettings &settings,
+   double projectRate, bool useOutput)
+{
+   auto &effect = GetEffect();
+   auto &pWrapper = effect.mMaster;
+   if (pWrapper)
+      // Already made so do nothing
+      return;
+   pWrapper = LV2Wrapper::Create(effect, mPorts,
+      // TODO give instances independent port states
+      effect.mPortStates,
+      GetSettings(settings), projectRate, useOutput);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -260,7 +281,7 @@ std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
    LV2Preferences::GetUseLatency(*this, mUseLatency);
    LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
-   return std::make_shared<LV2Instance>(*this);
+   return std::make_shared<LV2Instance>(*this, mPorts);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -548,7 +569,7 @@ bool LV2Effect::LoadSettings(
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
@@ -559,9 +580,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = LV2Wrapper::Create(*this,
-      mPorts, mPortStates, GetSettings(settings), mProjectRate, true);
-   if (!mMaster) {
+   auto &myInstance = dynamic_cast<LV2Instance &>(instance);
+   myInstance.MakeWrapper(settings, mProjectRate, true);
+   if (!myInstance.GetWrapper()) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
    }
@@ -575,7 +596,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    if (mUseGUI)
-      mUseGUI = BuildFancy(settings);
+      mUseGUI = BuildFancy(
+         myInstance.GetWrapper()->GetInstance(), settings);
 
    if (!mUseGUI) {
       if (!BuildPlain(access))
@@ -753,7 +775,8 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-bool LV2Effect::BuildFancy(const EffectSettings &settings)
+bool LV2Effect::BuildFancy(
+   LilvInstance &instance, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -830,11 +853,9 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
 #endif
    }
 
-   assert(mMaster); // PopulateUI() guarantees this
-   const auto instance = &mMaster->GetInstance();
-   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(instance);
+   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(&instance);
    mExtensionDataFeature =
-      { lilv_instance_get_descriptor(instance)->extension_data };
+      { lilv_instance_get_descriptor(&instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
