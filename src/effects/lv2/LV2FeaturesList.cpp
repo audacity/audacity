@@ -71,6 +71,7 @@ LV2FeaturesListBase::LV2FeaturesListBase(const LilvPlugin &plug) : mPlug{ plug }
 LV2FeaturesList::LV2FeaturesList(const LilvPlugin &plug)
    : LV2FeaturesListBase{ plug }
    , mSuppliesWorkerInterface{ SuppliesWorkerInterface(plug) }
+   , mOk{ InitializeOptions() && InitializeFeatures() }
 {
 }
 
@@ -134,7 +135,6 @@ bool LV2FeaturesList::InitializeFeatures()
    AddFeature(LV2_LOG__log, &mLogFeature);
    // Some plugins specify this as a feature
    AddFeature(LV2_EXTERNAL_UI__Widget, nullptr);
-
    return true;
 }
 

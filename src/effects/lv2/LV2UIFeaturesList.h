@@ -16,10 +16,12 @@
 
 #if USE_LV2
 
+#include "LV2FeaturesList.h"
 #include "lv2_external_ui.h"
 #include <suil/suil.h>
+#include "lv2/data-access/data-access.h"
 
-struct LV2UIFeaturesList final {
+struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    //! Abstraction of host services that a plug-ins native UI needs
    struct UIHandler {
       virtual ~UIHandler();
@@ -29,6 +31,17 @@ struct LV2UIFeaturesList final {
          uint32_t protocol, const void *buffer) = 0;
       virtual uint32_t suil_port_index(const char *port_symbol) = 0;
    };
+
+   LV2UIFeaturesList(
+      const LV2FeaturesListBase &baseFeatures, UIHandler &handler);
+
+   //! @return success
+   bool InitializeFeatures();
+
+   // publicize
+   using ExtendedLV2FeaturesList::mFeatures;
+
+   UIHandler &mHandler;
 
    /*! @name static functions that dispatch to a UIHandler
     @{
@@ -41,6 +54,23 @@ struct LV2UIFeaturesList final {
       uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
       const void *buffer);
    //! @}
+
+   // These objects contain C-style virtual function tables that we fill in
+   const LV2UI_Resize mUIResizeFeature{
+      &mHandler, LV2UIFeaturesList::ui_resize };
+   // Not const, filled in when making a dialog
+   LV2_Extension_Data_Feature mExtensionDataFeature{};
+
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
+   const LV2_External_UI_Host mExternalUIHost{
+      // The void* bound to the argument of ui_closed will be the same
+      // given to suil_instance_new
+      LV2UIFeaturesList::ui_closed, lilv_node_as_string(mHumanId.get()) };
+
+   //! Index into m_features
+   size_t mInstanceAccessFeature{};
+   //! Index into m_features
+   size_t mParentFeature{};
 };
 
 #endif

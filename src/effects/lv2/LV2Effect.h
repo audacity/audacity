@@ -23,9 +23,6 @@ class wxArrayString;
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
-#include "lv2/data-access/data-access.h"
-
-#include "LV2FeaturesList.h"
 #include "LV2UIFeaturesList.h"
 #include "LV2Ports.h"
 #include "../../ShuttleGui.h"
@@ -57,8 +54,7 @@ class NumericTextCtrl;
 class LV2EffectMeter;
 class LV2Wrapper;
 
-class LV2Effect final : public LV2FeaturesList
-   , public StatefulPerTrackEffect
+class LV2Effect final : public StatefulPerTrackEffect
    , LV2UIFeaturesList::UIHandler
 {
 public:
@@ -166,6 +162,10 @@ private:
    uint32_t suil_port_index(const char *port_symbol) override;
 
 private:
+   const LilvPlugin &mPlug;
+   const LV2FeaturesList mFeatures{ mPlug };
+   LV2UIFeaturesList mUIFeatures{ mFeatures, *this };
+
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
    LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
@@ -203,24 +203,8 @@ private:
 
    bool mUseGUI{};
 
-   // These objects contain C-style virtual function tables that we fill in
-   const LV2UI_Resize mUIResizeFeature{ this, LV2UIFeaturesList::ui_resize };
-   // Not const, filled in when making a dialog
-   LV2_Extension_Data_Feature mExtensionDataFeature{};
-
-   const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
-   const LV2_External_UI_Host mExternalUIHost{
-      // The void* bound to the argument of ui_closed will be the same
-      // given to suil_instance_new
-      LV2UIFeaturesList::ui_closed, lilv_node_as_string(mHumanId.get()) };
-
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
-
-   //! Index into m_features
-   size_t mInstanceAccessFeature{};
-   //! Index into m_features
-   size_t mParentFeature{};
 
    // UI
    struct PlainUIControl {

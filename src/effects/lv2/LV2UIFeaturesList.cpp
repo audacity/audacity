@@ -12,6 +12,31 @@
 **********************************************************************/
 
 #include "LV2UIFeaturesList.h"
+#include "lv2/instance-access/instance-access.h"
+
+LV2UIFeaturesList::LV2UIFeaturesList(
+   const LV2FeaturesListBase &baseFeatures, UIHandler &handler
+)  : ExtendedLV2FeaturesList{ baseFeatures }
+   , mHandler{ handler }
+{
+}
+
+bool LV2UIFeaturesList::InitializeFeatures()
+{
+   // To be set up later when making a dialog:
+   mExtensionDataFeature = {};
+
+   AddFeature(LV2_UI__resize, &mUIResizeFeature);
+   AddFeature(LV2_DATA_ACCESS_URI, &mExtensionDataFeature);
+   AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
+   AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
+   // Two features must be filled in later
+   mInstanceAccessFeature = mFeatures.size();
+   AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
+   mParentFeature = mFeatures.size();
+   AddFeature(LV2_UI__parent, nullptr);
+   return ValidateFeatures(lilv_plugin_get_uri(&mPlug));
+}
 
 int LV2UIFeaturesList::ui_resize(LV2UI_Feature_Handle handle,
    int width, int height)

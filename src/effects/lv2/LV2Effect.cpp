@@ -55,8 +55,6 @@
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "lv2/instance-access/instance-access.h"
-
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>
 #endif
@@ -76,7 +74,7 @@ LV2Instance::LV2Instance(
    LV2Preferences::GetBufferSize(effect, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
    mBlockSize = mUserBlockSize;
-   lv2_atom_forge_init(&mForge, GetEffect().URIDMapFeature());
+   lv2_atom_forge_init(&mForge, GetEffect().mFeatures.URIDMapFeature());
 }
 
 LV2Instance::~LV2Instance()
@@ -94,7 +92,7 @@ void LV2Instance::MakeWrapper(const EffectSettings &settings,
    if (pWrapper)
       // Already made so do nothing
       return;
-   pWrapper = LV2Wrapper::Create(effect, mPorts,
+   pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts,
       // TODO give instances independent port states
       effect.mPortStates,
       GetSettings(settings), projectRate, useOutput);
@@ -128,7 +126,7 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin &plug) : LV2FeaturesList{ plug }
+LV2Effect::LV2Effect(const LilvPlugin &plug) : mPlug{ plug }
 {
 }
 
@@ -147,7 +145,7 @@ PluginPath LV2Effect::GetPath() const
 
 ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
-   return GetPluginSymbol(mPlug);
+   return LV2FeaturesList::GetPluginSymbol(mPlug);
 }
 
 VendorSymbol LV2Effect::GetVendor() const
@@ -227,24 +225,10 @@ bool LV2Effect::SupportsAutomation() const
 
 bool LV2Effect::InitializePlugin()
 {
-   // To be set up later when making a dialog:
-   mExtensionDataFeature = {};
-
-   if (!LV2FeaturesList::InitializeOptions() ||
-      !LV2FeaturesList::InitializeFeatures()
-   )
+   if (!mFeatures.mOk)
       return false;
 
-   AddFeature(LV2_UI__resize, &mUIResizeFeature);
-   AddFeature(LV2_DATA_ACCESS_URI, &mExtensionDataFeature);
-   AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
-   AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
-   // Two features must be filled in later
-   mInstanceAccessFeature = mFeatures.size();
-   AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
-   mParentFeature = mFeatures.size();
-   AddFeature(LV2_UI__parent, nullptr);
-   if (!ValidateFeatures(lilv_plugin_get_uri(&mPlug)))
+   if (!mUIFeatures.InitializeFeatures())
       return false;
 
    // Determine available extensions
@@ -308,7 +292,7 @@ int LV2Effect::GetMidiOutCount() const
 size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 {
    auto pWrapper = GetWrapper();
-   const auto &featuresList = GetEffect();
+   const auto &featuresList = GetEffect().mFeatures;
    mBlockSize = std::max(featuresList.mMinBlockSize,
       std::min({maxBlockSize, mUserBlockSize, featuresList.mMaxBlockSize}));
    if (pWrapper)
@@ -404,7 +388,7 @@ return GuardedCall<bool>([&]{
 bool LV2Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto &featuresList = GetEffect();
+   auto &featuresList = GetEffect().mFeatures;
    auto &mPortStates = GetEffect().mPortStates;
    auto pInstance = LV2Wrapper::Create(featuresList,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);
@@ -518,7 +502,7 @@ int LV2Effect::ShowClientInterface(
    mDialog->Layout();
    mDialog->Fit();
    mDialog->SetMinSize(mDialog->GetSize());
-   if (mNoResize)
+   if (mUIFeatures.mNoResize)
    {
       mDialog->SetMaxSize(mDialog->GetSize());
    }
@@ -659,7 +643,7 @@ bool LV2Effect::CloseUI()
    mDialog = nullptr;
 
    // Restore initial state
-   mExtensionDataFeature = {};
+   mUIFeatures.mExtensionDataFeature = {};
    mPlainUIControls.clear();
    return true;
 }
@@ -718,7 +702,8 @@ bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
    if (LilvStatePtr state{
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
+      lilv_state_new_from_world(gWorld,
+         mFeatures.URIDMapFeature(), preset.get())
    }){
       auto &mySettings = GetSettings(settings);
       mPorts.EmitPortValues(*state, mySettings);
@@ -845,7 +830,7 @@ bool LV2Effect::BuildFancy(
 
    const LilvNode *uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
-   if (!ValidateFeatures(uinode))
+   if (!mUIFeatures.ValidateFeatures(uinode))
       return false;
 
    const char *containerType;
@@ -857,7 +842,8 @@ bool LV2Effect::BuildFancy(
    else
    {
       containerType = nativeType;
-      mFeatures[mParentFeature].data = mParent->GetHandle();
+      mUIFeatures.mFeatures[mUIFeatures.mParentFeature].data =
+         mParent->GetHandle();
 
 #if defined(__WXGTK__)
       // Make sure the parent has a window
@@ -868,8 +854,9 @@ bool LV2Effect::BuildFancy(
 #endif
    }
 
-   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(&instance);
-   mExtensionDataFeature =
+   mUIFeatures.mFeatures[mUIFeatures.mInstanceAccessFeature].data =
+      lilv_instance_get_handle(&instance);
+   mUIFeatures.mExtensionDataFeature =
       { lilv_instance_get_descriptor(&instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
@@ -902,7 +889,7 @@ bool LV2Effect::BuildFancy(
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   mSampleRate = mProjectRate;
+   mFeatures.mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:
@@ -910,7 +897,8 @@ bool LV2Effect::BuildFancy(
       containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
-      bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
+      bundlePath.get(), binaryPath.get(),
+      mUIFeatures.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
    if (!mSuilInstance)
@@ -970,7 +958,7 @@ bool LV2Effect::BuildFancy(
          auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
          if (hs)
          {
-            if (mNoResize)
+            if (mUIFeatures.mNoResize)
             {
                si = hs->Add(mNativeWin, 0, wxCENTER);
                vs->Add(hs.release(), 1, wxCENTER);
@@ -1500,7 +1488,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       if (mResized)
       {
          mDialog->SetMinSize(mDialog->GetSize());
-         if (mNoResize)
+         if (mUIFeatures.mNoResize)
          {
             mDialog->SetMaxSize(mDialog->GetSize());
          }

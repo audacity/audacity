@@ -114,12 +114,12 @@ public:
    //! May be needed before exposing features and options to the plugin
    void SetSampleRate(float sampleRate) const { mSampleRate = sampleRate; }
 
-protected:
    // lv2 functions require a pointer to non-const in places, but presumably
    // have no need to mutate the members of this structure
    LV2_URID_Map *URIDMapFeature() const
    { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
 
+protected:
    static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
       const char *map, const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
@@ -150,15 +150,18 @@ protected:
 
    std::vector<LV2_Feature> mFeatures;
 
-   mutable float mSampleRate{ 44100 };
    size_t mBlockSize{ LV2Preferences::DEFAULT_BLOCKSIZE };
    int mSeqSize{ DEFAULT_SEQSIZE };
 
-   size_t mMinBlockSize{ 1 };
-   size_t mMaxBlockSize{ mBlockSize };
-
    const bool mSuppliesWorkerInterface;
    bool mSupportsNominalBlockLength{ false };
+
+public:
+   size_t mMinBlockSize{ 1 };
+   size_t mMaxBlockSize{ mBlockSize };
+   mutable float mSampleRate{ 44100 };
+
+   const bool mOk;
 };
 
 #endif
