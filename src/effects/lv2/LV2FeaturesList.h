@@ -28,11 +28,40 @@
 
 using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 
-class LV2FeaturesList {
+//! Abstraction of a list of features, with a check for satisfaction of
+//! requirements of a given lv2 "subject"
+class LV2FeaturesListBase {
+public:
+   explicit LV2FeaturesListBase(const LilvPlugin &plug);
+   virtual ~LV2FeaturesListBase();
+
+   //! Get vector of pointers to features, whose `.data()` can be passed to lv2
+   using FeaturePointers = std::vector<const LV2_Feature *>;
+   virtual FeaturePointers GetFeaturePointers() const = 0;
+
+   /*!
+    @param subject URI of the host or of the UI identifies a resource in lv2
+    @return whether all required features of subject are supported
+    */
+   bool ValidateFeatures(const LilvNode *subject);
+
+   /*!
+    @param subject URI of the host or of the UI identifies a resource in lv2
+    @param required whether to check required or optional features of subject
+    @return true only if `!required` or else all required features are supported
+    */
+   bool CheckFeatures(const LilvNode *subject, bool required);
+
+   const LilvPlugin &mPlug;
+   bool mNoResize{ false };
+};
+
+class LV2FeaturesList : public LV2FeaturesListBase {
 public:
    static ComponentInterfaceSymbol GetPluginSymbol(const LilvPlugin &plug);
 
    explicit LV2FeaturesList(const LilvPlugin &plug);
+   ~LV2FeaturesList() override;
 
    //! @return success
    bool InitializeOptions();
@@ -41,9 +70,7 @@ public:
    //! @return success
    bool InitializeFeatures();
 
-   //! Get vector of pointers to features, whose `.data()` can be passed to lv2
-   using FeaturePointers = std::vector<const LV2_Feature *>;
-   FeaturePointers GetFeaturePointers() const;
+   FeaturePointers GetFeaturePointers() const override;
 
    //! @return whether our host should reciprocally supply the
    //! LV2_Worker_Schedule interface to the plug-in
@@ -72,23 +99,8 @@ public:
 
    void AddFeature(const char *uri, const void *data);
 
-   /*!
-    @param subject URI of the host or of the UI identifies a resource in lv2
-    @return whether all required features of subject are supported
-    */
-   bool ValidateFeatures(const LilvNode *subject);
-
-   /*!
-    @param subject URI of the host or of the UI identifies a resource in lv2
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all required features are supported
-    */
-   bool CheckFeatures(const LilvNode *subject, bool required);
-
    //! May be needed before exposing features and options to the plugin
    void SetSampleRate(float sampleRate) const { mSampleRate = sampleRate; }
-
-   const LilvPlugin &mPlug;
 
 protected:
    // lv2 functions require a pointer to non-const in places, but presumably
@@ -134,8 +146,6 @@ protected:
 
    const bool mSuppliesWorkerInterface;
    bool mSupportsNominalBlockLength{ false };
-
-   bool mNoResize{ false };
 };
 
 #endif

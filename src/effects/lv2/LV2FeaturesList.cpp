@@ -30,13 +30,21 @@
 #include "lv2_external_ui.h"
 #include "lv2/worker/worker.h"
 
+LV2FeaturesListBase::~LV2FeaturesListBase() = default;
+LV2FeaturesList::~LV2FeaturesList() = default;
+
 ComponentInterfaceSymbol
 LV2FeaturesList::GetPluginSymbol(const LilvPlugin &plug)
 {
    return LilvStringMove(lilv_plugin_get_name(&plug));
 }
 
-LV2FeaturesList::LV2FeaturesList(const LilvPlugin &plug) : mPlug{ plug }
+LV2FeaturesListBase::LV2FeaturesListBase(const LilvPlugin &plug) : mPlug{ plug }
+{
+}
+
+LV2FeaturesList::LV2FeaturesList(const LilvPlugin &plug)
+   : LV2FeaturesListBase{ plug }
    , mSuppliesWorkerInterface{ SuppliesWorkerInterface(plug) }
 {
 }
@@ -156,12 +164,12 @@ const LV2_Options_Option *LV2FeaturesList::NominalBlockLengthOption() const
       return nullptr;
 }
 
-bool LV2FeaturesList::ValidateFeatures(const LilvNode *subject)
+bool LV2FeaturesListBase::ValidateFeatures(const LilvNode *subject)
 {
    return CheckFeatures(subject, true) && CheckFeatures(subject, false);
 }
 
-bool LV2FeaturesList::CheckFeatures(const LilvNode *subject, bool required)
+bool LV2FeaturesListBase::CheckFeatures(const LilvNode *subject, bool required)
 {
    using namespace LV2Symbols;
    bool supported = true;
@@ -179,9 +187,11 @@ bool LV2FeaturesList::CheckFeatures(const LilvNode *subject, bool required)
             /* Supported but handled in LV2Wrapper */
          }
          else if (required) {
-            const auto end = mFeatures.end();
-            supported = (end != std::find_if(mFeatures.begin(), end,
-               [&](auto &feature){ return strcmp(feature.URI, uri) == 0; }));
+            auto features = GetFeaturePointers();
+            const auto end = features.end();
+            supported = (end != std::find_if(features.begin(), end,
+               [&](auto &pFeature){ return pFeature &&
+                  strcmp(pFeature->URI, uri) == 0; }));
             if (!supported) {
                wxLogError(wxT("%s requires unsupported feature %s"),
                   lilv_node_as_string(lilv_plugin_get_uri(&mPlug)), uri);
