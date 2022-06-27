@@ -188,7 +188,7 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
             );
 
             S.Id(ID_HYBRID_MODE).TieCheckBox( XXO("Hybrid Mode"), HybridModeSetting);
-            mCreateCorrectionFile = S.Disable(!hybridMode).TieCheckBox( XXO("Create Correction(.wvc) File"), CreateCorrectionFileSetting);
+            mCreateCorrectionFile = S.Disable(!hybridMode).TieCheckBox( XXO("Create Correction (.wvc) File"), CreateCorrectionFileSetting);
 
             mBitRate = S.Disable(!hybridMode).TieNumberAsChoice(
                XXO("Bit Rate:"),
