@@ -147,7 +147,7 @@ PluginPath LV2Effect::GetPath() const
 
 ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
-   return LilvStringMove(lilv_plugin_get_name(&mPlug));
+   return GetPluginSymbol(mPlug);
 }
 
 VendorSymbol LV2Effect::GetVendor() const

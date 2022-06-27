@@ -31,6 +31,7 @@ class wxArrayString;
 #include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
+#include "../StatefulPerTrackEffect.h"
 
 #include "NativeWindow.h"
 
@@ -58,6 +59,7 @@ class LV2EffectMeter;
 class LV2Wrapper;
 
 class LV2Effect final : public LV2FeaturesList
+   , public StatefulPerTrackEffect
 {
 public:
    LV2Effect(const LilvPlugin &plug);

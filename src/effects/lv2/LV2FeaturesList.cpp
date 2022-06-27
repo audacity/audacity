@@ -30,6 +30,12 @@
 #include "lv2_external_ui.h"
 #include "lv2/worker/worker.h"
 
+ComponentInterfaceSymbol
+LV2FeaturesList::GetPluginSymbol(const LilvPlugin &plug)
+{
+   return LilvStringMove(lilv_plugin_get_name(&plug));
+}
+
 LV2FeaturesList::LV2FeaturesList(const LilvPlugin &plug) : mPlug{ plug }
    , mSuppliesWorkerInterface{ SuppliesWorkerInterface(plug) }
 {
@@ -161,7 +167,8 @@ bool LV2FeaturesList::CheckFeatures(const LilvNode *subject, bool required)
    bool supported = true;
    auto predicate = required ? node_RequiredFeature : node_OptionalFeature;
    if (LilvNodesPtr nodes{
-      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }) {
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }
+   ){
       LILV_FOREACH(nodes, i, nodes.get()) {
          const auto node = lilv_nodes_get(nodes.get(), i);
          const auto uri = lilv_node_as_string(node);
@@ -198,7 +205,8 @@ bool LV2FeaturesList::CheckOptions(const LilvNode *subject, bool required)
    const auto predicate =
       required ? node_RequiredOption : node_SupportedOption;
    if (LilvNodesPtr nodes{
-      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }) {
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }
+   ){
       LILV_FOREACH(nodes, i, nodes.get()) {
          const auto node = lilv_nodes_get(nodes.get(), i);
          const auto uri = lilv_node_as_string(node);
@@ -314,7 +322,7 @@ int LV2FeaturesList::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
    wxCRT_VsnprintfA(msg.get(), len, fmt, ap);
    wxString text(msg.get());
    wxLogGeneric(level,
-      wxT("%s: %s"), GetSymbol().Msgid().Translation(), text);
+      wxT("%s: %s"), GetPluginSymbol(mPlug).Msgid().Translation(), text);
    return len;
 }
 

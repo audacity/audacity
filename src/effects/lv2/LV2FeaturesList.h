@@ -20,7 +20,6 @@
 #include "lv2/options/options.h"
 #include "lv2/uri-map/uri-map.h"
 
-#include "../StatefulPerTrackEffect.h"
 #include "LV2Symbols.h"
 #include "LV2Preferences.h" // for DEFAULT_BLOCKSIZE
 
@@ -29,8 +28,10 @@
 
 using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 
-class LV2FeaturesList : public StatefulPerTrackEffect {
+class LV2FeaturesList {
 public:
+   static ComponentInterfaceSymbol GetPluginSymbol(const LilvPlugin &plug);
+
    explicit LV2FeaturesList(const LilvPlugin &plug);
 
    //! @return success
@@ -58,14 +59,14 @@ public:
 
    /*!
     @param subject URI of a plugin
-    @return whether all required features of subject are supported
+    @return whether all required options of subject are supported
     */
    bool ValidateOptions(const LilvNode *subject);
 
    /*!
     @param subject URI of a plugin
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
+    @param required whether to check required or optional options of subject
+    @return true only if `!required` or else all required options are supported
     */
    bool CheckOptions(const LilvNode *subject, bool required);
 
@@ -80,7 +81,7 @@ public:
    /*!
     @param subject URI of the host or of the UI identifies a resource in lv2
     @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
+    @return true only if `!required` or else all required features are supported
     */
    bool CheckFeatures(const LilvNode *subject, bool required);
 
