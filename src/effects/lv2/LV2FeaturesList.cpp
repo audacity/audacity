@@ -31,6 +31,33 @@
 #include "lv2/worker/worker.h"
 
 LV2FeaturesListBase::~LV2FeaturesListBase() = default;
+
+ExtendedLV2FeaturesList::~ExtendedLV2FeaturesList() = default;
+ExtendedLV2FeaturesList::ExtendedLV2FeaturesList(
+   const LV2FeaturesListBase &baseFeatures
+) : LV2FeaturesListBase{ baseFeatures.mPlug }
+  , mBaseFeatures{ baseFeatures }
+{
+}
+
+auto ExtendedLV2FeaturesList::GetFeaturePointers() const -> FeaturePointers
+{
+   FeaturePointers result{ mBaseFeatures.GetFeaturePointers() };
+   result.pop_back();
+   for (auto &feature : mFeatures)
+      result.push_back(&feature);
+   result.push_back(nullptr);
+   return result;
+}
+
+void ExtendedLV2FeaturesList::AddFeature(const char *uri, const void *data)
+{
+   // This casting to const is innocent
+   // We pass our "virtual function tables" or array of options, which the
+   // library presumably will not change
+   mFeatures.emplace_back(LV2_Feature{ uri, const_cast<void*>(data) });
+}
+
 LV2FeaturesList::~LV2FeaturesList() = default;
 
 ComponentInterfaceSymbol

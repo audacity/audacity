@@ -56,6 +56,18 @@ public:
    bool mNoResize{ false };
 };
 
+//! Extends one (immutable) feature list (whose lifetime contains this one's)
+class ExtendedLV2FeaturesList : public LV2FeaturesListBase {
+public:
+   explicit ExtendedLV2FeaturesList(const LV2FeaturesListBase &baseFeatures);
+   virtual ~ExtendedLV2FeaturesList();
+   FeaturePointers GetFeaturePointers() const override;
+   void AddFeature(const char *uri, const void *data);
+   const LV2FeaturesListBase &mBaseFeatures;
+protected:
+   std::vector<LV2_Feature> mFeatures;
+};
+
 class LV2FeaturesList : public LV2FeaturesListBase {
 public:
    static ComponentInterfaceSymbol GetPluginSymbol(const LilvPlugin &plug);
