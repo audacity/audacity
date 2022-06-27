@@ -67,9 +67,11 @@
 
 LV2Instance::LV2Instance(
    StatefulPerTrackEffect &effect, const LV2Ports &ports
-)  : StatefulPerTrackEffect::Instance{ effect }
+)  : StatefulEffectBase::Instance{ effect }
+   , PerTrackEffect::Instance{ effect }
    , mPorts{ ports }
 {
+   LV2Preferences::GetUseLatency(effect, mUseLatency);
 }
 
 LV2Instance::~LV2Instance()
@@ -278,7 +280,6 @@ std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
    mUserBlockSize = std::max(1, userBlockSize);
    mBlockSize = mUserBlockSize;
 
-   LV2Preferences::GetUseLatency(*this, mUseLatency);
    LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
    return std::make_shared<LV2Instance>(*this, mPorts);
@@ -320,39 +321,48 @@ size_t LV2Effect::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount LV2Effect::GetLatency()
+sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
 {
-   if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
+   auto pWrapper = GetWrapper();
+   if (pWrapper && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
-      return sampleCount(mMaster->GetLatency());
+      return sampleCount(pWrapper->GetLatency());
    }
    return 0;
 }
 
 // Start of destructive processing path
-bool LV2Effect::ProcessInitialize(EffectSettings &settings,
+bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   if (!mMaster)
-      mMaster = LV2Wrapper::Create(*this,
-         mPorts, mPortStates, GetSettings(settings), sampleRate, false);
-   if (!mMaster)
+   auto &mPortStates = GetEffect().mPortStates;
+   auto &mBlockSize = GetEffect().mBlockSize;
+   if (!GetWrapper())
+      MakeWrapper(settings, sampleRate, false);
+   const auto pWrapper = GetWrapper();
+   if (!pWrapper)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
-   mMaster->Activate();
+   pWrapper->Activate();
    mLatencyDone = false;
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(EffectSettings &,
+size_t LV2Instance::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    using namespace LV2Symbols;
-   wxASSERT(size <= ( size_t) mBlockSize);
+   auto &mBlockSize = GetEffect().mBlockSize;
+   auto pWrapper = GetWrapper();
+   auto &mPortStates = GetEffect().mPortStates;
+   auto &mForge = GetEffect().mForge;
+   auto &mPositionFrame = GetEffect().mPositionFrame;
+   auto &mPositionSpeed = GetEffect().mPositionSpeed;
 
-   assert(mMaster); // else ProcessInitialize() returned false, I'm not called
-   const auto instance = &mMaster->GetInstance();
+   assert(size <= mBlockSize);
+   assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
+   const auto instance = &pWrapper->GetInstance();
 
    int i = 0;
    int o = 0;
@@ -367,7 +377,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    lilv_instance_run(instance, size);
 
    // Main thread consumes responses
-   mMaster->ConsumeResponses();
+   pWrapper->ConsumeResponses();
 
    for (auto & state : mPortStates.mAtomPortStates)
       state->ResetForInstanceOutput();

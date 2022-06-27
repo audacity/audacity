@@ -102,14 +102,6 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   sampleCount GetLatency() override;
-
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
    bool RealtimeAddProcessor(EffectSettings &settings,
@@ -223,8 +215,6 @@ private:
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
 
-   bool mUseLatency{ false };
-   bool mLatencyDone{ false };
    bool mRolling{ false };
 
    //! Holds lv2 library state for UI or for destructive processing
@@ -311,10 +301,19 @@ private:
    friend class LV2Instance; // Remove this later
 };
 
-class LV2Instance final : public StatefulPerTrackEffect::Instance {
+class LV2Instance final : public StatefulEffectBase::Instance
+   , public PerTrackEffect::Instance
+{
 public:
    LV2Instance(StatefulPerTrackEffect &effect, const LV2Ports &ports);
    ~LV2Instance() override;
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
+      sampleCount totalLen, ChannelNames chanMap) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+   override;
+   sampleCount GetLatency(
+      const EffectSettings &settings, double sampleRate) override;
 
    LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
 
@@ -337,6 +336,9 @@ private:
    }
 
    const LV2Ports &mPorts;
+
+   bool mUseLatency{ false };
+   bool mLatencyDone{ false };
 };
 
 #endif
