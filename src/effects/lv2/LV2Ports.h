@@ -17,6 +17,7 @@
 
 #if USE_LV2
 
+#include <functional>
 #include <optional>
 #include <unordered_map>
 
@@ -24,6 +25,7 @@
 #include "MemoryX.h"
 #include "TranslatableString.h"
 #include <wx/arrstr.h>
+#include "lv2/atom/forge.h"
 #include "zix/ring.h"
 
 using Floats = ArrayOf<float>;
@@ -78,14 +80,44 @@ struct LV2AtomPortState final {
    explicit LV2AtomPortState(LV2AtomPortPtr pPort)
       : mpPort{ move(pPort) }
       , mRing{ zix_ring_new(mpPort->mMinimumSize) }
-      , mBuffer( mpPort->mMinimumSize )
+      , mBuffer{ safenew uint8_t[mpPort->mMinimumSize] }
    {
       assert(mpPort);
+      /*
+       There is no complementary munlock anywhere in the library!
+       Are we mis-using a class meant for plugin implementation?
+       Do we make a resource leak of physical memory pages?
+       Should we just skip this call?
+       Or is mlock a good idea we should implement in our own RingBuffer,
+       which we can also munlock in its destructor?
+       */
       zix_ring_mlock(mRing.get());
    }
+
+   //! Transfer incoming events from the ring buffer to the event buffer.
+   /*!
+    These will be made available to each slave in the chain.
+    In addition, reset the output Atom ports.
+   */
+   void SendToInstance(LV2_Atom_Forge &forge, int64_t frameTime, float speed);
+   void ResetForInstanceOutput();
+
+   //! Take responses from the instance and send cross-thread for the dialog
+   void ReceiveFromInstance();
+
+   //! Dialog can poll one ring buffer for messages at idle time
+   /*!
+    Given function may be called multiple times
+    */
+   void SendToDialog(
+      std::function<void(const LV2_Atom *atom, uint32_t size)> handler);
+
+   //! Dialog pushes to other ring buffer when it gets a user interface event
+   void ReceiveFromDialog(const void *buffer, uint32_t buffer_size);
+
    const LV2AtomPortPtr mpPort;
    const Lilv_ptr<ZixRing, zix_ring_free> mRing;
-   std::vector<uint8_t> mBuffer;
+   const std::unique_ptr<uint8_t[]> mBuffer;
 };
 using LV2AtomPortStatePtr = std::shared_ptr<LV2AtomPortState>;
 using LV2AtomPortStateArray = std::vector<LV2AtomPortStatePtr>;
@@ -200,6 +232,15 @@ class LV2Ports {
 public:
    //! @post every member of `mGroups` occurs as a key in `mGroupMap`
    explicit LV2Ports(const LilvPlugin &plug);
+
+   void EmitPortValues(
+      const LilvState &state, LV2EffectSettings &settings) const;
+
+   const void *GetPortValue(const LV2EffectSettings &settings,
+      const char *port_symbol, uint32_t *size, uint32_t *type) const;
+
+   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
+      const void *value, uint32_t size, uint32_t type) const;
 
    LV2AudioPortArray mAudioPorts;
    unsigned mAudioIn{ 0 };

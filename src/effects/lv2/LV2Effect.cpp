@@ -334,68 +334,16 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
 
-   // Transfer incoming events from the ring buffer to the event buffer for each
-   // atom input port.  These will be made available to each slave in the chain and
-   // to the master once all slaves have run.
-   //
-   // In addition, reset the output Atom ports.
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      const auto buf = state->mBuffer.data();
-      if (port->mIsInput) {
-         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
-         LV2_Atom_Forge_Frame seqFrame;
-         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
-         if (port->mWantsPosition) {
-            lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-            LV2_Atom_Forge_Frame posFrame;
-            lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
-            lv2_atom_forge_key(&mForge, urid_Speed);
-            lv2_atom_forge_float(&mForge, mPositionSpeed);
-            lv2_atom_forge_key(&mForge, urid_Frame);
-            lv2_atom_forge_long(&mForge, mPositionFrame);
-            lv2_atom_forge_pop(&mForge, &posFrame);
-         }
-         const auto ring = state->mRing.get();
-         LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom))) {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
-               < mForge.size
-            ){
-               lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-               lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
-               zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
-               mForge.offset += atom.size;
-               seq->atom.size += atom.size;
-            }
-            else {
-               zix_ring_skip(ring, atom.size);
-               wxLogError(wxT("LV2 sequence buffer overflow"));
-            }
-         }
-         lv2_atom_forge_pop(&mForge, &seqFrame);
-      }
-      else {
-         state->mBuffer.resize(port->mMinimumSize);
-         *reinterpret_cast<LV2_Atom*>(buf) = { port->mMinimumSize, urid_Chunk };
-      }
-   }
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
 
    lilv_instance_run(instance, size);
 
    // Main thread consumes responses
    mProcess->ConsumeResponses();
 
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      if (!port->mIsInput) {
-         state->mBuffer.resize(port->mMinimumSize);
-         auto chunk = reinterpret_cast<LV2_Atom *>(state->mBuffer.data());
-         chunk->size = port->mMinimumSize;
-         chunk->type = urid_Chunk;
-      }
-   }
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->ResetForInstanceOutput();
 
    return size;
 }
@@ -432,7 +380,7 @@ bool LV2Effect::RealtimeAddProcessor(
 bool LV2Effect::RealtimeSuspend()
 {
    mPositionSpeed = 0.0;
-   mPositionFrame = 0.0;
+   mPositionFrame = 0;
    mRolling = false;
 
    return true;
@@ -441,7 +389,7 @@ bool LV2Effect::RealtimeSuspend()
 bool LV2Effect::RealtimeResume()
 {
    mPositionSpeed = 1.0;
-   mPositionFrame = 0.0;
+   mPositionFrame = 0;
    mRolling = true;
 
    return true;
@@ -449,64 +397,9 @@ bool LV2Effect::RealtimeResume()
 
 bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
-   using namespace LV2Symbols;
    mNumSamples = 0;
-
-   // Transfer incoming events from the ring buffer to the event buffer for each
-   // atom input port.  These will be made available to each slave in the chain and
-   // to the master once all slaves have run.
-   //
-   // In addition, reset the output Atom ports.
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      const auto buf = state->mBuffer.data();
-      if (port->mIsInput) {
-         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
-         LV2_Atom_Forge_Frame seqFrame;
-         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
-         if (port->mWantsPosition) {
-            lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-            LV2_Atom_Forge_Frame posFrame;
-            lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
-            lv2_atom_forge_key(&mForge, urid_Speed);
-            lv2_atom_forge_float(&mForge, mPositionSpeed);
-            lv2_atom_forge_key(&mForge, urid_Frame);
-            lv2_atom_forge_long(&mForge, mPositionFrame);
-            lv2_atom_forge_pop(&mForge, &posFrame);
-         }
-         const auto ring = state->mRing.get();
-         LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom))) {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
-               < mForge.size
-            ){
-               lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-               lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
-               zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
-               mForge.offset += atom.size;
-               seq->atom.size += atom.size;
-            }
-            else {
-               zix_ring_skip(ring, atom.size);
-               wxLogError(wxT("LV2 sequence buffer overflow"));
-            }
-         }
-         lv2_atom_forge_pop(&mForge, &seqFrame);
-#if 0
-         LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
-            auto o = reinterpret_cast<LV2_Atom_Object *>(&ev->body);
-            wxLogDebug(wxT("ev = %lld ev.size %d ev.type %d"), ev->time.frames, ev->body.size, ev->body.type);
-         }
-#endif
-      }
-      else {
-         state->mBuffer.resize(port->mMinimumSize);
-         *reinterpret_cast<LV2_Atom *>(buf) =
-            { port->mMinimumSize, urid_Chunk };
-      }
-   }
-
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
    return true;
 }
 
@@ -532,7 +425,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
 
-   mNumSamples = wxMax(numSamples, mNumSamples);
+   mNumSamples = std::max(numSamples, mNumSamples);
 
    if (mRolling)
       lilv_instance_run(instance, numSamples);
@@ -544,16 +437,8 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
 
-   for (auto & state : mPortStates.mAtomPortStates) {
-      auto &port = state->mpPort;
-      auto buf = state->mBuffer.data();
-      if (!port->mIsInput) {
-         state->mBuffer.resize(port->mMinimumSize);
-         auto chunk = reinterpret_cast<LV2_Atom *>(buf);
-         chunk->size = port->mMinimumSize;
-         chunk->type = LV2Symbols::urid_Chunk;
-      }
-   }
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->ResetForInstanceOutput();
 
    if (group == 0)
       mPositionFrame += numSamples;
@@ -570,15 +455,10 @@ return GuardedCall<bool>([&]{
       return true;
    }
 
-   for (auto & state : mPortStates.mAtomPortStates) {
-      if (!state->mpPort->mIsInput) {
-         const auto ring = state->mRing.get();
-         LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
-         )
-            zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
-      }
-   }
+   // Why is this not also done on the destructive processing path?
+   // Because it is soon dimissing the modal dialog anyway.
+   for (auto & state : mPortStates.mAtomPortStates)
+      state->ReceiveFromInstance();
 
    mNumSamples = 0;
 
@@ -782,17 +662,6 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-namespace {
-struct SetValueData { const LV2Effect &effect; LV2EffectSettings &settings; };
-void set_value_func(
-   const char *port_symbol, void *user_data,
-   const void *value, uint32_t size, uint32_t type)
-{
-   auto &[effect, settings] = *static_cast<SetValueData*>(user_data);
-   effect.SetPortValue(settings, port_symbol, value, size, type);
-}
-}
-
 bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
@@ -808,9 +677,7 @@ bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
       lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
    }){
       auto &mySettings = GetSettings(settings);
-      SetValueData data{ *this, mySettings };
-      // Get the control port values from the state into settings
-      lilv_state_emit_port_values(state.get(), set_value_func, &data);
+      mPorts.EmitPortValues(*state, mySettings);
       // Save the state, for whatever might not be contained in port values
       mySettings.mpState = move(state);
       return true;
@@ -992,7 +859,11 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
    mSampleRate = mProjectRate;
-   mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
+   mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
+      // The void* that the instance passes back to our write and index
+      // callback functions, which were given to suil_host_new:
+      this,
+      containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
@@ -1377,7 +1248,9 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
                suil_instance_port_event(mSuilInstance.get(),
-                  port->mIndex, sizeof(float), 0, &values[index]);
+                  port->mIndex, sizeof(float),
+                  /* Means this event sends a float: */ 0,
+                  &values[index]);
             ++index;
          }
       }
@@ -1510,26 +1383,17 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    }
 
    if (auto &atomState = mPortUIStates.mControlOut) {
-      const auto ring = atomState->mRing.get();
-      const auto minimumSize = atomState->mpPort->mMinimumSize;
-      const auto space = std::make_unique<char[]>(minimumSize);
-      auto atom = reinterpret_cast<LV2_Atom*>(space.get());
-      while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
-         uint32_t size = lv2_atom_total_size(atom);
-         if (size < minimumSize) {
-            zix_ring_read(ring,
-               LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
-            suil_instance_port_event(mSuilInstance.get(),
-               atomState->mpPort->mIndex, size,
-               LV2Symbols::urid_EventTransfer, atom);
-         }
-         else {
-            zix_ring_skip(ring, atom->size);
-            wxLogError(wxT("LV2 sequence buffer overflow"));
-         }
-      }
+      atomState->SendToDialog([&](const LV2_Atom *atom, uint32_t size){
+         suil_instance_port_event(mSuilInstance.get(),
+            atomState->mpPort->mIndex, size,
+            // Means this event sends some structured data:
+            LV2Symbols::urid_EventTransfer, atom);
+      });
    }
 
+   // Is this idle time polling for changes of input redundant with
+   // TransferDataToWindow or is it really needed?  Probably harmless.
+   // In case of output control port values though, it is needed for metering.
    size_t index = 0;
    for (auto &state : mPortUIStates.mControlPortStates) {
       auto &port = state.mpPort;
@@ -1537,7 +1401,9 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       // Let UI know that a port's value has changed
       if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
-            port->mIndex, sizeof(value), 0, &value);
+            port->mIndex, sizeof(value),
+            /* Means this event sends a float: */ 0,
+            &value);
          state.mLst = value;
       }
       ++index;
@@ -1644,6 +1510,7 @@ void LV2Effect::UIClosed()
 }
 
 // static callback
+// Foreign UI code wants to send a value or event to me, the host
 void LV2Effect::suil_port_write_func(SuilController controller,
    uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
    const void *buffer)
@@ -1657,15 +1524,16 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
 {
    // Handle implicit floats
    if (protocol == 0 && buffer_size == sizeof(float)) {
-      if (auto it = mPorts.mControlPortMap.find(port_index);
-         it != mPorts.mControlPortMap.end())
+      if (auto it = mPorts.mControlPortMap.find(port_index)
+         ; it != mPorts.mControlPortMap.end()
+      )
          mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
       auto &atomPortState = mPortUIStates.mControlIn;
       if (atomPortState && port_index == atomPortState->mpPort->mIndex)
-         zix_ring_write(atomPortState->mRing.get(), buffer, buffer_size);
+         atomPortState->ReceiveFromDialog(buffer, buffer_size);
    }
 }
 
@@ -1685,64 +1553,6 @@ uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
          return lilv_port_get_index(&mPlug, port);
    }
    return LV2UI_INVALID_PORT_INDEX;
-}
-
-namespace {
-struct GetValueData {
-   const LV2Effect &effect; const LV2EffectSettings &settings;
-};
-//! This function isn't used yet, but if we ever need to call
-//! lilv_state_new_from_instance, we will give it this callback
-const void *get_value_func(
-   const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
-{
-   auto &[effect, settings] = *static_cast<GetValueData*>(user_data);
-   return effect.GetPortValue(settings, port_symbol, size, type);
-}
-}
-
-const void *LV2Effect::GetPortValue(const LV2EffectSettings &settings,
-   const char *port_symbol, uint32_t *size, uint32_t *type) const
-{
-   wxString symbol = wxString::FromUTF8(port_symbol);
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mSymbol == symbol) {
-         *size = sizeof(float);
-         *type = LV2Symbols::urid_Float;
-         return &settings.values[index];
-      }
-      ++index;
-   }
-   *size = 0;
-   *type = 0;
-   return nullptr;
-}
-
-void LV2Effect::SetPortValue(LV2EffectSettings &settings,
-   const char *port_symbol, const void *value, uint32_t size, uint32_t type)
-const
-{
-   wxString symbol = wxString::FromUTF8(port_symbol);
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mSymbol == symbol) {
-         auto &dst = settings.values[index];
-         using namespace LV2Symbols;
-         if (type == urid_Bool && size == sizeof(bool))
-            dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
-         else if (type == urid_Double && size == sizeof(double))
-            dst = *static_cast<const double *>(value);
-         else if (type == urid_Float && size == sizeof(float))
-            dst = *static_cast<const float *>(value);
-         else if (type == urid_Int && size == sizeof(int32_t))
-            dst = *static_cast<const int32_t *>(value);
-         else if (type == urid_Long && size == sizeof(int64_t))
-            dst = *static_cast<const int64_t *>(value);
-         break;
-      }
-      ++index;
-   }
 }
 
 #if defined(__WXGTK__)

@@ -23,7 +23,6 @@ class wxArrayString;
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
-#include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
@@ -202,13 +201,6 @@ private:
                                     const char *port_symbol);
    uint32_t SuilPortIndex(const char *port_symbol);
 
-public:
-   const void *GetPortValue(const LV2EffectSettings &settings,
-      const char *port_symbol, uint32_t *size, uint32_t *type) const;
-
-   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
-      const void *value, uint32_t size, uint32_t type) const;
-
 private:
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
@@ -251,7 +243,7 @@ private:
 
    // Position info
    float mPositionSpeed{ 1.0f };
-   float mPositionFrame{ 0.0f };
+   int64_t mPositionFrame{ 0 };
 
    double mLength{};
 
