@@ -17,18 +17,14 @@
 
 class wxArrayString;
 
-#include <thread>
 #include <vector>
 
 #include <wx/event.h> // to inherit
-#include <wx/msgqueue.h>
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
-#include "lv2/state/state.h"
-#include "lv2/worker/worker.h"
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
 
@@ -61,13 +57,6 @@ class NumericTextCtrl;
 
 class LV2EffectMeter;
 class LV2Wrapper;
-
-struct LV2EffectSettings {
-   //! vector of values in correspondence with the control ports
-   std::vector<float> values;
-   //! Result of last load of a preset; may be null
-   mutable std::shared_ptr<const LilvState> mpState;
-};
 
 class LV2Effect final : public LV2FeaturesList
 {
@@ -170,9 +159,6 @@ private:
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
-
-   std::unique_ptr<LV2Wrapper>
-   InitInstance(const EffectSettings &settings, float sampleRate);
 
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
@@ -294,7 +280,6 @@ private:
    size_t mInstanceAccessFeature{};
    //! Index into m_features
    size_t mParentFeature{};
-   LV2_Feature *mWorkerScheduleFeature{};
 
    // UI
    struct PlainUIControl {
@@ -335,72 +320,6 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class LV2Wrapper;
-};
-
-class LV2Wrapper final
-{
-public:
-   struct LV2Work {
-      uint32_t size{};
-      const void *data{};
-   };
-
-public:
-   //! May spawn a thread
-   LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
-      const LilvPlugin &plugin, double sampleRate);
-   //! If a thread was started, joins it
-   ~LV2Wrapper();
-   void Activate();
-   void Deactivate();
-   LilvInstance *GetInstance() const;
-   LV2_Handle GetHandle() const;
-   float GetLatency() const;
-   void SetFreeWheeling(bool enable);
-   void SetBlockSize();
-   void ConsumeResponses();
-   static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
-                                          uint32_t size,
-                                          const void *data);
-   LV2_Worker_Status ScheduleWork(uint32_t size, const void *data);
-   static LV2_Worker_Status respond(LV2_Worker_Respond_Handle handle,
-                                    uint32_t size,
-                                    const void *data);
-   LV2_Worker_Status Respond(uint32_t size, const void *data);
-
-private:
-   void ThreadFunction();
-
-   std::thread mThread;
-
-   const LV2FeaturesList &mFeaturesList;
-   LilvInstancePtr mInstance;
-   LV2_Handle mHandle{};
-
-   wxMessageQueue<LV2Work> mRequests;
-   wxMessageQueue<LV2Work> mResponses;
-
-   // Options extension
-   const LV2_Options_Interface *mOptionsInterface{};
-
-   // State extension
-   const LV2_State_Interface *mStateInterface{};
-
-   // Worker extension
-   const LV2_Worker_Interface *mWorkerInterface{};
-   // Another object with an explicit virtual function table
-   LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
-
-   float mLatency{ 0.0 };
-
-   //! If true, do not spawn extra worker threads
-   bool mFreeWheeling{ false };
-
-   //! Written by main thread, read by worker, but atomic isn't needed because
-   //! mRequests provides synchronization
-   bool mStopWorker{ false };
-
-   bool mActivated{ false };
 };
 
 #endif

@@ -612,6 +612,8 @@ list( APPEND SOURCES
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
          effects/lv2/LV2Utils.h
+         effects/lv2/LV2Wrapper.cpp
+         effects/lv2/LV2Wrapper.h
          effects/lv2/LoadLV2.cpp
          effects/lv2/LoadLV2.h
          effects/lv2/NativeWindow.h

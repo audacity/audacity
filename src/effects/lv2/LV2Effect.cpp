@@ -23,9 +23,11 @@
 
 #include "LV2Effect.h"
 #include "LV2EffectMeter.h"
+#include "LV2Wrapper.h"
 #include "SampleCount.h"
 
 #include <cmath>
+#include <exception>
 #include <functional>
 
 #include <wx/button.h>
@@ -62,9 +64,6 @@
 #if defined(__WXMSW__)
 #include <wx/msw/wrapwin.h>
 #endif
-
-static inline void free_chars (char *p) { lilv_free(p); }
-using LilvCharsPtr = Lilv_ptr<char, free_chars>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -303,7 +302,8 @@ sampleCount LV2Effect::GetLatency()
 bool LV2Effect::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(settings, sampleRate);
+   mProcess = LV2Wrapper::Create(*this,
+      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!mProcess)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
@@ -325,16 +325,14 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    using namespace LV2Symbols;
    wxASSERT(size <= ( size_t) mBlockSize);
 
-   LilvInstance *instance = mProcess->GetInstance();
+   const auto instance = &mProcess->GetInstance();
 
    int i = 0;
    int o = 0;
    for (auto & port : mPorts.mAudioPorts)
-   {
       lilv_instance_connect_port(instance,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
-   }
 
    // Transfer incoming events from the ring buffer to the event buffer for each
    // atom input port.  These will be made available to each slave in the chain and
@@ -422,7 +420,8 @@ return GuardedCall<bool>([&]{
 bool LV2Effect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto pInstance = InitInstance(settings, sampleRate);
+   auto pInstance = LV2Wrapper::Create(*this,
+      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!pInstance)
       return false;
    pInstance->Activate();
@@ -524,33 +523,23 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    }
 
    const auto slave = mSlaves[group].get();
-   LilvInstance *instance = slave->GetInstance();
+   const auto instance = &slave->GetInstance();
 
    int i = 0;
    int o = 0;
    for (auto & port : mPorts.mAudioPorts)
-   {
       lilv_instance_connect_port(instance,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
-   }
 
    mNumSamples = wxMax(numSamples, mNumSamples);
 
    if (mRolling)
-   {
       lilv_instance_run(instance, numSamples);
-   }
    else
-   {
       while (--i >= 0)
-      {
          for (decltype(numSamples) s = 0; s < numSamples; s++)
-         {
             outbuf[i][s] = inbuf[i][s];
-         }
-      }
-   }
 
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
@@ -682,7 +671,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(settings, mProjectRate);
+   mMaster = LV2Wrapper::Create(*this,
+      mPorts, mPortStates, GetSettings(settings), mProjectRate, true);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -889,64 +879,6 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
-   const EffectSettings &settings, float sampleRate)
-{
-   auto wrapper = std::make_unique<LV2Wrapper>(
-      *this, mPorts.mLatencyPort, mPlug, sampleRate);
-   auto instance = wrapper->GetInstance();
-   if (!instance)
-      return nullptr;
-
-   wrapper->SetBlockSize();
-
-   static float blackHole;
-
-   // Connect all control ports
-   auto &values = GetSettings(settings).values;
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      // If it's not an input port and master has already been created
-      // then connect the port to a dummy field since slave output port
-      // values are unwanted as the master values will be used.
-      //
-      // Otherwise, connect it to the real value field.
-      lilv_instance_connect_port(instance, port->mIndex,
-         !port->mIsInput && mMaster
-            ? &blackHole
-            // Treat settings slot corresponding to an output port as mutable
-            // Otherwise those for input ports must still pass to the library
-            // as nominal pointers to non-const
-            : &const_cast<float&>(values[index]));
-      ++index;
-   }
-
-   // Connect all atom ports
-   for (auto & state : mPortStates.mAtomPortStates)
-      lilv_instance_connect_port(instance,
-         state->mpPort->mIndex, state->mBuffer.data());
-
-   // We don't fully support CV ports, so connect them to dummy buffers for now.
-   for (auto & state : mPortStates.mCVPortStates)
-      lilv_instance_connect_port(instance, state.mpPort->mIndex,
-         state.mBuffer.get());
-
-   // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
-   // this before it can be safely deleted.
-   lilv_instance_activate(instance);
-   lilv_instance_deactivate(instance);
-
-   for (auto & state : mPortStates.mAtomPortStates)
-      if (!state->mpPort->mIsInput)
-         LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
-         )
-            zix_ring_write(state->mRing.get(),
-               &ev->body, ev->body.size + sizeof(LV2_Atom));
-
-   return wrapper;
-}
-
 bool LV2Effect::BuildFancy(const EffectSettings &settings)
 {
    using namespace LV2Symbols;
@@ -1024,7 +956,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
 #endif
    }
 
-   LilvInstance *instance = mMaster->GetInstance();
+   const auto instance = &mMaster->GetInstance();
    mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(instance);
    mExtensionDataFeature =
       { lilv_instance_get_descriptor(instance)->extension_data };
@@ -1421,7 +1353,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    if (mMaster && mySettings.mpState) {
       // Maybe there are other important side effects on the instance besides
       // changes of port values
-      lilv_state_restore(mySettings.mpState.get(), mMaster->GetInstance(),
+      lilv_state_restore(mySettings.mpState.get(), &mMaster->GetInstance(),
          nullptr, nullptr, 0, nullptr);
       // Destroy the short lived carrier of preset state
       mySettings.mpState.reset();
@@ -1848,173 +1780,5 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
    }
 }
 #endif
-
-LV2Wrapper::~LV2Wrapper()
-{
-   if (mInstance) {
-      if (mThread.joinable()) {
-         mStopWorker = true;
-         mRequests.Post({ 0, NULL });  // Must do after writing mStopWorker
-         mThread.join();
-      }
-      Deactivate();
-   }
-}
-
-LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
-   const LilvPlugin &plugin, double sampleRate)
-:  mFeaturesList{ featuresList }
-{
-   // Reassign the sample rate, which is pointed to by options, which are
-   // pointed to by features, before we tell the library the features
-   mFeaturesList.SetSampleRate(sampleRate);
-   auto features = mFeaturesList.GetFeaturePointers();
-   LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
-   if (mFeaturesList.SuppliesWorkerInterface())
-      // Insert another pointer before the null
-      // Append a feature to the array, only for the plugin instantiation
-      // (features are also used elsewhere to instantiate the UI in the
-      // suil_* functions)
-      // It informs the plugin how to send work to another thread
-      features.insert(features.end() - 1, &tempFeature);
-
-#if defined(__WXMSW__)
-   // Plugins may have dependencies that need to be loaded from the same path
-   // as the main DLL, so add this plugin's path to the DLL search order.
-   const auto libNode = lilv_plugin_get_library_uri(&plugin);
-   const auto libUri = lilv_node_as_uri(libNode);
-   LilvCharsPtr libPath{ lilv_file_uri_parse(libUri, nullptr) };
-   const auto path = wxPathOnly(libPath.get());
-   SetDllDirectory(path.c_str());
-#endif
-
-   mInstance.reset(
-      lilv_plugin_instantiate(&plugin, sampleRate, features.data()));
-
-#if defined(__WXMSW__)
-   SetDllDirectory(nullptr);
-#endif
-
-   if (!mInstance)
-      return;
-
-   mHandle = lilv_instance_get_handle(mInstance.get());
-   mOptionsInterface = static_cast<const LV2_Options_Interface *>(
-      lilv_instance_get_extension_data(mInstance.get(), LV2_OPTIONS__interface));
-   mStateInterface = static_cast<const LV2_State_Interface *>(
-      lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
-   mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
-      lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
-   if (latencyPort >= 0)
-      lilv_instance_connect_port(mInstance.get(), latencyPort, &mLatency);
-   if (mWorkerInterface)
-      mThread = std::thread{
-         std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
-      };
-}
-
-void LV2Wrapper::Activate()
-{
-   if (!mActivated) {
-      lilv_instance_activate(GetInstance());
-      mActivated = true;
-   }
-}
-
-void LV2Wrapper::Deactivate()
-{
-   if (mActivated) {
-      lilv_instance_deactivate(GetInstance());
-      mActivated = false;
-   }
-}
-
-LilvInstance *LV2Wrapper::GetInstance() const
-{
-   return mInstance.get();
-}
-
-LV2_Handle LV2Wrapper::GetHandle() const
-{
-   return mHandle;
-}
-
-float LV2Wrapper::GetLatency() const
-{
-   return mLatency;
-}
-
-// Where is this called?
-void LV2Wrapper::SetFreeWheeling(bool enable)
-{
-   mFreeWheeling = enable;
-}
-
-void LV2Wrapper::SetBlockSize()
-{
-   if (auto pOption = mFeaturesList.NominalBlockLengthOption()
-      ; pOption && mOptionsInterface && mOptionsInterface->set
-   ){
-      LV2_Options_Option options[2]{ *pOption, {} };
-      mOptionsInterface->set(mHandle, options);
-   }
-}
-
-// Thread body
-void LV2Wrapper::ThreadFunction()
-{
-   for (LV2Work work{};
-      // Must test mStopWorker only after reading mRequests
-      mRequests.Receive(work) == wxMSGQUEUE_NO_ERROR && !mStopWorker;
-   )
-      mWorkerInterface->work(mHandle, respond, this, work.size, work.data);
-}
-
-void LV2Wrapper::ConsumeResponses()
-{
-   if (mWorkerInterface) {
-      LV2Work work{};
-      while (mResponses.ReceiveTimeout(0, work) == wxMSGQUEUE_NO_ERROR)
-         mWorkerInterface->work_response(mHandle, work.size, work.data);
-      if (mWorkerInterface->end_run)
-         mWorkerInterface->end_run(mHandle);
-   }
-}
-
-// static callback
-LV2_Worker_Status LV2Wrapper::schedule_work(LV2_Worker_Schedule_Handle handle,
-   uint32_t size, const void *data)
-{
-   return static_cast<LV2Wrapper *>(handle)->ScheduleWork(size, data);
-}
-
-LV2_Worker_Status LV2Wrapper::ScheduleWork(uint32_t size, const void *data)
-{
-   if (mFreeWheeling)
-      // Not using another thread
-      return mWorkerInterface->work(mHandle, respond, this, size, data);
-   else {
-      // Put in the queue for the worker thread
-      const auto err = mRequests.Post({ size, data });
-      return (err == wxMSGQUEUE_NO_ERROR)
-         ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
-   }
-}
-
-// static callback
-LV2_Worker_Status LV2Wrapper::respond(
-   LV2_Worker_Respond_Handle handle, uint32_t size, const void *data)
-{
-   return static_cast<LV2Wrapper*>(handle)->Respond(size, data);
-}
-
-LV2_Worker_Status LV2Wrapper::Respond(uint32_t size, const void *data)
-{
-   // Put in the queue, for another thread (if not "freewheeling")
-   // (not necessarily the main thread)
-   const auto err = mResponses.Post({ size, data });
-   return (err == wxMSGQUEUE_NO_ERROR)
-      ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
-}
 
 #endif

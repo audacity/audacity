@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <wx/string.h>
+#include "lilv/lilv.h" // for lilv_free
 
 //! Generate deleter classes for smart pointers to lv2 resources
 template<typename Type, void (*f)(Type*)>
@@ -23,6 +24,9 @@ struct Lilv_deleter { void operator()(Type *p) noexcept { f(p); } };
 //! Generate classes of smart pointers to lv2 resources
 template<typename Type, void (*f)(Type*)>
 using Lilv_ptr = std::unique_ptr<Type, Lilv_deleter<Type, f>>;
+
+static inline void free_chars (char *p) { lilv_free(p); }
+using LilvCharsPtr = Lilv_ptr<char, free_chars>;
 
 //! A smart pointer to LilvNode, which is essentially a variant type much used
 //! in the lv2 API
