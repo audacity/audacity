@@ -117,12 +117,15 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "FileConfig.h"
 #include "widgets/FileHistory.h"
-#include "update/UpdateManager.h"
 #include "widgets/wxWidgetsBasicUI.h"
 #include "LogWindow.h"
 #include "FrameStatisticsDialog.h"
 #include "PluginStartupRegistration.h"
 #include "IncompatiblePluginsDialog.h"
+
+#if defined(HAVE_UPDATES_CHECK)
+#  include "update/UpdateManager.h"
+#endif
 
 #ifdef HAS_NETWORKING
 #include "NetworkManager.h"
