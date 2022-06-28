@@ -115,9 +115,9 @@ bool Effect::IsDefault() const
    return true;
 }
 
-bool Effect::SupportsRealtime() const
+auto Effect::RealtimeSupport() const -> RealtimeSince
 {
-   return false;
+   return RealtimeSince::Never;
 }
 
 bool Effect::SupportsAutomation() const
@@ -671,8 +671,10 @@ bool Effect::EnablePreview(bool enable)
          play->Enable(enable);
          if (SupportsRealtime())
          {
-            rewind->Enable(enable);
-            ffwd->Enable(enable);
+            if (rewind)
+               rewind->Enable(enable);
+            if (ffwd)
+               ffwd->Enable(enable);
          }
       }
    }

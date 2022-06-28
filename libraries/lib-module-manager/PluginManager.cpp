@@ -46,7 +46,6 @@ for shared and private configs - which need to move out.
 
 // Registry has the list of plug ins
 #define REGVERKEY wxString(wxT("/pluginregistryversion"))
-#define REGVERCUR wxString(wxT("1.1"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
 
 // Settings has the values of the plug in settings.
@@ -192,7 +191,7 @@ const PluginID & PluginManager::RegisterPlugin(
    plug.SetEffectFamily(effect->GetFamily().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
-   plug.SetEffectRealtime(effect->SupportsRealtime());
+   plug.SetRealtimeSupport(effect->RealtimeSupport());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
    plug.SetEnabled(true);
@@ -408,7 +407,6 @@ void PluginManager::Initialize(FileConfigFactory factory)
 void PluginManager::Terminate()
 {
    // Get rid of all non-module(effects?) plugins first
-   auto iter = mRegisteredPlugins.begin();
    for(auto& p : mRegisteredPlugins)
    {
       auto& desc = p.second;
@@ -557,9 +555,8 @@ void PluginManager::Load()
    // Check for a registry version that we can understand
    // TODO: Should also check for a registry file that is newer than
    // what we can understand.
-   wxString regver = registry.Read(REGVERKEY);
-   if (regver < REGVERCUR )
-   {
+   mRegver = registry.Read(REGVERKEY);
+   if (Regver_lt(mRegver, "1.1")) {
       // Conversion code here, for when registry version changes.
 
       // We iterate through the effects, possibly updating their info.
@@ -583,7 +580,7 @@ void PluginManager::Load()
          // For 2.3.0 the plugins we distribute have moved around.
          // So we upped the registry version number to 1.1.
          // These particular config edits were originally written to fix Bug 1914.
-         if (regver <= "1.0") {
+         if (Regver_le(mRegver, "1.0")) {
             // Nyquist prompt is a built-in that has moved to the tools menu.
             if (effectSymbol == NYQUIST_PROMPT_ID) {
                registry.Write(KEY_EFFECTTYPE, "Tool");
@@ -604,7 +601,6 @@ void PluginManager::Load()
          registry.DeleteGroup(groupsToDelete[i]);
       }
       registry.SetPath("");
-      registry.Write(REGVERKEY, REGVERCUR);
       // Updates done.  Make sure we read the updated data later.
       registry.Flush();
    }
@@ -814,11 +810,11 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
             plug.SetEffectInteractive(boolVal);
 
             // Is it a realtime capable effect and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTREALTIME, &boolVal))
+            if (!pRegistry->Read(KEY_EFFECTREALTIME, &strVal))
             {
                continue;
             }
-            plug.SetEffectRealtime(boolVal);
+            plug.DeserializeRealtimeSupport(strVal);
 
             // Does the effect support automation...bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTAUTOMATABLE, &boolVal))
@@ -888,9 +884,6 @@ void PluginManager::Save()
    // Clear pluginregistry.cfg (not audacity.cfg)
    registry.DeleteAll();
 
-   // Write the version string
-   registry.Write(REGVERKEY, REGVERCUR);
-
    // Save the individual groups
    SaveGroup(&registry, PluginTypeEffect);
    SaveGroup(&registry, PluginTypeExporter);
@@ -905,8 +898,18 @@ void PluginManager::Save()
    // And now the providers
    SaveGroup(&registry, PluginTypeModule);
 
+   // Write the version string
+   registry.Write(REGVERKEY, REGVERCUR);
+
    // Just to be safe
    registry.Flush();
+
+   mRegver = REGVERCUR;
+}
+
+const PluginRegistryVersion &PluginManager::GetRegistryVersion() const
+{
+   return mRegver;
 }
 
 void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
@@ -965,7 +968,7 @@ void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
             pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
             pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
-            pRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
+            pRegistry->Write(KEY_EFFECTREALTIME, plug.SerializeRealtimeSupport());
             pRegistry->Write(KEY_EFFECTAUTOMATABLE, plug.IsEffectAutomatable());
          }
          break;
@@ -1004,7 +1007,7 @@ const PluginID & PluginManager::RegisterPlugin(
    plug.SetEffectFamily(effect->GetFamily().Internal());
    plug.SetEffectInteractive(effect->IsInteractive());
    plug.SetEffectDefault(effect->IsDefault());
-   plug.SetEffectRealtime(effect->SupportsRealtime());
+   plug.SetRealtimeSupport(effect->RealtimeSupport());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
    
    plug.SetEffectLegacy(true);

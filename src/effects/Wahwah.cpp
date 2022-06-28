@@ -203,9 +203,9 @@ EffectType EffectWahwah::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectWahwah::SupportsRealtime() const
+auto EffectWahwah::RealtimeSupport() const -> RealtimeSince
 {
-   return true;
+   return RealtimeSince::Always;
 }
 
 unsigned EffectWahwah::GetAudioInCount() const

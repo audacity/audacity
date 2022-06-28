@@ -79,7 +79,7 @@ public:
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
    bool IsDefault() const override;
-   bool SupportsRealtime() const override;
+   RealtimeSince RealtimeSupport() const override;
    bool SupportsAutomation() const override;
 
    bool SaveSettings(

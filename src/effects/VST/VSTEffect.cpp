@@ -925,11 +925,13 @@ bool VSTEffect::IsDefault() const
    return false;
 }
 
-bool VSTEffect::SupportsRealtime() const
+auto VSTEffect::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-   //return GetType() == EffectTypeProcess;
+   return RealtimeSince::Never;
+//   return GetType() == EffectTypeProcess
+//      ? RealtimeSince::Always
+//      : RealtimeSince::Never;
 }
 
 bool VSTEffect::SupportsAutomation() const

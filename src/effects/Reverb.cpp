@@ -299,6 +299,11 @@ unsigned EffectReverb::GetAudioOutCount() const
    return 2;
 }
 
+auto EffectReverb::RealtimeSupport() const -> RealtimeSince
+{
+   return RealtimeSince::Since_3_2;
+}
+
 static size_t BLOCK = 16384;
 
 bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
