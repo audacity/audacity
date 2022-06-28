@@ -84,6 +84,14 @@ LV2Instance::~LV2Instance()
       .mMaster.reset();
 }
 
+LV2Validator::LV2Validator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access
+)  : DefaultEffectUIValidator{ effect, access }
+{
+}
+
+LV2Validator::~LV2Validator() = default;
+
 void LV2Instance::MakeWrapper(const EffectSettings &settings,
    double projectRate, bool useOutput)
 {
@@ -603,7 +611,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
          return nullptr;
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
+   return std::make_unique<LV2Validator>(*this, access);
 }
 
 bool LV2Effect::IsGraphicalUI()

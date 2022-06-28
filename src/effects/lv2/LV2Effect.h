@@ -316,5 +316,12 @@ private:
    bool mLatencyDone{ false };
 };
 
+class LV2Validator final : public DefaultEffectUIValidator {
+public:
+   LV2Validator(
+      EffectUIClientInterface &effect, EffectSettingsAccess &access);
+   ~LV2Validator() override;
+};
+
 #endif
 #endif
