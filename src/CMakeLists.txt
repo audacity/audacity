@@ -672,7 +672,7 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_WAVPACK}>:
          export/ExportWavPack.cpp
       >
-      
+
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
@@ -1328,6 +1328,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          effects/VST3/module_mac.mm
          PROPERTIES
             COMPILE_FLAGS "-fobjc-arc"
+            SKIP_PRECOMPILE_HEADERS YES
+      )
+
+      set_source_files_properties(
+         effects/VST/VSTControlOSX.mm
+         PROPERTIES
+            SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
 
