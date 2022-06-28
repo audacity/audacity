@@ -76,6 +76,7 @@ LV2Instance::LV2Instance(
    LV2Preferences::GetBufferSize(effect, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
    mBlockSize = mUserBlockSize;
+   lv2_atom_forge_init(&mForge, GetEffect().URIDMapFeature());
 }
 
 LV2Instance::~LV2Instance()
@@ -280,7 +281,6 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    LV2Preferences::GetUseGUI(*this, mUseGUI);
-   lv2_atom_forge_init(&mForge, URIDMapFeature());
    return std::make_shared<LV2Instance>(*this, mPorts);
 }
 
@@ -355,7 +355,6 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    using namespace LV2Symbols;
    auto pWrapper = GetWrapper();
    auto &mPortStates = GetEffect().mPortStates;
-   auto &mForge = GetEffect().mForge;
 
    assert(size <= mBlockSize);
    assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
@@ -436,7 +435,6 @@ bool LV2Instance::RealtimeResume()
 bool LV2Instance::RealtimeProcessStart(EffectSettings &)
 {
    auto &mPortStates = GetEffect().mPortStates;
-   auto &mForge = GetEffect().mForge;
    mNumSamples = 0;
    for (auto & state : mPortStates.mAtomPortStates)
       state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);

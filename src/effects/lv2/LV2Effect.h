@@ -226,8 +226,6 @@ private:
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
 
-   LV2_Atom_Forge mForge{};
-
    //! Index into m_features
    size_t mInstanceAccessFeature{};
    //! Index into m_features
@@ -328,6 +326,7 @@ private:
    //! Each holds lv2 library state for realtime processing of one track
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
+   LV2_Atom_Forge mForge{};
 
    // Position info
    float mPositionSpeed{ 1.0f };
