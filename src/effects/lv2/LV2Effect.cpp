@@ -65,6 +65,41 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
+LV2Instance::LV2Instance(
+   StatefulPerTrackEffect &effect, const LV2Ports &ports
+)  : PerTrackEffect::Instance{ effect }
+   , mPorts{ ports }
+{
+   LV2Preferences::GetUseLatency(effect, mUseLatency);
+
+   int userBlockSize;
+   LV2Preferences::GetBufferSize(effect, userBlockSize);
+   mUserBlockSize = std::max(1, userBlockSize);
+   mBlockSize = mUserBlockSize;
+   lv2_atom_forge_init(&mForge, GetEffect().URIDMapFeature());
+}
+
+LV2Instance::~LV2Instance()
+{
+   // Some temporary ugliness until real statelessness
+   const_cast<LV2Effect&>(static_cast<const LV2Effect&>(mProcessor))
+      .mMaster.reset();
+}
+
+void LV2Instance::MakeWrapper(const EffectSettings &settings,
+   double projectRate, bool useOutput)
+{
+   auto &effect = GetEffect();
+   auto &pWrapper = effect.mMaster;
+   if (pWrapper)
+      // Already made so do nothing
+      return;
+   pWrapper = LV2Wrapper::Create(effect, mPorts,
+      // TODO give instances independent port states
+      effect.mPortStates,
+      GetSettings(settings), projectRate, useOutput);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2Effect
@@ -245,15 +280,8 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
-   int userBlockSize;
-   LV2Preferences::GetBufferSize(*this, userBlockSize);
-   mUserBlockSize = std::max(1, userBlockSize);
-   mBlockSize = mUserBlockSize;
-
-   LV2Preferences::GetUseLatency(*this, mUseLatency);
    LV2Preferences::GetUseGUI(*this, mUseGUI);
-   lv2_atom_forge_init(&mForge, URIDMapFeature());
-   return std::make_shared<Instance>(*this);
+   return std::make_shared<LV2Instance>(*this, mPorts);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -276,58 +304,61 @@ int LV2Effect::GetMidiOutCount() const
    return mPorts.mMidiOut;
 }
 
-size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
+size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 {
-   mBlockSize = std::max(mMinBlockSize,
-      std::min({maxBlockSize, mUserBlockSize, mMaxBlockSize}));
-   if (mMaster)
-      mMaster->SetBlockSize();
+   auto pWrapper = GetWrapper();
+   const auto &featuresList = GetEffect();
+   mBlockSize = std::max(featuresList.mMinBlockSize,
+      std::min({maxBlockSize, mUserBlockSize, featuresList.mMaxBlockSize}));
+   if (pWrapper)
+      pWrapper->SetBlockSize();
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
       mSlaves[i]->SetBlockSize();
    return mBlockSize;
 }
 
-size_t LV2Effect::GetBlockSize() const
+size_t LV2Instance::GetBlockSize() const
 {
    return mBlockSize;
 }
 
-sampleCount LV2Effect::GetLatency()
+sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
 {
-   if (mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
+   auto pWrapper = GetWrapper();
+   if (pWrapper && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
-      return sampleCount(mMaster->GetLatency());
+      return sampleCount(pWrapper->GetLatency());
    }
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(EffectSettings &settings,
+// Start of destructive processing path
+bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = LV2Wrapper::Create(*this,
-      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
-   if (!mProcess)
+   auto &mPortStates = GetEffect().mPortStates;
+   if (!GetWrapper())
+      MakeWrapper(settings, sampleRate, false);
+   const auto pWrapper = GetWrapper();
+   if (!pWrapper)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
-   mProcess->Activate();
+   pWrapper->Activate();
    mLatencyDone = false;
    return true;
 }
 
-bool LV2Effect::ProcessFinalize()
-{
-   mProcess.reset();
-   return true;
-}
-
-size_t LV2Effect::ProcessBlock(EffectSettings &,
+size_t LV2Instance::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    using namespace LV2Symbols;
-   wxASSERT(size <= ( size_t) mBlockSize);
+   auto pWrapper = GetWrapper();
+   auto &mPortStates = GetEffect().mPortStates;
 
-   const auto instance = &mProcess->GetInstance();
+   assert(size <= mBlockSize);
+   assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
+   const auto instance = &pWrapper->GetInstance();
 
    int i = 0;
    int o = 0;
@@ -342,7 +373,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    lilv_instance_run(instance, size);
 
    // Main thread consumes responses
-   mProcess->ConsumeResponses();
+   pWrapper->ConsumeResponses();
 
    for (auto & state : mPortStates.mAtomPortStates)
       state->ResetForInstanceOutput();
@@ -350,16 +381,18 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize(EffectSettings &, double)
+bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
 {
+   auto &mPortStates = GetEffect().mPortStates;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
+bool LV2Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
+   auto &mPortStates = GetEffect().mPortStates;
    mSlaves.clear();
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reset();
@@ -367,10 +400,12 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool LV2Effect::RealtimeAddProcessor(
+bool LV2Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto pInstance = LV2Wrapper::Create(*this,
+   auto &featuresList = GetEffect();
+   auto &mPortStates = GetEffect().mPortStates;
+   auto pInstance = LV2Wrapper::Create(featuresList,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!pInstance)
       return false;
@@ -379,7 +414,7 @@ bool LV2Effect::RealtimeAddProcessor(
    return true;
 }
 
-bool LV2Effect::RealtimeSuspend()
+bool LV2Instance::RealtimeSuspend()
 {
    mPositionSpeed = 0.0;
    mPositionFrame = 0;
@@ -388,7 +423,7 @@ bool LV2Effect::RealtimeSuspend()
    return true;
 }
 
-bool LV2Effect::RealtimeResume()
+bool LV2Instance::RealtimeResume()
 {
    mPositionSpeed = 1.0;
    mPositionFrame = 0;
@@ -397,17 +432,20 @@ bool LV2Effect::RealtimeResume()
    return true;
 }
 
-bool LV2Effect::RealtimeProcessStart(EffectSettings &)
+bool LV2Instance::RealtimeProcessStart(EffectSettings &)
 {
+   auto &mPortStates = GetEffect().mPortStates;
    mNumSamples = 0;
    for (auto & state : mPortStates.mAtomPortStates)
       state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
+size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
+   auto &mPortStates = GetEffect().mPortStates;
+
    if (group >= mSlaves.size())
       return 0;
    wxASSERT(numSamples <= (size_t) mBlockSize);
@@ -448,9 +486,10 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd(EffectSettings &) noexcept
+bool LV2Instance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
+   auto &mPortStates = GetEffect().mPortStates;
    // Nothing to do if we did process any samples
    if (mNumSamples == 0)
    {
@@ -541,8 +580,10 @@ bool LV2Effect::LoadSettings(
 // EffectUIClientInterface Implementation
 // ============================================================================
 
+// May come here before destructive processing
+// Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
@@ -553,9 +594,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = LV2Wrapper::Create(*this,
-      mPorts, mPortStates, GetSettings(settings), mProjectRate, true);
-   if (!mMaster) {
+   auto &myInstance = dynamic_cast<LV2Instance &>(instance);
+   myInstance.MakeWrapper(settings, mProjectRate, true);
+   if (!myInstance.GetWrapper()) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
    }
@@ -569,7 +610,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    if (mUseGUI)
-      mUseGUI = BuildFancy(settings);
+      mUseGUI = BuildFancy(
+         myInstance.GetWrapper()->GetInstance(), settings);
 
    if (!mUseGUI) {
       if (!BuildPlain(access))
@@ -612,7 +654,6 @@ bool LV2Effect::CloseUI()
       mSuilInstance.reset();
    }
    mSuilHost.reset();
-   mMaster.reset();
    mParent = nullptr;
    mDialog = nullptr;
 
@@ -748,7 +789,8 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-bool LV2Effect::BuildFancy(const EffectSettings &settings)
+bool LV2Effect::BuildFancy(
+   LilvInstance &instance, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -825,10 +867,9 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
 #endif
    }
 
-   const auto instance = &mMaster->GetInstance();
-   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(instance);
+   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(&instance);
    mExtensionDataFeature =
-      { lilv_instance_get_descriptor(instance)->extension_data };
+      { lilv_instance_get_descriptor(&instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
