@@ -21,12 +21,12 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
-   AccessState(const EffectSettingsManager &effect,
-      EffectSettings &mainSettings, EffectSettings &workerSettings)
+   AccessState(const EffectSettingsManager &effect, RealtimeEffectState &state)
       : mEffect{ effect }
-      , mWorkerSettings{ workerSettings }
+      , mState{ state }
    {
       // Clean initial state of the counter
+      auto &mainSettings = state.mMainSettings;
       mainSettings.extra.SetCounter(0);
       // Initialize each message buffer with two copies of settings
       mChannelToMain.Write(ToMainSlot{ mainSettings });
@@ -55,11 +55,13 @@ public:
       const EffectSettingsManager &effect; const EffectSettings &settings; };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mWorkerSettings);
+      mChannelFromMain.Read<FromMainSlot::Reader>(
+         mEffect, mState.mWorkerSettings);
    }
    void WorkerWrite() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelToMain.Write(EffectAndSettings{ mEffect, mWorkerSettings });
+      mChannelToMain.Write(EffectAndSettings{
+         mEffect, mState.mWorkerSettings });
    }
 
    const EffectSettings &MainThreadCache() const { return mMainThreadCache; }
@@ -117,7 +119,7 @@ public:
    };
 
    const EffectSettingsManager &mEffect;
-   EffectSettings &mWorkerSettings;
+   RealtimeEffectState &mState;
 
    MessageBuffer<FromMainSlot> mChannelFromMain;
    EffectSettings mMainThreadCache;
@@ -145,9 +147,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          // First time test, or echo is completed
          return pResult;
       }
-      else if (auto pAudioIO = AudioIOBase::Get()
-         ; !(pAudioIO && pAudioIO->IsStreamActive())
-      ){
+      else if (!state.mState.mInitialized) {
          // not relying on the other thread to make progress
          // and no fear of data races
          return &state.MainWriteThrough(lastSettings);
@@ -697,6 +697,6 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
    // Only the main thread assigns to the atomic pointer, here and
    // once only in the lifetime of the state
    if (!GetAccessState())
-      mpAccessState.emplace(*mPlugin, mMainSettings, mWorkerSettings);
+      mpAccessState.emplace(*mPlugin, *this);
    return std::make_shared<Access>(*this);
 }
