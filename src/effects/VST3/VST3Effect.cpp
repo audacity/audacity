@@ -405,12 +405,14 @@ bool VST3Effect::LoadUserPreset(
 }
 
 bool VST3Effect::SaveUserPreset(
-   const RegistryPath& name, const EffectSettings &) const
+   const RegistryPath& name, const EffectSettings& settings) const
 {
    using namespace Steinberg;
 
    if(!mEditController)
       return false;
+
+   StoreSettings(GetSettings(settings));
 
    auto processorState = owned(safenew PresetsBufferStream);
    if(mEffectComponent->getState(processorState) != kResultOk)
@@ -882,7 +884,7 @@ bool VST3Effect::CanExportPresets()
    return true;
 }
 
-void VST3Effect::ExportPresets(const EffectSettings &) const
+void VST3Effect::ExportPresets(const EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -914,6 +916,9 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
       );
       return;
    }
+
+   if (!StoreSettings(GetSettings(settings)))
+      return;
 
    if (!VST3Wrapper::SavePreset(fileStream))
    {
@@ -1163,7 +1168,8 @@ EffectSettings VST3Effect::MakeSettings() const
 
 bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
 {
-   StoreSettings(GetSettings(settings));
+   if (!StoreSettings(GetSettings(settings)))
+      return false;
 
    SyncParameters();
 
