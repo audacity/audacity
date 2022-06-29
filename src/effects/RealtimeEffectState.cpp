@@ -62,10 +62,8 @@ public:
       mChannelToMain.Write(EffectAndSettings{ mEffect, mWorkerSettings });
    }
 
-   EffectSettings mLastSettings;
    const EffectSettings &MainThreadCache() const { return mMainThreadCache; }
 
-private:
    struct ToMainSlot {
       // For initialization of the channel
       ToMainSlot() = default;
@@ -91,7 +89,6 @@ private:
 
       EffectSettings mSettings;
    };
-   MessageBuffer<ToMainSlot> mChannelToMain;
 
    struct FromMainSlot {
       // For initialization of the channel
@@ -118,11 +115,15 @@ private:
 
       EffectSettings mSettings;
    };
-   MessageBuffer<FromMainSlot> mChannelFromMain;
 
    const EffectSettingsManager &mEffect;
    EffectSettings &mWorkerSettings;
+
+   MessageBuffer<FromMainSlot> mChannelFromMain;
    EffectSettings mMainThreadCache;
+   EffectSettings mLastSettings;
+
+   MessageBuffer<ToMainSlot> mChannelToMain;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
