@@ -380,10 +380,7 @@ bool VST3Effect::LoadSettings(
             mEditController->setParamNormalized(id, value);
          }
       } while(parms.GetNextEntry(key, index));
-   }
-
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
+   }   
 
    return true;
 }
@@ -417,11 +414,6 @@ bool VST3Effect::LoadUserPreset(
          mEditController->setState(controllerState) != kResultOk)
          return false;
    }
-
-   SyncParameters(settings);
-
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
 
    return true;
 }
@@ -503,8 +495,6 @@ bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
       }
    }
    
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
 
    return true;
 }
@@ -600,7 +590,7 @@ bool VST3Effect::ProcessInitialize(
    {
       if(mEffectComponent->setActive(true) == kResultOk)
       {
-         SyncParameters(settings);//will do nothing for realtime effect
+         SyncParameters();//will do nothing for realtime effect
          mAudioProcessor->setProcessing(true);
          mInitialDelay = static_cast<decltype(mInitialDelay)>(mAudioProcessor->getLatencySamples());
          return true;
@@ -726,7 +716,7 @@ bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
    mSetup.sampleRate = sampleRate;
    //reload current parameters form the editor into parameter queues
-   SyncParameters(settings);
+   SyncParameters();
    return true;
 }
 
@@ -858,7 +848,7 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
    {
       // PRL:  Is this sync really needed?
       access.ModifySettings([&](EffectSettings &settings){
-         SyncParameters(settings);
+         SyncParameters();
       });
 
       auto parent = S.GetParent();
@@ -1127,7 +1117,7 @@ bool VST3Effect::LoadVSTUI(wxWindow* parent)
 }
 
 // Transfers data from the dialog
-void VST3Effect::SyncParameters(EffectSettings &) const
+void VST3Effect::SyncParameters() const
 {
    using namespace Steinberg;
 
@@ -1180,8 +1170,7 @@ bool VST3Effect::LoadPreset(const wxString& path)
       return false;
    }
 
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
+   
 
    return true;
 }
@@ -1197,4 +1186,17 @@ void VST3Effect::ReloadUserOptions()
       wxT("UseLatency"), mUseLatency, true);
 
    SetBlockSize(mUserBlockSize);
+}
+
+
+bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
+{
+   StoreSettings(GetSettings(settings));
+
+   SyncParameters();
+
+   if (mPlainUI != nullptr)
+      mPlainUI->ReloadParameters();
+
+   return false;
 }

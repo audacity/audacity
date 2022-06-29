@@ -158,12 +158,15 @@ public:
    bool HasOptions() override;
    void ShowOptions() override;
 
+
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+
 private:
    void OnEffectWindowResize(wxSizeEvent & evt);
 
    bool LoadVSTUI(wxWindow* parent);
 
-   void SyncParameters(EffectSettings &) const;
+   void SyncParameters() const;
 
    bool LoadPreset(const wxString& path);
 
