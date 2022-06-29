@@ -223,6 +223,13 @@ class TRACK_API Track /* not final */
    , public AttachedTrackObjects
    , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
+protected:
+   //! Empty argument passed to some public constructors
+   /*!
+    Passed to function templates like make_shared, which don't need to be
+    friends; but construction of the argument is controlled by the class
+    */
+   struct ProtectedCreationArg{};
 public:
 
    //! For two tracks describes the type of the linkage
@@ -442,7 +449,8 @@ private:
  public:
 
    Track();
-   Track(const Track &orig);
+   Track(const Track &orig, ProtectedCreationArg&&);
+   Track& operator =(const Track &orig) = delete;
 
    virtual ~ Track();
 
@@ -888,9 +896,8 @@ ENUMERATE_TRACK_TYPE(Track);
 class TRACK_API AudioTrack /* not final */ : public Track
 {
 public:
-   AudioTrack()
-      : Track{} {}
-   AudioTrack(const Track &orig) : Track{ orig } {}
+   AudioTrack();
+   AudioTrack(const Track &orig, ProtectedCreationArg &&a);
 
    static const TypeInfo &ClassTypeInfo();
 
@@ -908,9 +915,8 @@ ENUMERATE_TRACK_TYPE(AudioTrack);
 class TRACK_API PlayableTrack /* not final */ : public AudioTrack
 {
 public:
-   PlayableTrack()
-      : AudioTrack{} {}
-   PlayableTrack(const PlayableTrack &orig) : AudioTrack{ orig } {}
+   PlayableTrack();
+   PlayableTrack(const PlayableTrack &orig, ProtectedCreationArg&&);
 
    static const TypeInfo &ClassTypeInfo();
 

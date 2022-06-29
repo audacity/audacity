@@ -85,7 +85,8 @@ public:
 
    WaveTrack(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
-   WaveTrack(const WaveTrack &orig);
+   //! Copied only in WaveTrack::Clone() !
+   WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&);
 
    // overwrite data excluding the sample sequence but including display
    // settings

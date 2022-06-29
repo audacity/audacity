@@ -153,8 +153,8 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mLastdBRange = -1;
 }
 
-WaveTrack::WaveTrack(const WaveTrack &orig)
-   : WritableSampleTrack(orig)
+WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
+   : WritableSampleTrack(orig, std::move(a))
    , mpFactory( orig.mpFactory )
    , mpSpectrumSettings(orig.mpSpectrumSettings
       ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
@@ -167,11 +167,7 @@ WaveTrack::WaveTrack(const WaveTrack &orig)
 {
    mLastScaleType = -1;
    mLastdBRange = -1;
-
    mLegacyProjectFileOffset = 0;
-
-   Init(orig);
-
    for (const auto &clip : orig.mClips)
       mClips.push_back
          ( std::make_unique<WaveClip>( *clip, mpFactory, true ) );
@@ -451,7 +447,9 @@ const WaveClip* WaveTrack::FindClipByName(const wxString& name) const
 
 Track::Holder WaveTrack::Clone() const
 {
-   return std::make_shared<WaveTrack>( *this );
+   auto result = std::make_shared<WaveTrack>(*this, ProtectedCreationArg{});
+   result->Init(*this);
+   return result;
 }
 
 wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const

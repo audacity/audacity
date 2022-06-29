@@ -167,6 +167,7 @@ public:
       const std::shared_ptr<EffectSettingsAccess> &pSide = {});
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings) override;
+   void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
    //! @invariant not null
@@ -193,6 +194,13 @@ void EffectSettingsAccessTee::Set(EffectSettings &&settings) {
       pSide->Set(EffectSettings{ settings });
    // Move the given settings through
    mpMain->Set(std::move(settings));
+}
+
+void EffectSettingsAccessTee::Flush()
+{
+   mpMain->Flush();
+   if (auto pSide = mwSide.lock())
+      pSide->Flush();
 }
 
 bool EffectSettingsAccessTee::IsSameAs(
@@ -284,6 +292,7 @@ bool EffectUIHost::TransferDataFromWindow()
          }
       }
    });
+   mpAccess->Flush();
    return result;
 }
 

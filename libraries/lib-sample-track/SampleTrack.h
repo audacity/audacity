@@ -20,6 +20,8 @@ class SAMPLE_TRACK_API SampleTrack /* not final */
    : public PlayableTrack
 {
 public:
+   SampleTrack();
+   SampleTrack(const SampleTrack &other, ProtectedCreationArg&&);
    ~SampleTrack() override;
 
    const TypeInfo &GetTypeInfo() const override;
@@ -113,6 +115,9 @@ class SAMPLE_TRACK_API WritableSampleTrack /* not final */
    : public SampleTrack
 {
 public:
+   WritableSampleTrack();
+   WritableSampleTrack(
+      const WritableSampleTrack &other, ProtectedCreationArg&&);
    ~WritableSampleTrack() override;
 
    const TypeInfo &GetTypeInfo() const override;

@@ -106,7 +106,7 @@ class AUDACITY_DLL_API LabelTrack final
    static LabelTrack* Create(TrackList& trackList);
 
    LabelTrack();
-   LabelTrack(const LabelTrack &orig);
+   LabelTrack(const LabelTrack &orig, ProtectedCreationArg&&);
 
    virtual ~ LabelTrack();
 

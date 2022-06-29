@@ -140,6 +140,9 @@ public:
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings) = 0;
 
+   //! Make the last `Set` changes "persistent" in underlying storage
+   virtual void Flush() = 0;
+
    //! @return whether this and the other give access to the same settings
    virtual bool IsSameAs(const EffectSettingsAccess &other) const = 0;
 
@@ -166,6 +169,7 @@ public:
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings) override;
+   void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
    EffectSettings &mSettings;

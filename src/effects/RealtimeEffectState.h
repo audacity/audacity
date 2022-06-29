@@ -69,8 +69,7 @@ public:
       float *dummybuf, //!< one scratch buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
-   /*! @param running means no pause or deactivation of containing list */
-   bool ProcessEnd(bool running);
+   bool ProcessEnd();
 
    //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;
