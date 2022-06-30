@@ -3557,5 +3557,14 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings) cons
    return false;
 }
 
+bool VSTEffect::TransferDataToWindow(const EffectSettings& settings)
+{
+   if (!StoreSettings(GetSettings(settings)))
+      return false;
+
+   // TODO (?): update of the GUI controls 
+
+   return true;
+}
 
 #endif // USE_VST

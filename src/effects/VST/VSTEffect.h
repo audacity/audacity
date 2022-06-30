@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Audacity: A Digital Audio Editor 
 
   VSTEffect.h
 
@@ -132,6 +132,31 @@ struct VSTEffectWrapper : public VSTEffectLink
    bool FetchSettings(VSTEffectSettings& vst3Settings) const;
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
+
+
+   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
+
+   //! This function will be rewritten when the effect is really stateless
+   VSTEffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VSTEffectWrapper*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VSTEffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
 };
 
 
@@ -230,6 +255,8 @@ class VSTEffect final
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool InitializePlugin();
+
+   bool TransferDataToWindow(const EffectSettings& settings) override;
 
    // EffectUIClientInterface implementation
 
