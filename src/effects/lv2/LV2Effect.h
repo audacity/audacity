@@ -325,7 +325,7 @@ public:
       const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler);
    ~LV2Validator() override;
 
-   std::optional<LV2UIFeaturesList> mUIFeatures;
+   std::optional<const LV2UIFeaturesList> mUIFeatures;
 };
 
 #endif

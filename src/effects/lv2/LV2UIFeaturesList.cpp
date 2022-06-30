@@ -16,27 +16,27 @@
 
 LV2UIFeaturesList::LV2UIFeaturesList(
    const LV2FeaturesListBase &baseFeatures, UIHandler &handler,
-   const LilvNode *node
+   const LilvNode *node, LilvInstance *pInstance, wxWindow *pParent
 )  : ExtendedLV2FeaturesList{ baseFeatures }
    , mHandler{ handler }
-   , mOk{ InitializeFeatures(node) }
+   , mOk{ InitializeFeatures(node, pInstance, pParent) }
 {
 }
 
-bool LV2UIFeaturesList::InitializeFeatures(const LilvNode *node)
+bool LV2UIFeaturesList::InitializeFeatures(const LilvNode *node,
+   LilvInstance *pInstance, wxWindow *pParent)
 {
-   // To be set up later when making a dialog:
-   mExtensionDataFeature = {};
-
    AddFeature(LV2_UI__resize, &mUIResizeFeature);
+   mExtensionDataFeature = { pInstance
+      ? lilv_instance_get_descriptor(pInstance)->extension_data
+      : nullptr
+   };
    AddFeature(LV2_DATA_ACCESS_URI, &mExtensionDataFeature);
    AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
    AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
-   // Two features must be filled in later
-   mInstanceAccessFeature = mFeatures.size();
-   AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
-   mParentFeature = mFeatures.size();
-   AddFeature(LV2_UI__parent, nullptr);
+   AddFeature(LV2_INSTANCE_ACCESS_URI,
+      pInstance ? lilv_instance_get_handle(pInstance) : nullptr);
+   AddFeature(LV2_UI__parent, pParent ? pParent->GetHandle() : nullptr);
    return ValidateFeatures(node);
 }
 

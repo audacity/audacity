@@ -831,7 +831,9 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    const auto uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
    UIHandler &handler = *this;
-   auto &features = validator.mUIFeatures.emplace(mFeatures, handler, uinode);
+   auto &features = validator.mUIFeatures.emplace(
+      mFeatures, handler, uinode, &instance,
+      (uiType == node_ExternalUI) ? nullptr : mParent);
    if (!features.mOk)
       return false;
 
@@ -840,18 +842,12 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       containerType = LV2_EXTERNAL_UI__Widget;
    else {
       containerType = nativeType;
-      features.mFeatures[features.mParentFeature].data = mParent->GetHandle();
 #if defined(__WXGTK__)
       // Make sure the parent has a window
       if (!gtk_widget_get_window(GTK_WIDGET(mParent->m_wxwindow)))
          gtk_widget_realize(GTK_WIDGET(mParent->m_wxwindow));
 #endif
    }
-
-   features.mFeatures[features.mInstanceAccessFeature].data =
-      lilv_instance_get_handle(&instance);
-   features.mExtensionDataFeature =
-      { lilv_instance_get_descriptor(&instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;

@@ -34,11 +34,13 @@ struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
 
    LV2UIFeaturesList(
       const LV2FeaturesListBase &baseFeatures, UIHandler &handler,
-      const LilvNode *node);
+      const LilvNode *node,
+      LilvInstance *pInstance = nullptr, wxWindow *pParent = nullptr);
 
 private:
    //! @return success
-   bool InitializeFeatures(const LilvNode *node);
+   bool InitializeFeatures(const LilvNode *node,
+      LilvInstance *pInstance, wxWindow *pParent);
 
 public:
    // publicize
@@ -69,11 +71,6 @@ public:
       // The void* bound to the argument of ui_closed will be the same
       // given to suil_instance_new
       LV2UIFeaturesList::ui_closed, lilv_node_as_string(mHumanId.get()) };
-
-   //! Index into m_features
-   size_t mInstanceAccessFeature{};
-   //! Index into m_features
-   size_t mParentFeature{};
 
    const bool mOk;
 };
