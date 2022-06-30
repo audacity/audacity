@@ -12,10 +12,11 @@
 **********************************************************************/
 
 #include "LV2UIFeaturesList.h"
+#include "LV2InstanceFeaturesList.h"
 #include "lv2/instance-access/instance-access.h"
 
 LV2UIFeaturesList::LV2UIFeaturesList(
-   const LV2FeaturesListBase &baseFeatures, UIHandler &handler,
+   const LV2InstanceFeaturesList &baseFeatures, UIHandler &handler,
    const LilvNode *node, LilvInstance *pInstance, wxWindow *pParent
 )  : ExtendedLV2FeaturesList{ baseFeatures }
    , mHandler{ handler }

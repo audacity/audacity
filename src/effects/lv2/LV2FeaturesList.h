@@ -17,7 +17,6 @@
 #if USE_LV2
 
 #include "lv2/log/log.h"
-#include "lv2/options/options.h"
 #include "lv2/uri-map/uri-map.h"
 
 #include "LV2Symbols.h"
@@ -76,10 +75,6 @@ public:
    ~LV2FeaturesList() override;
 
    //! @return success
-   bool InitializeOptions();
-
-   //! To be called after InitializeOptions()
-   //! @return success
    bool InitializeFeatures();
 
    FeaturePointers GetFeaturePointers() const override;
@@ -91,40 +86,20 @@ public:
    //! @return whether our host should reciprocally supply the
    //! LV2_Worker_Schedule interface to the plug-in
    bool SuppliesWorkerInterface() const { return mSuppliesWorkerInterface; }
-   //! @return may be null
-   const LV2_Options_Option *NominalBlockLengthOption() const;
-
-   size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
-
-   /*!
-    @param subject URI of a plugin
-    @return whether all required options of subject are supported
-    */
-   bool ValidateOptions(const LilvNode *subject);
-
-   /*!
-    @param subject URI of a plugin
-    @param required whether to check required or optional options of subject
-    @return true only if `!required` or else all required options are supported
-    */
-   bool CheckOptions(const LilvNode *subject, bool required);
 
    void AddFeature(const char *uri, const void *data);
-
-   //! May be needed before exposing features and options to the plugin
-   void SetSampleRate(float sampleRate) const { mSampleRate = sampleRate; }
 
    // lv2 functions require a pointer to non-const in places, but presumably
    // have no need to mutate the members of this structure
    LV2_URID_Map *URIDMapFeature() const
    { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
 
+   LV2_URID URID_Map(const char *uri) const;
+
 protected:
    static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
       const char *map, const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
-   LV2_URID URID_Map(const char *uri) const;
-
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
 
@@ -150,22 +125,11 @@ protected:
     */
    mutable LV2Symbols::URIDMap mURIDMap;
 
-   std::vector<LV2_Options_Option> mOptions;
-   size_t mBlockSizeOption{};
-
    std::vector<LV2_Feature> mFeatures;
 
-   size_t mBlockSize{ LV2Preferences::DEFAULT_BLOCKSIZE };
-   int mSeqSize{ DEFAULT_SEQSIZE };
-
    const bool mSuppliesWorkerInterface;
-   bool mSupportsNominalBlockLength{ false };
 
 public:
-   size_t mMinBlockSize{ 1 };
-   size_t mMaxBlockSize{ mBlockSize };
-   mutable float mSampleRate{ 44100 };
-
    const bool mOk;
 };
 

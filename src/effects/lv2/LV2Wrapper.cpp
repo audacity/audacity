@@ -45,7 +45,7 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    }
 
    const auto instance = &wrapper->GetInstance();
-   wrapper->SetBlockSize();
+   wrapper->SendBlockSize();
    wrapper->ConnectPorts(ports, portStates, settings, useOutput);
 
    // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
@@ -115,13 +115,14 @@ LV2Wrapper::~LV2Wrapper()
 LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
    const LilvPlugin &plugin, double sampleRate
 )  : mFeaturesList{ featuresList }
-, mInstance{
-   [&featuresList, &plugin, sampleRate, pWorkerSchedule = &mWorkerSchedule]()
-{
+, mInstance{[
+   &featuresList, &instanceFeaturesList = mFeaturesList,
+   &plugin, sampleRate, pWorkerSchedule = &mWorkerSchedule
+](){
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   featuresList.SetSampleRate(sampleRate);
-   auto features = featuresList.GetFeaturePointers();
+   instanceFeaturesList.mSampleRate = sampleRate;
+   auto features = instanceFeaturesList.GetFeaturePointers();
    if (featuresList.SuppliesWorkerInterface()) {
       LV2_Feature tempFeature{ LV2_WORKER__schedule, pWorkerSchedule };
       // Append a feature to the array, only for the plugin instantiation
@@ -200,12 +201,15 @@ void LV2Wrapper::SetFreeWheeling(bool enable)
    mFreeWheeling = enable;
 }
 
-void LV2Wrapper::SetBlockSize()
+void LV2Wrapper::SendBlockSize()
 {
    if (auto pOption = mFeaturesList.NominalBlockLengthOption()
       ; pOption && mOptionsInterface && mOptionsInterface->set
    ){
       LV2_Options_Option options[2]{ *pOption, {} };
+      // I assume the pointer to temporary options is not retained by
+      // well written plug-ins, but they may watch the location at the pointer
+      // that is in the option structure.
       mOptionsInterface->set(mHandle, options);
    }
 }

@@ -21,6 +21,8 @@
 #include <suil/suil.h>
 #include "lv2/data-access/data-access.h"
 
+class LV2InstanceFeaturesList;
+
 struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    //! Abstraction of host services that a plug-ins native UI needs
    struct UIHandler {
@@ -33,7 +35,7 @@ struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    };
 
    LV2UIFeaturesList(
-      const LV2FeaturesListBase &baseFeatures, UIHandler &handler,
+      const LV2InstanceFeaturesList &baseFeatures, UIHandler &handler,
       const LilvNode *node,
       LilvInstance *pInstance = nullptr, wxWindow *pParent = nullptr);
 

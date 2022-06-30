@@ -73,7 +73,6 @@ LV2Instance::LV2Instance(
    int userBlockSize;
    LV2Preferences::GetBufferSize(effect, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
-   mBlockSize = mUserBlockSize;
    lv2_atom_forge_init(&mForge, GetEffect().mFeatures.URIDMapFeature());
 }
 
@@ -105,6 +104,7 @@ void LV2Instance::MakeWrapper(const EffectSettings &settings,
       // TODO give instances independent port states
       effect.mPortStates,
       GetSettings(settings), projectRate, useOutput);
+   SetBlockSize(mUserBlockSize);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,8 +237,13 @@ bool LV2Effect::InitializePlugin()
    if (!mFeatures.mOk)
       return false;
 
-   // Do a check only on a temporary UI features object
-   if (!LV2UIFeaturesList{ mFeatures, *this, lilv_plugin_get_uri(&mPlug) }.mOk)
+   // Do a check only on temporary feature list objects
+   auto instanceFeatures = LV2InstanceFeaturesList{ mFeatures };
+   if (!instanceFeatures.mOk)
+      return false;
+   if (!LV2UIFeaturesList{
+      instanceFeatures, *this, lilv_plugin_get_uri(&mPlug)
+   }.mOk)
       return false;
 
    // Determine available extensions
@@ -301,20 +306,27 @@ int LV2Effect::GetMidiOutCount() const
 
 size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 {
+   auto updateBlockSize = [maxBlockSize, userBlockSize = mUserBlockSize
+   ](LV2Wrapper &wrapper){
+      auto &featuresList = wrapper.GetFeatures();
+      featuresList.mBlockSize = std::max(featuresList.mMinBlockSize,
+         std::min({maxBlockSize, userBlockSize, featuresList.mMaxBlockSize}));
+      wrapper.SendBlockSize();
+   };
    auto pWrapper = GetWrapper();
-   const auto &featuresList = GetEffect().mFeatures;
-   mBlockSize = std::max(featuresList.mMinBlockSize,
-      std::min({maxBlockSize, mUserBlockSize, featuresList.mMaxBlockSize}));
    if (pWrapper)
-      pWrapper->SetBlockSize();
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
-      mSlaves[i]->SetBlockSize();
-   return mBlockSize;
+      updateBlockSize(*pWrapper);
+   for (auto &pSlave : mSlaves)
+      updateBlockSize(*pSlave);
+   return GetBlockSize();
 }
 
 size_t LV2Instance::GetBlockSize() const
 {
-   return mBlockSize;
+   if (const auto pWrapper = GetWrapper())
+      return pWrapper->GetFeatures().mBlockSize;
+   else
+      return LV2Preferences::DEFAULT_BLOCKSIZE;
 }
 
 sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
@@ -338,7 +350,7 @@ bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    if (!pWrapper)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
+      state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
    pWrapper->Activate();
    mLatencyDone = false;
    return true;
@@ -351,7 +363,7 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    auto pWrapper = GetWrapper();
    auto &mPortStates = GetEffect().mPortStates;
 
-   assert(size <= mBlockSize);
+   assert(size <= GetBlockSize());
    assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
    const auto instance = &pWrapper->GetInstance();
 
@@ -380,7 +392,7 @@ bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
 {
    auto &mPortStates = GetEffect().mPortStates;
    for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
+      state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
    return true;
 }
 
@@ -443,12 +455,10 @@ size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
 
    if (group >= mSlaves.size())
       return 0;
-   wxASSERT(numSamples <= (size_t) mBlockSize);
+   assert(numSamples <= (size_t) GetBlockSize());
 
    if (group < 0 || group >= (int) mSlaves.size())
-   {
       return 0;
-   }
 
    const auto slave = mSlaves[group].get();
    const auto instance = &slave->GetInstance();
@@ -833,7 +843,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    UIHandler &handler = *this;
    auto &instance = wrapper.GetInstance();
    auto &features = validator.mUIFeatures.emplace(
-      mFeatures, handler, uinode, &instance,
+      wrapper.GetFeatures(), handler, uinode, &instance,
       (uiType == node_ExternalUI) ? nullptr : mParent);
    if (!features.mOk)
       return false;
@@ -881,7 +891,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   mFeatures.mSampleRate = mProjectRate;
+   wrapper.GetFeatures().mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:

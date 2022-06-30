@@ -263,6 +263,7 @@ public:
       const EffectSettings &settings, double sampleRate) override;
 
    LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
+   const LV2Wrapper *GetWrapper() const { return GetEffect().mMaster.get(); }
 
    //! Do nothing if there is already an LV2Wrapper.  Else try to make one
    //! but this may fail.  The wrapper object remains until this is destroyed.
@@ -309,7 +310,6 @@ private:
    float mPositionSpeed{ 1.0f };
    int64_t mPositionFrame{ 0 };
 
-   size_t mBlockSize{};
    size_t mUserBlockSize{};
 
    size_t mNumSamples{};

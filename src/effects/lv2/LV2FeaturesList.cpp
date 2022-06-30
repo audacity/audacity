@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  LV2FeaturesList.cpp
+  @file LV2FeaturesList.cpp
 
   Paul Licameli split from LV2Effect.cpp
 
@@ -71,51 +71,8 @@ LV2FeaturesListBase::LV2FeaturesListBase(const LilvPlugin &plug) : mPlug{ plug }
 LV2FeaturesList::LV2FeaturesList(const LilvPlugin &plug)
    : LV2FeaturesListBase{ plug }
    , mSuppliesWorkerInterface{ SuppliesWorkerInterface(plug) }
-   , mOk{ InitializeOptions() && InitializeFeatures() }
+   , mOk{ InitializeFeatures() }
 {
-}
-
-bool LV2FeaturesList::InitializeOptions()
-{
-   using namespace LV2Symbols;
-
-   // Construct the null-terminated array describing options, and validate it
-   AddOption(urid_SequenceSize, sizeof(mSeqSize), urid_Int, &mSeqSize);
-   AddOption(urid_MinBlockLength,
-      sizeof(mMinBlockSize), urid_Int, &mMinBlockSize);
-   AddOption(urid_MaxBlockLength,
-      sizeof(mMaxBlockSize), urid_Int, &mMaxBlockSize);
-   // Two options are reset later
-   mBlockSizeOption = AddOption(urid_NominalBlockLength,
-      sizeof(mBlockSize), urid_Int, &mBlockSize);
-   AddOption(urid_SampleRate,
-      sizeof(mSampleRate), urid_Float, &mSampleRate);
-   AddOption(0, 0, 0, nullptr);
-   if (!ValidateOptions(lilv_plugin_get_uri(&mPlug)))
-      return false;
-
-   // Adjust the values in the block size features according to the plugin
-   if (LilvNodePtr minLength{ lilv_world_get(gWorld,
-         lilv_plugin_get_uri(&mPlug), node_MinBlockLength, nullptr) }
-      ; lilv_node_is_int(minLength.get())
-   ){
-      if (auto value = lilv_node_as_int(minLength.get())
-         ; value >= 0
-      )
-         mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
-   }
-   if (LilvNodePtr maxLength{ lilv_world_get(gWorld,
-         lilv_plugin_get_uri(&mPlug), node_MaxBlockLength, nullptr) }
-      ; lilv_node_is_int(maxLength.get())
-   ){
-      if (auto value = lilv_node_as_int(maxLength.get())
-         ; value >= 1
-      )
-         mMaxBlockSize = std::min<size_t>(mMaxBlockSize, value);
-   }
-   mMaxBlockSize = std::max(mMaxBlockSize, mMinBlockSize);
-
-   return true;
 }
 
 bool LV2FeaturesList::InitializeFeatures()
@@ -128,7 +85,6 @@ bool LV2FeaturesList::InitializeFeatures()
    AddFeature(LV2_UI__makeResident, nullptr);
    AddFeature(LV2_BUF_SIZE__boundedBlockLength, nullptr);
    AddFeature(LV2_BUF_SIZE__fixedBlockLength, nullptr);
-   AddFeature(LV2_OPTIONS__options, mOptions.data());
    AddFeature(LV2_URI_MAP_URI, &mUriMapFeature);
    AddFeature(LV2_URID__map, &mURIDMapFeature);
    AddFeature(LV2_URID__unmap, &mURIDUnmapFeature);
@@ -152,18 +108,6 @@ bool LV2FeaturesList::SuppliesWorkerInterface(const LilvPlugin &plug)
    return result;
 }
 
-size_t LV2FeaturesList::AddOption(
-   LV2_URID key, uint32_t size, LV2_URID type, const void *value)
-{
-   int ndx = mOptions.size();
-   if (key != 0)
-      mOptions.emplace_back(LV2_Options_Option{
-         LV2_OPTIONS_INSTANCE, 0, key, size, type, value });
-   else
-      mOptions.emplace_back(LV2_Options_Option{});
-   return ndx;
-}
-
 void LV2FeaturesList::AddFeature(const char *uri, const void *data)
 {
    // This casting to const is innocent
@@ -179,14 +123,6 @@ auto LV2FeaturesList::GetFeaturePointers() const -> FeaturePointers
       result.push_back(&feature);
    result.push_back(nullptr);
    return result;
-}
-
-const LV2_Options_Option *LV2FeaturesList::NominalBlockLengthOption() const
-{
-   if (mSupportsNominalBlockLength)
-      return &mOptions[mBlockSizeOption];
-   else
-      return nullptr;
 }
 
 bool LV2FeaturesListBase::ValidateFeatures(const LilvNode *subject)
@@ -219,43 +155,6 @@ bool LV2FeaturesListBase::CheckFeatures(const LilvNode *subject, bool required)
                   strcmp(pFeature->URI, uri) == 0; }));
             if (!supported) {
                wxLogError(wxT("%s requires unsupported feature %s"),
-                  lilv_node_as_string(lilv_plugin_get_uri(&mPlug)), uri);
-               break;
-            }
-         }
-      }
-   }
-   return supported;
-}
-
-bool LV2FeaturesList::ValidateOptions(const LilvNode *subject)
-{
-   return CheckOptions(subject, true) && CheckOptions(subject, false);
-}
-
-bool LV2FeaturesList::CheckOptions(const LilvNode *subject, bool required)
-{
-   using namespace LV2Symbols;
-   bool supported = true;
-   const auto predicate =
-      required ? node_RequiredOption : node_SupportedOption;
-   if (LilvNodesPtr nodes{
-      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }
-   ){
-      LILV_FOREACH(nodes, i, nodes.get()) {
-         const auto node = lilv_nodes_get(nodes.get(), i);
-         const auto uri = lilv_node_as_string(node);
-         const auto urid = URID_Map(uri);
-         if (urid == urid_NominalBlockLength)
-            mSupportsNominalBlockLength = true;
-         // else if (urid == urid_SampleRate)
-            // mSupportsSampleRate = true; // supports changing sample rate
-         else if (required) {
-            const auto end = mOptions.end();
-            supported = (end != std::find_if(mOptions.begin(), end,
-               [&](const auto &option){ return option.key == urid; }));
-            if (!supported) {
-               wxLogError(wxT("%s requires unsupported option %s"),
                   lilv_node_as_string(lilv_plugin_get_uri(&mPlug)), uri);
                break;
             }
