@@ -95,7 +95,6 @@ bool LV2FeaturesList::InitializeFeatures()
    AddFeature(LV2_LOG__log, &mLogFeature);
    // Some plugins specify this as a feature
    AddFeature(LV2_EXTERNAL_UI__Widget, nullptr);
-   AddFeature(LV2_UI__parent, nullptr);
 
    return true;
 }

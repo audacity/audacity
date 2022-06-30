@@ -243,6 +243,7 @@ bool LV2Effect::InitializePlugin()
    mInstanceAccessFeature = mFeatures.size();
    AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
    mParentFeature = mFeatures.size();
+   AddFeature(LV2_UI__parent, nullptr);
    if (!ValidateFeatures(lilv_plugin_get_uri(&mPlug)))
       return false;
 
