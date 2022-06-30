@@ -17,18 +17,13 @@
 
 class wxArrayString;
 
-#include <thread>
 #include <vector>
 
 #include <wx/event.h> // to inherit
-#include <wx/msgqueue.h>
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
-#include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
-#include "lv2/state/state.h"
-#include "lv2/worker/worker.h"
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
 
@@ -62,13 +57,6 @@ class NumericTextCtrl;
 class LV2EffectMeter;
 class LV2Wrapper;
 
-struct LV2EffectSettings {
-   //! vector of values in correspondence with the control ports
-   std::vector<float> values;
-   //! Result of last load of a preset; may be null
-   mutable std::shared_ptr<const LilvState> mpState;
-};
-
 class LV2Effect final : public LV2FeaturesList
 {
 public:
@@ -89,7 +77,7 @@ public:
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
    bool IsDefault() const override;
-   bool SupportsRealtime() const override;
+   RealtimeSince RealtimeSupport() const override;
    bool SupportsAutomation() const override;
 
    bool SaveSettings(
@@ -110,31 +98,6 @@ public:
 
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
-
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-   sampleCount GetLatency() override;
-
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
@@ -171,9 +134,6 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   std::unique_ptr<LV2Wrapper>
-   InitInstance(const EffectSettings &settings, float sampleRate);
-
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
 
@@ -185,7 +145,7 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(const EffectSettings &settings);
+   bool BuildFancy(LilvInstance &instance, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -216,19 +176,10 @@ private:
                                     const char *port_symbol);
    uint32_t SuilPortIndex(const char *port_symbol);
 
-public:
-   const void *GetPortValue(const LV2EffectSettings &settings,
-      const char *port_symbol, uint32_t *size, uint32_t *type) const;
-
-   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
-      const void *value, uint32_t size, uint32_t type) const;
-
 private:
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
    LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
-
-   size_t mUserBlockSize{ mBlockSize };
 
    LV2EffectSettings mSettings;
 
@@ -246,26 +197,13 @@ private:
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
 
-   bool mUseLatency{ false };
-   bool mLatencyDone{ false };
-   bool mRolling{ false };
-
-   //! Holds lv2 library state needed for the user interface
+   //! Holds lv2 library state for UI or for destructive processing
    std::unique_ptr<LV2Wrapper> mMaster;
-   //! Holds lv2 library state for destructive processing
-   std::unique_ptr<LV2Wrapper> mProcess;
-   //! Each holds lv2 library state for realtime processing of one track
-   std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
-   size_t mNumSamples{};
    size_t mFramePos{};
 
    FloatBuffers mCVInBuffers;
    FloatBuffers mCVOutBuffers;
-
-   // Position info
-   float mPositionSpeed{ 1.0f };
-   float mPositionFrame{ 0.0f };
 
    double mLength{};
 
@@ -288,13 +226,10 @@ private:
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
 
-   LV2_Atom_Forge mForge{};
-
    //! Index into m_features
    size_t mInstanceAccessFeature{};
    //! Index into m_features
    size_t mParentFeature{};
-   LV2_Feature *mWorkerScheduleFeature{};
 
    // UI
    struct PlainUIControl {
@@ -334,73 +269,76 @@ private:
 
    DECLARE_EVENT_TABLE()
 
-   friend class LV2Wrapper;
+   friend class LV2Instance; // Remove this later
 };
 
-class LV2Wrapper final
+class LV2Instance final : public PerTrackEffect::Instance
 {
 public:
-   struct LV2Work {
-      uint32_t size{};
-      const void *data{};
-   };
+   LV2Instance(StatefulPerTrackEffect &effect, const LV2Ports &ports);
+   ~LV2Instance() override;
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
+      sampleCount totalLen, ChannelNames chanMap) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+   override;
+   sampleCount GetLatency(
+      const EffectSettings &settings, double sampleRate) override;
 
-public:
-   //! May spawn a thread
-   LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
-      const LilvPlugin &plugin, double sampleRate);
-   //! If a thread was started, joins it
-   ~LV2Wrapper();
-   void Activate();
-   void Deactivate();
-   LilvInstance *GetInstance() const;
-   LV2_Handle GetHandle() const;
-   float GetLatency() const;
-   void SetFreeWheeling(bool enable);
-   void SetBlockSize();
-   void ConsumeResponses();
-   static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
-                                          uint32_t size,
-                                          const void *data);
-   LV2_Worker_Status ScheduleWork(uint32_t size, const void *data);
-   static LV2_Worker_Status respond(LV2_Worker_Respond_Handle handle,
-                                    uint32_t size,
-                                    const void *data);
-   LV2_Worker_Status Respond(uint32_t size, const void *data);
+   LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
+
+   //! Do nothing if there is already an LV2Wrapper.  Else try to make one
+   //! but this may fail.  The wrapper object remains until this is destroyed.
+   void MakeWrapper(const EffectSettings &settings,
+      double projectRate, bool useOutput);
+
+   size_t GetBlockSize() const override;
+   size_t SetBlockSize(size_t maxBlockSize) override;
+
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+   bool RealtimeSuspend() override;
+   bool RealtimeResume() override;
+   bool RealtimeProcessStart(EffectSettings &settings) override;
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
+   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
 private:
-   void ThreadFunction();
+   LV2Effect &GetEffect() const {
+      // Tolerate const_cast in this class while it sun-sets
+      return static_cast<LV2Effect &>(
+         const_cast<PerTrackEffect &>(mProcessor));
+   }
+   LV2EffectSettings &GetSettings(EffectSettings &settings) const {
+      return GetEffect().GetSettings(settings);
+   }
+   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const {
+      return GetEffect().GetSettings(settings);
+   }
 
-   std::thread mThread;
+   const LV2Ports &mPorts;
 
-   const LV2FeaturesList &mFeaturesList;
-   LilvInstancePtr mInstance;
-   LV2_Handle mHandle{};
+   //! Each holds lv2 library state for realtime processing of one track
+   std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
-   wxMessageQueue<LV2Work> mRequests;
-   wxMessageQueue<LV2Work> mResponses;
+   LV2_Atom_Forge mForge{};
 
-   // Options extension
-   const LV2_Options_Interface *mOptionsInterface{};
+   // Position info
+   float mPositionSpeed{ 1.0f };
+   int64_t mPositionFrame{ 0 };
 
-   // State extension
-   const LV2_State_Interface *mStateInterface{};
+   size_t mBlockSize{};
+   size_t mUserBlockSize{};
 
-   // Worker extension
-   const LV2_Worker_Interface *mWorkerInterface{};
-   // Another object with an explicit virtual function table
-   LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
-
-   float mLatency{ 0.0 };
-
-   //! If true, do not spawn extra worker threads
-   bool mFreeWheeling{ false };
-
-   //! Written by main thread, read by worker, but atomic isn't needed because
-   //! mRequests provides synchronization
-   bool mStopWorker{ false };
-
-   bool mActivated{ false };
+   size_t mNumSamples{};
+   bool mRolling{ false };
+   bool mUseLatency{ false };
+   bool mLatencyDone{ false };
 };
 
 #endif

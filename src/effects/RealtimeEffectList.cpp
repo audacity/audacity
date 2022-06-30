@@ -26,6 +26,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
       result->mStates.push_back(RealtimeEffectState::make_shared(*pState));
+   result->SetActive(this->IsActive());
    return result;
 }
 
@@ -196,15 +197,10 @@ XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 
 void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
 {
-   if (mStates.size() == 0)
-      return;
-
    xmlFile.StartTag(XMLTag());
    xmlFile.WriteAttr(activeAttribute, IsActive());
-
    for (const auto & state : mStates)
       state->WriteXML(xmlFile);
-   
    xmlFile.EndTag(XMLTag());
 }
 

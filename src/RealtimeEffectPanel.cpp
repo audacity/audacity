@@ -35,7 +35,6 @@
 #include "ProjectWindow.h"
 #include "Track.h"
 #include "WaveTrack.h"
-#include "ThemedWrappers.h"
 #include "effects/EffectUI.h"
 #include "effects/EffectManager.h"
 #include "effects/RealtimeEffectList.h"
@@ -289,7 +288,7 @@ namespace
       std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
-      wxButton* mEnableButton{nullptr};
+      ThemedButtonWrapper<wxBitmapButton>* mEnableButton{nullptr};
       wxWindow *mOptionsButton{};
 
    public:
@@ -322,8 +321,11 @@ namespace
                mSettingsAccess->ModifySettings([&](EffectSettings &settings){
                   settings.extra.SetActive(!wasEnabled);
                });
+               mSettingsAccess->Flush();
             }
             pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+            if (mProject)
+               ProjectHistory::Get(*mProject).ModifyState(false);
          });
 
          //Central button with effect name
@@ -382,6 +384,12 @@ namespace
          }
          else
             mSettingsAccess.reset();
+         if (mEnableButton)
+            mEnableButton->SetBitmapIndex(
+               (mSettingsAccess && mSettingsAccess->Get().extra.GetActive())
+                  ? bmpEffectOn
+                  : bmpEffectOff
+            );
          mChangeButton->SetTranslatableLabel(label);
          if (mOptionsButton)
             mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
@@ -855,6 +863,8 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
             mEffectList->EnableEffects(!wasEnabled);
          }
          pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+         if (mProject)
+            ProjectHistory::Get(*mProject).ModifyState(false);
       });
    
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
@@ -904,7 +914,13 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
    {
       mTrackTitle->SetLabel(track->GetName());
       mToggleEffects->Enable(true);
+      mToggleEffects->SetBitmapIndex(
+         (track && RealtimeEffectList::Get(*track).IsActive())
+            ? bmpEffectOn
+            : bmpEffectOff
+      );
       mEffectList->SetTrack(project, track);
+      mProject = &project;
    }
    else
       ResetTrack();
@@ -913,6 +929,8 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
 void RealtimeEffectPanel::ResetTrack()
 {
    mTrackTitle->SetLabel(wxEmptyString);
+   mToggleEffects->SetBitmapIndex(bmpEffectOff);
    mToggleEffects->Enable(false);
    mEffectList->ResetTrack();
+   mProject = nullptr;
 }

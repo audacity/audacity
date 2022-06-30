@@ -140,6 +140,9 @@ public:
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings) = 0;
 
+   //! Make the last `Set` changes "persistent" in underlying storage
+   virtual void Flush() = 0;
+
    //! @return whether this and the other give access to the same settings
    virtual bool IsSameAs(const EffectSettingsAccess &other) const = 0;
 
@@ -166,6 +169,7 @@ public:
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings) override;
+   void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
    EffectSettings &mSettings;
@@ -204,8 +208,20 @@ public:
    //! Whether the effect sorts "above the line" in the menus
    virtual bool IsDefault() const = 0;
 
+   //! In which versions of Audacity was an effect realtime capable?
+   enum class RealtimeSince : unsigned {
+      Never,
+      Since_3_2,
+      Always,
+   };
+
+   //! Since which version of Audacity has the effect supported realtime?
+   virtual RealtimeSince RealtimeSupport() const = 0;
+
    //! Whether the effect supports realtime previewing (while audio is playing).
-   virtual bool SupportsRealtime() const = 0;
+   //! non-virtual
+   bool SupportsRealtime() const
+   { return RealtimeSupport() != RealtimeSince::Never; }
 
    //! Whether the effect has any automatable controls.
    virtual bool SupportsAutomation() const = 0;

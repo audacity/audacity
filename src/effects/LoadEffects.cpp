@@ -18,7 +18,7 @@
 
 #include "Effect.h"
 #include "ModuleManager.h"
-#include "PluginInterface.h"
+#include "PluginManager.h"
 
 static bool sInitialized = false;
 
@@ -142,12 +142,18 @@ const FileExtensions &BuiltinEffectsModule::GetFileExtensions()
 
 void BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
+   // Assume initial PluginManager::Save is not yet done
+
+   // The set of built-in functions that are realtime capable may differ with
+   // the plugin registry version
+   bool rediscoverAll = !Regver_eq(pm.GetRegistryVersion(), REGVERCUR);
+
    TranslatableString ignoredErrMsg;
-   for (const auto &pair : mEffects)
-   {
+   for (const auto &pair : mEffects) {
       const auto &path = pair.first;
-      if (!pm.IsPluginRegistered(path, &pair.second->name.Msgid()))
-      {
+      if (rediscoverAll ||
+         !pm.IsPluginRegistered(path, &pair.second->name.Msgid())
+      ){
          if ( pair.second->excluded )
             continue;
          // No checking of error ?

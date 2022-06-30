@@ -11,6 +11,7 @@
 #pragma once
 #include <wx/string.h>
 
+#include "EffectInterface.h"
 #include "PluginInterface.h"
 #include "XMLTagHandler.h"
 #include "wxArrayStringEx.h"
@@ -111,7 +112,13 @@ public:
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
    void SetEffectLegacy(bool legacy);
-   void SetEffectRealtime(bool realtime);
+   void SetRealtimeSupport(EffectDefinitionInterface::RealtimeSince realtime);
+
+   //! for serialization
+   wxString SerializeRealtimeSupport() const;
+   //! for deserialization
+   void DeserializeRealtimeSupport(const wxString &value);
+
    void SetEffectAutomatable(bool automatable);
 
    void SetImporterIdentifier(const wxString & identifier);
@@ -140,7 +147,8 @@ private:
    bool mEffectInteractive {false};
    bool mEffectDefault {false};
    bool mEffectLegacy {false};
-   bool mEffectRealtime {false};
+   EffectDefinitionInterface::RealtimeSince mEffectRealtime {
+      EffectDefinitionInterface::RealtimeSince::Never };
    bool mEffectAutomatable {false};
 
    // Importers

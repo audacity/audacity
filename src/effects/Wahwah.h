@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include "StatefulPerTrackEffect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -85,7 +85,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool SupportsRealtime() const override;
+   RealtimeSince RealtimeSupport() const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

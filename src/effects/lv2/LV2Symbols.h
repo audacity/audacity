@@ -15,7 +15,6 @@
 #define LV2SYMBOLS_H
 
 #include <vector>
-#include "lilv/lilv.h"
 #include "LV2Utils.h"
 #include "MemoryX.h"
 

@@ -15,7 +15,115 @@
 #include "LV2Symbols.h"
 #include "Internat.h"
 
+#include <wx/log.h>
 #include <cmath>
+
+void LV2AtomPortState::SendToInstance(
+   LV2_Atom_Forge &forge, const int64_t frameTime, const float speed
+){
+   using namespace LV2Symbols;
+   auto &port = mpPort;
+   const auto buf = mBuffer.get();
+   if (port->mIsInput) {
+      // TAKE from an inter-thread ring buffer;
+      // PUT to an "atom forge" which is a serializer of structured information
+      // and the forge populates the buffer that the atom port was connected to
+      // and it also receives other information about speed and accumulated
+      // number of samples
+      lv2_atom_forge_set_buffer(&forge, buf, port->mMinimumSize);
+      LV2_Atom_Forge_Frame seqFrame;
+      const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
+         lv2_atom_forge_sequence_head(&forge, &seqFrame, 0));
+      if (port->mWantsPosition) {
+         lv2_atom_forge_frame_time(&forge, frameTime);
+         LV2_Atom_Forge_Frame posFrame;
+         lv2_atom_forge_object(&forge, &posFrame, 0, urid_Position);
+         lv2_atom_forge_key(&forge, urid_Speed);
+         lv2_atom_forge_float(&forge, speed);
+         lv2_atom_forge_key(&forge, urid_Frame);
+         lv2_atom_forge_long(&forge, frameTime);
+         lv2_atom_forge_pop(&forge, &posFrame);
+      }
+      // Copy event information from the UI thread into plugin's atom input,
+      // inserting frame time
+      const auto ring = mRing.get();
+      LV2_Atom atom;
+      while (zix_ring_read(ring, &atom, sizeof(atom))) {
+         if (forge.offset + sizeof(LV2_Atom_Event) + atom.size < forge.size){
+            lv2_atom_forge_frame_time(&forge, frameTime);
+            lv2_atom_forge_write(&forge, &atom, sizeof(atom));
+            zix_ring_read(ring, &forge.buf[forge.offset], atom.size);
+            forge.offset += atom.size;
+            seq->atom.size += atom.size;
+         }
+         else {
+            zix_ring_skip(ring, atom.size);
+            wxLogError(wxT("LV2 sequence buffer overflow"));
+         }
+      }
+      lv2_atom_forge_pop(&forge, &seqFrame);
+#if 0
+      LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
+         auto o = reinterpret_cast<LV2_Atom_Object *>(&ev->body);
+         wxLogDebug(wxT("ev = %lld ev.size %d ev.type %d"), ev->time.frames, ev->body.size, ev->body.type);
+      }
+#endif
+   }
+   else
+      // PRL:  I'm not sure why this must be done both before lilv_instance_run
+      // and after, but that's the legacy
+      ResetForInstanceOutput();
+}
+
+void LV2AtomPortState::ResetForInstanceOutput() {
+   using namespace LV2Symbols;
+   auto &port = mpPort;
+   if (!port->mIsInput) {
+      const auto buf = mBuffer.get();
+      *reinterpret_cast<LV2_Atom *>(buf) = { port->mMinimumSize, urid_Chunk };
+   }
+}
+
+void LV2AtomPortState::SendToDialog(
+   std::function<void(const LV2_Atom *atom, uint32_t size)> handler)
+{
+   const auto ring = mRing.get();
+   const auto minimumSize = mpPort->mMinimumSize;
+   const auto space = std::make_unique<char[]>(minimumSize);
+   auto atom = reinterpret_cast<LV2_Atom*>(space.get());
+   // Consume messages from the processing thread and pass to the
+   // foreign UI code, for updating output displays
+   while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
+      uint32_t size = lv2_atom_total_size(atom);
+      if (size < minimumSize) {
+         zix_ring_read(ring,
+            LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
+         handler(atom, size);
+      }
+      else {
+         zix_ring_skip(ring, atom->size);
+         wxLogError(wxT("LV2 sequence buffer overflow"));
+      }
+   }
+}
+
+void LV2AtomPortState::ReceiveFromInstance()
+{
+   if (!mpPort->mIsInput) {
+      const auto ring = mRing.get();
+      LV2_ATOM_SEQUENCE_FOREACH(
+         reinterpret_cast<LV2_Atom_Sequence *>(mBuffer.get()), ev
+      )
+         zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
+   }
+}
+
+void LV2AtomPortState::ReceiveFromDialog(
+   const void *buffer, uint32_t buffer_size)
+{
+   // Send event information blob from the UI to the processing thread
+   zix_ring_write(mRing.get(), buffer, buffer_size);
+}
 
 size_t LV2ControlPort::Discretize(float value) const
 {
@@ -213,6 +321,83 @@ LV2Ports::LV2Ports(const LilvPlugin &plug)
             min, max, def, hasLo, hasHi));
       }
    }
+}
+
+namespace {
+struct GetValueData {
+   const LV2Ports &ports; const LV2EffectSettings &settings;
+};
+//! This function isn't used yet, but if we ever need to call
+//! lilv_state_new_from_instance, we will give it this callback
+const void *get_value_func(
+   const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
+{
+   auto &[ports, settings] = *static_cast<GetValueData*>(user_data);
+   return ports.GetPortValue(settings, port_symbol, size, type);
+}
+}
+
+const void *LV2Ports::GetPortValue(const LV2EffectSettings &settings,
+   const char *port_symbol, uint32_t *size, uint32_t *type) const
+{
+   wxString symbol = wxString::FromUTF8(port_symbol);
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
+      if (port->mSymbol == symbol) {
+         *size = sizeof(float);
+         *type = LV2Symbols::urid_Float;
+         return &settings.values[index];
+      }
+      ++index;
+   }
+   *size = 0;
+   *type = 0;
+   return nullptr;
+}
+
+namespace {
+struct SetValueData { const LV2Ports &ports; LV2EffectSettings &settings; };
+void set_value_func(
+   const char *port_symbol, void *user_data,
+   const void *value, uint32_t size, uint32_t type)
+{
+   auto &[ports, settings] = *static_cast<SetValueData*>(user_data);
+   ports.SetPortValue(settings, port_symbol, value, size, type);
+}
+}
+
+void LV2Ports::SetPortValue(LV2EffectSettings &settings,
+   const char *port_symbol, const void *value, uint32_t size, uint32_t type)
+const
+{
+   wxString symbol = wxString::FromUTF8(port_symbol);
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
+      if (port->mSymbol == symbol) {
+         auto &dst = settings.values[index];
+         using namespace LV2Symbols;
+         if (type == urid_Bool && size == sizeof(bool))
+            dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
+         else if (type == urid_Double && size == sizeof(double))
+            dst = *static_cast<const double *>(value);
+         else if (type == urid_Float && size == sizeof(float))
+            dst = *static_cast<const float *>(value);
+         else if (type == urid_Int && size == sizeof(int32_t))
+            dst = *static_cast<const int32_t *>(value);
+         else if (type == urid_Long && size == sizeof(int64_t))
+            dst = *static_cast<const int64_t *>(value);
+         break;
+      }
+      ++index;
+   }
+}
+
+void LV2Ports::EmitPortValues(
+   const LilvState &state, LV2EffectSettings &settings) const
+{
+   SetValueData data{ *this, settings };
+   // Get the control port values from the state into settings
+   lilv_state_emit_port_values(&state, set_value_func, &data);
 }
 
 LV2PortStates::LV2PortStates(const LV2Ports &ports)

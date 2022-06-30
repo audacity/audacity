@@ -186,11 +186,11 @@ EffectType EffectDistortion::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectDistortion::SupportsRealtime() const
+auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-//   return true;
+   return RealtimeSince::Never;
+//   return RealtimeSince::Always;
 }
 
 unsigned EffectDistortion::GetAudioInCount() const

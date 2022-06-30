@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-05-31 21:02+0000\n"
+"PO-Revision-Date: 2022-06-25 17:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -10195,7 +10195,7 @@ msgstr "Eksportuj"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Eksportowanie zaznaczenia przy użyciu komendy z wiersza poleceń"
+msgstr "Eksportowanie zaznaczonego dźwięku przy użyciu komendy z wiersza poleceń"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
@@ -10979,7 +10979,7 @@ msgstr "Inicjowanie kodera FLAC zakończone niepowodzeniem\nStan: %d"
 
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
-msgstr "Eksportowanie zaznaczonych dźwięków jako FLAC"
+msgstr "Eksportowanie zaznaczonego dźwięku jako FLAC"
 
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
@@ -11000,7 +11000,7 @@ msgstr "Nie można otworzyć pliku do zapisu"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
-msgstr "Eksportowanie zaznaczonego dźwięku %ld kbps"
+msgstr "Eksportowanie zaznaczonego dźwięku z jakością %ld kbps"
 
 #: src/export/ExportMP2.cpp
 #, c-format
@@ -11229,7 +11229,7 @@ msgstr "Eksportowanie dźwięku z jakością VBR %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
-msgstr "Eksportowanie zaznaczonego dźwięku %d Kbps"
+msgstr "Eksportowanie zaznaczonego dźwięku z jakością %d Kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11439,7 +11439,7 @@ msgstr "Nie można eksportować - problem z plikiem"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
-msgstr "Eksportowanie zaznaczenia jako Ogg Vorbis"
+msgstr "Eksportowanie zaznaczonego dźwięku jako Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"

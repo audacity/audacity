@@ -28,6 +28,10 @@ void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
    mSettings = std::move(settings);
 }
 
+void SimpleEffectSettingsAccess::Flush()
+{
+}
+
 bool SimpleEffectSettingsAccess::IsSameAs(
    const EffectSettingsAccess &other) const
 {

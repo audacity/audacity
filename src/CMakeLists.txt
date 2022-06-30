@@ -582,8 +582,12 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitEffectOptionsDialog.h
          effects/audiounits/AudioUnitEffectsModule.cpp
          effects/audiounits/AudioUnitEffectsModule.h
+         effects/audiounits/AudioUnitInstance.cpp
+         effects/audiounits/AudioUnitInstance.h
          effects/audiounits/AudioUnitUtils.cpp
          effects/audiounits/AudioUnitUtils.h
+         effects/audiounits/AudioUnitValidator.cpp
+         effects/audiounits/AudioUnitValidator.h
          effects/audiounits/AudioUnitWrapper.cpp
          effects/audiounits/AudioUnitWrapper.h
       >
@@ -612,6 +616,8 @@ list( APPEND SOURCES
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
          effects/lv2/LV2Utils.h
+         effects/lv2/LV2Wrapper.cpp
+         effects/lv2/LV2Wrapper.h
          effects/lv2/LoadLV2.cpp
          effects/lv2/LoadLV2.h
          effects/lv2/NativeWindow.h
@@ -670,7 +676,7 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_WAVPACK}>:
          export/ExportWavPack.cpp
       >
-      
+
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
@@ -1326,6 +1332,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          effects/VST3/module_mac.mm
          PROPERTIES
             COMPILE_FLAGS "-fobjc-arc"
+            SKIP_PRECOMPILE_HEADERS YES
+      )
+
+      set_source_files_properties(
+         effects/VST/VSTControlOSX.mm
+         PROPERTIES
+            SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
 
