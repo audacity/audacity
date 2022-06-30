@@ -615,6 +615,8 @@ list( APPEND SOURCES
          effects/lv2/LV2Preferences.h
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
+         effects/lv2/LV2UIFeaturesList.cpp
+         effects/lv2/LV2UIFeaturesList.h
          effects/lv2/LV2Utils.h
          effects/lv2/LV2Wrapper.cpp
          effects/lv2/LV2Wrapper.h

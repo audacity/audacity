@@ -877,8 +877,8 @@ bool LV2Effect::BuildFancy(
    mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
-   mSuilHost.reset(suil_host_new(LV2Effect::suil_port_write_func,
-      LV2Effect::suil_port_index_func, nullptr, nullptr));
+   mSuilHost.reset(suil_host_new(LV2UIFeaturesList::suil_port_write,
+      LV2UIFeaturesList::suil_port_index, nullptr, nullptr));
    if (!mSuilHost)
       return false;
 
@@ -1522,13 +1522,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 // Feature handlers
 // ============================================================================
 
-// static callback
-int LV2Effect::ui_resize(LV2UI_Feature_Handle handle, int width, int height)
-{
-   return static_cast<LV2Effect *>(handle)->UIResize(width, height);
-}
-
-int LV2Effect::UIResize(int width, int height)
+int LV2Effect::ui_resize(int width, int height)
 {
    // Queue a wxSizeEvent to resize the plugins UI
    if (mNativeWin) {
@@ -1542,28 +1536,13 @@ int LV2Effect::UIResize(int width, int height)
    return 0;
 }
 
-// static callback
-void LV2Effect::ui_closed(LV2UI_Controller controller)
-{
-   return static_cast<LV2Effect *>(controller)->UIClosed();
-}
-
-void LV2Effect::UIClosed()
+void LV2Effect::ui_closed()
 {
    mExternalUIClosed = true;
 }
 
-// static callback
 // Foreign UI code wants to send a value or event to me, the host
-void LV2Effect::suil_port_write_func(SuilController controller,
-   uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
-   const void *buffer)
-{
-   static_cast<LV2Effect *>(controller)
-      ->SuilPortWrite(port_index, buffer_size, protocol, buffer);
-}
-
-void LV2Effect::SuilPortWrite(uint32_t port_index,
+void LV2Effect::suil_port_write(uint32_t port_index,
    uint32_t buffer_size, uint32_t protocol, const void *buffer)
 {
    // Handle implicit floats
@@ -1581,14 +1560,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    }
 }
 
-// static callback
-uint32_t LV2Effect::suil_port_index_func(
-   SuilController controller, const char *port_symbol)
-{
-   return static_cast<LV2Effect *>(controller)->SuilPortIndex(port_symbol);
-}
-
-uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
+uint32_t LV2Effect::suil_port_index(const char *port_symbol)
 {
    for (size_t i = 0, cnt = lilv_plugin_get_num_ports(&mPlug); i < cnt; ++i) {
       const auto port = lilv_plugin_get_port_by_index(&mPlug, i);

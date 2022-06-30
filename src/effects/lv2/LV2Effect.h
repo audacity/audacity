@@ -24,10 +24,9 @@ class wxArrayString;
 #include <wx/weakref.h>
 
 #include "lv2/data-access/data-access.h"
-#include <suil/suil.h>
-#include "lv2_external_ui.h"
 
 #include "LV2FeaturesList.h"
+#include "LV2UIFeaturesList.h"
 #include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
@@ -60,6 +59,7 @@ class LV2Wrapper;
 
 class LV2Effect final : public LV2FeaturesList
    , public StatefulPerTrackEffect
+   , LV2UIFeaturesList::UIHandler
 {
 public:
    LV2Effect(const LilvPlugin &plug);
@@ -136,11 +136,8 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
-   int UIResize(int width, int height);
-
-   static void ui_closed(LV2UI_Controller controller);
-   void UIClosed();
+   int ui_resize(int width, int height) override;
+   void ui_closed() override;
 
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *win);
@@ -164,19 +161,9 @@ private:
    void OnSize(wxSizeEvent & evt);
    void OnSizeWindow(wxCommandEvent & evt);
 
-   static void suil_port_write_func(SuilController controller,
-                                    uint32_t port_index,
-                                    uint32_t buffer_size,
-                                     uint32_t protocol,
-                                     const void *buffer);
-   void SuilPortWrite(uint32_t port_index,
-                      uint32_t buffer_size,
-                      uint32_t protocol,
-                      const void *buffer);
-
-   static uint32_t suil_port_index_func(SuilController controller,
-                                    const char *port_symbol);
-   uint32_t SuilPortIndex(const char *port_symbol);
+   void suil_port_write(uint32_t port_index,
+      uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
+   uint32_t suil_port_index(const char *port_symbol) override;
 
 private:
    const LV2Ports mPorts{ mPlug };
@@ -217,13 +204,15 @@ private:
    bool mUseGUI{};
 
    // These objects contain C-style virtual function tables that we fill in
-   const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
+   const LV2UI_Resize mUIResizeFeature{ this, LV2UIFeaturesList::ui_resize };
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
    const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
    const LV2_External_UI_Host mExternalUIHost{
-      LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
+      // The void* bound to the argument of ui_closed will be the same
+      // given to suil_instance_new
+      LV2UIFeaturesList::ui_closed, lilv_node_as_string(mHumanId.get()) };
 
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };

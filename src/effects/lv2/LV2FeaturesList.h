@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  LV2Effect.h
+  @file LV2FeaturesList.h
 
   Paul Licameli split from LV2Effect.h
 
@@ -121,16 +121,17 @@ protected:
    { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
 
    static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
-                             const char *map,
-                             const char *uri);
+      const char *map, const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
    LV2_URID URID_Map(const char *uri);
 
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
 
-   static int log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...);
-   static int log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap);
+   static int log_printf(LV2_Log_Handle handle,
+      LV2_URID type, const char *fmt, ...);
+   static int log_vprintf(LV2_Log_Handle handle,
+      LV2_URID type, const char *fmt, va_list ap);
    int LogVPrintf(LV2_URID type, const char *fmt, va_list ap);
 
    // These objects contain C-style virtual function tables that we fill in
