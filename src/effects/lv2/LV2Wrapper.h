@@ -60,7 +60,7 @@ public:
    //! Constructor may spawn a thread
    LV2Wrapper(CreateToken&&,
       const LV2FeaturesList &featuresList,
-      const LilvPlugin &plugin, double sampleRate);
+      const LilvPlugin &plugin, float sampleRate);
 
    //! If a thread was started, joins it
    ~LV2Wrapper();

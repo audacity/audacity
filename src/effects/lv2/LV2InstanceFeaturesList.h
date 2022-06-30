@@ -20,7 +20,8 @@
 #include "lv2/options/options.h"
 
 struct LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
-   explicit LV2InstanceFeaturesList(const LV2FeaturesList &baseFeatures);
+   explicit LV2InstanceFeaturesList(
+      const LV2FeaturesList &baseFeatures, float sampleRate = 44100);
 
    //! @return success
    bool InitializeOptions();
@@ -53,7 +54,7 @@ struct LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
 
    size_t mMinBlockSize{ 1 };
    size_t mMaxBlockSize{ mBlockSize };
-   float mSampleRate{ 44100 };
+   const float mSampleRate;
 
    const bool mOk;
 };

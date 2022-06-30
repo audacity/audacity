@@ -16,8 +16,9 @@
 #include "lv2/worker/worker.h"
 
 LV2InstanceFeaturesList::LV2InstanceFeaturesList(
-   const LV2FeaturesList &baseFeatures
+   const LV2FeaturesList &baseFeatures, float sampleRate
 )  : ExtendedLV2FeaturesList{ baseFeatures }
+   , mSampleRate{ sampleRate }
    , mOk{ InitializeOptions() }
 {
    AddFeature(LV2_OPTIONS__options, mOptions.data());

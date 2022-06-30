@@ -97,7 +97,7 @@ void LV2Instance::MakeWrapper(const EffectSettings &settings,
 {
    auto &effect = GetEffect();
    auto &pWrapper = effect.mMaster;
-   if (pWrapper)
+   if (pWrapper && projectRate == pWrapper->GetFeatures().mSampleRate)
       // Already made so do nothing
       return;
    pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts,
@@ -891,7 +891,6 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   wrapper.GetFeatures().mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:

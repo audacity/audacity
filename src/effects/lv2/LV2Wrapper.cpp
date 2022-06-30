@@ -113,15 +113,12 @@ LV2Wrapper::~LV2Wrapper()
 }
 
 LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
-   const LilvPlugin &plugin, double sampleRate
-)  : mFeaturesList{ featuresList }
+   const LilvPlugin &plugin, float sampleRate
+)  : mFeaturesList{ featuresList, sampleRate }
 , mInstance{[
    &featuresList, &instanceFeaturesList = mFeaturesList,
    &plugin, sampleRate, pWorkerSchedule = &mWorkerSchedule
 ](){
-   // Reassign the sample rate, which is pointed to by options, which are
-   // pointed to by features, before we tell the library the features
-   instanceFeaturesList.mSampleRate = sampleRate;
    auto features = instanceFeaturesList.GetFeaturePointers();
    if (featuresList.SuppliesWorkerInterface()) {
       LV2_Feature tempFeature{ LV2_WORKER__schedule, pWorkerSchedule };

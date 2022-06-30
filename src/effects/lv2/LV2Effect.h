@@ -265,8 +265,9 @@ public:
    LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
    const LV2Wrapper *GetWrapper() const { return GetEffect().mMaster.get(); }
 
-   //! Do nothing if there is already an LV2Wrapper.  Else try to make one
-   //! but this may fail.  The wrapper object remains until this is destroyed.
+   //! Do nothing if there is already an LV2Wrapper with the desired rate.
+   //! The wrapper object remains until this is destroyed
+   //! or the wrapper is re-made with another rate.
    void MakeWrapper(const EffectSettings &settings,
       double projectRate, bool useOutput);
 
