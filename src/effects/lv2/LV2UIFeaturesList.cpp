@@ -15,13 +15,15 @@
 #include "lv2/instance-access/instance-access.h"
 
 LV2UIFeaturesList::LV2UIFeaturesList(
-   const LV2FeaturesListBase &baseFeatures, UIHandler &handler
+   const LV2FeaturesListBase &baseFeatures, UIHandler &handler,
+   const LilvNode *node
 )  : ExtendedLV2FeaturesList{ baseFeatures }
    , mHandler{ handler }
+   , mOk{ InitializeFeatures(node) }
 {
 }
 
-bool LV2UIFeaturesList::InitializeFeatures()
+bool LV2UIFeaturesList::InitializeFeatures(const LilvNode *node)
 {
    // To be set up later when making a dialog:
    mExtensionDataFeature = {};
@@ -35,7 +37,7 @@ bool LV2UIFeaturesList::InitializeFeatures()
    AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
    mParentFeature = mFeatures.size();
    AddFeature(LV2_UI__parent, nullptr);
-   return ValidateFeatures(lilv_plugin_get_uri(&mPlug));
+   return ValidateFeatures(node);
 }
 
 int LV2UIFeaturesList::ui_resize(LV2UI_Feature_Handle handle,

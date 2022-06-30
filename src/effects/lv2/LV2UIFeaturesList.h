@@ -33,11 +33,14 @@ struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    };
 
    LV2UIFeaturesList(
-      const LV2FeaturesListBase &baseFeatures, UIHandler &handler);
+      const LV2FeaturesListBase &baseFeatures, UIHandler &handler,
+      const LilvNode *node);
 
+private:
    //! @return success
-   bool InitializeFeatures();
+   bool InitializeFeatures(const LilvNode *node);
 
+public:
    // publicize
    using ExtendedLV2FeaturesList::mFeatures;
 
@@ -71,6 +74,8 @@ struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    size_t mInstanceAccessFeature{};
    //! Index into m_features
    size_t mParentFeature{};
+
+   const bool mOk;
 };
 
 #endif

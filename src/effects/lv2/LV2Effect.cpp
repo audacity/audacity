@@ -85,7 +85,8 @@ LV2Instance::~LV2Instance()
 }
 
 LV2Validator::LV2Validator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access
+   EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler
 )  : DefaultEffectUIValidator{ effect, access }
 {
 }
@@ -236,7 +237,8 @@ bool LV2Effect::InitializePlugin()
    if (!mFeatures.mOk)
       return false;
 
-   if (!mUIFeatures.InitializeFeatures())
+   // Do a check only on a temporary UI features object
+   if (!LV2UIFeaturesList{ mFeatures, *this, lilv_plugin_get_uri(&mPlug) }.mOk)
       return false;
 
    // Determine available extensions
@@ -505,22 +507,16 @@ int LV2Effect::ShowClientInterface(
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    mDialog = &dialog;
-
    // Try to give the window a sensible default/minimum size
    mDialog->Layout();
    mDialog->Fit();
    mDialog->SetMinSize(mDialog->GetSize());
-   if (mUIFeatures.mNoResize)
-   {
+   if (mFeatures.mNoResize)
       mDialog->SetMaxSize(mDialog->GetSize());
-   }
-
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
-   {
+   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       mDialog->Show();
       return 0;
    }
-
    return mDialog->ShowModal();
 }
 
@@ -602,16 +598,16 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    if (GetType() == EffectTypeGenerate)
       mUseGUI = false;
 
+   UIHandler &handler = *this;
+   auto result =
+      std::make_unique<LV2Validator>(*this, access, mFeatures, handler);
+   
    if (mUseGUI)
-      mUseGUI = BuildFancy(
+      mUseGUI = BuildFancy(*result,
          myInstance.GetWrapper()->GetInstance(), settings);
-
-   if (!mUseGUI) {
-      if (!BuildPlain(access))
-         return nullptr;
-   }
-
-   return std::make_unique<LV2Validator>(*this, access);
+   if (!mUseGUI && !BuildPlain(access))
+      return nullptr;
+   return result;
 }
 
 bool LV2Effect::IsGraphicalUI()
@@ -649,9 +645,6 @@ bool LV2Effect::CloseUI()
    mSuilHost.reset();
    mParent = nullptr;
    mDialog = nullptr;
-
-   // Restore initial state
-   mUIFeatures.mExtensionDataFeature = {};
    mPlainUIControls.clear();
    return true;
 }
@@ -783,7 +776,7 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-bool LV2Effect::BuildFancy(
+bool LV2Effect::BuildFancy(LV2Validator &validator,
    LilvInstance &instance, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
@@ -823,8 +816,7 @@ bool LV2Effect::BuildFancy(
    if (!ui && uis) {
       LILV_FOREACH(uis, iter, uis.get()) {
          ui = lilv_uis_get(uis.get(), iter);
-         if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld))
-         {
+         if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld)) {
             uiType = node_ExternalUI;
             break;
          }
@@ -836,35 +828,29 @@ bool LV2Effect::BuildFancy(
    if (ui == NULL)
       return false;
 
-   const LilvNode *uinode = lilv_ui_get_uri(ui);
+   const auto uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
-   if (!mUIFeatures.ValidateFeatures(uinode))
+   UIHandler &handler = *this;
+   auto &features = validator.mUIFeatures.emplace(mFeatures, handler, uinode);
+   if (!features.mOk)
       return false;
 
    const char *containerType;
-
    if (uiType == node_ExternalUI)
-   {
       containerType = LV2_EXTERNAL_UI__Widget;
-   }
-   else
-   {
+   else {
       containerType = nativeType;
-      mUIFeatures.mFeatures[mUIFeatures.mParentFeature].data =
-         mParent->GetHandle();
-
+      features.mFeatures[features.mParentFeature].data = mParent->GetHandle();
 #if defined(__WXGTK__)
       // Make sure the parent has a window
       if (!gtk_widget_get_window(GTK_WIDGET(mParent->m_wxwindow)))
-      {
          gtk_widget_realize(GTK_WIDGET(mParent->m_wxwindow));
-      }
 #endif
    }
 
-   mUIFeatures.mFeatures[mUIFeatures.mInstanceAccessFeature].data =
+   features.mFeatures[features.mInstanceAccessFeature].data =
       lilv_instance_get_handle(&instance);
-   mUIFeatures.mExtensionDataFeature =
+   features.mExtensionDataFeature =
       { lilv_instance_get_descriptor(&instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
@@ -886,6 +872,7 @@ bool LV2Effect::BuildFancy(
    };
    const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
+   auto cleanup = finally([&]{ SetDllDirectory(nullptr); });
 #endif
 
    LilvCharsPtr bundlePath{
@@ -906,33 +893,22 @@ bool LV2Effect::BuildFancy(
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath.get(), binaryPath.get(),
-      mUIFeatures.GetFeaturePointers().data()));
+      features.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
-   if (!mSuilInstance)
-   {
-#if defined(__WXMSW__)
-      SetDllDirectory(NULL);
-#endif
-
+   if (!mSuilInstance) {
       mSuilHost.reset();
-
       return false;
    }
 
-   if (uiType == node_ExternalUI)
-   {
+   if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);
-
       mExternalWidget = static_cast<LV2_External_UI_Widget *>(
          suil_instance_get_widget(mSuilInstance.get()));
       mTimer.SetOwner(this, ID_TIMER);
       mTimer.Start(20);
-
       LV2_EXTERNAL_UI_SHOW(mExternalWidget);
-   }
-   else
-   {
+   } else {
       const auto widget = static_cast<WXWidget>(
          suil_instance_get_widget(mSuilInstance.get()));
 
@@ -949,39 +925,25 @@ bool LV2Effect::BuildFancy(
       if ( !uNativeWin->Create(mParent, widget) )
          return false;
       mNativeWin = uNativeWin.release();
-
       mNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
       // the native window was created, so set the size now.
       if (mNativeWinInitialSize != wxDefaultSize)
-      {
          mNativeWin->SetMinSize(mNativeWinInitialSize);
-      }
 
       wxSizerItem *si = NULL;
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      if (vs)
-      {
-         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         if (hs)
-         {
-            if (mUIFeatures.mNoResize)
-            {
-               si = hs->Add(mNativeWin, 0, wxCENTER);
-               vs->Add(hs.release(), 1, wxCENTER);
-            }
-            else
-            {
-               si = hs->Add(mNativeWin, 1, wxEXPAND);
-               vs->Add(hs.release(), 1, wxEXPAND);
-            }
-         }
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      if (features.mNoResize) {
+         si = hs->Add(mNativeWin, 0, wxCENTER);
+         vs->Add(hs.release(), 1, wxCENTER);
+      } else {
+         si = hs->Add(mNativeWin, 1, wxEXPAND);
+         vs->Add(hs.release(), 1, wxEXPAND);
       }
-
       if (!si)
          return false;
-
       mParent->SetSizerAndFit(vs.release());
    }
 
@@ -991,8 +953,7 @@ bool LV2Effect::BuildFancy(
    mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
       suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
 
-   if (mUIShowInterface)
-   {
+   if (mUIShowInterface) {
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
    }
 
@@ -1002,10 +963,6 @@ bool LV2Effect::BuildFancy(
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(true);
 #endif
-#endif
-
-#if defined(__WXMSW__)
-   SetDllDirectory(NULL);
 #endif
 
    return true;
@@ -1456,17 +1413,14 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 
    // Don't do anything here if we're recursing
    if (mResizing)
-   {
       return;
-   }
 
    // Indicate resizing is occurring
    mResizing = true;
 
    // Can only resize AFTER the dialog has been completely created and
    // there's no need to resize if we're already at the desired size.
-   if (mDialog && evt.GetSize() != mNativeWinLastSize)
-   {
+   if (mDialog && evt.GetSize() != mNativeWinLastSize) {
       // Save the desired size and set the native window to match
       mNativeWinLastSize = evt.GetSize();
       mNativeWin->SetMinSize(mNativeWinLastSize);
@@ -1484,22 +1438,17 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       // In this case, mResized has been set by the "size_request()" function
       // to indicate that this is a plugin generated resize request.
       if (mResized)
-      {
         mDialog->SetMinSize(wxDefaultSize);
-      }
 
       // Resize dialog
       mDialog->Fit();
 
       // Reestablish the minimum (and maximum) now that the dialog
       // has is desired size.
-      if (mResized)
-      {
+      if (mResized) {
          mDialog->SetMinSize(mDialog->GetSize());
-         if (mUIFeatures.mNoResize)
-         {
+         if (mFeatures.mNoResize)
             mDialog->SetMaxSize(mDialog->GetSize());
-         }
       }
 
       // Tell size_request() that the native window was just resized.

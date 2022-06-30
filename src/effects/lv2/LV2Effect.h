@@ -17,6 +17,7 @@
 
 class wxArrayString;
 
+#include <optional>
 #include <vector>
 
 #include <wx/event.h> // to inherit
@@ -52,6 +53,7 @@ class NumericTextCtrl;
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 
 class LV2EffectMeter;
+class LV2Validator;
 class LV2Wrapper;
 
 class LV2Effect final : public StatefulPerTrackEffect
@@ -140,7 +142,8 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(LilvInstance &instance, const EffectSettings &settings);
+   bool BuildFancy(LV2Validator &validator,
+      LilvInstance &instance, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -164,7 +167,6 @@ private:
 private:
    const LilvPlugin &mPlug;
    const LV2FeaturesList mFeatures{ mPlug };
-   LV2UIFeaturesList mUIFeatures{ mFeatures, *this };
 
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
@@ -319,8 +321,11 @@ private:
 class LV2Validator final : public DefaultEffectUIValidator {
 public:
    LV2Validator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access);
+      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler);
    ~LV2Validator() override;
+
+   std::optional<LV2UIFeaturesList> mUIFeatures;
 };
 
 #endif
