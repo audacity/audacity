@@ -18,10 +18,12 @@
 
 #include "LV2FeaturesList.h"
 #include "lv2/options/options.h"
+#include "lv2/worker/worker.h"
 
 struct LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
    explicit LV2InstanceFeaturesList(
-      const LV2FeaturesList &baseFeatures, float sampleRate = 44100);
+      const LV2FeaturesList &baseFeatures, float sampleRate = 44100,
+      const LV2_Worker_Schedule *pWorkerSchedule = nullptr);
 
    //! @return success
    bool InitializeOptions();

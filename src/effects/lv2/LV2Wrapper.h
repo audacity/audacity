@@ -91,10 +91,10 @@ public:
 private:
    void ThreadFunction();
 
-   LV2InstanceFeaturesList mFeaturesList;
-
    // Another object with an explicit virtual function table
    LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
+
+   LV2InstanceFeaturesList mFeaturesList;
 
    //! @invariant not null
    const LilvInstancePtr mInstance;

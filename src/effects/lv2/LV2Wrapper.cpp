@@ -114,21 +114,9 @@ LV2Wrapper::~LV2Wrapper()
 
 LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
    const LilvPlugin &plugin, float sampleRate
-)  : mFeaturesList{ featuresList, sampleRate }
-, mInstance{[
-   &featuresList, &instanceFeaturesList = mFeaturesList,
-   &plugin, sampleRate, pWorkerSchedule = &mWorkerSchedule
-](){
+)  : mFeaturesList{ featuresList, sampleRate, &mWorkerSchedule }
+, mInstance{ [&instanceFeaturesList = mFeaturesList, &plugin, sampleRate](){
    auto features = instanceFeaturesList.GetFeaturePointers();
-   if (featuresList.SuppliesWorkerInterface()) {
-      LV2_Feature tempFeature{ LV2_WORKER__schedule, pWorkerSchedule };
-      // Append a feature to the array, only for the plugin instantiation
-      // Insert another pointer before the null
-      // (features are also used elsewhere to instantiate the UI in the
-      // suil_* functions)
-      // It informs the plugin how to send work to another thread
-      features.insert(features.end() - 1, &tempFeature);
-   }
 
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
