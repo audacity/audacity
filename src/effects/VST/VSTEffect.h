@@ -112,7 +112,7 @@ struct VSTEffectWrapper : public VSTEffectLink
    float callGetParameter(int index) const;
 
    void callSetChunkB(bool isPgm, int len, void* buf);
-   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info);
+   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info) const;
 
    int      GetString(wxString& outstr, int opcode, int index = 0) const;
    wxString GetString(int opcode, int index = 0) const;
@@ -131,7 +131,7 @@ struct VSTEffectWrapper : public VSTEffectLink
 
    bool FetchSettings(VSTEffectSettings& vst3Settings) const;
 
-   bool StoreSettings(const VSTEffectSettings& vst3settings);
+   bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 };
 
 

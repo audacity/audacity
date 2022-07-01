@@ -2211,12 +2211,12 @@ void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf)
    callSetChunkB(isPgm, len, buf, &info);
 }
 
-void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf, VstPatchChunkInfo *info)
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf, VstPatchChunkInfo *info) const
 {
    if (isPgm)
    {
       // Ask the effect if this is an acceptable program
-      if (callDispatcher(effBeginLoadProgram, 0, 0, info, 0.0) == -1)
+      if (constCallDispatcher(effBeginLoadProgram, 0, 0, info, 0.0) == -1)
       {
          return;
       }
@@ -2224,15 +2224,15 @@ void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf, VstPatchChu
    else
    {
       // Ask the effect if this is an acceptable bank
-      if (callDispatcher(effBeginLoadBank, 0, 0, info, 0.0) == -1)
+      if (constCallDispatcher(effBeginLoadBank, 0, 0, info, 0.0) == -1)
       {
          return;
       }
    }
 
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-   callDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
+   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
 }
 
@@ -3503,7 +3503,7 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vst3settings) const
 }
 
 
-bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings)
+bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings) const
 {
    // First, make sure settings are compatibile with the plugin
    if ((vst3settings.mUniqueID  != mAEffect->uniqueID)   ||
