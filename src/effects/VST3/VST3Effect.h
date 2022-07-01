@@ -48,6 +48,7 @@ class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
    
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
+   bool mActive{false};
 
    //Since all of the realtime processors share same presets, following
    //fields are only initialized and assigned in the global effect instance
@@ -165,6 +166,10 @@ public:
    bool TransferDataToWindow(const EffectSettings& settings) override;
 
 private:
+   //Used to flush all pending changes to the IAudioProcessor, while
+   //plugin is inactive(!)
+   void FlushPendingChanges() const;
+
    void OnEffectWindowResize(wxSizeEvent & evt);
 
    bool LoadVSTUI(wxWindow* parent);
