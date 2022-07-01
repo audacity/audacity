@@ -20,6 +20,7 @@
 #include <wx/log.h>
 
 
+#include "AudacityVst3HostApplication.h"
 #include "ModuleManager.h"
 
 #include "wxArrayStringEx.h"
@@ -81,6 +82,8 @@ std::shared_ptr<VST3::Hosting::Module> VST3EffectsModule::GetModule(const wxStri
    auto module = VST3::Hosting::Module::create(path.ToStdString(), moduleCreateError);
    if(!module)
       throw std::runtime_error(moduleCreateError.c_str());
+
+   module->getFactory().setHostContext(&AudacityVst3HostApplication::Get());
 
    mModules[path] = module;
    return module;

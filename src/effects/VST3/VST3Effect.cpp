@@ -48,6 +48,7 @@
 #include "internal/x11/SocketWindow.h"
 #endif
 
+#include "AudacityVst3HostApplication.h"
 #include "ConfigInterface.h"
 #include "VST3ParametersWindow.h"
 
@@ -57,11 +58,6 @@ namespace {
    constexpr auto processorStateKey  = wxT("ProcessorState");
    constexpr auto controllerStateKey = wxT("ControllerState");
 
-Steinberg::Vst::IHostApplication& LocalContext()
-{
-   static Steinberg::Vst::HostApplication localContext;
-   return localContext;
-}
 
 
 void ActivateDefaultBuses(Steinberg::Vst::IComponent* component, const Steinberg::Vst::MediaType mediaType, const Steinberg::Vst::BusDirection direction, bool state)
@@ -127,7 +123,7 @@ void VST3Effect::Initialize()
    const auto& pluginFactory = mModule->getFactory();
    if(auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(mEffectClassInfo.ID()))
    {
-      if(effectComponent->initialize(&LocalContext()) == kResultOk)
+      if(effectComponent->initialize(&AudacityVst3HostApplication::Get()) == kResultOk)
       {
          if(auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effectComponent))
          {
@@ -199,46 +195,32 @@ VST3Effect::VST3Effect(
 
    const auto& pluginFactory = mModule->getFactory();
    auto editController = FUnknownPtr<Vst::IEditController>(mEffectComponent);
-   if(!editController)
+   if(editController.get() == nullptr)
    {
-      //Plugin does not have a separate edit controller
       TUID controllerCID;
             
 		if (mEffectComponent->getControllerClassId (controllerCID) == kResultTrue)
-		{
-			if(mEditController = pluginFactory.createInstance<Vst::IEditController> (VST3::UID (controllerCID)))
-			{
-            if(mEditController->initialize(&LocalContext()) != kResultOk)
-            {
-               wxLogMessage("Cannot create edit controller: initialization failed");
-               mEditController = nullptr;
-            }
-			}
-         else
-            wxLogMessage("Cannot create edit controller: attempt failed");
-		}
+         editController = pluginFactory.createInstance<Vst::IEditController>(VST3::UID(controllerCID));
       else
-         wxLogMessage("Cannot create edit controller: failed read controller Class ID from the effect component");
+         throw std::runtime_error("Failed to instantiate edit controller");
    }
-   else
-      mEditController = editController;
+   
+   mEditController = editController;
+   mEditController->initialize(&AudacityVst3HostApplication::Get());
 
-   if(mEditController)
+   mComponentHandler = owned(safenew internal::ComponentHandler);
+   mEditController->setComponentHandler(mComponentHandler);
+
+   const auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
+   const auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
+
+   if (componentConnectionPoint && controllerConnectionPoint)
    {
-      mComponentHandler = owned(safenew internal::ComponentHandler);
-      mEditController->setComponentHandler(mComponentHandler);
+      mComponentConnectionProxy = owned(safenew internal::ConnectionProxy(componentConnectionPoint));
+      mControllerConnectionProxy = owned(safenew internal::ConnectionProxy(controllerConnectionPoint));
 
-      auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
-      auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
-
-      if (componentConnectionPoint && controllerConnectionPoint)
-      {
-         mComponentConnectionProxy = owned(safenew internal::ConnectionProxy(componentConnectionPoint));
-         mControllerConnectionProxy = owned(safenew internal::ConnectionProxy(controllerConnectionPoint));
-
-         mComponentConnectionProxy->connect(controllerConnectionPoint);
-         mControllerConnectionProxy->connect(componentConnectionPoint);
-      }
+      mComponentConnectionProxy->connect(controllerConnectionPoint);
+      mControllerConnectionProxy->connect(componentConnectionPoint);
    }
 }
 
