@@ -143,7 +143,7 @@ private:
 #endif
 
    bool BuildFancy(LV2Validator &validator,
-      LilvInstance &instance, const EffectSettings &settings);
+      LV2Wrapper &wrapper, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;

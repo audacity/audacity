@@ -585,7 +585,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    myInstance.MakeWrapper(settings, mProjectRate, true);
-   if (!myInstance.GetWrapper()) {
+   const auto pWrapper = myInstance.GetWrapper();
+   if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
    }
@@ -603,8 +604,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       std::make_unique<LV2Validator>(*this, access, mFeatures, handler);
    
    if (mUseGUI)
-      mUseGUI = BuildFancy(*result,
-         myInstance.GetWrapper()->GetInstance(), settings);
+      mUseGUI = BuildFancy(*result, *pWrapper, settings);
    if (!mUseGUI && !BuildPlain(access))
       return nullptr;
    return result;
@@ -777,7 +777,7 @@ bool LV2Effect::SaveParameters(
 }
 
 bool LV2Effect::BuildFancy(LV2Validator &validator,
-   LilvInstance &instance, const EffectSettings &settings)
+   LV2Wrapper &wrapper, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -831,6 +831,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    const auto uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
    UIHandler &handler = *this;
+   auto &instance = wrapper.GetInstance();
    auto &features = validator.mUIFeatures.emplace(
       mFeatures, handler, uinode, &instance,
       (uiType == node_ExternalUI) ? nullptr : mParent);
