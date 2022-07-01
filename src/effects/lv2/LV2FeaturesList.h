@@ -123,7 +123,7 @@ protected:
    static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
       const char *map, const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
-   LV2_URID URID_Map(const char *uri);
+   LV2_URID URID_Map(const char *uri) const;
 
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
@@ -142,8 +142,13 @@ protected:
    const LV2_Log_Log mLogFeature{
       this, LV2FeaturesList::log_printf, LV2FeaturesList::log_vprintf };
 
-   // Declare local URI map
-   LV2Symbols::URIDMap mURIDMap;
+   //! Per-effect URID map allocates an ID for each URI on first lookup
+   /*!
+    This is some state shared among all instances of an effect, but logically
+    const as a mapping, assuming all reverse lookups of any urid (integer) are
+    done only after at least one lookup of the related uri (string)
+    */
+   mutable LV2Symbols::URIDMap mURIDMap;
 
    std::vector<LV2_Options_Option> mOptions;
    size_t mBlockSizeOption{};

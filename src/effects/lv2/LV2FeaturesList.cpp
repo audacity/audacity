@@ -282,7 +282,7 @@ LV2_URID LV2FeaturesList::urid_map(LV2_URID_Map_Handle handle, const char *uri)
    return static_cast<LV2FeaturesList *>(handle)->URID_Map(uri);
 }
 
-LV2_URID LV2FeaturesList::URID_Map(const char *uri)
+LV2_URID LV2FeaturesList::URID_Map(const char *uri) const
 {
    using namespace LV2Symbols;
    // Map global URIs to lower indices
