@@ -65,10 +65,11 @@
 
 LV2Instance::LV2Instance(
    StatefulPerTrackEffect &effect, const LV2FeaturesList &features,
-   const LV2Ports &ports
+   const LV2Ports &ports, LV2EffectSettings &settings
 )  : PerTrackEffect::Instance{ effect }
    , mFeatures{ features }
    , mPorts{ ports }
+   , mSettings{ settings }
 {
    LV2Preferences::GetUseLatency(effect, mUseLatency);
 
@@ -278,7 +279,7 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    LV2Preferences::GetUseGUI(*this, mUseGUI);
-   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts);
+   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts, mSettings);
 }
 
 unsigned LV2Effect::GetAudioInCount() const

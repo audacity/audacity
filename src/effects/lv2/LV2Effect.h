@@ -241,15 +241,14 @@ private:
    mutable wxArrayString mFactoryPresetUris;
 
    DECLARE_EVENT_TABLE()
-
-   friend class LV2Instance; // Remove this later
 };
 
 class LV2Instance final : public PerTrackEffect::Instance
 {
 public:
    LV2Instance(StatefulPerTrackEffect &effect,
-      const LV2FeaturesList &features, const LV2Ports &ports);
+      const LV2FeaturesList &features, const LV2Ports &ports,
+      LV2EffectSettings &settings);
    ~LV2Instance() override;
 
    const LV2PortStates &GetPortStates() const { return mPortStates; }
@@ -287,21 +286,19 @@ public:
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
 private:
-   LV2Effect &GetEffect() const {
-      // Tolerate const_cast in this class while it sun-sets
-      return static_cast<LV2Effect &>(
-         const_cast<PerTrackEffect &>(mProcessor));
+   // TODO static member function
+   LV2EffectSettings &GetSettings(EffectSettings &) const {
+      return const_cast<LV2Instance*>(this)->mSettings;
    }
-   LV2EffectSettings &GetSettings(EffectSettings &settings) const {
-      return GetEffect().GetSettings(settings);
-   }
-   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const {
-      return GetEffect().GetSettings(settings);
+   // TODO static member function
+   const LV2EffectSettings &GetSettings(const EffectSettings &) const {
+      return mSettings;
    }
 
    const LV2FeaturesList &mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
+   LV2EffectSettings &mSettings; // TODO remove
 
    //! Holds lv2 library state for UI or for destructive processing
    std::unique_ptr<LV2Wrapper> mMaster;
