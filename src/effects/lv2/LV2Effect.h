@@ -169,8 +169,6 @@ private:
    const LV2FeaturesList mFeatures{ mPlug };
 
    const LV2Ports mPorts{ mPlug };
-   LV2PortStates mPortStates{ mPorts };
-
    LV2EffectSettings mSettings;
 
    //! This ignores its argument while we transition to statelessness
@@ -255,6 +253,9 @@ class LV2Instance final : public PerTrackEffect::Instance
 public:
    LV2Instance(StatefulPerTrackEffect &effect, const LV2Ports &ports);
    ~LV2Instance() override;
+
+   const LV2PortStates &GetPortStates() const { return mPortStates; }
+
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
@@ -302,6 +303,7 @@ private:
    }
 
    const LV2Ports &mPorts;
+   LV2PortStates mPortStates{ mPorts };
 
    //! Each holds lv2 library state for realtime processing of one track
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;

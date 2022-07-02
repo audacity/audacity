@@ -102,9 +102,7 @@ void LV2Instance::MakeWrapper(const EffectSettings &settings,
    if (pWrapper && projectRate == pWrapper->GetFeatures().mSampleRate)
       // Already made so do nothing
       return;
-   pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts,
-      // TODO give instances independent port states
-      effect.mPortStates,
+   pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts, mPortStates,
       GetSettings(settings), projectRate, useOutput);
    SetBlockSize(mUserBlockSize);
 }
@@ -345,7 +343,6 @@ sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
 bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   auto &mPortStates = GetEffect().mPortStates;
    if (!GetWrapper())
       MakeWrapper(settings, sampleRate, false);
    const auto pWrapper = GetWrapper();
@@ -363,8 +360,6 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
 {
    using namespace LV2Symbols;
    auto pWrapper = GetWrapper();
-   auto &mPortStates = GetEffect().mPortStates;
-
    assert(size <= GetBlockSize());
    assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
    const auto instance = &pWrapper->GetInstance();
@@ -392,7 +387,6 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
 
 bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
 {
-   auto &mPortStates = GetEffect().mPortStates;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
    return true;
@@ -401,7 +395,6 @@ bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
 bool LV2Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
-   auto &mPortStates = GetEffect().mPortStates;
    mSlaves.clear();
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reset();
@@ -413,7 +406,6 @@ bool LV2Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
    auto &featuresList = GetEffect().mFeatures;
-   auto &mPortStates = GetEffect().mPortStates;
    auto pInstance = LV2Wrapper::Create(featuresList,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!pInstance)
@@ -443,7 +435,6 @@ bool LV2Instance::RealtimeResume()
 
 bool LV2Instance::RealtimeProcessStart(EffectSettings &)
 {
-   auto &mPortStates = GetEffect().mPortStates;
    mNumSamples = 0;
    for (auto & state : mPortStates.mAtomPortStates)
       state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
@@ -453,8 +444,6 @@ bool LV2Instance::RealtimeProcessStart(EffectSettings &)
 size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   auto &mPortStates = GetEffect().mPortStates;
-
    if (group >= mSlaves.size())
       return 0;
    assert(numSamples <= (size_t) GetBlockSize());
@@ -496,12 +485,9 @@ size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
 bool LV2Instance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
-   auto &mPortStates = GetEffect().mPortStates;
    // Nothing to do if we did process any samples
    if (mNumSamples == 0)
-   {
       return true;
-   }
 
    // Why is this not also done on the destructive processing path?
    // Because it is soon dimissing the modal dialog anyway.
@@ -613,7 +599,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    UIHandler &handler = *this;
    auto result = std::make_unique<LV2Validator>(*this, access, mFeatures,
-      handler, mPorts, mPortStates);
+      handler, mPorts,
+      dynamic_cast<LV2Instance&>(instance).GetPortStates());
 
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);
