@@ -86,11 +86,13 @@ LV2Instance::~LV2Instance()
 }
 
 LV2Validator::LV2Validator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   EffectUIClientInterface &effect, LV2Instance &instance,
+   EffectSettingsAccess &access,
    const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-   const LV2Ports &ports, const LV2PortStates &portStates
+   const LV2Ports &ports
 )  : DefaultEffectUIValidator{ effect, access }
-   , mPortUIStates{ portStates, ports }
+   , mInstance{ instance }
+   , mPortUIStates{ instance.GetPortStates(), ports }
 {
 }
 
@@ -599,9 +601,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    UIHandler &handler = *this;
-   auto result = std::make_unique<LV2Validator>(*this, access, mFeatures,
-      handler, mPorts,
-      dynamic_cast<LV2Instance&>(instance).GetPortStates());
+   auto result = std::make_unique<LV2Validator>(*this,
+      dynamic_cast<LV2Instance&>(instance),
+      access, mFeatures, handler, mPorts);
 
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);
@@ -1220,11 +1222,12 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    assert(mpValidator); // exists while a dialog is open
    auto &portUIStates = mpValidator->mPortUIStates;
    auto &mySettings = GetSettings(settings);
+   auto pMaster = mpValidator->mInstance.GetWrapper();
 
-   if (mMaster && mySettings.mpState) {
+   if (pMaster && mySettings.mpState) {
       // Maybe there are other important side effects on the instance besides
       // changes of port values
-      lilv_state_restore(mySettings.mpState.get(), &mMaster->GetInstance(),
+      lilv_state_restore(mySettings.mpState.get(), &pMaster->GetInstance(),
          nullptr, nullptr, 0, nullptr);
       // Destroy the short lived carrier of preset state
       mySettings.mpState.reset();

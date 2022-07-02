@@ -327,11 +327,13 @@ private:
 class LV2Validator final : public DefaultEffectUIValidator {
 public:
    LV2Validator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      EffectUIClientInterface &effect, LV2Instance &instance,
+      EffectSettingsAccess &access,
       const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-      const LV2Ports &ports, const LV2PortStates &portStates);
+      const LV2Ports &ports);
    ~LV2Validator() override;
 
+   LV2Instance &mInstance;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
 };
