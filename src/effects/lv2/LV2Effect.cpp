@@ -85,8 +85,10 @@ LV2Instance::~LV2Instance()
 
 LV2Validator::LV2Validator(
    EffectUIClientInterface &effect, EffectSettingsAccess &access,
-   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler
+   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+   const LV2Ports &ports, const LV2PortStates &portStates
 )  : DefaultEffectUIValidator{ effect, access }
+   , mPortUIStates{ portStates, ports }
 {
 }
 
@@ -610,13 +612,15 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    UIHandler &handler = *this;
-   auto result =
-      std::make_unique<LV2Validator>(*this, access, mFeatures, handler);
-   
+   auto result = std::make_unique<LV2Validator>(*this, access, mFeatures,
+      handler, mPorts, mPortStates);
+
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);
-   if (!mUseGUI && !BuildPlain(access))
+   if (!mUseGUI && !BuildPlain(access, *result))
       return nullptr;
+
+   mpValidator = result.get();
    return result;
 }
 
@@ -656,6 +660,7 @@ bool LV2Effect::CloseUI()
    mParent = nullptr;
    mDialog = nullptr;
    mPlainUIControls.clear();
+   mpValidator = nullptr;
    return true;
 }
 
@@ -974,8 +979,10 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    return true;
 }
 
-bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
+bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
+   LV2Validator &validator)
 {
+   auto &portUIStates = validator.mPortUIStates;
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
    mPlainUIControls.resize(mPorts.mControlPorts.size());
@@ -1024,7 +1031,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
          for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
-            auto &state = mPortUIStates.mControlPortStates[p];
+            auto &state = portUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
             const auto &value = values[p];
@@ -1222,6 +1229,8 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
+   assert(mpValidator); // exists while a dialog is open
+   auto &portUIStates = mpValidator->mPortUIStates;
    auto &mySettings = GetSettings(settings);
 
    if (mMaster && mySettings.mpState) {
@@ -1235,7 +1244,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 
    auto &values = mySettings.values;
    {
-      size_t index = 0; for (auto & state : mPortUIStates.mControlPortStates) {
+      size_t index = 0; for (auto & state : portUIStates.mControlPortStates) {
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
@@ -1265,7 +1274,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    for (auto & group : mPorts.mGroups) {
       const auto & params = mPorts.mGroupMap.at(group); /* won't throw */
       for (auto & param : params) {
-         auto &state = mPortUIStates.mControlPortStates[param];
+         auto &state = portUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
          auto &value = values[param];
@@ -1323,8 +1332,10 @@ void LV2Effect::OnChoice(wxCommandEvent &evt)
 
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
+   assert(mpValidator); // exists while a dialog is open
+   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Texts;
-   auto &state = mPortUIStates.mControlPortStates[idx];
+   auto &state = portUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
@@ -1336,8 +1347,10 @@ void LV2Effect::OnText(wxCommandEvent &evt)
 
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
+   assert(mpValidator); // exists while a dialog is open
+   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Sliders;
-   auto &state = mPortUIStates.mControlPortStates[idx];
+   auto &state = portUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    float lo = state.mLo;
    float hi = state.mHi;
@@ -1385,7 +1398,11 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
-   if (auto &atomState = mPortUIStates.mControlOut) {
+   if (!mpValidator)
+      return;
+   auto &portUIStates = mpValidator->mPortUIStates;
+
+   if (auto &atomState = portUIStates.mControlOut) {
       atomState->SendToDialog([&](const LV2_Atom *atom, uint32_t size){
          suil_instance_port_event(mSuilInstance.get(),
             atomState->mpPort->mIndex, size,
@@ -1397,8 +1414,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    // Is this idle time polling for changes of input redundant with
    // TransferDataToWindow or is it really needed?  Probably harmless.
    // In case of output control port values though, it is needed for metering.
-   size_t index = 0;
-   for (auto &state : mPortUIStates.mControlPortStates) {
+   size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
       const auto &value = mSettings.values[index];
       // Let UI know that a port's value has changed
@@ -1504,8 +1520,9 @@ void LV2Effect::suil_port_write(uint32_t port_index,
          mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
-   else if (protocol == LV2Symbols::urid_EventTransfer) {
-      auto &atomPortState = mPortUIStates.mControlIn;
+   else if (protocol == LV2Symbols::urid_EventTransfer && mpValidator) {
+      auto &portUIStates = mpValidator->mPortUIStates;
+      auto &atomPortState = portUIStates.mControlIn;
       if (atomPortState && port_index == atomPortState->mpPort->mIndex)
          atomPortState->ReceiveFromDialog(buffer, buffer_size);
    }

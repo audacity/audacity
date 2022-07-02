@@ -144,7 +144,7 @@ private:
 
    bool BuildFancy(LV2Validator &validator,
       LV2Wrapper &wrapper, const EffectSettings &settings);
-   bool BuildPlain(EffectSettingsAccess &access);
+   bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
@@ -170,7 +170,6 @@ private:
 
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
-   LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
 
    LV2EffectSettings mSettings;
 
@@ -202,6 +201,8 @@ private:
 
    wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent{};
+   // non-null for duration of a dialog
+   LV2Validator *mpValidator{};
 
    bool mUseGUI{};
 
@@ -323,10 +324,12 @@ class LV2Validator final : public DefaultEffectUIValidator {
 public:
    LV2Validator(
       EffectUIClientInterface &effect, EffectSettingsAccess &access,
-      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler);
+      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+      const LV2Ports &ports, const LV2PortStates &portStates);
    ~LV2Validator() override;
 
    std::optional<const LV2UIFeaturesList> mUIFeatures;
+   LV2PortUIStates mPortUIStates;
 };
 
 #endif
