@@ -90,7 +90,6 @@ enum
    ID_Sliders = 13000,
    ID_Choices = 14000,
    ID_Texts = 15000,
-   ID_TIMER = 20000,
 };
 
 BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
@@ -100,7 +99,6 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_COMMAND_RANGE(ID_Choices, ID_Choices + 999, wxEVT_COMMAND_CHOICE_SELECTED, LV2Effect::OnChoice)
    EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LV2Effect::OnText)
 
-   EVT_TIMER(ID_TIMER, LV2Effect::OnTimer)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
@@ -413,7 +411,6 @@ bool LV2Effect::CloseUI()
       }
       mUIIdleInterface = nullptr;
       mUIShowInterface = nullptr;
-      mExternalWidget = nullptr;
       mSuilInstance.reset();
    }
    mSuilHost.reset();
@@ -674,11 +671,10 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);
-      mExternalWidget = static_cast<LV2_External_UI_Widget *>(
+      validator.mTimer.mExternalWidget = static_cast<LV2_External_UI_Widget *>(
          suil_instance_get_widget(mSuilInstance.get()));
-      mTimer.SetOwner(this, ID_TIMER);
-      mTimer.Start(20);
-      LV2_EXTERNAL_UI_SHOW(mExternalWidget);
+      validator.mTimer.Start(20);
+      LV2_EXTERNAL_UI_SHOW(validator.mTimer.mExternalWidget);
    } else {
       const auto widget = static_cast<WXWidget>(
          suil_instance_get_widget(mSuilInstance.get()));
@@ -1127,14 +1123,10 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
-void LV2Effect::OnTimer(wxTimerEvent &evt)
+void LV2Validator::Timer::Notify()
 {
-   evt.Skip();
-
    if (mExternalWidget)
-   {
       LV2_EXTERNAL_UI_RUN(mExternalWidget);
-   }
 }
 
 void LV2Effect::OnIdle(wxIdleEvent &evt)

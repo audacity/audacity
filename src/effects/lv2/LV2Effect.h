@@ -155,7 +155,6 @@ private:
    void OnText(wxCommandEvent & evt);
    void OnSlider(wxCommandEvent & evt);
 
-   void OnTimer(wxTimerEvent & evt);
    void OnIdle(wxIdleEvent & evt);
    void OnSize(wxSizeEvent & evt);
    void OnSizeWindow(wxCommandEvent & evt);
@@ -192,8 +191,6 @@ private:
 
    double mLength{};
 
-   wxTimer mTimer;
-
    wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent{};
    // non-null for duration of a dialog
@@ -201,7 +198,6 @@ private:
 
    bool mUseGUI{};
 
-   LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
 
    // UI
@@ -257,6 +253,11 @@ public:
    LV2Instance &mInstance;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
+
+   struct Timer : wxTimer {
+      LV2_External_UI_Widget* mExternalWidget{};
+      void Notify() override;
+   } mTimer;
 };
 
 #endif
