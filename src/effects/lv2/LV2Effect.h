@@ -143,7 +143,7 @@ private:
 #endif
 
    bool BuildFancy(LV2Validator &validator,
-      LV2Wrapper &wrapper, const EffectSettings &settings);
+      const LV2Wrapper &wrapper, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -184,9 +184,6 @@ private:
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
-
-   //! Holds lv2 library state for UI or for destructive processing
-   std::unique_ptr<LV2Wrapper> mMaster;
 
    size_t mFramePos{};
 
@@ -265,13 +262,12 @@ public:
    sampleCount GetLatency(
       const EffectSettings &settings, double sampleRate) override;
 
-   LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
-   const LV2Wrapper *GetWrapper() const { return GetEffect().mMaster.get(); }
+   const LV2Wrapper *GetMaster() const { return mMaster.get(); }
 
    //! Do nothing if there is already an LV2Wrapper with the desired rate.
    //! The wrapper object remains until this is destroyed
    //! or the wrapper is re-made with another rate.
-   void MakeWrapper(const EffectSettings &settings,
+   void MakeMaster(const EffectSettings &settings,
       double projectRate, bool useOutput);
 
    size_t GetBlockSize() const override;
@@ -306,6 +302,9 @@ private:
    const LV2FeaturesList &mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
+
+   //! Holds lv2 library state for UI or for destructive processing
+   std::unique_ptr<LV2Wrapper> mMaster;
 
    //! Each holds lv2 library state for realtime processing of one track
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;

@@ -78,12 +78,7 @@ LV2Instance::LV2Instance(
    lv2_atom_forge_init(&mForge, mFeatures.URIDMapFeature());
 }
 
-LV2Instance::~LV2Instance()
-{
-   // Some temporary ugliness until real statelessness
-   const_cast<LV2Effect&>(static_cast<const LV2Effect&>(mProcessor))
-      .mMaster.reset();
-}
+LV2Instance::~LV2Instance() = default;
 
 LV2Validator::LV2Validator(
    EffectUIClientInterface &effect, LV2Instance &instance,
@@ -98,15 +93,13 @@ LV2Validator::LV2Validator(
 
 LV2Validator::~LV2Validator() = default;
 
-void LV2Instance::MakeWrapper(const EffectSettings &settings,
+void LV2Instance::MakeMaster(const EffectSettings &settings,
    double projectRate, bool useOutput)
 {
-   auto &effect = GetEffect();
-   auto &pWrapper = effect.mMaster;
-   if (pWrapper && projectRate == pWrapper->GetFeatures().mSampleRate)
+   if (mMaster && projectRate == mMaster->GetFeatures().mSampleRate)
       // Already made so do nothing
       return;
-   pWrapper = LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
+   mMaster = LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
       GetSettings(settings), projectRate, useOutput);
    SetBlockSize(mUserBlockSize);
 }
@@ -317,9 +310,8 @@ size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
          std::min({maxBlockSize, userBlockSize, featuresList.mMaxBlockSize}));
       wrapper.SendBlockSize();
    };
-   auto pWrapper = GetWrapper();
-   if (pWrapper)
-      updateBlockSize(*pWrapper);
+   if (mMaster)
+      updateBlockSize(*mMaster);
    for (auto &pSlave : mSlaves)
       updateBlockSize(*pSlave);
    return GetBlockSize();
@@ -327,18 +319,17 @@ size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 
 size_t LV2Instance::GetBlockSize() const
 {
-   if (const auto pWrapper = GetWrapper())
-      return pWrapper->GetFeatures().mBlockSize;
+   if (mMaster)
+      return mMaster->GetFeatures().mBlockSize;
    else
       return LV2Preferences::DEFAULT_BLOCKSIZE;
 }
 
 sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
 {
-   auto pWrapper = GetWrapper();
-   if (pWrapper && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
+   if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
-      return sampleCount(pWrapper->GetLatency());
+      return sampleCount(mMaster->GetLatency());
    }
    return 0;
 }
@@ -347,14 +338,13 @@ sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
 bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   if (!GetWrapper())
-      MakeWrapper(settings, sampleRate, false);
-   const auto pWrapper = GetWrapper();
-   if (!pWrapper)
+   if (!mMaster)
+      MakeMaster(settings, sampleRate, false);
+   if (!mMaster)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
-   pWrapper->Activate();
+   mMaster->Activate();
    mLatencyDone = false;
    return true;
 }
@@ -363,10 +353,9 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    using namespace LV2Symbols;
-   auto pWrapper = GetWrapper();
    assert(size <= GetBlockSize());
-   assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
-   const auto instance = &pWrapper->GetInstance();
+   assert(mMaster); // else ProcessInitialize() returned false, I'm not called
+   const auto instance = &mMaster->GetInstance();
 
    int i = 0;
    int o = 0;
@@ -381,7 +370,7 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    lilv_instance_run(instance, size);
 
    // Main thread consumes responses
-   pWrapper->ConsumeResponses();
+   mMaster->ConsumeResponses();
 
    for (auto & state : mPortStates.mAtomPortStates)
       state->ResetForInstanceOutput();
@@ -585,8 +574,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilInstance.reset();
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
-   myInstance.MakeWrapper(settings, mProjectRate, true);
-   const auto pWrapper = myInstance.GetWrapper();
+   myInstance.MakeMaster(settings, mProjectRate, true);
+   const auto pWrapper = myInstance.GetMaster();
    if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -782,7 +771,7 @@ bool LV2Effect::SaveParameters(
 }
 
 bool LV2Effect::BuildFancy(LV2Validator &validator,
-   LV2Wrapper &wrapper, const EffectSettings &settings)
+   const LV2Wrapper &wrapper, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -1222,7 +1211,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    assert(mpValidator); // exists while a dialog is open
    auto &portUIStates = mpValidator->mPortUIStates;
    auto &mySettings = GetSettings(settings);
-   auto pMaster = mpValidator->mInstance.GetWrapper();
+   auto pMaster = mpValidator->mInstance.GetMaster();
 
    if (pMaster && mySettings.mpState) {
       // Maybe there are other important side effects on the instance besides
