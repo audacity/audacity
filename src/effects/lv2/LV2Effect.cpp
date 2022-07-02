@@ -64,8 +64,10 @@
 #endif
 
 LV2Instance::LV2Instance(
-   StatefulPerTrackEffect &effect, const LV2Ports &ports
+   StatefulPerTrackEffect &effect, const LV2FeaturesList &features,
+   const LV2Ports &ports
 )  : PerTrackEffect::Instance{ effect }
+   , mFeatures{ features }
    , mPorts{ ports }
 {
    LV2Preferences::GetUseLatency(effect, mUseLatency);
@@ -73,7 +75,7 @@ LV2Instance::LV2Instance(
    int userBlockSize;
    LV2Preferences::GetBufferSize(effect, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
-   lv2_atom_forge_init(&mForge, GetEffect().mFeatures.URIDMapFeature());
+   lv2_atom_forge_init(&mForge, mFeatures.URIDMapFeature());
 }
 
 LV2Instance::~LV2Instance()
@@ -102,7 +104,7 @@ void LV2Instance::MakeWrapper(const EffectSettings &settings,
    if (pWrapper && projectRate == pWrapper->GetFeatures().mSampleRate)
       // Already made so do nothing
       return;
-   pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts, mPortStates,
+   pWrapper = LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
       GetSettings(settings), projectRate, useOutput);
    SetBlockSize(mUserBlockSize);
 }
@@ -281,7 +283,7 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    LV2Preferences::GetUseGUI(*this, mUseGUI);
-   return std::make_shared<LV2Instance>(*this, mPorts);
+   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -405,8 +407,7 @@ return GuardedCall<bool>([&]{
 bool LV2Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto &featuresList = GetEffect().mFeatures;
-   auto pInstance = LV2Wrapper::Create(featuresList,
+   auto pInstance = LV2Wrapper::Create(mFeatures,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);
    if (!pInstance)
       return false;

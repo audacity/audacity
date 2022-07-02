@@ -251,7 +251,8 @@ private:
 class LV2Instance final : public PerTrackEffect::Instance
 {
 public:
-   LV2Instance(StatefulPerTrackEffect &effect, const LV2Ports &ports);
+   LV2Instance(StatefulPerTrackEffect &effect,
+      const LV2FeaturesList &features, const LV2Ports &ports);
    ~LV2Instance() override;
 
    const LV2PortStates &GetPortStates() const { return mPortStates; }
@@ -302,6 +303,7 @@ private:
       return GetEffect().GetSettings(settings);
    }
 
+   const LV2FeaturesList &mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
 
