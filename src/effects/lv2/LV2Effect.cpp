@@ -67,14 +67,15 @@ LV2Validator::LV2Validator(
    EffectUIClientInterface &effect, LV2Instance &instance,
    EffectSettingsAccess &access,
    const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-   const LV2Ports &ports
+   const LV2Ports &ports, wxWindow *parent
 )  : DefaultEffectUIValidator{ effect, access }
    , mInstance{ instance }
    , mPortUIStates{ instance.GetPortStates(), ports }
+   , mParent{ parent }
 {
+   if (mParent)
+      mParent->PushEventHandler(static_cast<Effect*>(&effect));
 }
-
-LV2Validator::~LV2Validator() = default;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -347,8 +348,6 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    auto parent = S.GetParent();
    mParent = parent;
 
-   mParent->PushEventHandler(this);
-
    mSuilHost.reset();
    mSuilInstance.reset();
 
@@ -371,7 +370,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    UIHandler &handler = *this;
    auto result = std::make_unique<LV2Validator>(*this,
       dynamic_cast<LV2Instance&>(instance),
-      access, mFeatures, handler, mPorts);
+      access, mFeatures, handler, mPorts, parent);
 
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);
@@ -403,7 +402,6 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mParent->RemoveEventHandler(this);
    if (mSuilInstance) {
       if (mNativeWin) {
          mNativeWin->Destroy();
@@ -419,6 +417,12 @@ bool LV2Effect::CloseUI()
    mPlainUIControls.clear();
    mpValidator = nullptr;
    return true;
+}
+
+LV2Validator::~LV2Validator()
+{
+   if (mParent)
+      mParent->RemoveEventHandler(static_cast<Effect*>(&mEffect));
 }
 
 bool LV2Effect::LoadUserPreset(

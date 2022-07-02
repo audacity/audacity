@@ -247,7 +247,7 @@ public:
       EffectUIClientInterface &effect, LV2Instance &instance,
       EffectSettingsAccess &access,
       const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-      const LV2Ports &ports);
+      const LV2Ports &ports, wxWindow *parent);
    ~LV2Validator() override;
 
    // TODO static or non-member function
@@ -258,6 +258,8 @@ public:
    LV2Instance &mInstance;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
+
+   wxWindow *const mParent;
 
    struct Timer : wxTimer {
       LV2_External_UI_Widget* mExternalWidget{};
