@@ -571,7 +571,7 @@ protected:
 class COMPONENTS_API DefaultEffectUIValidator
    : public EffectUIValidator
    // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
-   , wxEvtHandler
+   , protected wxEvtHandler
 {
 public:
    using EffectUIValidator::EffectUIValidator;
