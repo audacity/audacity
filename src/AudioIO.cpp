@@ -357,6 +357,18 @@ AudioIO::AddState(AudacityProject &project, Track *pTrack, const PluginID & id)
    return RealtimeEffectManager::Get(project).AddState(pInit, pTrack, id);
 }
 
+std::shared_ptr<RealtimeEffectState>
+AudioIO::ReplaceState(AudacityProject &project,
+   Track *pTrack, size_t index, const PluginID & id)
+{
+   RealtimeEffects::InitializationScope *pInit = nullptr;
+   if (mpTransportState)
+      if (auto pProject = GetOwningProject(); pProject.get() == &project)
+         pInit = &*mpTransportState->mpRealtimeInitialization;
+   return RealtimeEffectManager::Get(project)
+      .ReplaceState(pInit, pTrack, index, id);
+}
+
 void AudioIO::RemoveState(AudacityProject &project,
    Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
@@ -365,14 +377,6 @@ void AudioIO::RemoveState(AudacityProject &project,
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
          pInit = &*mpTransportState->mpRealtimeInitialization;
    RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, pState);
-}
-
-RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()
-{
-   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
-      return RealtimeEffects::SuspensionScope{
-         *mpTransportState->mpRealtimeInitialization, mOwningProject };
-   return {};
 }
 
 void AudioIO::SetMixer(int inputSource, float recordVolume,
@@ -1567,11 +1571,10 @@ void AudioIO::SetPaused(bool state)
    if (state != IsPaused())
    {
       if (auto pOwningProject = mOwningProject.lock()) {
+         // The realtime effects manager may remain "active" but becomes
+         // "suspended" or "resumed".
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
-         if (state)
-            em.Suspend();
-         else
-            em.Resume();
+         em.SetSuspended(state);
       }
    }
 
