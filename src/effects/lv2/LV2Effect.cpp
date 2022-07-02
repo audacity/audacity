@@ -9,8 +9,6 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_LV2)
 
 #if defined(__GNUC__)
@@ -411,15 +409,10 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   if (mSuilInstance) {
-      if (mNativeWin) {
-         mNativeWin->Destroy();
-         mNativeWin = nullptr;
-      }
-      mUIIdleInterface = nullptr;
-      mUIShowInterface = nullptr;
-      mSuilInstance.reset();
-   }
+   mNativeWin.reset();
+   mUIIdleInterface = nullptr;
+   mUIShowInterface = nullptr;
+   mSuilInstance.reset();
    mSuilHost.reset();
    mParent = nullptr;
    mpValidator = nullptr;
@@ -701,25 +694,25 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       g_signal_connect(widget, "size-request", G_CALLBACK(LV2Effect::size_request), this);
 #endif
 
-      Destroy_ptr< NativeWindow > uNativeWin{ safenew NativeWindow() };
-      if ( !uNativeWin->Create(mParent, widget) )
+      wxWindowPtr< NativeWindow > pNativeWin{ safenew NativeWindow() };
+      if (!pNativeWin->Create(mParent, widget))
          return false;
-      mNativeWin = uNativeWin.release();
-      mNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
+      mNativeWin = pNativeWin;
+      pNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
       // the native window was created, so set the size now.
       if (mNativeWinInitialSize != wxDefaultSize)
-         mNativeWin->SetMinSize(mNativeWinInitialSize);
+         pNativeWin->SetMinSize(mNativeWinInitialSize);
 
       wxSizerItem *si = NULL;
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       if (features.mNoResize) {
-         si = hs->Add(mNativeWin, 0, wxCENTER);
+         si = hs->Add(pNativeWin.get(), 0, wxCENTER);
          vs->Add(hs.release(), 1, wxCENTER);
       } else {
-         si = hs->Add(mNativeWin, 1, wxEXPAND);
+         si = hs->Add(pNativeWin.get(), 1, wxEXPAND);
          vs->Add(hs.release(), 1, wxEXPAND);
       }
       if (!si)
@@ -1269,7 +1262,7 @@ int LV2Effect::ui_resize(int width, int height)
    // Queue a wxSizeEvent to resize the plugins UI
    if (mNativeWin) {
       wxSizeEvent sw{ wxSize{ width, height } };
-      sw.SetEventObject(mNativeWin);
+      sw.SetEventObject(mNativeWin.get());
       mNativeWin->GetEventHandler()->AddPendingEvent(sw);
    }
    else
@@ -1343,7 +1336,7 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
       {
          mResized = true;
          wxSizeEvent se(wxSize(requisition->width, requisition->height));
-         se.SetEventObject(mNativeWin);
+         se.SetEventObject(mNativeWin.get());
          mNativeWin->GetEventHandler()->AddPendingEvent(se);
       }
    }

@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_LV2_EFFECT__
 #define __AUDACITY_LV2_EFFECT__
 
-
 #if USE_LV2
 
 class wxArrayString;
@@ -23,6 +22,8 @@ class wxArrayString;
 #include <wx/event.h> // to inherit
 #include <wx/timer.h>
 #include <wx/weakref.h>
+#include <wx/window.h>
+#include <wx/windowptr.h>
 
 #include "LV2UIFeaturesList.h"
 #include "LV2Ports.h"
@@ -192,7 +193,7 @@ private:
    SuilHostPtr mSuilHost;
    SuilInstancePtr mSuilInstance;
 
-   NativeWindow *mNativeWin{};
+   wxWindowPtr<NativeWindow> mNativeWin{};
    wxSize mNativeWinInitialSize{ wxDefaultSize };
    wxSize mNativeWinLastSize{ wxDefaultSize };
    bool mResizing{ false };
