@@ -63,13 +63,17 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
-LV2Validator::LV2Validator(
-   EffectUIClientInterface &effect, LV2Instance &instance,
-   EffectSettingsAccess &access,
+LV2Validator::LV2Validator(EffectBase &effect,
+   const LilvPlugin &plug, LV2Instance &instance,
+   EffectSettingsAccess &access, double sampleRate,
    const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
    const LV2Ports &ports, wxWindow *parent
 )  : DefaultEffectUIValidator{ effect, access }
+   , mPlug{ plug }
+   , mType{ effect.GetType() }
    , mInstance{ instance }
+   , mSampleRate{ sampleRate }
+   , mPorts{ ports }
    , mPortUIStates{ instance.GetPortStates(), ports }
    , mParent{ parent }
 {
@@ -368,9 +372,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    UIHandler &handler = *this;
-   auto result = std::make_unique<LV2Validator>(*this,
+   auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mFeatures, handler, mPorts, parent);
+      access, mProjectRate, mFeatures, handler, mPorts, parent);
 
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);

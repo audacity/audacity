@@ -243,9 +243,9 @@ class LV2Instance;
 
 class LV2Validator final : public DefaultEffectUIValidator {
 public:
-   LV2Validator(
-      EffectUIClientInterface &effect, LV2Instance &instance,
-      EffectSettingsAccess &access,
+   LV2Validator(EffectBase &effect,
+      const LilvPlugin &plug, LV2Instance &instance,
+      EffectSettingsAccess &access, double sampleRate,
       const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
       const LV2Ports &ports, wxWindow *parent);
    ~LV2Validator() override;
@@ -255,7 +255,11 @@ public:
    // TODO static or non-member function
    const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
 
+   const LilvPlugin &mPlug;
+   const EffectType mType;
    LV2Instance &mInstance;
+   const double mSampleRate;
+   const LV2Ports &mPorts;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
 
