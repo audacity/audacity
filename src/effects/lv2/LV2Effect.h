@@ -17,20 +17,18 @@
 
 class wxArrayString;
 
+#include <optional>
 #include <vector>
 
 #include <wx/event.h> // to inherit
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
-#include "lv2/data-access/data-access.h"
-#include <suil/suil.h>
-#include "lv2_external_ui.h"
-
-#include "LV2FeaturesList.h"
+#include "LV2UIFeaturesList.h"
 #include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
+#include "../StatefulPerTrackEffect.h"
 
 #include "NativeWindow.h"
 
@@ -55,9 +53,11 @@ class NumericTextCtrl;
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 
 class LV2EffectMeter;
+class LV2Validator;
 class LV2Wrapper;
 
-class LV2Effect final : public LV2FeaturesList
+class LV2Effect final : public StatefulPerTrackEffect
+   , LV2UIFeaturesList::UIHandler
 {
 public:
    LV2Effect(const LilvPlugin &plug);
@@ -134,18 +134,16 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
-   int UIResize(int width, int height);
-
-   static void ui_closed(LV2UI_Controller controller);
-   void UIClosed();
+   int ui_resize(int width, int height) override;
+   void ui_closed() override;
 
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *win);
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(LilvInstance &instance, const EffectSettings &settings);
+   bool BuildFancy(LV2Validator &validator,
+      LV2Wrapper &wrapper, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -162,21 +160,14 @@ private:
    void OnSize(wxSizeEvent & evt);
    void OnSizeWindow(wxCommandEvent & evt);
 
-   static void suil_port_write_func(SuilController controller,
-                                    uint32_t port_index,
-                                    uint32_t buffer_size,
-                                     uint32_t protocol,
-                                     const void *buffer);
-   void SuilPortWrite(uint32_t port_index,
-                      uint32_t buffer_size,
-                      uint32_t protocol,
-                      const void *buffer);
-
-   static uint32_t suil_port_index_func(SuilController controller,
-                                    const char *port_symbol);
-   uint32_t SuilPortIndex(const char *port_symbol);
+   void suil_port_write(uint32_t port_index,
+      uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
+   uint32_t suil_port_index(const char *port_symbol) override;
 
 private:
+   const LilvPlugin &mPlug;
+   const LV2FeaturesList mFeatures{ mPlug };
+
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
    LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
@@ -214,22 +205,8 @@ private:
 
    bool mUseGUI{};
 
-   // These objects contain C-style virtual function tables that we fill in
-   const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
-   // Not const, filled in when making a dialog
-   LV2_Extension_Data_Feature mExtensionDataFeature{};
-
-   const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
-   const LV2_External_UI_Host mExternalUIHost{
-      LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
-
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
-
-   //! Index into m_features
-   size_t mInstanceAccessFeature{};
-   //! Index into m_features
-   size_t mParentFeature{};
 
    // UI
    struct PlainUIControl {
@@ -286,9 +263,11 @@ public:
       const EffectSettings &settings, double sampleRate) override;
 
    LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
+   const LV2Wrapper *GetWrapper() const { return GetEffect().mMaster.get(); }
 
-   //! Do nothing if there is already an LV2Wrapper.  Else try to make one
-   //! but this may fail.  The wrapper object remains until this is destroyed.
+   //! Do nothing if there is already an LV2Wrapper with the desired rate.
+   //! The wrapper object remains until this is destroyed
+   //! or the wrapper is re-made with another rate.
    void MakeWrapper(const EffectSettings &settings,
       double projectRate, bool useOutput);
 
@@ -332,13 +311,22 @@ private:
    float mPositionSpeed{ 1.0f };
    int64_t mPositionFrame{ 0 };
 
-   size_t mBlockSize{};
    size_t mUserBlockSize{};
 
    size_t mNumSamples{};
    bool mRolling{ false };
    bool mUseLatency{ false };
    bool mLatencyDone{ false };
+};
+
+class LV2Validator final : public DefaultEffectUIValidator {
+public:
+   LV2Validator(
+      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler);
+   ~LV2Validator() override;
+
+   std::optional<const LV2UIFeaturesList> mUIFeatures;
 };
 
 #endif

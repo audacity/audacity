@@ -55,8 +55,6 @@
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "lv2/instance-access/instance-access.h"
-
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>
 #endif
@@ -75,8 +73,7 @@ LV2Instance::LV2Instance(
    int userBlockSize;
    LV2Preferences::GetBufferSize(effect, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
-   mBlockSize = mUserBlockSize;
-   lv2_atom_forge_init(&mForge, GetEffect().URIDMapFeature());
+   lv2_atom_forge_init(&mForge, GetEffect().mFeatures.URIDMapFeature());
 }
 
 LV2Instance::~LV2Instance()
@@ -86,18 +83,28 @@ LV2Instance::~LV2Instance()
       .mMaster.reset();
 }
 
+LV2Validator::LV2Validator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler
+)  : DefaultEffectUIValidator{ effect, access }
+{
+}
+
+LV2Validator::~LV2Validator() = default;
+
 void LV2Instance::MakeWrapper(const EffectSettings &settings,
    double projectRate, bool useOutput)
 {
    auto &effect = GetEffect();
    auto &pWrapper = effect.mMaster;
-   if (pWrapper)
+   if (pWrapper && projectRate == pWrapper->GetFeatures().mSampleRate)
       // Already made so do nothing
       return;
-   pWrapper = LV2Wrapper::Create(effect, mPorts,
+   pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts,
       // TODO give instances independent port states
       effect.mPortStates,
       GetSettings(settings), projectRate, useOutput);
+   SetBlockSize(mUserBlockSize);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,7 +135,7 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin &plug) : LV2FeaturesList{ plug }
+LV2Effect::LV2Effect(const LilvPlugin &plug) : mPlug{ plug }
 {
 }
 
@@ -147,7 +154,7 @@ PluginPath LV2Effect::GetPath() const
 
 ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
-   return LilvStringMove(lilv_plugin_get_name(&mPlug));
+   return LV2FeaturesList::GetPluginSymbol(mPlug);
 }
 
 VendorSymbol LV2Effect::GetVendor() const
@@ -227,23 +234,16 @@ bool LV2Effect::SupportsAutomation() const
 
 bool LV2Effect::InitializePlugin()
 {
-   // To be set up later when making a dialog:
-   mExtensionDataFeature = {};
-
-   if (!LV2FeaturesList::InitializeOptions() ||
-      !LV2FeaturesList::InitializeFeatures()
-   )
+   if (!mFeatures.mOk)
       return false;
 
-   AddFeature(LV2_UI__resize, &mUIResizeFeature);
-   AddFeature(LV2_DATA_ACCESS_URI, &mExtensionDataFeature);
-   AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
-   AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
-   // Two features must be filled in later
-   mInstanceAccessFeature = mFeatures.size();
-   AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
-   mParentFeature = mFeatures.size();
-   if (!ValidateFeatures(lilv_plugin_get_uri(&mPlug)))
+   // Do a check only on temporary feature list objects
+   auto instanceFeatures = LV2InstanceFeaturesList{ mFeatures };
+   if (!instanceFeatures.mOk)
+      return false;
+   if (!LV2UIFeaturesList{
+      instanceFeatures, *this, lilv_plugin_get_uri(&mPlug)
+   }.mOk)
       return false;
 
    // Determine available extensions
@@ -306,20 +306,27 @@ int LV2Effect::GetMidiOutCount() const
 
 size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 {
+   auto updateBlockSize = [maxBlockSize, userBlockSize = mUserBlockSize
+   ](LV2Wrapper &wrapper){
+      auto &featuresList = wrapper.GetFeatures();
+      featuresList.mBlockSize = std::max(featuresList.mMinBlockSize,
+         std::min({maxBlockSize, userBlockSize, featuresList.mMaxBlockSize}));
+      wrapper.SendBlockSize();
+   };
    auto pWrapper = GetWrapper();
-   const auto &featuresList = GetEffect();
-   mBlockSize = std::max(featuresList.mMinBlockSize,
-      std::min({maxBlockSize, mUserBlockSize, featuresList.mMaxBlockSize}));
    if (pWrapper)
-      pWrapper->SetBlockSize();
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
-      mSlaves[i]->SetBlockSize();
-   return mBlockSize;
+      updateBlockSize(*pWrapper);
+   for (auto &pSlave : mSlaves)
+      updateBlockSize(*pSlave);
+   return GetBlockSize();
 }
 
 size_t LV2Instance::GetBlockSize() const
 {
-   return mBlockSize;
+   if (const auto pWrapper = GetWrapper())
+      return pWrapper->GetFeatures().mBlockSize;
+   else
+      return LV2Preferences::DEFAULT_BLOCKSIZE;
 }
 
 sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
@@ -343,7 +350,7 @@ bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    if (!pWrapper)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
+      state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
    pWrapper->Activate();
    mLatencyDone = false;
    return true;
@@ -356,7 +363,7 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    auto pWrapper = GetWrapper();
    auto &mPortStates = GetEffect().mPortStates;
 
-   assert(size <= mBlockSize);
+   assert(size <= GetBlockSize());
    assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
    const auto instance = &pWrapper->GetInstance();
 
@@ -385,7 +392,7 @@ bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
 {
    auto &mPortStates = GetEffect().mPortStates;
    for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
+      state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
    return true;
 }
 
@@ -403,7 +410,7 @@ return GuardedCall<bool>([&]{
 bool LV2Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto &featuresList = GetEffect();
+   auto &featuresList = GetEffect().mFeatures;
    auto &mPortStates = GetEffect().mPortStates;
    auto pInstance = LV2Wrapper::Create(featuresList,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);
@@ -448,12 +455,10 @@ size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
 
    if (group >= mSlaves.size())
       return 0;
-   wxASSERT(numSamples <= (size_t) mBlockSize);
+   assert(numSamples <= (size_t) GetBlockSize());
 
    if (group < 0 || group >= (int) mSlaves.size())
-   {
       return 0;
-   }
 
    const auto slave = mSlaves[group].get();
    const auto instance = &slave->GetInstance();
@@ -512,22 +517,16 @@ int LV2Effect::ShowClientInterface(
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    mDialog = &dialog;
-
    // Try to give the window a sensible default/minimum size
    mDialog->Layout();
    mDialog->Fit();
    mDialog->SetMinSize(mDialog->GetSize());
-   if (mNoResize)
-   {
+   if (mFeatures.mNoResize)
       mDialog->SetMaxSize(mDialog->GetSize());
-   }
-
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
-   {
+   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       mDialog->Show();
       return 0;
    }
-
    return mDialog->ShowModal();
 }
 
@@ -596,7 +595,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    myInstance.MakeWrapper(settings, mProjectRate, true);
-   if (!myInstance.GetWrapper()) {
+   const auto pWrapper = myInstance.GetWrapper();
+   if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
    }
@@ -609,16 +609,15 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    if (GetType() == EffectTypeGenerate)
       mUseGUI = false;
 
+   UIHandler &handler = *this;
+   auto result =
+      std::make_unique<LV2Validator>(*this, access, mFeatures, handler);
+   
    if (mUseGUI)
-      mUseGUI = BuildFancy(
-         myInstance.GetWrapper()->GetInstance(), settings);
-
-   if (!mUseGUI) {
-      if (!BuildPlain(access))
-         return nullptr;
-   }
-
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
+      mUseGUI = BuildFancy(*result, *pWrapper, settings);
+   if (!mUseGUI && !BuildPlain(access))
+      return nullptr;
+   return result;
 }
 
 bool LV2Effect::IsGraphicalUI()
@@ -656,9 +655,6 @@ bool LV2Effect::CloseUI()
    mSuilHost.reset();
    mParent = nullptr;
    mDialog = nullptr;
-
-   // Restore initial state
-   mExtensionDataFeature = {};
    mPlainUIControls.clear();
    return true;
 }
@@ -717,7 +713,8 @@ bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
    if (LilvStatePtr state{
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
+      lilv_state_new_from_world(gWorld,
+         mFeatures.URIDMapFeature(), preset.get())
    }){
       auto &mySettings = GetSettings(settings);
       mPorts.EmitPortValues(*state, mySettings);
@@ -789,8 +786,8 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-bool LV2Effect::BuildFancy(
-   LilvInstance &instance, const EffectSettings &settings)
+bool LV2Effect::BuildFancy(LV2Validator &validator,
+   LV2Wrapper &wrapper, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -829,8 +826,7 @@ bool LV2Effect::BuildFancy(
    if (!ui && uis) {
       LILV_FOREACH(uis, iter, uis.get()) {
          ui = lilv_uis_get(uis.get(), iter);
-         if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld))
-         {
+         if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld)) {
             uiType = node_ExternalUI;
             break;
          }
@@ -842,42 +838,35 @@ bool LV2Effect::BuildFancy(
    if (ui == NULL)
       return false;
 
-   const LilvNode *uinode = lilv_ui_get_uri(ui);
+   const auto uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
-   if (!ValidateFeatures(uinode))
+   UIHandler &handler = *this;
+   auto &instance = wrapper.GetInstance();
+   auto &features = validator.mUIFeatures.emplace(
+      wrapper.GetFeatures(), handler, uinode, &instance,
+      (uiType == node_ExternalUI) ? nullptr : mParent);
+   if (!features.mOk)
       return false;
 
    const char *containerType;
-
    if (uiType == node_ExternalUI)
-   {
       containerType = LV2_EXTERNAL_UI__Widget;
-   }
-   else
-   {
+   else {
       containerType = nativeType;
-      mFeatures[mParentFeature].data = mParent->GetHandle();
-
 #if defined(__WXGTK__)
       // Make sure the parent has a window
       if (!gtk_widget_get_window(GTK_WIDGET(mParent->m_wxwindow)))
-      {
          gtk_widget_realize(GTK_WIDGET(mParent->m_wxwindow));
-      }
 #endif
    }
-
-   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(&instance);
-   mExtensionDataFeature =
-      { lilv_instance_get_descriptor(&instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
    mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
-   mSuilHost.reset(suil_host_new(LV2Effect::suil_port_write_func,
-      LV2Effect::suil_port_index_func, nullptr, nullptr));
+   mSuilHost.reset(suil_host_new(LV2UIFeaturesList::suil_port_write,
+      LV2UIFeaturesList::suil_port_index, nullptr, nullptr));
    if (!mSuilHost)
       return false;
 
@@ -890,6 +879,7 @@ bool LV2Effect::BuildFancy(
    };
    const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
+   auto cleanup = finally([&]{ SetDllDirectory(nullptr); });
 #endif
 
    LilvCharsPtr bundlePath{
@@ -901,7 +891,6 @@ bool LV2Effect::BuildFancy(
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   mSampleRate = mProjectRate;
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:
@@ -909,33 +898,23 @@ bool LV2Effect::BuildFancy(
       containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
-      bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
+      bundlePath.get(), binaryPath.get(),
+      features.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
-   if (!mSuilInstance)
-   {
-#if defined(__WXMSW__)
-      SetDllDirectory(NULL);
-#endif
-
+   if (!mSuilInstance) {
       mSuilHost.reset();
-
       return false;
    }
 
-   if (uiType == node_ExternalUI)
-   {
+   if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);
-
       mExternalWidget = static_cast<LV2_External_UI_Widget *>(
          suil_instance_get_widget(mSuilInstance.get()));
       mTimer.SetOwner(this, ID_TIMER);
       mTimer.Start(20);
-
       LV2_EXTERNAL_UI_SHOW(mExternalWidget);
-   }
-   else
-   {
+   } else {
       const auto widget = static_cast<WXWidget>(
          suil_instance_get_widget(mSuilInstance.get()));
 
@@ -952,39 +931,25 @@ bool LV2Effect::BuildFancy(
       if ( !uNativeWin->Create(mParent, widget) )
          return false;
       mNativeWin = uNativeWin.release();
-
       mNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
       // the native window was created, so set the size now.
       if (mNativeWinInitialSize != wxDefaultSize)
-      {
          mNativeWin->SetMinSize(mNativeWinInitialSize);
-      }
 
       wxSizerItem *si = NULL;
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      if (vs)
-      {
-         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         if (hs)
-         {
-            if (mNoResize)
-            {
-               si = hs->Add(mNativeWin, 0, wxCENTER);
-               vs->Add(hs.release(), 1, wxCENTER);
-            }
-            else
-            {
-               si = hs->Add(mNativeWin, 1, wxEXPAND);
-               vs->Add(hs.release(), 1, wxEXPAND);
-            }
-         }
+      auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      if (features.mNoResize) {
+         si = hs->Add(mNativeWin, 0, wxCENTER);
+         vs->Add(hs.release(), 1, wxCENTER);
+      } else {
+         si = hs->Add(mNativeWin, 1, wxEXPAND);
+         vs->Add(hs.release(), 1, wxEXPAND);
       }
-
       if (!si)
          return false;
-
       mParent->SetSizerAndFit(vs.release());
    }
 
@@ -994,8 +959,7 @@ bool LV2Effect::BuildFancy(
    mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
       suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
 
-   if (mUIShowInterface)
-   {
+   if (mUIShowInterface) {
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
    }
 
@@ -1005,10 +969,6 @@ bool LV2Effect::BuildFancy(
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(true);
 #endif
-#endif
-
-#if defined(__WXMSW__)
-   SetDllDirectory(NULL);
 #endif
 
    return true;
@@ -1459,17 +1419,14 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 
    // Don't do anything here if we're recursing
    if (mResizing)
-   {
       return;
-   }
 
    // Indicate resizing is occurring
    mResizing = true;
 
    // Can only resize AFTER the dialog has been completely created and
    // there's no need to resize if we're already at the desired size.
-   if (mDialog && evt.GetSize() != mNativeWinLastSize)
-   {
+   if (mDialog && evt.GetSize() != mNativeWinLastSize) {
       // Save the desired size and set the native window to match
       mNativeWinLastSize = evt.GetSize();
       mNativeWin->SetMinSize(mNativeWinLastSize);
@@ -1487,22 +1444,17 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       // In this case, mResized has been set by the "size_request()" function
       // to indicate that this is a plugin generated resize request.
       if (mResized)
-      {
         mDialog->SetMinSize(wxDefaultSize);
-      }
 
       // Resize dialog
       mDialog->Fit();
 
       // Reestablish the minimum (and maximum) now that the dialog
       // has is desired size.
-      if (mResized)
-      {
+      if (mResized) {
          mDialog->SetMinSize(mDialog->GetSize());
-         if (mNoResize)
-         {
+         if (mFeatures.mNoResize)
             mDialog->SetMaxSize(mDialog->GetSize());
-         }
       }
 
       // Tell size_request() that the native window was just resized.
@@ -1521,13 +1473,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 // Feature handlers
 // ============================================================================
 
-// static callback
-int LV2Effect::ui_resize(LV2UI_Feature_Handle handle, int width, int height)
-{
-   return static_cast<LV2Effect *>(handle)->UIResize(width, height);
-}
-
-int LV2Effect::UIResize(int width, int height)
+int LV2Effect::ui_resize(int width, int height)
 {
    // Queue a wxSizeEvent to resize the plugins UI
    if (mNativeWin) {
@@ -1541,28 +1487,13 @@ int LV2Effect::UIResize(int width, int height)
    return 0;
 }
 
-// static callback
-void LV2Effect::ui_closed(LV2UI_Controller controller)
-{
-   return static_cast<LV2Effect *>(controller)->UIClosed();
-}
-
-void LV2Effect::UIClosed()
+void LV2Effect::ui_closed()
 {
    mExternalUIClosed = true;
 }
 
-// static callback
 // Foreign UI code wants to send a value or event to me, the host
-void LV2Effect::suil_port_write_func(SuilController controller,
-   uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
-   const void *buffer)
-{
-   static_cast<LV2Effect *>(controller)
-      ->SuilPortWrite(port_index, buffer_size, protocol, buffer);
-}
-
-void LV2Effect::SuilPortWrite(uint32_t port_index,
+void LV2Effect::suil_port_write(uint32_t port_index,
    uint32_t buffer_size, uint32_t protocol, const void *buffer)
 {
    // Handle implicit floats
@@ -1580,14 +1511,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    }
 }
 
-// static callback
-uint32_t LV2Effect::suil_port_index_func(
-   SuilController controller, const char *port_symbol)
-{
-   return static_cast<LV2Effect *>(controller)->SuilPortIndex(port_symbol);
-}
-
-uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
+uint32_t LV2Effect::suil_port_index(const char *port_symbol)
 {
    for (size_t i = 0, cnt = lilv_plugin_get_num_ports(&mPlug); i < cnt; ++i) {
       const auto port = lilv_plugin_get_port_by_index(&mPlug, i);

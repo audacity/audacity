@@ -19,6 +19,7 @@
 #if USE_LV2
 
 #include "LV2Utils.h"
+#include "LV2InstanceFeaturesList.h"
 
 #include "lilv/lilv.h"
 #include "lv2/core/attributes.h"
@@ -30,7 +31,6 @@
 #include <wx/msgqueue.h>
 
 struct LV2EffectSettings;
-class LV2FeaturesList;
 class LV2Ports;
 class LV2PortStates;
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
@@ -60,7 +60,7 @@ public:
    //! Constructor may spawn a thread
    LV2Wrapper(CreateToken&&,
       const LV2FeaturesList &featuresList,
-      const LilvPlugin &plugin, double sampleRate);
+      const LilvPlugin &plugin, float sampleRate);
 
    //! If a thread was started, joins it
    ~LV2Wrapper();
@@ -74,7 +74,7 @@ public:
    LV2_Handle GetHandle() const;
    float GetLatency() const;
    void SetFreeWheeling(bool enable);
-   void SetBlockSize();
+   void SendBlockSize();
    void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
                                           uint32_t size,
@@ -85,13 +85,16 @@ public:
                                     const void *data);
    LV2_Worker_Status Respond(uint32_t size, const void *data);
 
+   LV2InstanceFeaturesList &GetFeatures() { return mFeaturesList; }
+   const LV2InstanceFeaturesList &GetFeatures() const { return mFeaturesList; }
+
 private:
    void ThreadFunction();
 
-   const LV2FeaturesList &mFeaturesList;
-
    // Another object with an explicit virtual function table
    LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
+
+   LV2InstanceFeaturesList mFeaturesList;
 
    //! @invariant not null
    const LilvInstancePtr mInstance;

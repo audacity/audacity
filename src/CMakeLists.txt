@@ -609,12 +609,16 @@ list( APPEND SOURCES
          effects/lv2/LV2EffectMeter.h
          effects/lv2/LV2FeaturesList.cpp
          effects/lv2/LV2FeaturesList.h
+         effects/lv2/LV2InstanceFeaturesList.cpp
+         effects/lv2/LV2InstanceFeaturesList.h
          effects/lv2/LV2Ports.cpp
          effects/lv2/LV2Ports.h
          effects/lv2/LV2Preferences.cpp
          effects/lv2/LV2Preferences.h
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
+         effects/lv2/LV2UIFeaturesList.cpp
+         effects/lv2/LV2UIFeaturesList.h
          effects/lv2/LV2Utils.h
          effects/lv2/LV2Wrapper.cpp
          effects/lv2/LV2Wrapper.h
