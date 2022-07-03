@@ -112,7 +112,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
@@ -183,8 +182,6 @@ private:
    // non-null for duration of a dialog
    LV2Validator *mpValidator{};
 
-   bool mUseGUI{};
-
    SuilHostPtr mSuilHost;
    wxSize mNativeWinInitialSize{ wxDefaultSize };
 
@@ -204,8 +201,10 @@ public:
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, double sampleRate,
       const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-      const LV2Ports &ports, wxWindow *parent);
+      const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
+
+   bool IsGraphicalUI() override;
 
    // TODO static or non-member function
    LV2EffectSettings &GetSettings(EffectSettings &settings) const;
@@ -231,6 +230,7 @@ public:
    LV2PortUIStates mPortUIStates;
 
    wxWindow *const mParent;
+   bool mUseGUI{};
 
    // UI
    struct PlainUIControl {

@@ -65,7 +65,7 @@ LV2Validator::LV2Validator(EffectBase &effect,
    const LilvPlugin &plug, LV2Instance &instance,
    EffectSettingsAccess &access, double sampleRate,
    const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-   const LV2Ports &ports, wxWindow *parent
+   const LV2Ports &ports, wxWindow *parent, bool useGUI
 )  : DefaultEffectUIValidator{ effect, access }
    , mPlug{ plug }
    , mType{ effect.GetType() }
@@ -74,6 +74,7 @@ LV2Validator::LV2Validator(EffectBase &effect,
    , mPorts{ ports }
    , mPortUIStates{ instance.GetPortStates(), ports }
    , mParent{ parent }
+   , mUseGUI{ useGUI }
 {
    if (mParent)
       mParent->PushEventHandler(this);
@@ -250,7 +251,6 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
-   LV2Preferences::GetUseGUI(*this, mUseGUI);
    return std::make_shared<LV2Instance>(*this, mFeatures, mPorts, mSettings);
 }
 
@@ -362,28 +362,29 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    }
 
    // Determine if the GUI editor is supposed to be used or not
-   LV2Preferences::GetUseGUI(*this, mUseGUI);
+   bool useGUI = false;
+   LV2Preferences::GetUseGUI(*this, useGUI);
 
    // Until I figure out where to put the "Duration" control in the
    // graphical editor, force usage of plain editor.
    if (GetType() == EffectTypeGenerate)
-      mUseGUI = false;
+      useGUI = false;
 
    UIHandler &handler = *this;
    auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mProjectRate, mFeatures, handler, mPorts, parent);
+      access, mProjectRate, mFeatures, handler, mPorts, parent, useGUI);
 
-   if (mUseGUI)
-      mUseGUI = BuildFancy(*result, *pWrapper, settings);
-   if (!mUseGUI && !BuildPlain(access, *result))
+   if (result->mUseGUI)
+      result->mUseGUI = BuildFancy(*result, *pWrapper, settings);
+   if (!result->mUseGUI && !BuildPlain(access, *result))
       return nullptr;
 
    mpValidator = result.get();
    return result;
 }
 
-bool LV2Effect::IsGraphicalUI()
+bool LV2Validator::IsGraphicalUI()
 {
    return mUseGUI;
 }
@@ -1005,7 +1006,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
       }
    }
 
-   if (mUseGUI) {
+   if (mpValidator->mUseGUI) {
       // fancy UI
       if (mpValidator->mSuilInstance) {
          size_t index = 0;
