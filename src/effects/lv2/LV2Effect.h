@@ -127,8 +127,6 @@ public:
 private:
    void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
 
-   struct PlainUIControl;
-
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
@@ -147,17 +145,9 @@ private:
    bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
-   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
-
-   void OnTrigger(wxCommandEvent & evt);
-   void OnToggle(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & evt);
-   void OnText(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
 
    void OnIdle(wxIdleEvent & evt);
    void OnSize(wxSizeEvent & evt);
-   void OnSizeWindow(wxCommandEvent & evt);
 
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
@@ -200,21 +190,6 @@ private:
 
    bool mExternalUIClosed{ false };
 
-   // UI
-   struct PlainUIControl {
-      wxTextCtrl *mText{};
-      //! Discriminate this union according to corresponding port's properties
-      union {
-         wxButton *button;
-         wxCheckBox *checkbox;
-         wxChoice *choice;
-         LV2EffectMeter *meter;
-         wxSlider *slider;
-      };
-   };
-   //! Array in correspondence with the control ports
-   std::vector<PlainUIControl> mPlainUIControls;
-
    SuilHostPtr mSuilHost;
    SuilInstancePtr mSuilInstance;
 
@@ -255,6 +230,12 @@ public:
    // TODO static or non-member function
    const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
 
+   void OnTrigger(wxCommandEvent & evt);
+   void OnToggle(wxCommandEvent & evt);
+   void OnChoice(wxCommandEvent & evt);
+   void OnText(wxCommandEvent & evt);
+   void OnSlider(wxCommandEvent & evt);
+
    const LilvPlugin &mPlug;
    const EffectType mType;
    LV2Instance &mInstance;
@@ -265,10 +246,28 @@ public:
 
    wxWindow *const mParent;
 
+   // UI
+   struct PlainUIControl {
+      wxTextCtrl *mText{};
+      //! Discriminate this union according to corresponding port's properties
+      union {
+         wxButton *button;
+         wxCheckBox *checkbox;
+         wxChoice *choice;
+         LV2EffectMeter *meter;
+         wxSlider *slider;
+      };
+   };
+   //! Array in correspondence with the control ports
+   std::vector<PlainUIControl> mPlainUIControls;
+   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
+
    struct Timer : wxTimer {
       LV2_External_UI_Widget* mExternalWidget{};
       void Notify() override;
    } mTimer;
+
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

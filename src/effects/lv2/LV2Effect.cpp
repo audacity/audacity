@@ -77,8 +77,10 @@ LV2Validator::LV2Validator(EffectBase &effect,
    , mPortUIStates{ instance.GetPortStates(), ports }
    , mParent{ parent }
 {
-   if (mParent)
+   if (mParent) {
       mParent->PushEventHandler(static_cast<Effect*>(&effect));
+      mParent->PushEventHandler(this);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,13 +99,15 @@ enum
    ID_Texts = 15000,
 };
 
-BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_Triggers, ID_Triggers + 999, wxEVT_COMMAND_BUTTON_CLICKED, LV2Effect::OnTrigger)
-   EVT_COMMAND_RANGE(ID_Toggles, ID_Toggles + 999, wxEVT_COMMAND_CHECKBOX_CLICKED, LV2Effect::OnToggle)
-   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, LV2Effect::OnSlider)
-   EVT_COMMAND_RANGE(ID_Choices, ID_Choices + 999, wxEVT_COMMAND_CHOICE_SELECTED, LV2Effect::OnChoice)
-   EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LV2Effect::OnText)
+BEGIN_EVENT_TABLE(LV2Validator, wxEvtHandler)
+   EVT_COMMAND_RANGE(ID_Triggers, ID_Triggers + 999, wxEVT_COMMAND_BUTTON_CLICKED, LV2Validator::OnTrigger)
+   EVT_COMMAND_RANGE(ID_Toggles, ID_Toggles + 999, wxEVT_COMMAND_CHECKBOX_CLICKED, LV2Validator::OnToggle)
+   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, LV2Validator::OnSlider)
+   EVT_COMMAND_RANGE(ID_Choices, ID_Choices + 999, wxEVT_COMMAND_CHOICE_SELECTED, LV2Validator::OnChoice)
+   EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LV2Validator::OnText)
+END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
@@ -418,15 +422,16 @@ bool LV2Effect::CloseUI()
    mSuilHost.reset();
    mParent = nullptr;
    mDialog = nullptr;
-   mPlainUIControls.clear();
    mpValidator = nullptr;
    return true;
 }
 
 LV2Validator::~LV2Validator()
 {
-   if (mParent)
+   if (mParent) {
+      mParent->RemoveEventHandler(this);
       mParent->RemoveEventHandler(static_cast<Effect*>(&mEffect));
+   }
 }
 
 bool LV2Effect::LoadUserPreset(
@@ -749,7 +754,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
    auto &portUIStates = validator.mPortUIStates;
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
-   mPlainUIControls.resize(mPorts.mControlPorts.size());
+   validator.mPlainUIControls.resize(mPorts.mControlPorts.size());
 
    int numCols = 5;
    wxSizer *innerSizer;
@@ -797,7 +802,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
          for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
             auto &state = portUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
-            auto &ctrl = mPlainUIControls[p];
+            auto &ctrl = validator.mPlainUIControls[p];
             const auto &value = values[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
@@ -1041,7 +1046,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
       for (auto & param : params) {
          auto &state = portUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
-         auto &ctrl = mPlainUIControls[param];
+         auto &ctrl = mpValidator->mPlainUIControls[param];
          auto &value = values[param];
          if (port->mTrigger)
             continue;
@@ -1051,7 +1056,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
             ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
             state.mTmp = value * (port->mSampleRate ? mProjectRate : 1.0f);
-            SetSlider(state, ctrl);
+            mpValidator->SetSlider(state, ctrl);
          }
       }
    }
@@ -1060,7 +1065,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    return true;
 }
 
-void LV2Effect::SetSlider(
+void LV2Validator::SetSlider(
    const LV2ControlPortState &state, const PlainUIControl &ctrl)
 {
    float lo = state.mLo;
@@ -1074,48 +1079,51 @@ void LV2Effect::SetSlider(
    ctrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
-void LV2Effect::OnTrigger(wxCommandEvent &evt)
+void LV2Validator::OnTrigger(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Triggers;
    auto & port = mPorts.mControlPorts[idx];
-   mSettings.values[idx] = port->mDef;
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] = port->mDef;
+   });
 }
 
-void LV2Effect::OnToggle(wxCommandEvent &evt)
+void LV2Validator::OnToggle(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Toggles;
-   auto & port = mPorts.mControlPorts[idx];
-   mSettings.values[idx] = evt.GetInt() ? 1.0 : 0.0;
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] = evt.GetInt() ? 1.0 : 0.0;
+   });
 }
 
-void LV2Effect::OnChoice(wxCommandEvent &evt)
+void LV2Validator::OnChoice(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Choices;
    auto & port = mPorts.mControlPorts[idx];
-   mSettings.values[idx] = port->mScaleValues[evt.GetInt()];
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] = port->mScaleValues[evt.GetInt()];
+   });
 }
 
-void LV2Effect::OnText(wxCommandEvent &evt)
+void LV2Validator::OnText(wxCommandEvent &evt)
 {
-   assert(mpValidator); // exists while a dialog is open
-   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Texts;
-   auto &state = portUIStates.mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
-      mSettings.values[idx] =
-         port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
+      mAccess.ModifySettings([&](EffectSettings &settings) {
+         GetSettings(settings).values[idx] =
+            port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      });
       SetSlider(state, ctrl);
    }
 }
 
-void LV2Effect::OnSlider(wxCommandEvent &evt)
+void LV2Validator::OnSlider(wxCommandEvent &evt)
 {
-   assert(mpValidator); // exists while a dialog is open
-   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Sliders;
-   auto &state = portUIStates.mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    float lo = state.mLo;
    float hi = state.mHi;
@@ -1126,8 +1134,10 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    state.mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
-   mSettings.values[idx] =
-      port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] =
+         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+   });
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
