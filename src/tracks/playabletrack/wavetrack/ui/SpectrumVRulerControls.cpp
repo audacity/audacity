@@ -20,6 +20,8 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../widgets/Ruler.h"
+#include "../../../../widgets/LinearUpdater.h"
+#include "../../../../widgets/LogarithmicUpdater.h"
 
 SpectrumVRulerControls::~SpectrumVRulerControls() = default;
 
@@ -168,7 +170,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
             vruler->SetRange((int)(maxFreq), (int)(minFreq));
             vruler->SetUnits({});
          }
-         vruler->SetLog(false);
+         vruler->SetUpdater(std::make_unique<LinearUpdater>(*vruler, nullptr));
       }
          break;
       case SpectrogramSettings::stLogarithmic:
@@ -190,8 +192,8 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          vruler->SetLabelEdges(true);
          vruler->SetRange(maxFreq, minFreq);
          vruler->SetUnits({});
-         vruler->SetLog(true);
-         NumberScale scale(settings.GetScale(minFreq, maxFreq).Reversal() );
+         vruler->SetUpdater(std::make_unique<LogarithmicUpdater>(*vruler, nullptr));
+         NumberScale scale(settings.GetScale(minFreq, maxFreq).Reversal());
          vruler->SetNumberScale(scale);
       }
          break;

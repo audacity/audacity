@@ -21,6 +21,7 @@ class wxDC;
 
 class Envelope;
 class ZoomInfo;
+class RulerUpdater;
 
 #include "TranslatableString.h"
 
@@ -63,6 +64,13 @@ class AUDACITY_DLL_API Ruler {
    // (at the center of the pixel, in both cases)
    void SetRange(double min, double max, double hiddenMin, double hiddenMax);
 
+   // Set the kind of updater the ruler will use
+   // (Linear, Logarithmic, Custom, etc.)
+   void SetUpdater(std::unique_ptr<RulerUpdater> pUpdater);
+
+   // An overload to replace SetUseZoomInfo
+   void SetUpdater(std::unique_ptr<RulerUpdater> pUpdater, int leftOffset);
+
    //
    // Optional Ruler Parameters
    //
@@ -77,9 +85,6 @@ class AUDACITY_DLL_API Ruler {
    // want numbers like "1.6" formatted as "1.6 dB".
    void SetUnits(const TranslatableString &units);
    void SetDbMirrorValue( const double d );
-
-   // Logarithmic
-   void SetLog(bool log);
 
    // Minimum number of pixels between labels
    void SetSpacing(int spacing);
@@ -131,8 +136,6 @@ class AUDACITY_DLL_API Ruler {
    void SetCustomMinorLabels(
       const TranslatableStrings &labels, int start, int step);
 
-   void SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo);
-
    //
    // Drawing
    //
@@ -153,7 +156,10 @@ class AUDACITY_DLL_API Ruler {
    void Invalidate();
 
  private:
-   struct TickSizes;
+   friend class RulerUpdater;
+   friend class LinearUpdater;
+   friend class LogarithmicUpdater;
+   friend class CustomUpdater;
 
    class Label {
     public:
@@ -171,8 +177,6 @@ class AUDACITY_DLL_API Ruler {
    void ChooseFonts( wxDC &dc ) const;
 
    void UpdateCache( wxDC &dc, const Envelope* envelope ) const;
-
-   struct Updater;
    
 public:
    bool mbTicksOnly; // true => no line the length of the ruler
@@ -187,6 +191,8 @@ private:
 
    std::unique_ptr<Fonts> mpUserFonts;
    mutable std::unique_ptr<Fonts> mpFonts;
+
+   std::unique_ptr<RulerUpdater> mpUpdater;
 
    double       mMin, mMax;
    double       mHiddenMin, mHiddenMax;

@@ -23,6 +23,8 @@
 #include <wx/stattext.h>
 #include "../ShuttleGui.h"
 #include "../widgets/RulerPanel.h"
+#include "../widgets/LinearUpdater.h"
+#include "../widgets/LogarithmicUpdater.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -782,7 +784,7 @@ void EqualizationUI::UpdateDraw()
    if(lin) // do not use IsLinear() here
    {
       mBands.EnvLogToLin();
-      mFreqRuler->ruler.SetLog(false);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(0, hiFreq);
    }
 
@@ -818,7 +820,7 @@ void EqualizationUI::UpdateGraphic()
       }
 
       mBands.EnvLinToLog();
-      mFreqRuler->ruler.SetLog(true);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(loFreq, hiFreq);
    }
 
@@ -973,14 +975,14 @@ void EqualizationUI::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    lin = mLinFreq->IsChecked();
    if(parameters.IsLinear())  //going from log to lin freq scale
    {
-      mFreqRuler->ruler.SetLog(false);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(0, hiFreq);
       mBands.EnvLogToLin();
       lin = true;
    }
    else  //going from lin to log freq scale
    {
-      mFreqRuler->ruler.SetLog(true);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(loFreq, hiFreq);
       mBands.EnvLinToLog();
       lin = false;

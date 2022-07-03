@@ -25,6 +25,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UIHandle.h"
 #include "../../../widgets/Ruler.h"
+#include "../../../widgets/LinearUpdater.h"
+#include "../../../widgets/LogarithmicUpdater.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {
@@ -120,7 +122,10 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
    vruler->SetUnits({});
    vruler->SetLabelEdges(false);
-   vruler->SetLog(tt->GetDisplayLog());
+   if (tt->GetDisplayLog())
+      vruler->SetUpdater(std::make_unique<LogarithmicUpdater>(*vruler, nullptr));
+   else
+      vruler->SetUpdater(std::make_unique<LinearUpdater>(*vruler, nullptr));
 
    vruler->GetMaxSize( &tt->vrulerSize.first, &tt->vrulerSize.second );
 }

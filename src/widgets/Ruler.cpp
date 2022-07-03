@@ -62,6 +62,10 @@ array of Ruler::Label.
 #include "Theme.h"
 #include "ZoomInfo.h"
 
+#include "RulerUpdater.h"
+// Need to include to set default
+#include "LinearUpdater.h"
+
 using std::min;
 using std::max;
 
@@ -111,6 +115,12 @@ Ruler::Ruler()
    mTwoTone = false;
 
    mUseZoomInfo = NULL;
+
+   // This part in particular needs inspection, not giving an error
+   // But is this corret? And should it be set to NULL or nullptr if a default
+   // cannot be made?
+   mpUpdater = std::make_unique<LinearUpdater>( *this, mUseZoomInfo );
+   // mpUpdater = nullptr;
 }
 
 Ruler::~Ruler()
@@ -134,15 +144,29 @@ void Ruler::SetFormat(RulerFormat format)
    }
 }
 
-void Ruler::SetLog(bool log)
+void Ruler::SetUpdater(std::unique_ptr<RulerUpdater> pUpdater)
 {
-   // Logarithmic
+   // Should a comparison be made between mpUpdater and pUpdater?
+   // Runtime type comparison isn't clean in c++
+   mpUpdater = std::move(pUpdater);
+   Invalidate();
+}
 
-   if (mLog != log) {
-      mLog = log;
+void Ruler::SetUpdater
+   (std::unique_ptr<RulerUpdater> pUpdater, int leftOffset)
+{
+   // Should a comparison be made between mpUpdater and pUpdater?
+   // Runtime type comparison isn't clean in c++
+   mpUpdater = std::move(pUpdater);
 
-      Invalidate();
-   }
+   if (mLeftOffset != leftOffset)
+      mLeftOffset = leftOffset;
+
+   // Hm, is this invalidation sufficient?  What if *zoomInfo changes under us?
+   if (mUseZoomInfo != mpUpdater->zoomInfo)
+      mUseZoomInfo = mpUpdater->zoomInfo;
+
+   Invalidate();
 }
 
 void Ruler::SetUnits(const TranslatableString &units)
@@ -349,407 +373,6 @@ void Ruler::Invalidate()
    // mUserBits.clear();
 }
 
-struct Ruler::TickSizes
-{
-   bool useMajor = true;
-
-   double       mMajor;
-   double       mMinor;
-
-   int          mDigits;
-
-TickSizes( double UPP, int orientation, RulerFormat format, bool log )
-{
-   //TODO: better dynamic digit computation for the log case
-   (void)log;
-
-   // Given the dimensions of the ruler, the range of values it
-   // has to display, and the format (i.e. Int, Real, Time),
-   // figure out how many units are in one Minor tick, and
-   // in one Major tick.
-   //
-   // The goal is to always put tick marks on nice round numbers
-   // that are easy for humans to grok.  This is the most tricky
-   // with time.
-
-   double d;
-
-   // As a heuristic, we want at least 22 pixels between each 
-   // minor tick.  We want to show numbers like "-48"
-   // in that space.
-   // If vertical, we don't need as much space.
-   double units = ((orientation == wxHORIZONTAL) ? 22 : 16) * fabs(UPP);
-
-   mDigits = 0;
-
-   switch(format) {
-   case LinearDBFormat:
-      if (units < 0.001) {
-         mMinor = 0.001;
-         mMajor = 0.005;
-         return;
-      }
-      if (units < 0.01) {
-         mMinor = 0.01;
-         mMajor = 0.05;
-         return;
-      }
-      if (units < 0.1) {
-         mMinor = 0.1;
-         mMajor = 0.5;
-         return;
-      }
-      if (units < 1.0) {
-         mMinor = 1.0;
-         mMajor = 6.0;
-         return;
-      }
-      if (units < 3.0) {
-         mMinor = 3.0;
-         mMajor = 12.0;
-         return;
-      }
-      if (units < 6.0) {
-         mMinor = 6.0;
-         mMajor = 24.0;
-         return;
-      }
-      if (units < 12.0) {
-         mMinor = 12.0;
-         mMajor = 48.0;
-         return;
-      }
-      if (units < 24.0) {
-         mMinor = 24.0;
-         mMajor = 96.0;
-         return;
-      }
-      d = 20.0;
-      for(;;) {
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*5.0;
-            return;
-         }
-         d *= 5.0;
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*5.0;
-            return;
-         }
-         d *= 2.0;
-      }
-      break;
-
-   case IntFormat:
-      d = 1.0;
-      for(;;) {
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*5.0;
-            return;
-         }
-         d *= 5.0;
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*2.0;
-            return;
-         }
-         d *= 2.0;
-      }
-      break;
-
-   case TimeFormat:
-      if (units > 0.5) {
-         if (units < 1.0) { // 1 sec
-            mMinor = 1.0;
-            mMajor = 5.0;
-            return;
-         }
-         if (units < 5.0) { // 5 sec
-            mMinor = 5.0;
-            mMajor = 15.0;
-            return;
-         }
-         if (units < 10.0) {
-            mMinor = 10.0;
-            mMajor = 30.0;
-            return;
-         }
-         if (units < 15.0) {
-            mMinor = 15.0;
-            mMajor = 60.0;
-            return;
-         }
-         if (units < 30.0) {
-            mMinor = 30.0;
-            mMajor = 60.0;
-            return;
-         }
-         if (units < 60.0) { // 1 min
-            mMinor = 60.0;
-            mMajor = 300.0;
-            return;
-         }
-         if (units < 300.0) { // 5 min
-            mMinor = 300.0;
-            mMajor = 900.0;
-            return;
-         }
-         if (units < 600.0) { // 10 min
-            mMinor = 600.0;
-            mMajor = 1800.0;
-            return;
-         }
-         if (units < 900.0) { // 15 min
-            mMinor = 900.0;
-            mMajor = 3600.0;
-            return;
-         }
-         if (units < 1800.0) { // 30 min
-            mMinor = 1800.0;
-            mMajor = 3600.0;
-            return;
-         }
-         if (units < 3600.0) { // 1 hr
-            mMinor = 3600.0;
-            mMajor = 6*3600.0;
-            return;
-         }
-         if (units < 6*3600.0) { // 6 hrs
-            mMinor = 6*3600.0;
-            mMajor = 24*3600.0;
-            return;
-         }
-         if (units < 24*3600.0) { // 1 day
-            mMinor = 24*3600.0;
-            mMajor = 7*24*3600.0;
-            return;
-         }
-
-         mMinor = 24.0 * 7.0 * 3600.0; // 1 week
-         mMajor = 24.0 * 7.0 * 3600.0;
-      }
-
-      // Otherwise fall through to RealFormat
-      // (fractions of a second should be dealt with
-      // the same way as for RealFormat)
-
-   case RealFormat:
-      d = 0.000001;
-      // mDigits is number of digits after the decimal point.
-      mDigits = 6;
-      for(;;) {
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*5.0;
-            return;
-         }
-         d *= 5.0;
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*2.0;
-            return;
-         }
-         d *= 2.0;
-         mDigits--;
-         // More than 10 digit numbers?  Something is badly wrong.
-         // Probably units is coming in with too high a value.
-         wxASSERT( mDigits >= -10 );
-         if( mDigits < -10 )
-            break;
-      }
-      mMinor = d;
-      mMajor = d * 2.0;
-      break;
-
-   case RealLogFormat:
-      d = 0.000001;
-      // mDigits is number of digits after the decimal point.
-      mDigits = 6;
-      for(;;) {
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*5.0;
-            return;
-         }
-         d *= 5.0;
-         if (units < d) {
-            mMinor = d;
-            mMajor = d*2.0;
-            return;
-         }
-         d *= 2.0;
-         mDigits--;
-         // More than 10 digit numbers?  Something is badly wrong.
-         // Probably units is coming in with too high a value.
-         wxASSERT( mDigits >= -10 );
-         if( mDigits < -10 )
-            break;
-      }
-      mDigits++;
-      mMinor = d;
-      mMajor = d * 2.0;
-      break;
-   }
-}
-
-TranslatableString LabelString(
-   double d, RulerFormat format, const TranslatableString &units )
-   const
-{
-   // Given a value, turn it into a string according
-   // to the current ruler format.  The number of digits of
-   // accuracy depends on the resolution of the ruler,
-   // i.e. how far zoomed in or out you are.
-
-   wxString s;
-
-   // PRL Todo: are all these cases properly localized?  (Decimal points,
-   // hour-minute-second, etc.?)
-
-   // Replace -0 with 0
-   if (d < 0.0 && (d+mMinor > 0.0) && ( format != RealLogFormat ))
-      d = 0.0;
-
-   switch( format ) {
-   case IntFormat:
-      s.Printf(wxT("%d"), (int)floor(d+0.5));
-      break;
-   case LinearDBFormat:
-      if (mMinor >= 1.0)
-         s.Printf(wxT("%d"), (int)floor(d+0.5));
-      else {
-         int precision = -log10(mMinor);
-         s.Printf(wxT("%.*f"), precision, d);
-      }
-      break;
-   case RealFormat:
-      if (mMinor >= 1.0)
-         s.Printf(wxT("%d"), (int)floor(d+0.5));
-      else {
-         s.Printf(wxString::Format(wxT("%%.%df"), mDigits), d);
-      }
-      break;
-   case RealLogFormat:
-      if (mMinor >= 1.0)
-         s.Printf(wxT("%d"), (int)floor(d+0.5));
-      else {
-         s.Printf(wxString::Format(wxT("%%.%df"), mDigits), d);
-      }
-      break;
-   case TimeFormat:
-      if (useMajor) {
-         if (d < 0) {
-            s = wxT("-");
-            d = -d;
-         }
-
-         #if ALWAYS_HH_MM_SS
-         int secs = (int)(d + 0.5);
-         if (mMinor >= 1.0) {
-            s.Printf(wxT("%d:%02d:%02d"), secs/3600, (secs/60)%60, secs%60);
-         }
-         else {
-            wxString t1, t2, format;
-            t1.Printf(wxT("%d:%02d:"), secs/3600, (secs/60)%60);
-            format.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
-            t2.Printf(format, fmod(d, 60.0));
-            s += t1 + t2;
-         }
-         break;
-         #endif
-
-         if (mMinor >= 3600.0) {
-            int hrs = (int)(d / 3600.0 + 0.5);
-            wxString h;
-            h.Printf(wxT("%d:00:00"), hrs);
-            s += h;
-         }
-         else if (mMinor >= 60.0) {
-            int minutes = (int)(d / 60.0 + 0.5);
-            wxString m;
-            if (minutes >= 60)
-               m.Printf(wxT("%d:%02d:00"), minutes/60, minutes%60);
-            else
-               m.Printf(wxT("%d:00"), minutes);
-            s += m;
-         }
-         else if (mMinor >= 1.0) {
-            int secs = (int)(d + 0.5);
-            wxString t;
-            if (secs >= 3600)
-               t.Printf(wxT("%d:%02d:%02d"), secs/3600, (secs/60)%60, secs%60);
-            else if (secs >= 60)
-               t.Printf(wxT("%d:%02d"), secs/60, secs%60);
-            else
-               t.Printf(wxT("%d"), secs);
-            s += t;
-         }
-         else {
-// Commented out old and incorrect code for avoiding the 40mins and 60 seconds problem
-// It was causing Bug 463 - Incorrect Timeline numbering (where at high zoom and long tracks,
-// numbers did not change.
-#if 0
-            // The casting to float is working around an issue where 59 seconds
-            // would show up as 60 when using g++ (Ubuntu 4.3.3-5ubuntu4) 4.3.3.
-            int secs = (int)(float)(d);
-            wxString t1, t2, format;
-
-            if (secs >= 3600)
-               t1.Printf(wxT("%d:%02d:"), secs/3600, (secs/60)%60);
-            else if (secs >= 60)
-               t1.Printf(wxT("%d:"), secs/60);
-
-            if (secs >= 60)
-               format.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
-            else
-               format.Printf(wxT("%%%d.%dlf"), mDigits+3, mDigits);
-            // The casting to float is working around an issue where 59 seconds
-            // would show up as 60 when using g++ (Ubuntu 4.3.3-5ubuntu4) 4.3.3.
-            t2.Printf(format, fmod((float)d, (float)60.0));
-#else
-            // For d in the range of hours, d is just very slightly below the value it should 
-            // have, because of using a double, which in turn yields values like 59:59:999999 
-            // mins:secs:nanosecs when we want 1:00:00:000000
-            // so adjust by less than a nano second per hour to get nicer number formatting.
-            double dd = d * 1.000000000000001;
-            int secs = (int)(dd);
-            wxString t1, t2, format;
-
-            if (secs >= 3600)
-               t1.Printf(wxT("%d:%02d:"), secs/3600, (secs/60)%60);
-            else if (secs >= 60)
-               t1.Printf(wxT("%d:"), secs/60);
-
-            if (secs >= 60)
-               format.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
-            else
-               format.Printf(wxT("%%%d.%dlf"), mDigits+3, mDigits);
-            // dd will be reduced to just the seconds and fractional part.
-            dd = dd - secs + (secs%60);
-            // truncate to appropriate number of digits, so that the print formatting 
-            // doesn't round up 59.9999999 to 60.
-            double multiplier = pow( 10, mDigits);
-            dd = ((int)(dd * multiplier))/multiplier;
-            t2.Printf(format, dd);
-#endif
-            s += t1 + t2;
-         }
-      }
-      else {
-      }
-   }
-
-   auto result = Verbatim( s );
-   if (!units.empty())
-      result += units;
-
-   return result;
-}
-
-}; // struct Ruler::TickSizes
-
 auto Ruler::MakeTick(
    Label lab,
    wxDC &dc, wxFont font,
@@ -841,151 +464,11 @@ auto Ruler::MakeTick(
    return { { strLeft, strTop, strW, strH }, lab };
 }
 
-struct Ruler::Updater {
-   const Ruler &mRuler;
-   const ZoomInfo *zoomInfo;
-
-   explicit Updater( const Ruler &ruler, const ZoomInfo *z )
-   : mRuler{ ruler }
-   , zoomInfo{ z }
-   {}
-
-   const double mDbMirrorValue = mRuler.mDbMirrorValue;
-   const int mLength = mRuler.mLength;
-   const RulerFormat mFormat = mRuler.mFormat;
-   const TranslatableString mUnits = mRuler.mUnits;
-
-   const int mLeft = mRuler.mLeft;
-   const int mTop = mRuler.mTop;
-   const int mBottom = mRuler.mBottom;
-   const int mRight = mRuler.mRight;
-
-   const int mSpacing = mRuler.mSpacing;
-   const int mOrientation = mRuler.mOrientation;
-   const bool mFlip = mRuler.mFlip;
-
-   const bool mCustom = mRuler.mCustom;
-   const Fonts &mFonts = *mRuler.mpFonts;
-   const bool mLog = mRuler.mLog;
-   const double mHiddenMin = mRuler.mHiddenMin;
-   const double mHiddenMax = mRuler.mHiddenMax;
-   const bool mLabelEdges = mRuler.mLabelEdges;
-   const double mMin = mRuler.mMin;
-   const double mMax = mRuler.mMax;
-   const int mLeftOffset = mRuler.mLeftOffset;
-   const NumberScale mNumberScale = mRuler.mNumberScale;
-
-   struct TickOutputs;
-   
-   bool Tick( wxDC &dc,
-      int pos, double d, const TickSizes &tickSizes, wxFont font,
-      TickOutputs outputs
-   ) const;
-
-   // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom( wxDC &dc, int labelIdx, wxFont font,
-      TickOutputs outputs
-   ) const;
-
-   static void ChooseFonts(
-      std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
-      wxDC &dc, int desiredPixelHeight );
-
-   struct UpdateOutputs;
-   
-   void Update(
-      wxDC &dc, const Envelope* envelope,
-      UpdateOutputs &allOutputs
-   )// Envelope *speedEnv, long minSpeed, long maxSpeed )
-      const;
-
-   void UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const;
-   void UpdateLinear(
-      wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const;
-   void UpdateNonlinear( wxDC &dc, UpdateOutputs &allOutputs ) const;
-};
-
 struct Ruler::Cache {
    Bits mBits;
    Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
    wxRect mRect;
 };
-
-struct Ruler::Updater::TickOutputs{ Labels &labels; Bits &bits; wxRect &box; };
-struct Ruler::Updater::UpdateOutputs {
-   Labels &majorLabels, &minorLabels, &minorMinorLabels;
-   Bits &bits;
-   wxRect &box;
-};
-
-bool Ruler::Updater::Tick( wxDC &dc,
-   int pos, double d, const TickSizes &tickSizes, wxFont font,
-   // in/out:
-   TickOutputs outputs ) const
-{
-   // Bug 521.  dB view for waveforms needs a 2-sided scale.
-   if(( mDbMirrorValue > 1.0 ) && ( -d > mDbMirrorValue ))
-      d = -2*mDbMirrorValue - d;
-
-   // FIXME: We don't draw a tick if off end of our label arrays
-   // But we shouldn't have an array of labels.
-   if( outputs.labels.size() >= mLength )
-      return false;
-
-   Label lab;
-   lab.value = d;
-   lab.pos = pos;
-   lab.text = tickSizes.LabelString( d, mFormat, mUnits );
-
-   const auto result = MakeTick(
-      lab,
-      dc, font,
-      outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
-      mFlip,
-      mOrientation );
-
-   auto &rect = result.first;
-   outputs.box.Union( rect );
-   outputs.labels.emplace_back( result.second );
-   return !rect.IsEmpty();
-}
-
-bool Ruler::Updater::TickCustom( wxDC &dc, int labelIdx, wxFont font,
-   // in/out:
-   TickOutputs outputs ) const
-{
-   // FIXME: We don't draw a tick if of end of our label arrays
-   // But we shouldn't have an array of labels.
-   if( labelIdx >= outputs.labels.size() )
-      return false;
-
-   //This should only used in the mCustom case
-
-   Label lab;
-   lab.value = 0.0;
-
-   const auto result = MakeTick(
-      lab,
-
-      dc, font,
-      outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
-      mFlip,
-      mOrientation );
-
-   auto &rect = result.first;
-   outputs.box.Union( rect );
-   outputs.labels[labelIdx] = ( result.second );
-   return !rect.IsEmpty();
-}
-
-namespace {
-double ComputeWarpedLength(const Envelope &env, double t0, double t1)
-{
-   return env.IntegralOfInverse(t0, t1);
-}
-}
 
 static constexpr int MinPixelHeight =
 #ifdef __WXMSW__
@@ -1004,20 +487,23 @@ static constexpr int MaxPixelHeight =
 #endif
 
 
-void Ruler::Updater::ChooseFonts(
-   std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
-   wxDC &dc, int desiredPixelHeight )
+void Ruler::ChooseFonts( wxDC &dc ) const
 {
-   if ( pFonts )
+   const Fonts* pUserFonts = mpUserFonts.get();
+   int desiredPixelHeight = mOrientation == wxHORIZONTAL
+      ? mBottom - mTop - 5 // height less ticks and 1px gap
+      : MaxPixelHeight;
+
+   if (mpFonts)
       return;
 
-   if ( pUserFonts ) {
-      pFonts = std::make_unique<Fonts>( *pUserFonts );
+   if (pUserFonts) {
+      mpFonts = std::make_unique<Fonts>(*pUserFonts);
       return;
    }
 
-   pFonts = std::make_unique<Fonts>( Fonts{ {}, {}, {}, 0 } );
-   auto &fonts = *pFonts;
+   mpFonts = std::make_unique<Fonts>(Fonts{ {}, {}, {}, 0 });
+   auto& fonts = *mpFonts;
 
    int fontSize = 4;
 
@@ -1026,329 +512,18 @@ void Ruler::Updater::ChooseFonts(
 
    // Keep making the font bigger until it's too big, then subtract one.
    wxCoord height;
-   FindFontHeights( height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD );
+   FindFontHeights(height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD);
    while (height <= desiredPixelHeight && fontSize < 40) {
       fontSize++;
-      FindFontHeights( height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD );
+      FindFontHeights(height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD);
    }
    fontSize--;
-   FindFontHeights( height, fonts.lead, dc, fontSize );
+   FindFontHeights(height, fonts.lead, dc, fontSize);
 
    fonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
    fonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
    fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
-}
-
-void Ruler::Updater::UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const
-{
-   TickOutputs majorOutputs{
-      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
-
-   // SET PARAMETER IN MCUSTOM CASE
-   // Works only with major labels
-
-   int numLabel = allOutputs.majorLabels.size();
-
-   for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
-      TickCustom( dc, i, mFonts.major, majorOutputs );
-}
-
-void Ruler::Updater::UpdateLinear(
-   wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const
-{
-   TickOutputs majorOutputs{
-      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
-
-   // Use the "hidden" min and max to determine the tick size.
-   // That may make a difference with fisheye.
-   // Otherwise you may see the tick size for the whole ruler change
-   // when the fisheye approaches start or end.
-   double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-   TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
-
-   auto TickAtValue =
-   [this, &tickSizes, &dc, &majorOutputs]
-   ( double value ) -> int {
-      // Make a tick only if the value is strictly between the bounds
-      if ( value <= std::min( mMin, mMax ) )
-         return -1;
-      if ( value >= std::max( mMin, mMax ) )
-         return -1;
-
-      int mid;
-      if (zoomInfo != NULL) {
-         // Tick only at zero
-         if ( value )
-            return -1;
-         mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
-      }
-      else
-         mid = (int)(mLength*((mMin - value) / (mMin - mMax)) + 0.5);
-
-      const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
-      if (mid >= 0 && mid < iMaxPos)
-         Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
-      else
-         return -1;
-      
-      return mid;
-   };
-
-   if ( mDbMirrorValue ) {
-      // For dB scale, let the zeroes prevail over the extreme values if
-      // not the same, and let midline prevail over all
-
-      // Do the midline
-      TickAtValue( -mDbMirrorValue );
-
-      // Do the upper zero
-      TickAtValue( 0.0 );
-
-      // Do the other zero
-      TickAtValue( -2 * mDbMirrorValue );
-   }
-
-   // Extreme values
-   if (mLabelEdges) {
-      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
-   }
-
-   if ( !mDbMirrorValue ) {
-      // Zero (if it's strictly in the middle somewhere)
-      TickAtValue( 0.0 );
-   }
-
-   double sg = UPP > 0.0? 1.0: -1.0;
-
-   int nDroppedMinorLabels=0;
-   // Major and minor ticks
-   for (int jj = 0; jj < 2; ++jj) {
-      const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
-      auto font = jj == 0 ? mFonts.major : mFonts.minor;
-      TickOutputs outputs{
-         (jj == 0 ? allOutputs.majorLabels : allOutputs.minorLabels),
-         allOutputs.bits, allOutputs.box
-      };
-      int ii = -1, j = 0;
-      double d, warpedD, nextD;
-
-      double prevTime = 0.0, time = 0.0;
-      if (zoomInfo != NULL) {
-         j = zoomInfo->TimeToPosition(mMin);
-         prevTime = zoomInfo->PositionToTime(--j);
-         time = zoomInfo->PositionToTime(++j);
-         d = (prevTime + time) / 2.0;
-      }
-      else
-         d = mMin - UPP / 2;
-      if (envelope)
-         warpedD = ComputeWarpedLength(*envelope, 0.0, d);
-      else
-         warpedD = d;
-      // using ints doesn't work, as
-      // this will overflow and be negative at high zoom.
-      double step = floor(sg * warpedD / denom);
-      while (ii <= mLength) {
-         ii++;
-         if (zoomInfo)
-         {
-            prevTime = time;
-            time = zoomInfo->PositionToTime(++j);
-            nextD = (prevTime + time) / 2.0;
-            // wxASSERT(time >= prevTime);
-         }
-         else
-            nextD = d + UPP;
-         if (envelope)
-            warpedD += ComputeWarpedLength(*envelope, d, nextD);
-         else
-            warpedD = nextD;
-         d = nextD;
-
-         if (floor(sg * warpedD / denom) > step) {
-            step = floor(sg * warpedD / denom);
-            bool major = jj == 0;
-            tickSizes.useMajor = major;
-            bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
-               font, outputs );
-            if( !major && !ticked ){
-               nDroppedMinorLabels++;
-            }
-         }
-      }
-   }
-
-   tickSizes.useMajor = true;
-
-   // If we've dropped minor labels through overcrowding, then don't show
-   // any of them.  We're allowed though to drop ones which correspond to the
-   // major numbers.
-   if( nDroppedMinorLabels >
-         (allOutputs.majorLabels.size() + (mLabelEdges ? 2:0)) ){
-      // Old code dropped the labels AND their ticks, like so:
-      //    mMinorLabels.clear();
-      // Nowadays we just drop the labels.
-      for( auto &label : allOutputs.minorLabels )
-         label.text = {};
-   }
-
-   // Left and Right Edges
-   if (mLabelEdges) {
-      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
-   }
-}
-
-void Ruler::Updater::UpdateNonlinear(
-    wxDC &dc, UpdateOutputs &allOutputs ) const
-{
-   TickOutputs majorOutputs{
-      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
-
-   auto numberScale = ( mNumberScale == NumberScale{} )
-      ? NumberScale( nstLogarithmic, mMin, mMax )
-      : mNumberScale;
-
-   double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
-   TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
-
-   tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
-
-   double loLog = log10(mMin);
-   double hiLog = log10(mMax);
-   int loDecade = (int) floor(loLog);
-
-   double val;
-   double startDecade = pow(10., (double)loDecade);
-
-   // Major ticks are the decades
-   double decade = startDecade;
-   double delta=hiLog-loLog, steps=fabs(delta);
-   double step = delta>=0 ? 10 : 0.1;
-   double rMin=std::min(mMin, mMax), rMax=std::max(mMin, mMax);
-   for(int i=0; i<=steps; i++)
-   {  // if(i!=0)
-      {  val = decade;
-         if(val >= rMin && val < rMax) {
-            const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-            Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
-         }
-      }
-      decade *= step;
-   }
-
-   // Minor ticks are multiples of decades
-   decade = startDecade;
-   float start, end, mstep;
-   if (delta > 0)
-   {  start=2; end=10; mstep=1;
-   }else
-   {  start=9; end=1; mstep=-1;
-   }
-   steps++;
-   tickSizes.useMajor = false;
-   TickOutputs minorOutputs{
-      allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
-   for(int i=0; i<=steps; i++) {
-      for(int j=start; j!=end; j+=mstep) {
-         val = decade * j;
-         if(val >= rMin && val < rMax) {
-            const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-            Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
-         }
-      }
-      decade *= step;
-   }
-
-   // MinorMinor ticks are multiples of decades
-   decade = startDecade;
-   if (delta > 0)
-   {  start= 10; end=100; mstep= 1;
-   }else
-   {  start=100; end= 10; mstep=-1;
-   }
-   steps++;
-   TickOutputs minorMinorOutputs{
-      allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
-   for (int i = 0; i <= steps; i++) {
-      // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
-      if (!(mFormat == IntFormat && decade < 10.0)) {
-         for (int f = start; f != (int)(end); f += mstep) {
-            if ((int)(f / 10) != f / 10.0f) {
-               val = decade * f / 10;
-               if (val >= rMin && val < rMax) {
-                  const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                  Tick( dc, pos, val, tickSizes,
-                     mFonts.minorMinor, minorMinorOutputs );
-               }
-            }
-         }
-      }
-      decade *= step;
-   }
-}
-
-void Ruler::Updater::Update(
-   wxDC &dc, const Envelope* envelope,
-   UpdateOutputs &allOutputs
-)// Envelope *speedEnv, long minSpeed, long maxSpeed )
-   const
-{
-   TickOutputs majorOutputs{
-      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
-
-   if ( mCustom )
-      UpdateCustom( dc, allOutputs );
-   else if ( !mLog )
-      UpdateLinear( dc, envelope, allOutputs );
-   else
-      UpdateNonlinear( dc, allOutputs );
-
-   int displacementx=0, displacementy=0;
-   auto &box = allOutputs.box;
-   if (!mFlip) {
-      if (mOrientation==wxHORIZONTAL) {
-         int d = mTop + box.GetHeight() + 5;
-         box.Offset(0,d);
-         box.Inflate(0,5);
-         displacementx=0;
-         displacementy=d;
-      }
-      else {
-         int d = mLeft - box.GetLeft() + 5;
-         box.Offset(d,0);
-         box.Inflate(5,0);
-         displacementx=d;
-         displacementy=0;
-      }
-   }
-   else {
-      if (mOrientation==wxHORIZONTAL) {
-         box.Inflate(0,5);
-         displacementx=0;
-         displacementy=0;
-      }
-   }
-   auto update = [=]( Label &label ){
-      label.lx += displacementx;
-      label.ly += displacementy;
-   };
-   for( auto &label : allOutputs.majorLabels )
-      update( label );
-   for( auto &label : allOutputs.minorLabels )
-      update( label );
-   for( auto &label : allOutputs.minorMinorLabels )
-      update( label );
-}
-
-void Ruler::ChooseFonts( wxDC &dc ) const
-{
-   Updater::ChooseFonts( mpFonts, mpUserFonts.get(), dc,
-      mOrientation == wxHORIZONTAL
-         ? mBottom - mTop - 5 // height less ticks and 1px gap
-         : MaxPixelHeight
-   );
+   
 }
 
 void Ruler::UpdateCache(
@@ -1357,10 +532,6 @@ void Ruler::UpdateCache(
 {
    if ( mpCache )
       return;
-
-   const ZoomInfo *zoomInfo = NULL;
-   if (!mLog && mOrientation == wxHORIZONTAL)
-      zoomInfo = mUseZoomInfo;
 
    // This gets called when something has been changed
    // (i.e. we've been invalidated).  Recompute all
@@ -1394,15 +565,12 @@ void Ruler::UpdateCache(
 
    cache.mBits = mUserBits;
    cache.mBits.resize( static_cast<size_t>(mLength + 1), false );
-
-   // Keep Updater const!  We want no hidden state changes affecting its
-   // computations.
-   const Updater updater{ *this, zoomInfo };
-   Updater::UpdateOutputs allOutputs{
+   
+   RulerUpdater::UpdateOutputs allOutputs{
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
       cache.mBits, cache.mRect
    };
-   updater.Update(dc, envelope, allOutputs);
+   mpUpdater->Update(dc, envelope, allOutputs);
 }
 
 auto Ruler::GetFonts() const -> Fonts
@@ -1664,18 +832,5 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 #endif
       dc.SetBackgroundMode(wxTRANSPARENT);
       dc.DrawText(text.Translation(), lx, ly);
-   }
-}
-
-void Ruler::SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo)
-{
-   
-   if ( mLeftOffset != leftOffset ||
-      // Hm, is this invalidation sufficient?  What if *zoomInfo changes under us?
-      mUseZoomInfo != zoomInfo
-   ) {
-      mLeftOffset = leftOffset;
-      mUseZoomInfo = zoomInfo;
-      Invalidate();
    }
 }
