@@ -250,6 +250,11 @@ public:
       const LV2Ports &ports);
    ~LV2Validator() override;
 
+   // TODO static or non-member function
+   LV2EffectSettings &GetSettings(EffectSettings &settings) const;
+   // TODO static or non-member function
+   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
+
    LV2Instance &mInstance;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;

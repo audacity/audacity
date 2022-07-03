@@ -1328,4 +1328,12 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
 }
 #endif
 
+LV2EffectSettings &LV2Validator::GetSettings(EffectSettings &settings) const {
+   return mInstance.GetSettings(settings);
+}
+
+const LV2EffectSettings &
+LV2Validator::GetSettings(const EffectSettings &settings) const {
+   return mInstance.GetSettings(settings);
+}
 #endif
