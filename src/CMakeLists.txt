@@ -1019,6 +1019,8 @@ list( APPEND SOURCES
       widgets/BackedPanel.h
       widgets/BasicMenu.cpp
       widgets/BasicMenu.h
+      widgets/CustomUpdater.cpp
+      widgets/CustomUpdater.h
       widgets/ErrorDialog.cpp
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
@@ -1051,6 +1053,10 @@ list( APPEND SOURCES
       widgets/ImageRoll.h
       widgets/KeyView.cpp
       widgets/KeyView.h
+      widgets/LinearUpdater.cpp
+      widgets/LinearUpdater.h
+      widgets/LogarithmicUpdater.cpp
+      widgets/LogarithmicUpdater.h
       widgets/MeterPanel.cpp
       widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
@@ -1076,6 +1082,8 @@ list( APPEND SOURCES
       >
       widgets/UnwritableLocationErrorDialog.cpp
       widgets/UnwritableLocationErrorDialog.h
+      widgets/Updater.cpp
+      widgets/Updater.h
       widgets/VetoDialogHook.h
       widgets/Warning.cpp
       widgets/Warning.h
