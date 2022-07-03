@@ -451,22 +451,13 @@ wxString MacroCommands::PromptForParamsFor(
    const PluginID & ID =
       EffectManager::Get().GetEffectByIdentifier(command);
    if (ID.empty())
-   {
       return wxEmptyString;   // effect not found
-   }
 
    wxString res = params;
-
    auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
-
    if (EffectManager::Get().SetEffectParameters(ID, params))
-   {
       if (EffectManager::Get().PromptUser(ID, EffectUI::DialogFactory, parent))
-      {
          res = EffectManager::Get().GetEffectParameters(ID);
-      }
-   }
-
    return res;
 }
 

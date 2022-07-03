@@ -59,6 +59,7 @@ public:
    int ShowModal() override;
 
    bool Initialize();
+   EffectUIValidator *GetValidator() const { return mpValidator.get(); }
 
 private:
    std::shared_ptr<EffectInstance> InitializeInstance();
@@ -158,10 +159,8 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   wxDialog *DialogFactory( wxWindow &parent, EffectPlugin &host,
-      EffectUIClientInterface &client,
-      std::shared_ptr<EffectInstance> &pInstance,
-      EffectSettingsAccess &access);
+   DialogFactoryResults DialogFactory(wxWindow &parent, EffectPlugin &host,
+      EffectUIClientInterface &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

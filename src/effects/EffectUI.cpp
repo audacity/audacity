@@ -1296,10 +1296,8 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-wxDialog *EffectUI::DialogFactory( wxWindow &parent,
-   EffectPlugin &host,
-   EffectUIClientInterface &client,
-   std::shared_ptr<EffectInstance> &pInstance,
+DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
+   EffectPlugin &host, EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1307,13 +1305,16 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    // non-modal, as for realtime effects
    auto project = FindProjectFromWindow(&parent);
    if ( !project )
-      return nullptr;
+      return {};
+   std::shared_ptr<EffectInstance> pInstance;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
       *project, host, client, pInstance, access } };
-   if (dlg->Initialize())
+   if (dlg->Initialize()) {
+      auto pValidator = dlg->GetValidator();
       // release() is safe because parent will own it
-      return dlg.release();
-   return nullptr;
+      return { dlg.release(), pInstance, pValidator };
+   }
+   return {};
 }
 
 #include "PluginManager.h"

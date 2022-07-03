@@ -27,16 +27,18 @@ class EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
 
+struct DialogFactoryResults {
+   wxDialog *pDialog{};
+   //! constructed and successfully Init()-ed; or null for failure
+   std::shared_ptr<EffectInstance> pInstance{};
+   EffectUIValidator *pValidator{};
+};
+
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
-   /*
-    @param[out] pInstance may construct
-    (and then must call Init() with success), or leave null for failure
-    */
-using EffectDialogFactory = std::function< wxDialog* (
+using EffectDialogFactory = std::function< DialogFactoryResults(
    wxWindow &parent, EffectPlugin &, EffectUIClientInterface &,
-   std::shared_ptr<EffectInstance> &,
-   EffectSettingsAccess & ) >;
+   EffectSettingsAccess &) >;
 
 class TrackList;
 class WaveTrackFactory;

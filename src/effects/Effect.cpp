@@ -197,7 +197,9 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
    EffectUIClientInterface *const client = this;
-   mHostUIDialog = factory(parent, *this, *client, pInstance, access);
+   auto results = factory(parent, *this, *client, access);
+   mHostUIDialog = results.pDialog;
+   pInstance = results.pInstance;
    if (!mHostUIDialog)
       return 0;
 

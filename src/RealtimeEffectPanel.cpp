@@ -47,20 +47,23 @@ namespace
    ){
       return [=](wxWindow &parent,
          EffectPlugin &host, EffectUIClientInterface &client,
-         std::shared_ptr<EffectInstance> &pInstance,
          EffectSettingsAccess &access
-      ) -> wxDialog * {
+      ) -> DialogFactoryResults {
          // Make sure there is an associated project, whose lifetime will
          // govern the lifetime of the dialog
          if (auto project = FindProjectFromWindow(&parent)) {
+            std::shared_ptr<EffectInstance> pInstance;
             if (Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{
                   &parent, *project, host, client, pInstance, access,
                   pEffectState } }
                ; dlg->Initialize()
-            )  // release() is safe because parent will own it
-               return dlg.release();
+            ){
+               auto pValidator = dlg->GetValidator();
+               // release() is safe because parent will own it
+               return { dlg.release(), pInstance, pValidator };
+            }
          }
-         return nullptr;
+         return {};
       };
    }
 
