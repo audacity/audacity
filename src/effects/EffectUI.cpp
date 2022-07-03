@@ -329,9 +329,9 @@ int EffectUIHost::ShowModal()
 // EffectUIHost implementation
 // ============================================================================
 
-wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
+wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
 {
-   mIsGUI = mClient.IsGraphicalUI();
+   mIsGUI = graphicalUI;
    mIsBatch = mEffectUIHost.IsBatchProcessing();
 
    int margin = 0;
@@ -500,7 +500,8 @@ bool EffectUIHost::Initialize()
 
       S.StartPanel();
       {
-         const auto bar = BuildButtonBar( S.GetParent() );
+         const auto bar = BuildButtonBar(S.GetParent(),
+            mpValidator && mpValidator->IsGraphicalUI());
 
          long buttons;
          if ( mEffectUIHost.GetDefinition().ManualPage().empty() && mEffectUIHost.GetDefinition().HelpPage().empty()) {

@@ -115,7 +115,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool IsGraphicalUI() override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;

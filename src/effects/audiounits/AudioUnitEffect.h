@@ -103,7 +103,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool IsGraphicalUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -154,7 +153,6 @@ private:
 
    wxWindow *mParent{};
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
-   bool mIsGraphical{ false };
 };
 
 #endif

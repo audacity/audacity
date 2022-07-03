@@ -207,6 +207,11 @@ bool EffectUIValidator::UpdateUI()
    return true;
 }
 
+bool EffectUIValidator::IsGraphicalUI()
+{
+   return false;
+}
+
 DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
 
 bool DefaultEffectUIValidator::ValidateUI()
@@ -216,6 +221,11 @@ bool DefaultEffectUIValidator::ValidateUI()
       result = mEffect.ValidateUI(settings);
    });
    return result;
+}
+
+bool DefaultEffectUIValidator::IsGraphicalUI()
+{
+   return mEffect.IsGraphicalUI();
 }
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

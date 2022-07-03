@@ -1454,11 +1454,6 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
    return result;
 }
 
-bool LadspaEffect::IsGraphicalUI()
-{
-   return false;
-}
-
 bool LadspaEffect::Validator::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings &settings){

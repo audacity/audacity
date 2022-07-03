@@ -440,11 +440,6 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
 }
 
-bool AudioUnitEffect::IsGraphicalUI()
-{
-   return mUIType != wxT("Plain");
-}
-
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
 bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 {

@@ -23,11 +23,12 @@
 AudioUnitValidator::AudioUnitValidator(CreateToken,
    EffectUIClientInterface &effect,
    EffectSettingsAccess &access, AudioUnitInstance &instance,
-   AUControl *pControl
+   AUControl *pControl, bool isGraphical
 )  : EffectUIValidator{ effect, access }
    , mInstance{ instance }
    , mEventListenerRef{ MakeListener() }
    , mpControl{ pControl }
+   , mIsGraphical{ isGraphical }
 {
    // Make the settings of the instance up to date before using it to
    // build a UI
@@ -110,6 +111,11 @@ bool AudioUnitValidator::ValidateUI()
    return true;
 }
 
+bool AudioUnitValidator::IsGraphicalUI()
+{
+   return mIsGraphical;
+}
+
 bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
 {
    return mInstance.FetchSettings(AudioUnitInstance::GetSettings(settings));
@@ -126,6 +132,7 @@ std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
    EffectInstance &instance, EffectSettingsAccess &access)
 {
    const auto parent = S.GetParent();
+   bool isGraphical = (uiType == FullValue.MSGID().GET());
    // Cast is assumed to succeed because only this effect's own instances
    // are passed back by the framework
    auto &myInstance = dynamic_cast<AudioUnitInstance&>(instance);
@@ -154,8 +161,7 @@ std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
       pControl = uControl.get();
 
       if (!pControl->Create(container, myInstance.GetComponent(),
-         myInstance.GetAudioUnit(),
-         uiType == FullValue.MSGID().GET()))
+         myInstance.GetAudioUnit(), isGraphical))
          return nullptr;
 
       {
@@ -175,7 +181,7 @@ std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
    }
 
    return std::make_unique<AudioUnitValidator>(
-      CreateToken{}, effect, access, myInstance, pControl);
+      CreateToken{}, effect, access, myInstance, pControl, isGraphical);
 }
 
 void AudioUnitValidator::Notify()

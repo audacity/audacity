@@ -537,6 +537,12 @@ public:
     */
    virtual bool UpdateUI();
 
+   /*!
+    Default implementation returns false
+    @return true if using a native plug-in UI, not widgets
+    */
+   virtual bool IsGraphicalUI();
+
 protected:
    // Convenience function template for binding event handler functions
    template<typename EventTag, typename Class, typename Event>
@@ -572,6 +578,8 @@ public:
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
+   //! @return mEffect.IsGraphicalUI()
+   bool IsGraphicalUI() override;
 };
 
 /*************************************************************************************//**
@@ -595,6 +603,9 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
 
+   /*!
+    @return true if using a native plug-in UI, not widgets
+    */
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`

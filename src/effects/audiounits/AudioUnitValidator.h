@@ -32,12 +32,13 @@ public:
 
    AudioUnitValidator(CreateToken,
       EffectUIClientInterface &effect, EffectSettingsAccess &access,
-      AudioUnitInstance &instance, AUControl *pControl);
+      AudioUnitInstance &instance, AUControl *pControl, bool isGraphical);
 
    ~AudioUnitValidator() override;
 
    bool UpdateUI() override;
    bool ValidateUI() override;
+   bool IsGraphicalUI() override;
 
 private:
    static void EventListenerCallback(void *inCallbackRefCon,
@@ -60,5 +61,6 @@ private:
    AudioUnitInstance &mInstance;
    const EventListenerPtr mEventListenerRef;
    AUControl *const mpControl{};
+   const bool mIsGraphical;
 };
 #endif
