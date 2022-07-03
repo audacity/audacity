@@ -21,6 +21,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveTrack.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
+#include "../../../../widgets/LinearUpdater.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
@@ -235,10 +236,10 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
-      vruler->SetFormat(Ruler::RealFormat);
+      vruler->SetFormat(RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
-      vruler->SetLog(false);
+      vruler->SetUpdater(std::make_unique<LinearUpdater>());
    }
    else {
       wxASSERT(scaleType == WaveformSettings::stLogarithmic);
@@ -345,9 +346,9 @@ void WaveformVRulerControls::DoUpdateVRuler(
       else
          vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
 #endif
-      vruler->SetFormat(Ruler::RealLogFormat);
+      vruler->SetFormat(RealLogFormat);
       vruler->SetLabelEdges(true);
-      vruler->SetLog(false);
+      vruler->SetUpdater(std::make_unique<LinearUpdater>());
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

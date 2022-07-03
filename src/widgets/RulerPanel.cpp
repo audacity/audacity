@@ -18,7 +18,11 @@
 
 #include "RulerPanel.h"
 
+#include "LinearUpdater.h"
+#include "LogarithmicUpdater.h"
+
 #include <wx/dcclient.h>
+
 
 BEGIN_EVENT_TABLE(RulerPanel, wxPanelWrapper)
    EVT_ERASE_BACKGROUND(RulerPanel::OnErase)
@@ -32,7 +36,7 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        wxOrientation orientation,
                        const wxSize &bounds,
                        const Range &range,
-                       Ruler::RulerFormat format,
+                       RulerFormat format,
                        const TranslatableString &units,
                        const Options &options,
                        const wxPoint& pos /*= wxDefaultPosition*/,
@@ -42,7 +46,10 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
    ruler.SetBounds( 0, 0, bounds.x, bounds.y );
    ruler.SetOrientation(orientation);
    ruler.SetRange( range.first, range.second );
-   ruler.SetLog( options.log );
+   if (options.log)
+      ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
+   else
+      ruler.SetUpdater(std::make_unique<LinearUpdater>());
    ruler.SetFormat(format);
    ruler.SetUnits( units );
    ruler.SetFlip( options.flip );
