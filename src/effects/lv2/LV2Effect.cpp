@@ -273,8 +273,8 @@ int LV2Effect::GetMidiOutCount() const
    return mPorts.mMidiOut;
 }
 
-int LV2Effect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    mDialog = &dialog;

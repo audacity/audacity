@@ -1205,7 +1205,7 @@ bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 /// all provide the information (kn0ck0ut is one).
 ///
 int VSTEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+   wxWindow &parent, wxDialog &dialog, EffectUIValidator *, bool forceModal)
 {
    //   mProcessLevel = 1;      // in GUI thread
 

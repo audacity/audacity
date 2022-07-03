@@ -599,9 +599,8 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal = false
-   ) = 0;
+   virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal = false) = 0;
 
    /*!
     @return true if using a native plug-in UI, not widgets

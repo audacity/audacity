@@ -300,14 +300,13 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-int AudioUnitEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       dialog.Show();
       return 0;
    }
-
    return dialog.ShowModal();
 }
 

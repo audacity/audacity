@@ -143,7 +143,8 @@ public:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
    bool InitializePlugin();
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();

@@ -1056,8 +1056,8 @@ bool LadspaEffect::Instance::RealtimeProcessEnd(EffectSettings &) noexcept
    return true;
 }
 
-int LadspaEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int LadspaEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    dialog.Layout();
    dialog.Fit();
