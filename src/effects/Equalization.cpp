@@ -103,6 +103,8 @@
 #include "../WaveClip.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
+#include "../widgets/LinearUpdater.h"
+#include "../widgets/LogarithmicUpdater.h"
 #include "../widgets/Ruler.h"
 #include "../widgets/AudacityTextEntryDialog.h"
 #include "XMLFileReader.h"
@@ -2288,7 +2290,7 @@ void EffectEqualization::UpdateDraw()
    {
       EnvLogToLin();
       mEnvelope = mLinEnvelope.get();
-      mFreqRuler->ruler.SetLog(false);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(0, mHiFreq);
    }
 
@@ -2320,7 +2322,7 @@ void EffectEqualization::UpdateGraphic()
 
       EnvLinToLog();
       mEnvelope = mLogEnvelope.get();
-      mFreqRuler->ruler.SetLog(true);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
    }
 
@@ -2909,7 +2911,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    mLin = mLinFreq->IsChecked();
    if(IsLinear())  //going from log to lin freq scale
    {
-      mFreqRuler->ruler.SetLog(false);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(0, mHiFreq);
       EnvLogToLin();
       mEnvelope = mLinEnvelope.get();
@@ -2917,7 +2919,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    }
    else  //going from lin to log freq scale
    {
-      mFreqRuler->ruler.SetLog(true);
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
       EnvLinToLog();
       mEnvelope = mLogEnvelope.get();

@@ -21,6 +21,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
+#include "../../../../widgets/LinearUpdater.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
@@ -222,7 +223,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetFormat(Ruler::RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
-      vruler->SetLog(false);
+      vruler->SetUpdater(std::make_unique<LinearUpdater>(*vruler, nullptr));
    }
    else {
       wxASSERT(scaleType == WaveformSettings::stLogarithmic);
@@ -330,7 +331,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
 #endif
       vruler->SetFormat(Ruler::RealLogFormat);
       vruler->SetLabelEdges(true);
-      vruler->SetLog(false);
+      vruler->SetUpdater(std::make_unique<LinearUpdater>(*vruler, nullptr));
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }
