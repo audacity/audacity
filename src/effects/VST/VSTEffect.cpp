@@ -1473,7 +1473,7 @@ bool VSTEffect::CanExportPresets()
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets(const EffectSettings &) const
+void VSTEffect::ExportPresets(const EffectSettings& settings) const
 {
    wxString path;
 
@@ -1499,6 +1499,8 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
    {
       return;
    }
+
+   StoreSettings(GetSettings(settings));
 
    wxFileName fn(path);
    wxString ext = fn.GetExt();
@@ -2015,6 +2017,8 @@ bool VSTEffect::SaveParameters(
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"), vstSettings.mUniqueID );
    SetConfig(*this, PluginSettings::Private, group, wxT("Version"),  vstSettings.mVersion  );
    SetConfig(*this, PluginSettings::Private, group, wxT("Elements"), vstSettings.mNumParams);
+
+   StoreSettings(vstSettings);
 
    if ( SupportsChunk() )
    {
