@@ -1414,7 +1414,7 @@ bool AudacityApp::InitPart2()
       {
          PluginStartupRegistration reg(newPlugins);
          reg.Run();
-         failedPlugins = reg.GetFailedPlugins();
+         failedPlugins = reg.GetFailedPluginsPaths();
       }
    }
 

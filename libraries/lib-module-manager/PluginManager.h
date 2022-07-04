@@ -156,9 +156,9 @@ public:
    /**
     * \brief Ensures that all currently registered plugins still exist
     * and scans for new ones.
-    * \return Array of pairs, first element of which is provider id and the second is module path
+    * \return Map, where each module path(key) is associated with at least one provider id
     */
-   std::vector<std::pair<wxString, wxString>> CheckPluginUpdates();
+   std::map<wxString, std::vector<wxString>> CheckPluginUpdates();
 
    //! Used only by Nyquist Workbench module
    const PluginID & RegisterPlugin(

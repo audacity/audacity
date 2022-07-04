@@ -21,9 +21,10 @@
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 
-PluginStartupRegistration::PluginStartupRegistration(std::vector<std::pair<wxString, wxString>> pluginsToProcess)
-   : mPluginsToProcess(std::move(pluginsToProcess))
+PluginStartupRegistration::PluginStartupRegistration(const std::map<wxString, std::vector<wxString>>& pluginsToProcess)
 {
+   for(auto& p : pluginsToProcess)
+      mPluginsToProcess.push_back(p);
    mValidator = std::make_unique<AsyncPluginValidator>(*this);
 }
 
@@ -34,20 +35,44 @@ void PluginStartupRegistration::OnInternalError(const wxString& error)
 
 void PluginStartupRegistration::OnPluginFound(const PluginDescriptor& desc)
 {
-   PluginManager::Get().RegisterPlugin(PluginDescriptor { desc });
-   if(!desc.IsValid())
-      mFailedPlugins.push_back(desc.GetPath());
+   auto& pluginManager = PluginManager::Get();
+   //Multiple providers can report same module paths
+   if(desc.GetPluginType() == PluginTypeStub)
+      //do not register until all associated providers have tried to load the module
+      mFailedPluginsCache.push_back(desc);
+   else
+   {
+      mValidProviderFound = true;
+      PluginManager::Get().RegisterPlugin(PluginDescriptor { desc });
+   }
 }
 
 void PluginStartupRegistration::OnValidationFinished()
 {
-   ++mCurrentPluginIndex;
+   ++mCurrentPluginProviderIndex;
+   if(mValidProviderFound ||
+      mPluginsToProcess[mCurrentPluginIndex].second.size() == mCurrentPluginProviderIndex)
+   {
+      //we've tried all providers associated with same module path...
+      if(!mValidProviderFound && !mFailedPluginsCache.empty())
+      {
+         //...but none of them succeeded
+         mFailedPluginsPaths.push_back(mFailedPluginsCache[0].GetPath());
+
+         for(auto& desc : mFailedPluginsCache)
+            PluginManager::Get().RegisterPlugin(std::move(desc));
+      }
+      ++mCurrentPluginIndex;
+      mCurrentPluginProviderIndex = 0;
+      mValidProviderFound = false;
+      mFailedPluginsCache.clear();
+   }
    ProcessNext();
 }
 
-const std::vector<wxString>& PluginStartupRegistration::GetFailedPlugins() const noexcept
+const std::vector<wxString>& PluginStartupRegistration::GetFailedPluginsPaths() const noexcept
 {
-   return mFailedPlugins;
+   return mFailedPluginsPaths;
 }
 
 void PluginStartupRegistration::Run()
@@ -56,7 +81,7 @@ void PluginStartupRegistration::Run()
    ProcessNext();
    while(mValidator)
    {
-      const auto message = TranslatableString { mPluginsToProcess[mCurrentPluginIndex].second, { } };
+      const auto message = TranslatableString { mPluginsToProcess[mCurrentPluginIndex].first, { } };
       //Update UI
       if(dialog->Poll(mCurrentPluginIndex, mPluginsToProcess.size(), message) != BasicUI::ProgressResult::Success)
          Stop();
@@ -95,8 +120,9 @@ void PluginStartupRegistration::ProcessNext()
    try
    {
       mValidator->Validate(
-         mPluginsToProcess[mCurrentPluginIndex].first,
-         mPluginsToProcess[mCurrentPluginIndex].second);
+         mPluginsToProcess[mCurrentPluginIndex].second[mCurrentPluginProviderIndex],
+         mPluginsToProcess[mCurrentPluginIndex].first
+      );
    }
    catch(std::exception& e)
    {
