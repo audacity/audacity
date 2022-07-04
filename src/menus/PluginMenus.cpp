@@ -1215,7 +1215,7 @@ BaseItemSharedPtr GenerateMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XXO("&Generate"),
       Section( "Manage",
-         Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
+         Command( wxT("ManageGenerators"), XXO("Plugin Manager"),
             FN(OnManageGenerators), AudioIONotBusyFlag() )
       ),
 
@@ -1281,7 +1281,7 @@ BaseItemSharedPtr EffectMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XXO("Effe&ct"),
       Section( "Manage",
-         Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
+         Command( wxT("ManageEffects"), XXO("Plugin Manager"),
             FN(OnManageEffects), AudioIONotBusyFlag() )
       ),
 
@@ -1343,7 +1343,7 @@ BaseItemSharedPtr AnalyzeMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XXO("&Analyze"),
       Section( "Manage",
-         Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
+         Command( wxT("ManageAnalyzers"), XXO("Plugin Manager"),
             FN(OnManageAnalyzers), AudioIONotBusyFlag() )
       ),
 
@@ -1405,7 +1405,7 @@ BaseItemSharedPtr ToolsMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
-         Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
+         Command( wxT("ManageTools"), XXO("Plugin Manager"),
             FN(OnManageTools), AudioIONotBusyFlag() ),
 
          //Separator(),
