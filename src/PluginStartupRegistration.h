@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <memory>
 #include <wx/string.h>
 #include "AsyncPluginValidator.h"
@@ -27,19 +28,22 @@ class PluginStartupRegistration final :
    public AsyncPluginValidator::Delegate
 {
    std::unique_ptr<AsyncPluginValidator> mValidator;
-   const std::vector<std::pair<wxString, wxString>> mPluginsToProcess;
+   std::vector<std::pair<wxString, std::vector<wxString>>> mPluginsToProcess;
    size_t mCurrentPluginIndex{0};
-   std::vector<wxString> mFailedPlugins;
+   size_t mCurrentPluginProviderIndex{0};
+   bool mValidProviderFound{false};
+   std::vector<wxString> mFailedPluginsPaths;
+   std::vector<PluginDescriptor> mFailedPluginsCache;
 public:
 
-   PluginStartupRegistration(std::vector<std::pair<wxString, wxString>> pluginsToProcess);
+   PluginStartupRegistration(const std::map<wxString, std::vector<wxString>>& pluginsToProcess);
 
    ///Starts validation, showing dialog that blocks execution until
    ///process is complete or canceled
    void Run();
 
-   ///Returns list of plugins that didn't pass validation for some reason
-   const std::vector<wxString>& GetFailedPlugins() const noexcept;
+   ///Returns list of paths of plugins that didn't pass validation for some reason
+   const std::vector<wxString>& GetFailedPluginsPaths() const noexcept;
 
    void OnInternalError(const wxString& error) override;
    void OnPluginFound(const PluginDescriptor& desc) override;
