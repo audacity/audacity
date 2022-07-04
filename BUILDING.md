@@ -66,7 +66,7 @@ $ sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
 ```
 $ sudo zypper refresh
 $ sudo zypper install patterns-devel-C-C++-devel_C_C++ cmake git python3-pip \
-                      gtk2-devel libjack-devel uuid-devel libSM-devel perl-core
+                      gtk2-devel libjack-devel uuid-devel libSM-devel
 $ sudo pip3 install conan
 ```
 
@@ -74,7 +74,7 @@ $ sudo pip3 install conan
 
 ```
 $ sudo dnf update
-$ sudo dnf install gcc-c++ cmake git python3-pip \
+$ sudo dnf install gcc-c++ cmake git python3-pip perl-core \
                    gtk2-devel gtk3-devel alsa-lib-devel jack-audio-connection-kit-devel uuid-devel libSM-devel
 $ sudo pip3 install conan
 ```
