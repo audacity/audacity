@@ -2182,6 +2182,17 @@ void VSTEffect::callSetProgram(int index)
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 }
 
+
+void VSTEffectWrapper::callSetProgramB(int index)
+{
+   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+
+   callDispatcher(effSetProgram, 0, index, NULL, 0.0);
+
+   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+}
+
+
 void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf)
 {
    VstPatchChunkInfo info;
@@ -2504,7 +2515,7 @@ void VSTEffect::OnSlider(wxCommandEvent & evt)
    RefreshParameters(i);
 }
 
-bool VSTEffect::LoadFXB(const wxFileName & fn)
+bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
 {
    bool ret = false;
 
@@ -2523,7 +2534,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
          XO("Unable to allocate memory when loading presets file."),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return false;
    }
    unsigned char *bptr = data.get();
@@ -2538,7 +2549,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
             XO("Unable to read presets file."),
             XO("Error Loading VST Presets"),
             wxOK | wxCENTRE,
-            mParent);
+            nullptr);
          break;
       }
 
@@ -2656,7 +2667,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
          }
 
          // Set the entire bank in one shot
-         callSetChunk(false, size, &iptr[40], &info);
+         callSetChunkB(false, size, &iptr[40], &info);
 
          // Success
          ret = true;
@@ -2670,7 +2681,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
       // Set the active program
       if (ret && version >= 2)
       {
-         callSetProgram(curProg);
+         callSetProgramB(curProg);
       }
    } while (false);
 
@@ -2729,7 +2740,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
    return ret;
 }
 
-bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun)
+bool VSTEffectWrapper::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun)
 {
    // Most references to the data are via an "int" array
    int32_t *iptr = (int32_t *) *bptr;
@@ -2823,7 +2834,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
          for (int i = 0; i < numParams; i++)
          {
             wxUint32 val = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
-            callSetParameter(i, reinterpretAsFloat(val));
+            callSetParameterB(i, reinterpretAsFloat(val));
          }
          callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
       }
@@ -2862,7 +2873,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
       // Set the entire program in one shot
       if (!dryrun)
       {
-         callSetChunk(true, size, &iptr[15], &info);
+         callSetChunkB(true, size, &iptr[15], &info);
       }
 
       // Update in case we're loading an "FxBk" format bank file

@@ -129,6 +129,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool callSetParameterB(int index, float value);
 
+   // Other formats for import/export
+   bool LoadFXB(const wxFileName& fn);
+   bool LoadFXProgram(unsigned char** bptr, ssize_t& len, int index, bool dryrun);
+   void callSetProgramB(int index);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -290,10 +294,8 @@ private:
    void RefreshParameters(int skip = -1);
 
    // Program/Bank loading/saving
-   bool LoadFXB(const wxFileName & fn);
    bool LoadFXP(const wxFileName & fn);
-   
-   bool LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun);
+      
    void SaveFXB(const wxFileName & fn) const;
    void SaveFXP(const wxFileName & fn) const;
    void SaveXML(const wxFileName & fn) const;
