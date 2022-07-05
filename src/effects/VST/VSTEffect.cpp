@@ -2214,7 +2214,7 @@ wxString VSTEffectWrapper::GetString(int opcode, int index) const
    return str;
 }
 
-void VSTEffect::SetString(int opcode, const wxString & str, int index)
+void VSTEffectWrapper::SetString(int opcode, const wxString & str, int index)
 {
    char buf[256];
    strcpy(buf, str.Left(255).ToUTF8());
@@ -2261,6 +2261,15 @@ void VSTEffect::callSetParameter(int index, float value)
          slave->callSetParameter(index, value);
    }
 }
+
+void VSTEffectWrapper::callSetParameterB(int index, float value)
+{
+   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+   {
+      mAEffect->setParameter(mAEffect, index, value);      
+   }
+}
+
 
 void VSTEffect::callSetProgram(int index)
 {
@@ -2979,7 +2988,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
    return true;
 }
 
-bool VSTEffect::LoadXML(const wxFileName & fn)
+bool VSTEffectWrapper::LoadXML(const wxFileName & fn)
 {
    mInChunk = false;
    mInSet = false;
@@ -3255,7 +3264,7 @@ void VSTEffect::SaveXML(const wxFileName & fn) const
    xmlFile.Commit();
 }
 
-bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
+bool VSTEffectWrapper::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "vstprogrampersistence")
    {
@@ -3302,7 +3311,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
          {
             wxString strValue = value.ToWString();
 
-            if (strValue != GetSymbol().Internal())
+            if (strValue != GetSymbolB().Internal())
             {
                auto msg = XO("This parameter file was saved from %s. Continue?")
                   .Format( strValue );
@@ -3449,7 +3458,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
          return false;
       }
 
-      callSetParameter(ndx, val);
+      callSetParameterB(ndx, val);
 
       return true;
    }
@@ -3463,7 +3472,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
    return false;
 }
 
-void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
+void VSTEffectWrapper::HandleXMLEndTag(const std::string_view& tag)
 {
    if (tag == "chunk")
    {
@@ -3474,7 +3483,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
          int len = Base64::Decode(mChunk, buf.get());
          if (len)
          {
-            callSetChunk(true, len, buf.get(), &mXMLInfo);
+            callSetChunkB(true, len, buf.get(), &mXMLInfo);
          }
 
          mChunk.clear();
@@ -3493,7 +3502,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
    }
 }
 
-void VSTEffect::HandleXMLContent(const std::string_view& content)
+void VSTEffectWrapper::HandleXMLContent(const std::string_view& content)
 {
    if (mInChunk)
    {
@@ -3501,7 +3510,7 @@ void VSTEffect::HandleXMLContent(const std::string_view& content)
    }
 }
 
-XMLTagHandler *VSTEffect::HandleXMLChild(const std::string_view& tag)
+XMLTagHandler *VSTEffectWrapper::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "vstprogrampersistence")
    {
