@@ -2793,7 +2793,7 @@ bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
    return ret;
 }
 
-bool VSTEffect::LoadFXP(const wxFileName & fn)
+bool VSTEffectWrapper::LoadFXP(const wxFileName & fn)
 {
    bool ret = false;
 

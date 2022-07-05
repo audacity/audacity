@@ -193,6 +193,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    // Program/Bank loading/saving
    bool LoadFXB(const wxFileName& fn);
+   bool LoadFXP(const wxFileName& fn);
 
    bool LoadFXProgram(unsigned char** bptr, ssize_t& len, int index, bool dryrun);
 
@@ -364,8 +365,7 @@ private:
    wxSizer *BuildProgramBar();
    void RefreshParameters(int skip = -1);
 
-   // Program/Bank loading/saving
-   bool LoadFXP(const wxFileName & fn);
+   // Program/Bank loading/saving   
    
    void SaveFXB(const wxFileName & fn) const;
    void SaveFXP(const wxFileName & fn) const;
