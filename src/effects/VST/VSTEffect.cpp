@@ -3119,7 +3119,7 @@ void VSTEffectWrapper::SaveFXB(const wxFileName & fn) const
    return;
 }
 
-void VSTEffect::SaveFXP(const wxFileName & fn) const
+void VSTEffectWrapper::SaveFXP(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{ fn.GetFullPath() };

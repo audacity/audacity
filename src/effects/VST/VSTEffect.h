@@ -201,6 +201,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    void SaveXML(const wxFileName& fn) const;
    void SaveFXB(const wxFileName& fn) const;
+   void SaveFXP(const wxFileName & fn) const;
 
    void SaveFXProgram(wxMemoryBuffer& buf, int index) const;
 };
@@ -369,12 +370,6 @@ private:
    void BuildFancy();
    wxSizer *BuildProgramBar();
    void RefreshParameters(int skip = -1);
-
-   // Program/Bank loading/saving   
-   
-   
-   void SaveFXP(const wxFileName & fn) const;
-   
 
 
    // Utility methods
