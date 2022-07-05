@@ -147,8 +147,6 @@ private:
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
-   void OnIdle(wxIdleEvent & evt);
-
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
    uint32_t suil_port_index(const char *port_symbol) override;
@@ -187,15 +185,8 @@ private:
 
    bool mUseGUI{};
 
-   bool mExternalUIClosed{ false };
-
    SuilHostPtr mSuilHost;
-   SuilInstancePtr mSuilInstance;
-
    wxSize mNativeWinInitialSize{ wxDefaultSize };
-
-   const LV2UI_Idle_Interface *mUIIdleInterface{};
-   const LV2UI_Show_Interface *mUIShowInterface{};
 
    NumericTextCtrl *mDuration{};
 
@@ -203,8 +194,6 @@ private:
    mutable bool mFactoryPresetsLoaded{ false };
    mutable RegistryPaths mFactoryPresetNames;
    mutable wxArrayString mFactoryPresetUris;
-
-   DECLARE_EVENT_TABLE()
 };
 
 class LV2Instance;
@@ -222,6 +211,8 @@ public:
    LV2EffectSettings &GetSettings(EffectSettings &settings) const;
    // TODO static or non-member function
    const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
+
+   void OnIdle(wxIdleEvent & evt);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -257,6 +248,9 @@ public:
    std::vector<PlainUIControl> mPlainUIControls;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
+   SuilInstancePtr mSuilInstance;
+
+   //! Destroy before mSuilInstance
    wxWindowPtr<NativeWindow> mNativeWin{};
    wxSize mNativeWinLastSize{ wxDefaultSize };
    bool mResizing{ false };
@@ -265,11 +259,16 @@ public:
 #endif
 
    wxWeakRef<wxDialog> mDialog;
+   bool mExternalUIClosed{ false };
 
+   //! This must be destroyed before mSuilInstance
    struct Timer : wxTimer {
       LV2_External_UI_Widget* mExternalWidget{};
       void Notify() override;
    } mTimer;
+
+   const LV2UI_Idle_Interface *mUIIdleInterface{};
+   const LV2UI_Show_Interface *mUIShowInterface{};
 
    DECLARE_EVENT_TABLE()
 };

@@ -75,10 +75,8 @@ LV2Validator::LV2Validator(EffectBase &effect,
    , mPortUIStates{ instance.GetPortStates(), ports }
    , mParent{ parent }
 {
-   if (mParent) {
-      mParent->PushEventHandler(static_cast<Effect*>(&effect));
+   if (mParent)
       mParent->PushEventHandler(this);
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,10 +101,8 @@ BEGIN_EVENT_TABLE(LV2Validator, wxEvtHandler)
    EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, LV2Validator::OnSlider)
    EVT_COMMAND_RANGE(ID_Choices, ID_Choices + 999, wxEVT_COMMAND_CHOICE_SELECTED, LV2Validator::OnChoice)
    EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LV2Validator::OnText)
-END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
-   EVT_IDLE(LV2Effect::OnIdle)
+   EVT_IDLE(LV2Validator::OnIdle)
 END_EVENT_TABLE()
 
 LV2Effect::LV2Effect(const LilvPlugin &plug) : mPlug{ plug }
@@ -356,7 +352,6 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mParent = parent;
 
    mSuilHost.reset();
-   mSuilInstance.reset();
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    myInstance.MakeMaster(settings, mProjectRate, true);
@@ -409,9 +404,6 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mUIIdleInterface = nullptr;
-   mUIShowInterface = nullptr;
-   mSuilInstance.reset();
    mSuilHost.reset();
    mParent = nullptr;
    mpValidator = nullptr;
@@ -420,10 +412,8 @@ bool LV2Effect::CloseUI()
 
 LV2Validator::~LV2Validator()
 {
-   if (mParent) {
+   if (mParent)
       mParent->RemoveEventHandler(this);
-      mParent->RemoveEventHandler(static_cast<Effect*>(&mEffect));
-   }
 }
 
 bool LV2Effect::LoadUserPreset(
@@ -658,7 +648,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
+   validator.mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:
       this,
@@ -669,7 +659,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       features.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
-   if (!mSuilInstance) {
+   if (!validator.mSuilInstance) {
       mSuilHost.reset();
       return false;
    }
@@ -677,12 +667,12 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);
       validator.mTimer.mExternalWidget = static_cast<LV2_External_UI_Widget *>(
-         suil_instance_get_widget(mSuilInstance.get()));
+         suil_instance_get_widget(validator.mSuilInstance.get()));
       validator.mTimer.Start(20);
       LV2_EXTERNAL_UI_SHOW(validator.mTimer.mExternalWidget);
    } else {
       const auto widget = static_cast<WXWidget>(
-         suil_instance_get_widget(mSuilInstance.get()));
+         suil_instance_get_widget(validator.mSuilInstance.get()));
 
 #if defined(__WXGTK__)
       // Needed by some plugins (e.g., Invada) to ensure the display is fully
@@ -719,15 +709,15 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       mParent->SetSizerAndFit(vs.release());
    }
 
-   mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
-      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__idleInterface));
+   validator.mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
+      suil_instance_extension_data(validator.mSuilInstance.get(), LV2_UI__idleInterface));
 
-   mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
-      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
+   validator.mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
+      suil_instance_extension_data(validator.mSuilInstance.get(), LV2_UI__showInterface));
 
-   if (mUIShowInterface) {
+//   if (mUIShowInterface) {
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
-   }
+//   }
 
    TransferDataToWindow(settings);
 
@@ -1017,11 +1007,11 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 
    if (mUseGUI) {
       // fancy UI
-      if (mSuilInstance) {
+      if (mpValidator->mSuilInstance) {
          size_t index = 0;
          for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
-               suil_instance_port_event(mSuilInstance.get(),
+               suil_instance_port_event(mpValidator->mSuilInstance.get(),
                   port->mIndex, sizeof(float),
                   /* Means this event sends a float: */ 0,
                   &values[index]);
@@ -1139,7 +1129,7 @@ void LV2Validator::Timer::Notify()
       LV2_EXTERNAL_UI_RUN(mExternalWidget);
 }
 
-void LV2Effect::OnIdle(wxIdleEvent &evt)
+void LV2Validator::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
    if (!mSuilInstance)
@@ -1147,8 +1137,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mExternalUIClosed) {
       mExternalUIClosed = false;
-      if (mpValidator && mpValidator->mDialog)
-         mpValidator->mDialog->Close();
+      if (mDialog)
+         mDialog->Close();
       return;
    }
 
@@ -1157,15 +1147,13 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       if (mUIIdleInterface->idle(handle)) {
          if (mUIShowInterface)
             mUIShowInterface->hide(handle);
-         if (mpValidator && mpValidator->mDialog)
-            mpValidator->mDialog->Close();
+         if (mDialog)
+            mDialog->Close();
          return;
       }
    }
 
-   if (!mpValidator)
-      return;
-   auto &portUIStates = mpValidator->mPortUIStates;
+   auto &portUIStates = mPortUIStates;
 
    if (auto &atomState = portUIStates.mControlOut) {
       atomState->SendToDialog([&](const LV2_Atom *atom, uint32_t size){
@@ -1181,7 +1169,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    // In case of output control port values though, it is needed for metering.
    size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
-      const auto &value = mSettings.values[index];
+      const auto &value = GetSettings(mAccess.Get()).values[index];
       // Let UI know that a port's value has changed
       if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
@@ -1273,7 +1261,8 @@ int LV2Effect::ui_resize(int width, int height)
 
 void LV2Effect::ui_closed()
 {
-   mExternalUIClosed = true;
+   if (mpValidator)
+      mpValidator->mExternalUIClosed = true;
 }
 
 // Foreign UI code wants to send a value or event to me, the host
