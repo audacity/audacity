@@ -3111,7 +3111,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 }
 
 // Throws exceptions rather than giving error return.
-void VSTEffect::SaveXML(const wxFileName & fn) const
+void VSTEffectWrapper::SaveXML(const wxFileName & fn) const
 // may throw
 {
    XMLFileWriter xmlFile{ fn.GetFullPath(), XO("Error Saving Effect Presets") };

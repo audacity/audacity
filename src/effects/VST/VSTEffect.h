@@ -129,6 +129,8 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool callSetParameterB(int index, float value);
 
+   void SaveXML(const wxFileName& fn) const;
+
    // Other formats for import/export
    bool LoadFXB(const wxFileName& fn);
    bool LoadFXP(const wxFileName& fn);
@@ -298,7 +300,6 @@ private:
       
    void SaveFXB(const wxFileName & fn) const;
    void SaveFXP(const wxFileName & fn) const;
-   void SaveXML(const wxFileName & fn) const;
    void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
 
 
