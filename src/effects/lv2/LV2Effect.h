@@ -57,7 +57,6 @@ class LV2Validator;
 class LV2Wrapper;
 
 class LV2Effect final : public StatefulPerTrackEffect
-   , public LV2UIFeaturesList::UIHandler
 {
 public:
    LV2Effect(const LilvPlugin &plug);
@@ -130,18 +129,6 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   int ui_resize(int width, int height) override;
-   void ui_closed() override;
-
-#if defined(__WXGTK__)
-   static void size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *win);
-   void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
-#endif
-
-   void suil_port_write(uint32_t port_index,
-      uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
-   uint32_t suil_port_index(const char *port_symbol) override;
-
 private:
    const LilvPlugin &mPlug;
    const LV2FeaturesList mFeatures{ mPlug };
@@ -171,8 +158,6 @@ private:
    double mLength{};
 
    wxWindow *mParent{};
-   // non-null for duration of a dialog
-   LV2Validator *mpValidator{};
 
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };
@@ -184,12 +169,13 @@ class LV2Instance;
 
 class LV2Validator final : public EffectUIValidator
    , wxEvtHandler
+   , LV2UIFeaturesList::UIHandler
 {
 public:
    LV2Validator(EffectBase &effect,
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, double sampleRate,
-      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+      const LV2FeaturesList &features,
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
 
@@ -202,8 +188,21 @@ public:
    // TODO static or non-member function
    const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
 
+   int ui_resize(int width, int height) override;
+   void ui_closed() override;
+
+#if defined(__WXGTK__)
+   static void size_request(GtkWidget *widget, GtkRequisition *requisition,
+      LV2Validator *pValidator);
+   void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
+#endif
+
    bool BuildFancy(const LV2Wrapper &wrapper, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
+
+   void suil_port_write(uint32_t port_index,
+      uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
+   uint32_t suil_port_index(const char *port_symbol) override;
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);

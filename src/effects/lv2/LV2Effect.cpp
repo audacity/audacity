@@ -64,7 +64,7 @@
 LV2Validator::LV2Validator(EffectBase &effect,
    const LilvPlugin &plug, LV2Instance &instance,
    EffectSettingsAccess &access, double sampleRate,
-   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+   const LV2FeaturesList &features,
    const LV2Ports &ports, wxWindow *parent, bool useGUI
 )  : EffectUIValidator{ effect, access }
    , mPlug{ plug }
@@ -368,10 +368,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    if (GetType() == EffectTypeGenerate)
       useGUI = false;
 
-   UIHandler &handler = *this;
    auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mProjectRate, mFeatures, handler, mPorts, parent, useGUI);
+      access, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
    if (result->mUseGUI)
       result->mUseGUI = result->BuildFancy(*pWrapper, settings);
@@ -379,7 +378,6 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       return nullptr;
    result->UpdateUI();
 
-   mpValidator = result.get();
    return result;
 }
 
@@ -406,7 +404,6 @@ bool LV2Effect::CloseUI()
 #endif
 
    mParent = nullptr;
-   mpValidator = nullptr;
    return true;
 }
 
@@ -613,8 +610,7 @@ bool LV2Validator::BuildFancy(
 
    const auto uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
-   LV2UIFeaturesList::UIHandler &handler =
-      static_cast<LV2Effect &>(mEffect);
+   LV2UIFeaturesList::UIHandler &handler = *this;
    auto &instance = wrapper.GetInstance();
    auto &features = mUIFeatures.emplace(
       wrapper.GetFeatures(), &handler, uinode, &instance,
@@ -663,7 +659,7 @@ bool LV2Validator::BuildFancy(
 
    // The void* that the instance passes back to our write and index
    // callback functions, which were given to suil_host_new:
-   LV2UIFeaturesList::UIHandler *pHandler = &static_cast<LV2Effect&>(mEffect);
+   UIHandler *pHandler = this;
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
@@ -694,7 +690,7 @@ bool LV2Validator::BuildFancy(
       gtk_widget_show_all(widget);
 
       // See note at size_request()
-      g_signal_connect(widget, "size-request", G_CALLBACK(LV2Effect::size_request), this);
+      g_signal_connect(widget, "size-request", G_CALLBACK(LV2Validator::size_request), this);
 #endif
 
       wxWindowPtr< NativeWindow > pNativeWin{ safenew NativeWindow() };
@@ -1250,31 +1246,27 @@ void LV2Validator::OnSize(wxSizeEvent & evt)
 // Feature handlers
 // ============================================================================
 
-int LV2Effect::ui_resize(int width, int height)
+int LV2Validator::ui_resize(int width, int height)
 {
-   if (!mpValidator)
-      return 0;
-
    // Queue a wxSizeEvent to resize the plugins UI
-   if (mpValidator->mNativeWin) {
+   if (mNativeWin) {
       wxSizeEvent sw{ wxSize{ width, height } };
-      sw.SetEventObject(mpValidator->mNativeWin.get());
-      mpValidator->mNativeWin->GetEventHandler()->AddPendingEvent(sw);
+      sw.SetEventObject(mNativeWin.get());
+      mNativeWin->GetEventHandler()->AddPendingEvent(sw);
    }
    else
       // The window hasn't been created yet, so record the desired size
-      mpValidator->mNativeWinInitialSize = { width, height };
+      mNativeWinInitialSize = { width, height };
    return 0;
 }
 
-void LV2Effect::ui_closed()
+void LV2Validator::ui_closed()
 {
-   if (mpValidator)
-      mpValidator->mExternalUIClosed = true;
+   mExternalUIClosed = true;
 }
 
 // Foreign UI code wants to send a value or event to me, the host
-void LV2Effect::suil_port_write(uint32_t port_index,
+void LV2Validator::suil_port_write(uint32_t port_index,
    uint32_t buffer_size, uint32_t protocol, const void *buffer)
 {
    // Handle implicit floats
@@ -1282,18 +1274,21 @@ void LV2Effect::suil_port_write(uint32_t port_index,
       if (auto it = mPorts.mControlPortMap.find(port_index)
          ; it != mPorts.mControlPortMap.end()
       )
-         mSettings.values[it->second] = *static_cast<const float *>(buffer);
+         mAccess.ModifySettings([&](EffectSettings &settings){
+            GetSettings(settings).values[it->second] =
+               *static_cast<const float *>(buffer);
+         });
    }
    // Handle event transfers
-   else if (protocol == LV2Symbols::urid_EventTransfer && mpValidator) {
-      auto &portUIStates = mpValidator->mPortUIStates;
+   else if (protocol == LV2Symbols::urid_EventTransfer) {
+      auto &portUIStates = mPortUIStates;
       auto &atomPortState = portUIStates.mControlIn;
       if (atomPortState && port_index == atomPortState->mpPort->mIndex)
          atomPortState->ReceiveFromDialog(buffer, buffer_size);
    }
 }
 
-uint32_t LV2Effect::suil_port_index(const char *port_symbol)
+uint32_t LV2Validator::suil_port_index(const char *port_symbol)
 {
    for (size_t i = 0, cnt = lilv_plugin_get_num_ports(&mPlug); i < cnt; ++i) {
       const auto port = lilv_plugin_get_port_by_index(&mPlug, i);
@@ -1310,34 +1305,30 @@ uint32_t LV2Effect::suil_port_index(const char *port_symbol)
 // Need to queue a wxSizeEvent when the native window gets resized outside of
 // WX control.  Many of the x42 LV2 plugins can resize themselves when changing
 // the scale factor. (e.g., open "x42-dpl" effect and right click to change scaling)
-void LV2Effect::size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *effect)
+void LV2Validator::size_request(GtkWidget *widget, GtkRequisition *requisition,
+   LV2Validator *pValidator)
 {
-   effect->SizeRequest(widget, requisition);
+   pValidator->SizeRequest(widget, requisition);
 }
 
-void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
+void LV2Validator::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
 {
-   if (!mpValidator)
-      return;
-   
    // Don't do anything if the OnSize() method is active
-   if (!mpValidator->mResizing)
-   {
+   if (!mResizing) {
       // If the OnSize() routine has processed an event, mResized will be true,
       // so just set the widgets size.
-      if (mpValidator->mResized)
-      {
-         gtk_widget_set_size_request(widget, mpValidator->mNativeWinLastSize.x, mpValidator->mNativeWinLastSize.y);
-         mpValidator->mResized = false;
+      if (mResized) {
+         gtk_widget_set_size_request(widget,
+            mNativeWinLastSize.x, mNativeWinLastSize.y);
+         mResized = false;
       }
       // Otherwise, the plugin has resized the widget and we need to let WX know
       // about it.
-      else if (mpValidator->mNativeWin)
-      {
-         mpValidator->mResized = true;
+      else if (mNativeWin) {
+         mResized = true;
          wxSizeEvent se(wxSize(requisition->width, requisition->height));
-         se.SetEventObject(mpValidator->mNativeWin.get());
-         mpValidator->mNativeWin->GetEventHandler()->AddPendingEvent(se);
+         se.SetEventObject(mNativeWin.get());
+         mNativeWin->GetEventHandler()->AddPendingEvent(se);
       }
    }
 }
