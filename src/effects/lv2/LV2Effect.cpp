@@ -379,6 +379,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       result->mUseGUI = BuildFancy(*result, *pWrapper, settings);
    if (!result->mUseGUI && !BuildPlain(access, *result))
       return nullptr;
+   result->UpdateUI();
 
    mpValidator = result.get();
    return result;
@@ -720,8 +721,6 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
 //   }
 
-   TransferDataToWindow(settings);
-
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(true);
@@ -975,16 +974,13 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
    // And let the parent reduce to the NEW minimum if possible
    mParent->SetMinSize(w->GetMinSize());
 
-   TransferDataToWindow(settings);
    return true;
 }
 
-bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
+bool LV2Validator::UpdateUI()
 {
-   assert(mpValidator); // exists while a dialog is open
-   auto &portUIStates = mpValidator->mPortUIStates;
-   auto &mySettings = GetSettings(settings);
-   auto pMaster = mpValidator->mInstance.GetMaster();
+   const auto &mySettings = mInstance.GetSettings(mAccess.Get());
+   auto pMaster = mInstance.GetMaster();
 
    if (pMaster && mySettings.mpState) {
       // Maybe there are other important side effects on the instance besides
@@ -997,22 +993,22 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 
    auto &values = mySettings.values;
    {
-      size_t index = 0; for (auto & state : portUIStates.mControlPortStates) {
+      size_t index = 0; for (auto & state : mPortUIStates.mControlPortStates) {
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
-               values[index] * (port->mSampleRate ? mProjectRate : 1.0);
+               values[index] * (port->mSampleRate ? mSampleRate : 1.0);
          ++index;
       }
    }
 
-   if (mpValidator->mUseGUI) {
+   if (mUseGUI) {
       // fancy UI
-      if (mpValidator->mSuilInstance) {
+      if (mSuilInstance) {
          size_t index = 0;
          for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
-               suil_instance_port_event(mpValidator->mSuilInstance.get(),
+               suil_instance_port_event(mSuilInstance.get(),
                   port->mIndex, sizeof(float),
                   /* Means this event sends a float: */ 0,
                   &values[index]);
@@ -1027,9 +1023,9 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    for (auto & group : mPorts.mGroups) {
       const auto & params = mPorts.mGroupMap.at(group); /* won't throw */
       for (auto & param : params) {
-         auto &state = portUIStates.mControlPortStates[param];
+         auto &state = mPortUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
-         auto &ctrl = mpValidator->mPlainUIControls[param];
+         auto &ctrl = mPlainUIControls[param];
          auto &value = values[param];
          if (port->mTrigger)
             continue;
@@ -1038,8 +1034,8 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          else if (port->mEnumeration)      // Check before integer
             ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
-            state.mTmp = value * (port->mSampleRate ? mProjectRate : 1.0f);
-            mpValidator->SetSlider(state, ctrl);
+            state.mTmp = value * (port->mSampleRate ? mSampleRate : 1.0f);
+            SetSlider(state, ctrl);
          }
       }
    }

@@ -144,8 +144,6 @@ private:
       const LV2Wrapper &wrapper, const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
 
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
    uint32_t suil_port_index(const char *port_symbol) override;
@@ -204,6 +202,7 @@ public:
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
 
+   bool UpdateUI() override;
    bool IsGraphicalUI() override;
 
    // TODO static or non-member function
