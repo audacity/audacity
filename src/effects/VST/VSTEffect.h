@@ -114,7 +114,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    float callGetParameter(int index) const;
 
    void callSetChunkB(bool isPgm, int len, void* buf);
-   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info);
+   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info) const;
 
 
    int      GetString(wxString& outstr, int opcode, int index = 0) const;
@@ -134,7 +134,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool FetchSettings(VSTEffectSettings& vst3Settings) const;
 
-   bool StoreSettings(const VSTEffectSettings& vst3settings);
+   bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
    // These are here because they are used by the import/export methods
    int mVstVersion;
