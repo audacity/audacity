@@ -21,6 +21,7 @@ struct FFMPEG_SUPPORT_API AVUtilFunctions
 
    void*              (*av_malloc) (size_t size) = nullptr;
    void               (*av_free) (void *ptr) = nullptr;
+   char*              (*av_strdup) (const char *ptr) = nullptr;
    void               (*av_dict_free) (AVDictionary **m) = nullptr;
    AudacityAVDictionaryEntry*
                       (*av_dict_get) (const AVDictionary *m, const char *key, const AudacityAVDictionaryEntry *prev, int flags) = nullptr;

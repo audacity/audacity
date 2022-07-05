@@ -53,7 +53,11 @@ public:
    AVInputFormat* GetIFormat() const noexcept override
    {
       if (mAVFormatContext != nullptr)
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
          return mAVFormatContext->iformat;
+#else
+         return const_cast<AVInputFormat*>(mAVFormatContext->iformat);
+#endif
 
       return {};
    }
@@ -61,7 +65,11 @@ public:
    AVOutputFormat* GetOFormat() const noexcept override
    {
       if (mAVFormatContext != nullptr)
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
          return mAVFormatContext->oformat;
+#else
+         return const_cast<AVOutputFormat*>(mAVFormatContext->oformat);
+#endif
 
       return {};
    }
@@ -70,7 +78,7 @@ public:
    {
       if (mAVFormatContext != nullptr)
       {
-         mAVFormatContext->oformat = oformat->GetWrappedValue();
+         mAVFormatContext->oformat = const_cast<AVOutputFormat*>(oformat->GetWrappedValue());
          mOutputFormat = std::move(oformat);
       }
    }
@@ -113,7 +121,11 @@ public:
    const char* GetFilename() const noexcept override
    {
       if (mAVFormatContext != nullptr)
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
          return mAVFormatContext->filename;
+#else
+         return mAVFormatContext->url;
+#endif
 
       return {};
    }
@@ -122,13 +134,16 @@ public:
    {
       if (mAVFormatContext == nullptr)
          return;
-
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
       const size_t len =
          std::min(sizeof(mAVFormatContext->filename) - 1, std::strlen(filename));
 
       std::copy(filename, filename + len, mAVFormatContext->filename);
 
       mAVFormatContext->filename[len] = '\0';
+#else
+      mAVFormatContext->url = mFFmpeg.av_strdup(filename);
+#endif
    }
 
    int64_t GetStartTime() const noexcept override
@@ -524,7 +539,7 @@ public:
       if (mAVFormatContext == nullptr)
          return;
 
-      mAVFormatContext->audio_codec = audio_codec->GetWrappedValue();
+      mAVFormatContext->audio_codec = const_cast<AVCodec*>(audio_codec->GetWrappedValue());
       mForcedAudioCodec = move(audio_codec);
    }
 
@@ -561,7 +576,7 @@ public:
       mStreams.clear();
 
       for (int i = 0; i < mAVFormatContext->nb_streams; ++i)
-         mStreams.emplace_back(mFFmpeg.CreateAVStreamWrapper(mAVFormatContext->streams[i]));
+         mStreams.emplace_back(mFFmpeg.CreateAVStreamWrapper(mAVFormatContext->streams[i], false));
    }
 };
 

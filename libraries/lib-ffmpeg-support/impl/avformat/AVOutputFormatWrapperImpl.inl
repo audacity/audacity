@@ -11,7 +11,7 @@
 class AVOutputFormatWrapperImpl : public AVOutputFormatWrapper
 {
 public:
-   explicit AVOutputFormatWrapperImpl(AVOutputFormat* wrapped)
+   explicit AVOutputFormatWrapperImpl(const AVOutputFormat* wrapped)
       : AVOutputFormatWrapper(wrapped)
    {
    }
@@ -73,7 +73,7 @@ public:
    }
 };
 
-std::unique_ptr<AVOutputFormatWrapper> CreateAVOutputFormatWrapper (AVOutputFormat* wrapped)
+std::unique_ptr<AVOutputFormatWrapper> CreateAVOutputFormatWrapper (const AVOutputFormat* wrapped)
 {
    return std::make_unique<AVOutputFormatWrapperImpl>(wrapped);
 }

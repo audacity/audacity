@@ -70,7 +70,7 @@ AVCodecContextWrapper::DecodeAudioPacket(const AVPacketWrapper* packet)
    auto frame = mFFmpeg.CreateAVFrameWrapper();
    std::vector<uint8_t> data;
 
-   if (mFFmpeg.avcodec_decode_audio4)
+   if (mFFmpeg.avcodec_send_packet == nullptr)
    {
       std::unique_ptr<AVPacketWrapper> packetCopy =
          packet ? packet->Clone() : mFFmpeg.CreateAVPacketWrapper();
@@ -87,9 +87,8 @@ AVCodecContextWrapper::DecodeAudioPacket(const AVPacketWrapper* packet)
       if (!flushing && packetCopy->GetData() == nullptr)
          return {};
 
-      const int channels = GetChannels();
-
       int bytesDecoded = 0;
+
       do
       {
          int gotFrame;
@@ -114,47 +113,77 @@ AVCodecContextWrapper::DecodeAudioPacket(const AVPacketWrapper* packet)
             packetCopy->OffsetPacket(bytesDecoded);
             continue;
          }
-
-         const auto sampleSize =
-            static_cast<size_t>(mFFmpeg.av_get_bytes_per_sample(
-               static_cast<AVSampleFormatFwd>(frame->GetFormat())));
-
-         const auto samplesCount = frame->GetSamplesCount();
-         const auto frameSize = channels * sampleSize * samplesCount;
-
-         auto oldSize = data.size();
-         data.resize(oldSize + frameSize);
-         auto pData = &data[oldSize];
-
-         if (frame->GetData(1) != nullptr)
-         {
-            // We return interleaved buffer
-            for (int channel = 0; channel < channels; channel++)
-            {
-               for (int sample = 0; sample < samplesCount; sample++)
-               {
-                  const uint8_t* channelData =
-                     frame->GetExtendedData(channel) + sampleSize * sample;
-
-                  uint8_t* output =
-                     pData + sampleSize * (channels * sample + channel);
-
-                  std::copy(channelData, channelData + sampleSize, output);
-               }
-            }
-         }
-         else
-         {
-            uint8_t* frameData = frame->GetData(0);
-            std::copy(frameData, frameData + frameSize, pData);
-         }
-
+         
+         ConsumeFrame(data, *frame);
+         
          packetCopy->OffsetPacket(bytesDecoded);
       }
       while ( flushing ? bytesDecoded > 0 : packetCopy->GetSize() > 0 );
    }
+   else
+   {
+      auto ret = mFFmpeg.avcodec_send_packet(
+         mAVCodecContext,
+         packet != nullptr ? packet->GetWrappedValue() : nullptr);
+
+      if (ret < 0)
+         // send_packet has failed
+         return data;
+
+      while (ret >= 0)
+      {
+         ret = mFFmpeg.avcodec_receive_frame(mAVCodecContext, frame->GetWrappedValue());
+         if (ret == AUDACITY_AVERROR(EAGAIN) || ret == AUDACITY_AVERROR_EOF)
+            // The packet is fully consumed OR more data is needed
+            break;
+         else if (ret < 0)
+            // Decoding has failed
+            return data;
+
+         ConsumeFrame(data, *frame);
+      }
+   }
 
    return data;
+}
+
+void AVCodecContextWrapper::ConsumeFrame(
+   std::vector<uint8_t>& data, AVFrameWrapper& frame)
+{
+   const int channels = GetChannels();
+
+   const auto sampleSize = static_cast<size_t>(mFFmpeg.av_get_bytes_per_sample(
+      static_cast<AVSampleFormatFwd>(frame.GetFormat())));
+
+   const auto samplesCount = frame.GetSamplesCount();
+   const auto frameSize = channels * sampleSize * samplesCount;
+
+   auto oldSize = data.size();
+   data.resize(oldSize + frameSize);
+   auto pData = &data[oldSize];
+
+   if (frame.GetData(1) != nullptr)
+   {
+      // We return interleaved buffer
+      for (int channel = 0; channel < channels; channel++)
+      {
+         for (int sample = 0; sample < samplesCount; sample++)
+         {
+            const uint8_t* channelData =
+               frame.GetExtendedData(channel) + sampleSize * sample;
+
+            uint8_t* output =
+               pData + sampleSize * (channels * sample + channel);
+
+            std::copy(channelData, channelData + sampleSize, output);
+         }
+      }
+   }
+   else
+   {
+      uint8_t* frameData = frame.GetData(0);
+      std::copy(frameData, frameData + frameSize, pData);
+   }
 }
 
 namespace

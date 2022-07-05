@@ -38,4 +38,5 @@ struct FFMPEG_SUPPORT_API AVFormatFunctions
    // The following functions are not present in all library versions:
    void               (*av_register_all) (void) = nullptr;
    void               (*avio_context_free)(AVIOContext** s) = nullptr;
+   const AVOutputFormat* (*av_muxer_iterate)(void** opaque);   
 };

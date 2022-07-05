@@ -72,6 +72,8 @@ public:
 
    virtual std::unique_ptr<AVCodecContextWrapper> GetAVCodecContext() const noexcept = 0;
 
+   virtual int SetParametersFromContext(AVCodecContextWrapper& context) noexcept = 0;
+
 protected:
    const FFmpegFunctions& mFFmpeg;
    AVStream* mAVStream { nullptr };

@@ -33,7 +33,7 @@ struct AVCodecFactories final
 {
    std::unique_ptr<AVCodecContextWrapper> (*CreateAVCodecContextWrapper)(const FFmpegFunctions&, AVCodecContext*) = nullptr;
    std::unique_ptr<AVCodecContextWrapper> (*CreateAVCodecContextWrapperFromCodec)(const FFmpegFunctions&, std::unique_ptr<AVCodecWrapper>) = nullptr;
-   std::unique_ptr<AVCodecWrapper> (*CreateAVCodecWrapper) (AVCodec*) = nullptr;
+   std::unique_ptr<AVCodecWrapper> (*CreateAVCodecWrapper) (const AVCodec*) = nullptr;
 
    //! @post return value is not null
    std::unique_ptr<AVPacketWrapper> (*CreateAVPacketWrapper) (const FFmpegFunctions&) = nullptr;
@@ -50,8 +50,8 @@ struct AVFormatFactories final
    std::unique_ptr<AVFormatContextWrapper> (*CreateAVFormatContextWrapper) (const FFmpegFunctions&) = nullptr;
    std::unique_ptr<AVInputFormatWrapper> (*CreateAVInputFormatWrapper) (AVInputFormat*) = nullptr;
    std::unique_ptr<AVIOContextWrapper> (*CreateAVIOContextWrapper) (const FFmpegFunctions&) = nullptr;
-   std::unique_ptr<AVOutputFormatWrapper> (*CreateAVOutputFormatWrapper) (AVOutputFormat*) = nullptr;
-   std::unique_ptr<AVStreamWrapper> (*CreateAVStreamWrapper) (const FFmpegFunctions&, AVStream*) = nullptr;
+   std::unique_ptr<AVOutputFormatWrapper> (*CreateAVOutputFormatWrapper) (const AVOutputFormat*) = nullptr;
+   std::unique_ptr<AVStreamWrapper> (*CreateAVStreamWrapper) (const FFmpegFunctions&, AVStream*, bool) = nullptr;
 };
 
 class AVFrameWrapper;

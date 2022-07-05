@@ -25,7 +25,6 @@ bool LoadAVFormatFunctions(
    RESOLVE(avformat_close_input);
    RESOLVE(avformat_write_header);
    RESOLVE(av_interleaved_write_frame);
-   RESOLVE(av_oformat_next);
    RESOLVE(avformat_new_stream);
    RESOLVE(avformat_alloc_context);
    RESOLVE(av_write_trailer);
@@ -35,8 +34,11 @@ bool LoadAVFormatFunctions(
    RESOLVE(avio_alloc_context);
    RESOLVE(av_guess_format);
    RESOLVE(avformat_free_context);
+   
+   GET_SYMBOL(av_oformat_next);
    GET_SYMBOL(av_register_all);
    GET_SYMBOL(avio_context_free);
+   GET_SYMBOL(av_muxer_iterate);
 
    return GetAVVersion(lib, "avformat_version", functions.AVFormatVersion);
 }

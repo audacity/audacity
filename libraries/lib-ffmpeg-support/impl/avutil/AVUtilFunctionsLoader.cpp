@@ -21,6 +21,7 @@ bool LoadAVUtilFunctions(
 {
    RESOLVE(av_malloc);
    RESOLVE(av_free);
+   RESOLVE(av_strdup);
    RESOLVE(av_dict_free);
    RESOLVE(av_dict_get);
    RESOLVE(av_dict_set);
