@@ -73,7 +73,7 @@ typedef SInt16 CFBundleRefNum;
 #endif
 #endif
 
-struct VSTEffectWrapper : public VSTEffectLink
+struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 {
    AEffect* mAEffect = nullptr;
 
@@ -122,8 +122,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
    : public StatefulPerTrackEffect
-   , public VSTEffectWrapper
-   , public XMLTagHandler   
+   , public VSTEffectWrapper  
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
