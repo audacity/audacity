@@ -1267,8 +1267,6 @@ bool VSTEffect::DoLoadUserPreset(
       return false;
    }
 
-   RefreshParameters();
-
    return true;
 }
 
@@ -1305,8 +1303,6 @@ bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
 bool VSTEffect::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
-
-   RefreshParameters();
 
    return true;
 }
@@ -1518,8 +1514,6 @@ void VSTEffect::ImportPresets(EffectSettings &)
 
       return;
    }
-
-   RefreshParameters();
 
    return;
 }
@@ -3553,6 +3547,15 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings) cons
    return false;
 }
 
+bool VSTEffect::TransferDataToWindow(const EffectSettings& settings)
+{
+   if (!StoreSettings(GetSettings(settings)))
+      return false;
+
+   RefreshParameters();
+
+   return true;
+}
 
 ComponentInterfaceSymbol VSTEffectWrapper::GetSymbol() const
 {

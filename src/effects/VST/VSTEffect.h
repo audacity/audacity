@@ -292,6 +292,8 @@ class VSTEffect final
 
    bool InitializePlugin();
 
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
