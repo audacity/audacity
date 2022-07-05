@@ -66,7 +66,7 @@ LV2Validator::LV2Validator(EffectBase &effect,
    EffectSettingsAccess &access, double sampleRate,
    const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
    const LV2Ports &ports, wxWindow *parent, bool useGUI
-)  : DefaultEffectUIValidator{ effect, access }
+)  : EffectUIValidator{ effect, access }
    , mPlug{ plug }
    , mType{ effect.GetType() }
    , mInstance{ instance }
@@ -390,11 +390,12 @@ bool LV2Validator::IsGraphicalUI()
    return mUseGUI;
 }
 
-bool LV2Effect::ValidateUI(EffectSettings &settings)
+bool LV2Validator::ValidateUI()
 {
-   if (GetType() == EffectTypeGenerate)
-      settings.extra.SetDuration(mDuration->GetValue());
-
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      if (mType == EffectTypeGenerate)
+         settings.extra.SetDuration(mDuration->GetValue());
+   });
    return true;
 }
 
@@ -762,12 +763,12 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
          auto item = safenew wxStaticText(w, 0, _("&Duration:"));
          sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
          auto &extra = settings.extra;
-         mDuration = safenew NumericTextCtrl(w, ID_Duration,
+         validator.mDuration = safenew NumericTextCtrl(w, ID_Duration,
             NumericConverter::TIME, extra.GetDurationFormat(),
             extra.GetDuration(), mProjectRate,
             NumericTextCtrl::Options{}.AutoPos(true));
-         mDuration->SetName( XO("Duration") );
-         sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
+         validator.mDuration->SetName( XO("Duration") );
+         sizer->Add(validator.mDuration, 0, wxALIGN_CENTER | wxALL, 5);
          auto groupSizer =
             std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
          groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);

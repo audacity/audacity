@@ -112,7 +112,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -183,8 +182,6 @@ private:
    SuilHostPtr mSuilHost;
    wxSize mNativeWinInitialSize{ wxDefaultSize };
 
-   NumericTextCtrl *mDuration{};
-
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };
    mutable RegistryPaths mFactoryPresetNames;
@@ -193,7 +190,9 @@ private:
 
 class LV2Instance;
 
-class LV2Validator final : public DefaultEffectUIValidator {
+class LV2Validator final : public EffectUIValidator
+   , wxEvtHandler
+{
 public:
    LV2Validator(EffectBase &effect,
       const LilvPlugin &plug, LV2Instance &instance,
@@ -202,6 +201,7 @@ public:
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
 
+   bool ValidateUI() override;
    bool UpdateUI() override;
    bool IsGraphicalUI() override;
 
@@ -268,6 +268,7 @@ public:
 
    const LV2UI_Idle_Interface *mUIIdleInterface{};
    const LV2UI_Show_Interface *mUIShowInterface{};
+   NumericTextCtrl *mDuration{};
 
    DECLARE_EVENT_TABLE()
 };
