@@ -198,6 +198,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    bool LoadFXProgram(unsigned char** bptr, ssize_t& len, int index, bool dryrun);
 
    void callSetProgramB(int index);
+
+   void SaveXML(const wxFileName& fn) const;
+
 };
 
 
@@ -369,7 +372,6 @@ private:
    
    void SaveFXB(const wxFileName & fn) const;
    void SaveFXP(const wxFileName & fn) const;
-   void SaveXML(const wxFileName & fn) const;
    void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
 
 

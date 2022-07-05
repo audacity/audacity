@@ -3216,7 +3216,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 }
 
 // Throws exceptions rather than giving error return.
-void VSTEffect::SaveXML(const wxFileName & fn) const
+void VSTEffectWrapper::SaveXML(const wxFileName & fn) const
 // may throw
 {
    XMLFileWriter xmlFile{ fn.GetFullPath(), XO("Error Saving Effect Presets") };
@@ -3226,7 +3226,7 @@ void VSTEffect::SaveXML(const wxFileName & fn) const
 
    xmlFile.StartTag(wxT("effect"));
    // Use internal name only in persistent information
-   xmlFile.WriteAttr(wxT("name"), GetSymbol().Internal());
+   xmlFile.WriteAttr(wxT("name"), GetSymbolB().Internal());
    xmlFile.WriteAttr(wxT("uniqueID"), mAEffect->uniqueID);
    xmlFile.WriteAttr(wxT("version"), mAEffect->version);
    xmlFile.WriteAttr(wxT("numParams"), mAEffect->numParams);
