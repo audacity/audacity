@@ -351,8 +351,6 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    auto parent = S.GetParent();
    mParent = parent;
 
-   mSuilHost.reset();
-
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    myInstance.MakeMaster(settings, mProjectRate, true);
    const auto pWrapper = myInstance.GetMaster();
@@ -407,7 +405,6 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mSuilHost.reset();
    mParent = nullptr;
    mpValidator = nullptr;
    return true;
@@ -546,6 +543,22 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
+std::shared_ptr<SuilHost> LV2Validator::GetSuilHost()
+{
+   // This is a unique_ptr specialization
+   using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
+   // The host has no dependency on the plug-in and can be shared among
+   // validators
+   static std::weak_ptr<SuilHost> sSuilHost;
+   std::shared_ptr<SuilHost> result = sSuilHost.lock();
+   if (!result)
+      // shared_ptr erases type of custom deleter of SuilHostPtr
+      sSuilHost = result = SuilHostPtr{ suil_host_new(
+         LV2UIFeaturesList::suil_port_write,
+         LV2UIFeaturesList::suil_port_index, nullptr, nullptr) };
+   return result;
+}
+
 bool LV2Effect::BuildFancy(LV2Validator &validator,
    const LV2Wrapper &wrapper, const EffectSettings &settings)
 {
@@ -625,9 +638,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    validator.mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
-   mSuilHost.reset(suil_host_new(LV2UIFeaturesList::suil_port_write,
-      LV2UIFeaturesList::suil_port_index, nullptr, nullptr));
-   if (!mSuilHost)
+   if (!(validator.mSuilHost = validator.GetSuilHost()))
       return false;
 
 #if defined(__WXMSW__)
@@ -651,7 +662,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   validator.mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
+   validator.mSuilInstance.reset(suil_instance_new(validator.mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:
       this,
@@ -662,10 +673,8 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       features.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
-   if (!validator.mSuilInstance) {
-      mSuilHost.reset();
+   if (!validator.mSuilInstance)
       return false;
-   }
 
    if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);

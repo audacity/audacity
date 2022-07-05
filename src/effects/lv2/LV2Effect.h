@@ -35,7 +35,6 @@ class wxArrayString;
 
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
 using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
-using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
 using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 
 // We use deprecated LV2 interfaces to remain compatible with older
@@ -179,7 +178,6 @@ private:
    // non-null for duration of a dialog
    LV2Validator *mpValidator{};
 
-   SuilHostPtr mSuilHost;
    wxSize mNativeWinInitialSize{ wxDefaultSize };
 
    // Mutable cache fields computed once on demand
@@ -220,6 +218,8 @@ public:
 
    void OnSize(wxSizeEvent & evt);
 
+   static std::shared_ptr<SuilHost> GetSuilHost();
+
    const LilvPlugin &mPlug;
    const EffectType mType;
    LV2Instance &mInstance;
@@ -228,6 +228,7 @@ public:
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
 
+   std::shared_ptr<SuilHost> mSuilHost;
    wxWindow *const mParent;
    bool mUseGUI{};
 
