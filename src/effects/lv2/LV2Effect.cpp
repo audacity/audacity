@@ -281,21 +281,22 @@ int LV2Effect::GetMidiOutCount() const
 }
 
 int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal)
+   EffectUIValidator *pValidator, bool forceModal)
 {
-   // Remember the dialog with a weak pointer, but don't control its lifetime
-   mDialog = &dialog;
+   if (pValidator)
+      // Remember the dialog with a weak pointer, but don't control its lifetime
+      static_cast<LV2Validator*>(pValidator)->mDialog = &dialog;
    // Try to give the window a sensible default/minimum size
-   mDialog->Layout();
-   mDialog->Fit();
-   mDialog->SetMinSize(mDialog->GetSize());
+   dialog.Layout();
+   dialog.Fit();
+   dialog.SetMinSize(dialog.GetSize());
    if (mFeatures.mNoResize)
-      mDialog->SetMaxSize(mDialog->GetSize());
+      dialog.SetMaxSize(dialog.GetSize());
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
-      mDialog->Show();
+      dialog.Show();
       return 0;
    }
-   return mDialog->ShowModal();
+   return dialog.ShowModal();
 }
 
 bool LV2Effect::SaveSettings(
@@ -421,7 +422,6 @@ bool LV2Effect::CloseUI()
    }
    mSuilHost.reset();
    mParent = nullptr;
-   mDialog = nullptr;
    mpValidator = nullptr;
    return true;
 }
@@ -1155,7 +1155,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mExternalUIClosed) {
       mExternalUIClosed = false;
-      mDialog->Close();
+      if (mpValidator && mpValidator->mDialog)
+         mpValidator->mDialog->Close();
       return;
    }
 
@@ -1164,7 +1165,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       if (mUIIdleInterface->idle(handle)) {
          if (mUIShowInterface)
             mUIShowInterface->hide(handle);
-         mDialog->Close();
+         if (mpValidator && mpValidator->mDialog)
+            mpValidator->mDialog->Close();
          return;
       }
    }
@@ -1203,6 +1205,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 void LV2Effect::OnSize(wxSizeEvent & evt)
 {
    evt.Skip();
+   if (!mpValidator)
+      return;
 
    // Don't do anything here if we're recursing
    if (mResizing)
@@ -1213,7 +1217,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 
    // Can only resize AFTER the dialog has been completely created and
    // there's no need to resize if we're already at the desired size.
-   if (mDialog && evt.GetSize() != mNativeWinLastSize) {
+   if (mpValidator->mDialog && evt.GetSize() != mNativeWinLastSize) {
       // Save the desired size and set the native window to match
       mNativeWinLastSize = evt.GetSize();
       mNativeWin->SetMinSize(mNativeWinLastSize);
@@ -1231,24 +1235,24 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       // In this case, mResized has been set by the "size_request()" function
       // to indicate that this is a plugin generated resize request.
       if (mResized)
-        mDialog->SetMinSize(wxDefaultSize);
+         mpValidator->mDialog->SetMinSize(wxDefaultSize);
 
       // Resize dialog
-      mDialog->Fit();
+      mpValidator->mDialog->Fit();
 
       // Reestablish the minimum (and maximum) now that the dialog
       // has is desired size.
       if (mResized) {
-         mDialog->SetMinSize(mDialog->GetSize());
+         mpValidator->mDialog->SetMinSize(mpValidator->mDialog->GetSize());
          if (mFeatures.mNoResize)
-            mDialog->SetMaxSize(mDialog->GetSize());
+            mpValidator->mDialog->SetMaxSize(mpValidator->mDialog->GetSize());
       }
 
       // Tell size_request() that the native window was just resized.
       mResized = true;
 #else
       // Resize the dialog to fit its content.
-      mDialog->Fit();
+      mpValidator->mDialog->Fit();
 #endif
    }
 

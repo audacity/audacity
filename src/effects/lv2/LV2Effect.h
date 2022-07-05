@@ -181,7 +181,6 @@ private:
 
    double mLength{};
 
-   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent{};
    // non-null for duration of a dialog
    LV2Validator *mpValidator{};
@@ -261,6 +260,8 @@ public:
    //! Array in correspondence with the control ports
    std::vector<PlainUIControl> mPlainUIControls;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
+
+   wxWeakRef<wxDialog> mDialog;
 
    struct Timer : wxTimer {
       LV2_External_UI_Widget* mExternalWidget{};
