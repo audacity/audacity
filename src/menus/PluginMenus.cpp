@@ -16,6 +16,7 @@
 #include "../ProjectSelectionManager.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
+#include "../TrackPanelAx.h"
 #include "TempDirectory.h"
 #include "UndoManager.h"
 #include "../commands/CommandContext.h"
@@ -435,6 +436,15 @@ void DoManagePluginsMenu(AudacityProject &project)
       MenuCreator::RebuildAllMenuBars();
 }
 
+
+void DoShowRealtimeEffectsSidePanel(AudacityProject &project)
+{
+   auto &trackFocus = TrackFocus::Get(project);
+   auto &projectWindow = ProjectWindow::Get(project);
+
+   projectWindow.ShowEffectsPanel(project, trackFocus.Get());
+}
+
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
 {
    return
@@ -801,6 +811,12 @@ void OnManageEffects(const CommandContext &context)
 {
    auto &project = context.project;
    DoManagePluginsMenu(project);
+}
+
+void OnAddRealtimeEffects(const CommandContext& context)
+{
+   auto& project = context.project;
+   DoShowRealtimeEffectsSidePanel(project);
 }
 
 void OnAnalyzer2(wxCommandEvent& evt) { return; }
@@ -1272,6 +1288,16 @@ const ReservedCommandFlag&
    }; return flag;
 }
 
+static const ReservedCommandFlag&
+   HasTrackFocusFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project) {
+         auto& trackFocus = TrackFocus::Get(const_cast<AudacityProject&>(project));
+         return (trackFocus.Get() != nullptr);
+      }
+   };
+   return flag;
+}
+
 BaseItemSharedPtr EffectMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
@@ -1283,6 +1309,11 @@ BaseItemSharedPtr EffectMenu()
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Plugin Manager"),
             FN(OnManageEffects), AudioIONotBusyFlag() )
+      ),
+
+      Section( "RealtimeEffects",
+         Command ( wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
+            FN(OnAddRealtimeEffects),  HasTrackFocusFlag() )
       ),
 
       Section( "RepeatLast",
