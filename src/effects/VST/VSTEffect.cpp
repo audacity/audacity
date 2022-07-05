@@ -3031,7 +3031,7 @@ bool VSTEffectWrapper::LoadXML(const wxFileName & fn)
    return true;
 }
 
-void VSTEffect::SaveFXB(const wxFileName & fn) const
+void VSTEffectWrapper::SaveFXB(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{fn.GetFullPath()};
@@ -3155,7 +3155,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn) const
    return;
 }
 
-void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
+void VSTEffectWrapper::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 {
    wxInt32 subType;
    void *chunkPtr;

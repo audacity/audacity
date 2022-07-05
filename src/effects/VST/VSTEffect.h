@@ -200,7 +200,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    void callSetProgramB(int index);
 
    void SaveXML(const wxFileName& fn) const;
+   void SaveFXB(const wxFileName& fn) const;
 
+   void SaveFXProgram(wxMemoryBuffer& buf, int index) const;
 };
 
 
@@ -370,9 +372,9 @@ private:
 
    // Program/Bank loading/saving   
    
-   void SaveFXB(const wxFileName & fn) const;
+   
    void SaveFXP(const wxFileName & fn) const;
-   void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
+   
 
 
    // Utility methods
