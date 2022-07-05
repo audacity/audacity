@@ -136,6 +136,30 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
+   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
+
+   //! This function will be rewritten when the effect is really stateless
+   VSTEffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VSTEffectWrapper*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VSTEffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
+
    // These are here because they are used by the import/export methods
    int mVstVersion;
    wxString mName;
@@ -297,6 +321,8 @@ class VSTEffect final
                                float opt);
 
    void OnTimer();
+
+   EffectSettings MakeSettings() const override;
 
 private:
    // Plugin loading and unloading
@@ -462,6 +488,8 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class VSTEffectsModule;
+
+   mutable bool mInitialFetchDone{ false };
 };
 
 class VSTEffectsModule final : public PluginProvider

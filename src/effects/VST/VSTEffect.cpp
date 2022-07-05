@@ -3559,4 +3559,16 @@ ComponentInterfaceSymbol VSTEffectWrapper::GetSymbol() const
    return mName;
 }
 
+EffectSettings VSTEffect::MakeSettings() const
+{
+   auto result = StatefulPerTrackEffect::MakeSettings();
+   // Cause initial population of the map stored in the stateful effect
+   if (!mInitialFetchDone) {
+      FetchSettings(GetSettings(result));
+      mInitialFetchDone = true;
+   }
+   return result;
+}
+
+
 #endif // USE_VST
