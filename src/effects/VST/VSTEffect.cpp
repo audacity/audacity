@@ -2688,7 +2688,7 @@ bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
    return ret;
 }
 
-bool VSTEffect::LoadFXP(const wxFileName & fn)
+bool VSTEffectWrapper::LoadFXP(const wxFileName & fn)
 {
    bool ret = false;
 
@@ -2707,7 +2707,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
          XO("Unable to allocate memory when loading presets file."),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return false;
    }
    unsigned char *bptr = data.get();
@@ -2722,7 +2722,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
             XO("Unable to read presets file."),
             XO("Error Loading VST Presets"),
             wxOK | wxCENTRE,
-            mParent);
+            nullptr);
          break;
       }
 

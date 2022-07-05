@@ -131,6 +131,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    // Other formats for import/export
    bool LoadFXB(const wxFileName& fn);
+   bool LoadFXP(const wxFileName& fn);
    bool LoadFXProgram(unsigned char** bptr, ssize_t& len, int index, bool dryrun);
    void callSetProgramB(int index);
 };
@@ -294,7 +295,6 @@ private:
    void RefreshParameters(int skip = -1);
 
    // Program/Bank loading/saving
-   bool LoadFXP(const wxFileName & fn);
       
    void SaveFXB(const wxFileName & fn) const;
    void SaveFXP(const wxFileName & fn) const;
