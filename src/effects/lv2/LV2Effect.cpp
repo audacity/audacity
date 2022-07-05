@@ -374,8 +374,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       access, mProjectRate, mFeatures, handler, mPorts, parent, useGUI);
 
    if (result->mUseGUI)
-      result->mUseGUI = BuildFancy(*result, *pWrapper, settings);
-   if (!result->mUseGUI && !BuildPlain(access, *result))
+      result->mUseGUI = result->BuildFancy(*pWrapper, settings);
+   if (!result->mUseGUI && !result->BuildPlain(access))
       return nullptr;
    result->UpdateUI();
 
@@ -559,7 +559,7 @@ std::shared_ptr<SuilHost> LV2Validator::GetSuilHost()
    return result;
 }
 
-bool LV2Effect::BuildFancy(LV2Validator &validator,
+bool LV2Validator::BuildFancy(
    const LV2Wrapper &wrapper, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
@@ -613,9 +613,10 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    const auto uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
-   UIHandler &handler = *this;
+   LV2UIFeaturesList::UIHandler &handler =
+      static_cast<LV2Effect &>(mEffect);
    auto &instance = wrapper.GetInstance();
-   auto &features = validator.mUIFeatures.emplace(
+   auto &features = mUIFeatures.emplace(
       wrapper.GetFeatures(), handler, uinode, &instance,
       (uiType == node_ExternalUI) ? nullptr : mParent);
    if (!features.mOk)
@@ -635,10 +636,10 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
-   validator.mNativeWinLastSize = wxDefaultSize;
+   mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
-   if (!(validator.mSuilHost = validator.GetSuilHost()))
+   if (!(mSuilHost = GetSuilHost()))
       return false;
 
 #if defined(__WXMSW__)
@@ -662,11 +663,11 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // The void* that the instance passes back to our write and index
    // callback functions, which were given to suil_host_new:
-   UIHandler *pHandler = this;
+   LV2UIFeaturesList::UIHandler *pHandler = &static_cast<LV2Effect&>(mEffect);
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   validator.mSuilInstance.reset(suil_instance_new(validator.mSuilHost.get(),
+   mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       pHandler, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
@@ -674,18 +675,18 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       features.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
-   if (!validator.mSuilInstance)
+   if (!mSuilInstance)
       return false;
 
    if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);
-      validator.mTimer.mExternalWidget = static_cast<LV2_External_UI_Widget *>(
-         suil_instance_get_widget(validator.mSuilInstance.get()));
-      validator.mTimer.Start(20);
-      LV2_EXTERNAL_UI_SHOW(validator.mTimer.mExternalWidget);
+      mTimer.mExternalWidget = static_cast<LV2_External_UI_Widget *>(
+         suil_instance_get_widget(mSuilInstance.get()));
+      mTimer.Start(20);
+      LV2_EXTERNAL_UI_SHOW(mTimer.mExternalWidget);
    } else {
       const auto widget = static_cast<WXWidget>(
-         suil_instance_get_widget(validator.mSuilInstance.get()));
+         suil_instance_get_widget(mSuilInstance.get()));
 
 #if defined(__WXGTK__)
       // Needed by some plugins (e.g., Invada) to ensure the display is fully
@@ -699,8 +700,8 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       wxWindowPtr< NativeWindow > pNativeWin{ safenew NativeWindow() };
       if (!pNativeWin->Create(mParent, widget))
          return false;
-      validator.mNativeWin = pNativeWin;
-      pNativeWin->Bind(wxEVT_SIZE, &LV2Validator::OnSize, &validator);
+      mNativeWin = pNativeWin;
+      pNativeWin->Bind(wxEVT_SIZE, &LV2Validator::OnSize, this);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
       // the native window was created, so set the size now.
@@ -722,11 +723,11 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       mParent->SetSizerAndFit(vs.release());
    }
 
-   validator.mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
-      suil_instance_extension_data(validator.mSuilInstance.get(), LV2_UI__idleInterface));
+   mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
+      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__idleInterface));
 
-   validator.mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
-      suil_instance_extension_data(validator.mSuilInstance.get(), LV2_UI__showInterface));
+   mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
+      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
 
 //   if (mUIShowInterface) {
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
@@ -741,13 +742,12 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    return true;
 }
 
-bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
-   LV2Validator &validator)
+bool LV2Validator::BuildPlain(EffectSettingsAccess &access)
 {
-   auto &portUIStates = validator.mPortUIStates;
+   auto &portUIStates = mPortUIStates;
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
-   validator.mPlainUIControls.resize(mPorts.mControlPorts.size());
+   mPlainUIControls.resize(mPorts.mControlPorts.size());
 
    int numCols = 5;
    wxSizer *innerSizer;
@@ -768,17 +768,17 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
       innerSizer = uInnerSizer.get();
 
       // Add the duration control, if a generator
-      if (GetType() == EffectTypeGenerate) {
+      if (mType == EffectTypeGenerate) {
          auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
          auto item = safenew wxStaticText(w, 0, _("&Duration:"));
          sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
          auto &extra = settings.extra;
-         validator.mDuration = safenew NumericTextCtrl(w, ID_Duration,
+         mDuration = safenew NumericTextCtrl(w, ID_Duration,
             NumericConverter::TIME, extra.GetDurationFormat(),
-            extra.GetDuration(), mProjectRate,
+            extra.GetDuration(), mSampleRate,
             NumericTextCtrl::Options{}.AutoPos(true));
-         validator.mDuration->SetName( XO("Duration") );
-         sizer->Add(validator.mDuration, 0, wxALIGN_CENTER | wxALL, 5);
+         mDuration->SetName( XO("Duration") );
+         sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
          auto groupSizer =
             std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
          groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
@@ -795,7 +795,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
          for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
             auto &state = portUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
-            auto &ctrl = validator.mPlainUIControls[p];
+            auto &ctrl = mPlainUIControls[p];
             const auto &value = values[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
@@ -868,7 +868,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
                t->SetName(labelText);
                gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                ctrl.mText = t;
-               auto rate = port->mSampleRate ? mProjectRate : 1.0f;
+               auto rate = port->mSampleRate ? mSampleRate : 1.0f;
                state.mLo = port->mMin * rate;
                state.mHi = port->mMax * rate;
                state.mTmp = value * rate;
@@ -937,7 +937,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
 
       //! Function to revisit the controls just added above
       auto VisitCells = [&, cnt = innerSizer->GetChildren().GetCount()](auto f){
-         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; ++i) {
+         for (size_t i = (mType == EffectTypeGenerate); i < cnt; ++i) {
             // For each group (skipping duration) visit the grid sizer
             auto groupSizer = innerSizer->GetItem(i)->GetSizer();
             auto gridSizer = static_cast<wxFlexGridSizer *>(
@@ -1254,7 +1254,7 @@ int LV2Effect::ui_resize(int width, int height)
 {
    if (!mpValidator)
       return 0;
-   
+
    // Queue a wxSizeEvent to resize the plugins UI
    if (mpValidator->mNativeWin) {
       wxSizeEvent sw{ wxSize{ width, height } };
@@ -1263,7 +1263,7 @@ int LV2Effect::ui_resize(int width, int height)
    }
    else
       // The window hasn't been created yet, so record the desired size
-      mNativeWinInitialSize = { width, height };
+      mpValidator->mNativeWinInitialSize = { width, height };
    return 0;
 }
 

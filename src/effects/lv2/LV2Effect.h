@@ -57,7 +57,7 @@ class LV2Validator;
 class LV2Wrapper;
 
 class LV2Effect final : public StatefulPerTrackEffect
-   , LV2UIFeaturesList::UIHandler
+   , public LV2UIFeaturesList::UIHandler
 {
 public:
    LV2Effect(const LilvPlugin &plug);
@@ -138,10 +138,6 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(LV2Validator &validator,
-      const LV2Wrapper &wrapper, const EffectSettings &settings);
-   bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
-
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
    uint32_t suil_port_index(const char *port_symbol) override;
@@ -178,8 +174,6 @@ private:
    // non-null for duration of a dialog
    LV2Validator *mpValidator{};
 
-   wxSize mNativeWinInitialSize{ wxDefaultSize };
-
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };
    mutable RegistryPaths mFactoryPresetNames;
@@ -208,7 +202,8 @@ public:
    // TODO static or non-member function
    const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
 
-   void OnIdle(wxIdleEvent & evt);
+   bool BuildFancy(const LV2Wrapper &wrapper, const EffectSettings &settings);
+   bool BuildPlain(EffectSettingsAccess &access);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -216,6 +211,7 @@ public:
    void OnText(wxCommandEvent & evt);
    void OnSlider(wxCommandEvent & evt);
 
+   void OnIdle(wxIdleEvent & evt);
    void OnSize(wxSizeEvent & evt);
 
    static std::shared_ptr<SuilHost> GetSuilHost();
@@ -252,6 +248,7 @@ public:
 
    //! Destroy before mSuilInstance
    wxWindowPtr<NativeWindow> mNativeWin{};
+   wxSize mNativeWinInitialSize{ wxDefaultSize };
    wxSize mNativeWinLastSize{ wxDefaultSize };
    bool mResizing{ false };
 #if defined(__WXGTK__)
