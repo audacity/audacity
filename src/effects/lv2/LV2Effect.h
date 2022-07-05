@@ -143,8 +143,8 @@ private:
 #endif
 
    bool BuildFancy(LV2Validator &validator,
-      LV2Wrapper &wrapper, const EffectSettings &settings);
-   bool BuildPlain(EffectSettingsAccess &access);
+      const LV2Wrapper &wrapper, const EffectSettings &settings);
+   bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
@@ -169,9 +169,6 @@ private:
    const LV2FeaturesList mFeatures{ mPlug };
 
    const LV2Ports mPorts{ mPlug };
-   LV2PortStates mPortStates{ mPorts };
-   LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
-
    LV2EffectSettings mSettings;
 
    //! This ignores its argument while we transition to statelessness
@@ -188,9 +185,6 @@ private:
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
 
-   //! Holds lv2 library state for UI or for destructive processing
-   std::unique_ptr<LV2Wrapper> mMaster;
-
    size_t mFramePos{};
 
    FloatBuffers mCVInBuffers;
@@ -202,6 +196,8 @@ private:
 
    wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent{};
+   // non-null for duration of a dialog
+   LV2Validator *mpValidator{};
 
    bool mUseGUI{};
 
@@ -245,88 +241,22 @@ private:
    mutable wxArrayString mFactoryPresetUris;
 
    DECLARE_EVENT_TABLE()
-
-   friend class LV2Instance; // Remove this later
 };
 
-class LV2Instance final : public PerTrackEffect::Instance
-{
-public:
-   LV2Instance(StatefulPerTrackEffect &effect, const LV2Ports &ports);
-   ~LV2Instance() override;
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-   override;
-   sampleCount GetLatency(
-      const EffectSettings &settings, double sampleRate) override;
-
-   LV2Wrapper *GetWrapper() { return GetEffect().mMaster.get(); }
-   const LV2Wrapper *GetWrapper() const { return GetEffect().mMaster.get(); }
-
-   //! Do nothing if there is already an LV2Wrapper with the desired rate.
-   //! The wrapper object remains until this is destroyed
-   //! or the wrapper is re-made with another rate.
-   void MakeWrapper(const EffectSettings &settings,
-      double projectRate, bool useOutput);
-
-   size_t GetBlockSize() const override;
-   size_t SetBlockSize(size_t maxBlockSize) override;
-
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-
-private:
-   LV2Effect &GetEffect() const {
-      // Tolerate const_cast in this class while it sun-sets
-      return static_cast<LV2Effect &>(
-         const_cast<PerTrackEffect &>(mProcessor));
-   }
-   LV2EffectSettings &GetSettings(EffectSettings &settings) const {
-      return GetEffect().GetSettings(settings);
-   }
-   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const {
-      return GetEffect().GetSettings(settings);
-   }
-
-   const LV2Ports &mPorts;
-
-   //! Each holds lv2 library state for realtime processing of one track
-   std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
-
-   LV2_Atom_Forge mForge{};
-
-   // Position info
-   float mPositionSpeed{ 1.0f };
-   int64_t mPositionFrame{ 0 };
-
-   size_t mUserBlockSize{};
-
-   size_t mNumSamples{};
-   bool mRolling{ false };
-   bool mUseLatency{ false };
-   bool mLatencyDone{ false };
-};
+class LV2Instance;
 
 class LV2Validator final : public DefaultEffectUIValidator {
 public:
    LV2Validator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access,
-      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler);
+      EffectUIClientInterface &effect, LV2Instance &instance,
+      EffectSettingsAccess &access,
+      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+      const LV2Ports &ports);
    ~LV2Validator() override;
 
+   LV2Instance &mInstance;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
+   LV2PortUIStates mPortUIStates;
 };
 
 #endif

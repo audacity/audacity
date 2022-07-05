@@ -609,6 +609,8 @@ list( APPEND SOURCES
          effects/lv2/LV2EffectMeter.h
          effects/lv2/LV2FeaturesList.cpp
          effects/lv2/LV2FeaturesList.h
+         effects/lv2/LV2Instance.cpp
+         effects/lv2/LV2Instance.h
          effects/lv2/LV2InstanceFeaturesList.cpp
          effects/lv2/LV2InstanceFeaturesList.h
          effects/lv2/LV2Ports.cpp

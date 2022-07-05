@@ -23,6 +23,7 @@
 
 #include "LV2Effect.h"
 #include "LV2EffectMeter.h"
+#include "LV2Instance.h"
 #include "LV2Wrapper.h"
 #include "SampleCount.h"
 
@@ -49,7 +50,6 @@
 #include <wx/intl.h>
 #include <wx/scrolwin.h>
 
-#include "AudacityException.h"
 #include "ConfigInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
@@ -63,49 +63,18 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
-LV2Instance::LV2Instance(
-   StatefulPerTrackEffect &effect, const LV2Ports &ports
-)  : PerTrackEffect::Instance{ effect }
-   , mPorts{ ports }
-{
-   LV2Preferences::GetUseLatency(effect, mUseLatency);
-
-   int userBlockSize;
-   LV2Preferences::GetBufferSize(effect, userBlockSize);
-   mUserBlockSize = std::max(1, userBlockSize);
-   lv2_atom_forge_init(&mForge, GetEffect().mFeatures.URIDMapFeature());
-}
-
-LV2Instance::~LV2Instance()
-{
-   // Some temporary ugliness until real statelessness
-   const_cast<LV2Effect&>(static_cast<const LV2Effect&>(mProcessor))
-      .mMaster.reset();
-}
-
 LV2Validator::LV2Validator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access,
-   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler
+   EffectUIClientInterface &effect, LV2Instance &instance,
+   EffectSettingsAccess &access,
+   const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+   const LV2Ports &ports
 )  : DefaultEffectUIValidator{ effect, access }
+   , mInstance{ instance }
+   , mPortUIStates{ instance.GetPortStates(), ports }
 {
 }
 
 LV2Validator::~LV2Validator() = default;
-
-void LV2Instance::MakeWrapper(const EffectSettings &settings,
-   double projectRate, bool useOutput)
-{
-   auto &effect = GetEffect();
-   auto &pWrapper = effect.mMaster;
-   if (pWrapper && projectRate == pWrapper->GetFeatures().mSampleRate)
-      // Already made so do nothing
-      return;
-   pWrapper = LV2Wrapper::Create(effect.mFeatures, mPorts,
-      // TODO give instances independent port states
-      effect.mPortStates,
-      GetSettings(settings), projectRate, useOutput);
-   SetBlockSize(mUserBlockSize);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -281,7 +250,7 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    LV2Preferences::GetUseGUI(*this, mUseGUI);
-   return std::make_shared<LV2Instance>(*this, mPorts);
+   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts, mSettings);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -302,214 +271,6 @@ int LV2Effect::GetMidiInCount() const
 int LV2Effect::GetMidiOutCount() const
 {
    return mPorts.mMidiOut;
-}
-
-size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
-{
-   auto updateBlockSize = [maxBlockSize, userBlockSize = mUserBlockSize
-   ](LV2Wrapper &wrapper){
-      auto &featuresList = wrapper.GetFeatures();
-      featuresList.mBlockSize = std::max(featuresList.mMinBlockSize,
-         std::min({maxBlockSize, userBlockSize, featuresList.mMaxBlockSize}));
-      wrapper.SendBlockSize();
-   };
-   auto pWrapper = GetWrapper();
-   if (pWrapper)
-      updateBlockSize(*pWrapper);
-   for (auto &pSlave : mSlaves)
-      updateBlockSize(*pSlave);
-   return GetBlockSize();
-}
-
-size_t LV2Instance::GetBlockSize() const
-{
-   if (const auto pWrapper = GetWrapper())
-      return pWrapper->GetFeatures().mBlockSize;
-   else
-      return LV2Preferences::DEFAULT_BLOCKSIZE;
-}
-
-sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
-{
-   auto pWrapper = GetWrapper();
-   if (pWrapper && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
-      mLatencyDone = true;
-      return sampleCount(pWrapper->GetLatency());
-   }
-   return 0;
-}
-
-// Start of destructive processing path
-bool LV2Instance::ProcessInitialize(EffectSettings &settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
-{
-   auto &mPortStates = GetEffect().mPortStates;
-   if (!GetWrapper())
-      MakeWrapper(settings, sampleRate, false);
-   const auto pWrapper = GetWrapper();
-   if (!pWrapper)
-      return false;
-   for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
-   pWrapper->Activate();
-   mLatencyDone = false;
-   return true;
-}
-
-size_t LV2Instance::ProcessBlock(EffectSettings &,
-   const float *const *inbuf, float *const *outbuf, size_t size)
-{
-   using namespace LV2Symbols;
-   auto pWrapper = GetWrapper();
-   auto &mPortStates = GetEffect().mPortStates;
-
-   assert(size <= GetBlockSize());
-   assert(pWrapper); // else ProcessInitialize() returned false, I'm not called
-   const auto instance = &pWrapper->GetInstance();
-
-   int i = 0;
-   int o = 0;
-   for (auto & port : mPorts.mAudioPorts)
-      lilv_instance_connect_port(instance,
-         port->mIndex,
-         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
-
-   for (auto & state : mPortStates.mAtomPortStates)
-      state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
-
-   lilv_instance_run(instance, size);
-
-   // Main thread consumes responses
-   pWrapper->ConsumeResponses();
-
-   for (auto & state : mPortStates.mAtomPortStates)
-      state->ResetForInstanceOutput();
-
-   return size;
-}
-
-bool LV2Instance::RealtimeInitialize(EffectSettings &, double)
-{
-   auto &mPortStates = GetEffect().mPortStates;
-   for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
-   return true;
-}
-
-bool LV2Instance::RealtimeFinalize(EffectSettings &) noexcept
-{
-return GuardedCall<bool>([&]{
-   auto &mPortStates = GetEffect().mPortStates;
-   mSlaves.clear();
-   for (auto & state : mPortStates.mCVPortStates)
-      state.mBuffer.reset();
-   return true;
-});
-}
-
-bool LV2Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
-{
-   auto &featuresList = GetEffect().mFeatures;
-   auto &mPortStates = GetEffect().mPortStates;
-   auto pInstance = LV2Wrapper::Create(featuresList,
-      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
-   if (!pInstance)
-      return false;
-   pInstance->Activate();
-   mSlaves.push_back(move(pInstance));
-   return true;
-}
-
-bool LV2Instance::RealtimeSuspend()
-{
-   mPositionSpeed = 0.0;
-   mPositionFrame = 0;
-   mRolling = false;
-
-   return true;
-}
-
-bool LV2Instance::RealtimeResume()
-{
-   mPositionSpeed = 1.0;
-   mPositionFrame = 0;
-   mRolling = true;
-
-   return true;
-}
-
-bool LV2Instance::RealtimeProcessStart(EffectSettings &)
-{
-   auto &mPortStates = GetEffect().mPortStates;
-   mNumSamples = 0;
-   for (auto & state : mPortStates.mAtomPortStates)
-      state->SendToInstance(mForge, mPositionFrame, mPositionSpeed);
-   return true;
-}
-
-size_t LV2Instance::RealtimeProcess(size_t group, EffectSettings &,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
-{
-   auto &mPortStates = GetEffect().mPortStates;
-
-   if (group >= mSlaves.size())
-      return 0;
-   assert(numSamples <= (size_t) GetBlockSize());
-
-   if (group < 0 || group >= (int) mSlaves.size())
-      return 0;
-
-   const auto slave = mSlaves[group].get();
-   const auto instance = &slave->GetInstance();
-
-   int i = 0;
-   int o = 0;
-   for (auto & port : mPorts.mAudioPorts)
-      lilv_instance_connect_port(instance,
-         port->mIndex,
-         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
-
-   mNumSamples = std::max(numSamples, mNumSamples);
-
-   if (mRolling)
-      lilv_instance_run(instance, numSamples);
-   else
-      while (--i >= 0)
-         for (decltype(numSamples) s = 0; s < numSamples; s++)
-            outbuf[i][s] = inbuf[i][s];
-
-   // Background thread consumes responses from yet another worker thread
-   slave->ConsumeResponses();
-
-   for (auto & state : mPortStates.mAtomPortStates)
-      state->ResetForInstanceOutput();
-
-   if (group == 0)
-      mPositionFrame += numSamples;
-
-   return numSamples;
-}
-
-bool LV2Instance::RealtimeProcessEnd(EffectSettings &) noexcept
-{
-return GuardedCall<bool>([&]{
-   auto &mPortStates = GetEffect().mPortStates;
-   // Nothing to do if we did process any samples
-   if (mNumSamples == 0)
-   {
-      return true;
-   }
-
-   // Why is this not also done on the destructive processing path?
-   // Because it is soon dimissing the modal dialog anyway.
-   for (auto & state : mPortStates.mAtomPortStates)
-      state->ReceiveFromInstance();
-
-   mNumSamples = 0;
-
-   return true;
-});
 }
 
 int LV2Effect::ShowClientInterface(
@@ -594,8 +355,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilInstance.reset();
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
-   myInstance.MakeWrapper(settings, mProjectRate, true);
-   const auto pWrapper = myInstance.GetWrapper();
+   myInstance.MakeMaster(settings, mProjectRate, true);
+   const auto pWrapper = myInstance.GetMaster();
    if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -610,13 +371,16 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    UIHandler &handler = *this;
-   auto result =
-      std::make_unique<LV2Validator>(*this, access, mFeatures, handler);
-   
+   auto result = std::make_unique<LV2Validator>(*this,
+      dynamic_cast<LV2Instance&>(instance),
+      access, mFeatures, handler, mPorts);
+
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);
-   if (!mUseGUI && !BuildPlain(access))
+   if (!mUseGUI && !BuildPlain(access, *result))
       return nullptr;
+
+   mpValidator = result.get();
    return result;
 }
 
@@ -656,6 +420,7 @@ bool LV2Effect::CloseUI()
    mParent = nullptr;
    mDialog = nullptr;
    mPlainUIControls.clear();
+   mpValidator = nullptr;
    return true;
 }
 
@@ -787,7 +552,7 @@ bool LV2Effect::SaveParameters(
 }
 
 bool LV2Effect::BuildFancy(LV2Validator &validator,
-   LV2Wrapper &wrapper, const EffectSettings &settings)
+   const LV2Wrapper &wrapper, const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -974,8 +739,10 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
    return true;
 }
 
-bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
+bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
+   LV2Validator &validator)
 {
+   auto &portUIStates = validator.mPortUIStates;
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
    mPlainUIControls.resize(mPorts.mControlPorts.size());
@@ -1024,7 +791,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
          for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
-            auto &state = mPortUIStates.mControlPortStates[p];
+            auto &state = portUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
             const auto &value = values[p];
@@ -1222,12 +989,15 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
+   assert(mpValidator); // exists while a dialog is open
+   auto &portUIStates = mpValidator->mPortUIStates;
    auto &mySettings = GetSettings(settings);
+   auto pMaster = mpValidator->mInstance.GetMaster();
 
-   if (mMaster && mySettings.mpState) {
+   if (pMaster && mySettings.mpState) {
       // Maybe there are other important side effects on the instance besides
       // changes of port values
-      lilv_state_restore(mySettings.mpState.get(), &mMaster->GetInstance(),
+      lilv_state_restore(mySettings.mpState.get(), &pMaster->GetInstance(),
          nullptr, nullptr, 0, nullptr);
       // Destroy the short lived carrier of preset state
       mySettings.mpState.reset();
@@ -1235,7 +1005,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 
    auto &values = mySettings.values;
    {
-      size_t index = 0; for (auto & state : mPortUIStates.mControlPortStates) {
+      size_t index = 0; for (auto & state : portUIStates.mControlPortStates) {
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
@@ -1265,7 +1035,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    for (auto & group : mPorts.mGroups) {
       const auto & params = mPorts.mGroupMap.at(group); /* won't throw */
       for (auto & param : params) {
-         auto &state = mPortUIStates.mControlPortStates[param];
+         auto &state = portUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
          auto &value = values[param];
@@ -1323,8 +1093,10 @@ void LV2Effect::OnChoice(wxCommandEvent &evt)
 
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
+   assert(mpValidator); // exists while a dialog is open
+   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Texts;
-   auto &state = mPortUIStates.mControlPortStates[idx];
+   auto &state = portUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
@@ -1336,8 +1108,10 @@ void LV2Effect::OnText(wxCommandEvent &evt)
 
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
+   assert(mpValidator); // exists while a dialog is open
+   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Sliders;
-   auto &state = mPortUIStates.mControlPortStates[idx];
+   auto &state = portUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    float lo = state.mLo;
    float hi = state.mHi;
@@ -1385,7 +1159,11 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
-   if (auto &atomState = mPortUIStates.mControlOut) {
+   if (!mpValidator)
+      return;
+   auto &portUIStates = mpValidator->mPortUIStates;
+
+   if (auto &atomState = portUIStates.mControlOut) {
       atomState->SendToDialog([&](const LV2_Atom *atom, uint32_t size){
          suil_instance_port_event(mSuilInstance.get(),
             atomState->mpPort->mIndex, size,
@@ -1397,8 +1175,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    // Is this idle time polling for changes of input redundant with
    // TransferDataToWindow or is it really needed?  Probably harmless.
    // In case of output control port values though, it is needed for metering.
-   size_t index = 0;
-   for (auto &state : mPortUIStates.mControlPortStates) {
+   size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
       const auto &value = mSettings.values[index];
       // Let UI know that a port's value has changed
@@ -1504,8 +1281,9 @@ void LV2Effect::suil_port_write(uint32_t port_index,
          mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
-   else if (protocol == LV2Symbols::urid_EventTransfer) {
-      auto &atomPortState = mPortUIStates.mControlIn;
+   else if (protocol == LV2Symbols::urid_EventTransfer && mpValidator) {
+      auto &portUIStates = mpValidator->mPortUIStates;
+      auto &atomPortState = portUIStates.mControlIn;
       if (atomPortState && port_index == atomPortState->mpPort->mIndex)
          atomPortState->ReceiveFromDialog(buffer, buffer_size);
    }
