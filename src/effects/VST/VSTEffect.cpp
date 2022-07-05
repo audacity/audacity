@@ -3014,7 +3014,7 @@ void VSTEffectWrapper::SaveFXB(const wxFileName & fn) const
    return;
 }
 
-void VSTEffect::SaveFXP(const wxFileName & fn) const
+void VSTEffectWrapper::SaveFXP(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{ fn.GetFullPath() };
@@ -3025,7 +3025,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn) const
          XO("Could not open file: \"%s\"").Format( fullPath ),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return;
    }
 
@@ -3042,7 +3042,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn) const
          XO("Error writing to file: \"%s\"").Format( fullPath ),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
    }
 
    f.Close();
