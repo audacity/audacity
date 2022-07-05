@@ -2159,9 +2159,9 @@ void VSTEffect::callSetParameter(int index, float value)
 }
 
 
-bool VSTEffectWrapper::callSetParameterB(int index, float value)
+bool VSTEffectWrapper::callSetParameterB(int index, float value) const
 {
-   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+   if (mVstVersion == 0 || constCallDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
       return true;
@@ -3462,6 +3462,95 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
       if (!visitor(pi))
          break;
    }
+}
+
+
+bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vst3settings) const
+{
+   // Get the fallback ID-value parameters
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         float val = callGetParameter(pi.mID);
+         vst3settings.mParamsMap[pi.mName] = val;
+         return true;
+      }
+   );
+
+   // These are here to be checked against for compatibility later
+   vst3settings.mVersion   = mAEffect->version;
+   vst3settings.mUniqueID  = mAEffect->uniqueID;
+   vst3settings.mNumParams = mAEffect->numParams;
+
+   // Get the chunk (if supported)
+   vst3settings.mChunk = std::nullopt;
+   if (mAEffect->flags & effFlagsProgramChunks)
+   {
+      void* chunk = NULL;
+      int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      if (clen > 0)
+      {
+         vst3settings.mChunk = Base64::Encode(chunk, clen);
+      }
+   }
+
+   return true;
+}
+
+
+bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings)
+{
+   // First, make sure settings are compatibile with the plugin
+   if ((vst3settings.mUniqueID  != mAEffect->uniqueID)   ||
+       (vst3settings.mVersion   != mAEffect->version)    ||
+       (vst3settings.mNumParams != mAEffect->numParams)      )
+   {
+      return false;
+   }
+
+
+   // Try using the chunk first (if available)
+   if (vst3settings.mChunk)
+   {
+      ArrayOf<char> buf{ vst3settings.mChunk->length() / 4 * 3 };
+
+      int len = Base64::Decode(*vst3settings.mChunk, buf.get());
+      if (len)
+      {
+         VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+
+         callSetChunkB(true, len, buf.get(), &info);
+         return true;
+      }         
+   }
+
+
+   // Chunk unavailable / decoding it did not work? fall back to param ID-value pairs
+
+   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         const auto itr = vst3settings.mParamsMap.find(pi.mName);
+         if (itr != vst3settings.mParamsMap.end())
+         {
+            const float& value = itr->second;
+
+            if (value >= -1.0 && value <= 1.0)
+            {
+               callSetParameterB(pi.mID, value);
+            }
+         }
+         return true;
+      }
+   );
+   
+   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+
+   return false;
 }
 
 

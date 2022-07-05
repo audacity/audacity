@@ -21,6 +21,9 @@
 #include "XMLTagHandler.h"
 #include <wx/weakref.h>
 
+#include <unordered_map>
+#include <optional>
+
 class wxSizerItem;
 class wxSlider;
 class wxStaticText;
@@ -73,6 +76,29 @@ typedef SInt16 CFBundleRefNum;
 #endif
 #endif
 
+
+struct VSTEffectSettings
+{
+   // These are saved in the Config and checked against when loading a preset, to make sure
+   // that we are loading a Config  which is compatible.
+   //
+   int32_t mUniqueID;
+   int32_t mVersion;
+   int32_t mNumParams;
+
+   // When loading a preset, the preferred way is to use the chunk; when not present in
+   // the Config or failing to load, we fall back to loading single parameters (ID, value) pairs.
+   //
+   // It looks like a plugin might not support this (if their effFlagsProgramChunks bit is off)
+   // this is why it is made optional.
+   //
+   std::optional<wxString> mChunk;
+
+   // Fallback data used when the chunk is not available.
+   std::unordered_map<wxString, double> mParamsMap;
+};
+
+
 struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 {
    AEffect* mAEffect = nullptr;
@@ -106,6 +132,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    void ForEachParameter(ParameterVisitor visitor) const;
 
+   bool FetchSettings(VSTEffectSettings& vst3Settings) const;
+
+   bool StoreSettings(const VSTEffectSettings& vst3settings);
+
    // These are here because they are used by the import/export methods
    int mVstVersion;
    wxString mName;
@@ -127,7 +157,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    ComponentInterfaceSymbol GetSymbol() const;
 
-   bool callSetParameterB(int index, float value);
+   bool callSetParameterB(int index, float value) const;
 
    void SaveXML(const wxFileName& fn) const;
 
