@@ -73,7 +73,7 @@ typedef SInt16 CFBundleRefNum;
 #endif
 #endif
 
-struct VSTEffectWrapper : public VSTEffectLink
+struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 {
    AEffect* mAEffect = nullptr;
 
@@ -86,6 +86,10 @@ struct VSTEffectWrapper : public VSTEffectLink
    wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
 
    float callGetParameter(int index) const;
+
+   void callSetChunkB(bool isPgm, int len, void* buf);
+   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info);
+
 
    int      GetString(wxString& outstr, int opcode, int index = 0) const;
    wxString GetString(int opcode, int index = 0) const;
@@ -101,6 +105,30 @@ struct VSTEffectWrapper : public VSTEffectLink
    using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
 
    void ForEachParameter(ParameterVisitor visitor) const;
+
+   // These are here because they are used by the import/export methods
+   int mVstVersion;
+   wxString mName;
+
+   // XML load/save
+   bool mInSet;
+   bool mInChunk;
+   wxString mChunk;
+   long mXMLVersion;
+   VstPatchChunkInfo mXMLInfo;
+
+   bool LoadXML(const wxFileName& fn);
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+   void HandleXMLEndTag(const std::string_view& tag) override;
+   void HandleXMLContent(const std::string_view& content) override;
+   XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
+
+   void SetString(int opcode, const wxString& str, int index = 0);
+
+   ComponentInterfaceSymbol GetSymbol() const;
+
+   bool callSetParameterB(int index, float value);
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,7 +151,6 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 class VSTEffect final
    : public StatefulPerTrackEffect
    , public VSTEffectWrapper
-   , public XMLTagHandler   
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
@@ -265,17 +292,13 @@ private:
    // Program/Bank loading/saving
    bool LoadFXB(const wxFileName & fn);
    bool LoadFXP(const wxFileName & fn);
-   bool LoadXML(const wxFileName & fn);
+   
    bool LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun);
    void SaveFXB(const wxFileName & fn) const;
    void SaveFXP(const wxFileName & fn) const;
    void SaveXML(const wxFileName & fn) const;
    void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
 
-   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   void HandleXMLEndTag(const std::string_view& tag) override;
-   void HandleXMLContent(const std::string_view& content) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
 
    // Utility methods
 
@@ -292,7 +315,7 @@ private:
    void PowerOff();
       
    
-   void SetString(int opcode, const wxString & str, int index = 0);
+   
 
    // VST methods
 
@@ -302,7 +325,8 @@ private:
    void callSetParameter(int index, float value);   
    void callSetProgram(int index);
    void callSetChunk(bool isPgm, int len, void *buf);
-   void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);
+   void callSetChunk(bool isPgm, int len, void* buf, VstPatchChunkInfo* info);
+   
 
  private:
     // Define a manager class for a handle to a module
@@ -323,12 +347,11 @@ private:
    int mMidiOuts{0};
    bool mAutomatable;
    size_t mUserBlockSize{8192};
-   wxString mName;
    wxString mVendor;
    wxString mDescription;
    int mVersion;
    bool mInteractive{false};
-   int mVstVersion;
+   
 
    static intptr_t mCurrentEffectID;
 
@@ -392,7 +415,7 @@ private:
 
    // UI
    wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent;
+   wxWindow* mParent;
    wxSizerItem* mContainer{};
    bool mGui{false};
 
@@ -404,11 +427,6 @@ private:
    ArrayOf<wxStaticText *> mDisplays;
    ArrayOf<wxStaticText *> mLabels;
 
-   bool mInSet;
-   bool mInChunk;
-   wxString mChunk;
-   long mXMLVersion;
-   VstPatchChunkInfo mXMLInfo;
    
    DECLARE_EVENT_TABLE()
 

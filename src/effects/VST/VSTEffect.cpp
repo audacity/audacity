@@ -827,7 +827,7 @@ PluginPath VSTEffect::GetPath() const
 
 ComponentInterfaceSymbol VSTEffect::GetSymbol() const
 {
-   return mName;
+   return VSTEffectWrapper::GetSymbol();
 }
 
 VendorSymbol VSTEffect::GetVendor() const
@@ -2110,7 +2110,7 @@ wxString VSTEffectWrapper::GetString(int opcode, int index) const
    return str;
 }
 
-void VSTEffect::SetString(int opcode, const wxString & str, int index)
+void VSTEffectWrapper::SetString(int opcode, const wxString & str, int index)
 {
    char buf[256];
    strcpy(buf, str.Left(255).ToUTF8());
@@ -2149,14 +2149,27 @@ float VSTEffectWrapper::callGetParameter(int index) const
 
 void VSTEffect::callSetParameter(int index, float value)
 {
+   bool setOK = callSetParameterB(index, value);
+
+   if (setOK)
+   {
+      for (const auto& slave : mSlaves)
+         slave->callSetParameterB(index, value);
+   }
+}
+
+
+bool VSTEffectWrapper::callSetParameterB(int index, float value)
+{
    if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
-
-      for (const auto &slave : mSlaves)
-         slave->callSetParameter(index, value);
+      return true;
    }
+   return false;
 }
+
+
 
 void VSTEffect::callSetProgram(int index)
 {
@@ -2169,7 +2182,7 @@ void VSTEffect::callSetProgram(int index)
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 }
 
-void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf)
 {
    VstPatchChunkInfo info;
 
@@ -2179,10 +2192,10 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
    info.pluginVersion = mAEffect->version;
    info.numElements = isPgm ? mAEffect->numParams : mAEffect->numPrograms;
 
-   callSetChunk(isPgm, len, buf, &info);
+   callSetChunkB(isPgm, len, buf, &info);
 }
 
-void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info)
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf, VstPatchChunkInfo *info)
 {
    if (isPgm)
    {
@@ -2204,9 +2217,19 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    callDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+}
 
-   for (const auto &slave : mSlaves)
-      slave->callSetChunk(isPgm, len, buf, info);
+void VSTEffect::callSetChunk(bool isPgm, int len, void* buf)
+{
+   callSetChunkB(isPgm, len, buf);
+}
+
+void VSTEffect::callSetChunk(bool isPgm, int len, void* buf, VstPatchChunkInfo* info)
+{
+   callSetChunkB(isPgm, len, buf, info);
+
+   for (const auto& slave : mSlaves)
+      slave->callSetChunkB(isPgm, len, buf, info);
 }
 
 void VSTEffect::RemoveHandler()
@@ -2860,7 +2883,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
    return true;
 }
 
-bool VSTEffect::LoadXML(const wxFileName & fn)
+bool VSTEffectWrapper::LoadXML(const wxFileName & fn)
 {
    mInChunk = false;
    mInSet = false;
@@ -2885,7 +2908,7 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
          reader.GetErrorStr(),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return false;
    }
 
@@ -3136,7 +3159,7 @@ void VSTEffect::SaveXML(const wxFileName & fn) const
    xmlFile.Commit();
 }
 
-bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
+bool VSTEffectWrapper::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "vstprogrampersistence")
    {
@@ -3191,7 +3214,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
                   msg,
                   XO("Confirm"),
                   wxYES_NO,
-                  mParent );
+                  nullptr );
                if (result == wxNO)
                {
                   return false;
@@ -3330,7 +3353,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
          return false;
       }
 
-      callSetParameter(ndx, val);
+      callSetParameterB(ndx, val);
 
       return true;
    }
@@ -3344,7 +3367,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
    return false;
 }
 
-void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
+void VSTEffectWrapper::HandleXMLEndTag(const std::string_view& tag)
 {
    if (tag == "chunk")
    {
@@ -3355,7 +3378,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
          int len = Base64::Decode(mChunk, buf.get());
          if (len)
          {
-            callSetChunk(true, len, buf.get(), &mXMLInfo);
+            callSetChunkB(true, len, buf.get(), &mXMLInfo);
          }
 
          mChunk.clear();
@@ -3374,7 +3397,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
    }
 }
 
-void VSTEffect::HandleXMLContent(const std::string_view& content)
+void VSTEffectWrapper::HandleXMLContent(const std::string_view& content)
 {
    if (mInChunk)
    {
@@ -3382,7 +3405,7 @@ void VSTEffect::HandleXMLContent(const std::string_view& content)
    }
 }
 
-XMLTagHandler *VSTEffect::HandleXMLChild(const std::string_view& tag)
+XMLTagHandler *VSTEffectWrapper::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "vstprogrampersistence")
    {
@@ -3430,5 +3453,10 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
    }
 }
 
+
+ComponentInterfaceSymbol VSTEffectWrapper::GetSymbol() const
+{
+   return mName;
+}
 
 #endif // USE_VST
