@@ -166,7 +166,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    if ( pParent && dialogFactory && pAccess &&
       IsInteractive()) {
       if (!ShowHostInterface(
-         *pParent, dialogFactory, pInstance, *pAccess, IsBatchProcessing() ) )
+         *pParent, dialogFactory, pInstance, *pAccess, true ) )
          return false;
       else if (!pInstance)
          return false;

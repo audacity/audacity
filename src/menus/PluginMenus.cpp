@@ -279,8 +279,7 @@ void AddGroupedEffectMenuItems(
 
       groupNames.push_back( name );
       groupPlugs.push_back(plug->GetID());
-      groupFlags.push_back(
-         plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+      groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
    }
 
    if (groupNames.size() > 0)
@@ -343,8 +342,7 @@ void AddSortedEffectMenuItems(
       );
 
       groupPlugs.push_back(plug->GetID());
-      groupFlags.push_back(
-         plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+      groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
    }
 
    if (groupNames.size() > 0)
@@ -383,8 +381,7 @@ auto MakeAddGroupItems(const EffectsMenuGroups& list, CommandFlag batchflags, Co
                groupNames.push_back( name );
 
             groupPlugs.push_back(plug->GetID());
-            groupFlags.push_back(
-               plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+            groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
          }
 
          if (!groupNames.empty())
