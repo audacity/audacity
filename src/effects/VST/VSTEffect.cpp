@@ -1921,15 +1921,15 @@ bool VSTEffect::LoadParameters(
    return loadOK;
 }
 
+
 bool VSTEffect::SaveParameters(
    const RegistryPath & group, const EffectSettings &settings) const
 {
-   SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
-      mAEffect->uniqueID);
-   SetConfig(*this, PluginSettings::Private, group, wxT("Version"),
-      mAEffect->version);
-   SetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
-      mAEffect->numParams);
+   const auto& vstSettings = GetSettings(settings);
+
+   SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"), vstSettings.mUniqueID );
+   SetConfig(*this, PluginSettings::Private, group, wxT("Version"),  vstSettings.mVersion  );
+   SetConfig(*this, PluginSettings::Private, group, wxT("Elements"), vstSettings.mNumParams);
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
