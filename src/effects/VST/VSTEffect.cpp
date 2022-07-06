@@ -1254,13 +1254,6 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
 bool VSTEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name, settings);
-}
-
-bool VSTEffect::DoLoadUserPreset(
-   const RegistryPath & name, EffectSettings &settings)
-{
    if (!LoadParameters(name, settings))
    {
       return false;
@@ -1268,6 +1261,7 @@ bool VSTEffect::DoLoadUserPreset(
 
    return true;
 }
+
 
 bool VSTEffect::SaveUserPreset(
    const RegistryPath & name, const EffectSettings &settings) const
@@ -1858,12 +1852,27 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
+
+VstPatchChunkInfo VSTEffectWrapper::GetChunkInfo() const
+{
+   VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+   return info;
+}
+
+bool VSTEffectWrapper::IsCompatible(const VstPatchChunkInfo& info) const
+{
+   return  (info.pluginUniqueID == mAEffect->uniqueID) &&
+           (info.pluginVersion  == mAEffect->version) &&
+           (info.numElements    == mAEffect->numParams);
+}
+
 bool VSTEffect::LoadParameters(
-   const RegistryPath & group, EffectSettings &settings)
+   const RegistryPath & group, EffectSettings &settings) const
 {
    wxString value;
 
-   VstPatchChunkInfo info = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, ""};
+   auto info = GetChunkInfo();
+
    GetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       info.pluginUniqueID, info.pluginUniqueID);
    GetConfig(*this, PluginSettings::Private, group, wxT("Version"),
@@ -1871,9 +1880,7 @@ bool VSTEffect::LoadParameters(
    GetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
       info.numElements, info.numElements);
 
-   if ((info.pluginUniqueID != mAEffect->uniqueID) ||
-       (info.pluginVersion != mAEffect->version) ||
-       (info.numElements != mAEffect->numParams))
+   if ( ! IsCompatible(info) )
    {
       return false;
    }
@@ -1886,7 +1893,7 @@ bool VSTEffect::LoadParameters(
       int len = Base64::Decode(value, buf.get());
       if (len)
       {
-         callSetChunk(true, len, buf.get(), &info);
+         callSetChunkB(true, len, buf.get(), &info);
          FetchSettings(GetSettings(settings));
       }
 
@@ -2440,7 +2447,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
    mSliders[0]->SetFocus();
 }
 
-void VSTEffect::RefreshParameters(int skip)
+void VSTEffect::RefreshParameters(int skip) const
 {
    if (!mNames)
    {

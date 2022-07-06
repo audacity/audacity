@@ -136,6 +136,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
+   VstPatchChunkInfo GetChunkInfo() const;
+
+   bool IsCompatible(const VstPatchChunkInfo&) const;
+
    VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
 
    //! This function will be rewritten when the effect is really stateless
@@ -246,7 +250,7 @@ class VSTEffect final
 
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
+   
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
@@ -333,7 +337,7 @@ private:
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool LoadParameters(const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
        const RegistryPath & group, const EffectSettings &settings) const;
 
@@ -357,7 +361,7 @@ private:
    void BuildPlain(EffectSettingsAccess &access);
    void BuildFancy();
    wxSizer *BuildProgramBar();
-   void RefreshParameters(int skip = -1);
+   void RefreshParameters(int skip = -1) const;
 
    // Utility methods
 
