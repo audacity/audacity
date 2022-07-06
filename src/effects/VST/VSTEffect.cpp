@@ -1293,10 +1293,15 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
    return progs;
 }
 
-bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
+bool VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+   bool loadOK = const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+
+   if (loadOK)
+      FetchSettings(GetSettings(settings));
+
+   return loadOK;
 }
 
 bool VSTEffect::DoLoadFactoryPreset(int id)
@@ -1354,6 +1359,8 @@ bool VSTEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
       settings.extra.SetDuration(mDuration->GetValue());
+
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
@@ -1452,7 +1459,7 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets(EffectSettings &)
+void VSTEffect::ImportPresets(EffectSettings& settings)
 {
    wxString path;
 
@@ -1513,6 +1520,8 @@ void VSTEffect::ImportPresets(EffectSettings &)
 
       return;
    }
+
+   FetchSettings(GetSettings(settings));
 
    return;
 }
@@ -1878,6 +1887,7 @@ bool VSTEffect::LoadParameters(
       if (len)
       {
          callSetChunk(true, len, buf.get(), &info);
+         FetchSettings(GetSettings(settings));
       }
 
       return true;
@@ -1896,7 +1906,12 @@ bool VSTEffect::LoadParameters(
       return false;
    }
 
-   return LoadSettings(eap, settings);
+   const bool loadOK = LoadSettings(eap, settings);
+
+   if (loadOK)
+     FetchSettings(GetSettings(settings));
+
+   return loadOK;
 }
 
 bool VSTEffect::SaveParameters(
@@ -1908,10 +1923,6 @@ bool VSTEffect::SaveParameters(
       mAEffect->version);
    SetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
       mAEffect->numParams);
-
-
-   CommandParameters eap2;
-   SaveSettings(settings, eap2);
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
