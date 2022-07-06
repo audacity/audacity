@@ -138,6 +138,20 @@ public:
       if (mAVIOContext != nullptr)
          mAVIOContext->direct = direct;
    }
+
+   int Read(uint8_t* buf, int size) override
+   {
+      if (mpFile == nullptr)
+         return AUDACITY_AVERROR(EINVAL);
+
+#if LIBAVFORMAT_VERSION_MAJOR >= 58
+      // At least starting from avformat 58 FFmpeg expects EOF to be returned here
+      // instead of 0. This is critical for some codecs
+      if (mpFile->Eof())
+         return AUDACITY_AVERROR_EOF;
+#endif
+      return static_cast<int>(mpFile->Read(buf, size));
+   }
 };
 
 std::unique_ptr<AVIOContextWrapper> CreateAVIOContextWrapper(const FFmpegFunctions& ffmpeg)
