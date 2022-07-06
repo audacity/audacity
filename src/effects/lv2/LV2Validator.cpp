@@ -2,7 +2,9 @@
 
   Audacity: A Digital Audio Editor
 
-  LV2Effect.cpp
+  @file LV2Validator.cpp
+
+  Paul Licameli split from LV2Effect.cpp
 
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2 or later.  See License.txt.
@@ -19,46 +21,31 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
-#include "LV2Effect.h"
+#include "LV2Validator.h"
+#include "effects/EffectBase.h"
 #include "LV2EffectMeter.h"
 #include "LV2Instance.h"
 #include "LV2Wrapper.h"
-#include "SampleCount.h"
 
-#include <cmath>
-#include <exception>
-#include <functional>
+#include "ShuttleGui.h"
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/dialog.h>
-#include <wx/log.h>
-#include <wx/msgqueue.h>
-
-#ifdef __WXMAC__
-#include <wx/evtloop.h>
-#endif
 
 #include <wx/sizer.h>
-#include <wx/slider.h>
-#include <wx/statbox.h>
+
 #include <wx/stattext.h>
-#include <wx/tokenzr.h>
-#include <wx/intl.h>
+#include <wx/textctrl.h>
+
 #include <wx/scrolwin.h>
 
-#include "ConfigInterface.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+
 #include "../../widgets/NumericTextCtrl.h"
 
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>
-#endif
-
-#if defined(__WXMSW__)
-#include <wx/msw/wrapwin.h>
 #endif
 
 LV2Validator::LV2Validator(EffectBase &effect,
@@ -80,12 +67,6 @@ LV2Validator::LV2Validator(EffectBase &effect,
       mParent->PushEventHandler(this);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2Effect
-//
-///////////////////////////////////////////////////////////////////////////////
-
 enum
 {
    ID_Duration = 10000,
@@ -106,281 +87,6 @@ BEGIN_EVENT_TABLE(LV2Validator, wxEvtHandler)
    EVT_IDLE(LV2Validator::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin &plug) : mPlug{ plug }
-{
-}
-
-LV2Effect::~LV2Effect()
-{
-}
-
-// ============================================================================
-// ComponentInterface Implementation
-// ============================================================================
-
-PluginPath LV2Effect::GetPath() const
-{
-   return LilvString(lilv_plugin_get_uri(&mPlug));
-}
-
-ComponentInterfaceSymbol LV2Effect::GetSymbol() const
-{
-   return LV2FeaturesList::GetPluginSymbol(mPlug);
-}
-
-VendorSymbol LV2Effect::GetVendor() const
-{
-   wxString vendor = LilvStringMove(lilv_plugin_get_author_name(&mPlug));
-
-   if (vendor.empty())
-   {
-      return XO("n/a");
-   }
-
-   return {vendor};
-}
-
-wxString LV2Effect::GetVersion() const
-{
-   return wxT("1.0");
-}
-
-TranslatableString LV2Effect::GetDescription() const
-{
-   return XO("n/a");
-}
-
-// ============================================================================
-// EffectDefinitionInterface Implementation
-// ============================================================================
-
-EffectType LV2Effect::GetType() const
-{
-   if (GetAudioInCount() == 0 && GetAudioOutCount() == 0)
-   {
-      return EffectTypeTool;
-   }
-
-   if (GetAudioInCount() == 0)
-   {
-      return EffectTypeGenerate;
-   }
-
-   if (GetAudioOutCount() == 0)
-   {
-      return EffectTypeAnalyze;
-   }
-
-   return EffectTypeProcess;
-}
-
-EffectFamilySymbol LV2Effect::GetFamily() const
-{
-   return LV2EFFECTS_FAMILY;
-}
-
-bool LV2Effect::IsInteractive() const
-{
-   return mPorts.mControlPorts.size() != 0;
-}
-
-bool LV2Effect::IsDefault() const
-{
-   return false;
-}
-
-auto LV2Effect::RealtimeSupport() const -> RealtimeSince
-{
-   // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-//   return GetType() == EffectTypeProcess
-//      ? RealtimeSince::Always
-//      : RealtimeSince::Never;
-}
-
-bool LV2Effect::SupportsAutomation() const
-{
-   return true;
-}
-
-bool LV2Effect::InitializePlugin()
-{
-   if (!mFeatures.mOk)
-      return false;
-
-   // Do a check only on temporary feature list objects
-   auto instanceFeatures = LV2InstanceFeaturesList{ mFeatures };
-   if (!instanceFeatures.mOk)
-      return false;
-   if (!LV2UIFeaturesList{
-      instanceFeatures, nullptr, lilv_plugin_get_uri(&mPlug)
-   }.mOk)
-      return false;
-
-   // Determine available extensions
-   mWantsOptionsInterface = false;
-   mWantsStateInterface = false;
-   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(&mPlug) }) {
-      LILV_FOREACH(nodes, i, extdata.get()) {
-         const auto node = lilv_nodes_get(extdata.get(), i);
-         const auto uri = lilv_node_as_string(node);
-         if (strcmp(uri, LV2_OPTIONS__interface) == 0)
-            mWantsOptionsInterface = true;
-         else if (strcmp(uri, LV2_STATE__interface) == 0)
-            mWantsStateInterface = true;
-      }
-   }
-
-   InitializeSettings(mPorts, mSettings);
-   return true;
-}
-
-void LV2Effect::InitializeSettings(
-   const LV2Ports &ports, LV2EffectSettings &settings)
-{
-   for (auto &controlPort : ports.mControlPorts) {
-      auto &value = settings.values.emplace_back();
-      value = controlPort->mDef;
-   }
-}
-
-std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
-{
-   return const_cast<LV2Effect*>(this)->DoMakeInstance();
-}
-
-std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
-{
-   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts, mSettings);
-}
-
-unsigned LV2Effect::GetAudioInCount() const
-{
-   return mPorts.mAudioIn;
-}
-
-unsigned LV2Effect::GetAudioOutCount() const
-{
-   return mPorts.mAudioOut;
-}
-
-int LV2Effect::GetMidiInCount() const
-{
-   return mPorts.mMidiIn;
-}
-
-int LV2Effect::GetMidiOutCount() const
-{
-   return mPorts.mMidiOut;
-}
-
-int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *pValidator, bool forceModal)
-{
-   if (pValidator)
-      // Remember the dialog with a weak pointer, but don't control its lifetime
-      static_cast<LV2Validator*>(pValidator)->mDialog = &dialog;
-   // Try to give the window a sensible default/minimum size
-   dialog.Layout();
-   dialog.Fit();
-   dialog.SetMinSize(dialog.GetSize());
-   if (mFeatures.mNoResize)
-      dialog.SetMaxSize(dialog.GetSize());
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
-      dialog.Show();
-      return 0;
-   }
-   return dialog.ShowModal();
-}
-
-bool LV2Effect::SaveSettings(
-   const EffectSettings &settings, CommandParameters & parms) const
-{
-   auto &values = GetSettings(settings).values;
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mIsInput)
-         if (!parms.Write(port->mName, values[index]))
-            return false;
-      ++index;
-   }
-   return true;
-}
-
-bool LV2Effect::LoadSettings(
-   const CommandParameters & parms, EffectSettings &settings) const
-{
-   // First pass validates values
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mIsInput) {
-         double d = 0.0;
-         if (!parms.Read(port->mName, &d))
-            return false;
-         // Use unscaled range here
-         if (d < port->mMin || d > port->mMax)
-            return false;
-      }
-   }
-
-   // Second pass actually sets the values
-   auto &values = GetSettings(settings).values;
-   size_t index = 0;
-   for (auto & port : mPorts.mControlPorts) {
-      if (port->mIsInput) {
-         double d = 0.0;
-         if (!parms.Read(port->mName, &d))
-            return false;
-         values[index] = d;
-      }
-      ++index;
-   }
-
-   return true;
-}
-
-// ============================================================================
-// EffectUIClientInterface Implementation
-// ============================================================================
-
-// May come here before destructive processing
-// Or maybe not (if you "Repeat Last Effect")
-std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
-{
-   auto &settings = access.Get();
-   auto parent = S.GetParent();
-   mParent = parent;
-
-   auto &myInstance = dynamic_cast<LV2Instance &>(instance);
-   myInstance.MakeMaster(settings, mProjectRate, true);
-   const auto pWrapper = myInstance.GetMaster();
-   if (!pWrapper) {
-      AudacityMessageBox( XO("Couldn't instantiate effect") );
-      return nullptr;
-   }
-
-   // Determine if the GUI editor is supposed to be used or not
-   bool useGUI = false;
-   LV2Preferences::GetUseGUI(*this, useGUI);
-
-   // Until I figure out where to put the "Duration" control in the
-   // graphical editor, force usage of plain editor.
-   if (GetType() == EffectTypeGenerate)
-      useGUI = false;
-
-   auto result = std::make_unique<LV2Validator>(*this, mPlug,
-      dynamic_cast<LV2Instance&>(instance),
-      access, mProjectRate, mFeatures, mPorts, parent, useGUI);
-
-   if (result->mUseGUI)
-      result->mUseGUI = result->BuildFancy(*pWrapper, settings);
-   if (!result->mUseGUI && !result->BuildPlain(access))
-      return nullptr;
-   result->UpdateUI();
-
-   return result;
-}
-
 bool LV2Validator::IsGraphicalUI()
 {
    return mUseGUI;
@@ -395,149 +101,10 @@ bool LV2Validator::ValidateUI()
    return true;
 }
 
-bool LV2Effect::CloseUI()
-{
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-   wxEventLoop::SetBusyWaiting(false);
-#endif
-#endif
-
-   mParent = nullptr;
-   return true;
-}
-
 LV2Validator::~LV2Validator()
 {
    if (mParent)
       mParent->RemoveEventHandler(this);
-}
-
-bool LV2Effect::LoadUserPreset(
-   const RegistryPath &name, EffectSettings &settings) const
-{
-   return LoadParameters(name, settings);
-}
-
-bool LV2Effect::SaveUserPreset(
-   const RegistryPath &name, const EffectSettings &settings) const
-{
-   return SaveParameters(name, settings);
-}
-
-RegistryPaths LV2Effect::GetFactoryPresets() const
-{
-   using namespace LV2Symbols;
-   if (mFactoryPresetsLoaded)
-      return mFactoryPresetNames;
-
-   if (LilvNodesPtr presets{ lilv_plugin_get_related(&mPlug, node_Preset) }) {
-      LILV_FOREACH(nodes, i, presets.get()) {
-         const auto preset = lilv_nodes_get(presets.get(), i);
-
-         mFactoryPresetUris.push_back(LilvString(preset));
-
-         lilv_world_load_resource(gWorld, preset);
-
-         if (LilvNodesPtr labels{ lilv_world_find_nodes(gWorld, preset,
-            node_Label, nullptr) }) {
-            const auto label = lilv_nodes_get_first(labels.get());
-            mFactoryPresetNames.push_back(LilvString(label));
-         }
-         else
-            mFactoryPresetNames.push_back(
-               LilvString(preset).AfterLast(wxT('#')));
-      }
-   }
-
-   mFactoryPresetsLoaded = true;
-
-   return mFactoryPresetNames;
-}
-
-bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
-{
-   using namespace LV2Symbols;
-   if (id < 0 || id >= (int) mFactoryPresetUris.size())
-      return false;
-
-   LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
-   if (!preset)
-      return false;
-
-   using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
-   if (LilvStatePtr state{
-      lilv_state_new_from_world(gWorld,
-         mFeatures.URIDMapFeature(), preset.get())
-   }){
-      auto &mySettings = GetSettings(settings);
-      mPorts.EmitPortValues(*state, mySettings);
-      // Save the state, for whatever might not be contained in port values
-      mySettings.mpState = move(state);
-      return true;
-   }
-   else
-      return false;
-}
-
-bool LV2Effect::CanExportPresets()
-{
-   return false;
-}
-
-void LV2Effect::ExportPresets(const EffectSettings &) const
-{
-}
-
-void LV2Effect::ImportPresets(EffectSettings &)
-{
-}
-
-bool LV2Effect::HasOptions()
-{
-   return true;
-}
-
-void LV2Effect::ShowOptions()
-{
-   LV2Preferences::Dialog{ mParent, *this }.ShowModal();
-}
-
-// ============================================================================
-// LV2Effect Implementation
-// ============================================================================
-
-bool LV2Effect::LoadParameters(
-   const RegistryPath &group, EffectSettings &settings) const
-{
-   wxString parms;
-   if (!GetConfig(*this,
-      PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
-      return false;
-   CommandParameters eap;
-   if (!eap.SetParameters(parms))
-      return false;
-   return LoadSettings(eap, settings);
-}
-
-bool LV2Effect::SaveParameters(
-   const RegistryPath &group, const EffectSettings &settings) const
-{
-   // PRL: This function just dumps the several control port values to the
-   // config files.  Should it be reimplemented with
-   // lilv_state_new_from_instance to capture -- I don't know what -- other
-   // important state?
-
-   CommandParameters eap;
-   if (!SaveSettings(settings, eap))
-      return false;
-
-   wxString parms;
-   if (!eap.GetParameters(parms))
-      return false;
-
-   return SetConfig(*this,
-      PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
 std::shared_ptr<SuilHost> LV2Validator::GetSuilHost()
@@ -575,6 +142,7 @@ bool LV2Validator::BuildFancy(
    // Determine if the plugin has a supported UI
    const LilvUI *ui = nullptr;
    const LilvNode *uiType = nullptr;
+   using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
    LilvUIsPtr uis{ lilv_plugin_get_uis(&mPlug) };
    if (uis) {
       if (LilvNodePtr containerType{ lilv_new_uri(gWorld, nativeType) }) {

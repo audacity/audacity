@@ -21,7 +21,7 @@
 #include <suil/suil.h>
 #include "lv2/data-access/data-access.h"
 
-class LV2InstanceFeaturesList;
+struct LV2InstanceFeaturesList;
 
 struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    //! Abstraction of host services that a plug-ins native UI needs
