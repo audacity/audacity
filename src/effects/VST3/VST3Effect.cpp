@@ -760,7 +760,8 @@ bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
    });
 }
 
-int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal)
+int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
+   EffectUIValidator *, bool forceModal)
 {
    if(!IsGraphicalUI())
    {

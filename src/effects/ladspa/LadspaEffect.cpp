@@ -1056,8 +1056,8 @@ bool LadspaEffect::Instance::RealtimeProcessEnd(EffectSettings &) noexcept
    return true;
 }
 
-int LadspaEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int LadspaEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    dialog.Layout();
    dialog.Fit();
@@ -1452,11 +1452,6 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
       std::make_unique<Validator>(*this, access, mProjectRate, GetType());
    result->PopulateUI(S);
    return result;
-}
-
-bool LadspaEffect::IsGraphicalUI()
-{
-   return false;
 }
 
 bool LadspaEffect::Validator::ValidateUI()

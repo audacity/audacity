@@ -300,14 +300,13 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-int AudioUnitEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       dialog.Show();
       return 0;
    }
-
    return dialog.ShowModal();
 }
 
@@ -438,11 +437,6 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
 {
    mParent = S.GetParent();
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
-}
-
-bool AudioUnitEffect::IsGraphicalUI()
-{
-   return mUIType != wxT("Plain");
 }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)

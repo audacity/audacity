@@ -329,9 +329,9 @@ int EffectUIHost::ShowModal()
 // EffectUIHost implementation
 // ============================================================================
 
-wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
+wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
 {
-   mIsGUI = mClient.IsGraphicalUI();
+   mIsGUI = graphicalUI;
    mIsBatch = mEffectUIHost.IsBatchProcessing();
 
    int margin = 0;
@@ -500,7 +500,8 @@ bool EffectUIHost::Initialize()
 
       S.StartPanel();
       {
-         const auto bar = BuildButtonBar( S.GetParent() );
+         const auto bar = BuildButtonBar(S.GetParent(),
+            mpValidator && mpValidator->IsGraphicalUI());
 
          long buttons;
          if ( mEffectUIHost.GetDefinition().ManualPage().empty() && mEffectUIHost.GetDefinition().HelpPage().empty()) {
@@ -1295,10 +1296,8 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-wxDialog *EffectUI::DialogFactory( wxWindow &parent,
-   EffectPlugin &host,
-   EffectUIClientInterface &client,
-   std::shared_ptr<EffectInstance> &pInstance,
+DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
+   EffectPlugin &host, EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1306,13 +1305,16 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    // non-modal, as for realtime effects
    auto project = FindProjectFromWindow(&parent);
    if ( !project )
-      return nullptr;
+      return {};
+   std::shared_ptr<EffectInstance> pInstance;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
       *project, host, client, pInstance, access } };
-   if (dlg->Initialize())
+   if (dlg->Initialize()) {
+      auto pValidator = dlg->GetValidator();
       // release() is safe because parent will own it
-      return dlg.release();
-   return nullptr;
+      return { dlg.release(), pInstance, pValidator };
+   }
+   return {};
 }
 
 #include "PluginManager.h"

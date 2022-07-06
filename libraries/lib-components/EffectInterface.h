@@ -537,6 +537,12 @@ public:
     */
    virtual bool UpdateUI();
 
+   /*!
+    Default implementation returns false
+    @return true if using a native plug-in UI, not widgets
+    */
+   virtual bool IsGraphicalUI();
+
 protected:
    // Convenience function template for binding event handler functions
    template<typename EventTag, typename Class, typename Event>
@@ -565,13 +571,15 @@ protected:
 class COMPONENTS_API DefaultEffectUIValidator
    : public EffectUIValidator
    // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
-   , wxEvtHandler
+   , protected wxEvtHandler
 {
 public:
    using EffectUIValidator::EffectUIValidator;
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
+   //! @return mEffect.IsGraphicalUI()
+   bool IsGraphicalUI() override;
 };
 
 /*************************************************************************************//**
@@ -591,10 +599,12 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal = false
-   ) = 0;
+   virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal = false) = 0;
 
+   /*!
+    @return true if using a native plug-in UI, not widgets
+    */
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`

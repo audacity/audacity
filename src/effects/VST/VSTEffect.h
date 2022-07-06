@@ -164,8 +164,8 @@ class VSTEffect final
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
 
    bool InitializePlugin();
 

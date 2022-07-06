@@ -88,14 +88,15 @@ class AUDACITY_DLL_API Effect /* not final */
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
 
-   int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
 
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
+   //! @return false
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
