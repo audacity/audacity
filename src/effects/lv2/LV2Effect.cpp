@@ -660,13 +660,14 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr)
    };
 
+   // The void* that the instance passes back to our write and index
+   // callback functions, which were given to suil_host_new:
+   UIHandler *pHandler = this;
+
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
    validator.mSuilInstance.reset(suil_instance_new(validator.mSuilHost.get(),
-      // The void* that the instance passes back to our write and index
-      // callback functions, which were given to suil_host_new:
-      this,
-      containerType,
+      pHandler, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath.get(), binaryPath.get(),
