@@ -1201,18 +1201,17 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
-{
-   for (int i = 0; i < mAEffect->numParams; i++)
-   {
-      wxString name = GetString(effGetParamName, i);
-      if (name.empty())
-      {
-         name.Printf(wxT("parm_%d"), i);
-      }
 
-      float value = callGetParameter(i);
+
+bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
+{
+   const VSTEffectSettings& vstSettings = GetSettings(settings);
+
+   for (const auto& item : vstSettings.mParamsMap)
+   {
+      const auto& name  = item.first;
+      const auto& value = item.second;
+
       if (!parms.Write(name, value))
       {
          return false;
@@ -1222,35 +1221,35 @@ bool VSTEffect::SaveSettings(
    return true;
 }
 
-bool VSTEffect::LoadSettings(
-   const CommandParameters & parms, EffectSettings &settings) const
+
+bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
-   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-   for (int i = 0; i < mAEffect->numParams; i++)
+   VSTEffectSettings& vstSettings = GetSettings(settings);
+   vstSettings.mParamsMap.clear();
+
+   long index{};
+   wxString key;
+   float value = 0.0f;
+   if (parms.GetFirstEntry(key, index))
    {
-      wxString name = GetString(effGetParamName, i);
-      if (name.empty())
+      do
       {
-         name.Printf(wxT("parm_%d"), i);
-      }
+         if (parms.Read(key, value))
+            vstSettings.mParamsMap[key] = value;
+         else
+            return false;
 
-      double d = 0.0;
-      if (!parms.Read(name, &d))
-      {
-         return false;
-      }
-
-      if (d >= -1.0 && d <= 1.0)
-      {
-         const_cast<VSTEffect*>(this)->callSetParameter(i, d);
-         for (const auto &slave : mSlaves)
-            slave->callSetParameter(i, d);
-      }
+      } while (parms.GetNextEntry(key, index));
    }
-   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+
+   vstSettings.mChunk     = std::nullopt;
+   vstSettings.mVersion   = VSTEffectWrapper::mVstVersion;
+   vstSettings.mUniqueID  = VSTEffectWrapper::mAEffect->uniqueID;
+   vstSettings.mNumParams = VSTEffectWrapper::mAEffect->numParams;
 
    return true;
 }
+
 
 bool VSTEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
@@ -1909,6 +1908,10 @@ bool VSTEffect::SaveParameters(
       mAEffect->version);
    SetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
       mAEffect->numParams);
+
+
+   CommandParameters eap2;
+   SaveSettings(settings, eap2);
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
