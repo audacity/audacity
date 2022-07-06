@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_LV2_EFFECT__
 #define __AUDACITY_LV2_EFFECT__
 
-
 #if USE_LV2
 
 class wxArrayString;
@@ -23,6 +22,8 @@ class wxArrayString;
 #include <wx/event.h> // to inherit
 #include <wx/timer.h>
 #include <wx/weakref.h>
+#include <wx/window.h>
+#include <wx/windowptr.h>
 
 #include "LV2UIFeaturesList.h"
 #include "LV2Ports.h"
@@ -127,8 +128,6 @@ public:
 private:
    void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
 
-   struct PlainUIControl;
-
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
@@ -147,18 +146,6 @@ private:
    bool BuildPlain(EffectSettingsAccess &access, LV2Validator &validator);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
-   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
-
-   void OnTrigger(wxCommandEvent & evt);
-   void OnToggle(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & evt);
-   void OnText(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-
-   void OnTimer(wxTimerEvent & evt);
-   void OnIdle(wxIdleEvent & evt);
-   void OnSize(wxSizeEvent & evt);
-   void OnSizeWindow(wxCommandEvent & evt);
 
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
@@ -192,17 +179,58 @@ private:
 
    double mLength{};
 
-   wxTimer mTimer;
-
-   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent{};
    // non-null for duration of a dialog
    LV2Validator *mpValidator{};
 
    bool mUseGUI{};
 
-   LV2_External_UI_Widget* mExternalWidget{};
-   bool mExternalUIClosed{ false };
+   SuilHostPtr mSuilHost;
+   wxSize mNativeWinInitialSize{ wxDefaultSize };
+
+   NumericTextCtrl *mDuration{};
+
+   // Mutable cache fields computed once on demand
+   mutable bool mFactoryPresetsLoaded{ false };
+   mutable RegistryPaths mFactoryPresetNames;
+   mutable wxArrayString mFactoryPresetUris;
+};
+
+class LV2Instance;
+
+class LV2Validator final : public DefaultEffectUIValidator {
+public:
+   LV2Validator(EffectBase &effect,
+      const LilvPlugin &plug, LV2Instance &instance,
+      EffectSettingsAccess &access, double sampleRate,
+      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
+      const LV2Ports &ports, wxWindow *parent);
+   ~LV2Validator() override;
+
+   // TODO static or non-member function
+   LV2EffectSettings &GetSettings(EffectSettings &settings) const;
+   // TODO static or non-member function
+   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
+
+   void OnIdle(wxIdleEvent & evt);
+
+   void OnTrigger(wxCommandEvent & evt);
+   void OnToggle(wxCommandEvent & evt);
+   void OnChoice(wxCommandEvent & evt);
+   void OnText(wxCommandEvent & evt);
+   void OnSlider(wxCommandEvent & evt);
+
+   void OnSize(wxSizeEvent & evt);
+
+   const LilvPlugin &mPlug;
+   const EffectType mType;
+   LV2Instance &mInstance;
+   const double mSampleRate;
+   const LV2Ports &mPorts;
+   std::optional<const LV2UIFeaturesList> mUIFeatures;
+   LV2PortUIStates mPortUIStates;
+
+   wxWindow *const mParent;
 
    // UI
    struct PlainUIControl {
@@ -218,45 +246,31 @@ private:
    };
    //! Array in correspondence with the control ports
    std::vector<PlainUIControl> mPlainUIControls;
+   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
-   SuilHostPtr mSuilHost;
    SuilInstancePtr mSuilInstance;
 
-   NativeWindow *mNativeWin{};
-   wxSize mNativeWinInitialSize{ wxDefaultSize };
+   //! Destroy before mSuilInstance
+   wxWindowPtr<NativeWindow> mNativeWin{};
    wxSize mNativeWinLastSize{ wxDefaultSize };
    bool mResizing{ false };
 #if defined(__WXGTK__)
    bool mResized{ false };
 #endif
 
+   wxWeakRef<wxDialog> mDialog;
+   bool mExternalUIClosed{ false };
+
+   //! This must be destroyed before mSuilInstance
+   struct Timer : wxTimer {
+      LV2_External_UI_Widget* mExternalWidget{};
+      void Notify() override;
+   } mTimer;
+
    const LV2UI_Idle_Interface *mUIIdleInterface{};
    const LV2UI_Show_Interface *mUIShowInterface{};
 
-   NumericTextCtrl *mDuration{};
-
-   // Mutable cache fields computed once on demand
-   mutable bool mFactoryPresetsLoaded{ false };
-   mutable RegistryPaths mFactoryPresetNames;
-   mutable wxArrayString mFactoryPresetUris;
-
    DECLARE_EVENT_TABLE()
-};
-
-class LV2Instance;
-
-class LV2Validator final : public DefaultEffectUIValidator {
-public:
-   LV2Validator(
-      EffectUIClientInterface &effect, LV2Instance &instance,
-      EffectSettingsAccess &access,
-      const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-      const LV2Ports &ports);
-   ~LV2Validator() override;
-
-   LV2Instance &mInstance;
-   std::optional<const LV2UIFeaturesList> mUIFeatures;
-   LV2PortUIStates mPortUIStates;
 };
 
 #endif

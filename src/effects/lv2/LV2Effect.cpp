@@ -9,8 +9,6 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_LV2)
 
 #if defined(__GNUC__)
@@ -63,18 +61,23 @@
 #include <wx/msw/wrapwin.h>
 #endif
 
-LV2Validator::LV2Validator(
-   EffectUIClientInterface &effect, LV2Instance &instance,
-   EffectSettingsAccess &access,
+LV2Validator::LV2Validator(EffectBase &effect,
+   const LilvPlugin &plug, LV2Instance &instance,
+   EffectSettingsAccess &access, double sampleRate,
    const LV2FeaturesList &features, LV2UIFeaturesList::UIHandler &handler,
-   const LV2Ports &ports
+   const LV2Ports &ports, wxWindow *parent
 )  : DefaultEffectUIValidator{ effect, access }
+   , mPlug{ plug }
+   , mType{ effect.GetType() }
    , mInstance{ instance }
+   , mSampleRate{ sampleRate }
+   , mPorts{ ports }
    , mPortUIStates{ instance.GetPortStates(), ports }
+   , mParent{ parent }
 {
+   if (mParent)
+      mParent->PushEventHandler(this);
 }
-
-LV2Validator::~LV2Validator() = default;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -90,18 +93,16 @@ enum
    ID_Sliders = 13000,
    ID_Choices = 14000,
    ID_Texts = 15000,
-   ID_TIMER = 20000,
 };
 
-BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_Triggers, ID_Triggers + 999, wxEVT_COMMAND_BUTTON_CLICKED, LV2Effect::OnTrigger)
-   EVT_COMMAND_RANGE(ID_Toggles, ID_Toggles + 999, wxEVT_COMMAND_CHECKBOX_CLICKED, LV2Effect::OnToggle)
-   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, LV2Effect::OnSlider)
-   EVT_COMMAND_RANGE(ID_Choices, ID_Choices + 999, wxEVT_COMMAND_CHOICE_SELECTED, LV2Effect::OnChoice)
-   EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LV2Effect::OnText)
+BEGIN_EVENT_TABLE(LV2Validator, wxEvtHandler)
+   EVT_COMMAND_RANGE(ID_Triggers, ID_Triggers + 999, wxEVT_COMMAND_BUTTON_CLICKED, LV2Validator::OnTrigger)
+   EVT_COMMAND_RANGE(ID_Toggles, ID_Toggles + 999, wxEVT_COMMAND_CHECKBOX_CLICKED, LV2Validator::OnToggle)
+   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, LV2Validator::OnSlider)
+   EVT_COMMAND_RANGE(ID_Choices, ID_Choices + 999, wxEVT_COMMAND_CHOICE_SELECTED, LV2Validator::OnChoice)
+   EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LV2Validator::OnText)
 
-   EVT_TIMER(ID_TIMER, LV2Effect::OnTimer)
-   EVT_IDLE(LV2Effect::OnIdle)
+   EVT_IDLE(LV2Validator::OnIdle)
 END_EVENT_TABLE()
 
 LV2Effect::LV2Effect(const LilvPlugin &plug) : mPlug{ plug }
@@ -274,21 +275,22 @@ int LV2Effect::GetMidiOutCount() const
 }
 
 int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal)
+   EffectUIValidator *pValidator, bool forceModal)
 {
-   // Remember the dialog with a weak pointer, but don't control its lifetime
-   mDialog = &dialog;
+   if (pValidator)
+      // Remember the dialog with a weak pointer, but don't control its lifetime
+      static_cast<LV2Validator*>(pValidator)->mDialog = &dialog;
    // Try to give the window a sensible default/minimum size
-   mDialog->Layout();
-   mDialog->Fit();
-   mDialog->SetMinSize(mDialog->GetSize());
+   dialog.Layout();
+   dialog.Fit();
+   dialog.SetMinSize(dialog.GetSize());
    if (mFeatures.mNoResize)
-      mDialog->SetMaxSize(mDialog->GetSize());
+      dialog.SetMaxSize(dialog.GetSize());
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
-      mDialog->Show();
+      dialog.Show();
       return 0;
    }
-   return mDialog->ShowModal();
+   return dialog.ShowModal();
 }
 
 bool LV2Effect::SaveSettings(
@@ -349,10 +351,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    auto parent = S.GetParent();
    mParent = parent;
 
-   mParent->PushEventHandler(this);
-
    mSuilHost.reset();
-   mSuilInstance.reset();
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    myInstance.MakeMaster(settings, mProjectRate, true);
@@ -371,9 +370,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       mUseGUI = false;
 
    UIHandler &handler = *this;
-   auto result = std::make_unique<LV2Validator>(*this,
+   auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mFeatures, handler, mPorts);
+      access, mProjectRate, mFeatures, handler, mPorts, parent);
 
    if (mUseGUI)
       mUseGUI = BuildFancy(*result, *pWrapper, settings);
@@ -405,23 +404,16 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mParent->RemoveEventHandler(this);
-   if (mSuilInstance) {
-      if (mNativeWin) {
-         mNativeWin->Destroy();
-         mNativeWin = nullptr;
-      }
-      mUIIdleInterface = nullptr;
-      mUIShowInterface = nullptr;
-      mExternalWidget = nullptr;
-      mSuilInstance.reset();
-   }
    mSuilHost.reset();
    mParent = nullptr;
-   mDialog = nullptr;
-   mPlainUIControls.clear();
    mpValidator = nullptr;
    return true;
+}
+
+LV2Validator::~LV2Validator()
+{
+   if (mParent)
+      mParent->RemoveEventHandler(this);
 }
 
 bool LV2Effect::LoadUserPreset(
@@ -627,7 +619,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
-   mNativeWinLastSize = wxDefaultSize;
+   validator.mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
    mSuilHost.reset(suil_host_new(LV2UIFeaturesList::suil_port_write,
@@ -656,7 +648,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Reassign the sample rate, which is pointed to by options, which are
    // pointed to by features, before we tell the library the features
-   mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
+   validator.mSuilInstance.reset(suil_instance_new(mSuilHost.get(),
       // The void* that the instance passes back to our write and index
       // callback functions, which were given to suil_host_new:
       this,
@@ -667,21 +659,20 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       features.GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
-   if (!mSuilInstance) {
+   if (!validator.mSuilInstance) {
       mSuilHost.reset();
       return false;
    }
 
    if (uiType == node_ExternalUI) {
       mParent->SetMinSize(wxDefaultSize);
-      mExternalWidget = static_cast<LV2_External_UI_Widget *>(
-         suil_instance_get_widget(mSuilInstance.get()));
-      mTimer.SetOwner(this, ID_TIMER);
-      mTimer.Start(20);
-      LV2_EXTERNAL_UI_SHOW(mExternalWidget);
+      validator.mTimer.mExternalWidget = static_cast<LV2_External_UI_Widget *>(
+         suil_instance_get_widget(validator.mSuilInstance.get()));
+      validator.mTimer.Start(20);
+      LV2_EXTERNAL_UI_SHOW(validator.mTimer.mExternalWidget);
    } else {
       const auto widget = static_cast<WXWidget>(
-         suil_instance_get_widget(mSuilInstance.get()));
+         suil_instance_get_widget(validator.mSuilInstance.get()));
 
 #if defined(__WXGTK__)
       // Needed by some plugins (e.g., Invada) to ensure the display is fully
@@ -692,25 +683,25 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       g_signal_connect(widget, "size-request", G_CALLBACK(LV2Effect::size_request), this);
 #endif
 
-      Destroy_ptr< NativeWindow > uNativeWin{ safenew NativeWindow() };
-      if ( !uNativeWin->Create(mParent, widget) )
+      wxWindowPtr< NativeWindow > pNativeWin{ safenew NativeWindow() };
+      if (!pNativeWin->Create(mParent, widget))
          return false;
-      mNativeWin = uNativeWin.release();
-      mNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
+      validator.mNativeWin = pNativeWin;
+      pNativeWin->Bind(wxEVT_SIZE, &LV2Validator::OnSize, &validator);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
       // the native window was created, so set the size now.
       if (mNativeWinInitialSize != wxDefaultSize)
-         mNativeWin->SetMinSize(mNativeWinInitialSize);
+         pNativeWin->SetMinSize(mNativeWinInitialSize);
 
       wxSizerItem *si = NULL;
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       if (features.mNoResize) {
-         si = hs->Add(mNativeWin, 0, wxCENTER);
+         si = hs->Add(pNativeWin.get(), 0, wxCENTER);
          vs->Add(hs.release(), 1, wxCENTER);
       } else {
-         si = hs->Add(mNativeWin, 1, wxEXPAND);
+         si = hs->Add(pNativeWin.get(), 1, wxEXPAND);
          vs->Add(hs.release(), 1, wxEXPAND);
       }
       if (!si)
@@ -718,15 +709,15 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       mParent->SetSizerAndFit(vs.release());
    }
 
-   mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
-      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__idleInterface));
+   validator.mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
+      suil_instance_extension_data(validator.mSuilInstance.get(), LV2_UI__idleInterface));
 
-   mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
-      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
+   validator.mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
+      suil_instance_extension_data(validator.mSuilInstance.get(), LV2_UI__showInterface));
 
-   if (mUIShowInterface) {
+//   if (mUIShowInterface) {
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
-   }
+//   }
 
    TransferDataToWindow(settings);
 
@@ -745,7 +736,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
    auto &portUIStates = validator.mPortUIStates;
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
-   mPlainUIControls.resize(mPorts.mControlPorts.size());
+   validator.mPlainUIControls.resize(mPorts.mControlPorts.size());
 
    int numCols = 5;
    wxSizer *innerSizer;
@@ -793,7 +784,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access,
          for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
             auto &state = portUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
-            auto &ctrl = mPlainUIControls[p];
+            auto &ctrl = validator.mPlainUIControls[p];
             const auto &value = values[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
@@ -1016,11 +1007,11 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 
    if (mUseGUI) {
       // fancy UI
-      if (mSuilInstance) {
+      if (mpValidator->mSuilInstance) {
          size_t index = 0;
          for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
-               suil_instance_port_event(mSuilInstance.get(),
+               suil_instance_port_event(mpValidator->mSuilInstance.get(),
                   port->mIndex, sizeof(float),
                   /* Means this event sends a float: */ 0,
                   &values[index]);
@@ -1037,7 +1028,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
       for (auto & param : params) {
          auto &state = portUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
-         auto &ctrl = mPlainUIControls[param];
+         auto &ctrl = mpValidator->mPlainUIControls[param];
          auto &value = values[param];
          if (port->mTrigger)
             continue;
@@ -1047,7 +1038,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
             ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
             state.mTmp = value * (port->mSampleRate ? mProjectRate : 1.0f);
-            SetSlider(state, ctrl);
+            mpValidator->SetSlider(state, ctrl);
          }
       }
    }
@@ -1056,7 +1047,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    return true;
 }
 
-void LV2Effect::SetSlider(
+void LV2Validator::SetSlider(
    const LV2ControlPortState &state, const PlainUIControl &ctrl)
 {
    float lo = state.mLo;
@@ -1070,48 +1061,51 @@ void LV2Effect::SetSlider(
    ctrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
-void LV2Effect::OnTrigger(wxCommandEvent &evt)
+void LV2Validator::OnTrigger(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Triggers;
    auto & port = mPorts.mControlPorts[idx];
-   mSettings.values[idx] = port->mDef;
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] = port->mDef;
+   });
 }
 
-void LV2Effect::OnToggle(wxCommandEvent &evt)
+void LV2Validator::OnToggle(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Toggles;
-   auto & port = mPorts.mControlPorts[idx];
-   mSettings.values[idx] = evt.GetInt() ? 1.0 : 0.0;
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] = evt.GetInt() ? 1.0 : 0.0;
+   });
 }
 
-void LV2Effect::OnChoice(wxCommandEvent &evt)
+void LV2Validator::OnChoice(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Choices;
    auto & port = mPorts.mControlPorts[idx];
-   mSettings.values[idx] = port->mScaleValues[evt.GetInt()];
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] = port->mScaleValues[evt.GetInt()];
+   });
 }
 
-void LV2Effect::OnText(wxCommandEvent &evt)
+void LV2Validator::OnText(wxCommandEvent &evt)
 {
-   assert(mpValidator); // exists while a dialog is open
-   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Texts;
-   auto &state = portUIStates.mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
-      mSettings.values[idx] =
-         port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
+      mAccess.ModifySettings([&](EffectSettings &settings) {
+         GetSettings(settings).values[idx] =
+            port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      });
       SetSlider(state, ctrl);
    }
 }
 
-void LV2Effect::OnSlider(wxCommandEvent &evt)
+void LV2Validator::OnSlider(wxCommandEvent &evt)
 {
-   assert(mpValidator); // exists while a dialog is open
-   auto &portUIStates = mpValidator->mPortUIStates;
    size_t idx = evt.GetId() - ID_Sliders;
-   auto &state = portUIStates.mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    float lo = state.mLo;
    float hi = state.mHi;
@@ -1122,22 +1116,20 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    state.mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
-   mSettings.values[idx] =
-      port->mSampleRate ? state.mTmp / mProjectRate : state.mTmp;
+   mAccess.ModifySettings([&](EffectSettings &settings) {
+      GetSettings(settings).values[idx] =
+         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+   });
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
-void LV2Effect::OnTimer(wxTimerEvent &evt)
+void LV2Validator::Timer::Notify()
 {
-   evt.Skip();
-
    if (mExternalWidget)
-   {
       LV2_EXTERNAL_UI_RUN(mExternalWidget);
-   }
 }
 
-void LV2Effect::OnIdle(wxIdleEvent &evt)
+void LV2Validator::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
    if (!mSuilInstance)
@@ -1145,7 +1137,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mExternalUIClosed) {
       mExternalUIClosed = false;
-      mDialog->Close();
+      if (mDialog)
+         mDialog->Close();
       return;
    }
 
@@ -1154,14 +1147,13 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       if (mUIIdleInterface->idle(handle)) {
          if (mUIShowInterface)
             mUIShowInterface->hide(handle);
-         mDialog->Close();
+         if (mDialog)
+            mDialog->Close();
          return;
       }
    }
 
-   if (!mpValidator)
-      return;
-   auto &portUIStates = mpValidator->mPortUIStates;
+   auto &portUIStates = mPortUIStates;
 
    if (auto &atomState = portUIStates.mControlOut) {
       atomState->SendToDialog([&](const LV2_Atom *atom, uint32_t size){
@@ -1177,7 +1169,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    // In case of output control port values though, it is needed for metering.
    size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
-      const auto &value = mSettings.values[index];
+      const auto &value = GetSettings(mAccess.Get()).values[index];
       // Let UI know that a port's value has changed
       if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
@@ -1190,7 +1182,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    }
 }
 
-void LV2Effect::OnSize(wxSizeEvent & evt)
+void LV2Validator::OnSize(wxSizeEvent & evt)
 {
    evt.Skip();
 
@@ -1221,7 +1213,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       // In this case, mResized has been set by the "size_request()" function
       // to indicate that this is a plugin generated resize request.
       if (mResized)
-        mDialog->SetMinSize(wxDefaultSize);
+         mDialog->SetMinSize(wxDefaultSize);
 
       // Resize dialog
       mDialog->Fit();
@@ -1230,7 +1222,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       // has is desired size.
       if (mResized) {
          mDialog->SetMinSize(mDialog->GetSize());
-         if (mFeatures.mNoResize)
+         if (mUIFeatures && mUIFeatures->mNoResize)
             mDialog->SetMaxSize(mDialog->GetSize());
       }
 
@@ -1252,11 +1244,14 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 
 int LV2Effect::ui_resize(int width, int height)
 {
+   if (!mpValidator)
+      return 0;
+   
    // Queue a wxSizeEvent to resize the plugins UI
-   if (mNativeWin) {
+   if (mpValidator->mNativeWin) {
       wxSizeEvent sw{ wxSize{ width, height } };
-      sw.SetEventObject(mNativeWin);
-      mNativeWin->GetEventHandler()->AddPendingEvent(sw);
+      sw.SetEventObject(mpValidator->mNativeWin.get());
+      mpValidator->mNativeWin->GetEventHandler()->AddPendingEvent(sw);
    }
    else
       // The window hasn't been created yet, so record the desired size
@@ -1266,7 +1261,8 @@ int LV2Effect::ui_resize(int width, int height)
 
 void LV2Effect::ui_closed()
 {
-   mExternalUIClosed = true;
+   if (mpValidator)
+      mpValidator->mExternalUIClosed = true;
 }
 
 // Foreign UI code wants to send a value or event to me, the host
@@ -1313,27 +1309,38 @@ void LV2Effect::size_request(GtkWidget *widget, GtkRequisition *requisition, LV2
 
 void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
 {
+   if (!mpValidator)
+      return;
+   
    // Don't do anything if the OnSize() method is active
-   if (!mResizing)
+   if (!mpValidator->mResizing)
    {
       // If the OnSize() routine has processed an event, mResized will be true,
       // so just set the widgets size.
-      if (mResized)
+      if (mpValidator->mResized)
       {
-         gtk_widget_set_size_request(widget, mNativeWinLastSize.x, mNativeWinLastSize.y);
-         mResized = false;
+         gtk_widget_set_size_request(widget, mpValidator->mNativeWinLastSize.x, mpValidator->mNativeWinLastSize.y);
+         mpValidator->mResized = false;
       }
       // Otherwise, the plugin has resized the widget and we need to let WX know
       // about it.
-      else if (mNativeWin)
+      else if (mpValidator->mNativeWin)
       {
-         mResized = true;
+         mpValidator->mResized = true;
          wxSizeEvent se(wxSize(requisition->width, requisition->height));
-         se.SetEventObject(mNativeWin);
-         mNativeWin->GetEventHandler()->AddPendingEvent(se);
+         se.SetEventObject(mpValidator->mNativeWin.get());
+         mpValidator->mNativeWin->GetEventHandler()->AddPendingEvent(se);
       }
    }
 }
 #endif
 
+LV2EffectSettings &LV2Validator::GetSettings(EffectSettings &settings) const {
+   return mInstance.GetSettings(settings);
+}
+
+const LV2EffectSettings &
+LV2Validator::GetSettings(const EffectSettings &settings) const {
+   return mInstance.GetSettings(settings);
+}
 #endif

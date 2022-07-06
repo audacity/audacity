@@ -66,16 +66,16 @@ public:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-private:
-   // TODO static member function
+   // TODO static or non-member function
    LV2EffectSettings &GetSettings(EffectSettings &) const {
       return const_cast<LV2Instance*>(this)->mSettings;
    }
-   // TODO static member function
+   // TODO static or non-member function
    const LV2EffectSettings &GetSettings(const EffectSettings &) const {
       return mSettings;
    }
 
+private:
    const LV2FeaturesList &mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
