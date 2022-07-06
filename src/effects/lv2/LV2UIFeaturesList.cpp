@@ -16,10 +16,10 @@
 #include "lv2/instance-access/instance-access.h"
 
 LV2UIFeaturesList::LV2UIFeaturesList(
-   const LV2InstanceFeaturesList &baseFeatures, UIHandler &handler,
+   const LV2InstanceFeaturesList &baseFeatures, UIHandler *pHandler,
    const LilvNode *node, LilvInstance *pInstance, wxWindow *pParent
 )  : ExtendedLV2FeaturesList{ baseFeatures }
-   , mHandler{ handler }
+   , mpHandler{ pHandler }
    , mOk{ InitializeFeatures(node, pInstance, pParent) }
 {
 }

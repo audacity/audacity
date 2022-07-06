@@ -213,7 +213,7 @@ bool LV2Effect::InitializePlugin()
    if (!instanceFeatures.mOk)
       return false;
    if (!LV2UIFeaturesList{
-      instanceFeatures, *this, lilv_plugin_get_uri(&mPlug)
+      instanceFeatures, nullptr, lilv_plugin_get_uri(&mPlug)
    }.mOk)
       return false;
 
@@ -617,7 +617,7 @@ bool LV2Validator::BuildFancy(
       static_cast<LV2Effect &>(mEffect);
    auto &instance = wrapper.GetInstance();
    auto &features = mUIFeatures.emplace(
-      wrapper.GetFeatures(), handler, uinode, &instance,
+      wrapper.GetFeatures(), &handler, uinode, &instance,
       (uiType == node_ExternalUI) ? nullptr : mParent);
    if (!features.mOk)
       return false;
