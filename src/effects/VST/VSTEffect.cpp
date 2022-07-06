@@ -1393,7 +1393,7 @@ bool VSTEffect::CanExportPresets()
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets(const EffectSettings &) const
+void VSTEffect::ExportPresets(const EffectSettings& settings) const
 {
    wxString path;
 
@@ -1419,6 +1419,9 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
    {
       return;
    }
+
+   if ( ! StoreSettings(GetSettings(settings)) )
+      return;
 
    wxFileName fn(path);
    wxString ext = fn.GetExt();
@@ -1926,6 +1929,9 @@ bool VSTEffect::SaveParameters(
    const RegistryPath & group, const EffectSettings &settings) const
 {
    const auto& vstSettings = GetSettings(settings);
+
+   if ( ! StoreSettings(vstSettings) )
+      return false;
 
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"), vstSettings.mUniqueID );
    SetConfig(*this, PluginSettings::Private, group, wxT("Version"),  vstSettings.mVersion  );
