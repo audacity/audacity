@@ -148,7 +148,6 @@ private:
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
    void OnIdle(wxIdleEvent & evt);
-   void OnSize(wxSizeEvent & evt);
 
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
@@ -193,13 +192,7 @@ private:
    SuilHostPtr mSuilHost;
    SuilInstancePtr mSuilInstance;
 
-   wxWindowPtr<NativeWindow> mNativeWin{};
    wxSize mNativeWinInitialSize{ wxDefaultSize };
-   wxSize mNativeWinLastSize{ wxDefaultSize };
-   bool mResizing{ false };
-#if defined(__WXGTK__)
-   bool mResized{ false };
-#endif
 
    const LV2UI_Idle_Interface *mUIIdleInterface{};
    const LV2UI_Show_Interface *mUIShowInterface{};
@@ -236,6 +229,8 @@ public:
    void OnText(wxCommandEvent & evt);
    void OnSlider(wxCommandEvent & evt);
 
+   void OnSize(wxSizeEvent & evt);
+
    const LilvPlugin &mPlug;
    const EffectType mType;
    LV2Instance &mInstance;
@@ -261,6 +256,13 @@ public:
    //! Array in correspondence with the control ports
    std::vector<PlainUIControl> mPlainUIControls;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
+
+   wxWindowPtr<NativeWindow> mNativeWin{};
+   wxSize mNativeWinLastSize{ wxDefaultSize };
+   bool mResizing{ false };
+#if defined(__WXGTK__)
+   bool mResized{ false };
+#endif
 
    wxWeakRef<wxDialog> mDialog;
 

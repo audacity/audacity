@@ -409,7 +409,6 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mNativeWin.reset();
    mUIIdleInterface = nullptr;
    mUIShowInterface = nullptr;
    mSuilInstance.reset();
@@ -630,7 +629,7 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
-   mNativeWinLastSize = wxDefaultSize;
+   validator.mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
    mSuilHost.reset(suil_host_new(LV2UIFeaturesList::suil_port_write,
@@ -697,8 +696,8 @@ bool LV2Effect::BuildFancy(LV2Validator &validator,
       wxWindowPtr< NativeWindow > pNativeWin{ safenew NativeWindow() };
       if (!pNativeWin->Create(mParent, widget))
          return false;
-      mNativeWin = pNativeWin;
-      pNativeWin->Bind(wxEVT_SIZE, &LV2Effect::OnSize, this);
+      validator.mNativeWin = pNativeWin;
+      pNativeWin->Bind(wxEVT_SIZE, &LV2Validator::OnSize, &validator);
 
       // The plugin called the LV2UI_Resize::ui_resize function to set the size before
       // the native window was created, so set the size now.
@@ -1195,11 +1194,9 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    }
 }
 
-void LV2Effect::OnSize(wxSizeEvent & evt)
+void LV2Validator::OnSize(wxSizeEvent & evt)
 {
    evt.Skip();
-   if (!mpValidator)
-      return;
 
    // Don't do anything here if we're recursing
    if (mResizing)
@@ -1210,7 +1207,7 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 
    // Can only resize AFTER the dialog has been completely created and
    // there's no need to resize if we're already at the desired size.
-   if (mpValidator->mDialog && evt.GetSize() != mNativeWinLastSize) {
+   if (mDialog && evt.GetSize() != mNativeWinLastSize) {
       // Save the desired size and set the native window to match
       mNativeWinLastSize = evt.GetSize();
       mNativeWin->SetMinSize(mNativeWinLastSize);
@@ -1228,24 +1225,24 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
       // In this case, mResized has been set by the "size_request()" function
       // to indicate that this is a plugin generated resize request.
       if (mResized)
-         mpValidator->mDialog->SetMinSize(wxDefaultSize);
+         mDialog->SetMinSize(wxDefaultSize);
 
       // Resize dialog
-      mpValidator->mDialog->Fit();
+      mDialog->Fit();
 
       // Reestablish the minimum (and maximum) now that the dialog
       // has is desired size.
       if (mResized) {
-         mpValidator->mDialog->SetMinSize(mpValidator->mDialog->GetSize());
-         if (mFeatures.mNoResize)
-            mpValidator->mDialog->SetMaxSize(mpValidator->mDialog->GetSize());
+         mDialog->SetMinSize(mDialog->GetSize());
+         if (mUIFeatures && mUIFeatures->mNoResize)
+            mDialog->SetMaxSize(mDialog->GetSize());
       }
 
       // Tell size_request() that the native window was just resized.
       mResized = true;
 #else
       // Resize the dialog to fit its content.
-      mpValidator->mDialog->Fit();
+      mDialog->Fit();
 #endif
    }
 
@@ -1259,11 +1256,14 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 
 int LV2Effect::ui_resize(int width, int height)
 {
+   if (!mpValidator)
+      return 0;
+   
    // Queue a wxSizeEvent to resize the plugins UI
-   if (mNativeWin) {
+   if (mpValidator->mNativeWin) {
       wxSizeEvent sw{ wxSize{ width, height } };
-      sw.SetEventObject(mNativeWin.get());
-      mNativeWin->GetEventHandler()->AddPendingEvent(sw);
+      sw.SetEventObject(mpValidator->mNativeWin.get());
+      mpValidator->mNativeWin->GetEventHandler()->AddPendingEvent(sw);
    }
    else
       // The window hasn't been created yet, so record the desired size
@@ -1320,24 +1320,27 @@ void LV2Effect::size_request(GtkWidget *widget, GtkRequisition *requisition, LV2
 
 void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
 {
+   if (!mpValidator)
+      return;
+   
    // Don't do anything if the OnSize() method is active
-   if (!mResizing)
+   if (!mpValidator->mResizing)
    {
       // If the OnSize() routine has processed an event, mResized will be true,
       // so just set the widgets size.
-      if (mResized)
+      if (mpValidator->mResized)
       {
-         gtk_widget_set_size_request(widget, mNativeWinLastSize.x, mNativeWinLastSize.y);
-         mResized = false;
+         gtk_widget_set_size_request(widget, mpValidator->mNativeWinLastSize.x, mpValidator->mNativeWinLastSize.y);
+         mpValidator->mResized = false;
       }
       // Otherwise, the plugin has resized the widget and we need to let WX know
       // about it.
-      else if (mNativeWin)
+      else if (mpValidator->mNativeWin)
       {
-         mResized = true;
+         mpValidator->mResized = true;
          wxSizeEvent se(wxSize(requisition->width, requisition->height));
-         se.SetEventObject(mNativeWin.get());
-         mNativeWin->GetEventHandler()->AddPendingEvent(se);
+         se.SetEventObject(mpValidator->mNativeWin.get());
+         mpValidator->mNativeWin->GetEventHandler()->AddPendingEvent(se);
       }
    }
 }
