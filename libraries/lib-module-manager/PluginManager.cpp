@@ -1390,16 +1390,7 @@ bool PluginManager::GetConfigValue(
       using Type = typename decltype(var)::type;
       const auto pDefval =
          std::get_if<std::reference_wrapper<const Type>>(&defval);
-      if constexpr( std::is_same_v<Type, float> ) {
-         double temp;
-         if( GetSettings()->Read(key, &temp, *pDefval) ) {
-            *pVar = static_cast<float>(temp);
-            return true;
-         }
-         return false;
-      }
-      else
-         return GetSettings()->Read(key, pVar, *pDefval);
+      return GetSettings()->Read(key, pVar, *pDefval);
    };
    return Visit(visitor, var);
 }
