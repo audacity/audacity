@@ -83,7 +83,6 @@ public:
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
@@ -99,7 +98,9 @@ public:
    // LV2Effect implementation
 
 private:
-   void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
+   EffectSettings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
@@ -111,18 +112,6 @@ private:
    const LV2FeaturesList mFeatures{ mPlug };
 
    const LV2Ports mPorts{ mPlug };
-   LV2EffectSettings mSettings;
-
-   //! This ignores its argument while we transition to statelessness
-   //! but will later be rewritten as a static member function
-   LV2EffectSettings &GetSettings(EffectSettings &) const {
-      return const_cast<LV2EffectSettings &>(mSettings);
-   }
-   //! This ignores its argument while we transition to statelessness
-   //! but will later be rewritten as a static member function
-   const LV2EffectSettings &GetSettings(const EffectSettings &) const {
-      return mSettings;
-   }
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };

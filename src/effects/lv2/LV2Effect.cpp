@@ -176,27 +176,45 @@ bool LV2Effect::InitializePlugin()
       }
    }
 
-   InitializeSettings(mPorts, mSettings);
    return true;
 }
 
-void LV2Effect::InitializeSettings(
-   const LV2Ports &ports, LV2EffectSettings &settings)
+EffectSettings LV2Effect::MakeSettings() const
 {
-   for (auto &controlPort : ports.mControlPorts) {
+   auto result = EffectSettings::Make<LV2EffectSettings>();
+   auto &settings = GetSettings(result);
+   settings.values.reserve(mPorts.mControlPorts.size());
+   for (auto &controlPort : mPorts.mControlPorts) {
       auto &value = settings.values.emplace_back();
       value = controlPort->mDef;
    }
+   return result;
+}
+
+bool LV2Effect::CopySettingsContents(
+   const EffectSettings &src, EffectSettings &dst) const
+{
+   auto &srcControls = GetSettings(src).values;
+   auto &dstControls = GetSettings(dst).values;
+
+   // Do not use the copy constructor of std::vector.  Do an in-place rewrite
+   // of the destination vector, which will not allocate memory if dstControls
+   // began with sufficient capacity.
+   // And that will be try if dstControls originated with MakeSettings() or a
+   // copy of it, because the set of control ports does not vary after
+   // initialization of the plug-in.
+   assert(srcControls.size() == dstControls.size());
+   dstControls.resize(0);
+   copy(srcControls.begin(), srcControls.end(), back_inserter(dstControls));
+
+   // Ignore mpState
+
+   return true;
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 {
-   return const_cast<LV2Effect*>(this)->DoMakeInstance();
-}
-
-std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
-{
-   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts, mSettings);
+   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts);
 }
 
 unsigned LV2Effect::GetAudioInCount() const

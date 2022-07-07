@@ -25,12 +25,11 @@
 #include "AudacityException.h"
 
 LV2Instance::LV2Instance(
-   PerTrackEffect &effect, const LV2FeaturesList &features,
-   const LV2Ports &ports, LV2EffectSettings &settings
+   const PerTrackEffect &effect, const LV2FeaturesList &features,
+   const LV2Ports &ports
 )  : PerTrackEffect::Instance{ effect }
    , mFeatures{ features }
    , mPorts{ ports }
-   , mSettings{ settings }
 {
    LV2Preferences::GetUseLatency(effect, mUseLatency);
 
