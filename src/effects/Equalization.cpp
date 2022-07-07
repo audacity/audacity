@@ -1148,6 +1148,8 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
    if (!mDrawMode)
       UpdateGraphic();
 
+   UpdateRuler();
+
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
 
