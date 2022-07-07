@@ -27,9 +27,8 @@ class LV2Wrapper;
 class LV2Instance final : public PerTrackEffect::Instance
 {
 public:
-   LV2Instance(PerTrackEffect &effect,
-      const LV2FeaturesList &features, const LV2Ports &ports,
-      LV2EffectSettings &settings);
+   LV2Instance(const PerTrackEffect &effect,
+      const LV2FeaturesList &features, const LV2Ports &ports);
    ~LV2Instance() override;
 
    const LV2PortStates &GetPortStates() const { return mPortStates; }
@@ -66,20 +65,10 @@ public:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   // TODO static or non-member function
-   LV2EffectSettings &GetSettings(EffectSettings &) const {
-      return const_cast<LV2Instance*>(this)->mSettings;
-   }
-   // TODO static or non-member function
-   const LV2EffectSettings &GetSettings(const EffectSettings &) const {
-      return mSettings;
-   }
-
 private:
    const LV2FeaturesList &mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
-   LV2EffectSettings &mSettings; // TODO remove
 
    //! Holds lv2 library state for UI or for destructive processing
    std::unique_ptr<LV2Wrapper> mMaster;

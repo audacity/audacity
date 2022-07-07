@@ -22,6 +22,7 @@
 #include <unordered_map>
 
 #include "LV2Utils.h"
+#include "EffectInterface.h"
 #include "MemoryX.h"
 #include "TranslatableString.h"
 #include <wx/arrstr.h>
@@ -206,6 +207,20 @@ struct LV2EffectSettings final {
    //! Result of last load of a preset; may be null
    mutable std::shared_ptr<const LilvState> mpState;
 };
+
+//! Assume settings originated from LV2Effecct::MakeSettings()
+//! and copies thereof
+inline LV2EffectSettings &GetSettings(EffectSettings &settings)
+{
+   auto pSettings = settings.cast<LV2EffectSettings>();
+   assert(pSettings);
+   return *pSettings;
+}
+
+inline const LV2EffectSettings &GetSettings(const EffectSettings &settings)
+{
+   return GetSettings(const_cast<EffectSettings &>(settings));
+}
 
 //! Other UI related state of an instance of an LV2 Control port
 struct LV2ControlPortState final {

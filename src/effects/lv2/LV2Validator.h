@@ -63,11 +63,6 @@ public:
    bool UpdateUI() override;
    bool IsGraphicalUI() override;
 
-   // TODO static or non-member function
-   LV2EffectSettings &GetSettings(EffectSettings &settings) const;
-   // TODO static or non-member function
-   const LV2EffectSettings &GetSettings(const EffectSettings &settings) const;
-
    int ui_resize(int width, int height) override;
    void ui_closed() override;
 

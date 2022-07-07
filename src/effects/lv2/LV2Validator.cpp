@@ -554,7 +554,7 @@ bool LV2Validator::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Validator::UpdateUI()
 {
-   const auto &mySettings = mInstance.GetSettings(mAccess.Get());
+   const auto &mySettings = GetSettings(mAccess.Get());
    auto pMaster = mInstance.GetMaster();
 
    if (pMaster && mySettings.mpState) {
@@ -901,13 +901,4 @@ void LV2Validator::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
    }
 }
 #endif
-
-LV2EffectSettings &LV2Validator::GetSettings(EffectSettings &settings) const {
-   return mInstance.GetSettings(settings);
-}
-
-const LV2EffectSettings &
-LV2Validator::GetSettings(const EffectSettings &settings) const {
-   return mInstance.GetSettings(settings);
-}
 #endif

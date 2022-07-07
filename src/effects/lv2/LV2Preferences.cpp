@@ -33,7 +33,7 @@ static constexpr auto UseGUIStr = L"UseGUI";
 
 namespace {
 template<typename T>
-bool GetSetting(EffectDefinitionInterface &effect, const wchar_t *path,
+bool GetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
    T& var, const T &defaultValue)
 {
    return GetConfig(effect, PluginSettings::Shared, SettingsStr, path,
@@ -50,7 +50,7 @@ bool SetSetting(EffectDefinitionInterface &effect, const wchar_t *path,
 }
 
 bool LV2Preferences::GetBufferSize(
-   EffectDefinitionInterface &effect, int &bufferSize)
+   const EffectDefinitionInterface &effect, int &bufferSize)
 {
    return GetSetting(effect, BufferSizeStr, bufferSize, 8192);
 }
@@ -62,7 +62,7 @@ bool LV2Preferences::SetBufferSize(
 }
 
 bool LV2Preferences::GetUseLatency(
-   EffectDefinitionInterface &effect, bool &useLatency)
+   const EffectDefinitionInterface &effect, bool &useLatency)
 {
    return GetSetting(effect, UseLatencyStr, useLatency, true);
 }
@@ -74,7 +74,7 @@ bool LV2Preferences::SetUseLatency(
 }
 
 bool LV2Preferences::GetUseGUI(
-   EffectDefinitionInterface &effect, bool &useGUI)
+   const EffectDefinitionInterface &effect, bool &useGUI)
 {
    return GetSetting(effect, UseGUIStr, useGUI, true);
 }
