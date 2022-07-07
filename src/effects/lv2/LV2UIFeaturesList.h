@@ -21,7 +21,7 @@
 #include <suil/suil.h>
 #include "lv2/data-access/data-access.h"
 
-class LV2InstanceFeaturesList;
+struct LV2InstanceFeaturesList;
 
 struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    //! Abstraction of host services that a plug-ins native UI needs
@@ -35,7 +35,7 @@ struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    };
 
    LV2UIFeaturesList(
-      const LV2InstanceFeaturesList &baseFeatures, UIHandler &handler,
+      const LV2InstanceFeaturesList &baseFeatures, UIHandler *pHandler,
       const LilvNode *node,
       LilvInstance *pInstance = nullptr, wxWindow *pParent = nullptr);
 
@@ -48,7 +48,7 @@ public:
    // publicize
    using ExtendedLV2FeaturesList::mFeatures;
 
-   UIHandler &mHandler;
+   UIHandler *const mpHandler;
 
    /*! @name static functions that dispatch to a UIHandler
     @{
@@ -64,7 +64,7 @@ public:
 
    // These objects contain C-style virtual function tables that we fill in
    const LV2UI_Resize mUIResizeFeature{
-      &mHandler, LV2UIFeaturesList::ui_resize };
+      mpHandler, LV2UIFeaturesList::ui_resize };
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
