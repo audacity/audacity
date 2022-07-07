@@ -65,6 +65,8 @@ public:
    //! If a thread was started, joins it
    ~LV2Wrapper();
 
+   void ConnectControlPorts(const LV2Ports &ports,
+      const LV2EffectSettings &settings, bool useOutput);
    void ConnectPorts(const LV2Ports &ports,
       LV2PortStates &portStates, const LV2EffectSettings &settings,
       bool useOutput);

@@ -45,9 +45,11 @@ LV2Instance::~LV2Instance() = default;
 void LV2Instance::MakeMaster(const EffectSettings &settings,
    double projectRate, bool useOutput)
 {
-   if (mMaster && projectRate == mMaster->GetFeatures().mSampleRate)
-      // Already made so do nothing
+   if (mMaster && projectRate == mMaster->GetFeatures().mSampleRate) {
+      // Already made but be sure to connect control ports to the right place
+      mMaster->ConnectControlPorts(mPorts, GetSettings(settings), useOutput);
       return;
+   }
    mMaster = LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
       GetSettings(settings), projectRate, useOutput);
    SetBlockSize(mUserBlockSize);

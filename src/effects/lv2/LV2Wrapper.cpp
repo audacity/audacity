@@ -60,8 +60,8 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    return wrapper;
 }
 
-void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
-   const LV2EffectSettings &settings, bool useOutput)
+void LV2Wrapper::ConnectControlPorts(
+   const LV2Ports &ports, const LV2EffectSettings &settings, bool useOutput)
 {
    const auto instance = &GetInstance();
    static float blackHole;
@@ -86,6 +86,14 @@ void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
             : &const_cast<float&>(values[index]));
       ++index;
    }
+}
+
+void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
+   const LV2EffectSettings &settings, bool useOutput)
+{
+   ConnectControlPorts(ports, settings, useOutput);
+
+   const auto instance = &GetInstance();
 
    // Connect all atom ports
    for (auto & state : portStates.mAtomPortStates)
