@@ -292,24 +292,24 @@ private:
 
    PluginID mID;
    PluginPath mPath;
-   unsigned mAudioIns;
-   unsigned mAudioOuts;
-   int mMidiIns;
-   int mMidiOuts;
+   unsigned mAudioIns{0};
+   unsigned mAudioOuts{0};
+   int mMidiIns{0};
+   int mMidiOuts{0};
    bool mAutomatable;
-   size_t mUserBlockSize;
+   size_t mUserBlockSize{8192};
    wxString mName;
    wxString mVendor;
    wxString mDescription;
    int mVersion;
-   bool mInteractive;
+   bool mInteractive{false};
    int mVstVersion;
 
    static intptr_t mCurrentEffectID;
 
-   bool mReady;
+   bool mReady{false};
 
-   ModuleHandle mModule;
+   ModuleHandle mModule{};
 
 #if defined(__WXMAC__)
    // These members must be ordered after mModule
@@ -342,24 +342,24 @@ private:
    ResourceHandle mResource;
 #endif
 
-   AEffect *mAEffect;
+   AEffect* mAEffect{};
 
    VstTimeInfo mTimeInfo;
 
-   bool mUseLatency;
-   int mBufferDelay;
+   bool mUseLatency{true};
+   int mBufferDelay{0};
 
-   unsigned mBlockSize;
+   size_t mBlockSize{mUserBlockSize};
 
-   int mProcessLevel;
-   bool mHasPower;
-   bool mWantsIdle;
-   bool mWantsEditIdle;
+   int mProcessLevel{1};  // in GUI thread
+   bool mHasPower{false};
+   bool mWantsIdle{false};
+   bool mWantsEditIdle{false};
 
    wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
 
    std::unique_ptr<VSTEffectTimer> mTimer;
-   int mTimerGuard;
+   int mTimerGuard{0};
 
    // Realtime processing
    VSTEffect *mMaster;     // non-NULL if a slave
@@ -369,8 +369,8 @@ private:
    // UI
    wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
-   wxSizerItem *mContainer;
-   bool mGui;
+   wxSizerItem* mContainer{};
+   bool mGui{false};
 
    VSTControl *mControl;
 

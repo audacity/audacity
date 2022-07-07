@@ -793,25 +793,7 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
-   mModule = NULL;
-   mAEffect = NULL;
-
    mTimer = std::make_unique<VSTEffectTimer>(this);
-   mTimerGuard = 0;
-
-   mInteractive = false;
-   mAudioIns = 0;
-   mAudioOuts = 0;
-   mMidiIns = 0;
-   mMidiOuts = 0;
-   mBlockSize = mUserBlockSize = 8192;
-   mBufferDelay = 0;
-   mProcessLevel = 1;         // in GUI thread
-   mHasPower = false;
-   mWantsIdle = false;
-   mWantsEditIdle = false;
-   mUseLatency = true;
-   mReady = false;
 
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
@@ -821,11 +803,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
-
-   // UI
-   
-   mGui = false;
-   mContainer = NULL;
 
    // If we're a slave then go ahead a load immediately
    if (mMaster)
