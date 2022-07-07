@@ -223,6 +223,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
    AddCredit(wxT("Mark Phillips"), developerFormat, roleContributor);
    AddCredit(wxT("Andr\u00E9 Pinto"), developerFormat, roleContributor);
+   AddCredit(wxT("Pokechu22"), developerFormat, roleContributor);
    AddCredit(wxT("Jean Claude Risset"), composerFormat, roleContributor);
    AddCredit(wxT("RuRo"), developerFormat, roleContributor);
    AddCredit(wxT("Augustus Saunders"), developerFormat, roleContributor);
