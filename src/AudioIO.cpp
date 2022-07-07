@@ -135,13 +135,15 @@ AudioIO *AudioIO::Get()
    return static_cast< AudioIO* >( AudioIOBase::Get() );
 }
 
-struct AudioIoCallback::TransportState {
+struct AudioIoCallback::TransportState
+{
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
       const WaveTrackArray &playbackTracks,
-      unsigned numPlaybackChannels, double sampleRate)
+      unsigned numPlaybackChannels,
+      unsigned numRecordingChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
-          pOwningProject && numPlaybackChannels > 0) {
+          pOwningProject && ((numPlaybackChannels > 0) || (numRecordingChannels > 0)) ) {
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
          mpRealtimeInitialization.emplace(move(wOwningProject), sampleRate);
@@ -917,7 +919,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    mpTransportState = std::make_unique<TransportState>( mOwningProject,
-      mPlaybackTracks, mNumPlaybackChannels, mRate);
+      mPlaybackTracks, mNumPlaybackChannels, mNumCaptureChannels, mRate);
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
