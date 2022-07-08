@@ -5,17 +5,19 @@ $name (_ "Pluck")
 $manpage "Pluck"
 $debugbutton false
 $preview linear
-$action (_ "Generating pluck sound...")
-$info (_ "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.")
 $author (_ "David R.Sky")
-$release 2.3.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 2.3.0-1
+$copyright (_ "GNU General Public License v2.0")
 
-;; Released under terms of the GNU General Public License version 2:
+
+;;MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96.
+
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
 
 $control pitch (_ "Pluck MIDI pitch") int "" 60 1 120
 $control fade (_ "Fade-out type") choice ((_ "Abrupt") (_ "Gradual")) 0

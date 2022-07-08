@@ -6,10 +6,10 @@ $manpage "Nyquist_Plug-in_Installer"
 $debugbutton false
 $preview disabled
 $author "Steve Daulton"
-$release 2.4.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 2.4.0-1
+$copyright (_ "GNU General Public License v2.0 or later")
 
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

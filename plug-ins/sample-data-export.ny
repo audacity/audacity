@@ -4,11 +4,22 @@ $type tool analyze
 $name (_ "Sample Data Export")
 $manpage "Sample_Data_Export"
 $debugbutton false
-$action (_ "Analyzing...")
 $author (_ "Steve Daulton")
-$release 3.0.4
+$release 3.0.4-1
 $copyright (_ "GNU General Public License v2.0 or later")
 
+
+;; License: GPL v2+
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+
+;; To enable L/R prefix before alternate L/R channels
+;; (text output with header only)
+;; remove the semicolon from the start of the next line:
+;(setq LR-prefix '("L: " "R: "))
 
 $control number (_ "Limit output to first") int-text (_ "samples") 100 1 1000000
 $control units (_ "Measurement scale") choice ((_ "dB") (_ "Linear")) 0
@@ -34,18 +45,6 @@ $control messages (_ "Show messages") choice ((_ "Yes")
                                               (_ "None")) 0
 
 
-
-;; Released under terms of the GNU General Public License v2.0 or later:
-;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-;;
-;; For information about writing and modifying Nyquist plug-ins:
-;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
-
-
-;; To enable L/R prefix before alternate L/R channels
-;; (text output with header only)
-;; remove the semicolon from the start of the next line:
-;(setq LR-prefix '("L: " "R: "))
 
 (when (not (boundp 'LR-prefix))(setq LR-prefix nil))
 (setq *float-format* "%1.5f") ; 5 decimal places
