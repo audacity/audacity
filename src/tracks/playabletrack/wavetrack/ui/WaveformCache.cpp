@@ -26,7 +26,6 @@ public:
       , min(0)
       , max(0)
       , rms(0)
-      , bl(0)
    {
    }
 
@@ -40,7 +39,6 @@ public:
       , min(len)
       , max(len)
       , rms(len)
-      , bl(len)
    {
    }
 
@@ -57,7 +55,6 @@ public:
    std::vector<float> min;
    std::vector<float> max;
    std::vector<float> rms;
-   std::vector<int> bl;
 };
 
 //
@@ -81,7 +78,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
    float *min;
    float *max;
    float *rms;
-   int *bl;
    std::vector<sampleCount> *pWhere;
 
    if (allocated) {
@@ -89,7 +85,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       min = &display.min[0];
       max = &display.max[0];
       rms = &display.rms[0];
-      bl = &display.bl[0];
       pWhere = &display.ownWhere;
    }
    else {
@@ -117,7 +112,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          display.min = &mWaveCache->min[0];
          display.max = &mWaveCache->max[0];
          display.rms = &mWaveCache->rms[0];
-         display.bl = &mWaveCache->bl[0];
          display.where = &mWaveCache->where[0];
          return true;
       }
@@ -146,7 +140,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       min = &mWaveCache->min[0];
       max = &mWaveCache->max[0];
       rms = &mWaveCache->rms[0];
-      bl = &mWaveCache->bl[0];
       pWhere = &mWaveCache->where;
 
       fillWhere(*pWhere, numPixels, 0.0, correction,
@@ -169,7 +162,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          memcpy(&min[copyBegin], &oldCache->min[srcIdx], sizeFloats);
          memcpy(&max[copyBegin], &oldCache->max[srcIdx], sizeFloats);
          memcpy(&rms[copyBegin], &oldCache->rms[srcIdx], sizeFloats);
-         memcpy(&bl[copyBegin], &oldCache->bl[srcIdx], length * sizeof(int));
       }
    }
 
@@ -239,7 +231,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
                min[i] = theMin;
                max[i] = theMax;
                rms[i] = (float)sqrt(sumsq / len);
-               bl[i] = 1; //for now just fake it.
 
                didUpdate=true;
             }
@@ -256,7 +247,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          if (!::GetWaveDisplay(*sequence, &min[p0],
                                         &max[p0],
                                         &rms[p0],
-                                        &bl[p0],
                                         p1-p0,
                                         &where[p0]))
          {
@@ -270,7 +260,6 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       display.min = min;
       display.max = max;
       display.rms = rms;
-      display.bl = bl;
       display.where = &(*pWhere)[0];
    }
 
