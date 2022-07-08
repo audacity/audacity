@@ -5,13 +5,11 @@ $type analyze
 $name (_ "Label Sounds")
 $manpage "Label_Sounds"
 $debugbutton false
-;; As this is a new plug-in (Jan2021), display errors if they occur.
-$debugflags trace
 $author (_ "Steve Daulton")
-$release 3.0.4
+$release 3.0.4-1
 $copyright (_ "GNU General Public License v2.0 or later")
 
-;; Released under terms of the GNU General Public License v2.0 or later:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
