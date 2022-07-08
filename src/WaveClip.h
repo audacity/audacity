@@ -42,21 +42,30 @@ using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
+
+// Data for sample blocks related to the column
+struct WaveDisplayColumn final
+{
+   float min;
+   float max;
+   float rms;
+};
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.
 class WaveDisplay
 {
 public:
-   int width;
-   sampleCount *where;
-   float *min, *max, *rms;
-
+   int width { 0 };
+   WaveDisplayColumn* columns { nullptr };
+   sampleCount* where { nullptr };
+   // Index of the first sample in the sequence (not in a block!)
    std::vector<sampleCount> ownWhere;
-   std::vector<float> ownMin, ownMax, ownRms;
+   std::vector<WaveDisplayColumn> ownColums;
+
 
 public:
    WaveDisplay(int w)
-      : width(w), where(0), min(0), max(0), rms(0)
+      : width(w)
    {
    }
 
@@ -64,19 +73,12 @@ public:
    void Allocate()
    {
       ownWhere.resize(width + 1);
-      ownMin.resize(width);
-      ownMax.resize(width);
-      ownRms.resize(width);
+      ownColums.resize(width);
 
-      where = &ownWhere[0];
-      if (width > 0) {
-         min = &ownMin[0];
-         max = &ownMax[0];
-         rms = &ownRms[0];
-      }
-      else {
-         min = max = rms = 0;
-      }
+      where = ownWhere.data();
+
+      if (width > 0)
+         columns = ownColums.data();
    }
 
    ~WaveDisplay()
