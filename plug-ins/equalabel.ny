@@ -5,18 +5,19 @@ $debugbutton false
 $debugflags trace
 $name (_ "Regular Interval Labels")
 $manpage "Regular_Interval_Labels"
-$action (_ "Adding equally-spaced labels to the label track...")
 $author (_ "Steve Daulton")
-$release 2.3.1
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 2.3.1-1
+$copyright (_ "GNU General Public License v2.0 or later")
 
-;; TODO: Rewrite as an AUD-DO script so as to remove the requirement for an audio selection.
 
 ;; Original version by David R. Sky (http://www.garyallendj.com/davidsky/) 2007.
 ;; Based on an idea by Sami Jumppanen, with contributions from
 ;; Alex S.Brown, Dominic Mazzoni, Pierre M.I., Gale Andrews.
+;;
+;; TODO: Rewrite as an AUD-DO script so as to remove the requirement for
+;; an audio selection.
 
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
