@@ -23,7 +23,60 @@
 
 namespace AudioGraph {
 class Buffers;
+
+//! Downstream receiver of sample streams, taking Buffers as external context
+class Sink {
+public:
+   using Buffers = AudioGraph::Buffers;
+
+   virtual ~Sink();
+   //! Guarantee empty space in Buffers before they are written
+   /*!
+    @return success
+    @post result: `!result || data.BlockSize() <= data.Remaining()`
+    */
+   virtual bool Acquire(Buffers &data) = 0;
+   //! Acknowledge receipt of data in Buffers, which caller may then Advance()
+   /*!
+    @return success
+    @pre `curBlockSize <= data.BlockSize()`
+    @pre `data.Channels() > 0`
+    @pre `data.BufferSize() > 0`
+    */
+   virtual bool Release(const Buffers &data, size_t curBlockSize) = 0;
+};
+
 }
+
+class WaveTrackSink final : public AudioGraph::Sink {
+public:
+   WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
+      sampleCount start, bool isGenerator, bool isProcessor);
+   ~WaveTrackSink() override;
+
+   bool Acquire(Buffers &data) override;
+   bool Release(const Buffers &data, size_t curBlockSize) override;
+
+   /*!
+    @copydoc DoConsume
+    */
+   void Flush(Buffers &data, double t0, double t1);
+
+private:
+   /*!
+    @pre `data.Channels() > 0`
+    @pre `data.BufferSize() > 0`
+    @post `data.BlockSize() <= data.Remaining()`
+    */
+   void DoConsume(Buffers &data);
+
+   WaveTrack &mLeft;
+   WaveTrack *const mpRight;
+   const std::shared_ptr<WaveTrack> mGenLeft, mGenRight;
+   const bool mIsProcessor;
+
+   sampleCount mOutPos;
+};
 
 //! Base class for Effects that treat each (mono or stereo) track independently
 //! of other tracks.

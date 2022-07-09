@@ -25,6 +25,8 @@
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 
+AudioGraph::Sink::~Sink() = default;
+
 PerTrackEffect::Instance::~Instance() = default;
 
 bool PerTrackEffect::Instance::Process(EffectSettings &settings)
@@ -218,6 +220,72 @@ void AudioGraph::Buffers::ClearBuffer(unsigned iChannel, size_t n)
       n = std::min<size_t>(end - p, n);
       std::fill(p, p + n, 0);
    }
+}
+
+WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
+   sampleCount start, bool isGenerator, bool isProcessor
+)  : mLeft{ left }, mpRight{ pRight }
+   , mGenLeft{ isGenerator ? left.EmptyCopy() : nullptr }
+   , mGenRight{ pRight && isGenerator ? pRight->EmptyCopy() : nullptr }
+   , mIsProcessor{ isProcessor }
+   , mOutPos{ start }
+{
+}
+
+WaveTrackSink::~WaveTrackSink() = default;
+
+bool WaveTrackSink::Acquire(Buffers &data)
+{
+   if (data.BlockSize() <= data.Remaining()) {
+      // post is satisfied
+   }
+   else
+      // Output buffers have (mostly) filled
+      // (less than one block remains; maybe nonzero because of samples
+      // discarded for initial latency correction)
+      DoConsume(data);
+   return true;
+}
+
+bool WaveTrackSink::Release(const Buffers &, size_t)
+{
+   // May become non-trivial later
+   return true;
+}
+
+void WaveTrackSink::DoConsume(Buffers &data)
+{
+   // Satisfy pre of GetReadPosition()
+   assert(data.Channels() > 0);
+   assert(data.BufferSize() > 0);
+   const auto inputBufferCnt = data.Position();
+   if (inputBufferCnt > 0) {
+      // Some data still unwritten
+      if (mIsProcessor) {
+         mLeft.Set(data.GetReadPosition(0),
+            floatSample, mOutPos, inputBufferCnt);
+         if (mpRight)
+            mpRight->Set(data.GetReadPosition(1),
+               floatSample, mOutPos, inputBufferCnt);
+      }
+      else if (mGenLeft) {
+         mGenLeft->Append(data.GetReadPosition(0),
+            floatSample, inputBufferCnt);
+         if (mGenRight)
+            mGenRight->Append(data.GetReadPosition(1),
+               floatSample, inputBufferCnt);
+      }
+      // Satisfy post
+      data.Rewind();
+      // Bump to the next track position
+      mOutPos += inputBufferCnt;
+   }
+   else {
+      // Position is zero, therefore Remaining() is a positive multiple of
+      // block size
+   }
+   // assert the post
+   assert(data.BlockSize() <= data.Remaining());
 }
 
 bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
@@ -453,22 +521,14 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
    auto inPos = start;
-   auto outPos = start;
    auto inputRemaining = len;
    sampleCount curDelay = 0;
-   std::shared_ptr<WaveTrack> genLeft, genRight;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
    sampleCount delayRemaining = genLength ? *genLength : 0;
    bool latencyDone = false;
 
-   if (isGenerator) {
-      // Create temporary tracks
-      genLeft = left.EmptyCopy();
-
-      if (pRight)
-         genRight = pRight->EmptyCopy();
-   }
+   WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
 
    // Invariant O: blockSize positions from outBuffers.Positions() available
    // Initially true because of preconditions that outBuffers has the same
@@ -575,45 +635,23 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       }
       inPos += curBlockSize;
 
-      // Precondition for Discard() or Advance() holds
+      // Preconditions for Discard() and Consume() hold
       // because curBlockSize <= blockSize <= outBuffers.Remaining()
       assert(curBlockSize <= outBuffers.Remaining());
    
       // Do latency correction on effect output
-      auto discard =
-         (curDelay < curBlockSize ? curDelay.as_size_t(): curBlockSize);
+      auto discard = limitSampleBufferSize(curBlockSize, curDelay);
       if (discard) {
          curDelay -= discard;
          outBuffers.Discard(discard, curBlockSize - discard);
       }
-
+   
+      if (!sink.Release(outBuffers, curBlockSize - discard))
+         return false;
       outBuffers.Advance(curBlockSize - discard);
-      if (blockSize <= outBuffers.Remaining()) {
-         // Invariant O preserved
-      } else {
-         // Output buffers have (mostly) filled
-         // (less than one block remains; maybe nonzero because of samples
-         // discarded for initial latency correction)
-         const auto outputBufferCnt = outBuffers.Position();
-         if (isProcessor) {
-            // Write them out
-            left.Set(outBuffers.GetReadPosition(0),
-               floatSample, outPos, outputBufferCnt);
-            if (pRight)
-               pRight->Set(outBuffers.GetReadPosition(1),
-                  floatSample, outPos, outputBufferCnt);
-         }
-         else if (isGenerator) {
-            genLeft->Append(outBuffers.GetReadPosition(0),
-               floatSample, outputBufferCnt);
-            if (genRight)
-               genRight->Append(outBuffers.GetReadPosition(1),
-                  floatSample, outputBufferCnt);
-         }
-         outBuffers.Rewind();
-         // Bump to the next track position
-         outPos += outputBufferCnt;
-      }
+      if (!sink.Acquire(outBuffers))
+         return false;
+      // Invariant O preserved
 
       if (!pollUser(inPos)) {
          rc = false;
@@ -622,40 +660,25 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    }
 
    // Put any remaining output
-   const auto outputBufferCnt = outBuffers.Position();
-   if (rc && outputBufferCnt) {
-      if (isProcessor) {
-         left.Set(outBuffers.GetReadPosition(0),
-            floatSample, outPos, outputBufferCnt);
-         if (pRight)
-            pRight->Set(outBuffers.GetReadPosition(1),
-               floatSample, outPos, outputBufferCnt);
-      }
-      else if (isGenerator) {
-         genLeft->Append(outBuffers.GetReadPosition(0),
-            floatSample, outputBufferCnt);
-         if (genRight)
-            genRight->Append(outBuffers.GetReadPosition(1),
-               floatSample, outputBufferCnt);
-      }
-   }
-
-   if (rc && isGenerator) {
-      auto pProject = FindProject();
-
-      // Transfer the data from the temporary tracks to the actual ones
-      genLeft->Flush();
-      // mT1 gives us the NEW selection. We want to replace up to GetSel1().
-      auto &selectedRegion = ViewInfo::Get( *pProject ).selectedRegion;
-      auto t1 = selectedRegion.t1();
-      PasteTimeWarper warper{ t1, mT0 + genLeft->GetEndTime() };
-      left.ClearAndPaste(mT0, t1, genLeft.get(), true, true, &warper);
-      if (genRight) {
-         genRight->Flush();
-         pRight->ClearAndPaste(mT0, t1, genRight.get(), true, true, &warper);
-      }
-   }
-
+   if (rc)
+      sink.Flush(outBuffers,
+         mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
    } // End scope for cleanup
    return rc;
+}
+
+void WaveTrackSink::Flush(Buffers &data, const double t0, const double t1)
+{
+   DoConsume(data);
+   if (mGenLeft) {
+      // Transfer the data from the temporary tracks to the actual ones
+      mGenLeft->Flush();
+      // mT1 gives us the NEW selection. We want to replace up to GetSel1().
+      PasteTimeWarper warper{ t1, t0 + mGenLeft->GetEndTime() };
+      mLeft.ClearAndPaste(t0, t1, mGenLeft.get(), true, true, &warper);
+      if (mGenRight) {
+         mGenRight->Flush();
+         mpRight->ClearAndPaste(t0, t1, mGenRight.get(), true, true, &warper);
+      }
+   }
 }
