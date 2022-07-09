@@ -79,7 +79,7 @@ public:
     @copydoc PerTrackEffect::Instance::ProcessBlock()
     */
    virtual size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
+      const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
 private:
    bool Process(EffectInstance &instance, EffectSettings &settings) final;

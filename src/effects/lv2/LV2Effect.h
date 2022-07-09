@@ -20,7 +20,7 @@ class wxArrayString;
 #include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
-#include "../StatefulPerTrackEffect.h"
+#include "../PerTrackEffect.h"
 
 // We use deprecated LV2 interfaces to remain compatible with older
 // plug-ins, so disable warnings
@@ -33,7 +33,7 @@ LV2_DISABLE_DEPRECATION_WARNINGS
 
 class LV2Validator;
 
-class LV2Effect final : public StatefulPerTrackEffect
+class LV2Effect final : public PerTrackEffect
 {
 public:
    LV2Effect(const LilvPlugin &plug);
