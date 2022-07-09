@@ -82,7 +82,7 @@ private:
    bool ProcessPass(Instance &instance, EffectSettings &settings);
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
       double sampleRate, int count, ChannelNames map,
-      WaveTrack *left, WaveTrack *right,
+      WaveTrack &left, WaveTrack *pRight,
       sampleCount start, sampleCount len,
       FloatBuffers &inBuffer, FloatBuffers &outBuffer,
       ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,

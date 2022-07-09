@@ -106,20 +106,22 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
    range.VisitWhile( bGoodResult,
-      [&](WaveTrack *left, const Track::Fallthrough &fallthrough) {
-         if (!left->GetSelected())
+      [&](WaveTrack *pLeft, const Track::Fallthrough &fallthrough) {
+         // Track range visitor functions receive a pointer that is never null
+         auto &left = *pLeft;
+         if (!left.GetSelected())
             return fallthrough();
 
          sampleCount len = 0;
          sampleCount start = 0;
          unsigned numChannels = 0;
-         WaveTrack *right{};
+         WaveTrack *pRight{};
 
          // Iterate either over one track which could be any channel,
          // or if multichannel, then over all channels of left,
          // which is a leader.
          for (auto channel :
-              TrackList::Channels(left).StartingWith(left)) {
+              TrackList::Channels(pLeft).StartingWith(pLeft)) {
             if (channel->GetChannel() == Track::LeftChannel)
                map[numChannels] = ChannelNameFrontLeft;
             else if (channel->GetChannel() == Track::RightChannel)
@@ -132,7 +134,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
                break;
             if (numChannels == 2) {
                // TODO: more-than-two-channels
-               right = channel;
+               pRight = channel;
                clear = false;
                // Ignore other channels
                break;
@@ -140,16 +142,16 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          }
 
          if (!isGenerator) {
-            GetBounds(*left, right, &start, &len);
+            GetBounds(left, pRight, &start, &len);
             mSampleCnt = len;
          }
          else
-            mSampleCnt = left->TimeToLongSamples(duration);
+            mSampleCnt = left.TimeToLongSamples(duration);
 
-         const auto sampleRate = left->GetRate();
+         const auto sampleRate = left.GetRate();
 
          // Get the block size the client wants to use
-         auto max = left->GetMaxBlockSize() * 2;
+         auto max = left.GetMaxBlockSize() * 2;
          blockSize = instance.SetBlockSize(max);
 
          // Calculate the buffer size to be at least the max rounded up to the clients
@@ -185,14 +187,14 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             outBufPos[i] = outBuffer[i].get();
 
          // Clear unused input buffers
-         if (!right && !clear && numAudioIn > 1) {
+         if (!pRight && !clear && numAudioIn > 1) {
             ClearBuffer(&inBuffer[1][0], bufferSize);
             clear = true;
          }
 
          // Go process the track(s)
          bGoodResult = ProcessTrack(instance, settings, sampleRate,
-            count, map, left, right, start, len,
+            count, map, left, pRight, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, blockSize,
             numChannels);
          if (!bGoodResult)
@@ -214,7 +216,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    double sampleRate, int count, ChannelNames map,
-   WaveTrack *left, WaveTrack *right,
+   WaveTrack &left, WaveTrack *pRight,
    sampleCount start, sampleCount len,
    FloatBuffers &inBuffer, FloatBuffers &outBuffer,
    ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,
@@ -271,15 +273,15 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       }
       else
          genDur = duration;
-      genLength = sampleCount((left->GetRate() * genDur) + 0.5);  // round to nearest sample
+      genLength = sampleCount((left.GetRate() * genDur) + 0.5);  // round to nearest sample
       delayRemaining = genLength;
       cleared = true;
 
       // Create temporary tracks
-      genLeft = left->EmptyCopy();
+      genLeft = left.EmptyCopy();
 
-      if (right)
-         genRight = right->EmptyCopy();
+      if (pRight)
+         genRight = pRight->EmptyCopy();
    }
 
    // Call the effect until we run out of input or delayed samples
@@ -293,9 +295,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
                limitSampleBufferSize( bufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->GetFloats(inBuffer[0].get(), inPos, inputBufferCnt);
-            if (right)
-               right->GetFloats(inBuffer[1].get(), inPos, inputBufferCnt);
+            left.GetFloats(inBuffer[0].get(), inPos, inputBufferCnt);
+            if (pRight)
+               pRight->GetFloats(inBuffer[1].get(), inPos, inputBufferCnt);
 
             // Reset the input buffer positions
             for (size_t i = 0; i < numChannels; i++)
@@ -412,12 +414,12 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       else {
          if (isProcessor) {
             // Write them out
-            left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
-            if (right) {
+            left.Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+            if (pRight) {
                if (chans >= 2)
-                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
+                  pRight->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
                else
-                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+                  pRight->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
             }
          }
          else if (isGenerator) {
@@ -456,12 +458,12 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // Put any remaining output
    if (rc && outputBufferCnt) {
       if (isProcessor) {
-         left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
-         if (right) {
+         left.Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+         if (pRight) {
             if (chans >= 2)
-               right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
+               pRight->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
             else
-               right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+               pRight->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
          }
       }
       else if (isGenerator) {
@@ -480,10 +482,10 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       auto &selectedRegion = ViewInfo::Get( *pProject ).selectedRegion;
       auto t1 = selectedRegion.t1();
       PasteTimeWarper warper{ t1, mT0 + genLeft->GetEndTime() };
-      left->ClearAndPaste(mT0, t1, genLeft.get(), true, true, &warper);
+      left.ClearAndPaste(mT0, t1, genLeft.get(), true, true, &warper);
       if (genRight) {
          genRight->Flush();
-         right->ClearAndPaste(mT0, t1, genRight.get(), true, true, &warper);
+         pRight->ClearAndPaste(mT0, t1, genRight.get(), true, true, &warper);
       }
    }
 
