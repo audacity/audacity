@@ -253,27 +253,34 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto inPos = start;
    auto outPos = start;
    auto inputRemaining = len;
-   sampleCount curDelay = 0, delayRemaining = 0;
+   sampleCount curDelay = 0;
    size_t curBlockSize = 0;
    size_t inputBufferCnt = 0;
    size_t outputBufferCnt = 0;
    bool cleared = false;
    auto chans = std::min<unsigned>(GetAudioOutCount(), numChannels);
    std::shared_ptr<WaveTrack> genLeft, genRight;
-   sampleCount genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
-   double genDur = 0;
-   if (isGenerator) {
-      const auto duration = settings.extra.GetDuration();
-      if (IsPreviewing()) {
-         gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-         genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
+   const auto genLength = [this, &settings, &left, isGenerator](
+   ) -> std::optional<sampleCount> {
+      double genDur = 0;
+      if (isGenerator) {
+         const auto duration = settings.extra.GetDuration();
+         if (IsPreviewing()) {
+            gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
+            genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
+         }
+         else
+            genDur = duration;
+         // round to nearest sample
+         return sampleCount{ (left.GetRate() * genDur) + 0.5 };
       }
       else
-         genDur = duration;
-      genLength = sampleCount((left.GetRate() * genDur) + 0.5);  // round to nearest sample
-      delayRemaining = genLength;
+         return {};
+   }();
+   sampleCount delayRemaining = genLength ? *genLength : 0;
+   if (isGenerator) {
       cleared = true;
 
       // Create temporary tracks
@@ -439,7 +446,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       if (numChannels > 1) {
          if (TrackGroupProgress(count,
                (inPos - start).as_double() /
-               (isGenerator ? genLength : len).as_double())) {
+               (genLength ? *genLength : len).as_double())) {
             rc = false;
             break;
          }
@@ -447,7 +454,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       else {
          if (TrackProgress(count,
                (inPos - start).as_double() /
-               (isGenerator ? genLength : len).as_double())) {
+               (genLength ? *genLength : len).as_double())) {
             rc = false;
             break;
          }
