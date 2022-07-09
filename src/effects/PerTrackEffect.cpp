@@ -480,13 +480,10 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       auto &selectedRegion = ViewInfo::Get( *pProject ).selectedRegion;
       auto t1 = selectedRegion.t1();
       PasteTimeWarper warper{ t1, mT0 + genLeft->GetEndTime() };
-      left->ClearAndPaste(mT0, t1, genLeft.get(), true, true,
-         &warper);
-
+      left->ClearAndPaste(mT0, t1, genLeft.get(), true, true, &warper);
       if (genRight) {
          genRight->Flush();
-         right->ClearAndPaste(mT0, selectedRegion.t1(),
-            genRight.get(), true, true, nullptr /* &warper */);
+         right->ClearAndPaste(mT0, t1, genRight.get(), true, true, &warper);
       }
    }
 
