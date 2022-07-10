@@ -120,6 +120,17 @@ private:
        @post result: `result != nullptr`
        */
       constSamplePtr GetReadPosition(unsigned iChannel) const;
+
+      //! Get writable position for one channel
+      /*!
+       @pre `iChannel < Channels()`
+       @pre `BufferSize() > 0`
+       */
+      float &GetWritePosition(unsigned iChannel);
+
+      //! Zero-fill n places in one of the buffers,
+      //! starting from its position plus offset
+      void ClearBuffer(unsigned iChannel, size_t n, size_t offset = 0);
    private:
       std::vector<std::vector<float>> mBuffers;
       std::vector<float *> mPositions;
@@ -138,8 +149,7 @@ private:
       double sampleRate, ChannelNames map,
       WaveTrack &left, WaveTrack *pRight,
       sampleCount start, sampleCount len,
-      FloatBuffers &inBuffer, Buffers &outBuffers,
-      ArrayOf< float * > &inBufPos,
+      Buffers &inBuffers, Buffers &outBuffers,
       size_t bufferSize, size_t blockSize,
       unsigned mNumChannels) const;
 };

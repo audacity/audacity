@@ -79,10 +79,6 @@ bool PerTrackEffect::Process(
    return bGoodResult;
 }
 
-namespace {
-   inline void ClearBuffer(float *p, size_t n) { std::fill(p, p + n, 0); }
-}
-
 PerTrackEffect::Buffers::Buffers() = default;
 
 void PerTrackEffect::Buffers::Reinit(
@@ -168,15 +164,32 @@ constSamplePtr PerTrackEffect::Buffers::GetReadPosition(unsigned iChannel) const
    return reinterpret_cast<constSamplePtr>(buffer);
 }
 
+float &PerTrackEffect::Buffers::GetWritePosition(unsigned iChannel)
+{
+   assert(iChannel < Channels());
+   return *mBuffers[iChannel].data();
+}
+
+void PerTrackEffect::Buffers::ClearBuffer(
+   unsigned iChannel, size_t n, size_t offset)
+{
+   if (iChannel < mPositions.size()) {
+      auto p = mPositions[iChannel];
+      auto &buffer = mBuffers[iChannel];
+      auto end = buffer.data() + buffer.size();
+      p = std::min(end, p + offset);
+      n = std::min<size_t>(end - p, n);
+      std::fill(p, p + n, 0);
+   }
+}
+
 bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
-   FloatBuffers inBuffer;
-   Buffers outBuffers;
-   ArrayOf<float *> inBufPos;
+   Buffers inBuffers, outBuffers;
    ChannelName map[3];
    size_t prevBufferSize = 0;
    int count = 0;
@@ -259,12 +272,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          if (prevBufferSize != bufferSize) {
             // Always create the number of input buffers the client expects even if we don't have
             // the same number of channels.
-            inBufPos.reinit( numAudioIn );
-            inBuffer.reinit( numAudioIn, bufferSize );
+            inBuffers.Reinit(numAudioIn, bufferSize);
 
             // We won't be using more than the first 2 buffers, so clear the rest (if any)
             for (size_t i = 2; i < numAudioIn; i++)
-               ClearBuffer(&inBuffer[i][0], bufferSize);
+               inBuffers.ClearBuffer(i, bufferSize);
          }
          prevBufferSize = bufferSize;
 
@@ -281,12 +293,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          assert(outBuffers.BufferSize() > 0);
 
          // (Re)Set the input buffer positions
-         for (size_t i = 0; i < numAudioIn; i++)
-            inBufPos[i] = inBuffer[i].get();
+         inBuffers.Rewind();
 
          // Clear unused input buffers
          if (!pRight && !clear && numAudioIn > 1) {
-            ClearBuffer(&inBuffer[1][0], bufferSize);
+            inBuffers.ClearBuffer(1, bufferSize);
             clear = true;
          }
 
@@ -328,7 +339,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          bGoodResult = ProcessTrack(instance, settings,
             pollUser, genLength, sampleRate,
             map, left, pRight, start, len,
-            inBuffer, outBuffers, inBufPos, bufferSize, blockSize,
+            inBuffers, outBuffers, bufferSize, blockSize,
             numChannels);
          if (!bGoodResult)
             return;
@@ -352,8 +363,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    const double sampleRate, const ChannelNames map,
    WaveTrack &left, WaveTrack *const pRight,
    const sampleCount start, const sampleCount len,
-   FloatBuffers &inBuffer, Buffers &outBuffers,
-   ArrayOf< float * > &inBufPos,
+   Buffers &inBuffers, Buffers &outBuffers,
    const size_t bufferSize, const size_t blockSize,
    const unsigned numChannels) const
 {
@@ -419,13 +429,12 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
                limitSampleBufferSize( bufferSize, inputRemaining );
 
             // Fill the input buffers
-            left.GetFloats(inBuffer[0].get(), inPos, inputBufferCnt);
+            inBuffers.Rewind();
+            left.GetFloats(&inBuffers.GetWritePosition(0),
+               inPos, inputBufferCnt);
             if (pRight)
-               pRight->GetFloats(inBuffer[1].get(), inPos, inputBufferCnt);
-
-            // Reset the input buffer positions
-            for (size_t i = 0; i < numChannels; i++)
-               inBufPos[i] = inBuffer[i].get();
+               pRight->GetFloats(&inBuffers.GetWritePosition(1),
+                  inPos, inputBufferCnt);
          }
 
          // Calculate the number of samples to process
@@ -440,7 +449,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // to the effect
             auto cnt = blockSize - curBlockSize;
             for (size_t i = 0; i < numChannels; i++)
-               ClearBuffer(&inBufPos[i][curBlockSize], cnt);
+               inBuffers.ClearBuffer(i, cnt, curBlockSize);
 
             // Might be able to use up some of the delayed samples
             if (delayRemaining != 0) {
@@ -460,8 +469,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          // From this point on, we only want to feed zeros to the plugin
          if (!cleared) {
             // Reset the input buffer positions and clear
+            inBuffers.Rewind();
             for (size_t i = 0; i < numChannels; i++)
-               ClearBuffer((inBufPos[i] = inBuffer[i].get()), blockSize);
+               inBuffers.ClearBuffer(i, blockSize);
             cleared = true;
          }
       }
@@ -470,7 +480,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       decltype(curBlockSize) processed;
       try {
          processed = instance.ProcessBlock(
-            settings, inBufPos.get(),
+            settings, inBuffers.Positions(),
             outBuffers.Positions(), curBlockSize);
       }
       catch( const AudacityException & WXUNUSED(e) ) {
@@ -491,8 +501,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
       // Bump to next input buffer position
       if (inputRemaining != 0) {
-         for (size_t i = 0; i < numChannels; i++)
-            inBufPos[i] += curBlockSize;
+         inBuffers.Advance(curBlockSize);
          inputRemaining -= curBlockSize;
          inputBufferCnt -= curBlockSize;
       }
