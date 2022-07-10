@@ -178,8 +178,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    Buffers outBuffers;
    ArrayOf<float *> inBufPos;
    ChannelName map[3];
-   size_t bufferSize = 0;
-   size_t blockSize = 0;
+   size_t prevBufferSize = 0;
    int count = 0;
    bool clear = false;
 
@@ -187,6 +186,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    // the parameters (the Audacity Reverb effect does when the stereo width is 0).
    const auto numAudioIn = GetAudioInCount();
    const auto numAudioOut = GetAudioOutCount();
+   if (numAudioOut < 1)
+      return false;
+
    const bool multichannel = numAudioIn > 1;
    auto range = multichannel
       ? mOutputTracks->Leaders()
@@ -238,12 +240,20 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          // Get the block size the client wants to use
          auto max = left.GetMaxBlockSize() * 2;
-         blockSize = instance.SetBlockSize(max);
+         const auto blockSize = instance.SetBlockSize(max);
+         if (blockSize == 0) {
+            bGoodResult = false;
+            return;
+         }
 
          // Calculate the buffer size to be at least the max rounded up to the clients
          // selected block size.
-         const auto prevBufferSize = bufferSize;
-         bufferSize = ((max + (blockSize - 1)) / blockSize) * blockSize;
+         const auto bufferSize =
+            ((max + (blockSize - 1)) / blockSize) * blockSize;
+         if (bufferSize == 0) {
+            bGoodResult = false;
+            return;
+         }
 
          // If the buffer size has changed, then (re)allocate the buffers
          if (prevBufferSize != bufferSize) {
@@ -256,13 +266,19 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             for (size_t i = 2; i < numAudioIn; i++)
                ClearBuffer(&inBuffer[i][0], bufferSize);
          }
+         prevBufferSize = bufferSize;
 
          // Always create the number of output buffers the client expects
          // even if we don't have the same number of channels.
          // (These resizes may do nothing after the first track)
          // Output buffers get an extra blockSize worth to give extra room if
          // the plugin adds latency
+         assert(numAudioOut > 0); // checked above
+         assert(bufferSize + blockSize > 0); // Each term is positive
          outBuffers.Reinit(numAudioOut, bufferSize + blockSize);
+         // post of Reinit satisfies pre of ProcessTrack
+         assert(outBuffers.Channels() > 0);
+         assert(outBuffers.BufferSize() > 0);
 
          // (Re)Set the input buffer positions
          for (size_t i = 0; i < numAudioIn; i++)

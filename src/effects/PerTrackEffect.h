@@ -129,6 +129,10 @@ private:
    bool ProcessPass(Instance &instance, EffectSettings &settings);
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;
+   /*!
+    @pre `outBuffers.Channels() > 0`
+    @pre `outBuffers.BufferSize() > 0`
+    */
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
       const Poller &pollUser, std::optional<sampleCount> genLength,
       double sampleRate, ChannelNames map,
