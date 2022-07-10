@@ -215,13 +215,13 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 }
 
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
-   double sampleRate, int count, ChannelNames map,
-   WaveTrack &left, WaveTrack *pRight,
-   sampleCount start, sampleCount len,
+   const double sampleRate, const int count, const ChannelNames map,
+   WaveTrack &left, WaveTrack *const pRight,
+   const sampleCount start, const sampleCount len,
    FloatBuffers &inBuffer, FloatBuffers &outBuffer,
    ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,
-   size_t bufferSize, size_t blockSize,
-   unsigned numChannels) const
+   const size_t bufferSize, const size_t blockSize,
+   const unsigned numChannels) const
 {
    bool rc = true;
 
@@ -253,15 +253,14 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto inPos = start;
    auto outPos = start;
    auto inputRemaining = len;
-   decltype(instance.GetLatency(settings, sampleRate))
-      curDelay = 0, delayRemaining = 0;
-   decltype(blockSize) curBlockSize = 0;
-   decltype(bufferSize) inputBufferCnt = 0;
-   decltype(bufferSize) outputBufferCnt = 0;
+   sampleCount curDelay = 0, delayRemaining = 0;
+   size_t curBlockSize = 0;
+   size_t inputBufferCnt = 0;
+   size_t outputBufferCnt = 0;
    bool cleared = false;
    auto chans = std::min<unsigned>(GetAudioOutCount(), numChannels);
    std::shared_ptr<WaveTrack> genLeft, genRight;
-   decltype(len) genLength = 0;
+   sampleCount genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
    double genDur = 0;
