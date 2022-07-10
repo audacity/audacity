@@ -19,7 +19,7 @@
 #include <functional>
 #include <optional>
 
-using FloatBuffers = ArraysOf<float>;
+#include "SampleFormat.h"
 
 //! Base class for Effects that treat each (mono or stereo) track independently
 //! of other tracks.
@@ -81,6 +81,51 @@ protected:
    sampleCount    mSampleCnt{};
 
 private:
+   //! Accumulates (non-interleaved) data during effect processing
+   /*!
+    @invariant `mBuffers.size() == mPositions.size()`
+    @invariant all `mBuffers[i].size()` are equal to `BufferSize()`
+    @invariant all `(mPositions[i] - mBuffers[i].data())` are equal and in
+       range [`0`, `BufferSize()`]
+    */
+   class Buffers {
+   public:
+      //! Initially empty
+      Buffers();
+      unsigned Channels() const { return mBuffers.size(); }
+      size_t BufferSize() const { return mBufferSize; }
+      /*!
+       @post `Channels() == nChannels`
+       @post `BufferSize() == bufferSize`       
+       */
+      void Reinit(unsigned nChannels, size_t bufferSize);
+      //! Get array of positions in the buffers
+      float *const *Positions() const { return mPositions.data(); }
+      //! Discard some data at the (unchanging) positions
+      /*!
+       @param drop how many values to discard
+       @param keep how many following values are defined
+       */
+      void Discard(size_t drop, size_t keep);
+      //! Move the positions
+      void Advance(size_t count);
+      //! Reset positions to starts of buffers
+      void Rewind();
+
+      //! Get accumulated data for one channel
+      /*!
+       Last channel is replicated for all greater indices
+       @pre `Channels() > 0`
+       @pre `BufferSize() > 0`
+       @post result: `result != nullptr`
+       */
+      constSamplePtr GetReadPosition(unsigned iChannel) const;
+   private:
+      std::vector<std::vector<float>> mBuffers;
+      std::vector<float *> mPositions;
+      size_t mBufferSize{ 0 };
+   };
+
    bool ProcessPass(Instance &instance, EffectSettings &settings);
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;
@@ -89,8 +134,8 @@ private:
       double sampleRate, ChannelNames map,
       WaveTrack &left, WaveTrack *pRight,
       sampleCount start, sampleCount len,
-      FloatBuffers &inBuffer, FloatBuffers &outBuffer,
-      ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,
+      FloatBuffers &inBuffer, Buffers &outBuffers,
+      ArrayOf< float * > &inBufPos,
       size_t bufferSize, size_t blockSize,
       unsigned mNumChannels) const;
 };

@@ -83,14 +83,100 @@ namespace {
    inline void ClearBuffer(float *p, size_t n) { std::fill(p, p + n, 0); }
 }
 
+PerTrackEffect::Buffers::Buffers() = default;
+
+void PerTrackEffect::Buffers::Reinit(
+   unsigned nChannels, size_t bufferSize)
+{
+   mBuffers.resize(nChannels);
+   mPositions.resize(nChannels);
+   for (auto &buffer : mBuffers)
+      buffer.resize(bufferSize);
+   mBufferSize = bufferSize;
+   Rewind();
+}
+
+void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
+{
+   if (mBuffers.empty())
+      return;
+
+   // First buffer
+   auto iterP = mPositions.begin();
+   auto iterB = mBuffers.begin();
+   auto position = *iterP;
+   auto data = iterB->data();
+   auto end = data + iterB->size();
+
+   // Defend against excessive input values
+   end = std::max(data, std::min(end, position + drop + keep));
+   position = std::min(end, position);
+   drop = std::min<size_t>(end - position, drop);
+   // i.e. usually keep * sizeof(float) :
+   const size_t size = ((end - position) - drop) * sizeof(float);
+   memmove(position, position + drop, size);
+
+   // other buffers; assuming equal sizes and relative positions (invariants)
+   for (const auto endB = mBuffers.end(); ++iterB != endB;) {
+      position = *++iterP;
+      memmove(position, position + drop, size);
+   }
+}
+
+void PerTrackEffect::Buffers::Advance(size_t count)
+{
+   if (mBuffers.empty())
+      return;
+
+   // First buffer; defend against excessive count
+   auto iterP = mPositions.begin();
+   auto iterB = mBuffers.begin();
+   auto &position = *iterP;
+   auto data = iterB->data();
+   auto end = data + iterB->size();
+   // invariant assumed, and preserved
+   assert(data <= position && position <= end);
+   count = std::min<size_t>(end - position, count);
+   position += count;
+   assert(data <= position && position <= end);
+
+   // other buffers; assuming equal sizes and relative positions (invariants)
+   for (const auto endB = mBuffers.end(); ++iterB != endB;) {
+      auto &position = *++iterP;
+      // invariant assumed, and preserved
+      assert(iterB->data() <= position);
+      assert(position <= iterB->data() + iterB->size());
+   
+      position += count;
+
+      assert(iterB->data() <= position);
+      assert(position <= iterB->data() + iterB->size());
+   }
+}
+
+void PerTrackEffect::Buffers::Rewind()
+{
+   auto iterP = mPositions.begin();
+   for (auto &buffer : mBuffers)
+      *iterP++ = buffer.data();
+}
+
+constSamplePtr PerTrackEffect::Buffers::GetReadPosition(unsigned iChannel) const
+{
+   iChannel = std::min(iChannel, Channels() - 1);
+   auto buffer = mBuffers[iChannel].data();
+   return reinterpret_cast<constSamplePtr>(buffer);
+}
+
 bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
-   FloatBuffers inBuffer, outBuffer;
-   ArrayOf<float *> inBufPos, outBufPos;
+   FloatBuffers inBuffer;
+   Buffers outBuffers;
+   ArrayOf<float *> inBufPos;
    ChannelName map[3];
    size_t bufferSize = 0;
    size_t blockSize = 0;
@@ -169,22 +255,18 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             // We won't be using more than the first 2 buffers, so clear the rest (if any)
             for (size_t i = 2; i < numAudioIn; i++)
                ClearBuffer(&inBuffer[i][0], bufferSize);
-
-            // Always create the number of output buffers the client expects even if we don't have
-            // the same number of channels.
-            outBufPos.reinit( numAudioOut );
-            // Output buffers get an extra blockSize worth to give extra room if
-            // the plugin adds latency
-            outBuffer.reinit( numAudioOut, bufferSize + blockSize );
          }
+
+         // Always create the number of output buffers the client expects
+         // even if we don't have the same number of channels.
+         // (These resizes may do nothing after the first track)
+         // Output buffers get an extra blockSize worth to give extra room if
+         // the plugin adds latency
+         outBuffers.Reinit(numAudioOut, bufferSize + blockSize);
 
          // (Re)Set the input buffer positions
          for (size_t i = 0; i < numAudioIn; i++)
             inBufPos[i] = inBuffer[i].get();
-
-         // (Re)Set the output buffer positions
-         for (size_t i = 0; i < numAudioOut; i++)
-            outBufPos[i] = outBuffer[i].get();
 
          // Clear unused input buffers
          if (!pRight && !clear && numAudioIn > 1) {
@@ -230,7 +312,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          bGoodResult = ProcessTrack(instance, settings,
             pollUser, genLength, sampleRate,
             map, left, pRight, start, len,
-            inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, blockSize,
+            inBuffer, outBuffers, inBufPos, bufferSize, blockSize,
             numChannels);
          if (!bGoodResult)
             return;
@@ -254,8 +336,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    const double sampleRate, const ChannelNames map,
    WaveTrack &left, WaveTrack *const pRight,
    const sampleCount start, const sampleCount len,
-   FloatBuffers &inBuffer, FloatBuffers &outBuffer,
-   ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,
+   FloatBuffers &inBuffer, Buffers &outBuffers,
+   ArrayOf< float * > &inBufPos,
    const size_t bufferSize, const size_t blockSize,
    const unsigned numChannels) const
 {
@@ -294,7 +376,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    size_t inputBufferCnt = 0;
    size_t outputBufferCnt = 0;
    bool cleared = false;
-   auto chans = std::min<unsigned>(GetAudioOutCount(), numChannels);
    std::shared_ptr<WaveTrack> genLeft, genRight;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
@@ -373,7 +454,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       decltype(curBlockSize) processed;
       try {
          processed = instance.ProcessBlock(
-            settings, inBufPos.get(), outBufPos.get(), curBlockSize);
+            settings, inBufPos.get(),
+            outBuffers.Positions(), curBlockSize);
       }
       catch( const AudacityException & WXUNUSED(e) ) {
          // PRL: Bug 437:
@@ -426,8 +508,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // curDelay is bounded by curBlockSize:
             auto delay = curDelay.as_size_t();
             curBlockSize -= delay;
-            for (size_t i = 0; i < chans; i++)
-               memmove(outBufPos[i], outBufPos[i] + delay, sizeof(float) * curBlockSize);
+            outBuffers.Discard(delay, curBlockSize);
             curDelay = 0;
          }
       }
@@ -435,33 +516,29 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       // Adjust the number of samples in the output buffers
       outputBufferCnt += curBlockSize;
 
-      // Still have room in the output buffers
-      if (outputBufferCnt < bufferSize) {
+      if (outputBufferCnt < bufferSize)
+         // Still have room in the output buffers
          // Bump to next output buffer position
-         for (size_t i = 0; i < chans; i++)
-            outBufPos[i] += curBlockSize;
-      }
-      // Output buffers have filled
+         outBuffers.Advance(curBlockSize);
       else {
+         // Output buffers have filled
          if (isProcessor) {
             // Write them out
-            left.Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
-            if (pRight) {
-               if (chans >= 2)
-                  pRight->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
-               else
-                  pRight->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
-            }
+            left.Set(outBuffers.GetReadPosition(0),
+               floatSample, outPos, outputBufferCnt);
+            if (pRight)
+               pRight->Set(outBuffers.GetReadPosition(1),
+                  floatSample, outPos, outputBufferCnt);
          }
          else if (isGenerator) {
-            genLeft->Append((samplePtr) outBuffer[0].get(), floatSample, outputBufferCnt);
+            genLeft->Append(outBuffers.GetReadPosition(0),
+               floatSample, outputBufferCnt);
             if (genRight)
-               genRight->Append((samplePtr) outBuffer[1].get(), floatSample, outputBufferCnt);
+               genRight->Append(outBuffers.GetReadPosition(1),
+                  floatSample, outputBufferCnt);
          }
 
-         // Reset the output buffer positions
-         for (size_t i = 0; i < chans; i++)
-            outBufPos[i] = outBuffer[i].get();
+         outBuffers.Rewind();
 
          // Bump to the next track position
          outPos += outputBufferCnt;
@@ -477,18 +554,18 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // Put any remaining output
    if (rc && outputBufferCnt) {
       if (isProcessor) {
-         left.Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
-         if (pRight) {
-            if (chans >= 2)
-               pRight->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
-            else
-               pRight->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
-         }
+         left.Set(outBuffers.GetReadPosition(0),
+            floatSample, outPos, outputBufferCnt);
+         if (pRight)
+            pRight->Set(outBuffers.GetReadPosition(1),
+               floatSample, outPos, outputBufferCnt);
       }
       else if (isGenerator) {
-         genLeft->Append((samplePtr) outBuffer[0].get(), floatSample, outputBufferCnt);
+         genLeft->Append(outBuffers.GetReadPosition(0),
+            floatSample, outputBufferCnt);
          if (genRight)
-            genRight->Append((samplePtr) outBuffer[1].get(), floatSample, outputBufferCnt);
+            genRight->Append(outBuffers.GetReadPosition(1),
+               floatSample, outputBufferCnt);
       }
    }
 
