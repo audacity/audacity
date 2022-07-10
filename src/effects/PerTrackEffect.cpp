@@ -25,6 +25,8 @@
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 
+AudioGraph::Source::~Source() = default;
+
 AudioGraph::Sink::~Sink() = default;
 
 PerTrackEffect::Instance::~Instance() = default;
@@ -222,6 +224,61 @@ void AudioGraph::Buffers::ClearBuffer(unsigned iChannel, size_t n)
    }
 }
 
+SampleTrackSource::SampleTrackSource(
+   const SampleTrack &left, const SampleTrack *pRight,
+   sampleCount start, sampleCount len, Poller pollUser
+)  : mLeft{ left }, mpRight{ pRight }, mPollUser{ move(pollUser) }
+   , mPos{ start }, mOutputRemaining{ len  }
+{
+}
+
+SampleTrackSource::~SampleTrackSource() = default;
+
+sampleCount SampleTrackSource::Remaining() const
+{
+   return std::max<sampleCount>(0, mOutputRemaining);
+}
+
+size_t SampleTrackSource::Acquire(Buffers &data)
+{
+   assert(data.BufferSize() > 0); // pre
+   // Therefore its block size is nonzero
+
+   if (!mInitialized || !data.Remaining()) {
+      // Need to refill the buffers
+      data.Rewind();
+      // Calculate the number of samples to get
+      const auto outputBufferCnt =
+         limitSampleBufferSize(data.Remaining(), Remaining());
+      // guarantees write won't overflow
+      assert(outputBufferCnt <= data.Remaining());
+      // Fill the buffers
+      mLeft.GetFloats(&data.GetWritePosition(0), mPos, outputBufferCnt);
+      if (mpRight && data.Channels() > 1)
+         mpRight->GetFloats(&data.GetWritePosition(1), mPos, outputBufferCnt);
+      mPos += outputBufferCnt;
+      mInitialized = true;
+   }
+   assert(data.Remaining() > 0);
+   auto result = mLastProduced = std::min(data.BlockSize(),
+      limitSampleBufferSize(data.Remaining(), Remaining()));
+   // assert post
+   assert(result <= data.BlockSize());
+   assert(result <= data.Remaining());
+   assert(result <= Remaining());
+   // true because the three terms of the min would be positive
+   assert(Remaining() == 0 || result > 0);
+   return result;
+}
+
+bool SampleTrackSource::Release()
+{
+   mOutputRemaining -= mLastProduced;
+   mLastProduced = 0;
+   assert(mOutputRemaining >= 0);
+   return !mPollUser || mPollUser(mPos);
+}
+
 WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
    sampleCount start, bool isGenerator, bool isProcessor
 )  : mLeft{ left }, mpRight{ pRight }
@@ -389,7 +446,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          }
          inBuffers.Reinit(numAudioIn, blockSize, bufferSize / blockSize);
          if (len > 0) {
-            // post of Reinit satisfies pre of ProcessTrack
+            // post of Reinit later satisfies pre of Source::Acquire()
             assert(inBuffers.Channels() > 0);
             assert(inBuffers.BufferSize() > 0);
          }
@@ -518,11 +575,18 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // there is no further input data to process, the loop continues to call the
    // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
-   auto inPos = start;
-   auto inputRemaining = len;
    sampleCount curDelay = 0;
+
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
+   // Function precondition
+   assert(len == 0 ||
+      (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
+   SampleTrackSource source{ left, pRight, start, len, pollUser };
+   // Assert source is safe to Acquire inBuffers
+   assert(source.Remaining() == 0 ||
+      (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
+
    sampleCount delayRemaining = genLength ? *genLength : 0;
    bool latencyDone = false;
 
@@ -534,34 +598,12 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // of block size, and is rewound
    assert(blockSize <= outBuffers.Remaining());
 
-   // Cause the first pass of the loop to fetch from the track
-   inBuffers.Rewind();
-   inBuffers.Advance(inBuffers.BufferSize());
-
    // Call the effect until we run out of input or delayed samples
-   while (inputRemaining > 0 || delayRemaining > 0) {
+   while (source.Remaining() > 0 || delayRemaining > 0) {
       const auto curBlockSize = [&]() -> size_t {
-      if (inputRemaining > 0) {
+      if (source.Remaining() > 0)
          // Still working on the input samples
-         if (inBuffers.Remaining() == 0) {
-            // Need to refill the input buffers
-            inBuffers.Rewind();
-            // Calculate the number of samples to get
-            const auto inputBufferCnt =
-               limitSampleBufferSize(inBuffers.Remaining(), inputRemaining);
-            // guarantees write won't overflow
-            assert(inputBufferCnt <= inBuffers.Remaining());
-            // Fill the input buffers
-            left.GetFloats(&inBuffers.GetWritePosition(0),
-               inPos, inputBufferCnt);
-            if (pRight && inBuffers.Channels() > 1)
-               pRight->GetFloats(&inBuffers.GetWritePosition(1),
-                  inPos, inputBufferCnt);
-         }
-         assert(inBuffers.Remaining() > 0);
-         return std::min(blockSize,
-            limitSampleBufferSize(inBuffers.Remaining(), inputRemaining));
-      }
+         return source.Acquire(inBuffers);
       else {
          // We've exhausted the input samples and are now working on the delay
          assert(delayRemaining > 0);
@@ -573,8 +615,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          return result;
       }
       }();
-      // needed for other termination guarantee below
-      assert(inputRemaining <= 0 || curBlockSize > 0);
+      assert(source.Remaining() == 0 || curBlockSize <= inBuffers.Remaining());
+      // post of Acquire() gives termination guarantee below
+      assert(source.Remaining() == 0 || curBlockSize > 0);
       assert(curBlockSize <= blockSize);
 
       // Finally call the plugin to process the block
@@ -612,27 +655,22 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          latencyDone = true;
       }
 
-      // See where curBlockSize was decided:
-      assert(curBlockSize <= blockSize);
-      if (inputRemaining > 0) {
-         // Progress toward loop termination
-         inputRemaining -= curBlockSize;
-         assert(inputRemaining >= 0);
-         if (inputRemaining > 0) {
+      if (source.Remaining() > 0) {
+         if (!source.Release())
+            return false;
+         // post of Advance() implies progress to loop termination
+         if (source.Remaining() > 0) {
             // See where curBlockSize was decided:
             assert(curBlockSize <= inBuffers.Remaining());
             inBuffers.Advance(curBlockSize);
-            inPos += curBlockSize;
-            if (!pollUser(inPos))
-               return false;
          }
-         else if (delayRemaining > 0) {
-            // From this point on, we only want to feed zeros to the plugin
-            // Reset the input buffer positions and guarantee blockSize zeroes
-            inBuffers.Rewind();
-            for (size_t i = 0; i < numChannels; i++)
-               inBuffers.ClearBuffer(i, blockSize);
-         }
+      }
+      else if (delayRemaining > 0) {
+         // From this point on, we only want to feed zeros to the plugin
+         // Reset the input buffer positions and guarantee blockSize zeroes
+         inBuffers.Rewind();
+         for (size_t i = 0; i < numChannels; i++)
+            inBuffers.ClearBuffer(i, blockSize);
       }
 
       // Preconditions for Discard() and Consume() hold

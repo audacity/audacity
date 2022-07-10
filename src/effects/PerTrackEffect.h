@@ -21,8 +21,48 @@
 
 #include "SampleFormat.h"
 
+class SampleTrack;
+
 namespace AudioGraph {
 class Buffers;
+
+//! Upstream producer of sample streams, taking Buffers as external context
+class Source {
+public:
+   using Buffers = AudioGraph::Buffers;
+
+   virtual ~Source();
+
+   //! Occupy vacant space in Buffers with some data
+   /*!
+    May exceeed a single block of production
+
+    @return number of positions available to read from `data`
+    @pre `Remaining() == 0 || data.Channels() > 0`
+    @pre `Remaining() == 0 || data.BufferSize() > 0`
+       (therefore its block size is positive too)
+    @post result: `result <= data.BlockSize()`
+    @post result: `result <= data.Remaining()`
+    @post result: `result <= Remaining()`
+    @post `data.Remaining() > 0`
+    @post result: `Remaining() == 0 || result > 0` (progress guarantee)
+    @post `Remaining()` is unchanged
+    */
+   virtual size_t Acquire(Buffers &data) = 0;
+
+   //! Result includes any amount Acquired and not yet Released
+   /*!
+    @post result: `result >= 0`
+    */
+   virtual sampleCount Remaining() const = 0;
+
+   //! Caller is done examining last Acquire()d positions
+   /*!
+    @return success
+    @post `Remaining()` reduced by what was last returned by `Acquire()`
+    */
+   virtual bool Release() = 0;
+};
 
 //! Downstream receiver of sample streams, taking Buffers as external context
 class Sink {
@@ -47,6 +87,33 @@ public:
 };
 
 }
+
+class SampleTrackSource final : public AudioGraph::Source {
+public:
+   //! Type of function returning false if user cancels progress
+   using Poller = std::function<bool(sampleCount blockSize)>;
+
+   /*!
+    @post `Remaining()` == len
+    */
+   SampleTrackSource(const SampleTrack &left, const SampleTrack *pRight,
+      sampleCount start, sampleCount len, Poller pollUser);
+   ~SampleTrackSource() override;
+
+   size_t Acquire(Buffers &data) override;
+   sampleCount Remaining() const override;
+   //! Can test for user cancellation
+   bool Release() override;
+private:
+   const SampleTrack &mLeft;
+   const SampleTrack *const mpRight;
+   const Poller mPollUser;
+
+   sampleCount mPos{};
+   sampleCount mOutputRemaining{};
+   size_t mLastProduced{};
+   bool mInitialized{ false };
+};
 
 class WaveTrackSink final : public AudioGraph::Sink {
 public:
