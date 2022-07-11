@@ -11,6 +11,7 @@
 
 #include <wx/defs.h>
 #include <cstddef>
+#include <cstring>
 
 #include "Import.h"
 #include "BasicUI.h"
@@ -32,11 +33,66 @@
 #include "../widgets/ProgressDialog.h"
 
 #include "CodeConversions.h"
+#include "FromChars.h"
 
 namespace
 {
 
 static const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
+
+// ID2V2 genre can be quite complex:
+// (from https://id3.org/id3v2.3.0)
+// References to the ID3v1 genres can be made by, as first byte, enter
+// "(" followed by a number from the genres list (appendix A) and ended
+// with a ")" character. This is optionally followed by a refinement,
+// e.g. "(21)" or "(4)Eurodisco". Several references can be made in the
+// same frame, e.g. "(51)(39)". However, Audacity only supports one
+// genre, so we just skip ( a parse the number afterwards.
+wxString GetId3v2Genre(Tags& tags, const char* genre)
+{
+   if (genre == nullptr)
+      return {};
+
+   // It was observed, however, that Genre can use a different format
+   if (genre[0] != '(')
+      // We consider the string to be a genre name
+      return audacity::ToWXString(genre);
+
+   auto it = genre;
+   auto end = it + std::strlen(it);
+
+   while (*it == '(')
+   {
+      int tagValue;
+      auto result = FromChars(++it, end, tagValue);
+
+      // Parsing failed, consider it to be the genre
+      if (result.ec != std::errc {})
+         break;
+
+      const auto parsedGenre = tags.GetGenre(tagValue);
+
+      if (!parsedGenre.empty())
+         return parsedGenre;
+
+      it = result.ptr;
+
+      // Nothing left to parse
+      if (it == end)
+         break;
+
+      // Unexpected symbol in the tag
+      if (*it != ')')
+         break;
+
+      ++it;
+   }
+
+   if (it != end)
+      return audacity::ToWXString(it);
+   
+   return audacity::ToWXString(genre);
+}
 
 class MP3ImportPlugin final : public ImportPlugin
 {
@@ -302,7 +358,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       wxLogError(
          "Failed to decode MP3 file: %s", mpg123_plain_strerror(ret));
 
-      return ProgressResult::Failed;
+      //return ProgressResult::Failed;
    }
 
    // Flush and trim the channels
@@ -348,16 +404,8 @@ void MP3ImportFileHandle::ReadTags(Tags* tags)
       else if (v1 != nullptr && v1->year[0] != '\0')
          tags->SetTag(TAG_YEAR, audacity::ToWXString(std::string(v1->year, 4)));
 
-      // ID2V2 genre can be quite complex:
-      // (from https://id3.org/id3v2.3.0)
-      // References to the ID3v1 genres can be made by, as first byte, enter
-      // "(" followed by a number from the genres list (appendix A) and ended
-      // with a ")" character. This is optionally followed by a refinement,
-      // e.g. "(21)" or "(4)Eurodisco". Several references can be made in the
-      // same frame, e.g. "(51)(39)". However, Audacity only supports one
-      // genre, so we just skip ( a parse the number afterwards.
       if (v2 != nullptr && v2->genre != nullptr && v2->genre->fill > 0)
-         tags->SetTag(TAG_GENRE, tags->GetGenre(std::stoi(v2->genre->p + 1)));
+         tags->SetTag(TAG_GENRE, GetId3v2Genre(*tags, v2->genre->p));
       else if (v1 != nullptr)
          tags->SetTag(TAG_GENRE, tags->GetGenre(v1->genre));
 
