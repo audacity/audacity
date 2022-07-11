@@ -67,4 +67,7 @@ public:
     */
    void SetTrack(const std::shared_ptr<Track>& track);
    void ResetTrack();
+
+private:
+   void OnCharHook(wxKeyEvent& evt);
 };

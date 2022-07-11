@@ -1011,6 +1011,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
    SetSizerAndFit(vSizer.release());
 
+   Bind(wxEVT_CHAR_HOOK, &RealtimeEffectPanel::OnCharHook, this);
    mTrackListChanged = TrackList::Get(mProject).Subscribe([this](const TrackListEvent& evt) {
          auto track = evt.mpTrack.lock();
          auto waveTrack = dynamic_cast<WaveTrack*>(track.get());
@@ -1145,4 +1146,12 @@ void RealtimeEffectPanel::ResetTrack()
    mToggleEffects->Enable(false);
    mEffectList->ResetTrack();
    mCurrentTrack.reset();
+}
+
+void RealtimeEffectPanel::OnCharHook(wxKeyEvent& evt)
+{
+   if(evt.GetKeyCode() == WXK_ESCAPE && IsShown() && IsDescendant(FindFocus()))
+      Close();
+   else
+      evt.Skip();
 }

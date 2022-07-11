@@ -150,7 +150,7 @@ EffectsButtonHandle::~EffectsButtonHandle()
 UIHandle::Result EffectsButtonHandle::CommitChanges
 (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
 {
-   ProjectWindow::Get(*pProject).ShowEffectsPanel(mpTrack.lock().get());
+   ProjectWindow::Get(*pProject).ShowEffectsPanel(mpTrack.lock().get(), true);
    return RefreshCode::RefreshNone;
 }
 

@@ -137,7 +137,7 @@ public:
    double GetZoomOfToFit() const;
    void DoZoomFit();
    
-   void ShowEffectsPanel(Track* track = nullptr);
+   void ShowEffectsPanel(Track* track = nullptr, bool focus = false);
    void HideEffectsPanel();
    bool IsEffectsPanelShown();
 

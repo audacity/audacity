@@ -699,7 +699,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
          {
             auto& project = GetProject();
             auto& trackFocus = TrackFocus::Get(project);
-            ShowEffectsPanel(trackFocus.Get());
+            ShowEffectsPanel(trackFocus.Get(), false);
          }
       });
 
@@ -1906,7 +1906,7 @@ void ProjectWindow::DoZoomFit()
    window.TP_ScrollWindow(start);
 }
 
-void ProjectWindow::ShowEffectsPanel(Track* track)
+void ProjectWindow::ShowEffectsPanel(Track* track, bool focus)
 {
    if(track == nullptr)
    {
@@ -1926,6 +1926,8 @@ void ProjectWindow::ShowEffectsPanel(Track* track)
          mTrackListWindow,
          mEffectsWindow->GetSize().GetWidth());
    }
+   if(focus)
+      mEffectsWindow->SetFocus();
    Layout();
 }
 
