@@ -16,6 +16,8 @@
 
 #include "Effect.h" // to inherit
 #include "MemoryX.h"
+#include <functional>
+#include <optional>
 
 using FloatBuffers = ArraysOf<float>;
 
@@ -80,8 +82,11 @@ protected:
 
 private:
    bool ProcessPass(Instance &instance, EffectSettings &settings);
+   //! Type of function returning false if user cancels progress
+   using Poller = std::function<bool(sampleCount blockSize)>;
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
-      double sampleRate, int count, ChannelNames map,
+      const Poller &pollUser, std::optional<sampleCount> genLength,
+      double sampleRate, ChannelNames map,
       WaveTrack &left, WaveTrack *pRight,
       sampleCount start, sampleCount len,
       FloatBuffers &inBuffer, FloatBuffers &outBuffer,

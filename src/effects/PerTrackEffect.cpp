@@ -192,9 +192,44 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             clear = true;
          }
 
+         const auto genLength = [this, &settings, &left, isGenerator](
+         ) -> std::optional<sampleCount> {
+            double genDur = 0;
+            if (isGenerator) {
+               const auto duration = settings.extra.GetDuration();
+               if (IsPreviewing()) {
+                  gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
+                  genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
+               }
+               else
+                  genDur = duration;
+               // round to nearest sample
+               return sampleCount{ (left.GetRate() * genDur) + 0.5 };
+            }
+            else
+               return {};
+         }();
+
+         const auto pollUser = [this, numChannels, count, start,
+            length = (genLength ? *genLength : len).as_double()
+         ](sampleCount inPos){
+            if (numChannels > 1) {
+               if (TrackGroupProgress(
+                  count, (inPos - start).as_double() / length)
+               )
+                  return false;
+            }
+            else {
+               if (TrackProgress(count, (inPos - start).as_double() / length))
+                  return false;
+            }
+            return true;
+         };
+
          // Go process the track(s)
-         bGoodResult = ProcessTrack(instance, settings, sampleRate,
-            count, map, left, pRight, start, len,
+         bGoodResult = ProcessTrack(instance, settings,
+            pollUser, genLength, sampleRate,
+            map, left, pRight, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, blockSize,
             numChannels);
          if (!bGoodResult)
@@ -215,7 +250,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 }
 
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
-   const double sampleRate, const int count, const ChannelNames map,
+   const Poller &pollUser, std::optional<sampleCount> genLength,
+   const double sampleRate, const ChannelNames map,
    WaveTrack &left, WaveTrack *const pRight,
    const sampleCount start, const sampleCount len,
    FloatBuffers &inBuffer, FloatBuffers &outBuffer,
@@ -262,38 +298,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    std::shared_ptr<WaveTrack> genLeft, genRight;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
-   const auto genLength = [this, &settings, &left, isGenerator](
-   ) -> std::optional<sampleCount> {
-      double genDur = 0;
-      if (isGenerator) {
-         const auto duration = settings.extra.GetDuration();
-         if (IsPreviewing()) {
-            gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-            genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
-         }
-         else
-            genDur = duration;
-         // round to nearest sample
-         return sampleCount{ (left.GetRate() * genDur) + 0.5 };
-      }
-      else
-         return {};
-   }();
    sampleCount delayRemaining = genLength ? *genLength : 0;
-
-   const auto pollUser = [this, numChannels, count, start,
-      length = (genLength ? *genLength : len).as_double()
-   ](sampleCount inPos){
-      if (numChannels > 1) {
-         if (TrackGroupProgress(count, (inPos - start).as_double() / length))
-            return false;
-      }
-      else {
-         if (TrackProgress(count, (inPos - start).as_double() / length))
-            return false;
-      }
-      return true;
-   };
 
    if (isGenerator) {
       cleared = true;
