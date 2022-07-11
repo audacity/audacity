@@ -373,10 +373,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          inputBufferCnt -= curBlockSize;
       }
 
-      // "ls" and "rs" serve as the input sample index for the left and
-      // right channels when processing the input samples.  If we flip
-      // over to processing delayed samples, they simply become counters
-      // for the progress display.
       inPos += curBlockSize;
 
       // Get the current number of delayed samples and accumulate
