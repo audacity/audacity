@@ -391,7 +391,7 @@ END_EVENT_TABLE()
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent)
 :  wxDialogWrapper(parent,
             wxID_ANY,
-            XO("Manage Plug-ins"),
+            XO("Manage Plugins"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

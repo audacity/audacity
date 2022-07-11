@@ -50,7 +50,7 @@ IncompatiblePluginsDialog::IncompatiblePluginsDialog(
 
    {
       auto buttonsLayout = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      auto pluginManagerButton = safenew wxButton(this, wxID_ANY, _("Manage Plug-ins"));
+      auto pluginManagerButton = safenew wxButton(this, wxID_ANY, _("Manage Plugins"));
       pluginManagerButton->Bind(wxEVT_BUTTON, &IncompatiblePluginsDialog::OnPluginManagerClicked, this);
       buttonsLayout->Add(pluginManagerButton);
 
@@ -72,8 +72,10 @@ void IncompatiblePluginsDialog::SetPlugins(const std::vector<wxString>& plugins)
 {
    mText->SetLabelText(XO(
       "Audacity has found %d incompatible plugins which could "\
-      "not be loaded and are disabled. If you wish to enable them, "\
-      "you can do so from \"Manage Plug-Ins\" or click \"Continue\".")
+      "not be loaded. We have disabled these plugins to avoid any "\
+      "stalling or crashes. If you would still like to attempt "\
+      "to use these plugins, you can enable them using "\
+      "\"Manage Plugins\". Otherwise, select \"Continue\".")
       .Format(static_cast<int>(plugins.size())).Translation());
    mText->Wrap(GetClientSize().GetWidth() - 80);
 
