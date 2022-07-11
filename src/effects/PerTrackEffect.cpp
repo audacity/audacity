@@ -44,7 +44,7 @@ bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
 }
 
 sampleCount PerTrackEffect::Instance::GetLatency(
-   const EffectSettings &, double)
+   const EffectSettings &, double) const
 {
    return 0;
 }
@@ -299,6 +299,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
    sampleCount delayRemaining = genLength ? *genLength : 0;
+   bool latencyDone = false;
 
    if (isGenerator) {
       cleared = true;
@@ -402,10 +403,14 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
       // Get the current number of delayed samples and accumulate
       if (isProcessor) {
-         {
+         // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
+         // until at least one block of samples is processed.  Find latency
+         // once only for the track and assume it doesn't vary
+         if (!latencyDone) {
             auto delay = instance.GetLatency(settings, sampleRate);
             curDelay += delay;
             delayRemaining += delay;
+            latencyDone = true;
          }
 
          // If the plugin has delayed the output by more samples than our current

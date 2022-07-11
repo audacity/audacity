@@ -55,13 +55,12 @@ size_t AudioUnitInstance::GetBlockSize() const
 }
 
 sampleCount AudioUnitInstance::GetLatency(
-   const EffectSettings &, double sampleRate)
+   const EffectSettings &, double sampleRate) const
 {
    // Retrieve the latency (can be updated via an event)
-   if (mUseLatency && !mLatencyDone) {
+   if (mUseLatency) {
       Float64 latency = 0.0;
       if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
-         mLatencyDone = true;
          return sampleCount{ latency * sampleRate };
       }
    }
@@ -110,7 +109,6 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
    if (!BypassEffect(false))
       return false;
 
-   mLatencyDone = false;
    return true;
 }
 
@@ -364,8 +362,7 @@ void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
       // Handle latency changes
       if (inEvent->mArgument.mProperty.mPropertyID ==
           kAudioUnitProperty_Latency) {
-         // Allow change to be used
-         //mLatencyDone = false;
+         // Do what?
       }
       return;
    }

@@ -137,7 +137,7 @@ class VSTEffect final
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   sampleCount GetLatency() override;
+   sampleCount GetLatency() const override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
