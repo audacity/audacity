@@ -371,12 +371,7 @@ AButton::AButtonState AButton::GetState()
       }
    }
    else {
-      //if (mToggle) {
-         state = mButtonIsDown ? AButtonDown : AButtonUp;
-      //}
-      //else {
-         //state = mButtonIsDown ? AButtonDown : AButtonUp;
-      //}
+      state = mButtonIsDown ? AButtonDown : AButtonUp;
    }
 
    return state;
@@ -390,10 +385,8 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    mImages[mAlternateIdx].mArr[buttonState].Draw(dc, GetClientRect());
 
-   if( this == wxWindow::FindFocus() )
-   {
+   if(HasFocus())
       AColor::DrawFocus( dc, mFocusRect );
-   }
 }
 
 void AButton::OnErase(wxEraseEvent & WXUNUSED(event))
@@ -463,8 +456,6 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
          if (mCursorIsInWindow && (mToggle || !mButtonIsDown)) {
             if (mToggle)
                mButtonIsDown = !mButtonIsDown;
-            else
-               mButtonIsDown = true;
 
             mWasShiftDown = event.ShiftDown();
             mWasControlDown = event.ControlDown();
@@ -531,9 +522,9 @@ void AButton::OnKeyDown(wxKeyEvent & event)
       Navigate(wxNavigationKeyEvent::IsBackward);
       break;
    case WXK_TAB:
-      Navigate(event.ShiftDown()
+      Navigate(wxNavigationKeyEvent::FromTab | (event.ShiftDown()
                ? wxNavigationKeyEvent::IsBackward
-               : wxNavigationKeyEvent::IsForward);
+               : wxNavigationKeyEvent::IsForward));
       break;
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
@@ -541,6 +532,11 @@ void AButton::OnKeyDown(wxKeyEvent & event)
          break;
       mWasShiftDown = event.ShiftDown();
       mWasControlDown = event.ControlDown();
+      if(mToggle)
+      {
+         mButtonIsDown = !mButtonIsDown;
+         Refresh(false);
+      }
       Click();
       break;
    default:
