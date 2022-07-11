@@ -624,6 +624,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // See where curBlockSize was decided:
             assert(curBlockSize <= inBuffers.Remaining());
             inBuffers.Advance(curBlockSize);
+            inPos += curBlockSize;
+            if (!pollUser(inPos))
+               return false;
          }
          else if (delayRemaining > 0) {
             // From this point on, we only want to feed zeros to the plugin
@@ -633,7 +636,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
                inBuffers.ClearBuffer(i, blockSize);
          }
       }
-      inPos += curBlockSize;
 
       // Preconditions for Discard() and Consume() hold
       // because curBlockSize <= blockSize <= outBuffers.Remaining()
@@ -652,11 +654,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       if (!sink.Acquire(outBuffers))
          return false;
       // Invariant O preserved
-
-      if (!pollUser(inPos)) {
-         rc = false;
-         break;
-      }
    }
 
    // Put any remaining output
