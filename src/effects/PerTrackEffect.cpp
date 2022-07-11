@@ -280,6 +280,21 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          return {};
    }();
    sampleCount delayRemaining = genLength ? *genLength : 0;
+
+   const auto pollUser = [this, numChannels, count, start,
+      length = (genLength ? *genLength : len).as_double()
+   ](sampleCount inPos){
+      if (numChannels > 1) {
+         if (TrackGroupProgress(count, (inPos - start).as_double() / length))
+            return false;
+      }
+      else {
+         if (TrackProgress(count, (inPos - start).as_double() / length))
+            return false;
+      }
+      return true;
+   };
+
    if (isGenerator) {
       cleared = true;
 
@@ -443,21 +458,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          outputBufferCnt = 0;
       }
 
-      if (numChannels > 1) {
-         if (TrackGroupProgress(count,
-               (inPos - start).as_double() /
-               (genLength ? *genLength : len).as_double())) {
-            rc = false;
-            break;
-         }
-      }
-      else {
-         if (TrackProgress(count,
-               (inPos - start).as_double() /
-               (genLength ? *genLength : len).as_double())) {
-            rc = false;
-            break;
-         }
+      if (!pollUser(inPos)) {
+         rc = false;
+         break;
       }
    }
 
