@@ -1302,7 +1302,7 @@ BaseItemSharedPtr EffectMenu()
 
       Section( "RealtimeEffects",
          Command ( wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
-            FN(OnAddRealtimeEffects),  HasTrackFocusFlag() )
+            FN(OnAddRealtimeEffects),  HasTrackFocusFlag(), wxT("E") )
       ),
 
       Section( "RepeatLast",

@@ -29,57 +29,44 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
    auto temp1 = AButton::TemporarilyAllowFocus();
    auto temp2 = ASlider::TemporarilyAllowFocus();
    auto temp3 = MeterPanel::TemporarilyAllowFocus();
-
-   auto &toolManager = ToolManager::Get( project );
-   auto botDock = toolManager.GetBotDock();
-
-
-   // Define the set of windows we rotate among.
-   static const unsigned rotationSize = 3u;
-
-   wxWindow *const begin [rotationSize] = {
-      ProjectWindow::Get( project ).GetTopPanel(),
-      &TrackPanel::Get( project ),
-      botDock,
-   };
-
-   const auto end = begin + rotationSize;
-
-   // helper functions
-   auto IndexOf = [&](wxWindow *pWindow) {
-      return std::find(begin, end, pWindow) - begin;
-   };
+   
+   std::vector<wxWindow*> seq;
+   // Skip docks that are empty (Bug 1564).
+   if(!ToolManager::Get(project).GetTopDock()->GetChildren().IsEmpty())
+      seq.push_back(ProjectWindow::Get( project ).GetTopPanel());
+   seq.push_back(&TrackPanel::Get( project ));
+   seq.push_back(ProjectWindow::Get(project).GetEffectsWindow());
+   if(!ToolManager::Get( project ).GetBotDock()->GetChildren().IsEmpty())
+      seq.push_back(ToolManager::Get( project ).GetBotDock());
 
    auto FindAncestor = [&]() {
       wxWindow *pWindow = wxWindow::FindFocus();
-      unsigned index = rotationSize;
-      while ( pWindow &&
-              (rotationSize == (index = IndexOf(pWindow) ) ) )
+      while (pWindow)
+      {
+         auto it = std::find(seq.cbegin(), seq.cend(), pWindow);
+         if(it != seq.cend())
+            return static_cast<size_t>(std::distance(seq.cbegin(), it));
          pWindow = pWindow->GetParent();
-      return index;
+      }
+      return seq.size();
    };
 
    const auto idx = FindAncestor();
-   if (idx == rotationSize)
+   if (idx == seq.size())
       return;
 
    auto idx2 = idx;
-   auto increment = (forward ? 1 : rotationSize - 1);
+   const auto increment = (forward ? 1 : static_cast<int>(seq.size()) - 1);
 
-   while( idx != (idx2 = (idx2 + increment) % rotationSize) ) {
-      wxWindow *toFocus = begin[idx2];
-      bool bIsAnEmptyDock=false;
-      if( idx2 != 1 )
-         bIsAnEmptyDock = ((idx2==0) ? toolManager.GetTopDock() : botDock)->
-         GetChildren().GetCount() < 1;
+   while( idx != (idx2 = (idx2 + increment) % seq.size()) ) {
+      wxWindow *toFocus = seq[idx2];
+      if(!toFocus->IsShown())
+         continue;
 
-      // Skip docks that are empty (Bug 1564).
-      if( !bIsAnEmptyDock ){
-         toFocus->SetFocus();
-         if ( FindAncestor() == idx2 )
-            // The focus took!
-            break;
-      }
+      toFocus->SetFocus();
+      if ( FindAncestor() == idx2 )
+         // The focus took!
+         break;
    }
 }
 
