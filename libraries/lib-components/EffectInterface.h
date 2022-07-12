@@ -140,6 +140,9 @@ public:
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings) = 0;
 
+   //! Make the last `Set` changes "persistent" in underlying storage
+   virtual void Flush() = 0;
+
    //! @return whether this and the other give access to the same settings
    virtual bool IsSameAs(const EffectSettingsAccess &other) const = 0;
 
@@ -166,6 +169,7 @@ public:
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings) override;
+   void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
    EffectSettings &mSettings;
@@ -204,8 +208,20 @@ public:
    //! Whether the effect sorts "above the line" in the menus
    virtual bool IsDefault() const = 0;
 
+   //! In which versions of Audacity was an effect realtime capable?
+   enum class RealtimeSince : unsigned {
+      Never,
+      Since_3_2,
+      Always,
+   };
+
+   //! Since which version of Audacity has the effect supported realtime?
+   virtual RealtimeSince RealtimeSupport() const = 0;
+
    //! Whether the effect supports realtime previewing (while audio is playing).
-   virtual bool SupportsRealtime() const = 0;
+   //! non-virtual
+   bool SupportsRealtime() const
+   { return RealtimeSupport() != RealtimeSince::Never; }
 
    //! Whether the effect has any automatable controls.
    virtual bool SupportsAutomation() const = 0;
@@ -377,8 +393,6 @@ public:
     */
    virtual bool Process(EffectSettings &settings) = 0;
 
-   virtual void SetSampleRate(double rate) = 0;
-
    virtual size_t GetBlockSize() const = 0;
 
    // Suggest a block size, but the return is the size that was really set:
@@ -391,7 +405,7 @@ public:
     Other member functions related to realtime return true or zero, but will not
     be called, unless a derived class overrides RealtimeInitialize.
     */
-   virtual bool RealtimeInitialize(EffectSettings &settings);
+   virtual bool RealtimeInitialize(EffectSettings &settings, double sampleRate);
 
    /*!
     @return success
@@ -456,17 +470,6 @@ protected:
    size_t mBlockSize{ 0 };
 };
 
-//! Inherit to add a state variable to an EffectInstance subclass
-class COMPONENTS_API EffectInstanceWithSampleRate
-   : public virtual EffectInstance
-{
-public:
-   ~EffectInstanceWithSampleRate() override;
-   void SetSampleRate(double rate) override;
-protected:
-   double mSampleRate{ 0 };
-};
-
 /***************************************************************************//**
 \class EffectInstanceFactory
 *******************************************************************************/
@@ -484,6 +487,8 @@ public:
     and reloaded from files.
 
     @param settings may be assumed to have a lifetime enclosing the instance's
+
+    @post `true` (no promises that the result isn't null)
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
@@ -532,6 +537,12 @@ public:
     */
    virtual bool UpdateUI();
 
+   /*!
+    Default implementation returns false
+    @return true if using a native plug-in UI, not widgets
+    */
+   virtual bool IsGraphicalUI();
+
 protected:
    // Convenience function template for binding event handler functions
    template<typename EventTag, typename Class, typename Event>
@@ -560,13 +571,15 @@ protected:
 class COMPONENTS_API DefaultEffectUIValidator
    : public EffectUIValidator
    // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
-   , wxEvtHandler
+   , protected wxEvtHandler
 {
 public:
    using EffectUIValidator::EffectUIValidator;
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
+   //! @return mEffect.IsGraphicalUI()
+   bool IsGraphicalUI() override;
 };
 
 /*************************************************************************************//**
@@ -586,10 +599,12 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal = false
-   ) = 0;
+   virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal = false) = 0;
 
+   /*!
+    @return true if using a native plug-in UI, not widgets
+    */
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`

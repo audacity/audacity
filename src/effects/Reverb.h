@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "StatefulPerTrackEffect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 
@@ -69,7 +69,7 @@ public:
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   bool SupportsRealtime() const override { return true; }
+   RealtimeSince RealtimeSupport() const override;
 
    // Effect implementation
 

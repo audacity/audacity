@@ -101,6 +101,13 @@ unsigned EffectNoise::GetAudioOutCount() const
    return 1;
 }
 
+bool EffectNoise::ProcessInitialize(EffectSettings &,
+   double sampleRate, sampleCount, ChannelNames)
+{
+   mSampleRate = sampleRate;
+   return true;
+}
+
 size_t EffectNoise::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outbuf, size_t size)
 {

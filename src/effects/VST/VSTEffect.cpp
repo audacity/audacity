@@ -804,7 +804,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mAudioOuts = 0;
    mMidiIns = 0;
    mMidiOuts = 0;
-   mSampleRate = 44100;
    mBlockSize = mUserBlockSize = 8192;
    mBufferDelay = 0;
    mProcessLevel = 1;         // in GUI thread
@@ -926,11 +925,13 @@ bool VSTEffect::IsDefault() const
    return false;
 }
 
-bool VSTEffect::SupportsRealtime() const
+auto VSTEffect::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-   //return GetType() == EffectTypeProcess;
+   return RealtimeSince::Never;
+//   return GetType() == EffectTypeProcess
+//      ? RealtimeSince::Always
+//      : RealtimeSince::Never;
 }
 
 bool VSTEffect::SupportsAutomation() const
@@ -1008,11 +1009,6 @@ size_t VSTEffect::GetBlockSize() const
    return mBlockSize;
 }
 
-void VSTEffect::SetSampleRate(double rate)
-{
-   mSampleRate = (float) rate;
-}
-
 sampleCount VSTEffect::GetLatency()
 {
    if (mUseLatency)
@@ -1032,16 +1028,16 @@ bool VSTEffect::IsReady()
 }
 
 bool VSTEffect::ProcessInitialize(
-   EffectSettings &settings, sampleCount count, ChannelNames names)
+   EffectSettings &, double sampleRate, sampleCount, ChannelNames)
 {
-   return DoProcessInitialize(count, names);
+   return DoProcessInitialize(sampleRate);
 }
 
-bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
+bool VSTEffect::DoProcessInitialize(double sampleRate)
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
-   mTimeInfo.sampleRate = mSampleRate;
+   mTimeInfo.sampleRate = sampleRate;
    mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    mTimeInfo.tempo = 120.0;
    mTimeInfo.timeSigNumerator = 4;
@@ -1049,7 +1045,7 @@ bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid | kVstTransportPlaying;
 
    // Set processing parameters...power must be off for this
-   callDispatcher(effSetSampleRate, 0, 0, NULL, mSampleRate);
+   callDispatcher(effSetSampleRate, 0, 0, NULL, sampleRate);
    callDispatcher(effSetBlockSize, 0, mBlockSize, NULL, 0.0);
 
    // Turn on the power
@@ -1059,7 +1055,6 @@ bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
    SetBufferDelay(mAEffect->initialDelay);
 
    mReady = true;
-
    return true;
 }
 
@@ -1098,9 +1093,9 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-bool VSTEffect::RealtimeInitialize(EffectSettings &settings)
+bool VSTEffect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, 0, nullptr);
 }
 
 bool VSTEffect::RealtimeAddProcessor(
@@ -1110,33 +1105,23 @@ bool VSTEffect::RealtimeAddProcessor(
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
-   slave->SetSampleRate(sampleRate);
 
    int clen = 0;
-   if (mAEffect->flags & effFlagsProgramChunks)
-   {
+   if (mAEffect->flags & effFlagsProgramChunks) {
       void *chunk = NULL;
-
       clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0); // get master's chunk, for the program only
       if (clen != 0)
-      {
          slave->callSetChunk(true, clen, chunk); // copy state to slave, for the program only
-      }
    }
 
-   if (clen == 0)
-   {
+   if (clen == 0) {
       callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-
       for (int i = 0; i < mAEffect->numParams; i++)
-      {
          slave->callSetParameter(i, callGetParameter(i));
-      }
-
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   if (!slave->ProcessInitialize(settings, 0, nullptr))
+   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
       return false;
 
    mSlaves.emplace_back(move(slave));
@@ -1220,20 +1205,16 @@ bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 /// all provide the information (kn0ck0ut is one).
 ///
 int VSTEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+   wxWindow &parent, wxDialog &dialog, EffectUIValidator *, bool forceModal)
 {
    //   mProcessLevel = 1;      // in GUI thread
 
-   // Set some defaults since some VSTs need them...these will be reset when
-   // normal or realtime processing begins
    if (!IsReady())
    {
-      mSampleRate = 44100;
+      // Set some defaults since some VSTs need them...these will be reset when
+      // normal or realtime processing begins
       mBlockSize = 8192;
-      // No settings here!  Is this call really needed?  It appears to be
-      // redundant with later calls that reach process initialization from the
-      // dialog, either with the Apply or Play buttons.
-      DoProcessInitialize(0, nullptr);
+      DoProcessInitialize(mProjectRate);
    }
 
    // Remember the dialog with a weak pointer, but don't control its lifetime
@@ -2365,7 +2346,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
-                  mSampleRate,
+                  mProjectRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
             mDuration->SetName( XO("Duration") );

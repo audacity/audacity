@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "../StatefulPerTrackEffect.h"
+#include "../PerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -79,7 +79,7 @@ public:
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
    bool IsDefault() const override;
-   bool SupportsRealtime() const override;
+   RealtimeSince RealtimeSupport() const override;
    bool SupportsAutomation() const override;
 
    bool SaveSettings(
@@ -101,8 +101,8 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
    bool InitializePlugin();
    bool FullyInitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
@@ -115,7 +115,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool IsGraphicalUI() override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
@@ -149,7 +148,6 @@ private:
 
    wxString pluginName;
 
-   double mSampleRate{ 44100.0 };
    size_t mBlockSize{ 0 };
 
    bool mInteractive{ false };

@@ -119,7 +119,7 @@ std::unique_ptr<AVStreamWrapper> AVFormatContextWrapper::CreateStream()
 
    UpdateStreamList();
 
-   return mFFmpeg.CreateAVStreamWrapper(stream);
+   return mFFmpeg.CreateAVStreamWrapper(stream, true);
 }
 
 const AVInputFormatWrapper*

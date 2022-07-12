@@ -198,6 +198,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Alex S. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
+   AddCredit(wxT("Subhradeep Chakraborty"), developerFormat, roleContributor);
    AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
    AddCredit(wxT("Craig DeForest"), developerFormat, roleContributor);
    AddCredit(wxT("Edgar Franke (Edgar-RFT)"), developerFormat, roleContributor);
@@ -222,7 +223,9 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
    AddCredit(wxT("Mark Phillips"), developerFormat, roleContributor);
    AddCredit(wxT("Andr\u00E9 Pinto"), developerFormat, roleContributor);
+   AddCredit(wxT("Pokechu22"), developerFormat, roleContributor);
    AddCredit(wxT("Jean Claude Risset"), composerFormat, roleContributor);
+   AddCredit(wxT("RuRo"), developerFormat, roleContributor);
    AddCredit(wxT("Augustus Saunders"), developerFormat, roleContributor);
    AddCredit(wxT("Benjamin Schwartz"), developerFormat, roleContributor);
    AddCredit(wxT("Cliff Scott"), testerFormat, roleContributor);
@@ -611,9 +614,18 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          wxT(INSTALL_PREFIX));
 #endif
 
+   // Location of cache
+   AddBuildinfoRow(&informationStr, XO("Cache folder:"), \
+      FileNames::CacheDir());
    // Location of settings
    AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
+      FileNames::ConfigDir());
+   // Location of data
+   AddBuildinfoRow(&informationStr, XO("Data folder:"), \
       FileNames::DataDir());
+   // Location of data
+   AddBuildinfoRow(&informationStr, XO("State folder:"), \
+      FileNames::StateDir());
 
    informationStr << wxT("</table>\n"); // end of build info table
 
@@ -644,9 +656,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       << wxT("<table>");   // start table of file formats supported
 
 
-   #ifdef USE_LIBMAD
+   #if defined(USE_LIBMAD)
    /* i18n-hint: This is what the library (libmad) does - imports MP3 files */
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), enabled);
+   #elif defined(USE_LIBID3TAG)
+   AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Importing"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
    #endif

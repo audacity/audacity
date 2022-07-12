@@ -719,9 +719,11 @@ bool LadspaEffect::IsDefault() const
    return false;
 }
 
-bool LadspaEffect::SupportsRealtime() const
+auto LadspaEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return GetType() != EffectTypeGenerate;
+   return GetType() == EffectTypeGenerate
+      ? RealtimeSince::Never
+      : RealtimeSince::Always;
 }
 
 bool LadspaEffect::SupportsAutomation() const
@@ -731,7 +733,7 @@ bool LadspaEffect::SupportsAutomation() const
 
 namespace {
 std::pair<float, float>
-InputCountrolPortBounds(const LADSPA_PortRangeHint &hint, double sampleRate)
+InputControlPortBounds(const LADSPA_PortRangeHint &hint, double sampleRate)
 {
    // Find lower and upper bound values for ths hint
    const auto multiplier =
@@ -751,7 +753,7 @@ float InputControlPortDefaultValue(
    const LADSPA_PortRangeHint &hint, double sampleRate)
 {
    // See comments in library header ladspa.h about interpretation of macros
-   const auto bounds = InputCountrolPortBounds(hint, sampleRate);
+   const auto bounds = InputControlPortBounds(hint, sampleRate);
 
    // Function to find low, middle, or high default values
    const auto combine = [bounds,
@@ -855,7 +857,7 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
       if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
          // Determine the port's default value
          controls[p] = InputControlPortDefaultValue(
-            mData->PortRangeHints[p], mSampleRate);
+            mData->PortRangeHints[p], mProjectRate);
       else
          controls[p] = 0;
    }
@@ -865,19 +867,20 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
 struct LadspaEffect::Instance
    : PerTrackEffect::Instance
    , EffectInstanceWithBlockSize
-   , EffectInstanceWithSampleRate
 {
    using PerTrackEffect::Instance::Instance;
-   bool ProcessInitialize(EffectSettings &settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   sampleCount GetLatency(const EffectSettings &settings) override;
+   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+      override;
 
-   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
+      override;
    bool RealtimeAddProcessor(
       EffectSettings &settings, unsigned numChannels, float sampleRate)
    override;
@@ -926,7 +929,8 @@ int LadspaEffect::GetMidiOutCount() const
    return 0;
 }
 
-sampleCount LadspaEffect::Instance::GetLatency(const EffectSettings &settings)
+sampleCount LadspaEffect::Instance::GetLatency(
+   const EffectSettings &settings, double)
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
@@ -938,13 +942,13 @@ sampleCount LadspaEffect::Instance::GetLatency(const EffectSettings &settings)
 }
 
 bool LadspaEffect::Instance::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
 {
    /* Instantiate the plugin */
    if (!mReady) {
       auto &effect = GetEffect();
       auto &ladspaSettings = GetSettings(settings);
-      mMaster = effect.InitInstance(mSampleRate, ladspaSettings);
+      mMaster = effect.InitInstance(sampleRate, ladspaSettings);
       if (!mMaster)
          return false;
       mReady = true;
@@ -979,7 +983,7 @@ size_t LadspaEffect::Instance::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &)
+bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    return true;
 }
@@ -1052,8 +1056,8 @@ bool LadspaEffect::Instance::RealtimeProcessEnd(EffectSettings &) noexcept
    return true;
 }
 
-int LadspaEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int LadspaEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    dialog.Layout();
    dialog.Fit();
@@ -1445,14 +1449,9 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access)
 {
    auto result =
-      std::make_unique<Validator>(*this, access, mSampleRate, GetType());
+      std::make_unique<Validator>(*this, access, mProjectRate, GetType());
    result->PopulateUI(S);
    return result;
-}
-
-bool LadspaEffect::IsGraphicalUI()
-{
-   return false;
 }
 
 bool LadspaEffect::Validator::ValidateUI()

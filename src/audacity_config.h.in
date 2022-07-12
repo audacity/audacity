@@ -63,6 +63,12 @@
 /* Define if mp3 support is implemented with the libmad library */
 #cmakedefine USE_LIBMAD 1
 
+/* Define if mp3 support is implemented with the libmpg123 library */
+#cmakedefine USE_LIBMPG123 1
+
+/* Define if wavpack support is implemented with the wavpack library */
+#cmakedefine USE_WAVPACK 1
+
 /* Define if libtwolame (MP2 export) support should be enabled */
 #cmakedefine USE_LIBTWOLAME 1
 

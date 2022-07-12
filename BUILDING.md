@@ -58,7 +58,7 @@ Here are the dependencies you need to install on various distribution families.
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential cmake git python3-pip
 $ sudo pip3 install conan
-$ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev uuid-dev
+$ sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
 ```
 
 #### openSUSE
@@ -66,7 +66,7 @@ $ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jack
 ```
 $ sudo zypper refresh
 $ sudo zypper install patterns-devel-C-C++-devel_C_C++ cmake git python3-pip \
-                      gtk2-devel ffmpeg-4-libavformat-devel libjack-devel uuid-devel libSM-devel
+                      gtk2-devel libjack-devel uuid-devel libSM-devel
 $ sudo pip3 install conan
 ```
 
@@ -74,7 +74,7 @@ $ sudo pip3 install conan
 
 ```
 $ sudo dnf update
-$ sudo dnf install gcc-c++ cmake git python3-pip \
+$ sudo dnf install gcc-c++ cmake git python3-pip perl-core \
                    gtk2-devel gtk3-devel alsa-lib-devel jack-audio-connection-kit-devel uuid-devel libSM-devel
 $ sudo pip3 install conan
 ```
@@ -150,13 +150,7 @@ Steps 1 and 2 are only required for first-time builds.
 
 Alternatively, you can use **CLion**. If you chose to do so, open the directory where you have cloned Audacity using CLion and you are good to go.
 
-At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon (AKA M1/arm64) hardware but **mad** and **id3tag** should be disabled:
-
-```
-cmake -GXcode -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
-```
-
-Before Audacity 3.2 only the XCode "legacy" build system was supported. In order to build older version please use:
+Before Audacity 3.2 only **x86_64** builds and XCode "legacy" build system were supported. In order to build older version please use:
 
 ```
    $ mkdir build && cd build
@@ -176,7 +170,7 @@ to configure Audacity.
 2. Configure Audacity using CMake:
    ```
    $ mkdir build && cd build
-   $ cmake -G "Unix Makefiles" -Daudacity_use_ffmpeg=loaded ../audacity
+   $ cmake -G "Unix Makefiles" ../audacity
    ```
    By default, Debug build will be configured. To change that, pass `-DCMAKE_BUILD_TYPE=Release` to CMake.
 

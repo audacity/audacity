@@ -55,7 +55,7 @@ public:
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectInstance &instance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
    bool Init() override;
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;

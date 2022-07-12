@@ -28,6 +28,10 @@ void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
    mSettings = std::move(settings);
 }
 
+void SimpleEffectSettingsAccess::Flush()
+{
+}
+
 bool SimpleEffectSettingsAccess::IsSameAs(
    const EffectSettingsAccess &other) const
 {
@@ -117,7 +121,7 @@ bool EffectInstance::Init()
    return true;
 }
 
-bool EffectInstance::RealtimeInitialize(EffectSettings &)
+bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }
@@ -175,13 +179,6 @@ size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
    return (mBlockSize = maxBlockSize);
 }
 
-EffectInstanceWithSampleRate::~EffectInstanceWithSampleRate() = default;
-
-void EffectInstanceWithSampleRate::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
 int EffectInstanceFactory::GetMidiInCount() const
@@ -210,6 +207,11 @@ bool EffectUIValidator::UpdateUI()
    return true;
 }
 
+bool EffectUIValidator::IsGraphicalUI()
+{
+   return false;
+}
+
 DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
 
 bool DefaultEffectUIValidator::ValidateUI()
@@ -219,6 +221,11 @@ bool DefaultEffectUIValidator::ValidateUI()
       result = mEffect.ValidateUI(settings);
    });
    return result;
+}
+
+bool DefaultEffectUIValidator::IsGraphicalUI()
+{
+   return mEffect.IsGraphicalUI();
 }
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

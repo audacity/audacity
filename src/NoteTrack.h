@@ -11,10 +11,6 @@
 #ifndef __AUDACITY_NOTETRACK__
 #define __AUDACITY_NOTETRACK__
 
-
-
-
-
 #include <utility>
 #include "Prefs.h"
 #include "Track.h"
@@ -70,6 +66,8 @@ public:
    static NoteTrack *New(AudacityProject &project);
 
    NoteTrack();
+   //! Copy construction hasn't been necessary yet
+   NoteTrack(const NoteTrack &orig, ProtectedCreationArg &&) = delete;
    virtual ~NoteTrack();
 
    using Holder = std::shared_ptr<NoteTrack>;

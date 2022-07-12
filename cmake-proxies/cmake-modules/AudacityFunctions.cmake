@@ -227,7 +227,12 @@ function( audacity_append_common_compiler_options var use_pch )
          PRIVATE
             # include the correct config file; give absolute path to it, so
             # that this works whether in src, modules, libraries
-            $<$<PLATFORM_ID:Windows>:/FI${CMAKE_BINARY_DIR}/src/private/configwin.h>
+            $<$<PLATFORM_ID:Windows>:
+               $<IF:$<CXX_COMPILER_ID:MSVC>, 
+                  /FI${CMAKE_BINARY_DIR}/src/private/configwin.h,
+                  -include ${CMAKE_BINARY_DIR}/src/private/configwin.h
+               >
+            >
             $<$<PLATFORM_ID:Darwin>:-include ${CMAKE_BINARY_DIR}/src/private/configmac.h>
             $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:-include ${CMAKE_BINARY_DIR}/src/private/configunix.h>
       )
@@ -299,7 +304,7 @@ endfunction()
 function( import_symbol_define var module_name )
    import_export_symbol( symbol "${module_name}" )
    if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-      set( value "_declspec(dllimport)" )
+      set( value "__declspec(dllimport)" )
    elseif( HAVE_VISIBILITY )
       set( value "__attribute__((visibility(\"default\")))" )
    else()
@@ -311,7 +316,7 @@ endfunction()
 function( export_symbol_define var module_name )
    import_export_symbol( symbol "${module_name}" )
    if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-      set( value "_declspec(dllexport)" )
+      set( value "__declspec(dllexport)" )
    elseif( HAVE_VISIBILITY )
       set( value "__attribute__((visibility(\"default\")))" )
    else()

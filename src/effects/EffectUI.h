@@ -42,9 +42,14 @@ class EffectUIHost final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
+   /*
+    @param[out] pInstance may construct
+    (and then must call Init() with success), or leave null for failure
+    */
    EffectUIHost(wxWindow *parent, AudacityProject &project,
       EffectPlugin &effect, EffectUIClientInterface &client,
-      EffectInstance &instance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance,
+      EffectSettingsAccess &access,
       const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
    virtual ~EffectUIHost();
 
@@ -53,11 +58,13 @@ public:
 
    int ShowModal() override;
 
-   void InitializeRealtime();
    bool Initialize();
+   EffectUIValidator *GetValidator() const { return mpValidator.get(); }
 
 private:
-   wxPanel *BuildButtonBar( wxWindow *parent );
+   std::shared_ptr<EffectInstance> InitializeInstance();
+
+   wxPanel *BuildButtonBar(wxWindow *parent, bool graphicalUI);
 
    void OnInitDialog(wxInitDialogEvent & evt);
    void OnErase(wxEraseEvent & evt);
@@ -98,8 +105,6 @@ private:
    EffectPlugin &mEffectUIHost;
    EffectUIClientInterface &mClient;
    //! @invariant not null
-   const std::shared_ptr<EffectInstance> mpInstance;
-   //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess2;
@@ -138,12 +143,13 @@ private:
    double mPlayPos{ 0.0 };
 
    bool mDismissed{};
-   std::optional<RealtimeEffects::SuspensionScope> mSuspensionScope;
 
 #if wxDEBUG_LEVEL
    // Used only in an assertion
    bool mClosed{ false };
 #endif
+
+   const std::shared_ptr<EffectInstance> mpInstance;
 
    DECLARE_EVENT_TABLE()
 };
@@ -153,9 +159,8 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   wxDialog *DialogFactory( wxWindow &parent, EffectPlugin &host,
-      EffectUIClientInterface &client, EffectInstance &instance,
-      EffectSettingsAccess &access);
+   DialogFactoryResults DialogFactory(wxWindow &parent, EffectPlugin &host,
+      EffectUIClientInterface &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

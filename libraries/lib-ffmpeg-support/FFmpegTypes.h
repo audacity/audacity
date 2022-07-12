@@ -13,6 +13,9 @@
 #include <cstdint>
 #include <errno.h>
 
+#define AUDACITY_MKTAG(a, b, c, d) ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
+#define AUDACITY_FFERRTAG(a, b, c, d) (-(int)AUDACITY_MKTAG(a, b, c, d))
+
 #if EDOM > 0
 #   define AUDACITY_AVERROR(e) \
       (-(e)) ///< Returns a negative error code from a POSIX error code, to
@@ -25,6 +28,8 @@
 #   define AUDACITY_AVERROR(e) (e)
 #   define AUDACITY_AVUNERROR(e) (e)
 #endif
+
+#define AUDACITY_AVERROR_EOF AUDACITY_FFERRTAG('E', 'O', 'F', ' ') 
 
 #define AUDACITY_AVFMT_NOFILE 0x0001
 /*

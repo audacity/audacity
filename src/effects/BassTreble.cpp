@@ -106,11 +106,11 @@ EffectType EffectBassTreble::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectBassTreble::SupportsRealtime() const
+auto EffectBassTreble::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-//   return true;
+   return RealtimeSince::Never;
+//   return RealtimeSince::Always;
 }
 
 unsigned EffectBassTreble::GetAudioInCount() const
@@ -124,10 +124,9 @@ unsigned EffectBassTreble::GetAudioOutCount() const
 }
 
 bool EffectBassTreble::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames)
+   EffectSettings &, double sampleRate, sampleCount, ChannelNames)
 {
-   InstanceInit(mMaster, mSampleRate);
-
+   InstanceInit(mMaster, sampleRate);
    return true;
 }
 
@@ -137,12 +136,10 @@ size_t EffectBassTreble::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
+bool EffectBassTreble::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

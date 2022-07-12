@@ -149,6 +149,8 @@ struct EffectReverb::Validator
 
 #undef SpinSliderHandlers
 
+   void OnCheckbox(wxCommandEvent &evt);
+
 };
 
 
@@ -184,14 +186,12 @@ bool EffectReverb::Validator::ValidateUI()
 struct EffectReverb::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
-   , public EffectInstanceWithSampleRate
-
 {
    explicit Instance(const PerTrackEffect& effect)
       : PerTrackEffect::Instance{ effect }
    {}
 
-   bool ProcessInitialize(EffectSettings& settings,
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
@@ -201,7 +201,7 @@ struct EffectReverb::Instance
 
    // Realtime section
 
-   bool RealtimeInitialize(EffectSettings& settings) override
+   bool RealtimeInitialize(EffectSettings& settings, double) override
    {
       SetBlockSize(512);
       mSlaves.clear();
@@ -216,7 +216,8 @@ struct EffectReverb::Instance
       // The notion of ChannelNames is unavailable here,
       // so we'll have to force the stereo init, if this is the case
       //
-      InstanceInit(settings, slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
+      InstanceInit(settings, sampleRate,
+         slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
 
       mSlaves.push_back( std::move(slave) );
       return true;
@@ -236,7 +237,8 @@ struct EffectReverb::Instance
       return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
    }
 
-   bool InstanceInit(EffectSettings& settings, EffectReverbState& data, ChannelNames chanMap, bool forceStereo);
+   bool InstanceInit(EffectSettings& settings, double sampleRate,
+      EffectReverbState& data, ChannelNames chanMap, bool forceStereo);
 
    size_t InstanceProcess(EffectSettings& settings, EffectReverbState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
@@ -297,17 +299,24 @@ unsigned EffectReverb::GetAudioOutCount() const
    return 2;
 }
 
+auto EffectReverb::RealtimeSupport() const -> RealtimeSince
+{
+   return RealtimeSince::Since_3_2;
+}
+
 static size_t BLOCK = 16384;
 
-bool EffectReverb::Instance::ProcessInitialize(
-   EffectSettings& settings, sampleCount, ChannelNames chanMap)
+bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
+   double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   return InstanceInit(settings, mMaster, chanMap, /* forceStereo = */ false);
+   return InstanceInit(settings,
+      sampleRate, mMaster, chanMap, /* forceStereo = */ false);
 }
 
 
-bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverbState& state,
-                                          ChannelNames chanMap, bool forceStereo)
+bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
+   double sampleRate, EffectReverbState& state,
+   ChannelNames chanMap, bool forceStereo)
 {   
    auto& rs = GetSettings(settings);   
 
@@ -325,7 +334,7 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverb
    for (unsigned int i = 0; i < state.mNumChans; i++)
    {
       reverb_create(&state.mP[i].reverb,
-                    mSampleRate,
+                    sampleRate,
                     rs.mWetGain,
                     rs.mRoomSize,
                     rs.mReverberance,
@@ -487,7 +496,8 @@ void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyC =
-      S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);      
+      S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);
+      BindTo(*mWetOnlyC, wxEVT_CHECKBOX, &Validator::OnCheckbox);
    }
    S.EndHorizontalLay();
 
@@ -550,5 +560,9 @@ SpinSliderHandlers(WetGain)
 SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
-#undef SpinSliderHandlers
+void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
+{
+   ValidateUI();
+}
 
+#undef SpinSliderHandlers

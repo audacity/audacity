@@ -18,7 +18,6 @@
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/log.h>
-#include <public.sdk/source/vst/hosting/module.h>
 
 
 #include "ModuleManager.h"

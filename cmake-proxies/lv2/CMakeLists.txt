@@ -8,9 +8,11 @@ list( APPEND SOURCES
 
       # lilv
 
+      ${TARGET_ROOT}/lilv/lilv/lilv.h
       ${TARGET_ROOT}/lilv/src/collections.c
       ${TARGET_ROOT}/lilv/src/instance.c
       ${TARGET_ROOT}/lilv/src/lib.c
+      ${TARGET_ROOT}/lilv/src/lilv_internal.h
       ${TARGET_ROOT}/lilv/src/node.c
       ${TARGET_ROOT}/lilv/src/plugin.c
       ${TARGET_ROOT}/lilv/src/pluginclass.c
@@ -21,35 +23,51 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/lilv/src/ui.c
       ${TARGET_ROOT}/lilv/src/util.c
       ${TARGET_ROOT}/lilv/src/world.c
+      ${TARGET_ROOT}/lilv/src/zix/common.h
       ${TARGET_ROOT}/lilv/src/zix/tree.c
+      ${TARGET_ROOT}/lilv/src/zix/tree.h
+      ${TARGET_ROOT}/lilv/utils/bench.h
+      ${TARGET_ROOT}/lilv/utils/uri_table.h
 
       # serd
 
+      ${TARGET_ROOT}/serd/serd/serd.h
       ${TARGET_ROOT}/serd/src/byte_source.c
       ${TARGET_ROOT}/serd/src/env.c
       ${TARGET_ROOT}/serd/src/n3.c
       ${TARGET_ROOT}/serd/src/node.c
       ${TARGET_ROOT}/serd/src/reader.c
+      ${TARGET_ROOT}/serd/src/reader.h
+      ${TARGET_ROOT}/serd/src/serd_internal.h
       ${TARGET_ROOT}/serd/src/string.c
       ${TARGET_ROOT}/serd/src/uri.c
       ${TARGET_ROOT}/serd/src/writer.c
       
       # sord
 
+      ${TARGET_ROOT}/sord/sord/sord.h
       ${TARGET_ROOT}/sord/src/sord.c
+      ${TARGET_ROOT}/sord/src/sord_internal.h
       ${TARGET_ROOT}/sord/src/syntax.c
       ${TARGET_ROOT}/sord/src/zix/btree.c
+      ${TARGET_ROOT}/sord/src/zix/btree.h
+      ${TARGET_ROOT}/sord/src/zix/common.h
       ${TARGET_ROOT}/sord/src/zix/digest.c
+      ${TARGET_ROOT}/sord/src/zix/digest.h
       ${TARGET_ROOT}/sord/src/zix/hash.c
+      ${TARGET_ROOT}/sord/src/zix/hash.h
 
       # sratom
 
+      ${TARGET_ROOT}/sratom/sratom/sratom.h
       ${TARGET_ROOT}/sratom/src/sratom.c
 
       # suil
 
       ${TARGET_ROOT}/suil/src/host.c
       ${TARGET_ROOT}/suil/src/instance.c
+      ${TARGET_ROOT}/suil/src/suil_internal.h
+      ${TARGET_ROOT}/suil/suil/suil.h
 )
 
 list( APPEND INCLUDES

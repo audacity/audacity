@@ -267,18 +267,18 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
 
    wxMenu menu;
 
-   AppendSubMenu(menu, mHost, "Host");
+   AppendSubMenu(menu, mHost, "&Host");
    menu.AppendSeparator();
 
-   AppendSubMenu(menu, mOutput, "Playback Device");
+   AppendSubMenu(menu, mOutput, "&Playback Device");
    menu.AppendSeparator();
 
-   AppendSubMenu(menu, mInput, "Recording Device");
+   AppendSubMenu(menu, mInput, "&Recording Device");
    menu.AppendSeparator();
 
-   AppendSubMenu(menu, mInputChannels, "Recording Channels");
+   AppendSubMenu(menu, mInputChannels, "Recording &Channels");
    menu.AppendSeparator();
-   menu.Append(kAudioSettings, _("Audio Settings..."));
+   menu.Append(kAudioSettings, _("&Audio Settings..."));
 
    menu.Bind(wxEVT_MENU_CLOSE, [this](auto&) { mAudioSetup->PopUp(); });
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnMenu, this);

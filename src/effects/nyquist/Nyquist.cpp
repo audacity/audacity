@@ -1053,13 +1053,14 @@ finish:
 
 int NyquistEffect::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &factory,
-   EffectInstance &instance, EffectSettingsAccess &access, bool forceModal)
+   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
+   bool forceModal)
 {
    int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
       res = Effect::ShowHostInterface(
-         parent, factory, instance, access, forceModal);
+         parent, factory, pInstance, access, forceModal);
    }
 
 
@@ -1068,7 +1069,7 @@ int NyquistEffect::ShowHostInterface(
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
-   if (!res || !mIsPrompt || mControls.size() == 0)
+   if (!res || !mIsPrompt || mControls.size() == 0 || !pInstance)
       return res;
 
    // Nyquist prompt was OK, but gave us some magic ;control comments to
@@ -1080,7 +1081,7 @@ int NyquistEffect::ShowHostInterface(
    // Must give effect its own settings to interpret, not those in access
    // Let's also give it its own instance
    auto newSettings = effect.MakeSettings();
-   auto newInstance = effect.MakeInstance();
+   auto pNewInstance = effect.MakeInstance();
    auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
 
    if (IsBatchProcessing()) {
@@ -1092,7 +1093,7 @@ int NyquistEffect::ShowHostInterface(
 
       // Show the normal (prompt or effect) interface
       res = effect.ShowHostInterface(
-         parent, factory, *newInstance, *newAccess, forceModal);
+         parent, factory, pNewInstance, *newAccess, forceModal);
       if (res) {
          CommandParameters cp;
          effect.SaveSettings(newSettings, cp);
@@ -1103,7 +1104,7 @@ int NyquistEffect::ShowHostInterface(
       if (!factory)
          return 0;
       res = effect.ShowHostInterface(
-         parent, factory, *newInstance, *newAccess, false );
+         parent, factory, pNewInstance, *newAccess, false );
       if (!res)
          return 0;
 
@@ -1114,6 +1115,9 @@ int NyquistEffect::ShowHostInterface(
          nyquistSettings.proxyDebug = this->mDebug;
       });
    }
+   if (!pNewInstance)
+      // Propagate the failure from nested ShowHostInterface
+      pInstance.reset();
    return res;
 }
 

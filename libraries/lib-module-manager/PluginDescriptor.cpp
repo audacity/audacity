@@ -161,7 +161,7 @@ bool PluginDescriptor::IsEffectLegacy() const
 
 bool PluginDescriptor::IsEffectRealtime() const
 {
-   return mEffectRealtime;
+   return mEffectRealtime != EffectDefinitionInterface::RealtimeSince::Never;
 }
 
 bool PluginDescriptor::IsEffectAutomatable() const
@@ -194,11 +194,50 @@ void PluginDescriptor::SetEffectLegacy(bool legacy)
    mEffectLegacy = legacy;
 }
 
-void PluginDescriptor::SetEffectRealtime(bool realtime)
+void PluginDescriptor::SetRealtimeSupport(
+   EffectDefinitionInterface::RealtimeSince realtime)
 {
    mEffectRealtime = realtime;
 }
 
+static constexpr auto Since_3_2_string = "00";
+
+wxString PluginDescriptor::SerializeRealtimeSupport() const
+{
+   // Write a string value that converts to 0 or 1, therefore to a boolean,
+   // when read as a boolean from a config file by Audacity 3.1 or earlier
+   switch (mEffectRealtime) {
+   case EffectDefinitionInterface::RealtimeSince::Never:
+   default:
+      // A value that earlier Audacity interprets as false
+      return "0";
+   case EffectDefinitionInterface::RealtimeSince::Since_3_2:
+      // A different value that earlier Audacity interprets as false
+      return Since_3_2_string;
+   case EffectDefinitionInterface::RealtimeSince::Always:
+      // A value that earlier Audacity interprets as true
+      return "1";
+   }
+}
+ 
+void PluginDescriptor::DeserializeRealtimeSupport(const wxString &value)
+{
+   // Interpret the values stored by SerializeRealtimeSupport, or by previous
+   // versions of Audacity
+   if (value == Since_3_2_string)
+      mEffectRealtime = EffectDefinitionInterface::RealtimeSince::Since_3_2;
+   else {
+      // This leaves some open-endedness for future versions of Audacity to
+      // define other string values they interpret one way, but we interpret
+      // otherwise
+      long number;
+      value.ToLong(&number);
+      mEffectRealtime = number
+         ? EffectDefinitionInterface::RealtimeSince::Always
+         : EffectDefinitionInterface::RealtimeSince::Never;
+   }
+}
+ 
 void PluginDescriptor::SetEffectAutomatable(bool automatable)
 {
    mEffectAutomatable = automatable;
@@ -239,7 +278,7 @@ void PluginDescriptor::WriteXML(XMLWriter& writer) const
       writer.WriteAttr(AttrEffectFamily, GetEffectFamily());
       writer.WriteAttr(AttrEffectType, GetEffectType());
       writer.WriteAttr(AttrEffectDefault, IsEffectDefault());
-      writer.WriteAttr(AttrEffectRealtime, IsEffectRealtime());
+      writer.WriteAttr(AttrEffectRealtime, SerializeRealtimeSupport());
       writer.WriteAttr(AttrEffectAutomatable, IsEffectAutomatable());
       writer.WriteAttr(AttrEffectInteractive, IsEffectInteractive());
    }
@@ -261,7 +300,7 @@ bool PluginDescriptor::HandleXMLTag(const std::string_view& tag, const Attribute
          else if(key == AttrEffectDefault)
             SetEffectDefault(attr.Get<bool>());
          else if(key == AttrEffectRealtime)
-            SetEffectRealtime(attr.Get<bool>());
+            DeserializeRealtimeSupport(attr.ToWString());
          else if(key == AttrEffectAutomatable)
             SetEffectAutomatable(attr.Get<bool>());
          else if(key == AttrEffectInteractive)

@@ -122,11 +122,11 @@ EffectType EffectPhaser::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectPhaser::SupportsRealtime() const
+auto EffectPhaser::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-//   return true;
+   return RealtimeSince::Never;
+//   return RealtimeSince::Always;
 }
 
 unsigned EffectPhaser::GetAudioInCount() const
@@ -140,14 +140,11 @@ unsigned EffectPhaser::GetAudioOutCount() const
 }
 
 bool EffectPhaser::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, mSampleRate);
+   InstanceInit(mMaster, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
-   {
       mMaster.phase += M_PI;
-   }
-
    return true;
 }
 
@@ -157,12 +154,10 @@ size_t EffectPhaser::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::RealtimeInitialize(EffectSettings &)
+bool EffectPhaser::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

@@ -2142,7 +2142,7 @@ bool AdornedRulerPanel::SetPanelSize()
    if ( size != oldSize ) {
       SetSize(size);
       SetMinSize(size);
-      GetParent()->PostSizeEventToParent();
+      PostSizeEventToParent();
       return true;
    }
    else

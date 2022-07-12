@@ -115,9 +115,9 @@ bool Effect::IsDefault() const
    return true;
 }
 
-bool Effect::SupportsRealtime() const
+auto Effect::RealtimeSupport() const -> RealtimeSince
 {
-   return false;
+   return RealtimeSince::Never;
 }
 
 bool Effect::SupportsAutomation() const
@@ -150,31 +150,27 @@ const EffectParameterMethods &Effect::Parameters() const
    return empty;
 }
 
-int Effect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    mUIDialog = &dialog;
    mUIDialog->Layout();
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
-
-   if ( VetoDialogHook::Call( mUIDialog ) )
+   if (VetoDialogHook::Call(mUIDialog))
       return 0;
-
-   if( SupportsRealtime() && !forceModal )
-   {
+   if (SupportsRealtime() && !forceModal) {
       mUIDialog->Show();
       // Return false to bypass effect processing
       return 0;
    }
-
    return mUIDialog->ShowModal();
 }
 
 int Effect::ShowHostInterface(wxWindow &parent,
    const EffectDialogFactory &factory,
-   EffectInstance &instance, EffectSettingsAccess &access,
+   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
 {
    if (!IsInteractive())
@@ -197,12 +193,15 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
    EffectUIClientInterface *const client = this;
-   mHostUIDialog = factory(parent, *this, *client, instance, access);
+   auto results = factory(parent, *this, *client, access);
+   mHostUIDialog = results.pDialog;
+   pInstance = results.pInstance;
    if (!mHostUIDialog)
       return 0;
 
    // Let the client show the dialog and decide whether to keep it open
-   auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);
+   auto result = client->ShowClientInterface(parent, *mHostUIDialog,
+      results.pValidator, forceModal);
    if (mHostUIDialog && !mHostUIDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
       // So destroy it.
@@ -671,8 +670,10 @@ bool Effect::EnablePreview(bool enable)
          play->Enable(enable);
          if (SupportsRealtime())
          {
-            rewind->Enable(enable);
-            ffwd->Enable(enable);
+            if (rewind)
+               rewind->Enable(enable);
+            if (ffwd)
+               ffwd->Enable(enable);
          }
       }
    }

@@ -47,7 +47,7 @@ public:
       //! Called at start of destructive processing, for each (mono/stereo) track
       //! Default implementation does nothing, returns true
       virtual bool ProcessInitialize(EffectSettings &settings,
-         sampleCount totalLen, ChannelNames chanMap);
+         double sampleRate, sampleCount totalLen, ChannelNames chanMap);
 
       //! Called at end of destructive processing, for each (mono/stereo) track
       //! Default implementation does nothing, returns true
@@ -61,7 +61,8 @@ public:
 
       //! Called for destructive, non-realtime effect computation
       //! Default implementation returns zero
-      virtual sampleCount GetLatency(const EffectSettings &settings);
+      virtual sampleCount GetLatency(
+         const EffectSettings &settings, double sampleRate);
 
    protected:
       const PerTrackEffect &mProcessor;
@@ -80,16 +81,12 @@ protected:
 private:
    bool ProcessPass(Instance &instance, EffectSettings &settings);
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
-      int count,
-      ChannelNames map,
-      WaveTrack *left,
-      WaveTrack *right,
-      sampleCount start,
-      sampleCount len,
-      FloatBuffers &inBuffer,
-      FloatBuffers &outBuffer,
-      ArrayOf< float * > &inBufPos,
-      ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
+      double sampleRate, int count, ChannelNames map,
+      WaveTrack *left, WaveTrack *right,
+      sampleCount start, sampleCount len,
+      FloatBuffers &inBuffer, FloatBuffers &outBuffer,
+      ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,
+      size_t bufferSize, size_t blockSize,
       unsigned mNumChannels) const;
 };
 #endif

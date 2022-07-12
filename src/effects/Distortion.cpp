@@ -186,11 +186,11 @@ EffectType EffectDistortion::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectDistortion::SupportsRealtime() const
+auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-//   return true;
+   return RealtimeSince::Never;
+//   return RealtimeSince::Always;
 }
 
 unsigned EffectDistortion::GetAudioInCount() const
@@ -204,9 +204,9 @@ unsigned EffectDistortion::GetAudioOutCount() const
 }
 
 bool EffectDistortion::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, mSampleRate);
+   InstanceInit(mMaster, sampleRate);
    return true;
 }
 
@@ -216,12 +216,10 @@ size_t EffectDistortion::ProcessBlock(EffectSettings &settings,
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize(EffectSettings &)
+bool EffectDistortion::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
-
    mSlaves.clear();
-
    return true;
 }
 

@@ -156,9 +156,9 @@ public:
    /**
     * \brief Ensures that all currently registered plugins still exist
     * and scans for new ones.
-    * \return Array of pairs, first element of which is provider id and the second is module path
+    * \return Map, where each module path(key) is associated with at least one provider id
     */
-   std::vector<std::pair<wxString, wxString>> CheckPluginUpdates();
+   std::map<wxString, std::vector<wxString>> CheckPluginUpdates();
 
    //! Used only by Nyquist Workbench module
    const PluginID & RegisterPlugin(
@@ -169,6 +169,10 @@ public:
    void Load();
    //! Save to preferences
    void Save();
+
+   //! What is the plugin registry version number now in the file?
+   //! (Save() updates it)
+   const PluginRegistryVersion &GetRegistryVersion() const override;
 
 private:
    // private! Use Get()
@@ -217,6 +221,7 @@ private:
    PluginMap mRegisteredPlugins;
    std::map<PluginID, std::unique_ptr<ComponentInterface>> mLoadedInterfaces;
 
+   PluginRegistryVersion mRegver;
 };
 
 // Defining these special names in the low-level PluginManager.h
@@ -225,5 +230,8 @@ private:
 #define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 // User-visible name might change in later versions
 #define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
+
+// Latest version of the plugin registry config
+constexpr auto REGVERCUR = "1.2";
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */

@@ -26,6 +26,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
       result->mStates.push_back(RealtimeEffectState::make_shared(*pState));
+   result->SetActive(this->IsActive());
    return result;
 }
 
@@ -76,12 +77,6 @@ const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
    return Get(const_cast<Track &>(track));
 }
 
-void RealtimeEffectList::Visit(StateVisitor func)
-{
-   for (auto &state : mStates)
-      func(*state, IsActive());
-}
-
 bool
 RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
 {
@@ -95,6 +90,32 @@ RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
       Publisher<RealtimeEffectListMessage>::Publish({
          RealtimeEffectListMessage::Type::Insert,
          mStates.size() - 1,
+         { }
+      });
+
+      return true;
+   }
+   else
+      // Effect initialization failed for the id
+      return false;
+}
+
+bool
+RealtimeEffectList::ReplaceState(size_t index,
+   std::shared_ptr<RealtimeEffectState> pState)
+{
+   if (index >= mStates.size())
+      return false;
+   const auto &id = pState->GetID();
+   if (pState->GetEffect() != nullptr) {
+      auto shallowCopy = mStates;
+      swap(pState, shallowCopy[index]);
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
+
+      Publisher<RealtimeEffectListMessage>::Publish({
+         RealtimeEffectListMessage::Type::Replace,
+         index,
          { }
       });
 
@@ -125,6 +146,17 @@ void RealtimeEffectList::RemoveState(
          { }
       });
    }
+}
+
+std::optional<size_t> RealtimeEffectList::FindState(
+   const std::shared_ptr<RealtimeEffectState> &pState) const
+{
+   const auto begin = mStates.begin()
+      , end = mStates.end()
+      , iter = std::find(begin, end, pState);
+   if (iter == end)
+      return {};
+   return std::distance(begin, iter);
 }
 
 size_t RealtimeEffectList::GetStatesCount() const noexcept
@@ -202,15 +234,10 @@ XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 
 void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
 {
-   if (mStates.size() == 0)
-      return;
-
    xmlFile.StartTag(XMLTag());
    xmlFile.WriteAttr(activeAttribute, IsActive());
-
    for (const auto & state : mStates)
       state->WriteXML(xmlFile);
-   
    xmlFile.EndTag(XMLTag());
 }
 

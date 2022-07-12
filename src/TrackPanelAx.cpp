@@ -321,7 +321,7 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
 
    if( elementId == wxACC_SELF )
    {
-      rect = GetWindow()->GetRect();
+      rect = GetWindow()->GetScreenRect();
    }
    else
    {
@@ -341,9 +341,8 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
       const int dx = 1;
 #endif
       rect.Inflate(dx, dx);
+      rect.SetPosition(GetWindow()->ClientToScreen(rect.GetPosition()));
    }
-
-   rect.SetPosition( GetWindow()->GetParent()->ClientToScreen( rect.GetPosition() ) );
 
    return wxACC_OK;
 }

@@ -10,7 +10,6 @@
 
 
 #include "RealtimeEffectManager.h"
-#include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
 #include <memory>
@@ -52,11 +51,9 @@ bool RealtimeEffectManager::IsActive() const noexcept
    return mActive;
 }
 
-void RealtimeEffectManager::Initialize(double rate)
+void RealtimeEffectManager::Initialize(
+   RealtimeEffects::InitializationScope &scope, double sampleRate)
 {
-   // Remember the rate
-   mRate = rate;
-
    // (Re)Set processor parameters
    mChans.clear();
    mRates.clear();
@@ -67,15 +64,17 @@ void RealtimeEffectManager::Initialize(double rate)
    mActive = true;
 
    // Tell each state to get ready for action
-   VisitAll([rate](RealtimeEffectState &state, bool){
-      state.Initialize(rate);
+   VisitAll([&scope, sampleRate](RealtimeEffectState &state, bool) {
+      scope.mInstances.push_back(state.Initialize(sampleRate));
    });
 
    // Leave suspended state
-   Resume();
+   SetSuspended(false);
 }
 
-void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
+void RealtimeEffectManager::AddTrack(
+   RealtimeEffects::InitializationScope &scope,
+   Track &track, unsigned chans, float rate)
 {
    auto leader = *track.GetOwner()->FindLeader(&track);
    // This should never return a null
@@ -86,7 +85,7 @@ void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
 
    VisitGroup(*leader,
       [&](RealtimeEffectState & state, bool) {
-         state.AddTrack(*leader, chans, rate);
+         scope.mInstances.push_back(state.AddTrack(*leader, chans, rate));
       }
    );
 }
@@ -94,7 +93,7 @@ void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
 void RealtimeEffectManager::Finalize() noexcept
 {
    // Reenter suspended state
-   Suspend();
+   SetSuspended(true);
 
    // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
@@ -108,28 +107,6 @@ void RealtimeEffectManager::Finalize() noexcept
 
    // No longer active
    mActive = false;
-}
-
-void RealtimeEffectManager::Suspend()
-{
-   // Already suspended...bail
-   if (GetSuspended())
-      return;
-
-   // Show that we aren't going to be doing anything
-   // (set atomically, before next ProcessingScope)
-   SetSuspended(true);
-}
-
-void RealtimeEffectManager::Resume() noexcept
-{
-   // Already running...bail
-   if (!GetSuspended())
-      return;
-
-   // Get ready for more action
-   // (set atomically, before next ProcessingScope)
-   SetSuspended(false);
 }
 
 //
@@ -182,11 +159,8 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // Tracks how many processors were called
    size_t called = 0;
    VisitGroup(track,
-      [&](RealtimeEffectState &state, bool listIsActive)
+      [&](RealtimeEffectState &state, bool)
       {
-         if (!(listIsActive && state.IsActive()))
-            return;
-
          state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
          for (auto i = 0; i < chans; ++i)
             std::swap(ibuf[i], obuf[i]);
@@ -219,18 +193,9 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 {
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
-      state.ProcessEnd(!suspended && listIsActive);
+   VisitAll([suspended](RealtimeEffectState &state, bool){
+      state.ProcessEnd();
    });
-}
-
-void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
-{
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
-
-   // Call the function for each effect on the track list
-   RealtimeEffectList::Get(leader).Visit(func);
 }
 
 RealtimeEffectManager::
@@ -275,94 +240,110 @@ void RealtimeEffectManager::AllListsLock::Reset()
    }
 }
 
-void RealtimeEffectManager::VisitAll(StateVisitor func)
+std::shared_ptr<RealtimeEffectState>
+RealtimeEffectManager::MakeNewState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pLeader, const PluginID &id)
 {
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
+   if (!pScope && mActive)
+      return nullptr;
+   auto pNewState = RealtimeEffectState::make_shared(id);
+   auto &state = *pNewState;
+   if (pScope && mActive) {
+      // Adding a state while playback is in-flight
+      auto pInstance = state.Initialize(pScope->mSampleRate);
+      pScope->mInstances.push_back(pInstance);
+      for (auto &leader : mGroupLeaders) {
+         // Add all tracks to a per-project state, but add only the same track
+         // to a state in the per-track list
+         if (pLeader && pLeader != leader)
+            continue;
+         auto chans = mChans[leader];
+         auto rate = mRates[leader];
+         auto pInstance2 = state.AddTrack(*leader, chans, rate);
+         if (pInstance2 != pInstance)
+            pScope->mInstances.push_back(pInstance2);
+      }
+   }
+   return pNewState;
+}
 
-   // And all track lists
-   for (auto leader : mGroupLeaders)
-      RealtimeEffectList::Get(*leader).Visit(func);
+namespace {
+std::pair<Track *, RealtimeEffectList &>
+FindStates(AudacityProject &project, Track *pTrack) {
+   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
+   return { pLeader,
+      pLeader
+         ? RealtimeEffectList::Get(*pLeader)
+         : RealtimeEffectList::Get(project)
+   };
+}
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const PluginID & id)
 {
-   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
-   RealtimeEffectList &states = pLeader
-      ? RealtimeEffectList::Get(*pLeader)
-      : RealtimeEffectList::Get(mProject);
-
-   std::optional<RealtimeEffects::SuspensionScope> myScope;
-   if (mActive) {
-      if (pScope)
-         myScope.emplace(*pScope, mProject.weak_from_this());
-      else
-         return nullptr;
-   }
-
-   auto pState = RealtimeEffectState::make_shared(id);
-   auto &state = *pState;
-   
-   if (mActive)
-   {
-      // Adding a state while playback is in-flight
-      state.Initialize(mRate);
-
-      for (auto &leader : mGroupLeaders) {
-         // Add all tracks to a per-project state, but add only the same track
-         // to a state in the per-track list
-         if (pLeader && pLeader != leader)
-            continue;
-
-         auto chans = mChans[leader];
-         auto rate = mRates[leader];
-
-         state.AddTrack(*leader, chans, rate);
-      }
-   }
-
-   // Only now add the completed state to the list, under a lock guard
-   bool added = states.AddState(pState);
-   if (!added)
+   auto [pLeader, states] = FindStates(mProject, pTrack);
+   auto pState = MakeNewState(pScope, pTrack, id);
+   if (!pState)
       return nullptr;
 
+   // Only now add the completed state to the list, under a lock guard
+   if (!states.AddState(pState))
+      return nullptr;
    Publish({
       RealtimeEffectManagerMessage::Type::EffectAdded,
       pLeader ? pLeader->shared_from_this() : nullptr
    });
-
    return pState;
+}
+
+std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, size_t index, const PluginID & id)
+{
+   auto [pLeader, states] = FindStates(mProject, pTrack);
+   auto pOldState = states.GetStateAt(index);
+   if (!pOldState)
+      return nullptr;
+   auto pNewState = MakeNewState(pScope, pTrack, id);
+   if (!pNewState)
+      return nullptr;
+
+   // Only now swap the completed state into the list, under a lock guard
+   if (!states.ReplaceState(index, pNewState))
+      return nullptr;
+   if (mActive)
+      pOldState->Finalize();
+   Publish({
+      RealtimeEffectManagerMessage::Type::EffectReplaced,
+      pLeader ? pLeader->shared_from_this() : nullptr
+   });
+   return pNewState;
 }
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
-   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
-   RealtimeEffectList &states = pLeader
-      ? RealtimeEffectList::Get(*pLeader)
-      : RealtimeEffectList::Get(mProject);
-
-   std::optional<RealtimeEffects::SuspensionScope> myScope;
-   if (mActive) {
-      if (pScope)
-         myScope.emplace(*pScope, mProject.weak_from_this());
-      else
-         return;
-   }
+   auto [pLeader, states] = FindStates(mProject, pTrack);
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
-
    if (mActive)
       pState->Finalize();
-
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,
       pLeader ? pLeader->shared_from_this() : nullptr
    });
+}
+
+std::optional<size_t> RealtimeEffectManager::FindState(
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState) const
+{
+   auto [_, states] = FindStates(mProject, pTrack);
+   return states.FindState(pState);
 }
 
 // Where is this used?

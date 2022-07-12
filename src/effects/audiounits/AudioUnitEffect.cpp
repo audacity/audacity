@@ -17,8 +17,8 @@
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
 #include "AudioUnitEffectOptionsDialog.h"
-#include "AudacityException.h"
-#include "AUControl.h"
+#include "AudioUnitInstance.h"
+#include "AudioUnitValidator.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
@@ -39,10 +39,10 @@
 #include <wx/frame.h>
 #include <wx/listctrl.h>
 #include <wx/log.h>
-#include <wx/sizer.h>
 #include <wx/settings.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/osx/core/private.h>
 
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
@@ -99,7 +99,6 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    , mPath{ path }
    , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
    , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
-   , mMaster{ master }
 {
 }
 
@@ -183,11 +182,12 @@ bool AudioUnitEffect::IsDefault() const
    return false;
 }
 
-bool AudioUnitEffect::SupportsRealtime() const
+auto AudioUnitEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return true;
-
-//   return GetType() == EffectTypeProcess;
+   return RealtimeSince::Always;
+   // return GetType() == EffectTypeProcess
+      // ? RealtimeSince::Always
+      // : RealtimeSince::Never;
 }
 
 bool AudioUnitEffect::SupportsAutomation() const
@@ -203,58 +203,10 @@ bool AudioUnitEffect::SupportsAutomation() const
    return supports;
 }
 
-class AudioUnitInstance : public StatefulPerTrackEffect::Instance
-   , public AudioUnitWrapper
-{
-public:
-   AudioUnitInstance(StatefulPerTrackEffect &effect,
-      AudioComponent component, Parameters &parameters);
-   ~AudioUnitInstance() override;
-
-   void EventListener(const AudioUnitEvent *inEvent,
-      AudioUnitParameterValue inParameterValue);
-};
-
-AudioUnitInstance::AudioUnitInstance(StatefulPerTrackEffect &effect,
-   AudioComponent component, Parameters &parameters
-)  : StatefulPerTrackEffect::Instance{ effect }
-   , AudioUnitWrapper{ component, &parameters }
-{
-   CreateAudioUnit();
-}
-
-AudioUnitInstance::~AudioUnitInstance()
-{
-}
-
-bool AudioUnitEffect::InitializeInstance()
-{
-   if (!CreateAudioUnit())
-      return false;
-
-   mSampleRate = 44100;
-   GetChannelCounts();
-   SetRateAndChannels();
-
-   // Retrieve the desired number of frames per slice
-   if (GetFixedSizeProperty(
-      kAudioUnitProperty_MaximumFramesPerSlice, mBlockSize))
-      // Call failed?  Then supply a default:
-      mBlockSize = 512;
-   return true;
-}
-
 std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
 {
-   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance();
-}
-
-std::shared_ptr<EffectInstance> AudioUnitEffect::DoMakeInstance()
-{
-   if (mMaster)
-      // This is a slave
-      InitializeInstance();
-   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters);
+   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters,
+      GetSymbol().Internal(), mAudioIns, mAudioOuts, mUseLatency);
 }
 
 constexpr auto OptionsKey = L"Options";
@@ -271,10 +223,9 @@ bool AudioUnitEffect::InitializePlugin()
    // third party effect families that distinguish the notions of plug-in and
    // instance.
 
-   // When AudioUnitEffect implements its own proper Instance class, this
-   // should call CreateAudioUnit() directly and not do the rest of
-   // InitializeInstance.
-   if (!InitializeInstance())
+   GetChannelCounts();
+
+   if (!CreateAudioUnit())
       return false;
 
    // Determine interactivity
@@ -318,106 +269,6 @@ bool AudioUnitEffect::FullyInitializePlugin()
    return true;
 }
 
-class AudioUnitValidator : public EffectUIValidator {
-   struct CreateToken{};
-public:
-   static std::unique_ptr<EffectUIValidator> Create(
-      EffectUIClientInterface &effect, ShuttleGui &S,
-      const wxString &uiType,
-      EffectInstance &instance, EffectSettingsAccess &access);
-
-   AudioUnitValidator(CreateToken,
-      EffectUIClientInterface &effect, EffectSettingsAccess &access,
-      AudioUnitInstance &instance, AUControl *pControl);
-
-   ~AudioUnitValidator() override;
-
-   bool UpdateUI() override;
-   bool ValidateUI() override;
-
-private:
-   static void EventListenerCallback(void *inCallbackRefCon,
-      void *inObject, const AudioUnitEvent *inEvent,
-      UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue);
-   void EventListener(const AudioUnitEvent *inEvent,
-      AudioUnitParameterValue inParameterValue);
-   bool FetchSettingsFromInstance(EffectSettings &settings);
-   bool StoreSettingsToInstance(const EffectSettings &settings);
-
-   void Notify();
-
-   using EventListenerPtr =
-      AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
-
-   EventListenerPtr MakeListener();
-
-   // The lifetime guarantee is assumed to be provided by the instance.
-   // See contract of PopulateUI
-   AudioUnitInstance &mInstance;
-   const EventListenerPtr mEventListenerRef;
-   AUControl *const mpControl{};
-};
-
-AudioUnitValidator::AudioUnitValidator(CreateToken,
-   EffectUIClientInterface &effect,
-   EffectSettingsAccess &access, AudioUnitInstance &instance,
-   AUControl *pControl
-)  : EffectUIValidator{ effect, access }
-   , mInstance{ instance }
-   , mEventListenerRef{ MakeListener() }
-   , mpControl{ pControl }
-{
-   // Make the settings of the instance up to date before using it to
-   // build a UI
-   StoreSettingsToInstance(mAccess.Get());
-}
-
-AudioUnitValidator::~AudioUnitValidator()
-{
-   if (mpControl)
-      mpControl->Close();
-}
-
-auto AudioUnitValidator::MakeListener()
-   -> EventListenerPtr
-{
-   const auto unit = mInstance.GetAudioUnit();
-   EventListenerPtr result;
-
-   // Register a callback with the audio unit
-   AUEventListenerRef eventListenerRef{};
-   if (AUEventListenerCreate(AudioUnitValidator::EventListenerCallback,
-      this,
-      static_cast<CFRunLoopRef>( const_cast<void*>(
-         GetCFRunLoopFromEventLoop(GetCurrentEventLoop()))),
-      kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef))
-      return nullptr;
-   result.reset(eventListenerRef);
-
-   // AudioUnitEvent is a struct with a discriminator field and a union
-   AudioUnitEvent event{ kAudioUnitEvent_ParameterValueChange };
-   // Initialize union member -- the ID (second field) reassigned later
-   auto &parameter = event.mArgument.mParameter;
-   parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
-
-   // Register each parameter as something we're interested in
-   if (auto &parameters = mInstance.GetParameters())
-      for (const auto &ID : parameters) {
-         parameter.mParameterID = ID;
-         if (AUEventListenerAddEventType(result.get(), this, &event))
-            return nullptr;
-      }
-
-   // Now set up the other union member
-   event = { kAudioUnitEvent_PropertyChange };
-   event.mArgument.mProperty = AudioUnitUtils::Property{
-      unit, kAudioUnitProperty_Latency, kAudioUnitScope_Global };
-   if (AUEventListenerAddEventType(result.get(), this, &event))
-      return nullptr;
-
-   return result;
-}
-
 unsigned AudioUnitEffect::GetAudioInCount() const
 {
    return mAudioIns;
@@ -438,37 +289,8 @@ int AudioUnitEffect::GetMidiOutCount() const
    return 0;
 }
 
-void AudioUnitEffect::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
-size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
-{
-   return mBlockSize;
-}
-
-size_t AudioUnitEffect::GetBlockSize() const
-{
-   return mBlockSize;
-}
-
-sampleCount AudioUnitEffect::GetLatency()
-{
-   // Retrieve the latency (can be updated via an event)
-   if (mUseLatency && !mLatencyDone) {
-      Float64 latency = 0.0;
-      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
-         mLatencyDone = true;
-         return sampleCount{ latency * mSampleRate };
-      }
-   }
-   return 0;
-}
-
 #if 0
-// TODO move to AudioUnitEffect::Instance when that class exists
-size_t AudioUnitEffect::GetTailSize() const
+size_t AudioUnitInstance::GetTailSize() const
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
@@ -478,189 +300,52 @@ size_t AudioUnitEffect::GetTailSize() const
 }
 #endif
 
-bool AudioUnitEffect::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
-{
-   mInputList =
-      PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
-   mOutputList =
-      PackedArray::AllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
-
-   memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
-   mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
-                               // accumulate the number of frames processed so far
-   mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
-
-   if (!SetRateAndChannels())
-      return false;
-
-   if (SetProperty(kAudioUnitProperty_SetRenderCallback,
-      AudioUnitUtils::RenderCallback{ RenderCallback, this },
-      kAudioUnitScope_Input)) {
-      wxLogError("Setting input render callback failed.\n");
-      return false;
-   }
-
-   if (AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0))
-      return false;
-
-   if (!BypassEffect(false))
-      return false;
-
-   mLatencyDone = false;
-   return true;
-}
-
-bool AudioUnitEffect::ProcessFinalize()
-{
-   mOutputList.reset();
-   mInputList.reset();
-   return true;
-}
-
-size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   // mAudioIns and mAudioOuts don't change after plugin initialization,
-   // so ProcessInitialize() made sufficient allocations
-   assert(PackedArray::Count(mInputList) >= mAudioIns);
-   for (size_t i = 0; i < mAudioIns; ++i)
-      mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
-         const_cast<float*>(inBlock[i]) };
-
-   // See previous comment
-   assert(PackedArray::Count(mOutputList) >= mAudioOuts);
-   for (size_t i = 0; i < mAudioOuts; ++i)
-      mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
-         outBlock[i] };
-
-   AudioUnitRenderActionFlags flags = 0;
-   OSStatus result;
-
-   result = AudioUnitRender(mUnit.get(),
-                            &flags,
-                            &mTimeStamp,
-                            0,
-                            blockLen,
-                            mOutputList.get());
-   if (result != noErr) {
-      wxLogError("Render failed: %d %4.4s\n",
-         static_cast<int>(result), reinterpret_cast<char *>(&result));
-      return 0;
-   }
-
-   mTimeStamp.mSampleTime += blockLen;
-   return blockLen;
-}
-
-bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
-{
-   return ProcessInitialize(settings, 0, nullptr);
-}
-
-bool AudioUnitEffect::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
-{
-   auto slave = std::make_unique<AudioUnitEffect>(
-      mPath, mName, mComponent, &mParameters, this);
-   if (!slave->InitializeInstance())
-      return false;
-
-   slave->SetBlockSize(mBlockSize);
-   slave->SetSampleRate(sampleRate);
-
-   if (!slave->StoreSettings(GetSettings(settings)))
-      return false;
-
-   if (!slave->ProcessInitialize(settings, 0, nullptr))
-      return false;
-
-   mSlaves.push_back(std::move(slave));
-   return true;
-}
-
-bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
-{
-return GuardedCall<bool>([&]{
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      mSlaves[i]->ProcessFinalize();
-   }
-   mSlaves.clear();
-   return ProcessFinalize();
-});
-}
-
-bool AudioUnitEffect::RealtimeSuspend()
-{
-   if (!BypassEffect(true))
-   {
-      return false;
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      if (!mSlaves[i]->BypassEffect(true))
-      {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-bool AudioUnitEffect::RealtimeResume()
-{
-   if (!BypassEffect(false))
-      return false;
-
-   for (auto &slave: mSlaves) {
-      if (!slave->BypassEffect(false))
-         return false;
-   }
-
-   return true;
-}
-
-bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
-{
-   return true;
-}
-
-size_t AudioUnitEffect::RealtimeProcess(size_t group, EffectSettings &settings,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
-{
-   wxASSERT(numSamples <= mBlockSize);
-   if (group >= mSlaves.size())
-      return 0;
-   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
-}
-
-bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
-{
-   return true;
-}
-
-int AudioUnitEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       dialog.Show();
       return 0;
    }
-
    return dialog.ShowModal();
 }
 
+// Don't use the template-generated MakeSettings(), which default-constructs
+// the structure.  Instead allocate a number of values chosen by the plug-in
 EffectSettings AudioUnitEffect::MakeSettings() const
 {
-   auto result = StatefulPerTrackEffect::MakeSettings();
-   // Cause initial population of the map stored in the stateful effect
-   if (!mInitialFetchDone) {
-      FetchSettings(GetSettings(result));
-      mInitialFetchDone = true;
+   AudioUnitEffectSettings settings;
+   FetchSettings(settings);
+   return EffectSettings::Make<AudioUnitEffectSettings>(std::move(settings));
+}
+
+bool AudioUnitEffect::CopySettingsContents(
+   const EffectSettings &src, EffectSettings &dst) const
+{
+   auto &dstSettings = GetSettings(dst);
+   auto &srcSettings = GetSettings(src);
+   dstSettings.pSource = srcSettings.pSource;
+
+   // Do an in-place rewrite of dst, avoiding allocations
+   auto &dstMap = dstSettings.values;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   const auto &srcMap = srcSettings.values;
+   // Iterate the two maps in parallel, assuming correspondence of
+   // keys, because the settings objects ultimately came from MakeSettings()
+   // and copies.  Nothing else ever inserts or removes keys.
+   assert(srcMap.size() == dstMap.size());
+   for (auto &[key, oValue] : srcMap) {
+      assert(dstIter != dstEnd);
+      auto &[dstKey, dstOValue] = *dstIter;
+      assert(dstKey == key);
+      if (oValue)
+         dstOValue.emplace(*oValue);
+      else
+         dstOValue.reset();
+      ++dstIter;
    }
-   return result;
+   assert(dstIter == dstEnd);
+   return true;
 }
 
 bool AudioUnitEffect::SaveSettings(
@@ -692,53 +377,9 @@ bool AudioUnitEffect::LoadSettings(
       if (auto pKey = ParameterInfo::ParseKey(key)
          ; pKey && parms.Read(key, value)
       )
-         map[*pKey].emplace(key, value);
+         map[*pKey].emplace(mySettings.Intern(key), value);
    } while(parms.GetNextEntry(key, index));
    return true;
-}
-
-bool AudioUnitValidator::UpdateUI()
-{
-   // Update parameter values in AudioUnit, and propagate to any listeners
-   if (StoreSettingsToInstance(mAccess.Get())) {
-      // See AUView::viewWillDraw
-      if (mpControl)
-         mpControl->ForceRedraw();
-   
-      // This will be the AudioUnit of a stateful instance, not of the effect
-      Notify();
-
-      return true;
-   }
-   return false;
-}
-
-bool AudioUnitValidator::ValidateUI()
-{
-   mAccess.ModifySettings([this](EffectSettings &settings){
-#if 0
-      // This analogy with other generators doesn't seem to fit AudioUnits
-      // How can we define the control mDuration?
-      if (GetType() == EffectTypeGenerate)
-         settings.extra.SetDuration(mDuration->GetValue());
-#endif
-      FetchSettingsFromInstance(settings);
-   });
-   return true;
-}
-
-bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
-{
-   return mInstance.FetchSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
-}
-
-bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
-{
-   return mInstance.StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
 }
 
 bool AudioUnitEffect::LoadUserPreset(
@@ -791,74 +432,11 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
-   EffectUIClientInterface &effect, ShuttleGui &S,
-   const wxString &uiType,
-   EffectInstance &instance, EffectSettingsAccess &access)
-{
-   const auto parent = S.GetParent();
-   // Cast is assumed to succeed because only this effect's own instances
-   // are passed back by the framework
-   auto &myInstance = dynamic_cast<AudioUnitInstance&>(instance);
-
-   AUControl *pControl{};
-   wxPanel *container{};
-   {
-      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      wxASSERT(parent); // To justify safenew
-      container = safenew wxPanelWrapper(parent, wxID_ANY);
-      mainSizer->Add(container, 1, wxEXPAND);
-      parent->SetSizer(mainSizer.release());
-   }
-
-#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-   if (uiType == BasicValue.MSGID().GET()) {
-      if (!CreatePlain(mParent))
-         return nullptr;
-   }
-   else
-#endif
-   {
-      auto uControl = Destroy_ptr<AUControl>(safenew AUControl);
-      if (!uControl)
-         return nullptr;
-      pControl = uControl.get();
-
-      if (!pControl->Create(container, myInstance.GetComponent(),
-         myInstance.GetAudioUnit(),
-         uiType == FullValue.MSGID().GET()))
-         return nullptr;
-
-      {
-         auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
-         innerSizer->Add(uControl.release(), 1, wxEXPAND);
-         container->SetSizer(innerSizer.release());
-      }
-
-      parent->SetMinSize(wxDefaultSize);
-
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-      wxEventLoop::SetBusyWaiting(true);
-#endif
-#endif
-   }
-
-   return std::make_unique<AudioUnitValidator>(
-      CreateToken{}, effect, access, myInstance, pControl);
-}
-
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access)
 {
    mParent = S.GetParent();
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
-}
-
-bool AudioUnitEffect::IsGraphicalUI()
-{
-   return mUIType != wxT("Plain");
 }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -1049,75 +627,6 @@ bool AudioUnitEffect::SavePreset(
    return true;
 }
 
-bool AudioUnitEffect::SetRateAndChannels()
-{
-   mInitialization.reset();
-   AudioUnitUtils::StreamBasicDescription streamFormat{
-      // Float64 mSampleRate;
-      mSampleRate,
-
-      // UInt32  mFormatID;
-      kAudioFormatLinearPCM,
-
-      // UInt32  mFormatFlags;
-      (kAudioFormatFlagsNativeFloatPacked |
-          kAudioFormatFlagIsNonInterleaved),
-
-      // UInt32  mBytesPerPacket;
-      sizeof(float),
-
-      // UInt32  mFramesPerPacket;
-      1,
-
-      // UInt32  mBytesPerFrame;
-      sizeof(float),
-
-      // UInt32  mChannelsPerFrame;
-      0,
-
-      // UInt32  mBitsPerChannel;
-      sizeof(float) * 8,
-   };
-
-   const struct Info{
-      unsigned nChannels;
-      AudioUnitScope scope;
-      const char *const msg; // used only in log messages
-   } infos[]{
-      { 1, kAudioUnitScope_Global, "global" },
-      { mAudioIns, kAudioUnitScope_Input, "input" },
-      { mAudioOuts, kAudioUnitScope_Output, "output" },
-   };
-   for (const auto &[nChannels, scope, msg] : infos) {
-      if (nChannels) {
-         if (SetProperty(kAudioUnitProperty_SampleRate, mSampleRate, scope)) {
-            wxLogError("%ls Didn't accept sample rate on %s\n",
-               // Exposing internal name only in logging
-               GetSymbol().Internal().wx_str(), msg);
-            return false;
-         }
-         if (scope != kAudioUnitScope_Global) {
-            streamFormat.mChannelsPerFrame = nChannels;
-            if (SetProperty(kAudioUnitProperty_StreamFormat,
-               streamFormat, scope)) {
-               wxLogError("%ls didn't accept stream format on %s\n",
-                  // Exposing internal name only in logging
-                  GetSymbol().Internal().wx_str(), msg);
-               return false;
-            }
-         }
-      }
-   }
-
-   if (AudioUnitInitialize(mUnit.get())) {
-      wxLogError("Couldn't initialize audio unit\n");
-      return false;
-   }
-
-   mInitialization.reset(mUnit.get());
-   return true;
-}
-
 TranslatableString AudioUnitEffect::Export(
    const AudioUnitEffectSettings &settings, const wxString & path) const
 {
@@ -1162,101 +671,6 @@ TranslatableString AudioUnitEffect::Import(
       return error;
 
    return {};
-}
-
-void AudioUnitValidator::Notify()
-{
-   AudioUnitParameter aup = {};
-   aup.mAudioUnit = mInstance.GetAudioUnit();
-   aup.mParameterID = kAUParameterListener_AnyParameter;
-   aup.mScope = kAudioUnitScope_Global;
-   aup.mElement = 0;
-   AUParameterListenerNotify(NULL, NULL, &aup);
-}
-
-OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
-                                 const AudioTimeStamp *inTimeStamp,
-                                 UInt32 inBusNumber,
-                                 UInt32 inNumFrames,
-                                 AudioBufferList *ioData)
-{
-   size_t i = 0;
-   auto size =
-      std::min<size_t>(ioData->mNumberBuffers, PackedArray::Count(mInputList));
-   for (; i < size; ++i)
-      ioData->mBuffers[i].mData = mInputList[i].mData;
-   // Some defensive code here just in case SDK requests from us an unexpectedly
-   // large number of buffers:
-   for (; i < ioData->mNumberBuffers; ++i)
-      ioData->mBuffers[i].mData = nullptr;
-   return 0;
-}
-
-// static
-OSStatus AudioUnitEffect::RenderCallback(void *inRefCon,
-                                         AudioUnitRenderActionFlags *inActionFlags,
-                                         const AudioTimeStamp *inTimeStamp,
-                                         UInt32 inBusNumber,
-                                         UInt32 inNumFrames,
-                                         AudioBufferList *ioData)
-{
-   return static_cast<AudioUnitEffect *>(inRefCon)->Render(inActionFlags,
-      inTimeStamp, inBusNumber, inNumFrames, ioData);
-}
-
-void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
-   AudioUnitParameterValue inParameterValue)
-{
-   // Handle property changes
-   if (inEvent->mEventType == kAudioUnitEvent_PropertyChange) {
-      // Handle latency changes
-      if (inEvent->mArgument.mProperty.mPropertyID ==
-          kAudioUnitProperty_Latency) {
-         // Allow change to be used
-         //mLatencyDone = false;
-      }
-      return;
-   }
-
-   // Only parameter changes at this point
-   const auto parameterStorer = [inParameterValue,
-      ID = inEvent->mArgument.mParameter.mParameterID
-   ](AudioUnit pUnit){
-      AudioUnitSetParameter(pUnit, ID,
-         kAudioUnitScope_Global, 0, inParameterValue, 0);
-   };
-
-   // Save the parameter change in the instance, so it can be
-   // fetched into Settings, used to initialize any new slave's state
-   // This is like StoreSettings but for just one setting
-   parameterStorer(GetAudioUnit());
-
-   // Propagate the parameter
-   // TODO store slaves in the instance
-   auto &slaves =
-      static_cast<const AudioUnitEffect&>(GetEffect()).mSlaves;
-   for (auto &worker : slaves)
-      parameterStorer(worker->GetAudioUnit());
-}
-
-void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
-   AudioUnitParameterValue inParameterValue)
-{
-   // Modify the instance and its workers
-   mInstance.EventListener(inEvent, inParameterValue);
-   // Fetch changed settings and send them to the framework
-   // (Maybe we need a way to fetch just one changed setting, but this is
-   // the easy way to write it)
-   ValidateUI();
-}
-
-// static
-void AudioUnitValidator::EventListenerCallback(void *inCallbackRefCon,
-   void *inObject, const AudioUnitEvent *inEvent, UInt64 inEventHostTime,
-   AudioUnitParameterValue inParameterValue)
-{
-   static_cast<AudioUnitValidator *>(inCallbackRefCon)
-      ->EventListener(inEvent, inParameterValue);
 }
 
 void AudioUnitEffect::GetChannelCounts()
@@ -1357,11 +771,4 @@ void AudioUnitEffect::GetChannelCounts()
 
    return;
 }
-
-bool AudioUnitEffect::BypassEffect(bool bypass)
-{
-   UInt32 value = (bypass ? 1 : 0);
-   return !SetProperty(kAudioUnitProperty_BypassEffect, value);
-}
-
 #endif

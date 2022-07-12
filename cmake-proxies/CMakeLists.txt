@@ -110,6 +110,31 @@ add_conan_lib(
 )
 
 add_conan_lib(
+   mpg123
+   mpg123/1.29.3
+   PKG_CONFIG "libmpg123"
+   OPTION_NAME libmpg123
+   INTERFACE_NAME MPG123::libmpg123
+   CONAN_OPTIONS
+      mpg123:shared=True
+      mpg123:network=False
+)
+
+if( USE_LIBMPG123 )
+   # If we are building against libmpg123, we need to drop
+   # the previos configuration, which may used libmad
+   set( USE_LIBMAD OFF CACHE INTERNAL "" FORCE )
+   set( ${_OPT}use_libmad "off" )
+else()
+   add_conan_lib(
+      libmad
+      libmad/0.15.2b-1@
+      OPTION_NAME libmad
+      PKG_CONFIG "mad >= 0.15.0b" # Ubuntu has broken PC file
+   )
+endif()
+
+add_conan_lib(
    libid3tag
    libid3tag/0.15.2b@audacity/stable
    OPTION_NAME libid3tag
@@ -119,10 +144,13 @@ add_conan_lib(
 )
 
 add_conan_lib(
-   libmad
-   libmad/0.15.2b-1@
-   OPTION_NAME libmad
-   PKG_CONFIG "mad >= 0.15.0b" # Ubuntu has broken PC file
+   WavPack
+   wavpack/5.4.0
+   OPTION_NAME wavpack
+   ALLOW_FIND_PACKAGE
+   PKG_CONFIG "wavpack >= 5.2.0"
+   CONAN_OPTIONS
+      wavpack:shared=True
 )
 
 add_conan_lib(

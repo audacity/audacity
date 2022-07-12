@@ -164,8 +164,8 @@ void OnUndo(const CommandContext &context)
    auto t = *tracks.Selected().begin();
    if (!t)
       t = *tracks.Any().begin();
+   TrackFocus::Get(project).Set(t);
    if (t) {
-      TrackFocus::Get(project).Set(t);
       t->EnsureVisible();
    }
 }
@@ -194,8 +194,8 @@ void OnRedo(const CommandContext &context)
    auto t = *tracks.Selected().begin();
    if (!t)
       t = *tracks.Any().begin();
+   TrackFocus::Get(project).Set(t);
    if (t) {
-      TrackFocus::Get(project).Set(t);
       t->EnsureVisible();
    }
 }

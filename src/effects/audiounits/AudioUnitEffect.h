@@ -25,7 +25,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../StatefulPerTrackEffect.h"
+#include "../PerTrackEffect.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>
@@ -35,13 +35,11 @@
 #define AUDIOUNITEFFECTS_FAMILY EffectFamilySymbol{ wxT("AudioUnit"), XO("Audio Unit") }
 class AudioUnitEffect;
 
-using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
-
 class AUControl;
 
 class AudioUnitEffect final
-   : public StatefulPerTrackEffect
-   , public AudioUnitWrapper
+   : public PerTrackEffect
+   , AudioUnitWrapper
 {
 public:
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
@@ -66,13 +64,16 @@ public:
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
    bool IsDefault() const override;
-   bool SupportsRealtime() const override;
+   RealtimeSince RealtimeSupport() const override;
    bool SupportsAutomation() const override;
 
    EffectSettings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
+   //! May allocate memory, so should be called only in the main thread
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
@@ -90,47 +91,18 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   void SetSampleRate(double rate) override;
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
 
-   sampleCount GetLatency() override;
-   // size_t GetTailSize() const override;
-
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-
-   int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
-
-   bool InitializeInstance();
    bool InitializePlugin();
    bool FullyInitializePlugin();
 
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool IsGraphicalUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -143,8 +115,6 @@ public:
    // AudioUnitEffect implementation
    
 private:
-   bool SetRateAndChannels();
-
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(
@@ -156,18 +126,6 @@ private:
    TranslatableString SaveBlobToConfig(const RegistryPath &group,
       const wxString &path, const void *blob, size_t len,
       bool allowEmpty = true) const;
-
-   static OSStatus RenderCallback(void *inRefCon,
-                                  AudioUnitRenderActionFlags *inActionFlags,
-                                  const AudioTimeStamp *inTimeStamp,
-                                  UInt32 inBusNumber,
-                                  UInt32 inNumFrames,
-                                  AudioBufferList *ioData);
-   OSStatus Render(AudioUnitRenderActionFlags *inActionFlags,
-                   const AudioTimeStamp *inTimeStamp,
-                   UInt32 inBusNumber,
-                   UInt32 inNumFrames,
-                   AudioBufferList *ioData);
 
    void GetChannelCounts();
 
@@ -181,50 +139,20 @@ private:
    bool CreatePlain(wxWindow *parent);
 #endif
 
-   bool BypassEffect(bool bypass);
-
-private:
-   AudioUnitEffectSettings mSettings;
-
-public:
-   //! This function will be rewritten when the effect is really stateless
-   AudioUnitEffectSettings &GetSettings(EffectSettings &) const
-      { return const_cast<AudioUnitEffect*>(this)->mSettings; }
-   //! This function will be rewritten when the effect is really stateless
-   const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
-      { return mSettings; }
-
 private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
-
-   AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
    // Initialized in GetChannelCounts()
    unsigned mAudioIns{ 2 };
    unsigned mAudioOuts{ 2 };
 
    bool mInteractive{ false };
-   bool mLatencyDone{ false };
-   UInt32 mBlockSize{ 0 };
-   Float64 mSampleRate{ 44100.0 };
-
    bool mUseLatency{ true };
-
-   AudioTimeStamp mTimeStamp{};
-
-   PackedArray::Ptr<AudioBufferList> mInputList;
-   PackedArray::Ptr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
-   bool mIsGraphical{ false };
-
-   AudioUnitEffect *const mMaster;     // non-NULL if a slave
-public:
-   AudioUnitEffectArray mSlaves;
-   mutable bool mInitialFetchDone{ false };
 };
 
 #endif

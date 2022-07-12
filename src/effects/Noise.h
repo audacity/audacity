@@ -40,6 +40,8 @@ public:
    EffectType GetType() const override;
 
    unsigned GetAudioOutCount() const override;
+   bool ProcessInitialize(EffectSettings &settings,
+      double sampleRate, sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -55,6 +57,7 @@ public:
 private:
    // EffectNoise implementation
 
+   double mSampleRate{};
    int mType;
    double mAmp;
 

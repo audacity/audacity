@@ -582,8 +582,12 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitEffectOptionsDialog.h
          effects/audiounits/AudioUnitEffectsModule.cpp
          effects/audiounits/AudioUnitEffectsModule.h
+         effects/audiounits/AudioUnitInstance.cpp
+         effects/audiounits/AudioUnitInstance.h
          effects/audiounits/AudioUnitUtils.cpp
          effects/audiounits/AudioUnitUtils.h
+         effects/audiounits/AudioUnitValidator.cpp
+         effects/audiounits/AudioUnitValidator.h
          effects/audiounits/AudioUnitWrapper.cpp
          effects/audiounits/AudioUnitWrapper.h
       >
@@ -601,8 +605,27 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_LV2}>:
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
+         effects/lv2/LV2EffectMeter.cpp
+         effects/lv2/LV2EffectMeter.h
+         effects/lv2/LV2FeaturesList.cpp
+         effects/lv2/LV2FeaturesList.h
+         effects/lv2/LV2Instance.cpp
+         effects/lv2/LV2Instance.h
+         effects/lv2/LV2InstanceFeaturesList.cpp
+         effects/lv2/LV2InstanceFeaturesList.h
+         effects/lv2/LV2Ports.cpp
+         effects/lv2/LV2Ports.h
+         effects/lv2/LV2Preferences.cpp
+         effects/lv2/LV2Preferences.h
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
+         effects/lv2/LV2UIFeaturesList.cpp
+         effects/lv2/LV2UIFeaturesList.h
+         effects/lv2/LV2Utils.h
+         effects/lv2/LV2Validator.cpp
+         effects/lv2/LV2Validator.h
+         effects/lv2/LV2Wrapper.cpp
+         effects/lv2/LV2Wrapper.h
          effects/lv2/LoadLV2.cpp
          effects/lv2/LoadLV2.h
          effects/lv2/NativeWindow.h
@@ -658,6 +681,10 @@ list( APPEND SOURCES
          export/ExportMP2.cpp
       >
 
+      $<$<BOOL:${USE_WAVPACK}>:
+         export/ExportWavPack.cpp
+      >
+
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
@@ -706,7 +733,15 @@ list( APPEND SOURCES
       >
 
       $<$<BOOL:${USE_LIBMAD}>:
-         import/ImportMP3.cpp
+         import/ImportMP3_MAD.cpp
+      >
+
+      $<$<BOOL:${USE_LIBMPG123}>:
+         import/ImportMP3_MPG123.cpp
+      >
+
+      $<$<BOOL:${USE_WAVPACK}>:
+         import/ImportWavPack.cpp
       >
 
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
@@ -1172,6 +1207,8 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
+      $<$<BOOL:${USE_LIBMPG123}>:MPG123::libmpg123>
+      $<$<BOOL:${USE_WAVPACK}>:WavPack::WavPack>
       $<$<BOOL:${USE_LIBOGG}>:Ogg::ogg>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbis>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisfile>
@@ -1303,6 +1340,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          effects/VST3/module_mac.mm
          PROPERTIES
             COMPILE_FLAGS "-fobjc-arc"
+            SKIP_PRECOMPILE_HEADERS YES
+      )
+
+      set_source_files_properties(
+         effects/VST/VSTControlOSX.mm
+         PROPERTIES
+            SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
 
@@ -1374,7 +1418,7 @@ else()
          audio/x-flac
       )
    endif()
-   if( USE_LIBMAD )
+   if( USE_LIBMAD OR USE_LIBMPG123)
       list( APPEND MIMETYPES
          audio/mpeg
       )

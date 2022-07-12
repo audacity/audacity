@@ -116,6 +116,9 @@ public:
    virtual int Open(
       const AVCodecWrapper *codec, AVDictionaryWrapper *options = nullptr) = 0;
 
+private:
+   void ConsumeFrame(std::vector<uint8_t>& data, AVFrameWrapper& frame);
+
 protected:
    const FFmpegFunctions& mFFmpeg;
    AVCodecContext* mAVCodecContext { nullptr };

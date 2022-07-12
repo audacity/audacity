@@ -31,6 +31,7 @@
 
 #include <functional>
 #include <set>
+#include <vector>
 
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place
@@ -94,14 +95,22 @@ class TransactionalSettingBase : public SettingBase
 public:
    using SettingBase::SettingBase;
 
-   //! @return true iff successful
+   virtual void Invalidate() = 0;
+
+protected:
+   // Methods below should only be callable
+   // from within a transaction.
+   friend class SettingTransaction;
+   friend class SettingScope;
+   
+   virtual void EnterTransaction(size_t depth) = 0;
+   //! @return true if successful
    virtual bool Commit() = 0;
    virtual void Rollback() noexcept = 0;
-   virtual void Invalidate() = 0;
 };
 
 //! Makes temporary changes to preferences, then rolls them back at destruction
-/*! Nesting of SettingScope is not supported. No copy or move. */
+/*! No copy or move. */
 class PREFERENCES_API SettingScope /* not final */
 {
 public:
@@ -120,7 +129,6 @@ public:
    static AddResult Add( TransactionalSettingBase& setting );
 
 protected:
-   static SettingScope *sCurrent;
    std::set< TransactionalSettingBase * > mPending;
    bool mCommitted = false;
 };
@@ -243,24 +251,24 @@ public:
    //! Write value to config and return true if successful
    bool Write( const T &value )
    {
+      const auto config = this->GetConfig();
+      
+      if (config == nullptr)
+         return false;
+      
       switch ( SettingScope::Add( *this ) ) {
          // Eager writes, but not flushed, when there is no transaction
          default:
          case SettingTransaction::NotAdded: {
-            const auto config = this->GetConfig();
-            if ( config ) {
-               this->mCurrentValue = value;
-               return DoWrite();
-            }
-            return false;
+            this->mCurrentValue = value;
+            return DoWrite();
          }
 
          // Deferred writes, with flush, if there is a commit later
          case SettingTransaction::Added:
-            this->mPreviousValue = Read();
-            [[fallthrough]];
          case SettingTransaction::PreviouslyAdded:
             this->mCurrentValue = value;
+            this->mValid = true;
             return true;
       }
    }
@@ -271,19 +279,44 @@ public:
       return Write( GetDefault() );
    }
 
-   bool Commit() override
-   {
-      return DoWrite();
-   }
-
    void Invalidate() override
    {
       this->mValid = false;
    }
 
+private:
+   void EnterTransaction(size_t depth) override
+   {
+      const T value = Read();
+
+      for (size_t i = mPreviousValues.size(); i < depth; ++i)
+         this->mPreviousValues.emplace_back( value );
+   }
+
+   bool Commit() override
+   {
+      // This can be only called from within the transaction
+      assert(!this->mPreviousValues.empty());
+
+      if (this->mPreviousValues.empty())
+         return false;
+      
+      const auto result = this->mPreviousValues.size() > 1 || DoWrite();
+      mPreviousValues.pop_back();
+
+      return result;
+   }
+
    void Rollback() noexcept override
    {
-      this->mCurrentValue = this->mPreviousValue;
+      // This can be only called from within the transaction
+      assert(!this->mPreviousValues.empty());
+      
+      if (!this->mPreviousValues.empty())
+      {
+         this->mCurrentValue = std::move(this->mPreviousValues.back());
+         this->mPreviousValues.pop_back();
+      }
    }
 
 protected:
@@ -298,7 +331,7 @@ protected:
 
    const DefaultValueFunction mFunction;
    mutable T mDefaultValue{};
-   T mPreviousValue{};
+   std::vector<T> mPreviousValues;
 };
 
 //! This specialization of Setting for bool adds a Toggle method to negate the saved value

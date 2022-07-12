@@ -167,6 +167,7 @@ public:
       const std::shared_ptr<EffectSettingsAccess> &pSide = {});
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings) override;
+   void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
    //! @invariant not null
@@ -195,6 +196,13 @@ void EffectSettingsAccessTee::Set(EffectSettings &&settings) {
    mpMain->Set(std::move(settings));
 }
 
+void EffectSettingsAccessTee::Flush()
+{
+   mpMain->Flush();
+   if (auto pSide = mwSide.lock())
+      pSide->Flush();
+}
+
 bool EffectSettingsAccessTee::IsSameAs(
    const EffectSettingsAccess &other) const
 {
@@ -203,7 +211,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project, EffectPlugin &effect,
-   EffectUIClientInterface &client, EffectInstance &instance,
+   EffectUIClientInterface &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
@@ -211,9 +219,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 , mEffectUIHost{ effect }
 , mClient{ client }
-// Grab a pointer to the instance object,
-// extending its lifetime while this remains:
-, mpInstance{ instance.shared_from_this() }
 // Grab a pointer to the access object,
 // extending its lifetime while this remains:
 , mpGivenAccess{ access.shared_from_this() }
@@ -222,7 +227,10 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mProject{ project }
 , mParent{ parent }
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
+, mpInstance{ InitializeInstance() }
 {
+   // Assign the out parameter
+   pInstance = mpInstance;
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
    [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
@@ -284,6 +292,7 @@ bool EffectUIHost::TransferDataFromWindow()
          }
       }
    });
+   mpAccess->Flush();
    return result;
 }
 
@@ -320,9 +329,9 @@ int EffectUIHost::ShowModal()
 // EffectUIHost implementation
 // ============================================================================
 
-wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
+wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
 {
-   mIsGUI = mClient.IsGraphicalUI();
+   mIsGUI = graphicalUI;
    mIsBatch = mEffectUIHost.IsBatchProcessing();
 
    int margin = 0;
@@ -459,6 +468,9 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 
 bool EffectUIHost::Initialize()
 {
+   // Put the checkbox for realtime into the correct initial state
+   mEnabled = !RealtimeEffectManager::Get(mProject).GetSuspended();
+
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
    EffectPanel *w {};
@@ -488,7 +500,8 @@ bool EffectUIHost::Initialize()
 
       S.StartPanel();
       {
-         const auto bar = BuildButtonBar( S.GetParent() );
+         const auto bar = BuildButtonBar(S.GetParent(),
+            mpValidator && mpValidator->IsGraphicalUI());
 
          long buttons;
          if ( mEffectUIHost.GetDefinition().ManualPage().empty() && mEffectUIHost.GetDefinition().HelpPage().empty()) {
@@ -571,14 +584,8 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
    DoCancel();
-   
    CleanupRealtime();
-   
    Hide();
-
-   mSuspensionScope.reset();
-   mpValidator.reset();
-
    Destroy();
 #if wxDEBUG_LEVEL
    mClosed = true;
@@ -796,13 +803,9 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   mEnabled = mEnableCb->GetValue();
-   
-   if (mEnabled)
-      mSuspensionScope.reset();
-   else
-      mSuspensionScope.emplace(AudioIO::Get()->SuspensionScope());
-
+   // Change the suspension state of realtime processing, though it remains
+   // "active."
+   RealtimeEffectManager::Get(mProject).SetSuspended(!mEnableCb->GetValue());
    UpdateControls();
 }
 
@@ -1217,9 +1220,13 @@ void EffectUIHost::LoadUserPresets()
    return;
 }
 
-void EffectUIHost::InitializeRealtime()
+std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 {
-   {
+   // We are still constructing and the return initializes a const member
+   std::shared_ptr<EffectInstance> result;
+
+   bool priorState = (mpState != nullptr);
+   if (!priorState) {
       auto gAudioIO = AudioIO::Get();
       mDisableTransport = !gAudioIO->IsAvailable(mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
@@ -1227,42 +1234,53 @@ void EffectUIHost::InitializeRealtime()
    }
 
    if (mSupportsRealtime && !mInitialized) {
-      mpState =
-         AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
+      if (!priorState)
+         mpState =
+            AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
       if (mpState) {
+         // Find the right instance to connect to the dialog
+         if (!result) {
+            result = mpState->GetInstance();
+            if (result && !result->Init())
+               result.reset();
+         }
+
          mpAccess2 = mpState->GetAccess();
          if (!(mpAccess2->IsSameAs(*mpAccess)))
             // Decorate the given access object
             mpAccess = std::make_shared<EffectSettingsAccessTee>(
                *mpAccess, mpAccess2);
       }
-      /*
-      ProjectHistory::Get(mProject).PushState(
-         XO("Added %s effect").Format(mpState->GetEffect()->GetName()),
-         XO("Added Effect"),
-         UndoPush::NONE
-      );
-       */
-      mSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
-         switch (event.type) {
-         case AudioIOEvent::PLAYBACK:
-            OnPlayback(event); break;
-         case AudioIOEvent::CAPTURE:
-            OnCapture(event); break;
-         default:
-            break;
-         }
-      });
+      if (!priorState) {
+         mSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
+            switch (event.type) {
+            case AudioIOEvent::PLAYBACK:
+               OnPlayback(event); break;
+            case AudioIOEvent::CAPTURE:
+               OnCapture(event); break;
+            default:
+               break;
+            }
+         });
+      }
       
       mInitialized = true;
    }
+   else {
+      result = mEffectUIHost.MakeInstance();
+      if (result && !result->Init())
+         result.reset();
+   }
+   
+   return result;
 }
 
 void EffectUIHost::CleanupRealtime()
 {
+   bool noPriorState(mSubscription);
    mSubscription.Reset();
    if (mSupportsRealtime && mInitialized) {
-      if (mpState) {
+      if (noPriorState && mpState) {
          AudioIO::Get()->RemoveState(mProject, nullptr, mpState);
          mpState.reset();
       /*
@@ -1277,10 +1295,8 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-wxDialog *EffectUI::DialogFactory( wxWindow &parent,
-   EffectPlugin &host,
-   EffectUIClientInterface &client,
-   EffectInstance &instance,
+DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
+   EffectPlugin &host, EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1288,14 +1304,16 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    // non-modal, as for realtime effects
    auto project = FindProjectFromWindow(&parent);
    if ( !project )
-      return nullptr;
+      return {};
+   std::shared_ptr<EffectInstance> pInstance;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
-      *project, host, client, instance, access } };
-   dlg->InitializeRealtime();
-   if (dlg->Initialize())
+      *project, host, client, pInstance, access } };
+   if (dlg->Initialize()) {
+      auto pValidator = dlg->GetValidator();
       // release() is safe because parent will own it
-      return dlg.release();
-   return nullptr;
+      return { dlg.release(), pInstance, pValidator };
+   }
+   return {};
 }
 
 #include "PluginManager.h"

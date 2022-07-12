@@ -47,12 +47,17 @@ public:
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
-   bool EnsureInstance(double rate);
+   //! Expose a pointer to the state's instance (making one as needed).
+   /*!
+    @post `true` (no promise result is not null)
+    */
+   std::shared_ptr<EffectInstance> GetInstance();
    
    //! Main thread sets up for playback
-   bool Initialize(double rate);
+   std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
-   bool AddTrack(Track &track, unsigned chans, float rate);
+   std::shared_ptr<EffectInstance>
+   AddTrack(Track &track, unsigned chans, float sampleRate);
    //! Worker thread begins a batch of samples
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
@@ -64,8 +69,7 @@ public:
       float *dummybuf, //!< one scratch buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
-   /*! @param running means no pause or deactivation of containing list */
-   bool ProcessEnd(bool running);
+   bool ProcessEnd();
 
    //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;
@@ -88,6 +92,8 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+   std::shared_ptr<EffectInstance> EnsureInstance(double rate);
+
    struct Access;
    struct AccessState;
 
@@ -100,7 +106,7 @@ private:
       return mpAccessState.load(std::memory_order_acquire);
    }
 
-   /*! @name Members that are copied
+   /*! @name Members that are copied for undo and redo
     @{
     */
 
@@ -109,31 +115,42 @@ private:
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
-   //! Updated immediately by Access::Set
+   //! Updated immediately by Access::Set in the main thread
    NonInterfering<EffectSettings> mMainSettings;
 
    //! @}
 
-   // Following are not copied
+   /*! @name Members that are changed also in the worker thread
+    @{
+    */
 
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<EffectSettings> mWorkerSettings;
+   //! Assigned in the worker thread at the start of each processing scope
+   bool mLastActive{};
 
-   wxString mParameters;  // Used only during deserialization
+   //! @}
 
+   /*! @name Members that do not change during processing
+    @{
+    */
+    
    //! Stateful instance made by the plug-in
-   std::shared_ptr<EffectInstance> mInstance;
+   std::weak_ptr<EffectInstance> mwInstance;
+
+   std::unordered_map<Track *, size_t> mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.
    // Destroy before mWorkerSettings:
    AtomicUniquePointer<AccessState> mpAccessState{ nullptr };
-   
-   size_t mCurrentProcessor{ 0 };
-   std::unordered_map<Track *, size_t> mGroups;
 
-   bool mLastActive{};
+   wxString mParameters;  // Used only during deserialization
+   size_t mCurrentProcessor{ 0 };
+   bool mInitialized{ false };
+
+   //! @}
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__

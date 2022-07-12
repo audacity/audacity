@@ -333,12 +333,13 @@ bool EffectManager::PromptUser(
 {
    bool result = false;
    if (auto effect = GetEffect(ID)) {
+      std::shared_ptr<EffectInstance> pInstance;
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
       if (const auto pSettings = GetDefaultSettings(ID))
          result = effect->ShowHostInterface(
             parent, factory,
-            *effect->MakeInstance(), // short-lived object
+            pInstance,
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;
       return result;

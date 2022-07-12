@@ -14,10 +14,25 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitWrapper.h"
+#include "EffectInterface.h"
 #include "Internat.h"
 #include "ModuleManager.h"
 
 #include <wx/osx/core/private.h>
+
+AudioUnitEffectSettings &
+AudioUnitWrapper::GetSettings(EffectSettings &settings) {
+   auto pSettings = settings.cast<AudioUnitEffectSettings>();
+   // Assume the settings object ultimately came from AudioUnitEffect's
+   // MakeSettings or copying of that
+   assert(pSettings);
+   return *pSettings;
+}
+
+const AudioUnitEffectSettings &
+AudioUnitWrapper::GetSettings(const EffectSettings &settings) {
+   return GetSettings(const_cast<EffectSettings &>(settings));
+}
 
 //
 // When a plug-in's state is saved to the settings file (as a preset),
@@ -129,6 +144,8 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
 
 bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
 {
+   settings.pSource = this;
+
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(
@@ -138,7 +155,7 @@ bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
       // you choose 10 bands; the values for bands 10 ... 30 are undefined
       // but the parameter IDs are known
       auto &slot = settings.values[ID];
-      slot = {};
+      slot.reset();
       AudioUnitParameterValue value;
       if (!pi.mName ||
          AudioUnitGetParameter(
@@ -148,7 +165,7 @@ bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
             // parameter.  In any case, just ignore it.
          }
       else
-         slot.emplace(*pi.mName, value);
+         slot.emplace(settings.Intern(*pi.mName), value);
       return true;
    });
    return true;

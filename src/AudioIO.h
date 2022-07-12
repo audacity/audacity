@@ -53,7 +53,9 @@ struct PaStreamCallbackTimeInfo;
 typedef unsigned long PaStreamCallbackFlags;
 typedef int PaError;
 
-namespace RealtimeEffects { class SuspensionScope; }
+namespace RealtimeEffects {
+   class ProcessingScope;
+}
 
 bool ValidateDeviceNames();
 
@@ -420,11 +422,17 @@ public:
    std::shared_ptr<RealtimeEffectState>
    AddState(AudacityProject &project, Track *pTrack, const PluginID & id);
 
+   //! Forwards to RealtimeEffectManager::ReplaceState with proper init scope
+   /*!
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
+   std::shared_ptr<RealtimeEffectState>
+   ReplaceState(AudacityProject &project,
+      Track *pTrack, size_t index, const PluginID & id);
+
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
       Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
-
-   RealtimeEffects::SuspensionScope SuspensionScope();
 
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only
@@ -588,7 +596,8 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
-   void TransformPlayBuffers();
+   void TransformPlayBuffers(
+      std::optional<RealtimeEffects::ProcessingScope> &scope);
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();

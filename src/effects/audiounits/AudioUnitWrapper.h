@@ -16,6 +16,8 @@
 #if USE_AUDIO_UNITS
 
 #include <optional>
+#include <map>
+#include <set>
 #include <unordered_map>
 #include <wx/string.h>
 
@@ -23,25 +25,51 @@
 
 class wxCFStringRef;
 class wxMemoryBuffer;
+class EffectSettings;
 class TranslatableString;
+class AudioUnitWrapper;
 
 //! This works as a cached copy of state stored in an AudioUnit, but can also
 //! outlive it
 struct AudioUnitEffectSettings {
-   // Hash from numerical perameter IDs (not always a small initial segment
-   // of the integers) to optional pairs of floating point values and names
-   using Pair = std::pair<wxString, AudioUnitParameterValue>;
-   using Map = std::unordered_map<AudioUnitParameterID, std::optional<Pair>>;
+   //! Object from which settings were fetched
+   const AudioUnitWrapper *pSource{};
+
+   //! The effect object and all Settings objects coming from it share this
+   //! set of strings, which allows Pair below to copy without allocations.
+   /*!
+    Note that names associated with parameter IDs are not invariant metadata
+    of an AudioUnit effect!  The names can themselves depend on the current
+    values.  Example:  AUGraphicEQ changes names of slider parameters when you
+    change the switch between 10 and 31 bands.
+    */
+   using StringSet = std::set<wxString>;
+   const std::shared_ptr<StringSet> mSharedNames{
+      std::make_shared<StringSet>() };
+   
+   //! Map from numerical parameter IDs (not always a small initial segment
+   //! of the integers) to optional pairs of names and floating point values
+   using Pair = std::pair<const wxString &, AudioUnitParameterValue>;
+   using Map = std::map<AudioUnitParameterID, std::optional<Pair>>;
    Map values;
 
    AudioUnitEffectSettings() = default;
    AudioUnitEffectSettings(Map map) : values{ move(map) } {}
    
-   //! Associate 0 with all keys already present in the map
+   //! Get a pointer to a durable copy of `name`
+   //! May allocate memory
+   const wxString &Intern(const wxString &name) {
+      // std::set::insert guarantees this iterator is not at the end
+      auto [iter, _] = mSharedNames->insert(name);
+      // so dereference it merrily
+      return *iter;
+   }
+
+   //! Associate nullopt with all keys already present in the map
    void ResetValues()
    {
       for (auto &[_, value] : values)
-         value = {};
+         value.reset();
    }
 };
 
@@ -53,6 +81,10 @@ struct AudioUnitEffectSettings {
 struct AudioUnitWrapper
 {
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
+
+   static AudioUnitEffectSettings &GetSettings(EffectSettings &settings);
+   static const AudioUnitEffectSettings &GetSettings(
+      const EffectSettings &settings);
 
    /*!
     @param pParameters if non-null, use those; else, fetch from the AudioUnit
@@ -120,6 +152,7 @@ struct AudioUnitWrapper
    TranslatableString InterpretBlob(AudioUnitEffectSettings &settings,
       const wxString &group, const wxMemoryBuffer &buf) const;
 
+   //! May allocate memory, so should be called only in the main thread
    bool FetchSettings(AudioUnitEffectSettings &settings) const;
    bool StoreSettings(const AudioUnitEffectSettings &settings) const;
 
