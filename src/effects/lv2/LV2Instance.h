@@ -85,7 +85,7 @@ private:
    size_t mUserBlockSize{};
 
    size_t mNumSamples{};
-   bool mRolling{ false };
+   bool mRolling{ true };
    bool mUseLatency{ false };
    bool mLatencyDone{ false };
 };
