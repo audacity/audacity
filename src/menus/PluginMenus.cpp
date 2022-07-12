@@ -436,13 +436,15 @@ void DoManagePluginsMenu(AudacityProject &project)
       MenuCreator::RebuildAllMenuBars();
 }
 
-
-void DoShowRealtimeEffectsSidePanel(AudacityProject &project)
+void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
 {
    auto &trackFocus = TrackFocus::Get(project);
    auto &projectWindow = ProjectWindow::Get(project);
 
-   projectWindow.ShowEffectsPanel(project, trackFocus.Get());
+   if (projectWindow.IsEffectsPanelShown())
+      projectWindow.HideEffectsPanel();
+   else
+      projectWindow.ShowEffectsPanel(project, trackFocus.Get());
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
@@ -816,7 +818,7 @@ void OnManageEffects(const CommandContext &context)
 void OnAddRealtimeEffects(const CommandContext& context)
 {
    auto& project = context.project;
-   DoShowRealtimeEffectsSidePanel(project);
+   DoManageRealtimeEffectsSidePanel(project);
 }
 
 void OnAnalyzer2(wxCommandEvent& evt) { return; }
