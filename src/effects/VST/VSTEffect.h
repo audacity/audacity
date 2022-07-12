@@ -564,13 +564,30 @@ public:
       LoadPlugin(const PluginPath & path) override;
 };
 
-
 class VSTEffectInstance final : public StatefulPerTrackEffect::Instance
 {
 public:
    using Instance::Instance;
    ~VSTEffectInstance() override;
+
+private:
+   VSTEffect& GetEffect() const
+   {
+      // Tolerate const_cast in this class while it sun-sets
+      return static_cast<VSTEffect&>(
+         const_cast<PerTrackEffect&>(mProcessor));
+   }
+
+   VSTEffectSettings& GetSettings(EffectSettings& settings) const
+   {
+      return GetEffect().GetSettings(settings);
+   }
+
+   const VSTEffectSettings& GetSettings(const EffectSettings& settings) const {
+      return GetEffect().GetSettings(settings);
+   }
 };
+
 
 class VSTEffectValidator final : public DefaultEffectUIValidator
 {
