@@ -586,7 +586,6 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    DoCancel();
    CleanupRealtime();
    Hide();
-   mpValidator.reset();
    Destroy();
 #if wxDEBUG_LEVEL
    mClosed = true;
