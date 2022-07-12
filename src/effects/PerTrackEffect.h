@@ -141,6 +141,9 @@ private:
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;
    /*!
+    @pre `inBuffers.Channels() > 0`
+    @pre `inBuffers.BufferSize() > 0`
+    @pre `!pRight || inBuffers.Channels() > 1`
     @pre `outBuffers.Channels() > 0`
     @pre `outBuffers.BufferSize() > 0`
     */

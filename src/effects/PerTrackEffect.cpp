@@ -199,7 +199,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    // the parameters (the Audacity Reverb effect does when the stereo width is 0).
    const auto numAudioIn = GetAudioInCount();
    const auto numAudioOut = GetAudioOutCount();
-   if (numAudioOut < 1)
+   if (numAudioIn < 1 || numAudioOut < 1)
       return false;
 
    const bool multichannel = numAudioIn > 1;
@@ -233,6 +233,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             map[numChannels] = ChannelNameEOL;
             if (! multichannel)
                break;
+            assert(numAudioIn > 1); // multichannel is true
             if (numChannels == 2) {
                // TODO: more-than-two-channels
                pRight = channel;
@@ -268,13 +269,24 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             return;
          }
 
-         // If the buffer size has changed, then (re)allocate the buffers
-         if (prevBufferSize != bufferSize) {
-            // Always create the number of input buffers the client expects even if we don't have
-            // the same number of channels.
-            inBuffers.Reinit(numAudioIn, bufferSize);
+         // Always create the number of input buffers the client expects even
+         // if we don't have
+         // the same number of channels.
+         // (These resizes may do nothing after the first track)
 
-            // We won't be using more than the first 2 buffers, so clear the rest (if any)
+         assert(numAudioIn > 0); // checked above
+         assert(!pRight || numAudioIn > 1); // asserted when assigning pRight
+         assert(bufferSize > 0); // checked above
+         inBuffers.Reinit(numAudioIn, bufferSize);
+         // post of Reinit satisfies pre of ProcessTrack
+         assert(inBuffers.Channels() > 0);
+         assert(!pRight || inBuffers.Channels() > 1);
+         assert(inBuffers.BufferSize() > 0);
+
+         if (prevBufferSize != bufferSize) {
+            // Buffer size has changed
+            // We won't be using more than the first 2 buffers,
+            // so clear the rest (if any)
             for (size_t i = 2; i < numAudioIn; i++)
                inBuffers.ClearBuffer(i, bufferSize);
          }
