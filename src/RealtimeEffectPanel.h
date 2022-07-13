@@ -33,7 +33,7 @@ class AudacityProject;
  */
 class RealtimeEffectPanel : public wxWindow
 {
-   ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
+   AButton* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
    AudacityProject& mProject;
