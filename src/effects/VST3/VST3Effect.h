@@ -123,7 +123,7 @@ public:
    int GetMidiOutCount() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
-   sampleCount GetLatency() override;
+   sampleCount GetLatency() const override;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;

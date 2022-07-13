@@ -39,7 +39,7 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    override;
    sampleCount GetLatency(
-      const EffectSettings &settings, double sampleRate) override;
+      const EffectSettings &settings, double sampleRate) const override;
 
    const LV2Wrapper *GetMaster() const { return mMaster.get(); }
 
@@ -87,7 +87,6 @@ private:
    size_t mNumSamples{};
    bool mRolling{ true };
    bool mUseLatency{ false };
-   bool mLatencyDone{ false };
 };
 
 #endif

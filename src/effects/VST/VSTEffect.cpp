@@ -1009,16 +1009,10 @@ size_t VSTEffect::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount VSTEffect::GetLatency()
+sampleCount VSTEffect::GetLatency() const
 {
    if (mUseLatency)
-   {
-      // ??? Threading issue ???
-      auto delay = mBufferDelay;
-      mBufferDelay = 0;
-      return delay;
-   }
-
+      return mBufferDelay;
    return 0;
 }
 

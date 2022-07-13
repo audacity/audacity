@@ -78,12 +78,10 @@ size_t LV2Instance::GetBlockSize() const
       return LV2Preferences::DEFAULT_BLOCKSIZE;
 }
 
-sampleCount LV2Instance::GetLatency(const EffectSettings &, double)
+sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
 {
-   if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
-      mLatencyDone = true;
+   if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0)
       return sampleCount(mMaster->GetLatency());
-   }
    return 0;
 }
 
@@ -98,7 +96,6 @@ bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);
    mMaster->Activate();
-   mLatencyDone = false;
    return true;
 }
 

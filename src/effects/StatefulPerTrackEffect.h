@@ -43,7 +43,7 @@ public:
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
       sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) override;
+         const EffectSettings &settings, double sampleRate) const override;
 
    protected:
       StatefulPerTrackEffect &GetEffect() const
@@ -62,7 +62,7 @@ public:
    /*!
     @copydoc PerTrackEffect::Instance::GetLatency()
     */
-   virtual sampleCount GetLatency();
+   virtual sampleCount GetLatency() const;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessInitialize()
@@ -79,7 +79,7 @@ public:
     @copydoc PerTrackEffect::Instance::ProcessBlock()
     */
    virtual size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
+      const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
 private:
    bool Process(EffectInstance &instance, EffectSettings &settings) final;

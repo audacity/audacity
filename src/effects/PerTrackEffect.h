@@ -16,6 +16,8 @@
 
 #include "Effect.h" // to inherit
 #include "MemoryX.h"
+#include <functional>
+#include <optional>
 
 using FloatBuffers = ArraysOf<float>;
 
@@ -62,7 +64,7 @@ public:
       //! Called for destructive, non-realtime effect computation
       //! Default implementation returns zero
       virtual sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate);
+         const EffectSettings &settings, double sampleRate) const;
 
    protected:
       const PerTrackEffect &mProcessor;
@@ -80,9 +82,12 @@ protected:
 
 private:
    bool ProcessPass(Instance &instance, EffectSettings &settings);
+   //! Type of function returning false if user cancels progress
+   using Poller = std::function<bool(sampleCount blockSize)>;
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
-      double sampleRate, int count, ChannelNames map,
-      WaveTrack *left, WaveTrack *right,
+      const Poller &pollUser, std::optional<sampleCount> genLength,
+      double sampleRate, ChannelNames map,
+      WaveTrack &left, WaveTrack *pRight,
       sampleCount start, sampleCount len,
       FloatBuffers &inBuffer, FloatBuffers &outBuffer,
       ArrayOf< float * > &inBufPos, ArrayOf< float *> &outBufPos,

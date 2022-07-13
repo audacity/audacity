@@ -525,15 +525,13 @@ size_t VST3Effect::GetBlockSize() const
    return mSetup.maxSamplesPerBlock;
 }
 
-sampleCount VST3Effect::GetLatency()
+sampleCount VST3Effect::GetLatency() const
 {
    if(mUseLatency)
    {
       if(!mRealtimeGroupProcessors.empty())
          return mRealtimeGroupProcessors[0]->GetLatency();
-      auto delay = mInitialDelay;
-      mInitialDelay = 0u;
-      return delay;
+      return mInitialDelay;
    }
    return { 0u };
 }

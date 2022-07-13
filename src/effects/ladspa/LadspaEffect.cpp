@@ -877,7 +877,7 @@ struct LadspaEffect::Instance
       override;
 
    sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
-      override;
+      const override;
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
@@ -897,7 +897,6 @@ struct LadspaEffect::Instance
       { return static_cast<const LadspaEffect &>(mProcessor); }
 
    bool mReady{ false };
-   bool mLatencyDone{ false };
    LADSPA_Handle mMaster{};
 
    // Realtime processing
@@ -930,12 +929,11 @@ int LadspaEffect::GetMidiOutCount() const
 }
 
 sampleCount LadspaEffect::Instance::GetLatency(
-   const EffectSettings &settings, double)
+   const EffectSettings &settings, double) const
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
-   if (effect.mUseLatency && effect.mLatencyPort >= 0 && !mLatencyDone) {
-      mLatencyDone = true;
+   if (effect.mUseLatency && effect.mLatencyPort >= 0) {
       return sampleCount{ controls[effect.mLatencyPort] };
    }
    return 0;
@@ -953,7 +951,6 @@ bool LadspaEffect::Instance::ProcessInitialize(
          return false;
       mReady = true;
    }
-   mLatencyDone = false;
    return true;
 }
 
