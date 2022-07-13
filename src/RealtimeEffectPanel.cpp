@@ -17,11 +17,7 @@
 #include <wx/wupdlock.h>
 #include <wx/hyperlink.h>
 
-#ifdef __WXMSW__
 #include <wx/dcbuffer.h>
-#else
-#include <wx/dcclient.h>
-#endif
 
 #include "widgets/HelpSystem.h"
 #include "Theme.h"
@@ -33,6 +29,7 @@
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "Track.h"
+#include "AColor.h"
 #include "WaveTrack.h"
 #include "effects/EffectUI.h"
 #include "effects/EffectManager.h"
@@ -100,11 +97,7 @@ namespace
    private:
       void OnPaint(wxPaintEvent&)
       {
-#ifdef __WXMSW__
          wxBufferedPaintDC dc(this);
-#else
-         wxPaintDC dc(this);
-#endif
          const auto rect = wxRect(GetSize());
 
          dc.SetPen(*wxTRANSPARENT_PEN);
@@ -136,6 +129,136 @@ namespace
          return new MovableControlEvent(*this);
       }
    };
+   
+   /**
+    * \brief Changes default arrow navigation to behave more list- or table-like.
+    * Instead of searching focusable items among children first, list navigation
+    * searches for siblings when arrow key is pressed. Tab behaviour stays same.
+    * Requires wxWANT_CHARS style flag to be set
+    */
+   template<class WindowBase>
+   class ListNavigationEnabled : public wxNavigationEnabled<WindowBase>
+   {
+   public:
+      ListNavigationEnabled()
+      {
+         WindowBase::Bind(wxEVT_NAVIGATION_KEY, &ListNavigationEnabled::OnNavigationKeyEvent, this);
+         WindowBase::Bind(wxEVT_KEY_DOWN, &ListNavigationEnabled::OnKeyDown, this);
+         WindowBase::Bind(wxEVT_CHAR_HOOK, &ListNavigationEnabled::OnCharHook, this);
+      }
+
+   private:
+      void SetFocus() override
+      {
+         //Prevent attempt to search for a focusable child
+         WindowBase::SetFocus();
+      }
+
+      void OnCharHook(wxKeyEvent& evt)
+      {
+         //We want to restore focus to list item once arrow navigation is used
+         //on the child item, for this we need a char hook since key/navigation
+         //events are sent directly to the focused item
+         const auto keyCode = evt.GetKeyCode();
+         if((keyCode == WXK_DOWN || keyCode == WXK_UP) &&
+            !WindowBase::HasFocus() &&
+            WindowBase::IsDescendant(WindowBase::FindFocus()))
+         {
+            wxWindow::SetFocusFromKbd();
+         }
+         else
+            evt.Skip();
+      }
+      
+      void OnKeyDown(wxKeyEvent& evt)
+      {
+         const auto keyCode = evt.GetKeyCode();
+         if(keyCode == WXK_TAB)
+            WindowBase::NavigateIn(wxNavigationKeyEvent::FromTab | (evt.ShiftDown() ? wxNavigationKeyEvent::IsBackward : wxNavigationKeyEvent::IsForward));
+         else if(keyCode == WXK_DOWN)
+            WindowBase::Navigate(wxNavigationKeyEvent::IsForward);
+         else if(keyCode == WXK_UP)
+            WindowBase::Navigate(wxNavigationKeyEvent::IsBackward);
+         else
+            evt.Skip();
+      }
+
+      void OnNavigationKeyEvent(wxNavigationKeyEvent& evt)
+      {
+         if(evt.GetEventObject() == WindowBase::GetParent() && !evt.IsFromTab())
+            WindowBase::SetFocusFromKbd();
+         else if(evt.GetEventObject() == this && evt.GetCurrentFocus() == this && evt.IsFromTab())
+         {
+            //NavigateIn
+            wxPropagationDisabler disableProp(evt);
+            const auto isForward = evt.GetDirection();
+            const auto& children = WindowBase::GetChildren();
+            auto node = isForward ? children.GetFirst() : children.GetLast();
+            while(node)
+            {
+               auto child = node->GetData();
+               if(child->CanAcceptFocusFromKeyboard())
+               {
+                  if(!child->GetEventHandler()->ProcessEvent(evt))
+                  {
+                     child->SetFocusFromKbd();
+                  }
+                  evt.Skip(false);
+                  return;
+               }
+               node = isForward ? node->GetNext() : node->GetPrevious();
+            }
+         }
+         else
+            evt.Skip();
+      }
+   };
+
+   //Alias for ListNavigationEnabled<wxWindow> which provides wxWidgets-style ctor
+   class ListNavigationPanel : public ListNavigationEnabled<wxWindow>
+   {
+   public:
+      ListNavigationPanel() = default;
+
+      ListNavigationPanel(wxWindow* parent,
+                   wxWindowID id,
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   const wxString& name = wxPanelNameStr)
+      {
+         Create(parent, id, pos, size, name);
+      }
+
+      void Create(wxWindow* parent,
+                   wxWindowID id,
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   const wxString& name = wxPanelNameStr)
+      {
+         SetBackgroundStyle(wxBG_STYLE_PAINT);
+         ListNavigationEnabled<wxWindow>::Create(parent, id, pos, size, wxNO_BORDER | wxWANTS_CHARS, name);
+         Bind(wxEVT_PAINT, &ListNavigationPanel::OnPaint, this);
+         Bind(wxEVT_SET_FOCUS, &ListNavigationPanel::OnChangeFocus, this);
+         Bind(wxEVT_KILL_FOCUS, &ListNavigationPanel::OnChangeFocus, this);
+      }
+
+      void OnChangeFocus(wxFocusEvent& evt)
+      {
+         Refresh(false);
+      }
+      
+      void OnPaint(wxPaintEvent& evt)
+      {
+         wxBufferedPaintDC dc(this);
+
+         dc.SetPen(*wxTRANSPARENT_PEN);
+         dc.SetBrush(GetBackgroundColour());
+         dc.Clear();
+
+         if(HasFocus())
+            AColor::DrawFocus(dc, GetClientRect().Deflate(3, 3));
+      }
+   };
 
    wxDEFINE_EVENT(EVT_MOVABLE_CONTROL_DRAG_STARTED, MovableControlEvent);
    wxDEFINE_EVENT(EVT_MOVABLE_CONTROL_DRAG_POSITION, MovableControlEvent);
@@ -153,14 +276,26 @@ namespace
       int mSourceIndex { -1 };
    public:
 
+      MovableControl() = default;
+
       MovableControl(wxWindow* parent,
                    wxWindowID id,
                    const wxPoint& pos = wxDefaultPosition,
                    const wxSize& size = wxDefaultSize,
-                   long style = wxTAB_TRAVERSAL | wxNO_BORDER,
+                   long style = 0,
                    const wxString& name = wxPanelNameStr)
-                      : wxWindow(parent, id, pos, size, style, name)
       {
+         Create(parent, id, pos, size, style, name);
+      }
+
+      void Create(wxWindow* parent,
+                   wxWindowID id,
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   long style = 0,
+                   const wxString& name = wxPanelNameStr)
+      {
+         wxWindow::Create(parent, id, pos, size, style, name);
          Bind(wxEVT_LEFT_DOWN, &MovableControl::OnMouseDown, this);
          Bind(wxEVT_LEFT_UP, &MovableControl::OnMouseUp, this);
          Bind(wxEVT_MOTION, &MovableControl::OnMove, this);
@@ -296,7 +431,7 @@ namespace
    };
 
    //UI control that represents individual effect from the effect list
-   class RealtimeEffectControl : public MovableControl
+   class RealtimeEffectControl : public ListNavigationEnabled<MovableControl>
    {
       wxWeakRef<AudacityProject> mProject;
       std::shared_ptr<Track> mTrack;
@@ -310,17 +445,28 @@ namespace
       Observer::Subscription mSubscription;
 
    public:
+      RealtimeEffectControl() = default;
+
       RealtimeEffectControl(wxWindow* parent,
                    wxWindowID winid,
                    const wxPoint& pos = wxDefaultPosition,
-                   const wxSize& size = wxDefaultSize,
-                   long style = wxTAB_TRAVERSAL | wxNO_BORDER)
-                      : MovableControl(parent, winid, pos, size, style)
+                   const wxSize& size = wxDefaultSize)
+      {
+         Create(parent, winid, pos, size);
+      }
+
+      void Create(wxWindow* parent,
+                   wxWindowID winid,
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize)
       {
          //Prevents flickering and paint order issues
          MovableControl::SetBackgroundStyle(wxBG_STYLE_PAINT);
+         MovableControl::Create(parent, winid, pos, size, wxNO_BORDER | wxWANTS_CHARS);
 
          Bind(wxEVT_PAINT, &RealtimeEffectControl::OnPaint, this);
+         Bind(wxEVT_SET_FOCUS, &RealtimeEffectControl::OnFocusChange, this);
+         Bind(wxEVT_KILL_FOCUS, &RealtimeEffectControl::OnFocusChange, this);
 
          auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
@@ -505,11 +651,7 @@ namespace
 
       void OnPaint(wxPaintEvent&)
       {
-#ifdef __WXMSW__
          wxBufferedPaintDC dc(this);
-#else
-         wxPaintDC dc(this);
-#endif
          const auto rect = wxRect(GetSize());
 
          dc.SetPen(*wxTRANSPARENT_PEN);
@@ -519,6 +661,15 @@ namespace
          dc.SetPen(theTheme.Colour(clrEffectListItemBorder));
          dc.SetBrush(theTheme.Colour(clrEffectListItemBorder));
          dc.DrawLine(rect.GetBottomLeft(), rect.GetBottomRight());
+
+         if(HasFocus())
+            AColor::DrawFocus(dc, GetClientRect().Deflate(3, 3));
+      }
+
+      void OnFocusChange(wxFocusEvent& evt)
+      {
+         Refresh(false);
+         evt.Skip();
       }
 
    };
@@ -644,6 +795,13 @@ public:
 #endif
       auto rootSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
+      auto effectListContainer = safenew ThemedWindowWrapper<wxPanel>(this, wxID_ANY);
+      effectListContainer->SetBackgroundColorIndex(clrMedium);
+      effectListContainer->SetSizer(safenew wxBoxSizer(wxVERTICAL));
+      effectListContainer->SetDoubleBuffered(true);
+      effectListContainer->Disable();
+      mEffectListContainer = effectListContainer;
+
       auto addEffect = safenew ThemedAButtonWrapper<AButton>(this, wxID_ANY);
       addEffect->SetImageIndices(0,
             bmpUpButtonSmall,
@@ -668,12 +826,6 @@ public:
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
       mAddEffectTutorialLink = addEffectTutorialLink;
-
-      auto effectListContainer = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
-      effectListContainer->SetBackgroundColorIndex(clrMedium);
-      effectListContainer->SetSizer(safenew wxBoxSizer(wxVERTICAL));
-      effectListContainer->SetDoubleBuffered(true);
-      mEffectListContainer = effectListContainer;
 
       //indicates the insertion position of the item
       auto dropHintLine = safenew ThemedWindowWrapper<DropHintLine>(effectListContainer, wxID_ANY);
@@ -784,6 +936,7 @@ public:
       const auto insertItem = [this, &msg](){
          auto& effects = RealtimeEffectList::Get(*mTrack);
          InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
+         mEffectListContainer->Enable();
       };
       const auto removeItem = [this, &msg](){
          auto& ui = RealtimeEffectStateUI::Get(*msg.affectedState);
@@ -797,6 +950,8 @@ public:
          if(sizer->IsEmpty())
             mEffectListContainer->Hide();
 #endif
+         if(sizer->IsEmpty())
+            mEffectListContainer->Disable();
       };
 
       wxWindowUpdateLocker freeze(this);
@@ -879,13 +1034,16 @@ public:
          mEffectListContainer->Hide();
 #endif
 
+      auto isEmpty{true};
       if(mTrack)
       {
          auto& effects = RealtimeEffectList::Get(*mTrack);
+         isEmpty = effects.GetStatesCount() == 0;
          for(size_t i = 0, count = effects.GetStatesCount(); i < count; ++i)
             InsertEffectRow(i, effects.GetStateAt(i));
       }
       mAddEffect->SetEnabled(!!mTrack);
+      mEffectListContainer->Enable(!isEmpty);
       SendSizeEventToParent();
    }
 
@@ -954,13 +1112,13 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    AudacityProject& project, wxWindow* parent, wxWindowID id, const wxPoint& pos,
    const wxSize& size,
    long style, const wxString& name)
-      : wxWindow(parent, id, pos, size, style, name)
+      : wxPanel(parent, id, pos, size, style, name)
       , mProject(project)
       , mPrefsListenerHelper(std::make_unique<PrefsListenerHelper>(project))
 {
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-   auto header = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
+   auto header = safenew ThemedWindowWrapper<ListNavigationPanel>(this, wxID_ANY);
    header->SetBackgroundColorIndex(clrMedium);
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
