@@ -137,6 +137,10 @@ ErrorReportDialog::ErrorReportDialog(
                S.AddSpace(0, 20);
 
                S.AddVariableText(XO(
+                     "More information about this error may be available on [[https://audacityteam.org/help]]."))
+                  ->SetFont(textFont);
+               S.AddSpace(0, 12);
+               S.AddVariableText(XO(
                      "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
                   ->SetFont(textFont);
 
