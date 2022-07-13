@@ -299,20 +299,74 @@ namespace
          Bind(wxEVT_LEFT_DOWN, &MovableControl::OnMouseDown, this);
          Bind(wxEVT_LEFT_UP, &MovableControl::OnMouseUp, this);
          Bind(wxEVT_MOTION, &MovableControl::OnMove, this);
+         Bind(wxEVT_KEY_DOWN, &MovableControl::OnKeyDown, this);
          Bind(wxEVT_MOUSE_CAPTURE_LOST, &MovableControl::OnMouseCaptureLost, this);
       }
 
-      void PostDragEvent(wxWindow* target, wxEventType eventType)
+      void ProcessDragEvent(wxWindow* target, wxEventType eventType)
       {
          MovableControlEvent event(eventType);
          event.SetSourceIndex(mSourceIndex);
          event.SetTargetIndex(mTargetIndex);
          event.SetEventObject(this);
-         wxPostEvent(target, event);
+         target->GetEventHandler()->ProcessEvent(event);
       }
 
    private:
 
+      int FindIndexInParent() const
+      {
+         auto parent = GetParent();
+         if(!parent)
+            return -1;
+
+         if(auto sizer = parent->GetSizer())
+         {
+            for(size_t i = 0, count = sizer->GetItemCount(); i < count; ++i)
+            {
+               if(sizer->GetItem(i)->GetWindow() == this)
+                  return static_cast<int>(i);
+            }
+         }
+         return -1;
+      }
+
+      void OnKeyDown(wxKeyEvent& evt)
+      {
+         const auto keyCode = evt.GetKeyCode();
+         if(evt.AltDown() && (keyCode == WXK_DOWN || keyCode == WXK_UP))
+         {
+#ifdef __WXOSX__
+            {//don't allow auto-repeats
+               static long lastEventTimestamp = 0;
+               if(lastEventTimestamp == evt.GetTimestamp())
+                  return;//don't skip
+               lastEventTimestamp = evt.GetTimestamp();
+            }
+#endif
+            const auto sourceIndex = FindIndexInParent();
+            if(sourceIndex == -1)
+            {
+               evt.Skip();
+               return;
+            }
+            
+            const auto targetIndex = std::clamp(
+               keyCode == WXK_DOWN ? sourceIndex + 1 : sourceIndex - 1,
+               0,
+               static_cast<int>(GetParent()->GetSizer()->GetItemCount()) - 1
+            );
+            if(sourceIndex != targetIndex)
+            {
+               mSourceIndex = sourceIndex;
+               mTargetIndex = targetIndex;
+               ProcessDragEvent(GetParent(), EVT_MOVABLE_CONTROL_DRAG_FINISHED);
+            }
+         }
+         else
+            evt.Skip();
+      }
+      
       void OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
       {
          if(mDragging)
@@ -324,7 +378,7 @@ namespace
          if(auto parent = GetParent())
          {
             wxWindowUpdateLocker freeze(this);
-            PostDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_FINISHED);
+            ProcessDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_FINISHED);
          }
          mDragging = false;
       }
@@ -337,28 +391,14 @@ namespace
             return;
          }
 
-         auto parent = GetParent();
-         if(!parent)
-            return;
-
-         mSourceIndex = mTargetIndex = -1;
-
-         CaptureMouse();
-
-         mInitialPosition = evt.GetPosition();
-         mDragging=true;
-
-         if(auto sizer = parent->GetSizer())
+         mSourceIndex = mTargetIndex = FindIndexInParent();
+         if(mSourceIndex != -1)
          {
-            for(size_t i = 0, count = sizer->GetItemCount(); i < count; ++i)
-            {
-               if(sizer->GetItem(i)->GetWindow() == this)
-               {
-                  mSourceIndex = mTargetIndex = static_cast<int>(i);
-                  PostDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_STARTED);
-                  break;
-               }
-            }
+            CaptureMouse();
+            ProcessDragEvent(GetParent(), EVT_MOVABLE_CONTROL_DRAG_STARTED);
+
+            mInitialPosition = evt.GetPosition();
+            mDragging=true;
          }
       }
 
@@ -423,7 +463,7 @@ namespace
                if(targetIndex != mTargetIndex)
                {
                   mTargetIndex = targetIndex;
-                  PostDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_POSITION);
+                  ProcessDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_POSITION);
                }
             }
          }
@@ -761,7 +801,7 @@ namespace
             OpenInDefaultBrowser("https://plugins.audacityteam.org/");
       });
 
-      if(parent->PopupMenu(&menu) && selectedEffectIndex != -1)
+      if(parent->PopupMenu(&menu, parent->GetClientRect().GetLeftBottom()) && selectedEffectIndex != -1)
          return effects[selectedEffectIndex]->GetID();
 
       return {};
@@ -966,6 +1006,11 @@ public:
          const auto border = movedItem->GetBorder();
          const auto window = movedItem->GetWindow();
 
+         if(msg.srcIndex < msg.dstIndex)
+            window->MoveAfterInTabOrder(sizer->GetItem(msg.dstIndex)->GetWindow());
+         else
+            window->MoveBeforeInTabOrder(sizer->GetItem(msg.dstIndex)->GetWindow());
+         
          sizer->Remove(msg.srcIndex);
          sizer->Insert(msg.dstIndex, window, proportion, flag, border);
       }
@@ -1119,6 +1164,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
    auto header = safenew ThemedWindowWrapper<ListNavigationPanel>(this, wxID_ANY);
+   header->SetMinClientSize({254, -1});
    header->SetBackgroundColorIndex(clrMedium);
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
