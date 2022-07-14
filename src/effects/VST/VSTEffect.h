@@ -565,11 +565,26 @@ public:
 };
 
 
+class VSTEffectInstance final : public StatefulPerTrackEffect::Instance
+{
+public:
+   using Instance::Instance;
+   ~VSTEffectInstance() override;
+};
+
 class VSTEffectValidator final : public DefaultEffectUIValidator
 {
 public:
-   using DefaultEffectUIValidator::DefaultEffectUIValidator;
+    VSTEffectValidator(VSTEffectInstance&       instance,
+                       EffectUIClientInterface& effect,
+                       EffectSettingsAccess&    access,
+                       wxWindow*                pParent);
+
    ~VSTEffectValidator() override;
+
+   VSTEffectInstance& mInstance;
 };
+
+
 
 #endif // USE_VST

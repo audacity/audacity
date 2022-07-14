@@ -948,7 +948,8 @@ std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
    mBlockSize = mUserBlockSize;
-   return std::make_shared<Instance>(*this);
+
+   return std::make_shared<VSTEffectInstance>(*this);
 }
 
 unsigned VSTEffect::GetAudioInCount() const
@@ -1298,7 +1299,7 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
@@ -1330,7 +1331,7 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    auto pParent = S.GetParent();
    pParent->PushEventHandler(this);
 
-   return std::make_unique<VSTEffectValidator>(*this, access, pParent);
+   return std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -3594,6 +3595,18 @@ EffectSettings VSTEffect::MakeSettings() const
 
 VSTEffectValidator::~VSTEffectValidator() = default;
 
+
+VSTEffectValidator::VSTEffectValidator
+(
+   VSTEffectInstance&       instance,
+   EffectUIClientInterface& effect,
+   EffectSettingsAccess&    access,
+   wxWindow*                pParent
+)
+   : DefaultEffectUIValidator(effect, access, pParent),
+     mInstance(instance)
+{}
+
 // Default, do-nothing implementations of virtuals in VSTEffectWrapper
 void VSTEffectWrapper::NeedIdle()
 {   
@@ -3629,6 +3642,12 @@ void VSTEffectWrapper::SizeWindow(int w, int h)
 
 void VSTEffectWrapper::Automate(int index, float value)
 {
+}
+
+
+VSTEffectInstance::~VSTEffectInstance()
+{
+   
 }
 
 
