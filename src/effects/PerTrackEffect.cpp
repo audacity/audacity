@@ -539,23 +539,15 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             delayRemaining += delay;
             latencyDone = true;
          }
+      }
 
-         // If the plugin has delayed the output by more samples than our current
-         // block size, then we leave the output pointers alone.  This effectively
-         // removes those delayed samples from the output buffer.
-         if (curDelay >= curBlockSize) {
-            curDelay -= curBlockSize;
-            curBlockSize = 0;
-         }
-         // We have some delayed samples, at the beginning of the output samples,
-         // so overlay them by shifting the remaining output samples.
-         else if (curDelay > 0) {
-            // curDelay is bounded by curBlockSize:
-            auto delay = curDelay.as_size_t();
-            curBlockSize -= delay;
-            outBuffers.Discard(delay, curBlockSize);
-            curDelay = 0;
-         }
+      // Do latency correction on effect output
+      auto discard =
+         (curDelay < curBlockSize ? curDelay.as_size_t(): curBlockSize);
+      if (discard) {
+         curDelay -= discard;
+         outBuffers.Discard(discard, curBlockSize - discard);
+         curBlockSize -= discard;
       }
 
       // Adjust the number of samples in the output buffers
