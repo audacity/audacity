@@ -420,7 +420,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    size_t curBlockSize = 0;
    size_t inputBufferCnt = 0;
    size_t outputBufferCnt = 0;
-   bool cleared = false;
    std::shared_ptr<WaveTrack> genLeft, genRight;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
@@ -428,8 +427,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    bool latencyDone = false;
 
    if (isGenerator) {
-      cleared = true;
-
       // Create temporary tracks
       genLeft = left.EmptyCopy();
 
@@ -462,7 +459,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // We've reached the last block...set current block size to what's left
             // inputRemaining is positive and bounded by a size_t
             curBlockSize = inputRemaining.as_size_t();
-            inputRemaining = 0;
          }
       }
       // We've exhausted the input samples and are now working on the delay
@@ -470,15 +466,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          // Calculate the number of samples to process
          curBlockSize = limitSampleBufferSize( blockSize, delayRemaining );
          delayRemaining -= curBlockSize;
-
-         // From this point on, we only want to feed zeros to the plugin
-         if (!cleared) {
-            // Reset the input buffer positions and clear
-            inBuffers.Rewind();
-            for (size_t i = 0; i < numChannels; i++)
-               inBuffers.ClearBuffer(i, blockSize);
-            cleared = true;
-         }
       }
 
       // Finally call the plugin to process the block
@@ -504,27 +491,34 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          return false;
       wxUnusedVar(processed);
 
-      // Bump to next input buffer position
-      if (inputRemaining != 0) {
-         inBuffers.Advance(curBlockSize);
-         inputRemaining -= curBlockSize;
-         inputBufferCnt -= curBlockSize;
-      }
-
-      inPos += curBlockSize;
-
       // Get the current number of delayed samples and accumulate
-      if (isProcessor) {
+      if (isProcessor && !latencyDone) {
          // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
          // until at least one block of samples is processed.  Find latency
          // once only for the track and assume it doesn't vary
-         if (!latencyDone) {
-            auto delay = instance.GetLatency(settings, sampleRate);
-            curDelay += delay;
-            delayRemaining += delay;
-            latencyDone = true;
+         auto delay = instance.GetLatency(settings, sampleRate);
+         curDelay += delay;
+         delayRemaining = delay;
+         latencyDone = true;
+      }
+
+      if (inputRemaining != 0) {
+         inputRemaining -= curBlockSize;
+         if (inputRemaining != 0) {
+            // Bump to next input buffer position
+            inBuffers.Advance(curBlockSize);
+            inputBufferCnt -= curBlockSize;
+         }
+         else if (delayRemaining > 0) {
+            // From this point on, we only want to feed zeros to the plugin
+            // Reset the input buffer positions and clear
+            inBuffers.Rewind();
+            for (size_t i = 0; i < numChannels; i++)
+               inBuffers.ClearBuffer(i, blockSize);
          }
       }
+
+      inPos += curBlockSize;
 
       // Do latency correction on effect output
       auto discard =
