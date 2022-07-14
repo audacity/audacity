@@ -199,7 +199,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    // the parameters (the Audacity Reverb effect does when the stereo width is 0).
    const auto numAudioIn = GetAudioInCount();
    const auto numAudioOut = GetAudioOutCount();
-   if (numAudioIn < 1 || numAudioOut < 1)
+   if (numAudioOut < 1)
       return false;
 
    const bool multichannel = numAudioIn > 1;
@@ -246,6 +246,10 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          if (!isGenerator) {
             GetBounds(left, pRight, &start, &len);
             mSampleCnt = len;
+            if (len > 0 && numAudioIn < 1) {
+               bGoodResult = false;
+               return;
+            }
          }
          else
             mSampleCnt = left.TimeToLongSamples(duration);
@@ -274,14 +278,18 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          // the same number of channels.
          // (These resizes may do nothing after the first track)
 
-         assert(numAudioIn > 0); // checked above
-         assert(!pRight || numAudioIn > 1); // asserted when assigning pRight
-         assert(bufferSize > 0); // checked above
+         if (len > 0) {
+            assert(numAudioIn > 0); // checked above
+            assert(!pRight || numAudioIn > 1); // asserted when assigning pRight
+            assert(bufferSize > 0); // checked above
+         }
          inBuffers.Reinit(numAudioIn, bufferSize);
-         // post of Reinit satisfies pre of ProcessTrack
-         assert(inBuffers.Channels() > 0);
-         assert(!pRight || inBuffers.Channels() > 1);
-         assert(inBuffers.BufferSize() > 0);
+         if (len > 0) {
+            // post of Reinit satisfies pre of ProcessTrack
+            assert(inBuffers.Channels() > 0);
+            assert(!pRight || inBuffers.Channels() > 1);
+            assert(inBuffers.BufferSize() > 0);
+         }
 
          if (prevBufferSize != bufferSize) {
             // Buffer size has changed
