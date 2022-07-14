@@ -79,16 +79,21 @@ bool PerTrackEffect::Process(
    return bGoodResult;
 }
 
-PerTrackEffect::Buffers::Buffers() = default;
+PerTrackEffect::Buffers::Buffers()
+{
+   assert(IsRewound());
+}
 
 void PerTrackEffect::Buffers::Reinit(
-   unsigned nChannels, size_t bufferSize)
+   unsigned nChannels, size_t blockSize, size_t nBlocks)
 {
    mBuffers.resize(nChannels);
    mPositions.resize(nChannels);
+   const auto bufferSize = blockSize * nBlocks;
    for (auto &buffer : mBuffers)
       buffer.resize(bufferSize);
    mBufferSize = bufferSize;
+   mBlockSize = blockSize;
    Rewind();
 }
 
@@ -155,6 +160,7 @@ void PerTrackEffect::Buffers::Rewind()
    auto iterP = mPositions.begin();
    for (auto &buffer : mBuffers)
       *iterP++ = buffer.data();
+   assert(IsRewound());
 }
 
 constSamplePtr PerTrackEffect::Buffers::GetReadPosition(unsigned iChannel) const
@@ -167,7 +173,7 @@ constSamplePtr PerTrackEffect::Buffers::GetReadPosition(unsigned iChannel) const
 float &PerTrackEffect::Buffers::GetWritePosition(unsigned iChannel)
 {
    assert(iChannel < Channels());
-   return *mBuffers[iChannel].data();
+   return mBuffers[iChannel].data()[ Position() ];
 }
 
 void PerTrackEffect::Buffers::ClearBuffer(unsigned iChannel, size_t n)
@@ -282,7 +288,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             assert(!pRight || numAudioIn > 1); // asserted when assigning pRight
             assert(bufferSize > 0); // checked above
          }
-         inBuffers.Reinit(numAudioIn, bufferSize);
+         inBuffers.Reinit(numAudioIn, blockSize, bufferSize / blockSize);
          if (len > 0) {
             // post of Reinit satisfies pre of ProcessTrack
             assert(inBuffers.Channels() > 0);
@@ -303,10 +309,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          // even if we don't have the same number of channels.
          // (These resizes may do nothing after the first track)
          // Output buffers get an extra blockSize worth to give extra room if
-         // the plugin adds latency
+         // the plugin adds latency -- PRL:  actually not important to do
          assert(numAudioOut > 0); // checked above
          assert(bufferSize + blockSize > 0); // Each term is positive
-         outBuffers.Reinit(numAudioOut, bufferSize + blockSize);
+         outBuffers.Reinit(numAudioOut, blockSize,
+            (bufferSize / blockSize) + 1);
          // post of Reinit satisfies pre of ProcessTrack
          assert(outBuffers.Channels() > 0);
          assert(outBuffers.BufferSize() > 0);
@@ -358,8 +365,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          bGoodResult = ProcessTrack(instance, settings,
             pollUser, genLength, sampleRate,
             map, left, pRight, start, len,
-            inBuffers, outBuffers, bufferSize, blockSize,
-            numChannels);
+            inBuffers, outBuffers, numChannels);
          if (!bGoodResult)
             return;
 
@@ -383,10 +389,11 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    WaveTrack &left, WaveTrack *const pRight,
    const sampleCount start, const sampleCount len,
    Buffers &inBuffers, Buffers &outBuffers,
-   const size_t bufferSize, const size_t blockSize,
    const unsigned numChannels) const
 {
    bool rc = true;
+   const auto blockSize = inBuffers.BlockSize();
+   assert(blockSize > 0);
 
    // Give the plugin a chance to initialize
    if (!instance.ProcessInitialize(settings, sampleRate, len, map))
@@ -417,8 +424,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto outPos = start;
    auto inputRemaining = len;
    sampleCount curDelay = 0;
-   size_t inputBufferCnt = 0;
-   size_t outputBufferCnt = 0;
    std::shared_ptr<WaveTrack> genLeft, genRight;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
@@ -433,45 +438,55 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          genRight = pRight->EmptyCopy();
    }
 
-   // Call the effect until we run out of input or delayed samples
-   while (inputRemaining != 0 || delayRemaining != 0) {
-      const auto curBlockSize = [&]() -> size_t {
-      if (inputRemaining != 0) {
-         // Still working on the input samples
-         if (inputBufferCnt == 0) {
-            // Need to refill the input buffers
-            // Calculate the number of samples to get
-            inputBufferCnt =
-               limitSampleBufferSize( bufferSize, inputRemaining );
+   // Invariant O: blockSize positions from outBuffers.Positions() available
+   // Initially true because of preconditions that outBuffers has the same
+   // block size as inBuffers, has nonzero buffer size which is a multiple
+   // of block size, and is rewound
+   assert(blockSize <= outBuffers.Remaining());
 
-            // Fill the input buffers
+   // Cause the first pass of the loop to fetch from the track
+   inBuffers.Rewind();
+   inBuffers.Advance(inBuffers.BufferSize());
+
+   // Call the effect until we run out of input or delayed samples
+   while (inputRemaining > 0 || delayRemaining > 0) {
+      const auto curBlockSize = [&]() -> size_t {
+      if (inputRemaining > 0) {
+         // Still working on the input samples
+         if (inBuffers.Remaining() == 0) {
+            // Need to refill the input buffers
             inBuffers.Rewind();
+            // Calculate the number of samples to get
+            const auto inputBufferCnt =
+               limitSampleBufferSize(inBuffers.Remaining(), inputRemaining);
+            // Fill the input buffers
             left.GetFloats(&inBuffers.GetWritePosition(0),
                inPos, inputBufferCnt);
             if (pRight)
                pRight->GetFloats(&inBuffers.GetWritePosition(1),
                   inPos, inputBufferCnt);
          }
-         // Calculate the number of samples to process
-         auto result = blockSize;
-         if (result > inputRemaining) {
-            // We've reached the last block...set current block size to what's left
-            // inputRemaining is positive and bounded by a size_t
-            result = inputRemaining.as_size_t();
-         }
-         return result;
+         assert(inBuffers.Remaining() > 0);
+         return std::min(blockSize,
+            limitSampleBufferSize(inBuffers.Remaining(), inputRemaining));
       }
       else {
          // We've exhausted the input samples and are now working on the delay
          assert(delayRemaining > 0);
-         // Calculate the number of samples to process
+         // blockSize zeroes were guaranteed when inputRemaining was exhausted
          auto result = limitSampleBufferSize(blockSize, delayRemaining);
+         assert(result > 0); // Each argument was nonzero
+         // Progress toward loop termination
          delayRemaining -= result;
          return result;
       }
       }();
+      // needed for other termination guarantee below
+      assert(inputRemaining <= 0 || curBlockSize > 0);
+      assert(curBlockSize <= blockSize);
 
       // Finally call the plugin to process the block
+      // Invariant O guarantees that this doesn't overflow outBuffers
       size_t processed{};
       try {
          processed = instance.ProcessBlock(
@@ -505,23 +520,29 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          latencyDone = true;
       }
 
-      if (inputRemaining != 0) {
+      // See where curBlockSize was decided:
+      assert(curBlockSize <= blockSize);
+      if (inputRemaining > 0) {
+         // Progress toward loop termination
          inputRemaining -= curBlockSize;
-         if (inputRemaining != 0) {
-            // Bump to next input buffer position
+         assert(inputRemaining >= 0);
+         if (inputRemaining > 0) {
+            // See where curBlockSize was decided:
+            assert(curBlockSize <= inBuffers.Remaining());
             inBuffers.Advance(curBlockSize);
-            inputBufferCnt -= curBlockSize;
          }
          else if (delayRemaining > 0) {
             // From this point on, we only want to feed zeros to the plugin
-            // Reset the input buffer positions and clear
+            // Reset the input buffer positions and guarantee blockSize zeroes
             inBuffers.Rewind();
             for (size_t i = 0; i < numChannels; i++)
                inBuffers.ClearBuffer(i, blockSize);
          }
       }
-
       inPos += curBlockSize;
+
+      // Because curBlockSize <= blockSize <= outBuffers.Remaining()
+      assert(curBlockSize <= outBuffers.Remaining());
 
       // Do latency correction on effect output
       auto discard =
@@ -531,15 +552,14 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          outBuffers.Discard(discard, curBlockSize - discard);
       }
 
-      // Adjust the number of samples in the output buffers
-      outputBufferCnt += curBlockSize - discard;
-
-      if (outputBufferCnt < bufferSize)
-         // Still have room in the output buffers
-         // Bump to next output buffer position
-         outBuffers.Advance(curBlockSize - discard);
-      else {
-         // Output buffers have filled
+      outBuffers.Advance(curBlockSize - discard);
+      if (blockSize <= outBuffers.Remaining()) {
+         // Invariant O preserved
+      } else {
+         // Output buffers have (mostly) filled
+         // (less than one block remains; maybe nonzero because of samples
+         // discarded for initial latency correction)
+         const auto outputBufferCnt = outBuffers.Position();
          if (isProcessor) {
             // Write them out
             left.Set(outBuffers.GetReadPosition(0),
@@ -555,12 +575,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
                genRight->Append(outBuffers.GetReadPosition(1),
                   floatSample, outputBufferCnt);
          }
-
          outBuffers.Rewind();
-
          // Bump to the next track position
          outPos += outputBufferCnt;
-         outputBufferCnt = 0;
       }
 
       if (!pollUser(inPos)) {
@@ -570,6 +587,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    }
 
    // Put any remaining output
+   const auto outputBufferCnt = outBuffers.Position();
    if (rc && outputBufferCnt) {
       if (isProcessor) {
          left.Set(outBuffers.GetReadPosition(0),
