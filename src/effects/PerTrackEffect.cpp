@@ -170,14 +170,13 @@ float &PerTrackEffect::Buffers::GetWritePosition(unsigned iChannel)
    return *mBuffers[iChannel].data();
 }
 
-void PerTrackEffect::Buffers::ClearBuffer(
-   unsigned iChannel, size_t n, size_t offset)
+void PerTrackEffect::Buffers::ClearBuffer(unsigned iChannel, size_t n)
 {
    if (iChannel < mPositions.size()) {
       auto p = mPositions[iChannel];
       auto &buffer = mBuffers[iChannel];
       auto end = buffer.data() + buffer.size();
-      p = std::min(end, p + offset);
+      p = std::min(end, p);
       n = std::min<size_t>(end - p, n);
       std::fill(p, p + n, 0);
    }
@@ -464,20 +463,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // inputRemaining is positive and bounded by a size_t
             curBlockSize = inputRemaining.as_size_t();
             inputRemaining = 0;
-
-            // Clear the remainder of the buffers so that a full block can be passed
-            // to the effect
-            auto cnt = blockSize - curBlockSize;
-            for (size_t i = 0; i < numChannels; i++)
-               inBuffers.ClearBuffer(i, cnt, curBlockSize);
-
-            // Might be able to use up some of the delayed samples
-            if (delayRemaining != 0) {
-               // Don't use more than needed
-               cnt = limitSampleBufferSize(cnt, delayRemaining);
-               delayRemaining -= cnt;
-               curBlockSize += cnt;
-            }
          }
       }
       // We've exhausted the input samples and are now working on the delay

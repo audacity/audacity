@@ -129,8 +129,8 @@ private:
       float &GetWritePosition(unsigned iChannel);
 
       //! Zero-fill n places in one of the buffers,
-      //! starting from its position plus offset
-      void ClearBuffer(unsigned iChannel, size_t n, size_t offset = 0);
+      //! starting from its position
+      void ClearBuffer(unsigned iChannel, size_t n);
    private:
       std::vector<std::vector<float>> mBuffers;
       std::vector<float *> mPositions;
