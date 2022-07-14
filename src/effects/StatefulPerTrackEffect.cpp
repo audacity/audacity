@@ -42,14 +42,14 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
 }
 
 sampleCount StatefulPerTrackEffect::Instance::GetLatency(
-   const EffectSettings &, double)
+   const EffectSettings &, double) const
 {
    return GetEffect().GetLatency();
 }
 
 std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
 {
-   // Cheat with const-cast to return an object that calls through to
+   // Cheat with const_cast to return an object that calls through to
    // non-const methods of a stateful effect.
    // Stateless effects should override this function and be really const
    // correct.
@@ -75,7 +75,7 @@ size_t StatefulPerTrackEffect::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount StatefulPerTrackEffect::GetLatency()
+sampleCount StatefulPerTrackEffect::GetLatency() const
 {
    return 0;
 }
@@ -89,10 +89,4 @@ bool StatefulPerTrackEffect::ProcessInitialize(
 bool StatefulPerTrackEffect::ProcessFinalize()
 {
    return true;
-}
-
-size_t StatefulPerTrackEffect::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   return 0;
 }

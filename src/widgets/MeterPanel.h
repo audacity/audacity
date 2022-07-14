@@ -22,6 +22,7 @@
 #include <wx/defs.h>
 #include <wx/timer.h> // member variable
 
+#include "ASlider.h"
 #include "SampleFormat.h"
 #include "Prefs.h"
 #include "MeterPanelBase.h" // to inherit
@@ -189,8 +190,14 @@ class AUDACITY_DLL_API MeterPanel final
    struct State{ bool mSaved, mMonitoring, mActive; };
    State SaveState();
    void RestoreState(const State &state);
+   void SetMixer(wxCommandEvent& event);
 
    int GetDBRange() const override { return mDB ? mDBRange : -1; }
+
+   bool ShowDialog();
+   void Increase(float steps);
+   void Decrease(float steps);
+   void UpdateSliderControl();
 
  private:
    void UpdatePrefs() override;
@@ -212,6 +219,7 @@ class AUDACITY_DLL_API MeterPanel final
    void OnKillFocus(wxFocusEvent &evt);
 
    void OnAudioIOStatus(AudioIOEvent);
+   void OnAudioCapture(AudioIOEvent);
 
    void OnMeterUpdate(wxTimerEvent &evt);
 
@@ -232,7 +240,8 @@ class AUDACITY_DLL_API MeterPanel final
 
    wxString Key(const wxString & key) const;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mAudioIOStatusSubscription;
+   Observer::Subscription mAudioCaptureSubscription;
 
    AudacityProject *mProject;
    MeterUpdateQueue mQueue;
@@ -289,6 +298,12 @@ class AUDACITY_DLL_API MeterPanel final
    wxString  mLeftText;
    wxString  mRightText;
 
+   std::unique_ptr<LWSlider> mSlider;
+   wxPoint mSliderPos;
+   wxSize mSliderSize;
+
+   bool mEnabled{ true };
+
    bool mIsFocused;
    wxRect mFocusRect;
 #if defined(__WXMSW__)
@@ -298,8 +313,6 @@ class AUDACITY_DLL_API MeterPanel final
    bool mAccSilent;
 
    friend class MeterAx;
-
-   bool mHighlighted {};
 
    DECLARE_EVENT_TABLE()
 };
