@@ -564,4 +564,12 @@ public:
       LoadPlugin(const PluginPath & path) override;
 };
 
+
+class VSTEffectValidator final : public DefaultEffectUIValidator
+{
+public:
+   using DefaultEffectUIValidator::DefaultEffectUIValidator;
+   ~VSTEffectValidator() override;
+};
+
 #endif // USE_VST

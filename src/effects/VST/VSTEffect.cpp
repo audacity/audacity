@@ -1329,7 +1329,8 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 
    auto pParent = S.GetParent();
    pParent->PushEventHandler(this);
-   return std::make_unique<DefaultEffectUIValidator>(*this, access, pParent);
+
+   return std::make_unique<VSTEffectValidator>(*this, access, pParent);
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -3591,6 +3592,7 @@ EffectSettings VSTEffect::MakeSettings() const
    return result;
 }
 
+VSTEffectValidator::~VSTEffectValidator() = default;
 
 // Default, do-nothing implementations of virtuals in VSTEffectWrapper
 void VSTEffectWrapper::NeedIdle()
