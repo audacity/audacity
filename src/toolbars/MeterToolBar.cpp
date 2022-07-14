@@ -34,6 +34,7 @@
 #include <wx/gbsizer.h>
 
 #include "AllThemeResources.h"
+#include "ToolManager.h"
 #include "../ProjectAudioIO.h"
 #include "../widgets/MeterPanel.h"
 
@@ -69,6 +70,35 @@ MeterToolBar::MeterToolBar(AudacityProject &project, int type)
 
 MeterToolBar::~MeterToolBar()
 {
+}
+
+MeterToolBars MeterToolBar::GetToolBars(AudacityProject &project)
+{
+   return MeterToolBars{
+      Get(project, true),
+      Get(project, false)
+   };
+}
+
+ConstMeterToolBars MeterToolBar::GetToolBars(const AudacityProject &project)
+{
+   return ConstMeterToolBars{
+      Get(project, true),
+      Get(project, false)
+   };
+}
+
+MeterToolBar & MeterToolBar::Get(AudacityProject &project, bool forPlayMeterToolBar)
+{
+   auto& toolManager = ToolManager::Get(project);
+   auto  toolBarID = forPlayMeterToolBar ? PlayMeterBarID : RecordMeterBarID;
+
+   return *static_cast<MeterToolBar*>(toolManager.GetToolBar(toolBarID));
+}
+
+const MeterToolBar & MeterToolBar::Get(const AudacityProject &project, bool forPlayMeterToolBar)
+{
+   return Get( const_cast<AudacityProject&>( project ), forPlayMeterToolBar );
 }
 
 void MeterToolBar::Create(wxWindow * parent)
@@ -166,6 +196,15 @@ void MeterToolBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
+void MeterToolBar::UpdateControls()
+{
+   if ( mPlayMeter )
+      mPlayMeter->UpdateSliderControl();
+
+   if ( mRecordMeter )
+      mRecordMeter->UpdateSliderControl();
+}
+
 void MeterToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
@@ -258,6 +297,42 @@ bool MeterToolBar::Expose( bool show )
 void MeterToolBar::SetDocked(ToolDock *dock, bool pushed) {
    ToolBar::SetDocked(dock, pushed);
    Fit();
+}
+
+void MeterToolBar::ShowOutputGainDialog()
+{
+   mPlayMeter->ShowDialog();
+   mPlayMeter->UpdateSliderControl();
+}
+
+void MeterToolBar::ShowInputGainDialog()
+{
+   mRecordMeter->ShowDialog();
+   mRecordMeter->UpdateSliderControl();
+}
+
+void MeterToolBar::AdjustOutputGain(int adj)
+{
+   if (adj < 0) {
+      mPlayMeter->Decrease(-adj);
+   }
+   else {
+      mPlayMeter->Increase(adj);
+   }
+
+   mPlayMeter->UpdateSliderControl();
+}
+
+void MeterToolBar::AdjustInputGain(int adj)
+{
+   if (adj < 0) {
+      mRecordMeter->Decrease(-adj);
+   }
+   else {
+      mRecordMeter->Increase(adj);
+   }
+
+   mRecordMeter->UpdateSliderControl();
 }
 
 static RegisteredToolbarFactory factory1{ RecordMeterBarID,
