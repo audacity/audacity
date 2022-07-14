@@ -823,22 +823,27 @@ void EffectAutoDuck::Panel::OnMotion(wxMouseEvent & evt)
          case outerFadeDown:
             newValue = ((double)(FADE_DOWN_START - evt.GetX())) / FADE_SCALE;
             mEffect->mOuterFadeDownLen = std::clamp<double>(newValue, OuterFadeDownLen.min, OuterFadeDownLen.max);
+            mEffect->mOuterFadeDownLenBox->SetValue(Internat::ToDisplayString((double)mEffect->mOuterFadeDownLen, 2));
             break;
          case outerFadeUp:
             newValue = ((double)(evt.GetX() - FADE_UP_START)) / FADE_SCALE;
             mEffect->mOuterFadeUpLen = std::clamp<double>(newValue, OuterFadeUpLen.min, OuterFadeUpLen.max);
+            mEffect->mOuterFadeUpLenBox->SetValue(Internat::ToDisplayString((double)mEffect->mOuterFadeUpLen, 2));
             break;
          case innerFadeDown:
             newValue = ((double)(evt.GetX() - FADE_DOWN_START)) / FADE_SCALE;
             mEffect->mInnerFadeDownLen = std::clamp<double>(newValue, InnerFadeDownLen.min, InnerFadeDownLen.max);
+            mEffect->mInnerFadeDownLenBox->SetValue(Internat::ToDisplayString((double) mEffect->mInnerFadeDownLen, 2));
             break;
          case innerFadeUp:
             newValue = ((double)(FADE_UP_START - evt.GetX())) / FADE_SCALE;
             mEffect->mInnerFadeUpLen = std::clamp<double>(newValue, InnerFadeUpLen.min, InnerFadeUpLen.max);
+            mEffect->mInnerFadeUpLenBox->SetValue(Internat::ToDisplayString((double) mEffect->mInnerFadeUpLen, 2));
             break;
          case duckAmount:
             newValue = ((double)(DUCK_AMOUNT_START - evt.GetY())) / DUCK_AMOUNT_SCALE;
             mEffect->mDuckAmountDb = std::clamp<double>(newValue, DuckAmountDb.min, DuckAmountDb.max);
+            mEffect->mDuckAmountDbBox->SetValue(Internat::ToDisplayString((double) mEffect->mDuckAmountDb, 2));
             break;
          case none:
             wxASSERT(false); // should not happen
