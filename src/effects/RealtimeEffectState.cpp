@@ -189,7 +189,6 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            auto &lastSettings = pAccessState->mLastSettings;
             const EffectSettings *pResult{};
             while (!(pResult = FlushAttempt(*pAccessState))) {
                // Wait for progress of audio thread
@@ -197,6 +196,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                std::this_thread::sleep_for(50ms);
             }
             pState->mMainSettings.Set(*pResult); // Update the state
+            pAccessState->mLastSettings = *pResult;
          }
       }
    }
