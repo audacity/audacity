@@ -793,25 +793,7 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
-   mModule = NULL;
-   mAEffect = NULL;
-
    mTimer = std::make_unique<VSTEffectTimer>(this);
-   mTimerGuard = 0;
-
-   mInteractive = false;
-   mAudioIns = 0;
-   mAudioOuts = 0;
-   mMidiIns = 0;
-   mMidiOuts = 0;
-   mBlockSize = mUserBlockSize = 8192;
-   mBufferDelay = 0;
-   mProcessLevel = 1;         // in GUI thread
-   mHasPower = false;
-   mWantsIdle = false;
-   mWantsEditIdle = false;
-   mUseLatency = true;
-   mReady = false;
 
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
@@ -821,11 +803,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
-
-   // UI
-   
-   mGui = false;
-   mContainer = NULL;
 
    // If we're a slave then go ahead a load immediately
    if (mMaster)
@@ -850,7 +827,7 @@ PluginPath VSTEffect::GetPath() const
 
 ComponentInterfaceSymbol VSTEffect::GetSymbol() const
 {
-   return mName;
+   return VSTEffectWrapper::GetSymbol();
 }
 
 VendorSymbol VSTEffect::GetVendor() const
@@ -928,10 +905,10 @@ bool VSTEffect::IsDefault() const
 auto VSTEffect::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-//   return GetType() == EffectTypeProcess
-//      ? RealtimeSince::Always
-//      : RealtimeSince::Never;
+   //return RealtimeSince::Never;
+   return GetType() == EffectTypeProcess
+      ? RealtimeSince::Always
+      : RealtimeSince::Never;
 }
 
 bool VSTEffect::SupportsAutomation() const
@@ -1224,18 +1201,17 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
-{
-   for (int i = 0; i < mAEffect->numParams; i++)
-   {
-      wxString name = GetString(effGetParamName, i);
-      if (name.empty())
-      {
-         name.Printf(wxT("parm_%d"), i);
-      }
 
-      float value = callGetParameter(i);
+
+bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
+{
+   const VSTEffectSettings& vstSettings = GetSettings(settings);
+
+   for (const auto& item : vstSettings.mParamsMap)
+   {
+      const auto& name  = item.first;
+      const auto& value = item.second;
+
       if (!parms.Write(name, value))
       {
          return false;
@@ -1245,55 +1221,47 @@ bool VSTEffect::SaveSettings(
    return true;
 }
 
-bool VSTEffect::LoadSettings(
-   const CommandParameters & parms, EffectSettings &settings) const
+
+bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
-   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-   for (int i = 0; i < mAEffect->numParams; i++)
+   VSTEffectSettings& vstSettings = GetSettings(settings);
+   vstSettings.mParamsMap.clear();
+
+   long index{};
+   wxString key;
+   float value = 0.0f;
+   if (parms.GetFirstEntry(key, index))
    {
-      wxString name = GetString(effGetParamName, i);
-      if (name.empty())
+      do
       {
-         name.Printf(wxT("parm_%d"), i);
-      }
+         if (parms.Read(key, value))
+            vstSettings.mParamsMap[key] = value;
+         else
+            return false;
 
-      double d = 0.0;
-      if (!parms.Read(name, &d))
-      {
-         return false;
-      }
-
-      if (d >= -1.0 && d <= 1.0)
-      {
-         const_cast<VSTEffect*>(this)->callSetParameter(i, d);
-         for (const auto &slave : mSlaves)
-            slave->callSetParameter(i, d);
-      }
+      } while (parms.GetNextEntry(key, index));
    }
-   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+
+   vstSettings.mChunk     = std::nullopt;
+   vstSettings.mVersion   = VSTEffectWrapper::mVstVersion;
+   vstSettings.mUniqueID  = VSTEffectWrapper::mAEffect->uniqueID;
+   vstSettings.mNumParams = VSTEffectWrapper::mAEffect->numParams;
 
    return true;
 }
 
+
 bool VSTEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name, settings);
-}
-
-bool VSTEffect::DoLoadUserPreset(
-   const RegistryPath & name, EffectSettings &settings)
 {
    if (!LoadParameters(name, settings))
    {
       return false;
    }
 
-   RefreshParameters();
-
    return true;
 }
+
 
 bool VSTEffect::SaveUserPreset(
    const RegistryPath & name, const EffectSettings &settings) const
@@ -1319,17 +1287,20 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
    return progs;
 }
 
-bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
+bool VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+   bool loadOK = const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+
+   if (loadOK)
+      FetchSettings(GetSettings(settings));
+
+   return loadOK;
 }
 
 bool VSTEffect::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
-
-   RefreshParameters();
 
    return true;
 }
@@ -1383,6 +1354,8 @@ bool VSTEffect::ValidateUI(EffectSettings &settings)
    if (GetType() == EffectTypeGenerate)
       settings.extra.SetDuration(mDuration->GetValue());
 
+   FetchSettings(GetSettings(settings));
+
    return true;
 }
 
@@ -1420,7 +1393,7 @@ bool VSTEffect::CanExportPresets()
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets(const EffectSettings &) const
+void VSTEffect::ExportPresets(const EffectSettings& settings) const
 {
    wxString path;
 
@@ -1446,6 +1419,9 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
    {
       return;
    }
+
+   if ( ! StoreSettings(GetSettings(settings)) )
+      return;
 
    wxFileName fn(path);
    wxString ext = fn.GetExt();
@@ -1480,7 +1456,7 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets(EffectSettings &)
+void VSTEffect::ImportPresets(EffectSettings& settings)
 {
    wxString path;
 
@@ -1542,7 +1518,7 @@ void VSTEffect::ImportPresets(EffectSettings &)
       return;
    }
 
-   RefreshParameters();
+   FetchSettings(GetSettings(settings));
 
    return;
 }
@@ -1879,12 +1855,27 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
+
+VstPatchChunkInfo VSTEffectWrapper::GetChunkInfo() const
+{
+   VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+   return info;
+}
+
+bool VSTEffectWrapper::IsCompatible(const VstPatchChunkInfo& info) const
+{
+   return  (info.pluginUniqueID == mAEffect->uniqueID) &&
+           (info.pluginVersion  == mAEffect->version) &&
+           (info.numElements    == mAEffect->numParams);
+}
+
 bool VSTEffect::LoadParameters(
-   const RegistryPath & group, EffectSettings &settings)
+   const RegistryPath & group, EffectSettings &settings) const
 {
    wxString value;
 
-   VstPatchChunkInfo info = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, ""};
+   auto info = GetChunkInfo();
+
    GetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       info.pluginUniqueID, info.pluginUniqueID);
    GetConfig(*this, PluginSettings::Private, group, wxT("Version"),
@@ -1892,9 +1883,7 @@ bool VSTEffect::LoadParameters(
    GetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
       info.numElements, info.numElements);
 
-   if ((info.pluginUniqueID != mAEffect->uniqueID) ||
-       (info.pluginVersion != mAEffect->version) ||
-       (info.numElements != mAEffect->numParams))
+   if ( ! IsCompatible(info) )
    {
       return false;
    }
@@ -1907,7 +1896,8 @@ bool VSTEffect::LoadParameters(
       int len = Base64::Decode(value, buf.get());
       if (len)
       {
-         callSetChunk(true, len, buf.get(), &info);
+         callSetChunkB(true, len, buf.get(), &info);
+         FetchSettings(GetSettings(settings));
       }
 
       return true;
@@ -1926,18 +1916,26 @@ bool VSTEffect::LoadParameters(
       return false;
    }
 
-   return LoadSettings(eap, settings);
+   const bool loadOK = LoadSettings(eap, settings);
+
+   if (loadOK)
+     FetchSettings(GetSettings(settings));
+
+   return loadOK;
 }
+
 
 bool VSTEffect::SaveParameters(
    const RegistryPath & group, const EffectSettings &settings) const
 {
-   SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
-      mAEffect->uniqueID);
-   SetConfig(*this, PluginSettings::Private, group, wxT("Version"),
-      mAEffect->version);
-   SetConfig(*this, PluginSettings::Private, group, wxT("Elements"),
-      mAEffect->numParams);
+   const auto& vstSettings = GetSettings(settings);
+
+   if ( ! StoreSettings(vstSettings) )
+      return false;
+
+   SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"), vstSettings.mUniqueID );
+   SetConfig(*this, PluginSettings::Private, group, wxT("Version"),  vstSettings.mVersion  );
+   SetConfig(*this, PluginSettings::Private, group, wxT("Elements"), vstSettings.mNumParams);
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
@@ -2110,7 +2108,7 @@ void VSTEffect::SetBufferDelay(int samples)
    return;
 }
 
-int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
+int VSTEffectWrapper::GetString(wxString & outstr, int opcode, int index) const
 {
    char buf[256];
 
@@ -2124,7 +2122,7 @@ int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
    return 0;
 }
 
-wxString VSTEffect::GetString(int opcode, int index) const
+wxString VSTEffectWrapper::GetString(int opcode, int index) const
 {
    wxString str;
 
@@ -2133,7 +2131,7 @@ wxString VSTEffect::GetString(int opcode, int index) const
    return str;
 }
 
-void VSTEffect::SetString(int opcode, const wxString & str, int index)
+void VSTEffectWrapper::SetString(int opcode, const wxString & str, int index)
 {
    char buf[256];
    strcpy(buf, str.Left(255).ToUTF8());
@@ -2141,7 +2139,7 @@ void VSTEffect::SetString(int opcode, const wxString & str, int index)
    callDispatcher(opcode, index, 0, buf, 0.0);
 }
 
-intptr_t VSTEffect::callDispatcher(int opcode,
+intptr_t VSTEffectWrapper::callDispatcher(int opcode,
                                    int index, intptr_t value, void *ptr, float opt)
 {
    // Needed since we might be in the dispatcher when the timer pops
@@ -2149,11 +2147,11 @@ intptr_t VSTEffect::callDispatcher(int opcode,
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
-intptr_t VSTEffect::constCallDispatcher(int opcode,
+intptr_t VSTEffectWrapper::constCallDispatcher(int opcode,
    int index, intptr_t value, void *ptr, float opt) const
 {
    // Assume we are passed a read-only dispatcher function code
-   return const_cast<VSTEffect*>(this)
+   return const_cast<VSTEffectWrapper*>(this)
       ->callDispatcher(opcode, index, value, ptr, opt);
 }
 
@@ -2165,21 +2163,34 @@ void VSTEffect::callProcessReplacing(const float *const *inputs,
       const_cast<float**>(outputs), sampleframes);
 }
 
-float VSTEffect::callGetParameter(int index) const
+float VSTEffectWrapper::callGetParameter(int index) const
 {
    return mAEffect->getParameter(mAEffect, index);
 }
 
 void VSTEffect::callSetParameter(int index, float value)
 {
-   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
-   {
-      mAEffect->setParameter(mAEffect, index, value);
+   bool setOK = callSetParameterB(index, value);
 
-      for (const auto &slave : mSlaves)
-         slave->callSetParameter(index, value);
+   if (setOK)
+   {
+      for (const auto& slave : mSlaves)
+         slave->callSetParameterB(index, value);
    }
 }
+
+
+bool VSTEffectWrapper::callSetParameterB(int index, float value) const
+{
+   if (mVstVersion == 0 || constCallDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+   {
+      mAEffect->setParameter(mAEffect, index, value);
+      return true;
+   }
+   return false;
+}
+
+
 
 void VSTEffect::callSetProgram(int index)
 {
@@ -2192,7 +2203,18 @@ void VSTEffect::callSetProgram(int index)
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 }
 
-void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
+
+void VSTEffectWrapper::callSetProgramB(int index)
+{
+   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+
+   callDispatcher(effSetProgram, 0, index, NULL, 0.0);
+
+   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+}
+
+
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf)
 {
    VstPatchChunkInfo info;
 
@@ -2202,15 +2224,15 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
    info.pluginVersion = mAEffect->version;
    info.numElements = isPgm ? mAEffect->numParams : mAEffect->numPrograms;
 
-   callSetChunk(isPgm, len, buf, &info);
+   callSetChunkB(isPgm, len, buf, &info);
 }
 
-void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info)
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf, VstPatchChunkInfo *info) const
 {
    if (isPgm)
    {
       // Ask the effect if this is an acceptable program
-      if (callDispatcher(effBeginLoadProgram, 0, 0, info, 0.0) == -1)
+      if (constCallDispatcher(effBeginLoadProgram, 0, 0, info, 0.0) == -1)
       {
          return;
       }
@@ -2218,18 +2240,28 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
    else
    {
       // Ask the effect if this is an acceptable bank
-      if (callDispatcher(effBeginLoadBank, 0, 0, info, 0.0) == -1)
+      if (constCallDispatcher(effBeginLoadBank, 0, 0, info, 0.0) == -1)
       {
          return;
       }
    }
 
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-   callDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
+   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+}
 
-   for (const auto &slave : mSlaves)
-      slave->callSetChunk(isPgm, len, buf, info);
+void VSTEffect::callSetChunk(bool isPgm, int len, void* buf)
+{
+   callSetChunkB(isPgm, len, buf);
+}
+
+void VSTEffect::callSetChunk(bool isPgm, int len, void* buf, VstPatchChunkInfo* info)
+{
+   callSetChunkB(isPgm, len, buf, info);
+
+   for (const auto& slave : mSlaves)
+      slave->callSetChunkB(isPgm, len, buf, info);
 }
 
 void VSTEffect::RemoveHandler()
@@ -2421,7 +2453,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
    mSliders[0]->SetFocus();
 }
 
-void VSTEffect::RefreshParameters(int skip)
+void VSTEffect::RefreshParameters(int skip) const
 {
    if (!mNames)
    {
@@ -2504,7 +2536,7 @@ void VSTEffect::OnSlider(wxCommandEvent & evt)
    RefreshParameters(i);
 }
 
-bool VSTEffect::LoadFXB(const wxFileName & fn)
+bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
 {
    bool ret = false;
 
@@ -2523,7 +2555,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
          XO("Unable to allocate memory when loading presets file."),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return false;
    }
    unsigned char *bptr = data.get();
@@ -2538,7 +2570,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
             XO("Unable to read presets file."),
             XO("Error Loading VST Presets"),
             wxOK | wxCENTRE,
-            mParent);
+            nullptr);
          break;
       }
 
@@ -2656,7 +2688,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
          }
 
          // Set the entire bank in one shot
-         callSetChunk(false, size, &iptr[40], &info);
+         callSetChunkB(false, size, &iptr[40], &info);
 
          // Success
          ret = true;
@@ -2670,14 +2702,14 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
       // Set the active program
       if (ret && version >= 2)
       {
-         callSetProgram(curProg);
+         callSetProgramB(curProg);
       }
    } while (false);
 
    return ret;
 }
 
-bool VSTEffect::LoadFXP(const wxFileName & fn)
+bool VSTEffectWrapper::LoadFXP(const wxFileName & fn)
 {
    bool ret = false;
 
@@ -2696,7 +2728,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
          XO("Unable to allocate memory when loading presets file."),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return false;
    }
    unsigned char *bptr = data.get();
@@ -2711,7 +2743,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
             XO("Unable to read presets file."),
             XO("Error Loading VST Presets"),
             wxOK | wxCENTRE,
-            mParent);
+            nullptr);
          break;
       }
 
@@ -2729,7 +2761,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
    return ret;
 }
 
-bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun)
+bool VSTEffectWrapper::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun)
 {
    // Most references to the data are via an "int" array
    int32_t *iptr = (int32_t *) *bptr;
@@ -2823,7 +2855,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
          for (int i = 0; i < numParams; i++)
          {
             wxUint32 val = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
-            callSetParameter(i, reinterpretAsFloat(val));
+            callSetParameterB(i, reinterpretAsFloat(val));
          }
          callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
       }
@@ -2862,7 +2894,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
       // Set the entire program in one shot
       if (!dryrun)
       {
-         callSetChunk(true, size, &iptr[15], &info);
+         callSetChunkB(true, size, &iptr[15], &info);
       }
 
       // Update in case we're loading an "FxBk" format bank file
@@ -2883,7 +2915,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
    return true;
 }
 
-bool VSTEffect::LoadXML(const wxFileName & fn)
+bool VSTEffectWrapper::LoadXML(const wxFileName & fn)
 {
    mInChunk = false;
    mInSet = false;
@@ -2908,14 +2940,14 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
          reader.GetErrorStr(),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return false;
    }
 
    return true;
 }
 
-void VSTEffect::SaveFXB(const wxFileName & fn) const
+void VSTEffectWrapper::SaveFXB(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{fn.GetFullPath()};
@@ -2926,7 +2958,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn) const
          XO("Could not open file: \"%s\"").Format( fullPath ),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return;
    }
 
@@ -2995,7 +3027,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn) const
          XO("Error writing to file: \"%s\"").Format( fullPath ),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
    }
 
    f.Close();
@@ -3003,7 +3035,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn) const
    return;
 }
 
-void VSTEffect::SaveFXP(const wxFileName & fn) const
+void VSTEffectWrapper::SaveFXP(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{ fn.GetFullPath() };
@@ -3014,7 +3046,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn) const
          XO("Could not open file: \"%s\"").Format( fullPath ),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
       return;
    }
 
@@ -3031,7 +3063,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn) const
          XO("Error writing to file: \"%s\"").Format( fullPath ),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         nullptr);
    }
 
    f.Close();
@@ -3039,7 +3071,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn) const
    return;
 }
 
-void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
+void VSTEffectWrapper::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 {
    wxInt32 subType;
    void *chunkPtr;
@@ -3100,7 +3132,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 }
 
 // Throws exceptions rather than giving error return.
-void VSTEffect::SaveXML(const wxFileName & fn) const
+void VSTEffectWrapper::SaveXML(const wxFileName & fn) const
 // may throw
 {
    XMLFileWriter xmlFile{ fn.GetFullPath(), XO("Error Saving Effect Presets") };
@@ -3159,7 +3191,7 @@ void VSTEffect::SaveXML(const wxFileName & fn) const
    xmlFile.Commit();
 }
 
-bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
+bool VSTEffectWrapper::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "vstprogrampersistence")
    {
@@ -3214,7 +3246,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
                   msg,
                   XO("Confirm"),
                   wxYES_NO,
-                  mParent );
+                  nullptr );
                if (result == wxNO)
                {
                   return false;
@@ -3353,7 +3385,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
          return false;
       }
 
-      callSetParameter(ndx, val);
+      callSetParameterB(ndx, val);
 
       return true;
    }
@@ -3367,7 +3399,7 @@ bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &
    return false;
 }
 
-void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
+void VSTEffectWrapper::HandleXMLEndTag(const std::string_view& tag)
 {
    if (tag == "chunk")
    {
@@ -3378,7 +3410,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
          int len = Base64::Decode(mChunk, buf.get());
          if (len)
          {
-            callSetChunk(true, len, buf.get(), &mXMLInfo);
+            callSetChunkB(true, len, buf.get(), &mXMLInfo);
          }
 
          mChunk.clear();
@@ -3397,7 +3429,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
    }
 }
 
-void VSTEffect::HandleXMLContent(const std::string_view& content)
+void VSTEffectWrapper::HandleXMLContent(const std::string_view& content)
 {
    if (mInChunk)
    {
@@ -3405,7 +3437,7 @@ void VSTEffect::HandleXMLContent(const std::string_view& content)
    }
 }
 
-XMLTagHandler *VSTEffect::HandleXMLChild(const std::string_view& tag)
+XMLTagHandler *VSTEffectWrapper::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "vstprogrampersistence")
    {
@@ -3434,5 +3466,139 @@ XMLTagHandler *VSTEffect::HandleXMLChild(const std::string_view& tag)
 
    return NULL;
 }
+
+
+void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
+{
+   for (int i = 0; i < mAEffect->numParams; i++)
+   {
+      wxString name = GetString(effGetParamName, i);
+      if (name.empty())
+      {
+         name.Printf(wxT("parm_%d"), i);
+      }
+
+      ParameterInfo pi{ i, name };
+
+      if (!visitor(pi))
+         break;
+   }
+}
+
+
+bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vst3settings) const
+{
+   // Get the fallback ID-value parameters
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         float val = callGetParameter(pi.mID);
+         vst3settings.mParamsMap[pi.mName] = val;
+         return true;
+      }
+   );
+
+   // These are here to be checked against for compatibility later
+   vst3settings.mVersion   = mAEffect->version;
+   vst3settings.mUniqueID  = mAEffect->uniqueID;
+   vst3settings.mNumParams = mAEffect->numParams;
+
+   // Get the chunk (if supported)
+   vst3settings.mChunk = std::nullopt;
+   if (mAEffect->flags & effFlagsProgramChunks)
+   {
+      void* chunk = NULL;
+      int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      if (clen > 0)
+      {
+         vst3settings.mChunk = Base64::Encode(chunk, clen);
+      }
+   }
+
+   return true;
+}
+
+
+bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings) const
+{
+   // First, make sure settings are compatibile with the plugin
+   if ((vst3settings.mUniqueID  != mAEffect->uniqueID)   ||
+       (vst3settings.mVersion   != mAEffect->version)    ||
+       (vst3settings.mNumParams != mAEffect->numParams)      )
+   {
+      return false;
+   }
+
+
+   // Try using the chunk first (if available)
+   if (vst3settings.mChunk)
+   {
+      ArrayOf<char> buf{ vst3settings.mChunk->length() / 4 * 3 };
+
+      int len = Base64::Decode(*vst3settings.mChunk, buf.get());
+      if (len)
+      {
+         VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+
+         callSetChunkB(true, len, buf.get(), &info);
+         return true;
+      }         
+   }
+
+
+   // Chunk unavailable / decoding it did not work? fall back to param ID-value pairs
+
+   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         const auto itr = vst3settings.mParamsMap.find(pi.mName);
+         if (itr != vst3settings.mParamsMap.end())
+         {
+            const float& value = itr->second;
+
+            if (value >= -1.0 && value <= 1.0)
+            {
+               callSetParameterB(pi.mID, value);
+            }
+         }
+         return true;
+      }
+   );
+   
+   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+
+   return false;
+}
+
+bool VSTEffect::TransferDataToWindow(const EffectSettings& settings)
+{
+   if (!StoreSettings(GetSettings(settings)))
+      return false;
+
+   RefreshParameters();
+
+   return true;
+}
+
+ComponentInterfaceSymbol VSTEffectWrapper::GetSymbol() const
+{
+   return mName;
+}
+
+EffectSettings VSTEffect::MakeSettings() const
+{
+   auto result = StatefulPerTrackEffect::MakeSettings();
+   // Cause initial population of the map stored in the stateful effect
+   if (!mInitialFetchDone) {
+      FetchSettings(GetSettings(result));
+      mInitialFetchDone = true;
+   }
+   return result;
+}
+
 
 #endif // USE_VST
