@@ -99,6 +99,14 @@ void PerTrackEffect::Buffers::Reinit(
 
 void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
 {
+#ifndef NDEBUG
+   sampleCount oldRemaining = Remaining();
+#endif
+   // Assert the pre
+   assert(drop + keep < Remaining());
+
+#if 1
+   // Bounds checking version not assuming the pre, new in 3.2
    if (mBuffers.empty())
       return;
 
@@ -122,10 +130,27 @@ void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
       position = *++iterP;
       memmove(position, position + drop, size);
    }
+#else
+   // Version that assumes the precondition,
+   // which pre-3.2 did without known errors
+   assert(drop + keep <= Remaining());
+   for (auto position : mPositions)
+      memmove(position, position + drop, keep * sizeof(float));
+#endif
+   // Assert the post
+   assert(oldRemaining == Remaining());
 }
 
 void PerTrackEffect::Buffers::Advance(size_t count)
 {
+#ifndef NDEBUG
+   sampleCount oldRemaining = Remaining();
+#endif
+   // Assert the pre
+   assert(count <= Remaining());
+
+#if 1
+   // Bounds checking version not assuming the pre, new in 3.2
    if (mBuffers.empty())
       return;
 
@@ -153,6 +178,15 @@ void PerTrackEffect::Buffers::Advance(size_t count)
       assert(iterB->data() <= position);
       assert(position <= iterB->data() + iterB->size());
    }
+#else
+   // Version that assumes the precondition,
+   // which pre-3.2 did without known errors
+   assert(count <= Remaining());
+   for (auto &position : mPositions)
+      position += count;
+#endif
+   // Assert the post
+   assert(Remaining() == oldRemaining - count);
 }
 
 void PerTrackEffect::Buffers::Rewind()
@@ -459,6 +493,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // Calculate the number of samples to get
             const auto inputBufferCnt =
                limitSampleBufferSize(inBuffers.Remaining(), inputRemaining);
+            // guarantees write won't overflow
+            assert(inputBufferCnt <= inBuffers.Remaining());
             // Fill the input buffers
             left.GetFloats(&inBuffers.GetWritePosition(0),
                inPos, inputBufferCnt);
@@ -541,9 +577,10 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       }
       inPos += curBlockSize;
 
-      // Because curBlockSize <= blockSize <= outBuffers.Remaining()
+      // Precondition for Discard() or Advance() holds
+      // because curBlockSize <= blockSize <= outBuffers.Remaining()
       assert(curBlockSize <= outBuffers.Remaining());
-
+   
       // Do latency correction on effect output
       auto discard =
          (curDelay < curBlockSize ? curDelay.as_size_t(): curBlockSize);

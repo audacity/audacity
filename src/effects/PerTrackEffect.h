@@ -117,9 +117,15 @@ private:
       /*!
        @param drop how many values to discard
        @param keep how many following values are defined
+       @pre drop + keep <= Remaining()
+       @post `Remaining()` is unchanged
        */
       void Discard(size_t drop, size_t keep);
       //! Move the positions
+      /*!
+       @pre count <= Remaining()
+       @post `Remaining()` reduced by `count`
+       */
       void Advance(size_t count);
       //! Reset positions to starts of buffers
       /*!
