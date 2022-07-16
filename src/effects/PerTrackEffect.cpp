@@ -417,7 +417,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto outPos = start;
    auto inputRemaining = len;
    sampleCount curDelay = 0;
-   size_t curBlockSize = 0;
    size_t inputBufferCnt = 0;
    size_t outputBufferCnt = 0;
    std::shared_ptr<WaveTrack> genLeft, genRight;
@@ -436,10 +435,11 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    // Call the effect until we run out of input or delayed samples
    while (inputRemaining != 0 || delayRemaining != 0) {
-      // Still working on the input samples
+      const auto curBlockSize = [&]() -> size_t {
       if (inputRemaining != 0) {
-         // Need to refill the input buffers
+         // Still working on the input samples
          if (inputBufferCnt == 0) {
+            // Need to refill the input buffers
             // Calculate the number of samples to get
             inputBufferCnt =
                limitSampleBufferSize( bufferSize, inputRemaining );
@@ -452,24 +452,27 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
                pRight->GetFloats(&inBuffers.GetWritePosition(1),
                   inPos, inputBufferCnt);
          }
-
          // Calculate the number of samples to process
-         curBlockSize = blockSize;
-         if (curBlockSize > inputRemaining) {
+         auto result = blockSize;
+         if (result > inputRemaining) {
             // We've reached the last block...set current block size to what's left
             // inputRemaining is positive and bounded by a size_t
-            curBlockSize = inputRemaining.as_size_t();
+            result = inputRemaining.as_size_t();
          }
+         return result;
       }
-      // We've exhausted the input samples and are now working on the delay
-      else if (delayRemaining != 0) {
+      else {
+         // We've exhausted the input samples and are now working on the delay
+         assert(delayRemaining > 0);
          // Calculate the number of samples to process
-         curBlockSize = limitSampleBufferSize( blockSize, delayRemaining );
-         delayRemaining -= curBlockSize;
+         auto result = limitSampleBufferSize(blockSize, delayRemaining);
+         delayRemaining -= result;
+         return result;
       }
+      }();
 
       // Finally call the plugin to process the block
-      decltype(curBlockSize) processed;
+      size_t processed{};
       try {
          processed = instance.ProcessBlock(
             settings, inBuffers.Positions(),
@@ -526,16 +529,15 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       if (discard) {
          curDelay -= discard;
          outBuffers.Discard(discard, curBlockSize - discard);
-         curBlockSize -= discard;
       }
 
       // Adjust the number of samples in the output buffers
-      outputBufferCnt += curBlockSize;
+      outputBufferCnt += curBlockSize - discard;
 
       if (outputBufferCnt < bufferSize)
          // Still have room in the output buffers
          // Bump to next output buffer position
-         outBuffers.Advance(curBlockSize);
+         outBuffers.Advance(curBlockSize - discard);
       else {
          // Output buffers have filled
          if (isProcessor) {
