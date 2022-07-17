@@ -622,12 +622,14 @@ bool VST3Effect::ProcessInitialize(
    return false;
 }
 
-bool VST3Effect::ProcessFinalize()
+bool VST3Effect::ProcessFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    using namespace Steinberg;
    mActive = false;
    mAudioProcessor->setProcessing(false);
    return mEffectComponent->setActive(false) == Steinberg::kResultOk;
+});
 }
 
 namespace

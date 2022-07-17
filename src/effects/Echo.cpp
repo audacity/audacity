@@ -57,7 +57,7 @@ struct EffectEcho::Instance
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-   bool ProcessFinalize(void) override;
+   bool ProcessFinalize() noexcept override;
 
    Floats history;
    size_t histPos;
@@ -144,7 +144,7 @@ bool EffectEcho::Instance::ProcessInitialize(
    return history != NULL;
 }
 
-bool EffectEcho::Instance::ProcessFinalize()
+bool EffectEcho::Instance::ProcessFinalize() noexcept
 {
    return true;
 }

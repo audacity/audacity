@@ -1029,13 +1029,15 @@ bool VSTEffect::DoProcessInitialize(double sampleRate)
    return true;
 }
 
-bool VSTEffect::ProcessFinalize()
+bool VSTEffect::ProcessFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    mReady = false;
 
    PowerOff();
 
    return true;
+});
 }
 
 size_t VSTEffect::ProcessBlock(EffectSettings &,

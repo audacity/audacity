@@ -112,7 +112,7 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
    return true;
 }
 
-bool AudioUnitInstance::ProcessFinalize()
+bool AudioUnitInstance::ProcessFinalize() noexcept
 {
    mOutputList.reset();
    mInputList.reset();

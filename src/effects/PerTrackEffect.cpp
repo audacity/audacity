@@ -42,7 +42,7 @@ bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &,
    return true;
 }
 
-bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
+bool PerTrackEffect::Instance::ProcessFinalize() noexcept
 {
    return true;
 }
@@ -568,10 +568,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       return false;
 
    auto cleanup = finally( [&] {
-      // Allow the plugin to cleanup
-      if (!instance.ProcessFinalize())
-         // In case of non-exceptional flow of control, set rc
-         rc = false;
+      instance.ProcessFinalize();
    } );
 
    // For each input block of samples, we pass it to the effect along with a

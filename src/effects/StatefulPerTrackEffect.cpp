@@ -29,7 +29,7 @@ bool StatefulPerTrackEffect::Instance::ProcessInitialize(
       .ProcessInitialize(settings, sampleRate, chanMap);
 }
 
-bool StatefulPerTrackEffect::Instance::ProcessFinalize() /* noexcept */
+bool StatefulPerTrackEffect::Instance::ProcessFinalize() noexcept
 {
    return GetEffect().ProcessFinalize();
 }
@@ -85,7 +85,7 @@ bool StatefulPerTrackEffect::ProcessInitialize(
    return true;
 }
 
-bool StatefulPerTrackEffect::ProcessFinalize()
+bool StatefulPerTrackEffect::ProcessFinalize() noexcept
 {
    return true;
 }

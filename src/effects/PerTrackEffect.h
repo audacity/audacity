@@ -178,7 +178,7 @@ public:
       //! Called at end of destructive processing, for each (mono/stereo) track
       //! Default implementation does nothing, returns true
       //! This may be called during stack unwinding:
-      virtual bool ProcessFinalize() /* noexcept */ ;
+      virtual bool ProcessFinalize() noexcept;
 
       //! Called for destructive effect computation
       virtual size_t ProcessBlock(EffectSettings &settings,

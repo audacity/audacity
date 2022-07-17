@@ -197,7 +197,7 @@ struct EffectReverb::Instance
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-   bool ProcessFinalize(void) override; // not every effect needs this
+   bool ProcessFinalize(void) noexcept override;
 
    // Realtime section
 
@@ -350,7 +350,7 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
    return true;
 }
 
-bool EffectReverb::Instance::ProcessFinalize()
+bool EffectReverb::Instance::ProcessFinalize() noexcept
 {
    return true;
 }

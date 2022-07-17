@@ -38,7 +38,7 @@ public:
       ~Instance() override;
       bool ProcessInitialize(EffectSettings &settings, double sampleRate,
          ChannelNames chanMap) override;
-      bool ProcessFinalize() override;
+      bool ProcessFinalize() noexcept override;
       size_t ProcessBlock(EffectSettings &settings,
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -73,7 +73,7 @@ public:
    /*!
     @copydoc PerTrackEffect::Instance::ProcessFinalize()
     */
-   virtual bool ProcessFinalize() /* noexcept */;
+   virtual bool ProcessFinalize() noexcept;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessBlock()
