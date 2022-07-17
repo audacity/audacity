@@ -12,10 +12,11 @@
 #include "CustomUpdater.h"
 
 void CustomUpdater::Update(
-   wxDC& dc, const Envelope* envelope, UpdateOutputs& allOutputs) const
+   wxDC& dc, const Envelope* envelope,
+   UpdateOutputs& allOutputs, const RulerStruct& context) const
 {
-   const int mLength = mRuler.mLength;
-   const Ruler::Fonts& mFonts = *mRuler.mpFonts;
+   const int mLength = context.mLength;
+   const RulerStruct::Fonts& mFonts = *context.mpFonts;
 
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
@@ -26,7 +27,9 @@ void CustomUpdater::Update(
    int numLabel = allOutputs.majorLabels.size();
 
    for (int i = 0; (i < numLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.major, majorOutputs);
+      TickCustom(dc, i, mFonts.major, majorOutputs, context);
 
-   BoxAdjust(allOutputs);
+   BoxAdjust(allOutputs, context);
 }
+
+CustomUpdater::~CustomUpdater() = default;

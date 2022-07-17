@@ -14,13 +14,14 @@
 #include "Updater.h"
 
 struct LogarithmicUpdater : public Updater {
-   explicit LogarithmicUpdater(const Ruler& ruler, const ZoomInfo* z)
-      : Updater{ ruler, NULL }
+   explicit LogarithmicUpdater(const ZoomInfo* z = nullptr)
+      : Updater{ z }
    {}
+   ~LogarithmicUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
 };
 

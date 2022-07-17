@@ -83,7 +83,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    ruler.SetBounds(0, 0, width, rulerPageHeight);
    ruler.SetOrientation(wxHORIZONTAL);
    ruler.SetRange(0.0, mTracks->GetEndTime());
-   ruler.SetFormat(Ruler::TimeFormat);
+   ruler.SetFormat(TimeFormat);
    ruler.SetLabelEdges(true);
    ruler.Draw(*dc);
 

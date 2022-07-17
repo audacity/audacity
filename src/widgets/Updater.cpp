@@ -20,8 +20,29 @@
 *//******************************************************************/
 
 #include "Updater.h"
+#include <wx/font.h>
+#include <wx/dc.h>
 
-Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat format, bool log)
+RulerStruct::RulerStruct()
+{
+   mMin = mHiddenMin = 0.0;
+   mMax = mHiddenMax = 100.0;
+   mOrientation = wxHORIZONTAL;
+   mSpacing = 6;
+   mFormat = RealFormat;
+   mFlip = false;
+   mLabelEdges = false;
+
+   mLeft = -1;
+   mTop = -1;
+   mRight = -1;
+   mBottom = -1;
+
+   mDbMirrorValue = 0.0;
+   mLength = 0;
+}
+
+Updater::TickSizes::TickSizes(double UPP, int orientation, RulerFormat format, bool log)
    {
       //TODO: better dynamic digit computation for the log case
       (void)log;
@@ -46,7 +67,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat fo
       mDigits = 0;
 
       switch (format) {
-      case Ruler::LinearDBFormat:
+      case LinearDBFormat:
          if (units < 0.001) {
             mMinor = 0.001;
             mMajor = 0.005;
@@ -104,7 +125,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat fo
          }
          break;
 
-      case Ruler::IntFormat:
+      case IntFormat:
          d = 1.0;
          for (;;) {
             if (units < d) {
@@ -122,7 +143,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat fo
          }
          break;
 
-      case Ruler::TimeFormat:
+      case TimeFormat:
          if (units > 0.5) {
             if (units < 1.0) { // 1 sec
                mMinor = 1.0;
@@ -198,7 +219,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat fo
          // (fractions of a second should be dealt with
          // the same way as for RealFormat)
 
-      case Ruler::RealFormat:
+      case RealFormat:
          d = 0.000001;
          // mDigits is number of digits after the decimal point.
          mDigits = 6;
@@ -226,7 +247,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat fo
          mMajor = d * 2.0;
          break;
 
-      case Ruler::RealLogFormat:
+      case RealLogFormat:
          d = 0.000001;
          // mDigits is number of digits after the decimal point.
          mDigits = 6;
@@ -258,7 +279,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, Ruler::RulerFormat fo
    }
 
 TranslatableString Updater::TickSizes::LabelString(
-      double d, Ruler::RulerFormat format, const TranslatableString& units)
+      double d, RulerFormat format, const TranslatableString& units)
       const
    {
       // Given a value, turn it into a string according
@@ -272,14 +293,14 @@ TranslatableString Updater::TickSizes::LabelString(
       // hour-minute-second, etc.?)
 
       // Replace -0 with 0
-      if (d < 0.0 && (d + mMinor > 0.0) && (format != Ruler::RealLogFormat))
+      if (d < 0.0 && (d + mMinor > 0.0) && (format != RealLogFormat))
          d = 0.0;
 
       switch (format) {
-      case Ruler::IntFormat:
+      case IntFormat:
          s.Printf(wxT("%d"), (int)floor(d + 0.5));
          break;
-      case Ruler::LinearDBFormat:
+      case LinearDBFormat:
          if (mMinor >= 1.0)
             s.Printf(wxT("%d"), (int)floor(d + 0.5));
          else {
@@ -287,21 +308,21 @@ TranslatableString Updater::TickSizes::LabelString(
             s.Printf(wxT("%.*f"), precision, d);
          }
          break;
-      case Ruler::RealFormat:
+      case RealFormat:
          if (mMinor >= 1.0)
             s.Printf(wxT("%d"), (int)floor(d + 0.5));
          else {
             s.Printf(wxString::Format(wxT("%%.%df"), mDigits), d);
          }
          break;
-      case Ruler::RealLogFormat:
+      case RealLogFormat:
          if (mMinor >= 1.0)
             s.Printf(wxT("%d"), (int)floor(d + 0.5));
          else {
             s.Printf(wxString::Format(wxT("%%.%df"), mDigits), d);
          }
          break;
-      case Ruler::TimeFormat:
+      case TimeFormat:
          if (useMajor) {
             if (d < 0) {
                s = wxT("-");
@@ -412,16 +433,17 @@ TranslatableString Updater::TickSizes::LabelString(
  }
 
 void Updater::BoxAdjust(
-   UpdateOutputs& allOutputs
+   UpdateOutputs& allOutputs,
+   const RulerStruct& context
 )
 const
 {
-   const int mLeft = mRuler.mLeft;
-   const int mTop = mRuler.mTop;
-   const int mBottom = mRuler.mBottom;
-   const int mRight = mRuler.mRight;
-   const int mOrientation = mRuler.mOrientation;
-   const bool mFlip = mRuler.mFlip;
+   const int mLeft = context.mLeft;
+   const int mTop = context.mTop;
+   const int mBottom = context.mBottom;
+   const int mRight = context.mRight;
+   const int mOrientation = context.mOrientation;
+   const bool mFlip = context.mFlip;
 
    int displacementx = 0, displacementy = 0;
    auto& box = allOutputs.box;
@@ -448,7 +470,7 @@ const
          displacementy = 0;
       }
    }
-   auto update = [=](Ruler::Label& label) {
+   auto update = [=](Label& label) {
       label.lx += displacementx;
       label.ly += displacementy;
    };
@@ -460,25 +482,117 @@ const
       update(label);
 }
 
+auto Updater::MakeTick(
+   Label lab,
+   wxDC& dc, wxFont font,
+   std::vector<bool>& bits,
+   int left, int top, int spacing, int lead,
+   bool flip, int orientation)
+   -> std::pair< wxRect, Label >
+{
+   lab.lx = left - 1000; // don't display
+   lab.ly = top - 1000;  // don't display
+
+   auto length = bits.size() - 1;
+   auto pos = lab.pos;
+
+   dc.SetFont(font);
+
+   wxCoord strW, strH, strD, strL;
+   auto str = lab.text;
+   // Do not put the text into results until we are sure it does not overlap
+   lab.text = {};
+   dc.GetTextExtent(str.Translation(), &strW, &strH, &strD, &strL);
+
+   int strPos, strLen, strLeft, strTop;
+   if (orientation == wxHORIZONTAL) {
+      strLen = strW;
+      strPos = pos - strW / 2;
+      if (strPos < 0)
+         strPos = 0;
+      if (strPos + strW >= length)
+         strPos = length - strW;
+      strLeft = left + strPos;
+      if (flip)
+         strTop = top + 4;
+      else
+         strTop = -strH - lead;
+      //         strTop = top - lead + 4;// More space was needed...
+   }
+   else {
+      strLen = strH;
+      strPos = pos - strH / 2;
+      if (strPos < 0)
+         strPos = 0;
+      if (strPos + strH >= length)
+         strPos = length - strH;
+      strTop = top + strPos;
+      if (flip)
+         strLeft = left + 5;
+      else
+         strLeft = -strW - 6;
+   }
+
+   // FIXME: we shouldn't even get here if strPos < 0.
+   // Ruler code currently does  not handle very small or
+   // negative sized windows (i.e. don't draw) properly.
+   if (strPos < 0)
+      return { {}, lab };
+
+   // See if any of the pixels we need to draw this
+   // label is already covered
+
+   int i;
+   for (i = 0; i < strLen; i++)
+      if (bits[strPos + i])
+         return { {}, lab };
+
+   // If not, position the label
+
+   lab.lx = strLeft;
+   lab.ly = strTop;
+
+   // And mark these pixels, plus some surrounding
+   // ones (the spacing between labels), as covered
+   int leftMargin = spacing;
+   if (strPos < leftMargin)
+      leftMargin = strPos;
+   strPos -= leftMargin;
+   strLen += leftMargin;
+
+   int rightMargin = spacing;
+   if (strPos + strLen > length - spacing)
+      rightMargin = length - strPos - strLen;
+   strLen += rightMargin;
+
+   for (i = 0; i < strLen; i++)
+      bits[strPos + i] = true;
+
+   // Good to display the text
+   lab.text = str;
+   return { { strLeft, strTop, strW, strH }, lab };
+}
+
 bool Updater::Tick(wxDC& dc,
    int pos, double d, const TickSizes& tickSizes, wxFont font,
    // in/out:
-   TickOutputs outputs) const
+   TickOutputs outputs,
+   const RulerStruct& context) const
 {
-   const double mDbMirrorValue = mRuler.mDbMirrorValue;
-   const int mLength = mRuler.mLength;
-   const Ruler::RulerFormat mFormat = mRuler.mFormat;
+   const double mDbMirrorValue = context.mDbMirrorValue;
+   const int mLength = context.mLength;
+   const RulerFormat mFormat = context.mFormat;
 
-   const int mLeft = mRuler.mLeft;
-   const int mTop = mRuler.mTop;
-   const int mBottom = mRuler.mBottom;
-   const int mRight = mRuler.mRight;
-   const int mOrientation = mRuler.mOrientation;
+   const int mLeft = context.mLeft;
+   const int mTop = context.mTop;
+   const int mBottom = context.mBottom;
+   const int mRight = context.mRight;
+   const int mOrientation = context.mOrientation;
 
-   const Ruler::Fonts& mFonts = *mRuler.mpFonts;
-   const TranslatableString mUnits = mRuler.mUnits;
-   const int mSpacing = mRuler.mSpacing;
-   const bool mFlip = mRuler.mFlip;
+   const RulerStruct::Fonts& mFonts = *context.mpFonts;
+   const TranslatableString mUnits = context.mUnits;
+   const int mSpacing = context.mSpacing;
+   const bool mFlip = context.mFlip;
 
    // Bug 521.  dB view for waveforms needs a 2-sided scale.
    if ((mDbMirrorValue > 1.0) && (-d > mDbMirrorValue))
@@ -489,12 +603,12 @@ bool Updater::Tick(wxDC& dc,
    if (outputs.labels.size() >= mLength)
       return false;
 
-   Ruler::Label lab;
+   Label lab;
    lab.value = d;
    lab.pos = pos;
    lab.text = tickSizes.LabelString(d, mFormat, mUnits);
 
-   const auto result = Ruler::MakeTick(
+   const auto result = MakeTick(
       lab,
       dc, font,
       outputs.bits,
@@ -510,15 +624,16 @@ bool Updater::Tick(wxDC& dc,
 
 bool Updater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    // in/out:
-   TickOutputs outputs) const
+   TickOutputs outputs,
+   const RulerStruct& context) const
 {
-   const int mLeft = mRuler.mLeft;
-   const int mTop = mRuler.mTop;
-   const int mOrientation = mRuler.mOrientation;
+   const int mLeft = context.mLeft;
+   const int mTop = context.mTop;
+   const int mOrientation = context.mOrientation;
 
-   const Ruler::Fonts& mFonts = *mRuler.mpFonts;
-   const int mSpacing = mRuler.mSpacing;
-   const bool mFlip = mRuler.mFlip;
+   const RulerStruct::Fonts& mFonts = *context.mpFonts;
+   const int mSpacing = context.mSpacing;
+   const bool mFlip = context.mFlip;
 
    // FIXME: We don't draw a tick if of end of our label arrays
    // But we shouldn't have an array of labels.
@@ -527,10 +642,10 @@ bool Updater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
 
    //This should only used in the mCustom case
 
-   Ruler::Label lab;
+   Label lab;
    lab.value = 0.0;
 
-   const auto result = Ruler::MakeTick(
+   const auto result = MakeTick(
       lab,
 
       dc, font,
@@ -545,8 +660,12 @@ bool Updater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    return !rect.IsEmpty();
 }
 
+Updater::~Updater() = default;
+
 // Theoretically this helps
+
 void Updater::Update(
    wxDC& dc, const Envelope* envelope,
-   UpdateOutputs& allOutputs
+   UpdateOutputs& allOutputs,
+   const RulerStruct& context
 ) const {}

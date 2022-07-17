@@ -14,13 +14,14 @@
 #include "Updater.h"
 
 struct CustomUpdater : public Updater {
-   explicit CustomUpdater(const Ruler& ruler, const ZoomInfo* z)
-      : Updater{ ruler, NULL }
+   explicit CustomUpdater(const ZoomInfo* z = nullptr)
+      : Updater{ z }
    {}
+   ~CustomUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
 };
 

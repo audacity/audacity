@@ -724,7 +724,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                S.GetParent(), wxID_ANY, wxVERTICAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
-               Ruler::LinearDBFormat,
+               LinearDBFormat,
                XO("dB"),
                RulerPanel::Options{}
                   .LabelEdges(true)
@@ -781,7 +781,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             S.GetParent(), wxID_ANY, wxHORIZONTAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ mLoFreq, mHiFreq },
-            Ruler::IntFormat,
+            IntFormat,
             XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
@@ -2290,7 +2290,7 @@ void EffectEqualization::UpdateDraw()
    {
       EnvLogToLin();
       mEnvelope = mLinEnvelope.get();
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       mFreqRuler->ruler.SetRange(0, mHiFreq);
    }
 
@@ -2322,7 +2322,7 @@ void EffectEqualization::UpdateGraphic()
 
       EnvLinToLog();
       mEnvelope = mLogEnvelope.get();
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
    }
 
@@ -2911,7 +2911,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    mLin = mLinFreq->IsChecked();
    if(IsLinear())  //going from log to lin freq scale
    {
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       mFreqRuler->ruler.SetRange(0, mHiFreq);
       EnvLogToLin();
       mEnvelope = mLinEnvelope.get();
@@ -2919,7 +2919,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    }
    else  //going from lin to log freq scale
    {
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
       EnvLinToLog();
       mEnvelope = mLogEnvelope.get();
