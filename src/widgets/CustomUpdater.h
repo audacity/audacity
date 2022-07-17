@@ -13,16 +13,19 @@
 
 #include "Updater.h"
 
-struct CustomUpdater : public Updater {
-   explicit CustomUpdater(const Ruler& ruler, const ZoomInfo* z)
-      : Updater{ ruler, NULL }
-   {}
+struct CustomUpdater final : public Updater {
+   using Updater::Updater;
    ~CustomUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
+
+   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
+      TickOutputs outputs,
+      const RulerStruct& context
+   ) const;
 };
 
 #endif

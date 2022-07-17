@@ -11,27 +11,83 @@
 #ifndef __AUDACITY_UPDATER__
 #define __AUDACITY_UPDATER__
 
-#include "Ruler.h"
 #include "ViewInfo.h" // for children
 #include "Envelope.h"
+#include "NumberScale.h" // member variable
+#include <wx/font.h>
+
+class wxDC;
+class wxColor;
+
+enum RulerFormat {
+   IntFormat,
+   RealFormat,
+   RealLogFormat,
+   TimeFormat,
+   LinearDBFormat,
+};
+
+struct RulerStruct {
+   struct Fonts {
+      wxFont major, minor, minorMinor;
+      int lead;
+   };
+
+   double mMin{ 0.0 };
+   double mHiddenMin{ 0.0 };
+   double mMax{ 100.0 };
+   double mHiddenMax{ 100.0 };
+
+   int mOrientation{ wxHORIZONTAL };
+   int mSpacing{ 6 };
+   RulerFormat mFormat{ RealFormat };
+   bool mFlip{ false };
+   bool mLabelEdges{ false };
+
+   int mLeft{ -1 };
+   int mTop{ -1 };
+   int mRight{ -1 };
+   int mBottom{ -1 };
+   int mLength{ 0 };
+
+   double mDbMirrorValue{ 0.0 };
+
+
+   mutable std::unique_ptr<Fonts> mpFonts;
+   TranslatableString mUnits;
+
+   int mLeftOffset;
+
+   NumberScale mNumberScale;
+};
 
 struct Updater {
-   const Ruler& mRuler;
+
+   struct Label {
+      double value;
+      int pos;
+      int lx, ly;
+      TranslatableString text;
+
+      void Draw(wxDC& dc, bool twoTone, wxColour c) const;
+   };
+   using Labels = std::vector<Label>;
+
+   using Bits = std::vector< bool >;
+
    const ZoomInfo* zoomInfo;
 
-   explicit Updater(const Ruler& ruler, const ZoomInfo* z)
-      : mRuler{ ruler }
-      , zoomInfo{ z }
+   explicit Updater(const ZoomInfo* z = nullptr)
+      : zoomInfo{ z }
    {}
    virtual ~Updater() = 0;
 
-   struct TickOutputs { Ruler::Labels& labels; Ruler::Bits& bits; wxRect& box; };
+   struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };
    struct UpdateOutputs {
-      Ruler::Labels& majorLabels, & minorLabels, & minorMinorLabels;
-      Ruler::Bits& bits;
+      Labels& majorLabels, & minorLabels, & minorMinorLabels;
+      Bits& bits;
       wxRect& box;
    };
-
 
    struct TickSizes
    {
@@ -42,10 +98,10 @@ struct Updater {
 
       int          mDigits;
 
-      TickSizes(double UPP, int orientation, Ruler::RulerFormat format, bool log);
+      TickSizes(double UPP, int orientation, RulerFormat format, bool log);
 
       TranslatableString LabelString(
-         double d, Ruler::RulerFormat format, const TranslatableString& units)
+         double d, RulerFormat format, const TranslatableString& units)
          const;
    };
 
@@ -59,24 +115,28 @@ struct Updater {
       return env.SolveIntegralOfInverse(t0, length);
    }
 
+   static std::pair< wxRect, Label > MakeTick(
+      Updater::Label lab,
+      wxDC& dc, wxFont font,
+      std::vector<bool>& bits,
+      int left, int top, int spacing, int lead,
+      bool flip, int orientation);
+
    bool Tick(wxDC& dc,
       int pos, double d, const TickSizes& tickSizes, wxFont font,
-      TickOutputs outputs
-   ) const;
-
-   // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
-      TickOutputs outputs
+      TickOutputs outputs,
+      const RulerStruct& context
    ) const;
 
    void BoxAdjust(
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs,
+      const RulerStruct& context
    )
       const;
 
    virtual void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct &context
    )// Envelope *speedEnv, long minSpeed, long maxSpeed )
       const = 0;
 };
