@@ -74,9 +74,9 @@ void TimeTrack::CleanState()
    SetName(GetDefaultName());
 
    mRuler = std::make_unique<Ruler>();
-   mRuler->SetUpdater(std::make_unique<LinearUpdater>(*(mRuler.get()), mZoomInfo), 0);
+   mRuler->SetUpdater(std::make_unique<LinearUpdater>( mZoomInfo ), 0);
    mRuler->SetLabelEdges(false);
-   mRuler->SetFormat(Ruler::TimeFormat);
+   mRuler->SetFormat(TimeFormat);
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
@@ -102,9 +102,9 @@ TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mRuler = std::make_unique<Ruler>();
-   mRuler->SetUpdater(std::make_unique<LinearUpdater>(*(mRuler.get()), mZoomInfo), 0);
+   mRuler->SetUpdater(std::make_unique<LinearUpdater>( mZoomInfo ), 0);
    mRuler->SetLabelEdges(false);
-   mRuler->SetFormat(Ruler::TimeFormat);
+   mRuler->SetFormat(TimeFormat);
 }
 
 // Copy the track metadata but not the contents.

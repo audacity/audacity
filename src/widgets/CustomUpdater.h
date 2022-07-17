@@ -16,15 +16,18 @@
 
 class CustomUpdater : public RulerUpdater {
 public:
-   explicit CustomUpdater(const Ruler& ruler, const ZoomInfo* z)
-      : RulerUpdater{ ruler, NULL }
-   {}
+   using RulerUpdater::RulerUpdater;
    ~CustomUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
+
+   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
+      TickOutputs outputs,
+      const RulerStruct& context
+   ) const;
 };
 
 #endif

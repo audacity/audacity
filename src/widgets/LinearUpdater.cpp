@@ -12,29 +12,30 @@
 #include "LinearUpdater.h"
 
 void LinearUpdater::Update(
-   wxDC& dc, const Envelope* envelope, UpdateOutputs& allOutputs) const
+   wxDC& dc, const Envelope* envelope,
+   UpdateOutputs& allOutputs, const RulerStruct& context) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
 
-   const double mDbMirrorValue = mRuler.mDbMirrorValue;
-   const int mLength = mRuler.mLength;
-   const Ruler::RulerFormat mFormat = mRuler.mFormat;
+   const double mDbMirrorValue = context.mDbMirrorValue;
+   const int mLength = context.mLength;
+   const RulerFormat mFormat = context.mFormat;
 
-   const int mLeft = mRuler.mLeft;
-   const int mTop = mRuler.mTop;
-   const int mBottom = mRuler.mBottom;
-   const int mRight = mRuler.mRight;
-   const int mOrientation = mRuler.mOrientation;
+   const int mLeft = context.mLeft;
+   const int mTop = context.mTop;
+   const int mBottom = context.mBottom;
+   const int mRight = context.mRight;
+   const int mOrientation = context.mOrientation;
 
-   const double mMin = mRuler.mMin;
-   const double mMax = mRuler.mMax;
-   const double mHiddenMin = mRuler.mHiddenMin;
-   const double mHiddenMax = mRuler.mHiddenMax;
+   const double mMin = context.mMin;
+   const double mMax = context.mMax;
+   const double mHiddenMin = context.mHiddenMin;
+   const double mHiddenMax = context.mHiddenMax;
 
-   const Ruler::Fonts& mFonts = *mRuler.mpFonts;
-   const bool mLabelEdges = mRuler.mLabelEdges;
-   const int mLeftOffset = mRuler.mLeftOffset;
+   const RulerStruct::Fonts& mFonts = *context.mpFonts;
+   const bool mLabelEdges = context.mLabelEdges;
+   const int mLeftOffset = context.mLeftOffset;
 
    // Use the "hidden" min and max to determine the tick size.
    // That may make a difference with fisheye.
@@ -45,7 +46,7 @@ void LinearUpdater::Update(
 
    auto TickAtValue =
       [this, &tickSizes, &dc, &majorOutputs, &mFonts, mOrientation,
-         mMin, mMax, mLength, mLeftOffset, mRight, mBottom]
+         mMin, mMax, mLength, mLeftOffset, mRight, mBottom, &context]
    (double value) -> int {
       // Make a tick only if the value is strictly between the bounds
       if (value <= std::min(mMin, mMax))
@@ -65,7 +66,7 @@ void LinearUpdater::Update(
 
       const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
       if (mid >= 0 && mid < iMaxPos)
-         Tick(dc, mid, value, tickSizes, mFonts.major, majorOutputs);
+         Tick(dc, mid, value, tickSizes, mFonts.major, majorOutputs, context);
       else
          return -1;
 
@@ -88,8 +89,8 @@ void LinearUpdater::Update(
 
    // Extreme values
    if (mLabelEdges) {
-      Tick(dc, 0, mMin, tickSizes, mFonts.major, majorOutputs);
-      Tick(dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs);
+      Tick(dc, 0, mMin, tickSizes, mFonts.major, majorOutputs, context);
+      Tick(dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs, context);
    }
 
    if (!mDbMirrorValue) {
@@ -149,7 +150,7 @@ void LinearUpdater::Update(
             bool major = jj == 0;
             tickSizes.useMajor = major;
             bool ticked = Tick(dc, ii, sign * step * denom, tickSizes,
-               font, outputs);
+               font, outputs, context);
             if (!major && !ticked) {
                nDroppedMinorLabels++;
             }
@@ -173,11 +174,11 @@ void LinearUpdater::Update(
 
    // Left and Right Edges
    if (mLabelEdges) {
-      Tick(dc, 0, mMin, tickSizes, mFonts.major, majorOutputs);
-      Tick(dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs);
+      Tick(dc, 0, mMin, tickSizes, mFonts.major, majorOutputs, context);
+      Tick(dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs, context);
    }
 
-   BoxAdjust(allOutputs);
+   BoxAdjust(allOutputs, context);
 }
 
 LinearUpdater::~LinearUpdater() = default;

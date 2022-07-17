@@ -12,23 +12,24 @@
 #include "LogarithmicUpdater.h"
 
 void LogarithmicUpdater::Update(
-   wxDC& dc, const Envelope* envelope, UpdateOutputs& allOutputs) const
+   wxDC& dc, const Envelope* envelope,
+   UpdateOutputs& allOutputs, const RulerStruct& context) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
 
-   const int mLength = mRuler.mLength;
-   const Ruler::RulerFormat mFormat = mRuler.mFormat;
+   const int mLength = context.mLength;
+   const RulerFormat mFormat = context.mFormat;
 
-   const int mOrientation = mRuler.mOrientation;
+   const int mOrientation = context.mOrientation;
 
-   const double mMin = mRuler.mMin;
-   const double mMax = mRuler.mMax;
-   const double mHiddenMin = mRuler.mHiddenMin;
-   const double mHiddenMax = mRuler.mHiddenMax;
+   const double mMin = context.mMin;
+   const double mMax = context.mMax;
+   const double mHiddenMin = context.mHiddenMin;
+   const double mHiddenMax = context.mHiddenMax;
 
-   const Ruler::Fonts& mFonts = *mRuler.mpFonts;
-   const NumberScale mNumberScale = mRuler.mNumberScale;
+   const RulerStruct::Fonts& mFonts = *context.mpFonts;
+   const NumberScale mNumberScale = context.mNumberScale;
 
    auto numberScale = (mNumberScale == NumberScale{})
       ? NumberScale(nstLogarithmic, mMin, mMax)
@@ -56,7 +57,7 @@ void LogarithmicUpdater::Update(
       {  val = decade;
       if (val >= rMin && val < rMax) {
          const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-         Tick(dc, pos, val, tickSizes, mFonts.major, majorOutputs);
+         Tick(dc, pos, val, tickSizes, mFonts.major, majorOutputs, context);
       }
       }
       decade *= step;
@@ -82,7 +83,7 @@ void LogarithmicUpdater::Update(
          val = decade * j;
          if (val >= rMin && val < rMax) {
             const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-            Tick(dc, pos, val, tickSizes, mFonts.minor, minorOutputs);
+            Tick(dc, pos, val, tickSizes, mFonts.minor, minorOutputs, context);
          }
       }
       decade *= step;
@@ -103,14 +104,14 @@ void LogarithmicUpdater::Update(
       allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
    for (int i = 0; i <= steps; i++) {
       // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
-      if (!(mFormat == Ruler::IntFormat && decade < 10.0)) {
+      if (!(mFormat == IntFormat && decade < 10.0)) {
          for (int f = start; f != (int)(end); f += mstep) {
             if ((int)(f / 10) != f / 10.0f) {
                val = decade * f / 10;
                if (val >= rMin && val < rMax) {
                   const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
                   Tick(dc, pos, val, tickSizes,
-                     mFonts.minorMinor, minorMinorOutputs);
+                     mFonts.minorMinor, minorMinorOutputs, context);
                }
             }
          }
@@ -118,7 +119,7 @@ void LogarithmicUpdater::Update(
       decade *= step;
    }
 
-   BoxAdjust(allOutputs);
+   BoxAdjust(allOutputs, context);
 }
 
 LogarithmicUpdater::~LogarithmicUpdater() = default;

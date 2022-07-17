@@ -653,7 +653,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    vRuler.SetBounds(0, 0, width, height);
    vRuler.SetOrientation(wxVERTICAL);
    vRuler.SetRange(0, -rangeDB);
-   vRuler.SetFormat(Ruler::LinearDBFormat);
+   vRuler.SetFormat(LinearDBFormat);
    vRuler.SetUnits(XO("dB"));
    vRuler.GetMaxSize(&w, NULL);
 
@@ -661,7 +661,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    hRuler.SetBounds(0, 0, width, height);
    hRuler.SetOrientation(wxHORIZONTAL);
    hRuler.SetRange(-rangeDB, 0);
-   hRuler.SetFormat(Ruler::LinearDBFormat);
+   hRuler.SetFormat(LinearDBFormat);
    hRuler.SetUnits(XO("dB"));
    hRuler.SetFlip(true);
    hRuler.GetMaxSize(NULL, &h);

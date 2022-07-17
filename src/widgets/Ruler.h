@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_RULER__
 #define __AUDACITY_RULER__
 
+#include "RulerUpdater.h" // member variable
 #include "NumberScale.h" // member variable
 
 #include <wx/colour.h> // member variable
@@ -21,20 +22,11 @@ class wxDC;
 
 class Envelope;
 class ZoomInfo;
-class RulerUpdater;
 
 #include "TranslatableString.h"
 
 class AUDACITY_DLL_API Ruler {
  public:
-
-   enum RulerFormat {
-      IntFormat,
-      RealFormat,
-      RealLogFormat,
-      TimeFormat,
-      LinearDBFormat,
-   };
 
    //
    // Constructor / Destructor
@@ -64,11 +56,10 @@ class AUDACITY_DLL_API Ruler {
    // (at the center of the pixel, in both cases)
    void SetRange(double min, double max, double hiddenMin, double hiddenMax);
 
-   // Set the kind of updater the ruler will use
-   // (Linear, Logarithmic, Custom, etc.)
+   // Set the kind of updater the ruler will use (Linear, Logarithmic, Custom, etc.)
    void SetUpdater(std::unique_ptr<RulerUpdater> pUpdater);
 
-   // An overload to replace SetUseZoomInfo
+   // An overload to also set ZoomInfo while adjusting updater
    void SetUpdater(std::unique_ptr<RulerUpdater> pUpdater, int leftOffset);
 
    //
@@ -103,11 +94,7 @@ class AUDACITY_DLL_API Ruler {
 
    // Good defaults are provided, but you can override here
    void SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont);
-   struct Fonts {
-      wxFont major, minor, minorMinor;
-      int lead;
-   };
-   Fonts GetFonts() const;
+   RulerStruct::Fonts GetFonts() const;
 
    void SetNumberScale(const NumberScale &scale);
 
@@ -156,23 +143,6 @@ class AUDACITY_DLL_API Ruler {
    void Invalidate();
 
  private:
-   friend class RulerUpdater;
-   friend class LinearUpdater;
-   friend class LogarithmicUpdater;
-   friend class CustomUpdater;
-
-   class Label {
-    public:
-      double value;
-      int pos;
-      int lx, ly;
-      TranslatableString text;
-
-      void Draw(wxDC &dc, bool twoTone, wxColour c) const;
-   };
-   using Labels = std::vector<Label>;
-
-   using Bits = std::vector< bool >;
 
    void ChooseFonts( wxDC &dc ) const;
 
@@ -183,53 +153,29 @@ public:
    bool mbTicksAtExtremes;
 
 private:
+   RulerStruct mRulerStruct;
+
    wxColour mTickColour;
    wxPen mPen;
 
-   int          mLeft, mTop, mRight, mBottom;
-   int          mLength;
-
-   std::unique_ptr<Fonts> mpUserFonts;
-   mutable std::unique_ptr<Fonts> mpFonts;
+   std::unique_ptr<RulerStruct::Fonts> mpUserFonts;
 
    std::unique_ptr<RulerUpdater> mpUpdater;
 
-   double       mMin, mMax;
-   double       mHiddenMin, mHiddenMax;
-
-   Bits mUserBits;
-
-   static std::pair< wxRect, Label > MakeTick(
-      Label lab,
-      wxDC &dc, wxFont font,
-      std::vector<bool> &bits,
-      int left, int top, int spacing, int lead,
-      bool flip, int orientation );
+   RulerUpdater::Bits mUserBits;
 
    struct Cache;
    mutable std::unique_ptr<Cache> mpCache;
 
    // Returns 'zero' label coordinate (for grid drawing)
-   int FindZero( const Labels &labels ) const;
+   int FindZero( const RulerUpdater::Labels &labels ) const;
 
    int GetZeroPosition() const;
 
-   int          mOrientation;
-   int          mSpacing;
-   double       mDbMirrorValue;
    bool         mHasSetSpacing;
-   bool         mLabelEdges;
-   RulerFormat  mFormat;
-   bool         mLog;
-   bool         mFlip;
-   bool         mCustom;
    bool         mbMinor;
-   TranslatableString mUnits;
    bool         mTwoTone;
    const ZoomInfo *mUseZoomInfo;
-   int          mLeftOffset;
-
-   NumberScale mNumberScale;
 };
 
 #endif //define __AUDACITY_RULER__

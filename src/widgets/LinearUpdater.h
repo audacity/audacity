@@ -16,14 +16,12 @@
 
 class LinearUpdater final : public RulerUpdater {
 public:
-   explicit LinearUpdater(const Ruler& ruler, const ZoomInfo* z)
-      : RulerUpdater{ ruler, z }
-   {}
+   using RulerUpdater::RulerUpdater;
    ~LinearUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
 };
 

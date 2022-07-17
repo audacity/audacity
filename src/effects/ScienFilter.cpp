@@ -278,7 +278,7 @@ std::unique_ptr<EffectEditor> EffectScienFilter::PopulateOrExchange(
             S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 30.0, -120.0 },
-            Ruler::LinearDBFormat,
+            LinearDBFormat,
             XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
@@ -336,7 +336,7 @@ std::unique_ptr<EffectEditor> EffectScienFilter::PopulateOrExchange(
          S.GetParent(), wxID_ANY, wxHORIZONTAL,
          wxSize{ 100, 100 }, // Ruler can't handle small sizes
          RulerPanel::Range{ mLoFreq, mNyquist },
-         Ruler::IntFormat,
+         IntFormat,
          {},
          RulerPanel::Options{}
             .Log(true)

@@ -109,7 +109,7 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
                S.GetParent(), wxID_ANY, wxHORIZONTAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ loFreq, hiFreq },
-               Ruler::IntFormat,
+               IntFormat,
                XO("Hz"),
                RulerPanel::Options{}
                   .Log(true)
@@ -123,7 +123,7 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
                S.GetParent(), wxID_ANY, wxVERTICAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
-               Ruler::LinearDBFormat,
+               LinearDBFormat,
                XO("dB"),
                RulerPanel::Options{}
                   .LabelEdges(true)
@@ -784,7 +784,7 @@ void EqualizationUI::UpdateDraw()
    if(lin) // do not use IsLinear() here
    {
       mBands.EnvLogToLin();
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       mFreqRuler->ruler.SetRange(0, hiFreq);
    }
 
@@ -820,7 +820,7 @@ void EqualizationUI::UpdateGraphic()
       }
 
       mBands.EnvLinToLog();
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
       mFreqRuler->ruler.SetRange(loFreq, hiFreq);
    }
 
@@ -975,14 +975,14 @@ void EqualizationUI::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    lin = mLinFreq->IsChecked();
    if(parameters.IsLinear())  //going from log to lin freq scale
    {
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       mFreqRuler->ruler.SetRange(0, hiFreq);
       mBands.EnvLogToLin();
       lin = true;
    }
    else  //going from lin to log freq scale
    {
-      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(mFreqRuler->ruler, nullptr));
+      mFreqRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
       mFreqRuler->ruler.SetRange(loFreq, hiFreq);
       mBands.EnvLinToLog();
       lin = false;

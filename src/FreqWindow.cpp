@@ -292,7 +292,7 @@ void FrequencyPlotDialog::Populate()
             S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 0.0, -dBRange },
-            Ruler::LinearDBFormat,
+            LinearDBFormat,
             XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
@@ -375,7 +375,7 @@ void FrequencyPlotDialog::Populate()
             S.GetParent(), wxID_ANY, wxHORIZONTAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 10, 20000 },
-            Ruler::RealFormat,
+            RealFormat,
             XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
@@ -673,10 +673,10 @@ void FrequencyPlotDialog::DrawPlot()
    if (!mData || mDataLen < mWindowSize || mAnalyst->GetProcessedSize() == 0) {
       wxMemoryDC memDC;
 
-      vRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(vRuler->ruler, nullptr));
+      vRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       vRuler->ruler.SetRange(0.0, -dBRange);
 
-      hRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(hRuler->ruler, nullptr));
+      hRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       hRuler->ruler.SetRange(0, 1);
 
       DrawBackground(memDC);
@@ -713,10 +713,10 @@ void FrequencyPlotDialog::DrawPlot()
 
    if (mAlg == SpectrumAnalyst::Spectrum) {
       vRuler->ruler.SetUnits(XO("dB"));
-      vRuler->ruler.SetFormat(Ruler::LinearDBFormat);
+      vRuler->ruler.SetFormat(LinearDBFormat);
    } else {
       vRuler->ruler.SetUnits({});
-      vRuler->ruler.SetFormat(Ruler::RealFormat);
+      vRuler->ruler.SetFormat(RealFormat);
    }
    int w1, w2, h;
    vRuler->ruler.GetMaxSize(&w1, &h);
@@ -751,19 +751,19 @@ void FrequencyPlotDialog::DrawPlot()
       if (mLogAxis)
       {
          xStep = pow(2.0f, (log(xRatio) / log(2.0f)) / width);
-         hRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>(hRuler->ruler, nullptr));
+         hRuler->ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
       }
       else
       {
          xStep = (xMax - xMin) / width;
-         hRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(hRuler->ruler, nullptr));
+         hRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       }
       hRuler->ruler.SetUnits(XO("Hz"));
    } else {
       xMin = 0;
       xMax = mAnalyst->GetProcessedSize() / mRate;
       xStep = (xMax - xMin) / width;
-      hRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>(hRuler->ruler, nullptr));
+      hRuler->ruler.SetUpdater(std::make_unique<LinearUpdater>());
       /* i18n-hint: short form of 'seconds'.*/
       hRuler->ruler.SetUnits(XO("s"));
    }

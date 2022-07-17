@@ -1213,7 +1213,7 @@ void MeterPanel::SetActiveStyle(Style newStyle)
 
    if (mDB)
    {
-      mRuler.SetFormat(Ruler::LinearDBFormat);
+      mRuler.SetFormat(LinearDBFormat);
       if (mStyle == HorizontalStereo || mStyle == HorizontalStereoCompact)
       {
          mRuler.SetOrientation(wxHORIZONTAL);
@@ -1227,7 +1227,7 @@ void MeterPanel::SetActiveStyle(Style newStyle)
    }
    else
    {
-      mRuler.SetFormat(Ruler::RealFormat);
+      mRuler.SetFormat(RealFormat);
       if (mStyle == HorizontalStereo || mStyle == HorizontalStereoCompact)
       {
          mRuler.SetOrientation(wxHORIZONTAL);

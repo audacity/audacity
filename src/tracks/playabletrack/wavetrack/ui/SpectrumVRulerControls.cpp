@@ -157,7 +157,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           */
          vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(Ruler::RealFormat);
+         vruler->SetFormat(RealFormat);
          vruler->SetLabelEdges(true);
          // use kHz in scale, if appropriate
          if (maxFreq >= 2000) {
@@ -170,7 +170,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
             vruler->SetRange((int)(maxFreq), (int)(minFreq));
             vruler->SetUnits({});
          }
-         vruler->SetUpdater(std::make_unique<LinearUpdater>(*vruler, nullptr));
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
       }
          break;
       case SpectrogramSettings::stLogarithmic:
@@ -188,11 +188,11 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           */
          vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(Ruler::IntFormat);
+         vruler->SetFormat(IntFormat);
          vruler->SetLabelEdges(true);
          vruler->SetRange(maxFreq, minFreq);
          vruler->SetUnits({});
-         vruler->SetUpdater(std::make_unique<LogarithmicUpdater>(*vruler, nullptr));
+         vruler->SetUpdater(std::make_unique<LogarithmicUpdater>());
          NumberScale scale(settings.GetScale(minFreq, maxFreq).Reversal());
          vruler->SetNumberScale(scale);
       }

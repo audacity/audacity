@@ -16,14 +16,12 @@
 
 class LogarithmicUpdater final : public RulerUpdater {
 public:
-   explicit LogarithmicUpdater(const Ruler& ruler, const ZoomInfo* z)
-      : RulerUpdater{ ruler, NULL }
-   {}
+   using RulerUpdater::RulerUpdater;
    ~LogarithmicUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs
+      UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
 };
 
