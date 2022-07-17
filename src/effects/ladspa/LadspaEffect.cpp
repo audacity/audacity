@@ -893,7 +893,7 @@ struct LadspaEffect::Instance
 {
    using PerTrackEffect::Instance::Instance;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
@@ -963,7 +963,7 @@ sampleCount LadspaEffect::Instance::GetLatency(
 }
 
 bool LadspaEffect::Instance::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, ChannelNames)
 {
    /* Instantiate the plugin */
    if (!mReady) {

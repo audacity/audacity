@@ -144,7 +144,7 @@ unsigned EffectToneGen::GetAudioOutCount() const
 }
 
 bool EffectToneGen::ProcessInitialize(
-   EffectSettings &, double sampleRate, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double sampleRate, ChannelNames chanMap)
 {
    mSampleRate = sampleRate;
    mPositionInCycles = 0.0;

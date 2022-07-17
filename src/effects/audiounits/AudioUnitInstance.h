@@ -37,7 +37,7 @@ private:
    size_t SetBlockSize(size_t maxBlockSize) override;
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)

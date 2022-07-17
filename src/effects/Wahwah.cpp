@@ -136,7 +136,7 @@ struct EffectWahwah::Instance
    {}
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
@@ -219,7 +219,7 @@ unsigned EffectWahwah::GetAudioOutCount() const
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(settings, mMaster, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)

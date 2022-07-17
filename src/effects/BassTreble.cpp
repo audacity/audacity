@@ -124,7 +124,7 @@ unsigned EffectBassTreble::GetAudioOutCount() const
 }
 
 bool EffectBassTreble::ProcessInitialize(
-   EffectSettings &, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &, double sampleRate, ChannelNames)
 {
    InstanceInit(mMaster, sampleRate);
    return true;

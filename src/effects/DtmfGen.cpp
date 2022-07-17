@@ -135,7 +135,7 @@ struct EffectDtmf::Instance
    {}
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    override;
@@ -154,7 +154,7 @@ struct EffectDtmf::Instance
 };
 
 bool EffectDtmf::Instance::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, ChannelNames)
 {
    mSampleRate = sampleRate;
 

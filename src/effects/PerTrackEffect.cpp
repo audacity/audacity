@@ -33,7 +33,7 @@ bool PerTrackEffect::Instance::Process(EffectSettings &settings)
 }
 
 bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &,
-   double, sampleCount, ChannelNames)
+   double, ChannelNames)
 {
    return true;
 }
@@ -428,7 +428,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(blockSize > 0);
 
    // Give the plugin a chance to initialize
-   if (!instance.ProcessInitialize(settings, sampleRate, len, map))
+   if (!instance.ProcessInitialize(settings, sampleRate, map))
       return false;
 
    { // Start scope for cleanup

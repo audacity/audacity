@@ -49,7 +49,7 @@ public:
       //! Called at start of destructive processing, for each (mono/stereo) track
       //! Default implementation does nothing, returns true
       virtual bool ProcessInitialize(EffectSettings &settings,
-         double sampleRate, sampleCount totalLen, ChannelNames chanMap);
+         double sampleRate, ChannelNames chanMap);
 
       //! Called at end of destructive processing, for each (mono/stereo) track
       //! Default implementation does nothing, returns true
