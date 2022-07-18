@@ -303,4 +303,32 @@ private:
    size_t mBufferSize{ 0 };
    size_t mBlockSize{ 0 };
 };
+
+class EffectStage final {
+public:
+   using Buffers = AudioGraph::Buffers;
+   using Instance = PerTrackEffect::Instance;
+
+   //! Completes `instance.ProcessInitialize()` or throws a std::exception
+   EffectStage(Buffers &inBuffers,
+      Instance &instance, EffectSettings &settings,
+      double sampleRate, ChannelNames map);
+   EffectStage(const EffectStage&) = delete;
+   EffectStage &operator =(const EffectStage &) = delete;
+   //! Finalizes the instance
+   ~EffectStage();
+
+   //! Produce exactly `curBlockSize` samples in `data`
+   /*!
+    @pre curBlockSize <= data.BlockSize()
+    @pre data.BlockSize() <= data.Remaining()
+    @return success
+    */
+   bool Process(const Buffers &data, size_t curBlockSize) const;
+
+private:
+   Buffers &mInBuffers;
+   Instance &mInstance;
+   EffectSettings &mSettings;
+};
 #endif

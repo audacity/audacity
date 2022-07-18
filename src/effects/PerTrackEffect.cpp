@@ -279,6 +279,46 @@ bool SampleTrackSource::Release()
    return !mPollUser || mPollUser(mPos);
 }
 
+EffectStage::EffectStage(Buffers &inBuffers,
+   Instance &instance, EffectSettings &settings,
+   double sampleRate, ChannelNames map
+)  : mInBuffers{ inBuffers }, mInstance{ instance }, mSettings{ settings }
+{
+   // Give the plugin a chance to initialize
+   if (!mInstance.ProcessInitialize(mSettings, sampleRate, map))
+      throw std::exception{};
+}
+
+EffectStage::~EffectStage()
+{
+   // Allow the plugin to cleanup
+   mInstance.ProcessFinalize();
+}
+
+bool EffectStage::Process(
+   const Buffers &data, size_t curBlockSize) const
+{
+   size_t processed{};
+   try {
+      processed = mInstance.ProcessBlock(mSettings,
+         mInBuffers.Positions(), data.Positions(), curBlockSize);
+   }
+   catch (const AudacityException &) {
+      // PRL: Bug 437:
+      // Pass this along to our application-level handler
+      throw;
+   }
+   catch (...) {
+      // PRL:
+      // Exceptions for other reasons, maybe in third-party code...
+      // Continue treating them as we used to, but I wonder if these
+      // should now be treated the same way.
+      return false;
+   }
+
+   return (processed == curBlockSize);
+}
+
 WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
    sampleCount start, bool isGenerator, bool isProcessor
 )  : mLeft{ left }, mpRight{ pRight }
@@ -528,17 +568,19 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
 
          // Go process the track(s)
-         bGoodResult = ProcessTrack(instance, settings, source, sink,
-            genLength, sampleRate, map,
-            inBuffers, outBuffers, numChannels);
-         // Put any remaining output
+         try {
+            bGoodResult = ProcessTrack(instance, settings, source, sink,
+               genLength, sampleRate, map,
+               inBuffers, outBuffers, numChannels);
+         } catch(const std::exception&) {
+            bGoodResult = false;
+         }
          if (bGoodResult)
             sink.Flush(outBuffers,
                mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
          if (!bGoodResult)
             return;
-
-         count++;
+         ++count;
       },
       [&](Track *t) {
          if (SyncLock::IsSyncLockSelected(t))
@@ -563,14 +605,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    const auto blockSize = inBuffers.BlockSize();
    assert(blockSize > 0);
 
-   // Give the plugin a chance to initialize
-   if (!instance.ProcessInitialize(settings, sampleRate, map))
-      return false;
-
-   auto cleanup = finally( [&] {
-      instance.ProcessFinalize();
-   } );
-
    // For each input block of samples, we pass it to the effect along with a
    // variable output location.  This output location is simply a pointer into a
    // much larger buffer.  This reduces the number of calls required to add the
@@ -590,6 +624,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    sampleCount delayRemaining = genLength ? *genLength : 0;
    bool latencyDone = false;
+
+   EffectStage stage{ inBuffers, instance, settings, sampleRate, map };
 
    // Invariant O: blockSize positions from outBuffers.Positions() available
    // Initially true because of preconditions that outBuffers has the same
@@ -619,29 +655,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       assert(source.Remaining() == 0 || curBlockSize > 0);
       assert(curBlockSize <= blockSize);
 
-      // Finally call the plugin to process the block
-      // Invariant O guarantees that this doesn't overflow outBuffers
-      size_t processed{};
-      try {
-         processed = instance.ProcessBlock(
-            settings, inBuffers.Positions(),
-            outBuffers.Positions(), curBlockSize);
-      }
-      catch( const AudacityException & WXUNUSED(e) ) {
-         // PRL: Bug 437:
-         // Pass this along to our application-level handler
-         throw;
-      }
-      catch(...) {
-         // PRL:
-         // Exceptions for other reasons, maybe in third-party code...
-         // Continue treating them as we used to, but I wonder if these
-         // should now be treated the same way.
+      // Invariant O satisfies the precondition
+      if (!stage.Process(outBuffers, curBlockSize))
          return false;
-      }
-      if (processed != curBlockSize)
-         return false;
-      wxUnusedVar(processed);
 
       // Get the current number of delayed samples and accumulate
       if (isProcessor && !latencyDone) {
