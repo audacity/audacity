@@ -39,6 +39,10 @@
 #include "UndoManager.h"
 #include "Prefs.h"
 
+#if wxUSE_ACCESSIBILITY
+#include "widgets/WindowAccessible.h"
+#endif
+
 namespace
 {
    template <typename Visitor>
@@ -312,8 +316,6 @@ namespace
          target->GetEventHandler()->ProcessEvent(event);
       }
 
-   private:
-
       int FindIndexInParent() const
       {
          auto parent = GetParent();
@@ -330,6 +332,8 @@ namespace
          }
          return -1;
       }
+
+   private:
 
       void OnKeyDown(wxKeyEvent& evt)
       {
@@ -470,6 +474,75 @@ namespace
       }
    };
 
+#if wxUSE_ACCESSIBILITY
+   class RealtimeEffectControlAx : public wxAccessible
+   {
+   public:
+      RealtimeEffectControlAx(wxWindow* win = nullptr) : wxAccessible(win) { }
+
+      wxAccStatus GetName(int childId, wxString* name) override
+      {
+         if(childId != wxACC_SELF)
+            return wxACC_NOT_IMPLEMENTED;
+         
+         if(auto movable = wxDynamicCast(GetWindow(), MovableControl))
+            //i18n-hint: argument - position of the effect in the effect stack
+            *name = wxString::Format(_("Effect %d"), movable->FindIndexInParent() + 1);
+         return wxACC_OK;
+      }
+
+      wxAccStatus GetChildCount(int* childCount) override
+      {
+         const auto window = GetWindow();
+         *childCount = window->GetChildren().size();
+         return wxACC_OK;
+      }
+
+      wxAccStatus GetChild(int childId, wxAccessible** child) override
+      {
+         if(childId == wxACC_SELF)
+            *child = this;
+         else
+         {
+            const auto window = GetWindow();
+            const auto& children = window->GetChildren();
+            const auto childIndex = childId - 1;
+            if(childIndex < children.size())
+               *child = children[childIndex]->GetAccessible();
+            else
+               *child = nullptr;
+         }
+         return wxACC_OK;
+      }
+
+      wxAccStatus GetRole(int childId, wxAccRole* role) override
+      {
+         if(childId != wxACC_SELF)
+            return wxACC_NOT_IMPLEMENTED;
+
+         *role = wxROLE_SYSTEM_PANE;
+         return wxACC_OK;
+      }
+
+      wxAccStatus GetState(int childId, long* state) override
+      {
+         if(childId != wxACC_SELF)
+            return wxACC_NOT_IMPLEMENTED;
+
+         const auto window = GetWindow();
+         if(!window->IsEnabled())
+            *state = wxACC_STATE_SYSTEM_UNAVAILABLE;
+         else
+         {
+            *state = wxACC_STATE_SYSTEM_FOCUSABLE;
+            if(window->HasFocus())
+               *state |= wxACC_STATE_SYSTEM_FOCUSED;
+         }
+         return wxACC_OK;
+      }
+   };
+#endif
+
    //UI control that represents individual effect from the effect list
    class RealtimeEffectControl : public ListNavigationEnabled<MovableControl>
    {
@@ -512,6 +585,7 @@ namespace
 
          //On/off button
          auto enableButton = safenew ThemedAButtonWrapper<AButton>(this);
+         enableButton->SetTranslatableLabel(XO("Power"));
          enableButton->SetImageIndices(0, bmpEffectOff, bmpEffectOff, bmpEffectOn, bmpEffectOn, bmpEffectOff);
          enableButton->SetButtonToggles(true);
          enableButton->SetBackgroundColorIndex(clrEffectListItemBackground);
@@ -539,6 +613,7 @@ namespace
          auto changeButton = safenew ThemedAButtonWrapper<AButton>(this);
          changeButton->SetImageIndices(0, bmpEffectSettingsNormal, bmpEffectSettingsHover, bmpEffectSettingsDown, bmpEffectSettingsHover, bmpEffectSettingsNormal);
          changeButton->SetBackgroundColorIndex(clrEffectListItemBackground);
+         changeButton->SetTranslatableLabel(XO("Replace effect"));
          changeButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnChangeButtonClicked, this);
          
          auto dragArea = safenew wxStaticBitmap(this, wxID_ANY, theTheme.Bitmap(bmpDragArea));
@@ -554,6 +629,10 @@ namespace
          vSizer->Add(sizer.release(), 0, wxUP | wxDOWN | wxEXPAND, 10);
 
          SetSizer(vSizer.release());
+
+#if wxUSE_ACCESSIBILITY
+         SetAccessible(safenew RealtimeEffectControlAx(this));
+#endif
       }
 
       static const PluginDescriptor *GetPlugin(const PluginID &ID) {
@@ -713,7 +792,6 @@ namespace
          Refresh(false);
          evt.Skip();
       }
-
    };
 
    static wxString GetSafeVendor(const PluginDescriptor& descriptor)
@@ -864,9 +942,12 @@ public:
       mAddEffectHint = addEffectHint;
 
       //TODO: set link
-      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, "x", "https://www.audacityteam.org");
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, _("Watch video"), "https://www.audacityteam.org");
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
+#if wxUSE_ACCESSIBILITY
+      safenew WindowAccessible(addEffectTutorialLink);
+#endif
       mAddEffectTutorialLink = addEffectTutorialLink;
 
       //indicates the insertion position of the item
@@ -1167,12 +1248,16 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
    auto header = safenew ThemedWindowWrapper<ListNavigationPanel>(this, wxID_ANY);
    header->SetMinClientSize({254, -1});
+#if wxUSE_ACCESSIBILITY
+   safenew WindowAccessible(header);
+#endif
    header->SetBackgroundColorIndex(clrMedium);
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       auto toggleEffects = safenew ThemedAButtonWrapper<AButton>(header);
       toggleEffects->SetImageIndices(0, bmpEffectOff, bmpEffectOff, bmpEffectOn, bmpEffectOn, bmpEffectOff);
       toggleEffects->SetButtonToggles(true);
+      toggleEffects->SetTranslatableLabel(XO("Power"));
       toggleEffects->SetBackgroundColorIndex(clrMedium);
       mToggleEffects = toggleEffects;
 
@@ -1204,6 +1289,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          hSizer->Add(vSizer.release(), 1, wxEXPAND | wxALL, 10);
       }
       auto close = safenew ThemedAButtonWrapper<AButton>(header);
+      close->SetTranslatableLabel(XO("Close"));
       close->SetImageIndices(0, bmpCloseNormal, bmpCloseHover, bmpCloseDown, bmpCloseHover, bmpCloseNormal);
       close->SetBackgroundColorIndex(clrMedium);
 
@@ -1218,6 +1304,8 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    auto effectList = safenew ThemedWindowWrapper<RealtimeEffectListWindow>(this, wxID_ANY);
    effectList->SetBackgroundColorIndex(clrMedium);
    vSizer->Add(effectList, 1, wxEXPAND);
+
+   mHeader = header;
    mEffectList = effectList;
 
    SetSizerAndFit(vSizer.release());
@@ -1343,6 +1431,8 @@ void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)
       mEffectList->SetTrack(mProject, track);
 
       mCurrentTrack = track;
+      //i18n-hint: argument - track name
+      mHeader->SetName(wxString::Format(_("Realtime effects for %s"), track->GetName()));
    }
    else
       ResetTrack();
@@ -1354,6 +1444,7 @@ void RealtimeEffectPanel::ResetTrack()
    mToggleEffects->Disable();
    mEffectList->ResetTrack();
    mCurrentTrack.reset();
+   mHeader->SetName(wxEmptyString);
 }
 
 void RealtimeEffectPanel::OnCharHook(wxKeyEvent& evt)

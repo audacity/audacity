@@ -641,6 +641,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mContainerWindow->Initialize(mTrackListWindow);
 
    auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mProject, mContainerWindow, wxID_ANY);
+   effectsPanel->SetName(_("Realtime effects"));
    effectsPanel->SetBackgroundColorIndex(clrMedium);
    effectsPanel->Hide();//initially hidden
    effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&)
@@ -1941,6 +1942,7 @@ void ProjectWindow::HideEffectsPanel()
       mContainerWindow->SplitVertically(mEffectsWindow, mTrackListWindow);
 
    mContainerWindow->Unsplit(mEffectsWindow);
+   mTrackListWindow->SetFocus();
    Layout();
 }
 

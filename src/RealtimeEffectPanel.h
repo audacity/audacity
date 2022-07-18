@@ -36,6 +36,7 @@ class RealtimeEffectPanel : public wxPanel
    AButton* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
+   wxWindow* mHeader{nullptr};
    AudacityProject& mProject;
 
    std::weak_ptr<Track> mCurrentTrack;
