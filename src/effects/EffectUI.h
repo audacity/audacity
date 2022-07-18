@@ -78,8 +78,6 @@ private:
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
-   void OnRewind(wxCommandEvent & evt);
-   void OnFFwd(wxCommandEvent & evt);
    void OnPlayback(AudioIOEvent);
    void OnCapture(AudioIOEvent);
    void OnUserPreset(wxCommandEvent & evt);
@@ -123,8 +121,6 @@ private:
    wxButton *mCloseBtn{};
    wxButton *mMenuBtn{};
    wxButton *mPlayBtn{};
-   wxButton *mRewindBtn{};
-   wxButton *mFFwdBtn{};
    wxCheckBox *mEnableCb{};
 
    wxButton *mEnableToggleBtn{};

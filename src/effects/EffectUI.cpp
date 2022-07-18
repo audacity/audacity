@@ -125,8 +125,6 @@ static const int kDeletePresetDummyID = 20007;
 static const int kMenuID = 20100;
 static const int kEnableID = 20101;
 static const int kPlayID = 20102;
-static const int kRewindID = 20103;
-static const int kFFwdID = 20104;
 static const int kPlaybackID = 20105;
 static const int kCaptureID = 20106;
 static const int kUserPresetsID = 21000;
@@ -145,8 +143,6 @@ EVT_BUTTON(eDebugID, EffectUIHost::OnDebug)
 EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
 EVT_CHECKBOX(kEnableID, EffectUIHost::OnEnable)
 EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
-EVT_BUTTON(kRewindID, EffectUIHost::OnRewind)
-EVT_BUTTON(kFFwdID, EffectUIHost::OnFFwd)
 EVT_MENU(kSaveAsID, EffectUIHost::OnSaveAs)
 EVT_MENU(kImportID, EffectUIHost::OnImport)
 EVT_MENU(kExportID, EffectUIHost::OnExport)
@@ -415,44 +411,6 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
 
          if (mSupportsRealtime)
          {
-            if (!mIsGUI)
-            {
-               mRewindBtn = S.Id( kRewindID )
-                  .ToolTip(XO("Skip backward"))
-                  .AddButton( XXO("Skip &Backward"),
-                              wxALIGN_CENTER | wxTOP | wxBOTTOM );
-            }
-            else
-            {
-               mRewindBtn = S.Id( kRewindID )
-                  .ToolTip(XO("Skip backward"))
-                  .Name(XO("Skip &Backward"))
-                  .AddBitmapButton( CreateBitmap(
-                     effect_rewind_xpm, true, true) );
-               mRewindBtn->SetBitmapDisabled(
-                     CreateBitmap(effect_rewind_disabled_xpm, true, false));
-               mRewindBtn->SetBitmapPressed(CreateBitmap(effect_rewind_xpm, false, true));
-            }
-
-            if (!mIsGUI)
-            {
-               mFFwdBtn = S.Id( kFFwdID )
-                  .ToolTip(XO("Skip forward"))
-                  .AddButton( XXO("Skip &Forward"),
-                     wxALIGN_CENTER | wxTOP | wxBOTTOM );
-            }
-            else
-            {
-               mFFwdBtn = S.Id( kFFwdID )
-                  .ToolTip(XO("Skip forward"))
-                  .Name(XO("Skip &Forward"))
-                  .AddBitmapButton( CreateBitmap(
-                     effect_ffwd_xpm, true, true) );
-               mFFwdBtn->SetBitmapDisabled(
-                  CreateBitmap(effect_ffwd_disabled_xpm, true, false));
-               mFFwdBtn->SetBitmapPressed(CreateBitmap(effect_ffwd_xpm, false, true));
-            }
-
             S.AddSpace( 5, 5 );
 
             mEnableCb = S.Id( kEnableID )
@@ -866,51 +824,6 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    }
 }
 
-void EffectUIHost::OnRewind(wxCommandEvent & WXUNUSED(evt))
-{
-   if (mPlaying)
-   {
-      auto gAudioIO = AudioIO::Get();
-      double seek;
-      gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &seek, 1.0);
-      
-      double pos = gAudioIO->GetStreamTime();
-      if (pos - seek < mRegion.t0())
-      {
-         seek = pos - mRegion.t0();
-      }
-      
-      gAudioIO->SeekStream(-seek);
-   }
-   else
-   {
-      mPlayPos = mRegion.t0();
-   }
-}
-
-void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
-{
-   if (mPlaying)
-   {
-      double seek;
-      gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &seek, 1.0);
-      
-      auto gAudioIO = AudioIO::Get();
-      double pos = gAudioIO->GetStreamTime();
-      if (mRegion.t0() < mRegion.t1() && pos + seek > mRegion.t1())
-      {
-         seek = mRegion.t1() - pos;
-      }
-      
-      gAudioIO->SeekStream(seek);
-   }
-   else
-   {
-      // It allows to play past end of selection...probably useless
-      mPlayPos = mRegion.t1();
-   }
-}
-
 void EffectUIHost::OnPlayback(AudioIOEvent evt)
 {
    if (evt.on) {
@@ -1148,7 +1061,7 @@ void EffectUIHost::UpdateControls()
    {
       // Don't allow focus to get trapped
       wxWindow *focus = FindFocus();
-      if (focus == mRewindBtn || focus == mFFwdBtn || focus == mPlayBtn || focus == mEnableCb)
+      if (focus == mPlayBtn || focus == mEnableCb)
       {
          mCloseBtn->SetFocus();
       }
@@ -1163,8 +1076,6 @@ void EffectUIHost::UpdateControls()
    
    if (mSupportsRealtime)
    {
-      mRewindBtn->Enable(!(mCapturing || mDisableTransport));
-      mFFwdBtn->Enable(!(mCapturing || mDisableTransport));
       mEnableCb->Enable(!(mCapturing || mDisableTransport));
       
       wxBitmapButton *bb;
