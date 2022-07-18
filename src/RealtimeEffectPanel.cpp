@@ -480,7 +480,7 @@ namespace
 
       ThemedAButtonWrapper<AButton>* mChangeButton{nullptr};
       AButton* mEnableButton{nullptr};
-      wxWindow *mOptionsButton{};
+      ThemedAButtonWrapper<AButton>* mOptionsButton{};
 
       Observer::Subscription mSubscription;
 
@@ -522,31 +522,31 @@ namespace
             mEffectState->SetActive(mEnableButton->IsDown());
          });
 
-         //Central button with effect name
-         const auto changeButton = safenew ThemedAButtonWrapper<AButton>(this, wxID_ANY);
-         changeButton->SetImageIndices(0,
+         //Central button with effect name, show settings
+         const auto optionsButton = safenew ThemedAButtonWrapper<AButton>(this, wxID_ANY);
+         optionsButton->SetImageIndices(0,
             bmpUpButtonSmall,
             bmpHiliteUpButtonSmall,
             bmpDownButtonSmall,
             bmpHiliteButtonSmall,
             bmpUpButtonSmall);
-         changeButton->SetBackgroundColorIndex(clrEffectListItemBackground);
-         changeButton->SetForegroundColorIndex(clrTrackPanelText);
-         changeButton->SetButtonType(AButton::TextButton);
-         changeButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnChangeButtonClicked, this);
-
-         //Show effect settings
-         auto optionsButton = safenew ThemedAButtonWrapper<AButton>(this);
-         optionsButton->SetImageIndices(0, bmpEffectSettingsNormal, bmpEffectSettingsHover, bmpEffectSettingsDown, bmpEffectSettingsHover, bmpEffectSettingsNormal);
          optionsButton->SetBackgroundColorIndex(clrEffectListItemBackground);
+         optionsButton->SetForegroundColorIndex(clrTrackPanelText);
+         optionsButton->SetButtonType(AButton::TextButton);
          optionsButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnOptionsClicked, this);
 
+         //Remove/replace effect
+         auto changeButton = safenew ThemedAButtonWrapper<AButton>(this);
+         changeButton->SetImageIndices(0, bmpEffectSettingsNormal, bmpEffectSettingsHover, bmpEffectSettingsDown, bmpEffectSettingsHover, bmpEffectSettingsNormal);
+         changeButton->SetBackgroundColorIndex(clrEffectListItemBackground);
+         changeButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnChangeButtonClicked, this);
+         
          auto dragArea = safenew wxStaticBitmap(this, wxID_ANY, theTheme.Bitmap(bmpDragArea));
          dragArea->Disable();
          sizer->Add(dragArea, 0, wxLEFT | wxCENTER, 5);
-         sizer->Add(mEnableButton, 0, wxLEFT | wxCENTER, 5);
-         sizer->Add(changeButton, 1, wxLEFT | wxCENTER, 5);
-         sizer->Add(optionsButton, 0, wxLEFT | wxRIGHT | wxCENTER, 5);
+         sizer->Add(enableButton, 0, wxLEFT | wxCENTER, 5);
+         sizer->Add(optionsButton, 1, wxLEFT | wxCENTER, 5);
+         sizer->Add(changeButton, 0, wxLEFT | wxRIGHT | wxCENTER, 5);
          mChangeButton = changeButton;
          mOptionsButton = optionsButton;
 
@@ -600,9 +600,11 @@ namespace
             mSettingsAccess && mSettingsAccess->Get().extra.GetActive()
                ? mEnableButton->PushDown()
                : mEnableButton->PopUp();
-         mChangeButton->SetTranslatableLabel(label);
          if (mOptionsButton)
-            mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
+         {
+            mOptionsButton->SetTranslatableLabel(label);
+            mOptionsButton->SetEnabled(pState && GetPlugin(pState->GetID()));
+         }
       }
 
       void RemoveFromList()
