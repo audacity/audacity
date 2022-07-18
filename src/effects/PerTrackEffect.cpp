@@ -79,12 +79,12 @@ bool PerTrackEffect::Process(
    return bGoodResult;
 }
 
-PerTrackEffect::Buffers::Buffers()
+AudioGraph::Buffers::Buffers()
 {
    assert(IsRewound());
 }
 
-void PerTrackEffect::Buffers::Reinit(
+void AudioGraph::Buffers::Reinit(
    unsigned nChannels, size_t blockSize, size_t nBlocks)
 {
    mBuffers.resize(nChannels);
@@ -97,7 +97,7 @@ void PerTrackEffect::Buffers::Reinit(
    Rewind();
 }
 
-void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
+void AudioGraph::Buffers::Discard(size_t drop, size_t keep)
 {
 #ifndef NDEBUG
    sampleCount oldRemaining = Remaining();
@@ -140,7 +140,7 @@ void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
    assert(oldRemaining == Remaining());
 }
 
-void PerTrackEffect::Buffers::Advance(size_t count)
+void AudioGraph::Buffers::Advance(size_t count)
 {
 #ifndef NDEBUG
    sampleCount oldRemaining = Remaining();
@@ -187,7 +187,7 @@ void PerTrackEffect::Buffers::Advance(size_t count)
    assert(Remaining() == oldRemaining - count);
 }
 
-void PerTrackEffect::Buffers::Rewind()
+void AudioGraph::Buffers::Rewind()
 {
    auto iterP = mPositions.begin();
    for (auto &buffer : mBuffers)
@@ -195,20 +195,20 @@ void PerTrackEffect::Buffers::Rewind()
    assert(IsRewound());
 }
 
-constSamplePtr PerTrackEffect::Buffers::GetReadPosition(unsigned iChannel) const
+constSamplePtr AudioGraph::Buffers::GetReadPosition(unsigned iChannel) const
 {
    iChannel = std::min(iChannel, Channels() - 1);
    auto buffer = mBuffers[iChannel].data();
    return reinterpret_cast<constSamplePtr>(buffer);
 }
 
-float &PerTrackEffect::Buffers::GetWritePosition(unsigned iChannel)
+float &AudioGraph::Buffers::GetWritePosition(unsigned iChannel)
 {
    assert(iChannel < Channels());
    return mBuffers[iChannel].data()[ Position() ];
 }
 
-void PerTrackEffect::Buffers::ClearBuffer(unsigned iChannel, size_t n)
+void AudioGraph::Buffers::ClearBuffer(unsigned iChannel, size_t n)
 {
    if (iChannel < mPositions.size()) {
       auto p = mPositions[iChannel];
