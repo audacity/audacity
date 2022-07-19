@@ -59,7 +59,7 @@ a graph for EffectScienFilter.
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/Ruler.h"
+#include "../widgets/RulerPanel.h"
 #include "../widgets/WindowAccessible.h"
 
 #if !defined(M_PI)
