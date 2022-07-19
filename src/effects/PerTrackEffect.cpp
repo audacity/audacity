@@ -350,6 +350,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
+   bool isProcessor = GetType() == EffectTypeProcess;
 
    Buffers inBuffers, outBuffers;
    ChannelName map[3];
@@ -516,11 +517,24 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             return true;
          };
 
+         // Assured above
+         assert(len == 0 ||
+            (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
+         SampleTrackSource source{ left, pRight, start, len, pollUser };
+         // Assert source is safe to Acquire inBuffers
+         assert(source.Remaining() == 0 ||
+            (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
+
+         WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
+
          // Go process the track(s)
-         bGoodResult = ProcessTrack(instance, settings,
-            pollUser, genLength, sampleRate,
-            map, left, pRight, start, len,
+         bGoodResult = ProcessTrack(instance, settings, source, sink,
+            genLength, sampleRate, map,
             inBuffers, outBuffers, numChannels);
+         // Put any remaining output
+         if (bGoodResult)
+            sink.Flush(outBuffers,
+               mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
          if (!bGoodResult)
             return;
 
@@ -539,10 +553,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 }
 
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
-   const Poller &pollUser, std::optional<sampleCount> genLength,
+   AudioGraph::Source &source, AudioGraph::Sink &sink,
+   std::optional<sampleCount> genLength,
    const double sampleRate, const ChannelNames map,
-   WaveTrack &left, WaveTrack *const pRight,
-   const sampleCount start, const sampleCount len,
    Buffers &inBuffers, Buffers &outBuffers,
    const unsigned numChannels) const
 {
@@ -554,7 +567,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    if (!instance.ProcessInitialize(settings, sampleRate, map))
       return false;
 
-   { // Start scope for cleanup
    auto cleanup = finally( [&] {
       // Allow the plugin to cleanup
       if (!instance.ProcessFinalize())
@@ -577,20 +589,10 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // return all of the remaining delayed samples.
    sampleCount curDelay = 0;
 
-   bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
-   // Function precondition
-   assert(len == 0 ||
-      (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
-   SampleTrackSource source{ left, pRight, start, len, pollUser };
-   // Assert source is safe to Acquire inBuffers
-   assert(source.Remaining() == 0 ||
-      (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
 
    sampleCount delayRemaining = genLength ? *genLength : 0;
    bool latencyDone = false;
-
-   WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
 
    // Invariant O: blockSize positions from outBuffers.Positions() available
    // Initially true because of preconditions that outBuffers has the same
@@ -691,12 +693,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          return false;
       // Invariant O preserved
    }
-
-   // Put any remaining output
-   if (rc)
-      sink.Flush(outBuffers,
-         mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
-   } // End scope for cleanup
    return rc;
 }
 

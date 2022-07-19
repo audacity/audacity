@@ -212,18 +212,17 @@ private:
    using Poller = std::function<bool(sampleCount blockSize)>;
    /*!
     @pre `inBuffers.BlockSize() > 0`
-    @pre `len == 0 || inBuffers.Channels() > 0`
-    @pre `len == 0 || inBuffers.BufferSize() > 0`
+    @pre `source.Remaining() == 0 || inBuffers.Channels() > 0`
+    @pre `source.Remaining() == 0 || inBuffers.BufferSize() > 0`
     @pre `outBuffers.Channels() > 0`
     @pre `outBuffers.BufferSize() > 0`
     @pre `outBuffers.IsRewound()`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
-      const Poller &pollUser, std::optional<sampleCount> genLength,
+      AudioGraph::Source &source, AudioGraph::Sink &sink,
+      std::optional<sampleCount> genLength,
       double sampleRate, ChannelNames map,
-      WaveTrack &left, WaveTrack *pRight,
-      sampleCount start, sampleCount len,
       Buffers &inBuffers, Buffers &outBuffers, unsigned mNumChannels) const;
 };
 
