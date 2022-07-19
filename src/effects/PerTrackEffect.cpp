@@ -103,7 +103,7 @@ void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
    sampleCount oldRemaining = Remaining();
 #endif
    // Assert the pre
-   assert(drop + keep < Remaining());
+   assert(drop + keep <= Remaining());
 
 #if 1
    // Bounds checking version not assuming the pre, new in 3.2
@@ -133,7 +133,6 @@ void PerTrackEffect::Buffers::Discard(size_t drop, size_t keep)
 #else
    // Version that assumes the precondition,
    // which pre-3.2 did without known errors
-   assert(drop + keep <= Remaining());
    for (auto position : mPositions)
       memmove(position, position + drop, keep * sizeof(float));
 #endif
@@ -181,7 +180,6 @@ void PerTrackEffect::Buffers::Advance(size_t count)
 #else
    // Version that assumes the precondition,
    // which pre-3.2 did without known errors
-   assert(count <= Remaining());
    for (auto &position : mPositions)
       position += count;
 #endif
