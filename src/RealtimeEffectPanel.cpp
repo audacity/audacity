@@ -599,11 +599,11 @@ namespace
          //Central button with effect name, show settings
          const auto optionsButton = safenew ThemedAButtonWrapper<AButton>(this, wxID_ANY);
          optionsButton->SetImageIndices(0,
-            bmpUpButtonSmall,
-            bmpHiliteUpButtonSmall,
-            bmpDownButtonSmall,
-            bmpHiliteButtonSmall,
-            bmpUpButtonSmall);
+            bmpHButtonNormal,
+            bmpHButtonHover,
+            bmpHButtonDown,
+            bmpHButtonHover,
+            bmpHButtonDisabled);
          optionsButton->SetBackgroundColorIndex(clrEffectListItemBackground);
          optionsButton->SetForegroundColorIndex(clrTrackPanelText);
          optionsButton->SetButtonType(AButton::TextButton);
@@ -611,7 +611,7 @@ namespace
 
          //Remove/replace effect
          auto changeButton = safenew ThemedAButtonWrapper<AButton>(this);
-         changeButton->SetImageIndices(0, bmpEffectSettingsNormal, bmpEffectSettingsHover, bmpEffectSettingsDown, bmpEffectSettingsHover, bmpEffectSettingsNormal);
+         changeButton->SetImageIndices(0, bmpMoreNormal, bmpMoreHover, bmpMoreDown, bmpMoreHover, bmpMoreDisabled);
          changeButton->SetBackgroundColorIndex(clrEffectListItemBackground);
          changeButton->SetTranslatableLabel(XO("Replace effect"));
          changeButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnChangeButtonClicked, this);
@@ -924,11 +924,11 @@ public:
 
       auto addEffect = safenew ThemedAButtonWrapper<AButton>(this, wxID_ANY);
       addEffect->SetImageIndices(0,
-            bmpUpButtonSmall,
-            bmpHiliteUpButtonSmall,
-            bmpDownButtonSmall,
-            bmpHiliteButtonSmall,
-            bmpUpButtonSmall);
+            bmpHButtonNormal,
+            bmpHButtonHover,
+            bmpHButtonDown,
+            bmpHButtonHover,
+            bmpHButtonDisabled);
       addEffect->SetTranslatableLabel(XO("Add effect"));
       addEffect->SetButtonType(AButton::TextButton);
       addEffect->SetBackgroundColorIndex(clrMedium);
@@ -1290,7 +1290,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
       }
       auto close = safenew ThemedAButtonWrapper<AButton>(header);
       close->SetTranslatableLabel(XO("Close"));
-      close->SetImageIndices(0, bmpCloseNormal, bmpCloseHover, bmpCloseDown, bmpCloseHover, bmpCloseNormal);
+      close->SetImageIndices(0, bmpCloseNormal, bmpCloseHover, bmpCloseDown, bmpCloseHover, bmpCloseDisabled);
       close->SetBackgroundColorIndex(clrMedium);
 
       close->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { Close(); });
