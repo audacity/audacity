@@ -82,7 +82,7 @@ the mouse around.
 
 #include "./widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/Ruler.h"
+#include "widgets/RulerPanel.h"
 #include "widgets/LinearUpdater.h"
 #include "widgets/LogarithmicUpdater.h"
 #include "widgets/VetoDialogHook.h"

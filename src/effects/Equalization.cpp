@@ -105,7 +105,7 @@
 #include "../WaveTrack.h"
 #include "../widgets/LinearUpdater.h"
 #include "../widgets/LogarithmicUpdater.h"
-#include "../widgets/Ruler.h"
+#include "../widgets/RulerPanel.h"
 #include "../widgets/AudacityTextEntryDialog.h"
 #include "XMLFileReader.h"
 #include "AllThemeResources.h"
