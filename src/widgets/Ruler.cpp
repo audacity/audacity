@@ -701,18 +701,3 @@ void Ruler::SetCustomMinorLabels(
    }
 }
 #endif
-
-void Updater::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
-{
-   if (!text.empty()) {
-      bool altColor = twoTone && value < 0.0;
-
-#ifdef EXPERIMENTAL_THEMING
-      dc.SetTextForeground(altColor ? theTheme.Colour( clrTextNegativeNumbers) : c);
-#else
-      dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
-#endif
-      dc.SetBackgroundMode(wxTRANSPARENT);
-      dc.DrawText(text.Translation(), lx, ly);
-   }
-}

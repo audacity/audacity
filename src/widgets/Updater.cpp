@@ -20,6 +20,10 @@
 *//******************************************************************/
 
 #include "Updater.h"
+
+#include "AllThemeResources.h"
+#include "Theme.h"
+
 #include <wx/font.h>
 #include <wx/dc.h>
 
@@ -430,6 +434,21 @@ TranslatableString Updater::TickSizes::LabelString(
          result += units;
 
       return result;
+ }
+
+ void Updater::Label::Draw(wxDC& dc, bool twoTone, wxColour c) const
+ {
+    if (!text.empty()) {
+       bool altColor = twoTone && value < 0.0;
+
+#ifdef EXPERIMENTAL_THEMING
+       dc.SetTextForeground(altColor ? theTheme.Colour(clrTextNegativeNumbers) : c);
+#else
+       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
+#endif
+       dc.SetBackgroundMode(wxTRANSPARENT);
+       dc.DrawText(text.Translation(), lx, ly);
+    }
  }
 
 void Updater::BoxAdjust(
