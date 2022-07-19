@@ -385,14 +385,12 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          if (len > 0) {
             assert(numAudioIn > 0); // checked above
-            assert(!pRight || numAudioIn > 1); // asserted when assigning pRight
             assert(bufferSize > 0); // checked above
          }
          inBuffers.Reinit(numAudioIn, blockSize, bufferSize / blockSize);
          if (len > 0) {
             // post of Reinit satisfies pre of ProcessTrack
             assert(inBuffers.Channels() > 0);
-            assert(!pRight || inBuffers.Channels() > 1);
             assert(inBuffers.BufferSize() > 0);
          }
 
@@ -556,7 +554,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // Fill the input buffers
             left.GetFloats(&inBuffers.GetWritePosition(0),
                inPos, inputBufferCnt);
-            if (pRight)
+            if (pRight && inBuffers.Channels() > 1)
                pRight->GetFloats(&inBuffers.GetWritePosition(1),
                   inPos, inputBufferCnt);
          }
