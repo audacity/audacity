@@ -91,7 +91,8 @@ EffectType EffectLoudness::GetType() const
 
 // Effect implementation
 
-bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
+bool EffectLoudness::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    if(mNormalizeTo == kLoudness)
       // LU use 10*log10(...) instead of 20*log10(...)

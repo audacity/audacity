@@ -228,7 +228,8 @@ double EffectTruncSilence::CalcPreviewInputLength(
 }
 
 
-bool EffectTruncSilence::Process(EffectInstance &, EffectSettings &)
+bool EffectTruncSilence::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    const bool success =
       mbIndependent

@@ -79,7 +79,8 @@ EffectType EffectFindClipping::GetType() const
 
 // Effect implementation
 
-bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
+bool EffectFindClipping::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
    std::optional<ModifiedAnalysisTrack> modifiedTrack;

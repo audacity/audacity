@@ -215,7 +215,8 @@ int EffectNoiseRemoval::ShowHostInterface(EffectPlugin &,
    return returnCode;
 }
 
-bool EffectNoiseRemoval::Process(EffectInstance &, EffectSettings &)
+bool EffectNoiseRemoval::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    Initialize();
 

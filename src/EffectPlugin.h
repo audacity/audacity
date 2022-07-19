@@ -63,7 +63,7 @@ public:
    /*!
     @param updateUI called after adjusting temporary settings and before play
     */
-   virtual void Preview(
+   virtual void Preview(EffectContext &context,
       EffectSettingsAccess &access, std::function<void()> updateUI,
       bool dryOnly) = 0;
    virtual bool SaveSettingsAsString(
@@ -90,7 +90,7 @@ public:
 
     @return true on success
     */
-   virtual bool DoEffect(
+   virtual bool DoEffect(EffectContext &context,
       EffectSettings &settings, //!< Always given; only for processing
       const InstanceFinder &finder,
       double projectRate, TrackList *list,
@@ -118,7 +118,7 @@ public:
    /*!
     @return success
     */
-   virtual bool Process(EffectSettings &settings) = 0;
+   virtual bool Process(EffectContext &context, EffectSettings &settings) = 0;
 
    ~EffectInstanceEx() override;
 };

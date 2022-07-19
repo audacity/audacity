@@ -88,7 +88,8 @@ EffectType EffectRepeat::GetType() const
 
 // Effect implementation
 
-bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
+bool EffectRepeat::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.

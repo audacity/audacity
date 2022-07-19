@@ -80,7 +80,8 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
 private:
-   bool Process(EffectInstance &instance, EffectSettings &settings) final;
+   bool Process(EffectContext &context,
+      EffectInstance &instance, EffectSettings &settings) final;
 
    size_t mBlockSize{};
 };

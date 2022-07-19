@@ -141,8 +141,8 @@ double EffectPaulstretch::CalcPreviewInputLength(
    return minLength;
 }
 
-
-bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
+bool EffectPaulstretch::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    CopyInputTracks();
    m_t1=mT1;

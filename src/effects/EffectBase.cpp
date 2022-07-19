@@ -57,7 +57,7 @@ double EffectBase::GetDefaultDuration()
 // the recursive paths into this function via Effect::Delegate are simplified,
 // and we don't have both EffectSettings and EffectSettingsAccessPtr
 // If pAccess is not null, settings should have come from its Get()
-bool EffectBase::DoEffect(EffectSettings &settings,
+bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
    const InstanceFinder &finder,
    double projectRate,
    TrackList *list,
@@ -200,7 +200,7 @@ bool EffectBase::DoEffect(EffectSettings &settings,
       auto vr = valueRestorer( mProgress, progress.get() );
 
       assert(pInstanceEx); // null check above
-      returnVal = pInstanceEx->Process(settings);
+      returnVal = pInstanceEx->Process(context, settings);
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -327,7 +327,7 @@ std::any EffectBase::BeginPreview(const EffectSettings &)
    return {};
 }
 
-void EffectBase::Preview(
+void EffectBase::Preview(EffectContext &context,
    EffectSettingsAccess &access, std::function<void()> updateUI, bool dryOnly)
 {
    auto cleanup0 = BeginPreview(access.Get());
@@ -471,7 +471,7 @@ void EffectBase::Preview(
          // Preview of non-realtime effect
          auto pInstance =
             std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
-         success = pInstance && pInstance->Process(settings);
+         success = pInstance && pInstance->Process(context, settings);
          return nullptr;
       });
    }

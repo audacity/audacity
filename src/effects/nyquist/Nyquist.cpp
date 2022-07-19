@@ -661,7 +661,8 @@ bool NyquistEffect::Init()
 
 static void RegisterFunctions();
 
-bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
+bool NyquistEffect::Process(EffectContext &context,
+   EffectInstance &, EffectSettings &settings)
 {
    if (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing()) {
       auto &nyquistSettings = GetSettings(settings);
@@ -673,7 +674,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       proxy.SetCommand(mInputCmd);
       proxy.mDebug = nyquistSettings.proxyDebug;
       proxy.mControls = move(nyquistSettings.controls);
-      auto result = Delegate(proxy, nyquistSettings.proxySettings);
+      auto result = Delegate(context, proxy, nyquistSettings.proxySettings);
       if (result) {
          mT0 = proxy.mT0;
          mT1 = proxy.mT1;

@@ -16,9 +16,10 @@
 #include "ShuttleGui.h"
 #include <wx/sizer.h>
 
-bool StatefulEffect::Instance::Process(EffectSettings &settings)
+bool StatefulEffect::Instance::Process(
+   EffectContext &context, EffectSettings &settings)
 {
-   return GetEffect().Process(*this, settings);
+   return GetEffect().Process(context, *this, settings);
 }
 
 auto StatefulEffect::Instance::GetLatency(const EffectSettings &, double) const

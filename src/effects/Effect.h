@@ -106,7 +106,8 @@ class AUDACITY_DLL_API Effect /* not final */
    unsigned TestUIFlags(unsigned mask);
 
    //! Re-invoke DoEffect on another Effect object that implements the work
-   bool Delegate(Effect &delegate, EffectSettings &settings);
+   bool Delegate(
+      EffectContext &context, Effect &delegate, EffectSettings &settings);
 
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.

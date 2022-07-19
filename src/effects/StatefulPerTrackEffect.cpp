@@ -52,7 +52,7 @@ std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
       const_cast<StatefulPerTrackEffect&>(*this));
 }
 
-bool StatefulPerTrackEffect::Process(
+bool StatefulPerTrackEffect::Process(EffectContext &,
    EffectInstance &instance, EffectSettings &settings)
 {
    // Call through to a non-virtual function

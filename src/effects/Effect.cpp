@@ -328,13 +328,14 @@ void Effect::UnsetBatchProcessing()
    (void ) LoadUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
-bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
+bool Effect::Delegate(
+   EffectContext &context, Effect &delegate, EffectSettings &settings)
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect(settings, {}, mProjectRate, mTracks, mFactory,
-      region, mUIFlags, nullptr);
+   return delegate.DoEffect(context, settings, {},
+      mProjectRate, mTracks, mFactory, region, mUIFlags, nullptr);
 }
 
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const

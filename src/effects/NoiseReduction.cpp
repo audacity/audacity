@@ -209,7 +209,8 @@ public:
    Settings();
    ~Settings() {}
 
-   int PromptUser(EffectNoiseReduction *effect, EffectSettingsAccess &access,
+   int PromptUser(EffectContext &context,
+      EffectNoiseReduction *effect, EffectSettingsAccess &access,
       wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
    bool Validate(EffectNoiseReduction *effect) const;
@@ -344,10 +345,11 @@ class EffectNoiseReduction::Dialog final : public EffectDialog
 {
 public:
    // constructors and destructors
-   Dialog(EffectNoiseReduction *effect, EffectSettingsAccess &access,
-       Settings *settings,
-       wxWindow *parent, bool bHasProfile,
-       bool bAllowTwiddleSettings);
+   Dialog(EffectContext &context,
+      EffectNoiseReduction *effect, EffectSettingsAccess &access,
+      Settings *settings,
+      wxWindow *parent, bool bHasProfile,
+      bool bAllowTwiddleSettings);
 
    void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;
@@ -379,6 +381,7 @@ private:
 
    // data members
 
+   EffectContext &mContext;
    EffectNoiseReduction *m_pEffect;
    //! This dialog is modal, so mAccess will live long enough for it
    EffectSettingsAccess &mAccess;
@@ -454,15 +457,19 @@ int EffectNoiseReduction::ShowHostInterface(EffectPlugin &,
 
    // We may want to twiddle the levels if we are setting
    // from a macro editing dialog
-   return mSettings->PromptUser(this, access, parent,
+   // EffectContext construction
+   EffectContext context{};
+   return mSettings->PromptUser(context, this, access, parent,
       bool(mStatistics), IsBatchProcessing());
 }
 
-int EffectNoiseReduction::Settings::PromptUser(EffectNoiseReduction *effect,
+int EffectNoiseReduction::Settings::PromptUser(EffectContext &context,
+   EffectNoiseReduction *effect,
    EffectSettingsAccess &access, wxWindow &parent,
    bool bHasProfile, bool bAllowTwiddleSettings)
 {
-   EffectNoiseReduction::Dialog dlog(effect, access,
+   // Dialog shows modally, so don't worry about dangling reference to context
+   EffectNoiseReduction::Dialog dlog(context, effect, access,
       this, &parent, bHasProfile, bAllowTwiddleSettings);
 
    dlog.CentreOnParent();
@@ -615,7 +622,8 @@ EffectNoiseReduction::Worker::MyWindow::~MyWindow()
 {
 }
 
-bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
+bool EffectNoiseReduction::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
@@ -1346,11 +1354,13 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialogWrapper)
 #endif
 END_EVENT_TABLE()
 
-EffectNoiseReduction::Dialog::Dialog(EffectNoiseReduction *effect,
-    EffectSettingsAccess &access,
-    EffectNoiseReduction::Settings *settings,
-    wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
-   : EffectDialog( parent, XO("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
+EffectNoiseReduction::Dialog::Dialog(EffectContext &context,
+   EffectNoiseReduction *effect,
+   EffectSettingsAccess &access,
+   EffectNoiseReduction::Settings *settings,
+   wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings
+)  : EffectDialog( parent, XO("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
+   , mContext{ context }
    , m_pEffect(effect)
    , mAccess{access}
    , m_pSettings(settings) // point to
@@ -1480,7 +1490,7 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
-   m_pEffect->Preview(mAccess,
+   m_pEffect->Preview(mContext, mAccess,
       // Don't need any UI updates for preview
       {},
       false);

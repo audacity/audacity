@@ -158,7 +158,8 @@ bool EffectChangeTempo::Init()
    return true;
 }
 
-bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
+bool EffectChangeTempo::Process(EffectContext &context,
+   EffectInstance &, EffectSettings &settings)
 {
    bool success = false;
 
@@ -170,7 +171,7 @@ bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
       //! Already processing; don't make a dialog
-      success = Delegate(proxy, settings);
+      success = Delegate(context, proxy, settings);
    }
    else
 #endif

@@ -362,7 +362,8 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
+bool EffectEqualization::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
    mParameters.CalcFilter();

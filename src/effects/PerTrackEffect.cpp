@@ -34,7 +34,8 @@ AudioGraph::Sink::~Sink() = default;
 
 PerTrackEffect::Instance::~Instance() = default;
 
-bool PerTrackEffect::Instance::Process(EffectSettings &settings)
+bool PerTrackEffect::Instance::Process(
+   EffectContext &, EffectSettings &settings)
 {
    return mProcessor.Process(*this, settings);
 }

@@ -127,7 +127,7 @@ std::any EffectTimeScale::BeginPreview(const EffectSettings &settings)
    return { CopyableValueRestorer{ bPreview, true } };
 }
 
-bool EffectTimeScale::Process(
+bool EffectTimeScale::Process(EffectContext &context,
    EffectInstance &instance, EffectSettings &settings)
 {
    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
@@ -142,7 +142,7 @@ bool EffectTimeScale::Process(
    }
    
    EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return EffectSBSMS::Process(instance, settings);
+   return EffectSBSMS::Process(context, instance, settings);
 }
 
 std::unique_ptr<EffectEditor> EffectTimeScale::PopulateOrExchange(

@@ -110,7 +110,8 @@ bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }
 
-bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
+bool EffectClickRemoval::Process(EffectContext &,
+   EffectInstance &, EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;

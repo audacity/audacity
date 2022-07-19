@@ -71,7 +71,8 @@ public:
    /*!
     @copydoc EffectInstance::Process
     */
-   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
+   virtual bool Process(EffectContext &context,
+      EffectInstance &instance, EffectSettings &settings) = 0;
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeInitialize()

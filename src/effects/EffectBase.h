@@ -45,11 +45,12 @@ public:
 
    // The EffectBase class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   void Preview(
+   void Preview(EffectContext &context,
       EffectSettingsAccess &access, std::function<void()> updateUI,
       bool dryOnly) final;
 
-   bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
+   bool DoEffect(EffectContext &context,
+      EffectSettings &settings, //!< Always given; only for processing
       const InstanceFinder &finder,
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,

@@ -186,7 +186,8 @@ EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
+bool EffectChangePitch::Process(EffectContext &context,
+   EffectInstance &, EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -196,7 +197,7 @@ bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
       //! Already processing; don't make a dialog
-      return Delegate(proxy, settings);
+      return Delegate(context, proxy, settings);
    }
    else
 #endif

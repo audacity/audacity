@@ -765,11 +765,13 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          return;
       
       auto updater = [this]{ TransferDataToWindow(); };
-      mEffectUIHost.Preview(*mpAccess, updater, false);
+      // EffectContext construction
+      EffectContext eContext{};
+      mEffectUIHost.Preview(eContext, *mpAccess, updater, false);
       // After restoration of settings and effect state:
       // In case any dialog control depends on mT1 or mDuration:
       updater();
-
+      
       return;
    }
    
@@ -1322,6 +1324,8 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    success = false;
    if (auto effect = dynamic_cast<Effect*>(em.GetEffect(ID))) {
       if (const auto pSettings = em.GetDefaultSettings(ID)) {
+         // EffectContext construction
+         EffectContext eContext{};
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
          const auto finder =
@@ -1351,7 +1355,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
             return { pInstanceEx };
          };
          pAccess->ModifySettings([&](EffectSettings &settings){
-            success = effect->DoEffect(settings, finder,
+            success = effect->DoEffect(eContext, settings, finder,
                rate,
                &tracks,
                &trackFactory,
