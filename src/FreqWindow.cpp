@@ -79,7 +79,7 @@ the mouse around.
 
 #include "./widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/Ruler.h"
+#include "widgets/RulerPanel.h"
 #include "widgets/VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY

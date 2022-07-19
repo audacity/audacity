@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../widgets/Ruler.h"
 
 #include <wx/dc.h>
+#include <wx/event.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 NoteTrackVRulerControls::~NoteTrackVRulerControls()

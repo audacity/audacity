@@ -32,7 +32,7 @@
 #include "Theme.h"
 #include "../TrackArtist.h"
 #include "ViewInfo.h"
-#include "../widgets/Ruler.h"
+#include "../widgets/RulerPanel.h"
 #include "AllThemeResources.h"
 
 //----------------------------------------------------------------------------

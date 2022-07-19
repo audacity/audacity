@@ -22,7 +22,7 @@
 #include <wx/checkbox.h>
 #include <wx/stattext.h>
 #include "../ShuttleGui.h"
-#include "../widgets/Ruler.h"
+#include "../widgets/RulerPanel.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
