@@ -280,12 +280,16 @@ bool SampleTrackSource::Release()
 }
 
 EffectStage::EffectStage(Buffers &inBuffers,
-   Instance &instance, EffectSettings &settings,
-   double sampleRate, ChannelNames map
-)  : mInBuffers{ inBuffers }, mInstance{ instance }, mSettings{ settings }
+   Instance &instance, EffectSettings &settings, double sampleRate,
+   std::optional<sampleCount> genLength, ChannelNames map
+)  : mInBuffers{ inBuffers }
+   , mInstance{ instance }, mSettings{ settings }, mSampleRate{ sampleRate }
+   , mIsProcessor{ !genLength.has_value() }
+   //! Need to guarantee Remaining() is initially positive for processor
+   , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
    // Give the plugin a chance to initialize
-   if (!mInstance.ProcessInitialize(mSettings, sampleRate, map))
+   if (!mInstance.ProcessInitialize(mSettings, mSampleRate, map))
       throw std::exception{};
 }
 
@@ -293,6 +297,30 @@ EffectStage::~EffectStage()
 {
    // Allow the plugin to cleanup
    mInstance.ProcessFinalize();
+}
+
+size_t EffectStage::Acquire(Buffers &data)
+{
+   assert(data.BufferSize() > 0); // pre
+   // Therefore its block size is nonzero
+
+   data.Rewind();
+   assert(data.Remaining() > 0);
+
+   const auto blockSize = data.BlockSize();
+   auto result = limitSampleBufferSize(
+      std::min(blockSize, data.Remaining()), Remaining());
+   if (mIsProcessor && !mCleared) {
+      // From this point on, we only want to feed zeros to the plugin
+      for (size_t ii = 0; ii < data.Channels(); ++ii) {
+         auto p = &data.GetWritePosition(ii);
+         std::fill(p, p + blockSize, 0);
+      }
+      mCleared = true;
+   }
+   // true because the three terms of the min would be positive
+   assert(Remaining() == 0 || result > 0);
+   return result;
 }
 
 bool EffectStage::Process(
@@ -317,6 +345,32 @@ bool EffectStage::Process(
    }
 
    return (processed == curBlockSize);
+}
+
+sampleCount EffectStage::Remaining() const
+{
+   return std::max<sampleCount>(0, mDelayRemaining);
+}
+
+size_t EffectStage::ComputeDiscard(size_t curBlockSize)
+{
+   // Get the current number of delayed samples and accumulate
+   if (mIsProcessor && !mLatencyDone) {
+      // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
+      // until at least one block of samples is processed.  Find latency
+      // once only for the track and assume it doesn't vary
+      mDelayRemaining = mInstance.GetLatency(mSettings, mSampleRate);
+      mLatencyDone = true;
+   }
+   return mIsProcessor
+      ? limitSampleBufferSize(curBlockSize, Remaining())
+      : 0;
+}
+
+void EffectStage::Release(const size_t curBlockSize)
+{
+   // Progress toward termination (Remaining() == 0) if curBlockSize > 0
+   mDelayRemaining -= limitSampleBufferSize(curBlockSize, Remaining());
 }
 
 WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
@@ -571,7 +625,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          try {
             bGoodResult = ProcessTrack(instance, settings, source, sink,
                genLength, sampleRate, map,
-               inBuffers, outBuffers, numChannels);
+               inBuffers, outBuffers);
          } catch(const std::exception&) {
             bGoodResult = false;
          }
@@ -598,8 +652,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    AudioGraph::Source &source, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
    const double sampleRate, const ChannelNames map,
-   Buffers &inBuffers, Buffers &outBuffers,
-   const unsigned numChannels) const
+   Buffers &inBuffers, Buffers &outBuffers) const
 {
    bool rc = true;
    const auto blockSize = inBuffers.BlockSize();
@@ -618,14 +671,11 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // there is no further input data to process, the loop continues to call the
    // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
-   sampleCount curDelay = 0;
 
    bool isProcessor = GetType() == EffectTypeProcess;
 
-   sampleCount delayRemaining = genLength ? *genLength : 0;
-   bool latencyDone = false;
-
-   EffectStage stage{ inBuffers, instance, settings, sampleRate, map };
+   EffectStage stage{ inBuffers,
+      instance, settings, sampleRate, genLength, map };
 
    // Invariant O: blockSize positions from outBuffers.Positions() available
    // Initially true because of preconditions that outBuffers has the same
@@ -634,41 +684,22 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(blockSize <= outBuffers.Remaining());
 
    // Call the effect until we run out of input or delayed samples
-   while (source.Remaining() > 0 || delayRemaining > 0) {
-      const auto curBlockSize = [&]() -> size_t {
-      if (source.Remaining() > 0)
-         // Still working on the input samples
-         return source.Acquire(inBuffers);
-      else {
-         // We've exhausted the input samples and are now working on the delay
-         assert(delayRemaining > 0);
-         // blockSize zeroes were guaranteed when inputRemaining was exhausted
-         auto result = limitSampleBufferSize(blockSize, delayRemaining);
-         assert(result > 0); // Each argument was nonzero
-         // Progress toward loop termination
-         delayRemaining -= result;
-         return result;
-      }
-      }();
-      assert(source.Remaining() == 0 || curBlockSize <= inBuffers.Remaining());
+   while (source.Remaining() > 0 || stage.Remaining() > 0) {
+      const auto curBlockSize = (source.Remaining() > 0)
+         ? source.Acquire(inBuffers)
+         : stage.Acquire(inBuffers);
+      assert(curBlockSize <= inBuffers.Remaining()); // Process needs this
       // post of Acquire() gives termination guarantee below
-      assert(source.Remaining() == 0 || curBlockSize > 0);
+      assert(curBlockSize > 0);
       assert(curBlockSize <= blockSize);
 
       // Invariant O satisfies the precondition
       if (!stage.Process(outBuffers, curBlockSize))
          return false;
 
-      // Get the current number of delayed samples and accumulate
-      if (isProcessor && !latencyDone) {
-         // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
-         // until at least one block of samples is processed.  Find latency
-         // once only for the track and assume it doesn't vary
-         auto delay = instance.GetLatency(settings, sampleRate);
-         curDelay += delay;
-         delayRemaining = delay;
-         latencyDone = true;
-      }
+      // Preconditions for Discard() and Consume() hold
+      // because curBlockSize <= blockSize <= outBuffers.Remaining()
+      auto discard = stage.ComputeDiscard(curBlockSize);
 
       if (source.Remaining() > 0) {
          if (!source.Release())
@@ -680,25 +711,14 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             inBuffers.Advance(curBlockSize);
          }
       }
-      else if (delayRemaining > 0) {
-         // From this point on, we only want to feed zeros to the plugin
-         // Reset the input buffer positions and guarantee blockSize zeroes
-         inBuffers.Rewind();
-         for (size_t i = 0; i < numChannels; i++)
-            inBuffers.ClearBuffer(i, blockSize);
-      }
-
-      // Preconditions for Discard() and Consume() hold
-      // because curBlockSize <= blockSize <= outBuffers.Remaining()
-      assert(curBlockSize <= outBuffers.Remaining());
+      else
+         // make progress to termination
+         stage.Release(curBlockSize);
    
       // Do latency correction on effect output
-      auto discard = limitSampleBufferSize(curBlockSize, curDelay);
-      if (discard) {
-         curDelay -= discard;
+      if (discard)
          outBuffers.Discard(discard, curBlockSize - discard);
-      }
-   
+
       if (!sink.Release(outBuffers, curBlockSize - discard))
          return false;
       outBuffers.Advance(curBlockSize - discard);

@@ -223,7 +223,7 @@ private:
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
       double sampleRate, ChannelNames map,
-      Buffers &inBuffers, Buffers &outBuffers, unsigned mNumChannels) const;
+      Buffers &inBuffers, Buffers &outBuffers) const;
 };
 
 //! Accumulates (non-interleaved) data during effect processing
@@ -311,17 +311,36 @@ public:
 
    //! Completes `instance.ProcessInitialize()` or throws a std::exception
    EffectStage(Buffers &inBuffers,
-      Instance &instance, EffectSettings &settings,
-      double sampleRate, ChannelNames map);
+      Instance &instance, EffectSettings &settings, double sampleRate,
+      std::optional<sampleCount> genLength, ChannelNames map);
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
    //! Finalizes the instance
    ~EffectStage();
 
+   /*!
+    @pre `data.BufferSize() > 0`
+    @post result: `result <= data.BlockSize()`
+    @post result: `result <= data.Remaining()`
+    @post result: `result <= Remaining()`
+    @post `data.Remaining() > 0`
+    @post result: `Remaining() == 0 || result > 0` (progress guarantee)
+    @post `Remaining()` is unchanged
+    */
+   size_t Acquire(Buffers &data);
+   //! May decrease after one Process() happened!  Then constant
+   sampleCount Remaining() const;
+   //! @post result: `result <= curBlockSize`
+   size_t ComputeDiscard(size_t curBlockSize);
+   //! @post (`curBlockSize == 0` && old `Remaining() == 0`),
+   //!  or `Remaining()` decreases
+   void Release(size_t curBlockSize);
+
    //! Produce exactly `curBlockSize` samples in `data`
    /*!
     @pre curBlockSize <= data.BlockSize()
-    @pre data.BlockSize() <= data.Remaining()
+    @pre curBlockSize <= data.Remaining()
+    @pre curBlockSize <= mInBuffers.Remaining()
     @return success
     */
    bool Process(const Buffers &data, size_t curBlockSize) const;
@@ -330,5 +349,11 @@ private:
    Buffers &mInBuffers;
    Instance &mInstance;
    EffectSettings &mSettings;
+   const double mSampleRate;
+   const bool mIsProcessor;
+
+   sampleCount mDelayRemaining;
+   bool mLatencyDone{ false };
+   bool mCleared{ false };
 };
 #endif
