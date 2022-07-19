@@ -1329,7 +1329,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
          const auto finder =
-         [effect, &window, pAccess, flags] (EffectSettings &settings)
+         [&eContext, effect, &window, pAccess, flags] (EffectSettings &settings)
             -> std::optional<std::shared_ptr<EffectInstanceEx>>
          {
             // Prompting will be bypassed when applying an effect that has
@@ -1340,7 +1340,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
             if ((flags & EffectManager::kConfigured) == 0 && pAccess) {
                const auto pServices = dynamic_cast<EffectUIServices *>(effect);
                if (!pServices ||
-                   !pServices->ShowHostInterface(*effect,
+                   !pServices->ShowHostInterface(eContext, *effect,
                   window, DialogFactory, pInstance, *pAccess, true)
                )
                   return {};

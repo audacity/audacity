@@ -13,9 +13,8 @@
 
 EffectUIServices::~EffectUIServices() = default;
 
-int EffectUIServices::ShowHostInterface(EffectPlugin &plugin,
-   wxWindow &parent,
-   const EffectDialogFactory &factory,
+int EffectUIServices::ShowHostInterface(EffectContext &,
+   EffectPlugin &plugin, wxWindow &parent, const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
 {

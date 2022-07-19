@@ -1055,15 +1055,16 @@ finish:
    return success;
 }
 
-int NyquistEffect::ShowHostInterface(EffectPlugin &plugin,
-   wxWindow &parent, const EffectDialogFactory &factory,
+int NyquistEffect::ShowHostInterface(
+   EffectContext &context, EffectPlugin &plugin, wxWindow &parent,
+   const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
 {
    int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = EffectUIServices::ShowHostInterface(plugin,
+      res = EffectUIServices::ShowHostInterface(context, plugin,
          parent, factory, pInstance, access, forceModal);
    }
 
@@ -1103,7 +1104,7 @@ int NyquistEffect::ShowHostInterface(EffectPlugin &plugin,
 
       // Show the normal (prompt or effect) interface
       // Don't pass this as first argument, pass the worker to itself
-      res = effect.ShowHostInterface(effect,
+      res = effect.ShowHostInterface(context, effect,
          parent, factory, pNewInstance, *newAccess, forceModal);
       if (res) {
          CommandParameters cp;
@@ -1115,7 +1116,7 @@ int NyquistEffect::ShowHostInterface(EffectPlugin &plugin,
       if (!factory)
          return 0;
       // Don't pass this as first argument, pass the worker to itself
-      res = effect.ShowHostInterface(effect,
+      res = effect.ShowHostInterface(context, effect,
          parent, factory, pNewInstance, *newAccess, false );
       if (!res)
          return 0;

@@ -443,8 +443,8 @@ EffectType EffectNoiseReduction::GetType() const
  its unusual two-pass nature.  First choose and analyze an example of noise,
  then apply noise reduction to another selection.  That is difficult to fit into
  the framework for managing settings of other effects. */
-int EffectNoiseReduction::ShowHostInterface(EffectPlugin &,
-   wxWindow &parent, const EffectDialogFactory &,
+int EffectNoiseReduction::ShowHostInterface(EffectContext &context,
+   EffectPlugin &, wxWindow &parent, const EffectDialogFactory &,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
 {
@@ -457,8 +457,6 @@ int EffectNoiseReduction::ShowHostInterface(EffectPlugin &,
 
    // We may want to twiddle the levels if we are setting
    // from a macro editing dialog
-   // EffectContext construction
-   EffectContext context{};
    return mSettings->PromptUser(context, this, access, parent,
       bool(mStatistics), IsBatchProcessing());
 }

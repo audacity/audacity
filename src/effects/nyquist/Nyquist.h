@@ -121,8 +121,8 @@ public:
    bool Init() override;
    bool Process(EffectContext &context,
       EffectInstance &instance, EffectSettings &settings) override;
-   int ShowHostInterface(EffectPlugin &plugin, wxWindow &parent,
-      const EffectDialogFactory &factory,
+   int ShowHostInterface(EffectContext &context, EffectPlugin &plugin,
+      wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
    std::unique_ptr<EffectEditor> PopulateOrExchange(

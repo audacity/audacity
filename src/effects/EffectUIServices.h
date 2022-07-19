@@ -14,6 +14,7 @@
 #include <memory>
 #include <optional>
 
+struct EffectContext;
 class EffectEditor;
 class EffectInstance;
 class EffectPlugin;
@@ -71,7 +72,7 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowHostInterface(EffectPlugin &plugin,
+   virtual int ShowHostInterface(EffectContext &context, EffectPlugin &plugin,
       wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false);

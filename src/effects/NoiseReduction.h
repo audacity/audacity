@@ -37,8 +37,8 @@ public:
 
 //   using Effect::TrackProgress;
 
-   int ShowHostInterface(EffectPlugin &plugin, wxWindow &parent,
-      const EffectDialogFactory &factory,
+   int ShowHostInterface(EffectContext &context, EffectPlugin &plugin,
+      wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
 
