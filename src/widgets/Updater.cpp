@@ -641,44 +641,6 @@ bool Updater::Tick(wxDC& dc,
    return !rect.IsEmpty();
 }
 
-bool Updater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
-   // in/out:
-   TickOutputs outputs,
-   const RulerStruct& context) const
-{
-   const int mLeft = context.mLeft;
-   const int mTop = context.mTop;
-   const int mOrientation = context.mOrientation;
-
-   const RulerStruct::Fonts& mFonts = *context.mpFonts;
-   const int mSpacing = context.mSpacing;
-   const bool mFlip = context.mFlip;
-
-   // FIXME: We don't draw a tick if of end of our label arrays
-   // But we shouldn't have an array of labels.
-   if (labelIdx >= outputs.labels.size())
-      return false;
-
-   //This should only used in the mCustom case
-
-   Label lab;
-   lab.value = 0.0;
-
-   const auto result = MakeTick(
-      lab,
-
-      dc, font,
-      outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
-      mFlip,
-      mOrientation);
-
-   auto& rect = result.first;
-   outputs.box.Union(rect);
-   outputs.labels[labelIdx] = (result.second);
-   return !rect.IsEmpty();
-}
-
 Updater::~Updater() = default;
 
 // Theoretically this helps

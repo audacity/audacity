@@ -122,12 +122,6 @@ struct Updater {
       const RulerStruct& context
    ) const;
 
-   // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
-      TickOutputs outputs,
-      const RulerStruct& context
-   ) const;
-
    void BoxAdjust(
       UpdateOutputs& allOutputs,
       const RulerStruct& context
