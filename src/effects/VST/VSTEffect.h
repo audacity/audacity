@@ -199,6 +199,25 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    void SaveFXP(const wxFileName& fn) const;
    void SaveFXProgram(wxMemoryBuffer& buf, int index) const;
 
+   // VST plugin -> host callback
+   static intptr_t AudioMaster(AEffect *effect,
+                               int32_t opcode,
+                               int32_t index,
+                               intptr_t value,
+                               void * ptr,
+                               float opt);
+
+   // These are needed to move the AudioMaster callback from VSTEffect to this struct
+   //
+   intptr_t mCurrentEffectID {};
+   virtual void NeedIdle() = 0;
+   virtual void UpdateDisplay() = 0;
+   virtual VstTimeInfo* GetTimeInfo() = 0;
+   virtual void SetBufferDelay(int samples) = 0;
+   virtual float GetSampleRate() = 0;
+   virtual int GetProcessLevel() = 0;
+   virtual void SizeWindow(int w, int h) = 0;
+   virtual void Automate(int index, float value) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -219,8 +238,9 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
-   : public StatefulPerTrackEffect
-   , public VSTEffectWrapper
+   :  public VSTEffectWrapper
+     ,public StatefulPerTrackEffect
+   
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
@@ -318,17 +338,20 @@ class VSTEffect final
 
    // VSTEffect implementation
 
-   // VST plugin -> host callback
-   static intptr_t AudioMaster(AEffect *effect,
-                               int32_t opcode,
-                               int32_t index,
-                               intptr_t value,
-                               void * ptr,
-                               float opt);
 
    void OnTimer();
 
    EffectSettings MakeSettings() const override;
+
+protected:
+   void NeedIdle() override;
+   void UpdateDisplay() override;
+   VstTimeInfo* GetTimeInfo() override;
+   void  SetBufferDelay(int samples) override;
+   float GetSampleRate() override;
+   int   GetProcessLevel() override;
+   void  SizeWindow(int w, int h) override;
+   void  Automate(int index, float value) override;
 
 private:
    // Plugin loading and unloading
@@ -364,16 +387,11 @@ private:
    void RefreshParameters(int skip = -1) const;
 
    // Utility methods
-
-   VstTimeInfo *GetTimeInfo();
-   float GetSampleRate();
-   int GetProcessLevel();
-   void SetBufferDelay(int samples);
-   void NeedIdle();
+   
    void NeedEditIdle(bool state);
-   void SizeWindow(int w, int h);
-   void UpdateDisplay();
-   void Automate(int index, float value);
+   
+   
+   
    void PowerOn();
    void PowerOff();
       
@@ -416,7 +434,7 @@ private:
    bool mInteractive{false};
    
 
-   static intptr_t mCurrentEffectID;
+   
 
    bool mReady{false};
 
