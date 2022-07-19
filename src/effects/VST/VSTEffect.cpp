@@ -600,19 +600,17 @@ BEGIN_EVENT_TABLE(VSTEffect, wxEvtHandler)
    EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
 END_EVENT_TABLE()
 
-// Needed to support shell plugins...sucks, but whatcha gonna do???
-intptr_t VSTEffect::mCurrentEffectID;
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
-intptr_t VSTEffect::AudioMaster(AEffect * effect,
-                                int32_t opcode,
-                                int32_t index,
-                                intptr_t value,
-                                void * ptr,
-                                float opt)
+intptr_t VSTEffectWrapper::AudioMaster(AEffect * effect,
+                                       int32_t opcode,
+                                       int32_t index,
+                                       intptr_t value,
+                                       void * ptr,
+                                       float opt)
 {
-   VSTEffect *vst = (effect ? (VSTEffect *) effect->ptr2 : NULL);
+   VSTEffectWrapper *vst = (effect ? static_cast<VSTEffectWrapper*>(effect->ptr2) : nullptr);
 
    // Handles operations during initialization...before VSTEffect has had a
    // chance to set its instance pointer.
@@ -622,7 +620,7 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
          return (intptr_t) 2400;
 
       case audioMasterCurrentId:
-         return mCurrentEffectID;
+         return vst->mCurrentEffectID;
 
       case audioMasterGetVendorString:
          strcpy((char *) ptr, "Audacity Team");    // Do not translate, max 64 + 1 for null terminator
@@ -1687,7 +1685,7 @@ bool VSTEffect::Load()
    // Initialize the plugin
    try
    {
-      mAEffect = pluginMain(VSTEffect::AudioMaster);
+      mAEffect = pluginMain(VSTEffectWrapper::AudioMaster);
    }
    catch (...)
    {
@@ -1703,7 +1701,7 @@ bool VSTEffect::Load()
       // Note:  Some hosts use "user" and some use "ptr2/resvd2".  It might
       //        be worthwhile to check if user is NULL before using it and
       //        then falling back to "ptr2/resvd2".
-      mAEffect->ptr2 = this;
+      mAEffect->ptr2 = static_cast<VSTEffectWrapper*>(this);
 
       // Give the plugin an initial sample rate and blocksize
       callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
@@ -3583,6 +3581,44 @@ EffectSettings VSTEffect::MakeSettings() const
       mInitialFetchDone = true;
    }
    return result;
+}
+
+
+// Default, do-nothing implementations of virtuals in VSTEffectWrapper
+void VSTEffectWrapper::NeedIdle()
+{   
+}
+
+void VSTEffectWrapper::UpdateDisplay()
+{
+}
+
+VstTimeInfo* VSTEffectWrapper::GetTimeInfo()
+{
+   return nullptr;
+}
+
+void VSTEffectWrapper::SetBufferDelay(int samples)
+{
+}
+
+float VSTEffectWrapper::GetSampleRate()
+{
+   return 44100.0f;
+}
+
+int VSTEffectWrapper::GetProcessLevel()
+{
+   //return mProcessLevel;
+   return 1;
+}
+
+void VSTEffectWrapper::SizeWindow(int w, int h)
+{
+}
+
+void VSTEffectWrapper::Automate(int index, float value)
+{
 }
 
 
