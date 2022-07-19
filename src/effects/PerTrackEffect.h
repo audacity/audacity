@@ -33,14 +33,17 @@ public:
 
    virtual ~Source();
 
+   virtual bool AcceptsBuffers(const Buffers &buffers) const = 0;
+   virtual bool AcceptsBlockSize(size_t blockSize) const = 0;
+
    //! Occupy vacant space in Buffers with some data
    /*!
     May exceeed a single block of production
 
     @return number of positions available to read from `data`
-    @pre `Remaining() == 0 || data.Channels() > 0`
-    @pre `Remaining() == 0 || data.BufferSize() > 0`
-       (therefore its block size is positive too)
+    @pre `AcceptsBuffers(data)`
+    @pre `AcceptsBlockSize(data.BlockSize())`
+    @pre `data.BlockSize() > 0`
     @post result: `result <= data.BlockSize()`
     @post result: `result <= data.Remaining()`
     @post result: `result <= Remaining()`
@@ -99,6 +102,13 @@ public:
    SampleTrackSource(const SampleTrack &left, const SampleTrack *pRight,
       sampleCount start, sampleCount len, Poller pollUser);
    ~SampleTrackSource() override;
+
+   //! If constructed with positive length, then accepts buffers only when
+   //! number of channels and size of buffers are positive
+   bool AcceptsBuffers(const Buffers &buffers) const override;
+
+   //! Always true
+   bool AcceptsBlockSize(size_t blockSize) const override;
 
    size_t Acquire(Buffers &data) override;
    sampleCount Remaining() const override;
@@ -211,9 +221,9 @@ private:
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;
    /*!
+    @pre `source.AcceptsBuffers(inBuffers)`
+    @pre `source.AcceptsBlockSize(inBuffers.BlockSize())`
     @pre `inBuffers.BlockSize() > 0`
-    @pre `source.Remaining() == 0 || inBuffers.Channels() > 0`
-    @pre `source.Remaining() == 0 || inBuffers.BufferSize() > 0`
     @pre `outBuffers.Channels() > 0`
     @pre `outBuffers.BufferSize() > 0`
     @pre `outBuffers.IsRewound()`
@@ -319,7 +329,7 @@ public:
    ~EffectStage();
 
    /*!
-    @pre `data.BufferSize() > 0`
+    @pre `data.BlockSize() > 0`
     @post result: `result <= data.BlockSize()`
     @post result: `result <= data.Remaining()`
     @post result: `result <= Remaining()`

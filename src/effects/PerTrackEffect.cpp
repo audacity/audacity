@@ -234,6 +234,17 @@ SampleTrackSource::SampleTrackSource(
 
 SampleTrackSource::~SampleTrackSource() = default;
 
+bool SampleTrackSource::AcceptsBuffers(const Buffers &buffers) const
+{
+   return mOutputRemaining == 0 ||
+      (buffers.Channels() > 0 && buffers.BufferSize() > 0);
+}
+
+bool SampleTrackSource::AcceptsBlockSize(size_t) const
+{
+   return true;
+}
+
 sampleCount SampleTrackSource::Remaining() const
 {
    return std::max<sampleCount>(0, mOutputRemaining);
@@ -241,8 +252,9 @@ sampleCount SampleTrackSource::Remaining() const
 
 size_t SampleTrackSource::Acquire(Buffers &data)
 {
-   assert(data.BufferSize() > 0); // pre
-   // Therefore its block size is nonzero
+   assert(AcceptsBuffers(data));
+   assert(AcceptsBlockSize(data.BlockSize()));
+   assert(data.BlockSize() > 0);
 
    if (!mInitialized || !data.Remaining()) {
       // Need to refill the buffers
@@ -301,8 +313,7 @@ EffectStage::~EffectStage()
 
 size_t EffectStage::Acquire(Buffers &data)
 {
-   assert(data.BufferSize() > 0); // pre
-   // Therefore its block size is nonzero
+   assert(data.BlockSize() > 0); // pre
 
    data.Rewind();
    assert(data.Remaining() > 0);
@@ -616,8 +627,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
          SampleTrackSource source{ left, pRight, start, len, pollUser };
          // Assert source is safe to Acquire inBuffers
-         assert(source.Remaining() == 0 ||
-            (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
+         assert(source.AcceptsBuffers(inBuffers));
+         assert(source.AcceptsBlockSize(inBuffers.BlockSize()));
 
          WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
 
@@ -654,9 +665,12 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    const double sampleRate, const ChannelNames map,
    Buffers &inBuffers, Buffers &outBuffers) const
 {
+   assert(source.AcceptsBuffers(inBuffers));
+
    bool rc = true;
    const auto blockSize = inBuffers.BlockSize();
    assert(blockSize > 0);
+   assert(source.AcceptsBlockSize(blockSize));
 
    // For each input block of samples, we pass it to the effect along with a
    // variable output location.  This output location is simply a pointer into a
