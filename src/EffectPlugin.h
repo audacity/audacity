@@ -22,6 +22,11 @@ class EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
 
+//! Information about dialogs connected to an effect instance,
+//! and the selection of tracks, time, and frequencies to process
+struct EffectContext {
+};
+
 class TrackList;
 class WaveTrackFactory;
 class NotifyingSelectedRegion;
