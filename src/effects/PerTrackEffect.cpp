@@ -307,18 +307,25 @@ bool SampleTrackSource::Release()
    return !mPollUser || mPollUser(mPos);
 }
 
-EffectStage::EffectStage(Buffers &inBuffers,
+EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
    Instance &instance, EffectSettings &settings, double sampleRate,
    std::optional<sampleCount> genLength, ChannelNames map
-)  : mInBuffers{ inBuffers }
+)  : mUpstream{ upstream }, mInBuffers{ inBuffers }
    , mInstance{ instance }, mSettings{ settings }, mSampleRate{ sampleRate }
    , mIsProcessor{ !genLength.has_value() }
-   //! Need to guarantee Remaining() is initially positive for processor
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
+   assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
    // Give the plugin a chance to initialize
    if (!mInstance.ProcessInitialize(mSettings, mSampleRate, map))
       throw std::exception{};
+   assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
+
+   // Establish invariant
+   mInBuffers.Rewind();
+   if (!mIsProcessor)
+      // maybe not needed, but harmless
+      FinishUpstream();
 }
 
 EffectStage::~EffectStage()
@@ -327,35 +334,166 @@ EffectStage::~EffectStage()
    mInstance.ProcessFinalize();
 }
 
+bool EffectStage::AcceptsBuffers(const Buffers &buffers) const
+{
+   return true;
+}
+
+bool EffectStage::AcceptsBlockSize(size_t size) const
+{
+   // Test the equality of input and output block sizes
+   return mInBuffers.BlockSize() == size;
+}
+
 std::optional<size_t> EffectStage::Acquire(Buffers &data, size_t bound)
 {
-   assert(bound <= data.BlockSize());
-   data.Rewind();
-   assert(data.Remaining() > 0);
+   assert(AcceptsBuffers(data));
+   assert(AcceptsBlockSize(data.BlockSize()));
+   // pre, needed for Process() and Discard()
+   assert(bound <= std::min(data.BlockSize(), data.Remaining()));
 
-   auto result = limitSampleBufferSize(
-      std::min(bound, data.Remaining()), Remaining());
-   if (mIsProcessor && !mCleared) {
-      // From this point on, we only want to feed zeros to the plugin
-      const auto blockSize = data.BlockSize();
-      for (size_t ii = 0; ii < data.Channels(); ++ii) {
-         auto p = &data.GetWritePosition(ii);
-         std::fill(p, p + blockSize, 0);
+   // For each input block of samples, we pass it to the effect along with a
+   // variable output location.  This output location is simply a pointer into a
+   // much larger buffer.  This reduces the number of calls required to add the
+   // samples to the output track.
+   //
+   // Upon return from the effect, the output samples are "moved to the left" by
+   // the number of samples in the current latency setting, effectively removing any
+   // delay introduced by the effect.
+   //
+   // At the same time the total number of delayed samples are gathered and when
+   // there is no further input data to process, the loop continues to call the
+   // effect with an empty input buffer until the effect has had a chance to
+   // return all of the remaining delayed samples.
+
+   // Invariant satisfies pre for mUpstream.Acquire() and for Process()
+   assert(mInBuffers.BlockSize() <= mInBuffers.Remaining());
+
+   size_t curBlockSize = 0;
+
+   if (auto oCurBlockSize = FetchProcessAndAdvance(data, bound, false)
+      ; !oCurBlockSize
+   )
+      return {};
+   else {
+      curBlockSize = *oCurBlockSize;
+      if (mIsProcessor && !mLatencyDone) {
+         // Come here only in the first call to Acquire()
+         // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
+         // until at least one block of samples is processed.  Find latency
+         // once only for the track and assume it doesn't vary
+         mDelayRemaining = mDelay =
+            mInstance.GetLatency(mSettings, mSampleRate);
+         // Discard all the latency
+         auto delay = mDelay;
+         while (delay > 0 && curBlockSize > 0) {
+            auto discard = limitSampleBufferSize(curBlockSize, delay);
+            data.Discard(discard, curBlockSize);
+            delay -= discard;
+            curBlockSize -= discard;
+            if (curBlockSize == 0) {
+               if (auto oCurBlockSize =
+                  FetchProcessAndAdvance(data, bound, false)
+               )
+                  curBlockSize = *oCurBlockSize;
+               else
+                  return {};
+            }
+            mLastProduced -= discard;
+         }
+         while (delay > 0) {
+            assert(curBlockSize == 0);
+            // Finish one-time delay in case it exceeds entire upstream length
+            // Upstream must have been exhausted
+            assert(mUpstream.Remaining() == 0);
+            // Feed zeroes to the effect
+            auto zeroes = limitSampleBufferSize(data.BlockSize(), delay);
+            FetchProcessAndAdvance(data, zeroes, true);
+            delay -= zeroes;
+         }
+         mLatencyDone = true;
       }
-      mCleared = true;
    }
-   // true because the three terms of the min would be positive
+
+   if (curBlockSize < bound) {
+      // Continue feeding zeroes; this code block will produce as many zeroes
+      // at the end as were discarded at the beginning
+      auto zeroes =
+         limitSampleBufferSize(bound - curBlockSize, mDelayRemaining);
+      FetchProcessAndAdvance(data, zeroes, true, curBlockSize);
+      mDelayRemaining -= zeroes;
+   }
+
+   auto result = mLastProduced + mLastZeroes;
+   // assert the post
+   assert(data.Remaining() > 0);
+   assert(result <= bound);
+   assert(result <= data.Remaining());
+   assert(result <= Remaining());
    assert(bound == 0 || Remaining() == 0 || result > 0);
    return { result };
 }
 
+std::optional<size_t> EffectStage::FetchProcessAndAdvance(
+   Buffers &data, size_t bound, bool doZeroes, size_t outBufferOffset)
+{
+   std::optional<size_t> oCurBlockSize;
+   // Generator always supplies zeroes in
+   doZeroes = doZeroes || !mIsProcessor;
+   if (!doZeroes)
+      oCurBlockSize = mUpstream.Acquire(mInBuffers, bound);
+   else
+      oCurBlockSize = { bound };
+   if (!oCurBlockSize)
+      return {};
+
+   const auto curBlockSize = *oCurBlockSize;
+   if (curBlockSize == 0) {
+      assert(doZeroes || mUpstream.Remaining() == 0); // post of Acquire()
+      FinishUpstream();
+   }
+   else {
+      // Called only in Acquire()
+      // invariant or post of mUpstream.Acquire() satisfies pre of Process()
+      // because curBlockSize <= bound <= mInBuffers.blockSize()
+      //    == data.BlockSize()
+      // and mInBuffers.BlockSize() <= mInBuffers.Remaining() by invariant
+      // and data.BlockSize() <= data.Remaining() by pre of Acquire()
+      if (!Process(data, curBlockSize, outBufferOffset))
+         return {};
+
+      if (doZeroes)
+         // Either a generator or doing the tail; will count down delay
+         mLastZeroes = limitSampleBufferSize(curBlockSize, DelayRemaining());
+      else {
+         // Will count down the upstream
+         mLastProduced += curBlockSize;
+         mUpstream.Release();
+         mInBuffers.Advance(curBlockSize);
+         if (mInBuffers.Remaining() < mInBuffers.BlockSize())
+            // Maintain invariant minimum availability
+            mInBuffers.Rotate();
+      }
+   }
+   return oCurBlockSize;
+}
+
 bool EffectStage::Process(
-   const Buffers &data, size_t curBlockSize) const
+   const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const
 {
    size_t processed{};
    try {
+      auto outPositions = data.Positions();
+      std::vector<float *> advancedPositions;
+      if (outBufferOffset > 0) {
+         auto channels = data.Channels();
+         advancedPositions.reserve(channels);
+         for (size_t ii = 0; ii < channels; ++ii)
+            advancedPositions.push_back(outPositions[ii] + outBufferOffset);
+         outPositions = advancedPositions.data();
+      }
       processed = mInstance.ProcessBlock(mSettings,
-         mInBuffers.Positions(), data.Positions(), curBlockSize);
+         mInBuffers.Positions(), outPositions, curBlockSize);
    }
    catch (const AudacityException &) {
       // PRL: Bug 437:
@@ -375,28 +513,34 @@ bool EffectStage::Process(
 
 sampleCount EffectStage::Remaining() const
 {
-   return std::max<sampleCount>(0, mDelayRemaining);
+   // Not correct until at least one call to Acquire() so that mDelay is
+   // assigned.  mDelay does not change thereafter; mDelayRemaining decreases
+   // from that value to 0.
+   return mLastProduced + mUpstream.Remaining() - mDelay + DelayRemaining();
 }
 
-size_t EffectStage::ComputeDiscard(size_t curBlockSize)
+bool EffectStage::Release()
 {
-   // Get the current number of delayed samples and accumulate
-   if (mIsProcessor && !mLatencyDone) {
-      // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
-      // until at least one block of samples is processed.  Find latency
-      // once only for the track and assume it doesn't vary
-      mDelayRemaining = mInstance.GetLatency(mSettings, mSampleRate);
-      mLatencyDone = true;
+   // Progress toward termination (Remaining() == 0),
+   // if mLastProduced + mLastZeroes > 0,
+   // which is what Acquire() last returned
+   mDelayRemaining -= mLastZeroes;
+   mLastProduced = mLastZeroes = 0;
+   return true;
+}
+
+void EffectStage::FinishUpstream()
+{
+   if (!mCleared) {
+      // From this point on, we only want to feed zeros to the plugin
+      mInBuffers.Rewind();
+      const auto blockSize = mInBuffers.BlockSize();
+      for (size_t ii = 0; ii < mInBuffers.Channels(); ++ii) {
+         auto p = &mInBuffers.GetWritePosition(ii);
+         std::fill(p, p + blockSize, 0);
+      }
+      mCleared = true;
    }
-   return mIsProcessor
-      ? limitSampleBufferSize(curBlockSize, Remaining())
-      : 0;
-}
-
-void EffectStage::Release(const size_t curBlockSize)
-{
-   // Progress toward termination (Remaining() == 0) if curBlockSize > 0
-   mDelayRemaining -= limitSampleBufferSize(curBlockSize, Remaining());
 }
 
 WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
@@ -674,93 +818,56 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 }
 
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
-   AudioGraph::Source &source, AudioGraph::Sink &sink,
+   AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
    const double sampleRate, const ChannelNames map,
    Buffers &inBuffers, Buffers &outBuffers) const
 {
-   assert(source.AcceptsBuffers(inBuffers));
+   assert(upstream.AcceptsBuffers(inBuffers));
    assert(sink.AcceptsBuffers(outBuffers));
 
-   bool rc = true;
    const auto blockSize = inBuffers.BlockSize();
-   assert(source.AcceptsBlockSize(blockSize));
+   assert(upstream.AcceptsBlockSize(blockSize));
+   assert(blockSize == outBuffers.BlockSize());
 
-   // For each input block of samples, we pass it to the effect along with a
-   // variable output location.  This output location is simply a pointer into a
-   // much larger buffer.  This reduces the number of calls required to add the
-   // samples to the output track.
-   //
-   // Upon return from the effect, the output samples are "moved to the left" by
-   // the number of samples in the current latency setting, effectively removing any
-   // delay introduced by the effect.
-   //
-   // At the same time the total number of delayed samples are gathered and when
-   // there is no further input data to process, the loop continues to call the
-   // effect with an empty input buffer until the effect has had a chance to
-   // return all of the remaining delayed samples.
-
-   bool isProcessor = GetType() == EffectTypeProcess;
-
-   EffectStage stage{ inBuffers,
+   EffectStage source{ upstream, inBuffers,
       instance, settings, sampleRate, genLength, map };
+   assert(source.AcceptsBlockSize(blockSize)); // post of ctor
+   assert(source.AcceptsBuffers(outBuffers));
 
+   // Satisfaction of pre of Acquire():
+   const auto Invariant = [&]{ return outBuffers.Remaining() >= blockSize; };
+
+   // Satisfy invariant initially
    outBuffers.Rewind();
-   // Invariant O: blockSize positions from outBuffers.Positions() available
-   // Initially true because of preconditions that outBuffers has the same
-   // block size as inBuffers and is rewound
-   assert(blockSize <= outBuffers.Remaining());
+   assert(Invariant());
 
-   // Call the effect until we run out of input or delayed samples
-   while (source.Remaining() > 0 || stage.Remaining() > 0) {
-      const auto oCurBlockSize = (source.Remaining() > 0)
-         ? source.Acquire(inBuffers, blockSize)
-         : stage.Acquire(inBuffers, blockSize);
-      if (!oCurBlockSize)
-         return false;
+   std::optional<size_t> oCurBlockSize;
+   while ((oCurBlockSize = source.Acquire(outBuffers, blockSize)).has_value()) {
       const auto curBlockSize = *oCurBlockSize;
-      assert(curBlockSize <= inBuffers.Remaining()); // Process needs this
-      // post of Acquire() gives termination guarantee below
-      assert(curBlockSize > 0);
+      if (curBlockSize == 0)
+         break;
+
+      // post of source.Acquire() satisfies pre of sink.Release()
       assert(curBlockSize <= blockSize);
-
-      // Invariant O satisfies the precondition
-      if (!stage.Process(outBuffers, curBlockSize))
+      if (!sink.Release(outBuffers, curBlockSize))
          return false;
-
-      // Preconditions for Discard() and Consume() hold
-      // because curBlockSize <= blockSize <= outBuffers.Remaining()
-      auto discard = stage.ComputeDiscard(curBlockSize);
-
-      if (source.Remaining() > 0) {
-         if (!source.Release())
-            return false;
-         // post of Advance() implies progress to loop termination
-         if (source.Remaining() > 0) {
-            // See where curBlockSize was decided:
-            assert(curBlockSize <= inBuffers.Remaining());
-            inBuffers.Advance(curBlockSize);
-            if (inBuffers.Remaining() < blockSize)
-               // Restore sufficient space for Produce()
-               inBuffers.Rotate();
-         }
-      }
-      else
-         // make progress to termination
-         stage.Release(curBlockSize);
    
-      // Do latency correction on effect output
-      if (discard)
-         outBuffers.Discard(discard, curBlockSize - discard);
+      // This may break the invariant
+      outBuffers.Advance(curBlockSize);
 
-      if (!sink.Release(outBuffers, curBlockSize - discard))
+      // posts of source.Acquire() and source.Relase()
+      // give termination guarantee
+      assert(source.Remaining() == 0 || curBlockSize > 0);
+      if (!source.Release())
          return false;
-      outBuffers.Advance(curBlockSize - discard);
+
+      // Restore the invariant
       if (!sink.Acquire(outBuffers))
          return false;
-      // Invariant O preserved
+      assert(Invariant());
    }
-   return rc;
+   return oCurBlockSize.has_value();
 }
 
 void WaveTrackSink::Flush(Buffers &data, const double t0, const double t1)

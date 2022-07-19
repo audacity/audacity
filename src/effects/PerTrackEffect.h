@@ -54,18 +54,20 @@ public:
     @post `data.Remaining() > 0`
     @post result: `!result || bound == 0 || Remaining() == 0 || *result > 0`
        (progress guarantee)
-    @post `Remaining()` is unchanged
+    @post `Remaining()` was not previously defined, or is unchanged
     */
    virtual std::optional<size_t> Acquire(Buffers &data, size_t bound) = 0;
 
    //! Result includes any amount Acquired and not yet Released
    /*!
+    May be undefined before the first successful call to Acquire()
     @post result: `result >= 0`
     */
    virtual sampleCount Remaining() const = 0;
 
    //! Caller is done examining last Acquire()d positions
    /*!
+    May be called only after at least one successful call to Acquire()
     @return success
     @post `Remaining()` reduced by what was last returned by `Acquire()`
     */
@@ -337,57 +339,66 @@ private:
    size_t mBlockSize{ 0 };
 };
 
-class EffectStage final {
+//! Decorate a source with a non-timewarping effect, which may have latency
+class EffectStage final : public AudioGraph::Source {
 public:
-   using Buffers = AudioGraph::Buffers;
    using Instance = PerTrackEffect::Instance;
 
    //! Completes `instance.ProcessInitialize()` or throws a std::exception
-   EffectStage(Buffers &inBuffers,
+   /*!
+    @pre `upstream.AcceptsBlockSize(inBuffers.BlockSize())`
+    @post `AcceptsBlockSize(inBuffers.BlockSize())`
+    */
+   EffectStage(Source &upstream, Buffers &inBuffers,
       Instance &instance, EffectSettings &settings, double sampleRate,
       std::optional<sampleCount> genLength, ChannelNames map);
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
    //! Finalizes the instance
-   ~EffectStage();
+   ~EffectStage() override;
 
    /*!
-    @pre `bound <= data.BlockSize()`
-    @pre `data.BlockSize() <= data.Remaining()`
-    @post result: `!result || *result <= bound`
-    @post result: `!result || *result <= data.Remaining()`
-    @post result: `!result || *result <= Remaining()`
-    @post `data.Remaining() > 0`
-    @post result: `!result || bound == 0 || *Remaining() == 0 || *result > 0`
-       (progress guarantee)
-    @post `Remaining()` is unchanged
+    @return true
     */
-   std::optional<size_t> Acquire(Buffers &data, size_t bound);
-   //! May decrease after one Process() happened!  Then constant
-   sampleCount Remaining() const;
-   //! @post result: `result <= curBlockSize`
-   size_t ComputeDiscard(size_t curBlockSize);
-   //! @post (`curBlockSize == 0` && old `Remaining() == 0`),
-   //!  or `Remaining()` decreases
-   void Release(size_t curBlockSize);
+   bool AcceptsBuffers(const Buffers &buffers) const override;
+   //! See postcondition of constructor
+   bool AcceptsBlockSize(size_t size) const override;
+
+   std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
+   sampleCount Remaining() const override;
+   bool Release() override;
+
+private:
+   sampleCount DelayRemaining() const
+      { return std::max<sampleCount>(0, mDelayRemaining); }
 
    //! Produce exactly `curBlockSize` samples in `data`
    /*!
-    @pre curBlockSize <= data.BlockSize()
-    @pre curBlockSize <= data.Remaining()
+    @pre curBlockSize <= data.BlockSize() - outBufferOffset
+    @pre curBlockSize <= data.Remaining() - outBufferOffset
     @pre curBlockSize <= mInBuffers.Remaining()
     @return success
     */
-   bool Process(const Buffers &data, size_t curBlockSize) const;
+   bool Process(
+      const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const;
 
-private:
+   std::optional<size_t> FetchProcessAndAdvance(
+      Buffers &data, size_t bound, bool doZeros, size_t outBufferOffset = 0);
+
+   void FinishUpstream();
+
+   Source &mUpstream;
+   //! @invariant mInBuffers.BlockSize() <= mInBuffers.Remaining()
    Buffers &mInBuffers;
    Instance &mInstance;
    EffectSettings &mSettings;
    const double mSampleRate;
    const bool mIsProcessor;
 
+   sampleCount mDelay{};
    sampleCount mDelayRemaining;
+   size_t mLastProduced{};
+   size_t mLastZeroes{};
    bool mLatencyDone{ false };
    bool mCleared{ false };
 };
