@@ -253,7 +253,7 @@ sampleCount SampleTrackSource::Remaining() const
    return std::max<sampleCount>(0, mOutputRemaining);
 }
 
-size_t SampleTrackSource::Acquire(Buffers &data)
+std::optional<size_t> SampleTrackSource::Acquire(Buffers &data)
 {
    assert(AcceptsBuffers(data));
    assert(AcceptsBlockSize(data.BlockSize()));
@@ -282,7 +282,7 @@ size_t SampleTrackSource::Acquire(Buffers &data)
    assert(result <= Remaining());
    // true because the three terms of the min would be positive
    assert(Remaining() == 0 || result > 0);
-   return result;
+   return { result };
 }
 
 bool SampleTrackSource::Release()
@@ -313,7 +313,7 @@ EffectStage::~EffectStage()
    mInstance.ProcessFinalize();
 }
 
-size_t EffectStage::Acquire(Buffers &data)
+std::optional<size_t> EffectStage::Acquire(Buffers &data)
 {
    data.Rewind();
    assert(data.Remaining() > 0);
@@ -331,7 +331,7 @@ size_t EffectStage::Acquire(Buffers &data)
    }
    // true because the three terms of the min would be positive
    assert(Remaining() == 0 || result > 0);
-   return result;
+   return { result };
 }
 
 bool EffectStage::Process(
@@ -698,9 +698,12 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    // Call the effect until we run out of input or delayed samples
    while (source.Remaining() > 0 || stage.Remaining() > 0) {
-      const auto curBlockSize = (source.Remaining() > 0)
+      const auto oCurBlockSize = (source.Remaining() > 0)
          ? source.Acquire(inBuffers)
          : stage.Acquire(inBuffers);
+      if (!oCurBlockSize)
+         return false;
+      const auto curBlockSize = *oCurBlockSize;
       assert(curBlockSize <= inBuffers.Remaining()); // Process needs this
       // post of Acquire() gives termination guarantee below
       assert(curBlockSize > 0);

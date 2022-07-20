@@ -40,17 +40,18 @@ public:
    /*!
     May exceeed a single block of production
 
-    @return number of positions available to read from `data`
+    @return number of positions available to read from `data` or nullopt to fail
     @pre `AcceptsBuffers(data)`
     @pre `AcceptsBlockSize(data.BlockSize())`
-    @post result: `result <= data.BlockSize()`
-    @post result: `result <= data.Remaining()`
-    @post result: `result <= Remaining()`
+    @post result: `!result || *result <= data.BlockSize()`
+    @post result: `!result || *result <= data.Remaining()`
+    @post result: `!result || *result <= Remaining()`
     @post `data.Remaining() > 0`
-    @post result: `Remaining() == 0 || result > 0` (progress guarantee)
+    @post result: `!result || Remaining() == 0 || *result > 0`
+       (progress guarantee)
     @post `Remaining()` is unchanged
     */
-   virtual size_t Acquire(Buffers &data) = 0;
+   virtual std::optional<size_t> Acquire(Buffers &data) = 0;
 
    //! Result includes any amount Acquired and not yet Released
    /*!
@@ -111,7 +112,7 @@ public:
    //! Always true
    bool AcceptsBlockSize(size_t blockSize) const override;
 
-   size_t Acquire(Buffers &data) override;
+   std::optional<size_t> Acquire(Buffers &data) override;
    sampleCount Remaining() const override;
    //! Can test for user cancellation
    bool Release() override;
@@ -339,14 +340,15 @@ public:
    ~EffectStage();
 
    /*!
-    @post result: `result <= data.BlockSize()`
-    @post result: `result <= data.Remaining()`
-    @post result: `result <= Remaining()`
+    @post result: `!result || *result <= data.BlockSize()`
+    @post result: `!result || *result <= data.Remaining()`
+    @post result: `!result || *result <= Remaining()`
     @post `data.Remaining() > 0`
-    @post result: `Remaining() == 0 || result > 0` (progress guarantee)
+    @post result: `!result || *Remaining() == 0 || *result > 0`
+       (progress guarantee)
     @post `Remaining()` is unchanged
     */
-   size_t Acquire(Buffers &data);
+   std::optional<size_t> Acquire(Buffers &data);
    //! May decrease after one Process() happened!  Then constant
    sampleCount Remaining() const;
    //! @post result: `result <= curBlockSize`
