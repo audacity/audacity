@@ -662,9 +662,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
    xmlFile.StartTag(XMLTag());
    const auto active = mMainSettings.extra.GetActive();
    xmlFile.WriteAttr(activeAttribute, active);
-   xmlFile.WriteAttr(
-      idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mPlugin)));
-   xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mPlugin->GetVersion()));
+   xmlFile.WriteAttr(idAttribute, PluginManager::GetID(mPlugin));
+   xmlFile.WriteAttr(versionAttribute, mPlugin->GetVersion());
 
    CommandParameters cmdParms;
    if (mPlugin->SaveSettings(mMainSettings, cmdParms)) {
@@ -679,8 +678,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
          wxString entryValue = cmdParms.Read(entryName, "");
 
          xmlFile.StartTag(parameterAttribute);
-         xmlFile.WriteAttr(nameAttribute, XMLWriter::XMLEsc(entryName));
-         xmlFile.WriteAttr(valueAttribute, XMLWriter::XMLEsc(entryValue));
+         xmlFile.WriteAttr(nameAttribute, entryName);
+         xmlFile.WriteAttr(valueAttribute, entryValue);
          xmlFile.EndTag(parameterAttribute);
 
          entryKeepGoing = cmdParms.GetNextEntry(entryName, entryIndex);
