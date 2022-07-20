@@ -1545,18 +1545,17 @@ void VSTEffect::ShowOptions()
 // VSTEffect implementation
 // ============================================================================
 
-bool VSTEffect::Load()
+// Load the VST things that can be shared among all instances
+//------------------------------------------------------------------------------
+bool VSTEffect::LoadCommon()
 {
-   vstPluginMain pluginMain;
-   bool success = false;
-
    long effectID = 0;
-   wxString realPath = mPath.BeforeFirst(wxT(';'));
+   mRealPath = mPath.BeforeFirst(wxT(';'));
    mPath.AfterFirst(wxT(';')).ToLong(&effectID);
-   mCurrentEffectID = (intptr_t) effectID;
+   mCurrentEffectID = (intptr_t)effectID;
 
-   mModule = NULL;
-   mAEffect = NULL;
+   mModule = nullptr;
+   mAEffect = nullptr;
 
 #if defined(__WXMAC__)
    // Start clean
@@ -1565,7 +1564,7 @@ bool VSTEffect::Load()
    mResource = ResourceHandle{};
 
    // Convert the path to a CFSTring
-   wxCFStringRef path(realPath);
+   wxCFStringRef path(mRealPath);
 
    // Create the bundle using the URL
    BundleHandle bundleRef{ CFBundleCreate(kCFAllocatorDefault,
@@ -1574,7 +1573,7 @@ bool VSTEffect::Load()
          CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
             path, kCFURLPOSIXPathStyle, true)
       }.get()
-   )};
+   ) };
 
    // Bail if the bundle wasn't created
    if (!bundleRef)
@@ -1594,21 +1593,21 @@ bool VSTEffect::Load()
       return false;
 
    // Attempt to open it
-   mModule.reset((char*)dlopen((char *) exePath, RTLD_NOW | RTLD_LOCAL));
+   mModule.reset((char*)dlopen((char*)exePath, RTLD_NOW | RTLD_LOCAL));
    if (!mModule)
       return false;
 
    // Try to locate the NEW plugin entry point
-   pluginMain = (vstPluginMain) dlsym(mModule.get(), "VSTPluginMain");
+   mPluginMain = static_cast<vstPluginMain>( dlsym(mModule.get(), "VSTPluginMain") );
 
    // If not found, try finding the old entry point
-   if (pluginMain == NULL)
+   if (mPluginMain == nullptr)
    {
-      pluginMain = (vstPluginMain) dlsym(mModule.get(), "main_macho");
+      mPluginMain = static_cast<vstPluginMain>( dlsym(mModule.get(), "main_macho") );
    }
 
    // Must not be a VST plugin
-   if (pluginMain == NULL)
+   if (mPluginMain == nullptr)
    {
       mModule.reset();
       return false;
@@ -1629,8 +1628,8 @@ bool VSTEffect::Load()
       wxLogNull nolog;
 
       // Try to load the library
-      auto lib = std::make_unique<wxDynamicLibrary>(realPath);
-      if (!lib) 
+      auto lib = std::make_unique<wxDynamicLibrary>(mRealPath);
+      if (!lib)
          return false;
 
       // Bail if it wasn't successful
@@ -1638,11 +1637,11 @@ bool VSTEffect::Load()
          return false;
 
       // Try to find the entry point, while suppressing error messages
-      pluginMain = (vstPluginMain) lib->GetSymbol(wxT("VSTPluginMain"));
-      if (pluginMain == NULL)
+      mPluginMain = static_cast<vstPluginMain>( lib->GetSymbol(wxT("VSTPluginMain")) );
+      if (mPluginMain == nullptr)
       {
-         pluginMain = (vstPluginMain) lib->GetSymbol(wxT("main"));
-         if (pluginMain == NULL)
+         mPluginMain = static_cast<vstPluginMain>( lib->GetSymbol(wxT("main")) );
+         if (mPluginMain == nullptr)
             return false;
       }
 
@@ -1671,21 +1670,21 @@ bool VSTEffect::Load()
 #ifndef RTLD_DEEPBIND
 #define RTLD_DEEPBIND 0
 #endif
-   ModuleHandle lib {
-      (char*) dlopen((const char *)wxString(realPath).ToUTF8(),
+   ModuleHandle lib{
+      (char*)dlopen((const char*)wxString(mRealPath).ToUTF8(),
                      RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND)
    };
-   if (!lib) 
+   if (!lib)
    {
       return false;
    }
 
    // Try to find the entry point, while suppressing error messages
-   pluginMain = (vstPluginMain) dlsym(lib.get(), "VSTPluginMain");
-   if (pluginMain == NULL)
+   mPluginMain = static_cast<vstPluginMain>( dlsym(lib.get(), "VSTPluginMain") );
+   if (mPluginMain == nullptr)
    {
-      pluginMain = (vstPluginMain) dlsym(lib.get(), "main");
-      if (pluginMain == NULL)
+      mPluginMain = static_cast<vstPluginMain>( dlsym(lib.get(), "main") );
+      if (mPluginMain == nullptr)
          return false;
    }
 
@@ -1694,10 +1693,22 @@ bool VSTEffect::Load()
 
 #endif
 
+   return true;
+}
+
+
+bool VSTEffect::Load()
+{
+   // TODO: move this out of here, so that it can be called only once
+   if ( ! LoadCommon() )
+      return false;
+
+   bool success = false;
+
    // Initialize the plugin
    try
    {
-      mAEffect = pluginMain(VSTEffectWrapper::AudioMaster);
+      mAEffect = mPluginMain(VSTEffectWrapper::AudioMaster);
    }
    catch (...)
    {
@@ -1748,7 +1759,7 @@ bool VSTEffect::Load()
          }
          if (mName.length() == 0)
          {
-            mName = wxFileName{realPath}.GetName();
+            mName = wxFileName{mRealPath}.GetName();
          }
 
          if (mVstVersion >= 2)

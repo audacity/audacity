@@ -218,6 +218,12 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    virtual int GetProcessLevel() = 0;
    virtual void SizeWindow(int w, int h) = 0;
    virtual void Automate(int index, float value) = 0;
+
+   // Loaded once when getting common VST things;
+   // placed here because they will be reused when an instance is created
+   //
+   vstPluginMain mPluginMain = nullptr;   // entry point in the plugin dll
+   wxString      mRealPath;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -355,6 +361,9 @@ protected:
 
 private:
    // Plugin loading and unloading
+
+   bool LoadCommon();
+
    bool Load();
    void Unload();
    std::vector<int> GetEffectIDs();
