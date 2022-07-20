@@ -55,11 +55,10 @@ class AUDACITY_DLL_API Ruler {
    // (at the center of the pixel, in both cases)
    void SetRange(double min, double max, double hiddenMin, double hiddenMax);
 
-   // Set the kind of updater the ruler will use
-   // (Linear, Logarithmic, Custom, etc.)
+   // Set the kind of updater the ruler will use (Linear, Logarithmic, Custom, etc.)
    void SetUpdater(std::unique_ptr<Updater> pUpdater);
 
-   // An overload to replace SetUseZoomInfo
+   // An overload to also set ZoomInfo while adjusting updater
    void SetUpdater(std::unique_ptr<Updater> pUpdater, int leftOffset);
 
    //

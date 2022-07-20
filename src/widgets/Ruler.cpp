@@ -36,14 +36,6 @@
          "1:06:40", for example.  Will display fractions of
          a second, and tick marks are all reasonable round
          numbers for time (i.e. 15 seconds, 30 seconds, etc.)
-*//***************************************************************//**
-
-\class Ruler::Label
-\brief An array of these created by the Ruler is used to determine
-what and where text annotations to the numbers on the Ruler get drawn.
-
-\todo Check whether Ruler is costing too much time in allocation/free of
-array of Ruler::Label.
 
 *//******************************************************************/
 
@@ -461,7 +453,8 @@ void Ruler::UpdateCache(
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
       cache.mBits, cache.mRect
    };
-   mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct);
+   if (mpUpdater != nullptr)
+      mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct);
 }
 
 auto Ruler::GetFonts() const -> RulerStruct::Fonts

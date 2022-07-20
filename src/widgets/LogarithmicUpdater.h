@@ -14,9 +14,7 @@
 #include "Updater.h"
 
 struct LogarithmicUpdater : public Updater {
-   explicit LogarithmicUpdater(const ZoomInfo* z = nullptr)
-      : Updater{ z }
-   {}
+   using Updater::Updater;
    ~LogarithmicUpdater() override;
 
    void Update(

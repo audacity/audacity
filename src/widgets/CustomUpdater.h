@@ -14,9 +14,7 @@
 #include "Updater.h"
 
 struct CustomUpdater : public Updater {
-   explicit CustomUpdater(const ZoomInfo* z = nullptr)
-      : Updater{ z }
-   {}
+   using Updater::Updater;
    ~CustomUpdater() override;
 
    void Update(

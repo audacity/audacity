@@ -71,7 +71,7 @@ struct Updater {
 
    const ZoomInfo* zoomInfo;
 
-   explicit Updater(const ZoomInfo* z)
+   explicit Updater(const ZoomInfo* z = nullptr)
       : zoomInfo{ z }
    {}
    virtual ~Updater() = 0;

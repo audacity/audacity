@@ -14,9 +14,7 @@
 #include "Updater.h"
 
 struct LinearUpdater : public Updater {
-   explicit LinearUpdater(const ZoomInfo* z = nullptr)
-      : Updater{ z }
-   {}
+   using Updater::Updater;
    ~LinearUpdater() override;
 
    void Update(

@@ -16,6 +16,14 @@
 
   It supports three subclasses: LinearUpdater, LogarithmicUpdater,
   and CustomUpdater
+*//***************************************************************//**
+
+\class Updater::Label
+\brief An array of these created by the Updater is used to determine
+what and where text annotations to the numbers on the Ruler get drawn.
+
+\todo Check whether Updater is costing too much time in allocation/free of
+array of Updater::Label.
 
 *//******************************************************************/
 
