@@ -133,6 +133,8 @@ public:
    ByteCount GetFileUncompressedBytes() override;
    ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
 
+   bool SetupOutputFormat();
+
    void ReadTags(Tags* tags);
 
    wxInt32 GetStreamCount() override;
@@ -156,6 +158,8 @@ private:
    ProgressResult mUpdateResult { ProgressResult::Success };
 
    mpg123_handle* mHandle { nullptr };
+
+   bool mFloat64Output {};
 
    friend MP3ImportPlugin;
 }; // class MP3ImportFileHandle
@@ -269,16 +273,6 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
 
    CreateProgress();
 
-   int ret = mpg123_scan(mHandle);
-
-   if (ret != MPG123_OK)
-   {
-      wxLogError(
-         "Failed to scan MP3 file: %s", mpg123_plain_strerror(ret));
-
-      return ProgressResult::Failed;
-   }
-
    long long framesCount = mpg123_framelength(mHandle);
 
    mUpdateResult = mProgress->Update(0ll, framesCount);
@@ -286,17 +280,19 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    if (mUpdateResult == ProgressResult::Cancelled)
       return ProgressResult::Cancelled;
 
+   if (!SetupOutputFormat())
+      return ProgressResult::Failed;
+
    off_t frameIndex { 0 };
    unsigned char* data { nullptr };
    size_t dataSize { 0 };
 
-   int encoding = MPG123_ENC_FLOAT_32;
-
    std::vector<float> conversionBuffer;
 
+   int ret = MPG123_OK;
+
    while ((ret = mpg123_decode_frame(mHandle, &frameIndex, &data, &dataSize)) ==
-                 MPG123_OK ||
-          ret == MPG123_NEW_FORMAT)
+                 MPG123_OK)
    {
       mUpdateResult = mProgress->Update(
          static_cast<long long>(frameIndex), framesCount);
@@ -304,34 +300,12 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       if (mUpdateResult == ProgressResult::Cancelled)
          return ProgressResult::Cancelled;
 
-      if (ret == MPG123_NEW_FORMAT)
-      {
-         long rate;
-         int channels;
-         mpg123_getformat(mHandle, &rate, &channels, &encoding);
-
-         mNumChannels = channels == MPG123_MONO ? 1 : 2;
-         mChannels.resize(mNumChannels);
-
-         if (encoding != MPG123_ENC_FLOAT_32 && encoding != MPG123_ENC_FLOAT_64)
-         {
-            wxLogError("MPG123 returned unexpected encoding");
-
-            return ProgressResult::Failed;
-         }
-
-         for (unsigned i = 0; i < mNumChannels; ++i)
-            mChannels[i] = NewWaveTrack(*mTrackFactory, floatSample, rate);
-
-         continue;
-      }
-
       constSamplePtr samples = reinterpret_cast<constSamplePtr>(data);
       const size_t samplesCount = dataSize / sizeof(float) / mNumChannels;
 
       // libmpg123 picks up the format based on some "internal" precision.
       // This case is not expected to happen
-      if (encoding == MPG123_ENC_FLOAT_64)
+      if (mFloat64Output)
       {
          conversionBuffer.resize(samplesCount * mNumChannels);
 
@@ -358,7 +332,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       wxLogError(
          "Failed to decode MP3 file: %s", mpg123_plain_strerror(ret));
 
-      //return ProgressResult::Failed;
+      return ProgressResult::Failed;
    }
 
    // Flush and trim the channels
@@ -372,6 +346,31 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    ReadTags(tags);
 
    return mUpdateResult;
+}
+
+bool MP3ImportFileHandle::SetupOutputFormat()
+{
+   long rate;
+   int channels;
+   int encoding = MPG123_ENC_FLOAT_32;
+   mpg123_getformat(mHandle, &rate, &channels, &encoding);
+
+   mNumChannels = channels == MPG123_MONO ? 1 : 2;
+   mChannels.resize(mNumChannels);
+
+   if (encoding != MPG123_ENC_FLOAT_32 && encoding != MPG123_ENC_FLOAT_64)
+   {
+      wxLogError("MPG123 returned unexpected encoding");
+
+      return false;
+   }
+
+   mFloat64Output = encoding == MPG123_ENC_FLOAT_64;
+
+   for (unsigned i = 0; i < mNumChannels; ++i)
+      mChannels[i] = NewWaveTrack(*mTrackFactory, floatSample, rate);
+
+   return true;
 }
 
 void MP3ImportFileHandle::ReadTags(Tags* tags)
@@ -479,12 +478,20 @@ bool MP3ImportFileHandle::Open()
    auto errorCode = mpg123_open_handle(mHandle, this);
 
    if (errorCode != MPG123_OK)
-   {
-      wxLogError(
-         "Failed to open MP3 file: %s", mpg123_plain_strerror(errorCode));
-
       return false;
-   }
+
+   // Scan the file
+   errorCode = mpg123_scan(mHandle);
+
+   if (errorCode != MPG123_OK)
+      return false;
+
+   // Read the output format
+   errorCode = mpg123_decode_frame(mHandle, nullptr, nullptr, nullptr);
+
+   // First decode should read the format
+   if (errorCode != MPG123_NEW_FORMAT)
+      return false;
 
    return true;
 }
