@@ -543,6 +543,11 @@ public:
     */
    virtual bool IsGraphicalUI();
 
+   /*!
+    Handle the UI OnClose event. Default implementation calls mEffect.CloseUI()
+   */
+   virtual void OnClose();
+
 protected:
    // Convenience function template for binding event handler functions
    template<typename EventTag, typename Class, typename Event>
@@ -554,6 +559,8 @@ protected:
 
    EffectUIClientInterface &mEffect;
    EffectSettingsAccess &mAccess;
+
+   bool mUIClosed { false };
 };
 
 /*************************************************************************************//**
