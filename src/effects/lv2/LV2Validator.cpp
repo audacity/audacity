@@ -293,7 +293,7 @@ bool LV2Validator::BuildFancy(
    mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
       suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
 
-//   if (mUIShowInterface) {
+//   if (mUIShowInterface && mUIShowInterface->show) {
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
 //   }
 
@@ -716,8 +716,8 @@ void LV2Validator::OnIdle(wxIdleEvent &evt)
 
    if (mUIIdleInterface) {
       const auto handle = suil_instance_get_handle(mSuilInstance.get());
-      if (mUIIdleInterface->idle(handle)) {
-         if (mUIShowInterface)
+      if (mUIIdleInterface->idle && mUIIdleInterface->idle(handle)) {
+         if (mUIShowInterface && mUIShowInterface->hide)
             mUIShowInterface->hide(handle);
          if (mDialog)
             mDialog->Close();
