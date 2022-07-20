@@ -106,6 +106,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    intptr_t callDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) override;
 
+   intptr_t callDispatcher(AEffect* handle, int opcode, int index,
+      intptr_t value, void* ptr, float opt);
+
    intptr_t constCallDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) const;
 
@@ -119,6 +122,8 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    int      GetString(wxString& outstr, int opcode, int index = 0) const;
    wxString GetString(int opcode, int index = 0) const;
+
+   wxString GetStringFromHandle(int opcode, AEffect* handle) const;
 
    struct ParameterInfo
    {

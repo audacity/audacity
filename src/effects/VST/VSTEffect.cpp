@@ -1693,13 +1693,94 @@ bool VSTEffect::LoadCommon()
 
 #endif
 
-   return true;
+   AEffect* tempHandle;
+
+   try
+   {
+      tempHandle = mPluginMain(VSTEffectWrapper::AudioMaster);
+   }
+   catch (...)
+   {
+      wxLogMessage(wxT("VST plugin initialization failed\n"));
+      return false;
+   }
+
+   bool success = false;
+
+   // Ask the plugin to identify itself...might be needed for older plugins
+   callDispatcher(tempHandle, effIdentify, 0, 0, NULL, 0);
+
+   // Open a temporary plugin handle, to get some info on the plugin
+   callDispatcher(tempHandle, effOpen, 0, 0, NULL, 0.0);
+
+   // Get the VST version the plugin understands
+   mVstVersion = callDispatcher(tempHandle, effGetVstVersion, 0, 0, NULL, 0);
+
+   // Ensure that it looks like a plugin and can deal with ProcessReplacing
+   // calls.  Also exclude synths for now.
+   if (   tempHandle->magic == kEffectMagic &&
+        !(tempHandle->flags & effFlagsIsSynth) &&
+          tempHandle->flags & effFlagsCanReplacing)
+   {
+      if (mVstVersion >= 2)
+      {
+         mName = GetStringFromHandle(effGetEffectName, tempHandle);
+         if (mName.length() == 0)
+         {
+            mName = GetStringFromHandle(effGetProductString, tempHandle);
+         }
+      }
+      if (mName.length() == 0)
+      {
+         mName = wxFileName{ mRealPath }.GetName();
+      }
+
+      if (mVstVersion >= 2)
+      {
+         mVendor = GetStringFromHandle(effGetVendorString, tempHandle);
+         mVersion = wxINT32_SWAP_ON_LE(callDispatcher(tempHandle, effGetVendorVersion, 0, 0, NULL, 0));
+      }
+      if (mVersion == 0)
+      {
+         mVersion = wxINT32_SWAP_ON_LE(tempHandle->version);
+      }
+
+      if (tempHandle->flags & effFlagsHasEditor || tempHandle->numParams != 0)
+      {
+         mInteractive = true;
+      }
+
+      mAudioIns = tempHandle->numInputs;
+      mAudioOuts = tempHandle->numOutputs;
+
+      mMidiIns = 0;
+      mMidiOuts = 0;
+
+      // Check to see if parameters can be automated.  This isn't a guarantee
+      // since it could be that the effect simply doesn't support the opcode.
+      mAutomatable = false;
+      for (int i = 0; i < tempHandle->numParams; i++)
+      {
+         if (callDispatcher(tempHandle, effCanBeAutomated, 0, i, NULL, 0.0))
+         {
+            mAutomatable = true;
+            break;
+         }
+      }
+
+      success = true;
+   }
+
+   // close the temporary handle
+   callDispatcher(tempHandle, effClose, 0, 0, NULL, 0.0);
+
+   return success;
 }
 
 
 bool VSTEffect::Load()
 {
-   // TODO: move this out of here, so that it can be called only once
+   // TODO: move this call out of here, so that it is executed only once
    if ( ! LoadCommon() )
       return false;
 
@@ -1730,80 +1811,14 @@ bool VSTEffect::Load()
       callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
       callDispatcher(effSetBlockSize, 0, 512, NULL, 0);
 
-      // Ask the plugin to identify itself...might be needed for older plugins
-      callDispatcher(effIdentify, 0, 0, NULL, 0);
+      // Make sure we start out with a valid program selection
+      // I've found one plugin (SoundHack +morphfilter) that will
+      // crash Audacity when saving the initial default parameters
+      // with this.
+      callSetProgram(0);
 
-      // Open the plugin
-      callDispatcher(effOpen, 0, 0, NULL, 0.0);
-
-      // Get the VST version the plugin understands
-      mVstVersion = callDispatcher(effGetVstVersion, 0, 0, NULL, 0);
-
-      // Set it again in case plugin ignored it before the effOpen
-      callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
-      callDispatcher(effSetBlockSize, 0, 512, NULL, 0);
-
-      // Ensure that it looks like a plugin and can deal with ProcessReplacing
-      // calls.  Also exclude synths for now.
-      if (mAEffect->magic == kEffectMagic &&
-         !(mAEffect->flags & effFlagsIsSynth) &&
-         mAEffect->flags & effFlagsCanReplacing)
-      {
-         if (mVstVersion >= 2)
-         {
-            mName = GetString(effGetEffectName);
-            if (mName.length() == 0)
-            {
-               mName = GetString(effGetProductString);
-            }
-         }
-         if (mName.length() == 0)
-         {
-            mName = wxFileName{mRealPath}.GetName();
-         }
-
-         if (mVstVersion >= 2)
-         {
-            mVendor = GetString(effGetVendorString);
-            mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, NULL, 0));
-         }
-         if (mVersion == 0)
-         {
-            mVersion = wxINT32_SWAP_ON_LE(mAEffect->version);
-         }
-
-         if (mAEffect->flags & effFlagsHasEditor || mAEffect->numParams != 0)
-         {
-            mInteractive = true;
-         }
-
-         mAudioIns = mAEffect->numInputs;
-         mAudioOuts = mAEffect->numOutputs;
-
-         mMidiIns = 0;
-         mMidiOuts = 0;
-
-         // Check to see if parameters can be automated.  This isn't a guarantee
-         // since it could be that the effect simply doesn't support the opcode.
-         mAutomatable = false;
-         for (int i = 0; i < mAEffect->numParams; i++)
-         {
-            if (callDispatcher(effCanBeAutomated, 0, i, NULL, 0.0))
-            {
-               mAutomatable = true;
-               break;
-            }
-         }
-
-         // Make sure we start out with a valid program selection
-         // I've found one plugin (SoundHack +morphfilter) that will
-         // crash Audacity when saving the initial default parameters
-         // with this.
-         callSetProgram(0);
-
-         // Pretty confident that we're good to go
-         success = true;
-      }
+      // Pretty confident that we're good to go
+      success = true;
    }
 
    if (!success)
@@ -2140,6 +2155,23 @@ wxString VSTEffectWrapper::GetString(int opcode, int index) const
    return str;
 }
 
+wxString VSTEffectWrapper::GetStringFromHandle(int opcode, AEffect* handle) const
+{
+   wxString str;
+
+   char buf[256];
+
+   memset(buf, 0, sizeof(buf));
+
+   // Assume we are passed a read-only dispatcher function code
+   // constCallDispatcher(opcode, 0, 0, buf, 0.0);
+
+   const_cast<VSTEffectWrapper*>(this)->callDispatcher(handle, opcode, 0, 0, buf, 0.0);
+
+
+   return wxString::FromUTF8(buf);
+}
+
 void VSTEffectWrapper::SetString(int opcode, const wxString & str, int index)
 {
    char buf[256];
@@ -2151,10 +2183,18 @@ void VSTEffectWrapper::SetString(int opcode, const wxString & str, int index)
 intptr_t VSTEffectWrapper::callDispatcher(int opcode,
                                    int index, intptr_t value, void *ptr, float opt)
 {
+   return callDispatcher(mAEffect, opcode, index, value, ptr, opt);
+}
+
+intptr_t VSTEffectWrapper::callDispatcher(
+   AEffect* handle,
+   int opcode, int index, intptr_t value, void* ptr, float opt)
+{
    // Needed since we might be in the dispatcher when the timer pops
    wxCRIT_SECT_LOCKER(locker, mDispatcherLock);
-   return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
+   return handle->dispatcher(handle, opcode, index, value, ptr, opt);
 }
+
 
 intptr_t VSTEffectWrapper::constCallDispatcher(int opcode,
    int index, intptr_t value, void *ptr, float opt) const
