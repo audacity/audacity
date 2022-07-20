@@ -197,10 +197,7 @@ EffectUIValidator::EffectUIValidator(
    , mAccess{access}
 {}
 
-EffectUIValidator::~EffectUIValidator()
-{
-   mEffect.CloseUI();
-}
+EffectUIValidator::~EffectUIValidator() = default;
 
 bool EffectUIValidator::UpdateUI()
 {
@@ -210,6 +207,15 @@ bool EffectUIValidator::UpdateUI()
 bool EffectUIValidator::IsGraphicalUI()
 {
    return false;
+}
+
+void EffectUIValidator::OnClose()
+{
+   if (!mUIClosed)
+   {
+      mEffect.CloseUI();
+      mUIClosed = true;
+   }
 }
 
 DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
