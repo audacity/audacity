@@ -802,10 +802,11 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mTimeInfo.timeSigDenominator = 4;
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
 
-   // If we're a slave then go ahead a load immediately
+   // If we're a slave then go ahead and load immediately
    if (mMaster)
    {
-      Load();
+      if ( ! Load() )
+         Unload();
    }
 }
 
@@ -918,7 +919,8 @@ bool VSTEffect::InitializePlugin()
 {
    if (!mAEffect)
    {
-      Load();
+      if ( ! Load() )
+         Unload();
    }
 
    if (!mAEffect)
@@ -1819,11 +1821,6 @@ bool VSTEffect::Load()
 
       // Pretty confident that we're good to go
       success = true;
-   }
-
-   if (!success)
-   {
-      Unload();
    }
 
    return success;
