@@ -28,29 +28,35 @@ enum RulerFormat {
 };
 
 struct RulerStruct {
-   RulerStruct();
-
    struct Fonts {
       wxFont major, minor, minorMinor;
       int lead;
    };
 
-   int          mLeft, mTop, mRight, mBottom;
-   int          mLength;
+   double mMin{ 0.0 };
+   double mHiddenMin{ 0.0 };
+   double mMax{ 100.0 };
+   double mHiddenMax{ 100.0 };
 
-   double       mMin, mMax;
-   double       mHiddenMin, mHiddenMax;
+   int mOrientation{ wxHORIZONTAL };
+   int mSpacing{ 6 };
+   RulerFormat mFormat{ RealFormat };
+   bool mFlip{ false };
+   bool mLabelEdges{ false };
+
+   int mLeft{ -1 };
+   int mTop{ -1 };
+   int mRight{ -1 };
+   int mBottom{ -1 };
+   int mLength{ 0 };
+
+   double mDbMirrorValue{ 0.0 };
+
 
    mutable std::unique_ptr<Fonts> mpFonts;
    TranslatableString mUnits;
 
-   int          mSpacing;
-   int          mOrientation;
-   double       mDbMirrorValue;
-   RulerFormat  mFormat;
-   bool         mFlip;
-   bool         mLabelEdges;
-   int          mLeftOffset;
+   int mLeftOffset;
 
    NumberScale mNumberScale;
 };

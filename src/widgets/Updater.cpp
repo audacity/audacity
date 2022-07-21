@@ -35,25 +35,6 @@ array of Updater::Label.
 #include <wx/font.h>
 #include <wx/dc.h>
 
-RulerStruct::RulerStruct()
-{
-   mMin = mHiddenMin = 0.0;
-   mMax = mHiddenMax = 100.0;
-   mOrientation = wxHORIZONTAL;
-   mSpacing = 6;
-   mFormat = RealFormat;
-   mFlip = false;
-   mLabelEdges = false;
-
-   mLeft = -1;
-   mTop = -1;
-   mRight = -1;
-   mBottom = -1;
-
-   mDbMirrorValue = 0.0;
-   mLength = 0;
-}
-
 Updater::TickSizes::TickSizes(double UPP, int orientation, RulerFormat format, bool log)
    {
       //TODO: better dynamic digit computation for the log case
