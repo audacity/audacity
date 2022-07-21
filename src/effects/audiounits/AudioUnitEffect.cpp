@@ -320,7 +320,7 @@ EffectSettings AudioUnitEffect::MakeSettings() const
 }
 
 bool AudioUnitEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const
 {
    auto &dstSettings = GetSettings(dst);
    auto &srcSettings = GetSettings(src);
@@ -597,7 +597,7 @@ bool AudioUnitEffect::LoadPreset(
       //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
       return false;
    }
-   
+
    // Decode it, complementary to what SaveBlobToConfig did
    auto error =
       InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));

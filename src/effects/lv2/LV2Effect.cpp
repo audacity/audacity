@@ -191,7 +191,8 @@ EffectSettings LV2Effect::MakeSettings() const
 }
 
 bool LV2Effect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &src, EffectSettings &dst,
+   SettingsCopyDirection copyDirection) const
 {
    auto &srcControls = GetSettings(src).values;
    auto &dstControls = GetSettings(dst).values;

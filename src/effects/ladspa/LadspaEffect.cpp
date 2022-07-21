@@ -121,7 +121,7 @@ EffectSettings LadspaEffect::MakeSettings() const
 }
 
 bool LadspaEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const
 {
    // Do not use the copy constructor of std::vector.  Do an in-place rewrite
    // of the destination vector, which will not allocate memory if dstControls
