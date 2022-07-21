@@ -1784,7 +1784,7 @@ bool VSTEffect::LoadCommon()
 }
 
 
-bool VSTEffect::Load()
+bool VSTEffectWrapper::Load()
 {
    bool success = false;
 
@@ -1807,7 +1807,7 @@ bool VSTEffect::Load()
       // Note:  Some hosts use "user" and some use "ptr2/resvd2".  It might
       //        be worthwhile to check if user is NULL before using it and
       //        then falling back to "ptr2/resvd2".
-      mAEffect->ptr2 = static_cast<VSTEffectWrapper*>(this);
+      mAEffect->ptr2 = this;
 
       // Give the plugin an initial sample rate and blocksize
       callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
@@ -1817,7 +1817,13 @@ bool VSTEffect::Load()
       // I've found one plugin (SoundHack +morphfilter) that will
       // crash Audacity when saving the initial default parameters
       // with this.
-      callSetProgram(0);
+      //
+      // The following 3 calls to callDispatcher are equivalent to callSetProgram(0),
+      // only done on the mAEFfect handle and not on the slaves too, if present
+      //
+      callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+      callDispatcher(effSetProgram,      0, 0, NULL, 0.0);
+      callDispatcher(effEndSetProgram,   0, 0, NULL, 0.0);
 
       // Pretty confident that we're good to go
       success = true;

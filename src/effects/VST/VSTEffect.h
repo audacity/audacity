@@ -229,6 +229,8 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    //
    vstPluginMain mPluginMain = nullptr;   // entry point in the plugin dll
    wxString      mRealPath;
+
+   bool Load();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -369,7 +371,6 @@ private:
 
    bool LoadCommon();
 
-   bool Load();
    void Unload();
    std::vector<int> GetEffectIDs();
 
