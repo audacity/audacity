@@ -48,7 +48,6 @@
 #include "Prefs.h"
 #include "UndoManager.h"
 #include "widgets/ASlider.h"
-#include "widgets/Ruler.h"
 
 // PRL:  These lines allow you to remove Project.h above.
 // They must be included before the definition of macro NEW below.
