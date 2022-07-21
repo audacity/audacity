@@ -802,6 +802,10 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mTimeInfo.timeSigDenominator = 4;
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
 
+   // Get the constant data that are shared by all instances
+   // (e.g. entry point in the dll, vst version, no. of channels etc.)
+   LoadCommon();
+
    // If we're a slave then go ahead and load immediately
    if (mMaster)
    {
@@ -1782,13 +1786,9 @@ bool VSTEffect::LoadCommon()
 
 bool VSTEffect::Load()
 {
-   // TODO: move this call out of here, so that it is executed only once
-   if ( ! LoadCommon() )
-      return false;
-
    bool success = false;
 
-   // Initialize the plugin
+   // Create the handle to the plugin, also setting the vst callback function
    try
    {
       mAEffect = mPluginMain(VSTEffectWrapper::AudioMaster);
