@@ -25,8 +25,8 @@ namespace internal
    {
       std::thread::id mThreadId;
 
-      Steinberg::Vst::IConnectionPoint* mSource { nullptr };
-      Steinberg::Vst::IConnectionPoint* mTarget { nullptr };
+      Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mSource;
+      Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mTarget;
    public:
    
       DECLARE_FUNKNOWN_METHODS;

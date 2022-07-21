@@ -531,6 +531,10 @@ list( APPEND SOURCES
       >
 
       $<$<BOOL:${${_OPT}has_vst3}>:
+         effects/VST3/AudacityVst3HostApplication.h
+         effects/VST3/AudacityVst3HostApplication.cpp
+         effects/VST3/memorystream.h
+         effects/VST3/memorystream.cpp
          effects/VST3/VST3Effect.h
          effects/VST3/VST3Effect.cpp
          effects/VST3/VST3EffectsModule.h
