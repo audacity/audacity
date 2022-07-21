@@ -109,7 +109,7 @@ auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 }
 
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &) const
+   const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
 {
    return true;
 }

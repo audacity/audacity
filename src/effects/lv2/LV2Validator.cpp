@@ -739,9 +739,12 @@ void LV2Validator::OnIdle(wxIdleEvent &evt)
    // Is this idle time polling for changes of input redundant with
    // TransferDataToWindow or is it really needed?  Probably harmless.
    // In case of output control port values though, it is needed for metering.
+   mAccess.Flush();
+   auto& values = GetSettings(mAccess.Get()).values;
+
    size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
-      const auto &value = GetSettings(mAccess.Get()).values[index];
+      const auto& value = values[index];
       // Let UI know that a port's value has changed
       if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),

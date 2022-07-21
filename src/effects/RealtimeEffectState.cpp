@@ -78,7 +78,9 @@ public:
       // Worker thread writes the slot
       ToMainSlot& operator=(EffectAndSettings &&arg) {
          // This happens during MessageBuffer's busying of the slot
-         arg.effect.CopySettingsContents(arg.settings, mSettings);
+         arg.effect.CopySettingsContents(
+            arg.settings, mSettings,
+            SettingsCopyDirection::WorkerToMain);
          mSettings.extra = arg.settings.extra;
          return *this;
       }
@@ -111,7 +113,9 @@ public:
       struct Reader { Reader(FromMainSlot &&slot,
          const EffectSettingsManager &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
-            effect.CopySettingsContents(slot.mSettings, settings);
+            effect.CopySettingsContents(
+               slot.mSettings, settings,
+               SettingsCopyDirection::MainToWorker);
             settings.extra = slot.mSettings.extra;
       } };
 
@@ -185,7 +189,6 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            auto &lastSettings = pAccessState->mLastSettings;
             const EffectSettings *pResult{};
             while (!(pResult = FlushAttempt(*pAccessState))) {
                // Wait for progress of audio thread
@@ -193,6 +196,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                std::this_thread::sleep_for(50ms);
             }
             pState->mMainSettings.Set(*pResult); // Update the state
+            pAccessState->mLastSettings = *pResult;
          }
       }
    }

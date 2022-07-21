@@ -289,7 +289,7 @@ public:
       return EffectSettings::Make<Settings>();
    }
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override
+      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override
    {
       return EffectSettings::Copy<Settings>(src, dst);
    }

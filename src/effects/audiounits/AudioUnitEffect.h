@@ -69,7 +69,7 @@ public:
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override;
+      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override;
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
@@ -113,7 +113,7 @@ public:
    void ShowOptions() override;
 
    // AudioUnitEffect implementation
-   
+
 private:
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
