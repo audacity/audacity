@@ -875,3 +875,19 @@ int Effect::MessageBox( const TranslatableString& message,
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox( message, title, style, mUIParent );
 }
+
+DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
+
+bool DefaultEffectUIValidator::ValidateUI()
+{
+   bool result {};
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      result = mEffect.ValidateUI(settings);
+   });
+   return result;
+}
+
+bool DefaultEffectUIValidator::IsGraphicalUI()
+{
+   return mEffect.IsGraphicalUI();
+}

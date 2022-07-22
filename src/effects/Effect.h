@@ -23,6 +23,28 @@ class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
 
+//! Default implementation of EffectUIValidator invokes ValidateUI
+//! and IsGraphicalUI methods of an EffectUIClientInterface
+/*!
+
+ This is a transitional class; it should be eliminated when all effect classes
+ define their own associated subclasses of EffectUIValidator, which can hold
+ state only for the lifetime of a dialog, so the effect object need not hold it
+*/
+class DefaultEffectUIValidator
+   : public EffectUIValidator
+   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
+   , protected wxEvtHandler
+{
+public:
+   using EffectUIValidator::EffectUIValidator;
+   ~DefaultEffectUIValidator() override;
+   //! Calls mEffect.ValidateUI()
+   bool ValidateUI() override;
+   //! @return mEffect.IsGraphicalUI()
+   bool IsGraphicalUI() override;
+};
+
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
    , public EffectBase
