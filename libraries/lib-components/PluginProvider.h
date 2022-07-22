@@ -171,7 +171,7 @@ public:
 // be declared static so as not to interfere with other providers during link.
 // ----------------------------------------------------------------------------
 #define DECLARE_PROVIDER_ENTRY(name)                  \
-static PluginProvider * name()
+static std::unique_ptr<PluginProvider> name()
 
 // ----------------------------------------------------------------------------
 // This will create a class and instance that will register the provider entry
@@ -203,11 +203,11 @@ static name name ## _instance;
 DECLARE_BUILTIN_PROVIDER_BASE(name)                   \
 void name::Register()                                 \
 {                                                     \
-   RegisterProvider(AudacityModule);                  \
+   RegisterProviderFactory(AudacityModule);                  \
 }                                                     \
 void name::Unregister()                               \
 {                                                     \
-   UnregisterProvider(AudacityModule);                \
+   UnregisterProviderFactory(AudacityModule);                \
 }
 
 #endif // __AUDACITY_MODULEINTERFACE_H__

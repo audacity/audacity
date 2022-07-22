@@ -62,10 +62,6 @@ public:
    // AudioUnitEffectModule implementation
 
    void LoadAudioUnitsOfType(OSType inAUType, PluginPaths & effects);
-   AudioComponent FindAudioUnit(const PluginPath & path, wxString & name);
-
-   wxString FromOSType(OSType type);
-   OSType ToOSType(const wxString & type);
 };
 
 #endif

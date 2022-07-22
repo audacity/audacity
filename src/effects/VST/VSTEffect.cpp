@@ -145,7 +145,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VSTEffectsModule();
+   return std::make_unique<VSTEffectsModule>();
 }
 
 // ============================================================================

@@ -57,7 +57,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew BuiltinCommandsModule();
+   return std::make_unique<BuiltinCommandsModule>();
 }
 
 // ============================================================================

@@ -35,7 +35,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VST3EffectsModule();
+   return std::make_unique<VST3EffectsModule>();
 }
 
 DECLARE_BUILTIN_PROVIDER(VST3Builtin);

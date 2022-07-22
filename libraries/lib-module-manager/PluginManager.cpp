@@ -395,7 +395,7 @@ void PluginManager::Initialize(FileConfigFactory factory)
 
    auto &mm = ModuleManager::Get();
    mm.DiscoverProviders();
-   for (const auto &[id, module] : mm.Providers()) {
+   for (auto& [id, module] : mm.Providers()) {
       RegisterPlugin(module.get());
       // Allow the module to auto-register children
       module->AutoRegisterPlugins(*this);
