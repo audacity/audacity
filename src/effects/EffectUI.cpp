@@ -312,15 +312,24 @@ int EffectUIHost::ShowModal()
    mApplyBtn->Destroy();
    mApplyBtn = apply;
    mApplyBtn->SetDefault();
-   mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK, 0));
+
+   if (mEffectUIHost.GetDefinition().GetType() == EffectTypeGenerate)
+   {
+      mApplyBtn->SetLabel(XXO("&Generate").Translation());
+   }
+
    mCloseBtn->SetLabel(wxGetStockLabel(wxID_CANCEL, 0));
 #else
-   mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK));
+   if (mEffectUIHost.GetDefinition().GetType() == EffectTypeGenerate)
+   {
+      mApplyBtn->SetLabel(XXO("&Generate").Translation());
+   }
+
    mCloseBtn->SetLabel(wxGetStockLabel(wxID_CANCEL));
 #endif
-   
+
    Layout();
-   
+
    return wxDialogWrapper::ShowModal();
 }
 
