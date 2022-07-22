@@ -243,7 +243,8 @@ void WaveformPrefs::OnDefaults(wxCommandEvent &)
 void WaveformPrefs::EnableDisableRange()
 {
    mRangeChoice->Enable
-      (mScaleChoice->GetSelection() == WaveformSettings::stLogarithmic);
+      (mScaleChoice->GetSelection() == WaveformSettings::stLogarithmicDb);
+   // What does this mean?
 }
 
 BEGIN_EVENT_TABLE(WaveformPrefs, PrefsPanel)

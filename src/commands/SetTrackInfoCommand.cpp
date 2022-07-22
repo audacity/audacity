@@ -286,17 +286,20 @@ static const EnumValueSymbol kColourStrings[nColours] =
 
 enum kScaleTypes
 {
-   kLinear,
-   kDb,
+   kLinearAmp,
+   kLogarithmicDb,
+   kLinearDb,
    nScaleTypes
 };
 
 static const EnumValueSymbol kScaleTypeStrings[nScaleTypes] =
 {
    // These are acceptable dual purpose internal/visible names
-   { XO("Linear") },
+   { XO("Linear (amp)") },
    /* i18n-hint: abbreviates decibels */
-   { XO("dB") },
+   { XO("Logarithmic (dB)") },
+   /* i18n-hint: abbreviates decibels */
+   { XO("Linear (dB)")}
 };
 
 enum kZoomTypes
@@ -333,7 +336,7 @@ bool SetTrackVisualsCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
       S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    0, symbols.data(), symbols.size() );
    }
 
-   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   kScaleTypeStrings, nScaleTypes );
+   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinearAmp,   kScaleTypeStrings, nScaleTypes );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  kColourStrings, nColours );
    S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    kZoomTypeStrings, nZoomTypes );
    S.OptionalN( bHasVZoomTop       ).Define(     mVZoomTop,       wxT("VZoomHigh"),  1.0,  -2.0,  2.0 );
@@ -422,11 +425,14 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          view.SetDisplay( WaveTrackSubViewType::Default(), false );
       }
    }
-   if( wt && bHasScaleType )
-      wt->GetWaveformSettings().scaleType = 
-         (mScaleType==kLinear) ? 
-            WaveformSettings::stLinear
-            : WaveformSettings::stLogarithmic;
+   if (wt && bHasScaleType) {
+      switch (mScaleType) {
+      default:
+      case kLinearAmp: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinearAmp;
+      case kLogarithmicDb: wt->GetWaveformSettings().scaleType = WaveformSettings::stLogarithmicDb;
+      case kLinearDb: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinearDb;
+      }
+   }
 
    if( wt && bHasVZoom ){
       switch( mVZoom ){

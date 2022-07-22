@@ -75,7 +75,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
 
    using namespace WaveTrackViewConstants;
    const bool isDB =
-      wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
+      wt->GetWaveformSettings().isLinear();
    // Special cases for Waveform dB only.
    // Set the bottom of the dB scale but only if it's visible
    if (isDB && event.ShiftDown() && event.CmdDown()) {
@@ -187,12 +187,13 @@ void WaveformVRulerControls::DoUpdateVRuler(
    WaveformSettings::ScaleType scaleType =
    wt->GetWaveformSettings().scaleType;
    
-   if (scaleType == WaveformSettings::stLinear) {
+   if (wt->GetWaveformSettings().isLinear()) {
       // Waveform
       
       float min, max;
       wt->GetDisplayBounds(&min, &max);
-      if (wt->GetLastScaleType() != scaleType &&
+      if (wt->GetLastScaleType() != WaveformSettings::stLinearAmp &&
+         wt->GetLastScaleType() != WaveformSettings::stLinearDb &&
           wt->GetLastScaleType() != -1)
       {
          // do a translation into the linear space
@@ -223,19 +224,26 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetFormat(RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
-      vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      if (scaleType == WaveformSettings::stLinearDb)
+      {
+         // Custom ruler stuff here!
+         // vruler->SetUpdater(std::make_unique<CustomUpdater>());
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      }
+      else
+      {
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      }
    }
    else {
-      wxASSERT(scaleType == WaveformSettings::stLogarithmic);
-      scaleType = WaveformSettings::stLogarithmic;
-      
       vruler->SetUnits({});
       
       float min, max;
       wt->GetDisplayBounds(&min, &max);
       float lastdBRange;
       
-      if (wt->GetLastScaleType() != scaleType &&
+      if (wt->GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
+         // When Logarithmic Amp happens, put that here
           wt->GetLastScaleType() != -1)
       {
          // do a translation into the dB space
