@@ -124,8 +124,11 @@ std::shared_ptr<SuilHost> LV2Validator::GetSuilHost()
 }
 
 bool LV2Validator::BuildFancy(
-   const LV2Wrapper &wrapper, const EffectSettings &settings)
+   std::unique_ptr<LV2Wrapper> pWrapper, const EffectSettings &settings)
 {
+   assert(pWrapper);
+   auto &wrapper = *pWrapper;
+   mpWrapper = move(pWrapper);
    using namespace LV2Symbols;
    // Set the native UI type
    const char *nativeType =

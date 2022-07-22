@@ -334,8 +334,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mParent = parent;
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
-   myInstance.MakeMaster(settings, mProjectRate, true);
-   const auto pWrapper = myInstance.GetMaster();
+   auto pWrapper =
+      myInstance.MakeWrapper(settings, mProjectRate, true);
    if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -355,7 +355,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       access, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
    if (result->mUseGUI)
-      result->mUseGUI = result->BuildFancy(*pWrapper, settings);
+      result->mUseGUI = result->BuildFancy(move(pWrapper), settings);
    if (!result->mUseGUI && !result->BuildPlain(access))
       return nullptr;
    result->UpdateUI();

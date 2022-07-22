@@ -42,16 +42,23 @@ LV2Instance::LV2Instance(
 LV2Instance::~LV2Instance() = default;
 
 void LV2Instance::MakeMaster(const EffectSettings &settings,
-   double projectRate, bool useOutput)
+   double sampleRate, bool useOutput)
 {
-   if (mMaster && projectRate == mMaster->GetFeatures().mSampleRate) {
+   if (mMaster && sampleRate == mMaster->GetFeatures().mSampleRate) {
       // Already made but be sure to connect control ports to the right place
       mMaster->ConnectControlPorts(mPorts, GetSettings(settings), useOutput);
       return;
    }
-   mMaster = LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
-      GetSettings(settings), projectRate, useOutput);
+   mMaster = MakeWrapper(settings, sampleRate, useOutput);
    SetBlockSize(mUserBlockSize);
+}
+
+std::unique_ptr<LV2Wrapper>
+LV2Instance::MakeWrapper(const EffectSettings &settings,
+   double sampleRate, bool useOutput)
+{
+   return LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
+      GetSettings(settings), sampleRate, useOutput);
 }
 
 size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
@@ -89,8 +96,7 @@ sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
 bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   if (!mMaster)
-      MakeMaster(settings, sampleRate, false);
+   MakeMaster(settings, sampleRate, false);
    if (!mMaster)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
