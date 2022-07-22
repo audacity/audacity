@@ -101,6 +101,15 @@ struct VSTEffectSettings
 
 struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 {
+   explicit VSTEffectWrapper(const PluginPath& path)
+      : mPath(path)
+   {}
+
+   ~VSTEffectWrapper()
+   {
+      ResetModuleAndHandle();
+   }
+
    AEffect* mAEffect = nullptr;
 
    intptr_t callDispatcher(int opcode, int index,
@@ -218,6 +227,67 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    virtual int GetProcessLevel();
    virtual void SizeWindow(int w, int h);
    virtual void Automate(int index, float value);
+
+   bool Load();
+   PluginPath   mPath;
+
+   // Define a manager class for a handle to a module
+#if defined(__WXMSW__)
+   using ModuleHandle = std::unique_ptr<wxDynamicLibrary>;
+#else
+   struct ModuleDeleter {
+      void operator() (void*) const;
+   };
+   using ModuleHandle = std::unique_ptr < char, ModuleDeleter >;
+#endif
+
+   ModuleHandle mModule{};
+
+   wxString mVendor;
+   wxString mDescription;
+   int      mVersion;
+   bool     mInteractive{ false };
+   unsigned mAudioIns{ 0 };
+   unsigned mAudioOuts{ 0 };
+   int      mMidiIns{ 0 };
+   int      mMidiOuts{ 0 };
+   bool     mAutomatable;
+
+   virtual void Unload() = 0;
+
+   void ResetModuleAndHandle();
+
+#if defined(__WXMAC__)
+   // These members must be ordered after mModule
+
+   using BundleHandle = CF_ptr<CFBundleRef>;
+
+   BundleHandle mBundleRef;
+
+   struct ResourceHandle {
+      ResourceHandle(
+         CFBundleRef pHandle = nullptr, CFBundleRefNum num = 0)
+         : mpHandle{ pHandle }, mNum{ num }
+      {}
+      ResourceHandle& operator=(ResourceHandle&& other)
+      {
+         if (this != &other) {
+            mpHandle = other.mpHandle;
+            mNum = other.mNum;
+            other.mpHandle = nullptr;
+            other.mNum = 0;
+         }
+         return *this;
+      }
+      ~ResourceHandle() { reset(); }
+      void reset();
+
+      CFBundleRef mpHandle{};
+      CFBundleRefNum mNum{};
+   };
+   ResourceHandle mResource;
+#endif
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -352,8 +422,8 @@ protected:
 
 private:
    // Plugin loading and unloading
-   bool Load();
-   void Unload();
+   
+   void Unload() override;
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
@@ -407,65 +477,12 @@ private:
    
 
  private:
-    // Define a manager class for a handle to a module
-#if defined(__WXMSW__)
-   using ModuleHandle = std::unique_ptr<wxDynamicLibrary>;
-#else
-   struct ModuleDeleter {
-      void operator() (void*) const;
-   };
-   using ModuleHandle = std::unique_ptr < char, ModuleDeleter > ;
-#endif
 
    PluginID mID;
-   PluginPath mPath;
-   unsigned mAudioIns{0};
-   unsigned mAudioOuts{0};
-   bool mAutomatable;
-   size_t mUserBlockSize{8192};
-   wxString mVendor;
-   wxString mDescription;
-   int mVersion;
-   bool mInteractive{false};
-   
-
-   
+      
+   size_t mUserBlockSize{8192};   
 
    bool mReady{false};
-
-   ModuleHandle mModule{};
-
-#if defined(__WXMAC__)
-   // These members must be ordered after mModule
-
-   using BundleHandle = CF_ptr<CFBundleRef>;
-
-   BundleHandle mBundleRef;
-
-   struct ResourceHandle {
-      ResourceHandle(
-         CFBundleRef pHandle = nullptr, CFBundleRefNum num = 0)
-      : mpHandle{ pHandle }, mNum{ num }
-      {}
-      ResourceHandle& operator=( ResourceHandle &&other )
-      {
-         if (this != &other) {
-            mpHandle = other.mpHandle;
-            mNum = other.mNum;
-            other.mpHandle = nullptr;
-            other.mNum = 0;
-         }
-         return *this;
-      }
-      ~ResourceHandle() { reset(); }
-      void reset();
-
-      CFBundleRef mpHandle{};
-      CFBundleRefNum mNum{};
-   };
-   ResourceHandle mResource;
-#endif
-
 
    VstTimeInfo mTimeInfo;
 

@@ -786,7 +786,7 @@ void VSTEffect::ResourceHandle::reset()
 #endif
 
 VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
-:  mPath(path),
+:  VSTEffectWrapper(path),
    mMaster(master)
 {
    mTimer = std::make_unique<VSTEffectTimer>(this);
@@ -1533,7 +1533,7 @@ void VSTEffect::ShowOptions()
 // VSTEffect implementation
 // ============================================================================
 
-bool VSTEffect::Load()
+bool VSTEffectWrapper::Load()
 {
    vstPluginMain pluginMain;
    bool success = false;
@@ -1773,7 +1773,7 @@ bool VSTEffect::Load()
          // I've found one plugin (SoundHack +morphfilter) that will
          // crash Audacity when saving the initial default parameters
          // with this.
-         callSetProgram(0);
+         callSetProgramB(0);
 
          // Pretty confident that we're good to go
          success = true;
@@ -1783,6 +1783,7 @@ bool VSTEffect::Load()
    if (!success)
    {
       Unload();
+      ResetModuleAndHandle();
    }
 
    return success;
@@ -1805,6 +1806,12 @@ void VSTEffect::Unload()
       mAEffect = NULL;
    }
 
+   //ResetModuleAndHandle();
+}
+
+
+void VSTEffectWrapper::ResetModuleAndHandle()
+{
    if (mModule)
    {
 #if defined(__WXMAC__)
@@ -1816,6 +1823,7 @@ void VSTEffect::Unload()
       mAEffect = NULL;
    }
 }
+
 
 std::vector<int> VSTEffect::GetEffectIDs()
 {
