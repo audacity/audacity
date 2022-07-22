@@ -13,9 +13,6 @@
 
   This is a pure virtual class which sets how a ruler will generate
   its values.
-
-  It supports three subclasses: LinearUpdater, LogarithmicUpdater,
-  and CustomUpdater
 *//***************************************************************//**
 
 \class Updater::Label
