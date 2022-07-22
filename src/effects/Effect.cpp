@@ -298,9 +298,10 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
 
    if (!result) {
       // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(*this, access);
+      result = std::make_unique<DefaultEffectUIValidator>(
+         *this, access, S.GetParent());
+      mUIParent->PushEventHandler(this);
    }
-   mUIParent->PushEventHandler(this);
    return result;
 }
 
@@ -316,12 +317,8 @@ bool Effect::ValidateUI(EffectSettings &)
 
 bool Effect::CloseUI()
 {
-   if (mUIParent)
-      mUIParent->RemoveEventHandler(this);
-
-   mUIParent = NULL;
-   mUIDialog = NULL;
-
+   mUIParent = nullptr;
+   mUIDialog = nullptr;
    return true;
 }
 
@@ -876,7 +873,18 @@ int Effect::MessageBox( const TranslatableString& message,
    return AudacityMessageBox( message, title, style, mUIParent );
 }
 
-DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
+DefaultEffectUIValidator::DefaultEffectUIValidator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   wxWindow *pParent)
+   : EffectUIValidator{ effect, access }, mpParent{ pParent }
+{
+}
+
+DefaultEffectUIValidator::~DefaultEffectUIValidator()
+{
+   if (mpParent)
+      mpParent->PopEventHandler();
+}
 
 bool DefaultEffectUIValidator::ValidateUI()
 {
