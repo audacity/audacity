@@ -22,8 +22,11 @@
 
 struct LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
    explicit LV2InstanceFeaturesList(
-      const LV2FeaturesList &baseFeatures, float sampleRate = 44100,
-      const LV2_Worker_Schedule *pWorkerSchedule = nullptr);
+      const LV2FeaturesList &baseFeatures);
+
+   const LV2FeaturesList &Base() const {
+      return static_cast<const LV2FeaturesList&>(mBaseFeatures);
+   }
 
    //! @return success
    bool InitializeOptions();
@@ -56,9 +59,19 @@ struct LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
 
    size_t mMinBlockSize{ 1 };
    size_t mMaxBlockSize{ mBlockSize };
-   const float mSampleRate;
+   float mSampleRate{ 44100.0f };
 
    const bool mOk;
+};
+
+struct LV2WrapperFeaturesList final : ExtendedLV2FeaturesList {
+   LV2WrapperFeaturesList(
+      LV2InstanceFeaturesList &baseFeatures, float sampleRate = 44100.0f,
+      const LV2_Worker_Schedule *pWorkerSchedule = nullptr);
+
+   const LV2InstanceFeaturesList &Base() const {
+      return static_cast<const LV2InstanceFeaturesList&>(mBaseFeatures);
+   }
 };
 
 #endif

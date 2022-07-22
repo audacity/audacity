@@ -156,8 +156,8 @@ bool LV2Effect::InitializePlugin()
    auto instanceFeatures = LV2InstanceFeaturesList{ mFeatures };
    if (!instanceFeatures.mOk)
       return false;
-   if (!LV2UIFeaturesList{
-      instanceFeatures, nullptr, lilv_plugin_get_uri(&mPlug)
+   if (!LV2UIFeaturesList{ LV2WrapperFeaturesList{instanceFeatures},
+      nullptr, lilv_plugin_get_uri(&mPlug)
    }.mOk)
       return false;
 
@@ -233,7 +233,10 @@ bool LV2Effect::CopySettingsContents(
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 {
-   return std::make_shared<LV2Instance>(*this, mFeatures, mPorts);
+   auto result = std::make_shared<LV2Instance>(*this, mFeatures, mPorts);
+   if (result->IsOk())
+      return result;
+   return nullptr;
 }
 
 unsigned LV2Effect::GetAudioInCount() const

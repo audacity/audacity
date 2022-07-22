@@ -31,6 +31,8 @@ public:
       const LV2FeaturesList &features, const LV2Ports &ports);
    ~LV2Instance() override;
 
+   bool IsOk() const { return mFeatures.mOk; }
+
    const LV2PortStates &GetPortStates() const { return mPortStates; }
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
@@ -69,7 +71,7 @@ public:
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
 private:
-   const LV2FeaturesList &mFeatures;
+   LV2InstanceFeaturesList mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
 
