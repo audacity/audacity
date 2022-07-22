@@ -55,21 +55,24 @@ namespace {
 
 namespace {
    const auto waveformScaleKey = wxT("/GUI/DefaultWaveformScaleChoice");
-   const auto dbValueString = wxT("dB");
+   const auto dbLogValueString = wxT("dBLog");
+   const auto dbLinValueString = wxT("dBLin");
 }
 
 static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
    waveformScaleKey,
    {
-      { XO("Linear") },
-      { dbValueString, XO("Logarithmic (dB)") },
+      { XO("Linear (amp)") },
+      { dbLogValueString, XO("Logarithmic (dB)") },
+      { dbLinValueString, XO("Linear (dB)") },
    },
 
    0, // linear
    
    {
-      WaveformSettings::stLinear,
-      WaveformSettings::stLogarithmic,
+      WaveformSettings::stLinearAmp,
+      WaveformSettings::stLogarithmicDb,
+      WaveformSettings::stLinearDb,
    }
 };
 
@@ -134,7 +137,7 @@ public:
       if ( !gPrefs->Read( key3, &value ) ) {
          if (newValue == obsoleteValue) {
             newValue = waveformSymbol.Internal();
-            gPrefs->Write(waveformScaleKey, dbValueString);
+            gPrefs->Write(waveformScaleKey, dbLogValueString);
          }
 
          Write( value = newValue );

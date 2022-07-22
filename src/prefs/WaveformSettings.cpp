@@ -182,8 +182,9 @@ const EnumValueSymbols &WaveformSettings::GetScaleNames()
 {
    static const EnumValueSymbols result{
       // Keep in correspondence with ScaleTypeValues:
-      XO("Linear"),
-      XO("dB"),
+      XO("Linear (amp)"),
+      XO("Logarithmic (dB)"),
+      XO("Linear (dB)"),
    };
    return result;
 }

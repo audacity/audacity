@@ -90,8 +90,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
    using namespace WaveTrackViewConstants;
    auto &settings = WaveformSettings::Get(*wt);
    auto &cache = WaveformScale::Get(*wt);
-   const bool isDB =
-      settings.scaleType == WaveformSettings::stLogarithmic;
+   const bool isDB = settings.isLinear();
    // Special cases for Waveform dB only.
    // Set the bottom of the dB scale but only if it's visible
    if (isDB && event.ShiftDown() && event.CmdDown()) {
@@ -203,12 +202,13 @@ void WaveformVRulerControls::DoUpdateVRuler(
    auto scaleType = settings.scaleType;
    
    auto &cache = WaveformScale::Get(*wt);
-   if (scaleType == WaveformSettings::stLinear) {
+   if (settings.isLinear()) {
       // Waveform
       
       float min, max;
       cache.GetDisplayBounds(min, max);
-      if (cache.GetLastScaleType() != scaleType &&
+      if (cache.GetLastScaleType() != WaveformSettings::stLinearAmp &&
+          cache.GetLastScaleType() != WaveformSettings::stLinearDb &&
           cache.GetLastScaleType() != -1)
       {
          // do a translation into the linear space
@@ -239,12 +239,18 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetFormat(RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
-      vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      if (scaleType == WaveformSettings::stLinearDb)
+      {
+         // Custom ruler stuff here!
+         // vruler->SetUpdater(std::make_unique<CustomUpdater>());
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      }
+      else
+      {
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      }
    }
    else {
-      wxASSERT(scaleType == WaveformSettings::stLogarithmic);
-      scaleType = WaveformSettings::stLogarithmic;
-      
       vruler->SetUnits({});
       
       float min, max;
@@ -252,7 +258,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
       cache.GetDisplayBounds(min, max);
       float lastdBRange;
       
-      if (cache.GetLastScaleType() != scaleType &&
+      if (cache.GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
+         // When Logarithmic Amp happens, put that here
           cache.GetLastScaleType() != -1)
       {
          // do a translation into the dB space
