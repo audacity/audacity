@@ -13,7 +13,7 @@
 
 #include "Updater.h"
 
-struct LogarithmicUpdater : public Updater {
+struct LogarithmicUpdater final : public Updater {
    using Updater::Updater;
    ~LogarithmicUpdater() override;
 

@@ -13,7 +13,7 @@
 
 #include "Updater.h"
 
-struct LinearUpdater : public Updater {
+struct LinearUpdater final : public Updater {
    using Updater::Updater;
    ~LinearUpdater() override;
 
