@@ -575,32 +575,6 @@ protected:
 
 /*************************************************************************************//**
 
-\class DefaultEffectUIValidator
-
-\brief Default implementation of EffectUIValidator invokes ValidateUI
-   method of an EffectUIClientInterface
-
- This is a transitional class; it should be eliminated when all effect classes
- define their own associated subclasses of EffectUIValidator, which can hold
- state only for the lifetime of a dialog, so the effect object need not hold it
-
-*******************************************************************************************/
-class COMPONENTS_API DefaultEffectUIValidator
-   : public EffectUIValidator
-   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
-   , protected wxEvtHandler
-{
-public:
-   using EffectUIValidator::EffectUIValidator;
-   ~DefaultEffectUIValidator() override;
-   //! Calls mEffect.ValidateUI()
-   bool ValidateUI() override;
-   //! @return mEffect.IsGraphicalUI()
-   bool IsGraphicalUI() override;
-};
-
-/*************************************************************************************//**
-
 \class EffectUIClientInterface
 
 \brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
@@ -646,9 +620,6 @@ public:
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
 
-protected:
-   friend EffectUIValidator;
-   friend DefaultEffectUIValidator;
    virtual bool ValidateUI(EffectSettings &settings) = 0;
    virtual bool CloseUI() = 0;
 };

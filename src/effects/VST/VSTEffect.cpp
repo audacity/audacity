@@ -1316,8 +1316,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
 
-   mParent->PushEventHandler(this);
-
    // Determine if the VST editor is supposed to be used or not
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
                           wxT("UseGUI"),
@@ -1341,7 +1339,9 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
       BuildPlain(access);
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
+   auto pParent = S.GetParent();
+   pParent->PushEventHandler(this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access, pParent);
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -1367,8 +1367,6 @@ bool VSTEffect::CloseUI()
 #endif
    mControl->Close();
 #endif
-
-   mParent->RemoveEventHandler(this);
 
    PowerOff();
 

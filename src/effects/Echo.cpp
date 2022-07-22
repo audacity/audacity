@@ -172,11 +172,11 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
 
 
 struct EffectEcho::Validator
-   : DefaultEffectUIValidator
+   : EffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
       EffectSettingsAccess& access, const EffectEchoSettings& settings)
-      : DefaultEffectUIValidator{ effect, access }
+      : EffectUIValidator{ effect, access }
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
