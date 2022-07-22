@@ -101,7 +101,8 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    using namespace LV2Symbols;
-   assert(size <= GetBlockSize());
+   if (size > GetBlockSize())
+      return 0;
    assert(mMaster); // else ProcessInitialize() returned false, I'm not called
    const auto instance = &mMaster->GetInstance();
 
