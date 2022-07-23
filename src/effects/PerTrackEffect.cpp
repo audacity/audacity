@@ -396,6 +396,11 @@ WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
 
 WaveTrackSink::~WaveTrackSink() = default;
 
+bool WaveTrackSink::AcceptsBuffers(const Buffers &buffers) const
+{
+   return buffers.Channels() > 0;
+}
+
 bool WaveTrackSink::Acquire(Buffers &data)
 {
    if (data.BlockSize() <= data.Remaining()) {
@@ -624,6 +629,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          assert(source.AcceptsBlockSize(inBuffers.BlockSize()));
 
          WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
+         assert(sink.AcceptsBuffers(outBuffers));
 
          // Go process the track(s)
          try {
@@ -659,6 +665,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    Buffers &inBuffers, Buffers &outBuffers) const
 {
    assert(source.AcceptsBuffers(inBuffers));
+   assert(sink.AcceptsBuffers(outBuffers));
 
    bool rc = true;
    const auto blockSize = inBuffers.BlockSize();

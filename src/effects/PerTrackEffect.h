@@ -72,6 +72,9 @@ public:
    using Buffers = AudioGraph::Buffers;
 
    virtual ~Sink();
+
+   virtual bool AcceptsBuffers(const Buffers &buffers) const = 0;
+
    //! Guarantee empty space in Buffers before they are written
    /*!
     @return success
@@ -81,8 +84,8 @@ public:
    //! Acknowledge receipt of data in Buffers, which caller may then Advance()
    /*!
     @return success
+    @pre `AcceptsBuffers(data)`
     @pre `curBlockSize <= data.BlockSize()`
-    @pre `data.Channels() > 0`
     */
    virtual bool Release(const Buffers &data, size_t curBlockSize) = 0;
 };
@@ -128,6 +131,9 @@ public:
    WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
       sampleCount start, bool isGenerator, bool isProcessor);
    ~WaveTrackSink() override;
+
+   //! Accepts buffers only if there is at least one channel
+   bool AcceptsBuffers(const Buffers &buffers) const override;
 
    bool Acquire(Buffers &data) override;
    bool Release(const Buffers &data, size_t curBlockSize) override;
@@ -222,7 +228,7 @@ private:
 
     @pre `source.AcceptsBuffers(inBuffers)`
     @pre `source.AcceptsBlockSize(inBuffers.BlockSize())`
-    @pre `outBuffers.Channels() > 0`
+    @pre `sink.AcceptsBuffers(outBuffers)`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
