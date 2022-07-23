@@ -83,14 +83,18 @@ bool PerTrackEffect::Process(
    return bGoodResult;
 }
 
-AudioGraph::Buffers::Buffers()
+AudioGraph::Buffers::Buffers(size_t blockSize)
+   : mBufferSize{ blockSize }, mBlockSize{ blockSize }
 {
+   assert(blockSize > 0);
    assert(IsRewound());
 }
 
 void AudioGraph::Buffers::Reinit(
    unsigned nChannels, size_t blockSize, size_t nBlocks)
 {
+   assert(blockSize > 0);
+   assert(nBlocks > 0);
    mBuffers.resize(nChannels);
    mPositions.resize(nChannels);
    const auto bufferSize = blockSize * nBlocks;
@@ -236,8 +240,7 @@ SampleTrackSource::~SampleTrackSource() = default;
 
 bool SampleTrackSource::AcceptsBuffers(const Buffers &buffers) const
 {
-   return mOutputRemaining == 0 ||
-      (buffers.Channels() > 0 && buffers.BufferSize() > 0);
+   return mOutputRemaining == 0 || buffers.Channels() > 0;
 }
 
 bool SampleTrackSource::AcceptsBlockSize(size_t) const
@@ -254,7 +257,6 @@ size_t SampleTrackSource::Acquire(Buffers &data)
 {
    assert(AcceptsBuffers(data));
    assert(AcceptsBlockSize(data.BlockSize()));
-   assert(data.BlockSize() > 0);
 
    if (!mInitialized || !data.Remaining()) {
       // Need to refill the buffers
@@ -313,8 +315,6 @@ EffectStage::~EffectStage()
 
 size_t EffectStage::Acquire(Buffers &data)
 {
-   assert(data.BlockSize() > 0); // pre
-
    data.Rewind();
    assert(data.Remaining() > 0);
 
@@ -419,7 +419,6 @@ void WaveTrackSink::DoConsume(Buffers &data)
 {
    // Satisfy pre of GetReadPosition()
    assert(data.Channels() > 0);
-   assert(data.BufferSize() > 0);
    const auto inputBufferCnt = data.Position();
    if (inputBufferCnt > 0) {
       // Some data still unwritten
@@ -457,7 +456,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
 
-   Buffers inBuffers, outBuffers;
+   Buffers inBuffers{ 1 }, outBuffers{ 1 };
    ChannelName map[3];
    size_t prevBufferSize = 0;
    int count = 0;
@@ -546,16 +545,13 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          // the same number of channels.
          // (These resizes may do nothing after the first track)
 
-         if (len > 0) {
+         if (len > 0)
             assert(numAudioIn > 0); // checked above
-            assert(bufferSize > 0); // checked above
-         }
-         inBuffers.Reinit(numAudioIn, blockSize, bufferSize / blockSize);
-         if (len > 0) {
+         inBuffers.Reinit(numAudioIn, blockSize,
+            std::max<size_t>(1, bufferSize / blockSize));
+         if (len > 0)
             // post of Reinit later satisfies pre of Source::Acquire()
             assert(inBuffers.Channels() > 0);
-            assert(inBuffers.BufferSize() > 0);
-         }
 
          if (prevBufferSize != bufferSize) {
             // Buffer size has changed
@@ -572,12 +568,10 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          // Output buffers get an extra blockSize worth to give extra room if
          // the plugin adds latency -- PRL:  actually not important to do
          assert(numAudioOut > 0); // checked above
-         assert(bufferSize + blockSize > 0); // Each term is positive
          outBuffers.Reinit(numAudioOut, blockSize,
             (bufferSize / blockSize) + 1);
          // post of Reinit satisfies pre of ProcessTrack
          assert(outBuffers.Channels() > 0);
-         assert(outBuffers.BufferSize() > 0);
 
          // (Re)Set the input buffer positions
          inBuffers.Rewind();
@@ -623,8 +617,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          };
 
          // Assured above
-         assert(len == 0 ||
-            (inBuffers.Channels() > 0 && inBuffers.BufferSize() > 0));
+         assert(len == 0 || inBuffers.Channels() > 0);
          SampleTrackSource source{ left, pRight, start, len, pollUser };
          // Assert source is safe to Acquire inBuffers
          assert(source.AcceptsBuffers(inBuffers));
@@ -669,7 +662,6 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    bool rc = true;
    const auto blockSize = inBuffers.BlockSize();
-   assert(blockSize > 0);
    assert(source.AcceptsBlockSize(blockSize));
 
    // For each input block of samples, we pass it to the effect along with a
@@ -693,8 +685,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    // Invariant O: blockSize positions from outBuffers.Positions() available
    // Initially true because of preconditions that outBuffers has the same
-   // block size as inBuffers, has nonzero buffer size which is a multiple
-   // of block size, and is rewound
+   // block size as inBuffers and is rewound
    assert(blockSize <= outBuffers.Remaining());
 
    // Call the effect until we run out of input or delayed samples

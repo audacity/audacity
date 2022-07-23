@@ -43,7 +43,6 @@ public:
     @return number of positions available to read from `data`
     @pre `AcceptsBuffers(data)`
     @pre `AcceptsBlockSize(data.BlockSize())`
-    @pre `data.BlockSize() > 0`
     @post result: `result <= data.BlockSize()`
     @post result: `result <= data.Remaining()`
     @post result: `result <= Remaining()`
@@ -84,7 +83,6 @@ public:
     @return success
     @pre `curBlockSize <= data.BlockSize()`
     @pre `data.Channels() > 0`
-    @pre `data.BufferSize() > 0`
     */
    virtual bool Release(const Buffers &data, size_t curBlockSize) = 0;
 };
@@ -104,7 +102,7 @@ public:
    ~SampleTrackSource() override;
 
    //! If constructed with positive length, then accepts buffers only when
-   //! number of channels and size of buffers are positive
+   //! number of channels is positive
    bool AcceptsBuffers(const Buffers &buffers) const override;
 
    //! Always true
@@ -142,7 +140,6 @@ public:
 private:
    /*!
     @pre `data.Channels() > 0`
-    @pre `data.BufferSize() > 0`
     @post `data.BlockSize() <= data.Remaining()`
     */
    void DoConsume(Buffers &data);
@@ -223,9 +220,7 @@ private:
    /*!
     @pre `source.AcceptsBuffers(inBuffers)`
     @pre `source.AcceptsBlockSize(inBuffers.BlockSize())`
-    @pre `inBuffers.BlockSize() > 0`
     @pre `outBuffers.Channels() > 0`
-    @pre `outBuffers.BufferSize() > 0`
     @pre `outBuffers.IsRewound()`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
@@ -238,18 +233,24 @@ private:
 
 //! Accumulates (non-interleaved) data during effect processing
 /*!
+ @invariant `BlockSize() > 0`
+ @invariant `BufferSize() > 0`
+ @invariant `BufferSize() % BlockSize() == 0`
+
  @invariant `mBuffers.size() == mPositions.size()`
  @invariant all `mBuffers[i].size()` are equal to `BufferSize()`
  @invariant all `(mPositions[i] - mBuffers[i].data())` are equal and in
     range [`0`, `BufferSize()`]
- @invariant `BlockSize() == 0 || BufferSize() % BlockSize() == 0`
  */
 class AudioGraph::Buffers {
 public:
    /*!
+    @pre `blockSize > 0`
+    @post `BlockSize() == blockSize`
+    @post `BufferSize() == blockSize`
     @post `IsRewound()`
     */
-   Buffers();
+   explicit Buffers(size_t blockSize);
    unsigned Channels() const { return mBuffers.size(); }
    size_t BufferSize() const { return mBufferSize; }
    size_t BlockSize() const { return mBlockSize; }
@@ -261,6 +262,8 @@ public:
    size_t Remaining() const { return BufferSize() - Position(); }
    bool IsRewound() const { return BufferSize() == Remaining(); }
    /*!
+    @pre `blockSize > 0`
+    @pre `nBlocks > 0`
     @post `Channels() == nChannels`
     @post `BlockSize() == blockSize`
     @post `BufferSize() == blockSize * nBlocks`
@@ -329,7 +332,6 @@ public:
    ~EffectStage();
 
    /*!
-    @pre `data.BlockSize() > 0`
     @post result: `result <= data.BlockSize()`
     @post result: `result <= data.Remaining()`
     @post result: `result <= Remaining()`
