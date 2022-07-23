@@ -683,6 +683,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    EffectStage stage{ inBuffers,
       instance, settings, sampleRate, genLength, map };
 
+   outBuffers.Rewind();
    // Invariant O: blockSize positions from outBuffers.Positions() available
    // Initially true because of preconditions that outBuffers has the same
    // block size as inBuffers and is rewound

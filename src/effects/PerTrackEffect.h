@@ -218,10 +218,11 @@ private:
    //! Type of function returning false if user cancels progress
    using Poller = std::function<bool(sampleCount blockSize)>;
    /*!
+    Previous contents of inBuffers and outBuffers are ignored
+
     @pre `source.AcceptsBuffers(inBuffers)`
     @pre `source.AcceptsBlockSize(inBuffers.BlockSize())`
     @pre `outBuffers.Channels() > 0`
-    @pre `outBuffers.IsRewound()`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
