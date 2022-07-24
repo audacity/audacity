@@ -664,45 +664,36 @@ void Ruler::ResetCustomLabels(
 }
 
 void Ruler::SetCustomMajorLabels(
-   const TranslatableStrings &labels, int start, int step)
+   const RulerUpdater::Labels& labels)
 {
    const auto numLabel = labels.size();
 
    for(size_t i = 0; i<numLabel; i++) {
-      RulerUpdater::Label lab;
-      lab.text = labels[i];
-      lab.pos = start + i*step;
-      mCustomMajorLabels.push_back(lab);
+      mCustomMajorLabels.push_back(labels[i]);
    }
 
    Invalidate();
 }
 
 void Ruler::SetCustomMinorLabels(
-   const TranslatableStrings &labels, int start, int step)
+   const RulerUpdater::Labels& labels)
 {
    const auto numLabel = labels.size();
 
    for (size_t i = 0; i < numLabel; i++) {
-      RulerUpdater::Label lab;
-      lab.text = labels[i];
-      lab.pos = start + i * step;
-      mCustomMinorLabels.push_back(lab);
+      mCustomMinorLabels.push_back(labels[i]);
    }
 
    Invalidate();
 }
 
 void Ruler::SetCustomMinorMinorLabels(
-   const TranslatableStrings& labels, int start, int step)
+   const RulerUpdater::Labels& labels)
 {
    const auto numLabel = labels.size();
 
    for (size_t i = 0; i < numLabel; i++) {
-      RulerUpdater::Label lab;
-      lab.text = labels[i];
-      lab.pos = start + i * step;
-      mCustomMinorMinorLabels.push_back(lab);
+      mCustomMinorMinorLabels.push_back(labels[i]);
    }
 
    Invalidate();
