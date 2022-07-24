@@ -111,16 +111,18 @@ class AUDACITY_DLL_API Ruler {
 
    // The following functions should allow a custom ruler setup:
    // autosize is a GREAT thing, but for some applications it's
-   // useful the definition of a label array and label step by
-   // the user.
-   void SetCustomMode(bool value);
+   // useful the definition of a label array and label step by the user.
    // If this is the case, you should provide an array of labels, start
    // label position, and labels step. The range eventually specified will be
    // ignored.
+   void ResetCustomLabels(
+      bool resetMajor, bool resetMinor, bool resetMinorMinor);
    void SetCustomMajorLabels(
       const TranslatableStrings &labels, int start, int step);
    void SetCustomMinorLabels(
       const TranslatableStrings &labels, int start, int step);
+   void SetCustomMinorMinorLabels(
+      const TranslatableStrings& labels, int start, int step);
 
    //
    // Drawing
@@ -162,6 +164,10 @@ private:
    std::unique_ptr<Updater> mpUpdater;
 
    Updater::Bits mUserBits;
+
+   Updater::Labels mCustomMajorLabels;
+   Updater::Labels mCustomMinorLabels;
+   Updater::Labels mCustomMinorMinorLabels;
 
    struct Cache;
    mutable std::unique_ptr<Cache> mpCache;
