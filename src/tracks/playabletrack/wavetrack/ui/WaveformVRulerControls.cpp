@@ -352,7 +352,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       }
    }
    else {
-      vruler->SetUnits({});
+      vruler->SetUnits(XO("dB"));
       
       auto &cache = WaveformScale::Get(*wt);
       
