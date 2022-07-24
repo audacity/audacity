@@ -22,12 +22,13 @@ public:
    void Update(
       wxDC& dc, const Envelope* envelope,
       UpdateOutputs& allOutputs, const RulerStruct& context
-   ) const override;
+   ) const final;
 
-   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
+protected:
+   virtual bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
       const RulerStruct& context
-   ) const;
+   ) const = 0;
 };
 
 #endif

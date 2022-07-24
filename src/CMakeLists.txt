@@ -1006,6 +1006,10 @@ list( APPEND SOURCES
       widgets/BasicMenu.h
       widgets/CustomUpdater.cpp
       widgets/CustomUpdater.h
+      widgets/CustomUpdaterPosition.cpp
+      widgets/CustomUpdaterPosition.h
+      widgets/CustomUpdaterValue.cpp
+      widgets/CustomUpdaterValue.h
       widgets/ErrorDialog.cpp
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp

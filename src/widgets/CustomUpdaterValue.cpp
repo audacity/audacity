@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  CustomUpdater.cpp
+  CustomUpdaterValue.cpp
 
   Dominic Mazzoni
   Michael Papadopoulos split from Ruler.cpp
@@ -10,65 +10,69 @@
 **********************************************************************/
 
 
-#include "CustomUpdater.h"
+#include "CustomUpdaterValue.h"
 
-void CustomUpdater::Update(
-   wxDC& dc, const Envelope* envelope,
-   UpdateOutputs& allOutputs, const RulerStruct& context) const
-{
-   const int mLength = context.mLength;
-   const RulerStruct::Fonts& mFonts = *context.mpFonts;
-
-   TickOutputs majorOutputs{
-      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
-   int numMajorLabel = allOutputs.majorLabels.size();
-   for (int i = 0; (i < numMajorLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.major, majorOutputs, context);
-
-
-   TickOutputs minorOutputs{
-      allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
-   int numMinorLabel = allOutputs.minorLabels.size();
-   for (int i = 0; (i < numMinorLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.minor, minorOutputs, context);
-
-   TickOutputs minorMinorOutputs{
-      allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
-   int numMinorMinorLabel = allOutputs.minorMinorLabels.size();
-   for (int i = 0; (i < numMinorMinorLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.minorMinor, minorMinorOutputs, context);
-
-   BoxAdjust(allOutputs, context);
-}
-
-bool CustomUpdater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
+bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    // in/out:
    TickOutputs outputs,
    const RulerStruct& context) const
 {
+   const double mMin = context.mMin;
+   const double mMax = context.mMax;
+
    const int mLeft = context.mLeft;
    const int mTop = context.mTop;
+   const int mRight = context.mRight;
+   const int mBottom = context.mBottom;
+   const int mLength = context.mLength;
    const int mOrientation = context.mOrientation;
 
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
    const int mSpacing = context.mSpacing;
    const bool mFlip = context.mFlip;
    const TranslatableString mUnits = context.mUnits;
+   const bool mLabelEdges = context.mLabelEdges;
+
+   auto TickAtValue =
+      [this, &dc, &mFonts, mOrientation, mLabelEdges,
+      mMin, mMax, mLength, mRight, mBottom, &context]
+   (double value, double *pos) -> bool {
+      // Make a tick only if the value is strictly between the bounds
+      double min = std::min(mMin, mMax);
+      double max = std::max(mMin, mMax);
+      if ((value <= min && !mLabelEdges) || value < min)
+         return false;
+      if ((value >= max && !mLabelEdges) || value > max)
+         return false;
+
+      int mid = (int)(mLength * ((mMin - value) / (mMin - mMax)) + 0.5);
+
+      const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
+      if (mid >= 0 && mid < iMaxPos) {
+         *pos = mid;
+         return true;
+      }
+      return false;
+   };
 
    // FIXME: We don't draw a tick if of end of our label arrays
    // But we shouldn't have an array of labels.
    if (labelIdx >= outputs.labels.size())
       return false;
 
-   Label lab;
+   // Get the correct position based on value.
+   // Don't draw if the value is out of bounds.
+   double pos;
+   if (!TickAtValue(outputs.labels[labelIdx].value, &pos))
+      return false;
 
+   Label lab;
    lab.value = 0.0;
-   lab.pos = outputs.labels[labelIdx].pos;
+   lab.pos = pos;
    // Custom is flexible with text format
    // We can assume they use the right format, but still append the right units.
    lab.text = outputs.labels[labelIdx].text;
    lab.units = mUnits;
-
 
    const auto result = MakeTick(
       lab,
@@ -84,4 +88,4 @@ bool CustomUpdater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    return !rect.IsEmpty();
 }
 
-CustomUpdater::~CustomUpdater() = default;
+CustomUpdaterValue::~CustomUpdaterValue() = default;
