@@ -24,6 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "../../../../TrackPanelDrawingContext.h"
+#include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/Ruler.h"
 
 #include <wx/dc.h>
@@ -221,7 +222,7 @@ void NoteTrackVRulerControls::UpdateRuler( const wxRect &rect )
    if (!nt)
       return;
 
-   static Ruler ruler;
+   static Ruler ruler{ std::make_unique<LinearUpdater>() };
    const auto vruler = &ruler;
 
    vruler->SetBounds(rect.x, rect.y, rect.x + 1, rect.y + rect.height-1);

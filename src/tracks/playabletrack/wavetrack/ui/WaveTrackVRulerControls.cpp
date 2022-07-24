@@ -20,12 +20,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "Theme.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
+#include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/Ruler.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 Ruler &WaveTrackVRulerControls::ScratchRuler()
 {
-   static Ruler theRuler;
+   static Ruler theRuler{ std::make_unique<LinearUpdater>() };
    return theRuler;
 }
 

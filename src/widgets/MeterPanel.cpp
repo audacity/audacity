@@ -60,6 +60,7 @@
 #include "../widgets/BasicMenu.h"
 #include "ImageManipulation.h"
 #include "Decibels.h"
+#include "LinearUpdater.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectStatus.h"
@@ -313,7 +314,8 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mActive(false),
    mNumBars(0),
    mLayoutValid(false),
-   mBitmap{}
+   mBitmap{},
+   mRuler{ std::make_unique<LinearUpdater>() }
 {
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
    SetName( XO("Meter") );

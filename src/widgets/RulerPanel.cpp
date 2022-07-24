@@ -40,16 +40,18 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const TranslatableString &units,
                        const Options &options,
                        const wxPoint& pos /*= wxDefaultPosition*/,
-                       const wxSize& size /*= wxDefaultSize*/):
-   wxPanelWrapper(parent, id, pos, size)
+                       const wxSize& size /*= wxDefaultSize*/)
+   : wxPanelWrapper(parent, id, pos, size)
+   , ruler{ [&]() -> std::unique_ptr<RulerUpdater> {
+      if (options.log)
+         return std::make_unique<LogarithmicUpdater>();
+      else
+         return std::make_unique<LinearUpdater>();
+   }() }
 {
    ruler.SetBounds( 0, 0, bounds.x, bounds.y );
    ruler.SetOrientation(orientation);
    ruler.SetRange( range.first, range.second );
-   if (options.log)
-      ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
-   else
-      ruler.SetUpdater(std::make_unique<LinearUpdater>());
    ruler.SetFormat(format);
    ruler.SetUnits( units );
    ruler.SetFlip( options.flip );

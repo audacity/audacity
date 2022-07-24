@@ -35,7 +35,7 @@ TimeTrackVRulerControls::~TimeTrackVRulerControls()
 namespace {
    Ruler &ruler()
    {
-      static Ruler theRuler;
+      static Ruler theRuler{ std::make_unique<LinearUpdater>() };
       return theRuler;
    }
 }

@@ -20,6 +20,7 @@
 #include <wx/printdlg.h>
 
 #include "AColor.h"
+#include "widgets/LinearUpdater.h"
 #include "ProjectWindows.h"
 #include "TrackArtist.h"
 #include "ViewInfo.h"
@@ -82,7 +83,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    double scale = height / (double)screenTotalHeight;
 
    int rulerPageHeight = (int)(rulerScreenHeight * scale);
-   Ruler ruler;
+   Ruler ruler{ std::make_unique<LinearUpdater>() };
    ruler.SetBounds(0, 0, width, rulerPageHeight);
    ruler.SetOrientation(wxHORIZONTAL);
    ruler.SetRange(0.0, mTracks->GetEndTime());

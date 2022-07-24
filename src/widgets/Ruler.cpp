@@ -53,8 +53,6 @@
 #include "ZoomInfo.h"
 
 #include "RulerUpdater.h"
-// Need to include to set default
-#include "LinearUpdater.h"
 
 using std::min;
 using std::max;
@@ -65,8 +63,9 @@ using std::max;
 // Ruler
 //
 
-Ruler::Ruler()
+Ruler::Ruler(std::unique_ptr<RulerUpdater> pUpdater)
 {
+   assert(pUpdater);
    mHasSetSpacing = false;
 
    mbTicksOnly = true;
@@ -88,13 +87,7 @@ Ruler::Ruler()
 
    mTwoTone = false;
 
-   mUseZoomInfo = NULL;
-
-   // This part in particular needs inspection, not giving an error
-   // But is this correct? And should it be set to NULL or nullptr if a default
-   // cannot be made?
-   mpUpdater = std::make_unique<LinearUpdater>( mUseZoomInfo );
-   // mpUpdater = nullptr;
+   SetUpdater(move(pUpdater));
 }
 
 Ruler::~Ruler()
@@ -136,10 +129,6 @@ void Ruler::SetUpdater
 
    if (mRulerStruct.mLeftOffset != leftOffset)
       mRulerStruct.mLeftOffset = leftOffset;
-
-   // Hm, is this invalidation sufficient?  What if *zoomInfo changes under us?
-   if (mUseZoomInfo != mpUpdater->zoomInfo)
-      mUseZoomInfo = mpUpdater->zoomInfo;
 
    ResetCustomLabels(true, true, true);
    Invalidate();
@@ -449,7 +438,8 @@ void Ruler::UpdateCache(
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
       cache.mBits, cache.mRect
    };
-   mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct);
+   if (mpUpdater)
+      mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct);
 }
 
 auto Ruler::GetFonts() const -> RulerStruct::Fonts

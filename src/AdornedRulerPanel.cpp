@@ -1256,9 +1256,10 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxWindowID id,
    const wxPoint& pos,
    const wxSize& size,
-   ViewInfo *viewinfo)
-:  CellularPanel(parent, id, pos, size, viewinfo)
-, mProject(project)
+   ViewInfo *viewinfo
+)  : CellularPanel(parent, id, pos, size, viewinfo)
+   , mRuler{ std::make_unique<LinearUpdater>() }
+   , mProject(project)
 {
    SetLayoutDirection(wxLayout_LeftToRight);
 
@@ -1281,6 +1282,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
+   // Redundant SetUpdater() (just to use the other overload here)
+   // will be fixed later
    mRuler.SetUpdater( std::make_unique<LinearUpdater>( mViewInfo ), mLeftOffset );
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( TimeFormat );

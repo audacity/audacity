@@ -32,7 +32,8 @@ class AUDACITY_DLL_API Ruler {
    // Constructor / Destructor
    //
 
-   Ruler();
+   //! @pre pUpdater is not null
+   Ruler(std::unique_ptr<RulerUpdater> pUpdater);
    ~Ruler();
 
    //
@@ -181,7 +182,6 @@ private:
    bool         mHasSetSpacing;
    bool         mbMinor;
    bool         mTwoTone;
-   const ZoomInfo *mUseZoomInfo;
 };
 
 #endif //define __AUDACITY_RULER__
