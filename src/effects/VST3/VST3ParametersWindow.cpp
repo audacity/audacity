@@ -19,7 +19,6 @@
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/combobox.h>
 #include <wx/slider.h>
 
 #include "MemoryX.h"
@@ -35,7 +34,7 @@ public:
 
    virtual ~VST3ParameterControl() { }
    //Read parameter value from the controller and update UI
-   virtual void UpdateValue(Steinberg::Vst::IEditController&) = 0;
+   virtual void SetNormalizedValue(Steinberg::Vst::IEditController&, Steinberg::Vst::ParamValue value) = 0;
    //Convert current control value to normalized parameter value
    virtual Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const = 0;
 
@@ -60,10 +59,10 @@ namespace
       , VST3ParameterControl(paramId)
       , mUnits(units) { }
 
-      void UpdateValue(Steinberg::Vst::IEditController& editController) override
+      void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
          Steinberg::Vst::String128 str { };
-         editController.getParamStringByValue(GetParameterId(), editController.getParamNormalized(GetParameterId()), str);
+         editController.getParamStringByValue(GetParameterId(), value, str);
          if(mUnits.empty())
             SetLabel(VST3Utils::ToWxString(str));
          else
@@ -90,11 +89,9 @@ namespace
       : wxChoice(parent, id, pos, size, 0, nullptr, style, validator, name)
       , VST3ParameterControl(paramId) { }
 
-      void UpdateValue(Steinberg::Vst::IEditController& editController) override
+      void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
-         const auto paramId = GetParameterId();
-         const auto value = editController.getParamNormalized(paramId);
-         SetSelection(static_cast<int>(editController.normalizedParamToPlain(paramId, value)));
+         SetSelection(static_cast<int>(editController.normalizedParamToPlain(GetParameterId(), value)));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -119,9 +116,9 @@ namespace
       : wxSlider(parent, id, 0, 0, static_cast<int>(1.0 / Step), pos, size, style, validator, name)
       , VST3ParameterControl(paramId) { }
 
-      void UpdateValue(Steinberg::Vst::IEditController& editController) override
+      void SetNormalizedValue(Steinberg::Vst::IEditController&, Steinberg::Vst::ParamValue value) override
       {
-         SetValue(editController.getParamNormalized(GetParameterId()) / Step);
+         SetValue(static_cast<int>(value / Step));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController&) const override
@@ -145,11 +142,9 @@ namespace
       : wxSlider(parent, id, 0, 0, maxValue, pos, size, style, validator, name)
       , VST3ParameterControl(paramId) { }
 
-      void UpdateValue(Steinberg::Vst::IEditController& editController) override
+      void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
-         const auto paramId = GetParameterId();
-         const auto value = editController.getParamNormalized(paramId);
-         SetValue(editController.normalizedParamToPlain(paramId, value));
+         SetValue(static_cast<int>(editController.normalizedParamToPlain(GetParameterId(), value)));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -173,9 +168,9 @@ namespace
       : wxCheckBox(parent, id, wxEmptyString, pos, size, style, validator, name)
       , VST3ParameterControl(paramId) { }
 
-      void UpdateValue(Steinberg::Vst::IEditController& editController) override
+      void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
-         SetValue(editController.getParamNormalized(GetParameterId()) != .0);
+         SetValue(value != .0);
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController&) const override
@@ -230,22 +225,18 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
             parameterInfo.id,
             VST3Utils::ToWxString(parameterInfo.units)
          );
-         text->UpdateValue(editController);
          sizer->Add(text);
          sizer->AddStretchSpacer();
-
-         mControls[parameterInfo.id] = text;
+         RegisterParameterControl(text);
       }
       //toggle
       else if(parameterInfo.stepCount == 1)
       {
          const auto toggle = safenew VST3ToggleParameter (this, wxID_ANY, parameterInfo.id);
-         toggle->UpdateValue(editController);
          toggle->Bind(wxEVT_CHECKBOX, &VST3ParametersWindow::OnParameterValueChanged, this);
          sizer->Add(toggle, 0, wxEXPAND);
          sizer->AddStretchSpacer();
-
-         mControls[parameterInfo.id] = toggle;
+         RegisterParameterControl(toggle);
       }
       //list
       else if(parameterInfo.stepCount != 0 && (parameterInfo.flags & Vst::ParameterInfo::kIsList))
@@ -262,12 +253,10 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
             );
             list->AppendString(VST3Utils::ToWxString(displayValue));
          }
-         list->UpdateValue(editController);
          list->Bind(wxEVT_CHOICE, &VST3ParametersWindow::OnParameterValueChanged, this);
          sizer->Add(list, 0, wxEXPAND);
          sizer->AddStretchSpacer();
-
-         mControls[parameterInfo.id] = list;
+         RegisterParameterControl(list);
       }
       else
       {
@@ -275,25 +264,21 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
          if(parameterInfo.stepCount == 0)
          {
             auto slider = safenew VST3ContinuousParameter(this, wxID_ANY, parameterInfo.id);
-            slider->UpdateValue(editController);
             sizer->Add(slider, 0, wxEXPAND);
             slider->Bind(wxEVT_SLIDER, &VST3ParametersWindow::OnParameterValueChanged, this);
-
-            mControls[parameterInfo.id] = slider;
+            RegisterParameterControl(slider);
          }
          //discrete
          else
          {
             auto slider = safenew VST3DiscreteParameter(this, wxID_ANY, parameterInfo.id, parameterInfo.stepCount);
-            slider->UpdateValue(editController);
             sizer->Add(slider, 0, wxEXPAND);
             slider->Bind(wxEVT_SLIDER, &VST3ParametersWindow::OnParameterValueChanged, this);
-            mControls[parameterInfo.id] = slider;
+            RegisterParameterControl(slider);
          }
          const auto label = safenew VST3ValueText(this, wxID_ANY, parameterInfo.id, VST3Utils::ToWxString(parameterInfo.units));
-         label->UpdateValue(editController);
          sizer->Add(label);
-         mLabels[parameterInfo.id] = label;
+         RegisterParameterLabel(label);
       }
    }
 
@@ -303,9 +288,9 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
 void VST3ParametersWindow::ReloadParameters()
 {
    for(auto& p : mControls)
-      p.second->UpdateValue(*mEditController);
+      p.second->SetNormalizedValue(*mEditController, mEditController->getParamNormalized(p.second->GetParameterId()));
    for(auto& p : mLabels)
-      p.second->UpdateValue(*mEditController);
+      p.second->SetNormalizedValue(*mEditController, mEditController->getParamNormalized(p.second->GetParameterId()));
 }
 
 void VST3ParametersWindow::UpdateParameter(Steinberg::Vst::ParamID paramId)
@@ -313,13 +298,25 @@ void VST3ParametersWindow::UpdateParameter(Steinberg::Vst::ParamID paramId)
    {
       auto it = mControls.find(paramId);
       if(it != mControls.end())
-         it->second->UpdateValue(*mEditController);
+         it->second->SetNormalizedValue(*mEditController, mEditController->getParamNormalized(it->second->GetParameterId()));
    }
    {
       auto it = mLabels.find(paramId);
       if(it != mLabels.end())
-         it->second->UpdateValue(*mEditController);
+         it->second->SetNormalizedValue(*mEditController, mEditController->getParamNormalized(it->second->GetParameterId()));
    }
+}
+
+void VST3ParametersWindow::RegisterParameterControl(VST3ParameterControl* control)
+{
+   mControls[control->GetParameterId()] = control;
+   control->SetNormalizedValue(*mEditController, mEditController->getParamNormalized(control->GetParameterId()));
+}
+
+void VST3ParametersWindow::RegisterParameterLabel(VST3ParameterControl* label)
+{
+   mLabels[label->GetParameterId()] = label;
+   label->SetNormalizedValue(*mEditController, mEditController->getParamNormalized(label->GetParameterId()));
 }
 
 void VST3ParametersWindow::OnParameterValueChanged(const wxCommandEvent& evt)
@@ -329,9 +326,6 @@ void VST3ParametersWindow::OnParameterValueChanged(const wxCommandEvent& evt)
       const auto paramId = control->GetParameterId();
       const auto normalizedValue = control->GetNormalizedValue(*mEditController);
 
-      if(mEditController->getParamNormalized(control->GetParameterId()) == normalizedValue)
-         return;
-
       mEditController->setParamNormalized(paramId, normalizedValue);
       if(mComponentHandler->beginEdit(paramId) == Steinberg::kResultOk)
       {
@@ -340,7 +334,7 @@ void VST3ParametersWindow::OnParameterValueChanged(const wxCommandEvent& evt)
       }
       auto it = mLabels.find(paramId);
       if(it != mLabels.end())
-         it->second->UpdateValue(*mEditController);
+         it->second->SetNormalizedValue(*mEditController, normalizedValue);
    }
 }
 

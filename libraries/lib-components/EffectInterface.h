@@ -239,6 +239,15 @@ public:
    virtual bool IsHiddenFromMenus() const;
 };
 
+//! Direction in which settings are copied
+enum class SettingsCopyDirection
+{
+   //! Main thread settings replicated to the worker thread
+   MainToWorker,
+   //! Worker thread settings replicated to main thread
+   WorkerToMain
+};
+
 /*************************************************************************************//**
 
 \class EffectSettingsManager
@@ -277,10 +286,11 @@ public:
 
     @param src settings to copy from
     @param dst settings to copy into
+    @param copyDirection direction in which copy is performed
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const;
+      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const;
 
    //! Store settings as keys and values
    /*!
@@ -543,6 +553,11 @@ public:
     */
    virtual bool IsGraphicalUI();
 
+   /*!
+    Handle the UI OnClose event. Default implementation calls mEffect.CloseUI()
+   */
+   virtual void OnClose();
+
 protected:
    // Convenience function template for binding event handler functions
    template<typename EventTag, typename Class, typename Event>
@@ -554,32 +569,8 @@ protected:
 
    EffectUIClientInterface &mEffect;
    EffectSettingsAccess &mAccess;
-};
 
-/*************************************************************************************//**
-
-\class DefaultEffectUIValidator
-
-\brief Default implementation of EffectUIValidator invokes ValidateUI
-   method of an EffectUIClientInterface
-
- This is a transitional class; it should be eliminated when all effect classes
- define their own associated subclasses of EffectUIValidator, which can hold
- state only for the lifetime of a dialog, so the effect object need not hold it
-
-*******************************************************************************************/
-class COMPONENTS_API DefaultEffectUIValidator
-   : public EffectUIValidator
-   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
-   , protected wxEvtHandler
-{
-public:
-   using EffectUIValidator::EffectUIValidator;
-   ~DefaultEffectUIValidator() override;
-   //! Calls mEffect.ValidateUI()
-   bool ValidateUI() override;
-   //! @return mEffect.IsGraphicalUI()
-   bool IsGraphicalUI() override;
+   bool mUIClosed { false };
 };
 
 /*************************************************************************************//**
@@ -629,9 +620,6 @@ public:
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
 
-protected:
-   friend EffectUIValidator;
-   friend DefaultEffectUIValidator;
    virtual bool ValidateUI(EffectSettings &settings) = 0;
    virtual bool CloseUI() = 0;
 };

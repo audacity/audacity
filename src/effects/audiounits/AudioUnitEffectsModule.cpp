@@ -30,6 +30,7 @@ static const struct
 }
 BlackList[] =
 {
+   /*
    { 'appl', 'augn', 'afpl' },   // Apple: AUAudioFilePlayer
    { 'appl', 'augn', 'sspl' },   // Apple: AUScheduledSoundPlayer
    { 'appl', 'augn', 'ttsp' },   // Apple: AUSpeechSynthesis
@@ -39,6 +40,7 @@ BlackList[] =
    { 'appl', 'aumx', 'mxcm' },   // Apple: AUMultiChannelMixer
    { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
    { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
+    */
 };
 
 // ============================================================================

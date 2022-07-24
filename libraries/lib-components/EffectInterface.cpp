@@ -7,6 +7,7 @@
 **********************************************************************/
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
+#include <wx/window.h>
 
 const RegistryPath &EffectSettingsExtra::DurationKey()
 {
@@ -109,7 +110,7 @@ auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 }
 
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &) const
+   const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
 {
    return true;
 }
@@ -197,10 +198,7 @@ EffectUIValidator::EffectUIValidator(
    , mAccess{access}
 {}
 
-EffectUIValidator::~EffectUIValidator()
-{
-   mEffect.CloseUI();
-}
+EffectUIValidator::~EffectUIValidator() = default;
 
 bool EffectUIValidator::UpdateUI()
 {
@@ -212,20 +210,13 @@ bool EffectUIValidator::IsGraphicalUI()
    return false;
 }
 
-DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
-
-bool DefaultEffectUIValidator::ValidateUI()
+void EffectUIValidator::OnClose()
 {
-   bool result {};
-   mAccess.ModifySettings([&](EffectSettings &settings){
-      result = mEffect.ValidateUI(settings);
-   });
-   return result;
-}
-
-bool DefaultEffectUIValidator::IsGraphicalUI()
-{
-   return mEffect.IsGraphicalUI();
+   if (!mUIClosed)
+   {
+      mEffect.CloseUI();
+      mUIClosed = true;
+   }
 }
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

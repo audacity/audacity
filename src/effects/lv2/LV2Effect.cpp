@@ -191,20 +191,40 @@ EffectSettings LV2Effect::MakeSettings() const
 }
 
 bool LV2Effect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &src, EffectSettings &dst,
+   SettingsCopyDirection copyDirection) const
 {
    auto &srcControls = GetSettings(src).values;
    auto &dstControls = GetSettings(dst).values;
 
+   const auto &controlPorts = mPorts.mControlPorts;
+   const auto portsCount = controlPorts.size();
    // Do not use the copy constructor of std::vector.  Do an in-place rewrite
    // of the destination vector, which will not allocate memory if dstControls
    // began with sufficient capacity.
-   // And that will be try if dstControls originated with MakeSettings() or a
+   // And that will be true if dstControls originated with MakeSettings() or a
    // copy of it, because the set of control ports does not vary after
    // initialization of the plug-in.
-   assert(srcControls.size() == dstControls.size());
-   dstControls.resize(0);
-   copy(srcControls.begin(), srcControls.end(), back_inserter(dstControls));
+   assert(srcControls.size() == portsCount);
+   assert(dstControls.size() == portsCount);
+   // But let's be sure
+   const auto portValuesCount =
+      std::min(srcControls.size(), dstControls.size());
+
+   if (portValuesCount != portsCount)
+      return false;
+
+   const auto copyOutputs = copyDirection == SettingsCopyDirection::WorkerToMain;
+   
+   size_t portIndex {};
+
+   for (auto& port : controlPorts)
+   {
+      if (port->mIsInput || copyOutputs)
+         dstControls[portIndex] = srcControls[portIndex];
+
+      ++portIndex;
+   }
 
    // Ignore mpState
 

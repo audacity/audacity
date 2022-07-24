@@ -67,6 +67,9 @@ public:
    void UpdateParameter(Steinberg::Vst::ParamID paramId);
 
 private:
-   
+
+   void RegisterParameterControl(VST3ParameterControl* control);
+   void RegisterParameterLabel(VST3ParameterControl* label);
+
    void OnParameterValueChanged(const wxCommandEvent& evt);
 };

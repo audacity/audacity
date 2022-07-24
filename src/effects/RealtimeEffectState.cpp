@@ -78,7 +78,9 @@ public:
       // Worker thread writes the slot
       ToMainSlot& operator=(EffectAndSettings &&arg) {
          // This happens during MessageBuffer's busying of the slot
-         arg.effect.CopySettingsContents(arg.settings, mSettings);
+         arg.effect.CopySettingsContents(
+            arg.settings, mSettings,
+            SettingsCopyDirection::WorkerToMain);
          mSettings.extra = arg.settings.extra;
          return *this;
       }
@@ -111,7 +113,9 @@ public:
       struct Reader { Reader(FromMainSlot &&slot,
          const EffectSettingsManager &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
-            effect.CopySettingsContents(slot.mSettings, settings);
+            effect.CopySettingsContents(
+               slot.mSettings, settings,
+               SettingsCopyDirection::MainToWorker);
             settings.extra = slot.mSettings.extra;
       } };
 
@@ -185,7 +189,6 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            auto &lastSettings = pAccessState->mLastSettings;
             const EffectSettings *pResult{};
             while (!(pResult = FlushAttempt(*pAccessState))) {
                // Wait for progress of audio thread
@@ -193,6 +196,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                std::this_thread::sleep_for(50ms);
             }
             pState->mMainSettings.Set(*pResult); // Update the state
+            pAccessState->mLastSettings = *pResult;
          }
       }
    }
@@ -658,9 +662,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
    xmlFile.StartTag(XMLTag());
    const auto active = mMainSettings.extra.GetActive();
    xmlFile.WriteAttr(activeAttribute, active);
-   xmlFile.WriteAttr(
-      idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mPlugin)));
-   xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mPlugin->GetVersion()));
+   xmlFile.WriteAttr(idAttribute, PluginManager::GetID(mPlugin));
+   xmlFile.WriteAttr(versionAttribute, mPlugin->GetVersion());
 
    CommandParameters cmdParms;
    if (mPlugin->SaveSettings(mMainSettings, cmdParms)) {
@@ -675,8 +678,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
          wxString entryValue = cmdParms.Read(entryName, "");
 
          xmlFile.StartTag(parameterAttribute);
-         xmlFile.WriteAttr(nameAttribute, XMLWriter::XMLEsc(entryName));
-         xmlFile.WriteAttr(valueAttribute, XMLWriter::XMLEsc(entryValue));
+         xmlFile.WriteAttr(nameAttribute, entryName);
+         xmlFile.WriteAttr(valueAttribute, entryValue);
          xmlFile.EndTag(parameterAttribute);
 
          entryKeepGoing = cmdParms.GetNextEntry(entryName, entryIndex);

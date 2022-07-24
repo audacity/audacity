@@ -100,7 +100,8 @@ public:
 private:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override;
+      const EffectSettings &src, EffectSettings &dst,
+      SettingsCopyDirection copyDirection) const override;
 
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;

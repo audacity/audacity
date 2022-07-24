@@ -27,7 +27,7 @@ Steinberg::tresult internal::ConnectionProxy::connect (IConnectionPoint* other)
 {
    if(other == nullptr)
       return Steinberg::kInvalidArgument;
-   else if(mTarget != nullptr)
+   if(mTarget.get() != nullptr)
       return Steinberg::kResultFalse;
 
    //Looks a bit awkward, but the source can send messages to
@@ -43,7 +43,7 @@ Steinberg::tresult internal::ConnectionProxy::disconnect (IConnectionPoint* othe
 {
    if(other == nullptr)
       return Steinberg::kInvalidArgument;
-   else if(other != mTarget)
+   if(other != mTarget.get())
       return Steinberg::kResultFalse;
 
    auto result = mSource->disconnect(this);
@@ -54,7 +54,7 @@ Steinberg::tresult internal::ConnectionProxy::disconnect (IConnectionPoint* othe
 
 Steinberg::tresult internal::ConnectionProxy::notify (Steinberg::Vst::IMessage* message)
 {
-   if(mTarget == nullptr ||
+   if(mTarget.get() == nullptr ||
       std::this_thread::get_id() != mThreadId)
       return Steinberg::kResultFalse;
 
