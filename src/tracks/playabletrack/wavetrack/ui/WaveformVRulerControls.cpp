@@ -23,8 +23,44 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/RealFormat.h"
+#include "../../../../widgets/CustomUpdaterValue.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
+
+// These are doubles beacuse of the type of value in Label,
+// but for the purpose of labelling the linear dB waveform ruler,
+// these should always be integer numbers.
+using LinearDBValues = std::vector<double>;
+
+static LinearDBValues majorValues{}, minorValues{}, minorMinorValues{};
+
+void RegenerateLinearDBValues(int dBRange)
+{
+   majorValues.clear();
+   minorValues.clear();
+   minorMinorValues.clear();
+
+   majorValues.push_back(0);
+   majorValues.push_back(-dBRange);
+   majorValues.push_back(2 * -dBRange);
+
+   const double EPSILON = .01;
+
+   for (double major = 0.1; major <= 2 + EPSILON; major += .1) {
+      double val = std::round(major * 10) / 10;
+      if (fabs(major - 1) > EPSILON)
+         majorValues.push_back(std::trunc(-dBRange * val));
+   }
+   for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
+      double val = std::round(minor * 100) / 100;
+      minorValues.push_back(std::trunc(-dBRange * val));
+   }
+   for (int minorMinor = 0; minorMinor <= 2 * dBRange; minorMinor++) {
+      if ((minorMinor % (int) std::round(dBRange / 20)) != 0) {
+         minorMinorValues.push_back(-minorMinor);
+      }
+   }
+}
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
@@ -190,6 +226,8 @@ void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
    DoUpdateVRuler( rect, wt.get() );
 }
 
+static CustomUpdaterValue updater;
+
 void WaveformVRulerControls::DoUpdateVRuler(
    const wxRect &rect, const WaveTrack *wt )
 {
@@ -200,9 +238,16 @@ void WaveformVRulerControls::DoUpdateVRuler(
    auto &settings = WaveformSettings::Get(*wt);
    const float dBRange = settings.dBRange;
 
+   auto &cache = WaveformScale::Get(*wt);
+   const float lastdBRange = cache.GetLastDBRange();
+   if (dBRange != lastdBRange)
+   {
+      SetLastdBRange(cache, *wt);
+      RegenerateLinearDBValues(dBRange);
+   }
+
    auto scaleType = settings.scaleType;
    
-   auto &cache = WaveformScale::Get(*wt);
    if (settings.isLinear()) {
       // Waveform
       
@@ -238,17 +283,52 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat(&RealFormat::LinearInstance());
-      vruler->SetUnits({});
-      vruler->SetLabelEdges(false);
-      if (scaleType == WaveformSettings::stLinearDb)
-      {
-         // Custom ruler stuff here!
-         // vruler->SetUpdater(std::make_unique<CustomUpdater>());
+      if (scaleType == WaveformSettings::stLinearAmp) {
+         vruler->SetLabelEdges(false);
+         vruler->SetUnits({});
          vruler->SetUpdater(&LinearUpdater::Instance());
       }
-      else
-      {
-         vruler->SetUpdater(&LinearUpdater::Instance());
+      else {
+         vruler->SetLabelEdges(true);
+         vruler->SetUnits(XO("dB"));
+         vruler->SetUpdater(&updater);
+         RulerUpdater::Labels major, minor, minorMinor;
+         std::vector<LinearDBValues> values = { majorValues, minorValues, minorMinorValues };
+         for (int ii = 0; ii < 3; ii++) {
+            RulerUpdater::Labels labs;
+            int size = (ii == 0) ? majorValues.size() :
+               (ii == 1) ? minorValues.size() : minorMinorValues.size();
+            for (int i = 0; i < size; i++) {
+               double value = (ii == 0) ? majorValues[i] :
+                  (ii == 1) ? minorValues[i] : minorMinorValues[i];
+               RulerUpdater::Label lab;
+
+               if (value == -dBRange)
+                  lab.value = 0;
+               else {
+                  float sign = (value > -dBRange ? 1 : -1);
+                  if (value < -dBRange)
+                     value = -2 * dBRange - value;
+                  lab.value = DB_TO_LINEAR(value) * sign;
+               }
+
+               wxString s = (value == -dBRange) ?
+                  wxString(L"-\u221e") : wxString::FromDouble(value);
+               // \u221e represents the infinity symbol
+               // Should this just be -dBRange so it is consistent?
+               //wxString s = wxString::FromDouble(value);
+               lab.text = Verbatim(s);
+
+               labs.push_back(lab);
+            }
+            if (ii == 0)
+               major = labs;
+            else if (ii == 1)
+               minor = labs;
+            else
+               minorMinor = labs;
+         }
+         updater.SetData(major, minor, minorMinor);
       }
    }
    else {
@@ -257,7 +337,6 @@ void WaveformVRulerControls::DoUpdateVRuler(
       float min, max;
       auto &cache = WaveformScale::Get(*wt);
       cache.GetDisplayBounds(min, max);
-      float lastdBRange;
       
       if (cache.GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
          // When Logarithmic Amp happens, put that here
@@ -283,7 +362,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          }
          cache.SetDisplayBounds(min, max);
       }
-      else if (dBRange != (lastdBRange = cache.GetLastDBRange())) {
+      else if (dBRange != lastdBRange) {
          SetLastdBRange(cache, *wt);
          // Remap the max of the scale
          float newMax = max;
