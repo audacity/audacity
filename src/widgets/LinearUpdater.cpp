@@ -54,9 +54,9 @@ void LinearUpdater::Update(
          mMin, mMax, mLength, mRight, mBottom, &context]
    (double value) -> int {
       // Make a tick only if the value is strictly between the bounds
-      if (value <= std::min(mMin, mMax))
+      if (value < std::min(mMin, mMax))
          return -1;
-      if (value >= std::max(mMin, mMax))
+      if (value > std::max(mMin, mMax))
          return -1;
 
       int mid;
