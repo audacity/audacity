@@ -123,6 +123,7 @@ void Ruler::SetUpdater(std::unique_ptr<RulerUpdater> pUpdater)
    // Should a comparison be made between mpUpdater and pUpdater?
    // Runtime type comparison isn't clean in c++
    mpUpdater = std::move(pUpdater);
+   ResetCustomLabels(true, true, true);
    Invalidate();
 }
 
@@ -140,6 +141,7 @@ void Ruler::SetUpdater
    if (mUseZoomInfo != mpUpdater->zoomInfo)
       mUseZoomInfo = mpUpdater->zoomInfo;
 
+   ResetCustomLabels(true, true, true);
    Invalidate();
 }
 
@@ -436,18 +438,12 @@ void Ruler::UpdateCache(
    else
       cache.mRect = { 0, 0, 0, mRulerStruct.mLength };
 
-   // FIXME: Surely we do not need to allocate storage for the labels?
-   // We can just recompute them as we need them?  Yes, but only if
-   // mCustom is false!!!!
-
-   //if(!mCustom) {
-   //   cache.mMajorLabels.clear();
-   //   cache.mMinorLabels.clear();
-   //   cache.mMinorMinorLabels.clear();
-   //}
-
    cache.mBits = mUserBits;
    cache.mBits.resize( static_cast<size_t>(mRulerStruct.mLength + 1), false );
+
+   cache.mMajorLabels = mCustomMajorLabels;
+   cache.mMinorLabels = mCustomMinorLabels;
+   cache.mMinorMinorLabels = mCustomMinorMinorLabels;
    
    RulerUpdater::UpdateOutputs allOutputs{
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
@@ -657,40 +653,58 @@ void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
       *height = cache.mRect.GetHeight();
 }
 
-#if 0
-// These two unused functions need reconsideration of their interactions with
-// the cache and update
+void Ruler::ResetCustomLabels(
+   bool resetMajor, bool resetMinor, bool resetMinorMinor)
+{
+   if (resetMajor)
+      mCustomMajorLabels.clear();
+   if (resetMinor)
+      mCustomMinorLabels.clear();
+   if (resetMinorMinor)
+      mCustomMinorMinorLabels.clear();
+}
+
 void Ruler::SetCustomMajorLabels(
    const TranslatableStrings &labels, int start, int step)
 {
-   SetCustomMode( true );
-   mpCache = std::make_unique<Cache>();
-   auto &cache = *mpCache;
-   auto &mMajorLabels = cache.mMajorLabels;
-
    const auto numLabel = labels.size();
-   mMajorLabels.resize( numLabel );
 
    for(size_t i = 0; i<numLabel; i++) {
-      mMajorLabels[i].text = labels[i];
-      mMajorLabels[i].pos  = start + i*step;
+      RulerUpdater::Label lab;
+      lab.text = labels[i];
+      lab.pos = start + i*step;
+      mCustomMajorLabels.push_back(lab);
    }
+
+   Invalidate();
 }
 
 void Ruler::SetCustomMinorLabels(
    const TranslatableStrings &labels, int start, int step)
 {
-   SetCustomMode( true );
-   mpCache = std::make_unique<Cache>();
-   auto &cache = *mpCache;
-   auto &mMinorLabels = cache.mMinorLabels;
-
    const auto numLabel = labels.size();
-   mMinorLabels.resize( numLabel );
 
-   for(size_t i = 0; i<numLabel; i++) {
-      mMinorLabels[i].text = labels[i];
-      mMinorLabels[i].pos  = start + i*step;
+   for (size_t i = 0; i < numLabel; i++) {
+      RulerUpdater::Label lab;
+      lab.text = labels[i];
+      lab.pos = start + i * step;
+      mCustomMinorLabels.push_back(lab);
    }
+
+   Invalidate();
 }
-#endif
+
+void Ruler::SetCustomMinorMinorLabels(
+   const TranslatableStrings& labels, int start, int step)
+{
+   const auto numLabel = labels.size();
+
+   for (size_t i = 0; i < numLabel; i++) {
+      RulerUpdater::Label lab;
+      lab.text = labels[i];
+      lab.pos = start + i * step;
+      mCustomMinorMinorLabels.push_back(lab);
+   }
+
+   Invalidate();
+}

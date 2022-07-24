@@ -22,8 +22,32 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
+#include "../../../../widgets/CustomUpdater.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
+
+static const TranslatableStrings majorLabels{
+   XO("0"),
+   XO("1"),
+   XO("2"),
+   XO("3"),
+};
+static const TranslatableStrings minorLabels{
+   XO("0.5"),
+   XO("1.5"),
+   XO("2.5"),
+   XO("3.5"),
+};
+static const TranslatableStrings minorMinorLabels{
+   XO("0.25"),
+   XO("0.75"),
+   XO("1.25"),
+   XO("1.75"),
+   XO("2.25"),
+   XO("2.75"),
+   XO("3.25"),
+   XO("3.75"),
+};
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
@@ -237,21 +261,24 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat(RealFormat);
-      vruler->SetUnits({});
       vruler->SetLabelEdges(false);
       if (scaleType == WaveformSettings::stLinearDb)
       {
-         // Custom ruler stuff here!
-         // vruler->SetUpdater(std::make_unique<CustomUpdater>());
-         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+         vruler->SetUnits(XO("dB"));
+         vruler->SetUpdater(nullptr);
+         vruler->SetUpdater(std::make_unique<CustomUpdater>());
+         vruler->SetCustomMajorLabels(majorLabels, 0, 100);
+         vruler->SetCustomMinorLabels(minorLabels, 50, 100);
+         vruler->SetCustomMinorMinorLabels(minorMinorLabels, 25, 50);
       }
       else
       {
+         vruler->SetUnits({});
          vruler->SetUpdater(std::make_unique<LinearUpdater>());
       }
    }
    else {
-      vruler->SetUnits({});
+      vruler->SetUnits(XO("dB"));
       
       float min, max;
       auto &cache = WaveformScale::Get(*wt);
