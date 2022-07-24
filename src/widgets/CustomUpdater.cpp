@@ -66,7 +66,8 @@ bool CustomUpdater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    lab.pos = outputs.labels[labelIdx].pos;
    // Custom is flexible with text format
    // We can assume they use the right format, but still append the right units.
-   lab.text = outputs.labels[labelIdx].text + mUnits;
+   lab.text = outputs.labels[labelIdx].text;
+   lab.units = mUnits;
 
 
    const auto result = MakeTick(

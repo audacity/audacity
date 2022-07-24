@@ -525,7 +525,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
          }
       }
 
-      label.Draw(dc, mTwoTone, mTickColour);
+      label.Draw(dc, mTwoTone, mTickColour, mRulerStruct.mpFonts);
    };
 
    for( const auto &label : cache.mMajorLabels )

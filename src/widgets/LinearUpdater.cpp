@@ -168,8 +168,10 @@ void LinearUpdater::Update(
       // Old code dropped the labels AND their ticks, like so:
       //    mMinorLabels.clear();
       // Nowadays we just drop the labels.
-      for (auto& label : allOutputs.minorLabels)
+      for (auto& label : allOutputs.minorLabels) {
          label.text = {};
+         label.units = {};
+      }
    }
 
    // Left and Right Edges
