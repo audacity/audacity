@@ -339,22 +339,24 @@ PluginManager::~PluginManager()
 
 void PluginManager::InitializePlugins()
 {
-   ModuleManager & mm = ModuleManager::Get();
+   ModuleManager & moduleManager = ModuleManager::Get();
+   //ModuleManager::DiscoverProviders was called earlier, so we
+   //can be sure that providers are already loaded
 
-   // Check all known plugins to ensure they are still valid.
-   for (auto &pair : mRegisteredPlugins) {
-      auto &plug = pair.second;
-      const wxString & plugPath = plug.GetPath();
-      PluginType plugType = plug.GetPluginType();
-      
-      if (plugType != PluginTypeNone && plugType != PluginTypeStub && plugType != PluginTypeModule)
+   //Check all known plugins to ensure they are still valid.
+   for (auto it = mRegisteredPlugins.begin(); it != mRegisteredPlugins.end();) {
+      auto &pluginDesc = it->second;
+      const auto pluginType = pluginDesc.GetPluginType();
+      if(pluginType == PluginTypeNone || pluginType == PluginTypeModule)
       {
-         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath, true));
-         if (!plug.IsValid())
-         {
-            plug.SetEnabled(false);
-         }
+         ++it;
+         continue;
       }
+
+      if(!moduleManager.CheckPluginExist(pluginDesc.GetProviderID(), pluginDesc.GetPath()))
+         it = mRegisteredPlugins.erase(it);
+      else
+         ++it;
    }
 
    Save();
@@ -1143,7 +1145,6 @@ ComponentInterface *PluginManager::Load(const PluginID & ID)
 
 std::map<wxString, std::vector<wxString>> PluginManager::CheckPluginUpdates()
 {
-   ModuleManager & mm = ModuleManager::Get();
    wxArrayString pathIndex;
    for (auto &pair : mRegisteredPlugins) {
       auto &plug = pair.second;
@@ -1162,43 +1163,16 @@ std::map<wxString, std::vector<wxString>> PluginManager::CheckPluginUpdates()
    // When the user enables the plugin, each provider that reported it will be asked
    // to register the plugin.
 
+   auto& moduleManager = ModuleManager::Get();
    std::map<wxString, std::vector<wxString>> newPaths;
-   for (auto &pair : mRegisteredPlugins) {
-      auto &plug = pair.second;
-      const PluginID & plugID = plug.GetID();
-      const wxString & plugPath = plug.GetPath();
-      PluginType plugType = plug.GetPluginType();
-
-      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
-      if (plugType == PluginTypeNone)
-         continue;
-
-      if ( plugType == PluginTypeModule  )
+   for(auto& [id, provider] : moduleManager.Providers())
+   {
+      const auto paths = provider->FindModulePaths(*this);
+      for(const auto& path : paths)
       {
-         if (!mm.IsProviderValid(plugID, plugPath))
-         {
-            plug.SetEnabled(false);
-            plug.SetValid(false);
-         }
-         else
-         {
-            if (auto provider = mm.CreateProviderInstance( plugID, plugPath ))
-            {
-               const auto paths = provider->FindModulePaths(*this);
-               for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
-               {
-                  wxString path = paths[i].BeforeFirst(wxT(';'));
-                  if(!make_iterator_range(pathIndex).contains(path))
-                     newPaths[path].push_back(plugID);
-               }
-            }
-         }
-      }
-      else if (plugType != PluginTypeStub)
-      {
-         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath, false));
-         if (!plug.IsValid())
-            plug.SetEnabled(false);
+         const auto modulePath = path.BeforeFirst(';');
+         if(!make_iterator_range(pathIndex).contains(modulePath))
+            newPaths[modulePath].push_back(id);
       }
    }
 
