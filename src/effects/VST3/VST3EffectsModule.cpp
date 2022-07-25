@@ -251,18 +251,6 @@ unsigned VST3EffectsModule::DiscoverPluginsAtPath(const PluginPath& path, Transl
    return 0u;
 }
 
-bool VST3EffectsModule::IsPluginValid(const PluginPath& path, bool bFast)
-{
-   if(bFast)
-      return VST3Utils::ParsePluginPath(path, nullptr, nullptr);
-
-   wxString modulePath;
-   if(VST3Utils::ParsePluginPath(path, &modulePath, nullptr))
-      return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
-
-   return false;
-}
-
 std::unique_ptr<ComponentInterface>
 VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
 {

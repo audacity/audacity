@@ -55,7 +55,6 @@ public:
       const RegistrationCallback &callback)
          override;
 
-   bool IsPluginValid(const PluginPath & path, bool bFast) override;
    bool CheckPluginExist(const PluginPath& path) const override;
 
    std::unique_ptr<ComponentInterface>

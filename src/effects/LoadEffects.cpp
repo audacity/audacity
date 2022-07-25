@@ -190,13 +190,6 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool BuiltinEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   // bFast is unused as checking in the list is fast.
-   static_cast<void>(bFast);
-   return mEffects.find( path ) != mEffects.end();
-}
-
 std::unique_ptr<ComponentInterface>
 BuiltinEffectsModule::LoadPlugin(const PluginPath & path)
 {

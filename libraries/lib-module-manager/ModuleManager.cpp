@@ -550,15 +550,3 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
 
    return false;
 }
-
-bool ModuleManager::IsPluginValid(const PluginID & providerID,
-                                  const PluginPath & path,
-                                  bool bFast)
-{
-   if (mProviders.find(providerID) == mProviders.end())
-   {
-      return false;
-   }
-
-   return mProviders[providerID]->IsPluginValid(path, bFast);
-}

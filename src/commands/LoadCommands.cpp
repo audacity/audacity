@@ -187,13 +187,6 @@ unsigned BuiltinCommandsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool BuiltinCommandsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   // bFast is unused as checking in the list is fast.
-   static_cast<void>(bFast); // avoid unused variable warning
-   return mCommands.find( path ) != mCommands.end();
-}
-
 std::unique_ptr<ComponentInterface>
 BuiltinCommandsModule::LoadPlugin(const PluginPath & path)
 {

@@ -230,17 +230,6 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
    return 1;
 }
 
-bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if (bFast)
-   {
-      return true;
-   }
-
-   wxString name;
-   return FindAudioUnit(path, name) != NULL;
-}
-
 std::unique_ptr<ComponentInterface>
 AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {

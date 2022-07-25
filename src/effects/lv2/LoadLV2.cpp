@@ -259,13 +259,6 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if( bFast )
-      return true;
-   return GetPlugin(path) != NULL;
-}
-
 std::unique_ptr<ComponentInterface>
 LV2EffectsModule::LoadPlugin(const PluginPath & path)
 {

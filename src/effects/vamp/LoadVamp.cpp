@@ -225,17 +225,6 @@ unsigned VampEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool VampEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   int output;
-   bool hasParameters;
-   if( bFast )
-      return true;
-
-   auto vp = FindPlugin(path, output, hasParameters);
-   return bool(vp);
-}
-
 std::unique_ptr<ComponentInterface>
 VampEffectsModule::LoadPlugin(const PluginPath & path)
 {

@@ -384,14 +384,6 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if( bFast )
-      return true;
-   wxString realPath = path.BeforeFirst(wxT(';'));
-   return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
-}
-
 std::unique_ptr<ComponentInterface>
 VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
