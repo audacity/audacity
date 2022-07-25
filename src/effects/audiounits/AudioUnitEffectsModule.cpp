@@ -253,6 +253,12 @@ AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
    return nullptr;
 }
 
+bool AudioUnitEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   wxString unused;
+   return FindAudioUnit(path, unused) != nullptr;
+}
+
 // ============================================================================
 // AudioUnitEffectsModule implementation
 // ============================================================================

@@ -56,6 +56,7 @@ public:
          override;
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
+   bool CheckPluginExist(const PluginPath& path) const override;
 
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginPath & path) override;
@@ -63,7 +64,7 @@ public:
    // LV2EffectModule implementation
 
 private:
-   const LilvPlugin *GetPlugin(const PluginPath & path);
+   static const LilvPlugin *GetPlugin(const PluginPath & path);
 };
 
 #endif

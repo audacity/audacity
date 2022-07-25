@@ -293,4 +293,11 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
    return nullptr;
 }
 
+bool VST3EffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   wxString modulePath;
+   if(VST3Utils::ParsePluginPath(path, &modulePath, nullptr))
+      return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
 
+   return wxFileName::FileExists(path) || wxFileName::DirExists(path);
+}

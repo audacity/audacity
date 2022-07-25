@@ -402,6 +402,12 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
    return result;
 }
 
+bool VSTEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   const auto modulePath = path.BeforeFirst(wxT(';'));
+   return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
+}
+
 // ============================================================================
 // ModuleEffectInterface implementation
 // ============================================================================

@@ -248,6 +248,15 @@ VampEffectsModule::LoadPlugin(const PluginPath & path)
    return nullptr;
 }
 
+bool VampEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   PluginLoader::PluginKey key = path.BeforeLast(wxT('/')).ToUTF8().data();
+   const auto libraryPathUTF8 = PluginLoader::getInstance()->getLibraryPathForPlugin(key);
+   if(!libraryPathUTF8.empty())
+      return wxFileName::FileExists(wxString::FromUTF8(libraryPathUTF8));
+   return wxFileName::FileExists(path);
+}
+
 // VampEffectsModule implementation
 
 std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath & path,

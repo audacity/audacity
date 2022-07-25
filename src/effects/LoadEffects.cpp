@@ -204,6 +204,11 @@ BuiltinEffectsModule::LoadPlugin(const PluginPath & path)
    return Instantiate(path);
 }
 
+bool BuiltinEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   return mEffects.find( path ) != mEffects.end();
+}
+
 // ============================================================================
 // BuiltinEffectsModule implementation
 // ============================================================================

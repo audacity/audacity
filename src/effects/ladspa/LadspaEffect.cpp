@@ -398,6 +398,12 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    return result;
 }
 
+bool LadspaEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   const auto realPath = path.BeforeFirst(wxT(';'));
+   return wxFileName::FileExists(realPath);
+}
+
 FilePaths LadspaEffectsModule::GetSearchPaths()
 {
    FilePaths pathList;

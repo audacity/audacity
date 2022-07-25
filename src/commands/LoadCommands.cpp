@@ -201,6 +201,11 @@ BuiltinCommandsModule::LoadPlugin(const PluginPath & path)
    return Instantiate(path);
 }
 
+bool BuiltinCommandsModule::CheckPluginExist(const PluginPath& path) const
+{
+   return mCommands.find( path ) != mCommands.end();
+}
+
 // ============================================================================
 // BuiltinCommandsModule implementation
 // ============================================================================

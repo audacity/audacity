@@ -157,6 +157,13 @@ public:
 
    /*! @return true if the plug-in is still valid, otherwise false. */
    virtual bool IsPluginValid(const PluginPath & path, bool bFast) = 0;
+   /**
+    * \brief Performs plugin/module existence check, still plugin may fail to load.
+    * Implementation should avoid loading plugins during this check.
+    * \param path Internal plugin path/ID discovered via DiscoverPluginsAtPath
+    * or module path returned by FindModulePaths
+    */
+   virtual bool CheckPluginExist(const PluginPath& path) const = 0;
 
    //! Load the plug-in at a path reported by DiscoverPluginsAtPath
    /*!

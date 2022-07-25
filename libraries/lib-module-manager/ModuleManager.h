@@ -129,6 +129,7 @@ public:
 
    bool IsProviderValid(const PluginID & provider, const PluginPath & path);
    bool IsPluginValid(const PluginID & provider, const PluginPath & path, bool bFast);
+   bool CheckPluginExist(const PluginID& providerId, const PluginPath& path);
 
 private:
    // I'm a singleton class

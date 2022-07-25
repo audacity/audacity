@@ -525,6 +525,14 @@ std::unique_ptr<ComponentInterface> ModuleManager::LoadPlugin(
       return iter->second->LoadPlugin(path);
 }
 
+bool ModuleManager::CheckPluginExist(const PluginID& providerId, const PluginPath& path)
+{
+   if(mProviders.find(providerId) == mProviders.end())
+      return false;
+
+   return mProviders[providerId]->CheckPluginExist(path);
+}
+
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
                                     const PluginPath & path)
 {

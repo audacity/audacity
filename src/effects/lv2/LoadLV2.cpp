@@ -278,6 +278,11 @@ LV2EffectsModule::LoadPlugin(const PluginPath & path)
    return nullptr;
 }
 
+bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
+{
+   return GetPlugin(path) != nullptr;
+}
+
 // ============================================================================
 // LV2EffectsModule implementation
 // ============================================================================

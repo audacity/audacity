@@ -271,6 +271,14 @@ NyquistEffectsModule::LoadPlugin(const PluginPath & path)
    return nullptr;
 }
 
+bool NyquistEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   if(path == NYQUIST_PROMPT_ID)
+      return true;
+
+   return wxFileName::FileExists(path);
+}
+
 // ============================================================================
 // NyquistEffectsModule implementation
 // ============================================================================
