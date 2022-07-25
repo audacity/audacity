@@ -1141,7 +1141,7 @@ ComponentInterface *PluginManager::Load(const PluginID & ID)
    return nullptr;
 }
 
-std::vector<std::pair<wxString, wxString>> PluginManager::CheckPluginUpdates()
+std::map<wxString, std::vector<wxString>> PluginManager::CheckPluginUpdates()
 {
    ModuleManager & mm = ModuleManager::Get();
    wxArrayString pathIndex;
@@ -1162,7 +1162,7 @@ std::vector<std::pair<wxString, wxString>> PluginManager::CheckPluginUpdates()
    // When the user enables the plugin, each provider that reported it will be asked
    // to register the plugin.
 
-   std::vector<std::pair<wxString, wxString>> newPaths;
+   std::map<wxString, std::vector<wxString>> newPaths;
    for (auto &pair : mRegisteredPlugins) {
       auto &plug = pair.second;
       const PluginID & plugID = plug.GetID();
@@ -1189,7 +1189,7 @@ std::vector<std::pair<wxString, wxString>> PluginManager::CheckPluginUpdates()
                {
                   wxString path = paths[i].BeforeFirst(wxT(';'));
                   if(!make_iterator_range(pathIndex).contains(path))
-                     newPaths.push_back(std::make_pair(plugID, path));
+                     newPaths[path].push_back(plugID);
                }
             }
          }
@@ -1390,16 +1390,7 @@ bool PluginManager::GetConfigValue(
       using Type = typename decltype(var)::type;
       const auto pDefval =
          std::get_if<std::reference_wrapper<const Type>>(&defval);
-      if constexpr( std::is_same_v<Type, float> ) {
-         double temp;
-         if( GetSettings()->Read(key, &temp, *pDefval) ) {
-            *pVar = static_cast<float>(temp);
-            return true;
-         }
-         return false;
-      }
-      else
-         return GetSettings()->Read(key, pVar, *pDefval);
+      return GetSettings()->Read(key, pVar, *pDefval);
    };
    return Visit(visitor, var);
 }

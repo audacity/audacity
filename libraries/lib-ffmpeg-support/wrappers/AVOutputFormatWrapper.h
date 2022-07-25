@@ -24,9 +24,8 @@ public:
    AVOutputFormatWrapper(AVOutputFormatWrapper&&) = delete;
    AVOutputFormatWrapper& operator=(AVOutputFormatWrapper&&) = delete;
 
-   explicit AVOutputFormatWrapper(AVOutputFormat* wrapped) noexcept;
+   explicit AVOutputFormatWrapper(const AVOutputFormat* wrapped) noexcept;
 
-   AVOutputFormat* GetWrappedValue() noexcept;
    const AVOutputFormat* GetWrappedValue() const noexcept;
 
    //! This class is move-only, although it doesn't manage a resource
@@ -40,5 +39,5 @@ public:
    virtual int GetFlags() const noexcept = 0;
    virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
 protected:
-   AVOutputFormat* mAVOutputFormat { nullptr };
+   const AVOutputFormat* mAVOutputFormat { nullptr };
 };

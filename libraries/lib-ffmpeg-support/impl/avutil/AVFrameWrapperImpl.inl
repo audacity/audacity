@@ -44,17 +44,6 @@ public:
       return mAVFrame->linesize[index];
    }
 
-   uint64_t GetError(int index) const noexcept override
-   {
-      if (mAVFrame == nullptr)
-         return {};
-
-      if (index < 0 || index >= AV_NUM_DATA_POINTERS)
-         return {};
-
-      return mAVFrame->error[index];
-   }
-
    uint8_t* GetExtendedData(int index) const noexcept override
    {
       if (mAVFrame != nullptr)
@@ -135,7 +124,11 @@ public:
    int64_t GetPacketPresentationTimestamp() const noexcept override
    {
       if (mAVFrame != nullptr)
+#if LIBAVUTIL_VERSION_MAJOR <= 56
          return mAVFrame->pkt_pts;
+#else
+         return mAVFrame->pts;
+#endif
 
       return {};
    }

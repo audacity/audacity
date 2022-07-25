@@ -106,7 +106,7 @@ private:
       return mpAccessState.load(std::memory_order_acquire);
    }
 
-   /*! @name Members that are copied
+   /*! @name Members that are copied for undo and redo
     @{
     */
 
@@ -115,32 +115,42 @@ private:
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
-   //! Updated immediately by Access::Set
+   //! Updated immediately by Access::Set in the main thread
    NonInterfering<EffectSettings> mMainSettings;
 
    //! @}
 
-   // Following are not copied
+   /*! @name Members that are changed also in the worker thread
+    @{
+    */
 
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<EffectSettings> mWorkerSettings;
+   //! Assigned in the worker thread at the start of each processing scope
+   bool mLastActive{};
 
-   wxString mParameters;  // Used only during deserialization
+   //! @}
 
+   /*! @name Members that do not change during processing
+    @{
+    */
+    
    //! Stateful instance made by the plug-in
    std::weak_ptr<EffectInstance> mwInstance;
-   bool mInitialized{ false };
+
+   std::unordered_map<Track *, size_t> mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.
    // Destroy before mWorkerSettings:
    AtomicUniquePointer<AccessState> mpAccessState{ nullptr };
-   
-   size_t mCurrentProcessor{ 0 };
-   std::unordered_map<Track *, size_t> mGroups;
 
-   bool mLastActive{};
+   wxString mParameters;  // Used only during deserialization
+   size_t mCurrentProcessor{ 0 };
+   bool mInitialized{ false };
+
+   //! @}
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__

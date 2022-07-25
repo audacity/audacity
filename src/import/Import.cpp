@@ -659,10 +659,8 @@ bool Importer::Import( AudacityProject &project,
             }
          }
 
-         if (res == ProgressResult::Cancelled || res == ProgressResult::Failed)
-         {
+         if (res == ProgressResult::Cancelled)
             return false;
-         }
 
          // We could exit here since we had a match on the file extension,
          // but there may be another plug-in that can import the file and

@@ -100,6 +100,32 @@ RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
       return false;
 }
 
+bool
+RealtimeEffectList::ReplaceState(size_t index,
+   std::shared_ptr<RealtimeEffectState> pState)
+{
+   if (index >= mStates.size())
+      return false;
+   const auto &id = pState->GetID();
+   if (pState->GetEffect() != nullptr) {
+      auto shallowCopy = mStates;
+      swap(pState, shallowCopy[index]);
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
+
+      Publisher<RealtimeEffectListMessage>::Publish({
+         RealtimeEffectListMessage::Type::Replace,
+         index,
+         { }
+      });
+
+      return true;
+   }
+   else
+      // Effect initialization failed for the id
+      return false;
+}
+
 void RealtimeEffectList::RemoveState(
    const std::shared_ptr<RealtimeEffectState> &pState)
 {
@@ -120,6 +146,17 @@ void RealtimeEffectList::RemoveState(
          { }
       });
    }
+}
+
+std::optional<size_t> RealtimeEffectList::FindState(
+   const std::shared_ptr<RealtimeEffectState> &pState) const
+{
+   const auto begin = mStates.begin()
+      , end = mStates.end()
+      , iter = std::find(begin, end, pState);
+   if (iter == end)
+      return {};
+   return std::distance(begin, iter);
 }
 
 size_t RealtimeEffectList::GetStatesCount() const noexcept

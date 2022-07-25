@@ -47,20 +47,23 @@ namespace
    ){
       return [=](wxWindow &parent,
          EffectPlugin &host, EffectUIClientInterface &client,
-         std::shared_ptr<EffectInstance> &pInstance,
          EffectSettingsAccess &access
-      ) -> wxDialog * {
+      ) -> DialogFactoryResults {
          // Make sure there is an associated project, whose lifetime will
          // govern the lifetime of the dialog
          if (auto project = FindProjectFromWindow(&parent)) {
+            std::shared_ptr<EffectInstance> pInstance;
             if (Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{
                   &parent, *project, host, client, pInstance, access,
                   pEffectState } }
                ; dlg->Initialize()
-            )  // release() is safe because parent will own it
-               return dlg.release();
+            ){
+               auto pValidator = dlg->GetValidator();
+               // release() is safe because parent will own it
+               return { dlg.release(), pInstance, pValidator };
+            }
          }
-         return nullptr;
+         return {};
       };
    }
 
@@ -407,10 +410,14 @@ namespace
 
          AudioIO::Get()->RemoveState(*project, &*mTrack, mEffectState);
          ProjectHistory::Get(*project).PushState(
-            //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-            XO("'%s' removed from '%s' effect stack").Format(effectName, trackName),
-            //i18n-hint: undo history record
-            XO("Remove realtime effect")
+            /*! i18n-hint: undo history record
+             first parameter - realtime effect name
+             second parameter - track name
+             */
+            XO("Removed %s from %s").Format(effectName, trackName),
+            /*! i18n-hint: undo history record
+             first parameter - realtime effect name */
+            XO("Remove %s").Format(effectName)
          );
       }
       
@@ -444,10 +451,14 @@ namespace
          {
             auto effectName = GetEffectName();
             ProjectHistory::Get(*mProject).PushState(
-               //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-               XO("'%s' effect of '%s' modified").Format(effectName, mTrack->GetName()),
-               //i18n-hint: undo history record
-               XO("Modify realtime effect")
+               /*! i18n-hint: undo history record
+                first parameter - realtime effect name
+                second parameter - track name
+                */
+               XO("Changed %s in %s").Format(effectName, mTrack->GetName()),
+               /*! i18n-hint: undo history record
+                first parameter - realtime effect name */
+               XO("Change %s").Format(effectName)
          );
          }
          else
@@ -458,11 +469,40 @@ namespace
 
       void OnChangeButtonClicked(wxCommandEvent& event)
       {
+         if(!mTrack || mProject == nullptr)
+            return;
          if(mEffectState == nullptr)
             return;//not initialized
 
-         ShowSelectEffectMenu(mChangeButton, this);
-         //TODO: replace effect
+         const auto effectID = ShowSelectEffectMenu(mChangeButton, this);
+         if(effectID.empty())
+            return;
+
+         auto &em = RealtimeEffectManager::Get(*mProject);
+         auto oIndex = em.FindState(&*mTrack, mEffectState);
+         if (!oIndex)
+            return;
+
+         auto oldName = GetEffectName();
+         auto &project = *mProject;
+         auto trackName = mTrack->GetName();
+         if (auto state = AudioIO::Get()
+            ->ReplaceState(project, &*mTrack, *oIndex, effectID)
+         ){
+            // Message subscription took care of updating the button text
+            // and destroyed `this`!
+            auto effect = state->GetEffect();
+            assert(effect); // postcondition of ReplaceState
+            ProjectHistory::Get(project).PushState(
+               /*i18n-hint: undo history,
+                first and second parameters - realtime effect names
+                */
+               XO("Replaced %s with %s")
+                  .Format(oldName, effect->GetName()),
+               /*! i18n-hint: undo history record
+                first parameter - realtime effect name */
+               XO("Replace %s").Format(oldName));
+         }
       }
 
       void OnPaint(wxPaintEvent&)
@@ -674,12 +714,24 @@ public:
          const auto to = event.GetTargetIndex();
          if(from != to)
          {
+            auto effectName =
+               effectList.GetStateAt(from)->GetEffect()->GetName();
+            bool up = (to < from);
             effectList.MoveEffect(from, to);
             ProjectHistory::Get(*mProject).PushState(
-               //i18n-hint: undo history, first parameter - track name, second - old position, third - new position
-               XO("'%s' effects reorder %d->%d").Format(mTrack->GetName(), from + 1, to + 1),
-               //i18n-hint: undo history record
-               XO("Realtime effect reorder"), UndoPush::CONSOLIDATE);
+               (up
+                  /*! i18n-hint: undo history record
+                   first parameter - realtime effect name
+                   second parameter - track name
+                   */
+                  ? XO("Moved %s up in %s")
+                  /*! i18n-hint: undo history record
+                   first parameter - realtime effect name
+                   second parameter - track name
+                   */
+                  : XO("Moved %s down in %s"))
+                  .Format(effectName, mTrack->GetName()),
+               XO("Change effect order"), UndoPush::CONSOLIDATE);
          }
          else
          {
@@ -708,6 +760,21 @@ public:
 
    void OnEffectListItemChange(const RealtimeEffectListMessage& msg)
    {
+      const auto insertItem = [this, &msg](){
+         auto& effects = RealtimeEffectList::Get(*mTrack);
+         InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
+      };
+      const auto removeItem = [this, &msg](){
+         auto sizer = mEffectListContainer->GetSizer();
+         auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
+         item->Destroy();
+#ifdef __WXGTK__
+         // See comment in ReloadEffectsList
+         if(sizer->IsEmpty())
+            mEffectListContainer->Hide();
+#endif
+      };
+
       wxWindowUpdateLocker freeze(this);
       if(msg.type == RealtimeEffectListMessage::Type::Move)
       {
@@ -725,19 +792,16 @@ public:
       }
       else if(msg.type == RealtimeEffectListMessage::Type::Insert)
       {
-         auto& effects = RealtimeEffectList::Get(*mTrack);
-         InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
+         insertItem();
+      }
+      else if(msg.type == RealtimeEffectListMessage::Type::Replace)
+      {
+         removeItem();
+         insertItem();
       }
       else if(msg.type == RealtimeEffectListMessage::Type::Remove)
       {
-         auto sizer = mEffectListContainer->GetSizer();
-         auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
-         item->Destroy();
-#ifdef __WXGTK__
-         // See comment in ReloadEffectsList
-         if(sizer->IsEmpty())
-            mEffectListContainer->Hide();
-#endif
+         removeItem();
       }
       SendSizeEventToParent();
    }
@@ -811,11 +875,15 @@ public:
       {
          auto effect = state->GetEffect();
          assert(effect); // postcondition of AddState
+         const auto effectName = effect->GetName();
          ProjectHistory::Get(*mProject).PushState(
-            //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-            XO("'%s' added to the '%s' effect stack").Format(effect->GetName(), mTrack->GetName()),
+            /*! i18n-hint: undo history record
+             first parameter - realtime effect name
+             second parameter - track name
+             */
+            XO("Added %s to %s").Format(effectName, mTrack->GetName()),
             //i18n-hint: undo history record
-            XO("Add realtime effect"));
+            XO("Add %s").Format(effectName));
       }
    }
 

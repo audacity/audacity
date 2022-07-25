@@ -12,14 +12,9 @@
 
 #include "FFmpegFunctions.h"
 
-AVOutputFormatWrapper::AVOutputFormatWrapper(AVOutputFormat* wrapped) noexcept
+AVOutputFormatWrapper::AVOutputFormatWrapper(const AVOutputFormat* wrapped) noexcept
     : mAVOutputFormat(wrapped)
 {
-}
-
-AVOutputFormat* AVOutputFormatWrapper::GetWrappedValue() noexcept
-{
-   return mAVOutputFormat;
 }
 
 const AVOutputFormat* AVOutputFormatWrapper::GetWrappedValue() const noexcept

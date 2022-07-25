@@ -38,13 +38,13 @@ constexpr auto DEFAULT_BLOCKSIZE = 1048576;
 /*! @name Persistent settings that can apply to any LV2 effect
  @{
  */
-bool GetBufferSize(EffectDefinitionInterface &effect, int &bufferSize);
+bool GetBufferSize(const EffectDefinitionInterface &effect, int &bufferSize);
 bool SetBufferSize(EffectDefinitionInterface &effect, int bufferSize);
 
-bool GetUseLatency(EffectDefinitionInterface &effect, bool &useLatency);
+bool GetUseLatency(const EffectDefinitionInterface &effect, bool &useLatency);
 bool SetUseLatency(EffectDefinitionInterface &effect, bool useLatency);
 
-bool GetUseGUI(EffectDefinitionInterface &effect, bool &useGUI);
+bool GetUseGUI(const EffectDefinitionInterface &effect, bool &useGUI);
 bool SetUseGUI(EffectDefinitionInterface &effect, bool useGUI);
 /*!
  @}

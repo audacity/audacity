@@ -152,7 +152,13 @@ public:
    int64_t GetConvergenceDuration() const noexcept override
    {
       if (mAVPacket != nullptr)
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
          return mAVPacket->convergence_duration;
+#else
+         // From FFmpeg docs: "Same as the duration field, but as int64_t."
+         // duration is int64_t now, convergence_duration is removed
+         return mAVPacket->duration;
+#endif
 
       return {};
    }

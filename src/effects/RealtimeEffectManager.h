@@ -15,6 +15,7 @@
 #include <chrono>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -27,7 +28,6 @@ class EffectInstance;
 
 namespace RealtimeEffects {
    class InitializationScope;
-   class SuspensionScope;
    class ProcessingScope;
 }
 
@@ -37,6 +37,7 @@ struct RealtimeEffectManagerMessage
    enum class Type
    {
       EffectAdded,
+      EffectReplaced,
       EffectRemoved
    };
    Type type;
@@ -57,9 +58,9 @@ public:
    static const RealtimeEffectManager & Get(const AudacityProject &project);
 
    // Realtime effect processing
+
+   //! To be called only from main thread
    bool IsActive() const noexcept;
-   void Suspend();
-   void Resume() noexcept;
 //   Latency GetLatency() const;
 
    //! Main thread appends a global or per-track effect
@@ -75,6 +76,20 @@ public:
       RealtimeEffects::InitializationScope *pScope, Track *pTrack,
       const PluginID & id);
 
+   //! Main thread replaces a global or per-track effect
+   /*!
+    @param pScope if realtime is active but scope is absent, there is no effect
+    @param pTrack if null, then state is added to the global list
+    @param index position in the list to replace; no effect if out of range
+    @param id identifies the effect
+    @return if null, the given id was not found and the old state remains
+
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
+   std::shared_ptr<RealtimeEffectState> ReplaceState(
+      RealtimeEffects::InitializationScope *pScope, Track *pTrack,
+      size_t index, const PluginID & id);
+
    //! Main thread removes a global or per-track effect
    /*!
     @param pScope if realtime is active but scope is absent, there is no effect
@@ -85,9 +100,29 @@ public:
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
       Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
 
+   //! Report the position of a state in the global or a per-track list
+   std::optional<size_t> FindState(
+      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState) const;
+
+   bool GetSuspended() const
+      { return mSuspended.load(std::memory_order_relaxed); }
+
+   //! To be called only from main thread
+   /*!
+    Each time a processing scope starts in the audio thread, suspension state
+    is tested, and plug-in instances may need to do things in response to the
+    transitions.  Playback of samples may continue but with effects switched
+    off in suspended state.
+    */
+   void SetSuspended(bool value)
+      { mSuspended.store(value, std::memory_order_relaxed); }
+
 private:
    friend RealtimeEffects::InitializationScope;
-   friend RealtimeEffects::SuspensionScope;
+
+   std::shared_ptr<RealtimeEffectState>
+   MakeNewState(RealtimeEffects::InitializationScope *pScope,
+      Track *pLeader, const PluginID &id);
 
    //! Main thread begins to define a set of tracks for playback
    void Initialize(RealtimeEffects::InitializationScope &scope,
@@ -151,12 +186,8 @@ private:
    Latency mLatency{ 0 };
 
    std::atomic<bool> mSuspended{ true };
-   bool GetSuspended() const
-      { return mSuspended.load(std::memory_order_relaxed); }
-   void SetSuspended(bool value)
-      { mSuspended.store(value, std::memory_order_relaxed); }
 
-   std::atomic<bool> mActive{ false };
+   bool mActive{ false };
 
    // This member is mutated only by Initialize(), AddTrack(), Finalize()
    // which are to be called only while there is no playback
@@ -196,35 +227,6 @@ public:
 
    std::vector<std::shared_ptr<EffectInstance>> mInstances;
    double mSampleRate;
-
-private:
-   std::weak_ptr<AudacityProject> mwProject;
-};
-
-//! Brackets one suspension of processing in the main thread
-class SuspensionScope {
-public:
-   SuspensionScope() {}
-   //! Require a prior InitializationScope to ensure correct nesting
-   explicit SuspensionScope(InitializationScope &,
-      std::weak_ptr<AudacityProject> wProject)
-      : mwProject{ move(wProject) }
-   {
-      if (auto pProject = mwProject.lock()) {
-         auto &manager = RealtimeEffectManager::Get(*pProject);
-         if (!manager.GetSuspended())
-            manager.Suspend();
-         else
-            mwProject.reset();
-      }
-   }
-   SuspensionScope( SuspensionScope &&other ) = default;
-   SuspensionScope& operator=( SuspensionScope &&other ) = default;
-   ~SuspensionScope()
-   {
-      if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).Resume();
-   }
 
 private:
    std::weak_ptr<AudacityProject> mwProject;

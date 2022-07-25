@@ -68,7 +68,6 @@ kCaptureWhatStrings[ ScreenshotCommand::nCaptureWhats ] =
    { XO("Timer") },
    { XO("Tools") },
    { XO("Transport") },
-   { XO("Mixer") },
    { XO("Meter") },
    { wxT("PlayMeter"), XO("Play Meter") },
    { wxT("RecordMeter"), XO("Record Meter") },
@@ -803,8 +802,6 @@ bool ScreenshotCommand::Apply(const CommandContext & context)
       return CaptureToolbar(context, &toolManager, ToolsBarID, mFileName);
    case ktransport:
       return CaptureToolbar(context, &toolManager, TransportBarID, mFileName);
-   case kmixer:
-      return CaptureToolbar(context, &toolManager, MixerBarID, mFileName);
    case kmeter:
       return CaptureToolbar(context, &toolManager, MeterBarID, mFileName);
    case krecordmeter:

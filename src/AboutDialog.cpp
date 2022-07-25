@@ -198,6 +198,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Alex S. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
+   AddCredit(wxT("Subhradeep Chakraborty"), developerFormat, roleContributor);
    AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
    AddCredit(wxT("Craig DeForest"), developerFormat, roleContributor);
    AddCredit(wxT("Edgar Franke (Edgar-RFT)"), developerFormat, roleContributor);
@@ -222,7 +223,9 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
    AddCredit(wxT("Mark Phillips"), developerFormat, roleContributor);
    AddCredit(wxT("Andr\u00E9 Pinto"), developerFormat, roleContributor);
+   AddCredit(wxT("Pokechu22"), developerFormat, roleContributor);
    AddCredit(wxT("Jean Claude Risset"), composerFormat, roleContributor);
+   AddCredit(wxT("RuRo"), developerFormat, roleContributor);
    AddCredit(wxT("Augustus Saunders"), developerFormat, roleContributor);
    AddCredit(wxT("Benjamin Schwartz"), developerFormat, roleContributor);
    AddCredit(wxT("Cliff Scott"), testerFormat, roleContributor);

@@ -21,12 +21,12 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
-   AccessState(const EffectSettingsManager &effect,
-      EffectSettings &mainSettings, EffectSettings &workerSettings)
+   AccessState(const EffectSettingsManager &effect, RealtimeEffectState &state)
       : mEffect{ effect }
-      , mWorkerSettings{ workerSettings }
+      , mState{ state }
    {
       // Clean initial state of the counter
+      auto &mainSettings = state.mMainSettings;
       mainSettings.extra.SetCounter(0);
       // Initialize each message buffer with two copies of settings
       mChannelToMain.Write(ToMainSlot{ mainSettings });
@@ -55,17 +55,17 @@ public:
       const EffectSettingsManager &effect; const EffectSettings &settings; };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mWorkerSettings);
+      mChannelFromMain.Read<FromMainSlot::Reader>(
+         mEffect, mState.mWorkerSettings);
    }
    void WorkerWrite() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelToMain.Write(EffectAndSettings{ mEffect, mWorkerSettings });
+      mChannelToMain.Write(EffectAndSettings{
+         mEffect, mState.mWorkerSettings });
    }
 
-   EffectSettings mLastSettings;
    const EffectSettings &MainThreadCache() const { return mMainThreadCache; }
 
-private:
    struct ToMainSlot {
       // For initialization of the channel
       ToMainSlot() = default;
@@ -78,7 +78,9 @@ private:
       // Worker thread writes the slot
       ToMainSlot& operator=(EffectAndSettings &&arg) {
          // This happens during MessageBuffer's busying of the slot
-         arg.effect.CopySettingsContents(arg.settings, mSettings);
+         arg.effect.CopySettingsContents(
+            arg.settings, mSettings,
+            SettingsCopyDirection::WorkerToMain);
          mSettings.extra = arg.settings.extra;
          return *this;
       }
@@ -91,7 +93,6 @@ private:
 
       EffectSettings mSettings;
    };
-   MessageBuffer<ToMainSlot> mChannelToMain;
 
    struct FromMainSlot {
       // For initialization of the channel
@@ -112,17 +113,23 @@ private:
       struct Reader { Reader(FromMainSlot &&slot,
          const EffectSettingsManager &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
-            effect.CopySettingsContents(slot.mSettings, settings);
+            effect.CopySettingsContents(
+               slot.mSettings, settings,
+               SettingsCopyDirection::MainToWorker);
             settings.extra = slot.mSettings.extra;
       } };
 
       EffectSettings mSettings;
    };
-   MessageBuffer<FromMainSlot> mChannelFromMain;
 
    const EffectSettingsManager &mEffect;
-   EffectSettings &mWorkerSettings;
+   RealtimeEffectState &mState;
+
+   MessageBuffer<FromMainSlot> mChannelFromMain;
    EffectSettings mMainThreadCache;
+   EffectSettings mLastSettings;
+
+   MessageBuffer<ToMainSlot> mChannelToMain;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
@@ -144,9 +151,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          // First time test, or echo is completed
          return pResult;
       }
-      else if (auto pAudioIO = AudioIOBase::Get()
-         ; !(pAudioIO && pAudioIO->IsStreamActive())
-      ){
+      else if (!state.mState.mInitialized) {
          // not relying on the other thread to make progress
          // and no fear of data races
          return &state.MainWriteThrough(lastSettings);
@@ -184,7 +189,6 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            auto &lastSettings = pAccessState->mLastSettings;
             const EffectSettings *pResult{};
             while (!(pResult = FlushAttempt(*pAccessState))) {
                // Wait for progress of audio thread
@@ -192,6 +196,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                std::this_thread::sleep_for(50ms);
             }
             pState->mMainSettings.Set(*pResult); // Update the state
+            pAccessState->mLastSettings = *pResult;
          }
       }
    }
@@ -657,9 +662,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
    xmlFile.StartTag(XMLTag());
    const auto active = mMainSettings.extra.GetActive();
    xmlFile.WriteAttr(activeAttribute, active);
-   xmlFile.WriteAttr(
-      idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mPlugin)));
-   xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mPlugin->GetVersion()));
+   xmlFile.WriteAttr(idAttribute, PluginManager::GetID(mPlugin));
+   xmlFile.WriteAttr(versionAttribute, mPlugin->GetVersion());
 
    CommandParameters cmdParms;
    if (mPlugin->SaveSettings(mMainSettings, cmdParms)) {
@@ -674,8 +678,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
          wxString entryValue = cmdParms.Read(entryName, "");
 
          xmlFile.StartTag(parameterAttribute);
-         xmlFile.WriteAttr(nameAttribute, XMLWriter::XMLEsc(entryName));
-         xmlFile.WriteAttr(valueAttribute, XMLWriter::XMLEsc(entryValue));
+         xmlFile.WriteAttr(nameAttribute, entryName);
+         xmlFile.WriteAttr(valueAttribute, entryValue);
          xmlFile.EndTag(parameterAttribute);
 
          entryKeepGoing = cmdParms.GetNextEntry(entryName, entryIndex);
@@ -696,6 +700,6 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
    // Only the main thread assigns to the atomic pointer, here and
    // once only in the lifetime of the state
    if (!GetAccessState())
-      mpAccessState.emplace(*mPlugin, mMainSettings, mWorkerSettings);
+      mpAccessState.emplace(*mPlugin, *this);
    return std::make_shared<Access>(*this);
 }

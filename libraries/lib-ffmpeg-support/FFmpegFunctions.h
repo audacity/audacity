@@ -96,7 +96,7 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    std::unique_ptr<AVIOContextWrapper> CreateAVIOContext() const;
    std::unique_ptr<AVFormatContextWrapper> CreateAVFormatContext() const;
 
-   std::unique_ptr<AVStreamWrapper> CreateAVStreamWrapper(AVStream* stream) const;
+   std::unique_ptr<AVStreamWrapper> CreateAVStreamWrapper(AVStream* stream, bool forEncoding) const;
 
    //! @post return value is not null
    std::unique_ptr<AVPacketWrapper> CreateAVPacketWrapper() const;
@@ -105,7 +105,7 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    std::unique_ptr<AVFrameWrapper> CreateAVFrameWrapper() const;
 
    std::unique_ptr<AVInputFormatWrapper> CreateAVInputFormatWrapper(AVInputFormat* inputFormat) const;
-   std::unique_ptr<AVOutputFormatWrapper> CreateAVOutputFormatWrapper(AVOutputFormat* outputFormat) const;
+   std::unique_ptr<AVOutputFormatWrapper> CreateAVOutputFormatWrapper(const AVOutputFormat* outputFormat) const;
 
    std::unique_ptr<AVCodecWrapper> CreateDecoder(AVCodecIDFwd codecID) const;
    std::unique_ptr<AVCodecWrapper> CreateEncoder(AVCodecIDFwd codecID) const;
@@ -115,9 +115,9 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    std::unique_ptr<AVCodecContextWrapper> CreateAVCodecContextWrapperFromCodec(std::unique_ptr<AVCodecWrapper> codec) const;
 
    std::unique_ptr<AVOutputFormatWrapper> GuessOutputFormat(const char* short_name, const char* filename, const char* mime_type);
-   std::unique_ptr<AVOutputFormatWrapper> GetNextOutputFormat(const AVOutputFormatWrapper* fmt) const;
-
-   std::unique_ptr<AVCodecWrapper> GetNextCodec(const AVCodecWrapper* codec) const;
+   
+   const std::vector<const AVOutputFormatWrapper*>& GetOutputFormats() const;
+   const std::vector<const AVCodecWrapper*>& GetCodecs() const;
 
    std::unique_ptr<AVFifoBufferWrapper> CreateFifoBuffer(int size) const;
 
@@ -128,8 +128,17 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    }
 
 private:
+   void FillCodecsList();
+   void FillOuptutFormatsList();
+   
    struct Private;
    std::unique_ptr<Private> mPrivate;
+
+   std::vector<const AVCodecWrapper*> mCodecPointers;
+   std::vector<std::unique_ptr<AVCodecWrapper>> mCodecs;
+
+   std::vector<const AVOutputFormatWrapper*> mOutputFormatPointers;
+   std::vector<std::unique_ptr<AVOutputFormatWrapper>> mOutputFormats;
 };
 
 template<typename T>

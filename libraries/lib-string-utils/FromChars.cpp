@@ -86,7 +86,7 @@ FromCharsResult FastStringToInt(
    }
 
    // But here live dragons
-   while (ptr < last && (d = digitToInt(*ptr++)) <= 9)
+   while (ptr < last && (d = digitToInt(*ptr)) <= 9)
    {
       if (!safeMul10Add<UnsignedResultType>(result, result, d))
          return { ptr, std::errc::result_out_of_range };
@@ -103,6 +103,9 @@ FromCharsResult FastStringToInt(
          if (result > max)
             return { ptr, std::errc::result_out_of_range };
       }
+
+      
+      ++ptr;
    }
 
    if constexpr (std::is_signed_v<ResultType>)

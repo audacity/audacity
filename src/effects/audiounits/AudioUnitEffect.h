@@ -69,7 +69,7 @@ public:
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override;
+      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override;
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
@@ -91,8 +91,8 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
 
    bool InitializePlugin();
    bool FullyInitializePlugin();
@@ -103,7 +103,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool IsGraphicalUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -114,7 +113,7 @@ public:
    void ShowOptions() override;
 
    // AudioUnitEffect implementation
-   
+
 private:
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
@@ -154,7 +153,6 @@ private:
 
    wxWindow *mParent{};
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
-   bool mIsGraphical{ false };
 };
 
 #endif

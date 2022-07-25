@@ -40,7 +40,6 @@ public:
    virtual int GetNumDataPointers() const noexcept = 0;
    virtual uint8_t* GetData(int index) const noexcept = 0;
    virtual int GetLineSize(int index) const noexcept = 0;
-   virtual uint64_t GetError(int index) const noexcept = 0;
    virtual uint8_t* GetExtendedData(int index) const noexcept = 0;
 
    virtual int GetWidth() const noexcept = 0;

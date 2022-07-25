@@ -40,7 +40,7 @@ SetLabelCommand::SetLabelCommand()
 
 template<bool Const>
 bool SetLabelCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
-   S.Define(    mLabelIndex,                            wxT("Label"), 0, 0, 100 );
+   S.Define(    mLabelIndex,                            wxT("Label"), 0, 0, 10000 );
    S.OptionalY( bHasText       ).Define(  mText,        wxT("Text"),       wxString{"empty"} );
    S.OptionalY( bHasT0         ).Define(  mT0,          wxT("Start"),      0.0, 0.0, 100000.0);
    S.OptionalY( bHasT1         ).Define(  mT1,          wxT("End"),        0.0, 0.0, 100000.0);

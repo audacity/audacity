@@ -45,7 +45,7 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    }
 
    const auto instance = &wrapper->GetInstance();
-   wrapper->SetBlockSize();
+   wrapper->SendBlockSize();
    wrapper->ConnectPorts(ports, portStates, settings, useOutput);
 
    // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
@@ -60,8 +60,8 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    return wrapper;
 }
 
-void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
-   const LV2EffectSettings &settings, bool useOutput)
+void LV2Wrapper::ConnectControlPorts(
+   const LV2Ports &ports, const LV2EffectSettings &settings, bool useOutput)
 {
    const auto instance = &GetInstance();
    static float blackHole;
@@ -86,6 +86,14 @@ void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
             : &const_cast<float&>(values[index]));
       ++index;
    }
+}
+
+void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
+   const LV2EffectSettings &settings, bool useOutput)
+{
+   ConnectControlPorts(ports, settings, useOutput);
+
+   const auto instance = &GetInstance();
 
    // Connect all atom ports
    for (auto & state : portStates.mAtomPortStates)
@@ -113,24 +121,10 @@ LV2Wrapper::~LV2Wrapper()
 }
 
 LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
-   const LilvPlugin &plugin, double sampleRate
-)  : mFeaturesList{ featuresList }
-, mInstance{
-   [&featuresList, &plugin, sampleRate, pWorkerSchedule = &mWorkerSchedule]()
-{
-   // Reassign the sample rate, which is pointed to by options, which are
-   // pointed to by features, before we tell the library the features
-   featuresList.SetSampleRate(sampleRate);
-   auto features = featuresList.GetFeaturePointers();
-   if (featuresList.SuppliesWorkerInterface()) {
-      LV2_Feature tempFeature{ LV2_WORKER__schedule, pWorkerSchedule };
-      // Append a feature to the array, only for the plugin instantiation
-      // Insert another pointer before the null
-      // (features are also used elsewhere to instantiate the UI in the
-      // suil_* functions)
-      // It informs the plugin how to send work to another thread
-      features.insert(features.end() - 1, &tempFeature);
-   }
+   const LilvPlugin &plugin, float sampleRate
+)  : mFeaturesList{ featuresList, sampleRate, &mWorkerSchedule }
+, mInstance{ [&instanceFeaturesList = mFeaturesList, &plugin, sampleRate](){
+   auto features = instanceFeaturesList.GetFeaturePointers();
 
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
@@ -200,12 +194,15 @@ void LV2Wrapper::SetFreeWheeling(bool enable)
    mFreeWheeling = enable;
 }
 
-void LV2Wrapper::SetBlockSize()
+void LV2Wrapper::SendBlockSize()
 {
    if (auto pOption = mFeaturesList.NominalBlockLengthOption()
       ; pOption && mOptionsInterface && mOptionsInterface->set
    ){
       LV2_Options_Option options[2]{ *pOption, {} };
+      // I assume the pointer to temporary options is not retained by
+      // well written plug-ins, but they may watch the location at the pointer
+      // that is in the option structure.
       mOptionsInterface->set(mHandle, options);
    }
 }

@@ -16,13 +16,13 @@
 #include <wx/wx.h>
 
 #include <pluginterfaces/gui/iplugview.h>
-#include <pluginterfaces/vst/ivstaudioprocessor.h>
-#include <public.sdk/source/vst/hosting/module.h>
 
 #include "../StatefulPerTrackEffect.h"
 #include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
+
+#include "VST3Utils.h"
 
 class NumericTextCtrl;
 
@@ -42,17 +42,13 @@ class VST3ParametersWindow;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public StatefulPerTrackEffect
+class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
 {
-   //Keep strong reference to a module while effect is alive
-   std::shared_ptr<VST3::Hosting::Module> mModule;
-
    //Following fields are unique to each effect instance
-
-   Steinberg::IPtr<Steinberg::Vst::IComponent> mEffectComponent;
+   
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
-   const VST3::Hosting::ClassInfo mEffectClassInfo;
+   bool mActive{false};
 
    //Since all of the realtime processors share same presets, following
    //fields are only initialized and assigned in the global effect instance
@@ -61,7 +57,7 @@ class VST3Effect final : public StatefulPerTrackEffect
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
-   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
+   Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
    NumericTextCtrl* mDuration { nullptr };
@@ -84,7 +80,9 @@ class VST3Effect final : public StatefulPerTrackEffect
 
 
    void Initialize();
-   
+
+   mutable bool mInitialFetchDone{ false };
+
 public:
 
    static EffectFamilySymbol GetFamilySymbol();
@@ -119,7 +117,6 @@ public:
       const RegistryPath & name, const EffectSettings &settings) const override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool LoadFactoryDefaults(EffectSettings &) const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -127,7 +124,7 @@ public:
    int GetMidiOutCount() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
-   sampleCount GetLatency() override;
+   sampleCount GetLatency() const override;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
@@ -147,7 +144,8 @@ public:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
    bool InitializePlugin();
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();
@@ -163,14 +161,22 @@ public:
    bool HasOptions() override;
    void ShowOptions() override;
 
+   EffectSettings MakeSettings() const override;
+
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+
 private:
+   //Used to flush all pending changes to the IAudioProcessor, while
+   //plugin is inactive(!)
+   void FlushPendingChanges() const;
+
    void OnEffectWindowResize(wxSizeEvent & evt);
 
    bool LoadVSTUI(wxWindow* parent);
 
-   void SyncParameters(EffectSettings &) const;
+   void SyncParameters() const;
 
-   bool LoadPreset(const wxString& path);
+   bool LoadPreset(const wxString& path, EffectSettings& settings);
 
    void ReloadUserOptions();
 };

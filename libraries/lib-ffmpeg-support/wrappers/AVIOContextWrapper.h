@@ -67,15 +67,17 @@ public:
 
    virtual int GetDirect() const noexcept = 0;
    virtual void SetDirect(int direct) noexcept = 0;
+
 protected:
+   virtual int Read(uint8_t* buf, int size) = 0;
    const FFmpegFunctions& mFFmpeg;
    AVIOContext* mAVIOContext { nullptr };
+
+   //! This is held indirectly by unique_ptr just so it can be swapped
+   std::unique_ptr<wxFile> mpFile;
 
 private:
    static int FileRead(void* opaque, uint8_t* buf, int size);
    static int FileWrite(void* opaque, const uint8_t* buf, int size);
    static int64_t FileSeek(void* opaque, int64_t pos, int whence);
-
-   //! This is held indirectly by unique_ptr just so it can be swapped
-   std::unique_ptr<wxFile> mpFile;
 };

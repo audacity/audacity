@@ -31,7 +31,7 @@ public:
 private:
    size_t InitialBlockSize() const;
    sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
-      override;
+      const override;
 
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -84,6 +84,5 @@ private:
    const unsigned mAudioIns;
    const unsigned mAudioOuts;
    const bool mUseLatency;
-   bool mLatencyDone{ false };
 };
 #endif

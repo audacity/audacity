@@ -134,6 +134,7 @@ public:
    
    void ShowEffectsPanel(AudacityProject& project, Track* track = nullptr);
    void HideEffectsPanel();
+   bool IsEffectsPanelShown();
 
    void ApplyUpdatedTheme();
 

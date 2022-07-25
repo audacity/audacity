@@ -23,6 +23,37 @@ class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
 
+//! Default implementation of EffectUIValidator invokes ValidateUI
+//! and IsGraphicalUI methods of an EffectUIClientInterface
+/*
+ Also pops the even handler stack of a window, if given to the contructor
+
+ This is a transitional class; it should be eliminated when all effect classes
+ define their own associated subclasses of EffectUIValidator, which can hold
+ state only for the lifetime of a dialog, so the effect object need not hold it
+*/
+class DefaultEffectUIValidator
+   : public EffectUIValidator
+   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
+   , protected wxEvtHandler
+{
+public:
+   /*!
+    @param pParent if not null, caller will push an event handler onto this
+    window; then this object is responsible to pop it in the destructor
+    */
+   DefaultEffectUIValidator(
+      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      wxWindow *pParent = nullptr);
+   ~DefaultEffectUIValidator() override;
+   //! Calls mEffect.ValidateUI()
+   bool ValidateUI() override;
+   //! @return mEffect.IsGraphicalUI()
+   bool IsGraphicalUI() override;
+protected:
+   wxWindow *const mpParent;
+};
+
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
    , public EffectBase
@@ -88,14 +119,15 @@ class AUDACITY_DLL_API Effect /* not final */
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
 
-   int ShowClientInterface(
-      wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
+   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal) override;
 
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
+   //! @return false
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
@@ -288,7 +320,7 @@ public:
       return EffectSettings::Make<Settings>();
    }
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override
+      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override
    {
       return EffectSettings::Copy<Settings>(src, dst);
    }

@@ -121,15 +121,38 @@ EffectSettings LadspaEffect::MakeSettings() const
 }
 
 bool LadspaEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const
 {
    // Do not use the copy constructor of std::vector.  Do an in-place rewrite
    // of the destination vector, which will not allocate memory if dstControls
    // began with sufficient capacity.
+   const auto portCount = mData->PortCount;
+   
    auto &srcControls = GetSettings(src).controls;
    auto &dstControls = GetSettings(dst).controls;
-   dstControls.resize(0);
-   copy(srcControls.begin(), srcControls.end(), back_inserter(dstControls));
+
+   assert(srcControls.size() == portCount);
+   assert(dstControls.size() == portCount);
+
+   const auto portValuesCount =
+      std::min(srcControls.size(), dstControls.size());
+
+   if (portValuesCount != portCount)
+      return false;
+
+   const auto copyOutputs = copyDirection == SettingsCopyDirection::WorkerToMain;
+
+   for (unsigned long p = 0; p < portCount; ++p)
+   {
+      LADSPA_PortDescriptor d = mData->PortDescriptors[p];
+      
+      if (!(LADSPA_IS_PORT_CONTROL(d)))
+         continue;
+
+      if (LADSPA_IS_PORT_INPUT(d) || copyOutputs)
+         dstControls[p] = srcControls[p];
+   }
+   
    return true;
 }
 
@@ -877,7 +900,7 @@ struct LadspaEffect::Instance
       override;
 
    sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
-      override;
+      const override;
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
@@ -897,7 +920,6 @@ struct LadspaEffect::Instance
       { return static_cast<const LadspaEffect &>(mProcessor); }
 
    bool mReady{ false };
-   bool mLatencyDone{ false };
    LADSPA_Handle mMaster{};
 
    // Realtime processing
@@ -930,12 +952,11 @@ int LadspaEffect::GetMidiOutCount() const
 }
 
 sampleCount LadspaEffect::Instance::GetLatency(
-   const EffectSettings &settings, double)
+   const EffectSettings &settings, double) const
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
-   if (effect.mUseLatency && effect.mLatencyPort >= 0 && !mLatencyDone) {
-      mLatencyDone = true;
+   if (effect.mUseLatency && effect.mLatencyPort >= 0) {
       return sampleCount{ controls[effect.mLatencyPort] };
    }
    return 0;
@@ -953,7 +974,6 @@ bool LadspaEffect::Instance::ProcessInitialize(
          return false;
       mReady = true;
    }
-   mLatencyDone = false;
    return true;
 }
 
@@ -1056,8 +1076,8 @@ bool LadspaEffect::Instance::RealtimeProcessEnd(EffectSettings &) noexcept
    return true;
 }
 
-int LadspaEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int LadspaEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    dialog.Layout();
    dialog.Fit();
@@ -1452,11 +1472,6 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
       std::make_unique<Validator>(*this, access, mProjectRate, GetType());
    result->PopulateUI(S);
    return result;
-}
-
-bool LadspaEffect::IsGraphicalUI()
-{
-   return false;
 }
 
 bool LadspaEffect::Validator::ValidateUI()

@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  LV2Effect.h
+  @file LV2FeaturesList.h
 
   Paul Licameli split from LV2Effect.h
 
@@ -17,10 +17,8 @@
 #if USE_LV2
 
 #include "lv2/log/log.h"
-#include "lv2/options/options.h"
 #include "lv2/uri-map/uri-map.h"
 
-#include "../StatefulPerTrackEffect.h"
 #include "LV2Symbols.h"
 #include "LV2Preferences.h" // for DEFAULT_BLOCKSIZE
 
@@ -29,47 +27,16 @@
 
 using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 
-class LV2FeaturesList : public StatefulPerTrackEffect {
+//! Abstraction of a list of features, with a check for satisfaction of
+//! requirements of a given lv2 "subject"
+class LV2FeaturesListBase {
 public:
-   explicit LV2FeaturesList(const LilvPlugin &plug);
-
-   //! @return success
-   bool InitializeOptions();
-
-   //! To be called after InitializeOptions()
-   //! @return success
-   bool InitializeFeatures();
+   explicit LV2FeaturesListBase(const LilvPlugin &plug);
+   virtual ~LV2FeaturesListBase();
 
    //! Get vector of pointers to features, whose `.data()` can be passed to lv2
    using FeaturePointers = std::vector<const LV2_Feature *>;
-   FeaturePointers GetFeaturePointers() const;
-
-   //! @return whether our host should reciprocally supply the
-   //! LV2_Worker_Schedule interface to the plug-in
-   static bool SuppliesWorkerInterface(const LilvPlugin &plug);
-
-   //! @return whether our host should reciprocally supply the
-   //! LV2_Worker_Schedule interface to the plug-in
-   bool SuppliesWorkerInterface() const { return mSuppliesWorkerInterface; }
-   //! @return may be null
-   const LV2_Options_Option *NominalBlockLengthOption() const;
-
-   size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
-
-   /*!
-    @param subject URI of a plugin
-    @return whether all required features of subject are supported
-    */
-   bool ValidateOptions(const LilvNode *subject);
-
-   /*!
-    @param subject URI of a plugin
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
-    */
-   bool CheckOptions(const LilvNode *subject, bool required);
-
-   void AddFeature(const char *uri, const void *data);
+   virtual FeaturePointers GetFeaturePointers() const = 0;
 
    /*!
     @param subject URI of the host or of the UI identifies a resource in lv2
@@ -80,32 +47,66 @@ public:
    /*!
     @param subject URI of the host or of the UI identifies a resource in lv2
     @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
+    @return true only if `!required` or else all required features are supported
     */
    bool CheckFeatures(const LilvNode *subject, bool required);
 
-   //! May be needed before exposing features and options to the plugin
-   void SetSampleRate(float sampleRate) const { mSampleRate = sampleRate; }
-
    const LilvPlugin &mPlug;
+   bool mNoResize{ false };
+};
 
+//! Extends one (immutable) feature list (whose lifetime contains this one's)
+class ExtendedLV2FeaturesList : public LV2FeaturesListBase {
+public:
+   explicit ExtendedLV2FeaturesList(const LV2FeaturesListBase &baseFeatures);
+   virtual ~ExtendedLV2FeaturesList();
+   FeaturePointers GetFeaturePointers() const override;
+   void AddFeature(const char *uri, const void *data);
+   const LV2FeaturesListBase &mBaseFeatures;
 protected:
+   std::vector<LV2_Feature> mFeatures;
+};
+
+class LV2FeaturesList : public LV2FeaturesListBase {
+public:
+   static ComponentInterfaceSymbol GetPluginSymbol(const LilvPlugin &plug);
+
+   explicit LV2FeaturesList(const LilvPlugin &plug);
+   ~LV2FeaturesList() override;
+
+   //! @return success
+   bool InitializeFeatures();
+
+   FeaturePointers GetFeaturePointers() const override;
+
+   //! @return whether our host should reciprocally supply the
+   //! LV2_Worker_Schedule interface to the plug-in
+   static bool SuppliesWorkerInterface(const LilvPlugin &plug);
+
+   //! @return whether our host should reciprocally supply the
+   //! LV2_Worker_Schedule interface to the plug-in
+   bool SuppliesWorkerInterface() const { return mSuppliesWorkerInterface; }
+
+   void AddFeature(const char *uri, const void *data);
+
    // lv2 functions require a pointer to non-const in places, but presumably
    // have no need to mutate the members of this structure
    LV2_URID_Map *URIDMapFeature() const
    { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
 
-   static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
-                             const char *map,
-                             const char *uri);
-   static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
-   LV2_URID URID_Map(const char *uri);
+   LV2_URID URID_Map(const char *uri) const;
 
+protected:
+   static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
+      const char *map, const char *uri);
+   static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
 
-   static int log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...);
-   static int log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap);
+   static int log_printf(LV2_Log_Handle handle,
+      LV2_URID type, const char *fmt, ...);
+   static int log_vprintf(LV2_Log_Handle handle,
+      LV2_URID type, const char *fmt, va_list ap);
    int LogVPrintf(LV2_URID type, const char *fmt, va_list ap);
 
    // These objects contain C-style virtual function tables that we fill in
@@ -116,25 +117,20 @@ protected:
    const LV2_Log_Log mLogFeature{
       this, LV2FeaturesList::log_printf, LV2FeaturesList::log_vprintf };
 
-   // Declare local URI map
-   LV2Symbols::URIDMap mURIDMap;
-
-   std::vector<LV2_Options_Option> mOptions;
-   size_t mBlockSizeOption{};
+   //! Per-effect URID map allocates an ID for each URI on first lookup
+   /*!
+    This is some state shared among all instances of an effect, but logically
+    const as a mapping, assuming all reverse lookups of any urid (integer) are
+    done only after at least one lookup of the related uri (string)
+    */
+   mutable LV2Symbols::URIDMap mURIDMap;
 
    std::vector<LV2_Feature> mFeatures;
 
-   mutable float mSampleRate{ 44100 };
-   size_t mBlockSize{ LV2Preferences::DEFAULT_BLOCKSIZE };
-   int mSeqSize{ DEFAULT_SEQSIZE };
-
-   size_t mMinBlockSize{ 1 };
-   size_t mMaxBlockSize{ mBlockSize };
-
    const bool mSuppliesWorkerInterface;
-   bool mSupportsNominalBlockLength{ false };
 
-   bool mNoResize{ false };
+public:
+   const bool mOk;
 };
 
 #endif

@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-06-25 17:00+0000\n"
+"PO-Revision-Date: 2022-07-20 11:14+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -775,7 +775,7 @@ msgstr "&Małe ikony"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Toolbar"
-msgstr "Pasek narzędziowy"
+msgstr "Pasek narzędzi"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
@@ -835,7 +835,7 @@ msgstr "Harvey Lubin (logo)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr "Galeria ikon Tango (pasek narzędziowy ikon)"
+msgstr "Galeria ikon Tango (pasek narzędzi ikon)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
@@ -4715,7 +4715,7 @@ msgstr "Przechwyć część okna projektu"
 
 #: src/Screenshot.cpp
 msgid "All Toolbars"
-msgstr "Wszystkie paski narzędziowe"
+msgstr "Wszystkie paski narzędzi"
 
 #: src/Screenshot.cpp
 msgid "All Effects"
@@ -5996,7 +5996,7 @@ msgstr "Pełny ekran"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Toolbars"
-msgstr "Paski narzędziowe"
+msgstr "Paski narzędzi"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/prefs/EffectsPrefs.h
@@ -13681,12 +13681,12 @@ msgstr "Długie przesunięcie w pr&awo podczas odtwarzania"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
-msgstr "Paski &narzędziowe"
+msgstr "Paski &narzędzi"
 
 #. i18n-hint: (verb)
 #: src/menus/ToolbarMenus.cpp
 msgid "Reset Toolb&ars"
-msgstr "Zresetuj paski na&rzędziowe"
+msgstr "Zresetuj paski na&rzędzi"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -16473,7 +16473,7 @@ msgstr "%s."
 #. with the big buttons on it (play record etc)
 #: src/toolbars/ControlToolBar.cpp
 msgid "&Transport Toolbar"
-msgstr "Pasek narzędziowy &transportu"
+msgstr "Pasek narzędzi &transportu"
 
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
@@ -16525,7 +16525,7 @@ msgstr "Brak informacji o urządzeniu."
 #. that manages devices
 #: src/toolbars/DeviceToolBar.cpp
 msgid "&Device Toolbar"
-msgstr "Pasek narzędziowy &urządzenia"
+msgstr "Pasek narzędzi &urządzenia"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut selection"
@@ -16576,7 +16576,7 @@ msgstr "Otwórz efekty racka"
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
 msgid "&Edit Toolbar"
-msgstr "Pasek narzędziowy &edycji"
+msgstr "Pasek narzędzi &edycji"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
@@ -16617,13 +16617,13 @@ msgstr "Poziom nagrywania"
 #. with the recording level meters
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Recording Meter Toolbar"
-msgstr "Pasek miernika &nagrywania"
+msgstr "Pasek narzędzi miernika &nagrywania"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the playback level meter
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Playback Meter Toolbar"
-msgstr "Pasek miernika &odtwarzania"
+msgstr "Pasek narzędzi miernika &odtwarzania"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Recording Volume"
@@ -16655,7 +16655,7 @@ msgstr "Głośność odtwarzania (Niedostępna; użyj miksera systemowego.)"
 #. with the mixer
 #: src/toolbars/MixerToolBar.cpp
 msgid "Mi&xer Toolbar"
-msgstr "Pasek narzędziowy mi&ksera"
+msgstr "Pasek narzędzi mi&ksera"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -16705,7 +16705,7 @@ msgstr "Ukryj linijkę przewijania"
 #. that enables Scrub or Seek playback and Scrub Ruler
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scru&b Toolbar"
-msgstr "Pasek narzędziowy &przewijania"
+msgstr "Pasek narzędzi &przewijania"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
@@ -16777,7 +16777,7 @@ msgstr "Zaznaczenie %s. %s nie zmieniło się."
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
-msgstr "Pasek narzędziowy &zaznaczenia"
+msgstr "Pasek narzędzi &zaznaczenia"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -16799,7 +16799,7 @@ msgstr "Przepustowość"
 #. for selecting a frequency range of audio
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Pasek narzędziowy &widmowego zaznaczenia"
+msgstr "Pasek narzędzi &widmowego zaznaczenia"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -16809,17 +16809,17 @@ msgstr "Czas"
 #. for viewing actual time of the cursor
 #: src/toolbars/TimeToolBar.cpp
 msgid "&Time Toolbar"
-msgstr "Pasek narzędziowy &czasu"
+msgstr "Pasek narzędzi &czasu"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
 #, c-format
 msgid "Audacity %s Toolbar"
-msgstr "Pasek %s Audacity"
+msgstr "Pasek narzędzi %s Audacity"
 
 #: src/toolbars/ToolBar.cpp
 msgid "Click and drag to resize toolbar"
-msgstr "Kliknij i przeciągnij, aby zmienić rozmiar paska"
+msgstr "Kliknij i przeciągnij, aby zmienić rozmiar paska narzędzi"
 
 #: src/toolbars/ToolDock.cpp
 msgid "ToolDock"
@@ -16850,7 +16850,7 @@ msgstr "Multinarzędzie"
 #. that has some tools in it
 #: src/toolbars/ToolsToolBar.cpp
 msgid "T&ools Toolbar"
-msgstr "Pasek narzę&dziowy narzędzi"
+msgstr "Pasek narzę&dzi narzędzi"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Selection Tool"
@@ -16896,7 +16896,7 @@ msgstr "Odtwarzaj z prędkością raz"
 #. for transcription (currently just vary play speed)
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Pasek narzędziowy &odtwarzania z prędkością"
+msgstr "Pasek narzędzi &odtwarzania z prędkością"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."

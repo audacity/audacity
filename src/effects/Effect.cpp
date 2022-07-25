@@ -150,25 +150,21 @@ const EffectParameterMethods &Effect::Parameters() const
    return empty;
 }
 
-int Effect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, bool forceModal)
+int Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    mUIDialog = &dialog;
    mUIDialog->Layout();
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
-
-   if ( VetoDialogHook::Call( mUIDialog ) )
+   if (VetoDialogHook::Call(mUIDialog))
       return 0;
-
-   if( SupportsRealtime() && !forceModal )
-   {
+   if (SupportsRealtime() && !forceModal) {
       mUIDialog->Show();
       // Return false to bypass effect processing
       return 0;
    }
-
    return mUIDialog->ShowModal();
 }
 
@@ -197,12 +193,15 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
    EffectUIClientInterface *const client = this;
-   mHostUIDialog = factory(parent, *this, *client, pInstance, access);
+   auto results = factory(parent, *this, *client, access);
+   mHostUIDialog = results.pDialog;
+   pInstance = results.pInstance;
    if (!mHostUIDialog)
       return 0;
 
    // Let the client show the dialog and decide whether to keep it open
-   auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);
+   auto result = client->ShowClientInterface(parent, *mHostUIDialog,
+      results.pValidator, forceModal);
    if (mHostUIDialog && !mHostUIDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
       // So destroy it.
@@ -299,9 +298,10 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
 
    if (!result) {
       // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(*this, access);
+      result = std::make_unique<DefaultEffectUIValidator>(
+         *this, access, S.GetParent());
+      mUIParent->PushEventHandler(this);
    }
-   mUIParent->PushEventHandler(this);
    return result;
 }
 
@@ -317,12 +317,8 @@ bool Effect::ValidateUI(EffectSettings &)
 
 bool Effect::CloseUI()
 {
-   if (mUIParent)
-      mUIParent->RemoveEventHandler(this);
-
-   mUIParent = NULL;
-   mUIDialog = NULL;
-
+   mUIParent = nullptr;
+   mUIDialog = nullptr;
    return true;
 }
 
@@ -875,4 +871,31 @@ int Effect::MessageBox( const TranslatableString& message,
       ? GetName()
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox( message, title, style, mUIParent );
+}
+
+DefaultEffectUIValidator::DefaultEffectUIValidator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   wxWindow *pParent)
+   : EffectUIValidator{ effect, access }, mpParent{ pParent }
+{
+}
+
+DefaultEffectUIValidator::~DefaultEffectUIValidator()
+{
+   if (mpParent)
+      mpParent->PopEventHandler();
+}
+
+bool DefaultEffectUIValidator::ValidateUI()
+{
+   bool result {};
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      result = mEffect.ValidateUI(settings);
+   });
+   return result;
+}
+
+bool DefaultEffectUIValidator::IsGraphicalUI()
+{
+   return mEffect.IsGraphicalUI();
 }

@@ -1942,6 +1942,11 @@ void ProjectWindow::HideEffectsPanel()
    Layout();
 }
 
+bool ProjectWindow::IsEffectsPanelShown()
+{
+   return mEffectsWindow->IsShown();
+}
+
 static ToolManager::TopPanelHook::Scope scope {
 []( wxWindow &window ){
    auto pProjectWindow = dynamic_cast< ProjectWindow* >( &window );

@@ -10,6 +10,7 @@
 #define __AUDACITY_REALTIMEEFFECTLIST_H__
 
 #include <atomic>
+#include <optional>
 #include <vector>
 
 #include "PluginProvider.h" // for PluginID
@@ -29,6 +30,7 @@ struct RealtimeEffectListMessage
    enum class Type
    {
       Insert,///<New effect item was added to the list at srcIndex position
+      Replace,///<Effect item was replaced with a new item at srcIndex position
       Remove,///<Effect item was removed from the list at srcIndex position
       Move ///<Item position has changed, from srcIndex to dstIndex
    };
@@ -94,8 +96,20 @@ public:
    bool AddState(std::shared_ptr<RealtimeEffectState> pState);
 
    //! Use only in the main thread
+   //! Returns true for success.
+   //! Sends Insert message on success.
+   /*!
+    @post result: `!result || pState->GetEffect() != nullptr`
+    */
+   bool ReplaceState(size_t index, std::shared_ptr<RealtimeEffectState> pState);
+
+   //! Use only in the main thread
    //! On success sends Remove message.
    void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
+
+   //! Report the position of a state in the list
+   std::optional<size_t> FindState(
+      const std::shared_ptr<RealtimeEffectState> &pState) const;
 
    //! Use only in the main thread, to avoid races
    //! Returns total number of effects in this list
