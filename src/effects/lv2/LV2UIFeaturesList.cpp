@@ -18,7 +18,7 @@
 LV2UIFeaturesList::LV2UIFeaturesList(
    const LV2InstanceFeaturesList &baseFeatures, UIHandler *pHandler,
    const LilvNode *node, LilvInstance *pInstance, wxWindow *pParent
-)  : ExtendedLV2FeaturesList{ baseFeatures }
+)  : ExtendedLV2FeaturesList{ WithBase, baseFeatures }
    , mpHandler{ pHandler }
    , mOk{ InitializeFeatures(node, pInstance, pParent) }
 {

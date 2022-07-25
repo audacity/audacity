@@ -17,7 +17,7 @@
 LV2InstanceFeaturesList::LV2InstanceFeaturesList(
    const LV2FeaturesList &baseFeatures, float sampleRate,
    const LV2_Worker_Schedule *pWorkerSchedule
-)  : ExtendedLV2FeaturesList{ baseFeatures }
+)  : ExtendedLV2FeaturesList{ WithBase, baseFeatures }
    , mSampleRate{ sampleRate }
    , mOk{ InitializeOptions() }
 {
