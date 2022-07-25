@@ -31,6 +31,8 @@ public:
       const LV2FeaturesList &features, const LV2Ports &ports);
    ~LV2Instance() override;
 
+   bool IsOk() const { return mFeatures.mOk; }
+
    const LV2PortStates &GetPortStates() const { return mPortStates; }
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
@@ -47,7 +49,10 @@ public:
    //! The wrapper object remains until this is destroyed
    //! or the wrapper is re-made with another rate.
    void MakeMaster(const EffectSettings &settings,
-      double projectRate, bool useOutput);
+      double sampleRate, bool useOutput);
+
+   std::unique_ptr<LV2Wrapper> MakeWrapper(const EffectSettings &settings,
+      double sampleRate, bool useOutput);
 
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -66,11 +71,11 @@ public:
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
 private:
-   const LV2FeaturesList &mFeatures;
+   LV2InstanceFeaturesList mFeatures;
    const LV2Ports &mPorts;
    LV2PortStates mPortStates{ mPorts };
 
-   //! Holds lv2 library state for UI or for destructive processing
+   //! Holds lv2 library state for destructive processing
    std::unique_ptr<LV2Wrapper> mMaster;
 
    //! Each holds lv2 library state for realtime processing of one track

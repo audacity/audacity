@@ -30,16 +30,16 @@
 #endif
 
 std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
-   const LV2FeaturesList &featuresList,
+   LV2InstanceFeaturesList &baseFeatures,
    const LV2Ports &ports, LV2PortStates &portStates,
    const LV2EffectSettings &settings, float sampleRate, bool useOutput)
 {
-   auto &plug = featuresList.mPlug;
+   auto &plug = baseFeatures.mPlug;
 
    std::unique_ptr<LV2Wrapper> wrapper;
    try {
       wrapper = std::make_unique<LV2Wrapper>(CreateToken{},
-         featuresList, plug, sampleRate);
+         baseFeatures, plug, sampleRate);
    } catch(const std::exception&) {
       return nullptr;
    }
@@ -120,9 +120,9 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(CreateToken&&, const LV2FeaturesList &featuresList,
+LV2Wrapper::LV2Wrapper(CreateToken&&, LV2InstanceFeaturesList &baseFeatures,
    const LilvPlugin &plugin, float sampleRate
-)  : mFeaturesList{ featuresList, sampleRate, &mWorkerSchedule }
+)  : mFeaturesList{ baseFeatures, sampleRate, &mWorkerSchedule }
 , mInstance{ [&instanceFeaturesList = mFeaturesList, &plugin, sampleRate](){
    auto features = instanceFeaturesList.GetFeaturePointers();
 
@@ -196,7 +196,7 @@ void LV2Wrapper::SetFreeWheeling(bool enable)
 
 void LV2Wrapper::SendBlockSize()
 {
-   if (auto pOption = mFeaturesList.NominalBlockLengthOption()
+   if (auto pOption = mFeaturesList.Base().NominalBlockLengthOption()
       ; pOption && mOptionsInterface && mOptionsInterface->set
    ){
       LV2_Options_Option options[2]{ *pOption, {} };

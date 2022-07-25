@@ -36,46 +36,45 @@ LV2Instance::LV2Instance(
    int userBlockSize;
    LV2Preferences::GetBufferSize(effect, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
-   lv2_atom_forge_init(&mForge, mFeatures.URIDMapFeature());
+   lv2_atom_forge_init(&mForge, mFeatures.Base().URIDMapFeature());
 }
 
 LV2Instance::~LV2Instance() = default;
 
 void LV2Instance::MakeMaster(const EffectSettings &settings,
-   double projectRate, bool useOutput)
+   double sampleRate, bool useOutput)
 {
-   if (mMaster && projectRate == mMaster->GetFeatures().mSampleRate) {
+   if (mMaster && sampleRate == mFeatures.mSampleRate) {
       // Already made but be sure to connect control ports to the right place
       mMaster->ConnectControlPorts(mPorts, GetSettings(settings), useOutput);
       return;
    }
-   mMaster = LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
-      GetSettings(settings), projectRate, useOutput);
+   mMaster = MakeWrapper(settings, sampleRate, useOutput);
    SetBlockSize(mUserBlockSize);
+}
+
+std::unique_ptr<LV2Wrapper>
+LV2Instance::MakeWrapper(const EffectSettings &settings,
+   double sampleRate, bool useOutput)
+{
+   return LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
+      GetSettings(settings), sampleRate, useOutput);
 }
 
 size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
 {
-   auto updateBlockSize = [maxBlockSize, userBlockSize = mUserBlockSize
-   ](LV2Wrapper &wrapper){
-      auto &featuresList = wrapper.GetFeatures();
-      featuresList.mBlockSize = std::max(featuresList.mMinBlockSize,
-         std::min({maxBlockSize, userBlockSize, featuresList.mMaxBlockSize}));
-      wrapper.SendBlockSize();
-   };
+   mFeatures.mBlockSize = std::max(mFeatures.mMinBlockSize,
+      std::min({maxBlockSize, mUserBlockSize, mFeatures.mMaxBlockSize}));
    if (mMaster)
-      updateBlockSize(*mMaster);
+      mMaster->SendBlockSize();
    for (auto &pSlave : mSlaves)
-      updateBlockSize(*pSlave);
+      pSlave->SendBlockSize();
    return GetBlockSize();
 }
 
 size_t LV2Instance::GetBlockSize() const
 {
-   if (mMaster)
-      return mMaster->GetFeatures().mBlockSize;
-   else
-      return LV2Preferences::DEFAULT_BLOCKSIZE;
+   return mFeatures.mBlockSize;
 }
 
 sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
@@ -89,8 +88,7 @@ sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
 bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   if (!mMaster)
-      MakeMaster(settings, sampleRate, false);
+   MakeMaster(settings, sampleRate, false);
    if (!mMaster)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
@@ -103,7 +101,8 @@ size_t LV2Instance::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    using namespace LV2Symbols;
-   assert(size <= GetBlockSize());
+   if (size > GetBlockSize())
+      return 0;
    assert(mMaster); // else ProcessInitialize() returned false, I'm not called
    const auto instance = &mMaster->GetInstance();
 

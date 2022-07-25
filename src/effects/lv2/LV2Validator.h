@@ -72,7 +72,11 @@ public:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(const LV2Wrapper &wrapper, const EffectSettings &settings);
+   /*!
+    @pre `pWrapper != nullptr`
+    */
+   bool BuildFancy(std::unique_ptr<LV2Wrapper> pWrapper,
+      const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    void suil_port_write(uint32_t port_index,
@@ -95,6 +99,7 @@ public:
    LV2Instance &mInstance;
    const double mSampleRate;
    const LV2Ports &mPorts;
+   std::unique_ptr<LV2Wrapper> mpWrapper;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
 
