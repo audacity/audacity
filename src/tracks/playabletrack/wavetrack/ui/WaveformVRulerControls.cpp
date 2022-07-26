@@ -22,31 +22,12 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
-#include "../../../../widgets/CustomUpdater.h"
+#include "../../../../widgets/CustomUpdaterValue.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
-static const TranslatableStrings majorLabels{
-   XO("0"),
-   XO("1"),
-   XO("2"),
-   XO("3"),
-};
-static const TranslatableStrings minorLabels{
-   XO("0.5"),
-   XO("1.5"),
-   XO("2.5"),
-   XO("3.5"),
-};
-static const TranslatableStrings minorMinorLabels{
-   XO("0.25"),
-   XO("0.75"),
-   XO("1.25"),
-   XO("1.75"),
-   XO("2.25"),
-   XO("2.75"),
-   XO("3.25"),
-   XO("3.75"),
+static const std::vector<double> majorValues = {
+   -1, -3, -6, -9, -12, -18, -24, -60
 };
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
@@ -211,13 +192,12 @@ void WaveformVRulerControls::DoUpdateVRuler(
    WaveformSettings::ScaleType scaleType =
    wt->GetWaveformSettings().scaleType;
    
-   if (wt->GetWaveformSettings().isLinear()) {
+   if (wt->GetWaveformSettings().isAmp()) {
       // Waveform
       
       float min, max;
       wt->GetDisplayBounds(&min, &max);
       if (wt->GetLastScaleType() != WaveformSettings::stLinearAmp &&
-         wt->GetLastScaleType() != WaveformSettings::stLinearDb &&
           wt->GetLastScaleType() != -1)
       {
          // do a translation into the linear space
@@ -247,20 +227,8 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetRange(max, min);
       vruler->SetFormat(RealFormat);
       vruler->SetLabelEdges(false);
-      if (scaleType == WaveformSettings::stLinearDb)
-      {
-         vruler->SetUnits(XO("dB"));
-         vruler->SetUpdater(nullptr);
-         vruler->SetUpdater(std::make_unique<CustomUpdater>());
-         vruler->SetCustomMajorLabels(majorLabels, 0, 100);
-         vruler->SetCustomMinorLabels(minorLabels, 50, 100);
-         vruler->SetCustomMinorMinorLabels(minorMinorLabels, 25, 50);
-      }
-      else
-      {
-         vruler->SetUnits({});
-         vruler->SetUpdater(std::make_unique<LinearUpdater>());
-      }
+      vruler->SetUnits({});
+      vruler->SetUpdater(std::make_unique<LinearUpdater>());
    }
    else {
       vruler->SetUnits(XO("dB"));
@@ -270,6 +238,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       float lastdBRange;
       
       if (wt->GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
+         wt->GetLastScaleType() != WaveformSettings::stLinearDb &&
          // When Logarithmic Amp happens, put that here
           wt->GetLastScaleType() != -1)
       {
@@ -366,7 +335,24 @@ void WaveformVRulerControls::DoUpdateVRuler(
 #endif
       vruler->SetFormat(RealLogFormat);
       vruler->SetLabelEdges(true);
-      vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      if (scaleType == WaveformSettings::stLogarithmicDb){
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      }
+      else {
+         vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
+         Updater::Labels labs;
+         for (int i = 0; i < majorValues.size(); i++) {
+            double value = majorValues[i];
+            Updater::Label lab;
+            lab.value = value;
+            wxString s = (value == -60) ?
+               wxString(L"-\u221e") : wxString::FromDouble(value);
+            // \u221e represents the infinity symbol
+            lab.text = Verbatim(s);
+            labs.push_back(lab);
+         }
+         vruler->SetCustomMajorLabels(labs);
+      }
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

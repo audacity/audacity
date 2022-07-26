@@ -118,11 +118,11 @@ class AUDACITY_DLL_API Ruler {
    void ResetCustomLabels(
       bool resetMajor, bool resetMinor, bool resetMinorMinor);
    void SetCustomMajorLabels(
-      const TranslatableStrings &labels, int start, int step);
+      const Updater::Labels &labels);
    void SetCustomMinorLabels(
-      const TranslatableStrings &labels, int start, int step);
+      const Updater::Labels& labels);
    void SetCustomMinorMinorLabels(
-      const TranslatableStrings& labels, int start, int step);
+      const Updater::Labels& labels);
 
    //
    // Drawing

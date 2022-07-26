@@ -70,5 +70,6 @@ public:
 
    // Convenience
    bool isLinear() const { return scaleType == stLinearAmp || scaleType == stLinearDb; }
+   bool isAmp() const { return scaleType == stLinearAmp; }
 };
 #endif

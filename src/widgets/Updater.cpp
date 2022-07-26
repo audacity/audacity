@@ -628,11 +628,3 @@ bool Updater::Tick(wxDC& dc,
 }
 
 Updater::~Updater() = default;
-
-// Theoretically this helps
-
-void Updater::Update(
-   wxDC& dc, const Envelope* envelope,
-   UpdateOutputs& allOutputs,
-   const RulerStruct& context
-) const {}
