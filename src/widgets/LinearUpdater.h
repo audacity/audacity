@@ -5,16 +5,17 @@
   LinearUpdater.h
 
   Dominic Mazzoni
+  Michael Papadopoulos split from Ruler.h
 
 **********************************************************************/
 
 #ifndef __AUDACITY_LINEAR_UPDATER__
 #define __AUDACITY_LINEAR_UPDATER__
 
-#include "Updater.h"
+#include "RulerUpdater.h"
 
-struct LinearUpdater final : public Updater {
-   using Updater::Updater;
+struct LinearUpdater final : public RulerUpdater {
+   using RulerUpdater::RulerUpdater;
    ~LinearUpdater() override;
 
    void Update(

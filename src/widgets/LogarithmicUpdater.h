@@ -11,10 +11,10 @@
 #ifndef __AUDACITY_LOGARITHMIC_UPDATER__
 #define __AUDACITY_LOGARITHMIC_UPDATER__
 
-#include "Updater.h"
+#include "RulerUpdater.h"
 
-struct LogarithmicUpdater final : public Updater {
-   using Updater::Updater;
+struct LogarithmicUpdater final : public RulerUpdater {
+   using RulerUpdater::RulerUpdater;
    ~LogarithmicUpdater() override;
 
    void Update(

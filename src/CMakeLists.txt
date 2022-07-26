@@ -1021,6 +1021,10 @@ list( APPEND SOURCES
       widgets/BasicMenu.h
       widgets/CustomUpdater.cpp
       widgets/CustomUpdater.h
+      widgets/CustomUpdaterPosition.cpp
+      widgets/CustomUpdaterPosition.h
+      widgets/CustomUpdaterValue.cpp
+      widgets/CustomUpdaterValue.h
       widgets/ErrorDialog.cpp
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
@@ -1078,14 +1082,14 @@ list( APPEND SOURCES
       widgets/Ruler.h
       widgets/RulerPanel.cpp
       widgets/RulerPanel.h
+      widgets/RulerUpdater.cpp
+      widgets/RulerUpdater.h
       $<$<BOOL:${${_OPT}has_sentry_reporting}>:
          widgets/ErrorReportDialog.cpp
          widgets/ErrorReportDialog.h
       >
       widgets/UnwritableLocationErrorDialog.cpp
       widgets/UnwritableLocationErrorDialog.h
-      widgets/Updater.cpp
-      widgets/Updater.h
       widgets/VetoDialogHook.h
       widgets/Warning.cpp
       widgets/Warning.h

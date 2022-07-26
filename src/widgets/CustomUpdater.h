@@ -5,27 +5,28 @@
   CustomUpdater.h
 
   Dominic Mazzoni
+  Michael Papadopoulos split from Ruler.h
 
 **********************************************************************/
 
 #ifndef __AUDACITY_CUSTOM_UPDATER__
 #define __AUDACITY_CUSTOM_UPDATER__
 
-#include "Updater.h"
+#include "RulerUpdater.h"
 
-struct CustomUpdater final : public Updater {
-   using Updater::Updater;
-   ~CustomUpdater() override;
+struct CustomUpdater : public RulerUpdater {
+   using RulerUpdater::RulerUpdater;
+   virtual ~CustomUpdater() override = 0;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
       UpdateOutputs& allOutputs, const RulerStruct& context
-   ) const override;
+   ) const final override;
 
-   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
+   virtual bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
       const RulerStruct& context
-   ) const;
+   ) const = 0;
 };
 
 #endif

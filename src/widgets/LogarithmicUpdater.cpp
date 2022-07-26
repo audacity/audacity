@@ -5,6 +5,7 @@
   LogarithmicUpdater.cpp
 
   Dominic Mazzoni
+  Michael Papadopoulos split from Ruler.cpp
 
 **********************************************************************/
 

@@ -12,7 +12,7 @@
 #define __AUDACITY_RULER__
 
 #include "wxPanelWrapper.h" // to inherit
-#include "Updater.h" // member variable
+#include "RulerUpdater.h" // member variable
 #include "NumberScale.h" // member variable
 
 #include <wx/colour.h> // member variable
@@ -56,10 +56,10 @@ class AUDACITY_DLL_API Ruler {
    void SetRange(double min, double max, double hiddenMin, double hiddenMax);
 
    // Set the kind of updater the ruler will use (Linear, Logarithmic, Custom, etc.)
-   void SetUpdater(std::unique_ptr<Updater> pUpdater);
+   void SetUpdater(std::unique_ptr<RulerUpdater> pUpdater);
 
    // An overload to also set ZoomInfo while adjusting updater
-   void SetUpdater(std::unique_ptr<Updater> pUpdater, int leftOffset);
+   void SetUpdater(std::unique_ptr<RulerUpdater> pUpdater, int leftOffset);
 
    //
    // Optional Ruler Parameters
@@ -118,11 +118,11 @@ class AUDACITY_DLL_API Ruler {
    void ResetCustomLabels(
       bool resetMajor, bool resetMinor, bool resetMinorMinor);
    void SetCustomMajorLabels(
-      const TranslatableStrings &labels, int start, int step);
+      const RulerUpdater::Labels &labels);
    void SetCustomMinorLabels(
-      const TranslatableStrings &labels, int start, int step);
+      const RulerUpdater::Labels& labels);
    void SetCustomMinorMinorLabels(
-      const TranslatableStrings& labels, int start, int step);
+      const RulerUpdater::Labels& labels);
 
    //
    // Drawing
@@ -161,26 +161,25 @@ private:
 
    std::unique_ptr<RulerStruct::Fonts> mpUserFonts;
 
-   std::unique_ptr<Updater> mpUpdater;
+   std::unique_ptr<RulerUpdater> mpUpdater;
 
-   Updater::Bits mUserBits;
+   RulerUpdater::Bits mUserBits;
 
-   Updater::Labels mCustomMajorLabels;
-   Updater::Labels mCustomMinorLabels;
-   Updater::Labels mCustomMinorMinorLabels;
+   RulerUpdater::Labels mCustomMajorLabels;
+   RulerUpdater::Labels mCustomMinorLabels;
+   RulerUpdater::Labels mCustomMinorMinorLabels;
 
    struct Cache;
    mutable std::unique_ptr<Cache> mpCache;
 
    // Returns 'zero' label coordinate (for grid drawing)
-   int FindZero( const Updater::Labels &labels ) const;
+   int FindZero( const RulerUpdater::Labels &labels ) const;
 
    int GetZeroPosition() const;
 
    bool         mHasSetSpacing;
    bool         mbMinor;
    bool         mTwoTone;
-   const ZoomInfo *mUseZoomInfo;
 };
 
 #endif //define __AUDACITY_RULER__

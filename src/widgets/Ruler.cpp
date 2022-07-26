@@ -52,7 +52,7 @@
 #include "Theme.h"
 #include "ViewInfo.h"
 
-#include "Updater.h"
+#include "RulerUpdater.h"
 // Need to include to set default
 #include "LinearUpdater.h"
 
@@ -88,12 +88,8 @@ Ruler::Ruler()
 
    mTwoTone = false;
 
-   mUseZoomInfo = NULL;
-
-   // This part in particular needs inspection, not giving an error
-   // But is this corret? And should it be set to NULL or nullptr if a default
-   // cannot be made?
-   mpUpdater = std::make_unique<LinearUpdater>( mUseZoomInfo );
+   // Should this default to nullptr instead? Removes dependency on LinearUpdater
+   mpUpdater = std::make_unique<LinearUpdater>();
    // mpUpdater = nullptr;
 }
 
@@ -118,7 +114,7 @@ void Ruler::SetFormat(RulerFormat format)
    }
 }
 
-void Ruler::SetUpdater(std::unique_ptr<Updater> pUpdater)
+void Ruler::SetUpdater(std::unique_ptr<RulerUpdater> pUpdater)
 {
    // Should a comparison be made between mpUpdater and pUpdater?
    // Runtime type comparison isn't clean in c++
@@ -128,7 +124,7 @@ void Ruler::SetUpdater(std::unique_ptr<Updater> pUpdater)
 }
 
 void Ruler::SetUpdater
-   (std::unique_ptr<Updater> pUpdater, int leftOffset)
+   (std::unique_ptr<RulerUpdater> pUpdater, int leftOffset)
 {
    // Should a comparison be made between mpUpdater and pUpdater?
    // Runtime type comparison isn't clean in c++
@@ -136,10 +132,6 @@ void Ruler::SetUpdater
 
    if (mRulerStruct.mLeftOffset != leftOffset)
       mRulerStruct.mLeftOffset = leftOffset;
-
-   // Hm, is this invalidation sufficient?  What if *zoomInfo changes under us?
-   if (mUseZoomInfo != mpUpdater->zoomInfo)
-      mUseZoomInfo = mpUpdater->zoomInfo;
 
    ResetCustomLabels(true, true, true);
    Invalidate();
@@ -350,8 +342,8 @@ void Ruler::Invalidate()
 }
 
 struct Ruler::Cache {
-   Updater::Bits mBits;
-   Updater::Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
+   RulerUpdater::Bits mBits;
+   RulerUpdater::Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
    wxRect mRect;
 };
 
@@ -445,7 +437,7 @@ void Ruler::UpdateCache(
    cache.mMinorLabels = mCustomMinorLabels;
    cache.mMinorMinorLabels = mCustomMinorMinorLabels;
    
-   Updater::UpdateOutputs allOutputs{
+   RulerUpdater::UpdateOutputs allOutputs{
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
       cache.mBits, cache.mRect
    };
@@ -513,7 +505,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    // button, since otherwise the tick is drawn on the bevel.
    int iMaxPos = (mRulerStruct.mOrientation==wxHORIZONTAL)? mRulerStruct.mRight : mRulerStruct.mBottom-5;
 
-   auto drawLabel = [this, iMaxPos, &dc]( const Updater::Label &label, int length ){
+   auto drawLabel = [this, iMaxPos, &dc]( const RulerUpdater::Label &label, int length ){
       int pos = label.pos;
 
       if( mbTicksAtExtremes || ((pos!=0)&&(pos!=iMaxPos)))
@@ -536,7 +528,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
          }
       }
 
-      label.Draw(dc, mTwoTone, mTickColour);
+      label.Draw(dc, mTwoTone, mTickColour, mRulerStruct.mpFonts);
    };
 
    for( const auto &label : cache.mMajorLabels )
@@ -614,10 +606,10 @@ void Ruler::DrawGrid(wxDC& dc,
    }
 }
 
-int Ruler::FindZero( const Updater::Labels &labels ) const
+int Ruler::FindZero( const RulerUpdater::Labels &labels ) const
 {
    auto begin = labels.begin(), end = labels.end(),
-      iter = std::find_if( begin, end, []( const Updater::Label &label ){
+      iter = std::find_if( begin, end, []( const RulerUpdater::Label &label ){
          return label.value == 0.0;
       } );
 
@@ -665,45 +657,36 @@ void Ruler::ResetCustomLabels(
 }
 
 void Ruler::SetCustomMajorLabels(
-   const TranslatableStrings &labels, int start, int step)
+   const RulerUpdater::Labels& labels)
 {
    const auto numLabel = labels.size();
 
    for(size_t i = 0; i<numLabel; i++) {
-      Updater::Label lab;
-      lab.text = labels[i];
-      lab.pos = start + i*step;
-      mCustomMajorLabels.push_back(lab);
+      mCustomMajorLabels.push_back(labels[i]);
    }
 
    Invalidate();
 }
 
 void Ruler::SetCustomMinorLabels(
-   const TranslatableStrings &labels, int start, int step)
+   const RulerUpdater::Labels& labels)
 {
    const auto numLabel = labels.size();
 
    for (size_t i = 0; i < numLabel; i++) {
-      Updater::Label lab;
-      lab.text = labels[i];
-      lab.pos = start + i * step;
-      mCustomMinorLabels.push_back(lab);
+      mCustomMinorLabels.push_back(labels[i]);
    }
 
    Invalidate();
 }
 
 void Ruler::SetCustomMinorMinorLabels(
-   const TranslatableStrings& labels, int start, int step)
+   const RulerUpdater::Labels& labels)
 {
    const auto numLabel = labels.size();
 
    for (size_t i = 0; i < numLabel; i++) {
-      Updater::Label lab;
-      lab.text = labels[i];
-      lab.pos = start + i * step;
-      mCustomMinorMinorLabels.push_back(lab);
+      mCustomMinorMinorLabels.push_back(labels[i]);
    }
 
    Invalidate();

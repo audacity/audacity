@@ -2,9 +2,10 @@
 
   Audacity: A Digital Audio Editor
 
-  Updater.h
+  RulerUpdater.h
 
   Dominic Mazzoni
+  Michael Papadopoulos split from Ruler.h
 
 **********************************************************************/
 
@@ -61,15 +62,17 @@ struct RulerStruct {
    NumberScale mNumberScale;
 };
 
-struct Updater {
+struct RulerUpdater {
 
    struct Label {
       double value;
       int pos;
       int lx, ly;
       TranslatableString text;
+      TranslatableString units;
 
-      void Draw(wxDC& dc, bool twoTone, wxColour c) const;
+      void Draw(wxDC& dc, bool twoTone, wxColour c,
+         std::unique_ptr<RulerStruct::Fonts>& fonts) const;
    };
    using Labels = std::vector<Label>;
 
@@ -77,10 +80,10 @@ struct Updater {
 
    const ZoomInfo* zoomInfo;
 
-   explicit Updater(const ZoomInfo* z = nullptr)
+   explicit RulerUpdater(const ZoomInfo* z = nullptr)
       : zoomInfo{ z }
    {}
-   virtual ~Updater() = 0;
+   virtual ~RulerUpdater() = 0;
 
    struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };
    struct UpdateOutputs {
@@ -101,7 +104,7 @@ struct Updater {
       TickSizes(double UPP, int orientation, RulerFormat format, bool log);
 
       TranslatableString LabelString(
-         double d, RulerFormat format, const TranslatableString& units)
+         double d, RulerFormat format)
          const;
    };
 
@@ -116,7 +119,7 @@ struct Updater {
    }
 
    static std::pair< wxRect, Label > MakeTick(
-      Updater::Label lab,
+      RulerUpdater::Label lab,
       wxDC& dc, wxFont font,
       std::vector<bool>& bits,
       int left, int top, int spacing, int lead,
