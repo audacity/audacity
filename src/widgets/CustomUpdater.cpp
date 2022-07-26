@@ -19,69 +19,21 @@ void CustomUpdater::Update(
    const int mLength = context.mLength;
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
 
-   TickOutputs majorOutputs{
-      allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
-   int numMajorLabel = allOutputs.majorLabels.size();
-   for (int i = 0; (i < numMajorLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.major, majorOutputs, context);
+   for (int ii = 0; ii < 3; ii++) {
+      Labels& labs = (ii == 0) ? allOutputs.majorLabels :
+         (ii == 1) ? allOutputs.minorLabels : allOutputs.minorMinorLabels;
 
+      wxFont font = (ii == 0) ? mFonts.major :
+         (ii == 1) ? mFonts.minor : mFonts.minorMinor;
 
-   TickOutputs minorOutputs{
-      allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
-   int numMinorLabel = allOutputs.minorLabels.size();
-   for (int i = 0; (i < numMinorLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.minor, minorOutputs, context);
+      TickOutputs outputs{ labs, allOutputs.bits, allOutputs.box };
+      int numLabel = labs.size();
 
-   TickOutputs minorMinorOutputs{
-      allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
-   int numMinorMinorLabel = allOutputs.minorMinorLabels.size();
-   for (int i = 0; (i < numMinorMinorLabel) && (i <= mLength); ++i)
-      TickCustom(dc, i, mFonts.minorMinor, minorMinorOutputs, context);
+      for (int i = 0; (i < numLabel) && (i <= mLength); ++i)
+         TickCustom(dc, i, font, outputs, context);
+     }
 
    BoxAdjust(allOutputs, context);
-}
-
-bool CustomUpdater::TickCustom(wxDC& dc, int labelIdx, wxFont font,
-   // in/out:
-   TickOutputs outputs,
-
-   const RulerStruct& context) const
-{
-   const int mLeft = context.mLeft;
-   const int mTop = context.mTop;
-   const int mOrientation = context.mOrientation;
-
-   const RulerStruct::Fonts& mFonts = *context.mpFonts;
-   const int mSpacing = context.mSpacing;
-   const bool mFlip = context.mFlip;
-   const TranslatableString mUnits = context.mUnits;
-
-   // FIXME: We don't draw a tick if of end of our label arrays
-   // But we shouldn't have an array of labels.
-   if (labelIdx >= outputs.labels.size())
-      return false;
-
-   Label lab;
-
-   lab.value = 0.0;
-   lab.pos = outputs.labels[labelIdx].pos;
-   // Custom is flexible with text format
-   // We can assume they use the right format, but still append the right units.
-   lab.text = outputs.labels[labelIdx].text + mUnits;
-
-
-   const auto result = MakeTick(
-      lab,
-      dc, font,
-      outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
-      mFlip,
-      mOrientation);
-
-   auto& rect = result.first;
-   outputs.box.Union(rect);
-   outputs.labels[labelIdx] = (result.second);
-   return !rect.IsEmpty();
 }
 
 CustomUpdater::~CustomUpdater() = default;

@@ -69,8 +69,10 @@ public:
       int pos;
       int lx, ly;
       TranslatableString text;
+      TranslatableString units;
 
-      void Draw(wxDC& dc, bool twoTone, wxColour c) const;
+      void Draw(wxDC& dc, bool twoTone, wxColour c,
+         std::unique_ptr<RulerStruct::Fonts>& fonts) const;
    };
    using Labels = std::vector<Label>;
 
@@ -102,7 +104,7 @@ public:
       TickSizes(double UPP, int orientation, RulerFormat format, bool log);
 
       TranslatableString LabelString(
-         double d, RulerFormat format, const TranslatableString& units)
+         double d, RulerFormat format)
          const;
    };
 

@@ -5,6 +5,7 @@
   RulerPanel.cpp
 
   Dominic Mazzoni
+  Michael Papadopoulos split from Ruler.h
 
   Dominic Mazzoni
   Michael Papadopoulos split from Ruler.cpp
