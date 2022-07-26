@@ -525,6 +525,14 @@ namespace
       
    };
 
+   static wxString GetSafeVendor(const PluginDescriptor& descriptor)
+   {
+      if (descriptor.GetVendor().empty())
+         return XO("Unknown").Translation();
+
+      return descriptor.GetVendor();
+   }
+
    PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl)
    {
       wxMenu menu;
@@ -543,8 +551,12 @@ namespace
 
       auto compareEffects = [](const PluginDescriptor* a, const PluginDescriptor* b)
       {
-         return a->GetVendor() < b->GetVendor()
-            || (a->GetVendor() == b->GetVendor() && a->GetSymbol().Translation() < b->GetSymbol().Translation());
+         const auto vendorA = GetSafeVendor(*a);
+         const auto vendorB = GetSafeVendor(*b);
+
+         return vendorA < vendorB ||
+                (vendorA == vendorB &&
+                 a->GetSymbol().Translation() < b->GetSymbol().Translation());
       };
 
       for(auto& effect : pluginManager.EffectsOfType(EffectTypeProcess))
@@ -568,14 +580,16 @@ namespace
       {
          auto& effect = *effects[i];
 
-         if(currentSubMenuName != effect.GetVendor())
+         const wxString vendor = GetSafeVendor(effect);
+
+         if(currentSubMenuName != vendor)
          {
             if(currentSubMenu)
             {
                currentSubMenu->Bind(wxEVT_MENU, submenuEventHandler);
                menu.AppendSubMenu(currentSubMenu.release(), currentSubMenuName);
             }
-            currentSubMenuName = effect.GetVendor();
+            currentSubMenuName = vendor;
             currentSubMenu = std::make_unique<wxMenu>();
          }
 
