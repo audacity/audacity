@@ -203,6 +203,17 @@ void AudioGraph::Buffers::Rewind()
    assert(IsRewound());
 }
 
+size_t AudioGraph::Buffers::Rotate()
+{
+   auto oldRemaining = Remaining();
+   Rewind();
+   const auto free = BufferSize() - oldRemaining;
+   // Shift any partial block of unread data leftward
+   Discard(free, oldRemaining);
+   assert(IsRewound());
+   return oldRemaining;
+}
+
 constSamplePtr AudioGraph::Buffers::GetReadPosition(unsigned iChannel) const
 {
    iChannel = std::min(iChannel, Channels() - 1);
@@ -253,41 +264,44 @@ sampleCount SampleTrackSource::Remaining() const
    return std::max<sampleCount>(0, mOutputRemaining);
 }
 
-std::optional<size_t> SampleTrackSource::Acquire(Buffers &data)
+std::optional<size_t> SampleTrackSource::Acquire(Buffers &data, size_t bound)
 {
+   assert(bound <= data.BlockSize());
    assert(AcceptsBuffers(data));
    assert(AcceptsBlockSize(data.BlockSize()));
 
-   if (!mInitialized || !data.Remaining()) {
-      // Need to refill the buffers
-      data.Rewind();
+   if (!mInitialized || data.Remaining() < bound) {
+      // Need to make sufficient room in the buffers
+      data.Rotate();
       // Calculate the number of samples to get
-      const auto outputBufferCnt =
-         limitSampleBufferSize(data.Remaining(), Remaining());
+      const auto fetch =
+         limitSampleBufferSize(data.Remaining() - mFetched, Remaining());
       // guarantees write won't overflow
-      assert(outputBufferCnt <= data.Remaining());
+      assert(mFetched + fetch <= data.Remaining());
       // Fill the buffers
-      mLeft.GetFloats(&data.GetWritePosition(0), mPos, outputBufferCnt);
+      mLeft.GetFloats(&data.GetWritePosition(0) + mFetched, mPos, fetch);
       if (mpRight && data.Channels() > 1)
-         mpRight->GetFloats(&data.GetWritePosition(1), mPos, outputBufferCnt);
-      mPos += outputBufferCnt;
+         mpRight->GetFloats(&data.GetWritePosition(1) + mFetched, mPos, fetch);
+      mPos += fetch;
+      mFetched += fetch;
       mInitialized = true;
    }
    assert(data.Remaining() > 0);
-   auto result = mLastProduced = std::min(data.BlockSize(),
+   auto result = mLastProduced = std::min(bound,
       limitSampleBufferSize(data.Remaining(), Remaining()));
    // assert post
-   assert(result <= data.BlockSize());
+   assert(result <= bound);
    assert(result <= data.Remaining());
    assert(result <= Remaining());
    // true because the three terms of the min would be positive
-   assert(Remaining() == 0 || result > 0);
+   assert(bound == 0 || Remaining() == 0 || result > 0);
    return { result };
 }
 
 bool SampleTrackSource::Release()
 {
    mOutputRemaining -= mLastProduced;
+   mFetched -= mLastProduced;
    mLastProduced = 0;
    assert(mOutputRemaining >= 0);
    return !mPollUser || mPollUser(mPos);
@@ -313,16 +327,17 @@ EffectStage::~EffectStage()
    mInstance.ProcessFinalize();
 }
 
-std::optional<size_t> EffectStage::Acquire(Buffers &data)
+std::optional<size_t> EffectStage::Acquire(Buffers &data, size_t bound)
 {
+   assert(bound <= data.BlockSize());
    data.Rewind();
    assert(data.Remaining() > 0);
 
-   const auto blockSize = data.BlockSize();
    auto result = limitSampleBufferSize(
-      std::min(blockSize, data.Remaining()), Remaining());
+      std::min(bound, data.Remaining()), Remaining());
    if (mIsProcessor && !mCleared) {
       // From this point on, we only want to feed zeros to the plugin
+      const auto blockSize = data.BlockSize();
       for (size_t ii = 0; ii < data.Channels(); ++ii) {
          auto p = &data.GetWritePosition(ii);
          std::fill(p, p + blockSize, 0);
@@ -330,7 +345,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers &data)
       mCleared = true;
    }
    // true because the three terms of the min would be positive
-   assert(Remaining() == 0 || result > 0);
+   assert(bound == 0 || Remaining() == 0 || result > 0);
    return { result };
 }
 
@@ -699,8 +714,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    // Call the effect until we run out of input or delayed samples
    while (source.Remaining() > 0 || stage.Remaining() > 0) {
       const auto oCurBlockSize = (source.Remaining() > 0)
-         ? source.Acquire(inBuffers)
-         : stage.Acquire(inBuffers);
+         ? source.Acquire(inBuffers, blockSize)
+         : stage.Acquire(inBuffers, blockSize);
       if (!oCurBlockSize)
          return false;
       const auto curBlockSize = *oCurBlockSize;

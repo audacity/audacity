@@ -39,19 +39,22 @@ public:
    //! Occupy vacant space in Buffers with some data
    /*!
     May exceeed a single block of production
+    Can assume same buffer is passed each time, while the caller advances it
+    over the previous production.  May rewind or rotate the buffer.
 
     @return number of positions available to read from `data` or nullopt to fail
     @pre `AcceptsBuffers(data)`
     @pre `AcceptsBlockSize(data.BlockSize())`
-    @post result: `!result || *result <= data.BlockSize()`
+    @pre `bound <= data.BlockSize()`
+    @post result: `!result || *result <= bound`
     @post result: `!result || *result <= data.Remaining()`
     @post result: `!result || *result <= Remaining()`
     @post `data.Remaining() > 0`
-    @post result: `!result || Remaining() == 0 || *result > 0`
+    @post result: `!result || bound == 0 || Remaining() == 0 || *result > 0`
        (progress guarantee)
     @post `Remaining()` is unchanged
     */
-   virtual std::optional<size_t> Acquire(Buffers &data) = 0;
+   virtual std::optional<size_t> Acquire(Buffers &data, size_t bound) = 0;
 
    //! Result includes any amount Acquired and not yet Released
    /*!
@@ -112,7 +115,7 @@ public:
    //! Always true
    bool AcceptsBlockSize(size_t blockSize) const override;
 
-   std::optional<size_t> Acquire(Buffers &data) override;
+   std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
    sampleCount Remaining() const override;
    //! Can test for user cancellation
    bool Release() override;
@@ -124,6 +127,7 @@ private:
    sampleCount mPos{};
    sampleCount mOutputRemaining{};
    size_t mLastProduced{};
+   size_t mFetched{};
    bool mInitialized{ false };
 };
 
@@ -298,6 +302,12 @@ public:
     @post `IsRewound()`
     */
    void Rewind();
+   //! Shift all data at and after the old position to position 0
+   /*!
+    @return how many positions were shifted; other contents are unspecified
+    @post `IsRewound()`
+    */
+   size_t Rotate();
 
    //! Get accumulated data for one channel
    /*!
@@ -340,15 +350,16 @@ public:
    ~EffectStage();
 
    /*!
-    @post result: `!result || *result <= data.BlockSize()`
+    @pre `bound <= data.BlockSize()`
+    @post result: `!result || *result <= bound`
     @post result: `!result || *result <= data.Remaining()`
     @post result: `!result || *result <= Remaining()`
     @post `data.Remaining() > 0`
-    @post result: `!result || *Remaining() == 0 || *result > 0`
+    @post result: `!result || bound == 0 || *Remaining() == 0 || *result > 0`
        (progress guarantee)
     @post `Remaining()` is unchanged
     */
-   std::optional<size_t> Acquire(Buffers &data);
+   std::optional<size_t> Acquire(Buffers &data, size_t bound);
    //! May decrease after one Process() happened!  Then constant
    sampleCount Remaining() const;
    //! @post result: `result <= curBlockSize`
