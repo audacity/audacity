@@ -14,40 +14,11 @@
 #ifndef __AUDACITY_PER_TRACK_EFFECT__
 #define __AUDACITY_PER_TRACK_EFFECT__
 
+#include "AudioGraphSink.h" // to inherit
 #include "AudioGraphSource.h" // to inherit
 #include "Effect.h" // to inherit
 #include "MemoryX.h"
 #include <functional>
-
-namespace AudioGraph {
-
-class Buffers;
-
-//! Downstream receiver of sample streams, taking Buffers as external context
-class Sink {
-public:
-   using Buffers = AudioGraph::Buffers;
-
-   virtual ~Sink();
-
-   virtual bool AcceptsBuffers(const Buffers &buffers) const = 0;
-
-   //! Guarantee empty space in Buffers before they are written
-   /*!
-    @return success
-    @post result: `!result || data.BlockSize() <= data.Remaining()`
-    */
-   virtual bool Acquire(Buffers &data) = 0;
-   //! Acknowledge receipt of data in Buffers, which caller may then Advance()
-   /*!
-    @return success
-    @pre `AcceptsBuffers(data)`
-    @pre `curBlockSize <= data.BlockSize()`
-    */
-   virtual bool Release(const Buffers &data, size_t curBlockSize) = 0;
-};
-
-}
 
 class WaveTrackSink final : public AudioGraph::Sink {
 public:
