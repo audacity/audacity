@@ -7,8 +7,11 @@ set( SOURCES
    AudioGraphBuffers.h
    AudioGraphSource.cpp
    AudioGraphSource.h
+   EffectStage.cpp
+   EffectStage.h
 )
 set( LIBRARIES
+   lib-exceptions
    lib-math-interface
    PRIVATE
    wxBase
