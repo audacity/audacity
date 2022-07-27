@@ -269,8 +269,7 @@ Updater::TickSizes::TickSizes(double UPP, int orientation, RulerFormat format, b
    }
 
 TranslatableString Updater::TickSizes::LabelString(
-      double d, RulerFormat format, const TranslatableString& units)
-      const
+      double d, RulerFormat format) const
    {
       // Given a value, turn it into a string according
       // to the current ruler format.  The number of digits of
@@ -416,13 +415,13 @@ TranslatableString Updater::TickSizes::LabelString(
       }
 
       auto result = Verbatim(s);
-      if (!units.empty())
-         result += units;
 
       return result;
  }
 
- void Updater::Label::Draw(wxDC& dc, bool twoTone, wxColour c) const
+ void Updater::Label::Draw(
+    wxDC& dc, bool twoTone, wxColour c,
+    std::unique_ptr<RulerStruct::Fonts>& fonts) const
  {
     if (!text.empty()) {
        bool altColor = twoTone && value < 0.0;
@@ -433,7 +432,19 @@ TranslatableString Updater::TickSizes::LabelString(
        dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
        dc.SetBackgroundMode(wxTRANSPARENT);
-       dc.DrawText(text.Translation(), lx, ly);
+       // Do not draw units as bolded
+       if (dc.GetFont() == fonts->major) {
+          dc.DrawText(text.Translation(), lx, ly);
+          wxSize textSize = dc.GetTextExtent(text.Translation());
+          dc.SetFont(fonts->minor);
+          int unitX = lx + textSize.GetWidth();
+          dc.DrawText(units.Translation(), unitX, ly);
+          dc.SetFont(fonts->major);
+       }
+       else {
+          auto str = text + units;
+          dc.DrawText(str.Translation(), lx, ly);
+       }
     }
  }
 
@@ -504,9 +515,12 @@ auto Updater::MakeTick(
    dc.SetFont(font);
 
    wxCoord strW, strH, strD, strL;
-   auto str = lab.text;
+   auto strText = lab.text;
+   auto strUnits = lab.units;
+   auto str = strText + strUnits;
    // Do not put the text into results until we are sure it does not overlap
    lab.text = {};
+   lab.units = {};
    dc.GetTextExtent(str.Translation(), &strW, &strH, &strD, &strL);
 
    int strPos, strLen, strLeft, strTop;
@@ -574,7 +588,8 @@ auto Updater::MakeTick(
       bits[strPos + i] = true;
 
    // Good to display the text
-   lab.text = str;
+   lab.text = strText;
+   lab.units = strUnits;
    return { { strLeft, strTop, strW, strH }, lab };
 }
 
@@ -611,7 +626,8 @@ bool Updater::Tick(wxDC& dc,
    Label lab;
    lab.value = d;
    lab.pos = pos;
-   lab.text = tickSizes.LabelString(d, mFormat, mUnits);
+   lab.text = tickSizes.LabelString(d, mFormat);
+   lab.units = mUnits;
 
    const auto result = MakeTick(
       lab,
