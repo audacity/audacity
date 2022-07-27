@@ -315,6 +315,8 @@ list( APPEND SOURCES
       WaveTrack.cpp
       WaveTrack.h
       WaveTrackLocation.h
+      WaveTrackSink.cpp
+      WaveTrackSink.h
       WrappedType.cpp
       WrappedType.h
 
