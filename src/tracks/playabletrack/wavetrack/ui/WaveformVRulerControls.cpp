@@ -27,9 +27,16 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
 static const std::vector<double> majorValues = {
-   -1, -3, -6, -9, -12, -18, -24, -60
+   -1, -3, -6, -9, -12, -18, -24, -60, -96, -102, -108, -111, -114, -117, -119
 };
 
+static const std::vector<double> minorValues = {
+  -15, -21, -36, -48, -72, -84, -108, -111, -109, -105
+};
+
+static const std::vector<double> minorMinorValues = {
+   -2, -27, -103, -118
+};
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
    const AudacityProject *pProject)
@@ -340,18 +347,32 @@ void WaveformVRulerControls::DoUpdateVRuler(
       }
       else {
          vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
-         Updater::Labels labs;
-         for (int i = 0; i < majorValues.size(); i++) {
-            double value = majorValues[i];
-            Updater::Label lab;
-            lab.value = value;
-            wxString s = (value == -60) ?
-               wxString(L"-\u221e") : wxString::FromDouble(value);
-            // \u221e represents the infinity symbol
-            lab.text = Verbatim(s);
-            labs.push_back(lab);
+         for (int ii = 0; ii < 3; ii++) {
+            Updater::Labels labs;
+            int size = (ii == 0) ? majorValues.size() :
+               (ii == 1) ? minorValues.size() : minorMinorValues.size();
+            for (int i = 0; i < size; i++) {
+               double value = (ii == 0) ? majorValues[i] :
+                  (ii == 1) ? minorValues[i] : minorMinorValues[i];
+               Updater::Label lab;
+               lab.value = value;
+
+               if (value < -dBRange)
+                  value = -2 * dBRange - value;
+               wxString s = (value == -dBRange) ?
+                  wxString(L"-\u221e") : wxString::FromDouble(value);
+               // \u221e represents the infinity symbol
+
+               lab.text = Verbatim(s);
+               labs.push_back(lab);
+            }
+            if (ii == 0)
+               vruler->SetCustomMajorLabels(labs);
+            else if (ii == 1)
+               vruler->SetCustomMinorLabels(labs);
+            else
+               vruler->SetCustomMinorMinorLabels(labs);
          }
-         vruler->SetCustomMajorLabels(labs);
       }
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );

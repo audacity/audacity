@@ -682,7 +682,7 @@ void Ruler::SetCustomMinorLabels(
    const auto numLabel = labels.size();
 
    for (size_t i = 0; i < numLabel; i++) {
-      mCustomMinorLabels.push_back(labels[numLabel]);
+      mCustomMinorLabels.push_back(labels[i]);
    }
 
    Invalidate();
@@ -694,7 +694,7 @@ void Ruler::SetCustomMinorMinorLabels(
    const auto numLabel = labels.size();
 
    for (size_t i = 0; i < numLabel; i++) {
-      mCustomMinorMinorLabels.push_back(labels[numLabel]);
+      mCustomMinorMinorLabels.push_back(labels[i]);
    }
 
    Invalidate();
