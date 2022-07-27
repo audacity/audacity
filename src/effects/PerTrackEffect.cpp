@@ -26,8 +26,6 @@
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 
-AudioGraph::Source::~Source() = default;
-
 AudioGraph::Sink::~Sink() = default;
 
 PerTrackEffect::Instance::~Instance() = default;

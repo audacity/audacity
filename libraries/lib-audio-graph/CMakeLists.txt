@@ -5,6 +5,8 @@ Utilities for construction of effect processing pipelines
 set( SOURCES
    AudioGraphBuffers.cpp
    AudioGraphBuffers.h
+   AudioGraphSource.cpp
+   AudioGraphSource.h
 )
 set( LIBRARIES
    lib-math-interface
