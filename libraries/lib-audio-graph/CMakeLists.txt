@@ -9,6 +9,8 @@ set( SOURCES
    AudioGraphSink.h
    AudioGraphSource.cpp
    AudioGraphSource.h
+   AudioGraphTask.cpp
+   AudioGraphTask.h
    EffectStage.cpp
    EffectStage.h
 )

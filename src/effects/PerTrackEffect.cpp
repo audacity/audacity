@@ -21,6 +21,7 @@
 #include "PerTrackEffect.h"
 
 #include "AudioGraphBuffers.h"
+#include "AudioGraphTask.h"
 #include "EffectStage.h"
 #include "SampleTrackSource.h"
 #include "../SyncLock.h"
@@ -288,14 +289,6 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    return bGoodResult;
 }
 
-AudioGraph::Task::Task(Source &source, Buffers &buffers, Sink &sink)
-   : mSource{ source }, mBuffers{ buffers }, mSink{ sink }
-{
-   assert(source.AcceptsBlockSize(buffers.BlockSize()));
-   assert(source.AcceptsBuffers(buffers));
-   assert(sink.AcceptsBuffers(buffers));
-}
-
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
@@ -316,51 +309,4 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    AudioGraph::Task task{ source, outBuffers, sink };
    return task.RunLoop();
-}
-
-bool AudioGraph::Task::RunLoop()
-{
-   // Satisfy invariant initially
-   mBuffers.Rewind();
-   Status status{};
-   do {
-      assert(mBuffers.Remaining() >= mBuffers.BlockSize());
-      status = RunOnce();
-   } while (status == Status::More);
-   return status == Status::Done;
-}
-
-auto AudioGraph::Task::RunOnce() -> Status
-{
-   const auto blockSize = mBuffers.BlockSize();
-   assert(mBuffers.Remaining() >= blockSize); // pre
-   if (auto oCurBlockSize = mSource.Acquire(mBuffers, blockSize)) {
-      const auto curBlockSize = *oCurBlockSize;
-      if (curBlockSize == 0)
-         // post (same as pre) obviously preserved
-         return Status::Done;
-
-      // post of source.Acquire() satisfies pre of sink.Release()
-      assert(curBlockSize <= blockSize);
-      if (!mSink.Release(mBuffers, curBlockSize))
-         return Status::Fail;
-   
-      // This may break the post
-      mBuffers.Advance(curBlockSize);
-
-      // posts of source.Acquire() and source.Relase()
-      // give termination guarantee
-      assert(mSource.Remaining() == 0 || curBlockSize > 0);
-      if (!mSource.Release())
-         return Status::Fail;
-
-      // Reestablish the post
-      if (!mSink.Acquire(mBuffers))
-         return Status::Fail;
-      assert(mBuffers.Remaining() >= blockSize);
-
-      return Status::More;
-   }
-   else
-      return Status::Fail;
 }
