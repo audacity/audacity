@@ -240,11 +240,11 @@ private:
     @pre `sink.AcceptsBuffers(outBuffers)`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
-   bool ProcessTrack(Instance &instance, EffectSettings &settings,
+   static bool ProcessTrack(Instance &instance, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
       double sampleRate, ChannelNames map,
-      Buffers &inBuffers, Buffers &outBuffers) const;
+      Buffers &inBuffers, Buffers &outBuffers);
 };
 
 //! Accumulates (non-interleaved) data during effect processing
@@ -402,4 +402,33 @@ private:
    bool mLatencyDone{ false };
    bool mCleared{ false };
 };
+
+namespace AudioGraph{
+//! Copies from a Source to a Sink, mediated by Buffers
+struct Task {
+public:
+   /*!
+    @pre `source.AcceptsBlockSize(buffers.BlockSize())`
+    @pre `source.AcceptsBuffers(buffers)`
+    @pre `sink.AcceptsBuffers(buffers)`
+    */
+   Task(Source &source, Buffers &buffers, Sink &sink);
+   enum class Status { More, Done, Fail };
+   //! Do an increment of the copy
+   Status RunOnce();
+   //! Do the complete copy
+   /*!
+    @return success
+    @pre `mBuffers.Remaining() >= mBuffers.BlockSize()`
+    @post result:  `result == Status::Fail ||
+       mBuffers.Remaining() >= mBuffers.BlockSize()`
+    */
+   bool RunLoop();
+private:
+   Source &mSource;
+   Buffers &mBuffers;
+   Sink &mSink;
+};
+
+}
 #endif

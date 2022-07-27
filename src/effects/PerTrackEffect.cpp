@@ -817,11 +817,19 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    return bGoodResult;
 }
 
+AudioGraph::Task::Task(Source &source, Buffers &buffers, Sink &sink)
+   : mSource{ source }, mBuffers{ buffers }, mSink{ sink }
+{
+   assert(source.AcceptsBlockSize(buffers.BlockSize()));
+   assert(source.AcceptsBuffers(buffers));
+   assert(sink.AcceptsBuffers(buffers));
+}
+
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
    const double sampleRate, const ChannelNames map,
-   Buffers &inBuffers, Buffers &outBuffers) const
+   Buffers &inBuffers, Buffers &outBuffers)
 {
    assert(upstream.AcceptsBuffers(inBuffers));
    assert(sink.AcceptsBuffers(outBuffers));
@@ -835,39 +843,55 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(source.AcceptsBlockSize(blockSize)); // post of ctor
    assert(source.AcceptsBuffers(outBuffers));
 
-   // Satisfaction of pre of Acquire():
-   const auto Invariant = [&]{ return outBuffers.Remaining() >= blockSize; };
+   AudioGraph::Task task{ source, outBuffers, sink };
+   return task.RunLoop();
+}
 
+bool AudioGraph::Task::RunLoop()
+{
    // Satisfy invariant initially
-   outBuffers.Rewind();
-   assert(Invariant());
+   mBuffers.Rewind();
+   Status status{};
+   do {
+      assert(mBuffers.Remaining() >= mBuffers.BlockSize());
+      status = RunOnce();
+   } while (status == Status::More);
+   return status == Status::Done;
+}
 
-   std::optional<size_t> oCurBlockSize;
-   while ((oCurBlockSize = source.Acquire(outBuffers, blockSize)).has_value()) {
+auto AudioGraph::Task::RunOnce() -> Status
+{
+   const auto blockSize = mBuffers.BlockSize();
+   assert(mBuffers.Remaining() >= blockSize); // pre
+   if (auto oCurBlockSize = mSource.Acquire(mBuffers, blockSize)) {
       const auto curBlockSize = *oCurBlockSize;
       if (curBlockSize == 0)
-         break;
+         // post (same as pre) obviously preserved
+         return Status::Done;
 
       // post of source.Acquire() satisfies pre of sink.Release()
       assert(curBlockSize <= blockSize);
-      if (!sink.Release(outBuffers, curBlockSize))
-         return false;
+      if (!mSink.Release(mBuffers, curBlockSize))
+         return Status::Fail;
    
-      // This may break the invariant
-      outBuffers.Advance(curBlockSize);
+      // This may break the post
+      mBuffers.Advance(curBlockSize);
 
       // posts of source.Acquire() and source.Relase()
       // give termination guarantee
-      assert(source.Remaining() == 0 || curBlockSize > 0);
-      if (!source.Release())
-         return false;
+      assert(mSource.Remaining() == 0 || curBlockSize > 0);
+      if (!mSource.Release())
+         return Status::Fail;
 
-      // Restore the invariant
-      if (!sink.Acquire(outBuffers))
-         return false;
-      assert(Invariant());
+      // Reestablish the post
+      if (!mSink.Acquire(mBuffers))
+         return Status::Fail;
+      assert(mBuffers.Remaining() >= blockSize);
+
+      return Status::More;
    }
-   return oCurBlockSize.has_value();
+   else
+      return Status::Fail;
 }
 
 void WaveTrackSink::Flush(Buffers &data, const double t0, const double t1)
