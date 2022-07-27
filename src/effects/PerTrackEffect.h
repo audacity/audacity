@@ -40,12 +40,14 @@ public:
    /*!
     May exceeed a single block of production
     Can assume same buffer is passed each time, while the caller advances it
-    over the previous production.  May rewind or rotate the buffer.
+    over the previous production, or discards it, or rotates the buffer.
+    May rewind or rotate the buffer.
 
     @return number of positions available to read from `data` or nullopt to fail
     @pre `AcceptsBuffers(data)`
     @pre `AcceptsBlockSize(data.BlockSize())`
     @pre `bound <= data.BlockSize()`
+    @pre `data.BlockSize() <= data.Remaining()`
     @post result: `!result || *result <= bound`
     @post result: `!result || *result <= data.Remaining()`
     @post result: `!result || *result <= Remaining()`
@@ -351,6 +353,7 @@ public:
 
    /*!
     @pre `bound <= data.BlockSize()`
+    @pre `data.BlockSize() <= data.Remaining()`
     @post result: `!result || *result <= bound`
     @post result: `!result || *result <= data.Remaining()`
     @post result: `!result || *result <= Remaining()`

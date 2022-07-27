@@ -267,12 +267,12 @@ sampleCount SampleTrackSource::Remaining() const
 std::optional<size_t> SampleTrackSource::Acquire(Buffers &data, size_t bound)
 {
    assert(bound <= data.BlockSize());
+   assert(data.BlockSize() <= data.Remaining());
    assert(AcceptsBuffers(data));
    assert(AcceptsBlockSize(data.BlockSize()));
 
-   if (!mInitialized || data.Remaining() < bound) {
-      // Need to make sufficient room in the buffers
-      data.Rotate();
+   if (!mInitialized || mFetched < bound) {
+      // Need to fill sufficent data in the buffers
       // Calculate the number of samples to get
       const auto fetch =
          limitSampleBufferSize(data.Remaining() - mFetched, Remaining());
@@ -740,6 +740,9 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             // See where curBlockSize was decided:
             assert(curBlockSize <= inBuffers.Remaining());
             inBuffers.Advance(curBlockSize);
+            if (inBuffers.Remaining() < blockSize)
+               // Restore sufficient space for Produce()
+               inBuffers.Rotate();
          }
       }
       else
