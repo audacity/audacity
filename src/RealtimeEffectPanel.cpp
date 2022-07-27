@@ -10,6 +10,7 @@
 
 #include "RealtimeEffectPanel.h"
 
+#include <wx/app.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
@@ -97,6 +98,8 @@ namespace
          wxWindow::SetBackgroundStyle(wxBG_STYLE_PAINT);
          Bind(wxEVT_PAINT, &DropHintLine::OnPaint, this);
       }
+      
+      bool AcceptsFocus() const override { return false; }
 
    private:
       void OnPaint(wxPaintEvent&)
@@ -216,6 +219,24 @@ namespace
          else
             evt.Skip();
       }
+      
+      bool Destroy() override
+      {
+         if(WindowBase::IsDescendant(wxWindow::FindFocus()))
+         {
+            auto next = WindowBase::GetNextSibling();
+            if(next != nullptr && next->AcceptsFocus())
+               next->SetFocus();
+            else
+            {
+               auto prev = WindowBase::GetPrevSibling();
+               if(prev != nullptr && prev->AcceptsFocus())
+                  prev->SetFocus();
+            }
+         }
+         return wxNavigationEnabled<WindowBase>::Destroy();
+      }
+   
    };
 
    //Alias for ListNavigationEnabled<wxWindow> which provides wxWidgets-style ctor
@@ -261,6 +282,49 @@ namespace
 
          if(HasFocus())
             AColor::DrawFocus(dc, GetClientRect().Deflate(3, 3));
+      }
+   };
+
+   class HyperLinkCtrlWrapper : public ListNavigationEnabled<wxHyperlinkCtrl>
+   {
+   public:
+      HyperLinkCtrlWrapper(wxWindow *parent,
+                           wxWindowID id,
+                           const wxString& label,
+                           const wxString& url,
+                           const wxPoint& pos = wxDefaultPosition,
+                           const wxSize& size = wxDefaultSize,
+                           long style = wxHL_DEFAULT_STYLE,
+                           const wxString& name = wxHyperlinkCtrlNameStr)
+      {
+         Create(parent, id, label, url, pos, size, style, name);
+      }
+      
+      void Create(wxWindow *parent,
+                  wxWindowID id,
+                  const wxString& label,
+                  const wxString& url,
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize,
+                  long style = wxHL_DEFAULT_STYLE,
+                  const wxString& name = wxHyperlinkCtrlNameStr)
+      {
+         ListNavigationEnabled<wxHyperlinkCtrl>::Create(parent, id, label, url, pos, size, style, name);
+         Bind(wxEVT_PAINT, &HyperLinkCtrlWrapper::OnPaint, this);
+      }
+              
+      void OnPaint(wxPaintEvent& evt)
+      {
+         wxPaintDC dc(this);
+         dc.SetFont(GetFont());
+         dc.SetTextForeground(GetForegroundColour());
+         dc.SetTextBackground(GetBackgroundColour());
+
+         auto labelRect = GetLabelRect();
+         
+         dc.DrawText(GetLabel(), labelRect.GetTopLeft());
+         if (HasFocus())
+            AColor::DrawFocus(dc, labelRect);
       }
    };
 
@@ -919,7 +983,7 @@ public:
       effectListContainer->SetBackgroundColorIndex(clrMedium);
       effectListContainer->SetSizer(safenew wxBoxSizer(wxVERTICAL));
       effectListContainer->SetDoubleBuffered(true);
-      effectListContainer->Disable();
+      effectListContainer->Hide();
       mEffectListContainer = effectListContainer;
 
       auto addEffect = safenew ThemedAButtonWrapper<AButton>(this, wxID_ANY);
@@ -942,7 +1006,7 @@ public:
       mAddEffectHint = addEffectHint;
 
       //TODO: set link
-      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, _("Watch video"), "https://www.audacityteam.org");
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, _("Watch video"), "https://www.audacityteam.org", wxDefaultPosition, wxDefaultSize, wxHL_ALIGN_LEFT | wxHL_CONTEXTMENU);
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
 #if wxUSE_ACCESSIBILITY
@@ -1056,25 +1120,32 @@ public:
 
    void OnEffectListItemChange(const RealtimeEffectListMessage& msg)
    {
+      auto sizer = mEffectListContainer->GetSizer();
       const auto insertItem = [this, &msg](){
          auto& effects = RealtimeEffectList::Get(*mTrack);
          InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
-         mEffectListContainer->Enable();
+         mAddEffectHint->Hide();
+         mAddEffectTutorialLink->Hide();
       };
-      const auto removeItem = [this, &msg](){
+      const auto removeItem = [&](){
          auto& ui = RealtimeEffectStateUI::Get(*msg.affectedState);
          ui.Hide();
          
-         auto sizer = mEffectListContainer->GetSizer();
-         auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
-         item->Destroy();
-#ifdef __WXGTK__
-         // See comment in ReloadEffectsList
+         auto window = sizer->GetItem(msg.srcIndex)->GetWindow();
+         sizer->Remove(msg.srcIndex);
+         wxTheApp->CallAfter([ref = wxWeakRef { window }] {
+            if(ref) ref->Destroy();
+         });
+         
          if(sizer->IsEmpty())
+         {
+            if(mEffectListContainer->IsDescendant(FindFocus()))
+               mAddEffect->SetFocus();
+            
             mEffectListContainer->Hide();
-#endif
-         if(sizer->IsEmpty())
-            mEffectListContainer->Disable();
+            mAddEffectHint->Show();
+            mAddEffectTutorialLink->Show();
+         }
       };
 
       wxWindowUpdateLocker freeze(this);
@@ -1152,16 +1223,16 @@ public:
    void ReloadEffectsList()
    {
       wxWindowUpdateLocker freeze(this);
+      
+      const auto hadFocus = mEffectListContainer->IsDescendant(FindFocus());
       //delete items that were added to the sizer
+      mEffectListContainer->Hide();
       mEffectListContainer->GetSizer()->Clear(true);
 
-#ifdef __WXGTK__
-      //Workaround for GTK: Underlying GTK widget does not update
-      //its size when wxWindow size is set to zero
+      
       if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
          mEffectListContainer->Hide();
-#endif
-
+      
       auto isEmpty{true};
       if(mTrack)
       {
@@ -1171,7 +1242,12 @@ public:
             InsertEffectRow(i, effects.GetStateAt(i));
       }
       mAddEffect->SetEnabled(!!mTrack);
-      mEffectListContainer->Enable(!isEmpty);
+      //Workaround for GTK: Underlying GTK widget does not update
+      //its size when wxWindow size is set to zero
+      mEffectListContainer->Show(!isEmpty);
+      mAddEffectHint->Show(isEmpty);
+      mAddEffectTutorialLink->Show(isEmpty);
+      
       SendSizeEventToParent();
    }
 
@@ -1206,11 +1282,9 @@ public:
       if(mProject == nullptr)
          return;
 
-#ifdef __WXGTK__
       // See comment in ReloadEffectsList
       if(!mEffectListContainer->IsShown())
          mEffectListContainer->Show();
-#endif
 
       auto row = safenew ThemedWindowWrapper<RealtimeEffectControl>(mEffectListContainer, wxID_ANY);
       row->SetBackgroundColorIndex(clrEffectListItemBackground);
@@ -1445,6 +1519,11 @@ void RealtimeEffectPanel::ResetTrack()
    mEffectList->ResetTrack();
    mCurrentTrack.reset();
    mHeader->SetName(wxEmptyString);
+}
+
+void RealtimeEffectPanel::SetFocus()
+{
+   mHeader->SetFocus();
 }
 
 void RealtimeEffectPanel::OnCharHook(wxKeyEvent& evt)

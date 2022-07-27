@@ -70,7 +70,9 @@ public:
    void ResetTrack();
 
    bool IsTopNavigationDomain(NavigationKind) const override { return true; }
-
+   
+   void SetFocus() override;
+   
 private:
    void OnCharHook(wxKeyEvent& evt);
 };
