@@ -48,7 +48,7 @@ class LV2Wrapper;
 class EffectBase;
 
 class LV2Validator final : public EffectUIValidator
-   , wxEvtHandler
+   , public wxEvtHandler
    , LV2UIFeaturesList::UIHandler
 {
 public:
