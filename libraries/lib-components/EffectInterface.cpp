@@ -168,6 +168,8 @@ size_t EffectInstance::GetTailSize() const
    return 0;
 }
 
+EffectInstanceEx::~EffectInstanceEx() = default;
+
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
 
 size_t EffectInstanceWithBlockSize::GetBlockSize() const

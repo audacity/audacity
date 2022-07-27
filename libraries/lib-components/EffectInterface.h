@@ -468,6 +468,34 @@ public:
    virtual size_t GetTailSize() const;
 };
 
+/***************************************************************************//**
+\class EffectInstanceEx
+@brief Performs effect computation
+*******************************************************************************/
+class COMPONENTS_API EffectInstanceEx : public virtual EffectInstance {
+public:
+   ~EffectInstanceEx() override;
+
+   //! Called at start of destructive processing, for each (mono/stereo) track
+   //! Default implementation does nothing, returns true
+   virtual bool ProcessInitialize(EffectSettings &settings,
+      double sampleRate, ChannelNames chanMap) = 0;
+
+   //! Called at end of destructive processing, for each (mono/stereo) track
+   //! Default implementation does nothing, returns true
+   //! This may be called during stack unwinding:
+   virtual bool ProcessFinalize() noexcept = 0;
+
+   //! Called for destructive effect computation
+   virtual size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+   = 0;
+
+   //! Called for destructive, non-realtime effect computation
+   virtual sampleCount GetLatency(
+      const EffectSettings &settings, double sampleRate) const = 0;
+};
+
 //! Inherit to add a state variable to an EffectInstance subclass
 class COMPONENTS_API EffectInstanceWithBlockSize
    : public virtual EffectInstance

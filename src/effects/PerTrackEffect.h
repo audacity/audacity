@@ -182,7 +182,7 @@ class PerTrackEffect
 public:
    ~PerTrackEffect() override;
 
-   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
+   class AUDACITY_DLL_API Instance : public virtual EffectInstanceEx {
    public:
       explicit Instance(const PerTrackEffect &processor)
          : mProcessor{ processor }
@@ -192,25 +192,14 @@ public:
       //! Uses the other virtual functions of this class
       bool Process(EffectSettings &settings) final;
 
-      //! Called at start of destructive processing, for each (mono/stereo) track
-      //! Default implementation does nothing, returns true
-      virtual bool ProcessInitialize(EffectSettings &settings,
-         double sampleRate, ChannelNames chanMap);
+      bool ProcessInitialize(EffectSettings &settings,
+         double sampleRate, ChannelNames chanMap) override;
 
-      //! Called at end of destructive processing, for each (mono/stereo) track
-      //! Default implementation does nothing, returns true
-      //! This may be called during stack unwinding:
-      virtual bool ProcessFinalize() noexcept;
+      bool ProcessFinalize() noexcept override;
 
-      //! Called for destructive effect computation
-      virtual size_t ProcessBlock(EffectSettings &settings,
-         const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      = 0;
-
-      //! Called for destructive, non-realtime effect computation
       //! Default implementation returns zero
-      virtual sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const;
+      sampleCount GetLatency(
+         const EffectSettings &settings, double sampleRate) const override;
 
    protected:
       const PerTrackEffect &mProcessor;
@@ -339,10 +328,12 @@ private:
    size_t mBlockSize{ 0 };
 };
 
+namespace AudioGraph {
+
 //! Decorate a source with a non-timewarping effect, which may have latency
-class EffectStage final : public AudioGraph::Source {
+class EffectStage final : public Source {
 public:
-   using Instance = PerTrackEffect::Instance;
+   using Instance = EffectInstanceEx;
 
    //! Completes `instance.ProcessInitialize()` or throws a std::exception
    /*!
@@ -403,8 +394,6 @@ private:
    bool mCleared{ false };
 };
 
-namespace AudioGraph{
-//! Copies from a Source to a Sink, mediated by Buffers
 struct Task {
 public:
    /*!

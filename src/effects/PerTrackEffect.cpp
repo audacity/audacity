@@ -307,7 +307,7 @@ bool SampleTrackSource::Release()
    return !mPollUser || mPollUser(mPos);
 }
 
-EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
+AudioGraph::EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
    Instance &instance, EffectSettings &settings, double sampleRate,
    std::optional<sampleCount> genLength, ChannelNames map
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
@@ -328,24 +328,25 @@ EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
       FinishUpstream();
 }
 
-EffectStage::~EffectStage()
+AudioGraph::EffectStage::~EffectStage()
 {
    // Allow the plugin to cleanup
    mInstance.ProcessFinalize();
 }
 
-bool EffectStage::AcceptsBuffers(const Buffers &buffers) const
+bool AudioGraph::EffectStage::AcceptsBuffers(const Buffers &buffers) const
 {
    return true;
 }
 
-bool EffectStage::AcceptsBlockSize(size_t size) const
+bool AudioGraph::EffectStage::AcceptsBlockSize(size_t size) const
 {
    // Test the equality of input and output block sizes
    return mInBuffers.BlockSize() == size;
 }
 
-std::optional<size_t> EffectStage::Acquire(Buffers &data, size_t bound)
+std::optional<size_t>
+AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
 {
    assert(AcceptsBuffers(data));
    assert(AcceptsBlockSize(data.BlockSize()));
@@ -434,7 +435,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers &data, size_t bound)
    return { result };
 }
 
-std::optional<size_t> EffectStage::FetchProcessAndAdvance(
+std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
    Buffers &data, size_t bound, bool doZeroes, size_t outBufferOffset)
 {
    std::optional<size_t> oCurBlockSize;
@@ -478,7 +479,7 @@ std::optional<size_t> EffectStage::FetchProcessAndAdvance(
    return oCurBlockSize;
 }
 
-bool EffectStage::Process(
+bool AudioGraph::EffectStage::Process(
    const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const
 {
    size_t processed{};
@@ -511,7 +512,7 @@ bool EffectStage::Process(
    return (processed == curBlockSize);
 }
 
-sampleCount EffectStage::Remaining() const
+sampleCount AudioGraph::EffectStage::Remaining() const
 {
    // Not correct until at least one call to Acquire() so that mDelay is
    // assigned.  mDelay does not change thereafter; mDelayRemaining decreases
@@ -519,7 +520,7 @@ sampleCount EffectStage::Remaining() const
    return mLastProduced + mUpstream.Remaining() - mDelay + DelayRemaining();
 }
 
-bool EffectStage::Release()
+bool AudioGraph::EffectStage::Release()
 {
    // Progress toward termination (Remaining() == 0),
    // if mLastProduced + mLastZeroes > 0,
@@ -529,7 +530,7 @@ bool EffectStage::Release()
    return true;
 }
 
-void EffectStage::FinishUpstream()
+void AudioGraph::EffectStage::FinishUpstream()
 {
    if (!mCleared) {
       // From this point on, we only want to feed zeros to the plugin
@@ -838,7 +839,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   EffectStage source{ upstream, inBuffers,
+   AudioGraph::EffectStage source{ upstream, inBuffers,
       instance, settings, sampleRate, genLength, map };
    assert(source.AcceptsBlockSize(blockSize)); // post of ctor
    assert(source.AcceptsBuffers(outBuffers));
