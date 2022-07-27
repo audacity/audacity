@@ -19,8 +19,6 @@
 #include "MemoryX.h"
 #include <functional>
 
-class SampleTrack;
-
 namespace AudioGraph {
 
 class Buffers;
@@ -50,41 +48,6 @@ public:
 };
 
 }
-
-class SampleTrackSource final : public AudioGraph::Source {
-public:
-   //! Type of function returning false if user cancels progress
-   using Poller = std::function<bool(sampleCount blockSize)>;
-
-   /*!
-    @post `Remaining()` == len
-    */
-   SampleTrackSource(const SampleTrack &left, const SampleTrack *pRight,
-      sampleCount start, sampleCount len, Poller pollUser);
-   ~SampleTrackSource() override;
-
-   //! If constructed with positive length, then accepts buffers only when
-   //! number of channels is positive
-   bool AcceptsBuffers(const Buffers &buffers) const override;
-
-   //! Always true
-   bool AcceptsBlockSize(size_t blockSize) const override;
-
-   std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
-   sampleCount Remaining() const override;
-   //! Can test for user cancellation
-   bool Release() override;
-private:
-   const SampleTrack &mLeft;
-   const SampleTrack *const mpRight;
-   const Poller mPollUser;
-
-   sampleCount mPos{};
-   sampleCount mOutputRemaining{};
-   size_t mLastProduced{};
-   size_t mFetched{};
-   bool mInitialized{ false };
-};
 
 class WaveTrackSink final : public AudioGraph::Sink {
 public:
