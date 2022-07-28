@@ -87,6 +87,9 @@ class SAMPLE_TRACK_API Mixer {
    // Constructor / Destructor
    //
 
+   /*!
+    @post `BufferSize() == outBufferSize`
+    */
    Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
@@ -100,6 +103,8 @@ class SAMPLE_TRACK_API Mixer {
 
    virtual ~ Mixer();
 
+   size_t BufferSize() const { return mBufferSize; }
+
    //
    // Processing
    //
@@ -108,6 +113,10 @@ class SAMPLE_TRACK_API Mixer {
    /// a buffer which can be retrieved by calling GetBuffer().
    /// Returns number of output samples, or 0, if there are no
    /// more samples that must be processed.
+   /*!
+    @pre `maxSamples <= BufferSize()`
+    @post result: `result <= maxSamples`
+    */
    size_t Process(size_t maxSamples);
 
    /// Restart processing at beginning of buffer next time
@@ -136,9 +145,15 @@ class SAMPLE_TRACK_API Mixer {
  private:
 
    void Clear();
+   /*!
+    @post result: `result <= mMaxOut`
+    */
    size_t MixSameRate(int *channelFlags, SampleTrackCache &cache,
                            sampleCount *pos);
 
+   /*!
+    @post result: `result <= mMaxOut`
+    */
    size_t MixVariableRates(int *channelFlags, SampleTrackCache &cache,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
@@ -147,12 +162,21 @@ class SAMPLE_TRACK_API Mixer {
    void MakeResamplers();
 
  private:
+   // Cut the queue into blocks of this finer size
+   // for variable rate resampling.  Each block is resampled at some
+   // constant rate.
+   static constexpr size_t sProcessLen = 1024;
 
-    // Input
+   // This is the number of samples grabbed in one go from a track
+   // and placed in a queue, when mixing with resampling.
+   // (Should we use SampleTrack::GetBestBlockSize instead?)
+   static constexpr size_t sQueueMaxLen = 65536;
+
+   // Input
    const size_t     mNumInputTracks;
    ArrayOf<SampleTrackCache> mInputTrack;
    bool             mbVariableRates;
-   const BoundedEnvelope *mEnvelope;
+   const BoundedEnvelope *const mEnvelope;
    ArrayOf<sampleCount> mSamplePos;
    const bool       mApplyTrackGains;
    Doubles          mEnvValues;
@@ -160,28 +184,26 @@ class SAMPLE_TRACK_API Mixer {
    double           mT1; // Stop time (none if mT0==mT1)
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
    ArrayOf<std::unique_ptr<Resample>> mResample;
-   const size_t     mQueueMaxLen;
    FloatBuffers     mSampleQueue;
    ArrayOf<int>     mQueueStart;
    ArrayOf<int>     mQueueLen;
-   size_t           mProcessLen;
-   MixerSpec        *mMixerSpec;
+   MixerSpec *const mMixerSpec;
 
    // Output
-   size_t              mMaxOut;
+   size_t              mMaxOut{};
    const unsigned   mNumChannels;
    Floats           mGains;
-   unsigned         mNumBuffers;
-   size_t              mBufferSize;
-   size_t              mInterleavedBufferSize;
+   const size_t     mBufferSize;
+   const unsigned   mNumBuffers;
+   const size_t     mInterleavedBufferSize;
    const sampleFormat mFormat;
-   bool             mInterleaved;
+   const bool       mInterleaved;
    ArrayOf<SampleBuffer> mBuffer;
    ArrayOf<Floats>  mTemp;
    Floats           mFloatBuffer;
    const double     mRate;
    double           mSpeed;
-   bool             mHighQuality;
+   const bool       mHighQuality;
    std::vector<double> mMinFactor, mMaxFactor;
 
    const bool       mMayThrow;
