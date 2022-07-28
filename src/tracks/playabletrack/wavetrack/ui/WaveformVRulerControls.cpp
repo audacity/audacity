@@ -27,15 +27,20 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
 static const std::vector<double> majorValues = {
-   -1, -3, -6, -9, -12, -18, -24, -60, -96, -102, -108, -111, -114, -117, -119
+   0, -6, -12, -18, -24, -36, -60,
+   -84, -96, -102, -108, -114, -120
 };
 
 static const std::vector<double> minorValues = {
-  -15, -21, -36, -48, -72, -84, -108, -111, -109, -105
+  -3, -9, -15, -21, -27, -33, -39, -45, -51,
+  -69, -75, -81, -87, -93, -99, -105, -111, -117
 };
 
 static const std::vector<double> minorMinorValues = {
-   -2, -27, -103, -118
+   -1.5, -4.5, -7.5, -10.5, -13.5, -16.5, -19.5, -22.5, -25.5, -28.5,
+   -31.5, -34.5, -37.5, -40.5, -43.5, -46.5, -49.5, -55.5, 
+   -64.5, -70.5, -73.5, -76.5, -79.5, -82.5, -85.5, -88.5,
+   -91.5, -94.5, -97.5, -100.5, -103.5, -106.5, -109.5, -112.5, -115.5, -118.5
 };
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
@@ -199,12 +204,13 @@ void WaveformVRulerControls::DoUpdateVRuler(
    WaveformSettings::ScaleType scaleType =
    wt->GetWaveformSettings().scaleType;
    
-   if (wt->GetWaveformSettings().isAmp()) {
+   if (wt->GetWaveformSettings().isLinear()) {
       // Waveform
       
       float min, max;
       wt->GetDisplayBounds(&min, &max);
       if (wt->GetLastScaleType() != WaveformSettings::stLinearAmp &&
+         wt->GetLastScaleType() != WaveformSettings::stLinearDb &&
           wt->GetLastScaleType() != -1)
       {
          // do a translation into the linear space
@@ -233,9 +239,50 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
       vruler->SetFormat(RealFormat);
-      vruler->SetLabelEdges(false);
-      vruler->SetUnits({});
-      vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      if (scaleType == WaveformSettings::stLinearAmp) {
+         vruler->SetLabelEdges(false);
+         vruler->SetUnits({});
+         vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      }
+      else {
+         vruler->SetLabelEdges(true);
+         vruler->SetUnits(XO("dB"));
+         vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
+         for (int ii = 0; ii < 3; ii++) {
+            Updater::Labels labs;
+            int size = (ii == 0) ? majorValues.size() :
+               (ii == 1) ? minorValues.size() : minorMinorValues.size();
+            for (int i = 0; i < size; i++) {
+               double value = (ii == 0) ? majorValues[i] :
+                  (ii == 1) ? minorValues[i] : minorMinorValues[i];
+               Updater::Label lab;
+
+               if (value == -dBRange)
+                  lab.value = 0;
+               else {
+                  float sign = (value > -dBRange ? 1 : -1);
+                  if (value < -dBRange)
+                     value = -2 * dBRange - value;
+                  lab.value = DB_TO_LINEAR(value) * sign;
+               }
+
+               wxString s = wxString::FromDouble(value);
+               //wxString s = (value == -dBRange) ?
+               //   wxString(L"-\u221e") : wxString::FromDouble(value);
+               // \u221e represents the infinity symbol
+               // Should this just be -dBRange so it is consistent?
+               lab.text = Verbatim(s);
+
+               labs.push_back(lab);
+            }
+            if (ii == 0)
+               vruler->SetCustomMajorLabels(labs);
+            else if (ii == 1)
+               vruler->SetCustomMinorLabels(labs);
+            else
+               vruler->SetCustomMinorMinorLabels(labs);
+         }
+      }
    }
    else {
       vruler->SetUnits(XO("dB"));
@@ -245,7 +292,6 @@ void WaveformVRulerControls::DoUpdateVRuler(
       float lastdBRange;
       
       if (wt->GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
-         wt->GetLastScaleType() != WaveformSettings::stLinearDb &&
          // When Logarithmic Amp happens, put that here
           wt->GetLastScaleType() != -1)
       {
@@ -342,38 +388,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
 #endif
       vruler->SetFormat(RealLogFormat);
       vruler->SetLabelEdges(true);
-      if (scaleType == WaveformSettings::stLogarithmicDb){
-         vruler->SetUpdater(std::make_unique<LinearUpdater>());
-      }
-      else {
-         vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
-         for (int ii = 0; ii < 3; ii++) {
-            Updater::Labels labs;
-            int size = (ii == 0) ? majorValues.size() :
-               (ii == 1) ? minorValues.size() : minorMinorValues.size();
-            for (int i = 0; i < size; i++) {
-               double value = (ii == 0) ? majorValues[i] :
-                  (ii == 1) ? minorValues[i] : minorMinorValues[i];
-               Updater::Label lab;
-               lab.value = value;
-
-               if (value < -dBRange)
-                  value = -2 * dBRange - value;
-               wxString s = (value == -dBRange) ?
-                  wxString(L"-\u221e") : wxString::FromDouble(value);
-               // \u221e represents the infinity symbol
-
-               lab.text = Verbatim(s);
-               labs.push_back(lab);
-            }
-            if (ii == 0)
-               vruler->SetCustomMajorLabels(labs);
-            else if (ii == 1)
-               vruler->SetCustomMinorLabels(labs);
-            else
-               vruler->SetCustomMinorMinorLabels(labs);
-         }
-      }
+      vruler->SetUpdater(std::make_unique<LinearUpdater>());
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

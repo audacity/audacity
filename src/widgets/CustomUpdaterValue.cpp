@@ -17,12 +17,13 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
 
    const RulerStruct& context) const
 {
+   const double mMin = context.mMin;
+   const double mMax = context.mMax;
+
    const int mLeft = context.mLeft;
    const int mTop = context.mTop;
    const int mRight = context.mRight;
    const int mBottom = context.mBottom;
-   const int mMin = context.mMin;
-   const int mMax = context.mMax;
    const int mLength = context.mLength;
    const int mOrientation = context.mOrientation;
 
@@ -30,24 +31,28 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    const int mSpacing = context.mSpacing;
    const bool mFlip = context.mFlip;
    const TranslatableString mUnits = context.mUnits;
+   const bool mLabelEdges = context.mLabelEdges;
 
    auto TickAtValue =
-      [this, &dc, &mFonts, mOrientation,
+      [this, &dc, &mFonts, mOrientation, mLabelEdges,
       mMin, mMax, mLength, mRight, mBottom, &context]
-   (double value) -> int {
+   (double value, double *pos) -> bool {
       // Make a tick only if the value is strictly between the bounds
-      if (value <= std::min(mMin, mMax))
-         return -1;
-      if (value >= std::max(mMin, mMax))
-         return -1;
+      double min = std::min(mMin, mMax);
+      double max = std::max(mMin, mMax);
+      if (value <= min && !mLabelEdges || value < min)
+         return false;
+      if (value >= max && !mLabelEdges || value > max)
+         return false;
 
       int mid = (int)(mLength * ((mMin - value) / (mMin - mMax)) + 0.5);
 
       const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
-      if (mid >= 0 && mid < iMaxPos)
-         return mid;
-      else
-         return -1;
+      if (mid >= 0 && mid < iMaxPos) {
+         *pos = mid;
+         return true;
+      }
+      return false;
    };
 
    // FIXME: We don't draw a tick if of end of our label arrays
@@ -55,10 +60,15 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    if (labelIdx >= outputs.labels.size())
       return false;
 
-   Label lab;
+   // Get the correct position based on value.
+   // Don't draw if the value is out of bounds.
+   double pos;
+   if (!TickAtValue(outputs.labels[labelIdx].value, &pos))
+      return false;
 
+   Label lab;
    lab.value = 0.0;
-   lab.pos = TickAtValue(outputs.labels[labelIdx].value);
+   lab.pos = pos;
    // Custom is flexible with text format
    // We can assume they use the right format, but still append the right units.
    lab.text = outputs.labels[labelIdx].text;
