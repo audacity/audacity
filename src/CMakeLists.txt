@@ -1583,6 +1583,7 @@ else()
                USE_SOURCE_PERMISSIONS
                FILES_MATCHING PATTERN "*.so*" )
 
+      install( CODE "set( _LIBDIR \"${_LIBDIR}\")" )
       install( SCRIPT "${CMAKE_SOURCE_DIR}/scripts/build/linux/fix_rpath.cmake" )
 
       install( FILES "${_INTDIR}/audacity.desktop"

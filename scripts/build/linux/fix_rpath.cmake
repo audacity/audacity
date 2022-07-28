@@ -2,7 +2,7 @@ cmake_policy(SET CMP0011 NEW)
 cmake_policy(SET CMP0007 NEW)
 
 set(install_dir "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}")
-set(private_lib_dir "${install_dir}/lib/audacity")
+set(private_lib_dir "${install_dir}/${_LIBDIR}/audacity")
 
 message(STATUS "Running fix_rpath in ${private_lib_dir}")
 
@@ -29,7 +29,10 @@ function(get_rpath outvar lib)
    list( TRANSFORM output STRIP )
 
    foreach(line ${output})
-      if (line MATCHES ".*RUNPATH.*\\[(.*)\\]" OR line MATCHES ".*RPATH.*\\[(.*)\\]")
+      if (line MATCHES ".*RUNPATH.*\\[(.*)\\]")
+         set(${outvar} "${CMAKE_MATCH_1}" PARENT_SCOPE)
+         return()
+      elseif (line MATCHES ".*RPATH.*\\[(.*)\\]")
          set(${outvar} "${CMAKE_MATCH_1}" PARENT_SCOPE)
          return()
       endif()
