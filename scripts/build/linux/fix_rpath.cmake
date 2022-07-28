@@ -2,7 +2,7 @@ cmake_policy(SET CMP0011 NEW)
 cmake_policy(SET CMP0007 NEW)
 
 set(install_dir "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}")
-set(private_lib_dir "${install_dir}/lib/audacity")
+set(private_lib_dir "${install_dir}/${_LIBDIR}/audacity")
 
 message(STATUS "Running fix_rpath in ${private_lib_dir}")
 
