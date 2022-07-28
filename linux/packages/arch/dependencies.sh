@@ -42,6 +42,7 @@ deps=(
    mesa
    mpg123
    wavpack
+   wxwidgets-gtk3
 )
 
 pacman -Syu --noconfirm \

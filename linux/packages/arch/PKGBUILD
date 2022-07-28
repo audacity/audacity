@@ -39,6 +39,7 @@ depends=(zlib
    mesa
    mpg123
    wavpack
+   wxwidgets-gtk3
 )
 
 makedepends=(
@@ -89,8 +90,6 @@ build() {
         -D audacity_obey_system_dependencies=On # And force it!
 
         -D audacity_use_pch=no
-
-        -D audacity_use_wxwidgets=local # wxWidgets 3.1 is not available
 
         -D audacity_use_sbsms=local # sbsms is only available in AUR
 
