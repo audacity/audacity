@@ -1079,7 +1079,7 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
                *mpAccess, mpAccess2);
       }
       if (!priorState) {
-         mSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
+         mAudioIOSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
             switch (event.type) {
             case AudioIOEvent::PLAYBACK:
                OnPlayback(event); break;
@@ -1104,7 +1104,7 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 
 void EffectUIHost::CleanupRealtime()
 {
-   mSubscription.Reset();
+   mAudioIOSubscription.Reset();
 
    if (mSupportsRealtime && mInitialized) {
       if (!IsOpenedFromEffectPanel()) {
