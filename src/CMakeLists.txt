@@ -1575,11 +1575,17 @@ else()
                DESTINATION "."
                RESOURCE DESTINATION "${_APPDIR}/Resources" )
    else()
+
       install( TARGETS ${TARGET} RUNTIME )
+
       install( DIRECTORY "${_DEST}/${_LIBDIR}/"
                DESTINATION "${_LIBDIR}"
                USE_SOURCE_PERMISSIONS
                FILES_MATCHING PATTERN "*.so*" )
+
+      install( CODE "set( _LIBDIR \"${_LIBDIR}\")" )
+      install( SCRIPT "${CMAKE_SOURCE_DIR}/scripts/build/linux/fix_rpath.cmake" )
+
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"
@@ -1588,9 +1594,6 @@ else()
                DESTINATION "${_DATADIR}/mime/packages" )
       install( FILES "${topdir}/presets/EQDefaultCurves.xml"
                DESTINATION "${_PKGDATA}" )
-      install( PROGRAMS "${PROJECT_SOURCE_DIR}/linux/audacity.sh"
-               DESTINATION "."
-               RENAME "audacity" )
    endif()
 endif()
 

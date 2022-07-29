@@ -31,7 +31,7 @@
 LV2FeaturesListBase::~LV2FeaturesListBase() = default;
 
 ExtendedLV2FeaturesList::~ExtendedLV2FeaturesList() = default;
-ExtendedLV2FeaturesList::ExtendedLV2FeaturesList(
+ExtendedLV2FeaturesList::ExtendedLV2FeaturesList(WithBase_t,
    const LV2FeaturesListBase &baseFeatures
 ) : LV2FeaturesListBase{ baseFeatures.mPlug }
   , mBaseFeatures{ baseFeatures }
