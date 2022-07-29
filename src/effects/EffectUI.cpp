@@ -711,9 +711,10 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
    mEnabled = !mEnabled;
 
-   // Change the suspension state of realtime processing, though it remains
-   // "active."
-   RealtimeEffectManager::Get(mProject).SetSuspended(!mEnabled);
+   auto mpState = mwState.lock();
+   if (mpState)
+      mpState->SetActive(mEnabled);
+
    UpdateControls();
 }
 
@@ -1077,7 +1078,15 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
             // Decorate the given access object
             mpAccess = std::make_shared<EffectSettingsAccessTee>(
                *mpAccess, mpAccess2);
+
+         mEffectStateSubscription = mpState->Subscribe([this](RealtimeEffectStateChange state) {
+            mEnabled = (state == RealtimeEffectStateChange::EffectOn);
+            mEnableBtn->SetBitmap(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+
+            UpdateControls();
+         });
       }
+
       if (!priorState) {
          mAudioIOSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
             switch (event.type) {
@@ -1098,7 +1107,7 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
       if (result && !result->Init())
          result.reset();
    }
-   
+
    return result;
 }
 
@@ -1109,6 +1118,7 @@ void EffectUIHost::CleanupRealtime()
    if (mSupportsRealtime && mInitialized) {
       if (!IsOpenedFromEffectPanel()) {
          AudioIO::Get()->RemoveState(mProject, nullptr, mpTempProjectState);
+         mEffectStateSubscription.Reset();
          mpTempProjectState.reset();
       /*
          ProjectHistory::Get(mProject).PushState(

@@ -97,7 +97,7 @@ private:
    void CleanupRealtime();
 
 private:
-   Observer::Subscription mAudioIOSubscription;
+   Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 
    AudacityProject &mProject;
    wxWindow *const mParent;
