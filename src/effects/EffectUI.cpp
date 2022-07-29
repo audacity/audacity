@@ -14,6 +14,7 @@
 
 #include "EffectUI.h"
 
+#include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
 #include "ConfigInterface.h"
 #include "EffectManager.h"
@@ -24,6 +25,7 @@
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
+#include "Theme.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
@@ -138,10 +140,9 @@ EVT_PAINT(EffectUIHost::OnPaint)
 EVT_CLOSE(EffectUIHost::OnClose)
 EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
 EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
-EVT_BUTTON(wxID_HELP, EffectUIHost::OnHelp)
 EVT_BUTTON(eDebugID, EffectUIHost::OnDebug)
 EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
-EVT_CHECKBOX(kEnableID, EffectUIHost::OnEnable)
+EVT_BUTTON(kEnableID, EffectUIHost::OnEnable)
 EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
 EVT_MENU(kSaveAsID, EffectUIHost::OnSaveAs)
 EVT_MENU(kImportID, EffectUIHost::OnImport)
@@ -301,32 +302,10 @@ bool EffectUIHost::TransferDataFromWindow()
 
 int EffectUIHost::ShowModal()
 {
-#if defined(__WXMSW__)
-   // Swap the Close and Apply buttons
-   wxSizer *sz = mApplyBtn->GetContainingSizer();
-   wxASSERT(mApplyBtn->GetParent()); // To justify safenew
-   wxButton *apply = safenew wxButton(mApplyBtn->GetParent(), wxID_APPLY);
-   sz->Replace(mCloseBtn, apply);
-   sz->Replace(mApplyBtn, mCloseBtn);
-   sz->Layout();
-   mApplyBtn->Destroy();
-   mApplyBtn = apply;
-   mApplyBtn->SetDefault();
-
    if (mEffectUIHost.GetDefinition().GetType() == EffectTypeGenerate)
    {
       mApplyBtn->SetLabel(XXO("&Generate").Translation());
    }
-
-   mCloseBtn->SetLabel(wxGetStockLabel(wxID_CANCEL, 0));
-#else
-   if (mEffectUIHost.GetDefinition().GetType() == EffectTypeGenerate)
-   {
-      mApplyBtn->SetLabel(XXO("&Generate").Translation());
-   }
-
-   mCloseBtn->SetLabel(wxGetStockLabel(wxID_CANCEL));
-#endif
 
    Layout();
 
@@ -360,73 +339,44 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
    {
       S.SetBorder( margin );
 
-      if (!mIsGUI)
+      if (IsOpenedFromEffectPanel())
       {
-         mMenuBtn = S.Id( kMenuID )
-            .ToolTip(XO("Manage presets and options"))
-            .AddButton( XXO("&Manage"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
-      }
-      else
-      {
-         mMenuBtn = S.Id( kMenuID )
-            .ToolTip(XO("Manage presets and options"))
-            .Name(XO("&Manage"))
-            .AddBitmapButton( CreateBitmap(effect_menu_xpm, true, true) );
-         mMenuBtn->SetBitmapPressed(CreateBitmap(effect_menu_xpm, false, true));
+         mEnableBtn = S.Id(kEnableID)
+            .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
+            .Name(XO("Enable"))
+            .AddBitmapButton(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+
+         S.AddSpace( 5, 5 );
       }
 
-      S.AddSpace( 5, 5 );
+      mMenuBtn = S.Id( kMenuID )
+         .ToolTip(XO("Manage presets and options"))
+         .AddButton( XO("Presets && settings"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
 
       if (!mIsBatch)
       {
-         if (!mIsGUI)
+         if (mSupportsRealtime)
          {
-            if (mSupportsRealtime)
+            if (mpTempProjectState)
             {
-               mPlayToggleBtn = S.Id( kPlayID )
-                  .ToolTip(XO("Start and stop playback"))
-                  .AddButton( XXO("Start &Playback"),
-                              wxALIGN_CENTER | wxTOP | wxBOTTOM );
-            }
-            else if (
-               (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
-               (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
-            {
-               mPlayToggleBtn = S.Id( kPlayID )
-                  .ToolTip(XO("Preview effect"))
+               S.AddSpace( 5, 5 );
+
+               mPlayToggleBtn = S.Id(kPlayID)
+                  .ToolTip(XO("Start and stop preview"))
                   .AddButton( XXO("&Preview"),
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
          }
-         else
-         {
-            mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-            mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, true);
-            mStopBM = CreateBitmap(effect_stop_xpm, true, false);
-            mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
-            mPlayBtn = S.Id( kPlayID ).AddBitmapButton( mPlayBM );
-            mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-            mPlayBtn->SetBitmapPressed(CreateBitmap(effect_play_xpm, false, true));
-            if (!mSupportsRealtime)
-            {
-               mPlayBtn->SetToolTip(_("Preview effect"));
-#if defined(__WXMAC__)
-               mPlayBtn->SetName(_("Preview effect"));
-#else
-               mPlayBtn->SetLabel(_("&Preview effect"));
-#endif
-            }
-         }
-
-         if (mSupportsRealtime)
+         else if (
+            (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
+            (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
          {
             S.AddSpace( 5, 5 );
 
-            mEnableCb = S.Id( kEnableID )
-               .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
-               .Name(XO("Enable"))
-               .AddCheckBox( XXO("&Enable"), mEnabled );
-            //
+            mPlayToggleBtn = S.Id(kPlayID)
+               .ToolTip(XO("Preview effect"))
+               .AddButton( XXO("&Preview"),
+                           wxALIGN_CENTER | wxTOP | wxBOTTOM );
          }
       }
    }
@@ -438,57 +388,43 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
 
 bool EffectUIHost::Initialize()
 {
-   // Put the checkbox for realtime into the correct initial state
-   mEnabled = !RealtimeEffectManager::Get(mProject).GetSuspended();
+   mEnabled = mpAccess->Get().extra.GetActive();
+
+   mRealtimeEnabledBM = theTheme.Bitmap(bmpEffectOn);
+   mRealtimeDisabledBM = theTheme.Bitmap(bmpEffectOff);
+
+   const auto hasApplyButton = !IsOpenedFromEffectPanel();
 
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
    EffectPanel *w {};
    ShuttleGui S{ this, eIsCreating };
    {
-      S.StartHorizontalLay( wxEXPAND );
-      {
-         // Make the panel for the client
-         Destroy_ptr<EffectPanel> uw{ safenew EffectPanel( S.GetParent() ) };
-         RTL_WORKAROUND(uw.get());
+      // Make the panel for the client
+      Destroy_ptr<EffectPanel> uw{ safenew EffectPanel( S.GetParent() ) };
+      RTL_WORKAROUND(uw.get());
 
-         // Try to give the window a sensible default/minimum size
-         uw->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
-            mParent->GetSize().GetHeight() / 2));
+      // Try to give the window a sensible default/minimum size
+      uw->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
+         mParent->GetSize().GetHeight() / 2));
 
-         // Let the client add things to the panel
-         ShuttleGui S1{ uw.get(), eIsCreating };
-         mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess);
-         if (!mpValidator)
-            return false;
-
-         S.Prop( 1 )
-            .Position(wxEXPAND)
-            .AddWindow((w = uw.release()));
-      }
-      S.EndHorizontalLay();
+      // Let the client add things to the panel
+      ShuttleGui S1{ uw.get(), eIsCreating };
+      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess);
+      if (!mpValidator)
+         return false;
 
       S.StartPanel();
       {
          const auto bar = BuildButtonBar(S.GetParent(),
-            mpValidator && mpValidator->IsGraphicalUI());
+            mpValidator->IsGraphicalUI());
 
-         long buttons;
-         if ( mEffectUIHost.GetDefinition().ManualPage().empty() && mEffectUIHost.GetDefinition().HelpPage().empty()) {
-            buttons = eApplyButton | eCloseButton;
-            this->SetAcceleratorTable(wxNullAcceleratorTable);
-         }
-         else {
-            buttons = eApplyButton | eCloseButton | eHelpButton;
-            wxAcceleratorEntry entries[1];
-#if defined(__WXMAC__)
-            // Is there a standard shortcut on Mac?
-#else
-            entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
-#endif
-            wxAcceleratorTable accel(1, entries);
-            this->SetAcceleratorTable(accel);
-         }
+         long buttons = 0;
+
+         if (hasApplyButton)
+            buttons |= eApplyButton;
+
+         this->SetAcceleratorTable(wxNullAcceleratorTable);
 
          if (mEffectUIHost.GetDefinition().EnablesDebug())
             buttons |= eDebugButton;
@@ -496,19 +432,35 @@ bool EffectUIHost::Initialize()
          S.AddStandardButtons(buttons, bar);
       }
       S.EndPanel();
+
+      S.StartHorizontalLay( wxEXPAND );
+      {
+         S.Prop( 1 )
+            .Position(wxEXPAND)
+            .AddWindow((w = uw.release()));
+      }
+      S.EndHorizontalLay();
    }
 
    Layout();
    Fit();
    Center();
 
-   mApplyBtn = (wxButton *) FindWindow(wxID_APPLY);
-   mCloseBtn = (wxButton *) FindWindow(wxID_CANCEL);
+   if (hasApplyButton)
+      mApplyBtn = (wxButton *) FindWindow(wxID_APPLY);
 
    UpdateControls();
 
    w->SetAccept(!mIsGUI);
-   (!mIsGUI ? w : FindWindow(wxID_APPLY))->SetFocus();
+
+   if (!mIsGUI)
+   {
+      w->SetFocus();
+   }
+   else if (hasApplyButton)
+   {
+      mApplyBtn->SetFocus();
+   }
 
    LoadUserPresets();
 
@@ -647,27 +599,6 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
    Close();
 }
 
-void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
-{
-   if (mEffectUIHost.GetDefinition().ManualPage().empty()) {
-      // No manual page, so use help page
-
-      const auto &helpPage = mEffectUIHost.GetDefinition().HelpPage();
-      // It was guaranteed in Initialize() that there is no help
-      // button when neither manual nor help page is specified, so this
-      // event handler it not reachable in that case.
-      wxASSERT(!helpPage.empty());
-
-      // Old ShowHelp required when there is no on-line manual.
-      // Always use default web browser to allow full-featured HTML pages.
-      HelpSystem::ShowHelp(FindWindow(wxID_HELP), helpPage, wxEmptyString, true, true);
-   }
-   else {
-      // otherwise use the NEW ShowHelp
-      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffectUIHost.GetDefinition().ManualPage(), true);
-   }
-}
-
 void EffectUIHost::OnDebug(wxCommandEvent & evt)
 {
    OnApply(evt);
@@ -778,9 +709,11 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
+   mEnabled = !mEnabled;
+
    // Change the suspension state of realtime processing, though it remains
    // "active."
-   RealtimeEffectManager::Get(mProject).SetSuspended(!mEnableCb->GetValue());
+   RealtimeEffectManager::Get(mProject).SetSuspended(!mEnabled);
    UpdateControls();
 }
 
@@ -1026,6 +959,11 @@ void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
+bool EffectUIHost::IsOpenedFromEffectPanel() const
+{
+   return (mpTempProjectState == nullptr && mSupportsRealtime);
+}
+
 wxBitmap EffectUIHost::CreateBitmap(const char * const xpm[], bool up, bool pusher)
 {
    wxMemoryDC dc;
@@ -1066,72 +1004,31 @@ void EffectUIHost::UpdateControls()
       return;
    }
 
-   if (mCapturing || mDisableTransport)
+   if (IsOpenedFromEffectPanel())
    {
-      // Don't allow focus to get trapped
-      wxWindow *focus = FindFocus();
-      if (focus == mPlayBtn || focus == mEnableCb)
-      {
-         mCloseBtn->SetFocus();
-      }
+      mEnableBtn->SetBitmapLabel(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+      return;
    }
-   
+
    mApplyBtn->Enable(!mCapturing);
-   if ((mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
-       (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
-   {
-      (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
-   }
-   
+
    if (mSupportsRealtime)
    {
-      mEnableCb->Enable(!(mCapturing || mDisableTransport));
-      
-      wxBitmapButton *bb;
-      
+      mPlayToggleBtn->Enable(!(mCapturing || mDisableTransport));
+
       if (mPlaying)
       {
-         if (!mIsGUI)
-         {
-            /* i18n-hint: The access key "&P" should be the same in
-             "Stop &Playback" and "Start &Playback" */
-            mPlayToggleBtn->SetLabel(_("Stop &Playback"));
-            mPlayToggleBtn->Refresh();
-         }
-         else
-         {
-            bb = (wxBitmapButton *) mPlayBtn;
-            bb->SetBitmapLabel(mStopBM);
-            bb->SetBitmapDisabled(mStopDisabledBM);
-            bb->SetToolTip(_("Stop"));
-#if defined(__WXMAC__)
-            bb->SetName(_("Stop &Playback"));
-#else
-            bb->SetLabel(_("Stop &Playback"));
-#endif
-         }
+         /* i18n-hint: The access key "&P" should be the same in
+          "Stop &Preview" and "Start &Preview" */
+         mPlayToggleBtn->SetLabel(_("Stop &Preview"));
+         mPlayToggleBtn->Refresh();
       }
       else
       {
-         if (!mIsGUI)
-         {
-            /* i18n-hint: The access key "&P" should be the same in
-             "Stop &Playback" and "Start &Playback" */
-            mPlayToggleBtn->SetLabel(_("Start &Playback"));
-            mPlayToggleBtn->Refresh();
-         }
-         else
-         {
-            bb = (wxBitmapButton *) mPlayBtn;
-            bb->SetBitmapLabel(mPlayBM);
-            bb->SetBitmapDisabled(mPlayDisabledBM);
-            bb->SetToolTip(_("Play"));
-#if defined(__WXMAC__)
-            bb->SetName(_("Start &Playback"));
-#else
-            bb->SetLabel(_("Start &Playback"));
-#endif
-         }
+         /* i18n-hint: The access key "&P" should be the same in
+          "Stop &Preview" and "Start &Preview" */
+         mPlayToggleBtn->SetLabel(_("&Preview"));
+         mPlayToggleBtn->Refresh();
       }
    }
 }
@@ -1210,7 +1107,7 @@ void EffectUIHost::CleanupRealtime()
    mSubscription.Reset();
 
    if (mSupportsRealtime && mInitialized) {
-      if (mpTempProjectState) {
+      if (!IsOpenedFromEffectPanel()) {
          AudioIO::Get()->RemoveState(mProject, nullptr, mpTempProjectState);
          mpTempProjectState.reset();
       /*
