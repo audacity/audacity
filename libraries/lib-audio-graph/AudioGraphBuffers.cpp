@@ -20,8 +20,15 @@ AudioGraph::Buffers::Buffers(size_t blockSize)
    assert(IsRewound());
 }
 
+AudioGraph::Buffers::Buffers(
+   unsigned nChannels, size_t blockSize, size_t nBlocks,
+   size_t padding)
+{
+   Reinit(nChannels, blockSize, nBlocks, padding);
+}
+
 void AudioGraph::Buffers::Reinit(
-   unsigned nChannels, size_t blockSize, size_t nBlocks)
+   unsigned nChannels, size_t blockSize, size_t nBlocks, size_t padding)
 {
    assert(blockSize > 0);
    assert(nBlocks > 0);
@@ -29,7 +36,7 @@ void AudioGraph::Buffers::Reinit(
    mPositions.resize(nChannels);
    const auto bufferSize = blockSize * nBlocks;
    for (auto &buffer : mBuffers)
-      buffer.resize(bufferSize);
+      buffer.resize(bufferSize + padding);
    mBufferSize = bufferSize;
    mBlockSize = blockSize;
    Rewind();
