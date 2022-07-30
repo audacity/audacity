@@ -150,14 +150,12 @@ class SAMPLE_TRACK_API Mixer {
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixSameRate(size_t maxOut,
-      const unsigned char *channelFlags, SampleTrackCache &cache, sampleCount *pos);
+   size_t MixSameRate(size_t maxOut, SampleTrackCache &cache, sampleCount *pos);
 
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixVariableRates(size_t maxOut,
-      const unsigned char *channelFlags, SampleTrackCache &cache,
+   size_t MixVariableRates(size_t maxOut, SampleTrackCache &cache,
       sampleCount *pos, float *queue,
       int *queueStart, int *queueLen,
       Resample * pResample);
@@ -246,7 +244,6 @@ class SAMPLE_TRACK_API Mixer {
    // TODO -- insert effect stages here
 
    // Gain slider settings are applied late
-   std::vector<float> mGains;
 
    // Last step is accumulating results into the output buffers, with dithering
 };
