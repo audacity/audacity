@@ -148,20 +148,18 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mQueueStart( mNumInputTracks, 0 )
    , mQueueLen( mNumInputTracks, 0 )
 
-   , mInterleavedBufferSize{
-      mBufferSize * (mInterleaved ? mNumChannels : 1) }
    // PRL:  Bug2536: see other comments below for the `+ 1`
-   , mFloatBuffer( mInterleavedBufferSize + 1 )
+   , mFloatBuffer( mBufferSize + 1 )
 
    // non-interleaved
    , mTemp{ initVector<float>(mNumChannels, mBufferSize) }
    , mBuffer{ initVector<SampleBuffer>(mInterleaved ? 1 : mNumChannels,
-      [size = mInterleavedBufferSize, format = mFormat](auto &buffer){
-         buffer.Allocate(size, format);
-      }
+      [format = mFormat,
+         size = mBufferSize * (mInterleaved ? mNumChannels : 1)
+      ](auto &buffer){ buffer.Allocate(size, format); }
    )}
 
-   , mEnvValues( std::max(sQueueMaxLen, mInterleavedBufferSize) )
+   , mEnvValues( std::max(sQueueMaxLen, mBufferSize) )
    , mResample( mNumInputTracks )
    , mSpeed{ warpOptions.initialSpeed }
 

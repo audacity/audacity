@@ -224,7 +224,6 @@ class SAMPLE_TRACK_API Mixer {
    std::vector<int>     mQueueLen;
 
    // Resample into this buffer, or produce directly when not resampling
-   const size_t     mInterleavedBufferSize;
    std::vector<float>   mFloatBuffer;
 
    // Each channel's data is transformed, including application of
