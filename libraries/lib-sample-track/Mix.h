@@ -230,7 +230,6 @@ class SAMPLE_TRACK_API Mixer {
    // Each channel's data is transformed, including application of
    // gains and pans, and then (maybe many-to-one) mixer specifications
    // determine where in mTemp it is accumulated
-   const unsigned   mNumBuffers;
    std::vector<std::vector<float>> mTemp;
 
    // Final result applies dithering and interleaving

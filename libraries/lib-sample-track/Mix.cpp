@@ -153,9 +153,9 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    // PRL:  Bug2536: see other comments below for the `+ 1`
    , mFloatBuffer( mInterleavedBufferSize + 1 )
 
-   , mNumBuffers{ mInterleaved ? 1 : mNumChannels }
-   , mTemp{ initVector<float>(mNumBuffers, mInterleavedBufferSize) }
-   , mBuffer{ initVector<SampleBuffer>(mNumBuffers,
+   // non-interleaved
+   , mTemp{ initVector<float>(mNumChannels, mBufferSize) }
+   , mBuffer{ initVector<SampleBuffer>(mInterleaved ? 1 : mNumChannels,
       [size = mInterleavedBufferSize, format = mFormat](auto &buffer){
          buffer.Allocate(size, format);
       }
@@ -194,29 +194,15 @@ void Mixer::Clear()
 }
 
 static void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
-   const float *src, std::vector<std::vector<float>> &dests,
-   int len, bool interleaved)
+   const float *src, std::vector<std::vector<float>> &dests, int len)
 {
    for (unsigned int c = 0; c < numChannels; c++) {
       if (!channelFlags[c])
          continue;
-
-      float *dest;
-      unsigned skip;
-
-      if (interleaved) {
-         dest = dests[0].data() + c;
-         skip = numChannels;
-      } else {
-         dest = dests[c].data();
-         skip = 1;
-      }
-
+      float *dest = dests[c].data();
       float gain = gains[c];
-      for (int j = 0; j < len; j++) {
-         *dest += src[j] * gain;   // the actual mixing process
-         dest += skip;
-      }
+      for (int j = 0; j < len; ++j)
+         *dest++ += src[j] * gain;   // the actual mixing process
    }
 }
 
@@ -384,7 +370,7 @@ size_t Mixer::MixVariableRates(const size_t maxOut,
    }
 
    MixBuffers(mNumChannels, channelFlags, mGains.data(),
-      mFloatBuffer.data(), mTemp, out, mInterleaved);
+      mFloatBuffer.data(), mTemp, out);
 
    assert(out <= maxOut);
    return out;
@@ -447,7 +433,7 @@ size_t Mixer::MixSameRate(const size_t maxOut,
          mGains[c] = 1.0;
 
    MixBuffers(mNumChannels, channelFlags, mGains.data(),
-      mFloatBuffer.data(), mTemp, slen, mInterleaved);
+      mFloatBuffer.data(), mTemp, slen);
 
    assert(slen <= maxOut);
    return slen;
@@ -513,28 +499,18 @@ size_t Mixer::Process(const size_t maxToProcess)
          // forwards (the usual)
          mTime = std::min(std::max(t, mTime), mT1);
    }
-   if(mInterleaved) {
-      for(size_t c=0; c<mNumChannels; c++) {
-         CopySamples((constSamplePtr)(mTemp[0].data() + c),
-            floatSample,
-            mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat)),
-            mFormat,
-            maxOut,
-            mHighQuality ? gHighQualityDither : gLowQualityDither,
-            mNumChannels,
-            mNumChannels);
-      }
-   }
-   else {
-      for(size_t c=0; c<mNumBuffers; c++) {
-         CopySamples((constSamplePtr)mTemp[c].data(),
-            floatSample,
-            mBuffer[c].ptr(),
-            mFormat,
-            maxOut,
-            mHighQuality ? gHighQualityDither : gLowQualityDither);
-      }
-   }
+
+   const auto dstStride = (mInterleaved ? mNumChannels : 1);
+   for (size_t c = 0; c < mNumChannels; ++c)
+      CopySamples((constSamplePtr)mTemp[c].data(), floatSample,
+         (mInterleaved
+            ? mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat))
+            : mBuffer[c].ptr()
+         ),
+         mFormat, maxOut,
+         mHighQuality ? gHighQualityDither : gLowQualityDither,
+         1, dstStride);
+
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
    //mT += (maxOut / mRate);
 
