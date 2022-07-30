@@ -146,18 +146,19 @@ class SAMPLE_TRACK_API Mixer {
 
    void Clear();
    /*!
-    @post result: `result <= mMaxOut`
+    @post result: `result <= maxOut`
     */
-   size_t MixSameRate(int *channelFlags, SampleTrackCache &cache,
-                           sampleCount *pos);
+   size_t MixSameRate(size_t maxOut,
+      int *channelFlags, SampleTrackCache &cache, sampleCount *pos);
 
    /*!
-    @post result: `result <= mMaxOut`
+    @post result: `result <= maxOut`
     */
-   size_t MixVariableRates(int *channelFlags, SampleTrackCache &cache,
-                                sampleCount *pos, float *queue,
-                                int *queueStart, int *queueLen,
-                                Resample * pResample);
+   size_t MixVariableRates(size_t maxOut,
+      int *channelFlags, SampleTrackCache &cache,
+      sampleCount *pos, float *queue,
+      int *queueStart, int *queueLen,
+      Resample * pResample);
 
    void MakeResamplers();
 
@@ -190,7 +191,6 @@ class SAMPLE_TRACK_API Mixer {
    MixerSpec *const mMixerSpec;
 
    // Output
-   size_t              mMaxOut{};
    const unsigned   mNumChannels;
    Floats           mGains;
    const size_t     mBufferSize;

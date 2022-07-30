@@ -217,10 +217,11 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 
 }
 
-size_t Mixer::MixVariableRates(int *channelFlags, SampleTrackCache &cache,
-                                    sampleCount *pos, float *queue,
-                                    int *queueStart, int *queueLen,
-                                    Resample * pResample)
+size_t Mixer::MixVariableRates(const size_t maxOut,
+   int *channelFlags, SampleTrackCache &cache,
+   sampleCount *pos, float *queue,
+   int *queueStart, int *queueLen,
+   Resample * pResample)
 {
    const auto track = cache.GetTrack().get();
    const double trackRate = track->GetRate();
@@ -228,7 +229,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, SampleTrackCache &cache,
    const double tstep = 1.0 / trackRate;
    auto sampleSize = SAMPLE_SIZE(floatSample);
 
-   decltype(mMaxOut) out = 0;
+   size_t out = 0;
 
    /* time is floating point. Sample rate is integer. The number of samples
     * has to be integer, but the multiplication gives a float result, which we
@@ -253,7 +254,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, SampleTrackCache &cache,
    double t = ((*pos).as_long_long() +
                (backwards ? *queueLen : - *queueLen)) / trackRate;
 
-   while (out < mMaxOut) {
+   while (out < maxOut) {
       if (*queueLen < (int)sProcessLen) {
          // Shift pending portion to start of the buffer
          memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
@@ -332,14 +333,14 @@ size_t Mixer::MixVariableRates(int *channelFlags, SampleTrackCache &cache,
          thisProcessLen,
          last,
          // PRL:  Bug2536: crash in soxr happened on Mac, sometimes, when
-         // mMaxOut - out == 1 and &mFloatBuffer[out + 1] was an unmapped
+         // maxOut - out == 1 and &mFloatBuffer[out + 1] was an unmapped
          // address, because soxr, strangely, fetched an 8-byte (misaligned!)
          // value from &mFloatBuffer[out], but did nothing with it anyway,
          // in soxr_output_no_callback.
          // Now we make the bug go away by allocating a little more space in
          // the buffer than we need.
          &mFloatBuffer[out],
-         mMaxOut - out);
+         maxOut - out);
 
       const auto input_used = results.first;
       *queueStart += input_used;
@@ -369,12 +370,12 @@ size_t Mixer::MixVariableRates(int *channelFlags, SampleTrackCache &cache,
               out,
               mInterleaved);
 
-   assert(out <= mMaxOut);
+   assert(out <= maxOut);
    return out;
 }
 
-size_t Mixer::MixSameRate(int *channelFlags, SampleTrackCache &cache,
-                               sampleCount *pos)
+size_t Mixer::MixSameRate(const size_t maxOut,
+   int *channelFlags, SampleTrackCache &cache, sampleCount *pos)
 {
    const auto track = cache.GetTrack().get();
    const double t = ( *pos ).as_double() / track->GetRate();
@@ -390,7 +391,7 @@ size_t Mixer::MixSameRate(int *channelFlags, SampleTrackCache &cache,
       return 0;
    //if we're about to approach the end of the track or selection, figure out how much we need to grab
    const auto slen = limitSampleBufferSize(
-      mMaxOut,
+      maxOut,
       // PRL: maybe t and tEnd should be given as sampleCount instead to
       // avoid trouble subtracting one large value from another for a small
       // difference
@@ -432,11 +433,11 @@ size_t Mixer::MixSameRate(int *channelFlags, SampleTrackCache &cache,
    MixBuffers(mNumChannels, channelFlags, mGains.get(),
               mFloatBuffer.get(), mTemp.get(), slen, mInterleaved);
 
-   assert(slen <= mMaxOut);
+   assert(slen <= maxOut);
    return slen;
 }
 
-size_t Mixer::Process(size_t maxToProcess)
+size_t Mixer::Process(const size_t maxToProcess)
 {
    assert(maxToProcess <= BufferSize());
 
@@ -447,8 +448,6 @@ size_t Mixer::Process(size_t maxToProcess)
 
    decltype(Process(0)) maxOut = 0;
    ArrayOf<int> channelFlags{ mNumChannels };
-
-   mMaxOut = maxToProcess;
 
    Clear();
    for(size_t i=0; i<mNumInputTracks; i++) {
@@ -481,12 +480,12 @@ size_t Mixer::Process(size_t maxToProcess)
       }
       if (mbVariableRates || track->GetRate() != mRate)
          maxOut = std::max(maxOut,
-            MixVariableRates(channelFlags.get(), mInputTrack[i],
+            MixVariableRates(maxToProcess, channelFlags.get(), mInputTrack[i],
                &mSamplePos[i], mSampleQueue[i].get(),
                &mQueueStart[i], &mQueueLen[i], mResample[i].get()));
       else
          maxOut = std::max(maxOut,
-            MixSameRate(channelFlags.get(), mInputTrack[i], &mSamplePos[i]));
+            MixSameRate(maxToProcess, channelFlags.get(), mInputTrack[i], &mSamplePos[i]));
 
       double t = mSamplePos[i].as_double() / (double)track->GetRate();
       if (mT0 > mT1)
