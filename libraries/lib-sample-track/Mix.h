@@ -90,6 +90,8 @@ class SAMPLE_TRACK_API Mixer {
 
    /*!
     @pre all `inputTracks` are non-null
+    @pre any left channels in inputTracks are immediately followed by their
+       partners
     @post `BufferSize() == outBufferSize`
     */
    Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
@@ -150,7 +152,8 @@ class SAMPLE_TRACK_API Mixer {
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixSameRate(size_t maxOut, SampleTrackCache &cache, sampleCount *pos);
+   size_t MixSameRate(size_t maxOut, SampleTrackCache &cache, sampleCount *pos,
+      float &floatBuffer);
 
    /*!
     @post result: `result <= maxOut`
@@ -158,7 +161,7 @@ class SAMPLE_TRACK_API Mixer {
    size_t MixVariableRates(size_t maxOut, SampleTrackCache &cache,
       sampleCount *pos, float *queue,
       int *queueStart, int *queueLen,
-      Resample * pResample);
+      Resample * pResample, float &floatBuffer);
 
    void MakeResamplers();
 
@@ -221,8 +224,9 @@ class SAMPLE_TRACK_API Mixer {
    // For each queue, the number of available samples after the queue start
    std::vector<int>     mQueueLen;
 
-   // Resample into this buffer, or produce directly when not resampling
-   std::vector<float>   mFloatBuffer;
+   // Resample into these buffers, or produce directly when not resampling
+   // TODO: more-than-two-channels
+   std::vector<float>   mFloatBuffers[2];
 
    // Each channel's data is transformed, including application of
    // gains and pans, and then (maybe many-to-one) mixer specifications
