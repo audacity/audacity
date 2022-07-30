@@ -402,7 +402,7 @@ void PluginManager::Initialize(FileConfigFactory factory)
       // Allow the module to auto-register children
       module->AutoRegisterPlugins(*this);
    }
-   
+
    InitializePlugins();
 }
 
@@ -1035,10 +1035,17 @@ int PluginManager::GetPluginCount(PluginType type)
 
 const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID) const
 {
-   if (auto iter = mRegisteredPlugins.find(ID); iter == mRegisteredPlugins.end())
-      return nullptr;
-   else
+   if (auto iter = mRegisteredPlugins.find(ID); iter != mRegisteredPlugins.end())
       return &iter->second;
+
+   auto iter2 = make_iterator_range(mEffectPluginsCleared)
+      .find_if([&ID](const PluginDescriptor& plug) {
+         return plug.GetID() == ID;
+      });
+   if (iter2 != mEffectPluginsCleared.end())
+      return &(*iter2);
+
+   return nullptr;
 }
 
 void PluginManager::Iterator::Advance(bool incrementing)
@@ -1143,6 +1150,41 @@ ComponentInterface *PluginManager::Load(const PluginID & ID)
    return nullptr;
 }
 
+void PluginManager::ClearEffectPlugins()
+{
+   mEffectPluginsCleared.clear();
+
+   for ( auto it = mRegisteredPlugins.cbegin(); it != mRegisteredPlugins.cend(); )
+   {
+      const auto& desc = it->second;
+      const auto type = desc.GetPluginType();
+
+      if (type == PluginTypeEffect || type == PluginTypeStub)
+      {
+         mEffectPluginsCleared.push_back(desc);
+         it = mRegisteredPlugins.erase(it);
+      }
+      else
+      {
+         ++it;
+      }
+   }
+
+   // Repeat what usually happens at startup
+   // This prevents built-in plugins to appear in the plugin validation list
+   for (auto& [_, provider] : ModuleManager::Get().Providers())
+      provider->AutoRegisterPlugins(*this);
+
+   // Remove auto registered plugins from "cleared" list
+   for ( auto it = mEffectPluginsCleared.begin(); it != mEffectPluginsCleared.end(); )
+   {
+      if ( mRegisteredPlugins.find(it->GetID()) != mRegisteredPlugins.end() )
+         it = mEffectPluginsCleared.erase(it);
+      else
+         ++it;
+   }
+}
+
 std::map<wxString, std::vector<wxString>> PluginManager::CheckPluginUpdates()
 {
    wxArrayString pathIndex;
@@ -1171,8 +1213,14 @@ std::map<wxString, std::vector<wxString>> PluginManager::CheckPluginUpdates()
       for(const auto& path : paths)
       {
          const auto modulePath = path.BeforeFirst(';');
-         if(!make_iterator_range(pathIndex).contains(modulePath))
+         if (!make_iterator_range(pathIndex).contains(modulePath) ||
+            make_iterator_range(mEffectPluginsCleared).any_of([&modulePath](const PluginDescriptor& plug) {
+               return plug.GetPath().BeforeFirst(wxT(';')) == modulePath;
+            })
+         )
+         {
             newPaths[modulePath].push_back(id);
+         }
       }
    }
 
