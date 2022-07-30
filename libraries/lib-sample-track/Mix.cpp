@@ -452,42 +452,43 @@ size_t Mixer::Process(const size_t maxToProcess)
    size_t maxOut = 0;
    const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
 
+   // Decides which output buffers an input channel accumulates into
+   auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
+   (const bool *map, Track::ChannelType channel){
+      const auto end = channelFlags + numChannels;
+      std::fill(channelFlags, end, 0);
+      if (map)
+         // ignore left and right when downmixing is customized
+         std::copy(map, map + numChannels, channelFlags);
+      else switch(channel) {
+      case Track::MonoChannel:
+      default:
+         std::fill(channelFlags, end, 1);
+         break;
+      case Track::LeftChannel:
+         channelFlags[0] = 1;
+         break;
+      case Track::RightChannel:
+         if (numChannels >= 2)
+            channelFlags[1] = 1;
+         else
+            channelFlags[0] = 1;
+         break;
+      }
+      return channelFlags;
+   };
+
    Clear();
    for(size_t i=0; i<mNumInputTracks; i++) {
       const auto track = mInputTrack[i].GetTrack().get();
-      for(size_t j=0; j<mNumChannels; j++)
-         channelFlags[j] = 0;
-
-      if( mMixerSpec ) {
-         //ignore left and right when downmixing is not required
-         for(size_t j = 0; j < mNumChannels; j++ )
-            channelFlags[ j ] = mMixerSpec->mMap[ i ][ j ] ? 1 : 0;
-      }
-      else {
-         switch(track->GetChannel()) {
-         case Track::MonoChannel:
-         default:
-            for(size_t j=0; j<mNumChannels; j++)
-               channelFlags[j] = 1;
-            break;
-         case Track::LeftChannel:
-            channelFlags[0] = 1;
-            break;
-         case Track::RightChannel:
-            if (mNumChannels >= 2)
-               channelFlags[1] = 1;
-            else
-               channelFlags[0] = 1;
-            break;
-         }
-      }
+      const auto flags = findChannelFlags(
+         mMixerSpec ? mMixerSpec->mMap[i].get() : nullptr, track->GetChannel());
       const auto mixed =
       (mResampleParameters.mbVariableRates || track->GetRate() != mRate)
-         ? MixVariableRates(maxToProcess, channelFlags, mInputTrack[i],
+         ? MixVariableRates(maxToProcess, flags, mInputTrack[i],
             &mSamplePos[i], mSampleQueue[i].data(),
             &mQueueStart[i], &mQueueLen[i], mResample[i].get())
-         : MixSameRate(
-            maxToProcess, channelFlags, mInputTrack[i], &mSamplePos[i]);
+         : MixSameRate(maxToProcess, flags, mInputTrack[i], &mSamplePos[i]);
       maxOut = std::max(maxOut, mixed);
 
       double t = mSamplePos[i].as_double() / (double)track->GetRate();
