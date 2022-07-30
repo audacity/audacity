@@ -7,15 +7,7 @@
   Dominic Mazzoni
   Markus Meyer
 
-********************************************************************//**
-
-\class ArrayOf
-\brief Memory.h template class for making an array of float, bool, etc.
-
-\class ArraysOf
-\brief memory.h template class for making an array of arrays.
-
-*//********************************************************************/
+***********************************************************************/
 
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
@@ -211,11 +203,12 @@ class SAMPLE_TRACK_API Mixer {
    // INPUT
 
    // SampleTrackCaches are the source of data
-   ArrayOf<SampleTrackCache> mInputTrack;
+   std::vector<SampleTrackCache> mInputTrack;
+
    // Fetch position for source
    // mSamplePos holds for each track the next sample position not
    // yet processed.
-   ArrayOf<sampleCount> mSamplePos;
+   std::vector<sampleCount> mSamplePos;
    // There is also a double-valued fetch position with (reassignable) bounds
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)
@@ -224,38 +217,38 @@ class SAMPLE_TRACK_API Mixer {
    // BUFFERS
 
    // First intermediate buffer when resampling is needed
-   FloatBuffers     mSampleQueue;
+   std::vector<std::vector<float>> mSampleQueue;
    // Position in each queue of the start of the next block to resample
-   ArrayOf<int>     mQueueStart;
+   std::vector<int>     mQueueStart;
    // For each queue, the number of available samples after the queue start
-   ArrayOf<int>     mQueueLen;
+   std::vector<int>     mQueueLen;
 
    // Resample into this buffer, or produce directly when not resampling
    const size_t     mInterleavedBufferSize;
-   Floats           mFloatBuffer;
+   std::vector<float>   mFloatBuffer;
 
    // Each channel's data is transformed, including application of
    // gains and pans, and then (maybe many-to-one) mixer specifications
    // determine where in mTemp it is accumulated
    const unsigned   mNumBuffers;
-   ArrayOf<Floats>  mTemp;
+   std::vector<std::vector<float>> mTemp;
 
    // Final result applies dithering and interleaving
-   ArrayOf<SampleBuffer> mBuffer;
+   const std::vector<SampleBuffer> mBuffer;
 
    // TRANSFORMATION STATE
 
    // Gain envelopes are applied to input before other transformations
-   Doubles          mEnvValues;
+   std::vector<double> mEnvValues;
 
-   ArrayOf<std::unique_ptr<Resample>> mResample;
+   std::vector<std::unique_ptr<Resample>> mResample;
    // Varying scrub speed is one cause for resampling
    double           mSpeed;
 
    // TODO -- insert effect stages here
 
    // Gain slider settings are applied late
-   Floats           mGains;
+   std::vector<float> mGains;
 
    // Last step is accumulating results into the output buffers, with dithering
 };

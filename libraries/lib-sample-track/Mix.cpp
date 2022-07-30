@@ -90,6 +90,24 @@ Mixer::ResampleParameters::ResampleParameters(
    }
 }
 
+namespace {
+template<typename T, typename F> std::vector<T>
+initVector(size_t dim1, const F &f)
+{
+   std::vector<T> result( dim1 );
+   for (auto &row : result)
+      f(row);
+   return result;
+}
+
+template<typename T> std::vector<std::vector<T>>
+initVector(size_t dim1, size_t dim2)
+{
+   return initVector<std::vector<T>>(dim1,
+      [dim2](auto &row){ row.resize(dim2); });
+}
+}
+
 Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    const bool mayThrow,
    const WarpOptions &warpOptions,
@@ -126,9 +144,9 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mT1{ stopTime }
    , mTime{ startTime }
 
-   , mSampleQueue{ mNumInputTracks, sQueueMaxLen }
-   , mQueueStart( mNumInputTracks )
-   , mQueueLen( mNumInputTracks )
+   , mSampleQueue{ initVector<float>(mNumInputTracks, sQueueMaxLen) }
+   , mQueueStart( mNumInputTracks, 0 )
+   , mQueueLen( mNumInputTracks, 0 )
 
    , mInterleavedBufferSize{
       mBufferSize * (mInterleaved ? mNumChannels : 1) }
@@ -136,9 +154,14 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mFloatBuffer( mInterleavedBufferSize + 1 )
 
    , mNumBuffers{ mInterleaved ? 1 : mNumChannels }
-   , mTemp( mNumBuffers )
-   , mBuffer( mNumBuffers )
+   , mTemp{ initVector<float>(mNumBuffers, mInterleavedBufferSize) }
+   , mBuffer{ initVector<SampleBuffer>(mNumBuffers,
+      [size = mInterleavedBufferSize, format = mFormat](auto &buffer){
+         buffer.Allocate(size, format);
+      }
+   )}
 
+   , mEnvValues( std::max(sQueueMaxLen, mInterleavedBufferSize) )
    , mResample( mNumInputTracks )
    , mSpeed{ warpOptions.initialSpeed }
 
@@ -149,21 +172,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       mSamplePos[i] = inputTracks[i]->TimeToLongSamples(startTime);
    }
 
-   for (unsigned int c = 0; c < mNumBuffers; c++) {
-      mBuffer[c].Allocate(mInterleavedBufferSize, mFormat);
-      mTemp[c].reinit(mInterleavedBufferSize);
-   }
-
-   for (size_t i = 0; i<mNumInputTracks; i++) {
-      mQueueStart[i] = 0;
-      mQueueLen[i] = 0;
-   }
-
    MakeResamplers();
-
-   const auto envLen = std::max(sQueueMaxLen, mInterleavedBufferSize);
-   mEnvValues.reinit(envLen);
-
    assert(BufferSize() == outBufferSize);
 }
 
@@ -180,14 +189,13 @@ void Mixer::MakeResamplers()
 
 void Mixer::Clear()
 {
-   for (unsigned int c = 0; c < mNumBuffers; c++) {
-      memset(mTemp[c].get(), 0, mInterleavedBufferSize * sizeof(float));
-   }
+   for (auto &buffer: mTemp)
+      std::fill(buffer.begin(), buffer.end(), 0);
 }
 
 static void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
-                const float *src, Floats *dests,
-                int len, bool interleaved)
+   const float *src, std::vector<std::vector<float>> &dests,
+   int len, bool interleaved)
 {
    for (unsigned int c = 0; c < numChannels; c++) {
       if (!channelFlags[c])
@@ -197,10 +205,10 @@ static void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
       unsigned skip;
 
       if (interleaved) {
-         dest = dests[0].get() + c;
+         dest = dests[0].data() + c;
          skip = numChannels;
       } else {
-         dest = dests[c].get();
+         dest = dests[c].data();
          skip = 1;
       }
 
@@ -290,9 +298,8 @@ size_t Mixer::MixVariableRates(const size_t maxOut,
                else
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
-               track->GetEnvelopeValues(mEnvValues.get(),
-                                        getLen,
-                                        (*pos - (getLen- 1)).as_double() / trackRate);
+               track->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (*pos - (getLen - 1)).as_double() / trackRate);
                *pos -= getLen;
             }
             else {
@@ -302,9 +309,8 @@ size_t Mixer::MixVariableRates(const size_t maxOut,
                else
                   memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
-               track->GetEnvelopeValues(mEnvValues.get(),
-                                        getLen,
-                                        (*pos).as_double() / trackRate);
+               track->GetEnvelopeValues(mEnvValues.data(),
+                  getLen, (*pos).as_double() / trackRate);
 
                *pos += getLen;
             }
@@ -377,13 +383,8 @@ size_t Mixer::MixVariableRates(const size_t maxOut,
       }
    }
 
-   MixBuffers(mNumChannels,
-              channelFlags,
-              mGains.get(),
-              mFloatBuffer.get(),
-              mTemp.get(),
-              out,
-              mInterleaved);
+   MixBuffers(mNumChannels, channelFlags, mGains.data(),
+      mFloatBuffer.data(), mTemp, out, mInterleaved);
 
    assert(out <= maxOut);
    return out;
@@ -416,23 +417,23 @@ size_t Mixer::MixSameRate(const size_t maxOut,
    if (backwards) {
       auto results = cache.GetFloats(*pos - (slen - 1), slen, mMayThrow);
       if (results)
-         memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
+         memcpy(mFloatBuffer.data(), results, sizeof(float) * slen);
       else
-         memset(mFloatBuffer.get(), 0, sizeof(float) * slen);
-      track->GetEnvelopeValues(mEnvValues.get(), slen, t - (slen - 1) / mRate);
+         memset(mFloatBuffer.data(), 0, sizeof(float) * slen);
+      track->GetEnvelopeValues(mEnvValues.data(), slen, t - (slen - 1) / mRate);
       for (size_t i = 0; i < slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
-      ReverseSamples((samplePtr)mFloatBuffer.get(), floatSample, 0, slen);
+      ReverseSamples((samplePtr)mFloatBuffer.data(), floatSample, 0, slen);
 
       *pos -= slen;
    }
    else {
       auto results = cache.GetFloats(*pos, slen, mMayThrow);
       if (results)
-         memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
+         memcpy(mFloatBuffer.data(), results, sizeof(float) * slen);
       else
-         memset(mFloatBuffer.get(), 0, sizeof(float) * slen);
-      track->GetEnvelopeValues(mEnvValues.get(), slen, t);
+         memset(mFloatBuffer.data(), 0, sizeof(float) * slen);
+      track->GetEnvelopeValues(mEnvValues.data(), slen, t);
       for (size_t i = 0; i < slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
 
@@ -445,8 +446,8 @@ size_t Mixer::MixSameRate(const size_t maxOut,
       else
          mGains[c] = 1.0;
 
-   MixBuffers(mNumChannels, channelFlags, mGains.get(),
-              mFloatBuffer.get(), mTemp.get(), slen, mInterleaved);
+   MixBuffers(mNumChannels, channelFlags, mGains.data(),
+      mFloatBuffer.data(), mTemp, slen, mInterleaved);
 
    assert(slen <= maxOut);
    return slen;
@@ -498,7 +499,7 @@ size_t Mixer::Process(const size_t maxToProcess)
       )
          maxOut = std::max(maxOut,
             MixVariableRates(maxToProcess, channelFlags.get(), mInputTrack[i],
-               &mSamplePos[i], mSampleQueue[i].get(),
+               &mSamplePos[i], mSampleQueue[i].data(),
                &mQueueStart[i], &mQueueLen[i], mResample[i].get()));
       else
          maxOut = std::max(maxOut,
@@ -514,7 +515,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    }
    if(mInterleaved) {
       for(size_t c=0; c<mNumChannels; c++) {
-         CopySamples((constSamplePtr)(mTemp[0].get() + c),
+         CopySamples((constSamplePtr)(mTemp[0].data() + c),
             floatSample,
             mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat)),
             mFormat,
@@ -526,7 +527,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    }
    else {
       for(size_t c=0; c<mNumBuffers; c++) {
-         CopySamples((constSamplePtr)mTemp[c].get(),
+         CopySamples((constSamplePtr)mTemp[c].data(),
             floatSample,
             mBuffer[c].ptr(),
             mFormat,
