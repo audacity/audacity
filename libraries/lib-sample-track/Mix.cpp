@@ -449,7 +449,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    //if (mT >= mT1)
    //   return 0;
 
-   decltype(Process(0)) maxOut = 0;
+   size_t maxOut = 0;
    const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
 
    Clear();
@@ -481,16 +481,14 @@ size_t Mixer::Process(const size_t maxToProcess)
             break;
          }
       }
-      if (mResampleParameters.mbVariableRates
-         || track->GetRate() != mRate
-      )
-         maxOut = std::max(maxOut,
-            MixVariableRates(maxToProcess, channelFlags, mInputTrack[i],
-               &mSamplePos[i], mSampleQueue[i].data(),
-               &mQueueStart[i], &mQueueLen[i], mResample[i].get()));
-      else
-         maxOut = std::max(maxOut,
-            MixSameRate(maxToProcess, channelFlags, mInputTrack[i], &mSamplePos[i]));
+      const auto mixed =
+      (mResampleParameters.mbVariableRates || track->GetRate() != mRate)
+         ? MixVariableRates(maxToProcess, channelFlags, mInputTrack[i],
+            &mSamplePos[i], mSampleQueue[i].data(),
+            &mQueueStart[i], &mQueueLen[i], mResample[i].get())
+         : MixSameRate(
+            maxToProcess, channelFlags, mInputTrack[i], &mSamplePos[i]);
+      maxOut = std::max(maxOut, mixed);
 
       double t = mSamplePos[i].as_double() / (double)track->GetRate();
       if (mT0 > mT1)
