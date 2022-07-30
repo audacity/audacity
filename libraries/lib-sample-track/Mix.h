@@ -173,40 +173,82 @@ class SAMPLE_TRACK_API Mixer {
    // (Should we use SampleTrack::GetBestBlockSize instead?)
    static constexpr size_t sQueueMaxLen = 65536;
 
+   // GIVEN PARAMETERS
+
    // Input
    const size_t     mNumInputTracks;
-   ArrayOf<SampleTrackCache> mInputTrack;
-   bool             mbVariableRates;
-   const BoundedEnvelope *const mEnvelope;
-   ArrayOf<sampleCount> mSamplePos;
+   const unsigned   mNumChannels;
+
+   // Transformations
+   const size_t     mBufferSize;
+   const double     mRate; // may require resampling
+   const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
+
+   // Output
    const bool       mApplyTrackGains;
-   Doubles          mEnvValues;
+   MixerSpec *const mMixerSpec; // many-to-one mixing of channels
+   const bool       mHighQuality; // dithering
+   const sampleFormat mFormat; // output format also influences dithering
+   const bool       mInterleaved;
+
+   // General
+   const bool       mMayThrow;
+
+   // DERIVED PARAMETERS
+   // Resampling, sometimes, after gain envelope
+   bool             mbVariableRates{ false };
+   std::vector<double> mMinFactor, mMaxFactor;
+
+   // INPUT
+
+   // SampleTrackCaches are the source of data
+   ArrayOf<SampleTrackCache> mInputTrack;
+   // Fetch position for source
+   // mSamplePos holds for each track the next sample position not
+   // yet processed.
+   ArrayOf<sampleCount> mSamplePos;
+   // There is also a double-valued fetch position with (reassignable) bounds
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
-   ArrayOf<std::unique_ptr<Resample>> mResample;
+
+   // BUFFERS
+
+   // First intermediate buffer when resampling is needed
    FloatBuffers     mSampleQueue;
+   // Position in each queue of the start of the next block to resample
    ArrayOf<int>     mQueueStart;
+   // For each queue, the number of available samples after the queue start
    ArrayOf<int>     mQueueLen;
-   MixerSpec *const mMixerSpec;
 
-   // Output
-   const unsigned   mNumChannels;
-   Floats           mGains;
-   const size_t     mBufferSize;
-   const unsigned   mNumBuffers;
+   // Resample into this buffer, or produce directly when not resampling
    const size_t     mInterleavedBufferSize;
-   const sampleFormat mFormat;
-   const bool       mInterleaved;
-   ArrayOf<SampleBuffer> mBuffer;
-   ArrayOf<Floats>  mTemp;
    Floats           mFloatBuffer;
-   const double     mRate;
-   double           mSpeed;
-   const bool       mHighQuality;
-   std::vector<double> mMinFactor, mMaxFactor;
 
-   const bool       mMayThrow;
+   // Each channel's data is transformed, including application of
+   // gains and pans, and then (maybe many-to-one) mixer specifications
+   // determine where in mTemp it is accumulated
+   const unsigned   mNumBuffers;
+   ArrayOf<Floats>  mTemp;
+
+   // Final result applies dithering and interleaving
+   ArrayOf<SampleBuffer> mBuffer;
+
+   // TRANSFORMATION STATE
+
+   // Gain envelopes are applied to input before other transformations
+   Doubles          mEnvValues;
+
+   ArrayOf<std::unique_ptr<Resample>> mResample;
+   // Varying scrub speed is one cause for resampling
+   double           mSpeed;
+
+   // TODO -- insert effect stages here
+
+   // Gain slider settings are applied late
+   Floats           mGains;
+
+   // Last step is accumulating results into the output buffers, with dithering
 };
 
 #endif

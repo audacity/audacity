@@ -70,46 +70,52 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    double outRate, sampleFormat outFormat,
    const bool highQuality, MixerSpec *const mixerSpec,
    const bool applyTrackGains
-)  : mNumInputTracks { inputTracks.size() }
-   , mInputTrack( mNumInputTracks )
+)  : mNumInputTracks{ inputTracks.size() }
+   , mNumChannels{ numOutChannels }
+
+   , mBufferSize{ outBufferSize }
+   , mRate{ outRate }
    , mEnvelope{ warpOptions.envelope }
-   // mSamplePos holds for each track the next sample position not
-   // yet processed.
-   , mSamplePos( mNumInputTracks )
+
    , mApplyTrackGains{ applyTrackGains }
-   , mT0{ startTime }
-   , mT1{ stopTime }
-   , mTime{ startTime }
-   , mResample( mNumInputTracks )
-   , mSampleQueue{ mNumInputTracks, sQueueMaxLen }
-   // Position in each queue of the start of the next block to resample.
-   , mQueueStart( mNumInputTracks )
-   // For each queue, the number of available samples after the queue start.
-   , mQueueLen( mNumInputTracks )
    , mMixerSpec{
-      ( mixerSpec && mixerSpec->GetNumChannels() == numOutChannels &&
+      ( mixerSpec && mixerSpec->GetNumChannels() == mNumChannels &&
          mixerSpec->GetNumTracks() == mNumInputTracks
       )  ? mixerSpec
          : nullptr
    }
-   , mNumChannels{ numOutChannels }
-   , mGains( mNumChannels )
-   , mBufferSize{ outBufferSize }
-   , mNumBuffers{ outInterleaved ? 1 : mNumChannels }
-   , mInterleavedBufferSize{
-      mBufferSize * (outInterleaved ? mNumChannels : 1) }
+   , mHighQuality{ highQuality }
    , mFormat{ outFormat }
    , mInterleaved{ outInterleaved }
-   , mBuffer( mNumBuffers )
-   , mTemp( mNumBuffers )
-   // PRL:  Bug2536: see other comments below for the `+ 1`
-   , mFloatBuffer( mInterleavedBufferSize + 1 )
-   , mRate{ outRate }
-   , mSpeed{ warpOptions.initialSpeed }
-   , mHighQuality{ highQuality }
+
+   , mMayThrow{ mayThrow }
+
    , mMinFactor( mNumInputTracks )
    , mMaxFactor( mNumInputTracks )
-   , mMayThrow{ mayThrow }
+
+   , mInputTrack( mNumInputTracks )
+   , mSamplePos( mNumInputTracks )
+   , mT0{ startTime }
+   , mT1{ stopTime }
+   , mTime{ startTime }
+
+   , mSampleQueue{ mNumInputTracks, sQueueMaxLen }
+   , mQueueStart( mNumInputTracks )
+   , mQueueLen( mNumInputTracks )
+
+   , mInterleavedBufferSize{
+      mBufferSize * (mInterleaved ? mNumChannels : 1) }
+   // PRL:  Bug2536: see other comments below for the `+ 1`
+   , mFloatBuffer( mInterleavedBufferSize + 1 )
+
+   , mNumBuffers{ mInterleaved ? 1 : mNumChannels }
+   , mTemp( mNumBuffers )
+   , mBuffer( mNumBuffers )
+
+   , mResample( mNumInputTracks )
+   , mSpeed{ warpOptions.initialSpeed }
+
+   , mGains( mNumChannels )
 {
    for(size_t i=0; i<mNumInputTracks; i++) {
       mInputTrack[i].SetTrack(inputTracks[i]);
