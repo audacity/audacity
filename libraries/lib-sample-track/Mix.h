@@ -151,13 +151,13 @@ class SAMPLE_TRACK_API Mixer {
     @post result: `result <= maxOut`
     */
    size_t MixSameRate(size_t maxOut,
-      int *channelFlags, SampleTrackCache &cache, sampleCount *pos);
+      const unsigned char *channelFlags, SampleTrackCache &cache, sampleCount *pos);
 
    /*!
     @post result: `result <= maxOut`
     */
    size_t MixVariableRates(size_t maxOut,
-      int *channelFlags, SampleTrackCache &cache,
+      const unsigned char *channelFlags, SampleTrackCache &cache,
       sampleCount *pos, float *queue,
       int *queueStart, int *queueLen,
       Resample * pResample);

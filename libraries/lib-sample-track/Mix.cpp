@@ -191,7 +191,8 @@ void Mixer::Clear()
       std::fill(buffer.begin(), buffer.end(), 0);
 }
 
-static void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
+static void MixBuffers(unsigned numChannels,
+   const unsigned char *channelFlags, const float *gains,
    const float *src, std::vector<std::vector<float>> &dests, int len)
 {
    for (unsigned int c = 0; c < numChannels; c++) {
@@ -225,7 +226,7 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 }
 
 size_t Mixer::MixVariableRates(const size_t maxOut,
-   int *channelFlags, SampleTrackCache &cache,
+   const unsigned char *channelFlags, SampleTrackCache &cache,
    sampleCount *pos, float *queue,
    int *queueStart, int *queueLen,
    Resample * pResample)
@@ -375,7 +376,7 @@ size_t Mixer::MixVariableRates(const size_t maxOut,
 }
 
 size_t Mixer::MixSameRate(const size_t maxOut,
-   int *channelFlags, SampleTrackCache &cache, sampleCount *pos)
+   const unsigned char *channelFlags, SampleTrackCache &cache, sampleCount *pos)
 {
    const auto track = cache.GetTrack().get();
    const double t = ( *pos ).as_double() / track->GetRate();
@@ -437,6 +438,8 @@ size_t Mixer::MixSameRate(const size_t maxOut,
    return slen;
 }
 
+#define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
+
 size_t Mixer::Process(const size_t maxToProcess)
 {
    assert(maxToProcess <= BufferSize());
@@ -447,7 +450,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    //   return 0;
 
    decltype(Process(0)) maxOut = 0;
-   ArrayOf<int> channelFlags{ mNumChannels };
+   const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
 
    Clear();
    for(size_t i=0; i<mNumInputTracks; i++) {
@@ -482,12 +485,12 @@ size_t Mixer::Process(const size_t maxToProcess)
          || track->GetRate() != mRate
       )
          maxOut = std::max(maxOut,
-            MixVariableRates(maxToProcess, channelFlags.get(), mInputTrack[i],
+            MixVariableRates(maxToProcess, channelFlags, mInputTrack[i],
                &mSamplePos[i], mSampleQueue[i].data(),
                &mQueueStart[i], &mQueueLen[i], mResample[i].get()));
       else
          maxOut = std::max(maxOut,
-            MixSameRate(maxToProcess, channelFlags.get(), mInputTrack[i], &mSamplePos[i]));
+            MixSameRate(maxToProcess, channelFlags, mInputTrack[i], &mSamplePos[i]));
 
       double t = mSamplePos[i].as_double() / (double)track->GetRate();
       if (mT0 > mT1)
