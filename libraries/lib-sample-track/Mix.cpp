@@ -61,6 +61,35 @@ Mixer::WarpOptions::WarpOptions(double min, double max, double initial)
    }
 }
 
+Mixer::ResampleParameters::ResampleParameters(
+   const SampleTrackConstArray &inputTracks, double rate,
+   const WarpOptions &options)
+{
+   mMinFactor.reserve(inputTracks.size());
+   mMaxFactor.reserve(inputTracks.size());
+   for (const auto &pTrack : inputTracks) {
+      double factor = (rate / pTrack->GetRate());
+      if (const auto envelope = options.envelope) {
+         // variable rate resampling
+         mbVariableRates = true;
+         mMinFactor.push_back(factor / envelope->GetRangeUpper());
+         mMaxFactor.push_back(factor / envelope->GetRangeLower());
+      }
+      else if (options.minSpeed > 0.0 && options.maxSpeed > 0.0) {
+         // variable rate resampling
+         mbVariableRates = true;
+         mMinFactor.push_back(factor / options.maxSpeed);
+         mMaxFactor.push_back(factor / options.minSpeed);
+      }
+      else {
+         // constant rate resampling
+         mbVariableRates = false;
+         mMinFactor.push_back(factor);
+         mMaxFactor.push_back(factor);
+      }
+   }
+}
+
 Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    const bool mayThrow,
    const WarpOptions &warpOptions,
@@ -76,6 +105,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mBufferSize{ outBufferSize }
    , mRate{ outRate }
    , mEnvelope{ warpOptions.envelope }
+   , mResampleParameters{ inputTracks, mRate, warpOptions }
 
    , mApplyTrackGains{ applyTrackGains }
    , mMixerSpec{
@@ -89,9 +119,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mInterleaved{ outInterleaved }
 
    , mMayThrow{ mayThrow }
-
-   , mMinFactor( mNumInputTracks )
-   , mMaxFactor( mNumInputTracks )
 
    , mInputTrack( mNumInputTracks )
    , mSamplePos( mNumInputTracks )
@@ -128,25 +155,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    }
 
    for (size_t i = 0; i<mNumInputTracks; i++) {
-      double factor = (mRate / mInputTrack[i].GetTrack()->GetRate());
-      if (mEnvelope) {
-         // variable rate resampling
-         mbVariableRates = true;
-         mMinFactor[i] = factor / mEnvelope->GetRangeUpper();
-         mMaxFactor[i] = factor / mEnvelope->GetRangeLower();
-      }
-      else if (warpOptions.minSpeed > 0.0 && warpOptions.maxSpeed > 0.0) {
-         // variable rate resampling
-         mbVariableRates = true;
-         mMinFactor[i] = factor / warpOptions.maxSpeed;
-         mMaxFactor[i] = factor / warpOptions.minSpeed;
-      }
-      else {
-         // constant rate resampling
-         mbVariableRates = false;
-         mMinFactor[i] = mMaxFactor[i] = factor;
-      }
-
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
    }
@@ -166,7 +174,8 @@ Mixer::~Mixer()
 void Mixer::MakeResamplers()
 {
    for (size_t i = 0; i < mNumInputTracks; i++)
-      mResample[i] = std::make_unique<Resample>(mHighQuality, mMinFactor[i], mMaxFactor[i]);
+      mResample[i] = std::make_unique<Resample>(mHighQuality,
+         mResampleParameters.mMinFactor[i], mResampleParameters.mMaxFactor[i]);
 }
 
 void Mixer::Clear()
@@ -484,7 +493,9 @@ size_t Mixer::Process(const size_t maxToProcess)
             break;
          }
       }
-      if (mbVariableRates || track->GetRate() != mRate)
+      if (mResampleParameters.mbVariableRates
+         || track->GetRate() != mRate
+      )
          maxOut = std::max(maxOut,
             MixVariableRates(maxToProcess, channelFlags.get(), mInputTrack[i],
                &mSamplePos[i], mSampleQueue[i].get(),

@@ -83,11 +83,21 @@ class SAMPLE_TRACK_API Mixer {
        double initialSpeed{ 1.0 };
     };
 
+   // Information derived from WarpOptions and other data
+   struct ResampleParameters {
+      ResampleParameters(
+         const SampleTrackConstArray &inputTracks, double rate,
+         const WarpOptions &options);
+      bool             mbVariableRates{ false };
+      std::vector<double> mMinFactor, mMaxFactor;
+   };
+
     //
    // Constructor / Destructor
    //
 
    /*!
+    @pre all `inputTracks` are non-null
     @post `BufferSize() == outBufferSize`
     */
    Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
@@ -181,8 +191,11 @@ class SAMPLE_TRACK_API Mixer {
 
    // Transformations
    const size_t     mBufferSize;
+   // Resampling, as needed, after gain envelope
    const double     mRate; // may require resampling
    const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
+   // derived parameters
+   const ResampleParameters mResampleParameters;
 
    // Output
    const bool       mApplyTrackGains;
@@ -194,10 +207,6 @@ class SAMPLE_TRACK_API Mixer {
    // General
    const bool       mMayThrow;
 
-   // DERIVED PARAMETERS
-   // Resampling, sometimes, after gain envelope
-   bool             mbVariableRates{ false };
-   std::vector<double> mMinFactor, mMaxFactor;
 
    // INPUT
 
