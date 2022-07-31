@@ -23,6 +23,7 @@
 
 #include "Mix.h"
 
+#include <algorithm>
 #include <cmath>
 
 #include "Envelope.h"
@@ -457,6 +458,10 @@ size_t Mixer::Process(const size_t maxToProcess)
       return channelFlags;
    };
 
+   auto newTime = mTime;
+   // backwards (as possibly in scrubbing)
+   const auto backwards = (mT0 > mT1);
+
    Clear();
    for (size_t i = 0; i < mNumInputTracks; ++i) {
       const auto track = mInputTrack[i].GetTrack().get();
@@ -467,6 +472,11 @@ size_t Mixer::Process(const size_t maxToProcess)
             &mQueueStart[i], &mQueueLen[i], mResample[i].get())
          : MixSameRate(maxToProcess, mInputTrack[i], &mSamplePos[i]);
       maxOut = std::max(maxOut, mixed);
+      auto newT = mSamplePos[i].as_double() / (double)track->GetRate();
+      if (backwards)
+         newTime = std::min(newTime, newT);
+      else
+         newTime = std::max(newTime, newT);
 
       if (mApplyTrackGains)
          for (size_t c = 0; c < mNumChannels; ++c)
@@ -475,14 +485,12 @@ size_t Mixer::Process(const size_t maxToProcess)
       const auto flags = findChannelFlags(
          mMixerSpec ? mMixerSpec->mMap[i].get() : nullptr, track->GetChannel());
       MixBuffers(mNumChannels, flags, gains, mFloatBuffer.data(), mTemp, mixed);
-      double t = mSamplePos[i].as_double() / (double)track->GetRate();
-      if (mT0 > mT1)
-         // backwards (as possibly in scrubbing)
-         mTime = std::max(std::min(t, mTime), mT1);
-      else
-         // forwards (the usual)
-         mTime = std::min(std::max(t, mTime), mT1);
    }
+
+   if (backwards)
+      mTime = std::clamp(newTime, mT1, mTime);
+   else
+      mTime = std::clamp(newTime, mTime, mT1);
 
    const auto dstStride = (mInterleaved ? mNumChannels : 1);
    for (size_t c = 0; c < mNumChannels; ++c)
@@ -544,9 +552,9 @@ void Mixer::Reposition(double t, bool bSkipping)
    mTime = t;
    const bool backwards = (mT1 < mT0);
    if (backwards)
-      mTime = std::max(mT1, (std::min(mT0, mTime)));
+      mTime = std::clamp(mTime, mT1, mT0);
    else
-      mTime = std::max(mT0, (std::min(mT1, mTime)));
+      mTime = std::clamp(mTime, mT0, mT1);
 
    for(size_t i=0; i<mNumInputTracks; i++) {
       mSamplePos[i] = mInputTrack[i].GetTrack()->TimeToLongSamples(mTime);
