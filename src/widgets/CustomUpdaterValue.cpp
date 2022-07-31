@@ -40,9 +40,9 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
       // Make a tick only if the value is strictly between the bounds
       double min = std::min(mMin, mMax);
       double max = std::max(mMin, mMax);
-      if (value <= min && !mLabelEdges || value < min)
+      if ((value <= min && !mLabelEdges) || value < min)
          return false;
-      if (value >= max && !mLabelEdges || value > max)
+      if ((value >= max && !mLabelEdges) || value > max)
          return false;
 
       int mid = (int)(mLength * ((mMin - value) / (mMin - mMax)) + 0.5);
