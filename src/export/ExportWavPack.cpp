@@ -80,6 +80,7 @@ ExportWavPackOptions::~ExportWavPackOptions()
 
 const TranslatableStrings ExportQualityNames{
    XO("Low Quality (Fast)") ,
+   XO("Normal Quality") ,
    XO("High Quality (Slow)") ,
    XO("Very High Quality (Slowest)") ,
 };
@@ -88,6 +89,7 @@ const std::vector< int > ExportQualityValues{
    0,
    1,
    2,
+   3,
 };
 
 namespace {
@@ -315,10 +317,10 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
    if (quality == 0) {
       config.flags |= CONFIG_FAST_FLAG;
-   } else if (quality == 1) {
+   } else if (quality == 2) {
       config.flags |= CONFIG_HIGH_FLAG;
-   } else {
-      config.flags |= CONFIG_VERY_HIGH_FLAG;
+   } else if (quality == 3) {
+      config.flags |= CONFIG_HIGH_FLAG | CONFIG_VERY_HIGH_FLAG;
    }
 
    if (hybridMode) {
