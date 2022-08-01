@@ -893,8 +893,8 @@ struct LadspaEffect::Instance
 {
    using PerTrackEffect::Instance::Instance;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
+      ChannelNames chanMap) override;
+   bool ProcessFinalize() noexcept override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -963,7 +963,7 @@ sampleCount LadspaEffect::Instance::GetLatency(
 }
 
 bool LadspaEffect::Instance::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, ChannelNames)
 {
    /* Instantiate the plugin */
    if (!mReady) {
@@ -977,8 +977,9 @@ bool LadspaEffect::Instance::ProcessInitialize(
    return true;
 }
 
-bool LadspaEffect::Instance::ProcessFinalize()
+bool LadspaEffect::Instance::ProcessFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    if (mReady) {
       mReady = false;
       GetEffect().FreeInstance(mMaster);
@@ -986,6 +987,7 @@ bool LadspaEffect::Instance::ProcessFinalize()
    }
 
    return true;
+});
 }
 
 size_t LadspaEffect::Instance::ProcessBlock(EffectSettings &,

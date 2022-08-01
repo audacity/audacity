@@ -86,7 +86,7 @@ sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
 
 // Start of destructive processing path
 bool LV2Instance::ProcessInitialize(EffectSettings &settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
    MakeMaster(settings, sampleRate, false);
    if (!mMaster)

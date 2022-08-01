@@ -192,12 +192,12 @@ struct EffectReverb::Instance
    {}
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-   bool ProcessFinalize(void) override; // not every effect needs this
+   bool ProcessFinalize(void) noexcept override;
 
    // Realtime section
 
@@ -307,7 +307,7 @@ auto EffectReverb::RealtimeSupport() const -> RealtimeSince
 static size_t BLOCK = 16384;
 
 bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
    return InstanceInit(settings,
       sampleRate, mMaster, chanMap, /* forceStereo = */ false);
@@ -350,7 +350,7 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
    return true;
 }
 
-bool EffectReverb::Instance::ProcessFinalize()
+bool EffectReverb::Instance::ProcessFinalize() noexcept
 {
    return true;
 }

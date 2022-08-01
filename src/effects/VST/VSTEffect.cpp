@@ -999,7 +999,7 @@ bool VSTEffect::IsReady()
 }
 
 bool VSTEffect::ProcessInitialize(
-   EffectSettings &, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &, double sampleRate, ChannelNames)
 {
    return DoProcessInitialize(sampleRate);
 }
@@ -1029,13 +1029,15 @@ bool VSTEffect::DoProcessInitialize(double sampleRate)
    return true;
 }
 
-bool VSTEffect::ProcessFinalize()
+bool VSTEffect::ProcessFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    mReady = false;
 
    PowerOff();
 
    return true;
+});
 }
 
 size_t VSTEffect::ProcessBlock(EffectSettings &,
@@ -1066,7 +1068,7 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
 
 bool VSTEffect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, sampleRate, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, nullptr);
 }
 
 bool VSTEffect::RealtimeAddProcessor(
@@ -1092,7 +1094,7 @@ bool VSTEffect::RealtimeAddProcessor(
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
+   if (!slave->ProcessInitialize(settings, sampleRate, nullptr))
       return false;
 
    mSlaves.emplace_back(move(slave));

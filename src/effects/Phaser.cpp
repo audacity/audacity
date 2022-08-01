@@ -140,7 +140,7 @@ unsigned EffectPhaser::GetAudioOutCount() const
 }
 
 bool EffectPhaser::ProcessInitialize(
-   EffectSettings &, double sampleRate, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(mMaster, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)

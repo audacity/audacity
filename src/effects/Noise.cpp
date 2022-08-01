@@ -102,7 +102,7 @@ unsigned EffectNoise::GetAudioOutCount() const
 }
 
 bool EffectNoise::ProcessInitialize(EffectSettings &,
-   double sampleRate, sampleCount, ChannelNames)
+   double sampleRate, ChannelNames)
 {
    mSampleRate = sampleRate;
    return true;

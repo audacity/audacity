@@ -79,7 +79,7 @@ size_t AudioUnitInstance::GetTailSize() const
 #endif
 
 bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
    StoreSettings(GetSettings(settings));
 
@@ -112,7 +112,7 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
    return true;
 }
 
-bool AudioUnitInstance::ProcessFinalize()
+bool AudioUnitInstance::ProcessFinalize() noexcept
 {
    mOutputList.reset();
    mInputList.reset();
@@ -157,7 +157,7 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings &,
 bool AudioUnitInstance::RealtimeInitialize(
    EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, sampleRate, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, nullptr);
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
@@ -181,7 +181,7 @@ bool AudioUnitInstance::RealtimeAddProcessor(
 
    if (!slave->StoreSettings(GetSettings(settings)))
       return false;
-   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
+   if (!slave->ProcessInitialize(settings, sampleRate, nullptr))
       return false;
    if (uSlave)
       mSlaves.push_back(move(uSlave));

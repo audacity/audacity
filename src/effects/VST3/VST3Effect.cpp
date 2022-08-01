@@ -599,7 +599,7 @@ sampleCount VST3Effect::GetLatency() const
 }
 
 bool VST3Effect::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, ChannelNames)
 {
    if(mSetup.sampleRate != sampleRate)
    {
@@ -622,12 +622,14 @@ bool VST3Effect::ProcessInitialize(
    return false;
 }
 
-bool VST3Effect::ProcessFinalize()
+bool VST3Effect::ProcessFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    using namespace Steinberg;
    mActive = false;
    mAudioProcessor->setProcessing(false);
    return mEffectComponent->setActive(false) == Steinberg::kResultOk;
+});
 }
 
 namespace
@@ -764,7 +766,7 @@ bool VST3Effect::RealtimeAddProcessor(
       if(!SetupProcessing(*effect->mEffectComponent.get(), effect->mSetup))
          return false;
       
-      if(!effect->ProcessInitialize(settings, sampleRate, {0}, nullptr))
+      if(!effect->ProcessInitialize(settings, sampleRate, nullptr))
          throw std::runtime_error { "VST3 realtime initialization failed" };
 
       mRealtimeGroupProcessors.push_back(std::move(effect));

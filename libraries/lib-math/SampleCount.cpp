@@ -10,7 +10,6 @@
 #include "SampleCount.h"
 
 #include <algorithm>
-#include <limits>
 
 #include <wx/debug.h>
 
