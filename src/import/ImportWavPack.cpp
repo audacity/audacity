@@ -24,6 +24,7 @@
 #include "ImportPlugin.h"
 
 #include<wx/string.h>
+#include<wx/log.h>
 #include<stdlib.h>
 #include<wavpack/wavpack.h>
 
@@ -104,11 +105,12 @@ TranslatableString WavPackImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath &filename, AudacityProject*)
 {
    char errMessage[100]; // To hold possible error message
-   int flags = OPEN_WVC | OPEN_FILE_UTF8 | OPEN_TAGS;
+   int flags = OPEN_WVC | OPEN_FILE_UTF8 | OPEN_TAGS | OPEN_DSD_AS_PCM | OPEN_NORMALIZE;
    WavpackContext *wavpackContext = WavpackOpenFileInput(filename, errMessage, flags, 0);
    
    if (!wavpackContext) {
       // Some error occured(e.g. File not found or is invalid)
+      wxLogDebug("WavpackOpenFileInput() failed on file %s, error = %s", filename, errMessage);
       return nullptr;
    }
 
