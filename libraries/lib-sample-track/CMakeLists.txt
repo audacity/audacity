@@ -21,11 +21,13 @@ set( SOURCES
    SampleTrack.h
    SampleTrackCache.cpp
    SampleTrackCache.h
+   SampleTrackSource.cpp
+   SampleTrackSource.h
    Mix.cpp
    Mix.h
 )
 set( LIBRARIES
-   lib-math-interface
+   lib-audio-graph-interface
    lib-track-interface
    PRIVATE
    wxBase

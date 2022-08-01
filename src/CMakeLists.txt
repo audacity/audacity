@@ -315,6 +315,8 @@ list( APPEND SOURCES
       WaveTrack.cpp
       WaveTrack.h
       WaveTrackLocation.h
+      WaveTrackSink.cpp
+      WaveTrackSink.h
       WrappedType.cpp
       WrappedType.h
 
@@ -1516,6 +1518,7 @@ set( AUDACITY_LIBRARIES
    lib-module-manager-interface
    lib-project-history-interface
    lib-graphics-interface
+   lib-audio-graph
 )
 
 if (${_OPT}use_ffmpeg)
