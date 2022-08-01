@@ -95,6 +95,9 @@ class SAMPLE_TRACK_API Mixer {
          bool highQuality = true, MixerSpec *mixerSpec = nullptr,
          bool applytTrackGains = true);
 
+   Mixer(const Mixer&) = delete;
+   Mixer &operator=(const Mixer&) = delete;
+
    virtual ~ Mixer();
 
    //
