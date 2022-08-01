@@ -20,7 +20,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <type_traits>
 
 #include "Envelope.h"
 #include "SampleTrack.h"
@@ -134,11 +133,9 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mQueueStart( mNumInputTracks, 0 )
    , mQueueLen( mNumInputTracks, 0 )
 
-   // PRL:  Bug2536: see other comments below for the `+ 1`
-   , mFloatBuffers{
-      std::vector<float>(mBufferSize + 1),
-      std::vector<float>(mBufferSize + 1),
-   }
+   // PRL:  Bug2536: see other comments below for the last, padding argument
+   // TODO: more-than-two-channels
+   , mFloatBuffers{ 2, mBufferSize, 1, 1 }
 
    // non-interleaved
    , mTemp{ initVector<float>(mNumChannels, mBufferSize) }
@@ -472,7 +469,7 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    Clear();
    // TODO: more-than-two-channels
-   auto maxChannels = std::extent_v<decltype(mFloatBuffers)>;
+   auto maxChannels = mFloatBuffers.Channels();
 
    for (size_t i = 0; i < mNumInputTracks;) {
       const auto leader = mInputTrack[i].GetTrack().get();
@@ -488,8 +485,7 @@ size_t Mixer::Process(const size_t maxToProcess)
       {
       const auto mixed = stackAllocate(size_t, maxChannels);
       for (size_t j = 0; j < limit; ++j) {
-         const auto pFloat = mFloatBuffers[j].data();
-         assert(pFloat); // see constructor
+         const auto pFloat = &mFloatBuffers.GetWritePosition(j);
          auto &result = mixed[j];
          const auto ii = i + j;
          const auto track = mInputTrack[ii].GetTrack().get();
@@ -507,7 +503,7 @@ size_t Mixer::Process(const size_t maxToProcess)
       }
       // Another pass in case channels of a track did not produce equal numbers
       for (size_t j = 0; j < limit; ++j) {
-         const auto pFloat = mFloatBuffers[j].data();
+         const auto pFloat = &mFloatBuffers.GetWritePosition(j);
          const auto result = mixed[j];
          ZeroFill(result, maxTrack, *pFloat);
       }
@@ -516,8 +512,7 @@ size_t Mixer::Process(const size_t maxToProcess)
       // Insert effect stages here!  Passing them all channels of the track
 
       for (size_t j = 0; j < limit; ++j) {
-         const auto pFloat = mFloatBuffers[j].data();
-         assert(pFloat); // see constructor
+         const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
          const auto ii = i + j;
          const auto track = mInputTrack[ii].GetTrack().get();
          if (mApplyTrackGains)

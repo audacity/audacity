@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
+#include "AudioGraphBuffers.h"
 #include "GlobalVariable.h"
 #include "SampleFormat.h"
 #include <functional>
@@ -246,8 +247,7 @@ class SAMPLE_TRACK_API Mixer {
    std::vector<int>     mQueueLen;
 
    // Resample into these buffers, or produce directly when not resampling
-   // TODO: more-than-two-channels
-   std::vector<float>   mFloatBuffers[2];
+   AudioGraph::Buffers mFloatBuffers;
 
    // Each channel's data is transformed, including application of
    // gains and pans, and then (maybe many-to-one) mixer specifications
