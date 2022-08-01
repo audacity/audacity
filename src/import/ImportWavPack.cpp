@@ -257,12 +257,14 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             itemLen = WavpackGetTagItemIndexed(mWavPackContext, i, NULL, 0);
             std::string item (itemLen + 1, '\0');
             WavpackGetTagItemIndexed(mWavPackContext, i, item.data(), itemLen + 1);
+            item.resize(itemLen);           // remove terminating NULL from std::string
             name = audacity::ToWXString(item);
 
             // Get the actual length of the value for this item key
             valueLen = WavpackGetTagItem(mWavPackContext, item.data(), NULL, 0);
             std::string itemValue (valueLen + 1, '\0');
             WavpackGetTagItem(mWavPackContext, item.data(), itemValue.data(), valueLen + 1);
+            itemValue.resize(valueLen);     // remove terminating NULL from std::string
 
             if (apeTag) {
                for (int j = 0; j < valueLen; j++) {
