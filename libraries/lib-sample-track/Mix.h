@@ -152,16 +152,12 @@ class SAMPLE_TRACK_API Mixer {
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixSameRate(size_t maxOut, SampleTrackCache &cache, sampleCount *pos,
-      float &floatBuffer);
+   size_t MixSameRate(size_t ii, size_t maxOut, float &floatBuffer);
 
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixVariableRates(size_t maxOut, SampleTrackCache &cache,
-      sampleCount *pos, float *queue,
-      int *queueStart, int *queueLen,
-      Resample * pResample, float &floatBuffer);
+   size_t MixVariableRates(size_t ii, size_t maxOut, float &floatBuffer);
 
    void MakeResamplers();
 

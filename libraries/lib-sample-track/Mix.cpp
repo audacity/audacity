@@ -229,11 +229,16 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 
 }
 
-size_t Mixer::MixVariableRates(const size_t maxOut, SampleTrackCache &cache,
-   sampleCount *pos, float *queue,
-   int *queueStart, int *queueLen,
-   Resample * pResample, float &floatBuffer)
+size_t Mixer::MixVariableRates(
+   size_t ii, const size_t maxOut, float &floatBuffer)
 {
+   auto &cache = mInputTrack[ii];
+   const auto pos = &mSamplePos[ii];
+   const auto queue = mSampleQueue[ii].data();
+   const auto queueStart = &mQueueStart[ii];
+   const auto queueLen = &mQueueLen[ii];
+   const auto pResample = mResample[ii].get();
+
    const auto pFloat = &floatBuffer;
    const auto track = cache.GetTrack().get();
    const double trackRate = track->GetRate();
@@ -367,9 +372,12 @@ size_t Mixer::MixVariableRates(const size_t maxOut, SampleTrackCache &cache,
    return out;
 }
 
-size_t Mixer::MixSameRate(const size_t maxOut,
-   SampleTrackCache &cache, sampleCount *pos, float &floatBuffer)
+size_t Mixer::MixSameRate(size_t ii, const size_t maxOut,
+   float &floatBuffer)
 {
+   auto &cache = mInputTrack[ii];
+   const auto pos = &mSamplePos[ii];
+
    const auto pFloat = &floatBuffer;
    const auto track = cache.GetTrack().get();
    const double t = ( *pos ).as_double() / track->GetRate();
@@ -492,12 +500,8 @@ size_t Mixer::Process(const size_t maxToProcess)
          const auto track = mInputTrack[ii].GetTrack().get();
          result =
          (mResampleParameters.mbVariableRates || track->GetRate() != mRate)
-            ? MixVariableRates(maxToProcess, mInputTrack[ii],
-               &mSamplePos[ii], mSampleQueue[ii].data(),
-               &mQueueStart[ii], &mQueueLen[ii], mResample[ii].get(),
-               *pFloat)
-            : MixSameRate(maxToProcess, mInputTrack[ii], &mSamplePos[ii],
-               *pFloat);
+            ? MixVariableRates(ii, maxToProcess, *pFloat)
+            : MixSameRate(ii, maxToProcess, *pFloat);
          maxOut = std::max(maxOut, result);
          auto newT = mSamplePos[ii].as_double() / (double)track->GetRate();
          if (backwards)
