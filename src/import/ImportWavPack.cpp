@@ -194,8 +194,12 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          samplesRead = WavpackUnpackSamples(mWavPackContext, wavpackBuffer.get(), SAMPLES_TO_READ);
 
          if (mFormat == int16Sample) {
-            for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
-               int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
+            if (mBytesPerSample == 1)
+               for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
+                  int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c] * 256);
+            else
+               for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
+                  int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
