@@ -30,6 +30,8 @@
 #include "VST3Utils.h"
 #include "widgets/AButton.h"
 
+#include <public.sdk/source/vst/hosting/module.h>
+#include <pluginterfaces/vst/ivstaudioprocessor.h>
 
 DECLARE_PROVIDER_ENTRY(AudacityModule)
 {

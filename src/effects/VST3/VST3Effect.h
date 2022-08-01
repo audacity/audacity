@@ -16,13 +16,22 @@
 #include <wx/wx.h>
 
 #include <pluginterfaces/gui/iplugview.h>
+#include <public.sdk/source/vst/hosting/module.h>
 
 #include "../StatefulPerTrackEffect.h"
-#include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
 
 #include "VST3Utils.h"
+
+namespace VST3
+{
+   namespace Hosting
+   {
+      class ClassInfo;
+      class Module;
+   }
+}
 
 class NumericTextCtrl;
 
@@ -38,35 +47,30 @@ namespace Steinberg
 
 class ParameterChangesProvider;
 class VST3ParametersWindow;
+class VST3Wrapper;
 
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
+class VST3Effect final : public StatefulPerTrackEffect
 {
+   VST3::Hosting::ClassInfo mEffectClassInfo;
+   std::unique_ptr<VST3Wrapper> mWrapper;
+
    //Following fields are unique to each effect instance
    
-   Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
-   Steinberg::Vst::ProcessSetup mSetup;
    bool mActive{false};
 
    //Since all of the realtime processors share same presets, following
    //fields are only initialized and assigned in the global effect instance
 
-   Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mComponentConnectionProxy;
-   Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
    Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
-   Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
    NumericTextCtrl* mDuration { nullptr };
    //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
    VST3ParametersWindow* mPlainUI { nullptr };
-
-   //Holds pending parameter changes to be applied to multiple realtime effects.
-   //Not used in the "offline" mode
-   internal::ComponentHandler::PendingChangesPtr mPendingChanges;
 
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
@@ -77,9 +81,6 @@ class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
    size_t mUserBlockSize { 8192 };
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
-
-
-   void Initialize();
 
    mutable bool mInitialFetchDone{ false };
 
