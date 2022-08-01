@@ -209,7 +209,7 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 
 }
 
-size_t Mixer::MixVariableRates(
+size_t MixerSource::MixVariableRates(
    size_t ii, const size_t maxOut, float &floatBuffer)
 {
    auto &cache = mInputTrack[ii];
@@ -353,7 +353,7 @@ size_t Mixer::MixVariableRates(
    return out;
 }
 
-size_t Mixer::MixSameRate(size_t ii, const size_t maxOut,
+size_t MixerSource::MixSameRate(size_t ii, const size_t maxOut,
    float &floatBuffer)
 {
    auto &cache = mInputTrack[ii];
@@ -412,14 +412,101 @@ size_t Mixer::MixSameRate(size_t ii, const size_t maxOut,
    return slen;
 }
 
-void Mixer::ZeroFill(size_t produced, size_t max, float &floatBuffer)
+void MixerSource::ZeroFill(
+   size_t produced, size_t max, float &floatBuffer)
 {
    assert(produced <= max);
    const auto pFloat = &floatBuffer;
    std::fill(pFloat + produced, pFloat + max, 0);
 }
 
+MixerSource::MixerSource(const SampleTrack &leader, size_t i,
+   double rate, bool variableRates,
+   const BoundedEnvelope *const pEnvelope,
+   bool mayThrow
+   , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
+   , std::vector<SampleTrackCache> &mInputTrack
+   , std::vector<sampleCount> &mSamplePos
+   , std::vector<std::vector<float>> &mSampleQueue
+   , std::vector<int> &mQueueStart
+   , std::vector<int> &mQueueLen
+   , std::vector<std::unique_ptr<Resample>> &mResample
+   , std::vector<double> &mEnvValues
+)  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
+   , i{ i }
+   , mnChannels{ TrackList::Channels(&leader).size() }
+   , mRate{ rate }
+   , mVariableRates{ variableRates }
+   , mEnvelope{ pEnvelope }
+   , mMayThrow{ mayThrow }
+   , mTimesAndSpeed{ move(pTimesAndSpeed) }
+   , mInputTrack{ mInputTrack }
+   , mSamplePos{ mSamplePos }
+   , mSampleQueue{ mSampleQueue }
+   , mQueueStart{ mQueueStart }
+   , mQueueLen{ mQueueLen }
+   , mResample{ mResample }
+   , mEnvValues{ mEnvValues }
+{
+   assert(mTimesAndSpeed);
+}
+
+MixerSource::~MixerSource() = default;
+bool MixerSource::AcceptsBuffers(const Buffers &buffers) const
+{
+   return true;
+}
+
+bool MixerSource::AcceptsBlockSize(size_t blockSize) const
+{
+   return true;
+}
+
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
+
+std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
+{
+   auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
+   const bool backwards = (mT1 < mT0);
+   // TODO: more-than-two-channels
+   const auto maxChannels = data.Channels();
+   const auto limit = std::min<size_t>(mnChannels, maxChannels);
+   size_t maxTrack = 0;
+   const auto mixed = stackAllocate(size_t, maxChannels);
+   for (size_t j = 0; j < limit; ++j) {
+      const auto pFloat = &data.GetWritePosition(j);
+      auto &result = mixed[j];
+      const auto ii = i + j;
+      const auto track = mInputTrack[ii].GetTrack().get();
+      result =
+      (mVariableRates || track->GetRate() != mRate)
+         ? MixVariableRates(ii, bound, *pFloat)
+         : MixSameRate(ii, bound, *pFloat);
+      maxTrack = std::max(maxTrack, result);
+      auto newT = mSamplePos[ii].as_double() / track->GetRate();
+      if (backwards)
+         mTime = std::min(mTime, newT);
+      else
+         mTime = std::max(mTime, newT);
+   }
+   // Another pass in case channels of a track did not produce equal numbers
+   for (size_t j = 0; j < limit; ++j) {
+      const auto pFloat = &data.GetWritePosition(j);
+      const auto result = mixed[j];
+      ZeroFill(result, maxTrack, *pFloat);
+   }
+   return { maxTrack };
+}
+
+sampleCount MixerSource::Remaining() const
+{
+   return { 1 };
+}
+
+bool MixerSource::Release()
+{
+   return true;
+}
 
 size_t Mixer::Process(const size_t maxToProcess)
 {
@@ -480,37 +567,20 @@ size_t Mixer::Process(const size_t maxToProcess)
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      const auto limit = std::min<size_t>(nInChannels, maxChannels);
-      size_t maxTrack = 0;
-      {
-      const auto mixed = stackAllocate(size_t, maxChannels);
-      for (size_t j = 0; j < limit; ++j) {
-         const auto pFloat = &mFloatBuffers.GetWritePosition(j);
-         auto &result = mixed[j];
-         const auto ii = i + j;
-         const auto track = mInputTrack[ii].GetTrack().get();
-         result =
-         (mResampleParameters.mbVariableRates || track->GetRate() != mRate)
-            ? MixVariableRates(ii, maxToProcess, *pFloat)
-            : MixSameRate(ii, maxToProcess, *pFloat);
-         maxTrack = std::max(maxTrack, result);
-         maxOut = std::max(maxOut, result);
-         auto newT = mSamplePos[ii].as_double() / (double)track->GetRate();
-         if (backwards)
-            mTime = std::min(mTime, newT);
-         else
-            mTime = std::max(mTime, newT);
-      }
-      // Another pass in case channels of a track did not produce equal numbers
-      for (size_t j = 0; j < limit; ++j) {
-         const auto pFloat = &mFloatBuffers.GetWritePosition(j);
-         const auto result = mixed[j];
-         ZeroFill(result, maxTrack, *pFloat);
-      }
-      }
+      MixerSource source{ *leader, i, mRate,
+         mResampleParameters.mbVariableRates, mEnvelope, mMayThrow
+         , mTimesAndSpeed
+         , mInputTrack, mSamplePos, mSampleQueue, mQueueStart
+         , mQueueLen, mResample, mEnvValues
+      };
+      auto oResult = source.Acquire(mFloatBuffers, maxToProcess);
+      if (!oResult)
+         return 0;
+      maxOut = std::max(maxOut, *oResult);
 
       // Insert effect stages here!  Passing them all channels of the track
 
+      const auto limit = std::min<size_t>(nInChannels, maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
          const auto ii = i + j;
@@ -522,7 +592,7 @@ size_t Mixer::Process(const size_t maxToProcess)
             mMixerSpec ? mMixerSpec->mMap[ii].get() : nullptr,
             track->GetChannel());
          MixBuffers(mNumChannels,
-            flags, gains, *pFloat, mTemp, maxTrack);
+            flags, gains, *pFloat, mTemp, *oResult);
       }
    }
 

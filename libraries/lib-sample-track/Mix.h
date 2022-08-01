@@ -13,6 +13,7 @@
 #define __AUDACITY_MIX__
 
 #include "AudioGraphBuffers.h"
+#include "AudioGraphSource.h"
 #include "GlobalVariable.h"
 #include "SampleFormat.h"
 #include <functional>
@@ -173,29 +174,10 @@ class SAMPLE_TRACK_API Mixer {
  private:
 
    void Clear();
-   /*!
-    @post result: `result <= maxOut`
-    */
-   size_t MixSameRate(size_t ii, size_t maxOut, float &floatBuffer);
-
-   /*!
-    @post result: `result <= maxOut`
-    */
-   size_t MixVariableRates(size_t ii, size_t maxOut, float &floatBuffer);
-
-   /*!
-    @pre `produced <= max`
-    */
-   void ZeroFill(size_t produced, size_t max, float &floatBuffer);
 
    void MakeResamplers();
 
  private:
-   // Cut the queue into blocks of this finer size
-   // for variable rate resampling.  Each block is resampled at some
-   // constant rate.
-   static constexpr size_t sProcessLen = 1024;
-
    // This is the number of samples grabbed in one go from a track
    // and placed in a queue, when mixing with resampling.
    // (Should we use SampleTrack::GetBestBlockSize instead?)
@@ -269,6 +251,87 @@ class SAMPLE_TRACK_API Mixer {
    // Gain slider settings are applied late
 
    // Last step is accumulating results into the output buffers, with dithering
+};
+
+//! Fetches from tracks, applies envelopes; can resample, and warp time, even
+//! backwards, as for scrubbing.
+/*!
+ This class inherits AudioGraph::Source but does not yet fulfill the contracts
+ of all of the members.  But it is not yet used through any pointer or
+ reference to its base class.
+ */
+class MixerSource final : public AudioGraph::Source {
+public:
+   using TimesAndSpeed = MixerOptions::TimesAndSpeed;
+
+   /*!
+    @pre `pTimesAndSpeed != nullptr`
+    */
+   MixerSource(const SampleTrack &leader, size_t i,
+      double rate, bool variableRates,
+      const BoundedEnvelope *const pEnvelope, bool mayThrow
+
+      , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
+
+      , std::vector<SampleTrackCache> &mInputTrack
+      , std::vector<sampleCount> &mSamplePos
+      , std::vector<std::vector<float>> &mSampleQueue
+      , std::vector<int> &mQueueStart
+      , std::vector<int> &mQueueLen
+      , std::vector<std::unique_ptr<Resample>> &mResample
+      , std::vector<double> &mEnvValues
+   );
+   ~MixerSource();
+   bool AcceptsBuffers(const Buffers &buffers) const override;
+   bool AcceptsBlockSize(size_t blockSize) const override;
+   std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
+   sampleCount Remaining() const override;
+   bool Release() override;
+
+private:
+   // Cut the queue into blocks of this finer size
+   // for variable rate resampling.  Each block is resampled at some
+   // constant rate.
+   static constexpr size_t sProcessLen = 1024;
+
+   // This is the number of samples grabbed in one go from a track
+   // and placed in a queue, when mixing with resampling.
+   // (Should we use SampleTrack::GetBestBlockSize instead?)
+   static constexpr size_t sQueueMaxLen = 65536;
+
+   /*!
+    @post result: `result <= maxOut`
+    */
+   size_t MixSameRate(size_t ii, size_t maxOut, float &floatBuffer);
+
+   /*!
+    @post result: `result <= maxOut`
+    */
+   size_t MixVariableRates(size_t ii, size_t maxOut, float &floatBuffer);
+
+   /*!
+    @pre `produced <= max`
+    */
+   void ZeroFill(size_t produced, size_t max, float &floatBuffer);
+
+   const std::shared_ptr<const SampleTrack> mpLeader;
+   size_t i;
+
+   const size_t mnChannels;
+   const double mRate;
+   const bool mVariableRates;
+   const BoundedEnvelope *const mEnvelope;
+   const bool mMayThrow;
+
+   const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
+
+   std::vector<SampleTrackCache> &mInputTrack;
+   std::vector<sampleCount> &mSamplePos;
+   std::vector<std::vector<float>> &mSampleQueue;
+   std::vector<int> &mQueueStart;
+   std::vector<int> &mQueueLen;
+   std::vector<std::unique_ptr<Resample>> &mResample;
+   std::vector<double> &mEnvValues;
 };
 
 #endif
