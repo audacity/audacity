@@ -47,33 +47,39 @@ public:
    MixerSpec& operator=( const MixerSpec &mixerSpec );
 };
 
+namespace MixerOptions {
+
+//! Immutable structure is an argument to Mixer's constructor
+struct SAMPLE_TRACK_API Warp final {
+   //! Hook function for default time warp
+   struct SAMPLE_TRACK_API DefaultWarp : GlobalHook<DefaultWarp,
+    const BoundedEnvelope*(const TrackList&)
+   >{};
+
+   //! Construct using the default warp function
+   explicit Warp(const TrackList &list);
+
+   //! Construct with an explicit warp
+   explicit Warp(const BoundedEnvelope *e);
+
+   //! Construct with no time warp
+   /*!
+   @pre `min >= 0`
+   @pre `max >= 0`
+   @pre `min <= max`
+   */
+   Warp(double min, double max, double initial = 1.0);
+
+   const BoundedEnvelope *const envelope = nullptr;
+   const double minSpeed, maxSpeed;
+   const double initialSpeed{ 1.0 };
+};
+
+}
+
 class SAMPLE_TRACK_API Mixer {
  public:
-
-    // An argument to Mixer's constructor
-    class SAMPLE_TRACK_API WarpOptions
-    {
-    public:
-       //! Hook function for default time warp
-       struct SAMPLE_TRACK_API DefaultWarp : GlobalHook<DefaultWarp,
-          const BoundedEnvelope*(const TrackList&)
-       >{};
-
-       //! Construct using the default warp function
-       explicit WarpOptions(const TrackList &list);
-
-       //! Construct with an explicit warp
-       explicit WarpOptions(const BoundedEnvelope *e);
-
-       //! Construct with no time warp
-       WarpOptions(double min, double max, double initial = 1.0);
-
-    private:
-       friend class Mixer;
-       const BoundedEnvelope *envelope = nullptr;
-       double minSpeed, maxSpeed;
-       double initialSpeed{ 1.0 };
-    };
+   using WarpOptions = MixerOptions::Warp;
 
    // Information derived from WarpOptions and other data
    struct ResampleParameters {

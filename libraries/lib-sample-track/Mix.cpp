@@ -34,33 +34,23 @@
 #include "Resample.h"
 #include "float_cast.h"
 
-Mixer::WarpOptions::WarpOptions(const TrackList &list)
+MixerOptions::Warp::Warp(const TrackList &list)
 : envelope(DefaultWarp::Call(list)), minSpeed(0.0), maxSpeed(0.0)
 {
 }
 
-Mixer::WarpOptions::WarpOptions(const BoundedEnvelope *e)
+MixerOptions::Warp::Warp(const BoundedEnvelope *e)
     : envelope(e), minSpeed(0.0), maxSpeed(0.0)
  {}
 
-Mixer::WarpOptions::WarpOptions(double min, double max, double initial)
-   : minSpeed{min}, maxSpeed{max}, initialSpeed{initial}
+MixerOptions::Warp::Warp(double min, double max, double initial)
+   : minSpeed{ std::max(0.0, std::min(min, max)) }
+   , maxSpeed{ std::max(0.0, std::max(min, max)) }
+   , initialSpeed{initial}
 {
-   if (minSpeed < 0)
-   {
-      wxASSERT(false);
-      minSpeed = 0;
-   }
-   if (maxSpeed < 0)
-   {
-      wxASSERT(false);
-      maxSpeed = 0;
-   }
-   if (minSpeed > maxSpeed)
-   {
-      wxASSERT(false);
-      std::swap(minSpeed, maxSpeed);
-   }
+   assert(min >= 0);
+   assert(max >= 0);
+   assert(min <= max);
 }
 
 Mixer::ResampleParameters::ResampleParameters(
