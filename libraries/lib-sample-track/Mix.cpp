@@ -47,28 +47,31 @@ MixerOptions::Warp::Warp(double min, double max, double initial)
    assert(min <= max);
 }
 
-MixerOptions::ResampleParameters::ResampleParameters(
-   const SampleTrackConstArray &inputTracks, double rate, const Warp &options)
+MixerOptions::ResampleParameters::ResampleParameters(bool highQuality,
+   const SampleTrack &leader, double rate, const Warp &options
+)  : mHighQuality{ highQuality }
 {
-   mMinFactor.reserve(inputTracks.size());
-   mMaxFactor.reserve(inputTracks.size());
-   for (const auto &pTrack : inputTracks) {
+   auto range = TrackList::Channels<const SampleTrack>(&leader);
+   auto size = range.size();
+   mMinFactor.reserve(size);
+   mMaxFactor.reserve(size);
+   for (auto pTrack : range) {
       double factor = (rate / pTrack->GetRate());
       if (const auto envelope = options.envelope) {
          // variable rate resampling
-         mbVariableRates = true;
+         mVariableRates = true;
          mMinFactor.push_back(factor / envelope->GetRangeUpper());
          mMaxFactor.push_back(factor / envelope->GetRangeLower());
       }
       else if (options.minSpeed > 0.0 && options.maxSpeed > 0.0) {
          // variable rate resampling
-         mbVariableRates = true;
+         mVariableRates = true;
          mMinFactor.push_back(factor / options.maxSpeed);
          mMaxFactor.push_back(factor / options.minSpeed);
       }
       else {
          // constant rate resampling
-         mbVariableRates = false;
+         mVariableRates = false;
          mMinFactor.push_back(factor);
          mMaxFactor.push_back(factor);
       }
@@ -108,7 +111,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mBufferSize{ outBufferSize }
    , mRate{ outRate }
    , mEnvelope{ warpOptions.envelope }
-   , mResampleParameters{ inputTracks, mRate, warpOptions }
 
    , mApplyTrackGains{ applyTrackGains }
    , mMixerSpec{
@@ -139,13 +141,10 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
          size = mBufferSize * (mInterleaved ? mNumChannels : 1)
       ](auto &buffer){ buffer.Allocate(size, format); }
    )}
-
-   , mResample( mNumInputTracks )
 {
    for (size_t i = 0; i < mNumInputTracks; ++i)
       mInputTrack[i].SetTrack(inputTracks[i]);
 
-   MakeResamplers();
    assert(BufferSize() == outBufferSize);
 
    for (size_t i = 0; i < mNumInputTracks;) {
@@ -157,10 +156,10 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      mSources.emplace_back( *leader, i, BufferSize(), mRate,
-         mResampleParameters.mbVariableRates, mEnvelope, mMayThrow
+      mSources.emplace_back( *leader, i, BufferSize(), mRate
+         , warpOptions, highQuality, mEnvelope, mMayThrow
          , mTimesAndSpeed
-         , mInputTrack, mResample
+         , mInputTrack
          , mMixerSpec ? &mMixerSpec->mMap[i] : nullptr
       );
    }
@@ -170,11 +169,12 @@ Mixer::~Mixer()
 {
 }
 
-void Mixer::MakeResamplers()
+void MixerSource::MakeResamplers()
 {
-   for (size_t i = 0; i < mNumInputTracks; i++)
-      mResample[i] = std::make_unique<Resample>(mHighQuality,
-         mResampleParameters.mMinFactor[i], mResampleParameters.mMaxFactor[i]);
+   for (size_t j = 0; j < mnChannels; ++j)
+      mResample[j] = std::make_unique<Resample>(
+         mResampleParameters.mHighQuality,
+         mResampleParameters.mMinFactor[j], mResampleParameters.mMaxFactor[j]);
 }
 
 void Mixer::Clear()
@@ -228,7 +228,7 @@ size_t MixerSource::MixVariableRates(
    const auto queue = mSampleQueue[iChannel].data();
    const auto queueStart = &mQueueStart[iChannel];
    const auto queueLen = &mQueueLen[iChannel];
-   const auto pResample = mResample[ii].get();
+   const auto pResample = mResample[iChannel].get();
 
    const auto pFloat = &floatBuffer;
    const auto track = cache.GetTrack().get();
@@ -435,18 +435,16 @@ void MixerSource::ZeroFill(
 
 MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    size_t bufferSize,
-   double rate, bool variableRates,
+   double rate, const Mixer::WarpOptions &options, bool highQuality,
    const BoundedEnvelope *const pEnvelope,
    bool mayThrow
    , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
    , std::vector<SampleTrackCache> &mInputTrack
-   , std::vector<std::unique_ptr<Resample>> &mResample
    , const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
    , i{ i }
    , mnChannels{ TrackList::Channels(&leader).size() }
    , mRate{ rate }
-   , mVariableRates{ variableRates }
    , mEnvelope{ pEnvelope }
    , mMayThrow{ mayThrow }
    , mTimesAndSpeed{ move(pTimesAndSpeed) }
@@ -455,7 +453,8 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
    , mQueueStart( mnChannels, 0 )
    , mQueueLen( mnChannels, 0 )
-   , mResample{ mResample }
+   , mResampleParameters{ highQuality, leader, rate, options }
+   , mResample( mnChannels )
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }
 {
@@ -463,6 +462,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    auto t0 = mTimesAndSpeed->mT0;
    for (size_t j = 0; j < mnChannels; ++j)
       mSamplePos[j] = GetChannel(j)->TimeToLongSamples(t0);
+   MakeResamplers();
 }
 
 MixerSource::~MixerSource() = default;
@@ -506,7 +506,7 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
       auto &result = mixed[j];
       const auto track = GetChannel(j);
       result =
-      (mVariableRates || track->GetRate() != mRate)
+      (mResampleParameters.mVariableRates || track->GetRate() != mRate)
          ? MixVariableRates(j, bound, *pFloat)
          : MixSameRate(j, bound, *pFloat);
       maxTrack = std::max(maxTrack, result);
@@ -667,13 +667,20 @@ void Mixer::Restart()
 }
 #endif
 
-void MixerSource::Reposition(double time)
+void MixerSource::Reposition(double time, bool skipping)
 {
    for (size_t j = 0; j < mnChannels; ++j) {
       mSamplePos[j] = GetChannel(j)->TimeToLongSamples(time);
       mQueueStart[j] = 0;
       mQueueLen[j] = 0;
    }
+
+   // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
+   // constant rate resampling if you try to reuse the resampler after it has
+   // flushed.  Should that be considered a bug in sox?  This works around it.
+   // (See also bug 1887, and the same work around in Mixer::Restart().)
+   if (skipping)
+      MakeResamplers();
 }
 
 void Mixer::Reposition(double t, bool bSkipping)
@@ -687,14 +694,7 @@ void Mixer::Reposition(double t, bool bSkipping)
       mTime = std::clamp(mTime, mT0, mT1);
 
    for (auto &source : mSources)
-      source.Reposition(mTime);
-
-   // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
-   // constant rate resampling if you try to reuse the resampler after it has
-   // flushed.  Should that be considered a bug in sox?  This works around it.
-   // (See also bug 1887, and the same work around in Mixer::Restart().)
-   if( bSkipping )
-      MakeResamplers();
+      source.Reposition(mTime, bSkipping);
 }
 
 void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)

@@ -79,10 +79,10 @@ struct SAMPLE_TRACK_API Warp final {
 
 // Information derived from Warp and other data
 struct ResampleParameters final {
-   ResampleParameters(
-      const SampleTrackConstArray &inputTracks, double rate,
-      const Warp &options);
-   bool             mbVariableRates{ false };
+   ResampleParameters(bool highQuality,
+      const SampleTrack &leader, double rate, const Warp &options);
+   bool             mHighQuality{};
+   bool             mVariableRates{ false };
    std::vector<double> mMinFactor, mMaxFactor;
 };
 
@@ -177,8 +177,6 @@ class SAMPLE_TRACK_API Mixer {
 
    void Clear();
 
-   void MakeResamplers();
-
  private:
 
    // GIVEN PARAMETERS
@@ -192,8 +190,6 @@ class SAMPLE_TRACK_API Mixer {
    // Resampling, as needed, after gain envelope
    const double     mRate; // may require resampling
    const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
-   // derived parameters
-   const ResampleParameters mResampleParameters;
 
    // Output
    const bool       mApplyTrackGains;
@@ -225,16 +221,6 @@ class SAMPLE_TRACK_API Mixer {
    // Final result applies dithering and interleaving
    const std::vector<SampleBuffer> mBuffer;
 
-   // TRANSFORMATION STATE
-
-   std::vector<std::unique_ptr<Resample>> mResample;
-
-   // TODO -- insert effect stages here
-
-   // Gain slider settings are applied late
-
-   // Last step is accumulating results into the output buffers, with dithering
-
    std::vector<MixerSource> mSources;
 };
 
@@ -248,20 +234,22 @@ class SAMPLE_TRACK_API Mixer {
 class MixerSource final : public AudioGraph::Source {
 public:
    using TimesAndSpeed = MixerOptions::TimesAndSpeed;
+   using ResampleParameters = MixerOptions::ResampleParameters;
 
    /*!
     @pre `pTimesAndSpeed != nullptr`
     */
    MixerSource(const SampleTrack &leader, size_t i, size_t bufferSize,
-      double rate, bool variableRates,
+      double rate, const Mixer::WarpOptions &options, bool highQuality,
       const BoundedEnvelope *const pEnvelope, bool mayThrow
 
       , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
 
       , std::vector<SampleTrackCache> &mInputTrack
-      , std::vector<std::unique_ptr<Resample>> &mResample
       , const ArrayOf<bool> *pMap
    );
+   MixerSource(MixerSource&&) = default;
+   MixerSource &operator=(MixerSource&&) = delete;
    ~MixerSource();
 
    unsigned Channels() const { return mnChannels; }
@@ -273,9 +261,11 @@ public:
    std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
    sampleCount Remaining() const override;
    bool Release() override;
-   void Reposition(double time);
+   void Reposition(double time, bool skipping);
 
 private:
+   void MakeResamplers();
+
    // Cut the queue into blocks of this finer size
    // for variable rate resampling.  Each block is resampled at some
    // constant rate.
@@ -307,7 +297,6 @@ private:
 
    const size_t mnChannels;
    const double mRate;
-   const bool mVariableRates;
    const BoundedEnvelope *const mEnvelope;
    const bool mMayThrow;
 
@@ -329,7 +318,8 @@ private:
    // For each queue, the number of available samples after the queue start
    std::vector<int>     mQueueLen;
 
-   std::vector<std::unique_ptr<Resample>> &mResample;
+   const ResampleParameters mResampleParameters;
+   std::vector<std::unique_ptr<Resample>> mResample;
 
    // Gain envelopes are applied to input before other transformations
    std::vector<double> mEnvValues;
