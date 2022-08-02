@@ -284,8 +284,14 @@ public:
       , std::vector<int> &mQueueLen
       , std::vector<std::unique_ptr<Resample>> &mResample
       , std::vector<double> &mEnvValues
+      , const ArrayOf<bool> *pMap
    );
    ~MixerSource();
+
+   unsigned Channels() const { return mnChannels; }
+   const SampleTrack *GetChannel(unsigned iChannel) const;
+   const bool *MixerSpec(unsigned iChannel) const;
+
    bool AcceptsBuffers(const Buffers &buffers) const override;
    bool AcceptsBlockSize(size_t blockSize) const override;
    std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
@@ -337,6 +343,9 @@ private:
    std::vector<int> &mQueueLen;
    std::vector<std::unique_ptr<Resample>> &mResample;
    std::vector<double> &mEnvValues;
+
+   // Pointer into array of arrays
+   const ArrayOf<bool> *const mpMap;
 };
 
 #endif

@@ -170,6 +170,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
          , mTimesAndSpeed
          , mInputTrack, mSamplePos, mSampleQueue, mQueueStart
          , mQueueLen, mResample, mEnvValues
+         , mMixerSpec ? &mMixerSpec->mMap[i] : nullptr
       );
    }
 }
@@ -453,6 +454,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    , std::vector<int> &mQueueLen
    , std::vector<std::unique_ptr<Resample>> &mResample
    , std::vector<double> &mEnvValues
+   , const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
    , i{ i }
    , mnChannels{ TrackList::Channels(&leader).size() }
@@ -468,11 +470,26 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    , mQueueLen{ mQueueLen }
    , mResample{ mResample }
    , mEnvValues{ mEnvValues }
+   , mpMap{ pMap }
 {
    assert(mTimesAndSpeed);
 }
 
 MixerSource::~MixerSource() = default;
+
+const SampleTrack *MixerSource::GetChannel(unsigned iChannel) const
+{
+   auto range = TrackList::Channels(mpLeader.get());
+   auto iter = range.begin();
+   std::advance(iter, iChannel);
+   return *iter;
+}
+
+const bool *MixerSource::MixerSpec(unsigned iChannel) const
+{
+   return mpMap ? mpMap[iChannel].get() : nullptr;
+}
+
 bool MixerSource::AcceptsBuffers(const Buffers &buffers) const
 {
    return true;
@@ -498,7 +515,7 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
       const auto pFloat = &data.GetWritePosition(j);
       auto &result = mixed[j];
       const auto ii = i + j;
-      const auto track = mInputTrack[ii].GetTrack().get();
+      const auto track = GetChannel(j);
       result =
       (mVariableRates || track->GetRate() != mRate)
          ? MixVariableRates(j, bound, *pFloat)
@@ -579,34 +596,23 @@ size_t Mixer::Process(const size_t maxToProcess)
    // TODO: more-than-two-channels
    auto maxChannels = mFloatBuffers.Channels();
 
-   auto pSource = mSources.begin();
-   for (size_t i = 0; i < mNumInputTracks;) {
-      const auto leader = mInputTrack[i].GetTrack().get();
-      const auto nInChannels = TrackList::Channels(leader).size();
-      if (!leader || i + nInChannels > mNumInputTracks) {
-         assert(false);
-         break;
-      }
-      auto increment = finally([&]{ i += nInChannels; });
-
-      auto oResult = pSource++ ->Acquire(mFloatBuffers, maxToProcess);
+   for (auto &source : mSources) {
+      auto oResult = source.Acquire(mFloatBuffers, maxToProcess);
       if (!oResult)
          return 0;
       maxOut = std::max(maxOut, *oResult);
 
       // Insert effect stages here!  Passing them all channels of the track
 
-      const auto limit = std::min<size_t>(nInChannels, maxChannels);
+      const auto limit = std::min<size_t>(source.Channels(), maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
-         const auto ii = i + j;
-         const auto track = mInputTrack[ii].GetTrack().get();
+         const auto track = source.GetChannel(j);
          if (mApplyTrackGains)
             for (size_t c = 0; c < mNumChannels; ++c)
                gains[c] = track->GetChannelGain(c);
-         const auto flags = findChannelFlags(
-            mMixerSpec ? mMixerSpec->mMap[ii].get() : nullptr,
-            track->GetChannel());
+         const auto flags =
+            findChannelFlags(source.MixerSpec(j), track->GetChannel());
          MixBuffers(mNumChannels,
             flags, gains, *pFloat, mTemp, *oResult);
       }
