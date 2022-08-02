@@ -310,10 +310,16 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
    config.num_channels = numChannels;
    config.sample_rate = rate;
-   config.channel_mask = config.num_channels == 1 ? 4 : 3; // Microsoft standard, mono = 4, stereo = 3
    config.bits_per_sample = bitDepth;
    config.bytes_per_sample = bitDepth/8;
    config.float_norm_exp = format == floatSample ? 127 : 0;
+
+   if (config.num_channels <= 2)
+      config.channel_mask = 0x5 - config.num_channels;
+   else if (config.num_channels <= 18)
+      config.channel_mask = (1U << config.num_channels) - 1;
+   else
+      config.channel_mask = 0x3FFFF;
 
    if (quality == 0) {
       config.flags |= CONFIG_FAST_FLAG;
