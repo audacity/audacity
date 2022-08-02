@@ -460,7 +460,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    };
 
    auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
-   auto newTime = mTime;
+   auto oldTime = mTime;
    // backwards (as possibly in scrubbing)
    const auto backwards = (mT0 > mT1);
 
@@ -491,9 +491,9 @@ size_t Mixer::Process(const size_t maxToProcess)
          maxOut = std::max(maxOut, result);
          auto newT = mSamplePos[ii].as_double() / (double)track->GetRate();
          if (backwards)
-            newTime = std::min(newTime, newT);
+            mTime = std::min(mTime, newT);
          else
-            newTime = std::max(newTime, newT);
+            mTime = std::max(mTime, newT);
       }
 
       // Insert effect stages here!  Passing them all channels of the track
@@ -516,9 +516,9 @@ size_t Mixer::Process(const size_t maxToProcess)
    }
 
    if (backwards)
-      mTime = std::clamp(newTime, mT1, mTime);
+      mTime = std::clamp(mTime, mT1, oldTime);
    else
-      mTime = std::clamp(newTime, mTime, mT1);
+      mTime = std::clamp(mTime, oldTime, mT1);
 
    const auto dstStride = (mInterleaved ? mNumChannels : 1);
    for (size_t c = 0; c < mNumChannels; ++c)
