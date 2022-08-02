@@ -421,7 +421,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
          WavpackAppendTagItem(wpc,
                               n.mb_str(wxConvUTF8),
                               v.mb_str(wxConvUTF8),
-                              static_cast<int>( v.length() ));
+                              static_cast<int>( strlen(v.mb_str(wxConvUTF8)) ));
       }
 
       if (!WavpackWriteTag(wpc)) {
