@@ -415,6 +415,13 @@ size_t Mixer::MixSameRate(size_t ii, const size_t maxOut,
    return slen;
 }
 
+void Mixer::ZeroFill(size_t produced, size_t max, float &floatBuffer)
+{
+   assert(produced <= max);
+   const auto pFloat = &floatBuffer;
+   std::fill(pFloat + produced, pFloat + max, 0);
+}
+
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
 size_t Mixer::Process(const size_t maxToProcess)
@@ -431,7 +438,6 @@ size_t Mixer::Process(const size_t maxToProcess)
    const auto gains = stackAllocate(float, mNumChannels);
    if (!mApplyTrackGains)
       std::fill(gains, gains + mNumChannels, 1.0f);
-   const auto mixed = stackAllocate(size_t, mNumChannels);
 
    // Decides which output buffers an input channel accumulates into
    auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
@@ -465,6 +471,8 @@ size_t Mixer::Process(const size_t maxToProcess)
    const auto backwards = (mT0 > mT1);
 
    Clear();
+   // TODO: more-than-two-channels
+   auto maxChannels = std::extent_v<decltype(mFloatBuffers)>;
 
    for (size_t i = 0; i < mNumInputTracks;) {
       const auto leader = mInputTrack[i].GetTrack().get();
@@ -475,9 +483,10 @@ size_t Mixer::Process(const size_t maxToProcess)
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      // TODO: more-than-two-channels
-      const auto limit = std::min<size_t>(nInChannels,
-         std::extent_v<decltype(mFloatBuffers)>);
+      const auto limit = std::min<size_t>(nInChannels, maxChannels);
+      size_t maxTrack = 0;
+      {
+      const auto mixed = stackAllocate(size_t, maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = mFloatBuffers[j].data();
          assert(pFloat); // see constructor
@@ -488,6 +497,7 @@ size_t Mixer::Process(const size_t maxToProcess)
          (mResampleParameters.mbVariableRates || track->GetRate() != mRate)
             ? MixVariableRates(ii, maxToProcess, *pFloat)
             : MixSameRate(ii, maxToProcess, *pFloat);
+         maxTrack = std::max(maxTrack, result);
          maxOut = std::max(maxOut, result);
          auto newT = mSamplePos[ii].as_double() / (double)track->GetRate();
          if (backwards)
@@ -495,13 +505,19 @@ size_t Mixer::Process(const size_t maxToProcess)
          else
             mTime = std::max(mTime, newT);
       }
+      // Another pass in case channels of a track did not produce equal numbers
+      for (size_t j = 0; j < limit; ++j) {
+         const auto pFloat = mFloatBuffers[j].data();
+         const auto result = mixed[j];
+         ZeroFill(result, maxTrack, *pFloat);
+      }
+      }
 
       // Insert effect stages here!  Passing them all channels of the track
 
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = mFloatBuffers[j].data();
          assert(pFloat); // see constructor
-         const auto result = mixed[j];
          const auto ii = i + j;
          const auto track = mInputTrack[ii].GetTrack().get();
          if (mApplyTrackGains)
@@ -511,7 +527,7 @@ size_t Mixer::Process(const size_t maxToProcess)
             mMixerSpec ? mMixerSpec->mMap[ii].get() : nullptr,
             track->GetChannel());
          MixBuffers(mNumChannels,
-            flags, gains, *pFloat, mTemp, result);
+            flags, gains, *pFloat, mTemp, maxTrack);
       }
    }
 

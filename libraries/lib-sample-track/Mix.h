@@ -182,6 +182,11 @@ class SAMPLE_TRACK_API Mixer {
     */
    size_t MixVariableRates(size_t ii, size_t maxOut, float &floatBuffer);
 
+   /*!
+    @pre `produced <= max`
+    */
+   void ZeroFill(size_t produced, size_t max, float &floatBuffer);
+
    void MakeResamplers();
 
  private:
