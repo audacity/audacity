@@ -126,9 +126,9 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
 
    , mInputTrack( mNumInputTracks )
    , mSamplePos( mNumInputTracks )
-   , mT0{ startTime }
-   , mT1{ stopTime }
-   , mTime{ startTime }
+   , mTimesAndSpeed{ std::make_shared<TimesAndSpeed>( TimesAndSpeed{
+      startTime, stopTime, warpOptions.initialSpeed, startTime
+   } ) }
 
    , mSampleQueue{ initVector<float>(mNumInputTracks, sQueueMaxLen) }
    , mQueueStart( mNumInputTracks, 0 )
@@ -150,7 +150,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
 
    , mEnvValues( std::max(sQueueMaxLen, mBufferSize) )
    , mResample( mNumInputTracks )
-   , mSpeed{ warpOptions.initialSpeed }
 {
    for(size_t i=0; i<mNumInputTracks; i++) {
       mInputTrack[i].SetTrack(inputTracks[i]);
@@ -226,6 +225,7 @@ size_t Mixer::MixVariableRates(
    const auto pFloat = &floatBuffer;
    const auto track = cache.GetTrack().get();
    const double trackRate = track->GetRate();
+   const auto &[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
    const double initialWarp = mRate / mSpeed / trackRate;
    const double tstep = 1.0 / trackRate;
    auto sampleSize = SAMPLE_SIZE(floatSample);
@@ -367,6 +367,7 @@ size_t Mixer::MixSameRate(size_t ii, const size_t maxOut,
    const double t = ( *pos ).as_double() / track->GetRate();
    const double trackEndTime = track->GetEndTime();
    const double trackStartTime = track->GetStartTime();
+   const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
    const bool backwards = (mT1 < mT0);
    const double tEnd = backwards
       ? std::max(trackStartTime, mT1)
@@ -458,6 +459,7 @@ size_t Mixer::Process(const size_t maxToProcess)
       return channelFlags;
    };
 
+   auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
    auto newTime = mTime;
    // backwards (as possibly in scrubbing)
    const auto backwards = (mT0 > mT1);
@@ -548,7 +550,7 @@ constSamplePtr Mixer::GetBuffer(int channel)
 
 double Mixer::MixGetCurrentTime()
 {
-   return mTime;
+   return mTimesAndSpeed->mTime;
 }
 
 #if 0
@@ -575,6 +577,7 @@ void Mixer::Restart()
 
 void Mixer::Reposition(double t, bool bSkipping)
 {
+   auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
    mTime = t;
    const bool backwards = (mT1 < mT0);
    if (backwards)
@@ -599,6 +602,7 @@ void Mixer::Reposition(double t, bool bSkipping)
 void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)
 {
    wxASSERT(std::isfinite(speed));
+   auto &[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
    mT0 = t0;
    mT1 = t1;
    mSpeed = fabs(speed);
@@ -608,6 +612,7 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)
 void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
 {
    wxASSERT(std::isfinite(speed));
+   auto &[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
 
    // Check if the direction has changed
    if ((speed > 0.0 && mT1 < mT0) || (speed < 0.0 && mT1 > mT0)) {

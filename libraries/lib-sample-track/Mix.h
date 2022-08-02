@@ -83,6 +83,21 @@ struct ResampleParameters final {
    bool             mbVariableRates{ false };
    std::vector<double> mMinFactor, mMaxFactor;
 };
+
+//! Reassignable bounds and speed for a Mixer's fetch from tracks, and a
+//! readout of last fetched time
+struct TimesAndSpeed final {
+   // Bounds for fetch position in the sample source
+   double           mT0; // Start time
+   double           mT1; // Stop time (none if mT0==mT1)
+   // Varying scrub speed is one cause for resampling
+   double           mSpeed;
+
+   // For output purposes only (like progress indicator update)
+   double           mTime;  // Current time (renamed from mT to mTime for
+   // consistency with AudioIO - mT represented warped time there)
+};
+
 }
 
 class SAMPLE_TRACK_API Mixer {
@@ -90,6 +105,7 @@ class SAMPLE_TRACK_API Mixer {
    using WarpOptions = MixerOptions::Warp;
    using MixerSpec = MixerOptions::Downmix;
    using ResampleParameters = MixerOptions::ResampleParameters;
+   using TimesAndSpeed = MixerOptions::TimesAndSpeed;
 
    //
    // Constructor / Destructor
@@ -213,10 +229,7 @@ class SAMPLE_TRACK_API Mixer {
    // mSamplePos holds for each track the next sample position not
    // yet processed.
    std::vector<sampleCount> mSamplePos;
-   // There is also a double-valued fetch position with (reassignable) bounds
-   double           mT0; // Start time
-   double           mT1; // Stop time (none if mT0==mT1)
-   double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
+   const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
    // BUFFERS
 
@@ -245,8 +258,6 @@ class SAMPLE_TRACK_API Mixer {
    std::vector<double> mEnvValues;
 
    std::vector<std::unique_ptr<Resample>> mResample;
-   // Varying scrub speed is one cause for resampling
-   double           mSpeed;
 
    // TODO -- insert effect stages here
 
