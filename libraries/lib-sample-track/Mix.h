@@ -215,20 +215,9 @@ class SAMPLE_TRACK_API Mixer {
    // SampleTrackCaches are the source of data
    std::vector<SampleTrackCache> mInputTrack;
 
-   // Fetch position for source
-   // mSamplePos holds for each track the next sample position not
-   // yet processed.
-   std::vector<sampleCount> mSamplePos;
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
    // BUFFERS
-
-   // First intermediate buffer when resampling is needed
-   std::vector<std::vector<float>> mSampleQueue;
-   // Position in each queue of the start of the next block to resample
-   std::vector<int>     mQueueStart;
-   // For each queue, the number of available samples after the queue start
-   std::vector<int>     mQueueLen;
 
    // Resample into these buffers, or produce directly when not resampling
    AudioGraph::Buffers mFloatBuffers;
@@ -278,10 +267,6 @@ public:
       , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
 
       , std::vector<SampleTrackCache> &mInputTrack
-      , std::vector<sampleCount> &mSamplePos
-      , std::vector<std::vector<float>> &mSampleQueue
-      , std::vector<int> &mQueueStart
-      , std::vector<int> &mQueueLen
       , std::vector<std::unique_ptr<Resample>> &mResample
       , std::vector<double> &mEnvValues
       , const ArrayOf<bool> *pMap
@@ -297,6 +282,7 @@ public:
    std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
    sampleCount Remaining() const override;
    bool Release() override;
+   void Reposition(double time);
 
 private:
    // Cut the queue into blocks of this finer size
@@ -337,10 +323,21 @@ private:
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
    std::vector<SampleTrackCache> &mInputTrack;
-   std::vector<sampleCount> &mSamplePos;
-   std::vector<std::vector<float>> &mSampleQueue;
-   std::vector<int> &mQueueStart;
-   std::vector<int> &mQueueLen;
+
+   // Fetch position for source
+   // mSamplePos holds for each track the next sample position not
+   // yet processed.
+   std::vector<sampleCount> mSamplePos;
+
+   // First intermediate buffer when resampling is needed
+   std::vector<std::vector<float>> mSampleQueue;
+
+   // Position in each queue of the start of the next block to resample
+   std::vector<int>     mQueueStart;
+
+   // For each queue, the number of available samples after the queue start
+   std::vector<int>     mQueueLen;
+
    std::vector<std::unique_ptr<Resample>> &mResample;
    std::vector<double> &mEnvValues;
 

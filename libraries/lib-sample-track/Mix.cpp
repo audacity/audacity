@@ -124,14 +124,9 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mMayThrow{ mayThrow }
 
    , mInputTrack( mNumInputTracks )
-   , mSamplePos( mNumInputTracks )
    , mTimesAndSpeed{ std::make_shared<TimesAndSpeed>( TimesAndSpeed{
       startTime, stopTime, warpOptions.initialSpeed, startTime
    } ) }
-
-   , mSampleQueue{ initVector<float>(mNumInputTracks, sQueueMaxLen) }
-   , mQueueStart( mNumInputTracks, 0 )
-   , mQueueLen( mNumInputTracks, 0 )
 
    // PRL:  Bug2536: see other comments below for the last, padding argument
    // TODO: more-than-two-channels
@@ -148,10 +143,8 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    , mEnvValues( std::max(sQueueMaxLen, mBufferSize) )
    , mResample( mNumInputTracks )
 {
-   for(size_t i=0; i<mNumInputTracks; i++) {
+   for (size_t i = 0; i < mNumInputTracks; ++i)
       mInputTrack[i].SetTrack(inputTracks[i]);
-      mSamplePos[i] = inputTracks[i]->TimeToLongSamples(startTime);
-   }
 
    MakeResamplers();
    assert(BufferSize() == outBufferSize);
@@ -168,8 +161,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       mSources.emplace_back( *leader, i, mRate,
          mResampleParameters.mbVariableRates, mEnvelope, mMayThrow
          , mTimesAndSpeed
-         , mInputTrack, mSamplePos, mSampleQueue, mQueueStart
-         , mQueueLen, mResample, mEnvValues
+         , mInputTrack, mResample, mEnvValues
          , mMixerSpec ? &mMixerSpec->mMap[i] : nullptr
       );
    }
@@ -233,10 +225,10 @@ size_t MixerSource::MixVariableRates(
    const auto ii = i + iChannel;
 
    auto &cache = mInputTrack[ii];
-   const auto pos = &mSamplePos[ii];
-   const auto queue = mSampleQueue[ii].data();
-   const auto queueStart = &mQueueStart[ii];
-   const auto queueLen = &mQueueLen[ii];
+   const auto pos = &mSamplePos[iChannel];
+   const auto queue = mSampleQueue[iChannel].data();
+   const auto queueStart = &mQueueStart[iChannel];
+   const auto queueLen = &mQueueLen[iChannel];
    const auto pResample = mResample[ii].get();
 
    const auto pFloat = &floatBuffer;
@@ -379,7 +371,7 @@ size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    const auto ii = i + iChannel;
 
    auto &cache = mInputTrack[ii];
-   const auto pos = &mSamplePos[ii];
+   const auto pos = &mSamplePos[iChannel];
 
    const auto pFloat = &floatBuffer;
    const auto track = cache.GetTrack().get();
@@ -448,10 +440,6 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    bool mayThrow
    , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
    , std::vector<SampleTrackCache> &mInputTrack
-   , std::vector<sampleCount> &mSamplePos
-   , std::vector<std::vector<float>> &mSampleQueue
-   , std::vector<int> &mQueueStart
-   , std::vector<int> &mQueueLen
    , std::vector<std::unique_ptr<Resample>> &mResample
    , std::vector<double> &mEnvValues
    , const ArrayOf<bool> *pMap
@@ -464,15 +452,18 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    , mMayThrow{ mayThrow }
    , mTimesAndSpeed{ move(pTimesAndSpeed) }
    , mInputTrack{ mInputTrack }
-   , mSamplePos{ mSamplePos }
-   , mSampleQueue{ mSampleQueue }
-   , mQueueStart{ mQueueStart }
-   , mQueueLen{ mQueueLen }
+   , mSamplePos( mnChannels )
+   , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
+   , mQueueStart( mnChannels, 0 )
+   , mQueueLen( mnChannels, 0 )
    , mResample{ mResample }
    , mEnvValues{ mEnvValues }
    , mpMap{ pMap }
 {
    assert(mTimesAndSpeed);
+   auto t0 = mTimesAndSpeed->mT0;
+   for (size_t j = 0; j < mnChannels; ++j)
+      mSamplePos[j] = GetChannel(j)->TimeToLongSamples(t0);
 }
 
 MixerSource::~MixerSource() = default;
@@ -514,14 +505,13 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
    for (size_t j = 0; j < limit; ++j) {
       const auto pFloat = &data.GetWritePosition(j);
       auto &result = mixed[j];
-      const auto ii = i + j;
       const auto track = GetChannel(j);
       result =
       (mVariableRates || track->GetRate() != mRate)
          ? MixVariableRates(j, bound, *pFloat)
          : MixSameRate(j, bound, *pFloat);
       maxTrack = std::max(maxTrack, result);
-      auto newT = mSamplePos[ii].as_double() / track->GetRate();
+      auto newT = mSamplePos[j].as_double() / track->GetRate();
       if (backwards)
          mTime = std::min(mTime, newT);
       else
@@ -678,6 +668,15 @@ void Mixer::Restart()
 }
 #endif
 
+void MixerSource::Reposition(double time)
+{
+   for (size_t j = 0; j < mnChannels; ++j) {
+      mSamplePos[j] = GetChannel(j)->TimeToLongSamples(time);
+      mQueueStart[j] = 0;
+      mQueueLen[j] = 0;
+   }
+}
+
 void Mixer::Reposition(double t, bool bSkipping)
 {
    auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
@@ -688,11 +687,8 @@ void Mixer::Reposition(double t, bool bSkipping)
    else
       mTime = std::clamp(mTime, mT0, mT1);
 
-   for(size_t i=0; i<mNumInputTracks; i++) {
-      mSamplePos[i] = mInputTrack[i].GetTrack()->TimeToLongSamples(mTime);
-      mQueueStart[i] = 0;
-      mQueueLen[i] = 0;
-   }
+   for (auto &source : mSources)
+      source.Reposition(mTime);
 
    // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
    // constant rate resampling if you try to reuse the resampler after it has
