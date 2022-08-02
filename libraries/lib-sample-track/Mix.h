@@ -7,15 +7,7 @@
   Dominic Mazzoni
   Markus Meyer
 
-********************************************************************//**
-
-\class ArrayOf
-\brief Memory.h template class for making an array of float, bool, etc.
-
-\class ArraysOf
-\brief memory.h template class for making an array of arrays.
-
-*//********************************************************************/
+***********************************************************************/
 
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
@@ -83,10 +75,25 @@ class SAMPLE_TRACK_API Mixer {
        double initialSpeed{ 1.0 };
     };
 
+   // Information derived from WarpOptions and other data
+   struct ResampleParameters {
+      ResampleParameters(
+         const SampleTrackConstArray &inputTracks, double rate,
+         const WarpOptions &options);
+      bool             mbVariableRates{ false };
+      std::vector<double> mMinFactor, mMaxFactor;
+   };
+
     //
    // Constructor / Destructor
    //
 
+   /*!
+    @pre all `inputTracks` are non-null
+    @pre any left channels in inputTracks are immediately followed by their
+       partners
+    @post `BufferSize() == outBufferSize`
+    */
    Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
@@ -95,7 +102,12 @@ class SAMPLE_TRACK_API Mixer {
          bool highQuality = true, MixerSpec *mixerSpec = nullptr,
          bool applytTrackGains = true);
 
+   Mixer(const Mixer&) = delete;
+   Mixer &operator=(const Mixer&) = delete;
+
    virtual ~ Mixer();
+
+   size_t BufferSize() const { return mBufferSize; }
 
    //
    // Processing
@@ -105,6 +117,10 @@ class SAMPLE_TRACK_API Mixer {
    /// a buffer which can be retrieved by calling GetBuffer().
    /// Returns number of output samples, or 0, if there are no
    /// more samples that must be processed.
+   /*!
+    @pre `maxSamples <= BufferSize()`
+    @post result: `result <= maxSamples`
+    */
    size_t Process(size_t maxSamples);
 
    /// Restart processing at beginning of buffer next time
@@ -133,55 +149,103 @@ class SAMPLE_TRACK_API Mixer {
  private:
 
    void Clear();
-   size_t MixSameRate(int *channelFlags, SampleTrackCache &cache,
-                           sampleCount *pos);
+   /*!
+    @post result: `result <= maxOut`
+    */
+   size_t MixSameRate(size_t ii, size_t maxOut, float &floatBuffer);
 
-   size_t MixVariableRates(int *channelFlags, SampleTrackCache &cache,
-                                sampleCount *pos, float *queue,
-                                int *queueStart, int *queueLen,
-                                Resample * pResample);
+   /*!
+    @post result: `result <= maxOut`
+    */
+   size_t MixVariableRates(size_t ii, size_t maxOut, float &floatBuffer);
 
    void MakeResamplers();
 
  private:
+   // Cut the queue into blocks of this finer size
+   // for variable rate resampling.  Each block is resampled at some
+   // constant rate.
+   static constexpr size_t sProcessLen = 1024;
 
-    // Input
+   // This is the number of samples grabbed in one go from a track
+   // and placed in a queue, when mixing with resampling.
+   // (Should we use SampleTrack::GetBestBlockSize instead?)
+   static constexpr size_t sQueueMaxLen = 65536;
+
+   // GIVEN PARAMETERS
+
+   // Input
    const size_t     mNumInputTracks;
-   ArrayOf<SampleTrackCache> mInputTrack;
-   bool             mbVariableRates;
-   const BoundedEnvelope *mEnvelope;
-   ArrayOf<sampleCount> mSamplePos;
+   const unsigned   mNumChannels;
+
+   // Transformations
+   const size_t     mBufferSize;
+   // Resampling, as needed, after gain envelope
+   const double     mRate; // may require resampling
+   const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
+   // derived parameters
+   const ResampleParameters mResampleParameters;
+
+   // Output
    const bool       mApplyTrackGains;
-   Doubles          mEnvValues;
+   MixerSpec *const mMixerSpec; // many-to-one mixing of channels
+   const bool       mHighQuality; // dithering
+   const sampleFormat mFormat; // output format also influences dithering
+   const bool       mInterleaved;
+
+   // General
+   const bool       mMayThrow;
+
+
+   // INPUT
+
+   // SampleTrackCaches are the source of data
+   std::vector<SampleTrackCache> mInputTrack;
+
+   // Fetch position for source
+   // mSamplePos holds for each track the next sample position not
+   // yet processed.
+   std::vector<sampleCount> mSamplePos;
+   // There is also a double-valued fetch position with (reassignable) bounds
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
-   ArrayOf<std::unique_ptr<Resample>> mResample;
-   const size_t     mQueueMaxLen;
-   FloatBuffers     mSampleQueue;
-   ArrayOf<int>     mQueueStart;
-   ArrayOf<int>     mQueueLen;
-   size_t           mProcessLen;
-   MixerSpec        *mMixerSpec;
 
-   // Output
-   size_t              mMaxOut;
-   const unsigned   mNumChannels;
-   Floats           mGains;
-   unsigned         mNumBuffers;
-   size_t              mBufferSize;
-   size_t              mInterleavedBufferSize;
-   const sampleFormat mFormat;
-   bool             mInterleaved;
-   ArrayOf<SampleBuffer> mBuffer;
-   ArrayOf<Floats>  mTemp;
-   Floats           mFloatBuffer;
-   const double     mRate;
+   // BUFFERS
+
+   // First intermediate buffer when resampling is needed
+   std::vector<std::vector<float>> mSampleQueue;
+   // Position in each queue of the start of the next block to resample
+   std::vector<int>     mQueueStart;
+   // For each queue, the number of available samples after the queue start
+   std::vector<int>     mQueueLen;
+
+   // Resample into these buffers, or produce directly when not resampling
+   // TODO: more-than-two-channels
+   std::vector<float>   mFloatBuffers[2];
+
+   // Each channel's data is transformed, including application of
+   // gains and pans, and then (maybe many-to-one) mixer specifications
+   // determine where in mTemp it is accumulated
+   std::vector<std::vector<float>> mTemp;
+
+   // Final result applies dithering and interleaving
+   const std::vector<SampleBuffer> mBuffer;
+
+   // TRANSFORMATION STATE
+
+   // Gain envelopes are applied to input before other transformations
+   std::vector<double> mEnvValues;
+
+   std::vector<std::unique_ptr<Resample>> mResample;
+   // Varying scrub speed is one cause for resampling
    double           mSpeed;
-   bool             mHighQuality;
-   std::vector<double> mMinFactor, mMaxFactor;
 
-   const bool       mMayThrow;
+   // TODO -- insert effect stages here
+
+   // Gain slider settings are applied late
+
+   // Last step is accumulating results into the output buffers, with dithering
 };
 
 #endif
