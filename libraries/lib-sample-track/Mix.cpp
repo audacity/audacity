@@ -155,6 +155,23 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
 
    MakeResamplers();
    assert(BufferSize() == outBufferSize);
+
+   for (size_t i = 0; i < mNumInputTracks;) {
+      const auto leader = inputTracks[i].get();
+      const auto nInChannels = TrackList::Channels(leader).size();
+      if (!leader || i + nInChannels > mNumInputTracks) {
+         assert(false);
+         break;
+      }
+      auto increment = finally([&]{ i += nInChannels; });
+
+      mSources.emplace_back( *leader, i, mRate,
+         mResampleParameters.mbVariableRates, mEnvelope, mMayThrow
+         , mTimesAndSpeed
+         , mInputTrack, mSamplePos, mSampleQueue, mQueueStart
+         , mQueueLen, mResample, mEnvValues
+      );
+   }
 }
 
 Mixer::~Mixer()
@@ -562,6 +579,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    // TODO: more-than-two-channels
    auto maxChannels = mFloatBuffers.Channels();
 
+   auto pSource = mSources.begin();
    for (size_t i = 0; i < mNumInputTracks;) {
       const auto leader = mInputTrack[i].GetTrack().get();
       const auto nInChannels = TrackList::Channels(leader).size();
@@ -571,13 +589,7 @@ size_t Mixer::Process(const size_t maxToProcess)
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      MixerSource source{ *leader, i, mRate,
-         mResampleParameters.mbVariableRates, mEnvelope, mMayThrow
-         , mTimesAndSpeed
-         , mInputTrack, mSamplePos, mSampleQueue, mQueueStart
-         , mQueueLen, mResample, mEnvValues
-      };
-      auto oResult = source.Acquire(mFloatBuffers, maxToProcess);
+      auto oResult = pSource++ ->Acquire(mFloatBuffers, maxToProcess);
       if (!oResult)
          return 0;
       maxOut = std::max(maxOut, *oResult);

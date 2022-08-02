@@ -102,6 +102,8 @@ struct TimesAndSpeed final {
 
 }
 
+class MixerSource;
+
 class SAMPLE_TRACK_API Mixer {
  public:
    using WarpOptions = MixerOptions::Warp;
@@ -251,6 +253,8 @@ class SAMPLE_TRACK_API Mixer {
    // Gain slider settings are applied late
 
    // Last step is accumulating results into the output buffers, with dithering
+
+   std::vector<MixerSource> mSources;
 };
 
 //! Fetches from tracks, applies envelopes; can resample, and warp time, even
