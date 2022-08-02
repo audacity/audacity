@@ -378,33 +378,17 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
             break;
          
          if (format == int16Sample) {
-            const char *mixed = mixer->GetBuffer();
+            const int16_t *mixed = reinterpret_cast<const int16_t*>(mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < numChannels; i++) {
-                  int32_t value = *mixed++ & 0xff;
-                  value += *mixed++ << 8;
-                  wavpackBuffer[j*numChannels + i] = value;
+                  wavpackBuffer[j*numChannels + i] = (static_cast<int32_t>(*mixed++) * 65536) >> 16;
                }
             }
-         } else if (format == int24Sample || (WavpackGetMode(wpc) & MODE_FLOAT) == MODE_FLOAT) {
+         } else {
             const int *mixed = reinterpret_cast<const int*>(mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < numChannels; i++) {
                   wavpackBuffer[j*numChannels + i] = *mixed++;
-               }
-            }
-         } else {
-            const float *mixed = reinterpret_cast<const float*>(mixer->GetBuffer());
-            for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-               for (size_t i = 0; i < numChannels; i++) {
-                  int64_t intValue = static_cast<int64_t>((*mixed++) * (std::numeric_limits<int32_t>::max()));
-
-                  intValue = std::clamp<int64_t>(
-                     intValue,
-                     std::numeric_limits<int32_t>::min(),
-                     std::numeric_limits<int32_t>::max());
-
-                  wavpackBuffer[j*numChannels + i] = static_cast<int32_t>(intValue);
                }
             }
          }
