@@ -140,7 +140,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       ](auto &buffer){ buffer.Allocate(size, format); }
    )}
 
-   , mEnvValues( std::max(sQueueMaxLen, mBufferSize) )
    , mResample( mNumInputTracks )
 {
    for (size_t i = 0; i < mNumInputTracks; ++i)
@@ -158,10 +157,10 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      mSources.emplace_back( *leader, i, mRate,
+      mSources.emplace_back( *leader, i, BufferSize(), mRate,
          mResampleParameters.mbVariableRates, mEnvelope, mMayThrow
          , mTimesAndSpeed
-         , mInputTrack, mResample, mEnvValues
+         , mInputTrack, mResample
          , mMixerSpec ? &mMixerSpec->mMap[i] : nullptr
       );
    }
@@ -435,13 +434,13 @@ void MixerSource::ZeroFill(
 }
 
 MixerSource::MixerSource(const SampleTrack &leader, size_t i,
+   size_t bufferSize,
    double rate, bool variableRates,
    const BoundedEnvelope *const pEnvelope,
    bool mayThrow
    , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
    , std::vector<SampleTrackCache> &mInputTrack
    , std::vector<std::unique_ptr<Resample>> &mResample
-   , std::vector<double> &mEnvValues
    , const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
    , i{ i }
@@ -457,7 +456,7 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    , mQueueStart( mnChannels, 0 )
    , mQueueLen( mnChannels, 0 )
    , mResample{ mResample }
-   , mEnvValues{ mEnvValues }
+   , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }
 {
    assert(mTimesAndSpeed);
@@ -483,12 +482,12 @@ const bool *MixerSource::MixerSpec(unsigned iChannel) const
 
 bool MixerSource::AcceptsBuffers(const Buffers &buffers) const
 {
-   return true;
+   return AcceptsBlockSize(buffers.BufferSize());
 }
 
 bool MixerSource::AcceptsBlockSize(size_t blockSize) const
 {
-   return true;
+   return blockSize <= mEnvValues.size();
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))

@@ -180,10 +180,6 @@ class SAMPLE_TRACK_API Mixer {
    void MakeResamplers();
 
  private:
-   // This is the number of samples grabbed in one go from a track
-   // and placed in a queue, when mixing with resampling.
-   // (Should we use SampleTrack::GetBestBlockSize instead?)
-   static constexpr size_t sQueueMaxLen = 65536;
 
    // GIVEN PARAMETERS
 
@@ -209,7 +205,6 @@ class SAMPLE_TRACK_API Mixer {
    // General
    const bool       mMayThrow;
 
-
    // INPUT
 
    // SampleTrackCaches are the source of data
@@ -231,9 +226,6 @@ class SAMPLE_TRACK_API Mixer {
    const std::vector<SampleBuffer> mBuffer;
 
    // TRANSFORMATION STATE
-
-   // Gain envelopes are applied to input before other transformations
-   std::vector<double> mEnvValues;
 
    std::vector<std::unique_ptr<Resample>> mResample;
 
@@ -260,7 +252,7 @@ public:
    /*!
     @pre `pTimesAndSpeed != nullptr`
     */
-   MixerSource(const SampleTrack &leader, size_t i,
+   MixerSource(const SampleTrack &leader, size_t i, size_t bufferSize,
       double rate, bool variableRates,
       const BoundedEnvelope *const pEnvelope, bool mayThrow
 
@@ -268,7 +260,6 @@ public:
 
       , std::vector<SampleTrackCache> &mInputTrack
       , std::vector<std::unique_ptr<Resample>> &mResample
-      , std::vector<double> &mEnvValues
       , const ArrayOf<bool> *pMap
    );
    ~MixerSource();
@@ -339,7 +330,9 @@ private:
    std::vector<int>     mQueueLen;
 
    std::vector<std::unique_ptr<Resample>> &mResample;
-   std::vector<double> &mEnvValues;
+
+   // Gain envelopes are applied to input before other transformations
+   std::vector<double> mEnvValues;
 
    // Pointer into array of arrays
    const ArrayOf<bool> *const mpMap;
