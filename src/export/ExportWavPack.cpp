@@ -107,7 +107,7 @@ const std::vector< int > ExportBitDepthValues{
 };
 
 IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
-IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 160 };
+IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 40 };
 IntSetting BitDepthSetting{ L"/FileFormats/WavPackBitDepth", 16 };
 
 BoolSetting HybridModeSetting{ L"/FileFormats/WavPackHybridMode", false };
@@ -119,47 +119,33 @@ Copied from ExportMP2.cpp by
    Markus Meyer
 */
 
-// i18n-hint kbps abbreviates "thousands of bits per second"
-inline TranslatableString n_kbps( int n ) { return XO("%d kbps").Format( n ); }
+// i18n-hint bps abbreviates "bits per sample"
+inline TranslatableString n_bps( int n ) { return XO("%.1f bps").Format( n / 10.0 ); }
 
 const TranslatableStrings BitRateNames {
-   n_kbps(16),
-   n_kbps(24),
-   n_kbps(32),
-   n_kbps(40),
-   n_kbps(48),
-   n_kbps(56),
-   n_kbps(64),
-   n_kbps(80),
-   n_kbps(96),
-   n_kbps(112),
-   n_kbps(128),
-   n_kbps(160),
-   n_kbps(192),
-   n_kbps(224),
-   n_kbps(256),
-   n_kbps(320),
-   n_kbps(384),
+   n_bps(22),
+   n_bps(25),
+   n_bps(30),
+   n_bps(35),
+   n_bps(40),
+   n_bps(45),
+   n_bps(50),
+   n_bps(60),
+   n_bps(70),
+   n_bps(80),
 };
 
 const std::vector< int > BitRateValues {
-   16,
-   24,
-   32,
+   22,
+   25,
+   30,
+   35,
    40,
-   48,
-   56,
-   64,
+   45,
+   50,
+   60,
+   70,
    80,
-   96,
-   112,
-   128,
-   160,
-   192,
-   224,
-   256,
-   320,
-   384,
 };
 
 }
@@ -331,8 +317,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
    if (hybridMode) {
       config.flags |= CONFIG_HYBRID_FLAG;
-      config.flags |= CONFIG_BITRATE_KBPS;
-      config.bitrate = bitRate;
+      config.bitrate = bitRate / 10.0;
 
       if (createCorrectionFile) {
          config.flags |= CONFIG_CREATE_WVC;
