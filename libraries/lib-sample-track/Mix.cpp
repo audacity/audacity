@@ -210,8 +210,10 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 }
 
 size_t MixerSource::MixVariableRates(
-   size_t ii, const size_t maxOut, float &floatBuffer)
+   unsigned iChannel, const size_t maxOut, float &floatBuffer)
 {
+   const auto ii = i + iChannel;
+
    auto &cache = mInputTrack[ii];
    const auto pos = &mSamplePos[ii];
    const auto queue = mSampleQueue[ii].data();
@@ -353,9 +355,11 @@ size_t MixerSource::MixVariableRates(
    return out;
 }
 
-size_t MixerSource::MixSameRate(size_t ii, const size_t maxOut,
+size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    float &floatBuffer)
 {
+   const auto ii = i + iChannel;
+
    auto &cache = mInputTrack[ii];
    const auto pos = &mSamplePos[ii];
 
@@ -480,8 +484,8 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
       const auto track = mInputTrack[ii].GetTrack().get();
       result =
       (mVariableRates || track->GetRate() != mRate)
-         ? MixVariableRates(ii, bound, *pFloat)
-         : MixSameRate(ii, bound, *pFloat);
+         ? MixVariableRates(j, bound, *pFloat)
+         : MixSameRate(j, bound, *pFloat);
       maxTrack = std::max(maxTrack, result);
       auto newT = mSamplePos[ii].as_double() / track->GetRate();
       if (backwards)

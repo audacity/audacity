@@ -302,12 +302,13 @@ private:
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixSameRate(size_t ii, size_t maxOut, float &floatBuffer);
+   size_t MixSameRate(unsigned iChannel, size_t maxOut, float &floatBuffer);
 
    /*!
     @post result: `result <= maxOut`
     */
-   size_t MixVariableRates(size_t ii, size_t maxOut, float &floatBuffer);
+   size_t MixVariableRates(
+      unsigned iChannel, size_t maxOut, float &floatBuffer);
 
    /*!
     @pre `produced <= max`
