@@ -295,3 +295,18 @@ void VST3Wrapper::Finalize()
    mAudioProcessor->setProcessing(false);
    mEffectComponent->setActive(false);
 }
+
+void VST3Wrapper::SuspendProcessing()
+{
+   mAudioProcessor->setProcessing(false);
+}
+
+void VST3Wrapper::ResumeProcessing()
+{
+   mAudioProcessor->setProcessing(true);
+}
+
+Steinberg::int32 VST3Wrapper::GetLatencySamples() const
+{
+   return mAudioProcessor->getLatencySamples();
+}

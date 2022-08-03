@@ -64,7 +64,12 @@ struct VST3Wrapper
    bool Initialize(Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
    void Finalize();
 
+   void SuspendProcessing();
+   void ResumeProcessing();
+
    VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
+
+   Steinberg::int32 GetLatencySamples() const;
 
    //! This function will be rewritten when the effect is really stateless
    VST3EffectSettings& GetSettings(EffectSettings&) const
