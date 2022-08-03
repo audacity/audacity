@@ -401,8 +401,8 @@ bool VST3Effect::ProcessInitialize(
    if(mWrapper->Initialize(sampleRate, Steinberg::Vst::kOffline, mProcessingBlockSize))
    {
       SyncParameters();//will do nothing for realtime effect
-      mWrapper->mAudioProcessor->setProcessing(true);
-      mInitialDelay = static_cast<decltype(mInitialDelay)>(mWrapper->mAudioProcessor->getLatencySamples());
+      mWrapper->ResumeProcessing(); // Turn it on to do destructive processing
+      mInitialDelay = mWrapper->GetLatencySamples();
       return true;
    }
    return false;
@@ -568,14 +568,14 @@ bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
 bool VST3Effect::RealtimeSuspend()
 {
    for(auto& effect : mRealtimeGroupProcessors)
-      effect->mWrapper->mAudioProcessor->setProcessing(false);
+      effect->mWrapper->SuspendProcessing();
    return true;
 }
 
 bool VST3Effect::RealtimeResume()
 {
    for(auto& effect : mRealtimeGroupProcessors)
-      effect->mWrapper->mAudioProcessor->setProcessing(true);
+      effect->mWrapper->ResumeProcessing();
    return true;
 }
 
