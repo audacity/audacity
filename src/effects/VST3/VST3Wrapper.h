@@ -61,6 +61,8 @@ struct VST3Wrapper
    bool LoadPreset(Steinberg::IBStream* fileStream);
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
+   bool Initialize(Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
+   void Finalize();
 
    VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
 
@@ -87,8 +89,10 @@ struct VST3Wrapper
    */
 
 private:
-   void Initialize();
+   void InitComponents();
 
    const VST3::UID mEffectUID;
 
+public:
+   bool mActive{false};
 };
