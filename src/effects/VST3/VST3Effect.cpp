@@ -363,22 +363,7 @@ auto VST3Effect::RealtimeSupport() const -> RealtimeSince
 
 bool VST3Effect::SupportsAutomation() const
 {
-   if(mEditController == nullptr)
-      return false;
-
-   using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-      {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-            return true;
-      }
-   }
-
-   return false;
+   return true;
 }
 
 bool VST3Effect::SaveSettings(
