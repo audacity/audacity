@@ -181,27 +181,17 @@ class SAMPLE_TRACK_API Mixer {
 
  private:
 
-   // GIVEN PARAMETERS
-
    // Input
-   const size_t     mNumInputTracks;
    const unsigned   mNumChannels;
 
    // Transformations
    const size_t     mBufferSize;
-   // Resampling, as needed, after gain envelope
-   const double     mRate; // may require resampling
-   const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
 
    // Output
    const bool       mApplyTrackGains;
-   MixerSpec *const mMixerSpec; // many-to-one mixing of channels
    const bool       mHighQuality; // dithering
    const sampleFormat mFormat; // output format also influences dithering
    const bool       mInterleaved;
-
-   // General
-   const bool       mMayThrow;
 
    // INPUT
 
@@ -240,12 +230,9 @@ public:
     */
    MixerSource(const SampleTrack &leader, size_t bufferSize,
       double rate, const Mixer::WarpOptions &options, bool highQuality,
-      const BoundedEnvelope *const pEnvelope, bool mayThrow
-
-      , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
-
+      bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
       //! Null or else must have a lifetime enclosing this objects's
-      , const ArrayOf<bool> *pMap
+      const ArrayOf<bool> *pMap
    );
    MixerSource(MixerSource&&) = default;
    MixerSource &operator=(MixerSource&&) = delete;
@@ -295,8 +282,10 @@ private:
    size_t i;
 
    const size_t mnChannels;
-   const double mRate;
-   const BoundedEnvelope *const mEnvelope;
+   const double mRate; // may require resampling
+
+   // Resampling, as needed, after gain envelope
+   const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
    const bool mMayThrow;
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
@@ -324,6 +313,7 @@ private:
    // Gain envelopes are applied to input before other transformations
    std::vector<double> mEnvValues;
 
+   // many-to-one mixing of channels
    // Pointer into array of arrays
    const ArrayOf<bool> *const mpMap;
 };

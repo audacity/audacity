@@ -105,25 +105,12 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    double outRate, sampleFormat outFormat,
    const bool highQuality, MixerSpec *const mixerSpec,
    const bool applyTrackGains
-)  : mNumInputTracks{ inputTracks.size() }
-   , mNumChannels{ numOutChannels }
-
+)  : mNumChannels{ numOutChannels }
    , mBufferSize{ outBufferSize }
-   , mRate{ outRate }
-   , mEnvelope{ warpOptions.envelope }
-
    , mApplyTrackGains{ applyTrackGains }
-   , mMixerSpec{
-      ( mixerSpec && mixerSpec->GetNumChannels() == mNumChannels &&
-         mixerSpec->GetNumTracks() == mNumInputTracks
-      )  ? mixerSpec
-         : nullptr
-   }
    , mHighQuality{ highQuality }
    , mFormat{ outFormat }
    , mInterleaved{ outInterleaved }
-
-   , mMayThrow{ mayThrow }
 
    , mTimesAndSpeed{ std::make_shared<TimesAndSpeed>( TimesAndSpeed{
       startTime, stopTime, warpOptions.initialSpeed, startTime
@@ -142,19 +129,25 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    )}
 {
    assert(BufferSize() == outBufferSize);
+   const auto nTracks = inputTracks.size();
 
-   for (size_t i = 0; i < mNumInputTracks;) {
+   auto pMixerSpec = ( mixerSpec &&
+      mixerSpec->GetNumChannels() == mNumChannels &&
+      mixerSpec->GetNumTracks() == nTracks
+   ) ? mixerSpec : nullptr;
+
+   for (size_t i = 0; i < nTracks;) {
       const auto leader = inputTracks[i].get();
       const auto nInChannels = TrackList::Channels(leader).size();
-      if (!leader || i + nInChannels > mNumInputTracks) {
+      if (!leader || i + nInChannels > nTracks) {
          assert(false);
          break;
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      mSources.emplace_back( *leader, BufferSize(), mRate,
-         warpOptions, highQuality, mEnvelope, mMayThrow, mTimesAndSpeed,
-         (mMixerSpec ? &mMixerSpec->mMap[i] : nullptr));
+      mSources.emplace_back( *leader, BufferSize(), outRate,
+         warpOptions, highQuality, mayThrow, mTimesAndSpeed,
+         (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
    }
 }
 
@@ -424,13 +417,12 @@ void MixerSource::ZeroFill(
 
 MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    double rate, const Mixer::WarpOptions &options, bool highQuality,
-   const BoundedEnvelope *const pEnvelope,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
    const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
    , mnChannels{ TrackList::Channels(&leader).size() }
    , mRate{ rate }
-   , mEnvelope{ pEnvelope }
+   , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }
    , mTimesAndSpeed{ move(pTimesAndSpeed) }
    , mInputTrack( mnChannels )
@@ -592,8 +584,7 @@ size_t Mixer::Process(const size_t maxToProcess)
                gains[c] = track->GetChannelGain(c);
          const auto flags =
             findChannelFlags(source.MixerSpec(j), track->GetChannel());
-         MixBuffers(mNumChannels,
-            flags, gains, *pFloat, mTemp, *oResult);
+         MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, *oResult);
       }
    }
 
