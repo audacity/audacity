@@ -25,6 +25,8 @@ namespace Steinberg
    }
 }
 
+class EffectSettingsAccess;
+
 namespace internal
 {
    /** Stores all pending changes from the editor, and
@@ -43,6 +45,7 @@ namespace internal
       std::atomic<Steinberg::Vst::IParameterChanges*> mSecond { nullptr };
       std::atomic<Steinberg::Vst::IParameterChanges*> mPendingChanges { nullptr };
 
+      std::shared_ptr<EffectSettingsAccess> mAccess;
    public:
       using PendingChangesPtr = std::unique_ptr<
          Steinberg::Vst::IParameterChanges,
@@ -50,6 +53,10 @@ namespace internal
 
       ComponentHandler();
       virtual ~ComponentHandler();
+
+      void SetAccess(const std::shared_ptr<EffectSettingsAccess>& access);
+
+      EffectSettingsAccess* GetAccess();
 
       Steinberg::tresult PLUGIN_API beginEdit(Steinberg::Vst::ParamID id) override;
 
