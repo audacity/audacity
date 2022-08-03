@@ -54,6 +54,7 @@
 #include "AllThemeResources.h"
 #include "BasicUI.h"
 #include "Mix.h"
+#include "MixAndRender.h"
 #include "Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
 #include "Project.h"
@@ -235,8 +236,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
       + (selectionOnly ? &Track::IsSelected : &Track::Any )
       - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
-      inputs.push_back(
-         pTrack->SharedPointer< const SampleTrack >() );
+      inputs.emplace_back(
+         pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(move(inputs),
                   // Throw, to stop exporting, if read fails:

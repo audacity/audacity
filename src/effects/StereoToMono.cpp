@@ -20,6 +20,7 @@
 #include <wx/intl.h>
 
 #include "Mix.h"
+#include "MixAndRender.h"
 #include "Project.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
@@ -173,8 +174,9 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    auto end = wxMax(left->GetEndTime(), right->GetEndTime());
 
    Mixer::Inputs tracks;
-   tracks.push_back(left->SharedPointer< const SampleTrack >());
-   tracks.push_back(right->SharedPointer< const SampleTrack >());
+   for (auto pTrack : { left, right })
+      tracks.emplace_back(
+         pTrack->SharedPointer<const SampleTrack>(), GetEffectStages(*pTrack));
 
    Mixer mixer(move(tracks),
                true,                // Throw to abort mix-and-render if read fails:
