@@ -16,21 +16,11 @@
 #include <wx/wx.h>
 
 #include <pluginterfaces/gui/iplugview.h>
+#include <public.sdk/source/vst/hosting/module.h>
 
 #include "../StatefulPerTrackEffect.h"
 
 #include "SampleCount.h"
-
-#include "VST3Utils.h"
-
-namespace VST3
-{
-   namespace Hosting
-   {
-      class ClassInfo;
-      class Module;
-   }
-}
 
 class NumericTextCtrl;
 
@@ -38,6 +28,7 @@ namespace Steinberg
 {
    namespace Vst
    {
+      class IParameterChanges;
       class IComponent;
       class IEditController;
       class IConnectionPoint;
@@ -53,14 +44,8 @@ class VST3Wrapper;
  */
 class VST3Effect final : public StatefulPerTrackEffect
 {
+   VST3::Hosting::ClassInfo mEffectClassInfo;
    std::unique_ptr<VST3Wrapper> mWrapper;
-
-   //Following fields are unique to each effect instance
-   
-   bool mActive{false};
-
-   //Since all of the realtime processors share same presets, following
-   //fields are only initialized and assigned in the global effect instance
 
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
@@ -77,6 +62,7 @@ class VST3Effect final : public StatefulPerTrackEffect
    mutable RegistryPaths mFactoryPresets;
 
    size_t mUserBlockSize { 8192 };
+   size_t mProcessingBlockSize { 8192 };
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
 
@@ -165,15 +151,10 @@ public:
    bool TransferDataToWindow(const EffectSettings& settings) override;
 
 private:
-   //Used to flush all pending changes to the IAudioProcessor, while
-   //plugin is inactive(!)
-   void FlushPendingChanges() const;
 
    void OnEffectWindowResize(wxSizeEvent & evt);
 
    bool LoadVSTUI(wxWindow* parent);
-
-   void SyncParameters() const;
 
    bool LoadPreset(const wxString& path, EffectSettings& settings);
 
