@@ -289,6 +289,100 @@ bool VST3Wrapper::Initialize(Steinberg::Vst::SampleRate sampleRate, Steinberg::i
    return false;
 }
 
+size_t VST3Wrapper::ProcessBlock(
+   Steinberg::Vst::IComponent* mEffectComponent    ,
+   const Steinberg::Vst::ProcessSetup& mSetup,
+   const float* const* inBlock,
+   float* const* outBlock,
+   size_t blockLen,
+   Steinberg::Vst::IParameterChanges* inputParameterChanges)
+{
+   using namespace Steinberg;
+
+   auto mAudioProcessor = FUnknownPtr<Vst::IAudioProcessor>(mEffectComponent);
+   if (!mAudioProcessor)
+      return 0;
+
+   Vst::ProcessData data;
+   data.processMode = mSetup.processMode;
+   data.symbolicSampleSize = mSetup.symbolicSampleSize;
+   data.inputParameterChanges = inputParameterChanges;
+
+   static_assert(std::numeric_limits<decltype(blockLen)>::max()
+      >= std::numeric_limits<decltype(data.numSamples)>::max());
+
+   data.numSamples = static_cast<decltype(data.numSamples)>(std::min(
+      blockLen, 
+      static_cast<decltype(blockLen)>(mSetup.maxSamplesPerBlock)
+   ));
+
+   data.numInputs = inBlock == nullptr ? 0 : mEffectComponent->getBusCount(Vst::kAudio, Vst::kInput);
+   data.numOutputs = outBlock == nullptr ? 0 : mEffectComponent->getBusCount(Vst::kAudio, Vst::kOutput);
+
+   if(data.numInputs > 0)
+   {
+      int inputBlocksOffset {0};
+
+      data.inputs = static_cast<Vst::AudioBusBuffers*>(
+         alloca(sizeof(Vst::AudioBusBuffers) * data.numInputs));
+
+      for(int busIndex = 0; busIndex < data.numInputs; ++busIndex)
+      {
+         Vst::BusInfo busInfo { };
+         if(mEffectComponent->getBusInfo(Vst::kAudio, Vst::kInput, busIndex, busInfo) != kResultOk)
+         {
+            return 0;
+         }
+         if(busInfo.busType == Vst::kMain)
+         {
+            data.inputs[busIndex].numChannels = busInfo.channelCount;
+            data.inputs[busIndex].channelBuffers32 = const_cast<float**>(inBlock + inputBlocksOffset);
+            inputBlocksOffset += busInfo.channelCount;
+         }
+         else
+         {
+            //aux is not yet supported
+            data.inputs[busIndex].numChannels = 0;
+            data.inputs[busIndex].channelBuffers32 = nullptr;
+         }
+         data.inputs[busIndex].silenceFlags = 0UL;
+      }
+   }
+   if(data.numOutputs > 0)
+   {
+      int outputBlocksOffset {0};
+
+      data.outputs = static_cast<Vst::AudioBusBuffers*>(
+         alloca(sizeof(Vst::AudioBusBuffers) * data.numOutputs));
+      for(int busIndex = 0; busIndex < data.numOutputs; ++busIndex)
+      {
+         Vst::BusInfo busInfo { };
+         if(mEffectComponent->getBusInfo(Vst::kAudio, Vst::kOutput, busIndex, busInfo) != kResultOk)
+         {
+            return 0;
+         }
+         if(busInfo.busType == Vst::kMain)
+         {
+            data.outputs[busIndex].numChannels = busInfo.channelCount;
+            data.outputs[busIndex].channelBuffers32 = const_cast<float**>(outBlock + outputBlocksOffset);
+            outputBlocksOffset += busInfo.channelCount;
+         }
+         else
+         {
+            //aux is not yet supported
+            data.outputs[busIndex].numChannels = 0;
+            data.outputs[busIndex].channelBuffers32 = nullptr;
+         }
+         data.outputs[busIndex].silenceFlags = 0UL;
+      }
+   }
+
+   const auto processResult = mAudioProcessor->process(data);
+
+   return processResult == kResultOk ?
+      data.numSamples : 0;
+}
+
 void VST3Wrapper::Finalize()
 {
    mActive = false;
