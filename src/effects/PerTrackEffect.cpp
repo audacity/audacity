@@ -92,7 +92,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
 
-   Buffers inBuffers{ 1 }, outBuffers{ 1 };
+   Buffers inBuffers, outBuffers;
    ChannelName map[3];
    size_t prevBufferSize = 0;
    int count = 0;

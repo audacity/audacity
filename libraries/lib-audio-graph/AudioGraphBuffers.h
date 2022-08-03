@@ -35,7 +35,18 @@ public:
     @post `BufferSize() == blockSize`
     @post `IsRewound()`
     */
-   explicit Buffers(size_t blockSize);
+   explicit Buffers(size_t blockSize = 512);
+   /*!
+    @param padding extra allocation can work around a soxr library bug
+
+    @pre `blockSize > 0`
+    @pre `nBlocks > 0`
+    @post `Channels() == nChannels`
+    @post `BlockSize() == blockSize`
+    @post `BufferSize() == blockSize * nBlocks`
+    */
+   Buffers(unsigned nChannels, size_t blockSize, size_t nBlocks,
+      size_t padding = 0);
    unsigned Channels() const { return mBuffers.size(); }
    size_t BufferSize() const { return mBufferSize; }
    size_t BlockSize() const { return mBlockSize; }
@@ -47,13 +58,16 @@ public:
    size_t Remaining() const { return BufferSize() - Position(); }
    bool IsRewound() const { return BufferSize() == Remaining(); }
    /*!
+    @param padding extra allocation can work around a soxr library bug
+
     @pre `blockSize > 0`
     @pre `nBlocks > 0`
     @post `Channels() == nChannels`
     @post `BlockSize() == blockSize`
     @post `BufferSize() == blockSize * nBlocks`
     */
-   void Reinit(unsigned nChannels, size_t blockSize, size_t nBlocks);
+   void Reinit(unsigned nChannels, size_t blockSize, size_t nBlocks,
+      size_t padding = 0);
    //! Get array of positions in the buffers
    float *const *Positions() const { return mPositions.data(); }
    //! Discard some data at the (unchanging) positions
