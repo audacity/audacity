@@ -555,12 +555,6 @@ list( APPEND SOURCES
          effects/VST3/internal/ComponentHandler.cpp
          effects/VST3/internal/ConnectionProxy.h
          effects/VST3/internal/ConnectionProxy.cpp
-         effects/VST3/internal/ParameterChanges.h
-         effects/VST3/internal/ParameterChanges.cpp
-         effects/VST3/internal/ParameterQueuePool.h
-         effects/VST3/internal/ParameterQueuePool.cpp
-         effects/VST3/internal/ParameterValueQueue.h
-         effects/VST3/internal/ParameterValueQueue.cpp
          effects/VST3/internal/PlugFrame.h
          effects/VST3/internal/PlugFrame.cpp
       >

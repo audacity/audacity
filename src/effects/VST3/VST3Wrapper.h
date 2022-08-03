@@ -1,9 +1,10 @@
 #pragma once
+#include <unordered_map>
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
+#include <pluginterfaces/vst/ivstparameterchanges.h>
 #include <public.sdk/source/vst/hosting/module.h>
 #include "internal/ComponentHandler.h"
-#include <optional>
 
 namespace Steinberg
 {
@@ -17,6 +18,7 @@ namespace Steinberg
    {
       class IConnectionPoint;
       class IEditController;
+      class IParameterChanges;
    }
 }
 
@@ -24,13 +26,43 @@ struct EffectSettings;
 
 struct VST3EffectSettings
 {
+   //Holds the parameter that has been changed since last
+   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> parameterChanges;
+
+   //Holds the "current" parameter values
+   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> state;
    // states as saved by IComponent::getState
    std::optional<std::string> mProcessorStateStr;
    std::optional<std::string> mControllerStateStr;
 };
 
-struct VST3Wrapper
+class InputParameterValueQueue final : public Steinberg::Vst::IParamValueQueue
 {
+   Steinberg::Vst::ParamID mParameterId{};
+   const Steinberg::Vst::ParamValue* mValues{nullptr};
+public:
+
+   InputParameterValueQueue() { FUNKNOWN_CTOR }
+   ~InputParameterValueQueue() { FUNKNOWN_DTOR }
+
+   void Bind(Steinberg::Vst::ParamID id, const Steinberg::Vst::ParamValue* values);
+
+   Steinberg::tresult PLUGIN_API addPoint(Steinberg::int32 sampleOffset, Steinberg::Vst::ParamValue value,
+      Steinberg::int32& index) override;
+
+   Steinberg::Vst::ParamID PLUGIN_API getParameterId() override;
+
+   Steinberg::tresult PLUGIN_API getPoint(Steinberg::int32 index, Steinberg::int32& sampleOffset,
+      Steinberg::Vst::ParamValue& value) override;
+
+   Steinberg::int32 PLUGIN_API getPointCount() override;
+
+   DECLARE_FUNKNOWN_METHODS
+};
+
+class VST3Wrapper final
+{
+public:
 
    // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
    // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
@@ -43,9 +75,6 @@ struct VST3Wrapper
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mComponentConnectionProxy;
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
-   //Holds pending parameter changes to be applied to multiple realtime effects.
-   //Not used in the "offline" mode
-   internal::ComponentHandler::PendingChangesPtr mPendingChanges;
 
    VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::UID effectUID);
    VST3Wrapper(const VST3Wrapper& other);
@@ -62,50 +91,33 @@ struct VST3Wrapper
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
    bool Initialize(Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
+   size_t Process(const EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen);
    void Finalize();
 
    void SuspendProcessing();
    void ResumeProcessing();
 
-   VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
-
    Steinberg::int32 GetLatencySamples() const;
 
-   //! This function will be rewritten when the effect is really stateless
-   VST3EffectSettings& GetSettings(EffectSettings&) const
-   {
-      return const_cast<VST3Wrapper*>(this)->mSettings;
-   }
+   //Used to flush changes to the IAudioProcessor, while
+   //plugin is inactive(!)
+   void FlushSettings(const EffectSettings& settings);
 
-   //! This function will be rewritten when the effect is really stateless
-   const VST3EffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
+   static EffectSettings MakeSettings();
 
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-   */
+   static VST3EffectSettings& GetSettings(EffectSettings& settings);
+   static const VST3EffectSettings& GetSettings(const EffectSettings& settings);
 
 private:
    void InitComponents();
 
    const VST3::UID mEffectUID;
 
-public:
    bool mActive{false};
 
-   static size_t ProcessBlock(
-      Steinberg::Vst::IComponent* effect,
-      const Steinberg::Vst::ProcessSetup& setup,
-      const float* const* inBlock,
-      float* const* outBlock,
-      size_t blockLen,
-      Steinberg::Vst::IParameterChanges* inputParameterChanges);
+   //A preallocated array of Steinberg::Vst::IParameterValueQueue
+   //used as a view to an actual parameter changes that reside
+   //in VST3EffectSettings structure, dynamically assigned during
+   //processing
+   std::unique_ptr<InputParameterValueQueue[]> mParameterQueues;
 };

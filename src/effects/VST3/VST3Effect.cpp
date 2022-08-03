@@ -28,15 +28,9 @@
 #include <public.sdk/source/vst/hosting/hostclasses.h>
 
 #include "internal/ComponentHandler.h"
-#include "internal/ParameterChanges.h"
 #include "internal/PlugFrame.h"
 
 #include "widgets/NumericTextCtrl.h"
-
-auto VST3Effect::RealtimeSupport() const -> RealtimeSince
-{
-   return RealtimeSince::Always;
-}
 
 #include "SelectFile.h"
 
@@ -193,6 +187,11 @@ bool VST3Effect::IsDefault() const
    return false;
 }
 
+auto VST3Effect::RealtimeSupport() const -> RealtimeSince
+{
+   return RealtimeSince::Always;
+}
+
 bool VST3Effect::SupportsAutomation() const
 {
    return true;
@@ -201,7 +200,7 @@ bool VST3Effect::SupportsAutomation() const
 bool VST3Effect::SaveSettings(
    const EffectSettings& settings, CommandParameters& parms) const
 {
-   const auto& vst3Settings = mWrapper->GetSettings(settings);
+   const auto& vst3Settings = VST3Wrapper::GetSettings(settings);
 
    if (vst3Settings.mProcessorStateStr)
       parms.Write( processorStateKey,  wxString( *vst3Settings.mProcessorStateStr )  );
@@ -215,7 +214,7 @@ bool VST3Effect::SaveSettings(
 bool VST3Effect::LoadSettings(
    const CommandParameters& parms, EffectSettings& settings) const
 {
-   auto& vst3Settings = mWrapper->GetSettings(settings);
+   auto& vst3Settings = VST3Wrapper::GetSettings(settings);
 
    wxString tmpString;
 
@@ -372,6 +371,19 @@ unsigned VST3Effect::GetAudioOutCount() const
       Steinberg::Vst::kOutput,
       Steinberg::Vst::kMain);
 }
+
+int VST3Effect::GetMidiInCount() const
+{
+   //Dummy
+   return 0;
+}
+
+int VST3Effect::GetMidiOutCount() const
+{
+   //Dummy
+   return 0;
+}
+
 size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
 {
    mProcessingBlockSize = 
@@ -400,8 +412,6 @@ bool VST3Effect::ProcessInitialize(
 {
    if(mWrapper->Initialize(sampleRate, Steinberg::Vst::kOffline, mProcessingBlockSize))
    {
-      SyncParameters();//will do nothing for realtime effect
-      mWrapper->ResumeProcessing(); // Turn it on to do destructive processing
       mInitialDelay = mWrapper->GetLatencySamples();
       return true;
    }
@@ -416,19 +426,14 @@ return GuardedCall<bool>([&]{
 });
 }
 
-size_t VST3Effect::ProcessBlock(EffectSettings &,
+size_t VST3Effect::ProcessBlock(EffectSettings & settings,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
-   internal::ComponentHandler::PendingChangesPtr pendingChanges { nullptr };
-   if(mWrapper->mComponentHandler)
-      pendingChanges = mWrapper->mComponentHandler->getPendingChanges();
-   return VST3Wrapper::ProcessBlock(mWrapper->mEffectComponent.get(), mWrapper->mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
+   return mWrapper->Process(settings, inBlock, outBlock, blockLen);
 }
 
 bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   //reload current parameters form the editor into parameter queues
-   SyncParameters();
    return true;
 }
 
@@ -460,10 +465,9 @@ bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
    return GuardedCall<bool>([this]()
    {
       for(auto& processor : mRealtimeGroupProcessors)
-         processor->ProcessFinalize();
+         processor->mWrapper->Finalize();
 
       mRealtimeGroupProcessors.clear();
-      mWrapper->mPendingChanges.reset();
       
       return true;
    });
@@ -485,36 +489,21 @@ bool VST3Effect::RealtimeResume()
 
 bool VST3Effect::RealtimeProcessStart(EffectSettings &)
 {
-   assert(mWrapper->mPendingChanges == nullptr);
-
-   if(mWrapper->mComponentHandler != nullptr)
-      //Same parameter changes are used among all of the realtime processors
-      mWrapper->mPendingChanges = mWrapper->mComponentHandler->getPendingChanges();
    return true;
 }
 
-size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
+size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &settings,
    const float* const* inBuf, float* const* outBuf, size_t numSamples)
 {
    if (group >= mRealtimeGroupProcessors.size())
       return 0;
-   auto& effect = mRealtimeGroupProcessors[group];
-   return VST3Wrapper::ProcessBlock(
-      effect->mWrapper->mEffectComponent.get(),
-      effect->mWrapper->mSetup,
-      inBuf,
-      outBuf,
-      numSamples,
-      mWrapper->mPendingChanges.get());
+
+   return mRealtimeGroupProcessors[group]->mWrapper->Process(settings, inBuf, outBuf, numSamples);
 }
 
 bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
-   return GuardedCall<bool>([this]()
-   {
-      mWrapper->mPendingChanges.reset();
-      return true;
-   });
+   return true;
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
@@ -633,14 +622,12 @@ bool VST3Effect::CloseUI()
       mPlugView = nullptr;
       mPlugFrame = nullptr;
    }
-   else
-      FlushPendingChanges();
-
-   if(mWrapper->mComponentHandler)
+   else if(mWrapper->mComponentHandler)
    {
       //Slave processors don't have a component handler...
       if(auto access = mWrapper->mComponentHandler->GetAccess())
       {
+         mWrapper->FlushSettings(access->Get());
          mWrapper->mComponentHandler->SetAccess(nullptr);
       }
    }
@@ -733,33 +720,6 @@ void VST3Effect::ShowOptions()
    if (dlg.ShowModal())
    {
       ReloadUserOptions();
-   }
-}
-
-//Used as a workaround for issue #2555: some plugins do not accept changes
-//via IEditController::setParamNormalized, but seem to read current
-//parameter values directly from the DSP model.
-//
-//When processing is disabled this call helps synchronize internal state of the
-//IEditController, so that next time UI is opened it displays correct values.
-//
-//As a side effect subsequent call to IAudioProcessor::process may flush
-//plugin internal buffers
-void VST3Effect::FlushPendingChanges() const
-{
-   using namespace Steinberg;
-
-   if(mWrapper->mActive)
-      return;
-
-   auto pendingChanges = mWrapper->mComponentHandler->getPendingChanges();
-
-   if(pendingChanges && mWrapper->mEffectComponent->setActive(true) == kResultOk)
-   {
-      mWrapper->mAudioProcessor->setProcessing(true);
-      VST3Wrapper::ProcessBlock(mWrapper->mEffectComponent.get(), mWrapper->mSetup, nullptr, nullptr, 0, pendingChanges.get());
-      mWrapper->mAudioProcessor->setProcessing(false);
-      mWrapper->mEffectComponent->setActive(false);
    }
 }
 
@@ -878,32 +838,6 @@ bool VST3Effect::LoadVSTUI(wxWindow* parent)
    return false;
 }
 
-// Transfers data from the dialog
-void VST3Effect::SyncParameters() const
-{
-   using namespace Steinberg;
-
-   if(mWrapper->mComponentHandler != nullptr)
-   {
-      for(int i = 0, count = mWrapper->mEditController->getParameterCount(); i < count; ++i)
-      {
-         Vst::ParameterInfo parameterInfo { };
-         if(mWrapper->mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-         {
-            if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
-               continue;
-
-            if(mWrapper->mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
-            {
-               auto cleanup = finally([&]{ mWrapper->mComponentHandler->endEdit(parameterInfo.id); });
-               mWrapper->mComponentHandler->performEdit(parameterInfo.id, mWrapper->mEditController->getParamNormalized(parameterInfo.id));
-            }
-         }
-      }
-      FlushPendingChanges();
-   }
-}
-
 bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
 {
    using namespace Steinberg;
@@ -933,8 +867,6 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       return false;
    }
 
-   
-
    mWrapper->FetchSettings(mWrapper->GetSettings(settings));
 
    return true;
@@ -955,21 +887,15 @@ void VST3Effect::ReloadUserOptions()
 
 EffectSettings VST3Effect::MakeSettings() const
 {
-   auto result = StatefulPerTrackEffect::MakeSettings();
-   // Cause initial population of the map stored in the stateful effect
-   if (!mInitialFetchDone) {
-      mWrapper->FetchSettings(mWrapper->GetSettings(result));
-      mInitialFetchDone = true;
-   }
-   return result;
+   return VST3Wrapper::MakeSettings();
 }
 
 bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
 {
    if (!mWrapper->StoreSettings(mWrapper->GetSettings(settings)))
       return false;
-
-   SyncParameters();
+   
+   mWrapper->FlushSettings(settings);
 
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
