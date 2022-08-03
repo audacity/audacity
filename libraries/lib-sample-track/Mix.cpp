@@ -13,11 +13,6 @@
 \class Mixer
 \brief Functions for doing the mixdown of the tracks.
 
-*//****************************************************************//**
-
-\class MixerSpec
-\brief Class used with Mixer.
-
 *//*******************************************************************/
 
 
@@ -53,9 +48,8 @@ MixerOptions::Warp::Warp(double min, double max, double initial)
    assert(min <= max);
 }
 
-Mixer::ResampleParameters::ResampleParameters(
-   const SampleTrackConstArray &inputTracks, double rate,
-   const WarpOptions &options)
+MixerOptions::ResampleParameters::ResampleParameters(
+   const SampleTrackConstArray &inputTracks, double rate, const Warp &options)
 {
    mMinFactor.reserve(inputTracks.size());
    mMaxFactor.reserve(inputTracks.size());
@@ -635,7 +629,7 @@ void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
    mSpeed = fabs(speed);
 }
 
-MixerSpec::MixerSpec( unsigned numTracks, unsigned maxNumChannels )
+MixerOptions::Downmix::Downmix(unsigned numTracks, unsigned maxNumChannels)
 {
    mNumTracks = mNumChannels = numTracks;
    mMaxNumChannels = maxNumChannels;
@@ -650,7 +644,7 @@ MixerSpec::MixerSpec( unsigned numTracks, unsigned maxNumChannels )
          mMap[ i ][ j ] = ( i == j );
 }
 
-MixerSpec::MixerSpec( const MixerSpec &mixerSpec )
+MixerOptions::Downmix::Downmix(const Downmix &mixerSpec)
 {
    mNumTracks = mixerSpec.mNumTracks;
    mMaxNumChannels = mixerSpec.mMaxNumChannels;
@@ -663,16 +657,16 @@ MixerSpec::MixerSpec( const MixerSpec &mixerSpec )
          mMap[ i ][ j ] = mixerSpec.mMap[ i ][ j ];
 }
 
-void MixerSpec::Alloc()
+void MixerOptions::Downmix::Alloc()
 {
    mMap.reinit(mNumTracks, mMaxNumChannels);
 }
 
-MixerSpec::~MixerSpec()
+MixerOptions::Downmix::~Downmix()
 {
 }
 
-bool MixerSpec::SetNumChannels( unsigned newNumChannels )
+bool MixerOptions::Downmix::SetNumChannels(unsigned newNumChannels)
 {
    if( mNumChannels == newNumChannels )
       return true;
@@ -693,7 +687,7 @@ bool MixerSpec::SetNumChannels( unsigned newNumChannels )
    return true;
 }
 
-MixerSpec& MixerSpec::operator=( const MixerSpec &mixerSpec )
+auto MixerOptions::Downmix::operator=(const Downmix &mixerSpec) -> Downmix &
 {
    mNumTracks = mixerSpec.mNumTracks;
    mNumChannels = mixerSpec.mNumChannels;

@@ -25,8 +25,10 @@ class SampleTrack;
 using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
 class SampleTrackCache;
 
-class SAMPLE_TRACK_API MixerSpec
-{
+namespace MixerOptions {
+
+//! A matrix of booleans, one row per input channel, column per output
+class SAMPLE_TRACK_API Downmix final {
    unsigned mNumTracks, mNumChannels, mMaxNumChannels;
 
    void Alloc();
@@ -34,20 +36,18 @@ class SAMPLE_TRACK_API MixerSpec
 public:
    ArraysOf<bool> mMap;
 
-   MixerSpec( unsigned numTracks, unsigned maxNumChannels );
-   MixerSpec( const MixerSpec &mixerSpec );
-   virtual ~MixerSpec();
+   Downmix(unsigned numTracks, unsigned maxNumChannels);
+   Downmix(const Downmix &mixerSpec);
+   ~Downmix();
 
-   bool SetNumChannels( unsigned numChannels );
+   bool SetNumChannels(unsigned numChannels);
    unsigned GetNumChannels() { return mNumChannels; }
 
    unsigned GetMaxNumChannels() { return mMaxNumChannels; }
    unsigned GetNumTracks() { return mNumTracks; }
 
-   MixerSpec& operator=( const MixerSpec &mixerSpec );
+   Downmix& operator=(const Downmix &mixerSpec);
 };
-
-namespace MixerOptions {
 
 //! Immutable structure is an argument to Mixer's constructor
 struct SAMPLE_TRACK_API Warp final {
@@ -75,22 +75,23 @@ struct SAMPLE_TRACK_API Warp final {
    const double initialSpeed{ 1.0 };
 };
 
+// Information derived from Warp and other data
+struct ResampleParameters final {
+   ResampleParameters(
+      const SampleTrackConstArray &inputTracks, double rate,
+      const Warp &options);
+   bool             mbVariableRates{ false };
+   std::vector<double> mMinFactor, mMaxFactor;
+};
 }
 
 class SAMPLE_TRACK_API Mixer {
  public:
    using WarpOptions = MixerOptions::Warp;
+   using MixerSpec = MixerOptions::Downmix;
+   using ResampleParameters = MixerOptions::ResampleParameters;
 
-   // Information derived from WarpOptions and other data
-   struct ResampleParameters {
-      ResampleParameters(
-         const SampleTrackConstArray &inputTracks, double rate,
-         const WarpOptions &options);
-      bool             mbVariableRates{ false };
-      std::vector<double> mMinFactor, mMaxFactor;
-   };
-
-    //
+   //
    // Constructor / Destructor
    //
 

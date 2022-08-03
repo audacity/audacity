@@ -31,7 +31,8 @@ class AudacityProject;
 class WaveTrack;
 class Tags;
 class TrackList;
-class MixerSpec;
+namespace MixerOptions{ class Downmix; }
+using MixerSpec = MixerOptions::Downmix;
 class ProgressDialog;
 class ShuttleGui;
 class Mixer;
