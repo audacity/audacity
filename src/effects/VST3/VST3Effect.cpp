@@ -657,56 +657,53 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
 
    mParent = S.GetParent();
 
-   if(mWrapper->mComponentHandler != nullptr)
+   // PRL:  Is this sync really needed?
+   //access.ModifySettings([&](EffectSettings &settings){
+   //   SyncParameters();
+   //});
+   mWrapper->mComponentHandler->SetAccess(access.shared_from_this());
+
+   auto parent = S.GetParent();
+   if(GetType() == EffectTypeGenerate)
    {
-      // PRL:  Is this sync really needed?
-      access.ModifySettings([&](EffectSettings &settings){
-         SyncParameters();
-      });
+      auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
+      if(!LoadVSTUI(controlsRoot))
+         mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mWrapper->mEditController, *mWrapper->mComponentHandler);
+      vSizer->Add(controlsRoot);
 
-      auto parent = S.GetParent();
-      if(GetType() == EffectTypeGenerate)
-      {
-         auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-         auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
-         if(!LoadVSTUI(controlsRoot))
-            mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mWrapper->mEditController, *mWrapper->mComponentHandler);
-         vSizer->Add(controlsRoot);
-
-         auto &extra = access.Get().extra;
-         mDuration = safenew NumericTextCtrl(
-               parent, wxID_ANY,
-               NumericConverter::TIME,
-               extra.GetDurationFormat(),
-               extra.GetDuration(),
-               mWrapper->mSetup.sampleRate,
-               NumericTextCtrl::Options{}
-                  .AutoPos(true)
-            );
-         mDuration->SetName( XO("Duration") );
-
-         auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
-         hSizer->AddSpacer(5);
-         hSizer->Add(mDuration);
-         vSizer->AddSpacer(10);
-         vSizer->Add(hSizer.release());
-
-         parent->SetMinSize(vSizer->CalcMin());
-         parent->SetSizer(vSizer.release());
-      }
-      else if(!LoadVSTUI(parent))
-      {
-         mPlainUI = VST3ParametersWindow::Setup(
-            *parent,
-            *mWrapper->mEditController,
-            *mWrapper->mComponentHandler
+      auto &extra = access.Get().extra;
+      mDuration = safenew NumericTextCtrl(
+            parent, wxID_ANY,
+            NumericConverter::TIME,
+            extra.GetDurationFormat(),
+            extra.GetDuration(),
+            mWrapper->mSetup.sampleRate,
+            NumericTextCtrl::Options{}
+               .AutoPos(true)
          );
-      }
+      mDuration->SetName( XO("Duration") );
 
-      return std::make_unique<DefaultEffectUIValidator>(*this, access);
+      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
+      hSizer->AddSpacer(5);
+      hSizer->Add(mDuration);
+      vSizer->AddSpacer(10);
+      vSizer->Add(hSizer.release());
+
+      parent->SetMinSize(vSizer->CalcMin());
+      parent->SetSizer(vSizer.release());
    }
-   return nullptr;
+   else if(!LoadVSTUI(parent))
+   {
+      mPlainUI = VST3ParametersWindow::Setup(
+         *parent,
+         *mWrapper->mEditController,
+         *mWrapper->mComponentHandler
+      );
+   }
+
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool VST3Effect::ValidateUI(EffectSettings &settings)
@@ -734,6 +731,15 @@ bool VST3Effect::CloseUI()
    }
    else
       FlushPendingChanges();
+
+   if(mWrapper->mComponentHandler)
+   {
+      //Slave processors don't have a component handler...
+      if(auto access = mWrapper->mComponentHandler->GetAccess())
+      {
+         mWrapper->mComponentHandler->SetAccess(nullptr);
+      }
+   }
 
    return true;
 }

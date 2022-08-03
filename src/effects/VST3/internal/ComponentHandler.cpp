@@ -51,6 +51,16 @@ internal::ComponentHandler::~ComponentHandler()
    FUNKNOWN_DTOR;
 }
 
+void internal::ComponentHandler::SetAccess(const std::shared_ptr<EffectSettingsAccess>& access)
+{
+   mAccess = access;
+}
+
+EffectSettingsAccess* internal::ComponentHandler::GetAccess()
+{
+   return &*mAccess;
+}
+
 Steinberg::tresult internal::ComponentHandler::beginEdit(Steinberg::Vst::ParamID)
 {
    return Steinberg::kResultOk;
