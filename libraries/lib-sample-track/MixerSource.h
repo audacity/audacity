@@ -2,140 +2,23 @@
 
   Audacity: A Digital Audio Editor
 
-  Mix.h
+  @file MixerSource.h
+  @brief Fetches from tracks, applies envelopes, warps time, and resamples
 
   Dominic Mazzoni
   Markus Meyer
 
+  Paul Licameli split from Mix.h
+
 ***********************************************************************/
+#ifndef __AUDACITY_MIXER_SOURCE__
+#define __AUDACITY_MIXER_SOURCE__
 
-#ifndef __AUDACITY_MIX__
-#define __AUDACITY_MIX__
-
-#include "AudioGraphBuffers.h"
 #include "AudioGraphSource.h"
 #include "MixerOptions.h"
-#include "SampleFormat.h"
-#include <functional>
 
-class sampleCount;
 class Resample;
-class BoundedEnvelope;
-class TrackList;
-class SampleTrack;
-using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
 class SampleTrackCache;
-
-class MixerSource;
-
-class SAMPLE_TRACK_API Mixer {
- public:
-   using WarpOptions = MixerOptions::Warp;
-   using MixerSpec = MixerOptions::Downmix;
-   using ResampleParameters = MixerOptions::ResampleParameters;
-   using TimesAndSpeed = MixerOptions::TimesAndSpeed;
-
-   //
-   // Constructor / Destructor
-   //
-
-   /*!
-    @pre all `inputTracks` are non-null
-    @pre any left channels in inputTracks are immediately followed by their
-       partners
-    @post `BufferSize() == outBufferSize`
-    */
-   Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
-         const WarpOptions &warpOptions,
-         double startTime, double stopTime,
-         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
-         double outRate, sampleFormat outFormat,
-         bool highQuality = true,
-         //! Null or else must have a lifetime enclosing this object's
-         MixerSpec *mixerSpec = nullptr,
-         bool applytTrackGains = true);
-
-   Mixer(const Mixer&) = delete;
-   Mixer &operator=(const Mixer&) = delete;
-
-   virtual ~ Mixer();
-
-   size_t BufferSize() const { return mBufferSize; }
-
-   //
-   // Processing
-   //
-
-   /// Process a maximum of 'maxSamples' samples and put them into
-   /// a buffer which can be retrieved by calling GetBuffer().
-   /// Returns number of output samples, or 0, if there are no
-   /// more samples that must be processed.
-   /*!
-    @pre `maxSamples <= BufferSize()`
-    @post result: `result <= maxSamples`
-    */
-   size_t Process(size_t maxSamples);
-
-   /// Restart processing at beginning of buffer next time
-   /// Process() is called.
-   void Restart();
-
-   /// Reposition processing to absolute time next time
-   /// Process() is called.
-   void Reposition(double t, bool bSkipping = false);
-
-   // Used in scrubbing and other nonuniform playback policies.
-   void SetTimesAndSpeed(
-      double t0, double t1, double speed, bool bSkipping = false);
-   void SetSpeedForKeyboardScrubbing(double speed, double startTime);
-
-   /// Current time in seconds (unwarped, i.e. always between startTime and stopTime)
-   /// This value is not accurate, it's useful for progress bars and indicators, but nothing else.
-   double MixGetCurrentTime();
-
-   /// Retrieve the main buffer or the interleaved buffer
-   constSamplePtr GetBuffer();
-
-   /// Retrieve one of the non-interleaved buffers
-   constSamplePtr GetBuffer(int channel);
-
- private:
-
-   void Clear();
-
- private:
-
-   // Input
-   const unsigned   mNumChannels;
-
-   // Transformations
-   const size_t     mBufferSize;
-
-   // Output
-   const bool       mApplyTrackGains;
-   const bool       mHighQuality; // dithering
-   const sampleFormat mFormat; // output format also influences dithering
-   const bool       mInterleaved;
-
-   // INPUT
-
-   const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
-
-   // BUFFERS
-
-   // Resample into these buffers, or produce directly when not resampling
-   AudioGraph::Buffers mFloatBuffers;
-
-   // Each channel's data is transformed, including application of
-   // gains and pans, and then (maybe many-to-one) mixer specifications
-   // determine where in mTemp it is accumulated
-   std::vector<std::vector<float>> mTemp;
-
-   // Final result applies dithering and interleaving
-   const std::vector<SampleBuffer> mBuffer;
-
-   std::vector<MixerSource> mSources;
-};
 
 //! Fetches from tracks, applies envelopes; can resample, and warp time, even
 //! backwards, as for scrubbing.
@@ -153,7 +36,7 @@ public:
     @pre `pTimesAndSpeed != nullptr`
     */
    MixerSource(const SampleTrack &leader, size_t bufferSize,
-      double rate, const Mixer::WarpOptions &options, bool highQuality,
+      double rate, const MixerOptions::Warp &options, bool highQuality,
       bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
       //! Null or else must have a lifetime enclosing this objects's
       const ArrayOf<bool> *pMap
@@ -241,6 +124,4 @@ private:
    // Pointer into array of arrays
    const ArrayOf<bool> *const mpMap;
 };
-
 #endif
-
