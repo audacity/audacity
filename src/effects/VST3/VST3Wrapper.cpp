@@ -29,10 +29,73 @@ bool SyncComponentStates(Steinberg::Vst::IComponent& component, Steinberg::Vst::
    return false;
 }
 
+//Activates main audio input/output buses and disables others (event, audio aux)
+void ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
+{
+   using namespace Steinberg;
+
+   std::vector<Vst::SpeakerArrangement> defaultInputSpeakerArrangements;
+   std::vector<Vst::SpeakerArrangement> defaultOutputSpeakerArrangements;
+
+   const auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
+
+   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kInput); i < count; ++i)
+   {
+      Vst::BusInfo busInfo {};
+      Vst::SpeakerArrangement arrangement {0ull};
+      if(component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo) == kResultOk)
+      {
+         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
+            arrangement = (1ull << busInfo.channelCount) - 1ull;
+      }
+      if(component.activateBus(Vst::kAudio, Vst::kInput, i, arrangement > 0) != kResultOk)
+         arrangement = 0;
+
+      defaultInputSpeakerArrangements.push_back(arrangement);
+   }
+   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
+   {
+      Vst::BusInfo busInfo {};
+      Vst::SpeakerArrangement arrangement {0ull};
+      if(component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo) == kResultOk)
+      {
+         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
+            arrangement = (1ull << busInfo.channelCount) - 1ull;
+      }
+      if(component.activateBus(Vst::kAudio, Vst::kOutput, i, arrangement > 0) != kResultOk)
+         arrangement = 0;
+
+      defaultOutputSpeakerArrangements.push_back(arrangement);
+   }
+   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kInput); i < count; ++i)
+      component.activateBus(Vst::kEvent, Vst::kInput, i, 0);
+   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kOutput); i < count; ++i)
+      component.activateBus(Vst::kEvent, Vst::kOutput, i, 0);
+
+   processor->setBusArrangements(
+      defaultInputSpeakerArrangements.empty() ? nullptr : defaultInputSpeakerArrangements.data(), defaultInputSpeakerArrangements.size(),
+      defaultOutputSpeakerArrangements.empty() ? nullptr : defaultOutputSpeakerArrangements.data(), defaultOutputSpeakerArrangements.size()
+   );
+}
+
+//The component should be disabled
+bool SetupProcessing(Steinberg::Vst::IComponent& component, Steinberg::Vst::ProcessSetup& setup)
+{
+   using namespace Steinberg;
+   auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
+
+   if(processor->setupProcessing(setup) == kResultOk)
+   {
+      ActivateMainAudioBuses(component);
+      return true;
+   }
+   return false;
+}
+
 }
 
 
-void VST3Wrapper::Initialize()
+void VST3Wrapper::InitComponents()
 {
    using namespace Steinberg;
 
@@ -61,7 +124,7 @@ VST3Wrapper::VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::UI
    : mEffectUID(std::move(effectUID)), mModule(std::move(module))
 {
    using namespace Steinberg;
-   Initialize();
+   InitComponents();
 
    const auto& pluginFactory = mModule->getFactory();
    auto editController = FUnknownPtr<Vst::IEditController>(mEffectComponent);
@@ -101,7 +164,7 @@ VST3Wrapper::VST3Wrapper(const VST3Wrapper& other)
    : mModule(other.mModule), mEffectUID(other.mEffectUID)
 {
    mSetup = other.mSetup;
-   Initialize();
+   InitComponents();
 }
 
 VST3Wrapper::~VST3Wrapper()
@@ -202,4 +265,33 @@ bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream) const
       mEffectComponent.get(),
       mEditController.get()
    );
+}
+
+bool VST3Wrapper::Initialize(Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock)
+{
+   auto setup = mSetup;
+   setup.processMode = processMode;
+   setup.sampleRate = sampleRate;
+   setup.maxSamplesPerBlock = maxSamplesPerBlock;
+   setup.symbolicSampleSize = Steinberg::Vst::kSample32;
+   if(!SetupProcessing(*mEffectComponent.get(), setup))
+      return false;
+   mSetup = setup;
+   
+   using namespace Steinberg;
+   
+   if(mEffectComponent->setActive(true) == kResultOk)
+   {
+      mActive = true;
+      mAudioProcessor->setProcessing(true);
+      return true;
+   }
+   return false;
+}
+
+void VST3Wrapper::Finalize()
+{
+   mActive = false;
+   mAudioProcessor->setProcessing(false);
+   mEffectComponent->setActive(false);
 }

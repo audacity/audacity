@@ -57,9 +57,6 @@ class VST3Effect final : public StatefulPerTrackEffect
    VST3::Hosting::ClassInfo mEffectClassInfo;
    std::unique_ptr<VST3Wrapper> mWrapper;
 
-   //Following fields are unique to each effect instance
-   
-   bool mActive{false};
 
    //Since all of the realtime processors share same presets, following
    //fields are only initialized and assigned in the global effect instance
@@ -79,6 +76,7 @@ class VST3Effect final : public StatefulPerTrackEffect
    mutable RegistryPaths mFactoryPresets;
 
    size_t mUserBlockSize { 8192 };
+   size_t mProcessingBlockSize { 8192 };
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
 
