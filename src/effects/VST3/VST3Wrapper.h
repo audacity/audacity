@@ -100,4 +100,12 @@ private:
 
 public:
    bool mActive{false};
+
+   static size_t ProcessBlock(
+      Steinberg::Vst::IComponent* effect,
+      const Steinberg::Vst::ProcessSetup& setup,
+      const float* const* inBlock,
+      float* const* outBlock,
+      size_t blockLen,
+      Steinberg::Vst::IParameterChanges* inputParameterChanges);
 };

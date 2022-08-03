@@ -416,109 +416,13 @@ return GuardedCall<bool>([&]{
 });
 }
 
-namespace
-{
-   size_t VST3ProcessBlock(
-      Steinberg::Vst::IComponent* effect,
-      const Steinberg::Vst::ProcessSetup& setup,
-      const float* const* inBlock,
-      float* const* outBlock,
-      size_t blockLen,
-      Steinberg::Vst::IParameterChanges* inputParameterChanges)
-   {
-      using namespace Steinberg;
-      if(auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effect))
-      {
-         Vst::ProcessData data;
-         data.processMode = setup.processMode;
-         data.symbolicSampleSize = setup.symbolicSampleSize;
-         data.inputParameterChanges = inputParameterChanges;
-
-         static_assert(std::numeric_limits<decltype(blockLen)>::max()
-            >= std::numeric_limits<decltype(data.numSamples)>::max());
-
-         data.numSamples = static_cast<decltype(data.numSamples)>(std::min(
-            blockLen, 
-            static_cast<decltype(blockLen)>(setup.maxSamplesPerBlock)
-         ));
-
-         data.numInputs = inBlock == nullptr ? 0 : effect->getBusCount(Vst::kAudio, Vst::kInput);
-         data.numOutputs = outBlock == nullptr ? 0 : effect->getBusCount(Vst::kAudio, Vst::kOutput);
-
-         if(data.numInputs > 0)
-         {
-            int inputBlocksOffset {0};
-
-            data.inputs = static_cast<Vst::AudioBusBuffers*>(
-               alloca(sizeof(Vst::AudioBusBuffers) * data.numInputs));
-
-            for(int busIndex = 0; busIndex < data.numInputs; ++busIndex)
-            {
-               Vst::BusInfo busInfo { };
-               if(effect->getBusInfo(Vst::kAudio, Vst::kInput, busIndex, busInfo) != kResultOk)
-               {
-                  return 0;
-               }
-               if(busInfo.busType == Vst::kMain)
-               {
-                  data.inputs[busIndex].numChannels = busInfo.channelCount;
-                  data.inputs[busIndex].channelBuffers32 = const_cast<float**>(inBlock + inputBlocksOffset);
-                  inputBlocksOffset += busInfo.channelCount;
-               }
-               else
-               {
-                  //aux is not yet supported
-                  data.inputs[busIndex].numChannels = 0;
-                  data.inputs[busIndex].channelBuffers32 = nullptr;
-               }
-               data.inputs[busIndex].silenceFlags = 0UL;
-            }
-         }
-         if(data.numOutputs > 0)
-         {
-            int outputBlocksOffset {0};
-
-            data.outputs = static_cast<Vst::AudioBusBuffers*>(
-               alloca(sizeof(Vst::AudioBusBuffers) * data.numOutputs));
-            for(int busIndex = 0; busIndex < data.numOutputs; ++busIndex)
-            {
-               Vst::BusInfo busInfo { };
-               if(effect->getBusInfo(Vst::kAudio, Vst::kOutput, busIndex, busInfo) != kResultOk)
-               {
-                  return 0;
-               }
-               if(busInfo.busType == Vst::kMain)
-               {
-                  data.outputs[busIndex].numChannels = busInfo.channelCount;
-                  data.outputs[busIndex].channelBuffers32 = const_cast<float**>(outBlock + outputBlocksOffset);
-                  outputBlocksOffset += busInfo.channelCount;
-               }
-               else
-               {
-                  //aux is not yet supported
-                  data.outputs[busIndex].numChannels = 0;
-                  data.outputs[busIndex].channelBuffers32 = nullptr;
-               }
-               data.outputs[busIndex].silenceFlags = 0UL;
-            }
-         }
-      
-         const auto processResult = audioProcessor->process(data);
-      
-         return processResult == kResultOk ?
-            data.numSamples : 0;
-      }
-      return 0;
-   }
-}
-
 size_t VST3Effect::ProcessBlock(EffectSettings &,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    internal::ComponentHandler::PendingChangesPtr pendingChanges { nullptr };
    if(mWrapper->mComponentHandler)
       pendingChanges = mWrapper->mComponentHandler->getPendingChanges();
-   return VST3ProcessBlock(mWrapper->mEffectComponent.get(), mWrapper->mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
+   return VST3Wrapper::ProcessBlock(mWrapper->mEffectComponent.get(), mWrapper->mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
 bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
@@ -595,7 +499,7 @@ size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
    if (group >= mRealtimeGroupProcessors.size())
       return 0;
    auto& effect = mRealtimeGroupProcessors[group];
-   return VST3ProcessBlock(
+   return VST3Wrapper::ProcessBlock(
       effect->mWrapper->mEffectComponent.get(),
       effect->mWrapper->mSetup,
       inBuf,
@@ -853,7 +757,7 @@ void VST3Effect::FlushPendingChanges() const
    if(pendingChanges && mWrapper->mEffectComponent->setActive(true) == kResultOk)
    {
       mWrapper->mAudioProcessor->setProcessing(true);
-      VST3ProcessBlock(mWrapper->mEffectComponent.get(), mWrapper->mSetup, nullptr, nullptr, 0, pendingChanges.get());
+      VST3Wrapper::ProcessBlock(mWrapper->mEffectComponent.get(), mWrapper->mSetup, nullptr, nullptr, 0, pendingChanges.get());
       mWrapper->mAudioProcessor->setProcessing(false);
       mWrapper->mEffectComponent->setActive(false);
    }
