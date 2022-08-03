@@ -126,7 +126,9 @@ class SAMPLE_TRACK_API Mixer {
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
-         bool highQuality = true, MixerSpec *mixerSpec = nullptr,
+         bool highQuality = true,
+         //! Null or else must have a lifetime enclosing this object's
+         MixerSpec *mixerSpec = nullptr,
          bool applytTrackGains = true);
 
    Mixer(const Mixer&) = delete;
@@ -203,9 +205,6 @@ class SAMPLE_TRACK_API Mixer {
 
    // INPUT
 
-   // SampleTrackCaches are the source of data
-   std::vector<SampleTrackCache> mInputTrack;
-
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
    // BUFFERS
@@ -239,13 +238,13 @@ public:
    /*!
     @pre `pTimesAndSpeed != nullptr`
     */
-   MixerSource(const SampleTrack &leader, size_t i, size_t bufferSize,
+   MixerSource(const SampleTrack &leader, size_t bufferSize,
       double rate, const Mixer::WarpOptions &options, bool highQuality,
       const BoundedEnvelope *const pEnvelope, bool mayThrow
 
       , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
 
-      , std::vector<SampleTrackCache> &mInputTrack
+      //! Null or else must have a lifetime enclosing this objects's
       , const ArrayOf<bool> *pMap
    );
    MixerSource(MixerSource&&) = default;
@@ -302,7 +301,8 @@ private:
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
-   std::vector<SampleTrackCache> &mInputTrack;
+   // SampleTrackCaches are the source of data
+   std::vector<SampleTrackCache> mInputTrack;
 
    // Fetch position for source
    // mSamplePos holds for each track the next sample position not

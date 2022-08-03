@@ -125,7 +125,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
 
    , mMayThrow{ mayThrow }
 
-   , mInputTrack( mNumInputTracks )
    , mTimesAndSpeed{ std::make_shared<TimesAndSpeed>( TimesAndSpeed{
       startTime, stopTime, warpOptions.initialSpeed, startTime
    } ) }
@@ -142,9 +141,6 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       ](auto &buffer){ buffer.Allocate(size, format); }
    )}
 {
-   for (size_t i = 0; i < mNumInputTracks; ++i)
-      mInputTrack[i].SetTrack(inputTracks[i]);
-
    assert(BufferSize() == outBufferSize);
 
    for (size_t i = 0; i < mNumInputTracks;) {
@@ -156,12 +152,9 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      mSources.emplace_back( *leader, i, BufferSize(), mRate
-         , warpOptions, highQuality, mEnvelope, mMayThrow
-         , mTimesAndSpeed
-         , mInputTrack
-         , mMixerSpec ? &mMixerSpec->mMap[i] : nullptr
-      );
+      mSources.emplace_back( *leader, BufferSize(), mRate,
+         warpOptions, highQuality, mEnvelope, mMayThrow, mTimesAndSpeed,
+         (mMixerSpec ? &mMixerSpec->mMap[i] : nullptr));
    }
 }
 
@@ -221,9 +214,7 @@ double ComputeWarpFactor(const Envelope &env, double t0, double t1)
 size_t MixerSource::MixVariableRates(
    unsigned iChannel, const size_t maxOut, float &floatBuffer)
 {
-   const auto ii = i + iChannel;
-
-   auto &cache = mInputTrack[ii];
+   auto &cache = mInputTrack[iChannel];
    const auto pos = &mSamplePos[iChannel];
    const auto queue = mSampleQueue[iChannel].data();
    const auto queueStart = &mQueueStart[iChannel];
@@ -367,9 +358,7 @@ size_t MixerSource::MixVariableRates(
 size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    float &floatBuffer)
 {
-   const auto ii = i + iChannel;
-
-   auto &cache = mInputTrack[ii];
+   auto &cache = mInputTrack[iChannel];
    const auto pos = &mSamplePos[iChannel];
 
    const auto pFloat = &floatBuffer;
@@ -433,22 +422,18 @@ void MixerSource::ZeroFill(
    std::fill(pFloat + produced, pFloat + max, 0);
 }
 
-MixerSource::MixerSource(const SampleTrack &leader, size_t i,
-   size_t bufferSize,
+MixerSource::MixerSource(const SampleTrack &leader, size_t bufferSize,
    double rate, const Mixer::WarpOptions &options, bool highQuality,
    const BoundedEnvelope *const pEnvelope,
-   bool mayThrow
-   , std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
-   , std::vector<SampleTrackCache> &mInputTrack
-   , const ArrayOf<bool> *pMap
+   bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
+   const ArrayOf<bool> *pMap
 )  : mpLeader{ leader.SharedPointer<const SampleTrack>() }
-   , i{ i }
    , mnChannels{ TrackList::Channels(&leader).size() }
    , mRate{ rate }
    , mEnvelope{ pEnvelope }
    , mMayThrow{ mayThrow }
    , mTimesAndSpeed{ move(pTimesAndSpeed) }
-   , mInputTrack{ mInputTrack }
+   , mInputTrack( mnChannels )
    , mSamplePos( mnChannels )
    , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
    , mQueueStart( mnChannels, 0 )
@@ -458,10 +443,15 @@ MixerSource::MixerSource(const SampleTrack &leader, size_t i,
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }
 {
+   size_t j = 0;
+   for (auto channel : TrackList::Channels(&leader))
+      mInputTrack[j++].SetTrack(channel->SharedPointer<const SampleTrack>());
+
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;
-   for (size_t j = 0; j < mnChannels; ++j)
+   for (j = 0; j < mnChannels; ++j) {
       mSamplePos[j] = GetChannel(j)->TimeToLongSamples(t0);
+   }
    MakeResamplers();
 }
 
