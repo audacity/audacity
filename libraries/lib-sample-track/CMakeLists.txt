@@ -25,6 +25,8 @@ set( SOURCES
    SampleTrackSource.h
    Mix.cpp
    Mix.h
+   MixerOptions.cpp
+   MixerOptions.h
 )
 set( LIBRARIES
    lib-audio-graph-interface
