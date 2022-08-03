@@ -59,4 +59,8 @@ unsigned MakeChannelMap(const Track &track, bool multichannel,
    // TODO: more-than-two-channels
    ChannelName map[3]);
 
+AUDACITY_DLL_API
+std::vector<MixerOptions::StageSpecification>
+GetEffectStages(const WaveTrack &track);
+
 #endif
