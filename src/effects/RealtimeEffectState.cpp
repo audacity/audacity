@@ -295,7 +295,7 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
 {
    //! If there was already an instance, recycle it; else make one here
    auto pInstance = mwInstance.lock();
-   if (!pInstance)
+   if (!pInstance && mPlugin)
       mwInstance = pInstance = mPlugin->MakeInstance();
    return pInstance;
 }
@@ -557,6 +557,11 @@ bool RealtimeEffectState::ProcessEnd()
       pAccessState->WorkerWrite();
 
    return result;
+}
+
+bool RealtimeEffectState::IsEnabled() const noexcept
+{
+   return mMainSettings.extra.GetActive();
 }
 
 bool RealtimeEffectState::IsActive() const noexcept

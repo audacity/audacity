@@ -172,6 +172,12 @@ RealtimeEffectList::GetStateAt(size_t index) noexcept
    return nullptr;
 }
 
+std::shared_ptr<const RealtimeEffectState>
+RealtimeEffectList::GetStateAt(size_t index) const noexcept
+{
+   return const_cast<RealtimeEffectList*>(this)->GetStateAt(index);
+}
+
 void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
 {
    assert(fromIndex < mStates.size());

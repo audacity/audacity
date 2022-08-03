@@ -117,6 +117,10 @@ public:
    //! Returns effect state at given position
    //! Use only in the main thread, to avoid races
    std::shared_ptr<RealtimeEffectState> GetStateAt(size_t index) noexcept;
+   //! Returns effect state at given position
+   //! Use only in the main thread, to avoid races
+   std::shared_ptr<const RealtimeEffectState> GetStateAt(size_t index) const
+      noexcept;
 
    /**
     * \brief Use only in the main thread. Changes effect order in the stack.
