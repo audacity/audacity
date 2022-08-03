@@ -172,11 +172,11 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    auto start = wxMin(left->GetStartTime(), right->GetStartTime());
    auto end = wxMax(left->GetEndTime(), right->GetEndTime());
 
-   SampleTrackConstArray tracks;
+   Mixer::Inputs tracks;
    tracks.push_back(left->SharedPointer< const SampleTrack >());
    tracks.push_back(right->SharedPointer< const SampleTrack >());
 
-   Mixer mixer(tracks,
+   Mixer mixer(move(tracks),
                true,                // Throw to abort mix-and-render if read fails:
                Mixer::WarpOptions{*inputTracks()},
                start,

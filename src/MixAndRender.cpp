@@ -64,7 +64,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    double mixEndTime = 0.0;   /* end time of last track to end */
    double tstart, tend;    // start and end times for one track.
 
-   SampleTrackConstArray waveArray;
+   Mixer::Inputs waveArray;
 
    for(auto wt : trackRange) {
       waveArray.push_back( wt->SharedPointer< const SampleTrack >() );
@@ -132,7 +132,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       endTime = mixEndTime;
    }
 
-   Mixer mixer(waveArray,
+   Mixer mixer(move(waveArray),
       // Throw to abort mix-and-render if read fails:
       true, warpOptions,
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,

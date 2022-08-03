@@ -22,7 +22,6 @@ class sampleCount;
 class BoundedEnvelope;
 class TrackList;
 class SampleTrack;
-using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
 
 class MixerSource;
 
@@ -32,6 +31,18 @@ class SAMPLE_TRACK_API Mixer {
    using MixerSpec = MixerOptions::Downmix;
    using ResampleParameters = MixerOptions::ResampleParameters;
    using TimesAndSpeed = MixerOptions::TimesAndSpeed;
+   using Stages = std::vector<MixerOptions::StageSpecification>;
+
+   struct Input {
+      Input(
+         std::shared_ptr<const SampleTrack> pTrack = {}, Stages stages = {}
+      )  : pTrack{ move(pTrack) }, stages{ move(stages) }
+      {}
+
+      std::shared_ptr<const SampleTrack> pTrack;
+      Stages stages;
+   };
+   using Inputs = std::vector<Input>;
 
    //
    // Constructor / Destructor
@@ -43,7 +54,7 @@ class SAMPLE_TRACK_API Mixer {
        partners
     @post `BufferSize() == outBufferSize`
     */
-   Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
+   Mixer(Inputs inputs, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,

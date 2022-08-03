@@ -41,7 +41,7 @@ initVector(size_t dim1, size_t dim2)
 }
 }
 
-Mixer::Mixer(const SampleTrackConstArray &inputTracks,
+Mixer::Mixer(Inputs inputs,
    const bool mayThrow,
    const WarpOptions &warpOptions,
    const double startTime, const double stopTime,
@@ -74,7 +74,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    )}
 {
    assert(BufferSize() == outBufferSize);
-   const auto nTracks = inputTracks.size();
+   const auto nTracks = inputs.size();
 
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
@@ -82,7 +82,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    ) ? mixerSpec : nullptr;
 
    for (size_t i = 0; i < nTracks;) {
-      const auto leader = inputTracks[i].get();
+      const auto leader = inputs[i].pTrack.get();
       const auto nInChannels = TrackList::Channels(leader).size();
       if (!leader || i + nInChannels > nTracks) {
          assert(false);
