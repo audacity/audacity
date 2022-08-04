@@ -61,14 +61,16 @@ public:
 private:
    void MakeResamplers();
 
-   // Cut the queue into blocks of this finer size
-   // for variable rate resampling.  Each block is resampled at some
-   // constant rate.
+   //! Cut the queue into blocks of this finer size
+   //! for variable rate resampling.  Each block is resampled at some
+   //! constant rate.
    static constexpr size_t sProcessLen = 1024;
 
-   // This is the number of samples grabbed in one go from a track
-   // and placed in a queue, when mixing with resampling.
-   // (Should we use SampleTrack::GetBestBlockSize instead?)
+   //! This is the number of samples grabbed in one go from a track
+   //! and placed in a queue, when mixing with resampling.
+   /*!
+    (Should we use SampleTrack::GetBestBlockSize instead?)
+    */
    static constexpr size_t sQueueMaxLen = 65536;
 
    /*!
@@ -93,37 +95,42 @@ private:
    const size_t mnChannels;
    const double mRate; // may require resampling
 
-   // Resampling, as needed, after gain envelope
+   //! Resampling, as needed, after gain envelope
    const BoundedEnvelope *const mEnvelope; // for time warp which also resamples
    const bool mMayThrow;
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 
-   // SampleTrackCaches are the source of data
+   //! SampleTrackCaches are the source of data
    std::vector<SampleTrackCache> mInputTrack;
 
-   // Fetch position for source
-   // mSamplePos holds for each track the next sample position not
-   // yet processed.
+   //! Fetch position for source
+   /*!
+    mSamplePos holds for each track the next sample position not yet processed.
+    */
    std::vector<sampleCount> mSamplePos;
 
-   // First intermediate buffer when resampling is needed
+   //! First intermediate buffer when resampling is needed
    std::vector<std::vector<float>> mSampleQueue;
 
-   // Position in each queue of the start of the next block to resample
+   //! Position in each queue of the start of the next block to resample
    std::vector<int>     mQueueStart;
 
-   // For each queue, the number of available samples after the queue start
+   //! For each queue, the number of available samples after the queue start
    std::vector<int>     mQueueLen;
 
    const ResampleParameters mResampleParameters;
    std::vector<std::unique_ptr<Resample>> mResample;
 
-   // Gain envelopes are applied to input before other transformations
+   //! Gain envelopes are applied to input before other transformations
    std::vector<double> mEnvValues;
 
-   // many-to-one mixing of channels
-   // Pointer into array of arrays
+   //! many-to-one mixing of channels
+   //! Pointer into array of arrays
    const ArrayOf<bool> *const mpMap;
+
+   //! Remember how many channels were passed to Acquire()
+   unsigned mMaxChannels{};
+   size_t mLastProduced{};
 };
 #endif
