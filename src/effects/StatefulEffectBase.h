@@ -125,16 +125,7 @@ public:
    */
    virtual size_t GetBlockSize() const;
 
-   /*!
-     @copydoc StatefulEffectBase::Instance::GetAudioInCount()
-     Default implementation returns 0
-   */
    virtual unsigned GetAudioInCount() const;
-
-   /*!
-     @copydoc StatefulEffectBase::Instance::GetAudioOutCount()
-     Default implementation returns 0
-   */
    virtual unsigned GetAudioOutCount() const;
 
 private:

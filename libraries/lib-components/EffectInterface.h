@@ -410,15 +410,22 @@ public:
 
    //! How many input buffers to allocate at once
    /*!
+<<<<<<< HEAD
     If the instance processes channels independently, this can return 1
     The result is not necessarily well defined before `RealtimeInitialize`
+=======
+    If the effect ALWAYS processes channels independently, this can return 1
+>>>>>>> 2855bd30a6 (GetAudioInCount/GetAudioOutCount moved to EffectInstance)
     */
    virtual unsigned GetAudioInCount() const = 0;
 
    //! How many output buffers to allocate at once
+<<<<<<< HEAD
    /*!
     The result is not necessarily well defined before `RealtimeInitialize`
     */
+=======
+>>>>>>> 2855bd30a6 (GetAudioInCount/GetAudioOutCount moved to EffectInstance)
    virtual unsigned GetAudioOutCount() const = 0;
 
    /*!

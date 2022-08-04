@@ -134,6 +134,17 @@ std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
    return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
 }
 
+unsigned StatefulEffect::GetAudioInCount() const
+{
+   return 0;
+}
+
+unsigned StatefulEffect::GetAudioOutCount() const
+{
+   return 0;
+}
+
+
 const EffectParameterMethods &Effect::Parameters() const
 {
    static const CapturedParameters<Effect> empty;

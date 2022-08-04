@@ -354,6 +354,9 @@ public:
       bool Process(EffectSettings &settings) override;
    };
    std::shared_ptr<EffectInstance> MakeInstance() const override;
+ 
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 };
 
 // FIXME:
