@@ -6,6 +6,8 @@
 #include <public.sdk/source/vst/hosting/module.h>
 #include "internal/ComponentHandler.h"
 
+class VST3Wrapper;
+
 namespace Steinberg
 {
    class IPlugFrame;
@@ -28,12 +30,8 @@ struct VST3EffectSettings
 {
    //Holds the parameter that has been changed since last
    std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> parameterChanges;
-
    //Holds the "current" parameter values
    std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> state;
-   // states as saved by IComponent::getState
-   std::optional<std::string> mProcessorStateStr;
-   std::optional<std::string> mControllerStateStr;
 };
 
 class InputParameterValueQueue final : public Steinberg::Vst::IParamValueQueue
@@ -63,11 +61,6 @@ public:
 class VST3Wrapper final
 {
 public:
-
-   // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
-   // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
-   std::shared_ptr<VST3::Hosting::Module> mModule;
-
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
    Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
@@ -76,17 +69,14 @@ public:
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
 
-   VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::UID effectUID);
-   VST3Wrapper(const VST3Wrapper& other);
+   VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID);
    ~VST3Wrapper();
 
+   VST3Wrapper(const VST3Wrapper&) = delete;
    VST3Wrapper(VST3Wrapper&&) = delete;
    VST3Wrapper& operator=(const VST3Wrapper&) = delete;
    VST3Wrapper& operator=(VST3Wrapper&&) = delete;
-
-   bool FetchSettings(      VST3EffectSettings& settings) const;
-   bool StoreSettings(const VST3EffectSettings& settings) const;
-
+   
    bool LoadPreset(Steinberg::IBStream* fileStream);
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
@@ -109,8 +99,6 @@ public:
    static const VST3EffectSettings& GetSettings(const EffectSettings& settings);
 
 private:
-   void InitComponents();
-
    const VST3::UID mEffectUID;
 
    bool mActive{false};

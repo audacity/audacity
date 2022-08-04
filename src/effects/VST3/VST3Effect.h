@@ -20,8 +20,7 @@
 
 #include "../StatefulPerTrackEffect.h"
 
-#include "SampleCount.h"
-
+class VST3Instance;
 class NumericTextCtrl;
 
 namespace Steinberg
@@ -42,29 +41,21 @@ class VST3Wrapper;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public StatefulPerTrackEffect
+class VST3Effect final : public PerTrackEffect
 {
-   VST3::Hosting::ClassInfo mEffectClassInfo;
-   std::unique_ptr<VST3Wrapper> mWrapper;
+   // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
+   // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
+   std::shared_ptr<VST3::Hosting::Module> mModule;
 
-   //Used if provided by the plugin and enabled in the settings
-   Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
-   Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
-   wxWindow* mParent { nullptr };
-   NumericTextCtrl* mDuration { nullptr };
-   //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
-   VST3ParametersWindow* mPlainUI { nullptr };
+   VST3::Hosting::ClassInfo mEffectClassInfo;
+
+   std::weak_ptr<VST3Instance> mCurrentDisplayEffect;
 
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };
    mutable RegistryPaths mFactoryPresets;
-
-   size_t mUserBlockSize { 8192 };
-   size_t mProcessingBlockSize { 8192 };
-   bool mUseLatency { true };
-   sampleCount mInitialDelay { 0 };
 
    mutable bool mInitialFetchDone{ false };
 
@@ -76,7 +67,8 @@ public:
       std::shared_ptr<VST3::Hosting::Module> module,
       VST3::Hosting::ClassInfo effectClassInfo);
 
-   VST3Effect(const VST3Effect& other);
+   VST3Effect(const VST3Effect&) = delete;
+   VST3Effect& operator=(const VST3Effect&) = delete;
 
    ~VST3Effect() override;
 
@@ -103,35 +95,9 @@ public:
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-   sampleCount GetLatency() const override;
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   bool ProcessFinalize() noexcept override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
-   bool InitializePlugin();
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance();
    bool IsGraphicalUI() override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
@@ -150,11 +116,5 @@ public:
 
 private:
 
-   void OnEffectWindowResize(wxSizeEvent & evt);
-
-   bool LoadVSTUI(wxWindow* parent);
-
    bool LoadPreset(const wxString& path, EffectSettings& settings);
-
-   void ReloadUserOptions();
 };

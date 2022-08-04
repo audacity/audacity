@@ -8,28 +8,12 @@
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
 
-#include "memorystream.h"
-
 #include "VST3Utils.h"
 #include "internal/ConnectionProxy.h"
 #include "internal/ComponentHandler.h"
 
 namespace
 {
-   
-bool SyncComponentStates(Steinberg::Vst::IComponent& component, Steinberg::Vst::IEditController& editController)
-{
-   using namespace Steinberg;
-
-   Steinberg::MemoryStream stateStream;
-   if(component.getState(&stateStream) == kResultOk)
-   {
-      int64 unused;
-      stateStream.seek(0, IBStream::kIBSeekSet, &unused);
-      return editController.setComponentState(&stateStream) == kResultOk;
-   }
-   return false;
-}
 
 //Activates main audio input/output buses and disables others (event, audio aux)
 void ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
@@ -138,32 +122,6 @@ IMPLEMENT_FUNKNOWN_METHODS(InputParameterChanges, Steinberg::Vst::IParameterChan
 
 }
 
-
-void VST3Wrapper::InitComponents()
-{
-   using namespace Steinberg;
-
-   const auto& pluginFactory = mModule->getFactory();
-
-   auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(mEffectUID);
-   if(!effectComponent)
-      throw std::runtime_error("Cannot create VST3 effect component");
-   if(effectComponent->initialize(&AudacityVst3HostApplication::Get()) != kResultOk)
-      throw std::runtime_error("Cannot initialize VST3 effect component");
-
-   auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effectComponent);
-   if(!audioProcessor)
-      //It's stated that "This interface must always be supported by audio processing plug-ins."
-      throw std::runtime_error("VST3 plugin does not provide audio processor interface");
-   
-   if(audioProcessor->canProcessSampleSize(Vst::kSample32) != kResultTrue)
-      throw std::runtime_error("32-bit sample size not supported");
-
-   mEffectComponent = effectComponent;
-   mAudioProcessor = audioProcessor;
-}
-
-
 void InputParameterValueQueue::Bind(Steinberg::Vst::ParamID id, const Steinberg::Vst::ParamValue* values)
 {
    mParameterId = id;
@@ -196,13 +154,30 @@ Steinberg::int32 InputParameterValueQueue::getPointCount()
 
 IMPLEMENT_FUNKNOWN_METHODS(InputParameterValueQueue, Steinberg::Vst::IParamValueQueue, Steinberg::Vst::IParamValueQueue::iid);
 
-VST3Wrapper::VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::UID effectUID)
-   : mEffectUID(std::move(effectUID)), mModule(std::move(module))
+VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
+   : mEffectUID(std::move(effectUID))
 {
    using namespace Steinberg;
-   InitComponents();
 
-   const auto& pluginFactory = mModule->getFactory();
+   const auto& pluginFactory = module.getFactory();
+
+   auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(mEffectUID);
+   if(!effectComponent)
+      throw std::runtime_error("Cannot create VST3 effect component");
+   if(effectComponent->initialize(&AudacityVst3HostApplication::Get()) != kResultOk)
+      throw std::runtime_error("Cannot initialize VST3 effect component");
+
+   auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effectComponent);
+   if(!audioProcessor)
+      //It's stated that "This interface must always be supported by audio processing plug-ins."
+      throw std::runtime_error("VST3 plugin does not provide audio processor interface");
+   
+   if(audioProcessor->canProcessSampleSize(Vst::kSample32) != kResultTrue)
+      throw std::runtime_error("32-bit sample size not supported");
+
+   mEffectComponent = effectComponent;
+   mAudioProcessor = audioProcessor;
+
    auto editController = FUnknownPtr<Vst::IEditController>(mEffectComponent);
    if(editController.get() == nullptr)
    {
@@ -233,16 +208,7 @@ VST3Wrapper::VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::UI
       mControllerConnectionProxy->connect(componentConnectionPoint);
    }
 
-   SyncComponentStates(*mEffectComponent.get(), *mEditController.get());
    mParameterQueues = std::make_unique<InputParameterValueQueue[]>(mEditController->getParameterCount());
-}
-
-VST3Wrapper::VST3Wrapper(const VST3Wrapper& other)
-   : mModule(other.mModule), mEffectUID(other.mEffectUID)
-{
-   mSetup = other.mSetup;
-   InitComponents();
-   mParameterQueues = std::make_unique<InputParameterValueQueue[]>(other.mEditController->getParameterCount());
 }
 
 VST3Wrapper::~VST3Wrapper()
@@ -262,61 +228,6 @@ VST3Wrapper::~VST3Wrapper()
    if(mEffectComponent)
       mEffectComponent->terminate();
 }
-
-
-bool VST3Wrapper::FetchSettings(VST3EffectSettings& vst3Settings) const
-{
-   using namespace Steinberg;
-
-   auto processorState = owned(safenew PresetsBufferStream);
-   if (mEffectComponent->getState(processorState) == kResultOk)
-   {
-      vst3Settings.mProcessorStateStr = processorState->toString();
-   }
-   else
-   {
-      vst3Settings.mProcessorStateStr = std::nullopt;
-   }
-
-   auto controllerState = owned(safenew PresetsBufferStream);
-   if (mEditController->getState(controllerState) == kResultOk)
-   {
-      vst3Settings.mControllerStateStr = controllerState->toString();
-   }
-   else
-   {
-      vst3Settings.mControllerStateStr = std::nullopt;
-   }
-
-   return true;   
-}
-
-
-
-bool VST3Wrapper::StoreSettings(const VST3EffectSettings& vst3settings) const
-{
-   using namespace Steinberg;
-
-   // we need at least the processor state string, otherwise we can not set the EditController
-   if (!vst3settings.mProcessorStateStr)
-      return false;
-
-   auto processorState = PresetsBufferStream::fromString(*vst3settings.mProcessorStateStr);
-   if (mEffectComponent->setState(processorState) != kResultOk)
-      return false;
-
-   if (vst3settings.mControllerStateStr)
-   {
-      auto controllerState = PresetsBufferStream::fromString(*vst3settings.mControllerStateStr);
-
-      if (mEditController->setComponentState(processorState) != kResultOk ||
-         mEditController->setState(controllerState) != kResultOk)
-         return false;
-   }
-
-   return true;
-}
-
 
 bool VST3Wrapper::LoadPreset(Steinberg::IBStream* fileStream)
 {
@@ -489,7 +400,7 @@ Steinberg::int32 VST3Wrapper::GetLatencySamples() const
 //plugin internal buffers
 void VST3Wrapper::FlushSettings(const EffectSettings& settings)
 {
-   if(mComponentHandler && !mActive)
+   if(!mActive)
    {
       if(mEffectComponent->setActive(true) == Steinberg::kResultOk)
       {
@@ -503,7 +414,9 @@ void VST3Wrapper::FlushSettings(const EffectSettings& settings)
 
 EffectSettings VST3Wrapper::MakeSettings()
 {
-   return EffectSettings::Make<VST3EffectSettings>();
+   auto settings = EffectSettings::Make<VST3EffectSettings>();
+   auto vst3setting = GetSettings(settings);
+   return settings;
 }
 
 VST3EffectSettings& VST3Wrapper::GetSettings(EffectSettings& settings)
