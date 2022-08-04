@@ -1855,6 +1855,17 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    // Create and map the shared memory segment where the port number
    // will be stored.
    int memid = shmget(memkey, sizeof(int), IPC_CREAT | S_IRUSR | S_IWUSR);
+   if (memid == -1)
+   {
+      AudacityMessageBox(
+         XO("Unable to create shared memory segment.\n\n"
+            "error code=%d : \"%s\".").Format(errno, strerror(errno)),
+         XO("Audacity Startup Failure"),
+         wxOK | wxICON_ERROR);
+
+      return false;
+   }
+
    int *portnum = (int *) shmat(memid, nullptr, 0);
 
    // Create (or return) the SERVER semaphore ID
