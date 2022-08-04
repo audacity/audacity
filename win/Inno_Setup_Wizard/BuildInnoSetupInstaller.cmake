@@ -56,7 +56,7 @@ configure_file("${OUTPUT_DIR}/audacity_InnoWizard_InfoBefore.rtf.in" "${OUTPUT_D
 
 # Copy additional files
 
-file(COPY "${SOURCE_DIR}/presets" DESTINATION "${OUTPUT_DIR}/Additional")
+file(COPY "${SOURCE_DIR}/resources" DESTINATION "${OUTPUT_DIR}/Additional")
 
 file(COPY
         "${SOURCE_DIR}/LICENSE.txt"

@@ -176,14 +176,10 @@ bool IsBundledPlugin(const PluginDescriptor* plug)
 {
    if(IsDefaultPlugin(plug))
       return true;
-   auto applicationBundlePath = wxFileName(wxStandardPaths::Get().GetExecutablePath());
-#if __WXMAC__
-   //Remove MacOSX
-   applicationBundlePath.RemoveLastDir();
-#endif
+   auto applicationResourcePath = wxFileName(FileNames::ResourcesDir());
    auto pluginPath = wxFileName(plug->GetPath());
    pluginPath.MakeAbsolute();
-   return pluginPath.GetPath().StartsWith(applicationBundlePath.GetPath());
+   return pluginPath.GetPath().StartsWith(applicationResourcePath.GetPath());
 }
 
 auto MakeGroupsFilter(const EffectsMenuGroups& list) -> auto
@@ -572,13 +568,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
       if(type == EffectTypeProcess)
       {
          static auto effectMenuDefaults = [] {
-            wxFileName path = wxStandardPaths::Get().GetExecutablePath();
-#if defined(__WXMAC__)
-            //remove MacOSX
-            path.RemoveLastDir();
-#endif
-            path.AppendDir("res");
-            path.SetFullName("effects_menu_defaults.xml");
+            wxFileName path = wxFileName(FileNames::ResourcesDir(), wxT("EffectsMenuDefaults.xml"));
             return LoadEffectsMenuGroups(path.GetFullPath());
          }();
          static auto groupsFilter = MakeGroupsFilter(effectMenuDefaults);

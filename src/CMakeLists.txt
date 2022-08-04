@@ -1138,7 +1138,8 @@ list( APPEND INCLUDES
 # Define resources
 #
 list( APPEND RESOURCES
-   ../presets/EQDefaultCurves.xml
+   ../resources/EQDefaultCurves.xml
+   ../resources/EffectsMenuDefaults.xml
 )
 
 #
@@ -1252,16 +1253,18 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
 endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   # Define the Windows specific resources
+   list( APPEND WIN_RESOURCES
+      ../win/audacity.rc
+   )
+
    set_target_properties(
       ${TARGET}
       PROPERTIES
          # Make sure we're a GUI application and not a console tool
          WIN32_EXECUTABLE ON
-   )
-
-   # Define the Windows specific resources
-   list( APPEND WIN_RESOURCES
-      ../win/audacity.rc
+         # Add the resources
+         RESOURCE "${WIN_RESOURCES};${RESOURCES}"
    )
 
    # Copy over the wxWidgets DLLs
@@ -1398,6 +1401,12 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       POST_BUILD
    )
 else()
+   set_target_properties(
+      ${TARGET}
+      PROPERTIES
+         # Add the resources
+         RESOURCE "${RESOURCES}"
+   )
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DEST}" )
 
    # Build the list of mimetypes
@@ -1460,14 +1469,6 @@ else()
    target_link_libraries(findlib ${CMAKE_DL_LIBS})
 endif()
 
-add_custom_command(
-   TARGET
-      ${TARGET} POST_BUILD
-   COMMAND
-      ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/res" "${_DEST}/res"
-)
-
-
 if(CRASH_REPORT_URL)
     list(APPEND DEFINES PRIVATE -DCRASH_REPORT_URL="${CRASH_REPORT_URL}")
 endif()
@@ -1479,7 +1480,7 @@ endif()
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
-organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
+organize_source( "${TARGET_ROOT}/../resources" "resources" "${RESOURCES}" )
 organize_source( "${TARGET_ROOT}" "src" "${SOURCES}" )
 organize_source( "${TARGET_ROOT}/../mac/Resources" "mac" "${MAC_RESOURCES}" )
 organize_source( "${TARGET_ROOT}/../win" "win" "${WIN_RESOURCES}" )
@@ -1595,8 +1596,8 @@ else()
                DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )
       install( FILES "${_SRCDIR}/audacity.xml"
                DESTINATION "${_DATADIR}/mime/packages" )
-      install( FILES "${topdir}/presets/EQDefaultCurves.xml"
-               DESTINATION "${_PKGDATA}" )
+      install( TARGETS ${TARGET}
+               RESOURCE DESTINATION "${_PKGDATA}" )
    endif()
 endif()
 
