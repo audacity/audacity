@@ -270,7 +270,6 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
       {
          if(effectUIDString == classInfo.ID().toString()) {
             auto result = std::make_unique<VST3Effect>(module, classInfo);
-            result->InitializePlugin();
             return result;
          }
       }
