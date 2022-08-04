@@ -30,6 +30,7 @@ public:
    /*!
     @pre `upstream.AcceptsBlockSize(inBuffers.BlockSize())`
     @post `AcceptsBlockSize(inBuffers.BlockSize())`
+    @param map not required after construction
     */
    EffectStage(Source &upstream, Buffers &inBuffers,
       Instance &instance, EffectSettings &settings, double sampleRate,

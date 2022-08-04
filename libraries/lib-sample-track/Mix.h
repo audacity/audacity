@@ -13,16 +13,15 @@
 #define __AUDACITY_MIX__
 
 #include "AudioGraphBuffers.h"
-#include "AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "SampleFormat.h"
 
 class sampleCount;
 class BoundedEnvelope;
+namespace AudioGraph{ class EffectStage; class Source; }
+class MixerSource;
 class TrackList;
 class SampleTrack;
-
-class MixerSource;
 
 class SAMPLE_TRACK_API Mixer {
  public:
@@ -120,6 +119,7 @@ class SAMPLE_TRACK_API Mixer {
 
    // Input
    const unsigned   mNumChannels;
+   Inputs           mInputs;
 
    // Transformations
    const size_t     mBufferSize;
@@ -148,6 +148,9 @@ class SAMPLE_TRACK_API Mixer {
    const std::vector<SampleBuffer> mBuffer;
 
    std::vector<MixerSource> mSources;
+   std::vector<EffectSettings> mSettings;
+   std::vector<AudioGraph::Buffers> mStageBuffers;
+   std::vector<std::unique_ptr<AudioGraph::EffectStage>> mStages;
 
    struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
    std::vector<Source> mDecoratedSources;

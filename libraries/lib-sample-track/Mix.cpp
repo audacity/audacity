@@ -18,10 +18,12 @@
 #include "MixerSource.h"
 
 #include <cmath>
+#include "EffectStage.h"
 #include "SampleTrack.h"
 #include "SampleTrackCache.h"
 #include "Resample.h"
 #include "float_cast.h"
+#include <numeric>
 
 namespace {
 template<typename T, typename F> std::vector<T>
@@ -73,7 +75,8 @@ Mixer::Mixer(Inputs inputs,
    const bool highQuality, MixerSpec *const mixerSpec,
    const bool applyTrackGains
 )  : mNumChannels{ numOutChannels }
-   , mBufferSize{ FindBufferSize(inputs, outBufferSize) }
+   , mInputs{ move(inputs) }
+   , mBufferSize{ FindBufferSize(mInputs, outBufferSize) }
    , mApplyTrackGains{ applyTrackGains }
    , mHighQuality{ highQuality }
    , mFormat{ outFormat }
@@ -96,15 +99,23 @@ Mixer::Mixer(Inputs inputs,
    )}
 {
    assert(BufferSize() <= outBufferSize);
-   const auto nTracks = inputs.size();
+   const auto nTracks =  mInputs.size();
 
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
       mixerSpec->GetNumTracks() == nTracks
    ) ? mixerSpec : nullptr;
 
+   // Reserve vectors first so we can take safe references to pushed elements
+   mSources.reserve(nTracks);
+   auto nStages = std::accumulate(mInputs.begin(), mInputs.end(), 0,
+      [](auto sum, auto &input){ return sum + input.stages.size(); });
+   mSettings.reserve(nStages);
+   mStageBuffers.reserve(nStages);
+
    for (size_t i = 0; i < nTracks;) {
-      const auto leader = inputs[i].pTrack.get();
+      const auto &input = mInputs[i];
+      const auto leader = input.pTrack.get();
       const auto nInChannels = TrackList::Channels(leader).size();
       if (!leader || i + nInChannels > nTracks) {
          assert(false);
@@ -115,7 +126,21 @@ Mixer::Mixer(Inputs inputs,
       auto &source = mSources.emplace_back( *leader, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
          (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
-      mDecoratedSources.emplace_back(Source{ source, source });
+      AudioGraph::Source *pDownstream = &source;
+      for (const auto &stage : input.stages) {
+         // Make a mutable copy of stage.settings
+         auto &settings = mSettings.emplace_back(stage.settings);
+         // TODO: more-than-two-channels
+         // Like mFloatBuffers but padding not needed for soxr
+         auto &stageInput = mStageBuffers.emplace_back(2, mBufferSize, 1);
+         pDownstream =
+         mStages.emplace_back(std::make_unique<AudioGraph::EffectStage>(
+            *pDownstream, stageInput,
+            *stage.mpInstance, settings, outRate, std::nullopt,
+            stage.map
+         )).get();
+      }
+      mDecoratedSources.emplace_back(Source{ source, *pDownstream });
    }
 }
 
