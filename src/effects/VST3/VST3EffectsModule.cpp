@@ -35,7 +35,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VST3EffectsModule();
+   return std::make_unique<VST3EffectsModule>();
 }
 
 DECLARE_BUILTIN_PROVIDER(VST3Builtin);
@@ -251,18 +251,6 @@ unsigned VST3EffectsModule::DiscoverPluginsAtPath(const PluginPath& path, Transl
    return 0u;
 }
 
-bool VST3EffectsModule::IsPluginValid(const PluginPath& path, bool bFast)
-{
-   if(bFast)
-      return VST3Utils::ParsePluginPath(path, nullptr, nullptr);
-
-   wxString modulePath;
-   if(VST3Utils::ParsePluginPath(path, &modulePath, nullptr))
-      return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
-
-   return false;
-}
-
 std::unique_ptr<ComponentInterface>
 VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
 {
@@ -293,4 +281,11 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
    return nullptr;
 }
 
+bool VST3EffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   wxString modulePath;
+   if(VST3Utils::ParsePluginPath(path, &modulePath, nullptr))
+      return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
 
+   return wxFileName::FileExists(path) || wxFileName::DirExists(path);
+}

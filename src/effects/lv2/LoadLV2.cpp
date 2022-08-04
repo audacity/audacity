@@ -55,7 +55,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LV2EffectsModule();
+   return std::make_unique<LV2EffectsModule>();
 }
 
 // ============================================================================
@@ -259,13 +259,6 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if( bFast )
-      return true;
-   return GetPlugin(path) != NULL;
-}
-
 std::unique_ptr<ComponentInterface>
 LV2EffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -276,6 +269,11 @@ LV2EffectsModule::LoadPlugin(const PluginPath & path)
       return result;
    }
    return nullptr;
+}
+
+bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
+{
+   return GetPlugin(path) != nullptr;
 }
 
 // ============================================================================

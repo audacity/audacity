@@ -89,7 +89,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LadspaEffectsModule();
+   return std::make_unique<LadspaEffectsModule>();
 }
 
 // ============================================================================
@@ -375,14 +375,6 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    return nLoaded;
 }
 
-bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if( bFast )
-      return true;
-   wxString realPath = path.BeforeFirst(wxT(';'));
-   return wxFileName::FileExists(realPath);
-}
-
 std::unique_ptr<ComponentInterface>
 LadspaEffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -396,6 +388,12 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
    result->FullyInitializePlugin();
    return result;
+}
+
+bool LadspaEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   const auto realPath = path.BeforeFirst(wxT(';'));
+   return wxFileName::FileExists(realPath);
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()

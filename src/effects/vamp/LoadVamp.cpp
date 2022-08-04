@@ -39,7 +39,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew VampEffectsModule();
+   return std::make_unique<VampEffectsModule>();
 }
 
 // ============================================================================
@@ -225,17 +225,6 @@ unsigned VampEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool VampEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   int output;
-   bool hasParameters;
-   if( bFast )
-      return true;
-
-   auto vp = FindPlugin(path, output, hasParameters);
-   return bool(vp);
-}
-
 std::unique_ptr<ComponentInterface>
 VampEffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -248,13 +237,22 @@ VampEffectsModule::LoadPlugin(const PluginPath & path)
    return nullptr;
 }
 
+bool VampEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   PluginLoader::PluginKey key = path.BeforeFirst(wxT('/')).ToUTF8().data();
+   const auto libraryPathUTF8 = PluginLoader::getInstance()->getLibraryPathForPlugin(key);
+   if(!libraryPathUTF8.empty())
+      return wxFileName::FileExists(wxString::FromUTF8(libraryPathUTF8));
+   return wxFileName::FileExists(path);
+}
+
 // VampEffectsModule implementation
 
 std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath & path,
                                       int & output,
                                       bool & hasParameters)
 {
-   PluginLoader::PluginKey key = path.BeforeLast(wxT('/')).ToUTF8().data();
+   PluginLoader::PluginKey key = path.BeforeFirst(wxT('/')).ToUTF8().data();
 
    std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(key, 48000) }; // rate doesn't matter here
    if (!vp)

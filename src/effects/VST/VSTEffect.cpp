@@ -145,7 +145,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VSTEffectsModule();
+   return std::make_unique<VSTEffectsModule>();
 }
 
 // ============================================================================
@@ -384,14 +384,6 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if( bFast )
-      return true;
-   wxString realPath = path.BeforeFirst(wxT(';'));
-   return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
-}
-
 std::unique_ptr<ComponentInterface>
 VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -400,6 +392,12 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
    auto result = std::make_unique<VSTEffect>(path);
    result->InitializePlugin();
    return result;
+}
+
+bool VSTEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   const auto modulePath = path.BeforeFirst(wxT(';'));
+   return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
 }
 
 // ============================================================================
