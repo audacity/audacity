@@ -57,6 +57,9 @@ public:
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
 
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
    bool RealtimeAddProcessor(EffectSettings &settings,

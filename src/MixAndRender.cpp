@@ -250,7 +250,7 @@ GetEffectStages(const WaveTrack &track)
          continue;
       auto &stage = result.emplace_back(MixerOptions::StageSpecification{
          move(pInstance), settings });
-      MakeChannelMap(track, pEffect->GetAudioInCount() > 1, stage.map);
+      MakeChannelMap(track, stage.mpInstance->GetAudioInCount() > 1, stage.map);
    }
    return result;
 }

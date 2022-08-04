@@ -269,26 +269,6 @@ bool AudioUnitEffect::FullyInitializePlugin()
    return true;
 }
 
-unsigned AudioUnitEffect::GetAudioInCount() const
-{
-   return mAudioIns;
-}
-
-unsigned AudioUnitEffect::GetAudioOutCount() const
-{
-   return mAudioOuts;
-}
-
-int AudioUnitEffect::GetMidiInCount() const
-{
-   return 0;
-}
-
-int AudioUnitEffect::GetMidiOutCount() const
-{
-   return 0;
-}
-
 #if 0
 size_t AudioUnitInstance::GetTailSize() const
 {

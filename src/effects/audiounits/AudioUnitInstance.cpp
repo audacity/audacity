@@ -54,6 +54,16 @@ size_t AudioUnitInstance::GetBlockSize() const
    return mBlockSize;
 }
 
+unsigned AudioUnitInstance::GetAudioInCount() const
+{
+   return mAudioIns;
+}
+
+unsigned AudioUnitInstance::GetAudioOutCount() const
+{
+   return mAudioOuts;
+}
+
 sampleCount AudioUnitInstance::GetLatency(
    const EffectSettings &, double sampleRate) const
 {

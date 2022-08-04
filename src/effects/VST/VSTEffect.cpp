@@ -866,17 +866,17 @@ TranslatableString VSTEffect::GetDescription() const
 
 EffectType VSTEffect::GetType() const
 {
-   if (mAudioIns == 0 && mAudioOuts == 0 && mMidiIns == 0 && mMidiOuts == 0)
+   if (mAudioIns == 0 && mAudioOuts == 0)
    {
       return EffectTypeTool;
    }
 
-   if (mAudioIns == 0 && mMidiIns == 0)
+   if (mAudioIns == 0)
    {
       return EffectTypeGenerate;
    }
 
-   if (mAudioOuts == 0 && mMidiOuts == 0)
+   if (mAudioOuts == 0)
    {
       return EffectTypeAnalyze;
    }
@@ -961,16 +961,6 @@ unsigned VSTEffect::GetAudioInCount() const
 unsigned VSTEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
-}
-
-int VSTEffect::GetMidiInCount() const
-{
-   return mMidiIns;
-}
-
-int VSTEffect::GetMidiOutCount() const
-{
-   return mMidiOuts;
 }
 
 size_t VSTEffect::SetBlockSize(size_t maxBlockSize)
@@ -1768,9 +1758,6 @@ bool VSTEffect::Load()
 
          mAudioIns = mAEffect->numInputs;
          mAudioOuts = mAEffect->numOutputs;
-
-         mMidiIns = 0;
-         mMidiOuts = 0;
 
          // Check to see if parameters can be automated.  This isn't a guarantee
          // since it could be that the effect simply doesn't support the opcode.

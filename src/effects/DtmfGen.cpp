@@ -119,11 +119,6 @@ EffectType EffectDtmf::GetType() const
    return EffectTypeGenerate;
 }
 
-unsigned EffectDtmf::GetAudioOutCount() const
-{
-   return 1;
-}
-
 //! Temporary state of the computation
 struct EffectDtmf::Instance
    : PerTrackEffect::Instance
@@ -139,6 +134,16 @@ struct EffectDtmf::Instance
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    override;
+
+   unsigned GetAudioInCount() const override
+   {
+      return 0;
+   }
+
+   unsigned GetAudioOutCount() const override
+   {
+      return 1;
+   }
 
    const double mT0;
    double mSampleRate{};
