@@ -371,19 +371,6 @@ unsigned VST3Effect::GetAudioOutCount() const
       Steinberg::Vst::kOutput,
       Steinberg::Vst::kMain);
 }
-
-int VST3Effect::GetMidiInCount() const
-{
-   //Dummy
-   return 0;
-}
-
-int VST3Effect::GetMidiOutCount() const
-{
-   //Dummy
-   return 0;
-}
-
 size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
 {
    mProcessingBlockSize = 

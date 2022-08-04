@@ -43,6 +43,10 @@ public:
       override;
       bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
       bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+
+      unsigned GetAudioInCount() const override;
+      unsigned GetAudioOutCount() const override;
+      
    protected:
       StatefulEffectBase &mEffect;
       StatefulEffectBase &GetEffect() const { return mEffect; }
@@ -120,6 +124,9 @@ public:
      Default implementation returns mEffectBlockSize
    */
    virtual size_t GetBlockSize() const;
+
+   virtual unsigned GetAudioInCount() const;
+   virtual unsigned GetAudioOutCount() const;
 
 private:
 

@@ -237,6 +237,16 @@ struct EffectReverb::Instance
       return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
    }
 
+   unsigned GetAudioOutCount() const override
+   {
+      return 2;
+   }
+
+   unsigned GetAudioInCount() const override
+   {
+      return 2;
+   }
+
    bool InstanceInit(EffectSettings& settings, double sampleRate,
       EffectReverbState& data, ChannelNames chanMap, bool forceStereo);
 
@@ -287,16 +297,6 @@ ManualPageID EffectReverb::ManualPage() const
 EffectType EffectReverb::GetType() const
 {
    return EffectTypeProcess;
-}
-
-unsigned EffectReverb::GetAudioInCount() const
-{
-   return 2;
-}
-
-unsigned EffectReverb::GetAudioOutCount() const
-{
-   return 2;
 }
 
 auto EffectReverb::RealtimeSupport() const -> RealtimeSince

@@ -408,6 +408,15 @@ public:
    // Suggest a block size, but the return is the size that was really set:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
+   //! How many input buffers to allocate at once
+   /*!
+    If the effect ALWAYS processes channels independently, this can return 1
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   virtual unsigned GetAudioOutCount() const = 0;
+
    /*!
     @return success
     Default implementation does nothing, returns false (so assume realtime is
@@ -534,20 +543,6 @@ public:
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
-   //! How many input buffers to allocate at once
-   /*!
-    If the effect ALWAYS processes channels independently, this can return 1
-    */
-   virtual unsigned GetAudioInCount() const = 0;
-
-   //! How many output buffers to allocate at once
-   virtual unsigned GetAudioOutCount() const = 0;
-
-   //! Function that has not yet found a use
-   virtual int GetMidiInCount() const;
-
-   //! Function that has not yet found a use
-   virtual int GetMidiOutCount() const;
 };
 
 /*************************************************************************************//**

@@ -101,8 +101,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
    // It's possible that the number of channels the effect expects changed based on
    // the parameters (the Audacity Reverb effect does when the stereo width is 0).
-   const auto numAudioIn = GetAudioInCount();
-   const auto numAudioOut = GetAudioOutCount();
+   const auto numAudioIn = instance.GetAudioInCount();
+   const auto numAudioOut = instance.GetAudioOutCount();
    if (numAudioOut < 1)
       return false;
 
