@@ -16,7 +16,6 @@
 #include "AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "SampleFormat.h"
-#include <functional>
 
 class sampleCount;
 class BoundedEnvelope;
@@ -144,5 +143,8 @@ class SAMPLE_TRACK_API Mixer {
    const std::vector<SampleBuffer> mBuffer;
 
    std::vector<MixerSource> mSources;
+
+   struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
+   std::vector<Source> mDecoratedSources;
 };
 #endif

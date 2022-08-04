@@ -90,9 +90,10 @@ Mixer::Mixer(Inputs inputs,
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      mSources.emplace_back( *leader, BufferSize(), outRate,
+      auto &source = mSources.emplace_back( *leader, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
          (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
+      mDecoratedSources.emplace_back(Source{ source, source });
    }
 }
 
@@ -173,25 +174,30 @@ size_t Mixer::Process(const size_t maxToProcess)
    // TODO: more-than-two-channels
    auto maxChannels = mFloatBuffers.Channels();
 
-   for (auto &source : mSources) {
-      auto oResult = source.Acquire(mFloatBuffers, maxToProcess);
+   for (auto &[ upstream, downstream ] : mDecoratedSources) {
+      auto oResult = downstream.Acquire(mFloatBuffers, maxToProcess);
       if (!oResult)
          return 0;
-      maxOut = std::max(maxOut, *oResult);
+      auto result = *oResult;
+      maxOut = std::max(maxOut, result);
 
       // Insert effect stages here!  Passing them all channels of the track
 
-      const auto limit = std::min<size_t>(source.Channels(), maxChannels);
+      const auto limit = std::min<size_t>(upstream.Channels(), maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
-         const auto track = source.GetChannel(j);
+         const auto track = upstream.GetChannel(j);
          if (mApplyTrackGains)
             for (size_t c = 0; c < mNumChannels; ++c)
                gains[c] = track->GetChannelGain(c);
          const auto flags =
-            findChannelFlags(source.MixerSpec(j), track->GetChannel());
-         MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, *oResult);
+            findChannelFlags(upstream.MixerSpec(j), track->GetChannel());
+         MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);
       }
+
+      downstream.Release();
+      mFloatBuffers.Advance(result);
+      mFloatBuffers.Rotate();
    }
 
    if (backwards)
