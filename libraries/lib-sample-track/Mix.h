@@ -51,7 +51,7 @@ class SAMPLE_TRACK_API Mixer {
     @pre all `inputTracks` are non-null
     @pre any left channels in inputTracks are immediately followed by their
        partners
-    @post `BufferSize() == outBufferSize`
+    @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
     */
    Mixer(Inputs inputs, bool mayThrow,
          const WarpOptions &warpOptions,

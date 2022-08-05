@@ -41,6 +41,28 @@ initVector(size_t dim1, size_t dim2)
 }
 }
 
+namespace {
+// Find a block size acceptable to all stages; side-effects on instances
+size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
+{
+   size_t blockSize = bufferSize;
+   const auto nTracks = inputs.size();
+   for (size_t i = 0; i < nTracks;) {
+      const auto &input = inputs[i];
+      const auto leader = input.pTrack.get();
+      const auto nInChannels = TrackList::Channels(leader).size();
+      if (!leader || i + nInChannels > nTracks) {
+         assert(false);
+         break;
+      }
+      auto increment = finally([&]{ i += nInChannels; });
+      for (const auto &stage : input.stages)
+         blockSize = std::min(blockSize, stage.mpInstance->SetBlockSize(blockSize));
+   }
+   return blockSize;
+}
+}
+
 Mixer::Mixer(Inputs inputs,
    const bool mayThrow,
    const WarpOptions &warpOptions,
@@ -51,7 +73,7 @@ Mixer::Mixer(Inputs inputs,
    const bool highQuality, MixerSpec *const mixerSpec,
    const bool applyTrackGains
 )  : mNumChannels{ numOutChannels }
-   , mBufferSize{ outBufferSize }
+   , mBufferSize{ FindBufferSize(inputs, outBufferSize) }
    , mApplyTrackGains{ applyTrackGains }
    , mHighQuality{ highQuality }
    , mFormat{ outFormat }
@@ -73,7 +95,7 @@ Mixer::Mixer(Inputs inputs,
       ](auto &buffer){ buffer.Allocate(size, format); }
    )}
 {
-   assert(BufferSize() == outBufferSize);
+   assert(BufferSize() <= outBufferSize);
    const auto nTracks = inputs.size();
 
    auto pMixerSpec = ( mixerSpec &&
