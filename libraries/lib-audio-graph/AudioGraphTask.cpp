@@ -42,8 +42,27 @@ auto AudioGraph::Task::RunOnce() -> Status
 {
    const auto blockSize = mBuffers.BlockSize();
    assert(mBuffers.Remaining() >= blockSize); // pre
+
+#ifndef NDEBUG
+   // Variable used only for a loop termination sanity check
+   std::optional<sampleCount> oldRemaining;
+   if (mRanOnce)
+      oldRemaining.emplace(mSource.Remaining());
+   // else Remaining() may not be meaningful
+#endif
+ 
    if (auto oCurBlockSize = mSource.Acquire(mBuffers, blockSize)) {
       const auto curBlockSize = *oCurBlockSize;
+#ifndef NDEBUG
+      mRanOnce = true;
+      const auto remaining = mSource.Remaining();
+      // Assert a post of Acquire which is part of proof of termination
+      assert(!mSource.Terminates() || !oldRemaining ||
+         *oldRemaining == remaining);
+      oldRemaining.emplace(remaining);
+      // Assert another post that guarantees progress (even if not terminating)
+      assert(blockSize == 0 || remaining == 0 || curBlockSize > 0);
+#endif
       if (curBlockSize == 0)
          // post (same as pre) obviously preserved
          return Status::Done;
@@ -61,6 +80,11 @@ auto AudioGraph::Task::RunOnce() -> Status
       assert(mSource.Remaining() == 0 || curBlockSize > 0);
       if (!mSource.Release())
          return Status::Fail;
+#ifndef NDEBUG
+      // Assert a post of Release
+      assert(!mSource.Terminates() ||
+         mSource.Remaining() == remaining - curBlockSize);
+#endif
 
       // Reestablish the post
       if (!mSink.Acquire(mBuffers))
