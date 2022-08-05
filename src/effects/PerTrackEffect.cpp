@@ -23,6 +23,7 @@
 #include "AudioGraphBuffers.h"
 #include "AudioGraphTask.h"
 #include "EffectStage.h"
+#include "MixAndRender.h"
 #include "SampleTrackSource.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
@@ -118,31 +119,15 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          sampleCount len = 0;
          sampleCount start = 0;
-         unsigned numChannels = 0;
          WaveTrack *pRight{};
 
-         // Iterate either over one track which could be any channel,
-         // or if multichannel, then over all channels of left,
-         // which is a leader.
-         for (auto channel :
-              TrackList::Channels(pLeft).StartingWith(pLeft)) {
-            if (channel->GetChannel() == Track::LeftChannel)
-               map[numChannels] = ChannelNameFrontLeft;
-            else if (channel->GetChannel() == Track::RightChannel)
-               map[numChannels] = ChannelNameFrontRight;
-            else
-               map[numChannels] = ChannelNameMono;
-            ++ numChannels;
-            map[numChannels] = ChannelNameEOL;
-            if (! multichannel)
-               break;
-            assert(numAudioIn > 1); // multichannel is true
+         const auto numChannels = MakeChannelMap(left, multichannel, map);
+         if (multichannel) {
+            assert(numAudioIn > 1);
             if (numChannels == 2) {
                // TODO: more-than-two-channels
-               pRight = channel;
+               pRight = *TrackList::Channels(&left).rbegin();
                clear = false;
-               // Ignore other channels
-               break;
             }
          }
 

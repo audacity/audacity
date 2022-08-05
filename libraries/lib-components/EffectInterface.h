@@ -347,8 +347,7 @@ class sampleCount;
 // Supported channel assignments
 // ----------------------------------------------------------------------------
 
-typedef enum
-{
+enum ChannelName : int {
    // Use to mark end of list
    ChannelNameEOL = -1,
    // The default channel assignment
@@ -378,7 +377,8 @@ typedef enum
    ChannelNameBottomFrontCenter,
    ChannelNameBottomFrontLeft,
    ChannelNameBottomFrontRight,
-} ChannelName, *ChannelNames;
+};
+using ChannelNames = const ChannelName *;
 
 /***************************************************************************//**
 \class EffectInstance
