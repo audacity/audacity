@@ -73,7 +73,9 @@ void TimeTrack::CleanState()
    //Time track is always unique
    SetName(GetDefaultName());
 
-   mRuler = std::make_unique<Ruler>(std::make_unique<LinearUpdater>(mZoomInfo));
+   auto pUpdater = std::make_unique<LinearUpdater>();
+   pUpdater->SetData(mZoomInfo);
+   mRuler = std::make_unique<Ruler>(move(pUpdater));
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(TimeFormat);
 }
@@ -100,8 +102,9 @@ TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
    mEnvelope->SetOffset(0);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
-   mRuler = std::make_unique<Ruler>(
-      std::make_unique<LinearUpdater>( mZoomInfo ));
+   auto pUpdater = std::make_unique<LinearUpdater>();
+   pUpdater->SetData(mZoomInfo);
+   mRuler = std::make_unique<Ruler>(move(pUpdater));
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(TimeFormat);
 }

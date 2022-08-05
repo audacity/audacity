@@ -21,7 +21,6 @@
 class wxDC;
 
 class Envelope;
-class ZoomInfo;
 
 #include "TranslatableString.h"
 
@@ -58,10 +57,9 @@ class AUDACITY_DLL_API Ruler {
    void SetRange(double min, double max, double hiddenMin, double hiddenMax);
 
    // Set the kind of updater the ruler will use (Linear, Logarithmic, Custom, etc.)
+   // Invalidates the ruler.  However ruler doesn't invalidate automatically
+   // if the updater's state is mutated elsewhere.
    void SetUpdater(std::unique_ptr<const RulerUpdater> pUpdater);
-
-   // An overload to also set ZoomInfo while adjusting updater
-   void SetUpdater(std::unique_ptr<const RulerUpdater> pUpdater, int leftOffset);
 
    //
    // Optional Ruler Parameters
@@ -110,22 +108,6 @@ class AUDACITY_DLL_API Ruler {
    //
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
-
-   // The following functions should allow a custom ruler setup:
-   // autosize is a GREAT thing, but for some applications it's
-   // useful for the definition of a label array and label step by the user.
-   // If this is the case, you should provide an array of labels, start
-   // label position, and labels step. The range eventually specified will be
-   // ignored.
-   void ResetCustomLabels(
-      bool resetMajor, bool resetMinor, bool resetMinorMinor);
-   void SetCustomMajorLabels(
-      const RulerUpdater::Labels &labels);
-   void SetCustomMinorLabels(
-      const RulerUpdater::Labels& labels);
-   void SetCustomMinorMinorLabels(
-      const RulerUpdater::Labels& labels);
-
    //
    // Drawing
    //
@@ -166,10 +148,6 @@ private:
    std::unique_ptr<const RulerUpdater> mpUpdater;
 
    RulerUpdater::Bits mUserBits;
-
-   RulerUpdater::Labels mCustomMajorLabels;
-   RulerUpdater::Labels mCustomMinorLabels;
-   RulerUpdater::Labels mCustomMinorMinorLabels;
 
    struct Cache;
    mutable std::unique_ptr<Cache> mpCache;

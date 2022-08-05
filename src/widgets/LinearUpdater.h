@@ -14,6 +14,8 @@
 
 #include "GeneratedUpdater.h"
 
+class ZoomInfo;
+
 class LinearUpdater final : public GeneratedUpdater {
 public:
    using GeneratedUpdater::GeneratedUpdater;
@@ -23,6 +25,16 @@ public:
       wxDC& dc, const Envelope* envelope,
       UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
+
+   void SetData(const ZoomInfo *pZoomInfo = nullptr, int leftOffset = 0)
+   {
+      mpZoomInfo = pZoomInfo;
+      mLeftOffset = 0;
+   }
+
+private:
+   const ZoomInfo *mpZoomInfo{};
+   int mLeftOffset{};
 };
 
 #endif

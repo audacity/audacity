@@ -116,21 +116,6 @@ void Ruler::SetUpdater(std::unique_ptr<const RulerUpdater> pUpdater)
    // Should a comparison be made between mpUpdater and pUpdater?
    // Runtime type comparison isn't clean in c++
    mpUpdater = std::move(pUpdater);
-   ResetCustomLabels(true, true, true);
-   Invalidate();
-}
-
-void Ruler::SetUpdater
-   (std::unique_ptr<const RulerUpdater> pUpdater, int leftOffset)
-{
-   // Should a comparison be made between mpUpdater and pUpdater?
-   // Runtime type comparison isn't clean in c++
-   mpUpdater = std::move(pUpdater);
-
-   if (mRulerStruct.mLeftOffset != leftOffset)
-      mRulerStruct.mLeftOffset = leftOffset;
-
-   ResetCustomLabels(true, true, true);
    Invalidate();
 }
 
@@ -429,10 +414,6 @@ void Ruler::UpdateCache(
 
    cache.mBits = mUserBits;
    cache.mBits.resize( static_cast<size_t>(mRulerStruct.mLength + 1), false );
-
-   cache.mMajorLabels = mCustomMajorLabels;
-   cache.mMinorLabels = mCustomMinorLabels;
-   cache.mMinorMinorLabels = mCustomMinorMinorLabels;
    
    RulerUpdater::UpdateOutputs allOutputs{
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
@@ -640,51 +621,4 @@ void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 
    if (height)
       *height = cache.mRect.GetHeight();
-}
-
-void Ruler::ResetCustomLabels(
-   bool resetMajor, bool resetMinor, bool resetMinorMinor)
-{
-   if (resetMajor)
-      mCustomMajorLabels.clear();
-   if (resetMinor)
-      mCustomMinorLabels.clear();
-   if (resetMinorMinor)
-      mCustomMinorMinorLabels.clear();
-}
-
-void Ruler::SetCustomMajorLabels(
-   const RulerUpdater::Labels& labels)
-{
-   const auto numLabel = labels.size();
-
-   for(size_t i = 0; i<numLabel; i++) {
-      mCustomMajorLabels.push_back(labels[i]);
-   }
-
-   Invalidate();
-}
-
-void Ruler::SetCustomMinorLabels(
-   const RulerUpdater::Labels& labels)
-{
-   const auto numLabel = labels.size();
-
-   for (size_t i = 0; i < numLabel; i++) {
-      mCustomMinorLabels.push_back(labels[i]);
-   }
-
-   Invalidate();
-}
-
-void Ruler::SetCustomMinorMinorLabels(
-   const RulerUpdater::Labels& labels)
-{
-   const auto numLabel = labels.size();
-
-   for (size_t i = 0; i < numLabel; i++) {
-      mCustomMinorMinorLabels.push_back(labels[i]);
-   }
-
-   Invalidate();
 }

@@ -57,8 +57,6 @@ struct RulerStruct {
    mutable std::unique_ptr<Fonts> mpFonts;
    TranslatableString mUnits;
 
-   int mLeftOffset{};
-
    NumberScale mNumberScale;
 };
 
@@ -78,11 +76,7 @@ public:
 
    using Bits = std::vector< bool >;
 
-   const ZoomInfo* zoomInfo;
-
-   explicit RulerUpdater(const ZoomInfo* z = nullptr)
-      : zoomInfo{ z }
-   {}
+   RulerUpdater() {}
    virtual ~RulerUpdater();
 
    struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };

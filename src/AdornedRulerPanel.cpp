@@ -1258,7 +1258,11 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    const wxSize& size,
    ViewInfo *viewinfo
 )  : CellularPanel(parent, id, pos, size, viewinfo)
-   , mRuler{ std::make_unique<LinearUpdater>() }
+   , mRuler{ [this]{
+      auto pUpdater = std::make_unique<LinearUpdater>();
+      mpUpdater = pUpdater.get();
+      return pUpdater;
+   }() }
    , mProject(project)
 {
    SetLayoutDirection(wxLayout_LeftToRight);
@@ -1282,9 +1286,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
-   // Redundant SetUpdater() (just to use the other overload here)
-   // will be fixed later
-   mRuler.SetUpdater( std::make_unique<LinearUpdater>( mViewInfo ), mLeftOffset );
+   mpUpdater->SetData(mViewInfo, mLeftOffset);
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( TimeFormat );
 
@@ -2580,8 +2582,11 @@ int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
 
 void AdornedRulerPanel::SetLeftOffset(int offset)
 {
-   mLeftOffset = offset;
-   mRuler.SetUpdater( std::make_unique<LinearUpdater>( mViewInfo ), offset );
+   if (mLeftOffset != offset) {
+      mLeftOffset = offset;
+      mpUpdater->SetData(mViewInfo, offset);
+      mRuler.Invalidate();
+   }
 }
 
 // Draws the scrubbing/seeking indicator.

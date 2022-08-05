@@ -35,7 +35,6 @@ void LinearUpdater::Update(
 
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
    const bool mLabelEdges = context.mLabelEdges;
-   const int mLeftOffset = context.mLeftOffset;
 
    // Use the "hidden" min and max to determine the tick size.
    // That may make a difference with fisheye.
@@ -46,7 +45,7 @@ void LinearUpdater::Update(
 
    auto TickAtValue =
       [this, &tickSizes, &dc, &majorOutputs, &mFonts, mOrientation,
-         mMin, mMax, mLength, mLeftOffset, mRight, mBottom, &context]
+         mMin, mMax, mLength, mRight, mBottom, &context]
    (double value) -> int {
       // Make a tick only if the value is strictly between the bounds
       if (value <= std::min(mMin, mMax))
@@ -55,11 +54,11 @@ void LinearUpdater::Update(
          return -1;
 
       int mid;
-      if (zoomInfo) {
+      if (mpZoomInfo) {
          // Tick only at zero
          if (value)
             return -1;
-         mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+         mid = (int)(mpZoomInfo->TimeToPosition(0.0, mLeftOffset));
       }
       else
          mid = (int)(mLength * ((mMin - value) / (mMin - mMax)) + 0.5);
@@ -113,10 +112,10 @@ void LinearUpdater::Update(
       double d, warpedD, nextD;
 
       double prevTime = 0.0, time = 0.0;
-      if (zoomInfo) {
-         j = zoomInfo->TimeToPosition(mMin);
-         prevTime = zoomInfo->PositionToTime(--j);
-         time = zoomInfo->PositionToTime(++j);
+      if (mpZoomInfo) {
+         j = mpZoomInfo->TimeToPosition(mMin);
+         prevTime = mpZoomInfo->PositionToTime(--j);
+         time = mpZoomInfo->PositionToTime(++j);
          d = (prevTime + time) / 2.0;
       }
       else
@@ -130,10 +129,10 @@ void LinearUpdater::Update(
       double step = floor(sign * warpedD / denom);
       while (ii <= mLength) {
          ii++;
-         if (zoomInfo)
+         if (mpZoomInfo)
          {
             prevTime = time;
-            time = zoomInfo->PositionToTime(++j);
+            time = mpZoomInfo->PositionToTime(++j);
             nextD = (prevTime + time) / 2.0;
             // wxASSERT(time >= prevTime);
          }

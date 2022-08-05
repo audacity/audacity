@@ -24,11 +24,24 @@ public:
       UpdateOutputs& allOutputs, const RulerStruct& context
    ) const final;
 
+   void SetData(
+      RulerUpdater::Labels majorLabels,
+      RulerUpdater::Labels minorLabels,
+      RulerUpdater::Labels minorMinorLabels
+   )
+   {
+      mMajorLabels = move(majorLabels);
+      mMinorLabels = move(minorLabels);
+      mMinorMinorLabels = move(minorMinorLabels);
+   }
+
 protected:
    virtual bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
       const RulerStruct& context
    ) const = 0;
+
+   RulerUpdater::Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
 };
 
 #endif

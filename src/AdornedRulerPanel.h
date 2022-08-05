@@ -19,6 +19,7 @@
 
 class AudacityProject;
 struct AudioIOEvent;
+class LinearUpdater;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.
@@ -132,6 +133,7 @@ private:
 
 private:
 
+   LinearUpdater *mpUpdater{};
    Ruler mRuler;
    AudacityProject *const mProject;
    TrackList *mTracks;

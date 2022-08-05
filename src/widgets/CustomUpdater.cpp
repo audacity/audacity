@@ -19,6 +19,10 @@ void CustomUpdater::Update(
    const int mLength = context.mLength;
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
 
+   allOutputs.majorLabels = mMajorLabels;
+   allOutputs.minorLabels = mMinorLabels;
+   allOutputs.minorMinorLabels = mMinorMinorLabels;
+
    for (int ii = 0; ii < 3; ii++) {
       Labels& labs = (ii == 0) ? allOutputs.majorLabels :
          (ii == 1) ? allOutputs.minorLabels : allOutputs.minorMinorLabels;
