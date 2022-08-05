@@ -12,16 +12,16 @@
 #ifndef __AUDACITY_LOGARITHMIC_UPDATER__
 #define __AUDACITY_LOGARITHMIC_UPDATER__
 
-#include "RulerUpdater.h"
+#include "GeneratedUpdater.h"
 
-class LogarithmicUpdater final : public RulerUpdater {
+class LogarithmicUpdater final : public GeneratedUpdater {
 public:
-   using RulerUpdater::RulerUpdater;
+   using GeneratedUpdater::GeneratedUpdater;
    ~LogarithmicUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct& context
+      UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data
    ) const override;
 };
 

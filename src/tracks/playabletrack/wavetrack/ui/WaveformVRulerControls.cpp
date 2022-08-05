@@ -288,6 +288,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          vruler->SetLabelEdges(true);
          vruler->SetUnits(XO("dB"));
          vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
+         RulerUpdater::Labels major, minor, minorMinor;
          std::vector<LinearDBValues> values = { majorValues, minorValues, minorMinorValues };
          for (int ii = 0; ii < 3; ii++) {
             RulerUpdater::Labels labs;
@@ -317,12 +318,14 @@ void WaveformVRulerControls::DoUpdateVRuler(
                labs.push_back(lab);
             }
             if (ii == 0)
-               vruler->SetCustomMajorLabels(labs);
+               major = labs;
             else if (ii == 1)
-               vruler->SetCustomMinorLabels(labs);
+               minor = labs;
             else
-               vruler->SetCustomMinorMinorLabels(labs);
+               minorMinor = labs;
          }
+         CustomUpdaterData data = { major, minor, minorMinor };
+         vruler->SetUpdaterData(data);
       }
    }
    else {

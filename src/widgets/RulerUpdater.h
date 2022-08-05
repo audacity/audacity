@@ -16,6 +16,7 @@
 #include "Envelope.h"
 #include "NumberScale.h" // member variable
 #include <wx/font.h>
+#include <any> // needed for customizable data
 
 class wxDC;
 class wxColor;
@@ -57,8 +58,6 @@ struct RulerStruct {
    mutable std::unique_ptr<Fonts> mpFonts;
    TranslatableString mUnits;
 
-   int mLeftOffset;
-
    NumberScale mNumberScale;
 };
 
@@ -78,11 +77,7 @@ public:
 
    using Bits = std::vector< bool >;
 
-   const ZoomInfo* zoomInfo;
-
-   explicit RulerUpdater(const ZoomInfo* z = nullptr)
-      : zoomInfo{ z }
-   {}
+   explicit RulerUpdater() {}
    virtual ~RulerUpdater();
 
    struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };
@@ -108,11 +103,6 @@ public:
          const;
    };
 
-   double ComputeWarpedLength(const Envelope& env, double t0, double t1) const
-   {
-      return env.IntegralOfInverse(t0, t1);
-   }
-
    static std::pair< wxRect, Label > MakeTick(
       RulerUpdater::Label lab,
       wxDC& dc, wxFont font,
@@ -134,7 +124,7 @@ public:
 
    virtual void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct &context
+      UpdateOutputs& allOutputs, const RulerStruct &context, const std::any& data
    )// Envelope *speedEnv, long minSpeed, long maxSpeed )
       const = 0;
 };
