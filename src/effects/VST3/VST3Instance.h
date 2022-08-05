@@ -77,8 +77,6 @@ public:
 
    bool ValidateUI(EffectSettings&);
 
-   bool SaveSettings(CommandParameters & parms) const;
-   bool LoadSettings(const CommandParameters & parms);
    bool SaveUserPreset(const RegistryPath & name) const;
    bool LoadUserPreset(const RegistryPath & name);
    void ExportPresets() const;

@@ -181,18 +181,41 @@ bool VST3Effect::SupportsAutomation() const
    return true;
 }
 
-bool VST3Effect::SaveSettings(const EffectSettings&, CommandParameters& parms) const
+bool VST3Effect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
 {
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->SaveSettings(parms);
-   return false;
+   const auto& vst3settings = VST3Wrapper::GetSettings(settings);
+
+   for(const auto& p : vst3settings.state)
+      parms.Write(wxString::Format("%d", p.first), p.second);
+
+   return true;
 }
 
 bool VST3Effect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->LoadSettings(parms);
-   return false;
+   VST3EffectSettings temp;
+
+   long idx;
+   wxString key;
+   temp.state.reserve(parms.GetNumberOfEntries());
+
+   if(parms.GetFirstEntry(key, idx))
+   {
+      do
+      {
+         unsigned long paramId{0};
+         double paramValue;
+         if(key.ToULong(&paramId) && parms.Read(key, &paramValue))
+            temp.state[paramId] = paramValue;
+      } while(parms.GetNextEntry(key, idx));
+   }
+   //replicate the complete state, so that processor could
+   //update its state too before the first processing pass
+   temp.parameterChanges = temp.state;
+
+   std::swap(VST3Wrapper::GetSettings(settings), temp);
+
+   return true;
 }
 
 bool VST3Effect::LoadUserPreset(

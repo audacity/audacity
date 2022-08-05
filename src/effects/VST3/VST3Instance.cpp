@@ -256,45 +256,6 @@ bool VST3Instance::ValidateUI(EffectSettings& settings)
    return true;
 }
 
-bool VST3Instance::SaveSettings(CommandParameters& parms) const
-{
-   using namespace Steinberg;
-
-   auto processorState = owned(safenew PresetsBufferStream);
-   if (mWrapper->mEffectComponent->getState(processorState) == kResultOk)
-      parms.Write(processorStateKey,  processorState->toString());
-
-   auto controllerState = owned(safenew PresetsBufferStream);
-   if (mWrapper->mEditController->getState(controllerState) == kResultOk)
-      parms.Write(controllerStateKey, controllerState->toString());
-   
-   return true;
-}
-
-bool VST3Instance::LoadSettings(const CommandParameters & parms)
-{
-   using namespace Steinberg;
-   
-   wxString processorStateStr;
-   if (parms.Read(processorStateKey, &processorStateStr))
-   {
-      auto processorState = PresetsBufferStream::fromString(processorStateStr);
-      if(mWrapper->mEffectComponent->setState(processorState) != kResultOk)
-         return false;
-
-      wxString controllerStateStr;
-      if(parms.Read(controllerStateKey, &controllerStateStr))
-      {
-         auto controllerState = PresetsBufferStream::fromString(controllerStateStr);
-         if(mWrapper->mEditController->setComponentState(processorState) != kResultOk ||
-            mWrapper->mEditController->setState(controllerState) != kResultOk)
-            return false;
-      }
-   }
-   
-   return true;
-}
-
 bool VST3Instance::SaveUserPreset(const RegistryPath& name) const
 {
    using namespace Steinberg;
@@ -431,6 +392,13 @@ bool VST3Instance::TransferDataToWindow(const EffectSettings& settings)
 
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
+   else
+   {
+      SyncComponentStates(*mWrapper->mEffectComponent, *mWrapper->mEditController);
+      const auto& vst3settings = VST3Wrapper::GetSettings(settings);
+      for(const auto& p : vst3settings.parameterIndexMap)
+         mWrapper->mEditController->setParamNormalized(p.first, vst3settings.parameters[p.second]);
+   }
 
    return false;
 }
