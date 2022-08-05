@@ -146,7 +146,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
          XO("Mixing and rendering tracks"));
 
       while (updateResult == ProgressResult::Success) {
-         auto blockLen = mixer.Process(maxBlockLen);
+         auto blockLen = mixer.Process();
 
          if (blockLen == 0)
             break;

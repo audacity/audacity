@@ -314,8 +314,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
-         auto pcmNumSamples = mixer->Process(pcmBufferSize);
-
+         auto pcmNumSamples = mixer->Process();
          if (pcmNumSamples == 0)
             break;
 

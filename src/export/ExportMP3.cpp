@@ -1971,11 +1971,9 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
-         auto blockLen = mixer->Process(inSamples);
-
-         if (blockLen == 0) {
+         auto blockLen = mixer->Process();
+         if (blockLen == 0)
             break;
-         }
 
          float *mixed = (float *)mixer->GetBuffer();
 

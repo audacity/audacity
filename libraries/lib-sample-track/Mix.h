@@ -84,6 +84,11 @@ class SAMPLE_TRACK_API Mixer {
     */
    size_t Process(size_t maxSamples);
 
+   /*!
+    @post result: `result <= BufferSize()`
+    */
+   size_t Process() { return Process(BufferSize()); }
+
    /// Restart processing at beginning of buffer next time
    /// Process() is called.
    void Restart();

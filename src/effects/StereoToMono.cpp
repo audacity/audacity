@@ -193,8 +193,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    auto outTrack = left->EmptyCopy();
    outTrack->ConvertToSampleFormat(floatSample);
 
-   while (auto blockLen = mixer.Process(idealBlockLen))
-   {
+   while (auto blockLen = mixer.Process()) {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
       {
