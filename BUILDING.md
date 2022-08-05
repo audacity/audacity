@@ -89,6 +89,9 @@ If you install Graphviz, then an image file modules.dot.svg is generated in the 
 
 You will also be able to change to the scripts directory and run ./graph.pl to generate a diagram of dependencies among source code files within the executable.
 
+## Precompiled Headers
+
+While precompiled headers are useful, we want Audacity to run with or without this feature enabled. For that reason, we recommend setting `audacity_use_pch=NO` in CMake when configuring to disable precompiled headers for your build.
 
 ## Building on Windows
 
