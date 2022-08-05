@@ -379,6 +379,12 @@ bool MixerSource::Release()
    return true;
 }
 
+bool MixerSource::Terminates() const
+{
+   // Not always terminating
+   return false;
+}
+
 void MixerSource::Reposition(double time, bool skipping)
 {
    for (size_t j = 0; j < mnChannels; ++j) {

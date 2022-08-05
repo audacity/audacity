@@ -51,7 +51,8 @@ public:
     @post `data.Remaining() > 0`
     @post result: `!result || bound == 0 || Remaining() == 0 || *result > 0`
        (progress guarantee)
-    @post `Remaining()` was not previously defined, or is unchanged
+    @post `!Terminates()` or
+       `Remaining()` was not previously defined, or is unchanged
     */
    virtual std::optional<size_t> Acquire(Buffers &data, size_t bound) = 0;
 
@@ -66,9 +67,13 @@ public:
    /*!
     May be called only after at least one successful call to Acquire()
     @return success
-    @post `Remaining()` reduced by what was last returned by `Acquire()`
+    @post `!Terminates()` or
+       `Remaining()` reduced by what was last returned by `Acquire()`
     */
    virtual bool Release() = 0;
+
+   //! Needed only to make some postconditions assertable; defaults true
+   virtual bool Terminates() const;
 };
 
 }

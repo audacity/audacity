@@ -56,7 +56,7 @@ auto AudioGraph::Task::RunOnce() -> Status
       // This may break the post
       mBuffers.Advance(curBlockSize);
 
-      // posts of source.Acquire() and source.Relase()
+      // posts of source.Acquire() and source.Release()
       // give termination guarantee
       assert(mSource.Remaining() == 0 || curBlockSize > 0);
       if (!mSource.Release())

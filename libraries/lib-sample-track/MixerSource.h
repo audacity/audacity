@@ -54,6 +54,8 @@ public:
    std::optional<size_t> Acquire(Buffers &data, size_t bound) override;
    sampleCount Remaining() const override;
    bool Release() override;
+   //! @return false
+   bool Terminates() const override;
    void Reposition(double time, bool skipping);
 
 private:
