@@ -64,10 +64,8 @@ private:
    bool Process(
       const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const;
 
-   std::optional<size_t> FetchProcessAndAdvance(
+   [[nodiscard]] std::optional<size_t> FetchProcessAndAdvance(
       Buffers &data, size_t bound, bool doZeros, size_t outBufferOffset = 0);
-
-   void FinishUpstream();
 
    Source &mUpstream;
    //! @invariant mInBuffers.BlockSize() <= mInBuffers.Remaining()
@@ -77,7 +75,6 @@ private:
    const double mSampleRate;
    const bool mIsProcessor;
 
-   sampleCount mDelay{};
    sampleCount mDelayRemaining;
    size_t mLastProduced{};
    size_t mLastZeroes{};

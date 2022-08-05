@@ -34,9 +34,6 @@ AudioGraph::EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
 
    // Establish invariant
    mInBuffers.Rewind();
-   if (!mIsProcessor)
-      // maybe not needed, but harmless
-      FinishUpstream();
 }
 
 AudioGraph::EffectStage::~EffectStage()
@@ -94,46 +91,64 @@ AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
          // Some effects (like ladspa/lv2 swh plug-ins) don't report latency
          // until at least one block of samples is processed.  Find latency
          // once only for the track and assume it doesn't vary
-         mDelayRemaining = mDelay =
+         auto delay = mDelayRemaining =
             mInstance.GetLatency(mSettings, mSampleRate);
          // Discard all the latency
-         auto delay = mDelay;
          while (delay > 0 && curBlockSize > 0) {
             auto discard = limitSampleBufferSize(curBlockSize, delay);
             data.Discard(discard, curBlockSize);
             delay -= discard;
             curBlockSize -= discard;
             if (curBlockSize == 0) {
-               if (auto oCurBlockSize =
-                  FetchProcessAndAdvance(data, bound, false)
-               )
-                  curBlockSize = *oCurBlockSize;
-               else
+               if (!(oCurBlockSize = FetchProcessAndAdvance(data, bound, false)
+               ))
                   return {};
+               else
+                  curBlockSize = *oCurBlockSize;
             }
             mLastProduced -= discard;
          }
-         while (delay > 0) {
+         if (curBlockSize > 0) {
+            assert(delay == 0);
+            if (curBlockSize < bound) {
+               // Discarded all the latency, while upstream may still be
+               // producing.  Try to fill the buffer up to the bound.
+               if (!(oCurBlockSize = FetchProcessAndAdvance(
+                  data, bound - curBlockSize, false, curBlockSize)
+               ))
+                  return {};
+               else
+                  curBlockSize += *oCurBlockSize;
+            }
+         }
+         else while (delay > 0) {
             assert(curBlockSize == 0);
             // Finish one-time delay in case it exceeds entire upstream length
             // Upstream must have been exhausted
             assert(mUpstream.Remaining() == 0);
             // Feed zeroes to the effect
             auto zeroes = limitSampleBufferSize(data.BlockSize(), delay);
-            FetchProcessAndAdvance(data, zeroes, true);
+            if (!(FetchProcessAndAdvance(data, zeroes, true)))
+               return {};
             delay -= zeroes;
+            // Debit mDelayRemaining later in Release()
          }
          mLatencyDone = true;
       }
    }
 
    if (curBlockSize < bound) {
+      // If there is still a short buffer by this point, upstream must have
+      // been exhausted
+      assert(mUpstream.Remaining() == 0);
+
       // Continue feeding zeroes; this code block will produce as many zeroes
-      // at the end as were discarded at the beginning
+      // at the end as were discarded at the beginning (over one or more visits)
       auto zeroes =
          limitSampleBufferSize(bound - curBlockSize, mDelayRemaining);
-      FetchProcessAndAdvance(data, zeroes, true, curBlockSize);
-      mDelayRemaining -= zeroes;
+      if (!FetchProcessAndAdvance(data, zeroes, true, curBlockSize))
+         return {};
+      // Debit mDelayRemaining later in Release()
    }
 
    auto result = mLastProduced + mLastZeroes;
@@ -154,16 +169,26 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
    doZeroes = doZeroes || !mIsProcessor;
    if (!doZeroes)
       oCurBlockSize = mUpstream.Acquire(mInBuffers, bound);
-   else
+   else {
+      if (!mCleared) {
+         // Need to do this the first time, only, that we begin to give zeroes
+         // to the processor
+         mInBuffers.Rewind();
+         const auto blockSize = mInBuffers.BlockSize();
+         for (size_t ii = 0; ii < mInBuffers.Channels(); ++ii) {
+            auto p = &mInBuffers.GetWritePosition(ii);
+            std::fill(p, p + blockSize, 0);
+         }
+         mCleared = true;
+      }
       oCurBlockSize = { bound };
+   }
    if (!oCurBlockSize)
       return {};
 
    const auto curBlockSize = *oCurBlockSize;
-   if (curBlockSize == 0) {
+   if (curBlockSize == 0)
       assert(doZeroes || mUpstream.Remaining() == 0); // post of Acquire()
-      FinishUpstream();
-   }
    else {
       // Called only in Acquire()
       // invariant or post of mUpstream.Acquire() satisfies pre of Process()
@@ -225,10 +250,12 @@ bool AudioGraph::EffectStage::Process(
 
 sampleCount AudioGraph::EffectStage::Remaining() const
 {
-   // Not correct until at least one call to Acquire() so that mDelay is
-   // assigned.  mDelay does not change thereafter; mDelayRemaining decreases
-   // from that value to 0.
-   return mLastProduced + mUpstream.Remaining() - mDelay + DelayRemaining();
+   // Not correct until at least one call to Acquire() so that mDelayRemaining
+   // is assigned.
+   // mLastProduced will have the up-front latency discarding deducted.
+   // mDelayRemaining later decreases to 0 as zeroes are supplied to the
+   // processor at the end, compensating for the discarding.
+   return mLastProduced + mUpstream.Remaining() + DelayRemaining();
 }
 
 bool AudioGraph::EffectStage::Release()
@@ -237,20 +264,7 @@ bool AudioGraph::EffectStage::Release()
    // if mLastProduced + mLastZeroes > 0,
    // which is what Acquire() last returned
    mDelayRemaining -= mLastZeroes;
+   assert(mDelayRemaining >= 0);
    mLastProduced = mLastZeroes = 0;
    return true;
-}
-
-void AudioGraph::EffectStage::FinishUpstream()
-{
-   if (!mCleared) {
-      // From this point on, we only want to feed zeros to the plugin
-      mInBuffers.Rewind();
-      const auto blockSize = mInBuffers.BlockSize();
-      for (size_t ii = 0; ii < mInBuffers.Channels(); ++ii) {
-         auto p = &mInBuffers.GetWritePosition(ii);
-         std::fill(p, p + blockSize, 0);
-      }
-      mCleared = true;
-   }
 }
