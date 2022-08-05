@@ -137,12 +137,26 @@ ErrorReportDialog::ErrorReportDialog(
                S.AddSpace(0, 20);
 
                S.AddVariableText(XO(
-                     "More information about this error may be available on [[https://audacityteam.org/errors]]."))
+                     "More information about this error may be available on [[https://audacityteam.org/help]]."))
                   ->SetFont(textFont);
-               S.AddSpace(0, 6);
+               S.AddSpace(0, 12);
                S.AddVariableText(XO(
-                     "Would you like to send an anonymous report to help us fix this issue?"))
+                     "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
                   ->SetFont(textFont);
+
+               S.AddSpace(0, 6);
+
+               /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+               AccessibleLinksFormatter privacyPolicy(
+                  XO("See %s for more info."));
+
+               privacyPolicy.FormatLink(
+                  /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
+                  wxT("%s"),
+                  XO("our Privacy Policy"),
+                  "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+               privacyPolicy.Populate(S);
             }
             S.EndVerticalLay();
          }
@@ -208,7 +222,7 @@ ErrorReportDialog::ErrorReportDialog(
 
             S.AddSpace(13, 0);
 
-            S.Id(wxID_YES).AddButton(XC("&Send Report", "crash reporter button"));
+            S.Id(wxID_YES).AddButton(XC("&Send", "crash reporter button"));
          }
          S.EndHorizontalLay();
 
