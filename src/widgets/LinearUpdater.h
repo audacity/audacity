@@ -12,15 +12,17 @@
 #ifndef __AUDACITY_LINEAR_UPDATER__
 #define __AUDACITY_LINEAR_UPDATER__
 
-#include "RulerUpdater.h"
+#include "GeneratedUpdater.h"
 
-struct LinearUpdater final : public RulerUpdater {
-   using RulerUpdater::RulerUpdater;
+struct LinearUpdaterData { const ZoomInfo* zoomInfo; const int leftOffset; };
+
+struct LinearUpdater final : public GeneratedUpdater {
+   using GeneratedUpdater::GeneratedUpdater;
    ~LinearUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct& context
+      UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data
    ) const override;
 };
 

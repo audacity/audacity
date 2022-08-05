@@ -14,10 +14,18 @@
 
 void CustomUpdater::Update(
    wxDC& dc, const Envelope* envelope,
-   UpdateOutputs& allOutputs, const RulerStruct& context) const
+   UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data) const
 {
    const int mLength = context.mLength;
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
+
+   const CustomUpdaterData* customData = std::any_cast<CustomUpdaterData>(&data);
+
+   if (customData) {
+      allOutputs.majorLabels = customData->majorLabels;
+      allOutputs.minorLabels = customData->minorLabels;
+      allOutputs.minorMinorLabels = customData->minorMinorLabels;
+   }
 
    for (int ii = 0; ii < 3; ii++) {
       Labels& labs = (ii == 0) ? allOutputs.majorLabels :

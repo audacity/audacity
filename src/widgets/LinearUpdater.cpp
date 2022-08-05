@@ -13,7 +13,7 @@
 
 void LinearUpdater::Update(
    wxDC& dc, const Envelope* envelope,
-   UpdateOutputs& allOutputs, const RulerStruct& context) const
+   UpdateOutputs& allOutputs, const RulerStruct& context, const std::any &data) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
@@ -35,7 +35,11 @@ void LinearUpdater::Update(
 
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
    const bool mLabelEdges = context.mLabelEdges;
-   const int mLeftOffset = context.mLeftOffset;
+
+   const LinearUpdaterData* linearData = std::any_cast<LinearUpdaterData>(&data);
+   
+   const ZoomInfo* zoomInfo = linearData ? linearData->zoomInfo : nullptr;
+   const int mLeftOffset = linearData ? linearData->leftOffset : 0;
 
    // Use the "hidden" min and max to determine the tick size.
    // That may make a difference with fisheye.
@@ -45,7 +49,7 @@ void LinearUpdater::Update(
    TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
 
    auto TickAtValue =
-      [this, &tickSizes, &dc, &majorOutputs, &mFonts, mOrientation,
+      [this, &zoomInfo, &tickSizes, &dc, &majorOutputs, &mFonts, mOrientation,
          mMin, mMax, mLength, mLeftOffset, mRight, mBottom, &context]
    (double value) -> int {
       // Make a tick only if the value is strictly between the bounds

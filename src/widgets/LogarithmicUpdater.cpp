@@ -13,7 +13,7 @@
 
 void LogarithmicUpdater::Update(
    wxDC& dc, const Envelope* envelope,
-   UpdateOutputs& allOutputs, const RulerStruct& context) const
+   UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };

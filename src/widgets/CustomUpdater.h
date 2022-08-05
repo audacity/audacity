@@ -14,13 +14,16 @@
 
 #include "RulerUpdater.h"
 
+
+struct CustomUpdaterData { const RulerUpdater::Labels majorLabels, minorLabels, minorMinorLabels; };
+
 struct CustomUpdater : public RulerUpdater {
    using RulerUpdater::RulerUpdater;
    virtual ~CustomUpdater() override = 0;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct& context
+      UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data
    ) const final override;
 
    virtual bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
