@@ -12,11 +12,11 @@
 #ifndef __AUDACITY_LINEAR_UPDATER__
 #define __AUDACITY_LINEAR_UPDATER__
 
-#include "RulerUpdater.h"
+#include "GeneratedUpdater.h"
 
-class LinearUpdater final : public RulerUpdater {
+class LinearUpdater final : public GeneratedUpdater {
 public:
-   using RulerUpdater::RulerUpdater;
+   using GeneratedUpdater::GeneratedUpdater;
    ~LinearUpdater() override;
 
    void Update(

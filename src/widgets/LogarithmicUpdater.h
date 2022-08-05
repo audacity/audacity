@@ -12,11 +12,11 @@
 #ifndef __AUDACITY_LOGARITHMIC_UPDATER__
 #define __AUDACITY_LOGARITHMIC_UPDATER__
 
-#include "RulerUpdater.h"
+#include "GeneratedUpdater.h"
 
-class LogarithmicUpdater final : public RulerUpdater {
+class LogarithmicUpdater final : public GeneratedUpdater {
 public:
-   using RulerUpdater::RulerUpdater;
+   using GeneratedUpdater::GeneratedUpdater;
    ~LogarithmicUpdater() override;
 
    void Update(

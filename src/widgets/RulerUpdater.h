@@ -108,23 +108,12 @@ public:
          const;
    };
 
-   double ComputeWarpedLength(const Envelope& env, double t0, double t1) const
-   {
-      return env.IntegralOfInverse(t0, t1);
-   }
-
    static std::pair< wxRect, Label > MakeTick(
       RulerUpdater::Label lab,
       wxDC& dc, wxFont font,
       std::vector<bool>& bits,
       int left, int top, int spacing, int lead,
       bool flip, int orientation);
-
-   bool Tick(wxDC& dc,
-      int pos, double d, const TickSizes& tickSizes, wxFont font,
-      TickOutputs outputs,
-      const RulerStruct& context
-   ) const;
 
    void BoxAdjust(
       UpdateOutputs& allOutputs,
