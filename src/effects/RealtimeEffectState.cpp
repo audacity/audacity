@@ -321,6 +321,7 @@ RealtimeEffectState::Initialize(double sampleRate)
 
    mCurrentProcessor = 0;
    mGroups.clear();
+   mLatency = {};
    return EnsureInstance(sampleRate);
 }
 
@@ -378,7 +379,8 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
          return false;
    });
    if (mCurrentProcessor > first) {
-      mGroups[&track] = first;
+      // Remember the sampleRate of the track, so latency can be computed later
+      mGroups[&track] = { first, sampleRate };
       return pInstance;
    }
    return {};
@@ -433,7 +435,8 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
    const auto clientIn = stackAllocate(const float *, numAudioIn);
    const auto clientOut = stackAllocate(float *, numAudioOut);
    size_t len = 0;
-   auto processor = mGroups[&track];
+   const auto &pair = mGroups[&track];
+   auto processor = pair.first;
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned indx, unsigned ondx){
       len = 0;
@@ -465,6 +468,11 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
          // Assuming we are in a processing scope, use the worker settings
          len += pInstance->RealtimeProcess(processor,
             mWorkerSettings.settings, clientIn, clientOut, cnt);
+         if (!mLatency)
+            // Find latency once only per initialization scope,
+            // after processing one block
+            mLatency.emplace(
+               pInstance->GetLatency(mWorkerSettings.settings, pair.second));
          for (size_t i = 0 ; i < numAudioIn; i++)
             clientIn[i] += cnt;
          for (size_t i = 0 ; i < numAudioOut; i++)
@@ -534,6 +542,7 @@ bool RealtimeEffectState::Finalize() noexcept
       //overwrite what was read from the worker
       if (auto state = GetAccessState())
          state->Initialize(mMainSettings);
+   mLatency = {};
    mInitialized = false;
    return result;
 }
