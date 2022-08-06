@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-07-20 11:14+0000\n"
+"PO-Revision-Date: 2022-08-06 23:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -18361,7 +18361,7 @@ msgstr "herc"
 #. * in octaves
 #: src/widgets/NumericTextCtrl.cpp
 msgid "octaves"
-msgstr "oktawy"
+msgstr "oktaw"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
