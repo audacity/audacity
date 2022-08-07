@@ -65,7 +65,7 @@ public:
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
-   size_t Process(Track &track,
+   void Process(Track &track,
       unsigned chans,
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers

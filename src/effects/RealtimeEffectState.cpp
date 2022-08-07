@@ -416,16 +416,17 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
-size_t RealtimeEffectState::Process(Track &track,
+void RealtimeEffectState::Process(Track &track,
    unsigned chans,
    const float *const *inbuf, float *const *outbuf, float *dummybuf,
    size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
    if (!mPlugin || !pInstance || !mLastActive) {
+      // Process trivially
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
-      return numSamples; // consider all samples to be trivially processed
+      return;
    }
 
    // The caller passes the number of channels to process and specifies
@@ -537,8 +538,6 @@ size_t RealtimeEffectState::Process(Track &track,
       }
       processor++;
    }
-
-   return len;
 }
 
 bool RealtimeEffectState::ProcessEnd()
