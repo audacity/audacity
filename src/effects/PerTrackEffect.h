@@ -18,6 +18,7 @@
 #include "AudioGraphSource.h" // to inherit
 #include "Effect.h" // to inherit
 #include "MemoryX.h"
+#include "SampleCount.h"
 #include <functional>
 
 //! Base class for Effects that treat each (mono or stereo) track independently

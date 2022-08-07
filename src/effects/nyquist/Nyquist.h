@@ -13,6 +13,7 @@
 
 #include "../Effect.h"
 #include "FileNames.h"
+#include "SampleCount.h"
 #include "../../widgets/wxPanelWrapper.h"
 
 #include "nyx.h"

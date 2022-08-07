@@ -14,7 +14,6 @@
 
 #include "EffectBase.h"
 
-#include "SampleCount.h"
 #include "StatefulEffectBase.h"
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
@@ -22,6 +21,8 @@
 class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
+
+class sampleCount;
 
 //! Default implementation of EffectUIValidator invokes ValidateUI
 //! and IsGraphicalUI methods of an EffectUIClientInterface
