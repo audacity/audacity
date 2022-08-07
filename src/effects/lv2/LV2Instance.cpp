@@ -158,6 +158,11 @@ bool LV2Instance::RealtimeAddProcessor(
 
 bool LV2Instance::RealtimeSuspend()
 {
+   if (mMaster)
+      mMaster->Deactivate();
+   for (auto &pSlave : mSlaves)
+      pSlave->Deactivate();
+
    mPositionSpeed = 0.0;
    mPositionFrame = 0;
    mRolling = false;
@@ -167,6 +172,11 @@ bool LV2Instance::RealtimeSuspend()
 
 bool LV2Instance::RealtimeResume()
 {
+   if (mMaster)
+      mMaster->Activate();
+   for (auto &pSlave : mSlaves)
+      pSlave->Activate();
+
    mPositionSpeed = 1.0;
    mPositionFrame = 0;
    mRolling = true;
