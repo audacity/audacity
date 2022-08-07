@@ -30,7 +30,7 @@ public:
 
 private:
    size_t InitialBlockSize() const;
-   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+   SampleCount GetLatency(const EffectSettings &settings, double sampleRate)
       const override;
 
    size_t GetBlockSize() const override;

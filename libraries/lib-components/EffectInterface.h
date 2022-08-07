@@ -334,8 +334,6 @@ class wxWindow;
 
 class EffectUIClientInterface;
 
-class sampleCount;
-
 // ----------------------------------------------------------------------------
 // Supported channel assignments
 // ----------------------------------------------------------------------------
@@ -511,8 +509,10 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    = 0;
 
+   using SampleCount = uint64_t;
+
    //! Called for destructive, non-realtime effect computation
-   virtual sampleCount GetLatency(
+   virtual SampleCount GetLatency(
       const EffectSettings &settings, double sampleRate) const = 0;
 };
 

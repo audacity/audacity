@@ -563,7 +563,8 @@ public:
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
-   sampleCount GetLatency(const EffectSettings& settings, double sampleRate) const override;
+   SampleCount GetLatency(const EffectSettings& settings, double sampleRate)
+      const override;
 
    bool IsReady();
 

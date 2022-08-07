@@ -64,15 +64,14 @@ unsigned AudioUnitInstance::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-sampleCount AudioUnitInstance::GetLatency(
-   const EffectSettings &, double sampleRate) const
+auto AudioUnitInstance::GetLatency(
+   const EffectSettings &, double sampleRate) const -> SampleCount
 {
    // Retrieve the latency (can be updated via an event)
    if (mUseLatency) {
       Float64 latency = 0.0;
-      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
-         return sampleCount{ latency * sampleRate };
-      }
+      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency))
+         return latency * sampleRate;
    }
    return 0;
 }

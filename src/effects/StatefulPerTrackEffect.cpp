@@ -40,10 +40,10 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
    return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
-sampleCount StatefulPerTrackEffect::Instance::GetLatency(
-   const EffectSettings &, double) const
+auto StatefulPerTrackEffect::Instance::GetLatency(
+   const EffectSettings &, double) const -> SampleCount
 {
-   return GetEffect().GetLatency();
+   return GetEffect().GetLatency().as_long_long();
 }
 
 std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const

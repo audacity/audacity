@@ -51,7 +51,7 @@ public:
       bool ProcessFinalize() noexcept override;
 
       //! Default implementation returns zero
-      sampleCount GetLatency(
+      SampleCount GetLatency(
          const EffectSettings &settings, double sampleRate) const override;
 
    protected:

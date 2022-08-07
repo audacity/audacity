@@ -50,8 +50,8 @@ bool PerTrackEffect::Instance::ProcessFinalize() noexcept
    return true;
 }
 
-sampleCount PerTrackEffect::Instance::GetLatency(
-   const EffectSettings &, double) const
+auto PerTrackEffect::Instance::GetLatency(
+   const EffectSettings &, double) const -> SampleCount
 {
    return 0;
 }
