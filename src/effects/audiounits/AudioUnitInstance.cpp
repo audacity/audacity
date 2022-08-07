@@ -391,6 +391,8 @@ void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
 bool AudioUnitInstance::BypassEffect(bool bypass)
 {
    UInt32 value = (bypass ? 1 : 0);
+   if (bypass && AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0))
+      return false;
    return !SetProperty(kAudioUnitProperty_BypassEffect, value);
 }
 
