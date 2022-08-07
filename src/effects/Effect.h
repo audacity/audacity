@@ -355,6 +355,8 @@ public:
    public:
       using StatefulEffectBase::Instance::Instance;
       bool Process(EffectSettings &settings) override;
+      SampleCount GetLatency(
+         const EffectSettings &settings, double sampleRate) const override;
    };
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 };

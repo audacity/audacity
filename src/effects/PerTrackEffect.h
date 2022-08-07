@@ -50,11 +50,6 @@ public:
          double sampleRate, ChannelNames chanMap) override;
 
       bool ProcessFinalize() noexcept override;
-
-      //! Default implementation returns zero
-      SampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const override;
-
    protected:
       const PerTrackEffect &mProcessor;
    };
