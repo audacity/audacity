@@ -262,6 +262,7 @@ public:
          RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended);
    }
 
+   //! @return how many samples to discard for latency
    size_t Process(Track &track,
       float *const *buffers,
       float *const *scratch,
@@ -274,7 +275,7 @@ public:
             .Process(mSuspended, track, buffers, scratch,
                nBuffers, numSamples);
       else
-         return numSamples; // consider them trivially processed
+         return 0; // consider them trivially processed
    }
 
 private:

@@ -72,7 +72,10 @@ public:
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
-   void Process(Track &track,
+   /*!
+    @return how many leading samples are discardable for latency
+    */
+   size_t Process(Track &track,
       unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers

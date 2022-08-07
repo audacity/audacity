@@ -14,6 +14,7 @@
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
+#include "SampleCount.h"
 
 #include <chrono>
 #include <thread>
@@ -420,7 +421,7 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
-void RealtimeEffectState::Process(Track &track, unsigned chans,
+size_t RealtimeEffectState::Process(Track &track, unsigned chans,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
@@ -428,7 +429,7 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
       // Process trivially
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
-      return;
+      return 0;
    }
    const auto numAudioIn = pInstance->GetAudioInCount();
    const auto numAudioOut = pInstance->GetAudioOutCount();
@@ -437,10 +438,9 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
    size_t len = 0;
    const auto &pair = mGroups[&track];
    auto processor = pair.first;
+   // Outer loop over processors
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned indx, unsigned ondx){
-      len = 0;
-
       // Point at the correct input buffers
       unsigned copied = std::min(chans - indx, numAudioIn);
       std::copy(inbuf + indx, inbuf + indx + copied, clientIn);
@@ -462,11 +462,12 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
          std::fill(clientOut + copied, clientOut + numAudioOut, nullptr);
       }
 
+      // Inner loop over blocks
       const auto blockSize = pInstance->GetBlockSize();
       for (size_t block = 0; block < numSamples; block += blockSize) {
          auto cnt = std::min(numSamples - block, blockSize);
          // Assuming we are in a processing scope, use the worker settings
-         len += pInstance->RealtimeProcess(processor,
+         auto processed = pInstance->RealtimeProcess(processor,
             mWorkerSettings.settings, clientIn, clientOut, cnt);
          if (!mLatency)
             // Find latency once only per initialization scope,
@@ -477,10 +478,21 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
             clientIn[i] += cnt;
          for (size_t i = 0 ; i < numAudioOut; i++)
             clientOut[i] += cnt;
+         if (ondx == 0) {
+            // For the first processor only
+            len += processed;
+            auto discard = limitSampleBufferSize(len, *mLatency);
+            len -= discard;
+            *mLatency -= discard;
+         }
       }
       ++processor;
       return true;
    });
+   // Report the number discardable during the processing scope
+   // We are assuming len as calculated above is the same in case of multiple
+   // processors
+   return numSamples - len;
 }
 
 bool RealtimeEffectState::ProcessEnd()
