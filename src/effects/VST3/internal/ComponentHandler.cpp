@@ -16,7 +16,7 @@
 
 #include "effects/VST3/VST3Wrapper.h"
 
-internal::ComponentHandler::ComponentHandler()
+internal::ComponentHandler::ComponentHandler() 
 {
    FUNKNOWN_CTOR
 }
@@ -26,14 +26,14 @@ internal::ComponentHandler::~ComponentHandler()
    FUNKNOWN_DTOR;
 }
 
-void internal::ComponentHandler::SetAccess(const std::shared_ptr<EffectSettingsAccess>& access)
+void internal::ComponentHandler::SetAccess(EffectSettingsAccess* access)
 {
    mAccess = access;
 }
 
 EffectSettingsAccess* internal::ComponentHandler::GetAccess()
 {
-   return &*mAccess;
+   return mAccess;
 }
 
 Steinberg::tresult internal::ComponentHandler::beginEdit(Steinberg::Vst::ParamID)

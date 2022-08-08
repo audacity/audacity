@@ -549,6 +549,8 @@ list( APPEND SOURCES
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h
          effects/VST3/VST3ParametersWindow.cpp
+         effects/VST3/VST3UIValidator.h
+         effects/VST3/VST3UIValidator.cpp
          effects/VST3/VST3Utils.h
          effects/VST3/VST3Utils.cpp
          effects/VST3/VST3Wrapper.h
