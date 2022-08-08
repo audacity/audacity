@@ -547,9 +547,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       XO("Release build (debug level %d)").Format(wxDEBUG_LEVEL);
 #endif
    ;
-   if( (sizeof(void*) == 8) )
+   if( (sizeof(void*) == 8) ) {
       buildType = XO("%s, 64 bits").Format( buildType );
-
+   } else {
+      buildType = XO("%s, 32 bits").Format( buildType );
+   }
 // Remove this once the transition to CMake is complete
 #if defined(CMAKE)
    buildType = Verbatim("CMake %s").Format( buildType );
