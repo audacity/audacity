@@ -31,14 +31,6 @@ class VST3Instance
 
    std::unique_ptr<VST3Wrapper> mWrapper;
 
-   //Used if provided by the plugin and enabled in the settings
-   Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
-   Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
-   wxWindow* mParent { nullptr };
-   NumericTextCtrl* mDuration { nullptr };
-   //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
-   VST3ParametersWindow* mPlainUI { nullptr };
-
    size_t mUserBlockSize { 8192 };
    size_t mProcessingBlockSize { 8192 };
    bool mUseLatency { true };
@@ -70,29 +62,13 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock,
       size_t blockLen) override;
-
-   void PopulateUI(ShuttleGui &S, EffectSettingsAccess& access);
-   void CloseUI();
-   bool IsGraphicalUI() const;
-
-   bool ValidateUI(EffectSettings&);
-
    bool SaveUserPreset(const RegistryPath & name) const;
    bool LoadUserPreset(const RegistryPath & name);
-   void ExportPresets() const;
 
-   bool LoadPreset(const wxString& path);
-   void ShowOptions();
-
-   bool TransferDataToWindow(const EffectSettings& settings);
+   VST3Wrapper& GetWrapper();
 
    unsigned GetAudioOutCount() const override;
    unsigned GetAudioInCount() const override;
 
-private:
-
    void ReloadUserOptions();
-
-   bool LoadVSTUI(wxWindow* parent);
-   void OnEffectWindowResize(wxSizeEvent & evt);
 };

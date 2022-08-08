@@ -89,6 +89,10 @@ public:
 
    Steinberg::int32 GetLatencySamples() const;
 
+   //Updates native UI state to match the internal processor state,
+   //used when native UI isn't a source of changes
+   bool SyncComponentStates();
+
    //Used to flush changes to the IAudioProcessor, while
    //plugin is inactive(!)
    void FlushSettings(const EffectSettings& settings);

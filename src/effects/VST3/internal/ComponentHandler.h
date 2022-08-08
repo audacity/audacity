@@ -28,13 +28,13 @@ namespace internal
 {
    class ComponentHandler : public Steinberg::Vst::IComponentHandler
    {
-      std::shared_ptr<EffectSettingsAccess> mAccess;
+      EffectSettingsAccess* mAccess{nullptr};
    public:
       
       ComponentHandler();
       virtual ~ComponentHandler();
 
-      void SetAccess(const std::shared_ptr<EffectSettingsAccess>& access);
+      void SetAccess(EffectSettingsAccess* access);
 
       EffectSettingsAccess* GetAccess();
 

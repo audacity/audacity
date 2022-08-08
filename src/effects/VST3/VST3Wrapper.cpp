@@ -8,6 +8,7 @@
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
 
+#include "memorystream.h"
 #include "VST3Utils.h"
 #include "internal/ConnectionProxy.h"
 #include "internal/ComponentHandler.h"
@@ -387,6 +388,20 @@ void VST3Wrapper::ResumeProcessing()
 Steinberg::int32 VST3Wrapper::GetLatencySamples() const
 {
    return mAudioProcessor->getLatencySamples();
+}
+
+bool VST3Wrapper::SyncComponentStates()
+{
+   using namespace Steinberg;
+
+   Steinberg::MemoryStream stateStream;
+   if(mEffectComponent->getState(&stateStream) == kResultOk)
+   {
+      int64 unused;
+      stateStream.seek(0, IBStream::kIBSeekSet, &unused);
+      return mEditController->setComponentState(&stateStream) == kResultOk;
+   }
+   return false;
 }
 
 //Used as a workaround for issue #2555: some plugins do not accept changes

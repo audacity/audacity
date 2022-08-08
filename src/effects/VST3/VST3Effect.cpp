@@ -12,28 +12,14 @@
 
 #include "VST3Effect.h"
 
-#include "AudacityException.h"
-
-
 #include "BasicUI.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
-#include <stdexcept>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
 #include <wx/regex.h>
 
-#include <pluginterfaces/vst/ivsteditcontroller.h>
-#include <pluginterfaces/vst/ivstprocesscontext.h>
-#include <public.sdk/source/vst/hosting/hostclasses.h>
-
-#include "internal/ComponentHandler.h"
-#include "internal/PlugFrame.h"
-
-#include "widgets/NumericTextCtrl.h"
-
 #include "SelectFile.h"
-
 #include "ShuttleGui.h"
 
 #include "VST3Utils.h"
@@ -42,12 +28,11 @@
 
 #ifdef __WXMSW__
 #include <shlobj.h>
-#elif __WXGTK__
-#include "internal/x11/SocketWindow.h"
 #endif
 
 #include "ConfigInterface.h"
 #include "VST3Instance.h"
+#include "VST3UIValidator.h"
 #include "VST3Wrapper.h"
 
 namespace {
@@ -102,12 +87,7 @@ EffectFamilySymbol VST3Effect::GetFamilySymbol()
    return XO("VST3");
 }
 
-VST3Effect::~VST3Effect()
-{
-   using namespace Steinberg;
-
-   CloseUI();
-}
+VST3Effect::~VST3Effect() = default;
 
 VST3Effect::VST3Effect(
    std::shared_ptr<VST3::Hosting::Module> module, 
@@ -281,41 +261,32 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
    return 0;
 }
 
+bool VST3Effect::CloseUI()
+{
+   mParent = nullptr;
+   mCurrentDisplayEffect.reset();
+   return true;
+}
+
 std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 {
    return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
 }
 
-bool VST3Effect::IsGraphicalUI()
-{
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->IsGraphicalUI();
-   return false;
-}
-
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
    EffectInstance &instance, EffectSettingsAccess &access)
 {
+   bool useGUI { true };
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+            wxT("UseGUI"),
+            useGUI,
+            useGUI);
+
    auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
    mCurrentDisplayEffect = std::dynamic_pointer_cast<VST3Instance>(vst3instance->shared_from_this());
-   vst3instance->PopulateUI(S, access);
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
-}
+   mParent = S.GetParent();
 
-bool VST3Effect::ValidateUI(EffectSettings &settings)
-{
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->ValidateUI(settings);
-   return false;
-}
-
-bool VST3Effect::CloseUI()
-{
-   if(auto lck = mCurrentDisplayEffect.lock())
-      lck->CloseUI();
-   mCurrentDisplayEffect.reset();
-
-   return true;
+   return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
 bool VST3Effect::CanExportPresets()
@@ -325,8 +296,50 @@ bool VST3Effect::CanExportPresets()
 
 void VST3Effect::ExportPresets(const EffectSettings& settings) const
 {
-   if(auto lck = mCurrentDisplayEffect.lock())
-      lck->ExportPresets();
+   using namespace Steinberg;
+
+   auto instance = mCurrentDisplayEffect.lock();
+   if(!instance)
+      return;
+
+   auto path = SelectFile(FileNames::Operation::Presets,
+      XO("Save VST3 Preset As:"),
+      wxEmptyString,
+      wxEmptyString,
+      wxT(".vstpreset"),
+      {
+        { XO("VST3 preset file"), { wxT("vstpreset") }, true }
+      },
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      NULL);
+
+   if (path.empty())
+      return;
+
+   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
+
+   auto fileStream = owned(Vst::FileStream::open(path.c_str(), "wb"));
+   if(!fileStream)
+   {
+      BasicUI::ShowMessageBox(
+         //i18n-hint: VST3 preset export error
+         XO("Cannot open file"),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return;
+   }
+
+   if (!instance->GetWrapper().SavePreset(fileStream))
+   {
+      BasicUI::ShowMessageBox(
+         XO("Failed to save VST3 preset to file"),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+   }
 }
 
 void VST3Effect::ImportPresets(EffectSettings& settings)
@@ -357,25 +370,50 @@ bool VST3Effect::HasOptions()
 
 void VST3Effect::ShowOptions()
 {
+   VST3OptionsDialog dlg(mParent, *this);
+   dlg.ShowModal();
    if(auto lck = mCurrentDisplayEffect.lock())
-      lck->ShowOptions();
+      lck->ReloadUserOptions();
 }
 
 bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
 {
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->LoadPreset(path);
-   return false;
+   using namespace Steinberg;
+
+   auto instance = mCurrentDisplayEffect.lock();
+   if(!instance)
+      return false;
+
+   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
+
+   auto fileStream = owned(Vst::FileStream::open(path.c_str(), "rb"));
+   if(!fileStream)
+   {
+      BasicUI::ShowMessageBox(
+         XO("Cannot open VST3 preset file %s").Format(path),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return false;
+   }
+
+
+   if (!instance->GetWrapper().LoadPreset(fileStream))
+   {
+      BasicUI::ShowMessageBox(
+         XO("Unable to apply VST3 preset file %s").Format(path),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return false;
+   }
+
+   return true;
 }
 
 EffectSettings VST3Effect::MakeSettings() const
 {
    return VST3Wrapper::MakeSettings();
-}
-
-bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
-{
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->TransferDataToWindow(settings);
-   return false;
 }
