@@ -155,8 +155,13 @@ public:
       const RegistrationCallback &callback )
          = 0;
 
-   /*! @return true if the plug-in is still valid, otherwise false. */
-   virtual bool IsPluginValid(const PluginPath & path, bool bFast) = 0;
+   /**
+    * \brief Performs plugin/module existence check, still plugin may fail to load.
+    * Implementation should avoid loading plugins during this check.
+    * \param path Internal plugin path/ID discovered via DiscoverPluginsAtPath
+    * or module path returned by FindModulePaths
+    */
+   virtual bool CheckPluginExist(const PluginPath& path) const = 0;
 
    //! Load the plug-in at a path reported by DiscoverPluginsAtPath
    /*!
@@ -171,7 +176,7 @@ public:
 // be declared static so as not to interfere with other providers during link.
 // ----------------------------------------------------------------------------
 #define DECLARE_PROVIDER_ENTRY(name)                  \
-static PluginProvider * name()
+static std::unique_ptr<PluginProvider> name()
 
 // ----------------------------------------------------------------------------
 // This will create a class and instance that will register the provider entry
@@ -203,11 +208,11 @@ static name name ## _instance;
 DECLARE_BUILTIN_PROVIDER_BASE(name)                   \
 void name::Register()                                 \
 {                                                     \
-   RegisterProvider(AudacityModule);                  \
+   RegisterProviderFactory(AudacityModule);                  \
 }                                                     \
 void name::Unregister()                               \
 {                                                     \
-   UnregisterProvider(AudacityModule);                \
+   UnregisterProviderFactory(AudacityModule);                \
 }
 
 #endif // __AUDACITY_MODULEINTERFACE_H__

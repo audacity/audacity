@@ -78,7 +78,7 @@ unsigned EffectFade::GetAudioOutCount() const
 }
 
 bool EffectFade::ProcessInitialize(
-   EffectSettings &, double, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double, ChannelNames chanMap)
 {
    mSample = 0;
    return true;

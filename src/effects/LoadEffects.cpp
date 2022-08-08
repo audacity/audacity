@@ -55,7 +55,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew BuiltinEffectsModule();
+   return std::make_unique<BuiltinEffectsModule>();
 }
 
 // ============================================================================
@@ -190,18 +190,16 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool BuiltinEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   // bFast is unused as checking in the list is fast.
-   static_cast<void>(bFast);
-   return mEffects.find( path ) != mEffects.end();
-}
-
 std::unique_ptr<ComponentInterface>
 BuiltinEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    return Instantiate(path);
+}
+
+bool BuiltinEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   return mEffects.find( path ) != mEffects.end();
 }
 
 // ============================================================================

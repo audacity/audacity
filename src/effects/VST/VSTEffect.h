@@ -271,9 +271,9 @@ class VSTEffect final
 
    bool IsReady();
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
    bool DoProcessInitialize(double sampleRate);
-   bool ProcessFinalize() override;
+   bool ProcessFinalize() noexcept override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -527,8 +527,8 @@ public:
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
          override;
-
-   bool IsPluginValid(const PluginPath & path, bool bFast) override;
+   
+   bool CheckPluginExist(const PluginPath& path) const override;
 
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginPath & path) override;

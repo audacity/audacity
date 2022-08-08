@@ -30,6 +30,7 @@ set( LIBRARIES
    lib-module-manager
    lib-project-history
    lib-graphics
+   lib-audio-graph
 )
 
 if ( ${_OPT}has_networking )

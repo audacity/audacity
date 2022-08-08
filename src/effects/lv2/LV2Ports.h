@@ -93,6 +93,8 @@ struct LV2AtomPortState final {
        which we can also munlock in its destructor?
        */
       zix_ring_mlock(mRing.get());
+
+      ResetForInstanceOutput();
    }
 
    //! Transfer incoming events from the ring buffer to the event buffer.
@@ -176,7 +178,7 @@ public:
       , mSampleRate{ sampleRate }
       , mTrigger{ trigger }, mLogarithmic{ logarithmic }
    {}
- 
+
    // ScalePoints
    const std::vector<double> mScaleValues;
    const wxArrayString mScaleLabels;

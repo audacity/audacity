@@ -126,8 +126,8 @@ public:
    size_t GetBlockSize() const override;
    sampleCount GetLatency() const override;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
+      ChannelNames chanMap) override;
+   bool ProcessFinalize() noexcept override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;

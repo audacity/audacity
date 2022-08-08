@@ -17,6 +17,7 @@
 #include "EffectInterface.h"
 #include "Internat.h"
 #include "ModuleManager.h"
+#include "PluginProvider.h"
 
 #include <wx/osx/core/private.h>
 

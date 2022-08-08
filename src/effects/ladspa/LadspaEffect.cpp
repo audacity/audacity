@@ -89,7 +89,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LadspaEffectsModule();
+   return std::make_unique<LadspaEffectsModule>();
 }
 
 // ============================================================================
@@ -375,14 +375,6 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    return nLoaded;
 }
 
-bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if( bFast )
-      return true;
-   wxString realPath = path.BeforeFirst(wxT(';'));
-   return wxFileName::FileExists(realPath);
-}
-
 std::unique_ptr<ComponentInterface>
 LadspaEffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -396,6 +388,12 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
    result->FullyInitializePlugin();
    return result;
+}
+
+bool LadspaEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   const auto realPath = path.BeforeFirst(wxT(';'));
+   return wxFileName::FileExists(realPath);
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()
@@ -893,8 +891,8 @@ struct LadspaEffect::Instance
 {
    using PerTrackEffect::Instance::Instance;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
+      ChannelNames chanMap) override;
+   bool ProcessFinalize() noexcept override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -963,7 +961,7 @@ sampleCount LadspaEffect::Instance::GetLatency(
 }
 
 bool LadspaEffect::Instance::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, ChannelNames)
 {
    /* Instantiate the plugin */
    if (!mReady) {
@@ -977,8 +975,9 @@ bool LadspaEffect::Instance::ProcessInitialize(
    return true;
 }
 
-bool LadspaEffect::Instance::ProcessFinalize()
+bool LadspaEffect::Instance::ProcessFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    if (mReady) {
       mReady = false;
       GetEffect().FreeInstance(mMaster);
@@ -986,6 +985,7 @@ bool LadspaEffect::Instance::ProcessFinalize()
    }
 
    return true;
+});
 }
 
 size_t LadspaEffect::Instance::ProcessBlock(EffectSettings &,

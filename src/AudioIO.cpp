@@ -933,9 +933,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mPlaybackSchedule.GetPolicy().OffsetTrackTime( mPlaybackSchedule, 0 );
 
       // Reset mixer positions for all playback tracks
-      unsigned numMixers = mPlaybackTracks.size();
-      for (unsigned ii = 0; ii < numMixers; ++ii)
-         mPlaybackMixers[ii]->Reposition( time );
+      for (auto &mixer : mPlaybackMixers)
+         mixer->Reposition( time );
    }
    
    // Now that we are done with AllocateBuffers() and SetTrackTime():
@@ -1138,7 +1137,6 @@ bool AudioIO::AllocateBuffers(
                }
             }
             mPlaybackMixers.clear();
-            mPlaybackMixers.resize(mPlaybackTracks.size());
 
             const auto &warpOptions =
                policy.MixerWarpOptions(mPlaybackSchedule);
@@ -1152,50 +1150,53 @@ bool AudioIO::AllocateBuffers(
                mPlaybackBuffers[0] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
-            for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-            {
+            for (unsigned int i = 0; i < mPlaybackTracks.size(); i++) {
+               const auto &pTrack = mPlaybackTracks[i];
                // Bug 1763 - We must fade in from zero to avoid a click on starting.
-               mPlaybackTracks[i]->SetOldChannelGain(0, 0.0);
-               mPlaybackTracks[i]->SetOldChannelGain(1, 0.0);
+               pTrack->SetOldChannelGain(0, 0.0);
+               pTrack->SetOldChannelGain(1, 0.0);
 
                mPlaybackBuffers[i] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
-               // use track time for the end time, not real time!
-               SampleTrackConstArray mixTracks;
-               mixTracks.push_back(mPlaybackTracks[i]);
+               if (pTrack->IsLeader()) {
+                  // use track time for the end time, not real time!
+                  double startTime, endTime;
+                  if (!tracks.prerollTracks.empty())
+                     startTime = mPlaybackSchedule.mT0;
+                  else
+                     startTime = t0;
 
-               double startTime, endTime;
-               if (!tracks.prerollTracks.empty())
-                  startTime = mPlaybackSchedule.mT0;
-               else
-                  startTime = t0;
+                  if (make_iterator_range(tracks.prerollTracks)
+                     .contains(pTrack))
+                     // Stop playing this track after pre-roll
+                     endTime = t0;
+                  else
+                     // Pass t1 -- not mT1 as may have been adjusted for latency
+                     // -- so that overdub recording stops playing back samples
+                     // at the right time, though transport may continue to
+                     // record
+                     endTime = t1;
 
-               if (make_iterator_range(tracks.prerollTracks)
-                  .contains(mPlaybackTracks[i]))
-                  // Stop playing this track after pre-roll
-                  endTime = t0;
-               else
-                  // Pass t1 -- not mT1 as may have been adjusted for latency
-                  // -- so that overdub recording stops playing back samples
-                  // at the right time, though transport may continue to record
-                  endTime = t1;
-
-               mPlaybackMixers[i] = std::make_unique<Mixer>
-                  (mixTracks,
-                  // Don't throw for read errors, just play silence:
-                  false,
-                  warpOptions,
-                  startTime,
-                  endTime,
-                  1,
-                  std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
-                  false,
-                  mRate, floatSample,
-                  false, // low quality dithering and resampling
-                  nullptr,
-                  false // don't apply track gains
-               );
+                  SampleTrackConstArray mixTracks;
+                  const auto range =
+                     TrackList::Channels<const SampleTrack>(pTrack.get());
+                  for (auto channel : range)
+                     mixTracks.push_back(
+                        channel->SharedPointer<const SampleTrack>());
+                  mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
+                     mixTracks,
+                     // Don't throw for read errors, just play silence:
+                     false,
+                     warpOptions, startTime, endTime, range.size(),
+                     std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
+                     false, // not interleaved
+                     mRate, floatSample,
+                     false, // low quality dithering and resampling
+                     nullptr, // no custom mix-down
+                     false // don't apply track gains
+                  ));
+               }
             }
 
             const auto timeQueueSize = 1 +
@@ -1842,23 +1843,27 @@ void AudioIO::FillPlayBuffers()
       // atomic variables, the time queue doesn't.
       mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
 
-      for (size_t i = 0; i < mPlaybackTracks.size(); i++)
-      {
+      size_t i = 0;
+      for (auto &mixer : mPlaybackMixers) {
          // The mixer here isn't actually mixing: it's just doing
          // resampling, format conversion, and possibly time track
          // warping
-         if (frames > 0)
-         {
+         if (frames > 0) {
             size_t produced = 0;
             if ( toProduce )
-               produced = mPlaybackMixers[i]->Process( toProduce );
+               produced = mixer->Process( toProduce );
             //wxASSERT(produced <= toProduce);
-            auto warpedSamples = mPlaybackMixers[i]->GetBuffer();
-            const auto put = mPlaybackBuffers[i]->Put(
-               warpedSamples, floatSample, produced, frames - produced);
-            // wxASSERT(put == frames);
-            // but we can't assert in this thread
-            wxUnusedVar(put);
+            for(size_t j = 0, nChannels =
+               TrackList::Channels(mPlaybackTracks[i].get()).size();
+               j < nChannels; ++i, ++j
+            ) {
+               auto warpedSamples = mixer->GetBuffer(j);
+               const auto put = mPlaybackBuffers[i]->Put(
+                  warpedSamples, floatSample, produced, frames - produced);
+               // wxASSERT(put == frames);
+               // but we can't assert in this thread
+               wxUnusedVar(put);
+            }
          }
       }
 
@@ -3104,10 +3109,10 @@ int AudioIoCallback::CallbackDoSeek()
 
 
    // Reset mixer positions and flush buffers for all tracks
+   for (auto &mixer : mPlaybackMixers)
+      mixer->Reposition( time, true );
    for (size_t i = 0; i < numPlaybackTracks; i++)
    {
-      const bool skipping = true;
-      mPlaybackMixers[i]->Reposition( time, skipping );
       const auto toDiscard =
          mPlaybackBuffers[i]->AvailForGet();
       const auto discarded =

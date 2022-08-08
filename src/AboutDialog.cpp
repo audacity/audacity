@@ -49,12 +49,7 @@ hold information about one contributor to Audacity.
 #include "AllThemeResources.h"
 #include "Theme.h"
 
-// DA: Logo for About box.
-#ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
-#else
 #include "../images/AudacityLogoWithName.xpm"
-#endif
 
 // Notice this is a "system include".  This is on purpose and only until
 // we convert over to CMake.  Once converted, the "RevisionIndent.h" file
@@ -197,6 +192,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Sami Boukortt"), developerFormat, roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Alex S. Brown"), developerFormat, roleContributor);
+   AddCredit(wxT("David Bryant"), developerFormat, roleContributor);
    AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
    AddCredit(wxT("Subhradeep Chakraborty"), developerFormat, roleContributor);
    AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
@@ -372,19 +368,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    wxTextOutputStream informationStr( o );   // string to build up list of information in
    informationStr
       << wxT("<center>")
-// DA: Description and provenance in About box
-#ifdef EXPERIMENTAL_DA
-      #undef _
-      #define _(s) wxGetTranslation((s))
-      << wxT("<h3>DarkAudacity ")
-      << wxString(AUDACITY_VERSION_STRING)
-      << wxT("</center></h3>")
-      << wxT("Customised version of the Audacity free, open source, cross-platform software " )
-      << wxT("for recording and editing sounds.")
-      << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2021 Audacity Team.<br>")
-      << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark.<br><br>")
-
-#else
       << XO("<h3>")
       << ProgramName
       << wxT(" ")
@@ -393,20 +376,10 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       /* i18n-hint: The program's name substitutes for %s */
       << XO("%s the free, open source, cross-platform software for recording and editing sounds.")
             .Format(ProgramName)
-#endif
 
       << wxT("<h3>")
       << XO("Credits")
       << wxT("</h3>")
-      << wxT("<p>")
-
-// DA: Customisation credit
-#ifdef EXPERIMENTAL_DA
-      << wxT("<p><b>")
-      << XO("DarkAudacity Customisation")
-      << wxT("</b><br>")
-      << wxT("James Crook, art, coding &amp; design<br>")
-#endif
 
       << wxT("<p><b>")
       /* i18n-hint: The program's name substitutes for %s */
@@ -466,10 +439,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << XO("%s website: ").Format( ProgramName )
       << wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]")
 
-// DA: Link for DA url too
-#ifdef EXPERIMENTAL_DA
-      << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
-#else
       << wxT("<p><br>&nbsp; &nbsp; ")
       /* i18n-hint Audacity's name substitutes for first and third %s,
        and a "copyright" symbol for the second */
@@ -485,8 +454,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << XO("The name %s is a registered trademark.")
          .Format( Verbatim("<b>%s</b>").Format( ProgramName ) )
       << wxT("<br><br>")
-#endif
-
       << wxT("</center>")
    ;
 
@@ -580,9 +547,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       XO("Release build (debug level %d)").Format(wxDEBUG_LEVEL);
 #endif
    ;
-   if( (sizeof(void*) == 8) )
+   if( (sizeof(void*) == 8) ) {
       buildType = XO("%s, 64 bits").Format( buildType );
-
+   } else {
+      buildType = XO("%s, 32 bits").Format( buildType );
+   }
 // Remove this once the transition to CMake is complete
 #if defined(CMAKE)
    buildType = Verbatim("CMake %s").Format( buildType );
@@ -727,12 +696,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       << wxT("<h3>")
       << XO("Features")
       << wxT("</h3>\n<table>");  // start table of features
-
-#ifdef EXPERIMENTAL_DA
-   AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), enabled);
-#else
-   AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), disabled);
-#endif
 
    # if USE_NYQUIST
    AddBuildinfoRow(&informationStr, wxT("Nyquist"), XO("Plug-in support"),
