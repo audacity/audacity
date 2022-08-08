@@ -2577,32 +2577,30 @@ bool AudioIoCallback::FillOutputBuffers(
       // Mix the results with the existing output (software playthrough) and
       // apply panning.  If post panning effects are desired, the panning would
       // need to be be split out from the mixing and applied in a separate step.
-      for (auto c = 0; c < chanCnt; ++c)
+
+      // Our channels aren't silent.  We need to pass their data on.
+      //
+      // Note that there are two kinds of channel count.
+      // c and chanCnt are counting channels in the Tracks.
+      // chan (and numPlayBackChannels) is counting output channels on the device.
+      // chan = 0 is left channel
+      // chan = 1 is right channel.
+      //
+      // Each channel in the tracks can output to more than one channel on the device.
+      // For example mono channels output to both left and right output channels.
+      if (len > 0) for (int c = 0; c < chanCnt; c++)
       {
-         // Our channels aren't silent.  We need to pass their data on.
-         //
-         // Note that there are two kinds of channel count.
-         // c and chanCnt are counting channels in the Tracks.
-         // chan (and numPlayBackChannels) is counting output channels on the device.
-         // chan = 0 is left channel
-         // chan = 1 is right channel.
-         //
-         // Each channel in the tracks can output to more than one channel on the device.
-         // For example mono channels output to both left and right output channels.
-         if (len > 0) for (int c = 0; c < chanCnt; c++)
-         {
-            vt = chans[c];
+         vt = chans[c];
 
-            if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
-                  vt->GetChannelIgnoringPan() == Track::MonoChannel )
-               AddToOutputChannel( 0, outputMeterFloats, outputFloats,
-                  tempBufs[c], drop, len, vt);
+         if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
+               vt->GetChannelIgnoringPan() == Track::MonoChannel )
+            AddToOutputChannel( 0, outputMeterFloats, outputFloats,
+               tempBufs[c], drop, len, vt);
 
-            if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
-                  vt->GetChannelIgnoringPan() == Track::MonoChannel  )
-               AddToOutputChannel( 1, outputMeterFloats, outputFloats,
-                  tempBufs[c], drop, len, vt);
-         }
+         if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
+               vt->GetChannelIgnoringPan() == Track::MonoChannel  )
+            AddToOutputChannel( 1, outputMeterFloats, outputFloats,
+               tempBufs[c], drop, len, vt);
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
