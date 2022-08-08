@@ -96,7 +96,7 @@ AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
          // Discard all the latency
          while (delay > 0 && curBlockSize > 0) {
             auto discard = limitSampleBufferSize(curBlockSize, delay);
-            data.Discard(discard, curBlockSize);
+            data.Discard(discard, curBlockSize - discard);
             delay -= discard;
             curBlockSize -= discard;
             if (curBlockSize == 0) {
