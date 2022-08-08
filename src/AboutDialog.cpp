@@ -197,6 +197,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Sami Boukortt"), developerFormat, roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Alex S. Brown"), developerFormat, roleContributor);
+   AddCredit(wxT("David Bryant"), developerFormat, roleContributor);
    AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
    AddCredit(wxT("Subhradeep Chakraborty"), developerFormat, roleContributor);
    AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
