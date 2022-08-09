@@ -30,6 +30,7 @@ class RingBuffer final : public NonInterferingBase {
               size_t padding = 0);
    size_t Clear(sampleFormat format, size_t samples);
    //! Get access to written but unflushed data, which is in at most two blocks
+   //! Excludes the padding of the most recent Put()
    std::pair<samplePtr, size_t> GetUnflushed(unsigned iBlock);
    //! Flush after a sequence of Put (and/or Clear) calls to let consumer see
    void Flush();
@@ -48,6 +49,7 @@ class RingBuffer final : public NonInterferingBase {
    size_t Free( size_t start, size_t end );
 
    size_t mWritten{0};
+   size_t mLastPadding{0};
 
    // Align the two atomics to avoid false sharing
    NonInterfering< std::atomic<size_t> > mStart{ 0 }, mEnd{ 0 };
