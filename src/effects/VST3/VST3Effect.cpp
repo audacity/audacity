@@ -417,3 +417,20 @@ EffectSettings VST3Effect::MakeSettings() const
 {
    return VST3Wrapper::MakeSettings();
 }
+
+bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
+{
+   if(copyDirection == SettingsCopyDirection::MainToWorker)
+   {
+      //Clear changes that were already applied, so they won't appear
+      //on the other side on swap.
+      VST3Wrapper::GetSettings(dst).parameterChanges.clear();
+      //Don't allocate in worker
+      std::swap(
+         VST3Wrapper::GetSettings(*const_cast<EffectSettings*>(&src)).parameterChanges,
+         VST3Wrapper::GetSettings(dst).parameterChanges
+      );
+   }
+   return true;
+}
+
