@@ -64,10 +64,11 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    double mixEndTime = 0.0;   /* end time of last track to end */
    double tstart, tend;    // start and end times for one track.
 
-   SampleTrackConstArray waveArray;
+   Mixer::Inputs waveArray;
 
    for(auto wt : trackRange) {
-      waveArray.push_back( wt->SharedPointer< const SampleTrack >() );
+      waveArray.emplace_back(
+         wt->SharedPointer<const SampleTrack>(), GetEffectStages(*wt));
       tstart = wt->GetStartTime();
       tend = wt->GetEndTime();
       if (tend > mixEndTime)
@@ -132,7 +133,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       endTime = mixEndTime;
    }
 
-   Mixer mixer(waveArray,
+   Mixer mixer(move(waveArray),
       // Throw to abort mix-and-render if read fails:
       true, warpOptions,
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
@@ -145,7 +146,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
          XO("Mixing and rendering tracks"));
 
       while (updateResult == ProgressResult::Success) {
-         auto blockLen = mixer.Process(maxBlockLen);
+         auto blockLen = mixer.Process();
 
          if (blockLen == 0)
             break;
@@ -188,4 +189,63 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    wxPrintf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
    }
+}
+
+#include "EffectInterface.h"
+unsigned MakeChannelMap(
+   const Track &track, bool multichannel, ChannelName map[3])
+{
+   // Iterate either over one track which could be any channel,
+   // or if multichannel, then over all channels of track,
+   // which is a leader.
+   unsigned numChannels = 0;
+   for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
+      if (channel->GetChannel() == Track::LeftChannel)
+         map[numChannels] = ChannelNameFrontLeft;
+      else if (channel->GetChannel() == Track::RightChannel)
+         map[numChannels] = ChannelNameFrontRight;
+      else
+         map[numChannels] = ChannelNameMono;
+      ++ numChannels;
+      map[numChannels] = ChannelNameEOL;
+      if (! multichannel)
+         break;
+      if (numChannels == 2) {
+         // TODO: more-than-two-channels
+         // Ignore other channels
+         break;
+      }
+   }
+   return numChannels;
+}
+
+#include "effects/RealtimeEffectList.h"
+#include "effects/RealtimeEffectState.h"
+
+std::vector<MixerOptions::StageSpecification>
+GetEffectStages(const WaveTrack &track)
+{
+   auto &effects = RealtimeEffectList::Get(track);
+   if (!effects.IsActive())
+      return {};
+   std::vector<MixerOptions::StageSpecification> result;
+   for (size_t i = 0, count = effects.GetStatesCount(); i < count; ++i) {
+      const auto pState = effects.GetStateAt(i);
+      if (!pState->IsEnabled())
+         continue;
+      const auto pEffect = pState->GetEffect();
+      if (!pEffect)
+         continue;
+      const auto &settings = pState->GetSettings();
+      if (!settings.has_value())
+         continue;
+      const auto pInstance =
+         std::dynamic_pointer_cast<EffectInstanceEx>(pEffect->MakeInstance());
+      if (!pInstance)
+         continue;
+      auto &stage = result.emplace_back(MixerOptions::StageSpecification{
+         move(pInstance), settings });
+      MakeChannelMap(track, pEffect->GetAudioInCount() > 1, stage.map);
+   }
+   return result;
 }

@@ -634,8 +634,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
          while (updateResult == ProgressResult::Success) {
             sf_count_t samplesWritten;
-            size_t numSamples = mixer->Process(maxBlockLen);
-
+            size_t numSamples = mixer->Process();
             if (numSamples == 0)
                break;
 

@@ -44,6 +44,10 @@ private:
    Source &mSource;
    Buffers &mBuffers;
    Sink &mSink;
+
+#ifndef NDEBUG
+   bool mRanOnce{ false };
+#endif
 };
 
 }

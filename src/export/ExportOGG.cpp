@@ -285,8 +285,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
 
       while (updateResult == ProgressResult::Success && !eos) {
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
-         auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
-
+         auto samplesThisRun = mixer->Process();
          int err;
          if (samplesThisRun == 0) {
             // Tell the library that we wrote 0 bytes - signalling the end.

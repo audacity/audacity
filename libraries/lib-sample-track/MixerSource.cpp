@@ -338,10 +338,15 @@ bool MixerSource::AcceptsBlockSize(size_t blockSize) const
 
 std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
 {
+   assert(AcceptsBuffers(data));
+   assert(AcceptsBlockSize(data.BlockSize()));
+   assert(bound <= data.BlockSize());
+   assert(data.BlockSize() <= data.Remaining());
+
    auto &[mT0, mT1, _, mTime] = *mTimesAndSpeed;
    const bool backwards = (mT1 < mT0);
    // TODO: more-than-two-channels
-   const auto maxChannels = data.Channels();
+   const auto maxChannels = mMaxChannels = data.Channels();
    const auto limit = std::min<size_t>(mnChannels, maxChannels);
    size_t maxTrack = 0;
    const auto mixed = stackAllocate(size_t, maxChannels);
@@ -366,17 +371,38 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
       const auto result = mixed[j];
       ZeroFill(result, maxTrack, *pFloat);
    }
-   return { maxTrack };
+
+   mLastProduced = maxTrack;
+   assert(maxTrack <= bound);
+   assert(maxTrack <= data.Remaining());
+   assert(maxTrack <= Remaining());
+   assert(data.Remaining() > 0);
+   assert(bound == 0 || Remaining() == 0 || maxTrack > 0);
+   return { mLastProduced };
 }
 
+// Does not return a strictly decreasing sequence of values such as to
+// provide proof of termination.  Just an indication of whether done or not.
 sampleCount MixerSource::Remaining() const
 {
-   return { 1 };
+   // TODO:  make a more exact calculation of total remaining; see Terminates()
+   return mLastProduced;
 }
 
 bool MixerSource::Release()
 {
+   mLastProduced = 0;
    return true;
+}
+
+bool MixerSource::Terminates() const
+{
+   // Not always terminating
+   // TODO: return true sometimes, for mixers that never reposition
+   // because they are not used in playback.  But then an exact calculation of
+   // Remaining() is needed to satisfy the contract, and that is complicated
+   // when there is resampling or a time warp.
+   return false;
 }
 
 void MixerSource::Reposition(double time, bool skipping)

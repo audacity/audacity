@@ -380,10 +380,9 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    auto &progress = *pDialog;
 
    while (updateResult == ProgressResult::Success) {
-      auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
-      if (samplesThisRun == 0) { //stop encoding
+      auto samplesThisRun = mixer->Process();
+      if (samplesThisRun == 0) //stop encoding
          break;
-      }
       else {
          for (size_t i = 0; i < numChannels; i++) {
             auto mixed = mixer->GetBuffer(i);

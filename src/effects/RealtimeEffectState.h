@@ -45,7 +45,10 @@ public:
     Called by the constructor that takes an id */
    void SetID(const PluginID & id);
    const PluginID& GetID() const noexcept;
+   //! Initializes the effect on demand
    const EffectInstanceFactory *GetEffect();
+   //! const accessor will not initialize the effect on demand
+   const EffectInstanceFactory *GetEffect() const { return mPlugin; }
 
    //! Expose a pointer to the state's instance (making one as needed).
    /*!
@@ -70,6 +73,11 @@ public:
       size_t numSamples);
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();
+
+   const EffectSettings &GetSettings() const { return mMainSettings; }
+
+   //! Test only in the main thread
+   bool IsEnabled() const noexcept;
 
    //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;

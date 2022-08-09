@@ -18,10 +18,12 @@
 #include "MixerSource.h"
 
 #include <cmath>
+#include "EffectStage.h"
 #include "SampleTrack.h"
 #include "SampleTrackCache.h"
 #include "Resample.h"
 #include "float_cast.h"
+#include <numeric>
 
 namespace {
 template<typename T, typename F> std::vector<T>
@@ -41,7 +43,29 @@ initVector(size_t dim1, size_t dim2)
 }
 }
 
-Mixer::Mixer(const SampleTrackConstArray &inputTracks,
+namespace {
+// Find a block size acceptable to all stages; side-effects on instances
+size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
+{
+   size_t blockSize = bufferSize;
+   const auto nTracks = inputs.size();
+   for (size_t i = 0; i < nTracks;) {
+      const auto &input = inputs[i];
+      const auto leader = input.pTrack.get();
+      const auto nInChannels = TrackList::Channels(leader).size();
+      if (!leader || i + nInChannels > nTracks) {
+         assert(false);
+         break;
+      }
+      auto increment = finally([&]{ i += nInChannels; });
+      for (const auto &stage : input.stages)
+         blockSize = std::min(blockSize, stage.mpInstance->SetBlockSize(blockSize));
+   }
+   return blockSize;
+}
+}
+
+Mixer::Mixer(Inputs inputs,
    const bool mayThrow,
    const WarpOptions &warpOptions,
    const double startTime, const double stopTime,
@@ -51,7 +75,8 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    const bool highQuality, MixerSpec *const mixerSpec,
    const bool applyTrackGains
 )  : mNumChannels{ numOutChannels }
-   , mBufferSize{ outBufferSize }
+   , mInputs{ move(inputs) }
+   , mBufferSize{ FindBufferSize(mInputs, outBufferSize) }
    , mApplyTrackGains{ applyTrackGains }
    , mHighQuality{ highQuality }
    , mFormat{ outFormat }
@@ -73,16 +98,24 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       ](auto &buffer){ buffer.Allocate(size, format); }
    )}
 {
-   assert(BufferSize() == outBufferSize);
-   const auto nTracks = inputTracks.size();
+   assert(BufferSize() <= outBufferSize);
+   const auto nTracks =  mInputs.size();
 
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
       mixerSpec->GetNumTracks() == nTracks
    ) ? mixerSpec : nullptr;
 
+   // Reserve vectors first so we can take safe references to pushed elements
+   mSources.reserve(nTracks);
+   auto nStages = std::accumulate(mInputs.begin(), mInputs.end(), 0,
+      [](auto sum, auto &input){ return sum + input.stages.size(); });
+   mSettings.reserve(nStages);
+   mStageBuffers.reserve(nStages);
+
    for (size_t i = 0; i < nTracks;) {
-      const auto leader = inputTracks[i].get();
+      const auto &input = mInputs[i];
+      const auto leader = input.pTrack.get();
       const auto nInChannels = TrackList::Channels(leader).size();
       if (!leader || i + nInChannels > nTracks) {
          assert(false);
@@ -90,9 +123,24 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
       }
       auto increment = finally([&]{ i += nInChannels; });
 
-      mSources.emplace_back( *leader, BufferSize(), outRate,
+      auto &source = mSources.emplace_back( *leader, BufferSize(), outRate,
          warpOptions, highQuality, mayThrow, mTimesAndSpeed,
          (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
+      AudioGraph::Source *pDownstream = &source;
+      for (const auto &stage : input.stages) {
+         // Make a mutable copy of stage.settings
+         auto &settings = mSettings.emplace_back(stage.settings);
+         // TODO: more-than-two-channels
+         // Like mFloatBuffers but padding not needed for soxr
+         auto &stageInput = mStageBuffers.emplace_back(2, mBufferSize, 1);
+         pDownstream =
+         mStages.emplace_back(std::make_unique<AudioGraph::EffectStage>(
+            *pDownstream, stageInput,
+            *stage.mpInstance, settings, outRate, std::nullopt,
+            stage.map
+         )).get();
+      }
+      mDecoratedSources.emplace_back(Source{ source, *pDownstream });
    }
 }
 
@@ -173,25 +221,30 @@ size_t Mixer::Process(const size_t maxToProcess)
    // TODO: more-than-two-channels
    auto maxChannels = mFloatBuffers.Channels();
 
-   for (auto &source : mSources) {
-      auto oResult = source.Acquire(mFloatBuffers, maxToProcess);
+   for (auto &[ upstream, downstream ] : mDecoratedSources) {
+      auto oResult = downstream.Acquire(mFloatBuffers, maxToProcess);
       if (!oResult)
          return 0;
-      maxOut = std::max(maxOut, *oResult);
+      auto result = *oResult;
+      maxOut = std::max(maxOut, result);
 
       // Insert effect stages here!  Passing them all channels of the track
 
-      const auto limit = std::min<size_t>(source.Channels(), maxChannels);
+      const auto limit = std::min<size_t>(upstream.Channels(), maxChannels);
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
-         const auto track = source.GetChannel(j);
+         const auto track = upstream.GetChannel(j);
          if (mApplyTrackGains)
             for (size_t c = 0; c < mNumChannels; ++c)
                gains[c] = track->GetChannelGain(c);
          const auto flags =
-            findChannelFlags(source.MixerSpec(j), track->GetChannel());
-         MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, *oResult);
+            findChannelFlags(upstream.MixerSpec(j), track->GetChannel());
+         MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);
       }
+
+      downstream.Release();
+      mFloatBuffers.Advance(result);
+      mFloatBuffers.Rotate();
    }
 
    if (backwards)

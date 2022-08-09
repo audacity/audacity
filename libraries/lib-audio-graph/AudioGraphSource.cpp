@@ -10,3 +10,8 @@
 #include "AudioGraphSource.h"
 
 AudioGraph::Source::~Source() = default;
+
+bool AudioGraph::Source::Terminates() const
+{
+   return true;
+}

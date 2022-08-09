@@ -1178,14 +1178,14 @@ bool AudioIO::AllocateBuffers(
                      // record
                      endTime = t1;
 
-                  SampleTrackConstArray mixTracks;
+                  Mixer::Inputs mixTracks;
                   const auto range =
                      TrackList::Channels<const SampleTrack>(pTrack.get());
                   for (auto channel : range)
                      mixTracks.push_back(
                         channel->SharedPointer<const SampleTrack>());
                   mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
-                     mixTracks,
+                     move(mixTracks),
                      // Don't throw for read errors, just play silence:
                      false,
                      warpOptions, startTime, endTime, range.size(),
