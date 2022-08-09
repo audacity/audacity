@@ -1,7 +1,6 @@
-name: Bug Report
+name: Bug report
 description: File a bug report
-labels: ["bug", "waits for triage"]
-title: ""
+labels: ["bug"]
 body:
   - type: textarea
     id: desc
@@ -39,7 +38,7 @@ body:
   - type: dropdown
     id: version
     attributes:
-      label: Version
+      label: Audacity Version
       description: What version of Audacity are you running?
       options:
         - current master / alpha / nightly build
@@ -49,17 +48,18 @@ body:
         - other
     validations:
       required: true
-  - type: checkboxes
+  - type: dropdown
     id: os
     attributes:
       label: Operating system
       description: What OS does this bug occur on?
       multiple: true
       options:
-        - label: Windows
-        - label: macOS
-        - label: Linux
-        - label: Other
+        - Windows
+        - macOS
+        - Linux
+        - All
+        - Other
   - type: textarea
     id: context
     attributes:
