@@ -191,7 +191,7 @@ const TranslatableString &XMLFileReader::GetLibraryErrorStr() const
 }
 
 // static
-void XMLFileReader::startElement(void *userData, const char *name,
+void XMLFileReader::startElement(void *userData, const char *elementName,
                                  const char **atts)
 {
    XMLFileReader *This = (XMLFileReader *)userData;
@@ -202,7 +202,7 @@ void XMLFileReader::startElement(void *userData, const char *name,
    }
    else {
       if (XMLTagHandler *const handler = handlers.back())
-         handlers.push_back(handler->ReadXMLChild(name));
+         handlers.push_back(handler->ReadXMLChild(elementName));
       else
          handlers.push_back(NULL);
    }
@@ -219,7 +219,7 @@ void XMLFileReader::startElement(void *userData, const char *name,
             std::string_view(name), XMLAttributeValueView(std::string_view(value)));
       }
 
-      if (!handler->HandleXMLTag(name, This->mCurrentTagAttributes)) {
+      if (!handler->HandleXMLTag(elementName, This->mCurrentTagAttributes)) {
          handler = nullptr;
          if (handlers.size() == 1)
             This->mBaseHandler = nullptr;

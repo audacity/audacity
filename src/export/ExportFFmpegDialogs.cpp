@@ -1782,7 +1782,6 @@ void ExportFFmpegOptions::FetchCodecList()
    if (!mFFmpeg)
       return;
    // Enumerate all codecs
-   std::unique_ptr<AVCodecWrapper> codec;
    for (auto codec : mFFmpeg->GetCodecs())
    {
       // We're only interested in audio and only in encoders
@@ -2081,7 +2080,6 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AudacityAVC
    // All codecs are compatible with this format
    if (found == 2)
    {
-      std::unique_ptr<AVCodecWrapper> codec;
       for (auto codec : mFFmpeg->GetCodecs())
       {
          if (codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue()))
