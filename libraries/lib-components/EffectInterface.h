@@ -347,8 +347,7 @@ class sampleCount;
 // Supported channel assignments
 // ----------------------------------------------------------------------------
 
-typedef enum
-{
+enum ChannelName : int {
    // Use to mark end of list
    ChannelNameEOL = -1,
    // The default channel assignment
@@ -378,7 +377,8 @@ typedef enum
    ChannelNameBottomFrontCenter,
    ChannelNameBottomFrontLeft,
    ChannelNameBottomFrontRight,
-} ChannelName, *ChannelNames;
+};
+using ChannelNames = const ChannelName *;
 
 /***************************************************************************//**
 \class EffectInstance
@@ -478,6 +478,10 @@ public:
 
    //! Called at start of destructive processing, for each (mono/stereo) track
    //! Default implementation does nothing, returns true
+   /*!
+    @param chanMap null or array terminated with ChannelNameEOL.  Do not retain
+       the pointer
+    */
    virtual bool ProcessInitialize(EffectSettings &settings,
       double sampleRate, ChannelNames chanMap) = 0;
 

@@ -15,11 +15,13 @@
 #ifndef __AUDACITY_MIXER_OPTIONS__
 #define __AUDACITY_MIXER_OPTIONS__
 
+#include "EffectInterface.h" // for EffectSettings
 #include "GlobalVariable.h"
 #include "MemoryX.h"
 #include <vector>
 
 class BoundedEnvelope;
+class EffectInstanceEx;
 class SampleTrack;
 class TrackList;
 
@@ -94,6 +96,12 @@ struct TimesAndSpeed final {
    // For output purposes only (like progress indicator update)
    double           mTime;  // Current time (renamed from mT to mTime for
    // consistency with AudioIO - mT represented warped time there)
+};
+
+struct StageSpecification final {
+   std::shared_ptr<EffectInstanceEx> mpInstance;
+   EffectSettings settings;
+   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
 };
 
 }

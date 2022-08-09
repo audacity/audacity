@@ -13,18 +13,15 @@
 #define __AUDACITY_MIX__
 
 #include "AudioGraphBuffers.h"
-#include "AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "SampleFormat.h"
-#include <functional>
 
 class sampleCount;
 class BoundedEnvelope;
+namespace AudioGraph{ class EffectStage; class Source; }
+class MixerSource;
 class TrackList;
 class SampleTrack;
-using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
-
-class MixerSource;
 
 class SAMPLE_TRACK_API Mixer {
  public:
@@ -32,6 +29,18 @@ class SAMPLE_TRACK_API Mixer {
    using MixerSpec = MixerOptions::Downmix;
    using ResampleParameters = MixerOptions::ResampleParameters;
    using TimesAndSpeed = MixerOptions::TimesAndSpeed;
+   using Stages = std::vector<MixerOptions::StageSpecification>;
+
+   struct Input {
+      Input(
+         std::shared_ptr<const SampleTrack> pTrack = {}, Stages stages = {}
+      )  : pTrack{ move(pTrack) }, stages{ move(stages) }
+      {}
+
+      std::shared_ptr<const SampleTrack> pTrack;
+      Stages stages;
+   };
+   using Inputs = std::vector<Input>;
 
    //
    // Constructor / Destructor
@@ -41,9 +50,9 @@ class SAMPLE_TRACK_API Mixer {
     @pre all `inputTracks` are non-null
     @pre any left channels in inputTracks are immediately followed by their
        partners
-    @post `BufferSize() == outBufferSize`
+    @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
     */
-   Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
+   Mixer(Inputs inputs, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
@@ -73,6 +82,11 @@ class SAMPLE_TRACK_API Mixer {
     @post result: `result <= maxSamples`
     */
    size_t Process(size_t maxSamples);
+
+   /*!
+    @post result: `result <= BufferSize()`
+    */
+   size_t Process() { return Process(BufferSize()); }
 
    /// Restart processing at beginning of buffer next time
    /// Process() is called.
@@ -105,6 +119,7 @@ class SAMPLE_TRACK_API Mixer {
 
    // Input
    const unsigned   mNumChannels;
+   Inputs           mInputs;
 
    // Transformations
    const size_t     mBufferSize;
@@ -133,5 +148,11 @@ class SAMPLE_TRACK_API Mixer {
    const std::vector<SampleBuffer> mBuffer;
 
    std::vector<MixerSource> mSources;
+   std::vector<EffectSettings> mSettings;
+   std::vector<AudioGraph::Buffers> mStageBuffers;
+   std::vector<std::unique_ptr<AudioGraph::EffectStage>> mStages;
+
+   struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
+   std::vector<Source> mDecoratedSources;
 };
 #endif

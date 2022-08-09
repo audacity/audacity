@@ -531,10 +531,9 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
          // Need to mix another block
          if (numBytes == 0) {
-            auto numSamples = mixer->Process(maxBlockLen);
-            if (numSamples == 0) {
+            auto numSamples = mixer->Process();
+            if (numSamples == 0)
                break;
-            }
 
             mixed = mixer->GetBuffer();
             numBytes = numSamples * channels;

@@ -148,6 +148,19 @@ void RealtimeEffectList::RemoveState(
    }
 }
 
+void RealtimeEffectList::Clear()
+{
+   decltype(mStates) temp;
+   
+   // Swap an empty list in as a whole, not removing one at a time
+   // Lock for only a short time
+   (LockGuard{ mLock }, swap(temp, mStates));
+
+   for (auto index = temp.size(); index--;)
+      Publisher<RealtimeEffectListMessage>::Publish({
+         RealtimeEffectListMessage::Type::Remove, index, { } });
+}
+
 std::optional<size_t> RealtimeEffectList::FindState(
    const std::shared_ptr<RealtimeEffectState> &pState) const
 {
@@ -170,6 +183,12 @@ RealtimeEffectList::GetStateAt(size_t index) noexcept
    if (index < mStates.size())
       return mStates[index];
    return nullptr;
+}
+
+std::shared_ptr<const RealtimeEffectState>
+RealtimeEffectList::GetStateAt(size_t index) const noexcept
+{
+   return const_cast<RealtimeEffectList*>(this)->GetStateAt(index);
 }
 
 void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)

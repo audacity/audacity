@@ -375,7 +375,7 @@ bool AudioUnitEffect::LoadSettings(
        ; parms.GetFirstEntry(key, index)
    ) do {
       if (auto pKey = ParameterInfo::ParseKey(key)
-         ; pKey && parms.Read(key, value)
+         ; pKey && parms.Read(key, &value)
       )
          map[*pKey].emplace(mySettings.Intern(key), value);
    } while(parms.GetNextEntry(key, index));

@@ -107,6 +107,9 @@ public:
    //! On success sends Remove message.
    void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
 
+   //! Use only in the main thread.  Sends Remove messages
+   void Clear();
+
    //! Report the position of a state in the list
    std::optional<size_t> FindState(
       const std::shared_ptr<RealtimeEffectState> &pState) const;
@@ -117,6 +120,10 @@ public:
    //! Returns effect state at given position
    //! Use only in the main thread, to avoid races
    std::shared_ptr<RealtimeEffectState> GetStateAt(size_t index) noexcept;
+   //! Returns effect state at given position
+   //! Use only in the main thread, to avoid races
+   std::shared_ptr<const RealtimeEffectState> GetStateAt(size_t index) const
+      noexcept;
 
    /**
     * \brief Use only in the main thread. Changes effect order in the stack.
