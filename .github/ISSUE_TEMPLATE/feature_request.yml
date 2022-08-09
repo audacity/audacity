@@ -1,0 +1,13 @@
+name: Bug Report
+description: File a bug report
+labels: ["Enhancement request", "waits for triage"]
+title: ""
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Bug description
+      description: A more detailled description of the bug
+      placeholder: Context for the bug that didn't fit in the title
+    validations:
+      required: false
