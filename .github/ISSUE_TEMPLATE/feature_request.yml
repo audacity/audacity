@@ -1,13 +1,25 @@
-name: Bug Report
-description: File a bug report
-labels: ["Enhancement request", "waits for triage"]
-title: ""
+name: Enhancement request
+description: Request an existing feature to be made better, or a new feature
+labels: ["Enhancement request"]
 body:
+  - type: textarea
+    id: whatfor
+    attributes:
+      label: Problem to be solved
+      description: What problem would your idea solve?
+    validations:
+      required: true
   - type: textarea
     id: desc
     attributes:
-      label: Bug description
-      description: A more detailled description of the bug
-      placeholder: Context for the bug that didn't fit in the title
+      label: Solution
+      description: What's your solution for the problem?
+    validations:
+      required: true
+  - type: textarea
+    id: other
+    attributes:
+      label: Prior art
+      description: Have you run into this problem with other apps? How did they solve it? You can paste screenshots. 
     validations:
       required: false
