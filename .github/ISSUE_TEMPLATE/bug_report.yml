@@ -34,7 +34,7 @@ body:
       label: Actual behavior
       description: What are you actually seeing?
     validations:
-      required: true
+      required: false
   - type: dropdown
     id: version
     attributes:
@@ -58,12 +58,17 @@ body:
         - Windows
         - macOS
         - Linux
-        - All
         - Other
+    validations: 
+      required: true
   - type: textarea
     id: context
     attributes:
       label: Additional context
       description: Further information which may be relevant to this bug
-      placeholder: Sound card, commit ID, other bugs, ...
-
+      placeholder: Sound card, Screenshots, commit ID, related bugs, ...
+  - type: markdown
+    attributes:
+      value: >
+        Please note that Audacity is currently undergoing major restructuring. See the [Roadmap](https://github.com/audacity/audacity/wiki/Roadmap)
+        for further info. Bug fixes may be delayed or postponed significantly. 
