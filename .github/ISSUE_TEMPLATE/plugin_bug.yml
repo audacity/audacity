@@ -23,6 +23,7 @@ body:
         - Audio Unit
         - Nyquist
         - Vamp
+        - Other
     validations:
       required: true
   - type: input
@@ -63,7 +64,7 @@ body:
       label: Actual behavior
       description: What are you actually seeing?
     validations:
-      required: true
+      required: false
   - type: dropdown
     id: version
     attributes:
@@ -87,8 +88,9 @@ body:
         - Windows
         - macOS
         - Linux
-        - All
         - Other
+    validations:
+      required: true
   - type: dropdown
     id: arch
     attributes:
@@ -100,9 +102,16 @@ body:
         - 32 bit Intel/AMD processors 
         - Apple Silicon (M1, M2, ...)
         - Other
+    validations:
+      required: true
   - type: textarea
     id: context
     attributes:
       label: Additional context
       description: Further information which may be relevant to this bug
-      placeholder: Sound card, commit ID, trial vs paid version, etc.
+      placeholder: Sound card, commit ID, Screenshots, trial vs paid version, etc.
+  - type: markdown
+    attributes:
+      value: >
+        Please note that Audacity is currently undergoing major restructuring. See the [Roadmap](https://github.com/audacity/audacity/wiki/Roadmap)
+        for further info. Bug fixes may be delayed or postponed significantly. 
