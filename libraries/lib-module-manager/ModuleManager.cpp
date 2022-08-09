@@ -322,10 +322,10 @@ void ModuleManager::TryLoadModules(
 
          if (!module->HasDispatch())
          {
-            auto ShortName = wxFileName(file).GetName();
+            auto shortName = wxFileName(file).GetName();
             DoMessageBox(
                XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.")
-                  .Format(ShortName));
+                  .Format(shortName));
             wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), file);
             module->Unload();
          }

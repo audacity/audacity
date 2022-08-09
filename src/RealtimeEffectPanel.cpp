@@ -925,8 +925,6 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    long style, const wxString& name)
       : wxWindow(parent, id, pos, size, style, name)
 {
-   auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-   
    auto header = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
    header->SetBackgroundColorIndex(clrMedium);
    {
@@ -979,6 +977,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
 
       header->SetSizer(hSizer.release());
    }
+   auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
    vSizer->Add(header, 0, wxEXPAND);
 
    auto effectList = safenew ThemedWindowWrapper<RealtimeEffectListWindow>(this, wxID_ANY);
