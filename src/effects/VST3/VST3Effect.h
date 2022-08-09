@@ -94,7 +94,8 @@ public:
    void ShowOptions() override;
 
    EffectSettings MakeSettings() const override;
-   
+   bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const override;
+
 private:
 
    bool LoadPreset(const wxString& path, EffectSettings& settings);
