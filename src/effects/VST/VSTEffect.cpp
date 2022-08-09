@@ -3476,9 +3476,9 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
          name.Printf(wxT("parm_%d"), i);
       }
 
-      ParameterInfo pi{ i, name };
+      ParameterInfo info{ i, name };
 
-      if (!visitor(pi))
+      if (!visitor(info))
          break;
    }
 }
