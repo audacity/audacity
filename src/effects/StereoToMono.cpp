@@ -22,6 +22,7 @@
 #include "Mix.h"
 #include "MixAndRender.h"
 #include "Project.h"
+#include "RealtimeEffectList.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -214,6 +215,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    left->Paste(minStart, outTrack.get());
    mOutputTracks->UnlinkChannels(*left);
    mOutputTracks->Remove(right);
+   RealtimeEffectList::Get(*left).Clear();
 
    return bResult;
 }
