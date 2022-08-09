@@ -12,6 +12,7 @@ Paul Licameli split from Mix.cpp
 
 #include "BasicUI.h"
 #include "Mix.h"
+#include "effects/RealtimeEffectList.h"
 #include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -188,6 +189,10 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    wxPrintf("Elapsed time: %f sec\n", elapsedTime);
    wxPrintf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
+
+      for (auto pTrack : { uLeft.get(), uRight.get() })
+         if (pTrack)
+            RealtimeEffectList::Get(*pTrack).Clear();
    }
 }
 
