@@ -1443,7 +1443,7 @@ void ProjectFileManager::Compact()
 
       // Refresh the before space usage since it may have changed due to the
       // above actions.
-      auto before = wxFileName::GetSize(projectFileIO.GetFileName());
+      before = wxFileName::GetSize(projectFileIO.GetFileName());
 
       projectFileIO.Compact(trackLists, true);
 

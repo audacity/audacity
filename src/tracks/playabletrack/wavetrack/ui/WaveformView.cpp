@@ -1066,7 +1066,7 @@ void WaveformView::Draw(
    WaveTrackSubView::Draw( context, rect, iPass );
 }
 
-static const WaveTrackSubViews::RegisteredFactory key{
+static const WaveTrackSubViews::RegisteredFactory myey{
    []( WaveTrackView &view ){
       return std::make_shared< WaveformView >( view );
    }

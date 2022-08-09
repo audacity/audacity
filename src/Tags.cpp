@@ -207,13 +207,13 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    []( AudacityProject &project ){ return &Tags::Get( project ); }
 };
 
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
+static const AudacityProject::AttachedObjects::RegisteredFactory myKey{
   [](AudacityProject &){ return std::make_shared< Tags >(); }
 };
 
 Tags &Tags::Get( AudacityProject &project )
 {
-   return project.AttachedObjects::Get< Tags >( key );
+   return project.AttachedObjects::Get< Tags >( myKey );
 }
 
 const Tags &Tags::Get( const AudacityProject &project )
@@ -224,7 +224,7 @@ const Tags &Tags::Get( const AudacityProject &project )
 Tags &Tags::Set( AudacityProject &project, const std::shared_ptr< Tags > &tags )
 {
    auto &result = *tags;
-   project.AttachedObjects::Assign( key, tags );
+   project.AttachedObjects::Assign( myKey, tags );
    return result;
 }
 

@@ -170,10 +170,10 @@ bool VersionCheck( const wxString &value )
    auto strings = wxSplit( value, '.' );
    std::vector<int> numbers;
    for ( auto &string : strings ) {
-      long value;
-      if ( !string.ToCLong( &value ) )
+      long longValue;
+      if ( !string.ToCLong( &longValue ) )
          return false;
-      numbers.push_back( value );
+      numbers.push_back( longValue );
    }
    // OK if the static version number is not less than the given value
    // Maybe in the future there will be a compatibility break

@@ -1035,7 +1035,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    ProgressResult res = ProgressResult::Success;
 
    // Cleanup in case things go awry
-   auto cleanup = finally([&]
+   auto cleanup0 = finally([&]
    {
       if (!success)
       {

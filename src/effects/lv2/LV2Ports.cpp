@@ -207,8 +207,10 @@ LV2Ports::LV2Ports(const LilvPlugin &plug)
          // Get any unit descriptor
          if (LilvNodePtr unit{ lilv_port_get(&plug, port, node_Unit) })
             // Really should use lilv_world_get_symbol()
-            if (LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
-               units = LilvString(symbol.get());
+            if (LilvNodePtr pSymbol{
+               lilv_world_get_symbol(gWorld, unit.get())
+            })
+               units = LilvString(pSymbol.get());
 
          // Collect the value and range info
          bool hasLo = !std::isnan(minimumVals[i]);

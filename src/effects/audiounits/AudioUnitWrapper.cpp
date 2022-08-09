@@ -272,8 +272,8 @@ void AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
    if (!mParameters)
       return;
    for (const auto &ID : mParameters)
-      if (ParameterInfo pi{ mUnit.get(), ID };
-         !visitor(pi, ID))
+      if (ParameterInfo info{ mUnit.get(), ID };
+         !visitor(info, ID))
          break;
 }
 

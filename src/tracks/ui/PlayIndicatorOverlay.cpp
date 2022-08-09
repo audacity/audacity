@@ -180,8 +180,9 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
       const double playPos = scroller.GetRecentStreamTime();
 
       using Mode = ProjectWindow::PlaybackScroller::Mode;
-      const Mode mode = scroller.GetMode();
-      const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
+      const Mode scrollerMode = scroller.GetMode();
+      const bool pinned =
+         ( scrollerMode == Mode::Pinned || scrollerMode == Mode::Right );
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right

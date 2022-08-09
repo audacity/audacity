@@ -198,7 +198,7 @@ SubMenuListEntry::~SubMenuListEntry()
 }
 
 ///
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
+static const AudacityProject::AttachedObjects::RegisteredFactory myKey{
    [](AudacityProject&) {
       return std::make_unique<CommandManager>();
    }
@@ -206,7 +206,7 @@ static const AudacityProject::AttachedObjects::RegisteredFactory key{
 
 CommandManager &CommandManager::Get( AudacityProject &project )
 {
-   return project.AttachedObjects::Get< CommandManager >( key );
+   return project.AttachedObjects::Get< CommandManager >( myKey );
 }
 
 const CommandManager &CommandManager::Get( const AudacityProject &project )

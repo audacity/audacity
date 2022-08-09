@@ -1095,9 +1095,9 @@ int NyquistEffect::ShowHostInterface(
       res = effect.ShowHostInterface(
          parent, factory, pNewInstance, *newAccess, forceModal);
       if (res) {
-         CommandParameters cp;
-         effect.SaveSettings(newSettings, cp);
-         cp.GetParameters(mParameters);
+         CommandParameters parameters;
+         effect.SaveSettings(newSettings, parameters);
+         parameters.GetParameters(mParameters);
       }
    }
    else {
@@ -1295,15 +1295,15 @@ bool NyquistEffect::ProcessOne()
          }
          // Each clip is a list (start-time, end-time)
          // Limit number of clips added to avoid argument stack overflow error (bug 2300).
-         for (size_t i=0; i<ca.size(); i++) {
-            if (i < 1000) {
+         for (size_t j = 0; j < ca.size(); ++j) {
+            if (j < 1000) {
                clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                         Internat::ToString(ca[i]->GetPlayStartTime()),
-                                         Internat::ToString(ca[i]->GetPlayEndTime()));
-            } else if (i == 1000) {
+                                         Internat::ToString(ca[j]->GetPlayStartTime()),
+                                         Internat::ToString(ca[j]->GetPlayEndTime()));
+            } else if (j == 1000) {
                // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
                clips += "NIL";
-            } else if (i > 1000) {
+            } else if (j > 1000) {
                break;
             }
          }

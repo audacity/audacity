@@ -352,14 +352,15 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    if (t1 == t0) {
       if (newDefault) {
-         const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+         const auto &projectSelectedRegion = ViewInfo::Get( *p ).selectedRegion;
          // play selection if there is one, otherwise
          // set start of play region to project start,
          // and loop the project from current play position.
 
-         if ((t0 > selectedRegion.t0()) && (t0 < selectedRegion.t1())) {
-            t0 = selectedRegion.t0();
-            t1 = selectedRegion.t1();
+         if ((t0 > projectSelectedRegion.t0()) &&
+             (t0 < projectSelectedRegion.t1())) {
+            t0 = projectSelectedRegion.t0();
+            t1 = projectSelectedRegion.t1();
          }
          else {
             // loop the entire project

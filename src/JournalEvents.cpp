@@ -103,7 +103,8 @@ struct Type : RegisteredEventType {
    // a deserializer dependent on a run-time wxEvent type (such as one of
    // the many event types implemented by wxCommandEvent)
    template< typename Tag, typename Fn >
-   Deserializer checkDeserializer( wxEventTypeTag<Tag> type, Fn fn )
+   Deserializer checkDeserializer(
+      [[maybe_unused]] wxEventTypeTag<Tag> justForTypeDeduction, Fn fn )
    {
       // Check consistency of the deduced template parameters
       // The deserializer should produce unique pointer to Tag
@@ -222,19 +223,18 @@ static Type BooleanCommandType( EventType type, const wxString &code ){
    const auto deserialize =
    []( wxEventType type, const wxArrayStringEx &components ) {
       std::unique_ptr< Event > result;
-      int value;
       if ( components.size() == 2 ) {
          if ( auto pWindow = WindowPaths::FindByPath( components[0] ) ) {
             if ( long longValue; components[1].ToLong( &longValue ) ) {
-               bool value = (longValue != 0);
+               bool bValue = (longValue != 0);
                result = std::make_unique< Event >(
                   type, pWindow->GetId() );
                result->SetEventObject( pWindow );
-               result->SetInt( value );
+               result->SetInt( bValue );
                // Also change the state of the control before the event is
                // processed.  This class handles the most common control
                // types.
-               wxGenericValidator validator( &value );
+               wxGenericValidator validator( &bValue );
                validator.SetWindow( pWindow );
                validator.TransferToWindow();
             }

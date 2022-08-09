@@ -720,7 +720,7 @@ TranslatableString LabelString(
             // so adjust by less than a nano second per hour to get nicer number formatting.
             double dd = d * 1.000000000000001;
             int secs = (int)(dd);
-            wxString t1, t2, format;
+            wxString t1, t2, sformat;
 
             if (secs >= 3600)
                t1.Printf(wxT("%d:%02d:"), secs/3600, (secs/60)%60);
@@ -728,16 +728,16 @@ TranslatableString LabelString(
                t1.Printf(wxT("%d:"), secs/60);
 
             if (secs >= 60)
-               format.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
+               sformat.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
             else
-               format.Printf(wxT("%%%d.%dlf"), mDigits+3, mDigits);
+               sformat.Printf(wxT("%%%d.%dlf"), mDigits+3, mDigits);
             // dd will be reduced to just the seconds and fractional part.
             dd = dd - secs + (secs%60);
             // truncate to appropriate number of digits, so that the print formatting 
             // doesn't round up 59.9999999 to 60.
             double multiplier = pow( 10, mDigits);
             dd = ((int)(dd * multiplier))/multiplier;
-            t2.Printf(format, dd);
+            t2.Printf(sformat, dd);
 #endif
             s += t1 + t2;
          }

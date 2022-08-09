@@ -551,45 +551,48 @@ void Grid::OnEditorShown(wxGridEvent &event)
 void Grid::OnKeyDown(wxKeyEvent &event)
 {
    auto keyCode = event.GetKeyCode();
-   int crow = GetGridCursorRow();
-   int ccol = GetGridCursorCol();
 
-   if (event.CmdDown() && crow != wxGridNoCellCoords.GetRow() && ccol != wxGridNoCellCoords.GetCol())
    {
-      wxClipboardLocker cb;
+      int crow = GetGridCursorRow();
+      int ccol = GetGridCursorCol();
 
-      switch (keyCode)
+      if (event.CmdDown() && crow != wxGridNoCellCoords.GetRow() && ccol != wxGridNoCellCoords.GetCol())
       {
-         case 'C': // Copy
-         {
-            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
-            wxClipboard::Get()->SetData(data);
-            return;
-         }
-         break;
+         wxClipboardLocker cb;
 
-         case 'X': // Cut
+         switch (keyCode)
          {
-            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
-            wxClipboard::Get()->SetData(data);
-            SetCellValue(crow, ccol, "" );
-            return;
-         }
-         break;
-
-         case 'V': // Paste
-         {
-            if (wxClipboard::Get()->IsSupported(wxDF_UNICODETEXT))
+            case 'C': // Copy
             {
-               wxTextDataObject data;
-               if (wxClipboard::Get()->GetData(data))
+               wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+               wxClipboard::Get()->SetData(data);
+               return;
+            }
+            break;
+
+            case 'X': // Cut
+            {
+               wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+               wxClipboard::Get()->SetData(data);
+               SetCellValue(crow, ccol, "" );
+               return;
+            }
+            break;
+
+            case 'V': // Paste
+            {
+               if (wxClipboard::Get()->IsSupported(wxDF_UNICODETEXT))
                {
-                  SetCellValue(crow, ccol, data.GetText());
-                  return;
+                  wxTextDataObject data;
+                  if (wxClipboard::Get()->GetData(data))
+                  {
+                     SetCellValue(crow, ccol, data.GetText());
+                     return;
+                  }
                }
             }
+            break;
          }
-         break;
       }
    }
 

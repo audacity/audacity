@@ -86,7 +86,6 @@ private:
    void ZeroFill(size_t produced, size_t max, float &floatBuffer);
 
    const std::shared_ptr<const SampleTrack> mpLeader;
-   size_t i;
 
    const size_t mnChannels;
    const double mRate; // may require resampling

@@ -114,8 +114,8 @@ ArrayOf<Biquad> Biquad::CalcButterworthFilter(int order, double fn, double fc, i
          fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
       for (int iPair = 1; iPair <= order/2; iPair++)
       {
-         double fSPoleX = fC * cos (PI - iPair * PI / order);
-         double fSPoleY = fC * sin (PI - iPair * PI / order);
+         fSPoleX = fC * cos (PI - iPair * PI / order);
+         fSPoleY = fC * sin (PI - iPair * PI / order);
          BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
          pBiquad[iPair].fNumerCoeffs [B0] = 1;
          if (subtype == kLowPass)     // LOWPASS

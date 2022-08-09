@@ -923,8 +923,9 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    state.mUIHandle = Target();
    if (tpmEvent.event.RightDown() &&
        !(state.mUIHandle && state.mUIHandle->HandlesRightClick())) {
-      if (auto pCell = state.mLastCell.lock())
-         state.mUIHandle = std::make_shared<DefaultRightButtonHandler>(pCell);
+      if (auto pLastCell = state.mLastCell.lock())
+         state.mUIHandle =
+            std::make_shared<DefaultRightButtonHandler>(pLastCell);
    }
 
    if (state.mUIHandle) {

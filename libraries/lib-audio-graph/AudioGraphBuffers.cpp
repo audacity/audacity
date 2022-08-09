@@ -101,14 +101,16 @@ void AudioGraph::Buffers::Advance(size_t count)
    // First buffer; defend against excessive count
    auto iterP = mPositions.begin();
    auto iterB = mBuffers.begin();
-   auto &position = *iterP;
-   auto data = iterB->data();
-   auto end = data + iterB->size();
-   // invariant assumed, and preserved
-   assert(data <= position && position <= end);
-   count = std::min<size_t>(end - position, count);
-   position += count;
-   assert(data <= position && position <= end);
+   {
+      auto &position = *iterP;
+      auto data = iterB->data();
+      auto end = data + iterB->size();
+      // invariant assumed, and preserved
+      assert(data <= position && position <= end);
+      count = std::min<size_t>(end - position, count);
+      position += count;
+      assert(data <= position && position <= end);
+   }
 
    // other buffers; assuming equal sizes and relative positions (invariants)
    for (const auto endB = mBuffers.end(); ++iterB != endB;) {

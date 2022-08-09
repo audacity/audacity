@@ -792,11 +792,11 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          // set to use.  We use a darker selection if
          // in both spectral range and time range.
 
-         AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
+         AColor::ColorGradientChoice gradient = AColor::ColorGradientUnselected;
 
          // If we are in the time selected range, then we may use a different color set.
          if (maybeSelected) {
-            selected =
+            gradient =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
             if ( onBrushTool && selected != AColor::ColorGradientUnselected )
@@ -809,7 +809,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             : clipCache.mSpecPxCache->values[correctedX * hiddenMid.height + yy];
 
          unsigned char rv, gv, bv;
-         GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
+         GetColorGradient(value, gradient, colorScheme, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
          if (fftYGrid && yGrid[yy]) {
@@ -906,7 +906,7 @@ void SpectrumView::Draw(
    WaveTrackSubView::Draw( context, rect, iPass );
 }
 
-static const WaveTrackSubViews::RegisteredFactory key{
+static const WaveTrackSubViews::RegisteredFactory myKey{
    []( WaveTrackView &view ){
       return std::make_shared< SpectrumView >( view );
    }
