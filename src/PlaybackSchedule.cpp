@@ -244,7 +244,7 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
    double deltat = (frames / mRate) * mLastPlaySpeed;
 
    if (deltat > realTimeRemaining) {
-      toProduce = frames = (realTimeRemaining * mRate) / mLastPlaySpeed;
+      toProduce = frames = 0.5 + (realTimeRemaining * mRate) / mLastPlaySpeed;
       auto realTime = realTimeRemaining;
       double extra = 0;
       if (RevertToOldDefault(schedule)) {
@@ -252,7 +252,7 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
          // satisfy its end condition
          const double extraRealTime =
             ((TimeQueueGrainSize + 1) / mRate) * mLastPlaySpeed;
-         auto extra = std::min( extraRealTime, deltat - realTimeRemaining );
+         extra = std::min( extraRealTime, deltat - realTimeRemaining );
          frames = ((realTimeRemaining + extra) * mRate) / mLastPlaySpeed;
       }
       schedule.RealTimeAdvance( realTimeRemaining + extra );
