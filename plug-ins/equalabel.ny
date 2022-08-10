@@ -24,7 +24,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 
 ;i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
-$control mode (_ "Create labels based on") choice (("Both" (_ "Number & Interval"))
+$control mode (_ "Create labels based on") choice (("Both" (_ "Number and Interval"))
                                                    ("Number" (_ "Number of Labels"))
                                                    ("Interval" (_ "Label Interval"))) 0
 $control totalnum (_ "Number of labels") int-text "" 10 1 1000
