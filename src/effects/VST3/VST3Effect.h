@@ -34,8 +34,6 @@ class VST3Effect final : public PerTrackEffect
 
    VST3::Hosting::ClassInfo mEffectClassInfo;
 
-   std::weak_ptr<VST3Instance> mCurrentDisplayEffect;
-
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
    // Mutable cache fields computed once on demand

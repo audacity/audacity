@@ -9,10 +9,6 @@
 
 namespace
 {
-   // define some shared registry keys
-   constexpr auto processorStateKey  = wxT("ProcessorState");
-   constexpr auto controllerStateKey = wxT("ControllerState");
-
    unsigned CountChannels(Steinberg::Vst::IComponent* component,
    const Steinberg::Vst::MediaTypes mediaType, 
    const Steinberg::Vst::BusDirection busDirection,
@@ -62,12 +58,13 @@ bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings, unsigned, floa
 
 bool VST3Instance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
+   mWrapper->Finalize();
    return true;
 }
 
 bool VST3Instance::RealtimeInitialize(EffectSettings& settings, double sampleRate)
 {
-   if(mWrapper->Initialize(sampleRate, Steinberg::Vst::kRealtime, mProcessingBlockSize))
+   if(mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kRealtime, mProcessingBlockSize))
    {
       mInitialDelay = mWrapper->GetLatencySamples();
       return true;
@@ -90,6 +87,7 @@ bool VST3Instance::RealtimeProcessEnd(EffectSettings& settings) noexcept
 
 bool VST3Instance::RealtimeProcessStart(EffectSettings& settings)
 {
+   mWrapper->ProcessStart(settings);
    return true;
 }
 
@@ -123,7 +121,7 @@ bool VST3Instance::ProcessFinalize() noexcept
 
 bool VST3Instance::ProcessInitialize(EffectSettings &settings, double sampleRate, ChannelNames chanMap)
 {
-   if(mWrapper->Initialize(sampleRate, Steinberg::Vst::kRealtime, mProcessingBlockSize))
+   if(mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kRealtime, mProcessingBlockSize))
    {
       mInitialDelay = mWrapper->GetLatencySamples();
       return true;
@@ -147,52 +145,6 @@ size_t VST3Instance::ProcessBlock(EffectSettings& settings, const float* const* 
    size_t blockLen)
 {
    return mWrapper->Process(settings, inBlock, outBlock, blockLen);
-}
-
-bool VST3Instance::SaveUserPreset(const RegistryPath& name) const
-{
-   using namespace Steinberg;
-
-   auto processorState = owned(safenew PresetsBufferStream);
-   if(mWrapper->mEffectComponent->getState(processorState) != kResultOk)
-      return false;
-
-   SetConfig(mProcessor, PluginSettings::Private, name, processorStateKey, processorState->toString());
-
-   auto controllerState = owned(safenew PresetsBufferStream);
-   if(mWrapper->mEditController->getState(controllerState) == kResultOk)
-      SetConfig(mProcessor, PluginSettings::Private, name, controllerStateKey, controllerState->toString());
-
-   return true;
-}
-
-bool VST3Instance::LoadUserPreset(const RegistryPath& name)
-{
-   using namespace Steinberg;
-
-   if(!PluginSettings::HasConfigValue(mProcessor, PluginSettings::Private, name, processorStateKey))
-      return false;
-
-   wxString processorStateStr;
-   if(!GetConfig(mProcessor, PluginSettings::Private, name, processorStateKey, processorStateStr, wxEmptyString))
-      return false;
-   auto processorState = PresetsBufferStream::fromString(processorStateStr);
-   if(mWrapper->mEffectComponent->setState(processorState) != kResultOk)
-      return false;
-
-   mWrapper->mEditController->setComponentState(processorState);
-
-   if(PluginSettings::HasConfigValue(mProcessor, PluginSettings::Private, name, controllerStateKey))
-   {
-      wxString controllerStateStr;
-      if(!GetConfig(mProcessor, PluginSettings::Private, name, controllerStateKey, controllerStateStr, wxEmptyString))
-         return false;
-      auto controllerState = PresetsBufferStream::fromString(controllerStateStr);
-
-      return mWrapper->mEditController->setState(controllerState) == kResultOk;
-   }
-
-   return true;
 }
 
 VST3Wrapper& VST3Instance::GetWrapper()

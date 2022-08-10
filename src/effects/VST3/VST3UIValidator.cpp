@@ -3,6 +3,7 @@
 #include <pluginterfaces/gui/iplugview.h>
 
 #include "VST3ParametersWindow.h"
+#include "VST3Utils.h"
 #include "VST3Wrapper.h"
 #include "effects/EffectBase.h"
 #include "internal/PlugFrame.h"
@@ -15,7 +16,6 @@
 VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
    : EffectUIValidator(effect, access), mWrapper(wrapper)
 {
-   mWrapper.mComponentHandler->SetAccess(&access);
    if(effect.GetType() == EffectTypeGenerate)
    {
       auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
@@ -126,8 +126,6 @@ bool VST3UIValidator::TryLoadNativeUI(wxWindow* parent)
       mPlugView = view;
       mPlugFrame = plugFrame;
 
-      mWrapper.SyncComponentStates();
-
       return true;
 #endif
    }
@@ -144,6 +142,8 @@ bool VST3UIValidator::ValidateUI()
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mDuration != nullptr)
          settings.extra.SetDuration(mDuration->GetValue());
+      mWrapper.FlushSettings(settings);
+      mWrapper.StoreSettings(settings);
    });
 
    return true;
@@ -162,25 +162,25 @@ void VST3UIValidator::OnClose()
       mPlugView = nullptr;
       mPlugFrame = nullptr;
    }
-   else if(auto access = mWrapper.mComponentHandler->GetAccess())
-      mWrapper.FlushSettings(access->Get());
+   
    mWrapper.mComponentHandler->SetAccess(nullptr);
 }
 
 bool VST3UIValidator::UpdateUI()
 {
-   const auto& settings = mAccess.Get();
-   mWrapper.FlushSettings(settings);
-
+   if(!mWrapper.IsActive())
+   {
+      //Some plugins may call IComponentHandler::performEdit
+      //during IComponent::setState, so temporary unset the
+      //EffectSettingsAccess to avoid unnecessary EffectSettings
+      //modification
+      mWrapper.mComponentHandler->SetAccess(nullptr);
+      mWrapper.FetchSettings(mAccess.Get());
+      mWrapper.mComponentHandler->SetAccess(&mAccess);
+   }
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
-   else
-   {
-      mWrapper.SyncComponentStates();
-      const auto& vst3settings = VST3Wrapper::GetSettings(settings);
-      for(const auto& p : vst3settings.state)
-         mWrapper.mEditController->setParamNormalized(p.first, p.second);
-   }
+
    return true;
 }
 
