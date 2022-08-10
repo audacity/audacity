@@ -6,7 +6,7 @@
 
    Paul Licameli
    split from EffectInterface.h
-   
+
 **********************************************************************/
 
 #ifndef __AUDACITY_EFFECTPLUGIN_H__
@@ -83,6 +83,14 @@ public:
       wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) = 0;
+
+   //! Returns the EffectUIClientInterface instance for this effect
+   /*!
+    * Usually returns self. May return nullptr. EffectPlugin is responsible for the lifetime of the
+    * returned instance.
+    * @return EffectUIClientInterface object or nullptr, if the effect does not implement the interface.
+    */
+   virtual EffectUIClientInterface* GetEffectUIClientInterface() = 0;
 
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
    virtual bool SaveSettingsAsString(
