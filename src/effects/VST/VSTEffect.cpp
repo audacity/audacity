@@ -3569,7 +3569,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings) cons
    
    constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
-   return false;
+   return true;
 }
 
 bool VSTEffect::TransferDataToWindow(const EffectSettings& settings)
