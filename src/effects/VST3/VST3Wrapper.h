@@ -1,5 +1,5 @@
 #pragma once
-#include <unordered_map>
+#include <map>
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
@@ -26,24 +26,16 @@ namespace Steinberg
 
 struct EffectSettings;
 
-struct VST3EffectSettings
-{
-   //Holds the parameter that has been changed since last
-   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> parameterChanges;
-   //Holds the "current" parameter values
-   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> state;
-};
-
-class InputParameterValueQueue final : public Steinberg::Vst::IParamValueQueue
+class SingleInputParameterValue final : public Steinberg::Vst::IParamValueQueue
 {
    Steinberg::Vst::ParamID mParameterId{};
-   const Steinberg::Vst::ParamValue* mValues{nullptr};
+   Steinberg::Vst::ParamValue mValue;
 public:
 
-   InputParameterValueQueue() { FUNKNOWN_CTOR }
-   ~InputParameterValueQueue() { FUNKNOWN_DTOR }
+   SingleInputParameterValue() { FUNKNOWN_CTOR }
+   ~SingleInputParameterValue() { FUNKNOWN_DTOR }
 
-   void Bind(Steinberg::Vst::ParamID id, const Steinberg::Vst::ParamValue* values);
+   void Set(Steinberg::Vst::ParamID id, const Steinberg::Vst::ParamValue value);
 
    Steinberg::tresult PLUGIN_API addPoint(Steinberg::int32 sampleOffset, Steinberg::Vst::ParamValue value,
       Steinberg::int32& index) override;
@@ -60,6 +52,7 @@ public:
 
 class VST3Wrapper final
 {
+   EffectSettings mDefaultSettings;
 public:
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
@@ -76,12 +69,18 @@ public:
    VST3Wrapper(VST3Wrapper&&) = delete;
    VST3Wrapper& operator=(const VST3Wrapper&) = delete;
    VST3Wrapper& operator=(VST3Wrapper&&) = delete;
-   
+
+   void FetchSettings(const EffectSettings&);
+   void StoreSettings(EffectSettings&) const;
+
+   bool IsActive() const noexcept;
+
    bool LoadPreset(Steinberg::IBStream* fileStream);
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
-   bool Initialize(Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
-   size_t Process(const EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen);
+   bool Initialize(const EffectSettings& settings, Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
+   void ProcessStart(EffectSettings& settings);
+   size_t Process(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen);
    void Finalize();
 
    void SuspendProcessing();
@@ -89,27 +88,29 @@ public:
 
    Steinberg::int32 GetLatencySamples() const;
 
-   //Updates native UI state to match the internal processor state,
-   //used when native UI isn't a source of changes
-   bool SyncComponentStates();
+   void UpdateParameter(EffectSettingsAccess& access, Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue value);
 
    //Used to flush changes to the IAudioProcessor, while
    //plugin is inactive(!)
-   void FlushSettings(const EffectSettings& settings);
+   void FlushSettings(EffectSettings& settings);
 
    static EffectSettings MakeSettings();
+   static void CopySettings(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection);
 
-   static VST3EffectSettings& GetSettings(EffectSettings& settings);
-   static const VST3EffectSettings& GetSettings(const EffectSettings& settings);
+   static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);
+   static void SaveSettings(const EffectSettings& settings, CommandParameters& parms);
+   static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
+   static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
 private:
    const VST3::UID mEffectUID;
 
    bool mActive{false};
 
+   std::vector<std::pair<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue>> mParameters;
    //A preallocated array of Steinberg::Vst::IParameterValueQueue
    //used as a view to an actual parameter changes that reside
    //in VST3EffectSettings structure, dynamically assigned during
    //processing
-   std::unique_ptr<InputParameterValueQueue[]> mParameterQueues;
+   std::unique_ptr<SingleInputParameterValue[]> mParameterQueues;
 };

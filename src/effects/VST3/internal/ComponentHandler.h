@@ -16,6 +16,8 @@
 
 #include "EffectInterface.h"
 
+class VST3Wrapper;
+
 namespace Steinberg
 {
    namespace Vst
@@ -28,10 +30,11 @@ namespace internal
 {
    class ComponentHandler : public Steinberg::Vst::IComponentHandler
    {
+      VST3Wrapper& mWrapper;
       EffectSettingsAccess* mAccess{nullptr};
    public:
       
-      ComponentHandler();
+      ComponentHandler(VST3Wrapper& wrapper);
       virtual ~ComponentHandler();
 
       void SetAccess(EffectSettingsAccess* access);

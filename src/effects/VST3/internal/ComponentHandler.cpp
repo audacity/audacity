@@ -16,7 +16,8 @@
 
 #include "effects/VST3/VST3Wrapper.h"
 
-internal::ComponentHandler::ComponentHandler() 
+internal::ComponentHandler::ComponentHandler(VST3Wrapper& wrapper)
+   : mWrapper(wrapper) 
 {
    FUNKNOWN_CTOR
 }
@@ -38,7 +39,7 @@ EffectSettingsAccess* internal::ComponentHandler::GetAccess()
 
 Steinberg::tresult internal::ComponentHandler::beginEdit(Steinberg::Vst::ParamID)
 {
-   return mAccess ? Steinberg::kResultOk : Steinberg::kResultFalse;
+   return Steinberg::kResultOk;
 }
 
 Steinberg::tresult internal::ComponentHandler::performEdit(Steinberg::Vst::ParamID id,
@@ -46,15 +47,8 @@ Steinberg::tresult internal::ComponentHandler::performEdit(Steinberg::Vst::Param
 {
    using namespace Steinberg;
 
-   if(!mAccess)
-      return kResultFalse;
-
-   mAccess->ModifySettings([&](EffectSettings& settings)
-   {
-      auto& vst3settings = VST3Wrapper::GetSettings(settings);
-      vst3settings.parameterChanges[id] = valueNormalized;
-      vst3settings.state[id] = valueNormalized;
-   });
+   if(mAccess)
+      mWrapper.UpdateParameter(*mAccess, id, valueNormalized);
 
    return kResultOk;
 }

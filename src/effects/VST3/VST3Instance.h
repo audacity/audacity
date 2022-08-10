@@ -62,8 +62,6 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock,
       size_t blockLen) override;
-   bool SaveUserPreset(const RegistryPath & name) const;
-   bool LoadUserPreset(const RegistryPath & name);
 
    VST3Wrapper& GetWrapper();
 

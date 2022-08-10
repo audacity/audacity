@@ -23,7 +23,6 @@
 #include "ShuttleGui.h"
 
 #include "VST3Utils.h"
-#include "VST3ParametersWindow.h"
 #include "VST3OptionsDialog.h"
 
 #ifdef __WXMSW__
@@ -163,55 +162,28 @@ bool VST3Effect::SupportsAutomation() const
 
 bool VST3Effect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
 {
-   const auto& vst3settings = VST3Wrapper::GetSettings(settings);
-
-   for(const auto& p : vst3settings.state)
-      parms.Write(wxString::Format("%d", p.first), p.second);
-
+   VST3Wrapper::SaveSettings(settings, parms);
    return true;
 }
 
 bool VST3Effect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
-   VST3EffectSettings temp;
-
-   long idx;
-   wxString key;
-   temp.state.reserve(parms.GetNumberOfEntries());
-
-   if(parms.GetFirstEntry(key, idx))
-   {
-      do
-      {
-         unsigned long paramId{0};
-         double paramValue;
-         if(key.ToULong(&paramId) && parms.Read(key, &paramValue))
-            temp.state[paramId] = paramValue;
-      } while(parms.GetNextEntry(key, idx));
-   }
-   //replicate the complete state, so that processor could
-   //update its state too before the first processing pass
-   temp.parameterChanges = temp.state;
-
-   std::swap(VST3Wrapper::GetSettings(settings), temp);
-
+   VST3Wrapper::LoadSettings(parms, settings);
    return true;
 }
 
 bool VST3Effect::LoadUserPreset(
    const RegistryPath& name, EffectSettings& settings) const
 {
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->LoadUserPreset(name);
-   return false;
+   VST3Wrapper::LoadUserPreset(*this, name, settings);
+   return true;
 }
 
 bool VST3Effect::SaveUserPreset(
    const RegistryPath& name, const EffectSettings& settings) const
 {
-   if(auto lck = mCurrentDisplayEffect.lock())
-      return lck->SaveUserPreset(name);
-   return false;
+   VST3Wrapper::SaveUserPreset(*this, name, settings);
+   return true;
 }
 
 RegistryPaths VST3Effect::GetFactoryPresets() const
@@ -264,7 +236,6 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
 bool VST3Effect::CloseUI()
 {
    mParent = nullptr;
-   mCurrentDisplayEffect.reset();
    return true;
 }
 
@@ -283,7 +254,6 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
             useGUI);
 
    auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
-   mCurrentDisplayEffect = std::dynamic_pointer_cast<VST3Instance>(vst3instance->shared_from_this());
    mParent = S.GetParent();
 
    return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
@@ -297,10 +267,6 @@ bool VST3Effect::CanExportPresets()
 void VST3Effect::ExportPresets(const EffectSettings& settings) const
 {
    using namespace Steinberg;
-
-   auto instance = mCurrentDisplayEffect.lock();
-   if(!instance)
-      return;
 
    auto path = SelectFile(FileNames::Operation::Presets,
       XO("Save VST3 Preset As:"),
@@ -331,7 +297,10 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
       return;
    }
 
-   if (!instance->GetWrapper().SavePreset(fileStream))
+   VST3Wrapper wrapper(*mModule, mEffectClassInfo.ID());
+   wrapper.FetchSettings(settings);
+
+   if (!wrapper.SavePreset(fileStream))
    {
       BasicUI::ShowMessageBox(
          XO("Failed to save VST3 preset to file"),
@@ -372,17 +341,11 @@ void VST3Effect::ShowOptions()
 {
    VST3OptionsDialog dlg(mParent, *this);
    dlg.ShowModal();
-   if(auto lck = mCurrentDisplayEffect.lock())
-      lck->ReloadUserOptions();
 }
 
 bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
 {
    using namespace Steinberg;
-
-   auto instance = mCurrentDisplayEffect.lock();
-   if(!instance)
-      return false;
 
    auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
 
@@ -398,8 +361,9 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       return false;
    }
 
+   VST3Wrapper wrapper(*mModule, mEffectClassInfo.ID());
 
-   if (!instance->GetWrapper().LoadPreset(fileStream))
+   if (!wrapper.LoadPreset(fileStream))
    {
       BasicUI::ShowMessageBox(
          XO("Unable to apply VST3 preset file %s").Format(path),
@@ -409,6 +373,7 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       );
       return false;
    }
+   wrapper.StoreSettings(settings);
 
    return true;
 }
@@ -420,17 +385,7 @@ EffectSettings VST3Effect::MakeSettings() const
 
 bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
 {
-   if(copyDirection == SettingsCopyDirection::MainToWorker)
-   {
-      //Clear changes that were already applied, so they won't appear
-      //on the other side on swap.
-      VST3Wrapper::GetSettings(dst).parameterChanges.clear();
-      //Don't allocate in worker
-      std::swap(
-         VST3Wrapper::GetSettings(*const_cast<EffectSettings*>(&src)).parameterChanges,
-         VST3Wrapper::GetSettings(dst).parameterChanges
-      );
-   }
+   VST3Wrapper::CopySettings(src, dst, copyDirection);
    return true;
 }
 
