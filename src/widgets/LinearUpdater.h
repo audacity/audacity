@@ -16,7 +16,8 @@
 
 struct LinearUpdaterData { const ZoomInfo* zoomInfo; const int leftOffset; };
 
-struct LinearUpdater final : public GeneratedUpdater {
+class LinearUpdater final : public GeneratedUpdater {
+public:
    using GeneratedUpdater::GeneratedUpdater;
    ~LinearUpdater() override;
 

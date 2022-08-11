@@ -14,10 +14,12 @@
 
 #include "CustomUpdater.h"
 
-struct CustomUpdaterValue final : public CustomUpdater {
+class CustomUpdaterValue final : public CustomUpdater {
+public:
    using CustomUpdater::CustomUpdater;
    ~CustomUpdaterValue() override;
 
+protected:
    bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
       const RulerStruct& context

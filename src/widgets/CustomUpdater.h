@@ -17,7 +17,8 @@
 
 struct CustomUpdaterData { const RulerUpdater::Labels majorLabels, minorLabels, minorMinorLabels; };
 
-struct CustomUpdater : public RulerUpdater {
+class CustomUpdater : public RulerUpdater {
+public:
    using RulerUpdater::RulerUpdater;
    virtual ~CustomUpdater() override = 0;
 
@@ -26,6 +27,7 @@ struct CustomUpdater : public RulerUpdater {
       UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data
    ) const final override;
 
+protected:
    virtual bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
       const RulerStruct& context

@@ -13,7 +13,8 @@
 
 #include "GeneratedUpdater.h"
 
-struct LogarithmicUpdater final : public GeneratedUpdater {
+class LogarithmicUpdater final : public GeneratedUpdater {
+public:
    using GeneratedUpdater::GeneratedUpdater;
    ~LogarithmicUpdater() override;
 
