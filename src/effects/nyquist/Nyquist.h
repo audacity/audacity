@@ -312,6 +312,11 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class NyquistEffectsModule;
+
+   struct SharedValidatorState;
+   struct NyquistEffectUIValidator;
+
+   std::weak_ptr<SharedValidatorState> mSharedValidatorState;
 };
 
 class NyquistOutputDialog final : public wxDialogWrapper

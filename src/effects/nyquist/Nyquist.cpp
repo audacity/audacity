@@ -119,6 +119,68 @@ static const wxChar *KEY_Parameters = wxT("Parameters");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+// NyquistEffectUIValidator
+//
+///////////////////////////////////////////////////////////////////////////////
+struct NyquistEffect::SharedValidatorState final
+{
+   explicit SharedValidatorState(NyquistEffect& effect)
+       : mEffect(&effect), mParent(mEffect->GetUIParent())
+   {
+      mParent->PushEventHandler(&effect);
+   }
+
+   ~SharedValidatorState()
+   {
+      Reset();
+   }
+
+   void Reset()
+   {
+      if (mEffect == nullptr)
+         return;
+
+      if (mParent)
+         mParent->PopEventHandler();
+
+      mEffect = nullptr;
+   }
+
+   NyquistEffect* mEffect;
+   wxWeakRef<wxWindow> mParent;
+};
+
+struct NyquistEffect::NyquistEffectUIValidator final : public EffectUIValidator
+{
+   NyquistEffectUIValidator(
+      EffectUIClientInterface& effect, EffectSettingsAccess& access, std::shared_ptr<SharedValidatorState> sharedState)
+       : EffectUIValidator(effect, access),
+         mSharedState(sharedState)
+   {
+   }
+
+   bool ValidateUI() override
+   {
+      // Check, if the NyquistEffect is still valid
+      if (mSharedState->mEffect == nullptr)
+         return false;
+      
+      bool result {};
+      mAccess.ModifySettings([&](EffectSettings& settings)
+                             { result = mEffect.ValidateUI(settings); });
+      return result;
+   }
+
+   bool IsGraphicalUI() override
+   {
+      return mSharedState->mEffect != nullptr && mEffect.IsGraphicalUI();
+   }
+
+   std::shared_ptr<SharedValidatorState> mSharedState;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
 // NyquistEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -201,6 +263,15 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
 NyquistEffect::~NyquistEffect()
 {
+   auto sharedValidator = mSharedValidatorState.lock();
+
+   // NyquistEffect sometimes shows the interface for the "nested"
+   // effect, allocated on stack (i. e. NyquistPrompt exhibits this behavior).
+   // This nested effect violates the assumptions about the lifetimes:
+   // NyquistEffect instance is destroyed before the associated UI validator.
+   
+   if (sharedValidator != nullptr)
+      sharedValidator->Reset();
 }
 
 // ComponentInterface implementation
@@ -1122,13 +1193,32 @@ int NyquistEffect::ShowHostInterface(
 }
 
 std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    if (mIsPrompt)
       BuildPromptWindow(S);
    else
       BuildEffectWindow(S);
-   return nullptr;
+
+   auto sharedState = mSharedValidatorState.lock();
+
+   // We do not expect that mSharedValidatorState contains
+   // a state at this point in time. If it does, it means
+   // that we have tried to display UI more than once on one
+   // instance
+   assert(sharedState == nullptr);
+
+   // However, in order to preserve single PushEventHandler
+   // and single PopEventHandler only one SharedValidatorState
+   // is allowed per effect instance.
+   // wxWidgets uses intrusive linked list to maintain the
+   // handlers stack, it is not possible to push the same
+   // handler into the stack twice
+   if (sharedState == nullptr)
+      mSharedValidatorState = sharedState =
+         std::make_shared<SharedValidatorState>(*this);
+   
+   return std::make_unique<NyquistEffectUIValidator>(*this, access, sharedState);
 }
 
 bool NyquistEffect::EnablesDebug() const
