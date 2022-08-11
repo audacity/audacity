@@ -76,15 +76,23 @@ public:
 
    using Bits = std::vector< bool >;
 
-   RulerUpdater() {}
-   virtual ~RulerUpdater();
-
-   struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };
    struct UpdateOutputs {
       Labels& majorLabels, & minorLabels, & minorMinorLabels;
       Bits& bits;
       wxRect& box;
    };
+
+   RulerUpdater() {}
+   virtual ~RulerUpdater() = 0;
+
+   virtual void Update(
+      wxDC& dc, const Envelope* envelope,
+      UpdateOutputs& allOutputs, const RulerStruct &context
+   )// Envelope *speedEnv, long minSpeed, long maxSpeed )
+      const = 0;
+
+protected:
+   struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };
 
    struct TickSizes
    {
@@ -112,14 +120,7 @@ public:
    void BoxAdjust(
       UpdateOutputs& allOutputs,
       const RulerStruct& context
-   )
-      const;
-
-   virtual void Update(
-      wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct &context
-   )// Envelope *speedEnv, long minSpeed, long maxSpeed )
-      const = 0;
+   ) const;
 };
 
 #endif //define __AUDACITY_UPDATER__
