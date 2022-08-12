@@ -228,7 +228,7 @@ function( audacity_append_common_compiler_options var use_pch )
             # include the correct config file; give absolute path to it, so
             # that this works whether in src, modules, libraries
             $<$<PLATFORM_ID:Windows>:
-               $<IF:$<CXX_COMPILER_ID:MSVC>, 
+               $<IF:$<CXX_COMPILER_ID:MSVC>,
                   /FI${CMAKE_BINARY_DIR}/src/private/configwin.h,
                   -include ${CMAKE_BINARY_DIR}/src/private/configwin.h
                >
@@ -262,17 +262,28 @@ function( audacity_append_common_compiler_options var use_pch )
          # pointer like std::unique_ptr or std::shared_ptr.
          -Dsafenew=new
 
-         $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+         # Clang specific options
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=defaulted-function-deleted>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=shadow>
-	      # Yes, CMake will change -D to /D as needed for Windows:
-         -DWXINTL_NO_GETTEXT_MACRO
+
+         # MSVC specific options
+         $<$<CXX_COMPILER_ID:MSVC>:/permissive->
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
          $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
+         # warning C6246: Local declaration of <variable> hides declaration of same name in outer scope. Additional Information: See previous declaration at <location>.
+         $<$<CXX_COMPILER_ID:MSVC>:/we6246>
+         # warning C6244: local declaration of <variable> hides previous declaration at <line> of <file>
+         $<$<CXX_COMPILER_ID:MSVC>:/we6244>
+         # returning address of local variable or temporary
+         # is there a bug in MSVC? Enabling this breaks <functional> compilation
+         # $<$<CXX_COMPILER_ID:MSVC>:/we4172>
+
+	      # Yes, CMake will change -D to /D as needed for Windows:
+         -DWXINTL_NO_GETTEXT_MACRO
 
          # Define/undefine _DEBUG
          # Yes, -U to /U too as needed for Windows:
