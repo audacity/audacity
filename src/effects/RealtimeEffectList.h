@@ -105,7 +105,7 @@ public:
 
    //! Use only in the main thread
    //! On success sends Remove message.
-   void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
+   void RemoveState(std::shared_ptr<RealtimeEffectState> pState);
 
    //! Use only in the main thread.  Sends Remove messages
    void Clear();
