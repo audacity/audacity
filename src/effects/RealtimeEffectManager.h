@@ -147,7 +147,8 @@ private:
    void ProcessStart(bool suspended);
    /*! @copydoc ProcessScope::Process */
    size_t Process(bool suspended, Track &track,
-      float *const *buffers, float *const *scratch, size_t numSamples);
+      float *const *buffers, float *const *scratch,
+      unsigned nBuffers, size_t numSamples);
    void ProcessEnd(bool suspended) noexcept;
 
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
@@ -260,16 +261,16 @@ public:
    }
 
    size_t Process(Track &track,
-      float *const *buffers, /*!< Assume as many buffers, as channels were
-         specified in the AddTrack call */
-      float *const *scratch, /*!< As many temporary buffers as in buffers,
-         plus one more */
+      float *const *buffers,
+      float *const *scratch,
+      unsigned nBuffers, //!< how many buffers; equal number of scratches
       size_t numSamples //!< length of each buffer
    )
    {
       if (auto pProject = mwProject.lock())
          return RealtimeEffectManager::Get(*pProject)
-            .Process(mSuspended, track, buffers, scratch, numSamples);
+            .Process(mSuspended, track, buffers, scratch,
+               nBuffers, numSamples);
       else
          return numSamples; // consider them trivially processed
    }
