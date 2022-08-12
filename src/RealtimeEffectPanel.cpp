@@ -43,6 +43,29 @@
 
 namespace
 {
+   void UpdateRealtimeEffectUIData(Track& track)
+   {
+      auto& effects = RealtimeEffectList::Get(track);
+
+      effects.Visit(
+         [&track](auto& effectState, bool)
+         {
+            auto& ui = RealtimeEffectStateUI::Get(effectState);
+            ui.UpdateTrackData(track);
+         });
+   }
+
+   void HideRealtimeUIForTrack(Track& track)
+   {
+      auto& effects = RealtimeEffectList::Get(track);
+
+      effects.Visit(
+         [&track](auto& effectState, bool)
+         {
+            auto& ui = RealtimeEffectStateUI::Get(effectState);
+            ui.Hide();
+         });
+   }
    //fwd
    class RealtimeEffectControl;
    PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl = nullptr);
@@ -379,6 +402,9 @@ namespace
          if(mProject == nullptr || mEffectState == nullptr)
             return;
 
+         auto& ui = RealtimeEffectStateUI::Get(*mEffectState);
+         ui.Hide();
+
          auto effectName = GetEffectName();
          //After AudioIO::RemoveState call this will be destroyed
          auto project = mProject.get();
@@ -412,6 +438,8 @@ namespace
          }
 
          auto& effectStateUI = RealtimeEffectStateUI::Get(*mEffectState);
+
+         effectStateUI.UpdateTrackData(*mTrack);
          effectStateUI.Toggle( *mProject );
       }
 
@@ -797,10 +825,7 @@ public:
          mEffectListItemMovedSubscription = effects.Subscribe(
             *this, &RealtimeEffectListWindow::OnEffectListItemChange);
 
-         effects.Visit([track](auto& effect, bool) {
-            auto& ui = RealtimeEffectStateUI::Get(effect);
-            ui.UpdateTrackData(*track);
-         });
+         UpdateRealtimeEffectUIData(*track);
       }
    }
 
@@ -877,9 +902,12 @@ public:
    }
 };
 
-RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size,
+RealtimeEffectPanel::RealtimeEffectPanel(
+   AudacityProject& project, wxWindow* parent, wxWindowID id, const wxPoint& pos,
+   const wxSize& size,
    long style, const wxString& name)
       : wxWindow(parent, id, pos, size, style, name)
+      , mProject(project)
 {
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
@@ -901,8 +929,8 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
             mEffectList->EnableEffects(!wasEnabled);
          }
          pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
-         if (mProject)
-            ProjectHistory::Get(*mProject).ModifyState(false);
+         
+         ProjectHistory::Get(mProject).ModifyState(false);
       });
 
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
@@ -943,6 +971,35 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    mEffectList = effectList;
 
    SetSizerAndFit(vSizer.release());
+
+   mTrackListChanged = TrackList::Get(mProject).Subscribe([this](const TrackListEvent& evt) {
+         auto track = evt.mpTrack.lock();
+         auto waveTrack = dynamic_cast<WaveTrack*>(track.get());
+
+         if (waveTrack == nullptr)
+            return;
+         
+         switch (evt.mType)
+         {
+         case TrackListEvent::TRACK_DATA_CHANGE:
+            if (mCurrentTrack.lock() == track)
+               mTrackTitle->SetLabel(track->GetName());
+            UpdateRealtimeEffectUIData(*waveTrack);
+            break;
+         case TrackListEvent::DELETION:
+            if (evt.mExtra == 0)
+               HideRealtimeUIForTrack(*waveTrack);
+            break;
+         case TrackListEvent::ADDITION:
+            // Addition can be fired as a part of "replace" event.
+            // Calling UpdateRealtimeEffectUIData is mostly no-op,
+            // it will just create a new State and Access for it.
+            UpdateRealtimeEffectUIData(*waveTrack);
+            break;
+         default:
+            break;
+         }
+   });
 }
 
 void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
@@ -958,7 +1015,8 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
             : bmpEffectOff
       );
       mEffectList->SetTrack(project, track);
-      mProject = &project;
+
+      mCurrentTrack = track;
    }
    else
       ResetTrack();
@@ -970,5 +1028,5 @@ void RealtimeEffectPanel::ResetTrack()
    mToggleEffects->SetBitmapIndex(bmpEffectOff);
    mToggleEffects->Enable(false);
    mEffectList->ResetTrack();
-   mProject = nullptr;
+   mCurrentTrack.reset();
 }

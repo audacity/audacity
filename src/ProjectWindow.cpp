@@ -640,7 +640,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mContainerWindow->Initialize(mTrackListWindow);
 
-   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mContainerWindow, wxID_ANY);
+   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mProject, mContainerWindow, wxID_ANY);
    effectsPanel->SetBackgroundColorIndex(clrMedium);
    effectsPanel->Hide();//initially hidden
    effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&)

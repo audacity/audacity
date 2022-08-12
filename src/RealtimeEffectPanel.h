@@ -15,6 +15,7 @@
 #include <wx/weakref.h>
 
 #include "ThemedWrappers.h"
+#include "Observer.h"
 
 class Track;
 
@@ -35,9 +36,15 @@ class RealtimeEffectPanel : public wxWindow
    ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
-   wxWeakRef<AudacityProject> mProject;
+   AudacityProject& mProject;
+
+   std::weak_ptr<Track> mCurrentTrack;
+
+   Observer::Subscription mTrackListChanged;
+   
 public:
-   RealtimeEffectPanel(wxWindow *parent,
+   RealtimeEffectPanel(
+      AudacityProject& project, wxWindow* parent,
                 wxWindowID id,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
