@@ -370,7 +370,7 @@ AudioIO::ReplaceState(AudacityProject &project,
 }
 
 void AudioIO::RemoveState(AudacityProject &project,
-   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> pState)
 {
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)

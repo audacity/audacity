@@ -98,7 +98,7 @@ public:
     */
    /*! No effect if realtime is active but scope is not supplied */
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
-      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
+      Track *pTrack, std::shared_ptr<RealtimeEffectState> pState);
 
    //! Report the position of a state in the global or a per-track list
    std::optional<size_t> FindState(

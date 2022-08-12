@@ -324,7 +324,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> pState)
 {
    auto [pLeader, states] = FindStates(mProject, pTrack);
 
