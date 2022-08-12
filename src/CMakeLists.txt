@@ -470,6 +470,8 @@ list( APPEND SOURCES
       effects/RealtimeEffectManager.h
       effects/RealtimeEffectState.cpp
       effects/RealtimeEffectState.h
+      effects/RealtimeEffectStateUI.h
+      effects/RealtimeEffectStateUI.cpp
       effects/Repair.cpp
       effects/Repair.h
       effects/Repeat.cpp
