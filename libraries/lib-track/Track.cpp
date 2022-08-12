@@ -712,14 +712,14 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
    return front().get();
 }
 
-Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
+Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, TrackId id)
 {
    push_back(t);
 
    auto n = getPrev( getEnd() );
 
    t->SetOwner(shared_from_this(), n);
-   t->SetId( TrackId{ ++sCounter } );
+   t->SetId( (id == TrackId{}) ? TrackId{ ++sCounter } : id );
    RecalcPositions(n);
    AdditionEvent(n);
    return back().get();

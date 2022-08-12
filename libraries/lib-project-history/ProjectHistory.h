@@ -46,13 +46,19 @@ public:
    void SetStateTo(unsigned int n, bool doAutosave = true);
    bool UndoAvailable() const;
    bool RedoAvailable() const;
+   //! New saved state will make TrackIds correspond with current project
+   //! contents
    void PushState(
       const TranslatableString &desc,
       const TranslatableString &shortDesc); // use UndoPush::AUTOSAVE
+   //! New saved state will make TrackIds correspond with current project
+   //! contents
    void PushState(
       const TranslatableString &desc,
       const TranslatableString &shortDesc, UndoPush flags);
    void RollbackState();
+   //! Modified state will make TrackIds correspond with current project
+   //! contents
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file.
       // Should set only if you really want the state change restored after
       // a crash, as it can take many seconds for large (eg. 10 track-hours)

@@ -140,7 +140,7 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
 
    dstTracks.Clear();
    for (auto t : tracks->Any())
-      dstTracks.Add(t->Duplicate());
+      dstTracks.Add(t->Duplicate(), t->GetId());
 }
 
 void ProjectHistory::SetStateTo(unsigned int n, bool doAutosave)

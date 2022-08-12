@@ -189,10 +189,12 @@ void UndoManager::ModifyState(const TrackList &l,
    // Duplicate
    auto tracksCopy = TrackList::Create( nullptr );
    for (auto t : l) {
-      if ( t->GetId() == TrackId{} )
+      const auto id = t->GetId();
+      if (id == TrackId{})
          // Don't copy a pending added track
          continue;
-      tracksCopy->Add(t->Duplicate());
+      // Make TrackIds correspond between current state and saved
+      tracksCopy->Add(t->Duplicate(), id);
    }
 
    // Replace
@@ -239,10 +241,12 @@ void UndoManager::PushState(const TrackList &l,
 
    auto tracksCopy = TrackList::Create( nullptr );
    for (auto t : l) {
-      if ( t->GetId() == TrackId{} )
+      const auto id = t->GetId();
+      if (id == TrackId{})
          // Don't copy a pending added track
          continue;
-      tracksCopy->Add(t->Duplicate());
+      // Make TrackIds correspond between current state and saved
+      tracksCopy->Add(t->Duplicate(), id);
    }
 
    mayConsolidate = true;

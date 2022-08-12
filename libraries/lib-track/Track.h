@@ -146,7 +146,14 @@ template<typename T>
     (A track added by TrackList::RegisterPendingNewTrack() that is not yet applied is not
     considered added.)
  
-    TrackIds are assigned uniquely across projects. */
+    Undo management should set TrackIds in Track objects representing states of
+    "the same" track in history so they are equal.
+
+    Otherwise TrackIds are assigned uniquely in-session, if no second
+    argument is given to TrackList::Add().
+
+    TrackIds are then unique even across projects in-session.
+ */
 class TrackId
 {
 public:
@@ -1510,7 +1517,7 @@ class TRACK_API TrackList final
 
 private:
    Track *DoAddToHead(const std::shared_ptr<Track> &t);
-   Track *DoAdd(const std::shared_ptr<Track> &t);
+   Track *DoAdd(const std::shared_ptr<Track> &t, TrackId id);
 
    template< typename TrackType, typename InTrackType >
       static TrackIterRange< TrackType >
@@ -1559,8 +1566,8 @@ public:
          { return static_cast< TrackKind* >( DoAddToHead( t ) ); }
 
    template<typename TrackKind>
-      TrackKind *Add( const std::shared_ptr< TrackKind > &t )
-         { return static_cast< TrackKind* >( DoAdd( t ) ); }
+      TrackKind *Add( const std::shared_ptr< TrackKind > &t, TrackId id = {} )
+         { return static_cast< TrackKind* >( DoAdd( t, id ) ); }
    
    //! Removes linkage if track belongs to a group
    void UnlinkChannels(Track& track);

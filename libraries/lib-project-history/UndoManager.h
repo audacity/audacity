@@ -176,11 +176,15 @@ class PROJECT_HISTORY_API UndoManager final
    UndoManager( const UndoManager& ) = delete;
    UndoManager& operator = ( const UndoManager& ) = delete;
 
+   //! New saved state will make TrackIds correspond with current project
+   //! contents
    void PushState(const TrackList &l,
                   const SelectedRegion &selectedRegion,
                   const TranslatableString &longDescription,
                   const TranslatableString &shortDescription,
                   UndoPush flags = UndoPush::NONE);
+   //! Modified state will make TrackIds correspond with current project
+   //! contents
    void ModifyState(const TrackList &l,
                     const SelectedRegion &selectedRegion);
    void RenameState( int state,
