@@ -170,19 +170,27 @@ using Destroy_ptr = std::unique_ptr<T, Destroyer<T>>;
 
 // Construct this from any copyable function object, such as a lambda
 template <typename F>
-struct Final_action {
-   Final_action(F f) : clean( f ) {}
-   ~Final_action() { clean(); }
+struct Finally {
+   Finally(F f) : clean( f ) {}
+   ~Finally() { clean(); }
    F clean;
 };
 
-/// \brief Function template with type deduction lets you construct Final_action
+/// \brief Function template with type deduction lets you construct Finally
 /// without typing any angle brackets
 template <typename F>
-Final_action<F> finally (F f)
+[[nodiscard]] Finally<F> finally (F f)
 {
-   return Final_action<F>(f);
+   return Finally<F>(f);
 }
+
+//! C++17 deduction guide allows even simpler syntax:
+//! `Finally Do{[&]{ Stuff(); }};`
+/*!
+ Don't omit `Do` or some other variable name!  Otherwise, the execution of the
+ body is immediate, not delayed to the end of the enclosing scope.
+ */
+template<typename F> Finally(F) -> Finally<F>;
 
 #include <algorithm>
 
