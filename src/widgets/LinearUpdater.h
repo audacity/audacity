@@ -25,6 +25,8 @@ public:
       wxDC& dc, const Envelope* envelope,
       UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data
    ) const override;
+
+   std::string Identify() const override { return "LinearUpdater"; };
 };
 
 #endif

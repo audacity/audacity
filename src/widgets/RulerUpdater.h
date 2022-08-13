@@ -92,6 +92,8 @@ public:
    )// Envelope *speedEnv, long minSpeed, long maxSpeed )
       const = 0;
 
+   virtual std::string Identify() const = 0;
+
 protected:
    struct TickOutputs { Labels& labels; Bits& bits; wxRect& box; };
 

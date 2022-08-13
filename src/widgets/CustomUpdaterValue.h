@@ -19,6 +19,8 @@ public:
    using CustomUpdater::CustomUpdater;
    ~CustomUpdaterValue() override;
 
+   std::string Identify() const override { return "CustomUpdaterValue"; };
+
 protected:
    bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
