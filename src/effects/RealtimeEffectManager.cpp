@@ -126,7 +126,7 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 // This will be called in a thread other than the main GUI thread.
 //
 size_t RealtimeEffectManager::Process(bool suspended, Track &track,
-   float *const *buffers, float *const *scratch,
+   float *const *buffers, float *const *scratch, unsigned nBuffers,
    size_t numSamples)
 {
    // Can be suspended because of the audio stream being paused or because effects
@@ -142,14 +142,13 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
 
    // Allocate the in and out buffer arrays
    const auto ibuf =
-      static_cast<float **>(alloca(chans * sizeof(float *)));
+      static_cast<float **>(alloca(nBuffers * sizeof(float *)));
    const auto obuf =
-      static_cast<float **>(alloca(chans * sizeof(float *)));
+      static_cast<float **>(alloca(nBuffers * sizeof(float *)));
 
    // And populate the input with the buffers we've been given while allocating
    // NEW output buffers
-   for (unsigned int i = 0; i < chans; i++)
-   {
+   for (unsigned int i = 0; i < nBuffers; i++) {
       ibuf[i] = buffers[i];
       obuf[i] = scratch[i];
    }
@@ -161,7 +160,7 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    VisitGroup(track,
       [&](RealtimeEffectState &state, bool)
       {
-         state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
+         state.Process(track, chans, ibuf, obuf, numSamples);
          for (auto i = 0; i < chans; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
@@ -325,7 +324,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> pState)
 {
    auto [pLeader, states] = FindStates(mProject, pTrack);
 

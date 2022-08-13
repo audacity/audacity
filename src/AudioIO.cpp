@@ -370,7 +370,7 @@ AudioIO::ReplaceState(AudacityProject &project,
 }
 
 void AudioIO::RemoveState(AudacityProject &project,
-   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> pState)
 {
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
@@ -1935,12 +1935,13 @@ void AudioIO::TransformPlayBuffers(
             // Then supply some non-null fake input buffers, because the
             // various ProcessBlock overrides of effects may crash without it.
             // But it would be good to find the fixes to make this unnecessary.
-            float **scratch = &mScratchPointers[mNumPlaybackChannels + 1];
+            float **scratch = &mScratchPointers[mNumPlaybackChannels];
             while (iChannel < mNumPlaybackChannels)
-               pointers[iChannel++] = *scratch++;
+               memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
 
             if (len && pScope)
-               pScope->Process(*vt, &pointers[0], mScratchPointers.data(), len);
+               pScope->Process(*vt, &pointers[0], mScratchPointers.data(),
+                  mNumPlaybackChannels, len);
          }
       }
    }

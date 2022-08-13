@@ -127,7 +127,7 @@ RealtimeEffectList::ReplaceState(size_t index,
 }
 
 void RealtimeEffectList::RemoveState(
-   const std::shared_ptr<RealtimeEffectState> &pState)
+   const std::shared_ptr<RealtimeEffectState> pState)
 {
    auto shallowCopy = mStates;
    auto end = shallowCopy.end(),

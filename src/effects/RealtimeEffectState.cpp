@@ -416,16 +416,15 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
-size_t RealtimeEffectState::Process(Track &track,
-   unsigned chans,
-   const float *const *inbuf, float *const *outbuf, float *dummybuf,
-   size_t numSamples)
+void RealtimeEffectState::Process(Track &track, unsigned chans,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
    if (!mPlugin || !pInstance || !mLastActive) {
+      // Process trivially
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
-      return numSamples; // consider all samples to be trivially processed
+      return;
    }
 
    // The caller passes the number of channels to process and specifies
@@ -455,19 +454,12 @@ size_t RealtimeEffectState::Process(Track &track,
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
    {
-      // If we don't have enough input channels to accommodate the client's
-      // requirements, then we replicate the input channels until the
-      // client's needs are met.
+      // Assume sufficient buffers of zeroes given when the stored track
+      // did not have enough channels
       if (ichans < numAudioIn)
       {
          for (size_t i = 0; i < numAudioIn; i++)
-         {
-            if (indx == ichans)
-            {
-               indx = 0;
-            }
             clientIn[i] = inbuf[indx++];
-         }
 
          // All input channels have been consumed
          ichans = 0;
@@ -490,16 +482,7 @@ size_t RealtimeEffectState::Process(Track &track,
       if (ochans < numAudioOut)
       {
          for (size_t i = 0; i < numAudioOut; i++)
-         {
-            if (i < ochans)
-            {
-               clientOut[i] = outbuf[i];
-            }
-            else
-            {
-               clientOut[i] = dummybuf;
-            }
-         }
+            clientOut[i] = outbuf[i];
 
          // All output channels have been consumed
          ochans = 0;
@@ -537,8 +520,6 @@ size_t RealtimeEffectState::Process(Track &track,
       }
       processor++;
    }
-
-   return len;
 }
 
 bool RealtimeEffectState::ProcessEnd()
