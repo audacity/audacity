@@ -137,7 +137,7 @@ AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
       }
    }
 
-   if (curBlockSize < bound) {
+   if (mIsProcessor && curBlockSize < bound) {
       // If there is still a short buffer by this point, upstream must have
       // been exhausted
       assert(mUpstream.Remaining() == 0);
@@ -181,7 +181,8 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
          }
          mCleared = true;
       }
-      oCurBlockSize = { bound };
+      oCurBlockSize = {
+         mIsProcessor ? bound : limitSampleBufferSize(bound, mDelayRemaining) };
    }
    if (!oCurBlockSize)
       return {};
