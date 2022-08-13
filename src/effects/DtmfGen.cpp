@@ -262,6 +262,7 @@ size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
       if (isTone)
       {
          // generate the tone and append
+         assert(curSeqPos < dtmfSettings.dtmfNTones) ;
          MakeDtmfTone(buffer, len, mSampleRate,
             dtmfSettings.dtmfSequence[curSeqPos], curTonePos, numSamplesTone,
             dtmfSettings.dtmfAmplitude);
