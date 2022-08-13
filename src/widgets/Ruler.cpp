@@ -116,17 +116,19 @@ void Ruler::SetFormat(RulerFormat format)
 
 void Ruler::SetUpdater(std::unique_ptr<RulerUpdater> pUpdater)
 {
-   // Should a comparison be made between mpUpdater and pUpdater?
-   // Runtime type comparison isn't clean in c++
-   mpUpdater = std::move(pUpdater);
-   Invalidate();
+   if (mpUpdater->Identify() != pUpdater->Identify()) {
+      mpUpdater = std::move(pUpdater);
+      Invalidate();
+   }
 }
 
 
-void Ruler::SetUpdaterData(const std::any &data)
+void Ruler::SetUpdaterData(const std::any& data)
 {
-   mData = data;
-   Invalidate();
+   if (&data != &mData) {
+      mData = data;
+      Invalidate();
+   }
 }
 
 void Ruler::SetUnits(const TranslatableString &units)

@@ -26,6 +26,8 @@ public:
       UpdateOutputs& allOutputs, const RulerStruct& context, const std::any& data
    ) const final override;
 
+   virtual std::string Identify() const override = 0;
+
 protected:
    virtual bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
       TickOutputs outputs,
