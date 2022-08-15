@@ -342,6 +342,12 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
       }
    }
 
+   // If we're not creating a correction file now, any one that currently exists with this name
+   // will become obsolete now, so delete it if it happens to exist (although it usually won't)
+
+   if (!hybridMode || !createCorrectionFile)
+      wxRemoveFile(fName.GetFullPath().Append("c"));
+
    WavpackContext *wpc = WavpackOpenFileOutput(WriteBlock, &outWvFile, createCorrectionFile ? &outWvcFile : nullptr);
    auto closeWavPackContext = finally([wpc]() { WavpackCloseFile(wpc); });
 
