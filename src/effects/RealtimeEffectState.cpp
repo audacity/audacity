@@ -21,6 +21,11 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
+   struct EffectAndSettings {
+      const EffectSettingsManager &effect;
+      const EffectSettings &settings;
+   };
+
    AccessState(const EffectSettingsManager &effect, RealtimeEffectState &state)
       : mEffect{ effect }
       , mState{ state }
@@ -33,39 +38,39 @@ public:
       mChannelToMain.Write(ToMainSlot{ mainSettings });
       mChannelFromMain.Write(FromMainSlot{ mainSettings });
       mChannelFromMain.Write(FromMainSlot{ mainSettings });
+      mMainThreadCache = state.mMainSettings;
    }
 
    const EffectSettings &MainRead() {
-      // Main thread clones the object in the std::any, then gives a reference
-      mChannelToMain.Read<ToMainSlot::Reader>(mMainThreadCache);
+      //Read changes from the worker thread using CopySettingsContents (we don't
+      //want to erase anything that can't be send during inter-thread communication)
+      mChannelToMain.Read<ToMainSlot::Reader>(mEffect, mMainThreadCache);
       return mMainThreadCache;
    }
+
    void MainWrite(EffectSettings &&settings) {
-      // Main thread may simply swap new content into place
-      mChannelFromMain.Write(std::move(settings));
-   }
-   const EffectSettings &MainWriteThrough(const EffectSettings &settings) {
-      // Send a copy of settings for worker to update from later
-      MainWrite(EffectSettings{ settings });
-      // Main thread assumes worker isn't processing and bypasses the echo
-      return (mMainThreadCache = settings);
+      const auto counter = mMainThreadCache.extra.GetCounter();
+      //Update all
+      mMainThreadCache = std::move(settings);
+      //Increment the counter, which is used for state synchronization
+      mMainThreadCache.extra.SetCounter(counter + 1);
+      mChannelFromMain.Write(EffectSettings { mMainThreadCache });
    }
 
-   struct EffectAndSettings{
-      const EffectSettingsManager &effect; const EffectSettings &settings; };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelFromMain.Read<FromMainSlot::Reader>(
          mEffect, mState.mWorkerSettings);
    }
+
    void WorkerWrite() {
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelToMain.Write(EffectAndSettings{
          mEffect, mState.mWorkerSettings });
    }
 
-   const EffectSettings &MainThreadCache() const { return mMainThreadCache; }
-
+   EffectSettings& MainThreadCache() { return mMainThreadCache; }
+   
    struct ToMainSlot {
       // For initialization of the channel
       ToMainSlot() = default;
@@ -87,9 +92,14 @@ public:
 
       // Main thread doesn't move out of the slot, but copies std::any
       // and extra fields
-      struct Reader { Reader(ToMainSlot &&slot, EffectSettings &settings) {
-         settings = slot.mSettings;
-      } };
+      struct Reader {
+         Reader(ToMainSlot &&slot, const EffectSettingsManager &effect, EffectSettings &settings) {
+            //Read only that has changed: we don't want outdated(not changed by inter-thread communication)
+            //parts of settings to appear on the main thread...
+            effect.CopySettingsContents(slot.mSettings, settings, SettingsCopyDirection::WorkerToMain);
+            settings.extra = slot.mSettings.extra;
+         }
+      };
 
       EffectSettings mSettings;
    };
@@ -110,14 +120,15 @@ public:
       }
 
       // Worker thread reads the slot
-      struct Reader { Reader(FromMainSlot &&slot,
-         const EffectSettingsManager &effect, EffectSettings &settings) {
+      struct Reader {
+         Reader(FromMainSlot &&slot, const EffectSettingsManager &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(
                slot.mSettings, settings,
                SettingsCopyDirection::MainToWorker);
             settings.extra = slot.mSettings.extra;
-      } };
+         }
+      };
 
       EffectSettings mSettings;
    };
@@ -126,77 +137,60 @@ public:
    RealtimeEffectState &mState;
 
    MessageBuffer<FromMainSlot> mChannelFromMain;
-   EffectSettings mMainThreadCache;
-   EffectSettings mLastSettings;
-
    MessageBuffer<ToMainSlot> mChannelToMain;
+
+   //Holds the "current" state visible from the main thread
+   EffectSettings mMainThreadCache;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
 struct RealtimeEffectState::Access final : EffectSettingsAccess {
+private:
+   // Try once to detect that the worker thread has echoed the last write
+   static bool FlushAttempt(AccessState &state) {
+      auto pResult = &state.MainRead();
+      return pResult->extra.GetCounter() == state.mMainThreadCache.extra.GetCounter();
+   }
+public:
    Access() = default;
    explicit Access(RealtimeEffectState &state)
       : mwState{ state.weak_from_this() }
    {
    }
    ~Access() override = default;
-   // Try once to detect that the worker thread has echoed the last write
-   static const EffectSettings *FlushAttempt(AccessState &state) {
-      auto &lastSettings = state.mLastSettings;
-      auto pResult = &state.MainRead();
-      if (!lastSettings.has_value() ||
-         pResult->extra.GetCounter() ==
-         lastSettings.extra.GetCounter()
-      ){
-         // First time test, or echo is completed
-         return pResult;
-      }
-      else if (!state.mState.mInitialized) {
-         // not relying on the other thread to make progress
-         // and no fear of data races
-         return &state.MainWriteThrough(lastSettings);
-      }
-      return nullptr;
-   }
+
+   //Returns current EffectSettings (see Set and Flush)
    const EffectSettings &Get() override {
+      using namespace std::chrono;
+
       if (auto pState = mwState.lock()) {
-         if (auto pAccessState = pState->GetAccessState()) {
-            FlushAttempt(*pAccessState); // try once, ignore success
-            auto &lastSettings = pAccessState->mLastSettings;
-            return lastSettings.has_value()
-               ? lastSettings
-               // If no value there yet, then FlushAttempt did MainRead which
-               // has copied the initial value given to the constructor
-               : pAccessState->MainThreadCache();
-         }
+         if (auto pAccessState = pState->GetAccessState())
+            return pAccessState->MainThreadCache();
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
       static EffectSettings empty;
       return empty;
    }
+
+   //Sets new settings as a current. Sends them to the worker
    void Set(EffectSettings &&settings) override {
       if (auto pState = mwState.lock())
-         if (auto pAccessState = pState->GetAccessState()) {
-            auto &lastSettings = pAccessState->mLastSettings;
-            auto lastCounter = lastSettings.extra.GetCounter();
-            settings.extra.SetCounter(++lastCounter);
-            // move to remember values here
-            lastSettings = std::move(settings);
-            // move a copy to there
-            pAccessState->MainWrite(EffectSettings{ lastSettings });
-         }
+         if (auto pAccessState = pState->GetAccessState())
+            pAccessState->MainWrite(std::move(settings));
    }
+   //Attempts to read changes from the worker thread and update
+   //current settings. Once complete it's guaranteed that worker
+   //thread has received the result of the most recent Write,
+   //and all changes from the worker have been read.
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            const EffectSettings *pResult{};
-            while (!(pResult = FlushAttempt(*pAccessState))) {
+            while (!FlushAttempt(*pAccessState)) {
                // Wait for progress of audio thread
                using namespace std::chrono;
                std::this_thread::sleep_for(50ms);
             }
-            pState->mMainSettings.Set(*pResult); // Update the state
-            pAccessState->mLastSettings = *pResult;
+            pState->mMainSettings.Set(pAccessState->mMainThreadCache); // Update the state
          }
       }
    }
@@ -547,8 +541,10 @@ bool RealtimeEffectState::IsActive() const noexcept
 
 bool RealtimeEffectState::Finalize() noexcept
 {
-   // This is the main thread cleaning up a state not now used in processing
-   mMainSettings = mWorkerSettings;
+   {
+      Access access(*this);
+      access.Flush();
+   }
 
    mGroups.clear();
    mCurrentProcessor = 0;
