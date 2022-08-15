@@ -239,12 +239,12 @@ struct EffectReverb::Instance
 
    unsigned GetAudioOutCount() const override
    {
-      return 2;
+      return mChannels;
    }
 
    unsigned GetAudioInCount() const override
    {
-      return 2;
+      return mChannels;
    }
 
    bool InstanceInit(EffectSettings& settings, double sampleRate,
@@ -255,6 +255,7 @@ struct EffectReverb::Instance
 
    EffectReverbState mMaster;
    std::vector<EffectReverbState> mSlaves;
+   unsigned mChannels{ 2 };
 };
 
 
@@ -309,6 +310,10 @@ static size_t BLOCK = 16384;
 bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
    double sampleRate, ChannelNames chanMap)
 {
+   // For descructive processing, fix the number of channels, maybe as 1 not 2
+   auto& rs = GetSettings(settings);
+   mChannels = rs.mStereoWidth ? 2 : 1;
+
    return InstanceInit(settings,
       sampleRate, mMaster, chanMap, /* forceStereo = */ false);
 }
@@ -317,8 +322,8 @@ bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
 bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
    double sampleRate, EffectReverbState& state,
    ChannelNames chanMap, bool forceStereo)
-{   
-   auto& rs = GetSettings(settings);   
+{
+   auto& rs = GetSettings(settings);
 
    bool isStereo = false;
    state.mNumChans = 1;
