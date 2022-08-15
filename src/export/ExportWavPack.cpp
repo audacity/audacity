@@ -418,9 +418,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
       for (const auto &pair : metadata->GetRange()) {
          n = pair.first;
          const auto &v = pair.second;
-         if (n == TAG_YEAR) {
-            n = wxT("DATE");
-         }
+
          WavpackAppendTagItem(wpc,
                               n.mb_str(wxConvUTF8),
                               v.mb_str(wxConvUTF8),
