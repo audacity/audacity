@@ -444,7 +444,7 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
    if (projectWindow.IsEffectsPanelShown())
       projectWindow.HideEffectsPanel();
    else
-      projectWindow.ShowEffectsPanel(project, trackFocus.Get());
+      projectWindow.ShowEffectsPanel(trackFocus.Get());
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)

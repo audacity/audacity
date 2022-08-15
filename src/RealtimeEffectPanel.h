@@ -58,6 +58,6 @@ public:
     * \brief Shows effects from the effect stack of the track
     * \param track Pointer to the existing track, or null
     */
-   void SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track);
+   void SetTrack(const std::shared_ptr<Track>& track);
    void ResetTrack();
 };

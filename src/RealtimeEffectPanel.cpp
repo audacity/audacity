@@ -1075,7 +1075,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
       });
 }
 
-void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
+void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)
 {
    //Avoid creation-on-demand of a useless, empty list in case the track is of non-wave type.
    if(track && dynamic_cast<WaveTrack*>(&*track) != nullptr)
@@ -1087,7 +1087,7 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
             ? bmpEffectOn
             : bmpEffectOff
       );
-      mEffectList->SetTrack(project, track);
+      mEffectList->SetTrack(mProject, track);
 
       mCurrentTrack = track;
    }

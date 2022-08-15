@@ -699,7 +699,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
          {
             auto& project = GetProject();
             auto& trackFocus = TrackFocus::Get(project);
-            ShowEffectsPanel(project, trackFocus.Get());
+            ShowEffectsPanel(trackFocus.Get());
          }
       });
 
@@ -1906,7 +1906,7 @@ void ProjectWindow::DoZoomFit()
    window.TP_ScrollWindow(start);
 }
 
-void ProjectWindow::ShowEffectsPanel(AudacityProject& project, Track* track)
+void ProjectWindow::ShowEffectsPanel(Track* track)
 {
    if(track == nullptr)
    {
@@ -1916,7 +1916,7 @@ void ProjectWindow::ShowEffectsPanel(AudacityProject& project, Track* track)
 
    wxWindowUpdateLocker freeze(this);
 
-   mEffectsWindow->SetTrack(project, track->shared_from_this());
+   mEffectsWindow->SetTrack(track->shared_from_this());
 
    if(mContainerWindow->GetWindow1() != mEffectsWindow)
    {
