@@ -32,6 +32,7 @@
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "CodeConversions.h"
 
 #define DESC XO("WavPack files")
@@ -229,6 +230,10 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          updateResult = mProgress->Update(WavpackGetProgress(mWavPackContext), 1.0);
       } while (updateResult == ProgressResult::Success && samplesRead != 0);
    }
+
+   if (WavpackGetNumErrors(mWavPackContext))
+      AudacityMessageBox( XO( "Encountered %d errors decoding WavPack file!" ).Format( WavpackGetNumErrors(mWavPackContext) ),
+                          XO( "WavPack Importer" ), wxOK | wxICON_EXCLAMATION | wxCENTRE);
 
    if (updateResult != ProgressResult::Stopped && updateResult != ProgressResult::Cancelled
          && totalSamplesRead < mNumSamples)
