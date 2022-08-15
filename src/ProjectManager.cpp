@@ -587,6 +587,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // to save the state of the toolbars.
    ToolManager::Get( project ).Destroy();
 
+   window.Publish(ProjectWindowDestroyedMessage {});
    window.DestroyChildren();
 
    // Close project only now, because TrackPanel might have been holding

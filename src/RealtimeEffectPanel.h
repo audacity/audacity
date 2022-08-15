@@ -15,6 +15,7 @@
 #include <wx/weakref.h>
 
 #include "ThemedWrappers.h"
+#include "Observer.h"
 
 class Track;
 
@@ -35,19 +36,35 @@ class RealtimeEffectPanel : public wxWindow
    ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
-   wxWeakRef<AudacityProject> mProject;
+   AudacityProject& mProject;
+
+   std::weak_ptr<Track> mCurrentTrack;
+
+   Observer::Subscription mTrackListChanged;
+   Observer::Subscription mUndoSubscription;
+
+   std::vector<std::shared_ptr<Track>> mPotentiallyRemovedTracks;
+
+   // RealtimeEffectPanel is wrapped using ThemedWindowWrapper,
+   // so we cannot subscribe to Prefs directly
+   struct PrefsListenerHelper;
+   std::unique_ptr<PrefsListenerHelper> mPrefsListenerHelper;
+
 public:
-   RealtimeEffectPanel(wxWindow *parent,
+   RealtimeEffectPanel(
+      AudacityProject& project, wxWindow* parent,
                 wxWindowID id,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
                 long style = 0,
                 const wxString& name = wxPanelNameStr);
 
+   ~RealtimeEffectPanel() override;
+
    /**
     * \brief Shows effects from the effect stack of the track
     * \param track Pointer to the existing track, or null
     */
-   void SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track);
+   void SetTrack(const std::shared_ptr<Track>& track);
    void ResetTrack();
 };

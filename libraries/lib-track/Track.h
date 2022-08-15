@@ -1307,7 +1307,9 @@ struct TrackListEvent
       ADDITION,
 
       //! Posted when a track has been deleted from a tracklist. Also posted when one track replaces another
-      /*! mpTrack points to the first track after the deletion, if there is one. */
+      /*! mpTrack points to the removed track. It is expected, that track is valid during the event.
+       *! mExtra is 1 if the track is being replaced by another track, 0 otherwise.
+       */
       DELETION,
    };
 
@@ -1709,7 +1711,7 @@ private:
    void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
    void EnsureVisibleEvent(
       const std::shared_ptr<Track> &pTrack, bool modifyState );
-   void DeletionEvent(TrackNodePointer node = {});
+   void DeletionEvent(std::weak_ptr<Track> node, bool duringReplace);
    void AdditionEvent(TrackNodePointer node);
    void ResizingEvent(TrackNodePointer node);
 

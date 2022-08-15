@@ -213,20 +213,16 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    std::weak_ptr<RealtimeEffectState> mwState;
 };
 
-RealtimeEffectState::RealtimeEffectState(const PluginID & id)
+RealtimeEffectState::RealtimeEffectState(const PluginID& id)
 {
    SetID(id);
+   BuildAll();
 }
 
-RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState &other)
-  : mID{ other.mID }
-  , mPlugin{ other.mPlugin }
-  , mMainSettings{ other.mMainSettings }
+RealtimeEffectState::~RealtimeEffectState()
 {
-   // Do not copy mWorkerSettings
-}
 
-RealtimeEffectState::~RealtimeEffectState() = default;
+}
 
 void RealtimeEffectState::SetID(const PluginID & id)
 {
@@ -244,7 +240,6 @@ const PluginID& RealtimeEffectState::GetID() const noexcept
 {
    return mID;
 }
-
 
 const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 {
@@ -271,7 +266,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
       //! copying settings in the main thread while worker isn't yet running
       mWorkerSettings = mMainSettings;
       mLastActive = IsActive();
-      
+
       //! If there was already an instance, recycle it; else make one here
       if (!pInstance)
          mwInstance = pInstance = mPlugin->MakeInstance();
@@ -279,11 +274,11 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
          return {};
 
       mInitialized = true;
-      
+
       // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
       // number was important
       pInstance->SetBlockSize(512);
-      
+
       if (!pInstance->RealtimeInitialize(mMainSettings, sampleRate))
          return {};
       return pInstance;
@@ -392,7 +387,7 @@ bool RealtimeEffectState::ProcessStart(bool running)
    // processing scope.
    if (auto pAccessState = TestAccessState())
       pAccessState->WorkerRead();
-   
+
    // Detect transitions of activity state
    auto pInstance = mwInstance.lock();
    bool active = IsActive() && running;
