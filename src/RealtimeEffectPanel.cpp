@@ -41,6 +41,7 @@
 #include "effects/RealtimeEffectState.h"
 #include "effects/RealtimeEffectStateUI.h"
 #include "UndoManager.h"
+#include "Prefs.h"
 
 namespace
 {
@@ -65,6 +66,20 @@ namespace
    void HideRealtimeUIForTrack(Track& track)
    {
       VisitRealtimeEffectStateUIs(track, [](auto& ui) { ui.Hide(); });
+   }
+
+   void ReopenRealtimeEffectUIData(AudacityProject& project, Track& track)
+   {
+      VisitRealtimeEffectStateUIs(
+         track,
+         [&](auto& ui)
+         {
+            if (ui.IsShown())
+            {
+               ui.Hide();
+               ui.Show(project);
+            }
+         });
    }
    //fwd
    class RealtimeEffectControl;
@@ -902,12 +917,30 @@ public:
    }
 };
 
+
+struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
+{
+   AudacityProject& mProject;
+
+   explicit PrefsListenerHelper(AudacityProject& project)
+       : mProject { project }
+   {}
+
+   void UpdatePrefs() override
+   {
+      auto& trackList = TrackList::Get(mProject);
+      for (auto waveTrack : trackList.Any<WaveTrack>())
+         ReopenRealtimeEffectUIData(mProject, *waveTrack);
+   }
+};
+
 RealtimeEffectPanel::RealtimeEffectPanel(
    AudacityProject& project, wxWindow* parent, wxWindowID id, const wxPoint& pos,
    const wxSize& size,
    long style, const wxString& name)
       : wxWindow(parent, id, pos, size, style, name)
       , mProject(project)
+      , mPrefsListenerHelper(std::make_unique<PrefsListenerHelper>(project))
 {
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
@@ -1073,6 +1106,10 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
          mPotentiallyRemovedTracks.clear();
       });
+}
+
+RealtimeEffectPanel::~RealtimeEffectPanel()
+{
 }
 
 void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)

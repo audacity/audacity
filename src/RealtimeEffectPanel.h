@@ -45,6 +45,11 @@ class RealtimeEffectPanel : public wxWindow
 
    std::vector<std::shared_ptr<Track>> mPotentiallyRemovedTracks;
 
+   // RealtimeEffectPanel is wrapped using ThemedWindowWrapper,
+   // so we cannot subscribe to Prefs directly
+   struct PrefsListenerHelper;
+   std::unique_ptr<PrefsListenerHelper> mPrefsListenerHelper;
+
 public:
    RealtimeEffectPanel(
       AudacityProject& project, wxWindow* parent,
@@ -53,6 +58,8 @@ public:
                 const wxSize& size = wxDefaultSize,
                 long style = 0,
                 const wxString& name = wxPanelNameStr);
+
+   ~RealtimeEffectPanel() override;
 
    /**
     * \brief Shows effects from the effect stack of the track
