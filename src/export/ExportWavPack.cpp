@@ -39,6 +39,7 @@
 //---------------------------------------------------------------------------
 
 #define ID_HYBRID_MODE 9000
+#define ID_CREATE_WVC  9001
 
 class ExportWavPackOptions final : public wxPanelWrapper
 {
@@ -52,6 +53,7 @@ public:
    bool TransferDataFromWindow() override;
 
    void OnHybridMode(wxCommandEvent& evt);
+   void OnCreateCorrection(wxCommandEvent& evt);
 
 private:
    wxCheckBox *mCreateCorrectionFile { nullptr };
@@ -62,6 +64,7 @@ private:
 
 BEGIN_EVENT_TABLE(ExportWavPackOptions, wxPanelWrapper)
    EVT_CHECKBOX(ID_HYBRID_MODE, ExportWavPackOptions::OnHybridMode)
+   EVT_CHECKBOX(ID_CREATE_WVC,  ExportWavPackOptions::OnCreateCorrection)
 END_EVENT_TABLE()
 
 ExportWavPackOptions::ExportWavPackOptions(wxWindow *parent, int WXUNUSED(format))
@@ -176,7 +179,11 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
             );
 
             S.Id(ID_HYBRID_MODE).TieCheckBox( XXO("Hybrid Mode"), HybridModeSetting);
-            mCreateCorrectionFile = S.Disable(!hybridMode).TieCheckBox( XXO("Create Correction(.wvc) File"), CreateCorrectionFileSetting);
+
+            mCreateCorrectionFile = S.Id(ID_CREATE_WVC).Disable(!hybridMode).TieCheckBox(
+               XXO("Create Correction(.wvc) File"),
+               CreateCorrectionFileSetting
+            );
 
             mBitRate = S.Disable(!hybridMode).TieNumberAsChoice(
                XXO("Bit Rate:"),
@@ -212,6 +219,11 @@ void ExportWavPackOptions::OnHybridMode(wxCommandEvent&)
    const auto hybridMode = HybridModeSetting.Toggle();
    mCreateCorrectionFile->Enable(hybridMode);
    mBitRate->Enable(hybridMode);
+};
+
+void ExportWavPackOptions::OnCreateCorrection(wxCommandEvent&)
+{
+   CreateCorrectionFileSetting.Toggle();
 };
 
 //---------------------------------------------------------------------------
