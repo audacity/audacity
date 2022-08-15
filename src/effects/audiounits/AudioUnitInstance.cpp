@@ -81,7 +81,8 @@ size_t AudioUnitInstance::GetTailSize() const
 bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, ChannelNames chanMap)
 {
-   StoreSettings(GetSettings(settings));
+   if (!StoreSettings(GetSettings(settings)))
+      return false;
 
    mInputList =
       PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
@@ -179,8 +180,6 @@ bool AudioUnitInstance::RealtimeAddProcessor(
 
    slave->SetBlockSize(mBlockSize);
 
-   if (!slave->StoreSettings(GetSettings(settings)))
-      return false;
    if (!slave->ProcessInitialize(settings, sampleRate, nullptr))
       return false;
    if (uSlave)
@@ -391,6 +390,8 @@ void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
 bool AudioUnitInstance::BypassEffect(bool bypass)
 {
    UInt32 value = (bypass ? 1 : 0);
+   if (bypass && AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0))
+      return false;
    return !SetProperty(kAudioUnitProperty_BypassEffect, value);
 }
 

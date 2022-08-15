@@ -1038,11 +1038,17 @@ return GuardedCall<bool>([&]{
 
 bool LadspaEffect::Instance::RealtimeSuspend()
 {
+   if (auto fn = GetEffect().mData->deactivate)
+      for (auto &slave : mSlaves)
+         fn(slave);
    return true;
 }
 
 bool LadspaEffect::Instance::RealtimeResume()
 {
+   if (auto fn = GetEffect().mData->activate)
+      for (auto &slave : mSlaves)
+         fn(slave);
    return true;
 }
 
