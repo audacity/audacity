@@ -41,7 +41,10 @@ class RealtimeEffectPanel : public wxWindow
    std::weak_ptr<Track> mCurrentTrack;
 
    Observer::Subscription mTrackListChanged;
-   
+   Observer::Subscription mUndoSubscription;
+
+   std::vector<std::shared_ptr<Track>> mPotentiallyRemovedTracks;
+
 public:
    RealtimeEffectPanel(
       AudacityProject& project, wxWindow* parent,

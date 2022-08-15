@@ -40,31 +40,31 @@
 #include "effects/RealtimeEffectList.h"
 #include "effects/RealtimeEffectState.h"
 #include "effects/RealtimeEffectStateUI.h"
+#include "UndoManager.h"
 
 namespace
 {
-   void UpdateRealtimeEffectUIData(Track& track)
+   template <typename Visitor>
+   void VisitRealtimeEffectStateUIs(Track& track, Visitor&& visitor)
    {
       auto& effects = RealtimeEffectList::Get(track);
-
       effects.Visit(
-         [&track](auto& effectState, bool)
+         [visitor](auto& effectState, bool)
          {
             auto& ui = RealtimeEffectStateUI::Get(effectState);
-            ui.UpdateTrackData(track);
+            visitor(ui);
          });
+   }
+
+   void UpdateRealtimeEffectUIData(Track& track)
+   {
+      VisitRealtimeEffectStateUIs(
+         track, [&](auto& ui) { ui.UpdateTrackData(track); });
    }
 
    void HideRealtimeUIForTrack(Track& track)
    {
-      auto& effects = RealtimeEffectList::Get(track);
-
-      effects.Visit(
-         [&track](auto& effectState, bool)
-         {
-            auto& ui = RealtimeEffectStateUI::Get(effectState);
-            ui.Hide();
-         });
+      VisitRealtimeEffectStateUIs(track, [](auto& ui) { ui.Hide(); });
    }
    //fwd
    class RealtimeEffectControl;
@@ -988,7 +988,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             break;
          case TrackListEvent::DELETION:
             if (evt.mExtra == 0)
-               HideRealtimeUIForTrack(*waveTrack);
+               mPotentiallyRemovedTracks.push_back(track);
             break;
          case TrackListEvent::ADDITION:
             // Addition can be fired as a part of "replace" event.
@@ -1000,6 +1000,79 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             break;
          }
    });
+
+   mUndoSubscription = UndoManager::Get(mProject).Subscribe(
+      [this](UndoRedoMessage message)
+      {
+         if (
+            message.type == UndoRedoMessage::Type::Purge ||
+            message.type == UndoRedoMessage::Type::BeginPurge ||
+            message.type == UndoRedoMessage::Type::EndPurge)
+            return;
+
+         auto& trackList = TrackList::Get(mProject);
+
+         // Realtime effect UI is only updated on Undo or Redo
+         auto waveTracks = trackList.Any<WaveTrack>();
+         
+         if (
+            message.type == UndoRedoMessage::Type::UndoOrRedo ||
+            message.type == UndoRedoMessage::Type::Reset)
+         {
+            for (auto waveTrack : waveTracks)
+               UpdateRealtimeEffectUIData(*waveTrack);
+         }
+
+         // But mPotentiallyRemovedTracks processing happens as fast as possible.
+         // This event is fired right after the track is deleted, so we do not
+         // hold the strong reference to the track much longer than need.
+         if (mPotentiallyRemovedTracks.empty())
+            return;
+
+         // Collect RealtimeEffectUIs that are currently shown
+         // for the potentially removed tracks
+         std::vector<RealtimeEffectStateUI*> shownUIs;
+         
+         for (auto track : mPotentiallyRemovedTracks)
+         {
+            // By construction, track cannot be null
+            assert(track != nullptr);
+
+            VisitRealtimeEffectStateUIs(
+               *track,
+               [&shownUIs](auto& ui)
+               {
+                  if (ui.IsShown())
+                     shownUIs.push_back(&ui);
+               });
+         }
+
+         // For every UI shown - check if the corresponding state
+         // is reachable from the current track list.
+         for (auto effectUI : shownUIs)
+         {
+            bool reachable = false;
+            
+            for (auto track : waveTracks)
+            {               
+               VisitRealtimeEffectStateUIs(
+                  *track,
+                  [effectUI, &reachable](auto& ui)
+                  {
+                     if (effectUI == &ui)
+                        reachable = true;
+                  });
+
+               if (reachable)
+                  break;
+            }
+
+            if (!reachable)
+               effectUI->Hide();
+         }
+
+         mPotentiallyRemovedTracks.clear();
+      });
 }
 
 void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
