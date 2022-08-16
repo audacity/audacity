@@ -100,8 +100,7 @@ CurlHandleManager::Handle::Handle(CurlHandleManager* owner, CURL* handle, Reques
 
     setOption (CURLOPT_NOSIGNAL, 1L);
 
-    setOption (CURLOPT_SSL_VERIFYPEER, 1L);
-    setOption (CURLOPT_SSL_VERIFYHOST, 2L);
+    enableSSLValidation();
 
     setOption (CURLOPT_ACCEPT_ENCODING, "");
 }
@@ -219,6 +218,23 @@ void CurlHandleManager::Handle::reset () noexcept
 	setOption (CURLOPT_SSL_OPTIONS, 0);
 
     mUserAgentSet = false;
+}
+
+CURL* CurlHandleManager::Handle::getCurlHandle() const noexcept
+{
+   return mHandle;
+}
+
+void CurlHandleManager::Handle::disableSSLValidation()
+{
+   setOption(CURLOPT_SSL_VERIFYPEER, 0L);
+   setOption(CURLOPT_SSL_VERIFYHOST, 0L);
+}
+
+void CurlHandleManager::Handle::enableSSLValidation()
+{
+   setOption(CURLOPT_SSL_VERIFYPEER, 1L);
+   setOption(CURLOPT_SSL_VERIFYHOST, 2L);
 }
 
 CurlHandleManager::CurlHandleManager ()
