@@ -38,23 +38,22 @@ public:
       mChannelToMain.Write(ToMainSlot{ mainSettings });
       mChannelFromMain.Write(FromMainSlot{ mainSettings });
       mChannelFromMain.Write(FromMainSlot{ mainSettings });
-      mMainThreadCache = state.mMainSettings;
+      mMainReadCache = mMainWriteCache = state.mMainSettings;
    }
 
-   const EffectSettings &MainRead() {
+   void MainRead() {
       //Read changes from the worker thread using CopySettingsContents (we don't
       //want to erase anything that can't be send during inter-thread communication)
-      mChannelToMain.Read<ToMainSlot::Reader>(mEffect, mMainThreadCache);
-      return mMainThreadCache;
+      mChannelToMain.Read<ToMainSlot::Reader>(mEffect, mMainReadCache);
    }
 
    void MainWrite(EffectSettings &&settings) {
-      const auto counter = mMainThreadCache.extra.GetCounter();
+      const auto counter = mMainWriteCache.extra.GetCounter();
       //Update all
-      mMainThreadCache = std::move(settings);
+      mMainWriteCache = std::move(settings);
       //Increment the counter, which is used for state synchronization
-      mMainThreadCache.extra.SetCounter(counter + 1);
-      mChannelFromMain.Write(EffectSettings { mMainThreadCache });
+      mMainWriteCache.extra.SetCounter(counter + 1);
+      mChannelFromMain.Write(EffectSettings { mMainWriteCache });
    }
 
    void WorkerRead() {
@@ -69,7 +68,7 @@ public:
          mEffect, mState.mWorkerSettings });
    }
 
-   EffectSettings& MainThreadCache() { return mMainThreadCache; }
+   EffectSettings& MainThreadCache() { return mMainWriteCache; }
    
    struct ToMainSlot {
       // For initialization of the channel
@@ -140,7 +139,8 @@ public:
    MessageBuffer<ToMainSlot> mChannelToMain;
 
    //Holds the "current" state visible from the main thread
-   EffectSettings mMainThreadCache;
+   EffectSettings mMainWriteCache;
+   EffectSettings mMainReadCache;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
@@ -148,8 +148,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
 private:
    // Try once to detect that the worker thread has echoed the last write
    static bool FlushAttempt(AccessState &state) {
-      auto pResult = &state.MainRead();
-      return pResult->extra.GetCounter() == state.mMainThreadCache.extra.GetCounter();
+      state.MainRead();
+      return state.mMainReadCache.extra.GetCounter() == state.mMainWriteCache.extra.GetCounter();
    }
 public:
    Access() = default;
@@ -190,7 +190,8 @@ public:
                using namespace std::chrono;
                std::this_thread::sleep_for(50ms);
             }
-            pState->mMainSettings.Set(pAccessState->mMainThreadCache); // Update the state
+            pAccessState->mEffect.CopySettingsContents(pAccessState->mMainReadCache, pAccessState->mMainWriteCache, SettingsCopyDirection::WorkerToMain);
+            pState->mMainSettings.Set(pAccessState->mMainWriteCache); // Update the state
          }
       }
    }
