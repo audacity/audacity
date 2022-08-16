@@ -29,9 +29,9 @@ struct VST3EffectSettings
    std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> parameterChanges;
 
    ///Holds the last known processor/component state
-   std::optional<std::string> processorState;
+   std::optional<wxString> processorState;
    ///Holds the last known controller state
-   std::optional<std::string> controllerState;
+   std::optional<wxString> controllerState;
 };
 
 VST3EffectSettings& GetSettings(EffectSettings& settings)
@@ -286,15 +286,18 @@ void VST3Wrapper::FetchSettings(const EffectSettings& settings)
 
    auto processorState = PresetsBufferStream::fromString(*vst3settings->processorState);
    processorState->seek(0, Steinberg::IBStream::kIBSeekSet);
-   mEffectComponent->setState(processorState);
+   if(mEffectComponent->setState(processorState) != Steinberg::kResultOk)
+      return;
 
    processorState->seek(0, Steinberg::IBStream::kIBSeekSet);
-   mEditController->setComponentState(processorState);
+   if(mEditController->setComponentState(processorState) != Steinberg::kResultOk)
+      return;
 
    if(!vst3settings->controllerState.has_value())
       return;
 
    auto controllerState = PresetsBufferStream::fromString(*vst3settings->controllerState);
+   controllerState->seek(0, Steinberg::IBStream::kIBSeekSet);
    mEditController->setState(controllerState);
 }
 
@@ -310,11 +313,11 @@ void VST3Wrapper::StoreSettings(EffectSettings& settings) const
          vst3settings.controllerState.reset();
          return;
       }
-      vst3settings.processorState = processorState.toString().ToStdString();
+      vst3settings.processorState = processorState.toString();
    }
    PresetsBufferStream controllerState;
    if(mEditController->getState(&controllerState) == kResultOk)
-      vst3settings.controllerState = controllerState.toString().ToStdString();
+      vst3settings.controllerState = controllerState.toString();
    else
       vst3settings.controllerState.reset();
 }
@@ -563,9 +566,9 @@ void VST3Wrapper::LoadSettings(const CommandParameters& parms, EffectSettings& s
    vst3settings.controllerState.reset();
    if(parms.HasEntry(processorStateKey))
    {
-      vst3settings.processorState = parms.Read(processorStateKey).ToStdString();
+      vst3settings.processorState = parms.Read(processorStateKey);
       if(parms.HasEntry(controllerStateKey))
-         vst3settings.controllerState = parms.Read(controllerStateKey).ToStdString();
+         vst3settings.controllerState = parms.Read(controllerStateKey);
    }
 }
 
@@ -574,9 +577,9 @@ void VST3Wrapper::SaveSettings(const EffectSettings& settings, CommandParameters
    const auto& vst3settings = GetSettings(settings);
 
    if(vst3settings.processorState.has_value())
-      parms.Write(processorStateKey, wxString { *vst3settings.processorState });
+      parms.Write(processorStateKey, *vst3settings.processorState);
    if(vst3settings.controllerState.has_value())
-      parms.Write(controllerStateKey, wxString { *vst3settings.controllerState });
+      parms.Write(controllerStateKey, *vst3settings.controllerState);
 }
 
 void VST3Wrapper::LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings)
@@ -589,10 +592,10 @@ void VST3Wrapper::LoadUserPreset(const EffectDefinitionInterface& effect, const 
    wxString processorStateStr;
    if(GetConfig(effect, PluginSettings::Private, name, processorStateKey, processorStateStr, wxEmptyString))
    {
-      vst3settings.processorState = processorStateStr.ToStdString();
+      vst3settings.processorState = processorStateStr;
       wxString controllerStateStr;
       if(GetConfig(effect, PluginSettings::Private, name, controllerStateKey, controllerStateStr, wxEmptyString))
-         vst3settings.controllerState = controllerStateStr.ToStdString();
+         vst3settings.controllerState = controllerStateStr;
    }
 }
 
@@ -603,9 +606,9 @@ void VST3Wrapper::SaveUserPreset(const EffectDefinitionInterface& effect, const 
    const auto& vst3settings = GetSettings(settings);
    if(vst3settings.processorState.has_value())
    {
-      SetConfig(effect, PluginSettings::Private, name, processorStateKey, wxString { *vst3settings.processorState });
+      SetConfig(effect, PluginSettings::Private, name, processorStateKey, *vst3settings.processorState);
       if(vst3settings.controllerState.has_value())
-         SetConfig(effect, PluginSettings::Private, name, controllerStateKey, wxString { *vst3settings.controllerState });
+         SetConfig(effect, PluginSettings::Private, name, controllerStateKey, *vst3settings.controllerState);
    }
 }
 

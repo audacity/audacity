@@ -12,8 +12,8 @@
 
 
 #include "VST3Utils.h"
-#include "Base64.h"
 
+#include <base/source/fstring.h>
 #include <wx/string.h>
 
 wxString VST3Utils::MakePluginPathString(const wxString& modulePath, const std::string& effectUIDString)
@@ -72,23 +72,17 @@ bool VST3Utils::ParseAutomationParameterKey(const wxString& key, Steinberg::Vst:
 
 }
 
-
-
 Steinberg::IPtr<PresetsBufferStream> PresetsBufferStream::fromString(const wxString& str)
 {
-   Steinberg::Buffer buffer(str.size() / 4 * 3);
-   auto len = Base64::Decode(str, buffer);
-   assert(len <= buffer.getSize());
-   buffer.setSize(len);
+   auto data = str.To8BitData();
+   Steinberg::Buffer buffer(data, data.length());
 
    auto result = owned(safenew PresetsBufferStream);
    result->mBuffer.take(buffer);
    return result;
 }
 
-
 wxString PresetsBufferStream::toString() const
 {
-   return Base64::Encode(mBuffer, mBuffer.getSize());
+   return wxString::From8BitData(mBuffer.str8(), mBuffer.getFillSize());
 }
-
