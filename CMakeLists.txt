@@ -198,6 +198,10 @@ cmd_option( ${_OPT}has_networking
    "Build networking features into Audacity"
    Off)
 
+cmd_option( ${_OPT}has_url_schemes_support
+   "Build custom URL schemes support into Audacity"
+   Off)
+
 include( CMakeDependentOption )
 
 cmake_dependent_option(

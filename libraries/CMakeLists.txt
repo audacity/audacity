@@ -37,6 +37,10 @@ if ( ${_OPT}has_networking )
    list( APPEND LIBRARIES lib-network-manager)
 endif()
 
+if ( ${_OPT}has_url_schemes_support )
+   list( APPEND LIBRARIES lib-url-schemes)
+endif()
+
 # This library depends on lib-network-manager
 # If Sentry reporting is disabled, an INTERFACE library
 # will be defined

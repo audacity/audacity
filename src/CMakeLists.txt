@@ -1536,6 +1536,12 @@ if ( ${_OPT}has_networking )
    )
 endif()
 
+if( ${_OPT}has_url_schemes_support )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-url-schemes-interface
+   )
+endif()
+
 list( APPEND AUDACITY_LIBRARIES
    # If Sentry reporting is enabled, this library depends on
    # lib-network-manager
