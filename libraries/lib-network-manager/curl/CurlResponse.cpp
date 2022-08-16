@@ -14,6 +14,9 @@
 #include <map>
 #include <algorithm>
 
+#include "MultipartData.h"
+#include "MemoryX.h"
+
 namespace audacity
 {
 namespace network_manager
@@ -100,6 +103,16 @@ int DataStreamSeek (DataStream* stream, curl_off_t offs, int origin) noexcept
     stream->Offset = offset;
 
     return CURL_SEEKFUNC_OK;
+}
+
+size_t MimePartRead(char* ptr, size_t size, size_t nmemb, MultipartData::Part* stream)
+{
+   return stream->Read(ptr, size * nmemb);
+}
+
+int MimePartSeek(MultipartData::Part* stream, curl_off_t offs, int origin) noexcept
+{
+   return stream->Seek(offs, origin) ? CURL_SEEKFUNC_OK : CURL_SEEKFUNC_FAIL;
 }
 
 }
@@ -243,7 +256,18 @@ uint64_t CurlResponse::readData (void* buffer, uint64_t maxBytesCount)
     return maxBytesCount;
 }
 
-void CurlResponse::perform (const void* ptr, size_t size)
+void CurlResponse::setPayload(const void* ptr, size_t size)
+{
+   mPayload = ptr;
+   mPayloadSize = size;
+}
+
+void CurlResponse::setForm(std::unique_ptr<MultipartData> form)
+{
+   mForm = std::move(form);
+}
+
+void CurlResponse::perform ()
 {
     CurlHandleManager::Handle handle = mHandleManager->getHandle (mVerb, mRequest.getURL ());
 
@@ -267,17 +291,50 @@ void CurlResponse::perform (const void* ptr, size_t size)
 
     handle.appendCookies (mRequest.getCookies ());
 
-    DataStream ds { reinterpret_cast<const char*>(ptr), size };
+    DataStream ds { reinterpret_cast<const char*>(mPayload), mPayloadSize };
+    curl_mime* mimeList = nullptr;
 
-    if (ptr != nullptr && size != 0)
+    if (mForm != nullptr)
+    {
+       mimeList = curl_mime_init(handle.getCurlHandle());
+
+       for (size_t i = 0; i < mForm->GetPartsCount(); ++i)
+       {
+          auto part = mForm->GetPart(i);
+
+          curl_mimepart* curlPart = curl_mime_addpart(mimeList);
+
+          const auto& headers = part->GetHeaders();
+
+          if (headers.getHeadersCount() > 0)
+          {
+             curl_slist* partHeaders = nullptr;
+
+             for (auto header : headers)
+             {
+                partHeaders = curl_slist_append(
+                   partHeaders, (header.Name + ": " + header.Value).c_str());
+             }
+
+             curl_mime_headers(curlPart, partHeaders, 1);
+          }
+
+          curl_mime_data_cb(
+             curlPart, part->GetSize(), curl_read_callback(MimePartRead),
+             curl_seek_callback(MimePartSeek), nullptr, part);
+       }
+
+       curl_easy_setopt(handle.getCurlHandle(), CURLOPT_MIMEPOST, mimeList);
+    }
+    else if (mPayload != nullptr && mPayloadSize != 0)
     {
         handle.appendHeader ({ "Transfer-Encoding", std::string () });
-        handle.appendHeader ({ "Content-Length", std::to_string (size) });
+        handle.appendHeader({ "Content-Length", std::to_string(mPayloadSize) });
 
         if (mVerb == RequestVerb::Post)
-            handle.setOption (CURLOPT_POSTFIELDSIZE_LARGE, size);
+           handle.setOption(CURLOPT_POSTFIELDSIZE_LARGE, mPayloadSize);
         else
-            handle.setOption (CURLOPT_INFILESIZE_LARGE, size);
+           handle.setOption(CURLOPT_INFILESIZE_LARGE, mPayloadSize);
 
         handle.setOption (CURLOPT_READFUNCTION, DataStreamRead);
         handle.setOption (CURLOPT_READDATA, &ds);
@@ -285,6 +342,12 @@ void CurlResponse::perform (const void* ptr, size_t size)
         handle.setOption (CURLOPT_SEEKFUNCTION, DataStreamSeek);
         handle.setOption (CURLOPT_SEEKDATA, &ds);
     }
+
+    auto cleanupMime = finally(
+       [mimeList]() {
+          if (mimeList != nullptr)
+             curl_mime_free(mimeList);
+    });
 
     handle.appendHeaders (mRequest.getHeaders ());
 
