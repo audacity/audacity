@@ -5,6 +5,8 @@ Library, responsible for handling custom URL scemas.
 set( SOURCES
    URLSchemesRegistry.cpp
    URLSchemesRegistry.h
+
+   $<$<PLATFORM_ID:Windows>:win/SchemeRegistrar.cpp>
 )
 
 set( LIBRARIES
