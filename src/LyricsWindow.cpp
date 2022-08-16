@@ -232,7 +232,7 @@ CommandHandlerObject &findCommandHandler(AudacityProject &) {
 using namespace MenuTable;
 AttachedItem sAttachment{ wxT("View/Windows"),
    ( FinderScope{ findCommandHandler },
-      Command( wxT("Karaoke"), XXO("&Karaoke..."), &Handler::OnKaraoke,
+      Command( wxT("Karaoke"), XXO("&Karaoke"), &Handler::OnKaraoke,
          LabelTracksExistFlag() ) )
 };
 

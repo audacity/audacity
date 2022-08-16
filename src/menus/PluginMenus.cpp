@@ -444,7 +444,7 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
    if (projectWindow.IsEffectsPanelShown())
       projectWindow.HideEffectsPanel();
    else
-      projectWindow.ShowEffectsPanel(project, trackFocus.Get());
+      projectWindow.ShowEffectsPanel(trackFocus.Get());
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
@@ -1175,7 +1175,7 @@ void AddEffectMenuItemGroup(
             }
             // Done collecting
             table.push_back( Menu( wxEmptyString,
-               XXO("Plug-in %d to %d").Format( groupNdx + 1, end ),
+               XXO("Plugin %d to %d").Format( groupNdx + 1, end ),
                std::move( temp1 )
             ) );
             items = max;
@@ -1463,7 +1463,7 @@ BaseItemSharedPtr ToolsMenu()
          }
       ),
 
-      Command( wxT("ManageMacros"), XXO("&Macros..."),
+      Command( wxT("ManageMacros"), XXO("&Macro Manager"),
             FN(OnManageMacros), AudioIONotBusyFlag() ),
 
          Menu( wxT("Macros"), XXO("&Apply Macro"),

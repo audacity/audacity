@@ -5,7 +5,7 @@
    @file RealtimeEffectPanel.cpp
 
    @author Vitaly Sverchinsky
-   
+
 **********************************************************************/
 
 #include "RealtimeEffectPanel.h"
@@ -39,34 +39,48 @@
 #include "effects/EffectManager.h"
 #include "effects/RealtimeEffectList.h"
 #include "effects/RealtimeEffectState.h"
+#include "effects/RealtimeEffectStateUI.h"
+#include "UndoManager.h"
+#include "Prefs.h"
 
 namespace
 {
-   auto DialogFactory(
-      const std::shared_ptr<RealtimeEffectState> &pEffectState
-   ){
-      return [=](wxWindow &parent,
-         EffectPlugin &host, EffectUIClientInterface &client,
-         EffectSettingsAccess &access
-      ) -> DialogFactoryResults {
-         // Make sure there is an associated project, whose lifetime will
-         // govern the lifetime of the dialog
-         if (auto project = FindProjectFromWindow(&parent)) {
-            std::shared_ptr<EffectInstance> pInstance;
-            if (Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{
-                  &parent, *project, host, client, pInstance, access,
-                  pEffectState } }
-               ; dlg->Initialize()
-            ){
-               auto pValidator = dlg->GetValidator();
-               // release() is safe because parent will own it
-               return { dlg.release(), pInstance, pValidator };
-            }
-         }
-         return {};
-      };
+   template <typename Visitor>
+   void VisitRealtimeEffectStateUIs(Track& track, Visitor&& visitor)
+   {
+      auto& effects = RealtimeEffectList::Get(track);
+      effects.Visit(
+         [visitor](auto& effectState, bool)
+         {
+            auto& ui = RealtimeEffectStateUI::Get(effectState);
+            visitor(ui);
+         });
    }
 
+   void UpdateRealtimeEffectUIData(Track& track)
+   {
+      VisitRealtimeEffectStateUIs(
+         track, [&](auto& ui) { ui.UpdateTrackData(track); });
+   }
+
+   void HideRealtimeUIForTrack(Track& track)
+   {
+      VisitRealtimeEffectStateUIs(track, [](auto& ui) { ui.Hide(); });
+   }
+
+   void ReopenRealtimeEffectUIData(AudacityProject& project, Track& track)
+   {
+      VisitRealtimeEffectStateUIs(
+         track,
+         [&](auto& ui)
+         {
+            if (ui.IsShown())
+            {
+               ui.Hide();
+               ui.Show(project);
+            }
+         });
+   }
    //fwd
    class RealtimeEffectControl;
    PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl = nullptr);
@@ -111,7 +125,7 @@ namespace
    public:
       MovableControlEvent(wxEventType eventType, int winid = 0)
          : wxCommandEvent(eventType, winid) { }
-      
+
       void SetSourceIndex(int index) noexcept { mSourceIndex = index; }
       int GetSourceIndex() const noexcept { return mSourceIndex; }
 
@@ -162,9 +176,9 @@ namespace
          event.SetEventObject(this);
          wxPostEvent(target, event);
       }
-      
+
    private:
-      
+
       void OnMouseCaptureLost(wxMouseCaptureLostEvent& event)
       {
          if(mDragging)
@@ -194,12 +208,12 @@ namespace
             return;
 
          mSourceIndex = mTargetIndex = -1;
-         
+
          CaptureMouse();
 
          mInitialPosition = evt.GetPosition();
          mDragging=true;
-         
+
          if(auto sizer = parent->GetSizer())
          {
             for(size_t i = 0, count = sizer->GetItemCount(); i < count; ++i)
@@ -218,12 +232,12 @@ namespace
       {
          if(!mDragging)
             return;
-         
+
          ReleaseMouse();
-         
+
          DragFinished();
       }
-      
+
       void OnMove(wxMouseEvent& evt)
       {
          if(!mDragging)
@@ -241,7 +255,7 @@ namespace
             if(boxSizer->GetOrientation() == wxVERTICAL)
             {
                auto targetIndex = mSourceIndex;
-               
+
                //assuming that items are ordered from top to bottom (i > j <=> y(i) > y(j))
                //compare wxSizerItem position with the current MovableControl position!
                if(GetPosition().y < boxSizer->GetItem(mSourceIndex)->GetPosition().y)
@@ -250,7 +264,7 @@ namespace
                   for(int i = 0; i < mSourceIndex; ++i)
                   {
                      const auto item = boxSizer->GetItem(i);
-                     
+
                      if(GetRect().GetTop() <= item->GetPosition().y + item->GetSize().y / 2)
                      {
                         targetIndex = i;
@@ -342,7 +356,7 @@ namespace
          optionsButton->SetBitmapCurrentIndex(bmpEffectSettingsHover);
          optionsButton->SetBackgroundColorIndex(clrEffectListItemBackground);
          optionsButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnOptionsClicked, this);
-         
+
          auto dragArea = safenew wxStaticBitmap(this, wxID_ANY, theTheme.Bitmap(bmpDragArea));
          dragArea->Disable();
          sizer->Add(dragArea, 0, wxLEFT | wxCENTER, 5);
@@ -361,7 +375,7 @@ namespace
          auto desc = PluginManager::Get().GetPlugin(ID);
          return desc;
       }
-      
+
       //! @pre `mEffectState != nullptr`
       TranslatableString GetEffectName() const
       {
@@ -402,7 +416,10 @@ namespace
       {
          if(mProject == nullptr || mEffectState == nullptr)
             return;
-         
+
+         auto& ui = RealtimeEffectStateUI::Get(*mEffectState);
+         ui.Hide();
+
          auto effectName = GetEffectName();
          //After AudioIO::RemoveState call this will be destroyed
          auto project = mProject.get();
@@ -420,51 +437,25 @@ namespace
             XO("Remove %s").Format(effectName)
          );
       }
-      
+
       void OnOptionsClicked(wxCommandEvent& event)
       {
          if(mProject == nullptr || mEffectState == nullptr)
             return;//not initialized
-         
+
          const auto ID = mEffectState->GetID();
          const auto effectPlugin = EffectManager::Get().GetEffect(ID);
+
          if(effectPlugin == nullptr)
          {
-            ///TODO: effect is not avaialble
+            ///TODO: effect is not available
             return;
          }
-         auto access = mEffectState->GetAccess();
-         // Copy settings
-         auto initialSettings = access->Get();
-         auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
 
-         std::shared_ptr<EffectInstance> pInstance;
+         auto& effectStateUI = RealtimeEffectStateUI::Get(*mEffectState);
 
-         // Like the call in EffectManager::PromptUser, but access causes
-         // the necessary inter-thread communication of settings changes
-         // if play is in progress
-         bool changed = effectPlugin->ShowHostInterface(
-            ProjectWindow::Get( *mProject), DialogFactory(mEffectState),
-            pInstance, *access, true );
-
-         if (changed)
-         {
-            auto effectName = GetEffectName();
-            ProjectHistory::Get(*mProject).PushState(
-               /*! i18n-hint: undo history record
-                first parameter - realtime effect name
-                second parameter - track name
-                */
-               XO("Changed %s in %s").Format(effectName, mTrack->GetName()),
-               /*! i18n-hint: undo history record
-                first parameter - realtime effect name */
-               XO("Change %s").Format(effectName)
-         );
-         }
-         else
-            // Dialog was cancelled.
-            // Reverse any temporary changes made to the state
-            access->Set(std::move(initialSettings));
+         effectStateUI.UpdateTrackData(*mTrack);
+         effectStateUI.Toggle( *mProject );
       }
 
       void OnChangeButtonClicked(wxCommandEvent& event)
@@ -522,7 +513,7 @@ namespace
          dc.SetBrush(theTheme.Colour(clrEffectListItemBorder));
          dc.DrawLine(rect.GetBottomLeft(), rect.GetBottomRight());
       }
-      
+
    };
 
    static wxString GetSafeVendor(const PluginDescriptor& descriptor)
@@ -567,13 +558,13 @@ namespace
       }
 
       std::sort(effects.begin(), effects.end(), compareEffects);
-      
+
       wxString currentSubMenuName;
       std::unique_ptr<wxMenu> currentSubMenu;
 
       auto submenuEventHandler = [&](wxCommandEvent& event)
       {
-         selectedEffectIndex = event.GetId() - wxID_HIGHEST; 
+         selectedEffectIndex = event.GetId() - wxID_HIGHEST;
       };
 
       for(int i = 0, count = effects.size(); i < count; ++i)
@@ -614,7 +605,7 @@ namespace
 
       if(parent->PopupMenu(&menu) && selectedEffectIndex != -1)
          return effects[selectedEffectIndex]->GetID();
-      
+
       return {};
    }
 }
@@ -719,7 +710,7 @@ public:
       Bind(EVT_MOVABLE_CONTROL_DRAG_FINISHED, [this, dropHintLine](const MovableControlEvent& event)
       {
          dropHintLine->Hide();
-         
+
          if(mProject == nullptr)
             return;
 
@@ -779,6 +770,9 @@ public:
          InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
       };
       const auto removeItem = [this, &msg](){
+         auto& ui = RealtimeEffectStateUI::Get(*msg.affectedState);
+         ui.Hide();
+         
          auto sizer = mEffectListContainer->GetSizer();
          auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
          item->Destroy();
@@ -800,7 +794,7 @@ public:
          const auto flag = movedItem->GetFlag();
          const auto border = movedItem->GetBorder();
          const auto window = movedItem->GetWindow();
-         
+
          sizer->Remove(msg.srcIndex);
          sizer->Insert(msg.dstIndex, window, proportion, flag, border);
       }
@@ -823,7 +817,7 @@ public:
    void ResetTrack()
    {
       mEffectListItemMovedSubscription.Reset();
-      
+
       mTrack.reset();
       mProject = nullptr;
       ReloadEffectsList();
@@ -831,19 +825,22 @@ public:
 
    void SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
    {
-      if(mTrack == track)
+      if (mTrack == track)
          return;
 
       mEffectListItemMovedSubscription.Reset();
-      
+
       mTrack = track;
       mProject = &project;
       ReloadEffectsList();
 
-      if(track)
+      if (track)
       {
          auto& effects = RealtimeEffectList::Get(*mTrack);
-         mEffectListItemMovedSubscription = effects.Subscribe(*this, &RealtimeEffectListWindow::OnEffectListItemChange);
+         mEffectListItemMovedSubscription = effects.Subscribe(
+            *this, &RealtimeEffectListWindow::OnEffectListItemChange);
+
+         UpdateRealtimeEffectUIData(*track);
       }
    }
 
@@ -880,11 +877,11 @@ public:
    {
       if(!mTrack || mProject == nullptr)
          return;
-      
+
       const auto effectID = ShowSelectEffectMenu(dynamic_cast<wxWindow*>(event.GetEventObject()));
       if(effectID.empty())
          return;
-      
+
       if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, effectID))
       {
          auto effect = state->GetEffect();
@@ -921,12 +918,32 @@ public:
 };
 
 
-RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size,
+struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
+{
+   AudacityProject& mProject;
+
+   explicit PrefsListenerHelper(AudacityProject& project)
+       : mProject { project }
+   {}
+
+   void UpdatePrefs() override
+   {
+      auto& trackList = TrackList::Get(mProject);
+      for (auto waveTrack : trackList.Any<WaveTrack>())
+         ReopenRealtimeEffectUIData(mProject, *waveTrack);
+   }
+};
+
+RealtimeEffectPanel::RealtimeEffectPanel(
+   AudacityProject& project, wxWindow* parent, wxWindowID id, const wxPoint& pos,
+   const wxSize& size,
    long style, const wxString& name)
       : wxWindow(parent, id, pos, size, style, name)
+      , mProject(project)
+      , mPrefsListenerHelper(std::make_unique<PrefsListenerHelper>(project))
 {
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-   
+
    auto header = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
    header->SetBackgroundColorIndex(clrMedium);
    {
@@ -945,10 +962,10 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
             mEffectList->EnableEffects(!wasEnabled);
          }
          pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
-         if (mProject)
-            ProjectHistory::Get(*mProject).ModifyState(false);
+         
+         ProjectHistory::Get(mProject).ModifyState(false);
       });
-   
+
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
       {
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
@@ -974,7 +991,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
       close->SetBackgroundColorIndex(clrMedium);
 
       close->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { Close(); });
-      
+
       hSizer->Add(close, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxRIGHT, 5);
 
       header->SetSizer(hSizer.release());
@@ -987,9 +1004,115 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    mEffectList = effectList;
 
    SetSizerAndFit(vSizer.release());
+
+   mTrackListChanged = TrackList::Get(mProject).Subscribe([this](const TrackListEvent& evt) {
+         auto track = evt.mpTrack.lock();
+         auto waveTrack = dynamic_cast<WaveTrack*>(track.get());
+
+         if (waveTrack == nullptr)
+            return;
+         
+         switch (evt.mType)
+         {
+         case TrackListEvent::TRACK_DATA_CHANGE:
+            if (mCurrentTrack.lock() == track)
+               mTrackTitle->SetLabel(track->GetName());
+            UpdateRealtimeEffectUIData(*waveTrack);
+            break;
+         case TrackListEvent::DELETION:
+            if (evt.mExtra == 0)
+               mPotentiallyRemovedTracks.push_back(track);
+            break;
+         case TrackListEvent::ADDITION:
+            // Addition can be fired as a part of "replace" event.
+            // Calling UpdateRealtimeEffectUIData is mostly no-op,
+            // it will just create a new State and Access for it.
+            UpdateRealtimeEffectUIData(*waveTrack);
+            break;
+         default:
+            break;
+         }
+   });
+
+   mUndoSubscription = UndoManager::Get(mProject).Subscribe(
+      [this](UndoRedoMessage message)
+      {
+         if (
+            message.type == UndoRedoMessage::Type::Purge ||
+            message.type == UndoRedoMessage::Type::BeginPurge ||
+            message.type == UndoRedoMessage::Type::EndPurge)
+            return;
+
+         auto& trackList = TrackList::Get(mProject);
+
+         // Realtime effect UI is only updated on Undo or Redo
+         auto waveTracks = trackList.Any<WaveTrack>();
+         
+         if (
+            message.type == UndoRedoMessage::Type::UndoOrRedo ||
+            message.type == UndoRedoMessage::Type::Reset)
+         {
+            for (auto waveTrack : waveTracks)
+               UpdateRealtimeEffectUIData(*waveTrack);
+         }
+
+         // But mPotentiallyRemovedTracks processing happens as fast as possible.
+         // This event is fired right after the track is deleted, so we do not
+         // hold the strong reference to the track much longer than need.
+         if (mPotentiallyRemovedTracks.empty())
+            return;
+
+         // Collect RealtimeEffectUIs that are currently shown
+         // for the potentially removed tracks
+         std::vector<RealtimeEffectStateUI*> shownUIs;
+         
+         for (auto track : mPotentiallyRemovedTracks)
+         {
+            // By construction, track cannot be null
+            assert(track != nullptr);
+
+            VisitRealtimeEffectStateUIs(
+               *track,
+               [&shownUIs](auto& ui)
+               {
+                  if (ui.IsShown())
+                     shownUIs.push_back(&ui);
+               });
+         }
+
+         // For every UI shown - check if the corresponding state
+         // is reachable from the current track list.
+         for (auto effectUI : shownUIs)
+         {
+            bool reachable = false;
+            
+            for (auto track : waveTracks)
+            {               
+               VisitRealtimeEffectStateUIs(
+                  *track,
+                  [effectUI, &reachable](auto& ui)
+                  {
+                     if (effectUI == &ui)
+                        reachable = true;
+                  });
+
+               if (reachable)
+                  break;
+            }
+
+            if (!reachable)
+               effectUI->Hide();
+         }
+
+         mPotentiallyRemovedTracks.clear();
+      });
 }
 
-void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
+RealtimeEffectPanel::~RealtimeEffectPanel()
+{
+}
+
+void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)
 {
    //Avoid creation-on-demand of a useless, empty list in case the track is of non-wave type.
    if(track && dynamic_cast<WaveTrack*>(&*track) != nullptr)
@@ -1001,8 +1124,9 @@ void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_p
             ? bmpEffectOn
             : bmpEffectOff
       );
-      mEffectList->SetTrack(project, track);
-      mProject = &project;
+      mEffectList->SetTrack(mProject, track);
+
+      mCurrentTrack = track;
    }
    else
       ResetTrack();
@@ -1014,5 +1138,5 @@ void RealtimeEffectPanel::ResetTrack()
    mToggleEffects->SetBitmapIndex(bmpEffectOff);
    mToggleEffects->Enable(false);
    mEffectList->ResetTrack();
-   mProject = nullptr;
+   mCurrentTrack.reset();
 }

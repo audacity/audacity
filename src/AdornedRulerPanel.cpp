@@ -2246,7 +2246,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    {
       auto item = rulerMenu.Append(OnClearPlayRegionID,
          /* i18n-hint Clear is a verb */
-         _("Clear Looping Region"));
+         _("Clear Loop"));
    }
 
    {

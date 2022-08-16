@@ -108,7 +108,7 @@ private:
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess2;
-   std::shared_ptr<RealtimeEffectState> mpState{};
+   std::weak_ptr<RealtimeEffectState> mwState{};
    std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;

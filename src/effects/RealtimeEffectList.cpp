@@ -25,7 +25,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
-      result->mStates.push_back(RealtimeEffectState::make_shared(*pState));
+      result->mStates.push_back(pState);
    result->SetActive(this->IsActive());
    return result;
 }
@@ -83,14 +83,15 @@ RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
    const auto &id = pState->GetID();
    if (pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
-      shallowCopy.emplace_back(move(pState));
+      shallowCopy.emplace_back(pState);
       // Lock for only a short time
       (LockGuard{ mLock }, swap(shallowCopy, mStates));
 
       Publisher<RealtimeEffectListMessage>::Publish({
          RealtimeEffectListMessage::Type::Insert,
          mStates.size() - 1,
-         { }
+         { },
+         pState
       });
 
       return true;
@@ -107,7 +108,7 @@ RealtimeEffectList::ReplaceState(size_t index,
    if (index >= mStates.size())
       return false;
    const auto &id = pState->GetID();
-   if (pState->GetEffect() != nullptr) {
+   if (pState->GetEffect() != nullptr) {     
       auto shallowCopy = mStates;
       swap(pState, shallowCopy[index]);
       // Lock for only a short time
@@ -116,7 +117,8 @@ RealtimeEffectList::ReplaceState(size_t index,
       Publisher<RealtimeEffectListMessage>::Publish({
          RealtimeEffectListMessage::Type::Replace,
          index,
-         { }
+         { },
+         pState
       });
 
       return true;
@@ -133,7 +135,7 @@ void RealtimeEffectList::RemoveState(
    auto end = shallowCopy.end(),
       found = std::find(shallowCopy.begin(), end, pState);
    if (found != end)
-   {
+   {      
       const auto index = std::distance(shallowCopy.begin(), found);
       shallowCopy.erase(found);
 
@@ -143,7 +145,8 @@ void RealtimeEffectList::RemoveState(
       Publisher<RealtimeEffectListMessage>::Publish({
          RealtimeEffectListMessage::Type::Remove,
          static_cast<size_t>(index),
-         { }
+         { },
+         pState
       });
    }
 }
@@ -157,8 +160,8 @@ void RealtimeEffectList::Clear()
    (LockGuard{ mLock }, swap(temp, mStates));
 
    for (auto index = temp.size(); index--;)
-      Publisher<RealtimeEffectListMessage>::Publish({
-         RealtimeEffectListMessage::Type::Remove, index, { } });
+      Publisher<RealtimeEffectListMessage>::Publish(
+         { RealtimeEffectListMessage::Type::Remove, index, {}, temp[index] });
 }
 
 std::optional<size_t> RealtimeEffectList::FindState(
@@ -217,7 +220,8 @@ void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
    Publisher<RealtimeEffectListMessage>::Publish({
       RealtimeEffectListMessage::Type::Move,
       fromIndex,
-      toIndex
+      toIndex,
+      mStates[toIndex]
    });
 }
 

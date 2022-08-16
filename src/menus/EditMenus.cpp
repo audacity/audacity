@@ -1178,7 +1178,7 @@ BaseItemSharedPtr EditMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-         Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
+         Command( wxT("EditMetaData"), XXO("&Metadata"), FN(OnEditMetadata),
             AudioIONotBusyFlag() )
 
          //////////////////////////////////////////////////////////////////////////
@@ -1190,7 +1190,7 @@ BaseItemSharedPtr EditMenu()
       // not appear in the Edit menu but instead under Audacity, consistent with
       // MacOS conventions.
       Section( "Preferences",
-         Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
+         Command( wxT("Preferences"), XXO("Pre&ferences"), FN(OnPreferences),
             AudioIONotBusyFlag(), prefKey )
       )
 

@@ -122,6 +122,8 @@ class AUDACITY_DLL_API Effect /* not final */
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
 
+   EffectUIClientInterface* GetEffectUIClientInterface() override;
+
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
@@ -179,7 +181,7 @@ class AUDACITY_DLL_API Effect /* not final */
    bool EnableApply(bool enable = true);
 
  protected:
-   
+
    bool EnablePreview(bool enable = true);
 
    //! Default implementation returns false

@@ -223,7 +223,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 // extending its lifetime while this remains:
 , mpGivenAccess{ access.shared_from_this() }
 , mpAccess{ mpGivenAccess }
-, mpState{ pPriorState }
+, mwState{ pPriorState }
 , mProject{ project }
 , mParent{ parent }
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
@@ -1230,6 +1230,8 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
    // We are still constructing and the return initializes a const member
    std::shared_ptr<EffectInstance> result;
 
+   auto mpState = mwState.lock();
+ 
    bool priorState = (mpState != nullptr);
    if (!priorState) {
       auto gAudioIO = AudioIO::Get();
@@ -1285,6 +1287,8 @@ void EffectUIHost::CleanupRealtime()
    bool noPriorState(mSubscription);
    mSubscription.Reset();
    if (mSupportsRealtime && mInitialized) {
+      auto mpState = mwState.lock();
+
       if (noPriorState && mpState) {
          AudioIO::Get()->RemoveState(mProject, nullptr, mpState);
          mpState.reset();

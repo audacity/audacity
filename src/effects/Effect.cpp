@@ -872,6 +872,10 @@ int Effect::MessageBox( const TranslatableString& message,
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox( message, title, style, mUIParent );
 }
+EffectUIClientInterface* Effect::GetEffectUIClientInterface()
+{
+   return this;
+}
 
 DefaultEffectUIValidator::DefaultEffectUIValidator(
    EffectUIClientInterface &effect, EffectSettingsAccess &access,

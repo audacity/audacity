@@ -28,13 +28,18 @@ class RealtimeEffectPanel;
 class ProjectWindow;
 void InitProjectWindow( ProjectWindow &window );
 
+//! Message sent when the project window is closed.
+struct ProjectWindowDestroyedMessage final : Observer::Message {};
+
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
 class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
    , public TrackPanelListener
    , public PrefsListener
+   , public Observer::Publisher<ProjectWindowDestroyedMessage>
 {
 public:
+   using Observer::Publisher<ProjectWindowDestroyedMessage>::Publish;
    static ProjectWindow &Get( AudacityProject &project );
    static const ProjectWindow &Get( const AudacityProject &project );
    static ProjectWindow *Find( AudacityProject *pProject );
@@ -132,7 +137,7 @@ public:
    double GetZoomOfToFit() const;
    void DoZoomFit();
    
-   void ShowEffectsPanel(AudacityProject& project, Track* track = nullptr);
+   void ShowEffectsPanel(Track* track = nullptr);
    void HideEffectsPanel();
    bool IsEffectsPanelShown();
 

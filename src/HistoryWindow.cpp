@@ -564,7 +564,7 @@ AttachedItem sAttachment{ wxT("View/Windows"),
    ( FinderScope{ findCommandHandler },
    /* i18n-hint: Clicking this menu item shows the various editing steps
       that have been taken.*/
-      Command( wxT("UndoHistory"), XXO("&History..."), &Handler::OnHistory,
+      Command( wxT("UndoHistory"), XXO("&History"), &Handler::OnHistory,
          AudioIONotBusyFlag() ) )
 };
 

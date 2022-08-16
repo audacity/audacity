@@ -52,6 +52,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
+#include "BasicUI.h"
 #include "../EffectManager.h"
 #include "FileNames.h"
 #include "../../LabelTrack.h"
@@ -1077,6 +1078,12 @@ int NyquistEffect::ShowHostInterface(
 
    NyquistEffect effect(NYQUIST_WORKER_ID);
    effect.SetCommand(mInputCmd);
+   Finally Do{[&]{
+      // A second dialog will use effect as a pushed event handler.
+      // wxWidgets delays window destruction until idle time.
+      // Yield to destroy the dialog while effect is still in scope.
+      BasicUI::Yield();
+   }};
 
    // Must give effect its own settings to interpret, not those in access
    // Let's also give it its own instance

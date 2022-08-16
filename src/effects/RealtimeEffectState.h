@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <vector>
 #include <cstddef>
+
+#include "ClientData.h"
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
 #include "MemoryX.h"
@@ -28,6 +30,7 @@ class RealtimeEffectState
    : public XMLTagHandler
    , public std::enable_shared_from_this<RealtimeEffectState>
    , public SharedNonInterfering<RealtimeEffectState>
+   , public ClientData::Site<RealtimeEffectState>
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
@@ -35,7 +38,7 @@ public:
    >{};
 
    explicit RealtimeEffectState(const PluginID & id);
-   RealtimeEffectState(const RealtimeEffectState &other);
+   RealtimeEffectState(const RealtimeEffectState &other) = delete;
    RealtimeEffectState &operator =(const RealtimeEffectState &other) = delete;
    ~RealtimeEffectState();
 
@@ -55,7 +58,7 @@ public:
     @post `true` (no promise result is not null)
     */
    std::shared_ptr<EffectInstance> GetInstance();
-   
+
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
@@ -99,6 +102,7 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+      
    std::shared_ptr<EffectInstance> EnsureInstance(double rate);
 
    struct Access;
@@ -113,19 +117,15 @@ private:
       return mpAccessState.load(std::memory_order_acquire);
    }
 
-   /*! @name Members that are copied for undo and redo
-    @{
-    */
-
    PluginID mID;
-
+   
+   //! Stateful instance made by the plug-in
+   std::weak_ptr<EffectInstance> mwInstance;
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
    //! Updated immediately by Access::Set in the main thread
    NonInterfering<EffectSettings> mMainSettings;
-
-   //! @}
 
    /*! @name Members that are changed also in the worker thread
     @{
@@ -143,9 +143,6 @@ private:
     @{
     */
     
-   //! Stateful instance made by the plug-in
-   std::weak_ptr<EffectInstance> mwInstance;
-
    std::unordered_map<Track *, size_t> mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.
