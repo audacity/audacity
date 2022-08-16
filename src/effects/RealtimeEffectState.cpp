@@ -27,7 +27,7 @@ public:
    {
       // Clean initial state of the counter
       auto &mainSettings = state.mMainSettings;
-      mainSettings.extra.SetCounter(0);
+      mainSettings.counter = 0;
       // Initialize each message buffer with two copies of settings
       mChannelToMain.Write(ToMainSlot{ mainSettings });
       mChannelToMain.Write(ToMainSlot{ mainSettings });
@@ -35,24 +35,27 @@ public:
       mChannelFromMain.Write(FromMainSlot{ mainSettings });
    }
 
-   const EffectSettings &MainRead() {
+   const SettingsAndCounter &MainRead() {
       // Main thread clones the object in the std::any, then gives a reference
       mChannelToMain.Read<ToMainSlot::Reader>(mMainThreadCache);
       return mMainThreadCache;
    }
-   void MainWrite(EffectSettings &&settings) {
+   void MainWrite(SettingsAndCounter &&settings) {
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(std::move(settings));
    }
-   const EffectSettings &MainWriteThrough(const EffectSettings &settings) {
+   const SettingsAndCounter &
+   MainWriteThrough(const SettingsAndCounter &settings) {
       // Send a copy of settings for worker to update from later
-      MainWrite(EffectSettings{ settings });
+      MainWrite(SettingsAndCounter{ settings });
       // Main thread assumes worker isn't processing and bypasses the echo
       return (mMainThreadCache = settings);
    }
 
    struct EffectAndSettings{
-      const EffectSettingsManager &effect; const EffectSettings &settings; };
+      const EffectSettingsManager &effect;
+      const SettingsAndCounter &settings;
+   };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelFromMain.Read<FromMainSlot::Reader>(
@@ -64,12 +67,12 @@ public:
          mEffect, mState.mWorkerSettings });
    }
 
-   const EffectSettings &MainThreadCache() const { return mMainThreadCache; }
+   const SettingsAndCounter &MainThreadCache() const { return mMainThreadCache; }
 
    struct ToMainSlot {
       // For initialization of the channel
       ToMainSlot() = default;
-      explicit ToMainSlot(const EffectSettings &settings)
+      explicit ToMainSlot(const SettingsAndCounter &settings)
          // Copy std::any
          : mSettings{ settings }
       {}
@@ -77,57 +80,59 @@ public:
 
       // Worker thread writes the slot
       ToMainSlot& operator=(EffectAndSettings &&arg) {
+         mSettings.counter = arg.settings.counter;
          // This happens during MessageBuffer's busying of the slot
          arg.effect.CopySettingsContents(
-            arg.settings, mSettings,
+            arg.settings.settings, mSettings.settings,
             SettingsCopyDirection::WorkerToMain);
-         mSettings.extra = arg.settings.extra;
+         mSettings.settings.extra = arg.settings.settings.extra;
          return *this;
       }
 
       // Main thread doesn't move out of the slot, but copies std::any
       // and extra fields
-      struct Reader { Reader(ToMainSlot &&slot, EffectSettings &settings) {
+      struct Reader { Reader(ToMainSlot &&slot, SettingsAndCounter &settings) {
          settings = slot.mSettings;
       } };
 
-      EffectSettings mSettings;
+      SettingsAndCounter mSettings;
    };
 
    struct FromMainSlot {
       // For initialization of the channel
       FromMainSlot() = default;
-      explicit FromMainSlot(const EffectSettings &settings)
+      explicit FromMainSlot(const SettingsAndCounter &settings)
          // Copy std::any
          : mSettings{ settings }
       {}
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
       // Main thread writes the slot
-      FromMainSlot& operator=(EffectSettings &&settings) {
+      FromMainSlot& operator=(SettingsAndCounter &&settings) {
          mSettings.swap(settings);
          return *this;
       }
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
-         const EffectSettingsManager &effect, EffectSettings &settings) {
+         const EffectSettingsManager &effect, SettingsAndCounter &settings) {
+            settings.counter = slot.mSettings.counter;
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(
-               slot.mSettings, settings,
+               slot.mSettings.settings, settings.settings,
                SettingsCopyDirection::MainToWorker);
-            settings.extra = slot.mSettings.extra;
+            settings.settings.extra = slot.mSettings.settings.extra;
       } };
 
-      EffectSettings mSettings;
+      SettingsAndCounter mSettings;
    };
 
    const EffectSettingsManager &mEffect;
    RealtimeEffectState &mState;
 
    MessageBuffer<FromMainSlot> mChannelFromMain;
-   EffectSettings mMainThreadCache;
-   EffectSettings mLastSettings;
+   SettingsAndCounter mMainThreadCache;
+   SettingsAndCounter mLastSettings;
 
    MessageBuffer<ToMainSlot> mChannelToMain;
 };
@@ -141,12 +146,11 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    ~Access() override = default;
    // Try once to detect that the worker thread has echoed the last write
-   static const EffectSettings *FlushAttempt(AccessState &state) {
+   static const SettingsAndCounter *FlushAttempt(AccessState &state) {
       auto &lastSettings = state.mLastSettings;
       auto pResult = &state.MainRead();
-      if (!lastSettings.has_value() ||
-         pResult->extra.GetCounter() ==
-         lastSettings.extra.GetCounter()
+      if (!lastSettings.settings.has_value() ||
+         pResult->counter == lastSettings.counter
       ){
          // First time test, or echo is completed
          return pResult;
@@ -163,11 +167,11 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          if (auto pAccessState = pState->GetAccessState()) {
             FlushAttempt(*pAccessState); // try once, ignore success
             auto &lastSettings = pAccessState->mLastSettings;
-            return lastSettings.has_value()
-               ? lastSettings
+            return lastSettings.settings.has_value()
+               ? lastSettings.settings
                // If no value there yet, then FlushAttempt did MainRead which
                // has copied the initial value given to the constructor
-               : pAccessState->MainThreadCache();
+               : pAccessState->MainThreadCache().settings;
          }
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
@@ -178,18 +182,17 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
-            auto lastCounter = lastSettings.extra.GetCounter();
-            settings.extra.SetCounter(++lastCounter);
             // move to remember values here
-            lastSettings = std::move(settings);
+            lastSettings.settings = std::move(settings);
+            ++lastSettings.counter;
             // move a copy to there
-            pAccessState->MainWrite(EffectSettings{ lastSettings });
+            pAccessState->MainWrite(SettingsAndCounter{ lastSettings });
          }
    }
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            const EffectSettings *pResult{};
+            const SettingsAndCounter *pResult{};
             while (!(pResult = FlushAttempt(*pAccessState))) {
                // Wait for progress of audio thread
                using namespace std::chrono;
@@ -247,9 +250,10 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
       mPlugin = EffectFactory::Call(mID);
       if (mPlugin) {
          // Also make EffectSettings, but preserve activation
-         auto wasActive = mMainSettings.extra.GetActive();
-         mMainSettings.Set(mPlugin->MakeSettings());
-         mMainSettings.extra.SetActive(wasActive);
+         auto wasActive = mMainSettings.settings.extra.GetActive();
+         mMainSettings.counter = 0;
+         mMainSettings.settings = mPlugin->MakeSettings();
+         mMainSettings.settings.extra.SetActive(wasActive);
       }
    }
    return mPlugin;
@@ -279,7 +283,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
       // number was important
       pInstance->SetBlockSize(512);
 
-      if (!pInstance->RealtimeInitialize(mMainSettings, sampleRate))
+      if (!pInstance->RealtimeInitialize(mMainSettings.settings, sampleRate))
          return {};
       return pInstance;
    }
@@ -366,7 +370,9 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
       // Add a NEW processor
       // Pass reference to worker settings, not main -- such as, for connecting
       // Ladspa ports to the proper addresses.
-      if (pInstance->RealtimeAddProcessor(mWorkerSettings, gchans, sampleRate))
+      if (pInstance->RealtimeAddProcessor(
+         mWorkerSettings.settings, gchans, sampleRate)
+      )
          mCurrentProcessor++;
       else
          break;
@@ -406,7 +412,7 @@ bool RealtimeEffectState::ProcessStart(bool running)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
-   return pInstance->RealtimeProcessStart(mWorkerSettings);
+   return pInstance->RealtimeProcessStart(mWorkerSettings.settings);
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -501,7 +507,7 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
          auto cnt = std::min(numSamples - block, blockSize);
          // Assuming we are in a processing scope, use the worker settings
          len += pInstance->RealtimeProcess(processor,
-            mWorkerSettings, clientIn, clientOut, cnt);
+            mWorkerSettings.settings, clientIn, clientOut, cnt);
 
          for (size_t i = 0 ; i < numAudioIn; i++)
          {
@@ -522,7 +528,7 @@ bool RealtimeEffectState::ProcessEnd()
    auto pInstance = mwInstance.lock();
    bool result = pInstance && IsActive() && mLastActive &&
       // Assuming we are in a processing scope, use the worker settings
-      pInstance->RealtimeProcessEnd(mWorkerSettings);
+      pInstance->RealtimeProcessEnd(mWorkerSettings.settings);
 
    if (auto pAccessState = TestAccessState())
       // Always done, regardless of activity
@@ -537,12 +543,12 @@ bool RealtimeEffectState::ProcessEnd()
 
 bool RealtimeEffectState::IsEnabled() const noexcept
 {
-   return mMainSettings.extra.GetActive();
+   return mMainSettings.settings.extra.GetActive();
 }
 
 bool RealtimeEffectState::IsActive() const noexcept
 {
-   return mWorkerSettings.extra.GetActive();
+   return mWorkerSettings.settings.extra.GetActive();
 }
 
 bool RealtimeEffectState::Finalize() noexcept
@@ -557,7 +563,7 @@ bool RealtimeEffectState::Finalize() noexcept
    if (!pInstance)
       return false;
 
-   auto result = pInstance->RealtimeFinalize(mMainSettings);
+   auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
    mInitialized = false;
    return result;
 }
@@ -595,7 +601,7 @@ bool RealtimeEffectState::HandleXMLTag(
          else if (attr == activeAttribute)
             // Updating the EffectSettingsExtra although we haven't yet built
             // the settings
-            mMainSettings.extra.SetActive(value.Get<bool>());
+            mMainSettings.settings.extra.SetActive(value.Get<bool>());
       }
       return true;
    }
@@ -622,7 +628,7 @@ void RealtimeEffectState::HandleXMLEndTag(const std::string_view &tag)
    if (tag == XMLTag()) {
       if (mPlugin && !mParameters.empty()) {
          CommandParameters parms(mParameters);
-         mPlugin->LoadSettings(parms, mMainSettings);
+         mPlugin->LoadSettings(parms, mMainSettings.settings);
       }
       mParameters.clear();
    }
@@ -641,13 +647,13 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
       return;
 
    xmlFile.StartTag(XMLTag());
-   const auto active = mMainSettings.extra.GetActive();
+   const auto active = mMainSettings.settings.extra.GetActive();
    xmlFile.WriteAttr(activeAttribute, active);
    xmlFile.WriteAttr(idAttribute, PluginManager::GetID(mPlugin));
    xmlFile.WriteAttr(versionAttribute, mPlugin->GetVersion());
 
    CommandParameters cmdParms;
-   if (mPlugin->SaveSettings(mMainSettings, cmdParms)) {
+   if (mPlugin->SaveSettings(mMainSettings.settings, cmdParms)) {
       xmlFile.StartTag(parametersAttribute);
 
       wxString entryName;
