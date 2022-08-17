@@ -37,7 +37,8 @@ public:
 
    const SettingsAndCounter &MainRead() {
       // Main thread clones the object in the std::any, then gives a reference
-      mChannelToMain.Read<ToMainSlot::Reader>(mMainThreadCache);
+      mChannelToMain.Read<ToMainSlot::Reader>(
+         mMainThreadCache, mState.mwInstance.lock());
       return mMainThreadCache;
    }
    void MainWrite(SettingsAndCounter &&settings) {
@@ -91,9 +92,16 @@ public:
 
       // Main thread doesn't move out of the slot, but copies std::any
       // and extra fields
-      struct Reader { Reader(ToMainSlot &&slot, SettingsAndCounter &settings) {
-         settings = slot.mSettings;
-      } };
+      struct Reader {
+         Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
+            const std::shared_ptr<EffectInstance> pInstance
+         ) {
+            settings.counter = slot.mSettings.counter;
+            if (pInstance)
+               pInstance->AssignSettings(
+                  settings.settings, std::move(slot.mSettings.settings));
+         }
+      };
 
       SettingsAndCounter mSettings;
    };

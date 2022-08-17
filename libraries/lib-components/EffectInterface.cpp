@@ -168,6 +168,12 @@ size_t EffectInstance::GetTailSize() const
    return 0;
 }
 
+void EffectInstance::AssignSettings(EffectSettings &dst, EffectSettings &&src)
+   const
+{
+   dst = src;
+}
+
 EffectInstanceEx::~EffectInstanceEx() = default;
 
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;

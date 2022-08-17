@@ -474,6 +474,13 @@ public:
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
    virtual size_t GetTailSize() const;
+
+   //! Main thread receives updates to settings from a processing thread
+   /*!
+    Default implementation simply assigns by copy, not move
+    This might be overridden to copy contents only selectively
+    */
+   virtual void AssignSettings(EffectSettings &dst, EffectSettings &&src) const;
 };
 
 /***************************************************************************//**
