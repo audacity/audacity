@@ -111,9 +111,6 @@ class AUDACITY_DLL_API Effect /* not final */
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-
    // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
    // defines an empty list of parameters.

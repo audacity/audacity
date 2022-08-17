@@ -110,6 +110,16 @@ size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
    return GetEffect().SetBlockSize(maxBlockSize);
 }
 
+unsigned StatefulEffectBase::Instance::GetAudioInCount() const
+{
+   return GetEffect().GetAudioInCount();
+}
+
+unsigned StatefulEffectBase::Instance::GetAudioOutCount() const
+{
+   return GetEffect().GetAudioOutCount();
+}
+
 size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 {
    mEffectBlockSize = maxBlockSize;
@@ -119,6 +129,16 @@ size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 size_t StatefulEffectBase::GetBlockSize() const
 {
    return mEffectBlockSize;
+}
+
+unsigned StatefulEffectBase::GetAudioInCount() const
+{
+   return 0;
+}
+
+unsigned StatefulEffectBase::GetAudioOutCount() const
+{
+   return 0;
 }
 
 bool StatefulEffectBase::RealtimeInitialize(EffectSettings &, double)

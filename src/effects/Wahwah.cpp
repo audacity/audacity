@@ -160,6 +160,9 @@ struct EffectWahwah::Instance
    size_t InstanceProcess(EffectSettings& settings, EffectWahwahState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 };
@@ -206,16 +209,6 @@ EffectType EffectWahwah::GetType() const
 auto EffectWahwah::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::Always;
-}
-
-unsigned EffectWahwah::GetAudioInCount() const
-{
-   return 1;
-}
-
-unsigned EffectWahwah::GetAudioOutCount() const
-{
-   return 1;
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
@@ -466,6 +459,16 @@ size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
    }
 
    return blockLen;
+}
+
+unsigned EffectWahwah::Instance::GetAudioOutCount() const
+{
+   return 1;
+}
+
+unsigned EffectWahwah::Instance::GetAudioInCount() const
+{
+   return 1;
 }
 
 void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)

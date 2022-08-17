@@ -261,9 +261,6 @@ class VSTEffect final
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() const override;
-   int GetMidiOutCount() const override;
-
    sampleCount GetLatency() const override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -406,8 +403,6 @@ private:
    PluginPath mPath;
    unsigned mAudioIns{0};
    unsigned mAudioOuts{0};
-   int mMidiIns{0};
-   int mMidiOuts{0};
    bool mAutomatable;
    size_t mUserBlockSize{8192};
    wxString mVendor;

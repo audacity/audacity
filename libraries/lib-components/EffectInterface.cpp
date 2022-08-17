@@ -184,16 +184,6 @@ size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
 
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
-int EffectInstanceFactory::GetMidiInCount() const
-{
-   return 0;
-}
-
-int EffectInstanceFactory::GetMidiOutCount() const
-{
-   return 0;
-}
-
 EffectUIValidator::EffectUIValidator(
    EffectUIClientInterface &effect, EffectSettingsAccess &access)
    : mEffect{effect}

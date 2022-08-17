@@ -324,8 +324,8 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
 
    auto first = mCurrentProcessor;
 
-   const auto numAudioIn = mPlugin->GetAudioInCount();
-   const auto numAudioOut = mPlugin->GetAudioOutCount();
+   const auto numAudioIn = pInstance->GetAudioInCount();
+   const auto numAudioOut = pInstance->GetAudioOutCount();
 
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
@@ -430,8 +430,8 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
    // so if the number of channels we're currently processing are different
    // than what the effect expects, then we use a few methods of satisfying
    // the effects requirements.
-   const auto numAudioIn = mPlugin->GetAudioInCount();
-   const auto numAudioOut = mPlugin->GetAudioOutCount();
+   const auto numAudioIn = pInstance->GetAudioInCount();
+   const auto numAudioOut = pInstance->GetAudioOutCount();
 
    const auto clientIn =
       static_cast<const float **>(alloca(numAudioIn * sizeof(float *)));

@@ -59,6 +59,16 @@ struct EffectEcho::Instance
 
    bool ProcessFinalize() noexcept override;
 
+   unsigned GetAudioOutCount() const override
+   {
+      return 1;
+   }
+
+   unsigned GetAudioInCount() const override
+   {
+      return 1;
+   }
+
    Floats history;
    size_t histPos;
    size_t histLen;
@@ -105,16 +115,6 @@ ManualPageID EffectEcho::ManualPage() const
 EffectType EffectEcho::GetType() const
 {
    return EffectTypeProcess;
-}
-
-unsigned EffectEcho::GetAudioInCount() const
-{
-   return 1;
-}
-
-unsigned EffectEcho::GetAudioOutCount() const
-{
-   return 1;
 }
 
 bool EffectEcho::Instance::ProcessInitialize(

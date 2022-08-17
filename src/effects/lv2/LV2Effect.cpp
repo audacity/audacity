@@ -101,17 +101,17 @@ TranslatableString LV2Effect::GetDescription() const
 
 EffectType LV2Effect::GetType() const
 {
-   if (GetAudioInCount() == 0 && GetAudioOutCount() == 0)
+   if (mPorts.mAudioIn == 0 && mPorts.mAudioOut == 0)
    {
       return EffectTypeTool;
    }
 
-   if (GetAudioInCount() == 0)
+   if (mPorts.mAudioIn == 0)
    {
       return EffectTypeGenerate;
    }
 
-   if (GetAudioOutCount() == 0)
+   if (mPorts.mAudioOut == 0)
    {
       return EffectTypeAnalyze;
    }
@@ -237,26 +237,6 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
    if (result->IsOk())
       return result;
    return nullptr;
-}
-
-unsigned LV2Effect::GetAudioInCount() const
-{
-   return mPorts.mAudioIn;
-}
-
-unsigned LV2Effect::GetAudioOutCount() const
-{
-   return mPorts.mAudioOut;
-}
-
-int LV2Effect::GetMidiInCount() const
-{
-   return mPorts.mMidiIn;
-}
-
-int LV2Effect::GetMidiOutCount() const
-{
-   return mPorts.mMidiOut;
 }
 
 int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
