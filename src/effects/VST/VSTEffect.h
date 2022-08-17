@@ -23,6 +23,7 @@
 
 #include <unordered_map>
 #include <optional>
+#include <mutex>
 
 class wxSizerItem;
 class wxSlider;
@@ -149,30 +150,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool IsCompatible(const VstPatchChunkInfo&) const;
 
-   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
-
-   //! This function will be rewritten when the effect is really stateless
-   VSTEffectSettings& GetSettings(EffectSettings&) const
-   {
-      return const_cast<VSTEffectWrapper*>(this)->mSettings;
-   }
-
-   //! This function will be rewritten when the effect is really stateless
-   const VSTEffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
-
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-   */
-
    // These are here because they are used by the import/export methods
    int mVstVersion;
    wxString mName;
@@ -194,7 +171,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    ComponentInterfaceSymbol GetSymbol() const;
 
-   bool callSetParameterB(int index, float value) const;
+   void callSetParameter(int index, float value) const;
 
    void SaveXML(const wxFileName& fn) const;
 
@@ -202,7 +179,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    bool LoadFXB(const wxFileName& fn);
    bool LoadFXP(const wxFileName& fn);
    bool LoadFXProgram(unsigned char** bptr, ssize_t& len, int index, bool dryrun);
-   void callSetProgramB(int index);
+   void callSetProgram(int index);
 
    void SaveFXB(const wxFileName& fn) const;
    void SaveFXP(const wxFileName& fn) const;
@@ -270,38 +247,20 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    };
    ResourceHandle mResource;
 #endif
-      
-};
 
-
-
-class VSTEffectInstance;
-using VSTInstanceArray = std::vector < std::unique_ptr<VSTEffectInstance> >;
-
-
-// Transitional class to help with untangling Instance stuff from Effect stuff
-//-----------------------------------------------------------------------------
-struct VSTInstanceBase : VSTEffectWrapper
-{
-   explicit VSTInstanceBase(const PluginPath& path)
-      : VSTEffectWrapper(path)
-   {}
-
-   bool DoProcessInitialize(double sampleRate);
-   bool DoProcessFinalize() noexcept;
-
-   void callProcessReplacing(
-      const float* const* inputs, float* const* outputs, int sampleframes);
-
-   void PowerOn();
-   void PowerOff();
-   bool mHasPower{ false };
-
-   bool mReady{ false };
+   
+   VstTimeInfo* GetTimeInfo();
+   float        GetSampleRate();
+   VstTimeInfo  mTimeInfo;
 
    int mBufferDelay{ 0 };
 
-   // The vst callback is currently called both for the effect and for any instance.
+   int GetProcessLevel();
+   int mProcessLevel{ 1 };  // in GUI thread
+
+   bool   mUseLatency{ true };
+
+   // The vst callback is currently called both for the effect and for instances.
    //
    static intptr_t AudioMaster(AEffect *effect,
                                int32_t opcode,
@@ -322,22 +281,11 @@ struct VSTInstanceBase : VSTEffectWrapper
 
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
-   VstTimeInfo* GetTimeInfo();
-   int          GetProcessLevel();
-   float        GetSampleRate();
-   
-   VstTimeInfo  mTimeInfo;
 
-   size_t mBlockSize{ 8192 };
-   size_t mUserBlockSize{ mBlockSize };
-   bool   mUseLatency{ true };
-
-   int mProcessLevel{ 1 };  // in GUI thread
-
-   VSTInstanceArray mSlaves;
-   void callSetParameter(int index, float value);
 };
 
+class VSTEffectInstance;
+using VSTInstanceArray = std::vector < std::unique_ptr<VSTEffectInstance> >;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -350,12 +298,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
-// Temporary class allowing an intermediate phase in the transformation.
-// It is needed because the instance constructor needs something which is
-// both a PerTrackEffect and a StatefulEffectBase
-class TempClass : public PerTrackEffect
-                , public StatefulEffectBase
-{};
+class VSTEffectValidator;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -364,12 +307,12 @@ class TempClass : public PerTrackEffect
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
-   :  public VSTInstanceBase
-     ,public TempClass
+   :  public VSTEffectWrapper
+     ,public PerTrackEffect
    
 {
  public:
-   VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
+   VSTEffect(const PluginPath & path);
    virtual ~VSTEffect();
 
    // ComponentInterface implementation
@@ -404,27 +347,6 @@ class VSTEffect final
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;   
-
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
 
@@ -457,13 +379,43 @@ class VSTEffect final
 
    EffectSettings MakeSettings() const override;
 
+   void Automate(int index, float value) override;
+
+   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
+   std::mutex mSettingsMutex;    // to avoid read/write races on mSettings - this is needed temporarily
+                                 // and will be removed when the Validator will be implemented
+
+   //! This function will be rewritten when the effect is really stateless
+   VSTEffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VSTEffect*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VSTEffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
+
 protected:
    void NeedIdle() override;
    void UpdateDisplay() override;
    void SizeWindow(int w, int h) override;
-   void Automate(int index, float value) override;
 
 private:
+
+   VSTEffectValidator* mValidator{};
+
    // Plugin loading and unloading
    
    void Unload() override;
@@ -496,12 +448,7 @@ private:
    // Utility methods
    
    void NeedEditIdle(bool state);
-   
-
-   // VST methods
-   
-   void callSetProgram(int index);
-   
+ 
 
  private:
 
@@ -512,10 +459,6 @@ private:
    
    int mTimerGuard{0};
    std::unique_ptr<VSTEffectTimer> mTimer;
-
-   // Realtime processing
-   VSTEffect *mMaster;     // non-NULL if a slave
-   
    
 
    // UI
@@ -578,13 +521,12 @@ public:
 
 
 
-class VSTEffectInstance final : public StatefulEffectBase::Instance,
-                                       PerTrackEffect::Instance,
-                                public VSTInstanceBase
+class VSTEffectInstance final : public PerTrackEffect::Instance,
+   public VSTEffectWrapper
 {
 public:
 
-   VSTEffectInstance(TempClass&        effect,
+   VSTEffectInstance(PerTrackEffect&   effect,
                      const PluginPath& path,
                      size_t            blockSize,
                      size_t            userBlockSize,
@@ -599,6 +541,25 @@ public:
    
    bool ProcessFinalize() noexcept override;
 
+   size_t SetBlockSize(size_t maxBlockSize) override;
+   size_t GetBlockSize() const override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
+      override;
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+   bool RealtimeSuspend() override;
+   bool RealtimeResume() override;
+   bool RealtimeProcessStart(EffectSettings& settings) override;
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+   bool RealtimeProcessEnd(EffectSettings& settings) noexcept override;
+
+
+
+
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
@@ -606,7 +567,22 @@ public:
 
    bool IsReady();
 
+   unsigned GetAudioInCount() const override;
+
+   unsigned GetAudioOutCount() const override;
+
+   bool DoProcessInitialize(double sampleRate);
+
+   void PowerOn();
+   void PowerOff();
+
+   size_t mBlockSize{ 8192 };
+
 private:
+
+   void callProcessReplacing(
+      const float* const* inputs, float* const* outputs, int sampleframes);
+
    VSTEffect& GetEffect() const
    {
       // Tolerate const_cast in this class while it sun-sets
@@ -625,6 +601,13 @@ private:
 
    void Unload() override;
 
+   VSTInstanceArray mSlaves;
+
+   bool mHasPower{ false };
+
+   size_t mUserBlockSize{ mBlockSize };
+
+   bool mReady{ false };
 };
 
 

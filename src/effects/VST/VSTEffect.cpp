@@ -374,7 +374,8 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
          //Subsequent VSTEffect::Load may seem like overhead, but we need
          //to initialize EffectDefinitionInterface part, which includes
          //properly formatted plugin path
-         VSTEffect subeffect(wxString::Format("%s;%d", path, id), &effect);
+         VSTEffect subeffect(wxString::Format("%s;%d", path, id));
+         subeffect.Load();
          if(callback)
             callback(this, &subeffect);
       }
@@ -603,14 +604,14 @@ END_EVENT_TABLE()
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
-intptr_t VSTInstanceBase::AudioMaster( AEffect * effect,
+intptr_t VSTEffectWrapper::AudioMaster(AEffect * effect,
                                        int32_t opcode,
                                        int32_t index,
                                        intptr_t value,
                                        void * ptr,
                                        float opt)
 {
-   VSTInstanceBase* vst = (effect ? static_cast<VSTInstanceBase*>(effect->ptr2) : nullptr);
+   VSTEffectWrapper* vst = (effect ? static_cast<VSTEffectWrapper*>(effect->ptr2) : nullptr);
 
    // Handles operations during initialization...before VSTEffect has had a
    // chance to set its instance pointer.
@@ -785,9 +786,8 @@ void VSTEffect::ResourceHandle::reset()
 }
 #endif
 
-VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
-:  VSTInstanceBase(path),
-   mMaster(master)
+VSTEffect::VSTEffect(const PluginPath & path)
+:  VSTEffectWrapper(path)
 {
    mTimer = std::make_unique<VSTEffectTimer>(this);
 
@@ -799,12 +799,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
-
-   // If we're a slave then go ahead a load immediately
-   if (mMaster)
-   {
-      Load();
-   }
 }
 
 VSTEffect::~VSTEffect()
@@ -924,13 +918,6 @@ bool VSTEffect::InitializePlugin()
       return false;
    }
 
-   // If we have a master then there's no need to load settings since the master will feed
-   // us everything we need.
-   if (mMaster)
-   {
-      return true;
-   }
-
    return true;
 }
 
@@ -944,31 +931,31 @@ std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), userBlockSize, 8192);
-   mUserBlockSize = std::max( 1, userBlockSize );
+   size_t userBlockSizeC = std::max( 1, userBlockSize );
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
-   mBlockSize = mUserBlockSize;
+  
  
-   return std::make_shared<VSTEffectInstance>(*this, mPath, mBlockSize, mUserBlockSize, mUseLatency);
+   return std::make_shared<VSTEffectInstance>(*this, mPath, userBlockSizeC, userBlockSizeC, mUseLatency);
 }
 
-unsigned VSTEffect::GetAudioInCount() const
+unsigned VSTEffectInstance::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned VSTEffect::GetAudioOutCount() const
+unsigned VSTEffectInstance::GetAudioOutCount() const
 {
    return mAudioOuts;
 }
 
-size_t VSTEffect::SetBlockSize(size_t maxBlockSize)
+size_t VSTEffectInstance::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = std::min( maxBlockSize, mUserBlockSize );
    return mBlockSize;
 }
 
-size_t VSTEffect::GetBlockSize() const
+size_t VSTEffectInstance::GetBlockSize() const
 {
    return mBlockSize;
 }
@@ -993,7 +980,7 @@ bool VSTEffectInstance::ProcessInitialize(
    return DoProcessInitialize(sampleRate);
 }
 
-bool VSTInstanceBase::DoProcessInitialize(double sampleRate)
+bool VSTEffectInstance::DoProcessInitialize(double sampleRate)
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
@@ -1018,21 +1005,17 @@ bool VSTInstanceBase::DoProcessInitialize(double sampleRate)
    return true;
 }
 
-bool VSTInstanceBase::DoProcessFinalize() noexcept
-{
-return GuardedCall<bool>([&]{
-   mReady = false;
-
-   PowerOff();
-
-   return true;
-});
-}
-
 
 bool VSTEffectInstance::ProcessFinalize() noexcept
 {
-   return VSTInstanceBase::DoProcessFinalize();
+   return GuardedCall<bool>([&] {
+      mReady = false;
+
+      PowerOff();
+
+      return true;
+   });
+
 }
 
 
@@ -1053,15 +1036,15 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 }
 
 
-bool VSTEffect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
+bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
    return DoProcessInitialize(sampleRate);
 }
 
-bool VSTEffect::RealtimeAddProcessor(
+bool VSTEffectInstance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
-   auto slave = std::make_unique<VSTEffectInstance>(*this, mPath, mBlockSize, mUserBlockSize, mUseLatency);
+   auto slave = std::make_unique<VSTEffectInstance>(GetEffect(), mPath, mBlockSize, mUserBlockSize, mUseLatency);
 
    slave->SetBlockSize(mBlockSize);
 
@@ -1072,18 +1055,18 @@ bool VSTEffect::RealtimeAddProcessor(
    return true;
 }
 
-bool VSTEffect::RealtimeFinalize(EffectSettings &) noexcept
+bool VSTEffectInstance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (const auto &slave : mSlaves)
-      slave->DoProcessFinalize();
+      slave->ProcessFinalize();
    mSlaves.clear();
 
-   return DoProcessFinalize();
+   return ProcessFinalize();
 });
 }
 
-bool VSTEffect::RealtimeSuspend()
+bool VSTEffectInstance::RealtimeSuspend()
 {
    PowerOff();
 
@@ -1093,7 +1076,7 @@ bool VSTEffect::RealtimeSuspend()
    return true;
 }
 
-bool VSTEffect::RealtimeResume()
+bool VSTEffectInstance::RealtimeResume()
 {
    PowerOn();
 
@@ -1103,12 +1086,23 @@ bool VSTEffect::RealtimeResume()
    return true;
 }
 
-bool VSTEffect::RealtimeProcessStart(EffectSettings &)
+bool VSTEffectInstance::RealtimeProcessStart(EffectSettings& settings)
 {
+   {
+      // If we assume that the user might be moving knobs during realtime processing and wants
+      // to hear how the sound changes, we must protect mSettings from data races then
+      auto guard = std::lock_guard{ GetEffect().mSettingsMutex };
+
+      for (auto& slave : mSlaves)
+      {
+         slave->StoreSettings(GetSettings(settings));
+      }
+   }
+
    return true;
 }
 
-size_t VSTEffect::RealtimeProcess(size_t group, EffectSettings &settings,
+size_t VSTEffectInstance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
@@ -1117,7 +1111,7 @@ size_t VSTEffect::RealtimeProcess(size_t group, EffectSettings &settings,
    return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
-bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
+bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1154,12 +1148,13 @@ int VSTEffect::ShowClientInterface(
    //   mProcessLevel = 1;      // in GUI thread
 
    VSTEffectValidator* vstValidator = static_cast<VSTEffectValidator*>(validator);
+   mValidator = vstValidator;
 
    if (! vstValidator->GetInstance().IsReady() )
    {
       // Set some defaults since some VSTs need them...these will be reset when
       // normal or realtime processing begins
-      mBlockSize = 8192;
+      vstValidator->GetInstance().mBlockSize = 8192;
       vstValidator->GetInstance().DoProcessInitialize(mProjectRate);
    }
 
@@ -1344,7 +1339,7 @@ bool VSTEffect::CloseUI()
    mControl->Close();
 #endif
 
-   PowerOff();
+   mValidator->GetInstance().PowerOff();
 
    NeedEditIdle(false);
 
@@ -1357,6 +1352,7 @@ bool VSTEffect::CloseUI()
 
    mParent = NULL;
    mDialog = NULL;
+   mValidator = nullptr;
 
    return true;
 }
@@ -1508,10 +1504,7 @@ void VSTEffect::ShowOptions()
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("BufferSize"), userBlockSize, 8192);
-      mUserBlockSize = std::max( 1, userBlockSize );
+      
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
    }
@@ -1673,7 +1666,7 @@ bool VSTEffectWrapper::Load()
    // Initialize the plugin
    try
    {
-      mAEffect = pluginMain(VSTInstanceBase::AudioMaster);
+      mAEffect = pluginMain(VSTEffectWrapper::AudioMaster);
    }
    catch (...)
    {
@@ -1761,7 +1754,7 @@ bool VSTEffectWrapper::Load()
          // I've found one plugin (SoundHack +morphfilter) that will
          // crash Audacity when saving the initial default parameters
          // with this.
-         callSetProgramB(0);
+         callSetProgram(0);
 
          // Pretty confident that we're good to go
          success = true;
@@ -1786,9 +1779,6 @@ void VSTEffect::Unload()
 
    if (mAEffect)
    {
-      // Turn the power off
-      PowerOff();
-
       // Finally, close the plugin
       callDispatcher(effClose, 0, 0, NULL, 0.0);
       mAEffect = NULL;
@@ -1999,23 +1989,23 @@ void VSTEffect::NeedEditIdle(bool state)
    mTimer->Start(100);
 }
 
-VstTimeInfo* VSTInstanceBase::GetTimeInfo()
+VstTimeInfo* VSTEffectWrapper::GetTimeInfo()
 {
    mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
    return &mTimeInfo;
 }
 
-float VSTInstanceBase::GetSampleRate()
+float VSTEffectWrapper::GetSampleRate()
 {
    return mTimeInfo.sampleRate;
 }
 
-int VSTInstanceBase::GetProcessLevel()
+int VSTEffectWrapper::GetProcessLevel()
 {
    return mProcessLevel;
 }
 
-void VSTInstanceBase::PowerOn()
+void VSTEffectInstance::PowerOn()
 {
    if (!mHasPower)
    {
@@ -2033,7 +2023,7 @@ void VSTInstanceBase::PowerOn()
    }
 }
 
-void VSTInstanceBase::PowerOff()
+void VSTEffectInstance::PowerOff()
 {
    if (mHasPower)
    {
@@ -2078,23 +2068,8 @@ void VSTEffect::UpdateDisplay()
    return;
 }
 
-void VSTEffect::Automate(int index, float value)
-{
-   // Just ignore it if we're a slave
-   if (mMaster)
-   {
-      return;
-   }
 
-   for (const auto &slave : mSlaves)
-      slave->callSetParameterB(index, value);
-
-   FetchSettings(mSettings);
-
-   return;
-}
-
-void VSTInstanceBase::SetBufferDelay(int samples)
+void VSTEffectWrapper::SetBufferDelay(int samples)
 {
    // We do not support negative delay
    if (samples >= 0 && mUseLatency)
@@ -2152,7 +2127,7 @@ intptr_t VSTEffectWrapper::constCallDispatcher(int opcode,
       ->callDispatcher(opcode, index, value, ptr, opt);
 }
 
-void VSTInstanceBase::callProcessReplacing(const float *const *inputs,
+void VSTEffectInstance::callProcessReplacing(const float *const *inputs,
    float *const *outputs, int sampleframes)
 {
    mAEffect->processReplacing(mAEffect,
@@ -2165,43 +2140,18 @@ float VSTEffectWrapper::callGetParameter(int index) const
    return mAEffect->getParameter(mAEffect, index);
 }
 
-void VSTInstanceBase::callSetParameter(int index, float value)
-{
-   bool setOK = callSetParameterB(index, value);
-
-   if (setOK)
-   {
-      for (const auto& slave : mSlaves)
-         slave->callSetParameterB(index, value);
-   }
-}
 
 
-bool VSTEffectWrapper::callSetParameterB(int index, float value) const
+void VSTEffectWrapper::callSetParameter(int index, float value) const
 {
    if (mVstVersion == 0 || constCallDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
-      return true;
    }
-   return false;
 }
 
 
-
-void VSTEffect::callSetProgram(int index)
-{
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-
-   callDispatcher(effSetProgram, 0, index, NULL, 0.0);
-   for (const auto &slave : mSlaves)
-      slave->callSetProgramB(index);
-
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
-}
-
-
-void VSTEffectWrapper::callSetProgramB(int index)
+void VSTEffectWrapper::callSetProgram(int index)
 {
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
 
@@ -2518,7 +2468,20 @@ void VSTEffect::OnSlider(wxCommandEvent & evt)
    wxSlider *s = (wxSlider *) evt.GetEventObject();
    int i = s->GetId() - ID_Sliders;
 
+   // The plain GUI works (destructive or realtime) even without this call
+   // 
+   //if (mValidator)
+   //   mValidator->GetInstance().callSetParameter(i, s->GetValue() / 1000.0);
+
+   // This, along with the call to FetchSettings below, is needed in order
+   // to have the plain GUI work properly when realtime processing
    callSetParameter(i, s->GetValue() / 1000.0);
+
+   {
+      // Same comments found in VSTInstanceBase::Automate apply here
+      auto guard = std::lock_guard{ mSettingsMutex };
+      FetchSettings(mSettings);
+   }   
 
    RefreshParameters(i);
 }
@@ -2689,7 +2652,7 @@ bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
       // Set the active program
       if (ret && version >= 2)
       {
-         callSetProgramB(curProg);
+         callSetProgram(curProg);
       }
    } while (false);
 
@@ -2842,7 +2805,7 @@ bool VSTEffectWrapper::LoadFXProgram(unsigned char **bptr, ssize_t & len, int in
          for (int i = 0; i < numParams; i++)
          {
             wxUint32 val = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
-            callSetParameterB(i, reinterpretAsFloat(val));
+            callSetParameter(i, reinterpretAsFloat(val));
          }
          callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
       }
@@ -3372,7 +3335,7 @@ bool VSTEffectWrapper::HandleXMLTag(const std::string_view& tag, const Attribute
          return false;
       }
 
-      callSetParameterB(ndx, val);
+      callSetParameter(ndx, val);
 
       return true;
    }
@@ -3549,7 +3512,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
             if (value >= -1.0 && value <= 1.0)
             {
-               callSetParameterB(pi.mID, value);
+               callSetParameter(pi.mID, value);
             }
          }
          return true;
@@ -3609,36 +3572,51 @@ VSTEffectInstance& VSTEffectValidator::GetInstance()
 
 
 // Default, do-nothing implementations of virtuals in VSTEffectWrapper
-void VSTInstanceBase::NeedIdle()
+void VSTEffectWrapper::NeedIdle()
 {   
 }
 
-void VSTInstanceBase::UpdateDisplay()
+void VSTEffectWrapper::UpdateDisplay()
 {
 }
 
-void VSTInstanceBase::SizeWindow(int w, int h)
+void VSTEffectWrapper::SizeWindow(int w, int h)
 {
 }
 
-void VSTInstanceBase::Automate(int index, float value)
+void VSTEffectWrapper::Automate(int index, float value)
+{
+}
+
+void VSTEffect::Automate(int index, float value)
 {
    callSetParameter(index, value);
+
+   // Because we come here when a control on the effect's GUI is moved,
+   // we must update the temporary Effect-owned settings - users might
+   // want to hear what happens when they move a knob.
+   //
+   {
+      // we need a mutex because FetchSettings writes mSettings in the main
+      // thread, but the storing of the settings passed to ::RealtimeProcess
+      // happens in the worker thread
+      auto guard = std::lock_guard{ mSettingsMutex };
+      FetchSettings(mSettings);
+   }
 }
 
 
 VSTEffectInstance::VSTEffectInstance
 (
-   TempClass&        effect,
+   PerTrackEffect& effect,
    const PluginPath& path,
    size_t            blockSize,
    size_t            userBlockSize,
    bool              useLatency
 )
 
-   : StatefulEffectBase::Instance(effect)
-   , PerTrackEffect::Instance(effect)
-   , VSTInstanceBase(path)
+   : PerTrackEffect::Instance(effect)
+   , VSTEffectWrapper(path)
 {
    // what also happens in the effect ctor
    //
@@ -3662,13 +3640,6 @@ VSTEffectInstance::VSTEffectInstance
 VSTEffectInstance::~VSTEffectInstance()
 {
    Unload();
-}
-
-
-bool VSTEffect::Process(EffectInstance& instance, EffectSettings& settings)
-{
-   // Call through to a non-virtual function
-   return PerTrackEffect::Process(instance, settings);
 }
 
 
