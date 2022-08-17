@@ -681,10 +681,11 @@ bool WaveClip::FindCutLine(double cutLinePosition,
    {
       if (fabs(GetSequenceStartTime() + cutline->GetSequenceStartTime() - cutLinePosition) < 0.0001)
       {
+         auto startTime = GetSequenceStartTime() + cutline->GetSequenceStartTime();
          if (cutlineStart)
-            *cutlineStart = GetSequenceStartTime() + cutline->GetSequenceStartTime();
+            *cutlineStart = startTime;
          if (cutlineEnd)
-            *cutlineEnd = GetSequenceStartTime() + cutline->GetSequenceEndTime();
+            *cutlineEnd = startTime + cutline->SamplesToTime(cutline->GetPlaySamplesCount());
          return true;
       }
    }
