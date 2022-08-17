@@ -109,6 +109,8 @@ private:
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess2;
    std::weak_ptr<RealtimeEffectState> mwState{};
+   // Temporary state used for destructive processing
+   std::shared_ptr<RealtimeEffectState> mpTempProjectState {};
    std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;
