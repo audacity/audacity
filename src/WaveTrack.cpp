@@ -967,7 +967,12 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       if (st >= t0 && st <= t1) {
          auto it = get_split(st);
          if (clip->GetTrimLeft() != 0)
-            it->right = std::make_shared<WaveClip>(*clip, mpFactory, false, clip->GetSequenceStartTime(), st);
+         {
+            //keep only hidden left part
+            it->right = std::make_shared<WaveClip>(*clip, mpFactory, false);
+            it->right->SetTrimLeft(.0);
+            it->right->ClearRight(clip->GetPlayStartTime());
+         }
          it->rightClipName = clip->GetName();
       }
 
@@ -975,7 +980,12 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       if (st >= t0 && st <= t1) {
          auto it = get_split(st);
          if (clip->GetTrimRight() != 0)
-            it->left = std::make_shared<WaveClip>(*clip, mpFactory, false, st, clip->GetSequenceEndTime());
+         {
+            //keep only hidden right part
+            it->left = std::make_shared<WaveClip>(*clip, mpFactory, false);
+            it->left->SetTrimRight(.0);
+            it->left->ClearLeft(clip->GetPlayEndTime());
+         }
          it->leftClipName = clip->GetName();
       }
 
@@ -1428,8 +1438,8 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
 
     //wxPrintf("paste: we have at least one clip\n");
 
-    bool singleClipMode = (other->GetNumClips() == 1 &&
-        other->GetStartTime() == 0.0);
+    bool singleClipMode = other->GetNumClips() == 1 &&
+        std::abs(other->GetStartTime()) < LongSamplesToTime(1) * 0.5;
 
     const double insertDuration = other->GetEndTime();
     if (insertDuration != 0 && insertDuration < 1.0 / mRate)
