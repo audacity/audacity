@@ -73,9 +73,9 @@ class COMPONENTS_API EffectSettingsExtra final {
 public:
    static const RegistryPath &DurationKey();
    const NumericFormatSymbol& GetDurationFormat() const
-      { return mDurationFormat; }
+      { return *mpDurationFormat; }
    void SetDurationFormat(const NumericFormatSymbol &durationFormat)
-      { mDurationFormat = durationFormat; }
+      { *mpDurationFormat = durationFormat; }
 
    //! @return value is not negative
    double GetDuration() const { return mDuration; }
@@ -90,7 +90,9 @@ public:
    bool GetActive() const { return mActive; }
    void SetActive(bool value) { mActive = value; }
 private:
-   NumericFormatSymbol mDurationFormat{};
+   std::shared_ptr<NumericFormatSymbol> mpDurationFormat{
+      std::make_shared<NumericFormatSymbol>()
+   };
    double mDuration{}; //!< @invariant non-negative
    Counter mCounter{ 0 };
    bool mActive{ true };
