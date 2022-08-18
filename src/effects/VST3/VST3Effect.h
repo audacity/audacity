@@ -19,7 +19,6 @@
 #include <public.sdk/source/vst/hosting/module.h>
 
 #include "../StatefulPerTrackEffect.h"
-#include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
 
@@ -40,7 +39,6 @@ class VST3Effect final : public StatefulPerTrackEffect
    const VST3::Hosting::ClassInfo mEffectClassInfo;
    std::unique_ptr<VST3Wrapper> mWrapper;
    
-   bool mActive{false};
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
    Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
@@ -48,10 +46,6 @@ class VST3Effect final : public StatefulPerTrackEffect
    NumericTextCtrl* mDuration { nullptr };
    //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
    VST3ParametersWindow* mPlainUI { nullptr };
-
-   //Holds pending parameter changes to be applied to multiple realtime effects.
-   //Not used in the "offline" mode
-   internal::ComponentHandler::PendingChangesPtr mPendingChanges;
 
    std::vector<std::unique_ptr<VST3Wrapper>> mRealtimeGroupProcessors;
 
@@ -150,9 +144,6 @@ public:
    bool TransferDataToWindow(const EffectSettings& settings) override;
 
 private:
-   //Used to flush all pending changes to the IAudioProcessor, while
-   //plugin is inactive(!)
-   void FlushPendingChanges() const;
 
    void OnEffectWindowResize(wxSizeEvent & evt);
 
