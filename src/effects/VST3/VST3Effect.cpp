@@ -176,17 +176,11 @@ VST3Effect::VST3Effect(
    VST3::Hosting::ClassInfo effectClassInfo)
       : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
-   using namespace Steinberg;
    mWrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
-   //defaults
-   mWrapper->mSetup.processMode = Vst::kOffline;
-   mWrapper->mSetup.symbolicSampleSize = Vst::kSample32;
-   mWrapper->mSetup.maxSamplesPerBlock = mUserBlockSize;
-   mWrapper->mSetup.sampleRate = 44100.0;
-
-   if(!SetupProcessing(*mWrapper->mEffectComponent, mWrapper->mSetup))
-      //ProcessInitiaize should attempt to change that...
-      mWrapper->mSetup.sampleRate = .0;
+   mWrapper->mSetup.processMode = Steinberg::Vst::kOffline;
+   mWrapper->mSetup.symbolicSampleSize = Steinberg::Vst::kSample32;
+   mWrapper->mSetup.maxSamplesPerBlock = mProcessingBlockSize;
+   mWrapper->mSetup.sampleRate = mProjectRate;
 }
 
 
@@ -361,21 +355,14 @@ unsigned VST3Effect::GetAudioOutCount() const
 }
 size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
 {
-   auto newBlockSize = 
+   mProcessingBlockSize = 
       static_cast<Steinberg::int32>(std::min(maxBlockSize, mUserBlockSize));
-   if(newBlockSize != mWrapper->mSetup.maxSamplesPerBlock)
-   {
-      auto setup = mWrapper->mSetup;
-      setup.maxSamplesPerBlock = newBlockSize;
-      if(SetupProcessing(*mWrapper->mEffectComponent, setup))
-         mWrapper->mSetup = setup;
-   }
-   return mWrapper->mSetup.maxSamplesPerBlock;
+   return mProcessingBlockSize;
 }
 
 size_t VST3Effect::GetBlockSize() const
 {
-   return mWrapper->mSetup.maxSamplesPerBlock;
+   return mProcessingBlockSize;
 }
 
 sampleCount VST3Effect::GetLatency() const
@@ -392,17 +379,14 @@ sampleCount VST3Effect::GetLatency() const
 bool VST3Effect::ProcessInitialize(
    EffectSettings &settings, double sampleRate, ChannelNames)
 {
-   if(mWrapper->mSetup.sampleRate != sampleRate)
-   {
-      auto setup = mWrapper->mSetup;
-      setup.sampleRate = sampleRate;
-      if(!SetupProcessing(*mWrapper->mEffectComponent, setup))
-         return false;
-      mWrapper->mSetup = setup;
-   }
-   using namespace Steinberg;
+   auto setup = mWrapper->mSetup;
+   setup.sampleRate = sampleRate;
+   setup.maxSamplesPerBlock = mProcessingBlockSize;
+   if(!SetupProcessing(*mWrapper->mEffectComponent, setup))
+      return false;
+   mWrapper->mSetup = setup;
    
-   if(mWrapper->mEffectComponent->setActive(true) == kResultOk)
+   if(mWrapper->mEffectComponent->setActive(true) == Steinberg::kResultOk)
    {
       mActive = true;
       mWrapper->mAudioProcessor->setProcessing(true);
@@ -528,14 +512,6 @@ size_t VST3Effect::ProcessBlock(EffectSettings &,
 
 bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   if(mWrapper->mSetup.sampleRate != sampleRate)
-   {
-      auto setup = mWrapper->mSetup;
-      setup.sampleRate = sampleRate;
-      if(!SetupProcessing(*mWrapper->mEffectComponent, setup))
-         return false;
-      mWrapper->mSetup = setup;
-   }
    return true;
 }
 
@@ -547,7 +523,7 @@ bool VST3Effect::RealtimeAddProcessor(
    try
    {
       auto effect = std::make_unique<VST3Effect>(mModule, mEffectClassInfo);
-      effect->mWrapper->mSetup = mWrapper->mSetup;
+      effect->mWrapper->mSetup.maxSamplesPerBlock = mProcessingBlockSize;
       effect->mWrapper->mSetup.processMode = Vst::kRealtime;
       effect->mWrapper->mSetup.sampleRate = sampleRate;
       //IAudioProcessor should be configured for a different processing mode

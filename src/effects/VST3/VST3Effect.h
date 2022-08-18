@@ -59,6 +59,7 @@ class VST3Effect final : public StatefulPerTrackEffect
    mutable bool mRescanFactoryPresets { true };
    mutable RegistryPaths mFactoryPresets;
 
+   size_t mProcessingBlockSize { 8192 };
    size_t mUserBlockSize { 8192 };
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
