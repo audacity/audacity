@@ -169,6 +169,14 @@ It handles initialization and termination by subclassing wxApp.
 
 #include <thread>
 
+#ifdef HAS_CUSTOM_URL_HANDLING
+#include "URLSchemesRegistry.h"
+
+// This prefix is used to encode parameters
+// in RPC used by single instance checker
+static wxString urlPrefix = wxT("url:");
+#endif
+
 
 ////////////////////////////////////////////////////////////
 /// Custom events
@@ -834,6 +842,14 @@ void AudacityApp::MacNewFile()
       (void) ProjectManager::New();
 }
 
+#ifdef HAS_CUSTOM_URL_HANDLING
+void AudacityApp::MacOpenURL (const wxString& url)
+{
+   if(!url.IsEmpty())
+      ofqueue.push_back(urlPrefix + url);
+}
+#endif
+
 #endif //__WXMAC__
 
 // IPC communication
@@ -976,6 +992,21 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
                continue;
             }
 
+         #ifdef HAS_CUSTOM_URL_HANDLING
+            if (name.StartsWith(urlPrefix))
+            {
+               const auto utf8Url = name.ToUTF8();
+               const size_t prefixSize = urlPrefix.Length();
+
+               if (utf8Url.length() <= prefixSize)
+                  continue;
+
+               URLSchemesRegistry::Get().HandleURL(
+                  { utf8Url.data() + prefixSize,
+                    utf8Url.length() - prefixSize });
+            }
+            else
+         #endif
             // TODO: Handle failures better.
             // Some failures are OK, e.g. file not found, just would-be-nices to do better,
             // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
@@ -1560,6 +1591,18 @@ bool AudacityApp::InitPart2()
    });
 #endif
 
+#ifdef HAS_CUSTOM_URL_HANDLING
+   // Schemes are case insensitive as per RFC: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
+   URLSchemesRegistry::Get().RegisterScheme(AUDACITY_NAME);
+
+   wxString url;
+   if (parser->Found("u", &url))
+   {
+      auto utf8Url = url.ToUTF8();
+      URLSchemesRegistry::Get().HandleURL({ utf8Url.data(), utf8Url.length() });
+   }
+#endif
+
    return TRUE;
 }
 
@@ -1772,6 +1815,12 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          }
       }
 
+   #ifdef HAS_CUSTOM_URL_HANDLING
+      wxString url;
+      parser->Found("u", &url);
+   #endif
+
+
       // On Windows, we attempt to make a connection
       // to an already active Audacity.  If successful, we send
       // the first command line argument (the audio file name)
@@ -1786,6 +1835,14 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          if (conn)
          {
             bool ok = false;
+         #ifdef HAS_CUSTOM_URL_HANDLING
+            if (!url.empty())
+            {
+               if (!conn->Execute(urlPrefix + url))
+                  return false;
+            }
+         #endif
+
             if (filenames.size() > 0)
             {
                for (size_t i = 0, cnt = filenames.size(); i < cnt; i++)
@@ -2065,6 +2122,21 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       return false;
    }
 
+#ifdef HAS_CUSTOM_URL_HANDLING
+   wxString url;
+
+   if (parser->Found(wxT("u"), &url))
+   {
+      if (!url.empty())
+      {
+         url = urlPrefix + url;
+         auto str = url.c_str().AsWChar();
+
+         sock->WriteMsg(str, (url.length() + 1) * sizeof(*str));
+      }
+   }
+#endif
+
 #if defined(__WXMAC__)
    // On macOS the client gets events from the wxWidgets framework that
    // go to AudacityApp::MacOpenFile. Forward the file names to the prior
@@ -2173,6 +2245,11 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
    parser->AddParam(_("audio or project file name"),
                     wxCMD_LINE_VAL_STRING,
                     wxCMD_LINE_PARAM_MULTIPLE | wxCMD_LINE_PARAM_OPTIONAL);
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+   /* i18n-hint: This option is used to handle custom URLs in Audacity */
+   parser->AddOption(wxT("u"), wxT("url"), _("Handle 'audacity://' url"));
+#endif
 
    // Run the parser
    if (parser->Parse() == 0)
