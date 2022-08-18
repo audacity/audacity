@@ -77,24 +77,24 @@ bool VST3Utils::ParseAutomationParameterKey(const wxString& key, Steinberg::Vst:
 
 }
 
-
-
 Steinberg::IPtr<PresetsBufferStream> PresetsBufferStream::fromString(const wxString& str)
 {
-   Steinberg::Buffer buffer(str.size() / 4 * 3);
-   auto len = Base64::Decode(str, buffer);
-   assert(len <= buffer.getSize());
-   buffer.setSize(len);
+   Steinberg::Buffer buffer(str.length() / 4 * 3);
+   const auto numBytes = Base64::Decode(str, buffer);
+   //BufferStream uses fill size as a cursor position and size as a stream end position
+   //To prevent plugins from fetching bytes past the meaningful data we need to truncate
+   //end position
+   buffer.setSize(numBytes);
 
    auto result = owned(safenew PresetsBufferStream);
    result->mBuffer.take(buffer);
    return result;
 }
 
-
 wxString PresetsBufferStream::toString() const
 {
-   return Base64::Encode(mBuffer, mBuffer.getSize());
+   auto str = Base64::Encode(mBuffer, mBuffer.getFillSize());
+   return str;
 }
 
 
