@@ -553,6 +553,8 @@ list( APPEND SOURCES
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h
          effects/VST3/VST3ParametersWindow.cpp
+         effects/VST3/VST3UIValidator.cpp
+         effects/VST3/VST3UIValidator.h
          effects/VST3/internal/ConnectionProxy.h
          effects/VST3/internal/ConnectionProxy.cpp
          effects/VST3/internal/PlugFrame.h

@@ -321,6 +321,11 @@ VST3Wrapper::~VST3Wrapper()
       mEffectComponent->terminate();
 }
 
+bool VST3Wrapper::IsActive() const noexcept
+{
+   return mActive;
+}
+
 void VST3Wrapper::FetchSettings(const EffectSettings& settings)
 {
    const auto* vst3settings = &GetSettings(settings);

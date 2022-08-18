@@ -15,7 +15,6 @@
 
 #include <wx/wx.h>
 
-#include <pluginterfaces/gui/iplugview.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
 #include "effects/PerTrackEffect.h"
@@ -42,16 +41,8 @@ class VST3Effect final : public PerTrackEffect
    // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
    std::shared_ptr<VST3::Hosting::Module> mModule;
    const VST3::Hosting::ClassInfo mEffectClassInfo;
-   
-   //Used if provided by the plugin and enabled in the settings
-   Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
-   Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
-   wxWindow* mParent { nullptr };
-   NumericTextCtrl* mDuration { nullptr };
-   //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
-   VST3ParametersWindow* mPlainUI { nullptr };
 
-   std::shared_ptr<VST3Instance> mCurrentDisplayInstance;
+   wxWindow* mParent { nullptr };
 
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };
@@ -97,13 +88,13 @@ public:
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
-   bool InitializePlugin();
+
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   bool IsGraphicalUI() override;
+
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool ValidateUI(EffectSettings &) override;
+
    bool CloseUI() override;
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
@@ -114,13 +105,7 @@ public:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const override;
 
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-
 private:
-
-   void OnEffectWindowResize(wxSizeEvent & evt);
-
-   bool LoadVSTUI(Steinberg::Vst::IEditController& editController, wxWindow* parent);
-
+   
    bool LoadPreset(const wxString& path, EffectSettings& settings) const;
 };

@@ -22,8 +22,6 @@
 #include <wx/stdpaths.h>
 #include <wx/regex.h>
 
-#include <pluginterfaces/vst/ivsteditcontroller.h>
-#include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/hostclasses.h>
 
 #include "internal/PlugFrame.h"
@@ -42,12 +40,11 @@
 
 #ifdef __WXMSW__
 #include <shlobj.h>
-#elif __WXGTK__
-#include "internal/x11/SocketWindow.h"
 #endif
 
 #include "ConfigInterface.h"
 #include "VST3Instance.h"
+#include "VST3UIValidator.h"
 
 namespace {
 
@@ -252,110 +249,29 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
    return 0;
 }
 
-bool VST3Effect::InitializePlugin()
-{
-   return true;
-}
-   
 std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 {
    return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
 }
 
-bool VST3Effect::IsGraphicalUI()
-{
-   return mPlugView != nullptr;
-}
-
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
    EffectInstance& instance, EffectSettingsAccess &access)
 {
-   using namespace Steinberg;
+   bool useGUI { true };
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+            wxT("UseGUI"),
+            useGUI,
+            useGUI);
 
+   const auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
    mParent = S.GetParent();
 
-   auto& vst3instance = *dynamic_cast<VST3Instance*>(&instance);
-   auto& wrapper = vst3instance.GetWrapper();
-
-   auto parent = S.GetParent();
-   if(GetType() == EffectTypeGenerate)
-   {
-      auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
-      if(!LoadVSTUI(*wrapper.mEditController, controlsRoot))
-         mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *wrapper.mEditController, *wrapper.mComponentHandler);
-      vSizer->Add(controlsRoot);
-
-      auto &extra = access.Get().extra;
-      mDuration = safenew NumericTextCtrl(
-            parent, wxID_ANY,
-            NumericConverter::TIME,
-            extra.GetDurationFormat(),
-            extra.GetDuration(),
-            wrapper.mSetup.sampleRate,
-            NumericTextCtrl::Options{}
-               .AutoPos(true)
-         );
-      mDuration->SetName( XO("Duration") );
-
-      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
-      hSizer->AddSpacer(5);
-      hSizer->Add(mDuration);
-      vSizer->AddSpacer(10);
-      vSizer->Add(hSizer.release());
-
-      parent->SetMinSize(vSizer->CalcMin());
-      parent->SetSizer(vSizer.release());
-   }
-   else if(!LoadVSTUI(*wrapper.mEditController, parent))
-   {
-      mPlainUI = VST3ParametersWindow::Setup(
-         *parent,
-         *wrapper.mEditController,
-         *wrapper.mComponentHandler
-      );
-   }
-   wrapper.BeginParameterEdit(access);
-
-   mCurrentDisplayInstance = std::dynamic_pointer_cast<VST3Instance>(vst3instance.shared_from_this());
-   
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
-}
-
-bool VST3Effect::ValidateUI(EffectSettings &settings)
-{
-   if (mDuration != nullptr)
-      settings.extra.SetDuration(mDuration->GetValue());
-
-   assert(mCurrentDisplayInstance);
-
-   mCurrentDisplayInstance->GetWrapper().StoreSettings(settings);
-   mCurrentDisplayInstance->GetWrapper().FlushSettings(settings);
-
-   return true;
+   return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
 bool VST3Effect::CloseUI()
 {
-   using namespace Steinberg;
-
-   mPlainUI = nullptr;
    mParent = nullptr;
-   if(mPlugView)
-   {
-      mPlugView->setFrame(nullptr);
-      mPlugView->removed();
-      mPlugView = nullptr;
-      mPlugFrame = nullptr;
-   }
-
-   if(mCurrentDisplayInstance)
-   {
-      mCurrentDisplayInstance->GetWrapper().EndParameterEdit();
-      mCurrentDisplayInstance.reset();
-   }
-
    return true;
 }
 
@@ -443,119 +359,6 @@ void VST3Effect::ShowOptions()
    dlg.ShowModal();
 }
 
-void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
-{
-   using namespace Steinberg;
-
-   if(!mPlugView)
-      return;
-
-   const auto window = static_cast<wxWindow*>(evt.GetEventObject());
-   const auto windowSize = evt.GetSize();
-
-   {
-      //Workaround to prevent dialog window resize when
-      //plugin window reaches its maximum size
-      auto root = wxGetTopLevelParent(window);
-      wxSize maxRootSize = root->GetMaxSize();
-
-      //remember the current dialog size as its new maximum size
-      if(window->GetMaxWidth() != -1 && windowSize.GetWidth() >= window->GetMaxWidth())
-         maxRootSize.SetWidth(root->GetSize().GetWidth());
-      if(window->GetMaxHeight() != -1 && windowSize.GetHeight() >= window->GetMaxHeight())
-         maxRootSize.SetHeight(root->GetSize().GetHeight());
-      root->SetMaxSize(maxRootSize);
-   }
-   
-   ViewRect plugViewSize { 0, 0, windowSize.x, windowSize.y };
-   mPlugView->checkSizeConstraint(&plugViewSize);
-   mPlugView->onSize(&plugViewSize);
-}
-
-bool VST3Effect::LoadVSTUI(Steinberg::Vst::IEditController& editController, wxWindow* parent)
-{
-   using namespace Steinberg;
-
-   bool useGUI { true };
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-            wxT("UseGUI"),
-            useGUI,
-            useGUI);
-   if(!useGUI)
-      return false;
-
-   if(const auto view = owned (editController.createView (Vst::ViewType::kEditor))) 
-   {  
-      parent->Bind(wxEVT_SIZE, &VST3Effect::OnEffectWindowResize, this);
-
-      ViewRect defaultSize;
-      if(view->getSize(&defaultSize) == kResultOk)
-      {
-         if(view->canResize() == Steinberg::kResultTrue)
-         {
-            ViewRect minSize {0, 0, parent->GetMinWidth(), parent->GetMinHeight()};
-            ViewRect maxSize {0, 0, 10000, 10000};
-            if(view->checkSizeConstraint(&minSize) != kResultOk)
-               minSize = defaultSize;
-
-            if(view->checkSizeConstraint(&maxSize) != kResultOk)
-               maxSize = defaultSize;
-
-            //No need to accommodate the off-by-one error with Steinberg::ViewRect
-            //as we do it with wxRect
-
-            if(defaultSize.getWidth() < minSize.getWidth())
-               defaultSize.right = defaultSize.left + minSize.getWidth();
-            if(defaultSize.getWidth() > maxSize.getWidth())
-               defaultSize.right = defaultSize.left + maxSize.getWidth();
-
-            if(defaultSize.getHeight() < minSize.getHeight())
-               defaultSize.bottom = defaultSize.top + minSize.getHeight();
-            if(defaultSize.getHeight() > maxSize.getHeight())
-               defaultSize.bottom = defaultSize.top + maxSize.getHeight();
-
-            parent->SetMinSize({minSize.getWidth(), minSize.getHeight()});
-            parent->SetMaxSize({maxSize.getWidth(), maxSize.getHeight()});
-         }
-         else
-         {
-            parent->SetMinSize({defaultSize.getWidth(), defaultSize.getHeight()});
-            parent->SetMaxSize(parent->GetMinSize());
-         }
-
-         parent->SetSize({defaultSize.getWidth(), defaultSize.getHeight()});
-      }
-
-#if __WXGTK__
-      mPlugView = view;
-      safenew internal::x11::SocketWindow(parent, wxID_ANY, view);
-      return true;
-#else
-
-      static const auto platformType =
-#  if __WXMAC__
-         kPlatformTypeNSView;
-#  elif __WXMSW__
-         kPlatformTypeHWND;
-#  else
-#     error "Platform not supported"
-#  endif
-      auto plugFrame = owned(safenew internal::PlugFrame { parent });
-      view->setFrame(plugFrame);
-      if(view->attached(parent->GetHandle(), platformType) != kResultOk)
-         return false;
-
-      mPlugView = view;
-      mPlugFrame = plugFrame;
-
-      return true;
-#endif
-
-      
-   }
-   return false;
-}
-
 bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) const
 {
    using namespace Steinberg;
@@ -600,12 +403,5 @@ EffectSettings VST3Effect::MakeSettings() const
 bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
 {
    VST3Wrapper::CopySettingsContents(src, dst, copyDirection);
-   return true;
-}
-
-bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
-{
-   if(mCurrentDisplayInstance)
-      mCurrentDisplayInstance->GetWrapper().FetchSettings(settings);
    return true;
 }

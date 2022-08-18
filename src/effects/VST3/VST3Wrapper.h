@@ -70,6 +70,8 @@ public:
    VST3Wrapper& operator=(const VST3Wrapper&) = delete;
    VST3Wrapper& operator=(VST3Wrapper&&) = delete;
 
+   bool IsActive() const noexcept;
+
    void FetchSettings(const EffectSettings&);
    void StoreSettings(EffectSettings&) const;
 
