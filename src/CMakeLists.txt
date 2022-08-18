@@ -545,6 +545,8 @@ list( APPEND SOURCES
          effects/VST3/VST3EffectsModule.cpp
          effects/VST3/VST3Utils.h
          effects/VST3/VST3Utils.cpp
+         effects/VST3/VST3Wrapper.h
+         effects/VST3/VST3Wrapper.cpp
          effects/VST3/VST3OptionsDialog.h
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h

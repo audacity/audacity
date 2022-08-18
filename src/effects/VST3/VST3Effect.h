@@ -16,49 +16,34 @@
 #include <wx/wx.h>
 
 #include <pluginterfaces/gui/iplugview.h>
+#include <public.sdk/source/vst/hosting/module.h>
 
 #include "../StatefulPerTrackEffect.h"
 #include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
 
-#include "VST3Utils.h"
-
 class NumericTextCtrl;
-
-namespace Steinberg
-{
-   namespace Vst
-   {
-      class IComponent;
-      class IEditController;
-      class IConnectionPoint;
-   }
-}
 
 class ParameterChangesProvider;
 class VST3ParametersWindow;
+class VST3Wrapper;
 
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
+class VST3Effect final : public StatefulPerTrackEffect
 {
-   //Following fields are unique to each effect instance
+   // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
+   // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
+   std::shared_ptr<VST3::Hosting::Module> mModule;
+   const VST3::Hosting::ClassInfo mEffectClassInfo;
+   std::unique_ptr<VST3Wrapper> mWrapper;
    
-   Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
-   Steinberg::Vst::ProcessSetup mSetup;
    bool mActive{false};
-
-   //Since all of the realtime processors share same presets, following
-   //fields are only initialized and assigned in the global effect instance
-
-   Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mComponentConnectionProxy;
-   Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
    Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
-   Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
    NumericTextCtrl* mDuration { nullptr };
    //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
@@ -68,7 +53,7 @@ class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
    //Not used in the "offline" mode
    internal::ComponentHandler::PendingChangesPtr mPendingChanges;
 
-   std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
+   std::vector<std::unique_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };
@@ -77,9 +62,6 @@ class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
    size_t mUserBlockSize { 8192 };
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
-
-
-   void Initialize();
 
    mutable bool mInitialFetchDone{ false };
 
@@ -91,8 +73,11 @@ public:
       std::shared_ptr<VST3::Hosting::Module> module,
       VST3::Hosting::ClassInfo effectClassInfo);
 
-   VST3Effect(const VST3Effect& other);
-
+   VST3Effect(const VST3Effect&) = delete;
+   VST3Effect(VST3Effect&&) = delete;
+   VST3Effect& operator=(const VST3Effect&) = delete;
+   VST3Effect& operator=(VST3Effect&) = delete;
+   
    ~VST3Effect() override;
 
    PluginPath GetPath() const override;
@@ -171,8 +156,6 @@ private:
    void OnEffectWindowResize(wxSizeEvent & evt);
 
    bool LoadVSTUI(wxWindow* parent);
-
-   void SyncParameters() const;
 
    bool LoadPreset(const wxString& path, EffectSettings& settings);
 
