@@ -344,7 +344,7 @@ EffectFamilySymbol VST3Effect::GetFamily() const
 
 bool VST3Effect::IsInteractive() const
 {
-   return mEditController != nullptr;
+   return true;
 }
 
 bool VST3Effect::IsDefault() const
@@ -363,22 +363,7 @@ auto VST3Effect::RealtimeSupport() const -> RealtimeSince
 
 bool VST3Effect::SupportsAutomation() const
 {
-   if(mEditController == nullptr)
-      return false;
-
-   using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-      {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-            return true;
-      }
-   }
-
-   return false;
+   return true;
 }
 
 bool VST3Effect::SaveSettings(
@@ -867,57 +852,53 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
    using namespace Steinberg;
 
    mParent = S.GetParent();
+   
+   // PRL:  Is this sync really needed?
+   access.ModifySettings([&](EffectSettings &settings){
+      SyncParameters();
+   });
 
-   if(mComponentHandler != nullptr)
+   auto parent = S.GetParent();
+   if(GetType() == EffectTypeGenerate)
    {
-      // PRL:  Is this sync really needed?
-      access.ModifySettings([&](EffectSettings &settings){
-         SyncParameters();
-      });
+      auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
+      if(!LoadVSTUI(controlsRoot))
+         mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mEditController, *mComponentHandler);
+      vSizer->Add(controlsRoot);
 
-      auto parent = S.GetParent();
-      if(GetType() == EffectTypeGenerate)
-      {
-         auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-         auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
-         if(!LoadVSTUI(controlsRoot))
-            mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mEditController, *mComponentHandler);
-         vSizer->Add(controlsRoot);
-
-         auto &extra = access.Get().extra;
-         mDuration = safenew NumericTextCtrl(
-               parent, wxID_ANY,
-               NumericConverter::TIME,
-               extra.GetDurationFormat(),
-               extra.GetDuration(),
-               mSetup.sampleRate,
-               NumericTextCtrl::Options{}
-                  .AutoPos(true)
-            );
-         mDuration->SetName( XO("Duration") );
-
-         auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
-         hSizer->AddSpacer(5);
-         hSizer->Add(mDuration);
-         vSizer->AddSpacer(10);
-         vSizer->Add(hSizer.release());
-
-         parent->SetMinSize(vSizer->CalcMin());
-         parent->SetSizer(vSizer.release());
-      }
-      else if(!LoadVSTUI(parent))
-      {
-         mPlainUI = VST3ParametersWindow::Setup(
-            *parent,
-            *mEditController,
-            *mComponentHandler
+      auto &extra = access.Get().extra;
+      mDuration = safenew NumericTextCtrl(
+            parent, wxID_ANY,
+            NumericConverter::TIME,
+            extra.GetDurationFormat(),
+            extra.GetDuration(),
+            mSetup.sampleRate,
+            NumericTextCtrl::Options{}
+               .AutoPos(true)
          );
-      }
+      mDuration->SetName( XO("Duration") );
 
-      return std::make_unique<DefaultEffectUIValidator>(*this, access);
+      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
+      hSizer->AddSpacer(5);
+      hSizer->Add(mDuration);
+      vSizer->AddSpacer(10);
+      vSizer->Add(hSizer.release());
+
+      parent->SetMinSize(vSizer->CalcMin());
+      parent->SetSizer(vSizer.release());
    }
-   return nullptr;
+   else if(!LoadVSTUI(parent))
+   {
+      mPlainUI = VST3ParametersWindow::Setup(
+         *parent,
+         *mEditController,
+         *mComponentHandler
+      );
+   }
+
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool VST3Effect::ValidateUI(EffectSettings &settings)
@@ -1096,8 +1077,6 @@ void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
 bool VST3Effect::LoadVSTUI(wxWindow* parent)
 {
    using namespace Steinberg;
-   if(mEditController == nullptr)
-      return false;
 
    bool useGUI { true };
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
