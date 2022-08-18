@@ -639,3 +639,21 @@ void VST3Wrapper::SaveUserPreset(const EffectDefinitionInterface& effect, const 
          SetConfig(effect, PluginSettings::Private, name, controllerStateKey, *vst3settings.controllerState);
    }
 }
+
+void VST3Wrapper::AssignSettings(EffectSettings& dst, EffectSettings&& src)
+{
+   if(!dst.has_value() )
+      dst = src;
+}
+
+void VST3Wrapper::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection)
+{
+   if(copyDirection == SettingsCopyDirection::MainToWorker)
+   {
+      //Don't allocate in worker
+      std::swap(
+         GetSettings(*const_cast<EffectSettings*>(&src)).parameterChanges,
+         GetSettings(dst).parameterChanges
+      );
+   }
+}

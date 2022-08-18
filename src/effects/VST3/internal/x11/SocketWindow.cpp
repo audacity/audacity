@@ -11,6 +11,11 @@
 **********************************************************************/
 
 #include "SocketWindow.h"
+
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+
 #include "RunLoop.h"
 #include "PlugFrame.h"
 

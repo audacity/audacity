@@ -102,6 +102,9 @@ public:
    static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
+   static void AssignSettings(EffectSettings& dst, EffectSettings&& src);
+   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection);
+
 private:
    bool mActive {false};
    const VST3::UID mEffectUID;

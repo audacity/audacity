@@ -18,7 +18,6 @@
 #include "BasicUI.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
-#include <stdexcept>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
 #include <wx/regex.h>
@@ -48,6 +47,7 @@
 #endif
 
 #include "ConfigInterface.h"
+#include "VST3Instance.h"
 
 namespace {
 
@@ -112,7 +112,6 @@ VST3Effect::VST3Effect(
    VST3::Hosting::ClassInfo effectClassInfo)
       : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
-   mWrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
 }
 
 PluginPath VST3Effect::GetPath() const
@@ -171,11 +170,7 @@ bool VST3Effect::IsDefault() const
 
 auto VST3Effect::RealtimeSupport() const -> RealtimeSince
 {
-   // TODO reenable after achieving statelessness
-   // Also, as with old VST, perhaps only for plug-ins known not to be
-   // just generators
-   return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   return RealtimeSince::Always;
 }
 
 bool VST3Effect::SupportsAutomation() const
@@ -236,173 +231,8 @@ bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      // To do: externalize state so const_cast isn't needed
-      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath(), settings);
+      return LoadPreset(filename.GetFullPath(), settings);
    }
-   return true;
-}
-
-namespace
-{
-   unsigned CountChannels(Steinberg::Vst::IComponent* component,
-      const Steinberg::Vst::MediaTypes mediaType, 
-      const Steinberg::Vst::BusDirection busDirection,
-      const Steinberg::Vst::BusType busType)
-   {
-      using namespace Steinberg;
-
-      unsigned channelsCount{0};
-
-      const auto busCount = component->getBusCount(mediaType, busDirection);
-      for(auto i = 0; i < busCount; ++i)
-      {
-         Vst::BusInfo busInfo;
-         if(component->getBusInfo(mediaType, busDirection, i, busInfo) == kResultOk)
-         {
-            if(busInfo.busType == busType)
-               channelsCount += busInfo.channelCount;
-         }
-      }
-      return channelsCount;
-   }
-}
-
-unsigned VST3Effect::GetAudioInCount() const
-{
-   return CountChannels(
-      mWrapper->mEffectComponent,
-      Steinberg::Vst::kAudio,
-      Steinberg::Vst::kInput,
-      Steinberg::Vst::kMain);
-}
-
-unsigned VST3Effect::GetAudioOutCount() const
-{
-   return CountChannels(
-      mWrapper->mEffectComponent,
-      Steinberg::Vst::kAudio,
-      Steinberg::Vst::kOutput,
-      Steinberg::Vst::kMain);
-}
-size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
-{
-   mProcessingBlockSize = 
-      static_cast<Steinberg::int32>(std::min(maxBlockSize, mUserBlockSize));
-   return mProcessingBlockSize;
-}
-
-size_t VST3Effect::GetBlockSize() const
-{
-   return mProcessingBlockSize;
-}
-
-sampleCount VST3Effect::GetLatency() const
-{
-   if(mUseLatency)
-   {
-      if(!mRealtimeGroupProcessors.empty())
-         return mRealtimeGroupProcessors[0]->GetLatencySamples();
-      return mInitialDelay;
-   }
-   return { 0u };
-}
-
-bool VST3Effect::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, ChannelNames)
-{
-   if(mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kOffline, mProcessingBlockSize))
-   {
-      mWrapper->ConsumeChanges(settings);
-      mInitialDelay = mWrapper->GetLatencySamples();
-      return true;
-   }
-   return false;
-}
-
-bool VST3Effect::ProcessFinalize() noexcept
-{
-   return GuardedCall<bool>([&]{
-      mWrapper->Finalize();
-      return true;
-   });
-}
-
-size_t VST3Effect::ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
-{
-   return mWrapper->Process(inBlock, outBlock, blockLen);
-}
-
-bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
-{
-   return true;
-}
-
-bool VST3Effect::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
-{
-   using namespace Steinberg;
-
-   try
-   {
-      auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
-      if(!wrapper->Initialize(settings, sampleRate, Vst::kRealtime, mProcessingBlockSize))
-         throw std::runtime_error { "VST3 realtime initialization failed" };
-      wrapper->ConsumeChanges(settings);
-      mRealtimeGroupProcessors.push_back(std::move(wrapper));
-      return true;
-   }
-   catch(std::exception& e)
-   {
-      //make_unique<> isn't likely to fail here since this effect instance
-      //somehow succeeded
-      wxLogError("Failed to add realtime processor: %s", e.what());
-   }
-   return false;
-}
-
-bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
-{
-   return GuardedCall<bool>([this]()
-   {
-      for(auto& processor : mRealtimeGroupProcessors)
-         processor->Finalize();
-
-      mRealtimeGroupProcessors.clear();
-      
-      return true;
-   });
-}
-
-bool VST3Effect::RealtimeSuspend()
-{
-   for(auto& effect : mRealtimeGroupProcessors)
-      effect->SuspendProcessing();
-   return true;
-}
-
-bool VST3Effect::RealtimeResume()
-{
-   for(auto& effect : mRealtimeGroupProcessors)
-      effect->ResumeProcessing();
-   return true;
-}
-
-bool VST3Effect::RealtimeProcessStart(EffectSettings& settings)
-{
-   return true;
-}
-
-size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
-   const float* const* inBuf, float* const* outBuf, size_t numSamples)
-{
-   if (group >= mRealtimeGroupProcessors.size())
-      return 0;
-   auto& wrapper = mRealtimeGroupProcessors[group];
-   return wrapper->Process(inBuf, outBuf, numSamples);
-}
-
-bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
-{
    return true;
 }
 
@@ -429,13 +259,7 @@ bool VST3Effect::InitializePlugin()
    
 std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 {
-   return const_cast<VST3Effect*>(this)->DoMakeInstance();
-}
-   
-std::shared_ptr<EffectInstance> VST3Effect::DoMakeInstance()
-{
-   ReloadUserOptions();
-   return std::make_shared<Instance>(*this);
+   return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
 }
 
 bool VST3Effect::IsGraphicalUI()
@@ -444,19 +268,22 @@ bool VST3Effect::IsGraphicalUI()
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access)
 {
    using namespace Steinberg;
 
    mParent = S.GetParent();
-   
+
+   auto& vst3instance = *dynamic_cast<VST3Instance*>(&instance);
+   auto& wrapper = vst3instance.GetWrapper();
+
    auto parent = S.GetParent();
    if(GetType() == EffectTypeGenerate)
    {
       auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
-      if(!LoadVSTUI(controlsRoot))
-         mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mWrapper->mEditController, *mWrapper->mComponentHandler);
+      if(!LoadVSTUI(*wrapper.mEditController, controlsRoot))
+         mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *wrapper.mEditController, *wrapper.mComponentHandler);
       vSizer->Add(controlsRoot);
 
       auto &extra = access.Get().extra;
@@ -465,7 +292,7 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
             NumericConverter::TIME,
             extra.GetDurationFormat(),
             extra.GetDuration(),
-            mWrapper->mSetup.sampleRate,
+            wrapper.mSetup.sampleRate,
             NumericTextCtrl::Options{}
                .AutoPos(true)
          );
@@ -481,17 +308,18 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
       parent->SetMinSize(vSizer->CalcMin());
       parent->SetSizer(vSizer.release());
    }
-   else if(!LoadVSTUI(parent))
+   else if(!LoadVSTUI(*wrapper.mEditController, parent))
    {
       mPlainUI = VST3ParametersWindow::Setup(
          *parent,
-         *mWrapper->mEditController,
-         *mWrapper->mComponentHandler
+         *wrapper.mEditController,
+         *wrapper.mComponentHandler
       );
    }
+   wrapper.BeginParameterEdit(access);
 
-   mWrapper->BeginParameterEdit(access);
-
+   mCurrentDisplayInstance = std::dynamic_pointer_cast<VST3Instance>(vst3instance.shared_from_this());
+   
    return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
@@ -500,8 +328,10 @@ bool VST3Effect::ValidateUI(EffectSettings &settings)
    if (mDuration != nullptr)
       settings.extra.SetDuration(mDuration->GetValue());
 
-   mWrapper->StoreSettings(settings);
-   mWrapper->FlushSettings(settings);
+   assert(mCurrentDisplayInstance);
+
+   mCurrentDisplayInstance->GetWrapper().StoreSettings(settings);
+   mCurrentDisplayInstance->GetWrapper().FlushSettings(settings);
 
    return true;
 }
@@ -520,7 +350,11 @@ bool VST3Effect::CloseUI()
       mPlugFrame = nullptr;
    }
 
-   mWrapper->EndParameterEdit();
+   if(mCurrentDisplayInstance)
+   {
+      mCurrentDisplayInstance->GetWrapper().EndParameterEdit();
+      mCurrentDisplayInstance.reset();
+   }
 
    return true;
 }
@@ -562,8 +396,11 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
       );
       return;
    }
-   
-   if (!mWrapper->SavePreset(fileStream))
+
+   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+   wrapper->FetchSettings(settings);
+
+   if (!wrapper->SavePreset(fileStream))
    {
       BasicUI::ShowMessageBox(
          XO("Failed to save VST3 preset to file"),
@@ -603,10 +440,7 @@ bool VST3Effect::HasOptions()
 void VST3Effect::ShowOptions()
 {
    VST3OptionsDialog dlg(mParent, *this);
-   if (dlg.ShowModal())
-   {
-      ReloadUserOptions();
-   }
+   dlg.ShowModal();
 }
 
 void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
@@ -638,7 +472,7 @@ void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
    mPlugView->onSize(&plugViewSize);
 }
 
-bool VST3Effect::LoadVSTUI(wxWindow* parent)
+bool VST3Effect::LoadVSTUI(Steinberg::Vst::IEditController& editController, wxWindow* parent)
 {
    using namespace Steinberg;
 
@@ -650,7 +484,7 @@ bool VST3Effect::LoadVSTUI(wxWindow* parent)
    if(!useGUI)
       return false;
 
-   if(const auto view = owned (mWrapper->mEditController->createView (Vst::ViewType::kEditor))) 
+   if(const auto view = owned (editController.createView (Vst::ViewType::kEditor))) 
    {  
       parent->Bind(wxEVT_SIZE, &VST3Effect::OnEffectWindowResize, this);
 
@@ -722,7 +556,7 @@ bool VST3Effect::LoadVSTUI(wxWindow* parent)
    return false;
 }
 
-bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
+bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -740,7 +574,9 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       return false;
    }
 
-   if (!mWrapper->LoadPreset(fileStream))
+   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+
+   if (!wrapper->LoadPreset(fileStream))
    {
       BasicUI::ShowMessageBox(
          XO("Unable to apply VST3 preset file %s").Format(path),
@@ -751,20 +587,9 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       return false;
    }
 
+   wrapper->StoreSettings(settings);
+
    return true;
-}
-
-void VST3Effect::ReloadUserOptions()
-{
-   // Reinitialize configuration settings
-   int userBlockSize;
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("BufferSize"), userBlockSize, 8192);
-   mUserBlockSize = std::max( 1, userBlockSize );
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
-
-   SetBlockSize(mUserBlockSize);
 }
 
 EffectSettings VST3Effect::MakeSettings() const
@@ -772,8 +597,15 @@ EffectSettings VST3Effect::MakeSettings() const
    return VST3Wrapper::MakeSettings();
 }
 
+bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
+{
+   VST3Wrapper::CopySettingsContents(src, dst, copyDirection);
+   return true;
+}
+
 bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
 {
-   mWrapper->FetchSettings(settings);
+   if(mCurrentDisplayInstance)
+      mCurrentDisplayInstance->GetWrapper().FetchSettings(settings);
    return true;
 }
