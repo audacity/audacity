@@ -45,6 +45,70 @@ const VST3EffectSettings& GetSettings(const EffectSettings& settings)
    return *vst3settings;
 }
 
+
+//Activates main audio input/output buses and disables others (event, audio aux)
+void ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
+{
+   using namespace Steinberg;
+
+   std::vector<Vst::SpeakerArrangement> defaultInputSpeakerArrangements;
+   std::vector<Vst::SpeakerArrangement> defaultOutputSpeakerArrangements;
+
+   const auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
+
+   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kInput); i < count; ++i)
+   {
+      Vst::BusInfo busInfo {};
+      Vst::SpeakerArrangement arrangement {0ull};
+      if(component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo) == kResultOk)
+      {
+         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
+            arrangement = (1ull << busInfo.channelCount) - 1ull;
+      }
+      if(component.activateBus(Vst::kAudio, Vst::kInput, i, arrangement > 0) != kResultOk)
+         arrangement = 0;
+
+      defaultInputSpeakerArrangements.push_back(arrangement);
+   }
+   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
+   {
+      Vst::BusInfo busInfo {};
+      Vst::SpeakerArrangement arrangement {0ull};
+      if(component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo) == kResultOk)
+      {
+         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
+            arrangement = (1ull << busInfo.channelCount) - 1ull;
+      }
+      if(component.activateBus(Vst::kAudio, Vst::kOutput, i, arrangement > 0) != kResultOk)
+         arrangement = 0;
+
+      defaultOutputSpeakerArrangements.push_back(arrangement);
+   }
+   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kInput); i < count; ++i)
+      component.activateBus(Vst::kEvent, Vst::kInput, i, 0);
+   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kOutput); i < count; ++i)
+      component.activateBus(Vst::kEvent, Vst::kOutput, i, 0);
+
+   processor->setBusArrangements(
+      defaultInputSpeakerArrangements.empty() ? nullptr : defaultInputSpeakerArrangements.data(), defaultInputSpeakerArrangements.size(),
+      defaultOutputSpeakerArrangements.empty() ? nullptr : defaultOutputSpeakerArrangements.data(), defaultOutputSpeakerArrangements.size()
+   );
+}
+
+//The component should be disabled
+bool SetupProcessing(Steinberg::Vst::IComponent& component, Steinberg::Vst::ProcessSetup& setup)
+{
+   using namespace Steinberg;
+   auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
+
+   if(processor->setupProcessing(setup) == kResultOk)
+   {
+      ActivateMainAudioBuses(component);
+      return true;
+   }
+   return false;
+}
+
 }
 
 VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
@@ -203,6 +267,47 @@ bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream) const
 
       mEditController.get()
    );
+}
+
+bool VST3Wrapper::Initialize(const EffectSettings& settings, Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock)
+{
+   using namespace Steinberg;
+
+   FetchSettings(settings);
+
+   auto setup = mSetup;
+   setup.processMode = processMode;
+   setup.sampleRate = sampleRate;
+   setup.maxSamplesPerBlock = maxSamplesPerBlock;
+   setup.symbolicSampleSize = Steinberg::Vst::kSample32;
+   if(!SetupProcessing(*mEffectComponent.get(), setup))
+      return false;
+   mSetup = setup;
+   
+   if(mEffectComponent->setActive(true) == kResultOk)
+   {
+      mActive = true;
+      mAudioProcessor->setProcessing(true);
+      return true;
+   }
+   return false;
+}
+
+void VST3Wrapper::Finalize()
+{
+   mActive = false;
+   mAudioProcessor->setProcessing(false);
+   mEffectComponent->setActive(false);
+}
+
+void VST3Wrapper::SuspendProcessing()
+{
+   mAudioProcessor->setProcessing(false);
+}
+
+void VST3Wrapper::ResumeProcessing()
+{
+   mAudioProcessor->setProcessing(true);
 }
 
 Steinberg::int32 VST3Wrapper::GetLatencySamples() const

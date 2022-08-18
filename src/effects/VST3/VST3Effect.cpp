@@ -53,68 +53,6 @@
 
 namespace {
 
-//Activates main audio input/output buses and disables others (event, audio aux)
-void ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
-{
-   using namespace Steinberg;
-
-   std::vector<Vst::SpeakerArrangement> defaultInputSpeakerArrangements;
-   std::vector<Vst::SpeakerArrangement> defaultOutputSpeakerArrangements;
-
-   const auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
-
-   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kInput); i < count; ++i)
-   {
-      Vst::BusInfo busInfo {};
-      Vst::SpeakerArrangement arrangement {0ull};
-      if(component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo) == kResultOk)
-      {
-         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
-            arrangement = (1ull << busInfo.channelCount) - 1ull;
-      }
-      if(component.activateBus(Vst::kAudio, Vst::kInput, i, arrangement > 0) != kResultOk)
-         arrangement = 0;
-
-      defaultInputSpeakerArrangements.push_back(arrangement);
-   }
-   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
-   {
-      Vst::BusInfo busInfo {};
-      Vst::SpeakerArrangement arrangement {0ull};
-      if(component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo) == kResultOk)
-      {
-         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
-            arrangement = (1ull << busInfo.channelCount) - 1ull;
-      }
-      if(component.activateBus(Vst::kAudio, Vst::kOutput, i, arrangement > 0) != kResultOk)
-         arrangement = 0;
-
-      defaultOutputSpeakerArrangements.push_back(arrangement);
-   }
-   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kInput); i < count; ++i)
-      component.activateBus(Vst::kEvent, Vst::kInput, i, 0);
-   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kOutput); i < count; ++i)
-      component.activateBus(Vst::kEvent, Vst::kOutput, i, 0);
-
-   processor->setBusArrangements(
-      defaultInputSpeakerArrangements.empty() ? nullptr : defaultInputSpeakerArrangements.data(), defaultInputSpeakerArrangements.size(),
-      defaultOutputSpeakerArrangements.empty() ? nullptr : defaultOutputSpeakerArrangements.data(), defaultOutputSpeakerArrangements.size()
-   );
-}
-
-//The component should be disabled
-bool SetupProcessing(Steinberg::Vst::IComponent& component, Steinberg::Vst::ProcessSetup& setup)
-{
-   using namespace Steinberg;
-   auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
-
-   if(processor->setupProcessing(setup) == kResultOk)
-   {
-      ActivateMainAudioBuses(component);
-      return true;
-   }
-   return false;
-}
 
 wxString GetFactoryPresetsBasePath()
 {
@@ -177,12 +115,7 @@ VST3Effect::VST3Effect(
       : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
    mWrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
-   mWrapper->mSetup.processMode = Steinberg::Vst::kOffline;
-   mWrapper->mSetup.symbolicSampleSize = Steinberg::Vst::kSample32;
-   mWrapper->mSetup.maxSamplesPerBlock = mProcessingBlockSize;
-   mWrapper->mSetup.sampleRate = mProjectRate;
 }
-
 
 PluginPath VST3Effect::GetPath() const
 {
@@ -370,7 +303,7 @@ sampleCount VST3Effect::GetLatency() const
    if(mUseLatency)
    {
       if(!mRealtimeGroupProcessors.empty())
-         return mRealtimeGroupProcessors[0]->mWrapper->GetLatencySamples();
+         return mRealtimeGroupProcessors[0]->GetLatencySamples();
       return mInitialDelay;
    }
    return { 0u };
@@ -379,17 +312,8 @@ sampleCount VST3Effect::GetLatency() const
 bool VST3Effect::ProcessInitialize(
    EffectSettings &settings, double sampleRate, ChannelNames)
 {
-   auto setup = mWrapper->mSetup;
-   setup.sampleRate = sampleRate;
-   setup.maxSamplesPerBlock = mProcessingBlockSize;
-   if(!SetupProcessing(*mWrapper->mEffectComponent, setup))
-      return false;
-   mWrapper->mSetup = setup;
-   
-   if(mWrapper->mEffectComponent->setActive(true) == Steinberg::kResultOk)
+   if(mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kOffline, mProcessingBlockSize))
    {
-      mActive = true;
-      mWrapper->mAudioProcessor->setProcessing(true);
       mInitialDelay = mWrapper->GetLatencySamples();
       return true;
    }
@@ -398,12 +322,10 @@ bool VST3Effect::ProcessInitialize(
 
 bool VST3Effect::ProcessFinalize() noexcept
 {
-return GuardedCall<bool>([&]{
-   using namespace Steinberg;
-   mActive = false;
-   mWrapper->mAudioProcessor->setProcessing(false);
-   return mWrapper->mEffectComponent->setActive(false) == Steinberg::kResultOk;
-});
+   return GuardedCall<bool>([&]{
+      mWrapper->Finalize();
+      return true;
+   });
 }
 
 namespace
@@ -522,18 +444,10 @@ bool VST3Effect::RealtimeAddProcessor(
 
    try
    {
-      auto effect = std::make_unique<VST3Effect>(mModule, mEffectClassInfo);
-      effect->mWrapper->mSetup.maxSamplesPerBlock = mProcessingBlockSize;
-      effect->mWrapper->mSetup.processMode = Vst::kRealtime;
-      effect->mWrapper->mSetup.sampleRate = sampleRate;
-      //IAudioProcessor should be configured for a different processing mode
-      if(!SetupProcessing(*effect->mWrapper->mEffectComponent, effect->mWrapper->mSetup))
-         return false;
-      
-      if(!effect->ProcessInitialize(settings, sampleRate, nullptr))
+      auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+      if(!wrapper->Initialize(settings, sampleRate, Vst::kRealtime, mProcessingBlockSize))
          throw std::runtime_error { "VST3 realtime initialization failed" };
-
-      mRealtimeGroupProcessors.push_back(std::move(effect));
+      mRealtimeGroupProcessors.push_back(std::move(wrapper));
       return true;
    }
    catch(std::exception& e)
@@ -550,7 +464,7 @@ bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
    return GuardedCall<bool>([this]()
    {
       for(auto& processor : mRealtimeGroupProcessors)
-         processor->ProcessFinalize();
+         processor->Finalize();
 
       mRealtimeGroupProcessors.clear();
       mPendingChanges.reset();
@@ -562,14 +476,14 @@ bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
 bool VST3Effect::RealtimeSuspend()
 {
    for(auto& effect : mRealtimeGroupProcessors)
-      effect->mWrapper->mAudioProcessor->setProcessing(false);
+      effect->SuspendProcessing();
    return true;
 }
 
 bool VST3Effect::RealtimeResume()
 {
    for(auto& effect : mRealtimeGroupProcessors)
-      effect->mWrapper->mAudioProcessor->setProcessing(true);
+      effect->ResumeProcessing();
    return true;
 }
 
@@ -587,8 +501,8 @@ size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
 {
    if (group >= mRealtimeGroupProcessors.size())
       return 0;
-   auto& effect = mRealtimeGroupProcessors[group];
-   return VST3ProcessBlock(effect->mWrapper->mEffectComponent.get(), effect->mWrapper->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
+   auto& wrapper = mRealtimeGroupProcessors[group];
+   return VST3ProcessBlock(wrapper->mEffectComponent.get(), wrapper->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }
 
 bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept

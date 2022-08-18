@@ -53,7 +53,7 @@ class VST3Effect final : public StatefulPerTrackEffect
    //Not used in the "offline" mode
    internal::ComponentHandler::PendingChangesPtr mPendingChanges;
 
-   std::vector<std::unique_ptr<VST3Effect>> mRealtimeGroupProcessors;
+   std::vector<std::unique_ptr<VST3Wrapper>> mRealtimeGroupProcessors;
 
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };

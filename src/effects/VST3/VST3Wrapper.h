@@ -52,6 +52,12 @@ public:
    bool LoadPreset(Steinberg::IBStream* fileStream);
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
+   bool Initialize(const EffectSettings& settings, Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
+   void Finalize();
+
+   void SuspendProcessing();
+   void ResumeProcessing();
+
    Steinberg::int32 GetLatencySamples() const;
    
    static EffectSettings MakeSettings();
@@ -62,5 +68,6 @@ public:
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
 private:
+   bool mActive {false};
    const VST3::UID mEffectUID;
 };
