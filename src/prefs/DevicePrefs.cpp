@@ -192,13 +192,13 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
             .NameSuffix(XO("milliseconds"))
             .TieNumericTextBox(XXO("&Buffer length:"),
                                  AudioIOLatencyDuration,
-                                 9);
+                                 25);
          S.AddUnits(XO("milliseconds"));
 
          w = S
             .NameSuffix(XO("milliseconds"))
             .TieNumericTextBox(XXO("&Latency compensation:"),
-               AudioIOLatencyCorrection, 9);
+               AudioIOLatencyCorrection, 25);
          S.AddUnits(XO("milliseconds"));
       }
       S.EndThreeColumn();
