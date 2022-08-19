@@ -401,7 +401,7 @@ size_t CurlResponse::WriteCallback (const uint8_t* ptr, size_t size, size_t nmem
             // WriteCallback is called by the handle
             assert (request->mCurrentHandle != nullptr);
 
-            if (request->mCurrentHandle != nullptr && request->mHttpCode == 0)
+            if (request->mCurrentHandle != nullptr)
                 request->mHttpCode = request->mCurrentHandle->getHTTPCode ();
         }
     }
@@ -432,7 +432,7 @@ size_t CurlResponse::HeaderCallback (const char* buffer, size_t size, size_t nit
         // HeaderCallback is called by the handle
         assert (request->mCurrentHandle != nullptr);
 
-        if (request->mCurrentHandle != nullptr && request->mHttpCode == 0)
+        if (request->mCurrentHandle != nullptr)
             request->mHttpCode = request->mCurrentHandle->getHTTPCode ();
     }
 
