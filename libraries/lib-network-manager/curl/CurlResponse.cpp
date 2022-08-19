@@ -464,15 +464,22 @@ int CurlResponse::CurlProgressCallback(
    CurlResponse* clientp, curl_off_t dltotal, curl_off_t dlnow,
    curl_off_t ultotal, curl_off_t ulnow) noexcept
 {
-    std::lock_guard<std::mutex> callbackLock(clientp->mCallbackMutex);
+   {
+      std::lock_guard<std::mutex> lock(clientp->mStatusMutex);
 
-    if (dltotal > 0 && clientp->mDownloadProgressCallback)
-       clientp->mDownloadProgressCallback(dlnow, dltotal);
+      if (clientp->mAbortRequested)
+         return -1;
+   }
+   
+   std::lock_guard<std::mutex> callbackLock(clientp->mCallbackMutex);
 
-    if (ultotal > 0 && clientp->mUploadProgressCallback)
-       clientp->mUploadProgressCallback(ulnow, ultotal);
+   if (dltotal > 0 && clientp->mDownloadProgressCallback)
+      clientp->mDownloadProgressCallback(dlnow, dltotal);
 
-    return CURLE_OK;
+   if (ultotal > 0 && clientp->mUploadProgressCallback)
+      clientp->mUploadProgressCallback(ulnow, ultotal);
+
+   return CURLE_OK;
 }
 
 }
