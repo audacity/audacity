@@ -668,7 +668,9 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
 **********************************************************************/
 
 enum {
-   OnSyncQuickPlaySelID = 7000,
+   OnMinutesAndSecondsID = 7000,
+   OnBeatsAndMeasuresID,
+   OnSyncQuickPlaySelID,
    OnAutoScrollID,
    OnTogglePlayRegionID,
    OnClearPlayRegionID,
@@ -683,6 +685,8 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_LEAVE_WINDOW(AdornedRulerPanel::OnLeave)
 
    // Context menu commands
+   EVT_MENU(OnMinutesAndSecondsID, AdornedRulerPanel::OnTimelineFormatChange)
+   EVT_MENU(OnBeatsAndMeasuresID, AdornedRulerPanel::OnTimelineFormatChange)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnTogglePlayRegionID, AdornedRulerPanel::OnTogglePlayRegion)
@@ -1292,6 +1296,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mIsRecording = false;
 
+   mBeatsAndMeasures = false;
    mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
 
@@ -2234,6 +2239,20 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    const auto &playRegion = viewInfo.playRegion;
    wxMenu rulerMenu;
 
+   {
+      auto item = rulerMenu.AppendRadioItem(OnMinutesAndSecondsID,
+         _("Minutes and Seconds"));
+      item->Check(!mBeatsAndMeasures);
+   }
+
+   {
+      auto item = rulerMenu.AppendRadioItem(OnBeatsAndMeasuresID,
+         _("Beats and Measures"));
+      item->Check(mBeatsAndMeasures);
+   }
+
+   rulerMenu.AppendSeparator();
+
    auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
    pDrag->Enable(playRegion.Active());
@@ -2282,13 +2301,6 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
    );
 }
 
-void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
-{
-   mPlayRegionDragsSelection = (mPlayRegionDragsSelection)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
-   gPrefs->Flush();
-}
-
 void AdornedRulerPanel::DragSelection(AudacityProject &project)
 {
    auto &viewInfo = ViewInfo::Get( project );
@@ -2314,6 +2326,20 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
    mIsSnapped[index] = results.Snapped();
 }
 
+void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
+{
+   int id = event.GetId();
+   wxASSERT(id == OnMinutesAndSecondsID || id == OnBeatsAndMeasuresID);
+   mBeatsAndMeasures = (id == OnBeatsAndMeasuresID);
+}
+
+void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
+{
+   mPlayRegionDragsSelection = (mPlayRegionDragsSelection) ? false : true;
+   gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
+   gPrefs->Flush();
+}
+
 #if 0
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
 {
@@ -2322,6 +2348,7 @@ void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
    gPrefs->Flush();
 }
 #endif
+
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 {
