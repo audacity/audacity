@@ -167,6 +167,7 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    static void DragSelection(AudacityProject &project);
    void HandleSnapping(size_t index);
+   void OnTimelineFormatChange(wxCommandEvent& evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
@@ -177,6 +178,7 @@ private:
    void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);
 
+   bool mBeatsAndMeasures;
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
 
