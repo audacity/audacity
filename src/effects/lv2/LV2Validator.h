@@ -124,10 +124,14 @@ public:
    std::vector<PlainUIControl> mPlainUIControls;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
-   SuilInstancePtr mSuilInstance;
+   // Two smart pointers are grouped because their destruction needs caution
+   struct UI {
+      void Destroy();
+      ~UI() { Destroy(); }
+      SuilInstancePtr mSuilInstance;
+      wxWindowPtr<NativeWindow> mNativeWin{};
+   } mUI;
 
-   //! Destroy before mSuilInstance
-   wxWindowPtr<NativeWindow> mNativeWin{};
    wxSize mNativeWinInitialSize{ wxDefaultSize };
    wxSize mNativeWinLastSize{ wxDefaultSize };
    bool mResizing{ false };
