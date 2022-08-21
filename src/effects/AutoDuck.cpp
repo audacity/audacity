@@ -413,6 +413,9 @@ bool EffectAutoDuck::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAutoDuck::DoTransferDataToWindow()
 {
+   // Issue 2324: don't remove these two lines
+   if (!mUIParent->TransferDataToWindow())
+      return false;
    mPanel->Refresh(false);
    return true;
 }
