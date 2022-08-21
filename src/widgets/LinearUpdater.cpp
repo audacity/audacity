@@ -178,12 +178,6 @@ void LinearUpdater::Update(
       }
    }
 
-   // Left and Right Edges
-   if (mLabelEdges) {
-      Tick(dc, 0, mMin, tickSizes, mFonts.major, majorOutputs, context);
-      Tick(dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs, context);
-   }
-
    BoxAdjust(allOutputs, context);
 }
 
