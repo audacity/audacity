@@ -411,6 +411,8 @@ bool DevicePrefs::Commit()
       AudioIORecordChannels.Write(mChannels->GetSelection() + 1);
    }
 
+   AudioIOLatencyDuration.Invalidate();
+   AudioIOLatencyCorrection.Invalidate();
    return true;
 }
 
