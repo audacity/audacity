@@ -91,12 +91,6 @@ void LinearUpdater::Update(
       TickAtValue(-2 * mDbMirrorValue);
    }
 
-   // Extreme values
-   if (mLabelEdges) {
-      Tick(dc, 0, mMin, tickSizes, mFonts.major, majorOutputs, context);
-      Tick(dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs, context);
-   }
-
    if (!mDbMirrorValue) {
       // Zero (if it's strictly in the middle somewhere)
       TickAtValue(0.0);
