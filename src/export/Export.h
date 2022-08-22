@@ -203,6 +203,11 @@ public:
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
 
+   bool Process(
+      unsigned numChannels, const FileExtension& type, const wxString& filename,
+      bool selectedOnly, double t0, double t1,
+      std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
+
    void DisplayOptions(int index);
    int FindFormatIndex(int exportindex);
 
@@ -229,7 +234,7 @@ private:
    bool GetFilename();
    bool CheckFilename();
    bool CheckMix(bool prompt = true);
-   bool ExportTracks();
+   bool ExportTracks(std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
 
    static void CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata);
    void CreateUserPane(wxWindow *parent);
