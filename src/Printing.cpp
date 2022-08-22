@@ -26,6 +26,8 @@
 #include "Track.h"
 #include "widgets/Ruler.h"
 #include "widgets/AudacityMessageBox.h"
+#include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 
 #include "TrackPanelDrawingContext.h"
 
@@ -86,7 +88,8 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    ruler.SetBounds(0, 0, width, rulerPageHeight);
    ruler.SetOrientation(wxHORIZONTAL);
    ruler.SetRange(0.0, mTracks->GetEndTime());
-   ruler.SetFormat(TimeFormat);
+   ruler.SetUpdater(std::make_unique<LinearUpdater>());
+   ruler.SetFormat(std::make_unique<TimeFormat>());
    ruler.SetLabelEdges(true);
    ruler.Draw(*dc);
 

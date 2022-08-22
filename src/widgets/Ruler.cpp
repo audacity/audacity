@@ -53,8 +53,6 @@
 #include "ZoomInfo.h"
 
 #include "RulerUpdater.h"
-// Need to include to set default
-#include "LinearUpdater.h"
 
 using std::min;
 using std::max;
@@ -88,9 +86,7 @@ Ruler::Ruler()
 
    mTwoTone = false;
 
-   // Should this default to nullptr instead? Removes dependency on LinearUpdater
-   mpUpdater = std::make_unique<LinearUpdater>();
-   // mpUpdater = nullptr;
+   mpUpdater = nullptr;
 }
 
 Ruler::~Ruler()
@@ -103,12 +99,10 @@ void Ruler::SetTwoTone(bool twoTone)
    mTwoTone = twoTone;
 }
 
-void Ruler::SetFormat(RulerFormat format)
+void Ruler::SetFormat(std::unique_ptr<RulerFormat> pFormat)
 {
-   // IntFormat, RealFormat, RealLogFormat, TimeFormat, or LinearDBFormat
-
-   if (mRulerStruct.mFormat != format) {
-      mRulerStruct.mFormat = format;
+   if (!mRulerStruct.mpRulerFormat || mRulerStruct.mpRulerFormat->Identify() != pFormat->Identify()) {
+      mRulerStruct.mpRulerFormat = std::move(pFormat);
 
       Invalidate();
    }
@@ -116,7 +110,7 @@ void Ruler::SetFormat(RulerFormat format)
 
 void Ruler::SetUpdater(std::unique_ptr<RulerUpdater> pUpdater)
 {
-   if (mpUpdater->Identify() != pUpdater->Identify()) {
+   if (!mpUpdater || mpUpdater->Identify() != pUpdater->Identify()) {
       mpUpdater = std::move(pUpdater);
       Invalidate();
    }
@@ -125,8 +119,17 @@ void Ruler::SetUpdater(std::unique_ptr<RulerUpdater> pUpdater)
 
 void Ruler::SetUpdaterData(const std::any& data)
 {
-   if (&data != &mData) {
-      mData = data;
+   if (&data != &mUpdaterData) {
+      mUpdaterData = data;
+      Invalidate();
+   }
+}
+
+
+void Ruler::SetFormatData(const std::any& data)
+{
+   if (&data != &(mRulerStruct.mFormatData)) {
+      mRulerStruct.mFormatData = data;
       Invalidate();
    }
 }
@@ -432,7 +435,7 @@ void Ruler::UpdateCache(
       cache.mBits, cache.mRect
    };
    if (mpUpdater != nullptr)
-      mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct, mData);
+      mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct, mUpdaterData);
 }
 
 auto Ruler::GetFonts() const -> RulerStruct::Fonts

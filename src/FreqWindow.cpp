@@ -82,6 +82,8 @@ the mouse around.
 #include "widgets/RulerPanel.h"
 #include "widgets/LinearUpdater.h"
 #include "widgets/LogarithmicUpdater.h"
+#include "widgets/LinearDBFormat.h"
+#include "widgets/RealFormat.h"
 #include "widgets/VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -288,11 +290,12 @@ void FrequencyPlotDialog::Populate()
 
       S.StartVerticalLay(2);
       {
+         std::unique_ptr<RulerFormat> format = std::make_unique<LinearDBFormat>();
          vRuler = safenew RulerPanel(
             S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 0.0, -dBRange },
-            LinearDBFormat,
+            format,
             XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
@@ -371,11 +374,12 @@ void FrequencyPlotDialog::Populate()
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
+         std::unique_ptr<RulerFormat> format = std::make_unique<RealFormat>();
          hRuler  = safenew RulerPanel(
             S.GetParent(), wxID_ANY, wxHORIZONTAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 10, 20000 },
-            RealFormat,
+            format,
             XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
@@ -713,10 +717,10 @@ void FrequencyPlotDialog::DrawPlot()
 
    if (mAlg == SpectrumAnalyst::Spectrum) {
       vRuler->ruler.SetUnits(XO("dB"));
-      vRuler->ruler.SetFormat(LinearDBFormat);
+      vRuler->ruler.SetFormat(std::make_unique<LinearDBFormat>());
    } else {
       vRuler->ruler.SetUnits({});
-      vRuler->ruler.SetFormat(RealFormat);
+      vRuler->ruler.SetFormat(std::make_unique<RealFormat>());
    }
    int w1, w2, h;
    vRuler->ruler.GetMaxSize(&w1, &h);

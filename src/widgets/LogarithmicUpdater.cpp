@@ -19,7 +19,9 @@ void LogarithmicUpdater::Update(
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
 
    const int mLength = context.mLength;
-   const RulerFormat mFormat = context.mFormat;
+
+   // Can't define mRulerFormat early because it's a unique_ptr
+   const std::any& mFormatData = context.mFormatData;
 
    const int mOrientation = context.mOrientation;
 
@@ -36,7 +38,7 @@ void LogarithmicUpdater::Update(
       : mNumberScale;
 
    double UPP = (mHiddenMax - mHiddenMin) / mLength;  // Units per pixel
-   TickSizes tickSizes{ UPP, mOrientation, mFormat, true };
+   TickSizes tickSizes{ UPP, mOrientation, context.mpRulerFormat, true, mFormatData };
 
    tickSizes.mDigits = 2; //TODO: implement dynamic digit computation
 
@@ -104,7 +106,7 @@ void LogarithmicUpdater::Update(
       allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
    for (int i = 0; i <= steps; i++) {
       // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
-      if (!(mFormat == IntFormat && decade < 10.0)) {
+      if (!(context.mpRulerFormat->Identify() == "IntFormat" && decade < 10.0)) {
          for (int f = start; f != (int)(end); f += mstep) {
             if ((int)(f / 10) != f / 10.0f) {
                val = decade * f / 10;

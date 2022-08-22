@@ -23,6 +23,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/CustomUpdaterValue.h"
+#include "../../../../widgets/RealFormat.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
@@ -278,7 +279,9 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
-      vruler->SetFormat(RealFormat);
+      vruler->SetFormat(std::make_unique<RealFormat>());
+      RealFormatData formatData = { false };
+      vruler->SetFormatData(formatData);
       if (scaleType == WaveformSettings::stLinearAmp) {
          vruler->SetLabelEdges(false);
          vruler->SetUnits({});
@@ -431,7 +434,9 @@ void WaveformVRulerControls::DoUpdateVRuler(
       else
          vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
 #endif
-      vruler->SetFormat(RealLogFormat);
+      vruler->SetFormat(std::make_unique<RealFormat>());
+      RealFormatData formatData = { true };
+      vruler->SetFormatData(formatData);
       vruler->SetLabelEdges(true);
       vruler->SetUpdater(std::make_unique<LinearUpdater>());
    }

@@ -62,14 +62,17 @@ class AUDACITY_DLL_API Ruler {
    // Optional Ruler Parameters
    //
 
-   // Pass in any additional data needed for the ruler
+   // Pass in any additional data needed for the ruler updater
    void SetUpdaterData(const std::any &data);
 
    // If twoTone is true, cause zero and positive numbers to appear black, negative in another color.
    void SetTwoTone(bool twoTone);
 
-   // IntFormat, RealFormat, or TimeFormat
-   void SetFormat(RulerFormat format);
+   // Set the format to be used for generating tick labels and tick spacing for some updaters
+   void SetFormat(std::unique_ptr<RulerFormat> pFormat);
+
+   // Pass in additional data needed for the ruler format
+   void SetFormatData(const std::any& data);
 
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
@@ -139,7 +142,7 @@ public:
 
 private:
    RulerStruct mRulerStruct;
-   std::any mData;
+   std::any mUpdaterData;
 
    wxColour mTickColour;
    wxPen mPen;
