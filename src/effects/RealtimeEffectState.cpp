@@ -124,7 +124,10 @@ public:
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
          const EffectSettingsManager &effect, SettingsAndCounter &settings) {
-            settings.counter = slot.mSettings.counter;
+         if(slot.mSettings.counter == settings.counter)
+            return;//copy once
+
+         settings.counter = slot.mSettings.counter;
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(
                slot.mSettings.settings, settings.settings,
