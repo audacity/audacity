@@ -103,6 +103,8 @@
 #include "../WaveClip.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
+#include "../widgets/IntFormat.h"
+#include "../widgets/LinearDBFormat.h"
 #include "../widgets/LinearUpdater.h"
 #include "../widgets/LogarithmicUpdater.h"
 #include "../widgets/RulerPanel.h"
@@ -711,11 +713,12 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
          S.StartVerticalLay(wxEXPAND, 1);
          {
+            std::unique_ptr<RulerFormat> format = std::make_unique<LinearDBFormat>();
             mdBRuler = safenew RulerPanel(
                S.GetParent(), wxID_ANY, wxVERTICAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
-               LinearDBFormat,
+               format,
                XO("dB"),
                RulerPanel::Options{}
                   .LabelEdges(true)
@@ -768,11 +771,12 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
          // Column 1 is empty
          S.AddSpace(1, 1);
 
+         std::unique_ptr<RulerFormat> format = std::make_unique<IntFormat>();
          mFreqRuler  = safenew RulerPanel(
             S.GetParent(), wxID_ANY, wxHORIZONTAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ mLoFreq, mHiFreq },
-            IntFormat,
+            format,
             XO("Hz"),
             RulerPanel::Options{}
                .Log(true)

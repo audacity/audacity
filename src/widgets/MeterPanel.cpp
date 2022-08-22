@@ -71,6 +71,9 @@
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "../widgets/wxWidgetsWindowPlacement.h"
+#include "../widgets/LinearUpdater.h"
+#include "../widgets/LinearDBFormat.h"
+#include "../widgets/RealFormat.h"
 
 #include "AllThemeResources.h"
 #include "../widgets/valnum.h"
@@ -340,6 +343,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mRuler.SetFonts(GetFont(), GetFont(), GetFont());
    mRuler.SetFlip(mStyle != MixerTrackCluster);
    mRuler.SetLabelEdges(true);
+   mRuler.SetUpdater(std::make_unique<LinearUpdater>());
    //mRuler.SetTickColour( wxColour( 0,0,255 ) );
 
    if (mStyle != MixerTrackCluster)
@@ -1264,7 +1268,7 @@ void MeterPanel::SetActiveStyle(Style newStyle)
 
    if (mDB)
    {
-      mRuler.SetFormat(LinearDBFormat);
+      mRuler.SetFormat(std::make_unique<LinearDBFormat>());
       if (mStyle == HorizontalStereo || mStyle == HorizontalStereoCompact)
       {
          mRuler.SetOrientation(wxHORIZONTAL);
@@ -1278,7 +1282,7 @@ void MeterPanel::SetActiveStyle(Style newStyle)
    }
    else
    {
-      mRuler.SetFormat(RealFormat);
+      mRuler.SetFormat(std::make_unique<RealFormat>());
       if (mStyle == HorizontalStereo || mStyle == HorizontalStereoCompact)
       {
          mRuler.SetOrientation(wxHORIZONTAL);

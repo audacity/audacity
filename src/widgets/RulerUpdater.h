@@ -15,19 +15,12 @@
 #include "ViewInfo.h" // for children
 #include "Envelope.h"
 #include "NumberScale.h" // member variable
+#include "RulerFormat.h" // member variable
+
 #include <wx/font.h>
-#include <any> // needed for customizable data
 
 class wxDC;
 class wxColor;
-
-enum RulerFormat {
-   IntFormat,
-   RealFormat,
-   RealLogFormat,
-   TimeFormat,
-   LinearDBFormat,
-};
 
 struct RulerStruct {
    struct Fonts {
@@ -42,9 +35,11 @@ struct RulerStruct {
 
    int mOrientation{ wxHORIZONTAL };
    int mSpacing{ 6 };
-   RulerFormat mFormat{ RealFormat };
    bool mFlip{ false };
    bool mLabelEdges{ false };
+
+   std::unique_ptr<RulerFormat> mpRulerFormat;
+   std::any mFormatData;
 
    int mLeft{ -1 };
    int mTop{ -1 };
@@ -106,11 +101,15 @@ protected:
 
       int          mDigits;
 
-      TickSizes(double UPP, int orientation, RulerFormat format, bool log);
+      TickSizes(
+         double UPP, int orientation, const std::unique_ptr<RulerFormat>& format, bool log,
+         const std::any& data
+      );
 
       TranslatableString LabelString(
-         double d, RulerFormat format)
-         const;
+         double d, const std::unique_ptr<RulerFormat>& format,
+         const std::any& data
+      ) const;
    };
 
    static std::pair< wxRect, Label > MakeTick(

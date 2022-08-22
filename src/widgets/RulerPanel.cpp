@@ -34,7 +34,7 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
    wxOrientation orientation,
    const wxSize& bounds,
    const Range& range,
-   RulerFormat format,
+   std::unique_ptr<RulerFormat>& format,
    const TranslatableString& units,
    const Options& options,
    const wxPoint& pos /*= wxDefaultPosition*/,
@@ -48,7 +48,7 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
       ruler.SetUpdater(std::make_unique<LogarithmicUpdater>());
    else
       ruler.SetUpdater(std::make_unique<LinearUpdater>());
-   ruler.SetFormat(format);
+   ruler.SetFormat(std::move(format));
    ruler.SetUnits(units);
    ruler.SetFlip(options.flip);
    ruler.SetLabelEdges(options.labelEdges);
