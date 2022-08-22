@@ -680,7 +680,8 @@ bool Effect::TrackProgress(
    int whichTrack, double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
-      mProgress->Poll(whichTrack + frac, (double) mNumTracks, msg) :
+      mProgress->Poll((whichTrack + frac) * 1000,
+         (double) mNumTracks * 1000, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -689,7 +690,8 @@ bool Effect::TrackGroupProgress(
    int whichGroup, double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
-      mProgress->Poll(whichGroup + frac, (double) mNumGroups, msg) :
+      mProgress->Poll((whichGroup + frac) * 1000,
+         (double) mNumGroups * 1000, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
