@@ -52,7 +52,7 @@ class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
               wxOrientation orientation,
               const wxSize &bounds,
               const Range &range,
-              RulerFormat format,
+              const RulerFormat &format,
               const TranslatableString &units,
               const Options &options = {},
               const wxPoint& pos = wxDefaultPosition,

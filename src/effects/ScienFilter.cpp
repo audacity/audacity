@@ -60,6 +60,8 @@ a graph for EffectScienFilter.
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/RulerPanel.h"
+#include "../widgets/IntFormat.h"
+#include "../widgets/LinearDBFormat.h"
 #include "../widgets/WindowAccessible.h"
 
 #if !defined(M_PI)
@@ -278,7 +280,7 @@ std::unique_ptr<EffectEditor> EffectScienFilter::PopulateOrExchange(
             S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 30.0, -120.0 },
-            LinearDBFormat,
+            LinearDBFormat::Instance(),
             XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
@@ -336,7 +338,7 @@ std::unique_ptr<EffectEditor> EffectScienFilter::PopulateOrExchange(
          S.GetParent(), wxID_ANY, wxHORIZONTAL,
          wxSize{ 100, 100 }, // Ruler can't handle small sizes
          RulerPanel::Range{ mLoFreq, mNyquist },
-         IntFormat,
+         IntFormat::Instance(),
          {},
          RulerPanel::Options{}
             .Log(true)

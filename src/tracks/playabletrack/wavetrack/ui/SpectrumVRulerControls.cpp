@@ -22,6 +22,8 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/LogarithmicUpdater.h"
+#include "../../../../widgets/IntFormat.h"
+#include "../../../../widgets/RealFormat.h"
 
 SpectrumVRulerControls::~SpectrumVRulerControls() = default;
 
@@ -157,7 +159,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           */
          vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(RealFormat);
+         vruler->SetFormat(&RealFormat::LinearInstance());
          vruler->SetLabelEdges(true);
          // use kHz in scale, if appropriate
          if (maxFreq >= 2000) {
@@ -188,7 +190,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           */
          vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(IntFormat);
+         vruler->SetFormat(&IntFormat::Instance());
          vruler->SetLabelEdges(true);
          vruler->SetRange(maxFreq, minFreq);
          vruler->SetUnits({});

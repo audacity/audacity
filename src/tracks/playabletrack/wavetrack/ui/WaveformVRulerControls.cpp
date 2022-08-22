@@ -22,6 +22,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
+#include "../../../../widgets/RealFormat.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
 
@@ -236,7 +237,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
-      vruler->SetFormat(RealFormat);
+      vruler->SetFormat(&RealFormat::LinearInstance());
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
       vruler->SetUpdater(&LinearUpdater::Instance());
@@ -346,7 +347,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       else
          vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
 #endif
-      vruler->SetFormat(RealLogFormat);
+      vruler->SetFormat(&RealFormat::LogInstance());
       vruler->SetLabelEdges(true);
       vruler->SetUpdater(&LinearUpdater::Instance());
    }

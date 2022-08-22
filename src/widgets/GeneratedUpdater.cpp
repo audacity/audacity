@@ -20,7 +20,6 @@ bool GeneratedUpdater::Tick(wxDC& dc,
 {
    const double mDbMirrorValue = context.mDbMirrorValue;
    const int mLength = context.mLength;
-   const RulerFormat mFormat = context.mFormat;
 
    const int mLeft = context.mLeft;
    const int mTop = context.mTop;
@@ -45,7 +44,7 @@ bool GeneratedUpdater::Tick(wxDC& dc,
    Label lab;
    lab.value = d;
    lab.pos = pos;
-   lab.text = tickSizes.LabelString(d, mFormat);
+   lab.text = tickSizes.LabelString(d, context.mpRulerFormat);
    lab.units = mUnits;
 
    const auto result = RulerUpdater::MakeTick(

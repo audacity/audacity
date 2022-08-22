@@ -15,18 +15,12 @@
 #include "ViewInfo.h" // for children
 #include "Envelope.h"
 #include "NumberScale.h" // member variable
+#include "RulerFormat.h" // member variable
+
 #include <wx/font.h>
 
 class wxDC;
 class wxColor;
-
-enum RulerFormat {
-   IntFormat,
-   RealFormat,
-   RealLogFormat,
-   TimeFormat,
-   LinearDBFormat,
-};
 
 struct RulerStruct {
    struct Fonts {
@@ -41,9 +35,10 @@ struct RulerStruct {
 
    int mOrientation{ wxHORIZONTAL };
    int mSpacing{ 6 };
-   RulerFormat mFormat{ RealFormat };
    bool mFlip{ false };
    bool mLabelEdges{ false };
+
+   const RulerFormat *mpRulerFormat{};
 
    int mLeft{ -1 };
    int mTop{ -1 };
@@ -103,11 +98,11 @@ protected:
 
       int          mDigits;
 
-      TickSizes(double UPP, int orientation, RulerFormat format, bool log);
+      TickSizes(
+         double UPP, int orientation, const RulerFormat *format, bool log
+      );
 
-      TranslatableString LabelString(
-         double d, RulerFormat format)
-         const;
+      TranslatableString LabelString(double d, const RulerFormat *format) const;
    };
 
    static std::pair< wxRect, Label > MakeTick(

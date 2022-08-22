@@ -69,6 +69,9 @@
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "../widgets/wxWidgetsWindowPlacement.h"
+#include "../widgets/LinearUpdater.h"
+#include "../widgets/LinearDBFormat.h"
+#include "../widgets/RealFormat.h"
 
 #include "AllThemeResources.h"
 #include "../widgets/valnum.h"
@@ -315,7 +318,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mNumBars(0),
    mLayoutValid(false),
    mBitmap{},
-   mRuler{ LinearUpdater::Instance() }
+   mRuler{ LinearUpdater::Instance(), LinearDBFormat::Instance() }
 {
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
    SetName( XO("Meter") );
@@ -1215,7 +1218,7 @@ void MeterPanel::SetActiveStyle(Style newStyle)
 
    if (mDB)
    {
-      mRuler.SetFormat(LinearDBFormat);
+      mRuler.SetFormat(&LinearDBFormat::Instance());
       if (mStyle == HorizontalStereo || mStyle == HorizontalStereoCompact)
       {
          mRuler.SetOrientation(wxHORIZONTAL);
@@ -1229,7 +1232,7 @@ void MeterPanel::SetActiveStyle(Style newStyle)
    }
    else
    {
-      mRuler.SetFormat(RealFormat);
+      mRuler.SetFormat(&RealFormat::LinearInstance());
       if (mStyle == HorizontalStereo || mStyle == HorizontalStereoCompact)
       {
          mRuler.SetOrientation(wxHORIZONTAL);

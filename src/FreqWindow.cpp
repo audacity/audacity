@@ -82,6 +82,8 @@ the mouse around.
 #include "widgets/RulerPanel.h"
 #include "widgets/LinearUpdater.h"
 #include "widgets/LogarithmicUpdater.h"
+#include "widgets/LinearDBFormat.h"
+#include "widgets/RealFormat.h"
 #include "widgets/VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -292,7 +294,7 @@ void FrequencyPlotDialog::Populate()
             S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 0.0, -dBRange },
-            LinearDBFormat,
+            LinearDBFormat::Instance(),
             XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
@@ -375,7 +377,7 @@ void FrequencyPlotDialog::Populate()
             S.GetParent(), wxID_ANY, wxHORIZONTAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 10, 20000 },
-            RealFormat,
+            RealFormat::LinearInstance(),
             XO("Hz"),
             RulerPanel::Options{}
                .Log(true)
@@ -713,10 +715,10 @@ void FrequencyPlotDialog::DrawPlot()
 
    if (mAlg == SpectrumAnalyst::Spectrum) {
       vRuler->ruler.SetUnits(XO("dB"));
-      vRuler->ruler.SetFormat(LinearDBFormat);
+      vRuler->ruler.SetFormat(&LinearDBFormat::Instance());
    } else {
       vRuler->ruler.SetUnits({});
-      vRuler->ruler.SetFormat(RealFormat);
+      vRuler->ruler.SetFormat(&RealFormat::LinearInstance());
    }
    int w1, w2, h;
    vRuler->ruler.GetMaxSize(&w1, &h);

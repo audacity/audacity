@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../widgets/Ruler.h"
 #include "../../../widgets/LinearUpdater.h"
 #include "../../../widgets/LogarithmicUpdater.h"
+#include "../../../widgets/RealFormat.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {
@@ -35,7 +36,9 @@ TimeTrackVRulerControls::~TimeTrackVRulerControls()
 namespace {
    Ruler &ruler()
    {
-      static Ruler theRuler{ LinearUpdater::Instance() };
+      static Ruler theRuler{
+         LinearUpdater::Instance(), RealFormat::LinearInstance()
+      };
       return theRuler;
    }
 }
@@ -119,7 +122,9 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
    vruler->SetOrientation(wxVERTICAL);
    vruler->SetRange(max, min);
-   vruler->SetFormat((tt->GetDisplayLog()) ? RealLogFormat : RealFormat);
+   vruler->SetFormat(tt->GetDisplayLog()
+      ? &RealFormat::LogInstance()
+      : &RealFormat::LinearInstance());
    vruler->SetUnits({});
    vruler->SetLabelEdges(false);
    if (tt->GetDisplayLog())

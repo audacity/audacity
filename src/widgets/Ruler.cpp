@@ -63,7 +63,7 @@ using std::max;
 // Ruler
 //
 
-Ruler::Ruler(const RulerUpdater &updater)
+Ruler::Ruler(const RulerUpdater &updater, const RulerFormat &format)
 {
    mHasSetSpacing = false;
 
@@ -87,6 +87,7 @@ Ruler::Ruler(const RulerUpdater &updater)
    mTwoTone = false;
 
    SetUpdater(&updater);
+   SetFormat(&format);
 
    mTickLengths = { 4, 2, 2 };
 }
@@ -101,13 +102,10 @@ void Ruler::SetTwoTone(bool twoTone)
    mTwoTone = twoTone;
 }
 
-void Ruler::SetFormat(RulerFormat format)
+void Ruler::SetFormat(const RulerFormat *pFormat)
 {
-   // IntFormat, RealFormat, RealLogFormat, TimeFormat, or LinearDBFormat
-
-   if (mRulerStruct.mFormat != format) {
-      mRulerStruct.mFormat = format;
-
+   if (mRulerStruct.mpRulerFormat != pFormat) {
+      mRulerStruct.mpRulerFormat = pFormat;
       Invalidate();
    }
 }

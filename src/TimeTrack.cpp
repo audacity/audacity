@@ -22,6 +22,7 @@
 #include <wx/dc.h>
 #include "widgets/Ruler.h"
 #include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"
@@ -74,9 +75,8 @@ void TimeTrack::CleanState()
    SetName(GetDefaultName());
 
    mUpdater.SetData(mZoomInfo);
-   mRuler = std::make_unique<Ruler>(mUpdater);
+   mRuler = std::make_unique<Ruler>(mUpdater, TimeFormat::Instance() );
    mRuler->SetLabelEdges(false);
-   mRuler->SetFormat(TimeFormat);
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
@@ -102,9 +102,8 @@ TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mUpdater.SetData(mZoomInfo);
-   mRuler = std::make_unique<Ruler>(mUpdater);
+   mRuler = std::make_unique<Ruler>(mUpdater, TimeFormat::Instance());
    mRuler->SetLabelEdges(false);
-   mRuler->SetFormat(TimeFormat);
 }
 
 // Copy the track metadata but not the contents.

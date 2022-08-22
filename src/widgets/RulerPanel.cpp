@@ -33,29 +33,32 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(RulerPanel, wxPanelWrapper)
 
 RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
-                       wxOrientation orientation,
-                       const wxSize &bounds,
-                       const Range &range,
-                       RulerFormat format,
-                       const TranslatableString &units,
-                       const Options &options,
-                       const wxPoint& pos /*= wxDefaultPosition*/,
-                       const wxSize& size /*= wxDefaultSize*/)
+   wxOrientation orientation,
+   const wxSize& bounds,
+   const Range& range,
+   const RulerFormat &format,
+   const TranslatableString& units,
+   const Options& options,
+   const wxPoint& pos /*= wxDefaultPosition*/,
+   const wxSize& size /*= wxDefaultSize*/
+)
    : wxPanelWrapper(parent, id, pos, size)
-   , ruler{ [&]() -> const RulerUpdater& {
-      if (options.log)
-         return LogarithmicUpdater::Instance();
-      else
-         return LinearUpdater::Instance();
-   }() }
+   , ruler{
+      [&]() -> const RulerUpdater& {
+         if (options.log)
+            return LogarithmicUpdater::Instance();
+         else
+            return LinearUpdater::Instance();
+      }(),
+      format
+   }
 {
    ruler.SetBounds( 0, 0, bounds.x, bounds.y );
    ruler.SetOrientation(orientation);
    ruler.SetRange( range.first, range.second );
-   ruler.SetFormat(format);
-   ruler.SetUnits( units );
-   ruler.SetFlip( options.flip );
-   ruler.SetLabelEdges( options.labelEdges );
+   ruler.SetUnits(units);
+   ruler.SetFlip(options.flip);
+   ruler.SetLabelEdges(options.labelEdges);
    ruler.mbTicksAtExtremes = options.ticksAtExtremes;
    if (orientation == wxVERTICAL) {
       wxCoord w;

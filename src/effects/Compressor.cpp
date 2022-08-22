@@ -42,6 +42,8 @@
 #include "float_cast.h"
 #include "../widgets/LinearUpdater.h"
 #include "../widgets/Ruler.h"
+#include "../widgets/LinearDBFormat.h"
+#include "../widgets/LinearUpdater.h"
 
 #include "WaveTrack.h"
 #include "AllThemeResources.h"
@@ -650,19 +652,17 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    int w = 0;
    int h = 0;
 
-   Ruler vRuler{ LinearUpdater::Instance() };
+   Ruler vRuler{ LinearUpdater::Instance(), LinearDBFormat::Instance() };
    vRuler.SetBounds(0, 0, width, height);
    vRuler.SetOrientation(wxVERTICAL);
    vRuler.SetRange(0, -rangeDB);
-   vRuler.SetFormat(LinearDBFormat);
    vRuler.SetUnits(XO("dB"));
    vRuler.GetMaxSize(&w, NULL);
 
-   Ruler hRuler{ LinearUpdater::Instance() };
+   Ruler hRuler{ LinearUpdater::Instance(), LinearDBFormat::Instance() };
    hRuler.SetBounds(0, 0, width, height);
    hRuler.SetOrientation(wxHORIZONTAL);
    hRuler.SetRange(-rangeDB, 0);
-   hRuler.SetFormat(LinearDBFormat);
    hRuler.SetUnits(XO("dB"));
    hRuler.SetFlip(true);
    hRuler.GetMaxSize(NULL, &h);

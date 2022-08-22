@@ -14,6 +14,7 @@
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
 #include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 #include "Observer.h"
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
@@ -135,7 +136,7 @@ private:
 private:
 
    LinearUpdater mUpdater;
-   Ruler mRuler{ mUpdater };
+   Ruler mRuler{ mUpdater, TimeFormat::Instance() };
    AudacityProject *const mProject;
    TrackList *mTracks;
 

@@ -1042,8 +1042,12 @@ list( APPEND SOURCES
       widgets/HtmlWindow.h
       widgets/ImageRoll.cpp
       widgets/ImageRoll.h
+      widgets/IntFormat.cpp
+      widgets/IntFormat.h
       widgets/KeyView.cpp
       widgets/KeyView.h
+      widgets/LinearDBFormat.cpp
+      widgets/LinearDBFormat.h
       widgets/LinearUpdater.cpp
       widgets/LinearUpdater.h
       widgets/LogarithmicUpdater.cpp
@@ -1067,8 +1071,12 @@ list( APPEND SOURCES
       widgets/ProgressDialog.cpp
       widgets/ProgressDialog.h
       widgets/ReadOnlyText.h
+      widgets/RealFormat.cpp
+      widgets/RealFormat.h
       widgets/Ruler.cpp
       widgets/Ruler.h
+      widgets/RulerFormat.cpp
+      widgets/RulerFormat.h
       widgets/RulerPanel.cpp
       widgets/RulerPanel.h
       widgets/RulerUpdater.cpp
@@ -1077,6 +1085,8 @@ list( APPEND SOURCES
          widgets/ErrorReportDialog.cpp
          widgets/ErrorReportDialog.h
       >
+      widgets/TimeFormat.cpp
+      widgets/TimeFormat.h
       widgets/UnwritableLocationErrorDialog.cpp
       widgets/UnwritableLocationErrorDialog.h
       widgets/VetoDialogHook.h

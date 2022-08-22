@@ -21,6 +21,7 @@
 class wxDC;
 
 class Envelope;
+class RulerFormat;
 
 #include "TranslatableString.h"
 
@@ -35,7 +36,7 @@ class AUDACITY_DLL_API Ruler {
    // Constructor / Destructor
    //
 
-   Ruler(const RulerUpdater &updater);
+   Ruler(const RulerUpdater &updater, const RulerFormat &format);
    ~Ruler();
 
    //
@@ -71,8 +72,10 @@ class AUDACITY_DLL_API Ruler {
    // If twoTone is true, cause zero and positive numbers to appear black, negative in another color.
    void SetTwoTone(bool twoTone);
 
-   // IntFormat, RealFormat, or TimeFormat
-   void SetFormat(RulerFormat format);
+   // Set the format to be used for generating tick labels and tick spacing for some updaters
+   // Invalidates the ruler.  However ruler doesn't invalidate automatically
+   // if the formatter's state is mutated elsewhere.
+   void SetFormat(const RulerFormat *pFormat);
 
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".

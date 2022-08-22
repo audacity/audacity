@@ -25,6 +25,8 @@
 #include "../widgets/RulerPanel.h"
 #include "../widgets/LinearUpdater.h"
 #include "../widgets/LogarithmicUpdater.h"
+#include "../widgets/IntFormat.h"
+#include "../widgets/LinearDBFormat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -109,7 +111,7 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
                S.GetParent(), wxID_ANY, wxHORIZONTAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ loFreq, hiFreq },
-               IntFormat,
+               IntFormat::Instance(),
                XO("Hz"),
                RulerPanel::Options{}
                   .Log(true)
@@ -123,7 +125,7 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
                S.GetParent(), wxID_ANY, wxVERTICAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
-               LinearDBFormat,
+               LinearDBFormat::Instance(),
                XO("dB"),
                RulerPanel::Options{}
                   .LabelEdges(true)

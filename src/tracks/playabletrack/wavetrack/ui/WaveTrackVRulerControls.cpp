@@ -21,12 +21,14 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../widgets/LinearUpdater.h"
+#include "../../../../widgets/RealFormat.h"
 #include "../../../../widgets/Ruler.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 Ruler &WaveTrackVRulerControls::ScratchRuler()
 {
-   static Ruler theRuler{ LinearUpdater::Instance() };
+   static Ruler theRuler{
+      LinearUpdater::Instance(), RealFormat::LinearInstance() };
    return theRuler;
 }
 

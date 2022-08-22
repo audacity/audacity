@@ -56,6 +56,7 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/Grabber.h"
 #include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/dcclient.h>
@@ -1283,7 +1284,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mUpdater.SetData(mViewInfo, mLeftOffset);
    mRuler.SetLabelEdges( false );
-   mRuler.SetFormat( TimeFormat );
 
    mTracks = &TrackList::Get( *project );
 

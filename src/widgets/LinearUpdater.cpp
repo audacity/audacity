@@ -26,7 +26,6 @@ void LinearUpdater::Update(
 
    const double mDbMirrorValue = context.mDbMirrorValue;
    const int mLength = context.mLength;
-   const RulerFormat mFormat = context.mFormat;
 
    const int mLeft = context.mLeft;
    const int mTop = context.mTop;
@@ -47,7 +46,7 @@ void LinearUpdater::Update(
    // Otherwise you may see the tick size for the whole ruler change
    // when the fisheye approaches start or end.
    double UPP = (mHiddenMax - mHiddenMin) / mLength;  // Units per pixel
-   TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
+   TickSizes tickSizes{ UPP, mOrientation, context.mpRulerFormat, false };
 
    auto TickAtValue =
       [this, &tickSizes, &dc, &majorOutputs, &mFonts, mOrientation,
