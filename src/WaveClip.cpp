@@ -154,6 +154,8 @@ void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
 std::pair<float, float> WaveClip::GetMinMax(
    double t0, double t1, bool mayThrow) const
 {
+   t0 = std::max(t0, GetPlayStartTime());
+   t1 = std::min(t1, GetPlayEndTime());
    if (t0 > t1) {
       if (mayThrow)
          THROW_INCONSISTENCY_EXCEPTION;
