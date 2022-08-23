@@ -77,6 +77,16 @@ size_t LV2Instance::GetBlockSize() const
    return mFeatures.mBlockSize;
 }
 
+unsigned LV2Instance::GetAudioInCount() const
+{
+   return mPorts.mAudioIn;
+}
+
+unsigned LV2Instance::GetAudioOutCount() const
+{
+   return mPorts.mAudioOut;
+}
+
 sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
 {
    if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0)

@@ -36,7 +36,7 @@ BlackList[] =
    { 'appl', 'augn', 'nrcv' },   // Apple: AUNetReceive
    { 'appl', 'aumx', '3dmx' },   // Apple: AUMixer3D
    { 'appl', 'aumx', 'mspl' },   // Apple: AUMultiSplitter
-   { 'appl', 'aumx', 'mxcm' },   // Apple: AUMultiChannelMixer
+   { 'appl', 'aumx', 'mcmx' },   // Apple: AUMultiChannelMixer
    { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
    { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
 };

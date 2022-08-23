@@ -81,18 +81,11 @@ public:
    double GetDuration() const { return mDuration; }
    void SetDuration(double value) { mDuration = std::max(0.0, value); }
 
-   //! Versioning counter for detecting echo from worker thread;
-   //! it does not need a large range of values
-   using Counter = unsigned char;
-   Counter GetCounter() const { return mCounter; }
-   void SetCounter(Counter value) { mCounter = value; }
-
    bool GetActive() const { return mActive; }
    void SetActive(bool value) { mActive = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
-   Counter mCounter{ 0 };
    bool mActive{ true };
 };
 
@@ -408,8 +401,23 @@ public:
    // Suggest a block size, but the return is the size that was really set:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
+   //! How many input buffers to allocate at once
+   /*!
+    If the instance processes channels independently, this can return 1
+    The result is not necessarily well defined before `RealtimeInitialize`
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   /*!
+    The result is not necessarily well defined before `RealtimeInitialize`
+    */
+   virtual unsigned GetAudioOutCount() const = 0;
+
    /*!
     @return success
+    @post `GetAudioInCount()` and `GetAudioOutCount()` are well defined
+
     Default implementation does nothing, returns false (so assume realtime is
     not supported).
     Other member functions related to realtime return true or zero, but will not
@@ -466,6 +474,13 @@ public:
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
    virtual size_t GetTailSize() const;
+
+   //! Main thread receives updates to settings from a processing thread
+   /*!
+    Default implementation simply assigns by copy, not move
+    This might be overridden to copy contents only selectively
+    */
+   virtual void AssignSettings(EffectSettings &dst, EffectSettings &&src) const;
 };
 
 /***************************************************************************//**
@@ -481,6 +496,7 @@ public:
    /*!
     @param chanMap null or array terminated with ChannelNameEOL.  Do not retain
        the pointer
+    @post `GetAudioInCount()` and `GetAudioOutCount()` are well defined
     */
    virtual bool ProcessInitialize(EffectSettings &settings,
       double sampleRate, ChannelNames chanMap) = 0;
@@ -534,20 +550,6 @@ public:
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
-   //! How many input buffers to allocate at once
-   /*!
-    If the effect ALWAYS processes channels independently, this can return 1
-    */
-   virtual unsigned GetAudioInCount() const = 0;
-
-   //! How many output buffers to allocate at once
-   virtual unsigned GetAudioOutCount() const = 0;
-
-   //! Function that has not yet found a use
-   virtual int GetMidiInCount() const;
-
-   //! Function that has not yet found a use
-   virtual int GetMidiOutCount() const;
 };
 
 /*************************************************************************************//**

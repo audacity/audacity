@@ -1242,7 +1242,7 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 
    if (mSupportsRealtime && !mInitialized) {
       if (!priorState)
-         mpState =
+         mwState = mpState = mpTempProjectState =
             AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
       if (mpState) {
          // Find the right instance to connect to the dialog
@@ -1284,14 +1284,12 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 
 void EffectUIHost::CleanupRealtime()
 {
-   bool noPriorState(mSubscription);
    mSubscription.Reset();
-   if (mSupportsRealtime && mInitialized) {
-      auto mpState = mwState.lock();
 
-      if (noPriorState && mpState) {
-         AudioIO::Get()->RemoveState(mProject, nullptr, mpState);
-         mpState.reset();
+   if (mSupportsRealtime && mInitialized) {
+      if (mpTempProjectState) {
+         AudioIO::Get()->RemoveState(mProject, nullptr, mpTempProjectState);
+         mpTempProjectState.reset();
       /*
          ProjectHistory::Get(mProject).PushState(
             XO("Removed %s effect").Format(mpState->GetEffect()->GetName()),

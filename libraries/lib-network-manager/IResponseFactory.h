@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <string>
+#include <memory>
 
 namespace audacity
 {
@@ -20,6 +21,7 @@ namespace network_manager
 
 class IResponse;
 class Request;
+class MultipartData;
 
 using ResponsePtr = std::shared_ptr<IResponse>;
 
@@ -29,7 +31,8 @@ enum class RequestVerb
     Get,
     Post,
     Put,
-    Delete
+    Delete,
+    Patch
 };
 
 class IResponseFactory
@@ -41,6 +44,7 @@ public:
 
     virtual ResponsePtr performRequest (RequestVerb verb, const Request& request) = 0;
     virtual ResponsePtr performRequest (RequestVerb verb, const Request& request, const void* data, size_t size) = 0;
+    virtual ResponsePtr performRequest (RequestVerb verb, const Request& request, std::unique_ptr<MultipartData> form) = 0;
 
     virtual void terminate () = 0;
 };

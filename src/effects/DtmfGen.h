@@ -57,8 +57,6 @@ public:
 
    EffectType GetType() const override;
 
-   unsigned GetAudioOutCount() const override;
-
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

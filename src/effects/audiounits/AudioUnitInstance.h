@@ -36,6 +36,9 @@ private:
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
 
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       ChannelNames chanMap) override;
    bool ProcessFinalize() noexcept override;

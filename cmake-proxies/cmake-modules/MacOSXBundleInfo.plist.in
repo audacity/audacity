@@ -237,5 +237,16 @@
 	<string>Audacity requires access to the microphone only if you intend to record from it.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Audacity</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>audacity</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

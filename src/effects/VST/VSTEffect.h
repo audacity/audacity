@@ -12,7 +12,7 @@
 
 #if USE_VST
 
-#include "../StatefulPerTrackEffect.h"
+#include "../PerTrackEffect.h"
 #include "CFResources.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
@@ -23,6 +23,7 @@
 
 #include <unordered_map>
 #include <optional>
+#include <mutex>
 
 class wxSizerItem;
 class wxSlider;
@@ -101,6 +102,15 @@ struct VSTEffectSettings
 
 struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 {
+   explicit VSTEffectWrapper(const PluginPath& path)
+      : mPath(path)
+   {}
+
+   ~VSTEffectWrapper()
+   {
+      ResetModuleAndHandle();
+   }
+
    AEffect* mAEffect = nullptr;
 
    intptr_t callDispatcher(int opcode, int index,
@@ -113,8 +123,8 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    float callGetParameter(int index) const;
 
-   void callSetChunkB(bool isPgm, int len, void* buf);
-   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info) const;
+   void callSetChunk(bool isPgm, int len, void* buf);
+   void callSetChunk(bool isPgm, int len, void* buf, VstPatchChunkInfo* info) const;
 
 
    int      GetString(wxString& outstr, int opcode, int index = 0) const;
@@ -140,30 +150,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    bool IsCompatible(const VstPatchChunkInfo&) const;
 
-   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
-
-   //! This function will be rewritten when the effect is really stateless
-   VSTEffectSettings& GetSettings(EffectSettings&) const
-   {
-      return const_cast<VSTEffectWrapper*>(this)->mSettings;
-   }
-
-   //! This function will be rewritten when the effect is really stateless
-   const VSTEffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
-
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-   */
-
    // These are here because they are used by the import/export methods
    int mVstVersion;
    wxString mName;
@@ -185,7 +171,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    ComponentInterfaceSymbol GetSymbol() const;
 
-   bool callSetParameterB(int index, float value) const;
+   void callSetParameter(int index, float value) const;
 
    void SaveXML(const wxFileName& fn) const;
 
@@ -193,13 +179,113 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    bool LoadFXB(const wxFileName& fn);
    bool LoadFXP(const wxFileName& fn);
    bool LoadFXProgram(unsigned char** bptr, ssize_t& len, int index, bool dryrun);
-   void callSetProgramB(int index);
+   void callSetProgram(int index);
 
    void SaveFXB(const wxFileName& fn) const;
    void SaveFXP(const wxFileName& fn) const;
    void SaveFXProgram(wxMemoryBuffer& buf, int index) const;
 
+
+   intptr_t mCurrentEffectID {};
+   
+   bool Load();
+   PluginPath   mPath;
+
+   // Define a manager class for a handle to a module
+#if defined(__WXMSW__)
+   using ModuleHandle = std::unique_ptr<wxDynamicLibrary>;
+#else
+   struct ModuleDeleter {
+      void operator() (void*) const;
+   };
+   using ModuleHandle = std::unique_ptr < char, ModuleDeleter >;
+#endif
+
+   ModuleHandle mModule{};
+
+   wxString mVendor;
+   wxString mDescription;
+   int      mVersion;
+   bool     mInteractive{ false };
+   unsigned mAudioIns{ 0 };
+   unsigned mAudioOuts{ 0 };
+   int      mMidiIns{ 0 };
+   int      mMidiOuts{ 0 };
+   bool     mAutomatable;
+
+   virtual void Unload() = 0;
+
+   void ResetModuleAndHandle();
+
+#if defined(__WXMAC__)
+   // These members must be ordered after mModule
+
+   using BundleHandle = CF_ptr<CFBundleRef>;
+
+   BundleHandle mBundleRef;
+
+   struct ResourceHandle {
+      ResourceHandle(
+         CFBundleRef pHandle = nullptr, CFBundleRefNum num = 0)
+         : mpHandle{ pHandle }, mNum{ num }
+      {}
+      ResourceHandle& operator=(ResourceHandle&& other)
+      {
+         if (this != &other) {
+            mpHandle = other.mpHandle;
+            mNum = other.mNum;
+            other.mpHandle = nullptr;
+            other.mNum = 0;
+         }
+         return *this;
+      }
+      ~ResourceHandle() { reset(); }
+      void reset();
+
+      CFBundleRef mpHandle{};
+      CFBundleRefNum mNum{};
+   };
+   ResourceHandle mResource;
+#endif
+
+   
+   VstTimeInfo* GetTimeInfo();
+   float        GetSampleRate();
+   VstTimeInfo  mTimeInfo;
+
+   int mBufferDelay{ 0 };
+
+   int GetProcessLevel();
+   int mProcessLevel{ 1 };  // in GUI thread
+
+   bool   mUseLatency{ true };
+
+   // The vst callback is currently called both for the effect and for instances.
+   //
+   static intptr_t AudioMaster(AEffect *effect,
+                               int32_t opcode,
+                               int32_t index,
+                               intptr_t value,
+                               void * ptr,
+                               float opt);
+
+   // Some of the methods called by the callback make sense for the Effect:
+   //
+   // - All GUI-related stuff 
+   virtual void NeedIdle();
+   virtual void UpdateDisplay();
+   virtual void SizeWindow(int w, int h);
+
+   // - Automate is called by the callback whenever a control on the GUI is moved
+   virtual void Automate(int index, float value);
+
+   // Some other methods called by the callback make sense for Instances:
+   void         SetBufferDelay(int samples);
+
 };
+
+class VSTEffectInstance;
+using VSTInstanceArray = std::vector < std::unique_ptr<VSTEffectInstance> >;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -207,10 +293,12 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-using VSTEffectArray = std::vector < std::unique_ptr<VSTEffect> > ;
 
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
+
+
+class VSTEffectValidator;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -219,11 +307,12 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
-   : public StatefulPerTrackEffect
-   , public VSTEffectWrapper
+   :  public VSTEffectWrapper
+     ,public PerTrackEffect
+   
 {
  public:
-   VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
+   VSTEffect(const PluginPath & path);
    virtual ~VSTEffect();
 
    // ComponentInterface implementation
@@ -258,39 +347,6 @@ class VSTEffect final
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-
-   int GetMidiInCount() const override;
-   int GetMidiOutCount() const override;
-
-   sampleCount GetLatency() const override;
-
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-   bool IsReady();
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   bool DoProcessInitialize(double sampleRate);
-   bool ProcessFinalize() noexcept override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
 
@@ -318,22 +374,51 @@ class VSTEffect final
 
    // VSTEffect implementation
 
-   // VST plugin -> host callback
-   static intptr_t AudioMaster(AEffect *effect,
-                               int32_t opcode,
-                               int32_t index,
-                               intptr_t value,
-                               void * ptr,
-                               float opt);
 
    void OnTimer();
 
    EffectSettings MakeSettings() const override;
 
+   void Automate(int index, float value) override;
+
+   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
+   std::mutex mSettingsMutex;    // to avoid read/write races on mSettings - this is needed temporarily
+                                 // and will be removed when the Validator will be implemented
+
+   //! This function will be rewritten when the effect is really stateless
+   VSTEffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VSTEffect*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VSTEffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
+
+protected:
+   void NeedIdle() override;
+   void UpdateDisplay() override;
+   void SizeWindow(int w, int h) override;
+
 private:
+
+   VSTEffectValidator* mValidator{};
+
    // Plugin loading and unloading
-   bool Load();
-   void Unload();
+   
+   void Unload() override;
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
@@ -341,9 +426,6 @@ private:
    bool SaveParameters(
        const RegistryPath & group, const EffectSettings &settings) const;
 
-   // Realtime
-   unsigned GetChannelCount();
-   void SetChannelCount(unsigned numChannels);
 
    // UI
    void OnSlider(wxCommandEvent & evt);
@@ -359,122 +441,25 @@ private:
    void OnSettings(wxCommandEvent & evt);
 
    void BuildPlain(EffectSettingsAccess &access);
-   void BuildFancy();
+   void BuildFancy(EffectInstance& instance);
    wxSizer *BuildProgramBar();
    void RefreshParameters(int skip = -1) const;
 
    // Utility methods
-
-   VstTimeInfo *GetTimeInfo();
-   float GetSampleRate();
-   int GetProcessLevel();
-   void SetBufferDelay(int samples);
-   void NeedIdle();
+   
    void NeedEditIdle(bool state);
-   void SizeWindow(int w, int h);
-   void UpdateDisplay();
-   void Automate(int index, float value);
-   void PowerOn();
-   void PowerOff();
-      
-   
-   
-
-   // VST methods
-
-   
-   void callProcessReplacing(
-      const float *const *inputs, float *const *outputs, int sampleframes);
-   void callSetParameter(int index, float value);   
-   void callSetProgram(int index);
-   void callSetChunk(bool isPgm, int len, void *buf);
-   void callSetChunk(bool isPgm, int len, void* buf, VstPatchChunkInfo* info);
-   
+ 
 
  private:
-    // Define a manager class for a handle to a module
-#if defined(__WXMSW__)
-   using ModuleHandle = std::unique_ptr<wxDynamicLibrary>;
-#else
-   struct ModuleDeleter {
-      void operator() (void*) const;
-   };
-   using ModuleHandle = std::unique_ptr < char, ModuleDeleter > ;
-#endif
 
    PluginID mID;
-   PluginPath mPath;
-   unsigned mAudioIns{0};
-   unsigned mAudioOuts{0};
-   int mMidiIns{0};
-   int mMidiOuts{0};
-   bool mAutomatable;
-   size_t mUserBlockSize{8192};
-   wxString mVendor;
-   wxString mDescription;
-   int mVersion;
-   bool mInteractive{false};
    
-
-   static intptr_t mCurrentEffectID;
-
-   bool mReady{false};
-
-   ModuleHandle mModule{};
-
-#if defined(__WXMAC__)
-   // These members must be ordered after mModule
-
-   using BundleHandle = CF_ptr<CFBundleRef>;
-
-   BundleHandle mBundleRef;
-
-   struct ResourceHandle {
-      ResourceHandle(
-         CFBundleRef pHandle = nullptr, CFBundleRefNum num = 0)
-      : mpHandle{ pHandle }, mNum{ num }
-      {}
-      ResourceHandle& operator=( ResourceHandle &&other )
-      {
-         if (this != &other) {
-            mpHandle = other.mpHandle;
-            mNum = other.mNum;
-            other.mpHandle = nullptr;
-            other.mNum = 0;
-         }
-         return *this;
-      }
-      ~ResourceHandle() { reset(); }
-      void reset();
-
-      CFBundleRef mpHandle{};
-      CFBundleRefNum mNum{};
-   };
-   ResourceHandle mResource;
-#endif
-
-
-   VstTimeInfo mTimeInfo;
-
-   bool mUseLatency{true};
-   int mBufferDelay{0};
-
-   size_t mBlockSize{mUserBlockSize};
-
-   int mProcessLevel{1};  // in GUI thread
-   bool mHasPower{false};
-   bool mWantsIdle{false};
    bool mWantsEditIdle{false};
-
+   bool mWantsIdle{ false };
    
-
-   std::unique_ptr<VSTEffectTimer> mTimer;
    int mTimerGuard{0};
-
-   // Realtime processing
-   VSTEffect *mMaster;     // non-NULL if a slave
-   VSTEffectArray mSlaves;
-   unsigned mNumChannels;
+   std::unique_ptr<VSTEffectTimer> mTimer;
+   
 
    // UI
    wxWeakRef<wxDialog> mDialog;
@@ -533,5 +518,115 @@ public:
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginPath & path) override;
 };
+
+
+
+class VSTEffectInstance final : public PerTrackEffect::Instance,
+   public VSTEffectWrapper
+{
+public:
+
+   VSTEffectInstance(PerTrackEffect&   effect,
+                     const PluginPath& path,
+                     size_t            blockSize,
+                     size_t            userBlockSize,
+                     bool              useLatency
+                    );
+
+   ~VSTEffectInstance() override;
+
+
+   bool ProcessInitialize(EffectSettings& settings, double sampleRate,
+                          ChannelNames chanMap) override;
+   
+   bool ProcessFinalize() noexcept override;
+
+   size_t SetBlockSize(size_t maxBlockSize) override;
+   size_t GetBlockSize() const override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
+      override;
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+   bool RealtimeSuspend() override;
+   bool RealtimeResume() override;
+   bool RealtimeProcessStart(EffectSettings& settings) override;
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+   bool RealtimeProcessEnd(EffectSettings& settings) noexcept override;
+
+
+
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
+
+   sampleCount GetLatency(const EffectSettings& settings, double sampleRate) const override;
+
+   bool IsReady();
+
+   unsigned GetAudioInCount() const override;
+
+   unsigned GetAudioOutCount() const override;
+
+   bool DoProcessInitialize(double sampleRate);
+
+   void PowerOn();
+   void PowerOff();
+
+   size_t mBlockSize{ 8192 };
+
+private:
+
+   void callProcessReplacing(
+      const float* const* inputs, float* const* outputs, int sampleframes);
+
+   VSTEffect& GetEffect() const
+   {
+      // Tolerate const_cast in this class while it sun-sets
+      return static_cast<VSTEffect&>(
+         const_cast<PerTrackEffect&>(mProcessor));
+   }
+
+   VSTEffectSettings& GetSettings(EffectSettings& settings) const
+   {
+      return GetEffect().GetSettings(settings);
+   }
+
+   const VSTEffectSettings& GetSettings(const EffectSettings& settings) const {
+      return GetEffect().GetSettings(settings);
+   }
+
+   void Unload() override;
+
+   VSTInstanceArray mSlaves;
+
+   bool mHasPower{ false };
+
+   size_t mUserBlockSize{ mBlockSize };
+
+   bool mReady{ false };
+};
+
+
+class VSTEffectValidator final : public DefaultEffectUIValidator
+{
+public:
+    VSTEffectValidator(VSTEffectInstance&       instance,
+                       EffectUIClientInterface& effect,
+                       EffectSettingsAccess&    access,
+                       wxWindow*                pParent);
+
+   ~VSTEffectValidator() override;
+
+   VSTEffectInstance& GetInstance();
+
+private:
+   VSTEffectInstance& mInstance;
+};
+
+
 
 #endif // USE_VST

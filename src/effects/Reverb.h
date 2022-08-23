@@ -66,9 +66,6 @@ public:
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-
    RealtimeSince RealtimeSupport() const override;
 
    // Effect implementation

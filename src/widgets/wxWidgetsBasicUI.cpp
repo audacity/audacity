@@ -179,9 +179,9 @@ wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    const TranslatableString &remainingLabelText)
 {
    unsigned options = 0;
-   if (~(flags & ProgressShowStop))
+   if (!(flags & ProgressShowStop))
       options |= pdlgHideStopButton;
-   if (~(flags & ProgressShowCancel))
+   if (!(flags & ProgressShowCancel))
       options |= pdlgHideCancelButton;
    if ((flags & ProgressHideTime))
       options |= pdlgHideElapsedTime;

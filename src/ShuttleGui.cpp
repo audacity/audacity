@@ -1130,7 +1130,7 @@ void InvisiblePanel::OnPaint( wxPaintEvent & WXUNUSED(event))
    // event.Skip(); // swallow the paint event.
 }
 
-wxPanel * ShuttleGuiBase::StartInvisiblePanel()
+wxPanel * ShuttleGuiBase::StartInvisiblePanel(int border)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -1143,7 +1143,7 @@ wxPanel * ShuttleGuiBase::StartInvisiblePanel()
       wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)
       );
    SetProportions( 1 );
-   miBorder=0;
+   miBorder = border;
    UpdateSizers();  // adds window in to current sizer.
 
    // create a sizer within the window...

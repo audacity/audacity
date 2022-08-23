@@ -383,7 +383,7 @@ public:
 
    void EndNotebookPage();
 
-   wxPanel * StartInvisiblePanel();
+   wxPanel * StartInvisiblePanel(int border = 0);
    void EndInvisiblePanel();
 
    void StartRadioButtonGroup(ChoiceSetting &Setting);

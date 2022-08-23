@@ -16,6 +16,9 @@ set( SOURCES
     Request.h
     Request.cpp
 
+    MultipartData.h
+    MultipartData.cpp
+
     NetworkManager.h
     NetworkManager.cpp
 
@@ -33,7 +36,9 @@ set( SOURCES
 set ( LIBRARIES PRIVATE
     CURL::libcurl
     ThreadPool::ThreadPool
-    lib-string-utils
+    lib-string-utils-interface
+    lib-exceptions-interface
+    lib-utility-interface
     wxwidgets::base
 )
 

@@ -913,7 +913,10 @@ struct LadspaEffect::Instance
    override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   
+
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
    const LadspaEffect &GetEffect() const
       { return static_cast<const LadspaEffect &>(mProcessor); }
 
@@ -927,26 +930,6 @@ struct LadspaEffect::Instance
 std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
 {
    return std::make_shared<Instance>(*this);
-}
-
-unsigned LadspaEffect::GetAudioInCount() const
-{
-   return mAudioIns;
-}
-
-unsigned LadspaEffect::GetAudioOutCount() const
-{
-   return mAudioOuts;
-}
-
-int LadspaEffect::GetMidiInCount() const
-{
-   return 0;
-}
-
-int LadspaEffect::GetMidiOutCount() const
-{
-   return 0;
 }
 
 sampleCount LadspaEffect::Instance::GetLatency(
@@ -1022,6 +1005,16 @@ bool LadspaEffect::Instance::RealtimeAddProcessor(
    mSlaves.push_back(slave);
 
    return true;
+}
+
+unsigned LadspaEffect::Instance::GetAudioOutCount() const
+{
+   return GetEffect().mAudioOuts;
+}
+
+unsigned LadspaEffect::Instance::GetAudioInCount() const
+{
+   return GetEffect().mAudioIns;
 }
 
 bool LadspaEffect::Instance::RealtimeFinalize(EffectSettings &) noexcept
