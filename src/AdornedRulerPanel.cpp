@@ -56,6 +56,7 @@
 #include "AudacityMessageBox.h"
 #include "widgets/Grabber.h"
 #include "widgets/LinearUpdater.h"
+#include "widgets/BeatsFormat.h"
 #include "widgets/TimeFormat.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -1286,14 +1287,16 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
+   mBeatsAndMeasures = false;
+
    mUpdater.SetData(mViewInfo, mLeftOffset);
+
    mRuler.SetLabelEdges( false );
 
    mTracks = &TrackList::Get( *project );
 
    mIsRecording = false;
 
-   mBeatsAndMeasures = false;
    mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
 
@@ -2326,8 +2329,18 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
 void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
 {
    int id = event.GetId();
+   bool changeFlag = mBeatsAndMeasures;
    wxASSERT(id == OnMinutesAndSecondsID || id == OnBeatsAndMeasuresID);
    mBeatsAndMeasures = (id == OnBeatsAndMeasuresID);
+   if (mBeatsAndMeasures) {
+      mBeatsFormat.SetData(60.0, 4, 4);
+      mRuler.SetFormat(&mBeatsFormat);
+   }
+   else {
+      mRuler.SetFormat(&TimeFormat::Instance());
+   }
+   if (changeFlag != mBeatsAndMeasures)
+      Refresh();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)

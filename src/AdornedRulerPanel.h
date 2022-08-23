@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_ADORNED_RULER_PANEL__
 #define __AUDACITY_ADORNED_RULER_PANEL__
 
+#include "widgets/BeatsFormat.h"
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
 #include "widgets/LinearUpdater.h"
@@ -135,8 +136,14 @@ private:
 
 private:
 
+   // Stateless formatter object, but not used by default...
+   BeatsFormat mBeatsFormat;
+
    LinearUpdater mUpdater;
+
+   // ... Time formatter used by default instead
    Ruler mRuler{ mUpdater, TimeFormat::Instance() };
+
    AudacityProject *const mProject;
    TrackList *mTracks;
 
