@@ -81,18 +81,11 @@ public:
    double GetDuration() const { return mDuration; }
    void SetDuration(double value) { mDuration = std::max(0.0, value); }
 
-   //! Versioning counter for detecting echo from worker thread;
-   //! it does not need a large range of values
-   using Counter = unsigned char;
-   Counter GetCounter() const { return mCounter; }
-   void SetCounter(Counter value) { mCounter = value; }
-
    bool GetActive() const { return mActive; }
    void SetActive(bool value) { mActive = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
-   Counter mCounter{ 0 };
    bool mActive{ true };
 };
 
@@ -481,6 +474,13 @@ public:
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
    virtual size_t GetTailSize() const;
+
+   //! Main thread receives updates to settings from a processing thread
+   /*!
+    Default implementation simply assigns by copy, not move
+    This might be overridden to copy contents only selectively
+    */
+   virtual void AssignSettings(EffectSettings &dst, EffectSettings &&src) const;
 };
 
 /***************************************************************************//**

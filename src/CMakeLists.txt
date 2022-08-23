@@ -543,22 +543,20 @@ list( APPEND SOURCES
          effects/VST3/VST3Effect.cpp
          effects/VST3/VST3EffectsModule.h
          effects/VST3/VST3EffectsModule.cpp
+         effects/VST3/VST3Instance.h
+         effects/VST3/VST3Instance.cpp
          effects/VST3/VST3Utils.h
          effects/VST3/VST3Utils.cpp
+         effects/VST3/VST3Wrapper.h
+         effects/VST3/VST3Wrapper.cpp
          effects/VST3/VST3OptionsDialog.h
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h
          effects/VST3/VST3ParametersWindow.cpp
-         effects/VST3/internal/ComponentHandler.h
-         effects/VST3/internal/ComponentHandler.cpp
+         effects/VST3/VST3UIValidator.cpp
+         effects/VST3/VST3UIValidator.h
          effects/VST3/internal/ConnectionProxy.h
          effects/VST3/internal/ConnectionProxy.cpp
-         effects/VST3/internal/ParameterChanges.h
-         effects/VST3/internal/ParameterChanges.cpp
-         effects/VST3/internal/ParameterQueuePool.h
-         effects/VST3/internal/ParameterQueuePool.cpp
-         effects/VST3/internal/ParameterValueQueue.h
-         effects/VST3/internal/ParameterValueQueue.cpp
          effects/VST3/internal/PlugFrame.h
          effects/VST3/internal/PlugFrame.cpp
       >

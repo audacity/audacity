@@ -76,7 +76,7 @@ public:
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();
 
-   const EffectSettings &GetSettings() const { return mMainSettings; }
+   const EffectSettings &GetSettings() const { return mMainSettings.settings; }
 
    //! Test only in the main thread
    bool IsEnabled() const noexcept;
@@ -123,9 +123,21 @@ private:
    std::weak_ptr<EffectInstance> mwInstance;
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
+
+   struct SettingsAndCounter {
+      using Counter = unsigned char;
+
+      EffectSettings settings;
+      Counter counter{ 0 };
+
+      void swap(SettingsAndCounter &other) {
+         settings.swap(other.settings);
+         std::swap(counter, other.counter);
+      }
+   };
    
    //! Updated immediately by Access::Set in the main thread
-   NonInterfering<EffectSettings> mMainSettings;
+   NonInterfering<SettingsAndCounter> mMainSettings;
 
    /*! @name Members that are changed also in the worker thread
     @{
@@ -133,7 +145,7 @@ private:
 
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
-   NonInterfering<EffectSettings> mWorkerSettings;
+   NonInterfering<SettingsAndCounter> mWorkerSettings;
    //! Assigned in the worker thread at the start of each processing scope
    bool mLastActive{};
 
