@@ -84,6 +84,13 @@ ResponsePtr NetworkManager::doPut(
    return mResponseFactory->performRequest(RequestVerb::Put, request, std::move(form));
 }
 
+ResponsePtr
+NetworkManager::doPatch(const Request& request, const void* data, size_t size)
+{
+   return mResponseFactory->performRequest(
+      RequestVerb::Patch, request, data, size);
+}
+
 void NetworkManager::setProxy (const std::string& proxy)
 {
     mResponseFactory->setProxy (proxy);
