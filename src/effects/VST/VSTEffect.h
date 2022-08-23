@@ -651,6 +651,9 @@ public:
 
 private:
    VSTEffectInstance& mInstance;
+
+   bool FetchSettingsFromInstance(EffectSettings& settings);
+   bool StoreSettingsToInstance(const EffectSettings& settings);
 };
 
 

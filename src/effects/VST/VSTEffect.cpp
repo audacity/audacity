@@ -3765,7 +3765,11 @@ VSTEffectValidator::VSTEffectValidator
 )
    : DefaultEffectUIValidator(effect, access, pParent),
      mInstance(instance)
-{}
+{
+   // Make the settings of the instance up to date before using it to
+   // build a UI
+   StoreSettingsToInstance(mAccess.Get());
+}
 
 
 VSTEffectInstance& VSTEffectValidator::GetInstance()
@@ -3845,5 +3849,20 @@ VSTEffectInstance::~VSTEffectInstance()
    Unload();
 }
 
+
+bool VSTEffectValidator::FetchSettingsFromInstance(EffectSettings& settings)
+{
+   return mInstance.FetchSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+}
+
+
+bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
+{
+   return mInstance.StoreSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+}
 
 #endif // USE_VST
