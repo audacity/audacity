@@ -46,6 +46,7 @@ public:
     ResponsePtr doPut(const Request& request, const void* data, size_t size);
     ResponsePtr doPut(const Request& request, std::unique_ptr<MultipartData> form);
 
+    ResponsePtr doPatch(const Request& request, const void* data, size_t size);
 
     void setProxy (const std::string& proxy);
 private:

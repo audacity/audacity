@@ -31,7 +31,8 @@ enum class RequestVerb
     Get,
     Post,
     Put,
-    Delete
+    Delete,
+    Patch
 };
 
 class IResponseFactory

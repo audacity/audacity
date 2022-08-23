@@ -96,6 +96,10 @@ CurlHandleManager::Handle::Handle(CurlHandleManager* owner, CURL* handle, Reques
     case RequestVerb::Delete:
         setOption (CURLOPT_CUSTOMREQUEST, "DELETE");
         break;
+    case RequestVerb::Patch:
+       setOption(CURLOPT_UPLOAD, 1);
+       setOption(CURLOPT_CUSTOMREQUEST, "PATCH");
+       break;
     }
 
     setOption (CURLOPT_NOSIGNAL, 1L);
