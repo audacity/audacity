@@ -1016,6 +1016,8 @@ list( APPEND SOURCES
       widgets/BackedPanel.h
       widgets/BasicMenu.cpp
       widgets/BasicMenu.h
+      widgets/BeatsFormat.cpp
+      widgets/BeatsFormat.h
       widgets/CustomUpdater.cpp
       widgets/CustomUpdater.h
       widgets/CustomUpdaterPosition.cpp
