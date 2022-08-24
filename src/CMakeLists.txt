@@ -1138,8 +1138,8 @@ list( APPEND INCLUDES
 # Define resources
 #
 list( APPEND RESOURCES
-   ../resources/EQDefaultCurves.xml
-   ../resources/EffectsMenuDefaults.xml
+   ${topdir}/resources/EQDefaultCurves.xml
+   ${topdir}/resources/EffectsMenuDefaults.xml
 )
 
 #
@@ -1264,7 +1264,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          # Make sure we're a GUI application and not a console tool
          WIN32_EXECUTABLE ON
          # Add the resources
-         RESOURCE "${WIN_RESOURCES};${RESOURCES}"
+         RESOURCE "${WIN_RESOURCES}"
    )
 
    # Copy over the wxWidgets DLLs
@@ -1287,6 +1287,15 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          ${TARGET}
       COMMAND
          ${CMAKE_COMMAND} -E copy ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} ${_DEST}
+      POST_BUILD
+   )
+
+   # Copy resource files into build folder
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -E copy ${RESOURCES} ${_DEST}
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
