@@ -1302,20 +1302,30 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
       mGui = true;
    }
 
-   // Build the appropriate dialog type
-   if (mGui)
-   {
-      BuildFancy(instance);
-   }
-   else
-   {
-      BuildPlain(access);
-   }
-
    auto pParent = S.GetParent();
    pParent->PushEventHandler(this);
 
-   return std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
+   auto validator = std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
+
+   // These could be moved in the validator constructor
+   validator->Load();
+   validator->mParent = mParent;
+   validator->mTimer = std::make_unique<VSTEffectTimer>(this);
+   validator->mDialog = static_cast<wxDialog*>(wxGetTopLevelParent(parent));
+
+
+   // Build the appropriate dialog type
+   if (mGui)
+   {
+      validator->BuildFancy(instance);
+   }
+   else
+   {
+      validator->BuildPlain(access, GetType(), mProjectRate);
+   }
+
+
+   return validator;
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -1335,6 +1345,10 @@ bool VSTEffect::ValidateUI(EffectSettings &settings)
 
 bool VSTEffect::CloseUI()
 {
+   // TODO: now that the UI is owned/managed by the validator,
+   // some or all of these statements will have to move to VSTEffectValidator's override
+   // of EffectUIValidator::OnClose
+
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
@@ -1986,7 +2000,7 @@ void VSTEffect::NeedIdle()
    mTimer->Start(100);
 }
 
-void VSTEffect::NeedEditIdle(bool state)
+void VSTEffectWrapper::NeedEditIdle(bool state)
 {
    mWantsEditIdle = state;
    mTimer->Start(100);
@@ -2224,7 +2238,7 @@ static void OnSize(wxSizeEvent & evt)
    }
 }
 
-void VSTEffect::BuildFancy(EffectInstance& instance)
+void VSTEffectValidator::BuildFancy(EffectInstance& instance)
 {
    auto& vstEffInstance = dynamic_cast<VSTEffectInstance&>(instance);
 
@@ -2264,7 +2278,7 @@ void VSTEffect::BuildFancy(EffectInstance& instance)
    return;
 }
 
-void VSTEffect::BuildPlain(EffectSettingsAccess &access)
+void VSTEffectValidator::BuildPlain(EffectSettingsAccess &access, EffectType effectType, double projectRate)
 {
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
@@ -2302,7 +2316,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
          gridSizer->AddGrowableCol(1);
 
          // Add the duration control for generators
-         if (GetType() == EffectTypeGenerate)
+         if (effectType == EffectTypeGenerate)
          {
             wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
@@ -2312,7 +2326,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
-                  mProjectRate,
+                  projectRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
             mDuration->SetName( XO("Duration") );
@@ -2393,7 +2407,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
    mSliders[0]->SetFocus();
 }
 
-void VSTEffect::RefreshParameters(int skip) const
+void VSTEffectWrapper::RefreshParameters(int skip) const
 {
    if (!mNames)
    {
@@ -3564,11 +3578,14 @@ VSTEffectValidator::VSTEffectValidator
    wxWindow*                pParent
 )
    : DefaultEffectUIValidator(effect, access, pParent),
+     VSTEffectWrapper(instance.mPath),
      mInstance(instance)
-{
+{   
    // Make the settings of the instance up to date before using it to
    // build a UI
    StoreSettingsToInstance(mAccess.Get());
+
+   // TODO: Load()  (?)
 }
 
 
@@ -3610,6 +3627,20 @@ void VSTEffect::Automate(int index, float value)
       auto guard = std::lock_guard{ mSettingsMutex };
       FetchSettings(mSettings);
    }
+}
+
+
+void VSTEffectValidator::Automate(int index, float value)
+{
+    
+   mAccess.ModifySettings([this](EffectSettings& settings)
+   {
+      // HERE: call alternative StoreSettings which takes the {index, value}
+      // and writes it to its mParamsMap (setting its mChunk to nullopt, I guess) 
+
+      FetchSettingsFromInstance(settings);
+   });
+
 }
 
 
