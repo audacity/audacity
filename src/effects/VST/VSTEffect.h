@@ -282,6 +282,24 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
 
+
+   // The following is stuff that BuildFancy and BuildPlain use, but might
+   // be used by the Effect too - that's why they are here.
+   // TODO later: move as many as possible of these to the validator,
+   // possibly by creating copies of them in the Effect.
+   wxWindow* mParent;
+   wxWeakRef<wxDialog> mDialog;
+   ArrayOf<wxStaticText*> mNames;
+   ArrayOf<wxSlider*> mSliders;
+   ArrayOf<wxStaticText*> mDisplays;
+   ArrayOf<wxStaticText*> mLabels;
+   NumericTextCtrl* mDuration;
+   VSTControl* mControl;
+   void NeedEditIdle(bool state);
+      bool mWantsEditIdle{ false };
+      std::unique_ptr<VSTEffectTimer> mTimer;
+   void RefreshParameters(int skip = -1) const;
+
 };
 
 class VSTEffectInstance;
@@ -440,40 +458,36 @@ private:
    void OnSave(wxCommandEvent & evt);
    void OnSettings(wxCommandEvent & evt);
 
-   void BuildPlain(EffectSettingsAccess &access);
-   void BuildFancy(EffectInstance& instance);
+   
    wxSizer *BuildProgramBar();
-   void RefreshParameters(int skip = -1) const;
+   
 
    // Utility methods
    
-   void NeedEditIdle(bool state);
+   
  
 
  private:
 
    PluginID mID;
    
-   bool mWantsEditIdle{false};
+   
    bool mWantsIdle{ false };
    
    int mTimerGuard{0};
-   std::unique_ptr<VSTEffectTimer> mTimer;
+   
    
 
    // UI
-   wxWeakRef<wxDialog> mDialog;
-   wxWindow* mParent;
+   
+   
    wxSizerItem* mContainer{};
    bool mGui{false};
 
-   VSTControl *mControl;
+   
 
-   NumericTextCtrl *mDuration;
-   ArrayOf<wxStaticText *> mNames;
-   ArrayOf<wxSlider *> mSliders;
-   ArrayOf<wxStaticText *> mDisplays;
-   ArrayOf<wxStaticText *> mLabels;
+  
+   
 
    
    DECLARE_EVENT_TABLE()
@@ -608,27 +622,40 @@ private:
 
    size_t mUserBlockSize{ mBlockSize };
 
-   bool mReady{ false };
+   bool mReady{ false };     
 };
 
 
-class VSTEffectValidator final : public DefaultEffectUIValidator
+class VSTEffectValidator final : public DefaultEffectUIValidator,
+                                 public VSTEffectWrapper
 {
 public:
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
                        EffectSettingsAccess&    access,
-                       wxWindow*                pParent);
+                       wxWindow*                pParent
+                      );
 
    ~VSTEffectValidator() override;
 
    VSTEffectInstance& GetInstance();
+
+
+   void Automate(int index, float value) override;
+
+   // TODO!   
+   void Unload() override {};
+
+   void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
+   void BuildFancy(EffectInstance& instance);
 
 private:
    VSTEffectInstance& mInstance;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
    bool StoreSettingsToInstance(const EffectSettings& settings);
+
+   
 };
 
 
