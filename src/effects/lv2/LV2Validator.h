@@ -62,6 +62,7 @@ public:
    bool ValidateUI() override;
    bool UpdateUI() override;
    bool IsGraphicalUI() override;
+   void Disconnect() override;
 
    int ui_resize(int width, int height) override;
    void ui_closed() override;
@@ -104,7 +105,7 @@ public:
    LV2PortUIStates mPortUIStates;
 
    std::shared_ptr<SuilHost> mSuilHost;
-   wxWindow *const mParent;
+   wxWindow *mParent;
    bool mUseGUI{};
 
    // UI
