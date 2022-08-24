@@ -154,24 +154,6 @@ wxWidgetsBasicUI::DoMessageBox(
    }
 }
 
-namespace {
-struct MyProgressDialog : ::ProgressDialog, BasicUI::ProgressDialog {
-   using ::ProgressDialog::ProgressDialog;
-   ~MyProgressDialog() override = default;
-   ProgressResult Poll(
-      unsigned long long numerator,
-      unsigned long long denominator,
-      const TranslatableString &message) override
-   {
-      return Update(numerator, denominator, message);
-   }
-   virtual void SetMessage(const TranslatableString & message) override
-   {
-      ::ProgressDialog::SetMessage(message);
-   }
-};
-}
-
 std::unique_ptr<BasicUI::ProgressDialog>
 wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    const TranslatableString &message,
@@ -191,7 +173,7 @@ wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    // See https://docs.wxwidgets.org/3.0/overview_windowdeletion.html
    // But on macOS the use of wxWindowPtr for the progress dialog sometimes
    // causes hangs.
-   return std::make_unique<MyProgressDialog>(
+   return std::make_unique<::ProgressDialog>(
       title, message, options, remainingLabelText);
 }
 
