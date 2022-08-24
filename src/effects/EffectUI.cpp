@@ -245,6 +245,9 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
 EffectUIHost::~EffectUIHost()
 {
+   if (mpValidator)
+      mpValidator->Disconnect();
+   DestroyChildren();
    wxASSERT(mClosed);
 }
 
