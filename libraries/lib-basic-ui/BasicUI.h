@@ -163,6 +163,12 @@ public:
 
    //! Change an existing dialog's message
    virtual void SetMessage(const TranslatableString & message) = 0;
+
+   //! Change the dialog's title
+   virtual void SetDialogTitle(const TranslatableString & title) = 0;
+
+   //! Reset the dialog state
+   virtual void Reinit() = 0;
 };
 
 //! Abstraction of a progress dialog with undefined time-to-completion estimate

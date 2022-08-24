@@ -282,7 +282,7 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
-                         std::unique_ptr<ProgressDialog> &pDialog,
+                         std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                          unsigned channels,
                          const wxFileNameWrapper &fName,
                          bool selectedOnly,
@@ -355,8 +355,7 @@ ExportCL::ExportCL()
    SetDescription(XO("(external program)"),0);
 }
 
-ProgressResult ExportCL::Export(AudacityProject *project,
-                                std::unique_ptr<ProgressDialog> &pDialog,
+ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
                                 unsigned channels,
                                 const wxFileNameWrapper &fName,
                                 bool selectionOnly,
@@ -564,7 +563,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
          }
 
          // Update the progress display
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
       // Done with the progress display
    }
