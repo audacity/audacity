@@ -873,7 +873,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
    ExportKit activeSetting;  // pointer to the settings in use for this export
    /* Go round again and do the exporting (so this run is slow but
     * non-interactive) */
-   std::unique_ptr<ProgressDialog> pDialog;
+   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
    for (count = 0; count < numFiles; count++) {
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
@@ -1014,7 +1014,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    // loop
    int count = 0; // count the number of successful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
-   std::unique_ptr<ProgressDialog> pDialog;
+   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
 
    for (auto tr : mTracks->Leaders<WaveTrack>() - 
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)) {
@@ -1059,7 +1059,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    return ok ;
 }
 
-ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<ProgressDialog> &pDialog,
+ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                               unsigned channels,
                               const wxFileName &inName,
                               bool selectedOnly,

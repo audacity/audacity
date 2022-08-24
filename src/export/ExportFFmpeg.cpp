@@ -143,7 +143,7 @@ public:
    ///\param subformat index of export type
    ///\return true if export succeeded
    ProgressResult Export(AudacityProject *project,
-      std::unique_ptr<ProgressDialog> &pDialog,
+      std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
       unsigned channels,
       const wxFileNameWrapper &fName,
       bool selectedOnly,
@@ -1101,9 +1101,9 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 }
 
 
-ProgressResult ExportFFmpeg::Export(AudacityProject *project,
-   std::unique_ptr<ProgressDialog> &pDialog,
-   unsigned channels, const wxFileNameWrapper &fName,
+ProgressResult ExportFFmpeg::Export(
+   AudacityProject* project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
+   unsigned channels, const wxFileNameWrapper& fName,
    bool selectionOnly, double t0, double t1,
    MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
@@ -1177,7 +1177,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
             break;
          }
 
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 

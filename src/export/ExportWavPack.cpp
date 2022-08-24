@@ -246,7 +246,7 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
+      std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -271,7 +271,7 @@ ExportWavPack::ExportWavPack()
 }
 
 ProgressResult ExportWavPack::Export(AudacityProject *project,
-                       std::unique_ptr<ProgressDialog> &pDialog,
+                       std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                        unsigned numChannels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,
@@ -403,7 +403,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
          if (updateResult == ProgressResult::Success)
             updateResult =
-               progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+               progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 

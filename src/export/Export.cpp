@@ -249,19 +249,24 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
                   true, mixerSpec);
 }
 
-void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
+void ExportPlugin::InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
    const TranslatableString &title, const TranslatableString &message)
 {
    if (!pDialog)
       pDialog = std::make_unique<ProgressDialog>( title, message );
-   else {
-      pDialog->SetTitle( title );
-      pDialog->SetMessage( message );
-      pDialog->Reinit();
+   else
+   {
+      if (auto pd = dynamic_cast<ProgressDialog*>(pDialog.get()))
+      {
+         pd->SetTitle(title);
+         pd->Reinit();
+      }
+
+      pDialog->SetMessage(message);
    }
 }
 
-void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
+void ExportPlugin::InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
    const wxFileNameWrapper &title, const TranslatableString &message)
 {
    return InitProgress(
@@ -939,7 +944,7 @@ bool Exporter::ExportTracks()
       }
    } );
 
-   std::unique_ptr<ProgressDialog> pDialog;
+   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
    auto result = mPlugins[mFormat]->Export(mProject,
                                        pDialog,
                                        mChannels,
