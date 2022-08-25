@@ -47,7 +47,9 @@ public:
    enum : int { DefaultFontSize = 0 }; //system preferred
    static constexpr int TextFramePadding { 2 };
    static constexpr int TextFrameYOffset { -1 };
-   static constexpr int LabelBarHeight { 6 }; 
+   static constexpr int LabelBarHeight { 5 }; // odd/even should match mIconHeight
+   static constexpr int LabelRowMargin { 3 };
+   static constexpr int LabelRowHeightRoundUp{ 1 }; // round up when adding to y centerline
 
    explicit
    LabelTrackView( const std::shared_ptr<Track> &pTrack );
@@ -212,11 +214,12 @@ private:
    static void DrawGlyphs( wxDC & dc, const LabelStruct &ls, const wxRect & r,
       int GlyphLeft, int GlyphRight);
    static int GetTextFrameHeight();
+   static int GetLabelRowHeight();
    static void DrawText( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawTextBox( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r);
    static void DrawHighlight(
-      wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
+      wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2);
 
 public:
    /// convert pixel coordinate to character position in text box

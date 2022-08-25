@@ -425,6 +425,14 @@ void LabelTrackView::ComputeTextPosition(const wxRect & r, int index) const
    labelStruct.xText = xText;
 }
 
+// All things that contribute to one row:
+// The complete text height (including padding), the margin between (-TextFrameYOffset) and
+// the LabelBarHeight (icon is centered on labelbar and does not affect height)
+int LabelTrackView::GetLabelRowHeight()
+{
+   return GetTextFrameHeight() - TextFrameYOffset + LabelBarHeight;
+}
+
 /// ComputeLayout determines which row each label
 /// should be placed on, and reserves space for it.
 /// Function assumes that the labels are sorted.
@@ -435,7 +443,7 @@ void LabelTrackView::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) c
    int iRow;
    // Rows are the 'same' height as icons or as the text,
    // whichever is taller.
-   const int yRowHeight = wxMax(mTextHeight,mIconHeight)+3;// pixels.
+   const int yRowHeight = GetLabelRowHeight() + LabelRowMargin;
    // Extra space at end of rows.
    // We allow space for one half icon at the start and two
    // half icon widths for extra x for the text frame.
@@ -541,8 +549,9 @@ void LabelTrackView::DrawLines(
    // start, i.e. what is the y position of the icon?
    // We adjust this so that the line encroaches on the icon
    // slightly (there is white space in the design).
-   const int yIconStart = y - (mIconHeight /2)+1+(mTextHeight+3)/2;
-   const int yIconEnd   = yIconStart + mIconHeight-2;
+   const int yEncroachment = 1;
+   const int yIconStart = y + (GetLabelRowHeight() + LabelRowHeightRoundUp - LabelBarHeight - mIconHeight) / 2 + yEncroachment;
+   const int yIconEnd   = yIconStart + mIconHeight - 2 * yEncroachment;
 
    // If y is positive then it is the center line for the
    // Label.
@@ -578,8 +587,8 @@ void LabelTrackView::DrawGlyphs(
 {
    auto &y = ls.y;
 
-   const int xHalfWidth=mIconWidth/2;
-   const int yStart=y-mIconHeight/2+(mTextHeight+3)/2;
+   const int xHalfWidth = mIconWidth / 2;
+   const int yStart = y + (GetLabelRowHeight() + LabelRowHeightRoundUp - LabelBarHeight - mIconHeight) / 2;
 
    // If y == -1, nothing to draw
    if( y == -1 )
@@ -589,11 +598,11 @@ void LabelTrackView::DrawGlyphs(
    auto &x1 = ls.x1;
 
    if((x  >= r.x) && (x  <= (r.x+r.width)))
-      dc.DrawBitmap(GetGlyph(GlyphLeft), x-xHalfWidth,yStart, true);
+      dc.DrawBitmap(GetGlyph(GlyphLeft), x - xHalfWidth, yStart, true);
    // The extra test commented out here would suppress right hand markers
    // when they overlap the left hand marker (e.g. zoomed out) or to the left.
    if((x1 >= r.x) && (x1 <= (r.x+r.width)) /*&& (x1>x+mIconWidth)*/)
-      dc.DrawBitmap(GetGlyph(GlyphRight), x1-xHalfWidth,yStart, true);
+      dc.DrawBitmap(GetGlyph(GlyphRight), x1 - xHalfWidth, yStart, true);
 }
 
 int LabelTrackView::GetTextFrameHeight()
@@ -609,11 +618,9 @@ int LabelTrackView::GetTextFrameHeight()
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrackView::DrawText(wxDC & dc, const LabelStruct &ls, const wxRect & r)
 {
-   const int yFrameHeight = mTextHeight + TextFramePadding * 2;
    //If y is positive then it is the center line for the
    //text we are about to draw.
    //if it isn't, nothing to draw.
-
    auto &y = ls.y;
    if( y == -1 )
       return;
@@ -629,17 +636,18 @@ void LabelTrackView::DrawText(wxDC & dc, const LabelStruct &ls, const wxRect & r
       if( (xStart < (r.x+r.width)) && (xEnd > r.x) && (xWidth>0))
       {
          // Now draw the text itself.
-         auto pos = y - LabelBarHeight - yFrameHeight + TextFrameYOffset +
-            (yFrameHeight - mFontHeight) / 2 + dc.GetFontMetrics().ascent;
+         const auto pos = y - GetLabelRowHeight() / 2 + TextFramePadding;
          dc.DrawText(ls.title, xText, pos);
       }
    }
-
 }
 
 void LabelTrackView::DrawTextBox(
    wxDC & dc, const LabelStruct &ls, const wxRect & r)
 {
+   if (ls.y == -1)
+      return;
+
    // In drawing the bar and the frame, we compute the clipping
    // to the viewport ourselves.  Under Win98 the GDI does its
    // calculations in 16 bit arithmetic, and so gets it completely
@@ -649,7 +657,6 @@ void LabelTrackView::DrawTextBox(
    // Draw bar for label extent...
    // We don't quite draw from x to x1 because we allow
    // half an icon width at each end.
-    const auto textFrameHeight = GetTextFrameHeight();
     auto& xText = ls.xText;
     const int xStart = wxMax(r.x, xText - mIconWidth / 2);
     const int xEnd = wxMin(r.x + r.width, xText + ls.width + mIconWidth / 2);
@@ -658,8 +665,8 @@ void LabelTrackView::DrawTextBox(
     if ((xStart < (r.x + r.width)) && (xEnd > r.x) && (xWidth > 0))
     {
        wxRect frame(
-          xStart, ls.y - (textFrameHeight + LabelBarHeight) / 2 + TextFrameYOffset,
-          xWidth, textFrameHeight);
+          xStart, ls.y - GetLabelRowHeight() / 2,
+          xWidth, GetTextFrameHeight());
        dc.DrawRectangle(frame);
     }
 }
@@ -681,7 +688,7 @@ void LabelTrackView::DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r)
 
    if ((xStart < (r.x + r.width)) && (xEnd > r.x) && (xWidth > 0))
    {
-      wxRect bar(xStart, y - (LabelBarHeight - GetTextFrameHeight()) / 2,
+      wxRect bar(xStart, y + (GetLabelRowHeight() + LabelRowHeightRoundUp) / 2 - LabelBarHeight,
          xWidth, LabelBarHeight);
       if (x1 > x + xBarShorten)
          dc.DrawRectangle(bar);
@@ -690,18 +697,16 @@ void LabelTrackView::DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r)
 
 /// Draws text-selected region within the label
 void LabelTrackView::DrawHighlight( wxDC & dc, const LabelStruct &ls,
-   int xPos1, int xPos2, int charHeight)
+   int xPos1, int xPos2)
 {
-   const int yFrameHeight = mTextHeight + TextFramePadding * 2;
-   
    dc.SetPen(*wxTRANSPARENT_PEN);
    wxBrush curBrush = dc.GetBrush();
    curBrush.SetColour(wxString(wxT("BLUE")));
-   auto top = ls.y + TextFrameYOffset - (LabelBarHeight + yFrameHeight) / 2 + (yFrameHeight - charHeight) / 2;
+   auto top = ls.y - GetLabelRowHeight() / 2 + TextFramePadding;
    if (xPos1 < xPos2)
-      dc.DrawRectangle(xPos1-1, top, xPos2-xPos1+1, charHeight);
+      dc.DrawRectangle(xPos1-1, top, xPos2-xPos1+1, mTextHeight);
    else
-      dc.DrawRectangle(xPos2-1, top, xPos1-xPos2+1, charHeight);
+      dc.DrawRectangle(xPos2-1, top, xPos1-xPos2+1, mTextHeight);
 }
 
 namespace {
@@ -824,7 +829,6 @@ void LabelTrackView::Draw
    // labels or all are empty strings, which for example
    // happens with a NEW label track.
    mTextHeight = dc.GetFontMetrics().ascent + dc.GetFontMetrics().descent;
-   const int yFrameHeight = mTextHeight + TextFramePadding * 2;
 
    ComputeLayout( r, zoomInfo );
    dc.SetTextForeground(theTheme.Colour( clrLabelTrackText));
@@ -890,7 +894,7 @@ void LabelTrackView::Draw
       int xpos1, xpos2;
       CalcHighlightXs(&xpos1, &xpos2);
       DrawHighlight(dc, mLabels[mTextEditIndex],
-         xpos1, xpos2, dc.GetFontMetrics().ascent + dc.GetFontMetrics().descent);
+         xpos1, xpos2);
    }
 
    // Draw the text and the label boxes.
@@ -919,7 +923,7 @@ void LabelTrackView::Draw
       wxPen currentPen = dc.GetPen();
       const int CursorWidth=2;
       currentPen.SetWidth(CursorWidth);
-      const auto top = labelStruct.y - (LabelBarHeight + yFrameHeight) / 2 + (yFrameHeight - mFontHeight) / 2 + TextFrameYOffset;
+      const auto top = labelStruct.y - (GetLabelRowHeight() - mTextHeight + mFontHeight) / 2 + TextFramePadding;
       AColor::Line(dc,
                    xPos-1, top,
                    xPos-1, top + mFontHeight);
