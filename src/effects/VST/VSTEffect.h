@@ -295,11 +295,11 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    ArrayOf<wxStaticText*> mLabels;
    NumericTextCtrl* mDuration;
    VSTControl* mControl;
-   void NeedEditIdle(bool state);
-      bool mWantsEditIdle{ false };
-      std::unique_ptr<VSTEffectTimer> mTimer;
+     
+
    void RefreshParameters(int skip = -1) const;
 
+   
 };
 
 class VSTEffectInstance;
@@ -393,7 +393,7 @@ class VSTEffect final
    // VSTEffect implementation
 
 
-   void OnTimer();
+   
 
    EffectSettings MakeSettings() const override;
 
@@ -472,9 +472,8 @@ private:
    PluginID mID;
    
    
-   bool mWantsIdle{ false };
+      
    
-   int mTimerGuard{0};
    
    
 
@@ -649,13 +648,23 @@ public:
    void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
    void BuildFancy(EffectInstance& instance);
 
+   void OnTimer();
+
+   std::unique_ptr<VSTEffectTimer> mTimer;   
+   
+
 private:
    VSTEffectInstance& mInstance;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
    bool StoreSettingsToInstance(const EffectSettings& settings);
+   void NeedEditIdle(bool state);
+   void NeedIdle() override;
 
-   
+   int  mTimerGuard{ 0 };
+
+   bool mWantsEditIdle{ false };
+   bool mWantsIdle{ false };
 };
 
 
