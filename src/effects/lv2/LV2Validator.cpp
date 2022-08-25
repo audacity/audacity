@@ -101,10 +101,17 @@ bool LV2Validator::ValidateUI()
    return true;
 }
 
+void LV2Validator::Disconnect()
+{
+   if (mParent) {
+      mParent->PopEventHandler(this);
+      mParent = nullptr;
+   }
+}
+
 LV2Validator::~LV2Validator()
 {
-   if (mParent)
-      mParent->RemoveEventHandler(this);
+   Disconnect();
 }
 
 std::shared_ptr<SuilHost> LV2Validator::GetSuilHost()

@@ -208,6 +208,10 @@ bool EffectUIValidator::IsGraphicalUI()
    return false;
 }
 
+void EffectUIValidator::Disconnect()
+{
+}
+
 void EffectUIValidator::OnClose()
 {
    if (!mUIClosed)

@@ -878,8 +878,7 @@ DefaultEffectUIValidator::DefaultEffectUIValidator(
 
 DefaultEffectUIValidator::~DefaultEffectUIValidator()
 {
-   if (mpParent)
-      mpParent->PopEventHandler();
+   Disconnect();
 }
 
 bool DefaultEffectUIValidator::ValidateUI()
@@ -894,4 +893,12 @@ bool DefaultEffectUIValidator::ValidateUI()
 bool DefaultEffectUIValidator::IsGraphicalUI()
 {
    return mEffect.IsGraphicalUI();
+}
+
+void DefaultEffectUIValidator::Disconnect()
+{
+   if (mpParent) {
+      mpParent->PopEventHandler();
+      mpParent = nullptr;
+   }
 }

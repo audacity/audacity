@@ -587,6 +587,12 @@ public:
     */
    virtual bool IsGraphicalUI();
 
+   //! On the first call only, may disconnect from further event handling
+   /*!
+    Default implemantation does nothing
+    */
+   virtual void Disconnect();
+
    /*!
     Handle the UI OnClose event. Default implementation calls mEffect.CloseUI()
    */

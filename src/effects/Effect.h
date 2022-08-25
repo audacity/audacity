@@ -40,18 +40,20 @@ class DefaultEffectUIValidator
 public:
    /*!
     @param pParent if not null, caller will push an event handler onto this
-    window; then this object is responsible to pop it in the destructor
+    window; then this object is responsible to pop it
     */
    DefaultEffectUIValidator(
       EffectUIClientInterface &effect, EffectSettingsAccess &access,
       wxWindow *pParent = nullptr);
+   //! Calls Disconnect
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
    //! @return mEffect.IsGraphicalUI()
    bool IsGraphicalUI() override;
+   void Disconnect() override;
 protected:
-   wxWindow *const mpParent;
+   wxWindow *mpParent{};
 };
 
 class AUDACITY_DLL_API Effect /* not final */
