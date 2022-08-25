@@ -1114,6 +1114,10 @@ list( APPEND SOURCES
           update/NoUpdatesAvailableDialog.cpp
       >
 
+      # Audio.com
+      $<$<AND:$<BOOL:${${_OPT}has_audiocom_upload}>,$<BOOL:${${_OPT}has_url_schemes_support}>>:
+         cloud/audiocom/LinkUrlHandler.cpp
+      >
       Experimental.cmake
 )
 
@@ -1545,6 +1549,12 @@ endif()
 if( ${_OPT}has_url_schemes_support )
    list( APPEND AUDACITY_LIBRARIES
       lib-url-schemes-interface
+   )
+endif()
+
+if( ${_OPT}has_audiocom_upload )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-cloud-audiocom-interface
    )
 endif()
 
