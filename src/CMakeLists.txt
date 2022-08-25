@@ -1138,7 +1138,6 @@ list( APPEND INCLUDES
 # Define resources
 #
 list( APPEND RESOURCES
-   ${topdir}/resources/EQDefaultCurves.xml
    ${topdir}/resources/EffectsMenuDefaults.xml
 )
 
