@@ -1161,16 +1161,16 @@ int VSTEffect::ShowClientInterface(
    }
 
    // Remember the dialog with a weak pointer, but don't control its lifetime
-   mDialog = &dialog;
-   mDialog->CentreOnParent();
+   mDialogFE = &dialog;
+   mDialogFE->CentreOnParent();
 
    if (SupportsRealtime() && !forceModal)
    {
-      mDialog->Show();
+      mDialogFE->Show();
       return 0;
    }
 
-   return mDialog->ShowModal();
+   return mDialogFE->ShowModal();
 }
 
 
@@ -1286,8 +1286,8 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    const EffectOutputs *)
 {
    auto parent = S.GetParent();
-   mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
-   mParent = parent;
+   mDialogFE = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
+   mParentFE = parent;
 
    // Determine if the VST editor is supposed to be used or not
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1309,7 +1309,7 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 
    // These could be moved in the validator constructor
    validator->Load();
-   validator->mParent = mParent;
+   validator->mParent = mParentFE;
    validator->mTimer = std::make_unique<VSTEffectTimer>(validator.get());
    validator->mDialog = static_cast<wxDialog*>(wxGetTopLevelParent(parent));
 
@@ -1376,8 +1376,8 @@ bool VSTEffect::CloseUI()
    //mDisplays.reset();
    //mLabels.reset();
 
-   mParent = NULL;
-   mDialog = NULL;
+   mParentFE = NULL;
+   mDialogFE = NULL;
    mValidator = nullptr;
 
    return true;
@@ -1441,7 +1441,7 @@ void VSTEffect::ExportPresets(const EffectSettings& settings) const
          XO("Unrecognized file extension."),
          XO("Error Saving VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         mParentFE);
 
       return;
    }
@@ -1468,7 +1468,7 @@ void VSTEffect::ImportPresets(EffectSettings& settings)
          true
       } },
       wxFD_OPEN | wxRESIZE_BORDER,
-      mParent);
+      mParentFE);
 
    // User canceled...
    if (path.empty())
@@ -1498,7 +1498,7 @@ void VSTEffect::ImportPresets(EffectSettings& settings)
          XO("Unrecognized file extension."),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         mParentFE);
 
          return;
    }
@@ -1509,7 +1509,7 @@ void VSTEffect::ImportPresets(EffectSettings& settings)
          XO("Unable to load presets file."),
          XO("Error Loading VST Presets"),
          wxOK | wxCENTRE,
-         mParent);
+         mParentFE);
 
       return;
    }
@@ -1526,7 +1526,7 @@ bool VSTEffect::HasOptions()
 
 void VSTEffect::ShowOptions()
 {
-   VSTEffectOptionsDialog dlg(mParent, *this);
+   VSTEffectOptionsDialog dlg(mParentFE, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
@@ -1798,7 +1798,7 @@ bool VSTEffectWrapper::Load()
 
 void VSTEffect::Unload()
 {
-   if (mDialog)
+   if (mDialogFE)
    {
       CloseUI();
    }
@@ -2084,12 +2084,12 @@ void VSTEffectInstance::PowerOff()
 void VSTEffect::SizeWindow(int w, int h)
 {
    // Queue the event to make the resizes smoother
-   if (mParent)
+   if (mParentFE)
    {
       wxCommandEvent sw(EVT_SIZEWINDOW);
       sw.SetInt(w);
       sw.SetExtraLong(h);
-      mParent->GetEventHandler()->AddPendingEvent(sw);
+      mParentFE->GetEventHandler()->AddPendingEvent(sw);
    }
 
    return;
@@ -2495,12 +2495,12 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
    //
    // Guitar Rig (and possibly others) Cocoa VSTs can resize too large
    // if the bounds are unlimited.
-   mDialog->SetMinSize(wxDefaultSize);
-   mDialog->SetMaxSize(wxDefaultSize);
-   mDialog->Layout();
-   mDialog->SetMinSize(mDialog->GetBestSize());
-   mDialog->SetMaxSize(mDialog->GetBestSize());
-   mDialog->Fit();
+   mDialogFE->SetMinSize(wxDefaultSize);
+   mDialogFE->SetMaxSize(wxDefaultSize);
+   mDialogFE->Layout();
+   mDialogFE->SetMinSize(mDialogFE->GetBestSize());
+   mDialogFE->SetMaxSize(mDialogFE->GetBestSize());
+   mDialogFE->Fit();
 }
 
 void VSTEffect::OnSlider(wxCommandEvent & evt)

@@ -283,14 +283,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    void         SetBufferDelay(int samples);
 
 
-   // The following is stuff that BuildFancy and BuildPlain use, but might
-   // be used by the Effect too - that's why they are here.
-   // TODO later: move as many as possible of these to the validator,
-   // possibly by creating copies of them in the Effect.
-   wxWindow* mParent;
-   wxWeakRef<wxDialog> mDialog;
+    
       
-   
+   // After OnSizeWindow is moved to the Validator, this can be moved there too
    VSTControl* mControl;   
 };
 
@@ -463,23 +458,12 @@ private:
 
    PluginID mID;
    
-   
-      
-   
-   
-   
-
    // UI
-   
-   
+   wxWindow* mParentFE;            // FE = For Effect; to avoid confusion with the Validator mParent
+   wxWeakRef<wxDialog> mDialogFE;  // FE = as above
+      
    wxSizerItem* mContainer{};
    bool mGui{false};
-
-   
-
-  
-   
-
    
    DECLARE_EVENT_TABLE()
 
@@ -645,6 +629,10 @@ public:
    std::unique_ptr<VSTEffectTimer> mTimer;   
 
    void RefreshParameters(int skip = -1) const;
+
+   // TODO move to private after we pass mParentFE in constructor
+   wxWindow* mParent;
+   wxWeakRef<wxDialog> mDialog;
 
 private:
    VSTEffectInstance& mInstance;
