@@ -72,6 +72,9 @@ ExportFLACOptions::~ExportFLACOptions()
    TransferDataFromWindow();
 }
 
+extern ChoiceSetting FLACBitDepth;
+extern ChoiceSetting FLACLevel;
+
 ChoiceSetting FLACBitDepth{
    wxT("/FileFormats/FLACBitDepth"),
    {

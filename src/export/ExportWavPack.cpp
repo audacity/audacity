@@ -95,19 +95,11 @@ const std::vector< int > ExportQualityValues{
    3,
 };
 
-namespace {
 
-const TranslatableStrings ExportBitDepthNames{
-   XO("16 bit") ,
-   XO("24 bit") ,
-   XO("32 bit float ") ,
-};
-
-const std::vector< int > ExportBitDepthValues{
-   16,
-   24,
-   32,
-};
+extern IntSetting QualitySetting;
+extern IntSetting BitrateSetting;
+extern IntSetting BitDepthSetting;
+extern BoolSetting HybridModeSetting;
 
 IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
 IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 40 };
@@ -115,7 +107,19 @@ IntSetting BitDepthSetting{ L"/FileFormats/WavPackBitDepth", 16 };
 
 BoolSetting HybridModeSetting{ L"/FileFormats/WavPackHybridMode", false };
 BoolSetting CreateCorrectionFileSetting{ L"/FileFormats/WavPackCreateCorrectionFile", false };
+namespace
+{
+const TranslatableStrings ExportBitDepthNames {
+   XO("16 bit"),
+   XO("24 bit"),
+   XO("32 bit float "),
+};
 
+const std::vector<int> ExportBitDepthValues {
+   16,
+   24,
+   32,
+};
 /* 
 Copied from ExportMP2.cpp by
    Joshua Haberman
