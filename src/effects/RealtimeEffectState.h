@@ -20,17 +20,21 @@
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
 #include "MemoryX.h"
+#include "Observer.h"
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
 class EffectSettingsAccess;
 class Track;
 
+enum class RealtimeEffectStateChange { EffectOff, EffectOn };
+
 class RealtimeEffectState
    : public XMLTagHandler
    , public std::enable_shared_from_this<RealtimeEffectState>
    , public SharedNonInterfering<RealtimeEffectState>
    , public ClientData::Site<RealtimeEffectState>
+   , public Observer::Publisher<RealtimeEffectStateChange>
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
@@ -84,6 +88,9 @@ public:
    //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;
 
+   //! Set only in the main thread
+   void SetActive(bool active);
+
    //! Main thread cleans up playback
    bool Finalize() noexcept;
 
@@ -102,7 +109,7 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
-      
+
    std::shared_ptr<EffectInstance> EnsureInstance(double rate);
 
    struct Access;

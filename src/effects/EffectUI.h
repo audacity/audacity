@@ -73,13 +73,10 @@ private:
    void OnApply(wxCommandEvent & evt);
    void DoCancel();
    void OnCancel(wxCommandEvent & evt);
-   void OnHelp(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
-   void OnRewind(wxCommandEvent & evt);
-   void OnFFwd(wxCommandEvent & evt);
    void OnPlayback(AudioIOEvent);
    void OnCapture(AudioIOEvent);
    void OnUserPreset(wxCommandEvent & evt);
@@ -91,6 +88,8 @@ private:
    void OnOptions(wxCommandEvent & evt);
    void OnDefaults(wxCommandEvent & evt);
 
+   bool IsOpenedFromEffectPanel() const;
+
    void UpdateControls();
    wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
    void LoadUserPresets();
@@ -98,7 +97,7 @@ private:
    void CleanupRealtime();
 
 private:
-   Observer::Subscription mSubscription;
+   Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 
    AudacityProject &mProject;
    wxWindow *const mParent;
@@ -120,20 +119,13 @@ private:
    bool mIsBatch{};
 
    wxButton *mApplyBtn{};
-   wxButton *mCloseBtn{};
    wxButton *mMenuBtn{};
-   wxButton *mPlayBtn{};
-   wxButton *mRewindBtn{};
-   wxButton *mFFwdBtn{};
-   wxCheckBox *mEnableCb{};
+   wxButton *mEnableBtn{};
 
-   wxButton *mEnableToggleBtn{};
    wxButton *mPlayToggleBtn{};
 
-   wxBitmap mPlayBM;
-   wxBitmap mPlayDisabledBM;
-   wxBitmap mStopBM;
-   wxBitmap mStopDisabledBM;
+   wxBitmap mRealtimeEnabledBM;
+   wxBitmap mRealtimeDisabledBM;
 
    bool mEnabled{ true };
 

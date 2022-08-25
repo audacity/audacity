@@ -566,6 +566,19 @@ bool RealtimeEffectState::IsActive() const noexcept
    return mWorkerSettings.settings.extra.GetActive();
 }
 
+void RealtimeEffectState::SetActive(bool active)
+{
+   auto access = GetAccess();
+   access->ModifySettings([&](EffectSettings &settings) {
+      settings.extra.SetActive(active);
+   });
+   access->Flush();
+
+   Publish(active
+      ? RealtimeEffectStateChange::EffectOn
+      : RealtimeEffectStateChange::EffectOff);
+}
+
 bool RealtimeEffectState::Finalize() noexcept
 {
    // This is the main thread cleaning up a state not now used in processing

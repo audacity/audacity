@@ -29,6 +29,7 @@
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "Observer.h"
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectHistory.h"
@@ -308,6 +309,8 @@ namespace
       ThemedButtonWrapper<wxBitmapButton>* mEnableButton{nullptr};
       wxWindow *mOptionsButton{};
 
+      Observer::Subscription mSubscription;
+
    public:
       RealtimeEffectControl(wxWindow* parent,
                    wxWindowID winid,
@@ -334,15 +337,9 @@ namespace
                static_cast<ThemedButtonWrapper<wxBitmapButton>*>(mEnableButton);
             auto index = pButton->GetBitmapIndex();
             bool wasEnabled = (index == bmpEffectOn);
-            if (mSettingsAccess) {
-               mSettingsAccess->ModifySettings([&](EffectSettings &settings){
-                  settings.extra.SetActive(!wasEnabled);
-               });
-               mSettingsAccess->Flush();
-            }
+
+            mEffectState->SetActive(!wasEnabled);
             pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
-            if (mProject)
-               ProjectHistory::Get(*mProject).ModifyState(false);
          });
 
          //Central button with effect name
@@ -394,6 +391,15 @@ namespace
          mProject = &project;
          mTrack = track;
          mEffectState = pState;
+
+         mSubscription = mEffectState->Subscribe([this](RealtimeEffectStateChange state) {
+            auto pButton = static_cast<ThemedButtonWrapper<wxBitmapButton>*>(mEnableButton);
+            pButton->SetBitmapIndex(state == RealtimeEffectStateChange::EffectOn ? bmpEffectOn : bmpEffectOff);
+
+            if (mProject)
+               ProjectHistory::Get(*mProject).ModifyState(false);
+         });
+
          TranslatableString label;
          if (pState) {
             label = GetEffectName();

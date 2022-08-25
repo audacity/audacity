@@ -41,8 +41,6 @@
 #include <unordered_map>
 
 static const int kPlayID = 20102;
-static const int kRewindID = 20103;
-static const int kFFwdID = 20104;
 
 using t2bHash = std::unordered_map< void*, bool >;
 
@@ -641,27 +639,17 @@ bool Effect::EnablePreview(bool enable)
       wxWindow *play = dlg->FindWindow(kPlayID);
       if (play)
       {
-         wxWindow *rewind = dlg->FindWindow(kRewindID);
-         wxWindow *ffwd = dlg->FindWindow(kFFwdID);
-
          // Don't allow focus to get trapped
          if (!enable)
          {
             wxWindow *focus = dlg->FindFocus();
-            if (focus && (focus == play || focus == rewind || focus == ffwd))
+            if (focus == play)
             {
                dlg->FindWindow(wxID_CLOSE)->SetFocus();
             }
          }
 
          play->Enable(enable);
-         if (SupportsRealtime())
-         {
-            if (rewind)
-               rewind->Enable(enable);
-            if (ffwd)
-               ffwd->Enable(enable);
-         }
       }
    }
 
