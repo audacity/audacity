@@ -25,14 +25,19 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
+      Initialize(state.mMainSettings);
+   }
+
+   void Initialize(SettingsAndCounter &settings)
+   {
       // Clean initial state of the counter
-      auto &mainSettings = state.mMainSettings;
-      mainSettings.counter = 0;
+      settings.counter = 0;
+      mLastSettings = settings;
       // Initialize each message buffer with two copies of settings
-      mChannelToMain.Write(ToMainSlot{ mainSettings });
-      mChannelToMain.Write(ToMainSlot{ mainSettings });
-      mChannelFromMain.Write(FromMainSlot{ mainSettings });
-      mChannelFromMain.Write(FromMainSlot{ mainSettings });
+      mChannelToMain.Write(ToMainSlot{ settings });
+      mChannelToMain.Write(ToMainSlot{ settings });
+      mChannelFromMain.Write(FromMainSlot{ settings });
+      mChannelFromMain.Write(FromMainSlot{ settings });
    }
 
    const SettingsAndCounter &MainRead() {
@@ -47,8 +52,6 @@ public:
    }
    const SettingsAndCounter &
    MainWriteThrough(const SettingsAndCounter &settings) {
-      // Send a copy of settings for worker to update from later
-      MainWrite(SettingsAndCounter{ settings });
       // Main thread assumes worker isn't processing and bypasses the echo
       return (mMainThreadCache = settings);
    }
@@ -160,16 +163,17 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    static const SettingsAndCounter *FlushAttempt(AccessState &state) {
       auto &lastSettings = state.mLastSettings;
       auto pResult = &state.MainRead();
-      if (!lastSettings.settings.has_value() ||
+      if (!state.mState.mInitialized) {
+         // not relying on the other thread to make progress
+         // and no fear of data races
+         state.Initialize(lastSettings);
+         return &state.MainWriteThrough(lastSettings);
+      }
+      else if (!lastSettings.settings.has_value() ||
          pResult->counter == lastSettings.counter
       ){
          // First time test, or echo is completed
          return pResult;
-      }
-      else if (!state.mState.mInitialized) {
-         // not relying on the other thread to make progress
-         // and no fear of data races
-         return &state.MainWriteThrough(lastSettings);
       }
       return nullptr;
    }
