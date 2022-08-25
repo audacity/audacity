@@ -352,7 +352,6 @@ class VSTEffect final
 
    bool InitializePlugin();
 
-   bool TransferDataToWindow(const EffectSettings& settings) override;
 
    // EffectUIClientInterface implementation
 
@@ -610,6 +609,7 @@ public:
    VSTEffectInstance& GetInstance();
 
    bool ValidateUI() override;
+   bool UpdateUI() override;
 
    void Automate(int index, float value) override;
 

@@ -3520,16 +3520,15 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
    return true;
 }
 
-bool VSTEffect::TransferDataToWindow(const EffectSettings& settings)
+bool VSTEffectValidator::UpdateUI()
 {
-   if (!StoreSettings(GetSettings(settings)))
+   if ( ! StoreSettingsToInstance(mAccess.Get()) )
       return false;
 
-   // CAUTION: temporary disabled only to allow building,
-   // you may want to call this, after this method will belong to the validator
-   // (actually, it will become ::UpdateUI()
-   // 
-   //RefreshParameters();
+   // TOFIX: when a user preset is loaded, the GUI knobs are not updated.
+
+   // This is for the plain UI
+   RefreshParameters();
 
    return true;
 }
