@@ -107,6 +107,8 @@ Source: "Additional\resources\*"; DestDir: "{app}"; Flags: ignoreversion recurse
 ; so we control which dll files are present in the directory.
 Source: "Package\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
+Source: "Package\*.xml"; DestDir: "{app}"; Flags: ignoreversion
+
 Source: "Package\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't ship all modules, so the next line is commented out
 ; Source: "Package\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
