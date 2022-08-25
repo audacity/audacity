@@ -1326,18 +1326,7 @@ bool VSTEffect::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::ValidateUI(EffectSettings &settings)
-{
-   if (GetType() == EffectTypeGenerate)
-      // CAUTION - this was disabled only to allow building.
-      // you may want this once this method is moved to the validator
-      // 
-      //settings.extra.SetDuration(mDuration->GetValue());
 
-   FetchSettings(GetSettings(settings));
-
-   return true;
-}
 
 bool VSTEffect::CloseUI()
 {
@@ -3695,6 +3684,19 @@ bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
       static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
 }
 
+
+bool VSTEffectValidator::ValidateUI()
+{
+   mAccess.ModifySettings([this](EffectSettings& settings)
+   {
+      const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
+      if (eff.GetType() == EffectTypeGenerate)
+         settings.extra.SetDuration(mDuration->GetValue());
+
+      FetchSettingsFromInstance(settings);
+   });
+   return true;
+}
 
 void VSTEffectValidator::Unload()
 {
