@@ -434,7 +434,7 @@ private:
 
    // UI
    void OnSlider(wxCommandEvent & evt);
-   void OnSizeWindow(wxCommandEvent & evt);
+   
    void OnUpdateDisplay(wxCommandEvent & evt);
 
    void RemoveHandler();
@@ -637,6 +637,8 @@ private:
    bool StoreSettingsToInstance(const EffectSettings& settings);
    void NeedEditIdle(bool state);
    void NeedIdle() override;
+
+   void OnSizeWindow(wxCommandEvent& evt);
 
    int  mTimerGuard{ 0 };
 
