@@ -289,17 +289,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // possibly by creating copies of them in the Effect.
    wxWindow* mParent;
    wxWeakRef<wxDialog> mDialog;
-   ArrayOf<wxStaticText*> mNames;
-   ArrayOf<wxSlider*> mSliders;
-   ArrayOf<wxStaticText*> mDisplays;
-   ArrayOf<wxStaticText*> mLabels;
-   NumericTextCtrl* mDuration;
-   VSTControl* mControl;
-     
-
-   void RefreshParameters(int skip = -1) const;
-
+      
    
+   VSTControl* mControl;   
 };
 
 class VSTEffectInstance;
@@ -651,7 +643,8 @@ public:
    void OnTimer();
 
    std::unique_ptr<VSTEffectTimer> mTimer;   
-   
+
+   void RefreshParameters(int skip = -1) const;
 
 private:
    VSTEffectInstance& mInstance;
@@ -665,6 +658,12 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
+
+   ArrayOf<wxStaticText*> mNames;
+   ArrayOf<wxSlider*> mSliders;
+   ArrayOf<wxStaticText*> mDisplays;
+   ArrayOf<wxStaticText*> mLabels;
+   NumericTextCtrl* mDuration;
 };
 
 
