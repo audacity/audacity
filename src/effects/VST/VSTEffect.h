@@ -282,11 +282,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
 
-
-    
-      
-   // After OnSizeWindow is moved to the Validator, this can be moved there too
-   VSTControl* mControl;   
 };
 
 class VSTEffectInstance;
@@ -653,6 +648,7 @@ private:
 
    wxWindow* mParent;
    wxWeakRef<wxDialog> mDialog;
+   VSTControl* mControl;
 };
 
 
