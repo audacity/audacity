@@ -299,7 +299,7 @@ using VSTInstanceArray = std::vector < std::unique_ptr<VSTEffectInstance> >;
 ///////////////////////////////////////////////////////////////////////////////
 
 
-DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
+wxDECLARE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
