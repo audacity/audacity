@@ -1116,6 +1116,8 @@ list( APPEND SOURCES
 
       # Audio.com
       $<$<BOOL:${${_OPT}has_audiocom_upload}>:
+         cloud/audiocom/LinkAccountDialog.cpp
+         cloud/audiocom/LinkAccountDialog.h
          cloud/audiocom/LinkFailedDialog.cpp
          cloud/audiocom/LinkFailedDialog.h
          cloud/audiocom/UserImage.cpp
