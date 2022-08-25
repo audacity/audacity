@@ -104,9 +104,10 @@ bool LV2Validator::ValidateUI()
 void LV2Validator::Disconnect()
 {
    if (mParent) {
-      mParent->PopEventHandler(this);
+      mParent->PopEventHandler();
       mParent = nullptr;
    }
+   mNativeWin = nullptr;
 }
 
 LV2Validator::~LV2Validator()
