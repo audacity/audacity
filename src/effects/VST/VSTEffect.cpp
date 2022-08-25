@@ -1336,7 +1336,10 @@ bool VSTEffect::IsGraphicalUI()
 bool VSTEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-      settings.extra.SetDuration(mDuration->GetValue());
+      // CAUTION - this was disabled only to allow building.
+      // you may want this once this method is moved to the validator
+      // 
+      //settings.extra.SetDuration(mDuration->GetValue());
 
    FetchSettings(GetSettings(settings));
 
@@ -1365,10 +1368,13 @@ bool VSTEffect::CloseUI()
 
    RemoveHandler();
 
-   mNames.reset();
-   mSliders.reset();
-   mDisplays.reset();
-   mLabels.reset();
+   // CAUTION this was disabled only to allow building,
+   // but you probably want this in the validator ::OnClose
+   // 
+   //mNames.reset();
+   //mSliders.reset();
+   //mDisplays.reset();
+   //mLabels.reset();
 
    mParent = NULL;
    mDialog = NULL;
@@ -2424,7 +2430,7 @@ void VSTEffectValidator::BuildPlain(EffectSettingsAccess &access, EffectType eff
    mSliders[0]->SetFocus();
 }
 
-void VSTEffectWrapper::RefreshParameters(int skip) const
+void VSTEffectValidator::RefreshParameters(int skip) const
 {
    if (!mNames)
    {
@@ -2517,7 +2523,10 @@ void VSTEffect::OnSlider(wxCommandEvent & evt)
       FetchSettings(mSettings);
    }   
 
-   RefreshParameters(i);
+   // CAUTION: temporary disabled only to allow building,
+   // RE-ENABLE when this method will belong to the validator
+   // 
+   // RefreshParameters(i);
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3563,7 +3572,11 @@ bool VSTEffect::TransferDataToWindow(const EffectSettings& settings)
    if (!StoreSettings(GetSettings(settings)))
       return false;
 
-   RefreshParameters();
+   // CAUTION: temporary disabled only to allow building,
+   // you may want to call this, after this method will belong to the validator
+   // (actually, it will become ::UpdateUI()
+   // 
+   //RefreshParameters();
 
    return true;
 }
