@@ -1345,12 +1345,17 @@ bool VSTEffect::CloseUI()
    // some or all of these statements will have to move to VSTEffectValidator's override
    // of EffectUIValidator::OnClose
 
+   /* commented out because of mControl, now belonging to the validator.
+   *  this should move to EffectUIValidator::OnClose too.
+   
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
    mControl->Close();
 #endif
+
+   */
 
    mValidator->GetInstance().PowerOff();
 
