@@ -630,10 +630,6 @@ public:
 
    void RefreshParameters(int skip = -1) const;
 
-   // TODO move to private after we pass mParentFE in constructor
-   wxWindow* mParent;
-   wxWeakRef<wxDialog> mDialog;
-
 private:
    VSTEffectInstance& mInstance;
 
@@ -652,6 +648,9 @@ private:
    ArrayOf<wxStaticText*> mDisplays;
    ArrayOf<wxStaticText*> mLabels;
    NumericTextCtrl* mDuration;
+
+   wxWindow* mParent;
+   wxWeakRef<wxDialog> mDialog;
 };
 
 
