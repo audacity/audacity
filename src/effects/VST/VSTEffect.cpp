@@ -1341,39 +1341,6 @@ bool VSTEffect::ValidateUI(EffectSettings &settings)
 
 bool VSTEffect::CloseUI()
 {
-   // TODO: now that the UI is owned/managed by the validator,
-   // some or all of these statements will have to move to VSTEffectValidator's override
-   // of EffectUIValidator::OnClose
-
-   /* commented out because of mControl, now belonging to the validator.
-   *  this should move to EffectUIValidator::OnClose too.
-   
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-   wxEventLoop::SetBusyWaiting(false);
-#endif
-   mControl->Close();
-#endif
-
-   */
-
-   mValidator->GetInstance().PowerOff();
-
-   // CAUTION this was disabled only to allow building,
-   // but you probably want this in the validator ::OnClose
-   // 
-   // NeedEditIdle(false);
-
-   RemoveHandler();
-
-   // CAUTION this was disabled only to allow building,
-   // but you probably want this in the validator ::OnClose
-   // 
-   //mNames.reset();
-   //mSliders.reset();
-   //mDisplays.reset();
-   //mLabels.reset();
-
    mParentFE = NULL;
    mDialogFE = NULL;
    mValidator = nullptr;
@@ -2237,9 +2204,6 @@ void VSTEffectWrapper::callSetChunk(bool isPgm, int len, void *buf, VstPatchChun
 }
 
 
-void VSTEffect::RemoveHandler()
-{
-}
 
 static void OnSize(wxSizeEvent & evt)
 {
@@ -3729,6 +3693,36 @@ bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
    return mInstance.StoreSettings(
       // Change this when GetSettings becomes a static function
       static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+}
+
+
+void VSTEffectValidator::Unload()
+{
+   // TODO
+}
+
+
+void VSTEffectValidator::OnClose()
+{
+
+#ifdef __WXMAC__
+#ifdef __WX_EVTLOOP_BUSY_WAITING__
+   wxEventLoop::SetBusyWaiting(false);
+#endif
+   mControl->Close();
+#endif
+
+   GetInstance().PowerOff();
+
+   NeedEditIdle(false);
+
+   mNames.reset();
+   mSliders.reset();
+   mDisplays.reset();
+   mLabels.reset();
+
+   mParent = NULL;
+   mDialog = NULL;
 }
 
 #endif // USE_VST

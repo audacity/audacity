@@ -432,7 +432,6 @@ private:
    
    void OnUpdateDisplay(wxCommandEvent & evt);
 
-   void RemoveHandler();
 
    void OnProgram(wxCommandEvent & evt);
    void OnProgramText(wxCommandEvent & evt);
@@ -613,8 +612,8 @@ public:
 
    void Automate(int index, float value) override;
 
-   // TODO!   
-   void Unload() override {};
+   void Unload() override;
+   void OnClose() override;
 
    void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
    void BuildFancy(EffectInstance& instance);
