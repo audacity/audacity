@@ -598,7 +598,7 @@ BEGIN_EVENT_TABLE(VSTEffect, wxEvtHandler)
    EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, VSTEffect::OnSlider)
 
    // Events from the audioMaster callback
-   EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
+   //EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
 END_EVENT_TABLE()
 
 
@@ -2284,6 +2284,9 @@ void VSTEffectValidator::BuildFancy(EffectInstance& instance)
    NeedEditIdle(true);
 
    mDialog->Bind(wxEVT_SIZE, OnSize);
+   
+   
+   BindTo(*mDialog, EVT_SIZEWINDOW, &VSTEffectValidator::OnSizeWindow);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -2474,7 +2477,7 @@ void VSTEffectValidator::RefreshParameters(int skip) const
    }
 }
 
-void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
+void VSTEffectValidator::OnSizeWindow(wxCommandEvent & evt)
 {
    if (!mControl)
    {
@@ -2488,12 +2491,12 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
    //
    // Guitar Rig (and possibly others) Cocoa VSTs can resize too large
    // if the bounds are unlimited.
-   mDialogFE->SetMinSize(wxDefaultSize);
-   mDialogFE->SetMaxSize(wxDefaultSize);
-   mDialogFE->Layout();
-   mDialogFE->SetMinSize(mDialogFE->GetBestSize());
-   mDialogFE->SetMaxSize(mDialogFE->GetBestSize());
-   mDialogFE->Fit();
+   mDialog->SetMinSize(wxDefaultSize);
+   mDialog->SetMaxSize(wxDefaultSize);
+   mDialog->Layout();
+   mDialog->SetMinSize(mDialog->GetBestSize());
+   mDialog->SetMaxSize(mDialog->GetBestSize());
+   mDialog->Fit();
 }
 
 void VSTEffect::OnSlider(wxCommandEvent & evt)
