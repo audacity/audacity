@@ -362,7 +362,7 @@ class VSTEffect final
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       EffectOutputs *pOutputs) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
+   
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -609,6 +609,7 @@ public:
 
    VSTEffectInstance& GetInstance();
 
+   bool ValidateUI() override;
 
    void Automate(int index, float value) override;
 
