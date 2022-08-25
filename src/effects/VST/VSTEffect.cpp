@@ -1306,13 +1306,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 
    auto validator = std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
 
-   // These could be moved in the validator constructor
-   validator->Load();
-   validator->mParent = mParentFE;
-   validator->mTimer = std::make_unique<VSTEffectTimer>(validator.get());
-   validator->mDialog = static_cast<wxDialog*>(wxGetTopLevelParent(parent));
-
-
    // Build the appropriate dialog type
    if (mGui)
    {
@@ -3608,13 +3601,17 @@ VSTEffectValidator::VSTEffectValidator
 )
    : DefaultEffectUIValidator(effect, access, pParent),
      VSTEffectWrapper(instance.mPath),
-     mInstance(instance)
+     mInstance(instance),
+     mParent(pParent),
+     mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) )
 {   
    // Make the settings of the instance up to date before using it to
    // build a UI
    StoreSettingsToInstance(mAccess.Get());
 
-   // TODO: Load()  (?)
+   Load();
+
+   mTimer = std::make_unique<VSTEffectTimer>(this);   
 }
 
 
