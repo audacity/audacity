@@ -39,6 +39,9 @@ void BeatsFormat::SetLabelString(
 ) const
 {
    if (tickType == RulerFormat::t_major) {
+      if (d < 0) {
+         return;
+      }
       const BeatsFormatData* beatsData = std::any_cast<BeatsFormatData>(&data);
 
       const double bpm = beatsData ? beatsData->bpm : 0;

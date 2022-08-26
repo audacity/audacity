@@ -121,8 +121,7 @@ void TimeFormat::SetLabelString(
 {
    if (tickType == RulerFormat::t_major) {
       if (d < 0) {
-         s = wxT("-");
-         d = -d;
+         return;
       }
 
 #if ALWAYS_HH_MM_SS
