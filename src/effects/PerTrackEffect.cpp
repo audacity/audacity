@@ -50,12 +50,6 @@ bool PerTrackEffect::Instance::ProcessFinalize() noexcept
    return true;
 }
 
-sampleCount PerTrackEffect::Instance::GetLatency(
-   const EffectSettings &, double) const
-{
-   return 0;
-}
-
 PerTrackEffect::~PerTrackEffect() = default;
 
 bool PerTrackEffect::DoPass1() const

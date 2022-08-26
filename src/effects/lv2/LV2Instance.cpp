@@ -87,10 +87,11 @@ unsigned LV2Instance::GetAudioOutCount() const
    return mPorts.mAudioOut;
 }
 
-sampleCount LV2Instance::GetLatency(const EffectSettings &, double) const
+auto LV2Instance::GetLatency(const EffectSettings &, double) const
+   -> SampleCount
 {
    if (mMaster && mUseLatency && mPorts.mLatencyPort >= 0)
-      return sampleCount(mMaster->GetLatency());
+      return mMaster->GetLatency();
    return 0;
 }
 

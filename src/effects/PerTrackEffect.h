@@ -18,6 +18,7 @@
 #include "AudioGraphSource.h" // to inherit
 #include "Effect.h" // to inherit
 #include "MemoryX.h"
+#include "SampleCount.h"
 #include <functional>
 
 //! Base class for Effects that treat each (mono or stereo) track independently
@@ -49,11 +50,6 @@ public:
          double sampleRate, ChannelNames chanMap) override;
 
       bool ProcessFinalize() noexcept override;
-
-      //! Default implementation returns zero
-      sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const override;
-
    protected:
       const PerTrackEffect &mProcessor;
    };

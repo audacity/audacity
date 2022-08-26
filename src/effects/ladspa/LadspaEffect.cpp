@@ -897,7 +897,7 @@ struct LadspaEffect::Instance
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+   SampleCount GetLatency(const EffectSettings &settings, double sampleRate)
       const override;
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
@@ -932,14 +932,13 @@ std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
    return std::make_shared<Instance>(*this);
 }
 
-sampleCount LadspaEffect::Instance::GetLatency(
-   const EffectSettings &settings, double) const
+auto LadspaEffect::Instance::GetLatency(
+   const EffectSettings &settings, double) const -> SampleCount
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
-   if (effect.mUseLatency && effect.mLatencyPort >= 0) {
-      return sampleCount{ controls[effect.mLatencyPort] };
-   }
+   if (effect.mUseLatency && effect.mLatencyPort >= 0)
+      return controls[effect.mLatencyPort];
    return 0;
 }
 

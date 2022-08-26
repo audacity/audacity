@@ -40,7 +40,7 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    override;
-   sampleCount GetLatency(
+   SampleCount GetLatency(
       const EffectSettings &settings, double sampleRate) const override;
 
    const LV2Wrapper *GetMaster() const { return mMaster.get(); }

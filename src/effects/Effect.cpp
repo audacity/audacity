@@ -49,6 +49,12 @@ bool StatefulEffect::Instance::Process(EffectSettings &settings)
    return GetEffect().Process(*this, settings);
 }
 
+auto StatefulEffect::Instance::GetLatency(const EffectSettings &, double) const
+   -> SampleCount
+{
+   return GetEffect().GetLatency().as_long_long();
+}
+
 Effect::Effect()
 {
 }

@@ -960,7 +960,8 @@ size_t VSTEffectInstance::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount VSTEffectInstance::GetLatency(const EffectSettings& settings, double sampleRate) const
+auto VSTEffectInstance::GetLatency(
+   const EffectSettings& settings, double sampleRate) const -> SampleCount
 {
    if (mUseLatency)
       return mBufferDelay;

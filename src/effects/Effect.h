@@ -14,7 +14,6 @@
 
 #include "EffectBase.h"
 
-#include "SampleCount.h"
 #include "StatefulEffectBase.h"
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
@@ -22,6 +21,8 @@
 class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
+
+class sampleCount;
 
 //! Default implementation of EffectUIValidator invokes ValidateUI
 //! and IsGraphicalUI methods of an EffectUIClientInterface
@@ -354,6 +355,8 @@ public:
    public:
       using StatefulEffectBase::Instance::Instance;
       bool Process(EffectSettings &settings) override;
+      SampleCount GetLatency(
+         const EffectSettings &settings, double sampleRate) const override;
    };
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 };

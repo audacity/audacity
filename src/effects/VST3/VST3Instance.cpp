@@ -103,11 +103,12 @@ bool VST3Instance::RealtimeSuspend()
    return true;
 }
 
-sampleCount VST3Instance::GetLatency(const EffectSettings& settings, double sampleRate) const
+auto VST3Instance::GetLatency(const EffectSettings& settings, double sampleRate)
+   const -> SampleCount
 {
    if(mUseLatency)
-      return mInitialDelay;
-   return { 0u };
+      return mInitialDelay.as_long_long();
+   return 0;
 }
 
 bool VST3Instance::ProcessFinalize() noexcept

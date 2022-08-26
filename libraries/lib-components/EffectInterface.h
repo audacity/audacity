@@ -334,8 +334,6 @@ class wxWindow;
 
 class EffectUIClientInterface;
 
-class sampleCount;
-
 // ----------------------------------------------------------------------------
 // Supported channel assignments
 // ----------------------------------------------------------------------------
@@ -481,6 +479,14 @@ public:
     This might be overridden to copy contents only selectively
     */
    virtual void AssignSettings(EffectSettings &dst, EffectSettings &&src) const;
+
+   using SampleCount = uint64_t;
+
+   /*!
+    Default implementation returns 0
+    */
+   virtual SampleCount GetLatency(
+      const EffectSettings &settings, double sampleRate) const;
 };
 
 /***************************************************************************//**
@@ -510,10 +516,6 @@ public:
    virtual size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   virtual sampleCount GetLatency(
-      const EffectSettings &settings, double sampleRate) const = 0;
 };
 
 //! Inherit to add a state variable to an EffectInstance subclass

@@ -174,6 +174,12 @@ void EffectInstance::AssignSettings(EffectSettings &dst, EffectSettings &&src)
    dst = src;
 }
 
+auto EffectInstance::GetLatency(const EffectSettings &, double) const
+   -> SampleCount
+{
+   return 0;
+}
+
 EffectInstanceEx::~EffectInstanceEx() = default;
 
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;

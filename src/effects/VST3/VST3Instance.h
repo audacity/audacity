@@ -54,7 +54,8 @@ public:
    bool RealtimeProcessStart(EffectSettings& settings) override;
    bool RealtimeResume() override;
    bool RealtimeSuspend() override;
-   sampleCount GetLatency(const EffectSettings& settings, double sampleRate) const override;
+   SampleCount GetLatency(const EffectSettings& settings, double sampleRate)
+      const override;
    bool ProcessFinalize() noexcept override;
    bool ProcessInitialize(EffectSettings &settings,
          double sampleRate, ChannelNames chanMap) override;
