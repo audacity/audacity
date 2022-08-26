@@ -243,7 +243,7 @@ uint64_t CurlResponse::readData (void* buffer, uint64_t maxBytesCount)
 
     if (mDataBuffer.empty ())
         return 0;
-    
+
     maxBytesCount = std::min<uint64_t> (maxBytesCount, mDataBuffer.size ());
 
     const auto begin = mDataBuffer.begin ();
@@ -285,7 +285,7 @@ void CurlResponse::perform ()
 
     handle.setOption (CURLOPT_NOPROGRESS, 0L);
 
-    handle.setOption (CURLOPT_CONNECTTIMEOUT_MS, 
+    handle.setOption (CURLOPT_CONNECTTIMEOUT_MS,
         std::chrono::duration_cast<std::chrono::milliseconds> (mRequest.getTimeout()).count ()
     );
 
@@ -341,6 +341,11 @@ void CurlResponse::perform ()
 
         handle.setOption (CURLOPT_SEEKFUNCTION, DataStreamSeek);
         handle.setOption (CURLOPT_SEEKDATA, &ds);
+    }
+    else if (mVerb == RequestVerb::Post || mVerb == RequestVerb::Put || mVerb == RequestVerb::Patch)
+    {
+       handle.setOption (CURLOPT_POSTFIELDS, "");
+       handle.setOption (CURLOPT_POSTFIELDSIZE, 0);
     }
 
     auto cleanupMime = finally(
@@ -437,7 +442,7 @@ size_t CurlResponse::HeaderCallback (const char* buffer, size_t size, size_t nit
     }
 
     size = size * nitems;
-    
+
     if (size < 2)
         return 0;
 
@@ -470,7 +475,7 @@ int CurlResponse::CurlProgressCallback(
       if (clientp->mAbortRequested)
          return -1;
    }
-   
+
    std::lock_guard<std::mutex> callbackLock(clientp->mCallbackMutex);
 
    if (dltotal > 0 && clientp->mDownloadProgressCallback)
