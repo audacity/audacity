@@ -143,7 +143,7 @@ bool VST3UIValidator::ValidateUI()
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mDuration != nullptr)
          settings.extra.SetDuration(mDuration->GetValue());
-      mWrapper.FlushSettings(settings);
+      mWrapper.FlushParameters(settings);
       mWrapper.StoreSettings(settings);
    });
 
@@ -166,15 +166,30 @@ void VST3UIValidator::OnClose()
 
    mWrapper.EndParameterEdit();
 
+   //Make sure all previous changes has been processed by the worker
+   mAccess.Flush();
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      if (mDuration != nullptr)
+         settings.extra.SetDuration(mDuration->GetValue());
+      //Flush changes if there is no processing performed at the moment
+      mWrapper.FlushParameters(settings);
+      mWrapper.StoreSettings(settings);
+   });
+
    EffectUIValidator::OnClose();
 }
 
 bool VST3UIValidator::UpdateUI()
 {
+   mWrapper.EndParameterEdit();
    mWrapper.FetchSettings(mAccess.Get());
-   
+   mWrapper.BeginParameterEdit(mAccess);
+
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
+
+   //Write to main...
+   mAccess.Flush();
 
    return true;
 }
