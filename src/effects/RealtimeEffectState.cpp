@@ -451,7 +451,7 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
       }
 
       // Point at the correct output buffers
-      copied = std::min(chans - ondx, numAudioOut);
+      copied = std::min(numAudioOut - ondx, numAudioOut);
       std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
 
       const auto blockSize = pInstance->GetBlockSize();
