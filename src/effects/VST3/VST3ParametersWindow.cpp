@@ -143,7 +143,8 @@ namespace
       {
          Steinberg::Vst::String128 str{};
          editController.getParamStringByValue(GetParameterId(), value, str);
-         SetName(wxString::Format("%s %s %s", mTitle, str, mUnits));
+         SetName(wxString::Format("%s %s %s",
+            mTitle, VST3Utils::ToWxString(str), mUnits));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController&) const override
