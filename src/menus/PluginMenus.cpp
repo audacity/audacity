@@ -437,7 +437,7 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
    if (projectWindow.IsEffectsPanelShown())
       projectWindow.HideEffectsPanel();
    else
-      projectWindow.ShowEffectsPanel(trackFocus.Get());
+      projectWindow.ShowEffectsPanel(trackFocus.Get(), true);
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
@@ -1302,7 +1302,7 @@ BaseItemSharedPtr EffectMenu()
 
       Section( "RealtimeEffects",
          Command ( wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
-            FN(OnAddRealtimeEffects),  HasTrackFocusFlag() )
+            FN(OnAddRealtimeEffects),  HasTrackFocusFlag(), wxT("E") )
       ),
 
       Section( "RepeatLast",

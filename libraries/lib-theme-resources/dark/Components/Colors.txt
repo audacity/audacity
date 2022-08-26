@@ -107,6 +107,6 @@
                   ClipNameText: #fedfb2;
          ClipNameTextSelection: #b7cae2;
              DropHintHighlight: #fedfb2;
-      EffectListItemBackground: #5d5d5d;
-          EffectListItemBorder: #cccccc;
+      EffectListItemBackground: #404040;
+          EffectListItemBorder: #6B6B6B;
 }
