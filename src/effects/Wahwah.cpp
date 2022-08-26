@@ -208,7 +208,7 @@ EffectType EffectWahwah::GetType() const
 
 auto EffectWahwah::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Always;
+   return RealtimeSince::Never;
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
