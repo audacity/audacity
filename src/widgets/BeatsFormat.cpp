@@ -32,6 +32,10 @@ void BeatsFormat::SetLabelString(
 ) const
 {
    if (tickType == RulerFormat::t_major) {
+      if (d < 0) {
+         return;
+      }
+
       double val = (mBpm * d * mTimeSigLower) / (60 * mTimeSigUpper);
 
       s.Printf(wxT("%d"), (int)round(val + 1));
