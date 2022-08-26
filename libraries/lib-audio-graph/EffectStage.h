@@ -19,6 +19,8 @@
 #include "EffectInterface.h"
 #include "SampleCount.h"
 
+class Track;
+
 namespace AudioGraph {
 
 //! Decorates a source with a non-timewarping effect, which may have latency
@@ -93,5 +95,14 @@ private:
    bool mCleared{ false };
 };
 
+/*
+ @param multichannel true only when effect does not process each channel
+    of track independently
+ @param[out] map terminated with ChannelNameEOL
+ */
+AUDIO_GRAPH_API
+unsigned MakeChannelMap(const Track &track, bool multichannel,
+   // TODO: more-than-two-channels
+   ChannelName map[3]);
 }
 #endif

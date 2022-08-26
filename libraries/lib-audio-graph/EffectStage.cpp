@@ -16,6 +16,7 @@
 #include "EffectStage.h"
 #include "AudacityException.h"
 #include "AudioGraphBuffers.h"
+#include "Track.h"
 #include <cassert>
 
 AudioGraph::EffectStage::EffectStage(CreateToken,
@@ -285,4 +286,31 @@ bool AudioGraph::EffectStage::Release()
    assert(mDelayRemaining >= 0);
    mLastProduced = mLastZeroes = 0;
    return true;
+}
+
+unsigned AudioGraph::MakeChannelMap(
+   const Track &track, bool multichannel, ChannelName map[3])
+{
+   // Iterate either over one track which could be any channel,
+   // or if multichannel, then over all channels of track,
+   // which is a leader.
+   unsigned numChannels = 0;
+   for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
+      if (channel->GetChannel() == Track::LeftChannel)
+         map[numChannels] = ChannelNameFrontLeft;
+      else if (channel->GetChannel() == Track::RightChannel)
+         map[numChannels] = ChannelNameFrontRight;
+      else
+         map[numChannels] = ChannelNameMono;
+      ++ numChannels;
+      map[numChannels] = ChannelNameEOL;
+      if (! multichannel)
+         break;
+      if (numChannels == 2) {
+         // TODO: more-than-two-channels
+         // Ignore other channels
+         break;
+      }
+   }
+   return numChannels;
 }

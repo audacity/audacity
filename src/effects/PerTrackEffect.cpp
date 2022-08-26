@@ -115,7 +115,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          sampleCount start = 0;
          WaveTrack *pRight{};
 
-         const auto numChannels = MakeChannelMap(left, multichannel, map);
+         const auto numChannels =
+            AudioGraph::MakeChannelMap(left, multichannel, map);
          if (multichannel) {
             assert(numAudioIn > 1);
             if (numChannels == 2) {

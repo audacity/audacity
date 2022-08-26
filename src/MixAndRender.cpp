@@ -11,6 +11,7 @@ Paul Licameli split from Mix.cpp
 #include "MixAndRender.h"
 
 #include "BasicUI.h"
+#include "EffectStage.h"
 #include "Mix.h"
 #include "effects/RealtimeEffectList.h"
 #include "WaveTrack.h"
@@ -196,34 +197,6 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 }
 
-#include "EffectInterface.h"
-unsigned MakeChannelMap(
-   const Track &track, bool multichannel, ChannelName map[3])
-{
-   // Iterate either over one track which could be any channel,
-   // or if multichannel, then over all channels of track,
-   // which is a leader.
-   unsigned numChannels = 0;
-   for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
-      if (channel->GetChannel() == Track::LeftChannel)
-         map[numChannels] = ChannelNameFrontLeft;
-      else if (channel->GetChannel() == Track::RightChannel)
-         map[numChannels] = ChannelNameFrontRight;
-      else
-         map[numChannels] = ChannelNameMono;
-      ++ numChannels;
-      map[numChannels] = ChannelNameEOL;
-      if (! multichannel)
-         break;
-      if (numChannels == 2) {
-         // TODO: more-than-two-channels
-         // Ignore other channels
-         break;
-      }
-   }
-   return numChannels;
-}
-
 #include "effects/RealtimeEffectList.h"
 #include "effects/RealtimeEffectState.h"
 
@@ -250,7 +223,8 @@ GetEffectStages(const WaveTrack &track)
          continue;
       auto &stage = result.emplace_back(MixerOptions::StageSpecification{
          move(pInstance), settings });
-      MakeChannelMap(track, stage.mpInstance->GetAudioInCount() > 1, stage.map);
+      AudioGraph::MakeChannelMap(
+         track, stage.mpInstance->GetAudioInCount() > 1, stage.map);
    }
    return result;
 }
