@@ -82,12 +82,12 @@ public:
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
    bool Initialize(const EffectSettings& settings, Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
-   void Finalize();
+   void Finalize(EffectSettings* settings);
 
    //Updates internal state with changes from settings
    void ConsumeChanges(const EffectSettings& settings);
-   //Used to send EffectSettings to the IAudioProcessor, while effect is inactive(!)
-   void FlushSettings(EffectSettings& settings);
+   //Used to send EffectSettings changes to the IAudioProcessor, while effect is inactive(!)
+   void FlushParameters(EffectSettings& settings);
 
    //Intialize first, before calling to Process. It's safe to it use from another thread
    size_t Process(const float* const* inBlock, float* const* outBlock, size_t blockLen);

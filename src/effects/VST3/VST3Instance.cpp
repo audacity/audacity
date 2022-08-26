@@ -72,9 +72,9 @@ bool VST3Instance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
 return GuardedCall<bool>([&]{
    mRecruited = false;
-   mWrapper->Finalize();
+   mWrapper->Finalize(&settings);
    for (auto &pProcessor : mProcessors)
-      pProcessor->mWrapper->Finalize();
+      pProcessor->mWrapper->Finalize(nullptr);
    mProcessors.clear();
    return true;
 });
@@ -144,7 +144,7 @@ bool VST3Instance::ProcessFinalize() noexcept
 {
    return GuardedCall<bool>([&]
    {
-      mWrapper->Finalize();
+      mWrapper->Finalize(nullptr);
       return true;
    });
 }
