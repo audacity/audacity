@@ -87,6 +87,7 @@ private:
    void OnExport(wxCommandEvent & evt);
    void OnOptions(wxCommandEvent & evt);
    void OnDefaults(wxCommandEvent & evt);
+   void OnIdle(wxIdleEvent &evt);
 
    bool IsOpenedFromEffectPanel() const;
 

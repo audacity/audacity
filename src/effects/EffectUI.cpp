@@ -152,6 +152,7 @@ EVT_MENU(kDefaultsID, EffectUIHost::OnDefaults)
 EVT_MENU_RANGE(kUserPresetsID, kUserPresetsID + 999, EffectUIHost::OnUserPreset)
 EVT_MENU_RANGE(kDeletePresetID, kDeletePresetID + 999, EffectUIHost::OnDeletePreset)
 EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFactoryPreset)
+EVT_IDLE(EffectUIHost::OnIdle)
 END_EVENT_TABLE()
 
 namespace {
@@ -958,6 +959,13 @@ void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
    });
    TransferDataToWindow();
    return;
+}
+
+void EffectUIHost::OnIdle(wxIdleEvent &evt)
+{
+   evt.Skip();
+   if (mpAccess)
+      mpAccess->Flush();
 }
 
 bool EffectUIHost::IsOpenedFromEffectPanel() const
