@@ -1313,9 +1313,10 @@ int LabelTrackView::OverATextBox( const LabelTrack &track, int xx, int yy )
 // return true if the mouse is over text box, false otherwise
 bool LabelTrackView::OverTextBox(const LabelStruct *pLabel, int x, int y)
 {
+   int yText = pLabel->y - (LabelBarHeight - TextFrameYOffset) / 2;  // centerline
    if( (pLabel->xText-(mIconWidth/2) < x) &&
             (x<pLabel->xText+pLabel->width+(mIconWidth/2)) &&
-            (abs(pLabel->y-y)<mIconHeight/2))
+            (abs(yText - y) < mTextHeight / 2) )
    {
       return true;
    }
