@@ -144,7 +144,8 @@ struct AudioIoCallback::TransportState {
           pOwningProject && numPlaybackChannels > 0) {
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         mpRealtimeInitialization.emplace(move(wOwningProject), sampleRate);
+         mpRealtimeInitialization.emplace(
+            move(wOwningProject), sampleRate, numPlaybackChannels);
          // The following adds a new effect processor for each logical track.
          for (size_t i = 0, cnt = playbackTracks.size(); i < cnt;) {
             // An array of non-nulls only should be given to us
