@@ -292,14 +292,13 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
       if (!pInstance)
          return {};
 
-      mInitialized = true;
-
       // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
       // number was important
       pInstance->SetBlockSize(512);
 
       if (!pInstance->RealtimeInitialize(mMainSettings.settings, sampleRate))
          return {};
+      mInitialized = true;
       return pInstance;
    }
    return pInstance;
