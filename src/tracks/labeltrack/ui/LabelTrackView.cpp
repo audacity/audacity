@@ -290,100 +290,69 @@ void LabelTrackView::ComputeTextPosition(const wxRect & r, int index) const
 
    // xExtra is extra space
    // between the text and the endpoints.
-   const int xExtra=mIconWidth;
+   const int xExtra = mIconWidth;
    int x     = labelStruct.x;  // left endpoint
    int x1    = labelStruct.x1; // right endpoint.
    int width = labelStruct.width;
 
-   int xText; // This is where the text will end up.
+   int xText; // This is where the left edge of text will end up.
+
+   // Are label region endpoints onscreen?
+   int xLeftOffscreen = r.x - (x + xExtra);
+   int xRightOffscreen = x1 - (r.x + r.width - xExtra);
 
    // Will the text all fit at this zoom?
-   bool bTooWideForScreen = width > (r.width-2*xExtra);
-// bool bSimpleCentering = !bTooWideForScreen;
-   bool bSimpleCentering = false;
+   bool bTooWideForScreen = width > (r.width - 2 * xExtra);
 
-   //TODO (possibly):
-   // Add configurable options as to when to use simple
-   // and when complex centering.
-   //
-   // Simple centering does its best to keep the text
-   // centered between the label limits.
-   //
-   // Complex centering positions the text proportionally
-   // to how far we are through the label.
-   //
-   // If we add preferences for this, we want to be able to
-   // choose separately whether:
-   //   a) Wide text labels centered simple/complex.
-   //   b) Other text labels centered simple/complex.
-   //
+   // Center between these two points. Below, choose regions
+   // and k factor to generate a piecewise continuous function
+   int p = x, p1 = x1;
+   float k = 0.5;
+   float oneOverViewport = 1.0f / r.width;
 
-   if( bSimpleCentering )
+   // this can be any sigmoid function (a function that
+   // flattens 0..inf to 0..1)
+   auto sigmoid = [](float x)
    {
-      // Center text between the two end points.
-      xText = (x+x1-width)/2;
+      return x / (x + 1.0f);
+   };
+
+   if( xLeftOffscreen <= 0 && xRightOffscreen <= 0 )
+   {
+      // both onscreen, default center in label region
+   }
+   else if( xLeftOffscreen <= 0 )
+   {
+      // left on screen
+      p1 = r.x + r.width - xExtra; // right edge
+      k = 0.5f * (1.0f + sigmoid(oneOverViewport * xRightOffscreen));
+   }
+   else if( xRightOffscreen <= 0 )
+   {
+      // right on screen
+      p = r.x + xExtra; // left edge
+      k = 0.5f * (1.0f - sigmoid(oneOverViewport * xLeftOffscreen));
+   }
+   else if( bTooWideForScreen )
+   {
+      // Scroll through text proportional to viewport position within label
+      int scroll = width - (r.width - 2 * xExtra);
+      p = r.x + (r.width - scroll) / 2;
+      p1 = p + scroll;
+      k = 1.0f - ((r.x + r.width * 0.5f) - x) / (x1 - x);
    }
    else
    {
-      // Calculate xText position to make text line
-      // scroll sideways evenly as r moves right.
-
-      // xText is a linear function of r.x.
-      // These variables are used to compute that function.
-      int rx0,rx1,xText0,xText1;
-
-      // Since we will be using a linear function,
-      // we should blend smoothly between left and right
-      // aligned text as r, the 'viewport' moves.
-      if( bTooWideForScreen )
-      {
-         rx0=x;           // when viewport at label start.
-         xText0=x+xExtra; // text aligned left.
-         rx1=x1-r.width;  // when viewport end at label end
-         xText1=x1-(width+xExtra); // text aligned right.
-      }
-      else
-      {
-         // when label start + width + extra spacing at viewport end..
-         rx0=x-r.width+width+2*xExtra;
-         // ..text aligned left.
-         xText0=x+xExtra;
-         // when viewport start + width + extra spacing at label end..
-         rx1=x1-(width+2*xExtra);
-         // ..text aligned right.
-         xText1=x1-(width+xExtra);
-      }
-
-      if( rx1 > rx0 ) // Avoid divide by zero case.
-      {
-         // Compute the blend between left and right aligned.
-
-         // Don't use:
-         //
-         // xText = xText0 + ((xText1-xText0)*(r.x-rx0))/(rx1-rx0);
-         //
-         // The problem with the above is that it integer-oveflows at
-         // high zoom.
-
-         // Instead use:
-         xText = xText0 + (int)((xText1-xText0)*(((float)(r.x-rx0))/(rx1-rx0)));
-      }
-      else
-      {
-         // Avoid divide by zero by reverting to
-         // simple centering.
-         //
-         // We could also fall into this case if x and x1
-         // are swapped, in which case we'll end up
-         // left aligned anyway because code later on
-         // will catch that.
-         xText = (x+x1-width)/2;
-      }
+      p = r.x + xExtra; // left edge
+      p1 = r.x + r.width - xExtra; // right edge
+      k = 0.5f * (1.0f + sigmoid(oneOverViewport * xRightOffscreen) - sigmoid(oneOverViewport * xLeftOffscreen));
    }
 
+   xText = p + (int)(k * (p1 - p)) - width / 2;
+
    // Is the text now appearing partly outside r?
-   bool bOffLeft = xText < r.x+xExtra;
-   bool bOffRight = xText > r.x+r.width-width-xExtra;
+   bool bOffLeft = xText < r.x + xExtra;
+   bool bOffRight = xText + width > r.x + r.width - xExtra;
 
    // IF any part of the text is offscreen
    // THEN we may bring it back.
@@ -395,19 +364,19 @@ void LabelTrackView::ComputeTextPosition(const wxRect & r, int index) const
       //(because if we did, you'd never get to read
       //all the text by scrolling).
    }
-   else if( bOffLeft != bTooWideForScreen)
+   else if( bOffLeft != bTooWideForScreen )
    {
       // IF we're off on the left, OR we're
       // too wide for the screen and off on the right
       // (only) THEN align left.
-      xText = r.x+xExtra;
+      xText = r.x + xExtra;
    }
    else
    {
       // We're off on the right, OR we're
       // too wide and off on the left (only)
       // SO align right.
-      xText =r.x+r.width-width-xExtra;
+      xText = r.x + r.width - width - xExtra;
    }
 
    // But if we've taken the text out from its endpoints
@@ -417,10 +386,10 @@ void LabelTrackView::ComputeTextPosition(const wxRect & r, int index) const
    // text might not even fit between the endpoints (at this
    // zoom factor), and in that case we'd like to position
    // the text at the left end point.
-   if( xText > (x1-width-xExtra))
-      xText=(x1-width-xExtra);
-   if( xText < x+xExtra )
-      xText=x+xExtra;
+   if( xText > (x1  -width - xExtra) )
+      xText= x1 - width - xExtra;
+   if( xText < x + xExtra )
+      xText= x + xExtra;
 
    labelStruct.xText = xText;
 }
