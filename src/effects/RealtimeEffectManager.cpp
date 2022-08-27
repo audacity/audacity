@@ -55,7 +55,6 @@ void RealtimeEffectManager::Initialize(
    RealtimeEffects::InitializationScope &scope, double sampleRate)
 {
    // (Re)Set processor parameters
-   mChans.clear();
    mRates.clear();
    mGroupLeaders.clear();
 
@@ -80,7 +79,6 @@ void RealtimeEffectManager::AddTrack(
    // This should never return a null
    wxASSERT(leader);
    mGroupLeaders.push_back(leader);
-   mChans.insert({leader, chans});
    mRates.insert({leader, rate});
 
    VisitGroup(*leader,
@@ -102,7 +100,6 @@ void RealtimeEffectManager::Finalize() noexcept
 
    // Reset processor parameters
    mGroupLeaders.clear();
-   mChans.clear();
    mRates.clear();
 
    // No longer active
@@ -134,8 +131,6 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    if (suspended)
       return numSamples;
 
-   auto chans = mChans[&track];
-
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
    auto start = std::chrono::steady_clock::now();
@@ -160,8 +155,8 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    VisitGroup(track,
       [&](RealtimeEffectState &state, bool)
       {
-         state.Process(track, chans, ibuf, obuf, numSamples);
-         for (auto i = 0; i < chans; ++i)
+         state.Process(track, nBuffers, ibuf, obuf, numSamples);
+         for (auto i = 0; i < nBuffers; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
       }
@@ -172,7 +167,7 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // the caller's buffers.  This happens when the number of effects processed
    // is odd.
    if (called & 1)
-      for (unsigned int i = 0; i < chans; i++)
+      for (unsigned int i = 0; i < nBuffers; i++)
          memcpy(buffers[i], ibuf[i], numSamples * sizeof(float));
 
    // Remember the latency
@@ -257,9 +252,9 @@ RealtimeEffectManager::MakeNewState(
          // to a state in the per-track list
          if (pLeader && pLeader != leader)
             continue;
-         auto chans = mChans[leader];
          auto rate = mRates[leader];
-         auto pInstance2 = state.AddTrack(*leader, chans, rate);
+         auto pInstance2 =
+            state.AddTrack(*leader, pScope->mNumPlaybackChannels, rate);
          if (pInstance2 != pInstance)
             pScope->mInstances.push_back(pInstance2);
       }

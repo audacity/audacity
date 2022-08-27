@@ -450,8 +450,14 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
       }
 
       // Point at the correct output buffers
-      copied = std::min(numAudioOut - ondx, numAudioOut);
+      copied = std::min(chans - ondx, numAudioOut);
       std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
+      if (copied < numAudioOut) {
+         // This is unexpected.  Is a bad instance demanding 3 channels out?
+         assert(false);
+         // Make determinate pointers
+         std::fill(clientOut + copied, clientOut + numAudioOut, nullptr);
+      }
 
       const auto blockSize = pInstance->GetBlockSize();
       for (size_t block = 0; block < numSamples; block += blockSize) {

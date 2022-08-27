@@ -73,7 +73,7 @@ public:
    bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
    void Process(Track &track,
-      unsigned chans,
+      unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
       size_t numSamples);

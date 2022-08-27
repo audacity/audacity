@@ -194,7 +194,6 @@ private:
    // which are to be called only while there is no playback
    std::vector<Track *> mGroupLeaders; //!< all are non-null
 
-   std::unordered_map<Track *, unsigned> mChans;
    std::unordered_map<Track *, double> mRates;
 };
 
@@ -204,9 +203,11 @@ class InitializationScope {
 public:
    InitializationScope() {}
    explicit InitializationScope(
-      std::weak_ptr<AudacityProject> wProject, double sampleRate)
-      : mSampleRate{ sampleRate }
+      std::weak_ptr<AudacityProject> wProject, double sampleRate,
+      unsigned numPlaybackChannels
+   )  : mSampleRate{ sampleRate }
       , mwProject{ move(wProject) }
+      , mNumPlaybackChannels{ numPlaybackChannels }
    {
       if (auto pProject = mwProject.lock())
          RealtimeEffectManager::Get(*pProject).Initialize(*this, sampleRate);
@@ -228,6 +229,7 @@ public:
 
    std::vector<std::shared_ptr<EffectInstance>> mInstances;
    double mSampleRate;
+   unsigned mNumPlaybackChannels;
 
 private:
    std::weak_ptr<AudacityProject> mwProject;
