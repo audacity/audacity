@@ -259,7 +259,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
                return recycledInstances.emplace_back(
                   std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance()));
          };
-         bGoodResult = ProcessTrack(factory, settings, source, sink,
+         bGoodResult = ProcessTrack(multichannel, factory, settings, source, sink,
             genLength, sampleRate, left,
             inBuffers, outBuffers);
          if (bGoodResult)
@@ -281,7 +281,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessTrack(const Factory &factory,
+bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
    EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
@@ -295,7 +295,7 @@ bool PerTrackEffect::ProcessTrack(const Factory &factory,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   auto pSource = AudioGraph::EffectStage::Create( upstream, inBuffers,
+   auto pSource = AudioGraph::EffectStage::Create( multi, upstream, inBuffers,
       factory, settings, sampleRate, genLength, track );
    if (!pSource)
       return false;

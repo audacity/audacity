@@ -77,7 +77,8 @@ private:
     @pre `sink.AcceptsBuffers(outBuffers)`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
-   static bool ProcessTrack(const Factory &factory, EffectSettings &settings,
+   static bool ProcessTrack(bool multi,
+      const Factory &factory, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
       double sampleRate, const Track &track,

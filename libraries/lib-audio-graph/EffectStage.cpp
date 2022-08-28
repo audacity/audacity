@@ -19,40 +19,79 @@
 #include "Track.h"
 #include <cassert>
 
-AudioGraph::EffectStage::EffectStage(CreateToken,
+namespace {
+std::vector<std::shared_ptr<EffectInstanceEx>> MakeInstances(
+   const AudioGraph::EffectStage::Factory &factory,
+   EffectSettings &settings, double sampleRate, const Track &track
+   , std::optional<sampleCount> genLength, bool multi)
+{
+   std::vector<std::shared_ptr<EffectInstanceEx>> instances;
+   // Make as many instances as needed for the channels of the track, which
+   // depends on how the instances report how many channels they accept
+   const auto range = multi
+      ? TrackList::Channels(&track)
+      : TrackList::Channels(&track).StartingWith(&track).EndingAfter(&track);
+   const auto nChannels = range.size();
+   size_t ii = 0;
+   for (auto iter = range.begin(); iter != range.end();) {
+      auto channel = *iter;
+      auto pInstance = factory();
+      if (!pInstance)
+         // A constructor that can't satisfy its post should throw instead
+         throw std::exception{};
+      auto count = pInstance->GetAudioInCount();
+      ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
+      AudioGraph::MakeChannelMap(*channel, count > 1, map);
+      // Give the plugin a chance to initialize
+      if (!pInstance->ProcessInitialize(settings, sampleRate, map))
+         throw std::exception{};
+      instances.resize(ii);
+   
+      // Beware generators with zero in count
+      if (genLength)
+         count = nChannels;
+   
+      instances.push_back(move(pInstance));
+
+      // Advance ii and iter
+      if (count == 0)
+         // What? Can't make progress
+         throw std::exception();
+      ii += count;
+      if (ii >= nChannels)
+         break;
+      std::advance(iter, count);
+   }
+   return instances;
+}
+}
+
+AudioGraph::EffectStage::EffectStage(CreateToken, bool multi,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength, const Track &track
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
-   , mInstances{ { factory() } }
+   , mInstances{ MakeInstances(factory, settings, sampleRate, track,
+      genLength, multi) }
    , mSettings{ settings }, mSampleRate{ sampleRate }
    , mIsProcessor{ !genLength.has_value() }
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
-   const auto &pInstance = mInstances[0];
-   if (!pInstance)
-      // A constructor that can't satisfy its post should throw instead
-      throw std::exception{};
-   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
-   MakeChannelMap(track, pInstance->GetAudioInCount() > 1, map);
-   // Give the plugin a chance to initialize
-   if (!pInstance->ProcessInitialize(mSettings, mSampleRate, map))
-      throw std::exception{};
    assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
 
    // Establish invariant
    mInBuffers.Rewind();
 }
 
-auto AudioGraph::EffectStage::Create(
+auto AudioGraph::EffectStage::Create(bool multi,
    Source &upstream, Buffers &inBuffers,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength, const Track &track
 ) -> std::unique_ptr<EffectStage>
 {
    try {
-      return std::make_unique<EffectStage>(CreateToken{},
+      return std::make_unique<EffectStage>(CreateToken{}, multi,
          upstream, inBuffers, factory, settings, sampleRate, genLength, track);
    }
    catch (const std::exception &) {
@@ -228,8 +267,13 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
       //    == data.BlockSize()
       // and mInBuffers.BlockSize() <= mInBuffers.Remaining() by invariant
       // and data.BlockSize() <= data.Remaining() by pre of Acquire()
-      if (!Process(0, data, curBlockSize, outBufferOffset))
-         return {};
+      for (size_t ii = 0, nn = mInstances.size(); ii < nn; ++ii) {
+         auto &pInstance = mInstances[ii];
+         if (!pInstance)
+            continue;
+         if (!Process(*pInstance, ii, data, curBlockSize, outBufferOffset))
+            return {};
+      }
 
       if (doZeroes)
          // Either a generator or doing the tail; will count down delay
@@ -247,8 +291,9 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
    return oCurBlockSize;
 }
 
-bool AudioGraph::EffectStage::Process(size_t channel,
-   const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const
+bool AudioGraph::EffectStage::Process(EffectInstanceEx &instance,
+   size_t channel, const Buffers &data, size_t curBlockSize,
+   size_t outBufferOffset) const
 {
    size_t processed{};
    try {
@@ -263,7 +308,7 @@ bool AudioGraph::EffectStage::Process(size_t channel,
       }
       else
          outPositions += channel;
-      processed = mInstances[channel]->ProcessBlock(mSettings,
+      processed = instance.ProcessBlock(mSettings,
          mInBuffers.Positions() + channel, outPositions, curBlockSize);
    }
    catch (const AudacityException &) {

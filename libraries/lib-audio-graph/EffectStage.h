@@ -40,13 +40,13 @@ public:
        `factory`
     @param map not required after construction
     */
-   EffectStage(CreateToken, Source &upstream, Buffers &inBuffers,
+   EffectStage(CreateToken, bool multi, Source &upstream, Buffers &inBuffers,
       const Factory &factory, EffectSettings &settings,
       double sampleRate,
       std::optional<sampleCount> genLength, const Track &track);
 
    //! Satisfies postcondition of constructor or returns null
-   static std::unique_ptr<EffectStage> Create(
+   static std::unique_ptr<EffectStage> Create(bool multi,
       Source &upstream, Buffers &inBuffers,
       const Factory &factory, EffectSettings &settings,
       double sampleRate,
@@ -79,7 +79,7 @@ private:
     @pre curBlockSize <= mInBuffers.Remaining()
     @return success
     */
-   bool Process(size_t channel,
+   bool Process(EffectInstanceEx &instance, size_t channel,
       const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const;
 
    [[nodiscard]] std::optional<size_t> FetchProcessAndAdvance(
