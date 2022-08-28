@@ -203,11 +203,7 @@ void OnZoomToggle(const CommandContext &context)
 {
    auto &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
-
-//   const double origLeft = viewInfo.h;
-//   const double origWidth = viewInfo.GetScreenEndTime() - origLeft;
 
    // Choose the zoom that is most different to the current zoom.
    double Zoom1 = GetZoomOfPreset( project, TracksPrefs::Zoom1Choice() );
@@ -216,11 +212,15 @@ void OnZoomToggle(const CommandContext &context)
    double ChosenZoom =
       fabs(log(Zoom1 / Z)) > fabs(log( Z / Zoom2)) ? Zoom1:Zoom2;
 
-   window.Zoom(ChosenZoom);
-   trackPanel.Refresh(false);
-//   const double newWidth = GetScreenEndTime() - viewInfo.h;
-//   const double newh = origLeft + (origWidth - newWidth) / 2;
-//   TP_ScrollWindow(newh);
+   double ZoomBy = ChosenZoom / Z;
+   if( ZoomBy > 1 )
+   {
+      window.ZoomInByFactor(ZoomBy);
+   }
+   else
+   {
+      window.ZoomOutByFactor(ZoomBy);
+   }
 }
 
 void OnZoomFit(const CommandContext &context)
