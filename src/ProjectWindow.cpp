@@ -1636,7 +1636,7 @@ void ProjectWindow::Zoom(double level)
    float t0 = viewInfo.selectedRegion.t0();
    float t1 = viewInfo.selectedRegion.t1();
    float tAvailable = viewInfo.GetScreenEndTime() - viewInfo.h;
-   float tOnLeft = (tAvailable - t0 + t1)/2.0;
+   float tOnLeft = (tAvailable - (t1 - t0)) / 2.0f;
    // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
    // If tOnLeft is positive, then we have room for the selection, so scroll to it.
    if( tOnLeft >=0 )
