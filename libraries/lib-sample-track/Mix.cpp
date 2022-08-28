@@ -133,12 +133,20 @@ Mixer::Mixer(Inputs inputs,
          // TODO: more-than-two-channels
          // Like mFloatBuffers but padding not needed for soxr
          auto &stageInput = mStageBuffers.emplace_back(2, mBufferSize, 1);
-         pDownstream =
-         mStages.emplace_back(std::make_unique<AudioGraph::EffectStage>(
+         auto &pNewDownstream =
+         mStages.emplace_back(AudioGraph::EffectStage::Create(
             *pDownstream, stageInput,
             *stage.mpInstance, settings, outRate, std::nullopt,
             stage.map
-         )).get();
+         ));
+         if (pNewDownstream)
+            pDownstream = pNewDownstream.get();
+         else {
+            // Just omit the failed stage from rendering
+            // TODO propagate the error?
+            mStageBuffers.pop_back();
+            mSettings.pop_back();
+         }
       }
       mDecoratedSources.emplace_back(Source{ source, *pDownstream });
    }

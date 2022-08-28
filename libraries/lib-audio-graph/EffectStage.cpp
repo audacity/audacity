@@ -18,7 +18,8 @@
 #include "AudioGraphBuffers.h"
 #include <cassert>
 
-AudioGraph::EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
+AudioGraph::EffectStage::EffectStage(CreateToken,
+   Source &upstream, Buffers &inBuffers,
    Instance &instance, EffectSettings &settings, double sampleRate,
    std::optional<sampleCount> genLength, ChannelNames map
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
@@ -29,11 +30,27 @@ AudioGraph::EffectStage::EffectStage(Source &upstream, Buffers &inBuffers,
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
    // Give the plugin a chance to initialize
    if (!mInstance.ProcessInitialize(mSettings, mSampleRate, map))
+      // A constructor that can't satisfy its post should throw instead
       throw std::exception{};
    assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
 
    // Establish invariant
    mInBuffers.Rewind();
+}
+
+auto AudioGraph::EffectStage::Create(
+   Source &upstream, Buffers &inBuffers,
+   Instance &instance, EffectSettings &settings, double sampleRate,
+   std::optional<sampleCount> genLength, ChannelNames map
+) -> std::unique_ptr<EffectStage>
+{
+   try {
+      return std::make_unique<EffectStage>(CreateToken{},
+         upstream, inBuffers, instance, settings, sampleRate, genLength, map);
+   }
+   catch (const std::exception &) {
+      return nullptr;
+   }
 }
 
 AudioGraph::EffectStage::~EffectStage()

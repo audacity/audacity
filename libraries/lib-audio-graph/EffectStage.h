@@ -23,18 +23,28 @@ namespace AudioGraph {
 
 //! Decorates a source with a non-timewarping effect, which may have latency
 class AUDIO_GRAPH_API EffectStage final : public Source {
+   // To force usage of Create() instead
+   struct CreateToken {};
 public:
    using Instance = EffectInstanceEx;
 
-   //! Completes `instance.ProcessInitialize()` or throws a std::exception
+   //! Don't call directly but use Create()
    /*!
     @pre `upstream.AcceptsBlockSize(inBuffers.BlockSize())`
     @post `AcceptsBlockSize(inBuffers.BlockSize())`
+    @post `instance.ProcessInitialize()` succeeded
     @param map not required after construction
     */
-   EffectStage(Source &upstream, Buffers &inBuffers,
+   EffectStage(CreateToken, Source &upstream, Buffers &inBuffers,
       Instance &instance, EffectSettings &settings, double sampleRate,
       std::optional<sampleCount> genLength, ChannelNames map);
+
+   //! Satisfies postcondition of constructor or returns null
+   static std::unique_ptr<EffectStage> Create(
+      Source &upstream, Buffers &inBuffers,
+      Instance &instance, EffectSettings &settings, double sampleRate,
+      std::optional<sampleCount> genLength, ChannelNames map);
+
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
    //! Finalizes the instance

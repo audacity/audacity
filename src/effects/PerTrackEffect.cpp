@@ -242,13 +242,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          assert(sink.AcceptsBuffers(outBuffers));
 
          // Go process the track(s)
-         try {
-            bGoodResult = ProcessTrack(instance, settings, source, sink,
-               genLength, sampleRate, map,
-               inBuffers, outBuffers);
-         } catch(const std::exception&) {
-            bGoodResult = false;
-         }
+         bGoodResult = ProcessTrack(instance, settings, source, sink,
+            genLength, sampleRate, map,
+            inBuffers, outBuffers);
          if (bGoodResult)
             sink.Flush(outBuffers,
                mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
@@ -281,11 +277,13 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   AudioGraph::EffectStage source{ upstream, inBuffers,
-      instance, settings, sampleRate, genLength, map };
-   assert(source.AcceptsBlockSize(blockSize)); // post of ctor
-   assert(source.AcceptsBuffers(outBuffers));
+   auto pSource = AudioGraph::EffectStage::Create( upstream, inBuffers,
+      instance, settings, sampleRate, genLength, map );
+   if (!pSource)
+      return false;
+   assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor
+   assert(pSource->AcceptsBuffers(outBuffers));
 
-   AudioGraph::Task task{ source, outBuffers, sink };
+   AudioGraph::Task task{ *pSource, outBuffers, sink };
    return task.RunLoop();
 }
