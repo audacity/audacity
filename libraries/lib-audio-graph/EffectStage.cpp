@@ -24,13 +24,13 @@ AudioGraph::EffectStage::EffectStage(CreateToken,
    const Factory &factory, EffectSettings &settings,
    double sampleRate, std::optional<sampleCount> genLength, const Track &track
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
-   , mpInstance{ factory() }
+   , mInstances{ { factory() } }
    , mSettings{ settings }, mSampleRate{ sampleRate }
    , mIsProcessor{ !genLength.has_value() }
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
-   const auto &pInstance = mpInstance;
+   const auto &pInstance = mInstances[0];
    if (!pInstance)
       // A constructor that can't satisfy its post should throw instead
       throw std::exception{};
@@ -62,8 +62,10 @@ auto AudioGraph::EffectStage::Create(
 
 AudioGraph::EffectStage::~EffectStage()
 {
-   // Allow the plugin to cleanup
-   mpInstance->ProcessFinalize();
+   // Allow the instances to cleanup
+   for (auto &pInstance : mInstances)
+      if (pInstance)
+         pInstance->ProcessFinalize();
 }
 
 bool AudioGraph::EffectStage::AcceptsBuffers(const Buffers &buffers) const
@@ -116,7 +118,12 @@ AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
          // until at least one block of samples is processed.  Find latency
          // once only for the track and assume it doesn't vary
          auto delay = mDelayRemaining =
-            mpInstance->GetLatency(mSettings, mSampleRate);
+            mInstances[0]->GetLatency(mSettings, mSampleRate);
+         for (size_t ii = 1, nn = mInstances.size(); ii < nn; ++ii)
+            if (mInstances[ii] &&
+               mInstances[ii]->GetLatency(mSettings, mSampleRate) != delay)
+               // This mismatch is unexpected.  Fail
+               return {};
          // Discard all the latency
          while (delay > 0 && curBlockSize > 0) {
             auto discard = limitSampleBufferSize(curBlockSize, delay);
@@ -221,7 +228,7 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
       //    == data.BlockSize()
       // and mInBuffers.BlockSize() <= mInBuffers.Remaining() by invariant
       // and data.BlockSize() <= data.Remaining() by pre of Acquire()
-      if (!Process(data, curBlockSize, outBufferOffset))
+      if (!Process(0, data, curBlockSize, outBufferOffset))
          return {};
 
       if (doZeroes)
@@ -240,7 +247,7 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
    return oCurBlockSize;
 }
 
-bool AudioGraph::EffectStage::Process(
+bool AudioGraph::EffectStage::Process(size_t channel,
    const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const
 {
    size_t processed{};
@@ -249,13 +256,15 @@ bool AudioGraph::EffectStage::Process(
       std::vector<float *> advancedPositions;
       if (outBufferOffset > 0) {
          auto channels = data.Channels();
-         advancedPositions.reserve(channels);
-         for (size_t ii = 0; ii < channels; ++ii)
+         advancedPositions.reserve(channels - channel);
+         for (size_t ii = channel; ii < channels; ++ii)
             advancedPositions.push_back(outPositions[ii] + outBufferOffset);
          outPositions = advancedPositions.data();
       }
-      processed = mpInstance->ProcessBlock(mSettings,
-         mInBuffers.Positions(), outPositions, curBlockSize);
+      else
+         outPositions += channel;
+      processed = mInstances[channel]->ProcessBlock(mSettings,
+         mInBuffers.Positions() + channel, outPositions, curBlockSize);
    }
    catch (const AudacityException &) {
       // PRL: Bug 437:

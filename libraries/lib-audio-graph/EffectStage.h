@@ -79,7 +79,7 @@ private:
     @pre curBlockSize <= mInBuffers.Remaining()
     @return success
     */
-   bool Process(
+   bool Process(size_t channel,
       const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const;
 
    [[nodiscard]] std::optional<size_t> FetchProcessAndAdvance(
@@ -88,7 +88,7 @@ private:
    Source &mUpstream;
    //! @invariant mInBuffers.BlockSize() <= mInBuffers.Remaining()
    Buffers &mInBuffers;
-   const std::shared_ptr<EffectInstanceEx> mpInstance;
+   const std::vector<std::shared_ptr<EffectInstanceEx>> mInstances;
    EffectSettings &mSettings;
    const double mSampleRate;
    const bool mIsProcessor;
