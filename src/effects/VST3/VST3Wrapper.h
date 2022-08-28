@@ -53,6 +53,7 @@ public:
 class VST3Wrapper
 {
    EffectSettings mDefaultSettings;
+   VST3::Hosting::Module& mModule;
 public:
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
@@ -70,6 +71,8 @@ public:
    VST3Wrapper& operator=(const VST3Wrapper&) = delete;
    VST3Wrapper& operator=(VST3Wrapper&&) = delete;
 
+   VST3::Hosting::Module& GetModule() const { return mModule; }
+
    bool IsActive() const noexcept;
 
    void FetchSettings(const EffectSettings&);
@@ -82,7 +85,7 @@ public:
    void Finalize();
 
    //Updates internal state with changes from settings
-   void ConsumeChanges(EffectSettings& settings);
+   void ConsumeChanges(const EffectSettings& settings);
    //Used to send EffectSettings to the IAudioProcessor, while effect is inactive(!)
    void FlushSettings(EffectSettings& settings);
 

@@ -53,13 +53,31 @@ bool VST3Instance::Init()
 
 bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings, unsigned, float sampleRate)
 {
+   if (!mRecruited) {
+      // Assign self to the first processor
+      mRecruited = true;
+      return true;
+   }
+   // Assign another instance with independent state to other processors
+   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
+   auto uProcessor =
+      std::make_unique<VST3Instance>(effect, mWrapper->GetModule(), mEffectUID);
+   if (!uProcessor->RealtimeInitialize(settings, sampleRate))
+      return false;
+   mProcessors.push_back(move(uProcessor));
    return true;
 }
 
 bool VST3Instance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
+return GuardedCall<bool>([&]{
+   mRecruited = false;
    mWrapper->Finalize();
+   for (auto &pProcessor : mProcessors)
+      pProcessor->mWrapper->Finalize();
+   mProcessors.clear();
    return true;
+});
 }
 
 bool VST3Instance::RealtimeInitialize(EffectSettings& settings, double sampleRate)
@@ -75,8 +93,13 @@ bool VST3Instance::RealtimeInitialize(EffectSettings& settings, double sampleRat
 size_t VST3Instance::RealtimeProcess(size_t group, EffectSettings& settings, const float* const* inBuf,
    float* const* outBuf, size_t numSamples)
 {
-   if(group == 0)
+   if (!mRecruited)
+      // unexpected!
+      return 0;
+   if (group == 0)
       return mWrapper->Process(inBuf, outBuf, numSamples);
+   else if (--group < mProcessors.size())
+     return mProcessors[group]->mWrapper->Process(inBuf, outBuf, numSamples);
    return 0;
 }
 
@@ -88,18 +111,24 @@ bool VST3Instance::RealtimeProcessEnd(EffectSettings& settings) noexcept
 bool VST3Instance::RealtimeProcessStart(EffectSettings& settings)
 {
    mWrapper->ConsumeChanges(settings);
+   for (auto &pProcessor : mProcessors)
+      pProcessor->mWrapper->ConsumeChanges(settings);
    return true;
 }
 
 bool VST3Instance::RealtimeResume()
 {
    mWrapper->ResumeProcessing();
+   for (auto &pProcessor : mProcessors)
+      pProcessor->mWrapper->ResumeProcessing();
    return true;
 }
 
 bool VST3Instance::RealtimeSuspend()
 {
    mWrapper->SuspendProcessing();
+   for (auto &pProcessor : mProcessors)
+      pProcessor->mWrapper->SuspendProcessing();
    return true;
 }
 
