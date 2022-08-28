@@ -191,26 +191,21 @@ bool AudioUnitInstance::RealtimeInitialize(
 bool AudioUnitInstance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
-   auto *slave = this;
-   std::unique_ptr<AudioUnitInstance> uSlave;
-   if (!mRecruited)
+   if (!mRecruited) {
       // Assign self to the first processor
       mRecruited = true;
-   else {
-      // Assign another instance with independent state to other processors
-      uSlave = std::make_unique<AudioUnitInstance>(effect,
-         mComponent, mParameters, mIdentifier,
-         mAudioIns, mAudioOuts, mUseLatency);
-      slave = uSlave.get();
+      return true;
    }
 
-   slave->SetBlockSize(mBlockSize);
-
-   if (!slave->ProcessInitialize(settings, sampleRate, nullptr))
+   // Assign another instance with independent state to other processors
+   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
+   auto uProcessor = std::make_unique<AudioUnitInstance>(effect,
+      mComponent, mParameters, mIdentifier,
+      mAudioIns, mAudioOuts, mUseLatency);
+   uProcessor->SetBlockSize(mBlockSize);
+   if (!uProcessor->ProcessInitialize(settings, sampleRate, nullptr))
       return false;
-   if (uSlave)
-      mSlaves.push_back(move(uSlave));
+   mSlaves.push_back(move(uProcessor));
    return true;
 }
 
