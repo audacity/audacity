@@ -100,6 +100,13 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    if (numAudioOut < 1)
       return false;
 
+   // Instances that can be reused in each loop pass
+   std::vector<std::shared_ptr<EffectInstanceEx>> recycledInstances{
+      // First one is the given one; any others pushed onto here are
+      // discarded when we exit
+      std::dynamic_pointer_cast<EffectInstanceEx>(instance.shared_from_this())
+   };
+
    const bool multichannel = numAudioIn > 1;
    auto range = multichannel
       ? mOutputTracks->Leaders()
@@ -243,7 +250,16 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          assert(sink.AcceptsBuffers(outBuffers));
 
          // Go process the track(s)
-         bGoodResult = ProcessTrack(instance, settings, source, sink,
+         const auto factory =
+         [this, &recycledInstances, counter = 0]() mutable {
+            auto index = counter++;
+            if (index < recycledInstances.size())
+               return recycledInstances[index];
+            else
+               return recycledInstances.emplace_back(
+                  std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance()));
+         };
+         bGoodResult = ProcessTrack(factory, settings, source, sink,
             genLength, sampleRate, left,
             inBuffers, outBuffers);
          if (bGoodResult)
@@ -265,7 +281,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
+bool PerTrackEffect::ProcessTrack(const Factory &factory,
+   EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
    const double sampleRate, const Track &track,
@@ -279,7 +296,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(blockSize == outBuffers.BlockSize());
 
    auto pSource = AudioGraph::EffectStage::Create( upstream, inBuffers,
-      instance, settings, sampleRate, genLength, track );
+      factory, settings, sampleRate, genLength, track );
    if (!pSource)
       return false;
    assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor

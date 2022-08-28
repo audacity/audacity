@@ -58,8 +58,14 @@ size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
          break;
       }
       auto increment = finally([&]{ i += nInChannels; });
-      for (const auto &stage : input.stages)
-         blockSize = std::min(blockSize, stage.mpInstance->SetBlockSize(blockSize));
+      for (const auto &stage : input.stages) {
+         // Need an instance to query acceptable block size
+         const auto pInstance = stage.factory();
+         if (pInstance)
+            blockSize = std::min(blockSize, pInstance->SetBlockSize(blockSize));
+         // Cache the first factory call
+         stage.mpFirstInstance = move(pInstance);
+      }
    }
    return blockSize;
 }
@@ -133,10 +139,16 @@ Mixer::Mixer(Inputs inputs,
          // TODO: more-than-two-channels
          // Like mFloatBuffers but padding not needed for soxr
          auto &stageInput = mStageBuffers.emplace_back(2, mBufferSize, 1);
+         const auto &factory = [&stage]{
+            // Avoid unnecessary repeated calls to the factory
+            return stage.mpFirstInstance
+               ? move(stage.mpFirstInstance)
+               : stage.factory();
+         };
          auto &pNewDownstream =
          mStages.emplace_back(AudioGraph::EffectStage::Create(
             *pDownstream, stageInput,
-            *stage.mpInstance, settings, outRate, std::nullopt, *leader
+            factory, settings, outRate, std::nullopt, *leader
          ));
          if (pNewDownstream)
             pDownstream = pNewDownstream.get();

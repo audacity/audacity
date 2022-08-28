@@ -18,6 +18,7 @@
 #include "AudioGraphSource.h" // to inherit
 #include "EffectInterface.h"
 #include "SampleCount.h"
+#include <functional>
 
 class Track;
 
@@ -28,23 +29,27 @@ class AUDIO_GRAPH_API EffectStage final : public Source {
    // To force usage of Create() instead
    struct CreateToken {};
 public:
-   using Instance = EffectInstanceEx;
+   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
 
    //! Don't call directly but use Create()
    /*!
+    @param factory used only in construction, will be invoked one or more times
     @pre `upstream.AcceptsBlockSize(inBuffers.BlockSize())`
     @post `AcceptsBlockSize(inBuffers.BlockSize())`
-    @post `instance.ProcessInitialize()` succeeded
+    @post `ProcessInitialize()` succeeded on each instance that was made by
+       `factory`
     @param map not required after construction
     */
    EffectStage(CreateToken, Source &upstream, Buffers &inBuffers,
-      Instance &instance, EffectSettings &settings, double sampleRate,
+      const Factory &factory, EffectSettings &settings,
+      double sampleRate,
       std::optional<sampleCount> genLength, const Track &track);
 
    //! Satisfies postcondition of constructor or returns null
    static std::unique_ptr<EffectStage> Create(
       Source &upstream, Buffers &inBuffers,
-      Instance &instance, EffectSettings &settings, double sampleRate,
+      const Factory &factory, EffectSettings &settings,
+      double sampleRate,
       std::optional<sampleCount> genLength, const Track &track);
 
    EffectStage(const EffectStage&) = delete;
@@ -83,7 +88,7 @@ private:
    Source &mUpstream;
    //! @invariant mInBuffers.BlockSize() <= mInBuffers.Remaining()
    Buffers &mInBuffers;
-   Instance &mInstance;
+   const std::shared_ptr<EffectInstanceEx> mpInstance;
    EffectSettings &mSettings;
    const double mSampleRate;
    const bool mIsProcessor;

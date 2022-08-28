@@ -216,12 +216,10 @@ GetEffectStages(const WaveTrack &track)
       const auto &settings = pState->GetSettings();
       if (!settings.has_value())
          continue;
-      const auto pInstance =
-         std::dynamic_pointer_cast<EffectInstanceEx>(pEffect->MakeInstance());
-      if (!pInstance)
-         continue;
       auto &stage = result.emplace_back(MixerOptions::StageSpecification{
-         move(pInstance), settings });
+         [pEffect]{ return std::dynamic_pointer_cast<EffectInstanceEx>(
+            pEffect->MakeInstance()); },
+         settings });
    }
    return result;
 }

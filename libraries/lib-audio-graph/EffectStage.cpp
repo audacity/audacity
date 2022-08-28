@@ -21,19 +21,23 @@
 
 AudioGraph::EffectStage::EffectStage(CreateToken,
    Source &upstream, Buffers &inBuffers,
-   Instance &instance, EffectSettings &settings, double sampleRate,
-   std::optional<sampleCount> genLength, const Track &track
+   const Factory &factory, EffectSettings &settings,
+   double sampleRate, std::optional<sampleCount> genLength, const Track &track
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
-   , mInstance{ instance }, mSettings{ settings }, mSampleRate{ sampleRate }
+   , mpInstance{ factory() }
+   , mSettings{ settings }, mSampleRate{ sampleRate }
    , mIsProcessor{ !genLength.has_value() }
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
-   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
-   MakeChannelMap(track, mInstance.GetAudioInCount() > 1, map);
-   // Give the plugin a chance to initialize
-   if (!mInstance.ProcessInitialize(mSettings, mSampleRate, map))
+   const auto &pInstance = mpInstance;
+   if (!pInstance)
       // A constructor that can't satisfy its post should throw instead
+      throw std::exception{};
+   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
+   MakeChannelMap(track, pInstance->GetAudioInCount() > 1, map);
+   // Give the plugin a chance to initialize
+   if (!pInstance->ProcessInitialize(mSettings, mSampleRate, map))
       throw std::exception{};
    assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
 
@@ -43,13 +47,13 @@ AudioGraph::EffectStage::EffectStage(CreateToken,
 
 auto AudioGraph::EffectStage::Create(
    Source &upstream, Buffers &inBuffers,
-   Instance &instance, EffectSettings &settings, double sampleRate,
-   std::optional<sampleCount> genLength, const Track &track
+   const Factory &factory, EffectSettings &settings,
+   double sampleRate, std::optional<sampleCount> genLength, const Track &track
 ) -> std::unique_ptr<EffectStage>
 {
    try {
       return std::make_unique<EffectStage>(CreateToken{},
-         upstream, inBuffers, instance, settings, sampleRate, genLength, track);
+         upstream, inBuffers, factory, settings, sampleRate, genLength, track);
    }
    catch (const std::exception &) {
       return nullptr;
@@ -59,7 +63,7 @@ auto AudioGraph::EffectStage::Create(
 AudioGraph::EffectStage::~EffectStage()
 {
    // Allow the plugin to cleanup
-   mInstance.ProcessFinalize();
+   mpInstance->ProcessFinalize();
 }
 
 bool AudioGraph::EffectStage::AcceptsBuffers(const Buffers &buffers) const
@@ -112,7 +116,7 @@ AudioGraph::EffectStage::Acquire(Buffers &data, size_t bound)
          // until at least one block of samples is processed.  Find latency
          // once only for the track and assume it doesn't vary
          auto delay = mDelayRemaining =
-            mInstance.GetLatency(mSettings, mSampleRate);
+            mpInstance->GetLatency(mSettings, mSampleRate);
          // Discard all the latency
          while (delay > 0 && curBlockSize > 0) {
             auto discard = limitSampleBufferSize(curBlockSize, delay);
@@ -250,7 +254,7 @@ bool AudioGraph::EffectStage::Process(
             advancedPositions.push_back(outPositions[ii] + outBufferOffset);
          outPositions = advancedPositions.data();
       }
-      processed = mInstance.ProcessBlock(mSettings,
+      processed = mpInstance->ProcessBlock(mSettings,
          mInBuffers.Positions(), outPositions, curBlockSize);
    }
    catch (const AudacityException &) {
