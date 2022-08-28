@@ -36,6 +36,9 @@ class VST3Instance
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
 
+   bool mRecruited{ false };
+   std::vector<std::unique_ptr<VST3Instance>> mProcessors;
+
 public:
    VST3Instance(const PerTrackEffect& effect, VST3::Hosting::Module& module, VST3::UID effectUID);
    ~VST3Instance() override;

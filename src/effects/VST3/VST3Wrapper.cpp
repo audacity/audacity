@@ -236,6 +236,7 @@ IMPLEMENT_FUNKNOWN_METHODS(SingleInputParameterValue, Steinberg::Vst::IParamValu
 
 VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
    : mEffectUID(std::move(effectUID))
+   , mModule{ module }
 {
    using namespace Steinberg;
 
@@ -432,7 +433,7 @@ void VST3Wrapper::Finalize()
    mEffectComponent->setActive(false);
 }
 
-void VST3Wrapper::ConsumeChanges(EffectSettings& settings)
+void VST3Wrapper::ConsumeChanges(const EffectSettings& settings)
 {
    const auto& vst3settings = GetSettings(settings);
    for(auto& p : vst3settings.parameterChanges)
