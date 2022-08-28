@@ -195,9 +195,6 @@ private:
    static int mIconWidth;
    static int mTextHeight;
 
-   static bool mbGlyphsReady;
-   static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
-
    static int mFontHeight;
    mutable int mCurrentCursorPos;                  /// current cursor position
    mutable int mInitialCursorPos;                  /// initial cursor position

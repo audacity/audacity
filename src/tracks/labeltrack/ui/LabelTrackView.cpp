@@ -100,7 +100,12 @@ LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
    ResetFont();
-   CreateCustomGlyphs();
+
+   wxBitmap& sampleGlyph = GetGlyph(0);
+   mIconWidth = sampleGlyph.GetWidth();
+   mIconHeight = sampleGlyph.GetHeight();
+   mTextHeight = 8; // until proved otherwise...
+
    ResetFlags();
 
    // Events will be emitted by the track
@@ -204,16 +209,8 @@ std::vector<UIHandlePtr> LabelTrackView::DetailedHitTest
 }
 
 // static member variables.
-bool LabelTrackView::mbGlyphsReady=false;
-
 wxFont LabelTrackView::msFont;
 
-/// We have several variants of the icons (highlighting).
-/// The icons are draggable, and you can drag one boundary
-/// or all boundaries at the same timecode depending on whether you
-/// click the centre (for all) or the arrow part (for one).
-/// Currently we have twelve variants but we're only using six.
-wxBitmap LabelTrackView::mBoundaryGlyphs[ NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS ];
 int LabelTrackView::mIconHeight;
 int LabelTrackView::mIconWidth;
 int LabelTrackView::mTextHeight;
@@ -2169,112 +2166,14 @@ void LabelTrackView::OnSelectionChange( LabelTrackEvent &e )
    }
 }
 
+/// We have several variants of the icons (highlighting).
+/// The icons are draggable, and you can drag one boundary
+/// or all boundaries at the same timecode depending on whether you
+/// click the centre (for all) or the arrow part (for one).
+/// Currently we have twelve variants but we're only using six.
 wxBitmap & LabelTrackView::GetGlyph( int i)
 {
    return theTheme.Bitmap( i + bmpLabelGlyph0);
-}
-
-// This one XPM spec is used to generate a number of
-// different wxIcons.
-/* XPM */
-static const char *const GlyphXpmRegionSpec[] = {
-/* columns rows colors chars-per-pixel */
-"15 23 7 1",
-/* Default colors, with first color transparent */
-". c none",
-"2 c black",
-"3 c black",
-"4 c black",
-"5 c #BEBEF0",
-"6 c #BEBEF0",
-"7 c #BEBEF0",
-/* pixels */
-"...............",
-"...............",
-"...............",
-"....333.444....",
-"...3553.4774...",
-"...3553.4774...",
-"..35553.47774..",
-"..35522222774..",
-".3552666662774.",
-".3526666666274.",
-"355266666662774",
-"355266666662774",
-"355266666662774",
-".3526666666274.",
-".3552666662774.",
-"..35522222774..",
-"..35553.47774..",
-"...3553.4774...",
-"...3553.4774...",
-"....333.444....",
-"...............",
-"...............",
-"..............."
-};
-
-/// CreateCustomGlyphs() creates the mBoundaryGlyph array.
-/// It's a bit like painting by numbers!
-///
-/// Schematically the glyphs we want will 'look like':
-///   <O,  O>   and   <O>
-/// for a left boundary to a label, a right boundary and both.
-/// we're creating all three glyphs using the one Xpm Spec.
-///
-/// When we hover over a glyph we highlight the
-/// inside of either the '<', the 'O' or the '>' or none,
-/// giving 3 x 4 = 12 combinations.
-///
-/// Two of those combinations aren't used, but
-/// treating them specially would make other code more
-/// complicated.
-void LabelTrackView::CreateCustomGlyphs()
-{
-   int iConfig;
-   int iHighlight;
-   int index;
-   const int nSpecRows =
-      sizeof( GlyphXpmRegionSpec )/sizeof( GlyphXpmRegionSpec[0]);
-   const char *XmpBmp[nSpecRows];
-
-   // The glyphs are declared static wxIcon; so we only need
-   // to create them once, no matter how many LabelTracks.
-   if( mbGlyphsReady )
-      return;
-
-   // We're about to tweak the basic color spec to get 12 variations.
-   for( iConfig=0;iConfig<NUM_GLYPH_CONFIGS;iConfig++)
-   {
-      for( iHighlight=0;iHighlight<NUM_GLYPH_HIGHLIGHTS;iHighlight++)
-      {
-         index = iConfig + NUM_GLYPH_CONFIGS * iHighlight;
-         // Copy the basic spec...
-         memcpy( XmpBmp, GlyphXpmRegionSpec, sizeof( GlyphXpmRegionSpec ));
-         // The highlighted region (if any) is white...
-         if( iHighlight==1 ) XmpBmp[5]="5 c #FFFFFF";
-         if( iHighlight==2 ) XmpBmp[6]="6 c #FFFFFF";
-         if( iHighlight==3 ) XmpBmp[7]="7 c #FFFFFF";
-         // For left or right arrow the other side of the glyph
-         // is the transparent color.
-         if( iConfig==0) { XmpBmp[3]="3 c none"; XmpBmp[5]="5 c none"; }
-         if( iConfig==1) { XmpBmp[4]="4 c none"; XmpBmp[7]="7 c none"; }
-         // Create the icon from the tweaked spec.
-         mBoundaryGlyphs[index] = wxBitmap(XmpBmp);
-         // Create the mask
-         // SetMask takes ownership
-         mBoundaryGlyphs[index].SetMask(safenew wxMask(mBoundaryGlyphs[index], wxColour(192, 192, 192)));
-      }
-   }
-
-   mIconWidth  = mBoundaryGlyphs[0].GetWidth();
-   mIconHeight = mBoundaryGlyphs[0].GetHeight();
-   mTextHeight = mIconHeight; // until proved otherwise...
-   // The icon should have an odd width so that the
-   // line goes exactly down the middle.
-   wxASSERT( (mIconWidth %2)==1);
-
-   mbGlyphsReady=true;
 }
 
 #include "../../../LabelDialog.h"
