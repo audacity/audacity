@@ -244,7 +244,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          // Go process the track(s)
          bGoodResult = ProcessTrack(instance, settings, source, sink,
-            genLength, sampleRate, map,
+            genLength, sampleRate, left,
             inBuffers, outBuffers);
          if (bGoodResult)
             sink.Flush(outBuffers,
@@ -268,7 +268,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
-   const double sampleRate, const ChannelNames map,
+   const double sampleRate, const Track &track,
    Buffers &inBuffers, Buffers &outBuffers)
 {
    assert(upstream.AcceptsBuffers(inBuffers));
@@ -279,7 +279,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(blockSize == outBuffers.BlockSize());
 
    auto pSource = AudioGraph::EffectStage::Create( upstream, inBuffers,
-      instance, settings, sampleRate, genLength, map );
+      instance, settings, sampleRate, genLength, track );
    if (!pSource)
       return false;
    assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor

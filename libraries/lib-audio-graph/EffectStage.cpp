@@ -22,13 +22,15 @@
 AudioGraph::EffectStage::EffectStage(CreateToken,
    Source &upstream, Buffers &inBuffers,
    Instance &instance, EffectSettings &settings, double sampleRate,
-   std::optional<sampleCount> genLength, ChannelNames map
+   std::optional<sampleCount> genLength, const Track &track
 )  : mUpstream{ upstream }, mInBuffers{ inBuffers }
    , mInstance{ instance }, mSettings{ settings }, mSampleRate{ sampleRate }
    , mIsProcessor{ !genLength.has_value() }
    , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
 {
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
+   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
+   MakeChannelMap(track, mInstance.GetAudioInCount() > 1, map);
    // Give the plugin a chance to initialize
    if (!mInstance.ProcessInitialize(mSettings, mSampleRate, map))
       // A constructor that can't satisfy its post should throw instead
@@ -42,12 +44,12 @@ AudioGraph::EffectStage::EffectStage(CreateToken,
 auto AudioGraph::EffectStage::Create(
    Source &upstream, Buffers &inBuffers,
    Instance &instance, EffectSettings &settings, double sampleRate,
-   std::optional<sampleCount> genLength, ChannelNames map
+   std::optional<sampleCount> genLength, const Track &track
 ) -> std::unique_ptr<EffectStage>
 {
    try {
       return std::make_unique<EffectStage>(CreateToken{},
-         upstream, inBuffers, instance, settings, sampleRate, genLength, map);
+         upstream, inBuffers, instance, settings, sampleRate, genLength, track);
    }
    catch (const std::exception &) {
       return nullptr;

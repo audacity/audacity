@@ -39,13 +39,13 @@ public:
     */
    EffectStage(CreateToken, Source &upstream, Buffers &inBuffers,
       Instance &instance, EffectSettings &settings, double sampleRate,
-      std::optional<sampleCount> genLength, ChannelNames map);
+      std::optional<sampleCount> genLength, const Track &track);
 
    //! Satisfies postcondition of constructor or returns null
    static std::unique_ptr<EffectStage> Create(
       Source &upstream, Buffers &inBuffers,
       Instance &instance, EffectSettings &settings, double sampleRate,
-      std::optional<sampleCount> genLength, ChannelNames map);
+      std::optional<sampleCount> genLength, const Track &track);
 
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;

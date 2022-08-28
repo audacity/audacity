@@ -101,7 +101,6 @@ struct TimesAndSpeed final {
 struct StageSpecification final {
    std::shared_ptr<EffectInstanceEx> mpInstance;
    EffectSettings settings;
-   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
 };
 
 }

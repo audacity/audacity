@@ -11,7 +11,6 @@ Paul Licameli split from Mix.cpp
 #include "MixAndRender.h"
 
 #include "BasicUI.h"
-#include "EffectStage.h"
 #include "Mix.h"
 #include "effects/RealtimeEffectList.h"
 #include "WaveTrack.h"
@@ -223,8 +222,6 @@ GetEffectStages(const WaveTrack &track)
          continue;
       auto &stage = result.emplace_back(MixerOptions::StageSpecification{
          move(pInstance), settings });
-      AudioGraph::MakeChannelMap(
-         track, stage.mpInstance->GetAudioInCount() > 1, stage.map);
    }
    return result;
 }

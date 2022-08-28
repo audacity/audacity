@@ -136,8 +136,7 @@ Mixer::Mixer(Inputs inputs,
          auto &pNewDownstream =
          mStages.emplace_back(AudioGraph::EffectStage::Create(
             *pDownstream, stageInput,
-            *stage.mpInstance, settings, outRate, std::nullopt,
-            stage.map
+            *stage.mpInstance, settings, outRate, std::nullopt, *leader
          ));
          if (pNewDownstream)
             pDownstream = pNewDownstream.get();

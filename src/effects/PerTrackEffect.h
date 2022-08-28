@@ -81,7 +81,7 @@ private:
    static bool ProcessTrack(Instance &instance, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
-      double sampleRate, ChannelNames map,
+      double sampleRate, const Track &track,
       Buffers &inBuffers, Buffers &outBuffers);
 };
 #endif
