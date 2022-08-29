@@ -82,6 +82,8 @@ void LV2Validator::UI::Destroy()
          // Most plug-ins should come here, but x42-limiter will not!
          wxCFRelease(widget);
    }
+#else
+   mNativeWin = nullptr;
 #endif
 }
 
