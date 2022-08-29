@@ -1137,7 +1137,7 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
 
 void ThemeBase::SaveThemeComponents()
 {
-   ValueRestorer cleanup{ mpSet };
+   ValueRestorer cleanup{ *mpSet };
    for (auto &[key, data] : GetThemeCacheLookup())
       if (!SaveOneThemeComponents( key.Internal() ))
          // Some file failed to save, message was given
