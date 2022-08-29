@@ -238,7 +238,7 @@ This option implies `-Daudacity_obey_system_dependencies=On` and disables `local
 
 ### Disabling pre-built binaries downloads for Conan
 
-It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. 
+It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudacity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. 
 
 Additionally, passing `-Daudacity_conan_force_build_dependencies=On` will force Conan to rebuild all the packaged during *every* configuration. This can be usefull for the offline builds against the Conan download cache.
 
