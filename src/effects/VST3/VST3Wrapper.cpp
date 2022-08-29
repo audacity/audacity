@@ -62,7 +62,8 @@ wxString ParametersToString(const std::map<Steinberg::Vst::ParamID, Steinberg::V
 {
    wxString result;
    for(auto& p : params)
-      result.Append(wxString::Format("%lu=%f;", p.first, p.second));
+      result.Append(wxString::Format(
+         "%lu=%f;", static_cast<unsigned long>(p.first), p.second));
    return result;
 }
 
