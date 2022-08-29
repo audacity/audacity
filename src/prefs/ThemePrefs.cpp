@@ -244,7 +244,6 @@ bool ThemePrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
-   theTheme.LoadPreferredTheme();
    theTheme.DeleteUnusedThemes();
    AColor::ApplyUpdatedImages();
    return true;
