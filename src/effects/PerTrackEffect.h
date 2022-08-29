@@ -68,8 +68,7 @@ private:
    using Buffers = AudioGraph::Buffers;
 
    bool ProcessPass(Instance &instance, EffectSettings &settings);
-   //! Type of function returning false if user cancels progress
-   using Poller = std::function<bool(sampleCount blockSize)>;
+   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
    /*!
     Previous contents of inBuffers and outBuffers are ignored
 
@@ -78,10 +77,11 @@ private:
     @pre `sink.AcceptsBuffers(outBuffers)`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
-   static bool ProcessTrack(Instance &instance, EffectSettings &settings,
+   static bool ProcessTrack(bool multi,
+      const Factory &factory, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
-      double sampleRate, ChannelNames map,
+      double sampleRate, const Track &track,
       Buffers &inBuffers, Buffers &outBuffers);
 };
 #endif

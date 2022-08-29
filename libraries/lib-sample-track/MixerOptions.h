@@ -18,6 +18,7 @@
 #include "EffectInterface.h" // for EffectSettings
 #include "GlobalVariable.h"
 #include "MemoryX.h"
+#include <functional>
 #include <vector>
 
 class BoundedEnvelope;
@@ -99,9 +100,12 @@ struct TimesAndSpeed final {
 };
 
 struct StageSpecification final {
-   std::shared_ptr<EffectInstanceEx> mpInstance;
+   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
+
+   const Factory factory;
    EffectSettings settings;
-   ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
+
+   mutable std::shared_ptr<EffectInstanceEx> mpFirstInstance;
 };
 
 }

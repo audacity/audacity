@@ -17,6 +17,7 @@ set( SOURCES
 set( LIBRARIES
    lib-exceptions
    lib-math-interface
+   lib-track
    PRIVATE
    wxBase
 )

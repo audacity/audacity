@@ -100,6 +100,13 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    if (numAudioOut < 1)
       return false;
 
+   // Instances that can be reused in each loop pass
+   std::vector<std::shared_ptr<EffectInstanceEx>> recycledInstances{
+      // First one is the given one; any others pushed onto here are
+      // discarded when we exit
+      std::dynamic_pointer_cast<EffectInstanceEx>(instance.shared_from_this())
+   };
+
    const bool multichannel = numAudioIn > 1;
    auto range = multichannel
       ? mOutputTracks->Leaders()
@@ -115,7 +122,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          sampleCount start = 0;
          WaveTrack *pRight{};
 
-         const auto numChannels = MakeChannelMap(left, multichannel, map);
+         const auto numChannels =
+            AudioGraph::MakeChannelMap(left, multichannel, map);
          if (multichannel) {
             assert(numAudioIn > 1);
             if (numChannels == 2) {
@@ -242,13 +250,18 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          assert(sink.AcceptsBuffers(outBuffers));
 
          // Go process the track(s)
-         try {
-            bGoodResult = ProcessTrack(instance, settings, source, sink,
-               genLength, sampleRate, map,
-               inBuffers, outBuffers);
-         } catch(const std::exception&) {
-            bGoodResult = false;
-         }
+         const auto factory =
+         [this, &recycledInstances, counter = 0]() mutable {
+            auto index = counter++;
+            if (index < recycledInstances.size())
+               return recycledInstances[index];
+            else
+               return recycledInstances.emplace_back(
+                  std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance()));
+         };
+         bGoodResult = ProcessTrack(multichannel, factory, settings, source, sink,
+            genLength, sampleRate, left,
+            inBuffers, outBuffers);
          if (bGoodResult)
             sink.Flush(outBuffers,
                mT0, ViewInfo::Get(*FindProject()).selectedRegion.t1());
@@ -268,10 +281,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
+bool PerTrackEffect::ProcessTrack(bool multi, const Factory &factory,
+   EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
-   const double sampleRate, const ChannelNames map,
+   const double sampleRate, const Track &track,
    Buffers &inBuffers, Buffers &outBuffers)
 {
    assert(upstream.AcceptsBuffers(inBuffers));
@@ -281,11 +295,13 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   AudioGraph::EffectStage source{ upstream, inBuffers,
-      instance, settings, sampleRate, genLength, map };
-   assert(source.AcceptsBlockSize(blockSize)); // post of ctor
-   assert(source.AcceptsBuffers(outBuffers));
+   auto pSource = AudioGraph::EffectStage::Create( multi, upstream, inBuffers,
+      factory, settings, sampleRate, genLength, track );
+   if (!pSource)
+      return false;
+   assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor
+   assert(pSource->AcceptsBuffers(outBuffers));
 
-   AudioGraph::Task task{ source, outBuffers, sink };
+   AudioGraph::Task task{ *pSource, outBuffers, sink };
    return task.RunLoop();
 }

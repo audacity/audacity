@@ -18,23 +18,40 @@
 #include "AudioGraphSource.h" // to inherit
 #include "EffectInterface.h"
 #include "SampleCount.h"
+#include <functional>
+
+class Track;
 
 namespace AudioGraph {
 
 //! Decorates a source with a non-timewarping effect, which may have latency
 class AUDIO_GRAPH_API EffectStage final : public Source {
+   // To force usage of Create() instead
+   struct CreateToken {};
 public:
-   using Instance = EffectInstanceEx;
+   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
 
-   //! Completes `instance.ProcessInitialize()` or throws a std::exception
+   //! Don't call directly but use Create()
    /*!
+    @param factory used only in construction, will be invoked one or more times
     @pre `upstream.AcceptsBlockSize(inBuffers.BlockSize())`
     @post `AcceptsBlockSize(inBuffers.BlockSize())`
+    @post `ProcessInitialize()` succeeded on each instance that was made by
+       `factory`
     @param map not required after construction
     */
-   EffectStage(Source &upstream, Buffers &inBuffers,
-      Instance &instance, EffectSettings &settings, double sampleRate,
-      std::optional<sampleCount> genLength, ChannelNames map);
+   EffectStage(CreateToken, bool multi, Source &upstream, Buffers &inBuffers,
+      const Factory &factory, EffectSettings &settings,
+      double sampleRate,
+      std::optional<sampleCount> genLength, const Track &track);
+
+   //! Satisfies postcondition of constructor or returns null
+   static std::unique_ptr<EffectStage> Create(bool multi,
+      Source &upstream, Buffers &inBuffers,
+      const Factory &factory, EffectSettings &settings,
+      double sampleRate,
+      std::optional<sampleCount> genLength, const Track &track);
+
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
    //! Finalizes the instance
@@ -62,7 +79,7 @@ private:
     @pre curBlockSize <= mInBuffers.Remaining()
     @return success
     */
-   bool Process(
+   bool Process(EffectInstanceEx &instance, size_t channel,
       const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const;
 
    [[nodiscard]] std::optional<size_t> FetchProcessAndAdvance(
@@ -71,7 +88,7 @@ private:
    Source &mUpstream;
    //! @invariant mInBuffers.BlockSize() <= mInBuffers.Remaining()
    Buffers &mInBuffers;
-   Instance &mInstance;
+   const std::vector<std::shared_ptr<EffectInstanceEx>> mInstances;
    EffectSettings &mSettings;
    const double mSampleRate;
    const bool mIsProcessor;
@@ -83,5 +100,14 @@ private:
    bool mCleared{ false };
 };
 
+/*
+ @param multichannel true only when effect does not process each channel
+    of track independently
+ @param[out] map terminated with ChannelNameEOL
+ */
+AUDIO_GRAPH_API
+unsigned MakeChannelMap(const Track &track, bool multichannel,
+   // TODO: more-than-two-channels
+   ChannelName map[3]);
 }
 #endif
