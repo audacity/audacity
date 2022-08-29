@@ -28,7 +28,7 @@ Changes in version 3.2.0
     * Switched from mad to mpg123 as MP3 importer
  
  License update
-    * Audacity is now licensed under the GNU General Public License, Version 3. 
+    * Audacity binaries are now licensed under the GNU General Public License, Version 3. 
       Most code files remain GPLv2-or-later, but VST3 support required this license update. 
       More information can be found in the announcement post: https://github.com/audacity/audacity/discussions/2142
  
