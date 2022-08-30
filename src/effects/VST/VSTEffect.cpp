@@ -1091,10 +1091,24 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
    auto &settings = package.settings;
    {
-      // If we assume that the user might be moving knobs during realtime processing and wants
-      // to hear how the sound changes, we must protect mSettings from data races then
+      // This mutex protection is temporarily needed because:
+      //
+      //  - VSTEffectValidator::Automate ultimately writes to   VSTEffect::mSettings
+      //  - this method                             reads  from VSTEffect::mSettings
+      //
+      // And the two things above will happen when realtime processing and moving a slider -
+      // tests have shown that without this mutex, crashes will happen.
+      //
+      // Anyway, this mutex should go when the transition to stateless is complete.
+      //
       auto guard = std::lock_guard{ GetEffect().mSettingsMutex };
 
+      // It has been suggested that this loop is now useless and the StoreSettings can
+      // be called directly on "this" - however, this was tried and it did not work,
+      // i.e. sliders changes would not be heard in the realtime processed.
+      //
+      // If anything, the loop could be replaced with mSlaves[0].StoreSettings(...)
+      //
       for (auto& slave : mSlaves)
       {
          slave->StoreSettings(GetSettings(settings));
@@ -2472,7 +2486,8 @@ void VSTEffect::OnSlider(wxCommandEvent & evt)
    callSetParameter(i, s->GetValue() / 1000.0);
 
    {
-      // Same comments found in VSTInstanceBase::Automate apply here
+      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
+      //
       auto guard = std::lock_guard{ mSettingsMutex };
       FetchSettings(mSettings);
    }   
@@ -3601,34 +3616,23 @@ void VSTEffectWrapper::Automate(int index, float value)
 {
 }
 
-void VSTEffect::Automate(int index, float value)
-{
-   callSetParameter(index, value);
-
-   // Because we come here when a control on the effect's GUI is moved,
-   // we must update the temporary Effect-owned settings - users might
-   // want to hear what happens when they move a knob.
-   //
-   {
-      // we need a mutex because FetchSettings writes mSettings in the main
-      // thread, but the storing of the settings passed to ::RealtimeProcess
-      // happens in the worker thread
-      auto guard = std::lock_guard{ mSettingsMutex };
-      FetchSettings(mSettings);
-   }
-}
 
 
 void VSTEffectValidator::Automate(int index, float value)
 {
-    
-   mAccess.ModifySettings([this](EffectSettings& settings)
-   {
-      // HERE: call alternative StoreSettings which takes the {index, value}
-      // and writes it to its mParamsMap (setting its mChunk to nullopt, I guess) 
+   GetInstance().callSetParameter(index, value);
 
-      FetchSettingsFromInstance(settings);
-   });
+   {
+      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
+      //
+      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
+
+      mAccess.ModifySettings([this](EffectSettings& settings)
+      {
+         FetchSettingsFromInstance(settings);
+      });
+
+   }
 
 }
 
