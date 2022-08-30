@@ -101,7 +101,7 @@ LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
 {
    ResetFont();
 
-   wxBitmap& sampleGlyph = GetGlyph(0);
+   wxBitmap& sampleGlyph = theTheme.Bitmap(bmpLabelGlyph0);
    mIconWidth = sampleGlyph.GetWidth();
    mIconHeight = sampleGlyph.GetHeight();
    mTextHeight = 8; // until proved otherwise...
@@ -214,6 +214,8 @@ wxFont LabelTrackView::msFont;
 int LabelTrackView::mIconHeight;
 int LabelTrackView::mIconWidth;
 int LabelTrackView::mTextHeight;
+
+std::vector<wxBitmap> LabelTrackView::mColorizedBitmaps;
 
 int LabelTrackView::mFontHeight=-1;
 
@@ -795,6 +797,8 @@ void LabelTrackView::Draw
 
    if (mFontHeight == -1)
       calculateFontHeight(dc);
+
+   InvalidateColorizedGlyphs();
 
    const auto pTrack = std::static_pointer_cast< const LabelTrack >(
       FindTrack()->SubstitutePendingChangedTrack());
@@ -2171,9 +2175,49 @@ void LabelTrackView::OnSelectionChange( LabelTrackEvent &e )
 /// or all boundaries at the same timecode depending on whether you
 /// click the centre (for all) or the arrow part (for one).
 /// Currently we have twelve variants but we're only using six.
-wxBitmap & LabelTrackView::GetGlyph( int i)
+wxBitmap & LabelTrackView::GetGlyph(int i)
 {
-   return theTheme.Bitmap( i + bmpLabelGlyph0);
+   if (mColorizedBitmaps.size() <= i)
+      mColorizedBitmaps.resize(i + 1);
+   if (!mColorizedBitmaps[i].IsOk())
+   {
+      // glyphs and masks are interleaved
+      wxImage &imgOutline = theTheme.Image(2 * i + bmpLabelGlyph0);
+      wxImage Image = theTheme.Image(2 * i + bmpLabelMask0).Copy();  // will render into this copy
+
+      wxASSERT(imgOutline.GetSize() == Image.GetSize());
+      wxASSERT(imgOutline.HasAlpha() && Image.HasAlpha());
+
+      // FOR DESIGNERS:
+      // You can construct the equivalent blending setup in GIMP by creating
+      // three layers: On the bottom, a "wash" layer filled with the solid color
+      // of the label track. Above that, the label mask image, set to "multiply"
+      // and with its "composite mode" set to "intersection". The top layer is
+      // the label glyph in normal mode.
+
+      // you would think there would be a better way to do this,
+      // but there are so many holes in this api...
+      auto& color = theTheme.Colour(clrLabelTextNormalBrush);
+      const float div = 1. / 255.f, div2 = div * div;
+      const float rgb[3] = { color.Red() * div2, color.Green() * div2, color.Blue() * div2 };
+      for (unsigned char* s = imgOutline.GetData(), *sa = imgOutline.GetAlpha(),
+         *d = Image.GetData(), *da = Image.GetAlpha(),
+         *daend = Image.GetAlpha() + Image.GetWidth() * Image.GetHeight(); da < daend;
+         s += 3, sa++, d += 3, da++)
+      {
+         for (int j = 0; j < 3; ++j)
+            d[j] = std::clamp<int>(((rgb[j] * d[j] * da[0]) * (255 - sa[0]) + s[j] * sa[0]) * div + 0.5f, 0, 255);
+         da[0] = std::clamp<int>(da[0] * (255 - sa[0]) * div + sa[0], 0, 255);
+      }
+
+      mColorizedBitmaps[i] = wxBitmap(Image);
+   }
+   return mColorizedBitmaps[i];
+}
+
+void LabelTrackView::InvalidateColorizedGlyphs()
+{
+   mColorizedBitmaps.clear();
 }
 
 #include "../../../LabelDialog.h"

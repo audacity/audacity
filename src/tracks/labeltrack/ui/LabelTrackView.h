@@ -124,6 +124,7 @@ public:
 
 private:
    static wxBitmap & GetGlyph( int i);
+   static void InvalidateColorizedGlyphs();
 
    struct Index
    {
@@ -194,6 +195,8 @@ private:
    static int mIconHeight;
    static int mIconWidth;
    static int mTextHeight;
+
+   static std::vector<wxBitmap> mColorizedBitmaps;
 
    static int mFontHeight;
    mutable int mCurrentCursorPos;                  /// current cursor position

@@ -130,19 +130,31 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpOptions, wxImage( 24, 24 ), wxT("Options"));
    DEFINE_IMAGE( bmpOptionsDisabled, wxImage( 24, 24 ), wxT("OptionsDisabled"));
 
-   SET_THEME_FLAGS(  resFlagNone  );
+   SET_THEME_FLAGS(resFlagPaired);  // new line happens by changing flags
    DEFINE_IMAGE( bmpLabelGlyph0, wxImage( 15, 23 ), wxT("LabelGlyph0"));
+   DEFINE_IMAGE(bmpLabelMask0, wxImage(15, 23), wxT("LabelMask0"));
    DEFINE_IMAGE( bmpLabelGlyph1, wxImage( 15, 23 ), wxT("LabelGlyph1"));
+   DEFINE_IMAGE(bmpLabelMask1, wxImage(15, 23), wxT("LabelMask1"));
    DEFINE_IMAGE( bmpLabelGlyph2, wxImage( 15, 23 ), wxT("LabelGlyph2"));
+   DEFINE_IMAGE(bmpLabelMask2, wxImage(15, 23), wxT("LabelMask2"));
    DEFINE_IMAGE( bmpLabelGlyph3, wxImage( 15, 23 ), wxT("LabelGlyph3"));
+   DEFINE_IMAGE(bmpLabelMask3, wxImage(15, 23), wxT("LabelMask3"));
    DEFINE_IMAGE( bmpLabelGlyph4, wxImage( 15, 23 ), wxT("LabelGlyph4"));
+   DEFINE_IMAGE(bmpLabelMask4, wxImage(15, 23), wxT("LabelMask4"));
    DEFINE_IMAGE( bmpLabelGlyph5, wxImage( 15, 23 ), wxT("LabelGlyph5"));
+   DEFINE_IMAGE(bmpLabelMask5, wxImage(15, 23), wxT("LabelMask5"));
    DEFINE_IMAGE( bmpLabelGlyph6, wxImage( 15, 23 ), wxT("LabelGlyph6"));
+   DEFINE_IMAGE(bmpLabelMask6, wxImage(15, 23), wxT("LabelMask6"));
    DEFINE_IMAGE( bmpLabelGlyph7, wxImage( 15, 23 ), wxT("LabelGlyph7"));
+   DEFINE_IMAGE(bmpLabelMask7, wxImage(15, 23), wxT("LabelMask7"));
    DEFINE_IMAGE( bmpLabelGlyph8, wxImage( 15, 23 ), wxT("LabelGlyph8"));
+   DEFINE_IMAGE(bmpLabelMask8, wxImage(15, 23), wxT("LabelMask8"));
    DEFINE_IMAGE( bmpLabelGlyph9, wxImage( 15, 23 ), wxT("LabelGlyph9"));
+   DEFINE_IMAGE(bmpLabelMask9, wxImage(15, 23), wxT("LabelMask9"));
    DEFINE_IMAGE( bmpLabelGlyph10, wxImage( 15, 23 ), wxT("LabelGlyph10"));
+   DEFINE_IMAGE(bmpLabelMask10, wxImage(15, 23), wxT("LabelMask10"));
    DEFINE_IMAGE( bmpLabelGlyph11, wxImage( 15, 23 ), wxT("LabelGlyph11"));
+   DEFINE_IMAGE(bmpLabelMask11, wxImage(15, 23), wxT("LabelMask11"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
    DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
