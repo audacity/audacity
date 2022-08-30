@@ -103,8 +103,14 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
                                // accumulate the number of frames processed so far
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-   if (!SetRateAndChannels(sampleRate))
+   mInitialization.reset();
+   if (!SetRateAndChannels(sampleRate, mIdentifier))
       return false;
+   if (AudioUnitInitialize(mUnit.get())) {
+      wxLogError("Couldn't initialize audio unit\n");
+      return false;
+   }
+   mInitialization.reset(mUnit.get());
 
    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
       AudioUnitUtils::RenderCallback{ RenderCallback, this },
@@ -267,9 +273,9 @@ bool AudioUnitInstance::RealtimeProcessEnd(EffectSettings &) noexcept
    return true;
 }
 
-bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
+bool AudioUnitInstance::SetRateAndChannels(
+   double sampleRate, const wxString &identifier)
 {
-   mInitialization.reset();
    AudioUnitUtils::StreamBasicDescription streamFormat{
       // Float64 mSampleRate;
       sampleRate,
@@ -311,7 +317,7 @@ bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
          if (SetProperty(kAudioUnitProperty_SampleRate, sampleRate, scope)) {
             wxLogError("%ls Didn't accept sample rate on %s\n",
                // Exposing internal name only in logging
-               mIdentifier.wx_str(), msg);
+               identifier.wx_str(), msg);
             return false;
          }
          if (scope != kAudioUnitScope_Global) {
@@ -320,19 +326,12 @@ bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
                streamFormat, scope)) {
                wxLogError("%ls didn't accept stream format on %s\n",
                   // Exposing internal name only in logging
-                  mIdentifier.wx_str(), msg);
+                  identifier.wx_str(), msg);
                return false;
             }
          }
       }
    }
-
-   if (AudioUnitInitialize(mUnit.get())) {
-      wxLogError("Couldn't initialize audio unit\n");
-      return false;
-   }
-
-   mInitialization.reset(mUnit.get());
    return true;
 }
 
