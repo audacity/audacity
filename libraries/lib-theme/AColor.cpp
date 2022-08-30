@@ -53,7 +53,6 @@ wxBrush AColor::envelopeBrush;
 wxPen AColor::envelopePen;
 wxPen AColor::WideEnvelopePen;
 
-wxBrush AColor::labelTextNormalBrush;
 wxBrush AColor::labelTextEditBrush;
 wxBrush AColor::labelUnselectedBrush;
 wxBrush AColor::labelSelectedBrush;
@@ -556,7 +555,6 @@ void AColor::Init()
 
    WideEnvelopePen.SetWidth( 3 );
 
-   theTheme.SetBrushColour( labelTextNormalBrush,  clrLabelTextNormalBrush );
    theTheme.SetBrushColour( labelTextEditBrush,    clrLabelTextEditBrush );
    theTheme.SetBrushColour( labelUnselectedBrush,  clrLabelUnselectedBrush );
    theTheme.SetBrushColour( labelSelectedBrush,    clrLabelSelectedBrush );

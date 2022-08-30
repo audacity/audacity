@@ -215,6 +215,7 @@ int LabelTrackView::mIconHeight;
 int LabelTrackView::mIconWidth;
 int LabelTrackView::mTextHeight;
 
+wxBrush LabelTrackView::mLabelTextNormalBrush;
 std::vector<wxBitmap> LabelTrackView::mColorizedBitmaps;
 
 int LabelTrackView::mFontHeight=-1;
@@ -265,6 +266,27 @@ void LabelTrackView::ResetFont()
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
    int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), DefaultFontSize);
    msFont = GetFont(facename, size);
+}
+
+void LabelTrackView::SetColours(int iColorIndex)
+{
+   switch (iColorIndex % 4)
+   {
+      default:
+      case 0:
+         mLabelTextNormalBrush.SetColour(theTheme.Colour(clrLabelTextNormalBrush));
+         break;
+      case 1: // RED
+         mLabelTextNormalBrush.SetColour(wxColor(250, 174, 174));
+         break;
+      case 2: // GREEN
+         mLabelTextNormalBrush.SetColour(wxColor(160, 220, 160));
+         break;
+      case 3: //BLACK
+         mLabelTextNormalBrush.SetColour(wxColor(209, 209, 209));
+         break;
+   }
+   InvalidateColorizedGlyphs();
 }
 
 /// ComputeTextPosition is 'smart' about where to display
@@ -798,11 +820,11 @@ void LabelTrackView::Draw
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   InvalidateColorizedGlyphs();
-
    const auto pTrack = std::static_pointer_cast< const LabelTrack >(
       FindTrack()->SubstitutePendingChangedTrack());
    const auto &mLabels = pTrack->GetLabels();
+
+   SetColours(0);
 
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
@@ -830,7 +852,7 @@ void LabelTrackView::Draw
    ComputeLayout( r, zoomInfo );
    dc.SetTextForeground(theTheme.Colour( clrLabelTrackText));
    dc.SetBackgroundMode(wxTRANSPARENT);
-   dc.SetBrush(AColor::labelTextNormalBrush);
+   dc.SetBrush(mLabelTextNormalBrush);
    dc.SetPen(AColor::labelSurroundPen);
    int GlyphLeft;
    int GlyphRight;
@@ -868,7 +890,7 @@ void LabelTrackView::Draw
 #endif
          
          dc.SetBrush(mNavigationIndex == i || (pHit && pHit->mMouseOverLabel == i) 
-            ? AColor::labelTextEditBrush : AColor::labelTextNormalBrush);
+            ? AColor::labelTextEditBrush : mLabelTextNormalBrush);
          DrawBar(dc, labelStruct, r);
 
          bool selected = mTextEditIndex == i;
@@ -878,10 +900,10 @@ void LabelTrackView::Draw
          else if (highlight)
             dc.SetBrush(AColor::uglyBrush);
          else
-            dc.SetBrush(AColor::labelTextNormalBrush);
+            dc.SetBrush(mLabelTextNormalBrush);
          DrawTextBox(dc, labelStruct, r);
 
-         dc.SetBrush(AColor::labelTextNormalBrush);
+         dc.SetBrush(mLabelTextNormalBrush);
       }
    }
 
@@ -900,7 +922,7 @@ void LabelTrackView::Draw
          dc.SetBrush(AColor::labelTextEditBrush);
       DrawText( dc, labelStruct, r );
       if(mTextEditIndex == i )
-         dc.SetBrush(AColor::labelTextNormalBrush);
+         dc.SetBrush(mLabelTextNormalBrush);
    }}
 
    // Draw the cursor, if there is one.
@@ -2197,7 +2219,7 @@ wxBitmap & LabelTrackView::GetGlyph(int i)
 
       // you would think there would be a better way to do this,
       // but there are so many holes in this api...
-      auto& color = theTheme.Colour(clrLabelTextNormalBrush);
+      const auto& color = mLabelTextNormalBrush.GetColour();
       const float div = 1. / 255.f, div2 = div * div;
       const float rgb[3] = { color.Red() * div2, color.Green() * div2, color.Blue() * div2 };
       for (unsigned char* s = imgOutline.GetData(), *sa = imgOutline.GetAlpha(),

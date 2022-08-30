@@ -196,6 +196,7 @@ private:
    static int mIconWidth;
    static int mTextHeight;
 
+   static wxBrush mLabelTextNormalBrush;
    static std::vector<wxBitmap> mColorizedBitmaps;
 
    static int mFontHeight;
@@ -208,6 +209,7 @@ private:
 
    void ComputeTextPosition(const wxRect & r, int index) const;
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
+   static void SetColours(int iColorIndex);
    static void DrawLines( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawGlyphs( wxDC & dc, const LabelStruct &ls, const wxRect & r,
       int GlyphLeft, int GlyphRight);
