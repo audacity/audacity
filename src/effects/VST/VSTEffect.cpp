@@ -1309,6 +1309,10 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    }
 
    auto pParent = S.GetParent();
+
+   // Looks like pushing the event handler is still needed, otherwise
+   // an assert will pop up when closing the gui:
+   // "xwWindowsBase::PopEventHandler(): cannot pop the wxWindows itself"
    pParent->PushEventHandler(this);
 
    auto validator = std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
