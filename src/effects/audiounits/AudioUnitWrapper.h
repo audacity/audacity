@@ -169,6 +169,10 @@ protected:
 
    Parameters mOwnParameters;
    Parameters &mParameters;
+
+   // Initialized in GetChannelCounts()
+   unsigned mAudioIns{ 2 };
+   unsigned mAudioOuts{ 2 };
 };
 
 class AudioUnitWrapper::ParameterInfo final

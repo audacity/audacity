@@ -85,8 +85,6 @@ private:
 
    const wxString &mIdentifier; // for debug messages only
    const size_t mBlockSize;
-   const unsigned mAudioIns;
-   const unsigned mAudioOuts;
    const bool mUseLatency;
 };
 #endif

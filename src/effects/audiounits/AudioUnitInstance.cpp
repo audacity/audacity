@@ -26,8 +26,10 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    , AudioUnitWrapper{ component, &parameters }
    , mIdentifier{ identifier }
    , mBlockSize{ InitialBlockSize() }
-   , mAudioIns{ audioIns }, mAudioOuts{ audioOuts }, mUseLatency{ useLatency }
+   , mUseLatency{ useLatency }
 {
+   mAudioIns = audioIns;
+   mAudioOuts = audioOuts;
    CreateAudioUnit();
 }
 
