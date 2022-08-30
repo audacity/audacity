@@ -139,7 +139,7 @@ jobs:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Build
       uses: audacity/audacity-actions/build@v1
@@ -198,7 +198,7 @@ jobs:
         arch: ${{ matrix.config.arch }}
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: |
           ${{ env.CONFIGURE_CMAKE_OPTIONS }}
           -DCMAKE_SYSTEM_VERSION=${{ matrix.config.windows_sdk }}
@@ -232,7 +232,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
@@ -266,7 +266,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
@@ -279,7 +279,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: arm64
         image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
