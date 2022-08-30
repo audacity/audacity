@@ -101,8 +101,6 @@ Source: "Package\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 @MANUAL@
 
-Source: "Additional\resources\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-
 ; We include all dll files from the Adacity root directory. This script is now executed as a part of CI build process,
 ; so we control which dll files are present in the directory.
 Source: "Package\*.dll"; DestDir: "{app}"; Flags: ignoreversion
