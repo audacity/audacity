@@ -3526,9 +3526,11 @@ bool VSTEffectValidator::UpdateUI()
    if ( ! StoreSettingsToInstance(mAccess.Get()) )
       return false;
 
-   // TOFIX: when a user preset is loaded, the GUI knobs are not updated.
+   // Update the controls on the GUI too
+   if ( ! StoreSettings(mAccess.Get()) )
+      return false;
 
-   // This is for the plain UI
+   // Update the controls on the plain UI
    RefreshParameters();
 
    return true;
@@ -3679,6 +3681,14 @@ bool VSTEffectValidator::FetchSettingsFromInstance(EffectSettings& settings)
 bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
 {
    return mInstance.StoreSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+}
+
+
+bool VSTEffectValidator::StoreSettings(const EffectSettings& settings)
+{   
+   return VSTEffectWrapper::StoreSettings(
       // Change this when GetSettings becomes a static function
       static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
 }
