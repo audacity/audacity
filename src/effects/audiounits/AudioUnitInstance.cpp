@@ -106,10 +106,20 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
    mInitialization.reset();
+   // Redo this with the correct sample rate, not the arbirary 44100 that the
+   // effect used
+   auto ins = mAudioIns;
+   auto outs = mAudioOuts;
    if (!SetRateAndChannels(sampleRate, mIdentifier))
       return false;
    if (AudioUnitInitialize(mUnit.get())) {
       wxLogError("Couldn't initialize audio unit\n");
+      return false;
+   }
+   if (ins != mAudioIns || outs != mAudioOuts) {
+      // A change of channels with changing rate?  This is unexpected!
+      ins = mAudioIns;
+      outs = mAudioOuts;
       return false;
    }
    mInitialization.reset(mUnit.get());

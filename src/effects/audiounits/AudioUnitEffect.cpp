@@ -227,6 +227,10 @@ bool AudioUnitEffect::InitializePlugin()
    if (!CreateAudioUnit())
       return false;
 
+   // Use an arbitrary rate while completing the discovery of channel support
+   if (!SetRateAndChannels(44100.0, GetSymbol().Internal()))
+      return false;
+
    // Determine interactivity
    mInteractive = (Count(mParameters) > 0);
    if (!mInteractive) {
@@ -245,6 +249,7 @@ bool AudioUnitEffect::InitializePlugin()
             kAudioUnitProperty_GetUIComponentList, compDesc);
       }
    }
+
    return true;
 }
 
