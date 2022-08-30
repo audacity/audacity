@@ -156,8 +156,10 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
       switch (alg) {
          case Spectrum:
             PowerSpectrum(mWindowSize, in.get(), out.get());
-
-            for (size_t i = 0; i < half; i++)
+            // Add the contribution from the computed spectrum at 
+            // all frequencies being analysed, from DC to half the
+            // sampling rate (Fs/2).
+            for (size_t i = 0; i <= half; i++)
                mProcessed[i] += out[i];
             break;
 
@@ -241,15 +243,17 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    switch (alg) {
    case Spectrum:
       // Convert to decibels
-      mYMin = 1000000.;
-      mYMax = -1000000.;
+      mYMin = +1000000.0f;
+      mYMax = -1000000.0f;
       scale = wss / (double)windows;
-      for (size_t i = 0; i < half; i++)
+      // Process all of the analysed frequencies,
+      // from DC to half the sampling rate (Fs/2).
+      for (size_t i = 0; i <= half; i++)
       {
          mProcessed[i] = 10 * log10(mProcessed[i] * scale);
-         if(mProcessed[i] > mYMax)
+         if (mProcessed[i] > mYMax)
             mYMax = mProcessed[i];
-         else if(mProcessed[i] < mYMin)
+         else if (mProcessed[i] < mYMin)
             mYMin = mProcessed[i];
       }
       break;
