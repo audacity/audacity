@@ -2471,27 +2471,11 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
    wxSlider *s = (wxSlider *) evt.GetEventObject();
    int i = s->GetId() - ID_Sliders;
 
-   // This, along with the call to FetchSettings below, is needed in order
-   // to have the plain GUI work properly when realtime processing
-   callSetParameter(i, s->GetValue() / 1000.0);
-
-   {
-      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
-      //
-      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
-      FetchSettings(GetInstance().GetEffect().mSettings);
-   }   
-
-   // What is done above is enough to make realtime processing work as expected,
-   // but not enough to have destructive processing work as expected too:
-   // changes in the slider will not be heard in the processed.
-   // 
-   // The following call makes it work; this might be a sign that things are
-   // not totally right somewhere else.
-   //
    GetInstance().callSetParameter(i, s->GetValue() / 1000.0);
 
    RefreshParameters(i);
+
+   ValidateUI();
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3618,18 +3602,7 @@ void VSTEffectValidator::Automate(int index, float value)
 {
    GetInstance().callSetParameter(index, value);
 
-   {
-      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
-      //
-      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
-
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         FetchSettingsFromInstance(settings);
-      });
-
-   }
-
+   ValidateUI();
 }
 
 
@@ -3696,14 +3669,22 @@ bool VSTEffectValidator::StoreSettings(const EffectSettings& settings)
 
 bool VSTEffectValidator::ValidateUI()
 {
-   mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
-      if (eff.GetType() == EffectTypeGenerate)
-         settings.extra.SetDuration(mDuration->GetValue());
+      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
+      //
+      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
 
-      FetchSettingsFromInstance(settings);
-   });
+      mAccess.ModifySettings([this](EffectSettings& settings)
+      {
+         const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
+         if (eff.GetType() == EffectTypeGenerate)
+            settings.extra.SetDuration(mDuration->GetValue());
+
+         FetchSettingsFromInstance(settings);
+      });
+
+   }
+
    return true;
 }
 
