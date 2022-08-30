@@ -297,7 +297,7 @@ The default build architecture is selected based on `CMAKE_HOST_SYSTEM_PROCESSOR
 When cross-compiling from Intel to AppleSilicon, or if *Rosetta 2* is not installed on the AppleSilicon Mac, 
 a native Audacity version build directory is required, as Audacity needs a working `image-compiler`. 
 
-For example, to build ARM64 version of Audaicty on Intel Mac:
+For example, to build ARM64 version of Audacity on Intel Mac:
 
 ```
 $ mkdir build.x64
