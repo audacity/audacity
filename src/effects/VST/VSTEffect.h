@@ -426,7 +426,7 @@ private:
 
 
    // UI
-   void OnSlider(wxCommandEvent & evt);
+   
    
    void OnUpdateDisplay(wxCommandEvent & evt);
 
@@ -457,8 +457,6 @@ private:
    wxSizerItem* mContainer{};
    bool mGui{false};
    
-   DECLARE_EVENT_TABLE()
-
    friend class VSTEffectsModule;
 
    mutable bool mInitialFetchDone{ false };
@@ -624,6 +622,8 @@ public:
    std::unique_ptr<VSTEffectTimer> mTimer;   
 
    void RefreshParameters(int skip = -1) const;
+
+   void OnSlider(wxCommandEvent& evt);
 
 private:
    VSTEffectInstance& mInstance;

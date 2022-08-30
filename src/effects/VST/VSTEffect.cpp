@@ -594,13 +594,6 @@ enum
 wxDEFINE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DEFINE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY);
 
-BEGIN_EVENT_TABLE(VSTEffect, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, VSTEffect::OnSlider)
-
-   // Events from the audioMaster callback
-   //EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
-END_EVENT_TABLE()
-
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
@@ -2370,6 +2363,9 @@ void VSTEffectValidator::BuildPlain(EffectSettingsAccess &access, EffectType eff
             mSliders[i]->SetAccessible(safenew WindowAccessible(mSliders[i]));
 #endif
 
+            // Bind the slider to ::OnSlider
+            BindTo(*mSliders[i], wxEVT_COMMAND_SLIDER_UPDATED, &VSTEffectValidator::OnSlider);
+
             mDisplays[i] = safenew wxStaticText(scroller,
                wxID_ANY,
                wxEmptyString,
@@ -2470,15 +2466,10 @@ void VSTEffectValidator::OnSizeWindow(wxCommandEvent & evt)
    mDialog->Fit();
 }
 
-void VSTEffect::OnSlider(wxCommandEvent & evt)
+void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
 {
    wxSlider *s = (wxSlider *) evt.GetEventObject();
    int i = s->GetId() - ID_Sliders;
-
-   // The plain GUI works (destructive or realtime) even without this call
-   // 
-   //if (mValidator)
-   //   mValidator->GetInstance().callSetParameter(i, s->GetValue() / 1000.0);
 
    // This, along with the call to FetchSettings below, is needed in order
    // to have the plain GUI work properly when realtime processing
@@ -2487,14 +2478,20 @@ void VSTEffect::OnSlider(wxCommandEvent & evt)
    {
       // Please see comments at ::RealtimeProcessStart on why this mutex is needed
       //
-      auto guard = std::lock_guard{ mSettingsMutex };
-      FetchSettings(mSettings);
+      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
+      FetchSettings(GetInstance().GetEffect().mSettings);
    }   
 
-   // CAUTION: temporary disabled only to allow building,
-   // RE-ENABLE when this method will belong to the validator
+   // What is done above is enough to make realtime processing work as expected,
+   // but not enough to have destructive processing work as expected too:
+   // changes in the slider will not be heard in the processed.
    // 
-   // RefreshParameters(i);
+   // The following call makes it work; this might be a sign that things are
+   // not totally right somewhere else.
+   //
+   GetInstance().callSetParameter(i, s->GetValue() / 1000.0);
+
+   RefreshParameters(i);
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
