@@ -163,6 +163,9 @@ struct AudioUnitWrapper
    const Parameters &GetParameters() const
    { return mParameters; }
 
+   // @param identifier only for logging messages
+   bool SetRateAndChannels(double sampleRate, const wxString &identifier);
+
 protected:
    const AudioComponent mComponent;
    AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
@@ -170,7 +173,6 @@ protected:
    Parameters mOwnParameters;
    Parameters &mParameters;
 
-   // Initialized in GetChannelCounts()
    unsigned mAudioIns{ 2 };
    unsigned mAudioOuts{ 2 };
 };

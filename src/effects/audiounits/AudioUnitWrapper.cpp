@@ -20,6 +20,7 @@
 #include "PluginProvider.h"
 
 #include <wx/osx/core/private.h>
+#include <wx/log.h>
 
 AudioUnitEffectSettings &
 AudioUnitWrapper::GetSettings(EffectSettings &settings) {
@@ -317,5 +318,67 @@ AudioUnitWrapper::MakeBlob(const AudioUnitEffectSettings &settings,
       message = XO("XML data is empty after conversion");
 
    return { move(data), message };
+}
+
+bool AudioUnitWrapper::SetRateAndChannels(
+   double sampleRate, const wxString &identifier)
+{
+   AudioUnitUtils::StreamBasicDescription streamFormat{
+      // Float64 mSampleRate;
+      sampleRate,
+
+      // UInt32  mFormatID;
+      kAudioFormatLinearPCM,
+
+      // UInt32  mFormatFlags;
+      (kAudioFormatFlagsNativeFloatPacked |
+          kAudioFormatFlagIsNonInterleaved),
+
+      // UInt32  mBytesPerPacket;
+      sizeof(float),
+
+      // UInt32  mFramesPerPacket;
+      1,
+
+      // UInt32  mBytesPerFrame;
+      sizeof(float),
+
+      // UInt32  mChannelsPerFrame;
+      0,
+
+      // UInt32  mBitsPerChannel;
+      sizeof(float) * 8,
+   };
+
+   const struct Info{
+      unsigned nChannels;
+      AudioUnitScope scope;
+      const char *const msg; // used only in log messages
+   } infos[]{
+      { 1, kAudioUnitScope_Global, "global" },
+      { mAudioIns, kAudioUnitScope_Input, "input" },
+      { mAudioOuts, kAudioUnitScope_Output, "output" },
+   };
+   for (const auto &[nChannels, scope, msg] : infos) {
+      if (nChannels) {
+         if (SetProperty(kAudioUnitProperty_SampleRate, sampleRate, scope)) {
+            wxLogError("%ls Didn't accept sample rate on %s\n",
+               // Exposing internal name only in logging
+               identifier.wx_str(), msg);
+            return false;
+         }
+         if (scope != kAudioUnitScope_Global) {
+            streamFormat.mChannelsPerFrame = nChannels;
+            if (SetProperty(kAudioUnitProperty_StreamFormat,
+               streamFormat, scope)) {
+               wxLogError("%ls didn't accept stream format on %s\n",
+                  // Exposing internal name only in logging
+                  identifier.wx_str(), msg);
+               return false;
+            }
+         }
+      }
+   }
+   return true;
 }
 #endif

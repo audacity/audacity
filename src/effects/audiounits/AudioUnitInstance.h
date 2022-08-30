@@ -59,9 +59,6 @@ private:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   // @param identifier only for logging messages
-   bool SetRateAndChannels(double sampleRate, const wxString &identifier);
-
    static OSStatus RenderCallback(void *inRefCon,
       AudioUnitRenderActionFlags *inActionFlags,
       const AudioTimeStamp *inTimeStamp,
