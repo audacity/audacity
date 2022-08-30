@@ -173,6 +173,7 @@ protected:
    Parameters mOwnParameters;
    Parameters &mParameters;
 
+   // Reassinged in GetRateAndChannels()
    unsigned mAudioIns{ 2 };
    unsigned mAudioOuts{ 2 };
 };
