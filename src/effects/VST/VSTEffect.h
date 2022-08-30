@@ -378,7 +378,6 @@ class VSTEffect final
 
    EffectSettings MakeSettings() const override;
 
-   void Automate(int index, float value) override;
 
    VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
    std::mutex mSettingsMutex;    // to avoid read/write races on mSettings - this is needed temporarily
@@ -561,17 +560,18 @@ public:
 
    size_t mBlockSize{ 8192 };
 
-private:
-
-   void callProcessReplacing(
-      const float* const* inputs, float* const* outputs, int sampleframes);
-
+   // Temporarily made public
    VSTEffect& GetEffect() const
    {
       // Tolerate const_cast in this class while it sun-sets
       return static_cast<VSTEffect&>(
          const_cast<PerTrackEffect&>(mProcessor));
    }
+
+private:
+
+   void callProcessReplacing(
+      const float* const* inputs, float* const* outputs, int sampleframes);
 
    VSTEffectSettings& GetSettings(EffectSettings& settings) const
    {
