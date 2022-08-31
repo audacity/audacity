@@ -67,8 +67,10 @@ enum
 };
 
 BEGIN_POPUP_MENU(LabelTrackMenuTable)
-   BeginSection( "Basic" );
+   BeginSection( "Appearance" );
       AppendItem( "Font", OnSetFontID, XXO("&Font..."), POPUP_MENU_FN( OnSetFont ) );
+      BeginSection("Extra");
+      EndSection();
    EndSection();
 END_POPUP_MENU()
 
@@ -187,5 +189,138 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultLabelTrackHeight) {
       // Default is to allow two rows so that NEW users get the
       // idea that labels can 'stack' when they would overlap.
       return 73;
+   };
+}
+
+// The following attaches the label color sub-menu to the label track popup
+// menu.  It is appropriate only to label view and so is kept in this
+// source file with the rest of the label view implementation.
+
+#include <mutex> // for std::call_once
+#include "LabelTrackControls.h"
+#include "../../../widgets/PopupMenuTable.h"
+#include "../../../ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "../../../RefreshCode.h"
+
+LabelTrackMenuTable& GetLabelTrackMenuTable()
+{
+   return LabelTrackMenuTable::Instance();
+}
+
+//=============================================================================
+// Table class for a sub-menu
+
+enum {
+   OnInstrument1ID = OnSetFontID + 50,
+   OnInstrument2ID,
+   OnInstrument3ID,
+   OnInstrument4ID,
+};
+struct LabelColorMenuTable : PopupMenuTable
+{
+   LabelColorMenuTable() : PopupMenuTable{ "LabelColor", XO("&Label Color") } {}
+   DECLARE_POPUP_MENU(LabelColorMenuTable);
+
+   static LabelColorMenuTable& Instance();
+
+   void InitUserData(void* pUserData) override;
+
+   CommonTrackControls::InitMenuData* mpData{};
+
+   int IdOfLabelColor(int LabelColor);
+   void OnLabelColorChange(wxCommandEvent& event);
+};
+
+LabelColorMenuTable& LabelColorMenuTable::Instance()
+{
+   static LabelColorMenuTable instance;
+   return instance;
+}
+
+void LabelColorMenuTable::InitUserData(void* pUserData)
+{
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+}
+
+namespace {
+   using ValueFinder = std::function< int(LabelTrack&) >;
+
+   const TranslatableString GetLabelColorStr(int colorIndex)
+   {
+      return XXO("Instrument %i").Format(colorIndex + 1);
+   }
+}
+
+BEGIN_POPUP_MENU(LabelColorMenuTable)
+static const auto fn = [](PopupMenuHandler& handler, wxMenu& menu, int id) {
+   auto& me = static_cast<LabelColorMenuTable&>(handler);
+   auto pData = me.mpData;
+   const auto& track = *static_cast<LabelTrack*>(pData->pTrack);
+   auto& project = pData->project;
+   bool unsafe = ProjectAudioIO::Get(project).IsAudioActive();
+
+   menu.Check(id, id == me.IdOfLabelColor(track.GetColourIndex()));
+   menu.Enable(id, !unsafe);
+};
+
+static std::once_flag flag;
+std::call_once(flag, [this] {
+   auto& hostTable = GetLabelTrackMenuTable();
+
+   });
+
+AppendRadioItem("Instrument1", OnInstrument1ID,
+   GetLabelColorStr(0), POPUP_MENU_FN(OnLabelColorChange), fn);
+AppendRadioItem("Instrument2", OnInstrument2ID,
+   GetLabelColorStr(1), POPUP_MENU_FN(OnLabelColorChange), fn);
+AppendRadioItem("Instrument3", OnInstrument3ID,
+   GetLabelColorStr(2), POPUP_MENU_FN(OnLabelColorChange), fn);
+AppendRadioItem("Instrument4", OnInstrument4ID,
+   GetLabelColorStr(3), POPUP_MENU_FN(OnLabelColorChange), fn);
+
+END_POPUP_MENU()
+
+/// Converts a LabelColor enumeration to a wxWidgets menu item Id.
+int LabelColorMenuTable::IdOfLabelColor(int LabelColor)
+{
+   return OnInstrument1ID + LabelColor;
+}
+
+/// Handles the selection from the LabelColor submenu of the
+/// track menu.
+void LabelColorMenuTable::OnLabelColorChange(wxCommandEvent& event)
+{
+   int id = event.GetId();
+   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
+   const auto pTrack = static_cast<LabelTrack*>(mpData->pTrack);
+
+   int newLabelColor = id - OnInstrument1ID;
+
+   AudacityProject* const project = &mpData->project;
+
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->SetColourIndex(newLabelColor);
+
+   ProjectHistory::Get(*project)
+      .PushState(XO("Changed '%s' to %s")
+         .Format(pTrack->GetName(), GetLabelColorStr(newLabelColor)),
+         XO("LabelColor Change"));
+
+   using namespace RefreshCode;
+   mpData->result = RefreshAll | FixScrollbars;
+}
+
+namespace {
+   PopupMenuTable::AttachedItem sAttachment{
+      GetLabelTrackMenuTable(),
+      { "Appearance/Extra" },
+      std::make_unique<PopupMenuSection>("LabelColor",
+      // Conditionally add sub-menu for label color, if showing labelform
+      PopupMenuTable::Computed< LabelTrackMenuTable >(
+         [](LabelTrackMenuTable& table) -> Registry::BaseItemPtr {
+            return Registry::Shared(LabelColorMenuTable::Instance()
+               .Get(table.mpData));
+         }))
    };
 }
