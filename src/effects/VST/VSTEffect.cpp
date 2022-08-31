@@ -1157,7 +1157,6 @@ int VSTEffect::ShowClientInterface(
    //   mProcessLevel = 1;      // in GUI thread
 
    VSTEffectValidator* vstValidator = static_cast<VSTEffectValidator*>(validator);
-   mValidator = vstValidator;
 
    if (! vstValidator->GetInstance().IsReady() )
    {
@@ -1342,7 +1341,6 @@ bool VSTEffect::CloseUI()
 {
    mParentFE = NULL;
    mDialogFE = NULL;
-   mValidator = nullptr;
 
    return true;
 }

@@ -412,7 +412,6 @@ protected:
 
 private:
 
-   VSTEffectValidator* mValidator{};
 
    // Plugin loading and unloading
    
