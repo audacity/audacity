@@ -127,6 +127,8 @@ static const int kDeletePresetDummyID = 20007;
 static const int kMenuID = 20100;
 static const int kEnableID = 20101;
 static const int kPlayID = 20102;
+static const int kApplyID = 20103;
+static const int kDebugID = 20104;
 static const int kPlaybackID = 20105;
 static const int kCaptureID = 20106;
 static const int kUserPresetsID = 21000;
@@ -138,9 +140,9 @@ EVT_INIT_DIALOG(EffectUIHost::OnInitDialog)
 EVT_ERASE_BACKGROUND(EffectUIHost::OnErase)
 EVT_PAINT(EffectUIHost::OnPaint)
 EVT_CLOSE(EffectUIHost::OnClose)
-EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
+EVT_BUTTON(kApplyID, EffectUIHost::OnApply)
 EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
-EVT_BUTTON(eDebugID, EffectUIHost::OnDebug)
+EVT_BUTTON(kDebugID, EffectUIHost::OnDebug)
 EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
 EVT_BUTTON(kEnableID, EffectUIHost::OnEnable)
 EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
@@ -318,74 +320,73 @@ int EffectUIHost::ShowModal()
 // EffectUIHost implementation
 // ============================================================================
 
-wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent, bool graphicalUI)
+void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 {
    mIsGUI = graphicalUI;
    mIsBatch = mEffectUIHost.IsBatchProcessing();
 
-   int margin = 0;
-#if defined(__WXMAC__)
-   margin = 3; // I'm sure it's needed because of the order things are created...
-#endif
+   constexpr int margin = 3;
 
-   const auto bar = safenew wxPanelWrapper(parent, wxID_ANY);
-
-   // This fools NVDA into not saying "Panel" when the dialog gets focus
-   bar->SetName(TranslatableString::Inaudible);
-   bar->SetLabel(TranslatableString::Inaudible);
-
-   ShuttleGui S{ bar, eIsCreating,
-      false /* horizontal */,
-      { -1, -1 } /* minimum size */
-   };
+   S.StartPanel();
    {
       S.SetBorder( margin );
 
-      if (IsOpenedFromEffectPanel())
+      S.StartHorizontalLay(wxEXPAND, 0);
       {
-         mEnableBtn = S.Id(kEnableID)
-            .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
-            .Name(XO("Enable"))
-            .AddBitmapButton(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
-
-         S.AddSpace( 5, 5 );
-      }
-
-      mMenuBtn = S.Id( kMenuID )
-         .ToolTip(XO("Manage presets and options"))
-         .AddButton( XO("Presets && settings"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
-
-      if (!mIsBatch)
-      {
-         if (mSupportsRealtime)
+         if (IsOpenedFromEffectPanel())
          {
-            if (mpTempProjectState)
-            {
-               S.AddSpace( 5, 5 );
+            mEnableBtn = S.Id(kEnableID)
+               .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
+               .Name(XO("Enable"))
+               .AddBitmapButton(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+         }
 
+         mMenuBtn = S.Id( kMenuID )
+            .ToolTip(XO("Manage presets and options"))
+            .AddButton( XO("Presets && settings"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
+
+         S.AddSpace(1, 0, 1);
+
+         if (!mIsBatch)
+         {
+            if (mSupportsRealtime)
+            {
+               if (mpTempProjectState)
+               {
+                  mPlayToggleBtn = S.Id(kPlayID)
+                     .ToolTip(XO("Start and stop preview"))
+                     .AddButton( XXO("&Preview"),
+                                 wxALIGN_CENTER | wxTOP | wxBOTTOM );
+               }
+            }
+            else if (
+               (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
+               (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
+            {
                mPlayToggleBtn = S.Id(kPlayID)
-                  .ToolTip(XO("Start and stop preview"))
+                  .ToolTip(XO("Preview effect"))
                   .AddButton( XXO("&Preview"),
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
          }
-         else if (
-            (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
-            (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
-         {
-            S.AddSpace( 5, 5 );
 
-            mPlayToggleBtn = S.Id(kPlayID)
-               .ToolTip(XO("Preview effect"))
-               .AddButton( XXO("&Preview"),
+         if (!IsOpenedFromEffectPanel())
+         {
+            mApplyBtn = S.Id(kApplyID)
+               .AddButton( XXO("&Apply"),
+                           wxALIGN_CENTER | wxTOP | wxBOTTOM );
+         }
+
+         if (mEffectUIHost.GetDefinition().EnablesDebug())
+         {
+            mDebugBtn = S.Id(kDebugID)
+               .AddButton( XXO("Debu&g"),
                            wxALIGN_CENTER | wxTOP | wxBOTTOM );
          }
       }
+      S.EndHorizontalLay();
    }
-
-   bar->GetSizer()->SetSizeHints( bar );
-
-   return bar;
+   S.EndPanel();
 }
 
 bool EffectUIHost::Initialize()
@@ -394,8 +395,6 @@ bool EffectUIHost::Initialize()
 
    mRealtimeEnabledBM = theTheme.Bitmap(bmpEffectOn);
    mRealtimeDisabledBM = theTheme.Bitmap(bmpEffectOff);
-
-   const auto hasApplyButton = !IsOpenedFromEffectPanel();
 
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
@@ -416,24 +415,7 @@ bool EffectUIHost::Initialize()
       if (!mpValidator)
          return false;
 
-      S.StartPanel();
-      {
-         const auto bar = BuildButtonBar(S.GetParent(),
-            mpValidator->IsGraphicalUI());
-
-         long buttons = 0;
-
-         if (hasApplyButton)
-            buttons |= eApplyButton;
-
-         this->SetAcceleratorTable(wxNullAcceleratorTable);
-
-         if (mEffectUIHost.GetDefinition().EnablesDebug())
-            buttons |= eDebugButton;
-
-         S.AddStandardButtons(buttons, bar);
-      }
-      S.EndPanel();
+      BuildButtonBar(S, mpValidator->IsGraphicalUI());
 
       S.StartHorizontalLay( wxEXPAND );
       {
@@ -448,9 +430,6 @@ bool EffectUIHost::Initialize()
    Fit();
    Center();
 
-   if (hasApplyButton)
-      mApplyBtn = (wxButton *) FindWindow(wxID_APPLY);
-
    UpdateControls();
 
    w->SetAccept(!mIsGUI);
@@ -459,7 +438,7 @@ bool EffectUIHost::Initialize()
    {
       w->SetFocus();
    }
-   else if (hasApplyButton)
+   else if (!IsOpenedFromEffectPanel())
    {
       mApplyBtn->SetFocus();
    }
@@ -532,7 +511,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // just our Effects dialogs.  So, this is a only temporary workaround
    // for legacy effects that disable the OK button.  Hopefully this has
    // been corrected in wx3.
-   if (!FindWindow(wxID_APPLY)->IsEnabled())
+   if (!mApplyBtn->IsEnabled())
    {
       return;
    }
