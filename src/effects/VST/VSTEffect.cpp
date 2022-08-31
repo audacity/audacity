@@ -1166,17 +1166,20 @@ int VSTEffect::ShowClientInterface(
       vstValidator->GetInstance().DoProcessInitialize(mProjectRate);
    }
 
-   // Remember the dialog with a weak pointer, but don't control its lifetime
-   mDialogFE = &dialog;
-   mDialogFE->CentreOnParent();
+   return vstValidator->ShowDialog(/* nonModal = */ SupportsRealtime() && !forceModal);
+}
 
-   if (SupportsRealtime() && !forceModal)
+int VSTEffectValidator::ShowDialog(bool nonModal)
+{
+   mDialog->CentreOnParent();
+
+   if (nonModal)
    {
-      mDialogFE->Show();
+      mDialog->Show();
       return 0;
    }
 
-   return mDialogFE->ShowModal();
+   return mDialog->ShowModal();
 }
 
 
@@ -1291,7 +1294,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    EffectInstance& instance, EffectSettingsAccess &access, EffectOutputs *)
 {
    auto parent = S.GetParent();
-   mDialogFE = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParentFE = parent;
 
    // Determine if the VST editor is supposed to be used or not
@@ -1340,7 +1342,6 @@ bool VSTEffect::IsGraphicalUI()
 bool VSTEffect::CloseUI()
 {
    mParentFE = NULL;
-   mDialogFE = NULL;
 
    return true;
 }
@@ -1760,19 +1761,12 @@ bool VSTEffectWrapper::Load()
 
 void VSTEffect::Unload()
 {
-   if (mDialogFE)
-   {
-      CloseUI();
-   }
-
    if (mAEffect)
    {
       // Finally, close the plugin
       callDispatcher(effClose, 0, 0, NULL, 0.0);
       mAEffect = NULL;
    }
-
-   //ResetModuleAndHandle();
 }
 
 

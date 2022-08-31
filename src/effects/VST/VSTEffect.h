@@ -451,7 +451,6 @@ private:
    
    // UI
    wxWindow* mParentFE;            // FE = For Effect; to avoid confusion with the Validator mParent
-   wxWeakRef<wxDialog> mDialogFE;  // FE = as above
       
    wxSizerItem* mContainer{};
    bool mGui{false};
@@ -622,7 +621,9 @@ public:
 
    void RefreshParameters(int skip = -1) const;
 
-   void OnSlider(wxCommandEvent& evt);
+   void OnSlider(wxCommandEvent& evt);    
+
+   int ShowDialog(bool nonModal);
 
 private:
    VSTEffectInstance& mInstance;
@@ -649,6 +650,7 @@ private:
 
    wxWindow* mParent;
    wxWeakRef<wxDialog> mDialog;
+   
    VSTControl* mControl;
 };
 
