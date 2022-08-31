@@ -651,6 +651,12 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList 
             mLabels.clear();
             mLabels.reserve(nValue);
          }
+         else if (attr == "colorindex")
+         {
+            if (!value.TryGet(nValue))
+               return false;
+            SetColourIndex(nValue);
+         }
       }
 
       return true;
@@ -675,6 +681,7 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.StartTag(wxT("labeltrack"));
    this->Track::WriteCommonXMLAttributes( xmlFile );
    xmlFile.WriteAttr(wxT("numlabels"), len);
+   xmlFile.WriteAttr(wxT("colorindex"), mColourIndex);
 
    for (auto &labelStruct: mLabels) {
       xmlFile.StartTag(wxT("label"));

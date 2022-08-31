@@ -824,7 +824,7 @@ void LabelTrackView::Draw
       FindTrack()->SubstitutePendingChangedTrack());
    const auto &mLabels = pTrack->GetLabels();
 
-   SetColours(0);
+   SetColours(pTrack->GetColourIndex());
 
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
