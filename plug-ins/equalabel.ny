@@ -50,14 +50,14 @@ $control verbose (_ "Message on completion") choice ((_ "Details")
   ;; Get parameters
   (case mode
     (1  ;Number
-        (setf interval 
+        (setf interval
           (if (= region 0)
-              (/ (- (get-duration 1) region) totalnum)
-              (/ (- (get-duration 1) region) (1- totalnum)))))
+              (/ (get-safe-duration) totalnum)
+              (/ (get-safe-duration) (1- totalnum)))))
     (2  ;Interval
         (setf totalnum (get-interval-count))
         (when (= adjust 1)
-          (setf interval (/ (- (get-duration 1) region) totalnum))))
+          (setf interval (/ (get-safe-duration) totalnum))))
     (t  ;Number and Interval
         ))
   ;; Loop for required number of labels
@@ -66,7 +66,7 @@ $control verbose (_ "Message on completion") choice ((_ "Details")
        ((= count totalnum))
     (push (make-one-label time (+ firstnum count)) labels))
   (when (and (> region 0)(= mode 2)(= adjust 1))
-    (push (make-one-label (- (get-duration 1) region)
+    (push (make-one-label (get-safe-duration)
                           (+ firstnum totalnum))
           labels))
   ;; Create confirmation message
@@ -77,9 +77,11 @@ $control verbose (_ "Message on completion") choice ((_ "Details")
 
 (defun message (number interval)
 "Generate output message in debug window."
-  (if (> region interval)
-      (setf msg (format nil (_ "Warning: Overlapping region labels.~%")))
-      (setf msg ""))
+  (if (= number 0)
+      (setf msg (format nil( _ "Error: There is insufficient space to create labels.~%")))
+      (if (> region interval)
+         (setf msg (format nil (_ "Warning: Overlapping region labels.~%")))
+         (setf msg "")))
   (cond
   ((= verbose 1) ;Warnings only
       (format t msg))
@@ -101,7 +103,7 @@ $control verbose (_ "Message on completion") choice ((_ "Details")
 
 (defun get-interval-count (&aux dur)
 "Number of labels when interval is specified"
-  (setf dur (- (get-duration 1) region))
+  (setf dur (get-safe-duration))
   (case adjust
     ;; Interval is user input value
     (0  (let ((n (truncate (/ dur interval))))
@@ -137,6 +139,12 @@ $control verbose (_ "Message on completion") choice ((_ "Details")
         (num (length (get '*selection* 'tracks))))
     (= index num)))
 
+(defun get-safe-duration ()
+   "Returns a safe duration for the labels to be distributed in"
+   (let ((duration (- (get-duration 1) region)))
+      (if (< duration 0)
+          0
+          duration)))
 
 (setf num-before-text (<= zeros 3))
 (setf zeros (1+ (rem (1- zeros) 3)))
