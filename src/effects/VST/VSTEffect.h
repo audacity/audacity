@@ -96,7 +96,7 @@ struct VSTEffectSettings
    std::optional<wxString> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::unordered_map<wxString, double> mParamsMap;
+   std::map<wxString, double> mParamsMap;
 };
 
 
@@ -401,6 +401,8 @@ class VSTEffect final
       return *pSettings;
    }
    */
+
+   bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
 protected:
    void NeedIdle() override;

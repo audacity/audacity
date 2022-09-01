@@ -1203,6 +1203,39 @@ bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& 
 }
 
 
+bool VSTEffect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
+{
+   const VSTEffectSettings* pSrc = src.cast<VSTEffectSettings>();
+         VSTEffectSettings* pDst = dst.cast<VSTEffectSettings>();
+
+   pDst->mNumParams = pSrc->mNumParams;
+   pDst->mUniqueID  = pSrc->mUniqueID;
+   pDst->mVersion   = pSrc->mVersion;
+
+   assert(pDst->mParamsMap.size() == pSrc->mParamsMap.size());
+
+   // ? 
+   //pDst->mChunk = pSrc->mChunk;
+
+   // Do an in-place rewrite of dst, avoiding allocations
+   auto& dstMap = pDst->mParamsMap;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   const auto& srcMap = pSrc->mParamsMap;
+
+   for (auto& [key, value] : srcMap)
+   {
+      assert(dstIter != dstEnd);
+      auto& [dstKey, dstValue] = *dstIter;
+      assert(dstKey == key);
+
+      dstValue = value;
+
+      dstIter++;
+   }
+
+   return true;
+}
+
 bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
    VSTEffectSettings& vstSettings = GetSettings(settings);
@@ -3524,13 +3557,9 @@ ComponentInterfaceSymbol VSTEffectWrapper::GetSymbol() const
 
 EffectSettings VSTEffect::MakeSettings() const
 {
-   auto result = PerTrackEffect::MakeSettings();
-   // Cause initial population of the map stored in the stateful effect
-   if (!mInitialFetchDone) {
-      FetchSettings(GetSettings(result));
-      mInitialFetchDone = true;
-   }
-   return result;
+   VSTEffectSettings settings;
+   FetchSettings(settings);
+   return EffectSettings::make<VSTEffectSettings>(std::move(settings));
 }
 
 VSTEffectValidator::~VSTEffectValidator() = default;
