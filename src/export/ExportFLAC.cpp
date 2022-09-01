@@ -208,8 +208,6 @@ public:
 
    ExportFLAC();
 
-   // Required
-
    void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
@@ -221,6 +219,10 @@ public:
                MixerSpec *mixerSpec = NULL,
                const Tags *metadata = NULL,
                int subformat = 0) override;
+
+   void SetupUploadFormat() override;
+   FileExtension GetUploadFormat() override;
+   FileExtension GetUploadExtension() override;
 
 private:
 
@@ -480,6 +482,22 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
    }
 
    return true;
+}
+
+void ExportFLAC::SetupUploadFormat()
+{
+   FLACBitDepth.Write("24");
+   FLACLevel.Write("5");
+}
+
+FileExtension ExportFLAC::GetUploadFormat()
+{
+   return FileExtension { "FLAC" };
+}
+
+FileExtension ExportFLAC::GetUploadExtension()
+{
+   return FileExtension { "flac" };
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FLAC",

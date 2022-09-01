@@ -260,6 +260,10 @@ public:
                const Tags *metadata = NULL,
                int subformat = 0) override;
 
+   void SetupUploadFormat() override;
+   FileExtension GetUploadFormat() override;
+   FileExtension GetUploadExtension() override;
+
    static int WriteBlock(void *id, void *data, int32_t length);
 };
 
@@ -493,6 +497,24 @@ int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
 void ExportWavPack::OptionsCreate(ShuttleGui &S, int format)
 {
    S.AddWindow( safenew ExportWavPackOptions{ S.GetParent(), format } );
+}
+
+void ExportWavPack::SetupUploadFormat()
+{
+   QualitySetting.Write(2);
+   BitrateSetting.Write(40);
+   BitDepthSetting.Write(24);
+   HybridModeSetting.Write(false);
+}
+
+FileExtension ExportWavPack::GetUploadFormat()
+{
+   return FileExtension { "WavPack" };
+}
+
+FileExtension ExportWavPack::GetUploadExtension()
+{
+   return FileExtension { "wv" };
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",

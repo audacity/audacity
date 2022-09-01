@@ -87,6 +87,20 @@ ExportPlugin::~ExportPlugin()
 {
 }
 
+void ExportPlugin::SetupUploadFormat()
+{
+}
+
+FileExtension ExportPlugin::GetUploadFormat()
+{
+   return {};
+}
+
+FileExtension ExportPlugin::GetUploadExtension()
+{
+   return {};
+}
+
 bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
   return true;

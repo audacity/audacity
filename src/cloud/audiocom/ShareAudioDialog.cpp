@@ -46,18 +46,6 @@
 #include "URLSchemesRegistry.h"
 #endif
 
-#ifdef USE_LIBFLAC
-extern ChoiceSetting FLACBitDepth;
-extern ChoiceSetting FLACLevel;
-#endif
-
-#ifdef USE_WAVPACK
-extern IntSetting QualitySetting;
-extern IntSetting BitrateSetting;
-extern IntSetting BitDepthSetting;
-extern BoolSetting HybridModeSetting;
-#endif
-
 namespace cloud::audiocom
 {
 namespace
@@ -66,21 +54,7 @@ BoolSetting wasOpened { L"/cloud/audiocom/wasOpened", false };
 
 const wxSize avatarSize = { 32, 32 };
 
-// A helper class that encapsulates exporting logic
-struct ExportHelper /* not final */
-{
-   virtual ~ExportHelper();
-
-   //! May modify global settings affecting export;
-   //! not responsible to revert changes
-   virtual void SetupUploadFormat() = 0;
-   //! Returns the format name
-   virtual FileExtension GetUploadFormat() const = 0;
-   //! Returns the extension of the file
-   virtual FileExtension GetUploadExtension() const = 0;
-};
-
-ExportHelper::~ExportHelper() = default;
+using ExportHelper = ExportPlugin;
 
 bool GenerateTempPath(ExportHelper &helper, wxString &path)
 {
@@ -138,81 +112,6 @@ bool DoExport(AudacityProject &project, Exporter &e,
    );
 }
 
-struct WavExportHelper final : ExportHelper
-{
-   WavExportHelper()
-   {
-   }
-
-   void SetupUploadFormat() override
-   {
-      // We have very little control over the WAV export:
-      // all the settings are stored based on SND file constants
-   }
-
-   FileExtension GetUploadFormat() const override
-   {
-      return FileExtension { "WAV" };
-   }
-
-   FileExtension GetUploadExtension() const override
-   {
-      return FileExtension { "wav" };
-   }
-};
-
-#ifdef USE_LIBFLAC
-struct FlacExportHelper final : ExportHelper
-{
-   FlacExportHelper()
-   {
-   }
-
-   void SetupUploadFormat() override
-   {
-      FLACBitDepth.Write("24");
-      FLACLevel.Write("5");
-   }
-
-   FileExtension GetUploadFormat() const override
-   {
-      return FileExtension { "FLAC" };
-   }
-
-   FileExtension GetUploadExtension() const override
-   {
-      return FileExtension { "flac" };
-   }
-};
-#endif
-
-#ifdef USE_WAVPACK
-struct WavPackExportHelper final : ExportHelper
-{
-   WavPackExportHelper()
-   {
-   }
-
-   void SetupUploadFormat() override
-   {
-      QualitySetting.Write(2);
-      BitrateSetting.Write(40);
-      BitDepthSetting.Write(24);
-      HybridModeSetting.Write(false);
-   }
-
-   FileExtension GetUploadFormat() const override
-   {
-      return FileExtension { "WavPack" };
-   }
-
-   FileExtension GetUploadExtension() const override
-   {
-      return FileExtension { "wv" };
-   }
-};
-#endif
-
 namespace {
 Identifier GetPreferredAudioFormat()
 {
@@ -222,20 +121,16 @@ Identifier GetPreferredAudioFormat()
 }
 }
 
-// We use WAV only as a fall back (unless config asks for it explicitly)
-std::unique_ptr<ExportHelper> GetUploadHelper()
+ExportHelper *GetUploadHelper(Exporter &e)
 {
    const auto preferredFormat = GetPreferredAudioFormat();
-
-#ifdef USE_WAVPACK
-   if (preferredFormat == "WavPack")
-      return std::make_unique<WavPackExportHelper>();
-#endif
-#ifdef USE_LIBFLAC
-   if (preferredFormat != "PCM")
-      return std::make_unique<FlacExportHelper>();
-#endif
-   return std::make_unique<WavExportHelper>();
+   size_t ii = 0;
+   for (auto &id : e.GetPluginIDs()) {
+      if (id == preferredFormat)
+         return e.GetPlugins()[ii].get();
+      ++ii;
+   }
+   return nullptr;
 }
 }
 
@@ -414,7 +309,7 @@ wxString ShareAudioDialog::ExportProject()
 
    Exporter e { mProject };
 
-   auto helper = GetUploadHelper();
+   auto helper = GetUploadHelper(e);
 
    wxString path;
 

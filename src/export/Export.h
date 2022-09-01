@@ -108,6 +108,17 @@ public:
     * of channels in exported file. -1 for unspecified */
    virtual int SetNumExportChannels() { return -1; }
 
+   // TODO:  the next three virtuals might take arguments, as does
+   // GetFormat()
+
+   //! May modify global settings affecting export;
+   //! not responsible to revert changes
+   virtual void SetupUploadFormat();
+   //! Returns the format name preferred for upload, or empty
+   virtual FileExtension GetUploadFormat();
+   //! Returns the file extension preferred for upload, or empty
+   virtual FileExtension GetUploadExtension();
+
    /** \brief called to export audio into a file.
     *
     * @param pDialog To be initialized with pointer to a NEW ProgressDialog if

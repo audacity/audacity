@@ -403,6 +403,10 @@ public:
    FileExtension GetExtension(int index) override;
    unsigned GetMaxChannels(int index) override;
 
+   void SetupUploadFormat() override;
+   FileExtension GetUploadFormat() override;
+   FileExtension GetUploadExtension() override;
+
 private:
    void ReportTooBigError(wxWindow * pParent);
    ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
@@ -1096,6 +1100,22 @@ unsigned ExportPCM::GetMaxChannels(int index)
 
    // Return the max number of channels
    return si.channels - 1;
+}
+
+void ExportPCM::SetupUploadFormat()
+{
+   // We have very little control over the WAV export:
+   // all the settings are stored based on SND file constants
+}
+
+FileExtension ExportPCM::GetUploadFormat()
+{
+   return FileExtension { "WAV" };
+}
+
+FileExtension ExportPCM::GetUploadExtension()
+{
+   return FileExtension { "wav" };
 }
 
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",
