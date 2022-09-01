@@ -83,6 +83,7 @@ LabelTrack* LabelTrack::Create(TrackList& trackList)
 
 LabelTrack::LabelTrack():
    Track(),
+   mColourIndex(0),
    mClipLen(0.0),
    miLastLabel(-1)
 {
@@ -90,6 +91,7 @@ LabelTrack::LabelTrack():
 
 LabelTrack::LabelTrack(const LabelTrack &orig, ProtectedCreationArg &&a)
    : Track(orig, std::move(a))
+   , mColourIndex( orig.mColourIndex )
    , mClipLen(0.0)
 {
    for (auto &original: orig.mLabels) {

@@ -195,7 +195,7 @@ public:
 
  private:
    LabelArray mLabels;
-   int mColourIndex = 0;
+   int mColourIndex;
 
    // Set in copied label tracks
    double mClipLen;
