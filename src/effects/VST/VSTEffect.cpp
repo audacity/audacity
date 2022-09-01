@@ -1759,24 +1759,11 @@ bool VSTEffectWrapper::Load()
    return success;
 }
 
-void VSTEffect::Unload()
+
+void VSTEffectWrapper::Unload()
 {
    if (mAEffect)
    {
-      // Finally, close the plugin
-      callDispatcher(effClose, 0, 0, NULL, 0.0);
-      mAEffect = NULL;
-   }
-}
-
-
-void VSTEffectInstance::Unload()
-{
-   if (mAEffect)
-   {
-      // Turn the power off
-      PowerOff();
-
       // Finally, close the plugin
       callDispatcher(effClose, 0, 0, NULL, 0.0);
       mAEffect = NULL;
@@ -3635,6 +3622,7 @@ VSTEffectInstance::VSTEffectInstance
 
 VSTEffectInstance::~VSTEffectInstance()
 {
+   PowerOff();
    Unload();
 }
 
@@ -3682,11 +3670,6 @@ bool VSTEffectValidator::ValidateUI()
    }
 
    return true;
-}
-
-void VSTEffectValidator::Unload()
-{
-   // TODO
 }
 
 

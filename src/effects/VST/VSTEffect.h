@@ -213,7 +213,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    int      mMidiOuts{ 0 };
    bool     mAutomatable;
 
-   virtual void Unload() = 0;
+   void Unload();
 
    void ResetModuleAndHandle();
 
@@ -415,7 +415,6 @@ private:
 
    // Plugin loading and unloading
    
-   void Unload() override;
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
@@ -578,8 +577,6 @@ private:
       return GetEffect().GetSettings(settings);
    }
 
-   void Unload() override;
-
    VSTInstanceArray mSlaves;
 
    bool mHasPower{ false };
@@ -609,7 +606,6 @@ public:
 
    void Automate(int index, float value) override;
 
-   void Unload() override;
    void OnClose() override;
 
    void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
