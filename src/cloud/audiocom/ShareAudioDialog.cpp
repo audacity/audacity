@@ -69,105 +69,93 @@ const wxSize avatarSize = { 32, 32 };
 // A helper class that encapsulates exporting logic
 struct ExportHelper /* not final */
 {
-   AudacityProject& mProject;
-   wxString mPath;
+   virtual ~ExportHelper();
 
-   explicit ExportHelper(AudacityProject& project)
-       : mProject { project }
-   {
-   }
-
-   virtual ~ExportHelper() = default;
-
-   // Setups the desired options for exporter
-   virtual void SetupFormat() = 0;
-   // Returns the format name
-   virtual FileExtension GetFormat() const = 0;
-   // Returns the extension of the file
-   virtual FileExtension GetExtension() const = 0;
-
-   const wxString& GetPath() const noexcept
-   {
-      return mPath;
-   }
-
-   bool GenerateTempPath()
-   {
-      FilePath pathName = TempDirectory::DefaultTempDir();
-
-      if (!FileNames::WritableLocationCheck(
-             pathName, XO("Cannot proceed to export.")))
-      {
-         return false;
-      }
-
-      wxFileName fileName(
-         pathName + "/cloud/",
-         wxString::Format("%lld", std::chrono::system_clock::now().time_since_epoch().count()),
-         GetExtension());
-
-      fileName.Mkdir(0700, wxPATH_MKDIR_FULL);
-
-      if (fileName.Exists())
-      {
-         if (!wxRemoveFile(mPath))
-            return false;
-      }
-
-      mPath = fileName.GetFullPath();
-
-      return true;
-   }
-
-   bool Export(std::unique_ptr<BasicUI::ProgressDialog>& progress)
-   {
-      if (!GenerateTempPath())
-         return false;
-
-      SettingScope scope;
-
-      SetupFormat();
-
-      Exporter e { const_cast<AudacityProject&>(mProject) };
-
-      auto& tracks = TrackList::Get(mProject);
-
-      const double t0 = 0.0;
-      const double t1 = tracks.GetEndTime();
-
-      const int nChannels = (tracks.Any() - &Track::IsLeader).empty() ? 1 : 2;
-
-      return e.Process(
-         nChannels,   // numChannels,
-         GetFormat(), // type,
-         mPath,       // full path,
-         false,       // selectedOnly,
-         t0,          // t0
-         t1,          // t1
-         progress     // progress dialog
-      );
-   }
+   //! May modify global settings affecting export;
+   //! not responsible to revert changes
+   virtual void SetupUploadFormat() = 0;
+   //! Returns the format name
+   virtual FileExtension GetUploadFormat() const = 0;
+   //! Returns the extension of the file
+   virtual FileExtension GetUploadExtension() const = 0;
 };
+
+ExportHelper::~ExportHelper() = default;
+
+bool GenerateTempPath(ExportHelper &helper, wxString &path)
+{
+   FilePath pathName = TempDirectory::DefaultTempDir();
+
+   if (!FileNames::WritableLocationCheck(
+          pathName, XO("Cannot proceed to export.")))
+   {
+      return false;
+   }
+
+   wxFileName fileName(
+      pathName + "/cloud/",
+      wxString::Format("%lld", std::chrono::system_clock::now().time_since_epoch().count()),
+      helper.GetUploadExtension());
+
+   fileName.Mkdir(0700, wxPATH_MKDIR_FULL);
+
+   if (fileName.Exists())
+   {
+      if (!wxRemoveFile(path))
+         return false;
+   }
+
+   path = fileName.GetFullPath();
+   return true;
+}
+
+bool DoExport(AudacityProject &project, Exporter &e,
+   ExportHelper &helper, std::unique_ptr<BasicUI::ProgressDialog>& progress,
+   /* out */ wxString &path)
+{
+   if (!GenerateTempPath(helper, path))
+      return false;
+
+   SettingScope scope;
+
+   helper.SetupUploadFormat();
+
+   auto& tracks = TrackList::Get(project);
+
+   const double t0 = 0.0;
+   const double t1 = tracks.GetEndTime();
+
+   const int nChannels = (tracks.Any() - &Track::IsLeader).empty() ? 1 : 2;
+
+   return e.Process(
+      nChannels,   // numChannels,
+      helper.GetUploadFormat(), // type,
+      path,       // full path,
+      false,       // selectedOnly,
+      t0,          // t0
+      t1,          // t1
+      progress     // progress dialog
+   );
+}
 
 struct WavExportHelper final : ExportHelper
 {
-   explicit WavExportHelper(AudacityProject& project)
-       : ExportHelper(project)
+   WavExportHelper()
    {
    }
 
-   void SetupFormat() override
+   void SetupUploadFormat() override
    {
       // We have very little control over the WAV export:
       // all the settings are stored based on SND file constants
    }
 
-   FileExtension GetFormat() const override
+   FileExtension GetUploadFormat() const override
    {
       return FileExtension { "WAV" };
    }
 
-   FileExtension GetExtension() const override
+   FileExtension GetUploadExtension() const override
    {
       return FileExtension { "wav" };
    }
@@ -176,23 +164,22 @@ struct WavExportHelper final : ExportHelper
 #ifdef USE_LIBFLAC
 struct FlacExportHelper final : ExportHelper
 {
-   explicit FlacExportHelper(AudacityProject& project)
-       : ExportHelper(project)
+   FlacExportHelper()
    {
    }
 
-   void SetupFormat() override
+   void SetupUploadFormat() override
    {
       FLACBitDepth.Write("24");
       FLACLevel.Write("5");
    }
 
-   FileExtension GetFormat() const override
+   FileExtension GetUploadFormat() const override
    {
       return FileExtension { "FLAC" };
    }
 
-   FileExtension GetExtension() const override
+   FileExtension GetUploadExtension() const override
    {
       return FileExtension { "flac" };
    }
@@ -202,12 +189,11 @@ struct FlacExportHelper final : ExportHelper
 #ifdef USE_WAVPACK
 struct WavPackExportHelper final : ExportHelper
 {
-   explicit WavPackExportHelper(AudacityProject& project)
-       : ExportHelper(project)
+   WavPackExportHelper()
    {
    }
 
-   void SetupFormat() override
+   void SetupUploadFormat() override
    {
       QualitySetting.Write(2);
       BitrateSetting.Write(40);
@@ -215,12 +201,12 @@ struct WavPackExportHelper final : ExportHelper
       HybridModeSetting.Write(false);
    }
 
-   FileExtension GetFormat() const override
+   FileExtension GetUploadFormat() const override
    {
       return FileExtension { "WavPack" };
    }
 
-   FileExtension GetExtension() const override
+   FileExtension GetUploadExtension() const override
    {
       return FileExtension { "wv" };
    }
@@ -228,20 +214,19 @@ struct WavPackExportHelper final : ExportHelper
 #endif
 
 // We use WAV only as a fall back (unless config asks for it explicitly)
-std::unique_ptr<ExportHelper>
-GetExportHelper(AudacityProject& project)
+std::unique_ptr<ExportHelper> GetUploadHelper()
 {
    const auto preferredFormat = GetServiceConfig().GetPreferredAudioFormat();
 
 #ifdef USE_WAVPACK
    if (preferredFormat == AudioFormat::WAVPACK)
-      return std::make_unique<WavPackExportHelper>(project);
+      return std::make_unique<WavPackExportHelper>();
 #endif
 #ifdef USE_LIBFLAC
    if (preferredFormat != AudioFormat::WAV)
-      return std::make_unique<FlacExportHelper>(project);
+      return std::make_unique<FlacExportHelper>();
 #endif
-   return std::make_unique<WavExportHelper>(project);
+   return std::make_unique<WavExportHelper>();
 }
 }
 
@@ -418,12 +403,16 @@ wxString ShareAudioDialog::ExportProject()
 {
    mExportProgressHelper = std::make_unique<ExportProgressHelper>(*this);
 
-   auto exporter = GetExportHelper(mProject);
+   Exporter e { mProject };
 
-   if (!exporter->Export(mExportProgressHelper))
+   auto helper = GetUploadHelper();
+
+   wxString path;
+
+   if (!helper || !DoExport(mProject, e, *helper, mExportProgressHelper, path))
       return {};
 
-   return exporter->GetPath();
+   return path;
 }
 
 void ShareAudioDialog::StartUploadProcess()
