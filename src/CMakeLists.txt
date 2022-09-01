@@ -1115,6 +1115,11 @@ list( APPEND SOURCES
       >
 
       # Audio.com
+      $<$<BOOL:${${_OPT}has_audiocom_upload}>:
+         cloud/audiocom/UserImage.cpp
+         cloud/audiocom/UserImage.h
+      >
+
       $<$<AND:$<BOOL:${${_OPT}has_audiocom_upload}>,$<BOOL:${${_OPT}has_url_schemes_support}>>:
          cloud/audiocom/LinkUrlHandler.cpp
       >
