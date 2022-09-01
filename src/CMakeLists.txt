@@ -1120,6 +1120,8 @@ list( APPEND SOURCES
          cloud/audiocom/LinkAccountDialog.h
          cloud/audiocom/LinkFailedDialog.cpp
          cloud/audiocom/LinkFailedDialog.h
+         cloud/audiocom/ShareAudioDialog.cpp
+         cloud/audiocom/ShareAudioDialog.h
          cloud/audiocom/UserImage.cpp
          cloud/audiocom/UserImage.h
       >
