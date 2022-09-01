@@ -212,6 +212,8 @@ public:
    int FindFormatIndex(int exportindex);
 
    const ExportPluginArray &GetPlugins();
+   //! In correspondence with result of GetPlugins()
+   const std::vector<Identifier> &GetPluginIDs();
 
    // Auto Export from Timer Recording
    bool ProcessFromTimerRecording(bool selectedOnly,
@@ -248,6 +250,7 @@ private:
    std::unique_ptr<MixerSpec> mMixerSpec;
 
    ExportPluginArray mPlugins;
+   std::vector<Identifier> mPluginIDs;
 
    wxFileName mFilename;
    wxFileName mActualName;

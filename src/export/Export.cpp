@@ -339,6 +339,7 @@ Exporter::Exporter( AudacityProject &project )
    for ( const auto &factory : sFactories() )
       mPlugins.emplace_back( factory() );
 
+   //! Permute the registered plug-ins by the ordering preference
    struct MyVisitor final : Visitor {
       MyVisitor()
       {
@@ -352,12 +353,15 @@ Exporter::Exporter( AudacityProject &project )
       {
          mPlugins.emplace_back(
             static_cast<ExporterItem&>( item ).mFactory() );
+         mPluginIDs.emplace_back(item.name);
       }
 
       ExportPluginArray mPlugins;
+      std::vector<Identifier> mPluginIDs;
    } visitor;
 
    mPlugins.swap( visitor.mPlugins );
+   mPluginIDs.swap(visitor.mPluginIDs);
 
    SetFileDialogTitle( XO("Export Audio") );
 }
@@ -400,6 +404,11 @@ int Exporter::FindFormatIndex(int exportindex)
 const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
+}
+
+const std::vector<Identifier> &Exporter::GetPluginIDs()
+{
+   return mPluginIDs;
 }
 
 bool Exporter::DoEditMetadata(AudacityProject &project,
