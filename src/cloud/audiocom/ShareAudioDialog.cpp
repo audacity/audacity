@@ -213,17 +213,26 @@ struct WavPackExportHelper final : ExportHelper
 };
 #endif
 
+namespace {
+Identifier GetPreferredAudioFormat()
+{
+   // Identifier that a plug-in was registered with -- though this makes
+   // a coincidence of string literals.  Should this become a StringSetting?
+   return "WavPack";
+}
+}
+
 // We use WAV only as a fall back (unless config asks for it explicitly)
 std::unique_ptr<ExportHelper> GetUploadHelper()
 {
-   const auto preferredFormat = GetServiceConfig().GetPreferredAudioFormat();
+   const auto preferredFormat = GetPreferredAudioFormat();
 
 #ifdef USE_WAVPACK
-   if (preferredFormat == AudioFormat::WAVPACK)
+   if (preferredFormat == "WavPack")
       return std::make_unique<WavPackExportHelper>();
 #endif
 #ifdef USE_LIBFLAC
-   if (preferredFormat != AudioFormat::WAV)
+   if (preferredFormat != "PCM")
       return std::make_unique<FlacExportHelper>();
 #endif
    return std::make_unique<WavExportHelper>();

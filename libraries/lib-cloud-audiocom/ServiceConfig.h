@@ -16,14 +16,6 @@
 
 namespace cloud::audiocom
 {
-//! Preferred audio format for the upload
-enum class AudioFormat
-{
-   WAV,
-   FLAC,
-   WAVPACK
-};
-
 //! Configuration for the audio.com
 class CLOUD_AUDIOCOM_API ServiceConfig final
 {
@@ -42,8 +34,6 @@ public:
    std::string GetFinishUploadPage(std::string_view audioID, std::string_view token) const;
    //! Timeout between progress callbacks
    std::chrono::milliseconds GetProgressCallbackTimeout() const;
-   //! Preferred audio format
-   AudioFormat GetPreferredAudioFormat() const;
 };
 
 //! Returns the instance of the ServiceConfig

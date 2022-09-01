@@ -55,11 +55,6 @@ std::chrono::milliseconds ServiceConfig::GetProgressCallbackTimeout() const
    return std::chrono::seconds(3);
 }
 
-AudioFormat ServiceConfig::GetPreferredAudioFormat() const
-{
-   return AudioFormat::WAVPACK;
-}
-
 const ServiceConfig& GetServiceConfig()
 {
    static ServiceConfig config;
