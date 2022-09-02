@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2020-07-19 16:59+0800\n"
+"PO-Revision-Date: 2022-08-22 12:25+0800\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/zh/)\n"
 "Language: zh_CN\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 3.0\n"
 
 #. i18n-hint C++ programming assertion
 #: crashreports/crashreporter/CrashReportApp.cpp
@@ -35,14 +35,12 @@ msgid "Unknown exception"
 msgstr ""
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
 msgid "Unknown error"
-msgstr "未知格式"
+msgstr "未知错误"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "为 Audacity 提供 Vamp 效果器支持"
+msgstr ""
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -63,9 +61,9 @@ msgstr "注释"
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "See %s for more info."
-msgstr "选择一个或多个音频文件"
+msgstr ""
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
@@ -91,9 +89,8 @@ msgid "&Send"
 msgstr ""
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "无法设定预设名字"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -272,14 +269,15 @@ msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr "Audacity 成功写入了文件 %s 但是改名为 %s 时失败。"
 
 #: libraries/lib-files/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
 "Audacity 写入文件失败。\n"
-"可能 %s 不可写或者磁盘已满。"
+"可能 %s 不可写或者磁盘已满。\n"
+"关于释放空间的建议，请点击帮助。"
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
@@ -330,11 +328,13 @@ msgid "(%s)"
 msgstr "(%s)"
 
 #: libraries/lib-files/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s does not have write permissions."
-msgstr "目录%s不存在。是否创建它？"
+msgstr ""
+"\n"
+"%s无写入权限。"
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
 #: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
@@ -704,14 +704,12 @@ msgid "Could not parse XML"
 msgstr "无法解析 XML"
 
 #: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
 msgid "1st Experimental Command..."
-msgstr "特殊命令"
+msgstr "第一实验性命令……"
 
 #: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
 msgid "2nd Experimental Command"
-msgstr "特殊命令"
+msgstr "第二实验性命令"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -15050,9 +15048,8 @@ msgid "Bro&wse..."
 msgstr "浏览..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Macro output:"
-msgstr "显示输出"
+msgstr "宏输出："
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -15063,17 +15060,14 @@ msgid "&Location:"
 msgstr "位置(&L)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "临时文件目录"
+msgstr "临时文件目录不能设于FAT驱动器上。"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Brow&se..."
 msgstr "浏览..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Free Space:"
 msgstr "剩余容量："
 
@@ -15082,37 +15076,38 @@ msgid "Choose a location to place the temporary directory"
 msgstr "选择存放临时目录的位置"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Cannot set the preference."
-msgstr "获取偏好..."
+msgstr "无法设置偏好。"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
 msgstr "不可用 - 上面的位置不存在"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Choose a location"
-msgstr "选择文件保存的位置"
+msgstr "选择位置"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Directory %s does not exist. Create it?"
-msgstr "目录%s不存在。是否创建它？"
+msgstr ""
+"\n"
+"目录%s不存在。是否创建它？"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Directory creation failed."
-msgstr "目录对话框"
+msgstr "目录创建失败。"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s"
-msgstr "%s:"
+msgstr ""
+"\n"
+"%s"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15120,14 +15115,12 @@ msgid "Directory %s is not suitable (at risk of being cleaned out)"
 msgstr "目录 %s 是不合适的（有被清理的可能）"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary Directory' cannot be set."
-msgstr "临时文件目录"
+msgstr "无法设置临时文件目录"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary files' directory cannot be set."
-msgstr "临时文件目录"
+msgstr "无法设置临时文件目录"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15143,9 +15136,8 @@ msgid "Temp Directory Update"
 msgstr "临时目录更新"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Open' directory cannot be set."
-msgstr "临时文件目录"
+msgstr "无法设置打开目录"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
@@ -16299,31 +16291,27 @@ msgstr "周期"
 
 #. i18n-hint: New color scheme for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4（默认）"
+msgstr "颜色（默认）"
 
 #. i18n-hint: Classic color scheme(from theme) for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "经典"
+msgstr "颜色（经典）"
 
 #. i18n-hint: Grayscale color scheme for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr "灰阶(&Y)"
+msgstr "灰阶"
 
 #. i18n-hint: Inverse grayscale color scheme for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "线性缩放(&L)"
+msgstr "反相灰阶"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
@@ -18196,9 +18184,8 @@ msgid "No Updates Available"
 msgstr "支持"
 
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "Check for Updates"
-msgstr "检查更新(&C)..."
+msgstr "检查更新"
 
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -18209,9 +18196,8 @@ msgstr ""
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Preferences > Application"
-msgstr "质量偏好设置"
+msgstr "偏好设置 > 应用"
 
 #: src/update/UpdateManager.cpp
 #, fuzzy
