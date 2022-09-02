@@ -253,6 +253,9 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
       }
       oCurBlockSize = {
          mIsProcessor ? bound : limitSampleBufferSize(bound, mDelayRemaining) };
+      if (!mIsProcessor)
+         // Do this (ignoring result) so we can correctly Release() upstream
+         mUpstream.Acquire(mInBuffers, bound);
    }
    if (!oCurBlockSize)
       return {};
@@ -275,13 +278,20 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
             return {};
       }
 
-      if (doZeroes)
+      if (doZeroes) {
          // Either a generator or doing the tail; will count down delay
          mLastZeroes = limitSampleBufferSize(curBlockSize, DelayRemaining());
+         if (!mIsProcessor) {
+            // This allows polling the progress meter for a generator
+            if (!mUpstream.Release())
+               return {};
+         }
+      }
       else {
          // Will count down the upstream
          mLastProduced += curBlockSize;
-         mUpstream.Release();
+         if (!mUpstream.Release())
+            return {};
          mInBuffers.Advance(curBlockSize);
          if (mInBuffers.Remaining() < mInBuffers.BlockSize())
             // Maintain invariant minimum availability
@@ -334,7 +344,9 @@ sampleCount AudioGraph::EffectStage::Remaining() const
    // mLastProduced will have the up-front latency discarding deducted.
    // mDelayRemaining later decreases to 0 as zeroes are supplied to the
    // processor at the end, compensating for the discarding.
-   return mLastProduced + mUpstream.Remaining() + DelayRemaining();
+   return mLastProduced
+      + (mIsProcessor ? mUpstream.Remaining() : 0)
+      + DelayRemaining();
 }
 
 bool AudioGraph::EffectStage::Release()
