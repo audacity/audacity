@@ -2403,22 +2403,22 @@ void VSTEffectValidator::RefreshParameters(int skip) const
       // keyboard, so we skip the active slider if any.
       if (i != skip)
       {
-         mSliders[i]->SetValue(callGetParameter(i) * 1000);
+         mSliders[i]->SetValue(GetInstance().callGetParameter(i) * 1000);
       }
       name = text;
 
-      text = GetString(effGetParamDisplay, i);
+      text = GetInstance().GetString(effGetParamDisplay, i);
       if (text.empty())
       {
-         text.Printf(wxT("%.5g"),callGetParameter(i));
+         text.Printf(wxT("%.5g"), GetInstance().callGetParameter(i));
       }
       mDisplays[i]->SetLabel(wxString::Format(wxT("%8s"), text));
       name += wxT(' ') + text;
 
-      text = GetString(effGetParamDisplay, i);
+      text = GetInstance().GetString(effGetParamDisplay, i);
       if (!text.empty())
       {
-         text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i));
+         text.Printf(wxT("%-8s"), GetInstance().GetString(effGetParamLabel, i));
          mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text));
          name += wxT(' ') + text;
       }
@@ -3556,7 +3556,7 @@ VSTEffectValidator::VSTEffectValidator
 }
 
 
-VSTEffectInstance& VSTEffectValidator::GetInstance()
+VSTEffectInstance& VSTEffectValidator::GetInstance() const
 {
    return mInstance;
 }

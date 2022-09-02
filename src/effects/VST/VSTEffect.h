@@ -599,7 +599,7 @@ public:
 
    ~VSTEffectValidator() override;
 
-   VSTEffectInstance& GetInstance();
+   VSTEffectInstance& GetInstance() const;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
