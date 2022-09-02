@@ -255,7 +255,7 @@ size_t Mixer::Process(const size_t maxToProcess)
          const auto track = upstream.GetChannel(j);
          if (mApplyTrackGains)
             for (size_t c = 0; c < mNumChannels; ++c)
-               gains[c] = track->GetChannelGain(c);
+               gains[c] = track->GetOwnChannelGain();
          const auto flags =
             findChannelFlags(upstream.MixerSpec(j), track->GetChannel());
          MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);

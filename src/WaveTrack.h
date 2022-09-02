@@ -147,7 +147,11 @@ private:
    float GetPan() const;
    void SetPan(float newPan) override;
 
+   // Convert pan value in [-1.0f, 1.0f] to a pair of multipliers
+   static std::pair<float, float> ChannelGains(float pan);
+
    float GetChannelGain(int channel) const override;
+   float GetOwnChannelGain() const override;
 
    float GetOldChannelGain(int channel) const override;
    void SetOldChannelGain(int channel, float gain) override;

@@ -42,8 +42,13 @@ public:
    virtual void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const = 0;
 
+   //! Multiplier to mix this track to the given output device channel
    //! Takes gain and pan into account
    virtual float GetChannelGain(int channel) const = 0;
+
+   //! Multiplier to mix this track to its proper device channel (as
+   //! determined by GetChannel())
+   virtual float GetOwnChannelGain() const = 0;
 
    //! This returns a nonnegative number of samples meant to size a memory buffer
    virtual size_t GetBestBlockSize(sampleCount t) const = 0;

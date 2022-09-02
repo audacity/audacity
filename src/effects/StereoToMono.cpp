@@ -194,12 +194,12 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    auto outTrack = left->EmptyCopy();
    outTrack->ConvertToSampleFormat(floatSample);
 
+   const auto gains = WaveTrack::ChannelGains(left->GetPan());
+   const auto divisor = gains.first + gains.second;
    while (auto blockLen = mixer.Process()) {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
-      {
-         ((float *)buffer)[i] /= 2.0;
-      }
+         ((float *)buffer)[i] /= divisor;
       outTrack->Append(buffer, floatSample, blockLen);
 
       curTime += blockLen;
@@ -211,6 +211,8 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    outTrack->Flush();
 
    double minStart = wxMin(left->GetStartTime(), right->GetStartTime());
+   left->SetPan(0);
+   left->SetGain(1);
    left->Clear(left->GetStartTime(), left->GetEndTime());
    left->Paste(minStart, outTrack.get());
    mOutputTracks->UnlinkChannels(*left);

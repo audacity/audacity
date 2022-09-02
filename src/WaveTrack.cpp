@@ -534,19 +534,33 @@ void WaveTrack::SetPan(float newPan)
    }
 }
 
+std::pair<float, float> WaveTrack::ChannelGains(float pan)
+{
+   // Constant-power panning law: sum of squares of left and right is
+   // independent of pan
+   constexpr float pi_4 = M_PI / 4;
+   const auto angle = pi_4 * (1 - pan);
+   return { sinf(angle), cosf(angle) };
+}
+
 float WaveTrack::GetChannelGain(int channel) const
 {
-   float left = 1.0;
-   float right = 1.0;
-
-   const auto pan = GetPan();
-   if (pan < 0)
-      right = (pan + 1.0);
-   else if (pan > 0)
-      left = 1.0 - pan;
-
+   auto [left, right] = ChannelGains(GetPan());
    const auto gain = GetGain();
    if ((channel%2) == 0)
+      return left * gain;
+   else
+      return right * gain;
+}
+
+float WaveTrack::GetOwnChannelGain() const
+{
+   const auto channel = GetChannel();
+   const auto gain = GetGain();
+   if (channel == MonoChannel)
+      return gain;
+   auto [left, right] = ChannelGains(GetPan());
+   if (channel == LeftChannel)
       return left * gain;
    else
       return right * gain;
