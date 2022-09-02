@@ -65,6 +65,7 @@ private:
    std::shared_ptr<EffectInstance> InitializeInstance();
 
    wxPanel *BuildButtonBar(wxWindow *parent, bool graphicalUI);
+   void BuildButtonBar(ShuttleGui &S, bool graphicalUI);
 
    void OnInitDialog(wxInitDialogEvent & evt);
    void OnErase(wxEraseEvent & evt);
@@ -122,7 +123,7 @@ private:
    wxButton *mApplyBtn{};
    wxButton *mMenuBtn{};
    wxButton *mEnableBtn{};
-
+   wxButton *mDebugBtn{};
    wxButton *mPlayToggleBtn{};
 
    wxBitmap mRealtimeEnabledBM;
