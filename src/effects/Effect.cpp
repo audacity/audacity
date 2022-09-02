@@ -623,7 +623,8 @@ bool Effect::EnableApply(bool enable)
          }
       }
 
-      apply->Enable(enable);
+      if (apply)
+         apply->Enable(enable);
    }
 
    EnablePreview(enable);
