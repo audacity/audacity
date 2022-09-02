@@ -89,6 +89,7 @@ private:
    void OnOptions(wxCommandEvent & evt);
    void OnDefaults(wxCommandEvent & evt);
    void OnIdle(wxIdleEvent &evt);
+   void OnCharHook(wxKeyEvent& evt);
 
    bool IsOpenedFromEffectPanel() const;
 

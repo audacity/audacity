@@ -155,6 +155,7 @@ EVT_MENU_RANGE(kUserPresetsID, kUserPresetsID + 999, EffectUIHost::OnUserPreset)
 EVT_MENU_RANGE(kDeletePresetID, kDeletePresetID + 999, EffectUIHost::OnDeletePreset)
 EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFactoryPreset)
 EVT_IDLE(EffectUIHost::OnIdle)
+EVT_CHAR_HOOK(EffectUIHost::OnCharHook)
 END_EVENT_TABLE()
 
 namespace {
@@ -490,7 +491,9 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
    if (mpValidator)
       mpValidator->OnClose();
-   
+
+   ProjectHistory::AutoSave::Call(mProject);
+
    Hide();
    Destroy();
    
@@ -945,6 +948,24 @@ void EffectUIHost::OnIdle(wxIdleEvent &evt)
    evt.Skip();
    if (mpAccess)
       mpAccess->Flush();
+}
+
+void EffectUIHost::OnCharHook(wxKeyEvent& evt)
+{
+   if (!IsEscapeKey(evt))
+   {
+      evt.Skip();
+      return;
+   }
+   
+   if (IsOpenedFromEffectPanel())
+      Close();
+   else
+   {
+      wxCommandEvent cancelEvt { wxEVT_COMMAND_BUTTON_CLICKED, wxID_CANCEL };
+
+      OnCancel(cancelEvt);
+   }
 }
 
 bool EffectUIHost::IsOpenedFromEffectPanel() const

@@ -59,8 +59,6 @@ private:
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
-   bool SetRateAndChannels(double sampleRate);
-
    static OSStatus RenderCallback(void *inRefCon,
       AudioUnitRenderActionFlags *inActionFlags,
       const AudioTimeStamp *inTimeStamp,
@@ -84,8 +82,6 @@ private:
 
    const wxString &mIdentifier; // for debug messages only
    const size_t mBlockSize;
-   const unsigned mAudioIns;
-   const unsigned mAudioOuts;
    const bool mUseLatency;
 };
 #endif

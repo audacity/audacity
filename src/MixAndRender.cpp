@@ -97,8 +97,11 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    // EmptyCopy carries over any interesting channel group information
    // But make sure the left is unlinked before we re-link
+   // And reset pan and gain
    auto mixLeft =
       first->EmptyCopy(trackFactory->GetSampleBlockFactory(), false);
+   mixLeft->SetPan(0);
+   mixLeft->SetGain(1);
    mixLeft->SetRate(rate);
    mixLeft->ConvertToSampleFormat(format);
    if (oneinput)

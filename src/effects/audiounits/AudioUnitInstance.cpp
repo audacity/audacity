@@ -26,8 +26,10 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    , AudioUnitWrapper{ component, &parameters }
    , mIdentifier{ identifier }
    , mBlockSize{ InitialBlockSize() }
-   , mAudioIns{ audioIns }, mAudioOuts{ audioOuts }, mUseLatency{ useLatency }
+   , mUseLatency{ useLatency }
 {
+   mAudioIns = audioIns;
+   mAudioOuts = audioOuts;
    CreateAudioUnit();
 }
 
@@ -103,8 +105,24 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
                                // accumulate the number of frames processed so far
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-   if (!SetRateAndChannels(sampleRate))
+   mInitialization.reset();
+   // Redo this with the correct sample rate, not the arbirary 44100 that the
+   // effect used
+   auto ins = mAudioIns;
+   auto outs = mAudioOuts;
+   if (!SetRateAndChannels(sampleRate, mIdentifier))
       return false;
+   if (AudioUnitInitialize(mUnit.get())) {
+      wxLogError("Couldn't initialize audio unit\n");
+      return false;
+   }
+   if (ins != mAudioIns || outs != mAudioOuts) {
+      // A change of channels with changing rate?  This is unexpected!
+      ins = mAudioIns;
+      outs = mAudioOuts;
+      return false;
+   }
+   mInitialization.reset(mUnit.get());
 
    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
       AudioUnitUtils::RenderCallback{ RenderCallback, this },
@@ -173,26 +191,21 @@ bool AudioUnitInstance::RealtimeInitialize(
 bool AudioUnitInstance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
-   auto *slave = this;
-   std::unique_ptr<AudioUnitInstance> uSlave;
-   if (!mRecruited)
+   if (!mRecruited) {
       // Assign self to the first processor
       mRecruited = true;
-   else {
-      // Assign another instance with independent state to other processors
-      uSlave = std::make_unique<AudioUnitInstance>(effect,
-         mComponent, mParameters, mIdentifier,
-         mAudioIns, mAudioOuts, mUseLatency);
-      slave = uSlave.get();
+      return true;
    }
 
-   slave->SetBlockSize(mBlockSize);
-
-   if (!slave->ProcessInitialize(settings, sampleRate, nullptr))
+   // Assign another instance with independent state to other processors
+   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
+   auto uProcessor = std::make_unique<AudioUnitInstance>(effect,
+      mComponent, mParameters, mIdentifier,
+      mAudioIns, mAudioOuts, mUseLatency);
+   uProcessor->SetBlockSize(mBlockSize);
+   if (!uProcessor->ProcessInitialize(settings, sampleRate, nullptr))
       return false;
-   if (uSlave)
-      mSlaves.push_back(move(uSlave));
+   mSlaves.push_back(move(uProcessor));
    return true;
 }
 
@@ -264,75 +277,6 @@ AudioUnitInstance::RealtimeProcess(size_t group, EffectSettings &settings,
 
 bool AudioUnitInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
-   return true;
-}
-
-bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
-{
-   mInitialization.reset();
-   AudioUnitUtils::StreamBasicDescription streamFormat{
-      // Float64 mSampleRate;
-      sampleRate,
-
-      // UInt32  mFormatID;
-      kAudioFormatLinearPCM,
-
-      // UInt32  mFormatFlags;
-      (kAudioFormatFlagsNativeFloatPacked |
-          kAudioFormatFlagIsNonInterleaved),
-
-      // UInt32  mBytesPerPacket;
-      sizeof(float),
-
-      // UInt32  mFramesPerPacket;
-      1,
-
-      // UInt32  mBytesPerFrame;
-      sizeof(float),
-
-      // UInt32  mChannelsPerFrame;
-      0,
-
-      // UInt32  mBitsPerChannel;
-      sizeof(float) * 8,
-   };
-
-   const struct Info{
-      unsigned nChannels;
-      AudioUnitScope scope;
-      const char *const msg; // used only in log messages
-   } infos[]{
-      { 1, kAudioUnitScope_Global, "global" },
-      { mAudioIns, kAudioUnitScope_Input, "input" },
-      { mAudioOuts, kAudioUnitScope_Output, "output" },
-   };
-   for (const auto &[nChannels, scope, msg] : infos) {
-      if (nChannels) {
-         if (SetProperty(kAudioUnitProperty_SampleRate, sampleRate, scope)) {
-            wxLogError("%ls Didn't accept sample rate on %s\n",
-               // Exposing internal name only in logging
-               mIdentifier.wx_str(), msg);
-            return false;
-         }
-         if (scope != kAudioUnitScope_Global) {
-            streamFormat.mChannelsPerFrame = nChannels;
-            if (SetProperty(kAudioUnitProperty_StreamFormat,
-               streamFormat, scope)) {
-               wxLogError("%ls didn't accept stream format on %s\n",
-                  // Exposing internal name only in logging
-                  mIdentifier.wx_str(), msg);
-               return false;
-            }
-         }
-      }
-   }
-
-   if (AudioUnitInitialize(mUnit.get())) {
-      wxLogError("Couldn't initialize audio unit\n");
-      return false;
-   }
-
-   mInitialization.reset(mUnit.get());
    return true;
 }
 

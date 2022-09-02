@@ -170,7 +170,12 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          if (len > 0)
             assert(numAudioIn > 0); // checked above
-         inBuffers.Reinit(numAudioIn, blockSize,
+         inBuffers.Reinit(
+            // TODO fix this hack for making Generator progress work without
+            // assertion violations.  Make a dummy Source class that doesn't
+            // care about the buffers.
+            std::max(1u, numAudioIn),
+            blockSize,
             std::max<size_t>(1, bufferSize / blockSize));
          if (len > 0)
             // post of Reinit later satisfies pre of Source::Acquire()
@@ -241,6 +246,10 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          // Assured above
          assert(len == 0 || inBuffers.Channels() > 0);
+         // TODO fix this hack to make the time remaining of the generator
+         // progress dialog correct
+         if (len == 0 && genLength)
+            len = *genLength;
          SampleTrackSource source{ left, pRight, start, len, pollUser };
          // Assert source is safe to Acquire inBuffers
          assert(source.AcceptsBuffers(inBuffers));

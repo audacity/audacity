@@ -139,7 +139,7 @@ jobs:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Build
       uses: audacity/audacity-actions/build@v1
@@ -198,7 +198,7 @@ jobs:
         arch: ${{ matrix.config.arch }}
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: |
           ${{ env.CONFIGURE_CMAKE_OPTIONS }}
           -DCMAKE_SYSTEM_VERSION=${{ matrix.config.windows_sdk }}
@@ -232,7 +232,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
@@ -266,7 +266,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
@@ -279,7 +279,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: arm64
         image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
@@ -317,7 +317,7 @@ jobs:
           macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
     - name: Install Apple codesigning certificates
       uses: apple-actions/import-codesign-certs@v1
-      if: github.event_name == 'push' && github.repository_owner == 'audacity'
+      if: github.event_name != 'pull_request' && github.repository_owner == 'audacity'
       with:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
