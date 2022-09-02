@@ -512,7 +512,9 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
    if (mpValidator)
       mpValidator->OnClose();
-   
+
+   ProjectHistory::AutoSave::Call(mProject);
+
    Hide();
    Destroy();
    
