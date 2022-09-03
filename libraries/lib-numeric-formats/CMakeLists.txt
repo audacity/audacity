@@ -8,6 +8,8 @@ Per-project choices of numeric formats.
 ]]
 
 set( SOURCES
+   Beats.cpp
+   Beats.h
    NumericConverter.cpp
    NumericConverter.h
    ProjectNumericFormats.cpp
