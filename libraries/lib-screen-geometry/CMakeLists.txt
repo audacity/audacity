@@ -4,6 +4,8 @@ times, or frequencies, or amplitudes.
 ]]#
 
 set( SOURCES
+   Beats.cpp
+   Beats.h
    Decibels.cpp
    Decibels.h
    NumberScale.h

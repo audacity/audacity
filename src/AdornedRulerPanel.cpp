@@ -29,6 +29,7 @@
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "widgets/BasicMenu.h"
+#include "Beats.h"
 #include "CellularPanel.h"
 #include "../images/Cursors.h"
 #include "HitTestResult.h"
@@ -2336,7 +2337,7 @@ void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
    mBeatsAndMeasures = (id == OnBeatsAndMeasuresID);
    if (mBeatsAndMeasures) {
       mRuler.SetFormat(std::make_unique<BeatsFormat>());
-      BeatsFormatData data = { 60.0, 4, 4 };
+      BeatsFormatData data = { BeatsPerMinute.Read(), UpperTimeSignature.Read(), LowerTimeSignature.Read() };
       mRuler.SetFormatData(data);
    }
    else {
