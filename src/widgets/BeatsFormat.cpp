@@ -11,8 +11,8 @@
 #include "BeatsFormat.h"
 
 void BeatsFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, int& mDigits,
-   const std::any& data
+   double units, double& mMajor, double& mMinor, double& mMinorMinor,
+   int& mDigits, const std::any& data
 ) const
 {
    const BeatsFormatData* beatsData = std::any_cast<BeatsFormatData>(&data);
@@ -28,6 +28,8 @@ void BeatsFormat::SetTickSizes(
 
    mMajor = (60 * timeSigUpper) / (bpm * timeSigLower);
    mMinor = 60 / (bpm * timeSigLower);
+   if (timeSigLower < 16)
+      mMinorMinor = 60 / (bpm * 16);
    mDigits = 0;
 }
 

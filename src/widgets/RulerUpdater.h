@@ -96,8 +96,9 @@ protected:
    {
       bool useMajor = true;
 
-      double       mMajor;
-      double       mMinor;
+      double       mMajor = 0;
+      double       mMinor = 0;
+      double       mMinorMinor = 0;
 
       int          mDigits;
 
