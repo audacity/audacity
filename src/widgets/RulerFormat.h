@@ -20,7 +20,8 @@ public:
    virtual ~RulerFormat();
 
    virtual void SetTickSizes(
-      double units, double& mMajor, double& mMinor, int &mDigits
+      double units, double& mMajor, double& mMinor, double &minorMinor,
+      int &mDigits
    ) const = 0;
 
    virtual void SetLabelString(

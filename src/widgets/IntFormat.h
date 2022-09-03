@@ -21,7 +21,8 @@ public:
    ~IntFormat() override;
 
    void SetTickSizes(
-      double units, double& mMajor, double& mMinor, int& mDigits
+      double units, double& mMajor, double& mMinor, double& mMinorMinor,
+      int& mDigits
    ) const override;
 
    void SetLabelString(

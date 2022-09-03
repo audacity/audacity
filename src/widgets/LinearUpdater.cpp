@@ -106,11 +106,15 @@ void LinearUpdater::Update(
 
    int nDroppedMinorLabels = 0;
    // Major and minor ticks
-   for (int jj = 0; jj < 2; ++jj) {
-      const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
-      auto font = jj == 0 ? mFonts.major : mFonts.minor;
+   for (int jj = 0; jj < 3; ++jj) {
+      const double denom = jj == 0 ? tickSizes.mMajor :
+         jj == 1 ? tickSizes.mMinor : tickSizes.mMinorMinor;
+      if (denom == 0) continue;
+      auto font = jj == 0 ? mFonts.major :
+         jj == 1 ? mFonts.minor : mFonts.minorMinor;
       TickOutputs outputs{
-         (jj == 0 ? allOutputs.majorLabels : allOutputs.minorLabels),
+         (jj == 0 ? allOutputs.majorLabels :
+         jj == 1 ? allOutputs.minorLabels : allOutputs.minorMinorLabels),
          allOutputs.bits, allOutputs.box
       };
       int ii = -1, j = 0;
@@ -173,6 +177,10 @@ void LinearUpdater::Update(
       //    mMinorLabels.clear();
       // Nowadays we just drop the labels.
       for (auto& label : allOutputs.minorLabels) {
+         label.text = {};
+         label.units = {};
+      }
+      for (auto& label : allOutputs.minorMinorLabels) {
          label.text = {};
          label.units = {};
       }

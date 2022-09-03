@@ -19,7 +19,8 @@ const TimeFormat &TimeFormat::Instance()
 }
 
 void TimeFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, int& mDigits
+   double units, double& mMajor, double& mMinor, double& mMinorMinor,
+   int& mDigits
 ) const
 {
    if (units > 0.5) {
@@ -98,7 +99,7 @@ void TimeFormat::SetTickSizes(
    // (fractions of a second should be dealt with
    // the same way as for RealFormat)
    RealFormat::LinearInstance().SetTickSizes(
-      units, mMajor, mMinor, mDigits);
+      units, mMajor, mMinor, mMinorMinor, mDigits);
 }
 
 void TimeFormat::SetLabelString(

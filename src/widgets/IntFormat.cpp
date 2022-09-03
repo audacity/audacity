@@ -18,7 +18,8 @@ const IntFormat &::IntFormat::Instance()
 }
 
 void IntFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, int& mDigits
+   double units, double& mMajor, double& mMinor, double& mMinorMinor,
+   int& mDigits
 ) const
 {
    double d;
