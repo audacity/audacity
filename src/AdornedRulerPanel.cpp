@@ -29,6 +29,7 @@
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "widgets/BasicMenu.h"
+#include "Beats.h"
 #include "CellularPanel.h"
 #include "../images/Cursors.h"
 #include "HitTestResult.h"
@@ -2333,7 +2334,9 @@ void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
    wxASSERT(id == OnMinutesAndSecondsID || id == OnBeatsAndMeasuresID);
    mBeatsAndMeasures = (id == OnBeatsAndMeasuresID);
    if (mBeatsAndMeasures) {
-      mBeatsFormat.SetData(60.0, 4, 4);
+      mBeatsFormat.SetData(BeatsPerMinute.Read(),
+         UpperTimeSignature.Read(), LowerTimeSignature.Read());
+      mRuler.Invalidate();
       mRuler.SetFormat(&mBeatsFormat);
    }
    else {
