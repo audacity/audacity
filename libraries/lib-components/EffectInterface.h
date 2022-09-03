@@ -457,19 +457,6 @@ class COMPONENTS_API EffectInstance
 public:
    virtual ~EffectInstance();
 
-   //! Call once to set up state for whole list of tracks to be processed
-   /*!
-    @return success
-    Default implementation does nothing, returns true
-    */
-   virtual bool Init();
-
-   //! Actually do the effect here.
-   /*!
-    @return success
-    */
-   virtual bool Process(EffectSettings &settings) = 0;
-
    virtual size_t GetBlockSize() const = 0;
 
    // Suggest a block size, but the return is the size that was really set:
@@ -580,15 +567,6 @@ public:
    /*! If true (default result), then results require dither if later rendered
     to a narrower sample format */
    virtual bool NeedsDither() const;
-};
-
-/***************************************************************************//**
-\class EffectInstanceEx
-@brief Performs effect computation
-*******************************************************************************/
-class COMPONENTS_API EffectInstanceEx : public virtual EffectInstance {
-public:
-   ~EffectInstanceEx() override;
 
    //! Called at start of destructive processing, for each (mono/stereo) track
    //! Default implementation does nothing, returns true

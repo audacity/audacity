@@ -360,6 +360,10 @@ public:
       bool Process(EffectSettings &settings) override;
       SampleCount GetLatency(
          const EffectSettings &settings, double sampleRate) const override;
+      //! Default implementation fails (returns 0 always)
+      size_t ProcessBlock(EffectSettings &settings,
+         const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
    };
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 };

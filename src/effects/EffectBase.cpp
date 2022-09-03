@@ -179,13 +179,14 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
          settings = pAccess->Get();
    }
 
-   if (!pInstance) {
+   auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(pInstance);
+   if (!pInstanceEx) {
       // Path that skipped the dialog factory -- effect may be non-interactive
       // or this is batch mode processing or repeat of last effect with stored
       // settings.
-      pInstance = MakeInstance();
+      pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
       // Note: Init may read parameters from preferences
-      if (!pInstance || !pInstance->Init())
+      if (!pInstanceEx || !pInstanceEx->Init())
          return false;
    }
 
@@ -206,8 +207,8 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
       );
       auto vr = valueRestorer( mProgress, progress.get() );
 
-      assert(pInstance); // null check above
-      returnVal = pInstance->Process(settings);
+      assert(pInstanceEx); // null check above
+      returnVal = pInstanceEx->Process(settings);
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -378,7 +379,9 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       if (!dryOnly)
          // TODO remove this reinitialization of state within the Effect object
          // It is done indirectly via Effect::Instance
-         if (auto pInstance = MakeInstance())
+         if (auto pInstance =
+            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance())
+         )
             pInstance->Init();
 
       // In case any dialog control depends on mT1 or mDuration:
@@ -471,7 +474,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 
       access.ModifySettings([&](EffectSettings &settings){
          // Preview of non-realtime effect
-         auto pInstance = MakeInstance();
+         auto pInstance =
+            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
          success = pInstance && pInstance->Process(settings);
          return nullptr;
       });

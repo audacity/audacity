@@ -55,6 +55,12 @@ auto StatefulEffect::Instance::GetLatency(const EffectSettings &, double) const
    return GetEffect().GetLatency().as_long_long();
 }
 
+size_t StatefulEffect::Instance::ProcessBlock(EffectSettings &,
+   const float *const *, float *const *, size_t)
+{
+   return 0;
+}
+
 Effect::Effect()
 {
 }

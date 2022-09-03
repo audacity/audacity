@@ -101,7 +101,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
       return false;
 
    // Instances that can be reused in each loop pass
-   std::vector<std::shared_ptr<EffectInstanceEx>> recycledInstances{
+   std::vector<std::shared_ptr<EffectInstance>> recycledInstances{
       // First one is the given one; any others pushed onto here are
       // discarded when we exit
       std::dynamic_pointer_cast<EffectInstanceEx>(instance.shared_from_this())
@@ -267,8 +267,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             if (index < recycledInstances.size())
                return recycledInstances[index];
             else
-               return recycledInstances.emplace_back(
-                  std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance()));
+               return recycledInstances.emplace_back(MakeInstance());
          };
          bGoodResult = ProcessTrack(multichannel, factory, settings, source, sink,
             genLength, sampleRate, left,

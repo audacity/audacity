@@ -135,4 +135,25 @@ public:
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
 };
 
+/***************************************************************************//**
+\class EffectInstanceEx
+@brief Performs effect computation
+*******************************************************************************/
+class AUDACITY_DLL_API EffectInstanceEx : public virtual EffectInstance {
+public:
+   //! Call once to set up state for whole list of tracks to be processed
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool Init();
+
+   //! Actually do the effect here.
+   /*!
+    @return success
+    */
+   virtual bool Process(EffectSettings &settings) = 0;
+
+   ~EffectInstanceEx() override;
+};
 #endif

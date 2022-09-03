@@ -29,7 +29,7 @@ class AUDIO_GRAPH_API EffectStage final : public Source {
    // To force usage of Create() instead
    struct CreateToken {};
 public:
-   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
+   using Factory = std::function<std::shared_ptr<EffectInstance>()>;
 
    //! Don't call directly but use Create()
    /*!
@@ -79,7 +79,7 @@ private:
     @pre curBlockSize <= mInBuffers.Remaining()
     @return success
     */
-   bool Process(EffectInstanceEx &instance, size_t channel,
+   bool Process(EffectInstance &instance, size_t channel,
       const Buffers &data, size_t curBlockSize, size_t outBufferOffset) const;
 
    [[nodiscard]] std::optional<size_t> FetchProcessAndAdvance(
@@ -88,7 +88,7 @@ private:
    Source &mUpstream;
    //! @invariant mInBuffers.BlockSize() <= mInBuffers.Remaining()
    Buffers &mInBuffers;
-   const std::vector<std::shared_ptr<EffectInstanceEx>> mInstances;
+   const std::vector<std::shared_ptr<EffectInstance>> mInstances;
    EffectSettings &mSettings;
    const double mSampleRate;
    const bool mIsProcessor;

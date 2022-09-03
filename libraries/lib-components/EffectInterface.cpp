@@ -131,11 +131,6 @@ bool EffectSettingsManager::CopySettingsContents(
 
 EffectInstance::~EffectInstance() = default;
 
-bool EffectInstance::Init()
-{
-   return true;
-}
-
 bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
@@ -203,8 +198,6 @@ bool EffectInstance::NeedsDither() const
 {
    return true;
 }
-
-EffectInstanceEx::~EffectInstanceEx() = default;
 
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
 

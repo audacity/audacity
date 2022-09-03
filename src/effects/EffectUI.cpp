@@ -1157,7 +1157,9 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
    }
    else {
       result = mEffectUIHost.MakeInstance();
-      if (result && !result->Init())
+      if (auto pInstanceEx =
+         std::dynamic_pointer_cast<EffectInstanceEx>(result)
+         ; pInstanceEx && !pInstanceEx->Init())
          result.reset();
    }
 
