@@ -56,7 +56,7 @@ RulerUpdater::TickSizes::TickSizes(
 
       mDigits = 0;
 
-      format->SetTickSizes(units, mMajor, mMinor, mDigits, data);
+      format->SetTickSizes(units, mMajor, mMinor, mMinorMinor, mDigits, data);
    }
 
 TranslatableString RulerUpdater::TickSizes::LabelString(

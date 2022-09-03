@@ -21,8 +21,8 @@ public:
    virtual ~RulerFormat() = 0;
 
    virtual void SetTickSizes(
-      double units, double& mMajor, double& mMinor, int &mDigits,
-      const std::any& data
+      double units, double& mMajor, double& mMinor, double &minorMinor,
+      int &mDigits, const std::any& data
    ) const = 0;
 
    virtual void SetLabelString(

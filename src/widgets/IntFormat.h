@@ -20,8 +20,8 @@ public:
    ~IntFormat() override;
 
    void SetTickSizes(
-      double units, double& mMajor, double& mMinor, int& mDigits,
-      const std::any& data
+      double units, double& mMajor, double& mMinor, double& mMinorMinor,
+      int& mDigits, const std::any& data
    ) const override;
 
    void SetLabelString(

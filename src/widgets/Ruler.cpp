@@ -530,14 +530,13 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    if( mbMinor ) {
       dc.SetFont( mRulerStruct.mpFonts->minor );
       for( const auto &label : cache.mMinorLabels )
-         drawLabel( label, 2 );
+         drawLabel( label, 3 );
    }
 
    dc.SetFont( mRulerStruct.mpFonts->minorMinor );
 
    for( const auto &label : cache.mMinorMinorLabels )
-      if ( !label.text.empty() )
-         drawLabel( label, 2 );
+      drawLabel( label, 1 );
 }
 
 // ********** Draw grid ***************************
