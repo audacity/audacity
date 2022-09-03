@@ -18,6 +18,7 @@
 #include "RulerFormat.h" // member variable
 
 #include <wx/font.h>
+#include <optional>
 
 class wxDC;
 class wxColor;
@@ -61,7 +62,11 @@ public:
       double value;
       int pos;
       int lx, ly;
-      TranslatableString text;
+
+      // Minorminor tick draws only when optional is nonempty
+      // Major or minor tick draws regardless
+      std::optional<TranslatableString> text;
+
       TranslatableString units;
 
       void Draw(wxDC& dc, bool twoTone, wxColour c,

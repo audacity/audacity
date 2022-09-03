@@ -539,7 +539,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    dc.SetFont( mRulerStruct.mpFonts->minorMinor );
 
    for( const auto &label : cache.mMinorMinorLabels )
-      if ( !label.text.empty() )
+      if ( label.text )
          drawLabel( label, mTickLengths.minorMinorLength );
 }
 

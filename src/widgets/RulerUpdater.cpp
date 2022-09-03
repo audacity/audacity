@@ -84,7 +84,7 @@ void RulerUpdater::Label::Draw(
    wxDC& dc, bool twoTone, wxColour c,
    std::unique_ptr<RulerStruct::Fonts>& fonts) const
 {
-   if (!text.empty()) {
+   if (text.has_value() && !text->empty()) {
       bool altColor = twoTone && value < 0.0;
 
 #ifdef EXPERIMENTAL_THEMING
@@ -95,15 +95,15 @@ void RulerUpdater::Label::Draw(
       dc.SetBackgroundMode(wxTRANSPARENT);
       if (dc.GetFont() == fonts->major) {
          // Do not draw units as bolded
-         dc.DrawText(text.Translation(), lx, ly);
-         wxSize textSize = dc.GetTextExtent(text.Translation());
+         dc.DrawText(text->Translation(), lx, ly);
+         wxSize textSize = dc.GetTextExtent(text->Translation());
          dc.SetFont(fonts->minor);
          int unitX = lx + textSize.GetWidth();
          dc.DrawText(units.Translation(), unitX, ly);
          dc.SetFont(fonts->major);
       }
       else {
-         auto str = text + units;
+         auto str = *text + units;
          dc.DrawText(str.Translation(), lx, ly);
       }
    }
@@ -128,7 +128,7 @@ auto RulerUpdater::MakeTick(
    wxCoord strW, strH, strD, strL;
    auto strText = lab.text;
    auto strUnits = lab.units;
-   auto str = strText + strUnits;
+   auto str = (strText ? *strText : TranslatableString{}) + strUnits;
    // Do not put the text into results until we are sure it does not overlap
    lab.text = {};
    lab.units = {};

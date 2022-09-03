@@ -80,13 +80,17 @@ bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    lab.text = outputs.labels[labelIdx].text;
    lab.units = mUnits;
 
-   const auto result = MakeTick(
+   auto result = MakeTick(
       lab,
       dc, font,
       outputs.bits,
       mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
       mOrientation);
+
+   if (!result.second.text)
+      // Always a non-empty optional
+      result.second.text = { TranslatableString{} };
 
    auto& rect = result.first;
    outputs.box.Union(rect);
