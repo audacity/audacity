@@ -209,7 +209,7 @@ public:
    Settings();
    ~Settings() {}
 
-   int PromptUser(EffectContext &context,
+   int PromptUser(const std::shared_ptr<EffectContext> &pContext,
       EffectNoiseReduction *effect, EffectSettingsAccess &access,
       wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
@@ -345,7 +345,7 @@ class EffectNoiseReduction::Dialog final : public EffectDialog
 {
 public:
    // constructors and destructors
-   Dialog(EffectContext &context,
+   Dialog(const std::shared_ptr<EffectContext> &pContext,
       EffectNoiseReduction *effect, EffectSettingsAccess &access,
       Settings *settings,
       wxWindow *parent, bool bHasProfile,
@@ -381,7 +381,7 @@ private:
 
    // data members
 
-   EffectContext &mContext;
+   const std::shared_ptr<EffectContext> mpContext;
    EffectNoiseReduction *m_pEffect;
    //! This dialog is modal, so mAccess will live long enough for it
    EffectSettingsAccess &mAccess;
@@ -443,7 +443,8 @@ EffectType EffectNoiseReduction::GetType() const
  its unusual two-pass nature.  First choose and analyze an example of noise,
  then apply noise reduction to another selection.  That is difficult to fit into
  the framework for managing settings of other effects. */
-int EffectNoiseReduction::ShowHostInterface(EffectContext &context,
+int EffectNoiseReduction::ShowHostInterface(
+   const std::shared_ptr<EffectContext> &pContext,
    EffectPlugin &, wxWindow &parent, const EffectDialogFactory &,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
@@ -457,17 +458,19 @@ int EffectNoiseReduction::ShowHostInterface(EffectContext &context,
 
    // We may want to twiddle the levels if we are setting
    // from a macro editing dialog
-   return mSettings->PromptUser(context, this, access, parent,
+   return mSettings->PromptUser(pContext, this, access, parent,
       bool(mStatistics), IsBatchProcessing());
 }
 
-int EffectNoiseReduction::Settings::PromptUser(EffectContext &context,
+int EffectNoiseReduction::Settings::PromptUser(
+   const std::shared_ptr<EffectContext> &pContext,
    EffectNoiseReduction *effect,
    EffectSettingsAccess &access, wxWindow &parent,
    bool bHasProfile, bool bAllowTwiddleSettings)
 {
-   // Dialog shows modally, so don't worry about dangling reference to context
-   EffectNoiseReduction::Dialog dlog(context, effect, access,
+   // Dialog shows modally, so shared pointer to context isn't needed to
+   // avoid a dangling pointer, but we use one anyway
+   EffectNoiseReduction::Dialog dlog(pContext, effect, access,
       this, &parent, bHasProfile, bAllowTwiddleSettings);
 
    dlog.CentreOnParent();
@@ -1352,13 +1355,14 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialogWrapper)
 #endif
 END_EVENT_TABLE()
 
-EffectNoiseReduction::Dialog::Dialog(EffectContext &context,
+EffectNoiseReduction::Dialog::Dialog(
+   const std::shared_ptr<EffectContext> &pContext,
    EffectNoiseReduction *effect,
    EffectSettingsAccess &access,
    EffectNoiseReduction::Settings *settings,
    wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings
 )  : EffectDialog( parent, XO("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
-   , mContext{ context }
+   , mpContext{ pContext }
    , m_pEffect(effect)
    , mAccess{access}
    , m_pSettings(settings) // point to
@@ -1488,7 +1492,7 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
-   m_pEffect->Preview(mContext, mAccess,
+   m_pEffect->Preview(*mpContext, mAccess,
       // Don't need any UI updates for preview
       {},
       false);

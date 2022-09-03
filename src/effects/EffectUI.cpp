@@ -226,7 +226,8 @@ bool EffectSettingsAccessTee::IsSameAs(
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
-   AudacityProject &project, EffectPlugin &effect,
+   AudacityProject &project, const std::shared_ptr<EffectContext> &pContext,
+   EffectPlugin &effect,
    EffectUIServices &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
@@ -241,6 +242,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mpAccess{ mpGivenAccess }
 , mwState{ pPriorState }
 , mProject{ project }
+, mpContext{ pContext }
 , mParent{ parent }
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
 , mHadPriorState{ (pPriorState != nullptr) }
@@ -600,11 +602,10 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    mApplyBtn->Disable();
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
-   CommandContext context( project );
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   EffectUI::DoEffect(GetID(mEffectUIHost), context,
+   EffectUI::DoEffect(project, mpContext, GetID(mEffectUIHost),
       EffectManager::kConfigured);
 }
 
@@ -765,8 +766,9 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          return;
       
       auto updater = [this]{ TransferDataToWindow(); };
-      // EffectContext construction
-      EffectContext eContext{};
+      // Copy the context; any side-effects to it by the effect are not kept
+      // EffectContext construction by copy
+      EffectContext eContext{ *mpContext };
       mEffectUIHost.Preview(eContext, *mpAccess, updater, false);
       // After restoration of settings and effect state:
       // In case any dialog control depends on mT1 or mDuration:
@@ -1215,6 +1217,7 @@ void EffectUIHost::StopPlayback()
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
+   const std::shared_ptr<EffectContext> &pContext,
    EffectPlugin &host, EffectUIServices &client,
    EffectSettingsAccess &access)
 {
@@ -1226,7 +1229,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       return {};
    std::shared_ptr<EffectInstance> pInstance;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
-      *project, host, client, pInstance, access } };
+      *project, pContext, host, client, pInstance, access } };
    if (!pInstance) {
       dlg->SetClosed();
       return {};
@@ -1253,10 +1256,10 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 //  parameters, whether to save the state to history and whether to allow
 /// 'Repeat Last Effect'.
 
-/* static */ bool EffectUI::DoEffect(
-   const PluginID & ID, const CommandContext &context, unsigned flags )
+/* static */ bool EffectUI::DoEffect(AudacityProject &project,
+   const std::shared_ptr<EffectContext> &pContext,
+   const PluginID & ID, unsigned flags )
 {
-   AudacityProject &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
@@ -1324,12 +1327,10 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    success = false;
    if (auto effect = dynamic_cast<Effect*>(em.GetEffect(ID))) {
       if (const auto pSettings = em.GetDefaultSettings(ID)) {
-         // EffectContext construction
-         EffectContext eContext{};
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
          const auto finder =
-         [&eContext, effect, &window, pAccess, flags] (EffectSettings &settings)
+         [pContext, effect, &window, pAccess, flags] (EffectSettings &settings)
             -> std::optional<std::shared_ptr<EffectInstanceEx>>
          {
             // Prompting will be bypassed when applying an effect that has
@@ -1340,7 +1341,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
             if ((flags & EffectManager::kConfigured) == 0 && pAccess) {
                const auto pServices = dynamic_cast<EffectUIServices *>(effect);
                if (!pServices ||
-                   !pServices->ShowHostInterface(eContext, *effect,
+                   !pServices->ShowHostInterface(pContext, *effect,
                   window, DialogFactory, pInstance, *pAccess, true)
                )
                   return {};
@@ -1355,7 +1356,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
             return { pInstanceEx };
          };
          pAccess->ModifySettings([&](EffectSettings &settings){
-            success = effect->DoEffect(eContext, settings, finder,
+            success = effect->DoEffect(*pContext, settings, finder,
                rate,
                &tracks,
                &trackFactory,

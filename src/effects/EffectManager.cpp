@@ -331,7 +331,7 @@ bool EffectManager::PromptUser(
    const PluginID & ID, const EffectDialogFactory &factory, wxWindow &parent)
 {
    // EffectContext construction
-   EffectContext eContext{};
+   auto pContext = std::make_shared<EffectContext>();
    bool result = false;
    if (auto effect = dynamic_cast<Effect*>(GetEffect(ID))) {
 
@@ -351,7 +351,7 @@ bool EffectManager::PromptUser(
       //! for instance to define a macro.
       if (const auto pSettings = GetDefaultSettings(ID)) {
          const auto pServices = dynamic_cast<EffectUIServices *>(effect);
-         result = pServices && pServices->ShowHostInterface(eContext, *effect,
+         result = pServices && pServices->ShowHostInterface(pContext, *effect,
             parent, factory, pInstance,
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;

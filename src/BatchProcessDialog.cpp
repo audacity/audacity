@@ -1404,23 +1404,23 @@ void OnRepeatLastTool(const CommandContext& context)
 {
    auto& menuManager = MenuManager::Get(context.project);
    switch (menuManager.mLastToolRegistration) {
-     case MenuCreator::repeattypeplugin:
-     {
-        auto lastEffect = menuManager.mLastTool;
-        if (!lastEffect.empty())
-        {
-           EffectUI::DoEffect(
-              lastEffect, context, menuManager.mRepeatToolFlags);
-        }
-     }
-       break;
-     case MenuCreator::repeattypeunique:
-        CommandManager::Get(context.project).DoRepeatProcess(context,
-           menuManager.mLastToolRegisteredId);
-        break;
-     case MenuCreator::repeattypeapplymacro:
-        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
-        break;
+   case MenuCreator::repeattypeplugin: {
+      auto lastEffect = menuManager.mLastTool;
+      if (!lastEffect.empty()) {
+         // EffectContext construction
+         auto pContext = std::make_shared<EffectContext>();
+         EffectUI::DoEffect(context.project, pContext, lastEffect,
+            menuManager.mRepeatToolFlags);
+      }
+   }
+   break;
+   case MenuCreator::repeattypeunique:
+      CommandManager::Get(context.project)
+         .DoRepeatProcess(context, menuManager.mLastToolRegisteredId);
+      break;
+   case MenuCreator::repeattypeapplymacro:
+      OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
+      break;
    }
 }
 

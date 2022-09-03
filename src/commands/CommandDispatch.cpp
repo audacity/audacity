@@ -41,10 +41,13 @@ bool CommandDispatch::HandleTextualCommand( CommandManager &commandManager,
    // instead we only try the effects.
    EffectManager & em = EffectManager::Get();
    for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
-      if (em.GetCommandIdentifier(plug.GetID()) == Str)
-         return EffectUI::DoEffect(
-            plug.GetID(), context,
+      if (em.GetCommandIdentifier(plug.GetID()) == Str) {
+         // EffectContext construction
+         auto pContext = std::make_shared<EffectContext>();
+         return EffectUI::DoEffect(context.project, pContext,
+            plug.GetID(),
             EffectManager::kConfigured);
+      }
 
    return false;
 }

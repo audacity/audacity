@@ -1346,7 +1346,9 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      EffectUI::DoEffect(ID, CommandContext(*p), 0);
+      // EffectContext construction
+      auto pContext = std::make_shared<EffectContext>();
+      EffectUI::DoEffect(*p, pContext, ID, 0);
 
       mRunning = false;
       UpdateWindowUI();

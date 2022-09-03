@@ -13,7 +13,8 @@
 
 EffectUIServices::~EffectUIServices() = default;
 
-int EffectUIServices::ShowHostInterface(EffectContext &,
+int EffectUIServices::ShowHostInterface(
+   const std::shared_ptr<EffectContext> &pContext,
    EffectPlugin &plugin, wxWindow &parent, const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
@@ -23,7 +24,7 @@ int EffectUIServices::ShowHostInterface(EffectContext &,
       return wxID_APPLY;
 
    // Create the dialog
-   auto results = factory(parent, plugin, *this, access);
+   auto results = factory(parent, pContext, plugin, *this, access);
    auto pDialog = results.pDialog;
    pInstance = results.pInstance;
    if (!pDialog)

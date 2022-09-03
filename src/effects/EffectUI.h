@@ -50,7 +50,8 @@ public:
     @param[out] pInstance may construct
     (and then must call Init() with success), or leave null for failure
     */
-   EffectUIHost(wxWindow *parent, AudacityProject &project,
+   EffectUIHost(wxWindow *parent,
+      AudacityProject &project, const std::shared_ptr<EffectContext> &pContext,
       EffectPlugin &effect, EffectUIServices &client,
       std::shared_ptr<EffectInstance> &pInstance,
       EffectSettingsAccess &access,
@@ -117,6 +118,7 @@ private:
    Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 
    AudacityProject &mProject;
+   const std::shared_ptr<EffectContext> &mpContext;
    wxWindow *const mParent;
    EffectPlugin &mEffectUIHost;
    EffectUIServices &mClient;
@@ -173,16 +175,18 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   DialogFactoryResults DialogFactory(wxWindow &parent, EffectPlugin &host,
+   DialogFactoryResults DialogFactory(wxWindow &parent,
+      const std::shared_ptr<EffectContext> &pContext,
+      EffectPlugin &host,
       EffectUIServices &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
-   AUDACITY_DLL_API bool DoEffect(
-      const PluginID & ID, const CommandContext &context, unsigned flags );
-
+   AUDACITY_DLL_API bool DoEffect(AudacityProject &project,
+      const std::shared_ptr<EffectContext> &pContext,
+      const PluginID & ID, unsigned flags );
 }
 
 class ShuttleGui;

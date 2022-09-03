@@ -38,7 +38,8 @@ struct DialogFactoryResults {
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
 using EffectDialogFactory = std::function< DialogFactoryResults(
-   wxWindow &parent, EffectPlugin &, EffectUIServices &,
+   wxWindow &parent, const std::shared_ptr<EffectContext> &,
+   EffectPlugin &, EffectUIServices &,
    EffectSettingsAccess &) >;
 
 //! Abstract base class to populate a UI and validate UI values.
@@ -72,7 +73,8 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowHostInterface(EffectContext &context, EffectPlugin &plugin,
+   virtual int ShowHostInterface(const std::shared_ptr<EffectContext> &pContext,
+      EffectPlugin &plugin,
       wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false);

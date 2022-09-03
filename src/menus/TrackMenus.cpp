@@ -611,9 +611,10 @@ namespace {
 
 void OnStereoToMono(const CommandContext &context)
 {
-   EffectUI::DoEffect(
+   // EffectContext construction
+   auto pContext = std::make_shared<EffectContext>();
+   EffectUI::DoEffect(context.project, pContext,
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-      context,
       EffectManager::kConfigured);
 }
 

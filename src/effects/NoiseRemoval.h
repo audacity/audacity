@@ -53,8 +53,8 @@ public:
 
    // Effect implementation
 
-   int ShowHostInterface(EffectContext &context, EffectPlugin &plugin,
-      wxWindow &parent, const EffectDialogFactory &factory,
+   int ShowHostInterface(const std::shared_ptr<EffectContext> &pContext,
+      EffectPlugin &plugin, wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
    bool Init() override;

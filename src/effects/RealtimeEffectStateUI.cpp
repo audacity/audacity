@@ -78,8 +78,11 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
    auto access = mRealtimeEffectState.GetAccess();
 
    // EffectUIHost invokes shared_from_this on access
+   // EffectContext construction
+   auto pContext = std::make_shared<EffectContext>();
    Destroy_ptr<EffectUIHost> dlg(safenew EffectUIHost(
-      &projectWindow, project, *effectPlugin, *client, pInstance, *access,
+      &projectWindow, project, pContext,
+      *effectPlugin, *client, pInstance, *access,
       mRealtimeEffectState.shared_from_this()));
 
    if (!dlg->Initialize())

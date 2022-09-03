@@ -526,13 +526,15 @@ bool MacroCommands::ApplyEffectCommand(
             EffectManager::kConfigured |
             EffectManager::kSkipState |
             EffectManager::kDontRepeatLast);
-      else
+      else {
          // and apply the effect...
-         res = EffectUI::DoEffect(ID,
-            Context,
+         // EffectContext construction
+         auto pContext = std::make_shared<EffectContext>();
+         res = EffectUI::DoEffect(Context.project, pContext, ID,
             EffectManager::kConfigured |
             EffectManager::kSkipState |
             EffectManager::kDontRepeatLast);
+      }
    }
 
    return res;
