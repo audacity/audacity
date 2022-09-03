@@ -409,7 +409,6 @@ namespace{ BuiltinEffectsModule::Registration< EffectNoiseReduction > reg; }
 EffectNoiseReduction::EffectNoiseReduction()
 : mSettings(std::make_unique<EffectNoiseReduction::Settings>())
 {
-   Init();
 }
 
 EffectNoiseReduction::~EffectNoiseReduction()
@@ -448,8 +447,6 @@ int EffectNoiseReduction::ShowHostInterface(
 {
    // Assign the out parameter
    pInstance = MakeInstance();
-   if (pInstance && !pInstance->Init())
-      pInstance.reset();
 
    // to do: use forceModal correctly
 

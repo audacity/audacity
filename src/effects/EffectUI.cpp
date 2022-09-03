@@ -1123,11 +1123,8 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
             AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
       if (mpState) {
          // Find the right instance to connect to the dialog
-         if (!result) {
+         if (!result)
             result = mpState->GetInstance();
-            if (result && !result->Init())
-               result.reset();
-         }
 
          mpAccess2 = mpState->GetAccess();
          if (!(mpAccess2->IsSameAs(*mpAccess)))

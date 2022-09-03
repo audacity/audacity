@@ -46,11 +46,6 @@ size_t VST3Instance::GetTailSize() const
    return Instance::GetTailSize();
 }
 
-bool VST3Instance::Init()
-{
-   return Instance::Init();
-}
-
 bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings,
    EffectOutputs *, unsigned, float sampleRate)
 {
