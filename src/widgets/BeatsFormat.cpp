@@ -20,10 +20,13 @@ void BeatsFormat::SetTickSizes(
    // Also check that the lower time signature is valid (power of 2)
    wxASSERT(!(mTimeSigLower & (mTimeSigLower - 1)));
 
-   mMajor = (60 * mTimeSigUpper) / (mBpm * mTimeSigLower);
-   mMinor = 60 / (mBpm * mTimeSigLower);
-   if (mTimeSigLower < 16)
-      mMinorMinor = 60 / (mBpm * 16);
+   int factor = std::ceil(units);
+   mMajor = (60 * mTimeSigUpper * factor) / (mBpm * mTimeSigLower);
+
+   if (units < 1)
+      mMinor = (60) / (mBpm * mTimeSigLower);
+   if (units < .5 && mTimeSigLower < 16)
+      mMinorMinor = (60) / (mBpm * 16);
    mDigits = 0;
 }
 
