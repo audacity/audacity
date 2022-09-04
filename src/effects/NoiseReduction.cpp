@@ -460,7 +460,7 @@ int EffectNoiseReduction::ShowHostInterface(
    // We may want to twiddle the levels if we are setting
    // from a macro editing dialog
    return mSettings->PromptUser(this, access, parent,
-      bool(mStatistics), forceModal);
+      bool(mStatistics), IsBatchProcessing());
 }
 
 int EffectNoiseReduction::Settings::PromptUser(EffectNoiseReduction *effect,
