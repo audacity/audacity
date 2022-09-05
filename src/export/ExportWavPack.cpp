@@ -95,15 +95,15 @@ const std::vector< int > ExportQualityValues{
    3,
 };
 
-namespace {
-
-const TranslatableStrings ExportBitDepthNames{
-   XO("16 bit") ,
-   XO("24 bit") ,
-   XO("32 bit float ") ,
+namespace
+{
+const TranslatableStrings ExportBitDepthNames {
+   XO("16 bit"),
+   XO("24 bit"),
+   XO("32 bit float "),
 };
 
-const std::vector< int > ExportBitDepthValues{
+const std::vector<int> ExportBitDepthValues {
    16,
    24,
    32,
@@ -494,3 +494,35 @@ void ExportWavPack::OptionsCreate(ShuttleGui &S, int format)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "WavPack",
    []{ return std::make_unique< ExportWavPack >(); }
 };
+
+#ifdef HAS_CLOUD_UPLOAD
+#include "CloudExporterPlugin.h"
+#include "CloudExportersRegistry.h"
+
+class WavPackCloudHelper : public cloud::CloudExporterPlugin
+{
+public:
+   wxString GetExporterID() const override
+   {
+      return "WavPack";
+   }
+
+   FileExtension GetFileExtension() const override
+   {
+      return "wv";
+   }
+
+   void OnBeforeExport() override
+   {
+      QualitySetting.Write(2);
+      BitrateSetting.Write(40);
+      BitDepthSetting.Write(24);
+      HybridModeSetting.Write(false);
+   }
+
+}; // WavPackCloudHelper
+
+static bool cloudExporterRegisterd = cloud::RegisterCloudExporter(
+   "audio/x-wavpack",
+   [](const AudacityProject&) { return std::make_unique<WavPackCloudHelper>(); });
+#endif

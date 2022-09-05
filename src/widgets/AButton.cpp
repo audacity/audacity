@@ -227,6 +227,7 @@ void AButton::SetButtonType(Type type)
    if(mType != type)
    {
       mType = type;
+      InvalidateBestSize();
       Refresh(false);
       PostSizeEventToParent();
    }
@@ -266,6 +267,8 @@ void AButton::SetToolTip( const TranslatableString &toolTip )
 void AButton::SetLabel( const TranslatableString &toolTip )
 {
    wxWindow::SetLabel( toolTip.Stripped().Translation() );
+   if(mType == FrameButton)
+      InvalidateBestSize();
 }
 
 // This compensates for a but in wxWidgets 3.0.2 for mac:
@@ -296,6 +299,12 @@ void AButton::SetAlternateImages(unsigned idx,
    mImages[idx][AButtonDown] = down;
    mImages[idx][AButtonOverDown] = overDown;
    mImages[idx][AButtonDis] = dis;
+}
+
+void AButton::SetIcon(const wxImage& icon)
+{
+   mIcon = icon;
+   Refresh(false);
 }
 
 void AButton::SetAlternateIdx(unsigned idx)
@@ -367,11 +376,46 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetBrush(GetBackgroundColour());
    dc.Clear();
 
+   const auto buttonRect = GetClientRect();
    if(HasAlternateImages(mAlternateIdx))
    {
       AButtonState buttonState = GetState();
       if(mType == ImageButton)
-         dc.DrawBitmap(mImages[mAlternateIdx][buttonState], GetClientRect().GetTopLeft());
+         dc.DrawBitmap(mImages[mAlternateIdx][buttonState], buttonRect.GetTopLeft());
+      else if(mType == FrameButton)
+      {
+         wxBitmap bitmap = mImages[mAlternateIdx][buttonState];
+         AColor::DrawFrame(dc, buttonRect, bitmap);
+
+         const auto border = bitmap.GetSize() / 4;
+
+         if(!GetLabel().IsEmpty())
+         {
+            dc.SetFont(GetFont());
+            auto textRect = buttonRect;
+            if(mIcon.IsOk())
+            {
+               auto fontMetrics = dc.GetFontMetrics();
+               auto sumHeight = fontMetrics.height + mIcon.GetHeight() + border.y;
+               dc.DrawBitmap(mIcon,
+                  buttonRect.x + (buttonRect.width - mIcon.GetWidth()) / 2,
+                  buttonRect.y + (buttonRect.height - sumHeight) / 2);
+               textRect = wxRect(
+                     buttonRect.x,
+                     buttonRect.y + buttonRect.height / 2 + sumHeight / 2 - fontMetrics.height,
+                     buttonRect.width,
+                     fontMetrics.height);
+            }
+            dc.SetPen(GetForegroundColour());
+            dc.DrawLabel(GetLabel(), textRect, wxALIGN_CENTER);
+         }
+         else if(mIcon.IsOk())
+         {
+            dc.DrawBitmap(mIcon,
+               buttonRect.x + (buttonRect.width - mIcon.GetWidth() / 2),
+                  buttonRect.y + (buttonRect.height - mIcon.GetHeight() / 2));
+         }
+      }
       else
       {
          wxBitmap bitmap = mImages[mAlternateIdx][buttonState];
@@ -639,9 +683,36 @@ wxSize AButton::DoGetBestClientSize() const
    if(HasAlternateImages(mAlternateIdx))
    {
       const auto& image = mImages[mAlternateIdx][AButtonUp];
-      if(mType == ImageButton)
+      switch(mType)
+      {
+      case FrameButton:
+         {
+            const auto border = image.GetSize() / 4;
+            wxSize bestSize { -1 , -1 };
+            if(!GetLabel().IsEmpty())
+            {
+               wxMemoryDC dc;
+               dc.SetFont(GetFont());
+               bestSize = dc.GetTextExtent(GetLabel());
+            }
+            if(mIcon.IsOk())
+            {
+               bestSize.x = std::max(bestSize.x, mIcon.GetWidth());
+               bestSize.y = bestSize.y > 0
+                  ? bestSize.y + border.y + mIcon.GetHeight()
+                  : mIcon.GetHeight();
+            }
+            if(bestSize.x > 0)
+               bestSize.x += border.x * 2;
+            if(bestSize.y > 0)
+               bestSize.y += border.y * 2;
+            return bestSize;
+         }
+      case TextButton:
+         return {-1, image.GetHeight() };
+      default:
          return image.GetSize();
-      return {-1, image.GetHeight() };
+      }
    }
    return wxWindow::DoGetBestClientSize();
 }

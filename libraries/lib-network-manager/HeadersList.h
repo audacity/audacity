@@ -20,6 +20,34 @@ namespace audacity
 namespace network_manager
 {
 
+namespace common_headers
+{
+extern NETWORK_MANAGER_API const std::string Accept;
+extern NETWORK_MANAGER_API const std::string AcceptEncoding;
+extern NETWORK_MANAGER_API const std::string AcceptLanguage;
+extern NETWORK_MANAGER_API const std::string Authorization;
+extern NETWORK_MANAGER_API const std::string CacheControl;
+extern NETWORK_MANAGER_API const std::string Connection;
+extern NETWORK_MANAGER_API const std::string ContentLength;
+extern NETWORK_MANAGER_API const std::string ContentType;
+extern NETWORK_MANAGER_API const std::string ContentDisposition;
+extern NETWORK_MANAGER_API const std::string Cookie;
+extern NETWORK_MANAGER_API const std::string Host;
+extern NETWORK_MANAGER_API const std::string Origin;
+extern NETWORK_MANAGER_API const std::string Referer;
+extern NETWORK_MANAGER_API const std::string UserAgent;
+extern NETWORK_MANAGER_API const std::string IfNoneMatch;
+extern NETWORK_MANAGER_API const std::string IfModifiedSince;
+} // namespace common_headers
+
+namespace common_content_types
+{
+extern NETWORK_MANAGER_API const std::string ApplicationJson;
+extern NETWORK_MANAGER_API const std::string ApplicationXml;
+extern NETWORK_MANAGER_API const std::string ApplicationXWwwFormUrlencoded;
+extern NETWORK_MANAGER_API const std::string ApplicationXOctetStream;
+extern NETWORK_MANAGER_API const std::string ApplicationXGzip;
+} // namespace common_content_types
 struct NETWORK_MANAGER_API Header final
 {
     std::string Name;

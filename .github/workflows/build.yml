@@ -100,7 +100,10 @@ env:
   BUILD_TYPE: ${{ (inputs && inputs.build_type) || (github.event.inputs && github.event.inputs.build_type) || 'RelWithDebInfo' }}
   CONFIGURATION_TYPES: ${{ (inputs && inputs.configuration_types) || (github.event.inputs && github.event.inputs.configuration_types) || 'RelWithDebInfo' }}
 
-  CONFIGURE_CMAKE_OPTIONS: ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
+  CONFIGURE_CMAKE_OPTIONS: |
+    -Daudacity_has_url_schemes_support=On
+    -Daudacity_has_audiocom_upload=On
+    ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
 
   BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}
 

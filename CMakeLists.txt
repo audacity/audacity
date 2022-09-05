@@ -212,6 +212,14 @@ cmake_dependent_option(
    Off
 )
 
+cmake_dependent_option(
+   ${_OPT}has_audiocom_upload
+   "Enables uploading of Audacity recordings to Audio.com"
+   Off
+   "${_OPT}has_networking"
+   Off
+)
+
 include( AudacityDependencies )
 include( AudacityTesting )
 

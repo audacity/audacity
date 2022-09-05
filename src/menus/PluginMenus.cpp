@@ -1113,10 +1113,9 @@ void AddEffectMenuItemGroup(
          {
             const PluginDescriptor *plug =
                PluginManager::Get().GetPlugin(plugs[i]);
-            wxString item = plug->GetPath();
             if( plug->GetPluginType() == PluginTypeEffect )
-               temp2.push_back( Command( item,
-                  Verbatim( item ),
+               temp2.push_back( Command( plug->GetID(),
+                  Verbatim( plug->GetPath() ),
                   FN(OnEffect),
                   flags[i],
                   CommandManager::Options{}
@@ -1136,11 +1135,7 @@ void AddEffectMenuItemGroup(
             PluginManager::Get().GetPlugin(plugs[i]);
          if( plug->GetPluginType() == PluginTypeEffect )
             pTable->push_back( Command(
-               // Call Debug() not MSGID() so that any concatenated "..." is
-               // included in the identifier, preserving old behavior, and
-               // avoiding the collision of the "Silence" command and the
-               // "Silence..." generator
-               names[i].Debug(), // names[i].MSGID(),
+               plug->GetID(),
                names[i],
                FN(OnEffect),
                flags[i],

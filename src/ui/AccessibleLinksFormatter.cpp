@@ -123,19 +123,23 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
 
             // Add hyperlink
 #ifndef __WXGTK__
-            wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
-               S.GetParent(), wxID_ANY, argument->Value.Translation(),
-               argument->TargetURL);
-
-            if (argument->Handler)
+            const auto value = argument->Value.Translation();
+            // On macOS wx refuses to create wxHyperlinkCtrl with an empty value
+            if (!value.empty())
             {
-               hyperlink->Bind(
-                  wxEVT_HYPERLINK, [handler = argument->Handler](wxHyperlinkEvent& evt) { 
-                    handler(); 
-               });
-            }
+               wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
+                  S.GetParent(), wxID_ANY, argument->Value.Translation(),
+                  argument->TargetURL);
 
-            S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+               if (argument->Handler)
+               {
+                  hyperlink->Bind(
+                     wxEVT_HYPERLINK, [handler = argument->Handler](
+                                         wxHyperlinkEvent& evt) { handler(); });
+               }
+
+               S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+            }
 #else
             wxStaticText* hyperlink = S.AddVariableText(argument->Value);
 

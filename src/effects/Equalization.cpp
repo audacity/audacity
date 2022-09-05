@@ -681,15 +681,6 @@ bool EffectEqualization::CloseUI()
 std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
-   if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
-      access.ModifySettings([&](EffectSettings &settings){
-         LoadUserPreset(CurrentSettingsGroup(), settings);
-      });
-
-   //LoadCurves();
-
-
-
    S.SetBorder(0);
 
    S.SetSizerProportion(1);

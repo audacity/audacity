@@ -4,6 +4,7 @@ A library holding image and color data for the four built-in themes
 
 # Names of the image files (and Colors.txt) expected in each theme
 set( IMAGE_LIST
+   AnonymousUser.png
    AudacityLogo48x48.png
    BandWidthCursor.png
    BottomFrequencyCursor.png
@@ -86,6 +87,7 @@ set( IMAGE_LIST
    Seek.png
    SeekDisabled.png
    Setup.png
+   ShareAudio.png
    Silence.png
    SilenceDisabled.png
    SliderThumb.png

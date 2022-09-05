@@ -68,9 +68,9 @@ const EffectParameterMethods& EffectAmplify::Parameters() const
    // Parameters differ depending on batch mode.  Option to disable clipping
    // is interactive only.
    if (IsBatchProcessing())
-      return parameters;
-   else
       return batchParameters;
+   else
+      return parameters;
 }
 
 //

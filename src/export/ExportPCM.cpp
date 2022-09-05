@@ -1101,3 +1101,31 @@ unsigned ExportPCM::GetMaxChannels(int index)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",
    []{ return std::make_unique< ExportPCM >(); }
 };
+
+#ifdef HAS_CLOUD_UPLOAD
+#   include "CloudExporterPlugin.h"
+#   include "CloudExportersRegistry.h"
+
+class PCMCloudHelper : public cloud::CloudExporterPlugin
+{
+public:
+   wxString GetExporterID() const override
+   {
+      return "WAV";
+   }
+
+   FileExtension GetFileExtension() const override
+   {
+      return "wav";
+   }
+
+   void OnBeforeExport() override
+   {
+   }
+
+}; // WavPackCloudHelper
+
+static bool cloudExporterRegisterd = cloud::RegisterCloudExporter(
+   "audio/x-wav",
+   [](const AudacityProject&) { return std::make_unique<PCMCloudHelper>(); });
+#endif
