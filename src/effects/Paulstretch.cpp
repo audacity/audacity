@@ -128,7 +128,7 @@ EffectType EffectPaulstretch::GetType() const
 
 // Effect implementation
 
-double EffectPaulstretch::CalcPreviewInputLength(
+double EffectPaulstretch::CalcPreviewInputLength(const EffectContext &,
    const EffectSettings &, double previewLength) const
 {
    // FIXME: Preview is currently at the project rate, but should really be

@@ -56,7 +56,7 @@ public:
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    bool Process(EffectContext &context,
       EffectInstance &instance, EffectSettings &settings) override;
-   double CalcPreviewInputLength(
+   double CalcPreviewInputLength(const EffectContext &context,
       const EffectSettings &settings, double previewLength) const override;
    std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,

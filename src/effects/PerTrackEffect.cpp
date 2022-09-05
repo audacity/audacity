@@ -35,9 +35,9 @@ AudioGraph::Sink::~Sink() = default;
 PerTrackEffect::Instance::~Instance() = default;
 
 bool PerTrackEffect::Instance::Process(
-   EffectContext &, EffectSettings &settings)
+   EffectContext &context, EffectSettings &settings)
 {
-   return mProcessor.Process(*this, settings);
+   return mProcessor.Process(context, *this, settings);
 }
 
 bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &,
@@ -63,7 +63,7 @@ bool PerTrackEffect::DoPass2() const
    return false;
 }
 
-bool PerTrackEffect::Process(
+bool PerTrackEffect::Process(EffectContext &context,
    EffectInstance &instance, EffectSettings &settings) const
 {
    auto pThis = const_cast<PerTrackEffect *>(this);
@@ -72,16 +72,17 @@ bool PerTrackEffect::Process(
    // mPass = 1;
    if (DoPass1()) {
       auto &myInstance = dynamic_cast<Instance&>(instance);
-      bGoodResult = pThis->ProcessPass(myInstance, settings);
+      bGoodResult = pThis->ProcessPass(context, myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = pThis->ProcessPass(myInstance, settings);
+         bGoodResult = pThis->ProcessPass(context, myInstance, settings);
    }
    pThis->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
+bool PerTrackEffect::ProcessPass(
+   EffectContext &context, Instance &instance, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
@@ -211,14 +212,16 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             clear = true;
          }
 
-         const auto genLength = [this, &settings, &left, isGenerator](
+         const auto genLength =
+         [this, &settings, &left, isGenerator, &context](
          ) -> std::optional<sampleCount> {
             double genDur = 0;
             if (isGenerator) {
                const auto duration = settings.extra.GetDuration();
                if (IsPreviewing()) {
                   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-                  genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
+                  genDur = std::min(duration,
+                     CalcPreviewInputLength(context, settings, genDur));
                }
                else
                   genDur = duration;

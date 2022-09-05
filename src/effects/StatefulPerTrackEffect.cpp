@@ -52,11 +52,11 @@ std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
       const_cast<StatefulPerTrackEffect&>(*this));
 }
 
-bool StatefulPerTrackEffect::Process(EffectContext &,
+bool StatefulPerTrackEffect::Process(EffectContext &context,
    EffectInstance &instance, EffectSettings &settings)
 {
    // Call through to a non-virtual function
-   return PerTrackEffect::Process(instance, settings);
+   return PerTrackEffect::Process(context, instance, settings);
 }
 
 size_t StatefulPerTrackEffect::SetBlockSize(size_t maxBlockSize)

@@ -200,7 +200,7 @@ bool EffectTruncSilence::LoadSettings(
 
 // Effect implementation
 
-double EffectTruncSilence::CalcPreviewInputLength(
+double EffectTruncSilence::CalcPreviewInputLength(const EffectContext &,
    const EffectSettings &, double /* previewLength */) const
 {
    double inputLength = mT1 - mT0;

@@ -518,7 +518,7 @@ bool Effect::CheckWhetherSkipEffect(const EffectSettings &) const
    return false;
 }
 
-double Effect::CalcPreviewInputLength(
+double Effect::CalcPreviewInputLength(const EffectContext &,
    const EffectSettings &, double previewLength) const
 {
    return previewLength;

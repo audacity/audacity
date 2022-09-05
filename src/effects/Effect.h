@@ -124,7 +124,7 @@ protected:
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
    //! Default implementation returns `previewLength`
-   double CalcPreviewInputLength(
+   double CalcPreviewInputLength(const EffectContext &context,
       const EffectSettings &settings, double previewLength) const override;
 
    // No more virtuals!

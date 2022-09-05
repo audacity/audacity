@@ -106,7 +106,7 @@ EffectType EffectTimeScale::GetType() const
 
 // Effect implementation
 
-double EffectTimeScale::CalcPreviewInputLength(
+double EffectTimeScale::CalcPreviewInputLength(const EffectContext &,
    const EffectSettings &settings, double previewLength) const
 {
    double inputLength = settings.extra.GetDuration();

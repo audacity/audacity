@@ -355,10 +355,10 @@ void EffectBase::Preview(EffectContext &context,
 
    const auto &settings = access.Get();
    if (isNyquist && isGenerator)
-      previewDuration = CalcPreviewInputLength(settings, previewLen);
+      previewDuration = CalcPreviewInputLength(context, settings, previewLen);
    else
       previewDuration = std::min(settings.extra.GetDuration(),
-         CalcPreviewInputLength(settings, previewLen));
+         CalcPreviewInputLength(context, settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 

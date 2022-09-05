@@ -52,7 +52,7 @@ public:
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
-   double CalcPreviewInputLength(
+   double CalcPreviewInputLength(const EffectContext &context,
       const EffectSettings &settings, double previewLength) const override;
 
 private:

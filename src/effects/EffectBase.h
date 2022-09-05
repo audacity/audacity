@@ -76,7 +76,7 @@ protected:
 
      @return seconds
     */
-   virtual double CalcPreviewInputLength(
+   virtual double CalcPreviewInputLength(const EffectContext &context,
       const EffectSettings &settings, double previewLength) const = 0;
 
    // Previewing linear effect can be optimised by pre-mixing. However this

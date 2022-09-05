@@ -61,7 +61,7 @@ protected:
    /* virtual */ bool DoPass2() const;
 
    // non-virtual
-   bool Process(
+   bool Process(EffectContext &context,
       EffectInstance &instance, EffectSettings &settings) const;
 
    sampleCount    mSampleCnt{};
@@ -69,7 +69,8 @@ protected:
 private:
    using Buffers = AudioGraph::Buffers;
 
-   bool ProcessPass(Instance &instance, EffectSettings &settings);
+   bool ProcessPass(
+      EffectContext &context, Instance &instance, EffectSettings &settings);
    using Factory = std::function<std::shared_ptr<EffectInstance>()>;
    /*!
     Previous contents of inBuffers and outBuffers are ignored

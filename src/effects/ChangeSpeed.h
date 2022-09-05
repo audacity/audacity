@@ -46,7 +46,7 @@ public:
    OptionalMessage DoLoadFactoryDefaults(EffectSettings &settings);
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
-   double CalcPreviewInputLength(
+   double CalcPreviewInputLength(const EffectContext &context,
       const EffectSettings &settings, double previewLength) const override;
    bool Init() override;
    bool Process(EffectContext &context,

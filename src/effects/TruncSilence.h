@@ -51,7 +51,7 @@ public:
 
    // Effect implementation
 
-   double CalcPreviewInputLength(
+   double CalcPreviewInputLength(const EffectContext &context,
       const EffectSettings &settings, double previewLength) const override;
 
    // Analyze a single track to find silences
