@@ -106,10 +106,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
       : mPath(path)
    {}
 
-   ~VSTEffectWrapper()
-   {
-      ResetModuleAndHandle();
-   }
+   ~VSTEffectWrapper();
 
    AEffect* mAEffect = nullptr;
 

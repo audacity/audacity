@@ -796,7 +796,6 @@ VSTEffect::VSTEffect(const PluginPath & path)
 
 VSTEffect::~VSTEffect()
 {
-   Unload();
 }
 
 // ============================================================================
@@ -1783,6 +1782,13 @@ void VSTEffectWrapper::ResetModuleAndHandle()
       mModule.reset();
       mAEffect = NULL;
    }
+}
+
+
+VSTEffectWrapper::~VSTEffectWrapper()
+{
+   Unload();
+   ResetModuleAndHandle();
 }
 
 
@@ -3621,7 +3627,6 @@ VSTEffectInstance::VSTEffectInstance
 VSTEffectInstance::~VSTEffectInstance()
 {
    PowerOff();
-   Unload();
 }
 
 
