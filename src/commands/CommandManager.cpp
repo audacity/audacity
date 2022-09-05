@@ -171,12 +171,13 @@ struct CommandListEntry
    bool useStrictFlags{ false };
 };
 
-NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
-{
-}
+NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow() = default;
 
-TopLevelKeystrokeHandlingWindow::~TopLevelKeystrokeHandlingWindow()
+TopLevelKeystrokeHandlingWindow::~TopLevelKeystrokeHandlingWindow() = default;
+
+bool TopLevelKeystrokeHandlingWindow::HandleCommandKeystrokes()
 {
+   return true;
 }
 
 MenuBarListEntry::MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
@@ -1121,8 +1122,8 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    // Bug 1557.  MixerBoard should count as 'destined for project'
    // MixerBoard IS a TopLevelWindow, and its parent is the project.
    if( pParent && pParent->GetParent() == pWindow ){
-      if( dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ) != NULL )
-         validTarget = true;
+      if(auto keystrokeHandlingWindow = dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ))
+         validTarget = keystrokeHandlingWindow->HandleCommandKeystrokes();
    }
    validTarget = validTarget && wxEventLoop::GetActive()->IsMain();
 
