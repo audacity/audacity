@@ -30,6 +30,23 @@ class wxTextCtrl;
 
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
+namespace NyquistFormatting {
+
+wxString EscapeString(const wxString & inStr);
+
+double GetCtrlValue(const wxString &s);
+
+/*!
+ A file path given to Nyquist may be a platform-independent canonicalized
+ form using certain abbreviations that are expanded into the platform-dependent
+ equivalent.
+
+ If the path names only a directory, also append "/untitled" plus extension
+ */
+void resolveFilePath(wxString & path, FileExtension extension = {});
+
+}
+
 enum NyqControlType
 {
    NYQ_CTRL_INT,
@@ -164,7 +181,6 @@ private:
    static FilePaths GetNyquistSearchPath();
 
    static wxString NyquistToWxString(const char *nyqString);
-   wxString EscapeString(const wxString & inStr);
    static std::vector<EnumValueSymbol> ParseChoice(const wxString & text);
 
    FileExtensions ParseFileExtensions(const wxString & text);
@@ -212,7 +228,6 @@ private:
                            wxString *pExtraString = nullptr);
    static wxString UnQuote(const wxString &s, bool allowParens = true,
                            wxString *pExtraString = nullptr);
-   static double GetCtrlValue(const wxString &s);
 
    void OnDebug(wxCommandEvent & evt);
 
@@ -222,7 +237,6 @@ private:
    void OnTime(wxCommandEvent & evt);
    void OnFileButton(wxCommandEvent & evt);
 
-   static void resolveFilePath(wxString & path, FileExtension extension = {});
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 

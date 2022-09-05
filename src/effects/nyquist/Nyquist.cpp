@@ -269,7 +269,7 @@ bool NyquistEffect::DoVisitSettings(
       double d = ctrl.val;
 
       if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
-         d = GetCtrlValue(ctrl.valStr);
+         d = NyquistFormatting::GetCtrlValue(ctrl.valStr);
 
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
@@ -307,7 +307,7 @@ bool NyquistEffect::SaveSettings(
 
       if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
       {
-         d = GetCtrlValue(ctrl.valStr);
+         d = NyquistFormatting::GetCtrlValue(ctrl.valStr);
       }
 
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
@@ -332,6 +332,7 @@ bool NyquistEffect::SaveSettings(
       else if (ctrl.type == NYQ_CTRL_FILE)
       {
          // Convert the given path string to platform-dependent equivalent
+         NyquistFormatting::
          resolveFilePath(const_cast<wxString&>(ctrl.valStr));
          parms.Write(ctrl.var, ctrl.valStr);
       }
@@ -394,7 +395,7 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
          double d = ctrl.val;
          if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
          {
-            d = GetCtrlValue(ctrl.valStr);
+            d = NyquistFormatting::GetCtrlValue(ctrl.valStr);
          }
       }
 
@@ -585,6 +586,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 "error: File \"%s\" specified in header but not found in plug-in path.\n")
          .Format( mHelpFile );
    }
+
+   using namespace NyquistFormatting;
 
    if (mVersion >= 4)
    {
@@ -946,6 +949,8 @@ bool NyquistEffect::ProcessOne()
       cmd += mProps;
       cmd += mPerTrackProps;
    }
+
+   using namespace NyquistFormatting;
 
    if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
       // Set the track TYPE and VIEW properties
@@ -1472,7 +1477,7 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
     return str;
 }
 
-wxString NyquistEffect::EscapeString(const wxString & inStr)
+wxString NyquistFormatting::EscapeString(const wxString & inStr)
 {
    wxString str = inStr;
 
@@ -1656,7 +1661,7 @@ wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
    return UnQuoteMsgid( s, allowParens, pExtraString ).Translation();
 }
 
-double NyquistEffect::GetCtrlValue(const wxString &s)
+double NyquistFormatting::GetCtrlValue(const wxString &s)
 {
    /* For this to work correctly requires that the plug-in header is
     * parsed on each run so that the correct value for "half-srate" may
@@ -1987,6 +1992,7 @@ bool NyquistEffect::Parse(
       return true;
    }
 
+   using namespace NyquistFormatting;
 
    if (len >= 3 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
@@ -2448,6 +2454,8 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
       return true;
    }
 
+   using namespace NyquistFormatting;
+   
    for (unsigned int i = 0; i < mControls.size(); i++)
    {
       NyqControl *ctrl = &mControls[i];
@@ -2657,6 +2665,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                      if ( !type.extensions.empty() )
                         defaultExtension = type.extensions[0];
                   }
+                  NyquistFormatting::
                   resolveFilePath(ctrl.valStr, defaultExtension);
 
                   wxTextCtrl *item = S.Id(ID_Text+i)
@@ -2858,7 +2867,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
       }
    }
 
-   resolveFilePath(ctrl.valStr);
+   NyquistFormatting::resolveFilePath(ctrl.valStr);
 
    wxFileName fname = ctrl.valStr;
    wxString defaultDir = fname.GetPath();
@@ -2904,14 +2913,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
    mUIParent->FindWindow(ID_Text + i)->GetValidator()->TransferToWindow();
 }
 
-/*!
- A file path given to Nyquist may be a platform-independent canonicalized
- form using certain abbreviations that are expanded into the platform-dependent
- equivalent.
-
- If the path names only a directory, also append "/untitled" plus extension
- */
-void NyquistEffect::resolveFilePath(
+void NyquistFormatting::resolveFilePath(
    wxString& path, FileExtension extension /* empty string */)
 {
 #if defined(__WXMSW__)
