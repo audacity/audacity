@@ -519,7 +519,12 @@ static struct DefaultConfigEntry {
    { ToolsBarID,             TransportBarID,         NoBarID                },
    { EditBarID,              ToolsBarID,             NoBarID                },
    { AudioSetupBarID,        EditBarID,              NoBarID                },
+#ifdef HAS_AUDIOCOM_UPLOAD
+   { ShareAudioBarID,        AudioSetupBarID,        NoBarID                },
+   { RecordMeterBarID,       ShareAudioBarID,        NoBarID                },
+#else
    { RecordMeterBarID,       AudioSetupBarID,        NoBarID                },
+#endif
    { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
 
    // start another top dock row

@@ -48,8 +48,13 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "TrackPanel.h"
 
-namespace {
+namespace
+{
+#ifdef HAS_AUDIOCOM_UPLOAD
+   constexpr int DEFAULT_WINDOW_WIDTH = 1260;
+#else
    constexpr int DEFAULT_WINDOW_WIDTH = 1200;
+#endif
    constexpr int DEFAULT_WINDOW_HEIGHT = 674;
 }
 
