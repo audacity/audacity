@@ -61,7 +61,6 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
    const InstanceFinder &finder,
    double projectRate,
    TrackList *list,
-   WaveTrackFactory *factory,
    NotifyingSelectedRegion &selectedRegion,
    const EffectSettingsAccessPtr &pAccess)
 {
@@ -69,7 +68,6 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
 
    mOutputTracks.reset();
 
-   mFactory = factory;
    mProjectRate = projectRate;
 
    SetTracks(list);
@@ -115,7 +113,7 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
    if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) &&
        (context.numTracks == 0)
    ) {
-      auto track = mFactory->Create();
+      auto track = context.factory->Create();
       track->SetName(mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
       newTrack = mTracks->Add(track);
       newTrack->SetSelected(true);
@@ -408,7 +406,7 @@ void EffectBase::Preview(EffectContext &context,
       MixAndRender(saveTracks->Selected<const WaveTrack>(),
          Mixer::WarpOptions{ *saveTracks },
          wxString{}, // Don't care about the name of the temporary tracks
-         mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
+         context.factory, rate, floatSample, mT0, t1, mixLeft, mixRight);
       if (!mixLeft)
          return;
 

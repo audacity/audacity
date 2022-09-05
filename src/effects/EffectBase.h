@@ -54,7 +54,7 @@ public:
       EffectSettings &settings, //!< Always given; only for processing
       const InstanceFinder &finder,
       double projectRate, TrackList *list,
-      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      NotifyingSelectedRegion &selectedRegion,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
 
@@ -98,7 +98,6 @@ protected:
 
    double         mProjectRate{}; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
-   WaveTrackFactory   *mFactory{};
    const TrackList *inputTracks() const { return mTracks; }
    const AudacityProject *FindProject() const;
    // used only if CopyInputTracks() is called.

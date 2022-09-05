@@ -23,6 +23,7 @@ class EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
 class TrackList;
+class WaveTrackFactory;
 
 //! Information about dialogs connected to an effect instance,
 //! and the selection of tracks, time, and frequencies to process
@@ -66,6 +67,7 @@ struct EffectContext {
     */
    bool skipState{ false };
 
+   WaveTrackFactory   *factory{};
    unsigned       uiFlags{ 0 };
 };
 
@@ -136,7 +138,7 @@ public:
       EffectSettings &settings, //!< Always given; only for processing
       const InstanceFinder &finder,
       double projectRate, TrackList *list,
-      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      NotifyingSelectedRegion &selectedRegion,
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;

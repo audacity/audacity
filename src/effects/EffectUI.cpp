@@ -1330,6 +1330,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       if (const auto pSettings = em.GetDefaultSettings(ID)) {
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
+         pContext->factory = &trackFactory;
          const auto finder =
          [pContext, effect, &window, pAccess, flags] (EffectSettings &settings)
             -> std::optional<std::shared_ptr<EffectInstanceEx>>
@@ -1360,7 +1361,6 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
             success = effect->DoEffect(*pContext, settings, finder,
                rate,
                &tracks,
-               &trackFactory,
                selectedRegion,
                pAccess);
             return nullptr;

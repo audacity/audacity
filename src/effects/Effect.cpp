@@ -331,7 +331,7 @@ bool Effect::Delegate(
    region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect(context, settings, {},
-      mProjectRate, mTracks, mFactory, region, nullptr);
+      mProjectRate, mTracks, region, nullptr);
 }
 
 void Effect::GetBounds(
