@@ -1281,7 +1281,7 @@ const ControlInfo *controlInfo() {
          XXO("&Noise reduction (dB):"), XO("Noise reduction")),
          ControlInfo(&EffectNoiseReduction::Settings::mNewSensitivity,
          0.0, 24.0, 48, wxT("%.2f"), false,
-         XXO("&Sensitivity:"), XO("Sensitivity")),
+         XXO("Sensitivit&y:"), XO("Sensitivity")),
 #ifdef ATTACK_AND_RELEASE
          ControlInfo(&EffectNoiseReduction::Settings::mAttackTime,
          0, 1.0, 100, wxT("%.2f"), false,

@@ -2882,7 +2882,7 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
       S.StartHorizontalLay(wxALIGN_CENTER, 0);
       {
          S.Id(ID_Load).AddButton(XXO("&Load"));
-         S.Id(ID_Save).AddButton(XXO("&Save"));
+         S.Id(ID_Save).AddButton(XXO("S&ave"));
       }
       S.EndHorizontalLay();
    }

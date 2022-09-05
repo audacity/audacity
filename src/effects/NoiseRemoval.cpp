@@ -751,7 +751,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          mSensitivityT = S.Id(ID_SENSITIVITY_TEXT)
             .Validator<wxTextValidator>(wxFILTER_NUMERIC)
-            .AddTextBox(XXO("&Sensitivity (dB):"), wxT(""), 0);
+            .AddTextBox(XXO("Sensitivit&y (dB):"), wxT(""), 0);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER)
             .Name(XO("Sensitivity"))
             .Style(wxSL_HORIZONTAL)

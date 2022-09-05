@@ -294,7 +294,7 @@ std::unique_ptr<EffectUIValidator> EffectLoudness::PopulateOrExchange(
 
             mStereoIndCheckBox = S
                .Validator<wxGenericValidator>( &mStereoInd )
-               .AddCheckBox(XXO("Normalize &stereo channels independently"),
+               .AddCheckBox(XXO("Normalize stereo &channels independently"),
                   mStereoInd );
 
             mDualMonoCheckBox = S

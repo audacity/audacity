@@ -203,7 +203,7 @@ std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
       mStagesT = S.Id(ID_Stages)
          .Validator<IntegerValidator<int>>(
             &mStages, NumValidatorStyle::DEFAULT, Stages.min, Stages.max)
-         .AddTextBox(XXO("&Stages:"), L"", 15);
+         .AddTextBox(XXO("S&tages:"), L"", 15);
 
       mStagesS = S.Id(ID_Stages)
          .Name(XO("Stages"))

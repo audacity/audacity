@@ -382,7 +382,7 @@ std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
             );
          S.AddSpace(1, 1);
 
-         mRippleCtlP = S.AddVariableText( XO("&Passband Ripple:"),
+         mRippleCtlP = S.AddVariableText( XO("Passband R&ipple:"),
             false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          mRippleCtl = S.Id(ID_Ripple)
             .Name(XO("Passband Ripple (dB)"))
@@ -396,7 +396,7 @@ std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
          mFilterSubTypeCtl = S.Id(ID_SubType)
             .Validator<wxGenericValidator>(&mFilterSubtype)
             .MinSize( { -1, -1 } )
-            .AddChoice(XXO("&Subtype:"),
+            .AddChoice(XXO("Su&btype:"),
                Msgids(kSubTypeStrings, nSubTypes)
             );
 

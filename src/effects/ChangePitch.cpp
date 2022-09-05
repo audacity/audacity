@@ -292,7 +292,7 @@ std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
                   2, &m_dSemitonesChange,
                   NumValidatorStyle::TWO_TRAILING_ZEROES
                )
-               .AddTextBox(XXO("&Semitones (half-steps):"), wxT(""), 12);
+               .AddTextBox(XXO("S&emitones (half-steps):"), wxT(""), 12);
          }
          S.EndHorizontalLay();
       }

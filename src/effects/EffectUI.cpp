@@ -343,7 +343,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 
          mMenuBtn = S.Id( kMenuID )
             .ToolTip(XO("Manage presets and options"))
-            .AddButton( XO("Presets && settings"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
+            .AddButton( XO("Presets && &settings"), wxALIGN_CENTER | wxTOP | wxBOTTOM );
 
          S.AddSpace(1, 0, 1);
 

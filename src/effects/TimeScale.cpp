@@ -212,7 +212,7 @@ std::unique_ptr<EffectUIValidator> EffectTimeScale::PopulateOrExchange(
                   3, &m_PitchHalfStepsStart,
                   NumValidatorStyle::NO_TRAILING_ZEROES,
                   HalfStepsStart.min, HalfStepsStart.max )
-               .AddTextBox(XXO("(&semitones) [-12 to 12]:"), L"", 12);
+               .AddTextBox(XXO("(se&mitones) [-12 to 12]:"), L"", 12);
 
 
             m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_PitchPercentChangeStart)

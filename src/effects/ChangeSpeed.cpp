@@ -268,7 +268,7 @@ std::unique_ptr<EffectUIValidator> EffectChangeSpeed::PopulateOrExchange(
                3, &mMultiplier,
                NumValidatorStyle::THREE_TRAILING_ZEROES,
                Percentage.min / 100.0, ((Percentage.max / 100.0) + 1) )
-            .AddTextBox(XXO("&Speed Multiplier:"), L"", 12);
+            .AddTextBox(XXO("Speed &Multiplier:"), L"", 12);
 
          mpTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(

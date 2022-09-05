@@ -351,7 +351,7 @@ void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
             vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
             return vldDtmf;
          })
-         .AddTextBox(XXO("DTMF &sequence:"), wxT(""), 10);
+         .AddTextBox(XXO("DT&MF sequence:"), wxT(""), 10);
       BindTo(*mDtmfSequenceT, wxEVT_TEXT, &Validator::OnSequence);
 
       // A control with no event handler but the validator causes updates

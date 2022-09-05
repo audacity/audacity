@@ -302,7 +302,7 @@ std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
       mWidthT = S.Id(ID_Width)
          .Validator<IntegerValidator<int>>(
             &mClickWidth, NumValidatorStyle::DEFAULT, Width.min, Width.max)
-         .AddTextBox(XXO("Max &Spike Width (higher is more sensitive):"),
+         .AddTextBox(XXO("&Max Spike Width (higher is more sensitive):"),
                      wxT(""),
                      10);
 

@@ -182,7 +182,7 @@ std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
           * the effect to a 1-second sample, with the default Stretch Factor of 10.0
           * will give an (approximately) 10 second sound
           */
-         .AddTextBox(XXO("&Stretch Factor:"), wxT(""), 10);
+         .AddTextBox(XXO("Stretch &Factor:"), wxT(""), 10);
 
       S
          .Validator<FloatingPointValidator<float>>(

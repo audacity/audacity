@@ -305,7 +305,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.Name(XO("Background end time"))
             .AddWindow(mBackgroundEndT);
 
-         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(XXO("Mea&sure selection"));
+         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(XXO("&Measure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT)
             .ConnectRoot(wxEVT_KEY_DOWN,
                          &ContrastDialog::OnChar)

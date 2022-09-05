@@ -195,7 +195,7 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
             .Name(XO("Bass (dB):"))
             .Validator<FloatingPointValidator<double>>(
                1, &mBass, NumValidatorStyle::DEFAULT, Bass.min, Bass.max)
-            .AddTextBox(XXO("Ba&ss (dB):"), L"", 10);
+            .AddTextBox(XXO("&Bass (dB):"), L"", 10);
 
          mBassS = S.Id(ID_Bass)
             .Name(XO("Bass"))

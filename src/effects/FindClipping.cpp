@@ -230,7 +230,7 @@ void EffectFindClipping::DoPopulateOrExchange(
       S
          .Validator<IntegerValidator<int>>(
             &mStart, NumValidatorStyle::DEFAULT, Start.min)
-         .TieTextBox(XXO("&Start threshold (samples):"), mStart, 10);
+         .TieTextBox(XXO("St&art threshold (samples):"), mStart, 10);
 
       S
          .Validator<IntegerValidator<int>>(
