@@ -50,6 +50,7 @@ public:
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
 

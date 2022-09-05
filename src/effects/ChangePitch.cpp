@@ -365,6 +365,11 @@ bool EffectChangePitch::TransferDataToWindow(const EffectSettings &)
 {
    m_bLoopDetect = true;
 
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    Calc_SemitonesChange_fromPercentChange();
    Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
    Calc_ToFrequency();
@@ -387,6 +392,11 @@ bool EffectChangePitch::TransferDataToWindow(const EffectSettings &)
 
 bool EffectChangePitch::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    // from/to pitch controls
    m_nFromPitch = m_pChoice_FromPitch->GetSelection();
    m_nFromOctave = m_pSpin_FromOctave->GetValue();

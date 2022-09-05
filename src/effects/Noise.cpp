@@ -211,13 +211,22 @@ std::unique_ptr<EffectUIValidator> EffectNoise::PopulateOrExchange(
 
 bool EffectNoise::TransferDataToWindow(const EffectSettings &settings)
 {
-   mNoiseDurationT->SetValue(settings.extra.GetDuration());
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
 
+   mNoiseDurationT->SetValue(settings.extra.GetDuration());
    return true;
 }
 
 bool EffectNoise::TransferDataFromWindow(EffectSettings &settings)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    settings.extra.SetDuration(mNoiseDurationT->GetValue());
    return true;
 }
