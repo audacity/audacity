@@ -41,6 +41,12 @@ if ( ${_OPT}has_url_schemes_support )
    list( APPEND LIBRARIES lib-url-schemes)
 endif()
 
+if ( ${_OPT}has_audiocom_upload)
+   list( APPEND LIBRARIES
+      lib-cloud-upload
+   )
+endif()
+
 # This library depends on lib-network-manager
 # If Sentry reporting is disabled, an INTERFACE library
 # will be defined
