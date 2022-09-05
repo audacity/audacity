@@ -110,9 +110,6 @@ enum
    ID_FILE = 15000
 };
 
-// Protect Nyquist from selections greater than 2^31 samples (bug 439)
-#define NYQ_MAX_LEN (std::numeric_limits<long>::max())
-
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
 static const wxChar *KEY_Command = wxT("Command");
@@ -142,34 +139,6 @@ END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
 {
-   mOutputTrack[0] = mOutputTrack[1] = nullptr;
-
-   mAction = XO("Applying Nyquist Effect...");
-   mIsPrompt = false;
-   mExternal = false;
-   mCompiler = false;
-   mTrace = false;
-   mRedirectOutput = false;
-   mDebug = false;
-   mIsSal = false;
-   mOK = false;
-   mAuthor = XO("n/a");
-   mReleaseVersion = XO("n/a");
-   mCopyright = XO("n/a");
-
-   // set clip/split handling when applying over clip boundary.
-   mRestoreSplits = true;  // Default: Restore split lines.
-   mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
-
-   mVersion = 4;
-
-   mStop = false;
-   mBreak = false;
-   mCont = false;
-   mIsTool = false;
-
-   mMaxLen = NYQ_MAX_LEN;
-
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
       mName = NYQUIST_PROMPT_NAME;
