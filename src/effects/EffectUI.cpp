@@ -449,6 +449,12 @@ bool EffectUIHost::Initialize()
    return true;
 }
 
+bool EffectUIHost::HandleCommandKeystrokes()
+{
+   return !IsModal();
+}
+
+
 void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
 {
    // Do default handling

@@ -22,6 +22,7 @@
 #include "EffectPlugin.h"
 #include "Observer.h"
 #include "PluginInterface.h"
+#include "commands/CommandManagerWindowClasses.h"
 #include "effects/RealtimeEffectManager.h"
 
 struct AudioIOEvent;
@@ -38,7 +39,9 @@ class RealtimeEffectState;
 class wxCheckBox;
 
 //
-class EffectUIHost final : public wxDialogWrapper
+class EffectUIHost final
+   : public wxDialogWrapper
+   , public TopLevelKeystrokeHandlingWindow
 {
 public:
    // constructors and destructors
@@ -60,6 +63,8 @@ public:
 
    bool Initialize();
    EffectUIValidator *GetValidator() const { return mpValidator.get(); }
+
+   bool HandleCommandKeystrokes() override;
 
 private:
    std::shared_ptr<EffectInstance> InitializeInstance();
