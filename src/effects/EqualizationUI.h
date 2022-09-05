@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_EQUALIZATION_UI__
 #define __AUDACITY_EFFECT_EQUALIZATION_UI__
 
-#include "EffectInterface.h"
+#include "EffectPlugin.h"
 #include "EqualizationBandSliders.h"
 
 class wxButton;

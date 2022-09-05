@@ -22,3 +22,36 @@ bool EffectInstanceEx::Init()
 {
    return true;
 }
+
+EffectUIValidator::EffectUIValidator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access)
+   : mEffect{effect}
+   , mAccess{access}
+{}
+
+EffectUIValidator::~EffectUIValidator() = default;
+
+bool EffectUIValidator::UpdateUI()
+{
+   return true;
+}
+
+bool EffectUIValidator::IsGraphicalUI()
+{
+   return false;
+}
+
+void EffectUIValidator::Disconnect()
+{
+}
+
+void EffectUIValidator::OnClose()
+{
+   if (!mUIClosed)
+   {
+      mEffect.CloseUI();
+      mUIClosed = true;
+   }
+}
+
+EffectUIClientInterface::~EffectUIClientInterface() = default;
