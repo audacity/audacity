@@ -873,10 +873,10 @@ bool EffectNoiseReduction::Worker::DoStart()
    return TrackSpectrumTransformer::DoStart();
 }
 
-auto EffectNoiseReduction::Worker::Processor(EffectContext &)
+auto EffectNoiseReduction::Worker::Processor(EffectContext &context)
    -> WindowProcessor
 {
-   return [&](SpectrumTransformer &transformer)
+   return [&context](SpectrumTransformer &transformer)
 {
    auto &worker = static_cast<Worker &>(transformer);
    // Compute power spectrum in the newest window
@@ -900,7 +900,8 @@ auto EffectNoiseReduction::Worker::Processor(EffectContext &)
       worker.ReduceNoise();
 
    // Update the Progress meter, let user cancel
-   return !worker.mEffect.TrackProgress(worker.mProgressTrackCount,
+   return !context.TrackProgress(
+      worker.mProgressTrackCount,
       std::min(1.0,
          ((++worker.mProgressWindowCount).as_double() * worker.mStepSize)
             / worker.mLen.as_double()));

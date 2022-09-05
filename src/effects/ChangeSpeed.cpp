@@ -436,7 +436,7 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-bool EffectChangeSpeed::ProcessOne(EffectContext &,
+bool EffectChangeSpeed::ProcessOne(EffectContext &context,
    WaveTrack * track, sampleCount start, sampleCount end)
 {
    if (track == NULL)
@@ -496,7 +496,8 @@ bool EffectChangeSpeed::ProcessOne(EffectContext &,
       samplePos += results.first;
 
       // Update the Progress meter
-      if (TrackProgress(mCurTrackNum, (samplePos - start).as_double() / len)) {
+      if (context.TrackProgress(
+         mCurTrackNum, (samplePos - start).as_double() / len)) {
          bResult = false;
          break;
       }

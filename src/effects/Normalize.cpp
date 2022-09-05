@@ -329,7 +329,7 @@ bool EffectNormalize::AnalyseTrack(EffectContext &context,
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(EffectContext &,
+bool EffectNormalize::AnalyseTrackData(EffectContext &context,
    const WaveTrack * track, const TranslatableString &msg,
    double &progress, float &offset)
 {
@@ -375,8 +375,10 @@ bool EffectNormalize::AnalyseTrackData(EffectContext &,
       s += block;
 
       //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
+      if (context.TotalProgress(
+         progress + ((s - start).as_double() / len)
+            / double(2 * context.numTracks), msg))
+      {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
@@ -386,7 +388,7 @@ bool EffectNormalize::AnalyseTrackData(EffectContext &,
    else
       offset = 0.0;
 
-   progress += 1.0/double(2*GetNumWaveTracks());
+   progress += 1.0/double(2 * context.numTracks);
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
 }
@@ -395,7 +397,7 @@ bool EffectNormalize::AnalyseTrackData(EffectContext &,
 //and executes ProcessData, on it...
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
-bool EffectNormalize::ProcessOne(EffectContext &,
+bool EffectNormalize::ProcessOne(EffectContext &context,
    WaveTrack * track, const TranslatableString &msg,
    double &progress, float offset)
 {
@@ -438,13 +440,15 @@ bool EffectNormalize::ProcessOne(EffectContext &,
       s += block;
 
       //Update the Progress meter
-      if (TotalProgress(progress +
-                        ((s - start).as_double() / len)/double(2*GetNumWaveTracks()), msg)) {
+      if (context.TotalProgress(progress +
+         ((s - start).as_double() / len)
+            / double(2 * context.numTracks), msg))
+      {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
    }
-   progress += 1.0/double(2*GetNumWaveTracks());
+   progress += 1.0 / double(2 * context.numTracks);
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;

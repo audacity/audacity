@@ -210,7 +210,7 @@ double EffectSBSMS::getRate(double rateStart, double rateEnd, SlideType slideTyp
    return slide.getRate(t);
 }
 
-bool EffectSBSMS::Process(EffectContext &,
+bool EffectSBSMS::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    bool bGoodResult = true;
@@ -392,7 +392,7 @@ bool EffectSBSMS::Process(EffectContext &,
                      frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once.
                   }
                }
-               if (TrackProgress(nWhichTrack, frac)) {
+               if (context.TrackProgress(nWhichTrack, frac)) {
                   bGoodResult = false;
                   return;
                }

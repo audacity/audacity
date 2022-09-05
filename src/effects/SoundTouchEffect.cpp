@@ -187,7 +187,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(EffectContext &context,
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
-bool EffectSoundTouch::ProcessOne(EffectContext &,
+bool EffectSoundTouch::ProcessOne(EffectContext &context,
    soundtouch::SoundTouch *pSoundTouch,
    WaveTrack *track,
    sampleCount start, sampleCount end,
@@ -233,7 +233,8 @@ bool EffectSoundTouch::ProcessOne(EffectContext &,
          s += block;
 
          //Update the Progress meter
-         if (TrackProgress(mCurTrackNum, (s - start).as_double() / len))
+         if (context.TrackProgress(
+            mCurTrackNum, (s - start).as_double() / len))
             return false;
       }
 
@@ -261,7 +262,7 @@ bool EffectSoundTouch::ProcessOne(EffectContext &,
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereo(EffectContext &,
+bool EffectSoundTouch::ProcessStereo(EffectContext &context,
    soundtouch::SoundTouch *pSoundTouch,
    WaveTrack* leftTrack, WaveTrack* rightTrack,
    sampleCount start, sampleCount end, const TimeWarper &warper)
@@ -331,7 +332,7 @@ bool EffectSoundTouch::ProcessStereo(EffectContext &,
             frac -= 0.5;
             frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once.
          }
-         if (TrackProgress(nWhichTrack, frac))
+         if (context.TrackProgress(nWhichTrack, frac))
             return false;
       }
 

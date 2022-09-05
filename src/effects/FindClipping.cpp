@@ -126,7 +126,7 @@ bool EffectFindClipping::Process(EffectContext &context,
    return true;
 }
 
-bool EffectFindClipping::ProcessOne(EffectContext &,
+bool EffectFindClipping::ProcessOne(EffectContext &context,
    LabelTrack * lt, int count, const WaveTrack * wt,
    sampleCount start, sampleCount len)
 {
@@ -159,7 +159,7 @@ bool EffectFindClipping::ProcessOne(EffectContext &,
 
    while (s < len) {
       if (block == 0) {
-         if (TrackProgress(count,
+         if (context.TrackProgress(count,
                            s.as_double() /
                            len.as_double() )) {
             bGoodResult = false;

@@ -75,7 +75,7 @@ bool EffectSimpleMono::Process(EffectContext &context,
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSimpleMono on these blocks
-bool EffectSimpleMono::ProcessOne(EffectContext &,
+bool EffectSimpleMono::ProcessOne(EffectContext &context,
    WaveTrack * track, sampleCount start, sampleCount end)
 {
    //Get the length of the buffer (as double). len is
@@ -112,7 +112,7 @@ bool EffectSimpleMono::ProcessOne(EffectContext &,
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(mCurTrackNum,
+      if (context.TrackProgress(mCurTrackNum,
                         (s - start).as_double() /
                         len))
          return false;

@@ -147,7 +147,7 @@ bool EffectClickRemoval::Process(EffectContext &context,
    return bGoodResult && mbDidSomething;
 }
 
-bool EffectClickRemoval::ProcessOne(EffectContext &,
+bool EffectClickRemoval::ProcessOne(EffectContext &context,
    int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
    if (len <= windowSize / 2)
@@ -193,8 +193,8 @@ bool EffectClickRemoval::ProcessOne(EffectContext &,
 
       s += block;
 
-      if (TrackProgress(count, s.as_double() /
-                               len.as_double())) {
+      if (context.TrackProgress(
+         count, s.as_double() / len.as_double())) {
          bResult = false;
          break;
       }

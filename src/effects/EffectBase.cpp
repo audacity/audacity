@@ -83,7 +83,7 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
    TransactionScope trans(pProject, "Effect");
 
    // Update track/group counts
-   CountWaveTracks();
+   context.CountWaveTracks(*mTracks);
 
    bool isSelection = false;
 
@@ -114,7 +114,9 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
 
    // We don't yet know the effect type for code in the Nyquist Prompt, so
    // assume it requires a track and handle errors when the effect runs.
-   if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) && (mNumTracks == 0)) {
+   if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) &&
+       (context.numTracks == 0)
+   ) {
       auto track = mFactory->Create();
       track->SetName(mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
       newTrack = mTracks->Add(track);
@@ -159,7 +161,7 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
       mPresetNames.push_back(L"control-f1");
 
 #endif
-   CountWaveTracks();
+   context.CountWaveTracks(*mTracks);
 
    // Allow the dialog factory to fill this in, but it might not
    std::shared_ptr<EffectInstance> pInstance;
@@ -197,7 +199,7 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
          XO("Applying %s...").Format( name ),
          ProgressShowCancel
       );
-      auto vr = valueRestorer( mProgress, progress.get() );
+      auto vr = valueRestorer(context.pProgress, progress.get());
 
       assert(pInstanceEx); // null check above
       returnVal = pInstanceEx->Process(context, settings);
@@ -316,12 +318,6 @@ const AudacityProject *EffectBase::FindProject() const
    return inputTracks()->GetOwner();
 }
 
-void EffectBase::CountWaveTracks()
-{
-   mNumTracks = mTracks->Selected< const WaveTrack >().size();
-   mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
-}
-
 std::any EffectBase::BeginPreview(const EffectSettings &)
 {
    return {};
@@ -332,9 +328,8 @@ void EffectBase::Preview(EffectContext &context,
 {
    auto cleanup0 = BeginPreview(access.Get());
 
-   if (mNumTracks == 0) { // nothing to preview
+   if (context.numTracks == 0) // nothing to preview
       return;
-   }
 
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy()) {
@@ -453,7 +448,7 @@ void EffectBase::Preview(EffectContext &context,
    mT0 = 0.0;
 
    // Update track/group counts
-   CountWaveTracks();
+   context.CountWaveTracks(*mTracks);
 
    // Apply effect
    if (!dryOnly) {
@@ -463,7 +458,7 @@ void EffectBase::Preview(EffectContext &context,
          XO("Preparing preview"),
          ProgressShowStop
       ); // Have only "Stop" button.
-      auto vr = valueRestorer( mProgress, progress.get() );
+      auto vr = valueRestorer(context.pProgress, progress.get());
 
       auto vr2 = valueRestorer( mIsPreview, true );
 

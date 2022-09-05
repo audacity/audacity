@@ -450,7 +450,7 @@ struct EqualizationTask {
 
 // EffectEqualization implementation
 
-bool EffectEqualization::ProcessOne(EffectContext &, int count,
+bool EffectEqualization::ProcessOne(EffectContext &context, int count,
    WaveTrack * t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
@@ -476,7 +476,7 @@ bool EffectEqualization::ProcessOne(EffectContext &, int count,
    auto &output = task.output;
    t->ConvertToSampleFormat( floatSample );
 
-   TrackProgress(count, 0.);
+   context.TrackProgress(count, 0.);
    bool bLoopSuccess = true;
    size_t wcopy = 0;
 
@@ -509,8 +509,8 @@ bool EffectEqualization::ProcessOne(EffectContext &, int count,
       len -= block;
       s += block;
 
-      if (TrackProgress(count, ( s - start ).as_double() /
-                        originalLen.as_double()))
+      if (context.TrackProgress(count,
+         ( s - start ).as_double() / originalLen.as_double()))
       {
          bLoopSuccess = false;
          break;

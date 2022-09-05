@@ -334,7 +334,7 @@ bool VampEffect::Init()
    return true;
 }
 
-bool VampEffect::Process(EffectContext &,
+bool VampEffect::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    if (!mPlugin)
@@ -347,7 +347,7 @@ bool VampEffect::Process(EffectContext &,
    bool multiple = false;
    unsigned prevTrackChannels = 0;
 
-   if (GetNumWaveGroups() > 1)
+   if (context.numGroups > 1)
    {
       // if there is another track beyond this one and any linked one,
       // then we're processing more than one track.  That means we
@@ -490,7 +490,7 @@ bool VampEffect::Process(EffectContext &,
 
          if (channels > 1)
          {
-            if (TrackGroupProgress(count,
+            if (context.TrackGroupProgress(count,
                   (pos - start).as_double() /
                   originalLen.as_double() ))
             {
@@ -499,7 +499,7 @@ bool VampEffect::Process(EffectContext &,
          }
          else
          {
-            if (TrackProgress(count,
+            if (context.TrackProgress(count,
                   (pos - start).as_double() /
                   originalLen.as_double() ))
             {

@@ -104,7 +104,6 @@ protected:
    // Else clear and DELETE mOutputTracks copies.
    void ReplaceProcessedTracks(const bool bGoodResult);
 
-   BasicUI::ProgressDialog *mProgress{}; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate{}; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    WaveTrackFactory   *mFactory{};
@@ -126,8 +125,6 @@ private:
 
    double GetDefaultDuration();
 
-   void CountWaveTracks();
-
    TrackList *mTracks{}; // the complete list of all tracks
    bool mIsLinearEffect{ false };
    bool mPreviewWithNotSelected{ false };
@@ -137,9 +134,6 @@ private:
 
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;
-
-   int mNumTracks{}; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
-   int mNumGroups{};
 };
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in

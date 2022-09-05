@@ -712,7 +712,7 @@ bool NyquistEffect::Process(EffectContext &context,
    mProgressIn = 0;
    mProgressOut = 0;
    mProgressTot = 0;
-   mScale = (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
+   mScale = (GetType() == EffectTypeProcess ? 0.5 : 1.0) / context.numGroups;
 
    mStop = false;
    mBreak = false;
@@ -1503,10 +1503,10 @@ bool NyquistEffect::ProcessOne(EffectContext &context)
    // so notify the user that process has completed (bug 558)
    if ((rval != nyx_audio) && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
       if (mCurNumChannels == 1) {
-         TrackProgress(mCount, 1.0, XO("Processing complete."));
+         context.TrackProgress(mCount, 1.0, XO("Processing complete."));
       }
       else {
-         TrackGroupProgress(mCount, 1.0, XO("Processing complete."));
+         context.TrackGroupProgress(mCount, 1.0, XO("Processing complete."));
       }
    }
 
@@ -2518,7 +2518,7 @@ int NyquistEffect::StaticGetCallback(float *buffer, int channel,
       buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::GetCallback(EffectContext &,
+int NyquistEffect::GetCallback(EffectContext &context,
    float *buffer, int ch, int64_t start, int64_t len, int64_t)
 {
    if (mCurBuffer[ch]) {
@@ -2569,7 +2569,7 @@ int NyquistEffect::GetCallback(EffectContext &,
          mProgressIn = progress;
       }
 
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+      if (context.TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
          return -1;
       }
    }
@@ -2586,7 +2586,7 @@ int NyquistEffect::StaticPutCallback(float *buffer, int channel,
       buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::PutCallback(EffectContext &,
+int NyquistEffect::PutCallback(EffectContext &context,
    float *buffer, int channel,
    int64_t start, int64_t len, int64_t totlen)
 {
@@ -2599,7 +2599,8 @@ int NyquistEffect::PutCallback(EffectContext &,
             mProgressOut = progress;
          }
 
-         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+         if (context.TotalProgress(
+            mProgressIn+mProgressOut + mProgressTot)) {
             return -1;
          }
       }

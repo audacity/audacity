@@ -491,11 +491,11 @@ void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack> range,
    }
 }
 
-bool EffectLoudness::UpdateProgress(EffectContext &)
+bool EffectLoudness::UpdateProgress(EffectContext &context)
 {
    mProgressVal += (double(1+mProcStereo) * double(mTrackBufferLen)
-                 / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));
-   return !TotalProgress(mProgressVal, mProgressMsg);
+                 / (double(context.numTracks) * double(mSteps) * mTrackLen));
+   return !context.TotalProgress(mProgressVal, mProgressMsg);
 }
 
 void EffectLoudness::OnChoice(wxCommandEvent & WXUNUSED(evt))

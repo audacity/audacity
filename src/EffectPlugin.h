@@ -13,6 +13,7 @@
 
 #include "EffectInterface.h"
 
+#include "BasicUI.h"
 #include <functional>
 #include <memory>
 
@@ -21,10 +22,34 @@ class EffectSettingsManager;
 class EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
+class TrackList;
 
 //! Information about dialogs connected to an effect instance,
 //! and the selection of tracks, time, and frequencies to process
 struct EffectContext {
+   //! Count wave tracks and stereo groups
+   void CountWaveTracks(const TrackList &tracks);
+
+   // The Progress methods all return true if the user has cancelled;
+   // you should exit immediately if this happens (cleaning up memory
+   // is okay, but don't try to undo).
+
+   // Pass a fraction between 0.0 and 1.0
+   bool TotalProgress(double frac, const TranslatableString & = {}) const;
+
+   // Pass a fraction between 0.0 and 1.0, for the current track
+   // (when doing one track at a time)
+   bool TrackProgress(int whichTrack, double frac,
+      const TranslatableString & = {}) const;
+
+   // Pass a fraction between 0.0 and 1.0, for the current track group
+   // (when doing stereo groups at a time)
+   bool TrackGroupProgress(int whichGroup, double frac,
+      const TranslatableString & = {}) const;
+
+   BasicUI::ProgressDialog *pProgress{};
+   /* const */ unsigned numTracks{}; //!< This is really mNumWaveTracks
+   /* const */ unsigned numGroups{};
 };
 
 class TrackList;

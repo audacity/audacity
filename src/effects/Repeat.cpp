@@ -88,7 +88,7 @@ EffectType EffectRepeat::GetType() const
 
 // Effect implementation
 
-bool EffectRepeat::Process(EffectContext &,
+bool EffectRepeat::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
@@ -131,7 +131,7 @@ bool EffectRepeat::Process(EffectContext &,
          auto t0 = tc;
          for(int j=0; j<repeatCount; j++)
          {
-            if (TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
+            if (context.TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
             {
                bGoodResult = false;
                return;

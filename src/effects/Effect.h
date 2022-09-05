@@ -129,26 +129,6 @@ protected:
 
    // No more virtuals!
 
-   // The Progress methods all return true if the user has cancelled;
-   // you should exit immediately if this happens (cleaning up memory
-   // is okay, but don't try to undo).
-
-   // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac, const TranslatableString & = {}) const;
-
-   // Pass a fraction between 0.0 and 1.0, for the current track
-   // (when doing one track at a time)
-   bool TrackProgress(
-      int whichTrack, double frac, const TranslatableString & = {}) const;
-
-   // Pass a fraction between 0.0 and 1.0, for the current track group
-   // (when doing stereo groups at a time)
-   bool TrackGroupProgress(
-      int whichGroup, double frac, const TranslatableString & = {}) const;
-
-   int GetNumWaveTracks() const { return mNumTracks; }
-   int GetNumWaveGroups() const { return mNumGroups; }
-
    // Calculates the start time and length in samples for one or two channels
    void GetBounds(
       const WaveTrack &track, const WaveTrack *pRight,

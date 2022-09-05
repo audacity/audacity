@@ -116,7 +116,7 @@ bool Generator::Process(EffectContext &context,
    return bGoodResult;
 }
 
-bool BlockGenerator::GenerateTrack(EffectContext &,
+bool BlockGenerator::GenerateTrack(EffectContext &context,
    EffectSettings &settings,
    WaveTrack *tmp, const WaveTrack &track, int ntrack)
 {
@@ -136,7 +136,7 @@ bool BlockGenerator::GenerateTrack(EffectContext &,
       i += block;
 
       // Update the progress meter
-      if (TrackProgress(ntrack,
+      if (context.TrackProgress(ntrack,
                         i.as_double() /
                         numSamples.as_double()))
          bGoodResult = false;

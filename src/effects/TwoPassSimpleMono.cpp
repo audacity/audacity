@@ -113,7 +113,7 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectContext &context,
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes TwoBufferProcessPass1 or TwoBufferProcessPass2 on these blocks
-bool EffectTwoPassSimpleMono::ProcessOne(EffectContext &,
+bool EffectTwoPassSimpleMono::ProcessOne(EffectContext &context,
    WaveTrack * track, WaveTrack * outTrack,
    sampleCount start, sampleCount end)
 {
@@ -180,13 +180,14 @@ bool EffectTwoPassSimpleMono::ProcessOne(EffectContext &,
 
       //Update the Progress meter
       if (mSecondPassDisabled)
-         ret = TotalProgress(
+         ret = context.TotalProgress(
             (mCurTrackNum + (s-start).as_double()/len) /
-            GetNumWaveTracks());
+            context.numTracks);
       else
-         ret = TotalProgress(
-            (mCurTrackNum + (s-start).as_double()/len + GetNumWaveTracks()*mPass) /
-            (GetNumWaveTracks()*2));
+         ret = context.TotalProgress(
+            (mCurTrackNum + (s-start).as_double()/len
+                + context.numTracks * mPass)
+            / (context.numTracks * 2));
       if (ret)
          //Return false because the effect failed.
          return false;

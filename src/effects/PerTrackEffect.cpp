@@ -233,16 +233,18 @@ bool PerTrackEffect::ProcessPass(
          }();
 
          const auto pollUser = [this, numChannels, count, start,
-            length = (genLength ? *genLength : len).as_double()
+            length = (genLength ? *genLength : len).as_double(),
+            &context
          ](sampleCount inPos){
             if (numChannels > 1) {
-               if (TrackGroupProgress(
+               if (context.TrackGroupProgress(
                   count, (inPos - start).as_double() / length)
                )
                   return false;
             }
             else {
-               if (TrackProgress(count, (inPos - start).as_double() / length))
+               if (context.TrackProgress(count,
+                  (inPos - start).as_double() / length))
                   return false;
             }
             return true;

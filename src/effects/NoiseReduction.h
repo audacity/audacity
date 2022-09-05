@@ -22,8 +22,6 @@ public:
    EffectNoiseReduction();
    virtual ~EffectNoiseReduction();
 
-   using Effect::TrackProgress;
-
    // ComponentInterface implementation
 
    ComponentInterfaceSymbol GetSymbol() const override;

@@ -393,7 +393,7 @@ bool EffectTruncSilence::FindSilences(EffectContext &context,
    return true;
 }
 
-bool EffectTruncSilence::DoRemoval(EffectContext &,
+bool EffectTruncSilence::DoRemoval(EffectContext &context,
    const RegionList &silences, unsigned iGroup, unsigned nGroups,
    Track *firstTrack, Track *lastTrack,
    double &totalCutLen)
@@ -414,7 +414,7 @@ bool EffectTruncSilence::DoRemoval(EffectContext &,
       // Progress dialog and cancellation. Do additional cleanup before return.
       const double frac = detectFrac +
          (1 - detectFrac) * (iGroup + whichReg / double(silences.size())) / nGroups;
-      if (TotalProgress(frac))
+      if (context.TotalProgress(frac))
       {
          ReplaceProcessedTracks(false);
          return false;
@@ -513,7 +513,7 @@ bool EffectTruncSilence::DoRemoval(EffectContext &,
    return true;
 }
 
-bool EffectTruncSilence::Analyze(const EffectContext &,
+bool EffectTruncSilence::Analyze(const EffectContext &context,
    RegionList& silenceList,
    RegionList& trackSilences,
    const WaveTrack *wt,
@@ -555,11 +555,11 @@ bool EffectTruncSilence::Analyze(const EffectContext &,
 
       if (!inputLength) {
          // Show progress dialog, test for cancellation
-         bool cancelled = TotalProgress(
+         bool cancelled = context.TotalProgress(
                detectFrac * (whichTrack +
                              (*index - start).as_double() /
                              (end - start).as_double()) /
-                             (double)GetNumWaveTracks());
+                             (double)context.numTracks);
          if (cancelled)
             return false;
       }

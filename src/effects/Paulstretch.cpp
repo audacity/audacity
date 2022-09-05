@@ -239,7 +239,7 @@ size_t EffectPaulstretch::GetBufferSize(double rate) const
    return std::max<size_t>(stmp, 128);
 }
 
-bool EffectPaulstretch::ProcessOne(EffectContext &,
+bool EffectPaulstretch::ProcessOne(EffectContext &context,
    WaveTrack *track, double t0, double t1, int count)
 {
    const auto badAllocMessage =
@@ -371,7 +371,7 @@ bool EffectPaulstretch::ProcessOne(EffectContext &,
             outputTrack->Append((samplePtr)stretch.out_buf.get(), floatSample, stretch.out_bufsize);
 
             nget = stretch.get_nsamples();
-            if (TrackProgress(count,
+            if (context.TrackProgress(count,
                s.as_double() / len.as_double()
             )) {
                cancelled = true;

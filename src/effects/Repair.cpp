@@ -139,7 +139,7 @@ bool EffectRepair::Process(EffectContext &context,
    return bGoodResult;
 }
 
-bool EffectRepair::ProcessOne(EffectContext &, int count,
+bool EffectRepair::ProcessOne(EffectContext &context, int count,
    WaveTrack * track, sampleCount start, size_t len,
    size_t repairStart, size_t repairLen)
 {
@@ -151,7 +151,8 @@ bool EffectRepair::ProcessOne(EffectContext &, int count,
       // little repairs shouldn't force dither on rendering:
       narrowestSampleFormat
    );
-   return !TrackProgress(count, 1.0); // TrackProgress returns true on Cancel.
+   // TrackProgress returns true on Cancel.
+   return !context.TrackProgress(count, 1.0);
 }
 
 bool EffectRepair::NeedsDither() const

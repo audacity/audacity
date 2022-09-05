@@ -214,7 +214,7 @@ bool EffectReverse::ProcessOneWave(EffectContext &context, int count,
    return rValue;
 }
 
-bool EffectReverse::ProcessOneClip(EffectContext &,
+bool EffectReverse::ProcessOneClip(EffectContext &context,
    int count, WaveTrack *track, sampleCount start, sampleCount len,
    sampleCount originalStart, sampleCount originalEnd)
 {
@@ -250,8 +250,9 @@ bool EffectReverse::ProcessOneClip(EffectContext &,
       len -= 2 * block;
       first += block;
 
-      if( TrackProgress(count, 2 * ( first - originalStart ).as_double() /
-                        originalLen.as_double() ) ) {
+      if( context.TrackProgress(
+         count, 2 * ( first - originalStart ).as_double() /
+         originalLen.as_double() ) ) {
          rc = false;
          break;
       }

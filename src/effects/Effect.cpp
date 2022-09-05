@@ -338,34 +338,6 @@ bool Effect::Delegate(
       mProjectRate, mTracks, mFactory, region, mUIFlags, nullptr);
 }
 
-bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
-{
-   auto updateResult = (mProgress ?
-      mProgress->Poll(frac * 1000, 1000, msg) :
-      ProgressResult::Success);
-   return (updateResult != ProgressResult::Success);
-}
-
-bool Effect::TrackProgress(
-   int whichTrack, double frac, const TranslatableString &msg) const
-{
-   auto updateResult = (mProgress ?
-      mProgress->Poll((whichTrack + frac) * 1000,
-         (double) mNumTracks * 1000, msg) :
-      ProgressResult::Success);
-   return (updateResult != ProgressResult::Success);
-}
-
-bool Effect::TrackGroupProgress(
-   int whichGroup, double frac, const TranslatableString &msg) const
-{
-   auto updateResult = (mProgress ?
-      mProgress->Poll((whichGroup + frac) * 1000,
-         (double) mNumGroups * 1000, msg) :
-      ProgressResult::Success);
-   return (updateResult != ProgressResult::Success);
-}
-
 void Effect::GetBounds(
    const WaveTrack &track, const WaveTrack *pRight,
    sampleCount *start, sampleCount *len)
