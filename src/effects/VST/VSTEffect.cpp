@@ -1182,7 +1182,10 @@ int VSTEffectValidator::ShowDialog(bool nonModal)
    return mDialog->ShowModal();
 }
 
-
+bool VSTEffectValidator::IsGraphicalUI()
+{
+   return mEffect.IsGraphicalUI();
+}
 
 bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
 {
@@ -1311,11 +1314,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    }
 
    auto pParent = S.GetParent();
-
-   // Looks like pushing the event handler is still needed, otherwise
-   // an assert will pop up when closing the gui:
-   // "xwWindowsBase::PopEventHandler(): cannot pop the wxWindows itself"
-   pParent->PushEventHandler(this);
 
    auto validator = std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
 
@@ -3541,7 +3539,7 @@ VSTEffectValidator::VSTEffectValidator
    EffectSettingsAccess&    access,
    wxWindow*                pParent
 )
-   : DefaultEffectUIValidator(effect, access, pParent),
+   : EffectUIValidator(effect, access),
      VSTEffectWrapper(instance.mPath),
      mInstance(instance),
      mParent(pParent),
