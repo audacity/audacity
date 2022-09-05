@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-08-16 17:26+0000\n"
+"PO-Revision-Date: 2022-09-05 03:46+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -265,7 +265,7 @@ msgstr "Audacity nie otworzył pliku %s."
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity failed to read from a file in %s."
-msgstr "Audacity nie odczytał z pliku %s."
+msgstr "Audacity nie wczytał z pliku %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -620,7 +620,7 @@ msgstr "Audacity nie mógł wczytać pliku:\n%s.\nByć może format png jest nie
 msgid ""
 "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr "Audacity nie mógł odczytać tego motywu domyślnego.\nZgłoś problem."
+msgstr "Audacity nie mógł wczytać tego motywu domyślnego.\nZgłoś problem."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2373,7 +2373,7 @@ msgstr "Czas na sprawdzenie wszystkich danych: %ld ms\n"
 
 #: src/Benchmark.cpp
 msgid "Reading data again...\n"
-msgstr "Ponowne odczytywanie danych...\n"
+msgstr "Ponowne wczytywanie danych...\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -3251,7 +3251,7 @@ msgstr "Etykieta ścieżki"
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
-msgstr "Nie można było przeczytać jednej lub więcej zapisanych etykiet."
+msgstr "Nie można było wczytać jednej lub więcej zapisanych etykiet."
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -3912,7 +3912,7 @@ msgstr "Wyłącz wykrywanie przerwań"
 #. "Found problems with <sequence> when checking project file."
 #: src/ProjectFSCK.cpp
 msgid "Project check read faulty Sequence tags."
-msgstr "Sprawdzanie projektu odczytało błędne znaczniki sekwencji."
+msgstr "Sprawdzanie projektu wczytało błędne znaczniki sekwencji."
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no changes"
@@ -3927,7 +3927,7 @@ msgstr "Kontynuuj z naprawami wymienionymi w dzienniku i poszukaj kolejnych bł�
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
-msgstr "Ostrzeżenie - Problemy odczytywania znaczników sekwencji"
+msgstr "Ostrzeżenie - Problemy wczytywania znaczników sekwencji"
 
 #: src/ProjectFSCK.cpp
 msgid "Inspecting project file data"
@@ -10290,7 +10290,7 @@ msgstr "Nie można otworzyć kodeka \"%s\" (0x%x)\n\n%s"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg : BŁĄD - Nie można przydzielić bufora do zapoznania się z dźwiękiem FIFO."
+msgstr "FFmpeg : BŁĄD - Nie można przydzielić bufora do odczytu z dźwiękiem FIFO."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
@@ -11685,7 +11685,7 @@ msgid ""
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr "Audacity rozpoznał typ pliku '%s'.\nProgramy przypuszczalnie importujące takie pliki to:\n%s,\nale żaden z nich nie odczytał tego formatu pliku."
+msgstr "Audacity rozpoznał typ pliku '%s'.\nProgramy przypuszczalnie importujące takie pliki to:\n%s,\nale żaden z nich nie wczytał tego formatu pliku."
 
 #: src/import/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
@@ -19525,7 +19525,7 @@ msgstr "Pliki skopiowane do folderu wtyczek:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Not found or cannot be read:"
-msgstr "Nie znaleziono lub nie można odczytać:"
+msgstr "Nie znaleziono lub nie można wczytać:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Unsupported file type:"
@@ -20009,7 +20009,7 @@ msgstr "Importuj przykładowe dane"
 
 #: plug-ins/sample-data-import.ny
 msgid "Reading and rendering samples..."
-msgstr "Odczytywanie i renderowanie sampli..."
+msgstr "Wczytywanie i renderowanie sampli..."
 
 #: plug-ins/sample-data-import.ny
 msgid "Select file"
