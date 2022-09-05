@@ -587,7 +587,7 @@ private:
 };
 
 
-class VSTEffectValidator final : public DefaultEffectUIValidator,
+class VSTEffectValidator final : public EffectUIValidator,
                                  public VSTEffectWrapper
 {
 public:
@@ -620,6 +620,8 @@ public:
    void OnSlider(wxCommandEvent& evt);    
 
    int ShowDialog(bool nonModal);
+
+   bool IsGraphicalUI();
 
 private:
    VSTEffectInstance& mInstance;
