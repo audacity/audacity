@@ -437,17 +437,12 @@ private:
    
 
    // Utility methods
-   
-   
  
 
  private:
 
    PluginID mID;
-   
-   // UI
-   wxWindow* mParentFE;            // FE = For Effect; to avoid confusion with the Validator mParent
-      
+     
    wxSizerItem* mContainer{};
    bool mGui{false};
    
@@ -619,6 +614,9 @@ public:
    int ShowDialog(bool nonModal);
 
    bool IsGraphicalUI();
+
+protected:
+   void SizeWindow(int w, int h) override;
 
 private:
    VSTEffectInstance& mInstance;
