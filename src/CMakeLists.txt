@@ -648,6 +648,8 @@ list( APPEND SOURCES
          effects/nyquist/LoadNyquist.h
          effects/nyquist/Nyquist.cpp
          effects/nyquist/Nyquist.h
+         effects/nyquist/NyquistControls.cpp
+         effects/nyquist/NyquistControls.h
          effects/nyquist/NyquistPrompt.cpp
          effects/nyquist/NyquistPrompt.h
       >
