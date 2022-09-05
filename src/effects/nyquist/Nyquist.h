@@ -74,7 +74,7 @@ struct NyquistSettings {
    // Other fields, to do
 };
 
-class AUDACITY_DLL_API NyquistEffect final
+class AUDACITY_DLL_API NyquistEffect
    : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
@@ -108,21 +108,25 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, EffectSettings &settings) const override;
-   bool DoLoadSettings(
-      const CommandParameters & parms, EffectSettings &settings);
+      const CommandParameters & parms, EffectSettings &settings) const final;
+   virtual bool DoLoadSettings(
+      const CommandParameters *pParms, EffectSettings &settings);
 
    bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
       override;
    bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings)
-      const override;
+      const final;
+   virtual bool DoVisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const;
    int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
+   virtual bool AcceptsAllNyquistTypes();
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
@@ -141,20 +145,16 @@ public:
    void Break();
    void Stop();
 
+   void SetDebug(bool value) { mDebug = value; }
+   void SetControls(std::vector<NyqControl> controls)
+      { mControls = move(controls); }
+   std::vector<NyqControl> MoveControls() { return move(mControls); }
+
 private:
    static int mReentryCount;
    // NyquistEffect implementation
 
    bool ProcessOne();
-
-   void BuildPromptWindow(ShuttleGui & S);
-   void BuildEffectWindow(ShuttleGui & S);
-
-   bool TransferDataToPromptWindow();
-   bool TransferDataToEffectWindow();
-
-   bool TransferDataFromPromptWindow();
-   bool TransferDataFromEffectWindow();
 
    bool IsOk();
    const TranslatableString &InitializationError() const { return mInitError; }
@@ -186,7 +186,12 @@ private:
    void OSCallback();
 
    void ParseFile();
+
+protected:
    bool ParseCommand(const wxString & cmd);
+   virtual bool RecoverParseTypeFailed();
+
+private:
    bool ParseProgram(wxInputStream & stream);
    struct Tokenizer {
       bool sl { false };
@@ -207,8 +212,6 @@ private:
                            wxString *pExtraString = nullptr);
    static double GetCtrlValue(const wxString &s);
 
-   void OnLoad(wxCommandEvent & evt);
-   void OnSave(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
 
    void OnText(wxCommandEvent & evt);
@@ -227,7 +230,10 @@ private:
 
    wxString          mXlispPath;
 
+protected:
    wxFileName        mFileName;  ///< Name of the Nyquist script file this effect is loaded from
+
+private:
    wxDateTime        mFileModified; ///< When the script was last modified on disk
 
    bool              mStop{ false };
@@ -238,21 +244,21 @@ private:
    bool              mCompiler{ false };
    bool              mTrace{ false };   // True when *tracenable* or *sal-traceback* are enabled
    bool              mIsSal{ false };
+
+protected:
    bool              mExternal{ false };
    bool              mIsSpectral;
    bool              mIsTool{ false };
-   /** True if the code to execute is obtained interactively from the user via
-    * the "Nyquist Effect Prompt", or "Nyquist Prompt", false for all other effects (lisp code read from
-    * files)
-    */
-   bool              mIsPrompt{ false };
    bool              mOK{ false };
    TranslatableString mInitError;
-   wxString          mInputCmd; // history: exactly what the user typed
-   wxString          mParameters; // The parameters of to be fed to a nested prompt
+
+private:
    wxString          mCmd;      // the command to be processed
+
+protected:
    TranslatableString mName;   ///< Name of the Effect (untranslated)
-   TranslatableString mPromptName; // If a prompt, we need to remember original name.
+
+private:
    TranslatableString mAction{ XO("Applying Nyquist Effect...") };
    TranslatableString mInfo;
    TranslatableString mAuthor{ XO("n/a") };
@@ -266,21 +272,24 @@ private:
    wxString          mHelpFile;
    bool              mHelpFileExists;
    FilePath          mHelpPage;
-   EffectType        mType;
-   EffectType        mPromptType; // If a prompt, need to remember original type.
 
+protected:
+   EffectType        mType;
    bool              mEnablePreview;
    bool              mDebugButton;  // Set to false to disable Debug button.
-
    bool              mDebug{ false }; // When true, debug window is shown.
+
+private:
    bool              mRedirectOutput{ false };
    bool              mProjectChanged;
    wxString          mDebugOutputStr;
    TranslatableString mDebugOutput;
 
+protected:
    int               mVersion{ 4 }; // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
    std::vector<NyqControl>   mControls;
 
+private:
    unsigned          mCurNumChannels;
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
@@ -311,13 +320,61 @@ private:
    bool              mRestoreSplits{ true }; //!< Default: Restore split lines.
    int               mMergeClips{ -1 }; //!< Default (auto):  Merge if length remains unchanged.
 
-   wxTextCtrl *mCommandText;
-
    std::exception_ptr mpException {};
 
    DECLARE_EVENT_TABLE()
 
    friend class NyquistEffectsModule;
+};
+
+class AUDACITY_DLL_API NyquistPrompt final
+   : public NyquistEffect
+{
+public:
+   NyquistPrompt();
+
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   ManualPageID ManualPage() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms)
+         const override;
+   bool DoLoadSettings(
+      const CommandParameters *pParms, EffectSettings &settings) override;
+   bool DoVisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override;
+
+   bool Init() override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
+   bool AcceptsAllNyquistTypes() override;
+
+   int ShowHostInterface( wxWindow &parent,
+      const EffectDialogFactory &factory,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
+      bool forceModal = false) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+         override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
+
+   bool RecoverParseTypeFailed() override;
+
+private:
+   wxString          mInputCmd; // history: exactly what the user typed
+   wxString          mParameters; // The parameters to be fed to a nested prompt
+   TranslatableString mPromptName; // If a prompt, we need to remember original name.
+   EffectType        mPromptType; // If a prompt, need to remember original type.
+   wxTextCtrl *mCommandText;
+
+   void OnLoad(wxCommandEvent & evt);
+   void OnSave(wxCommandEvent & evt);
+   DECLARE_EVENT_TABLE()
 };
 
 class NyquistOutputDialog final : public wxDialogWrapper

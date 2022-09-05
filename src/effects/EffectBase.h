@@ -35,6 +35,8 @@ public:
    EffectBase();
    ~EffectBase() override;
 
+   double GetT0() const { return mT0; }
+   double GetT1() const { return mT1; }
 protected:
    // The EffectBase class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.

@@ -254,7 +254,9 @@ std::unique_ptr<ComponentInterface>
 NyquistEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   auto effect = std::make_unique<NyquistEffect>(path);
+   std::unique_ptr<NyquistEffect> effect = (path == NYQUIST_PROMPT_ID)
+      ? std::make_unique<NyquistPrompt>()
+      : std::make_unique<NyquistEffect>(path);
    if (effect->IsOk())
       return effect;
    return nullptr;
