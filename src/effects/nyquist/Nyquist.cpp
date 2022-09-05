@@ -138,10 +138,17 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
 END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
+: mName{
+     (fName == NYQUIST_PROMPT_ID) ? NYQUIST_PROMPT_NAME
+   /* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */
+   : (fName == NYQUIST_WORKER_ID) ? XO("Nyquist Worker")
+   // Use the file name verbatim as effect name.
+   // This is only a default name, overridden if we find a $name line:
+   : Verbatim(wxFileName{ fName }.GetName())
+}
 {
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
-      mName = NYQUIST_PROMPT_NAME;
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
@@ -151,22 +158,14 @@ NyquistEffect::NyquistEffect(const wxString &fName)
       return;
    }
 
-   if (fName == NYQUIST_WORKER_ID) {
-      // Effect spawned from Nyquist Prompt
-/* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */
-      mName = XO("Nyquist Worker");
-      return;
+   if (!(fName == NYQUIST_PROMPT_ID || fName == NYQUIST_WORKER_ID)) {
+      mFileName = fName;
+      mFileModified = mFileName.GetModificationTime();
+      ParseFile();
+
+      if (!mOK && mInitError.empty())
+         mInitError = XO("Ill-formed Nyquist plug-in header");
    }
-
-   mFileName = fName;
-   // Use the file name verbatim as effect name.
-   // This is only a default name, overridden if we find a $name line:
-   mName = Verbatim( mFileName.GetName() );
-   mFileModified = mFileName.GetModificationTime();
-   ParseFile();
-
-   if (!mOK && mInitError.empty())
-      mInitError = XO("Ill-formed Nyquist plug-in header");   
 }
 
 NyquistEffect::~NyquistEffect()
