@@ -322,6 +322,12 @@ void AColor::DrawHStretch(wxDC& dc, const wxRect& rect, wxBitmap& bitmap)
    dc.StretchBlit(dx2, rect.y, w0, dh, &srcDC, bitmap.GetWidth() - w0, 0, w0, sh);
 }
 
+void AColor::DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap)
+{
+   DrawNinePatch(dc, bitmap, r);
+}
+
+
 wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
 {
    wxColour c3(

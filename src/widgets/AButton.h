@@ -18,6 +18,7 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/window.h> // to inherit
+#include <wx/image.h>
 
 class wxImage;
 class TranslatableString;
@@ -32,6 +33,7 @@ public:
    {
       TextButton,
       ImageButton,
+      FrameButton
    };
 
    AButton(wxWindow* parent = nullptr,
@@ -83,6 +85,8 @@ public:
                                    const wxImage& down,
                                    const wxImage& overDown,
                                    const wxImage& dis);
+
+   void SetIcon(const wxImage& icon);
 
    // Choose state of the button
    void SetAlternateIdx(unsigned idx);
@@ -185,7 +189,8 @@ public:
    bool mEnabled{true};
    bool mUseDisabledAsDownHiliteImage{false};
    bool mIsDoubleClicked{false};
-   
+
+   wxImage mIcon;
    std::vector<std::array<wxImage, AButtonStateCount>> mImages;
 
    wxRect mFocusRect;
