@@ -173,15 +173,19 @@ void ShareAudioToolbar::MakeShareAudioButton()
          bmpRecoloredSetupHiliteSmall, bmpHiliteButtonSmall, size);
    }
 
-   mShareAudioButton = MakeButton(
-      this,
-      bmpRecoloredSetupUpSmall, bmpRecoloredSetupDownSmall,
-      bmpRecoloredSetupUpHiliteSmall, bmpRecoloredSetupHiliteSmall,
-      bmpShareAudio, bmpShareAudio, bmpShareAudio,
-      ID_SHARE_AUDIO_BUTTON,
-      wxDefaultPosition, false, theTheme.ImageSize(bmpRecoloredSetupUpSmall));
-
+   mShareAudioButton = safenew AButton(this, ID_SHARE_AUDIO_BUTTON);
+   //i18n-hint: Share audio button text, keep as short as possible
    mShareAudioButton->SetLabel(XO("Share Audio"));
+   mShareAudioButton->SetButtonType(AButton::FrameButton);
+   mShareAudioButton->SetButtonToggles(true);
+   mShareAudioButton->SetImages(
+      theTheme.Image(bmpRecoloredSetupUpSmall),
+      theTheme.Image(bmpRecoloredSetupUpHiliteSmall),
+      theTheme.Image(bmpRecoloredSetupDownSmall),
+      theTheme.Image(bmpRecoloredSetupHiliteSmall),
+      theTheme.Image(bmpRecoloredSetupUpSmall));
+   mShareAudioButton->SetIcon(theTheme.Image(bmpSetup));
+   mShareAudioButton->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
 
    mShareAudioButton->Bind(
       wxEVT_BUTTON,
@@ -196,27 +200,11 @@ void ShareAudioToolbar::MakeShareAudioButton()
 
 void ShareAudioToolbar::ArrangeButtons()
 {
-   int flags = wxALIGN_CENTER | wxRIGHT;
-
    // (Re)allocate the button sizer
    DestroySizer();
 
    Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
-
-   auto text = safenew wxStaticText(this, wxID_ANY, XO("Share Audio").Translation());
-   text->SetBackgroundColour(theTheme.Colour(clrMedium));
-   text->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
-
-   auto vSizer = safenew wxBoxSizer(wxVERTICAL);
-   vSizer->AddSpacer(4);
-   vSizer->Add(mShareAudioButton, 0, flags, 2);
-   vSizer->AddSpacer(4);
-   vSizer->Add(text, 0, flags, 2);
-
-   // Start with a little extra space
-   mSizer->Add(5, 55);
-   mSizer->Add(vSizer, 1, wxEXPAND);
-   mSizer->Add(5, 55);
+   mSizer->Add(mShareAudioButton, 1, wxEXPAND);
 
    // Layout the sizer
    mSizer->Layout();
