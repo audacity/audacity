@@ -44,7 +44,6 @@ effects from this one class.
 #include <wx/slider.h>
 #include <wx/sstream.h>
 #include <wx/stattext.h>
-#include <wx/textdlg.h>
 #include <wx/tokenzr.h>
 #include <wx/txtstrm.h>
 #include <wx/valgen.h>
@@ -52,7 +51,6 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "BasicUI.h"
 #include "../EffectManager.h"
 #include "FileNames.h"
 #include "../../LabelTrack.h"
@@ -93,16 +91,11 @@ effects from this one class.
 #include <sstream>
 #include <float.h>
 
-#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
-
 int NyquistEffect::mReentryCount = 0;
 
 enum
 {
    ID_Editor = 10000,
-   ID_Load,
-   ID_Save,
-
    ID_Slider = 11000,
    ID_Text = 12000,
    ID_Choice = 13000,
@@ -112,19 +105,11 @@ enum
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
-static const wxChar *KEY_Command = wxT("Command");
-static const wxChar *KEY_Parameters = wxT("Parameters");
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // NyquistEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
-
-BEGIN_EVENT_TABLE(NyquistPrompt, NyquistEffect)
-   EVT_BUTTON(ID_Load, NyquistPrompt::OnLoad)
-   EVT_BUTTON(ID_Save, NyquistPrompt::OnSave)
-END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
    EVT_COMMAND_RANGE(ID_Slider, ID_Slider+99,
@@ -159,16 +144,6 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    }
 }
 
-NyquistPrompt::NyquistPrompt() : NyquistEffect{ NYQUIST_PROMPT_ID }
-{
-   // Interactive Nyquist
-   mType = EffectTypeTool;
-   mIsTool = true;
-   mPromptName = mName;
-   mPromptType = mType;
-   mOK = true;
-}
-
 NyquistEffect::~NyquistEffect()
 {
 }
@@ -180,29 +155,14 @@ PluginPath NyquistEffect::GetPath() const
    return mFileName.GetFullPath();
 }
 
-PluginPath NyquistPrompt::GetPath() const
-{
-   return NYQUIST_PROMPT_ID;
-}
-
 ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
 {
    return mName;
 }
 
-ComponentInterfaceSymbol NyquistPrompt::GetSymbol() const
-{
-   return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
-}
-
 VendorSymbol NyquistEffect::GetVendor() const
 {
    return mAuthor;
-}
-
-VendorSymbol NyquistPrompt::GetVendor() const
-{
-   return XO("Audacity");
 }
 
 wxString NyquistEffect::GetVersion() const
@@ -220,11 +180,6 @@ TranslatableString NyquistEffect::GetDescription() const
 ManualPageID NyquistEffect::ManualPage() const
 {
    return mManPage;
-}
-
-ManualPageID NyquistPrompt::ManualPage() const
-{
-   return wxString("Nyquist_Prompt");
 }
 
 
@@ -273,19 +228,9 @@ bool NyquistEffect::IsInteractive() const
    return mControls.size() != 0;
 }
 
-bool NyquistPrompt::IsInteractive() const
-{
-   return true;
-}
-
 bool NyquistEffect::IsDefault() const
 {
    return false;
-}
-
-bool NyquistPrompt::IsDefault() const
-{
-   return true;
 }
 
 bool NyquistEffect::VisitSettings(
@@ -315,14 +260,6 @@ bool NyquistEffect::VisitSettings(
       return true;
 
    return DoVisitSettings(visitor, settings);
-}
-
-bool NyquistPrompt::DoVisitSettings(
-   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
-{
-   visitor.Define( mInputCmd, KEY_Command, wxString{} );
-   visitor.Define( mParameters, KEY_Parameters, wxString{} );
-   return true;
 }
 
 bool NyquistEffect::DoVisitSettings(
@@ -357,15 +294,6 @@ bool NyquistEffect::DoVisitSettings(
          //parms.Write(ctrl.var, ctrl.valStr);
       }
    }
-   return true;
-}
-
-bool NyquistPrompt::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
-{
-   parms.Write(KEY_Command, mInputCmd);
-   parms.Write(KEY_Parameters, mParameters);
-
    return true;
 }
 
@@ -417,44 +345,6 @@ bool NyquistEffect::LoadSettings(
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<NyquistEffect*>(this)->DoLoadSettings(&parms, settings);
-}
-
-bool NyquistPrompt::DoLoadSettings(
-   const CommandParameters *pParms, EffectSettings &settings)
-{
-   // Due to a constness problem that happens when using the prompt, we need
-   // to be ready to switch the params to a local instance.
-   CommandParameters localParms;
-
-   pParms->Read(KEY_Command, &mInputCmd, wxEmptyString);
-   pParms->Read(KEY_Parameters, &mParameters, wxEmptyString);
-
-   if (!mInputCmd.empty())
-   {
-      ParseCommand(mInputCmd);
-   }
-
-   if (!mParameters.empty())
-   {
-      pParms = &localParms;
-      localParms.SetParameters(mParameters);
-   }
-
-   if (!IsBatchProcessing())
-   {
-      mType = EffectTypeTool;
-   }
-
-   mPromptType = mType;
-   mIsTool = (mPromptType == EffectTypeTool);
-   mExternal = true;
-
-   if (!IsBatchProcessing())
-   {
-      return true;
-   }
-
-   return NyquistEffect::DoLoadSettings(pParms, settings);
 }
 
 bool NyquistEffect::DoLoadSettings(
@@ -556,23 +446,6 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
 }
 
 // Effect Implementation
-bool NyquistPrompt::Init()
-{
-   // When Nyquist Prompt spawns an effect GUI, Init() is called for Nyquist Prompt,
-   // and then again for the spawned (mExternal) effect.
-
-   // EffectType may not be defined in script, so
-   // reset each time we call the Nyquist Prompt.
-   mName = mPromptName;
-   // Reset effect type each time we call the Nyquist Prompt.
-   mType = mPromptType;
-   mIsSpectral = false;
-   mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
-   mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
-   mVersion = 4;
-   return true;
-}
-
 bool NyquistEffect::Init()
 {
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
@@ -652,28 +525,6 @@ bool NyquistEffect::Init()
 }
 
 static void RegisterFunctions();
-
-bool NyquistPrompt::Process(EffectInstance &instance, EffectSettings &settings)
-{
-   if (mControls.size() > 0 && !IsBatchProcessing()) {
-      auto &nyquistSettings = GetSettings(settings);
-      auto cleanup = finally([&]{
-         // Free up memory
-         nyquistSettings.proxySettings = {};
-      });
-      NyquistEffect proxy{ NYQUIST_WORKER_ID };
-      proxy.SetCommand(mInputCmd);
-      proxy.SetDebug(nyquistSettings.proxyDebug);
-      proxy.SetControls(move(nyquistSettings.controls));
-      auto result = Delegate(proxy, nyquistSettings.proxySettings);
-      if (result) {
-         mT0 = proxy.GetT0();
-         mT1 = proxy.GetT1();
-      }
-      return result;
-   }
-   return NyquistEffect::Process(instance, settings);
-}
 
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
@@ -1059,82 +910,6 @@ int NyquistEffect::ShowHostInterface(
       parent, factory, pInstance, access, forceModal);
    // Remember if the user clicked debug
    mDebug = (res == eDebugID);
-   return res;
-}
-
-int NyquistPrompt::ShowHostInterface(
-   wxWindow &parent, const EffectDialogFactory &factory,
-   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
-   bool forceModal)
-{
-   int res = wxID_APPLY;
-   if (!Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt)) {
-      // Show the normal prompt interface
-      res = Effect::ShowHostInterface(
-         parent, factory, pInstance, access, forceModal);
-   }
-
-   // Remember if the user clicked debug
-   mDebug = (res == eDebugID);
-
-   // We're done if the user clicked "Close",
-   // or the program currently loaded into the prompt doesn't have a UI.
-   if (!res || mControls.size() == 0 || !pInstance)
-      return res;
-
-   // Nyquist prompt was OK, but gave us some magic ;control comments to
-   // reinterpret into a second dialog
-
-   NyquistEffect effect(NYQUIST_WORKER_ID);
-   effect.SetCommand(mInputCmd);
-   Finally Do{[&]{
-      // A second dialog will use effect as a pushed event handler.
-      // wxWidgets delays window destruction until idle time.
-      // Yield to destroy the dialog while effect is still in scope.
-      BasicUI::Yield();
-   }};
-
-   // Must give effect its own settings to interpret, not those in access
-   // Let's also give it its own instance
-   auto newSettings = effect.MakeSettings();
-   auto pNewInstance = effect.MakeInstance();
-   auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
-
-   if (IsBatchProcessing()) {
-      effect.SetBatchProcessing();
-
-      CommandParameters cp;
-      cp.SetParameters(mParameters);
-      effect.LoadSettings(cp, newSettings);
-
-      // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(
-         parent, factory, pNewInstance, *newAccess, forceModal);
-      if (res) {
-         CommandParameters cp;
-         effect.SaveSettings(newSettings, cp);
-         cp.GetParameters(mParameters);
-      }
-   }
-   else {
-      if (!factory)
-         return 0;
-      res = effect.ShowHostInterface(
-         parent, factory, pNewInstance, *newAccess, false );
-      if (!res)
-         return 0;
-
-      // Wrap the new settings in the old settings
-      access.ModifySettings([&](EffectSettings &settings){
-         auto &nyquistSettings = GetSettings(settings);
-         nyquistSettings.proxySettings = std::move(newSettings);
-         nyquistSettings.proxyDebug = this->mDebug;
-         nyquistSettings.controls = effect.MoveControls();
-      });
-   }
-   if (!pNewInstance)
-      // Propagate the failure from nested ShowHostInterface
-      pInstance.reset();
    return res;
 }
 
@@ -1678,12 +1453,6 @@ bool NyquistEffect::AcceptsAllNyquistTypes()
    // If not returning audio from process effect,
    // return first result then stop (disables preview)
    return GetType() != EffectTypeProcess;
-}
-
-bool NyquistPrompt::AcceptsAllNyquistTypes()
-{
-   // Allow all output from Nyquist Prompt.
-   return true;
 }
 
 // ============================================================================
@@ -2443,22 +2212,6 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    return true;
 }
 
-bool NyquistPrompt::RecoverParseTypeFailed()
-{
-   /* i1n-hint: SAL and LISP are names for variant syntaxes for the
-    Nyquist programming language.  Leave them, and 'return', untranslated. */
-   Effect::MessageBox(
-      XO(
-"Your code looks like SAL syntax, but there is no \'return\' statement.\n\
-For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
-or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
-      Effect::DefaultMessageBoxStyle,
-      XO("Error in Nyquist code") );
-   /* i18n-hint: refers to programming "languages" */
-   mInitError = XO("Could not determine language");
-   return false;
-}
-
 bool NyquistEffect::RecoverParseTypeFailed()
 {
    // Just throw it at Nyquist to see what happens
@@ -2646,14 +2399,6 @@ FilePaths NyquistEffect::GetNyquistSearchPath()
    return pathList;
 }
 
-bool NyquistPrompt::TransferDataToWindow(const EffectSettings &)
-{
-   mUIParent->TransferDataToWindow();
-   mCommandText->ChangeValue(mInputCmd);
-   EnablePreview(mEnablePreview);
-   return true;
-}
-
 bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
    mUIParent->TransferDataToWindow();
@@ -2691,27 +2436,6 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
    EnablePreview(mEnablePreview);
    return true;
-}
-
-bool NyquistPrompt::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-      return false;
-
-   mInputCmd = mCommandText->GetValue();
-
-   // Un-correct smart quoting, bothersomely applied in wxTextCtrl by
-   // the native widget of MacOS 10.9 SDK
-   const wxString left = wxT("\u201c"), right = wxT("\u201d"), dumb = '"';
-   mInputCmd.Replace(left, dumb, true);
-   mInputCmd.Replace(right, dumb, true);
-
-   const wxString leftSingle = wxT("\u2018"), rightSingle = wxT("\u2019"),
-      dumbSingle = '\'';
-   mInputCmd.Replace(leftSingle, dumbSingle, true);
-   mInputCmd.Replace(rightSingle, dumbSingle, true);
-
-   return ParseCommand(mInputCmd);
 }
 
 bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
@@ -2855,40 +2579,6 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
    }
 
    return true;
-}
-
-std::unique_ptr<EffectUIValidator> NyquistPrompt::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
-{
-   S.StartVerticalLay();
-   {
-      S.StartMultiColumn(3, wxEXPAND);
-      {
-         S.SetStretchyCol(1);
-
-         S.AddVariableText(XO("Enter Nyquist Command: "));
-
-         S.AddSpace(1, 1);
-      }
-      S.EndMultiColumn();
-
-      S.StartHorizontalLay(wxEXPAND, 1);
-      {
-          mCommandText = S.Focus()
-            .MinSize( { 500, 200 } )
-            .AddTextWindow(wxT(""));
-      }
-      S.EndHorizontalLay();
-
-      S.StartHorizontalLay(wxALIGN_CENTER, 0);
-      {
-         S.Id(ID_Load).AddButton(XXO("&Load"));
-         S.Id(ID_Save).AddButton(XXO("&Save"));
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndVerticalLay();
-   return nullptr;
 }
 
 std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
@@ -3056,78 +2746,6 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
 bool NyquistEffect::IsOk()
 {
    return mOK;
-}
-
-static const FileNames::FileType
-   /* i18n-hint: Nyquist is the name of a programming language */
-     NyquistScripts = { XO("Nyquist scripts"), { wxT("ny") }, true }
-   /* i18n-hint: Lisp is the name of a programming language */
-   , LispScripts = { XO("Lisp scripts"), { wxT("lsp") }, true }
-;
-
-void NyquistPrompt::OnLoad(wxCommandEvent & WXUNUSED(evt))
-{
-   if (mCommandText->IsModified())
-   {
-      if (wxNO == Effect::MessageBox(
-         XO("Current program has been modified.\nDiscard changes?"),
-         wxYES_NO ) )
-      {
-         return;
-      }
-   }
-
-   FileDialogWrapper dlog(
-      mUIParent,
-      XO("Load Nyquist script"),
-      mFileName.GetPath(),
-      wxEmptyString,
-      {
-         NyquistScripts,
-         LispScripts,
-         FileNames::TextFiles,
-         FileNames::AllFiles
-      },
-      wxFD_OPEN | wxRESIZE_BORDER);
-
-   if (dlog.ShowModal() != wxID_OK)
-   {
-      return;
-   }
-
-   mFileName = dlog.GetPath();
-
-   if (!mCommandText->LoadFile(mFileName.GetFullPath()))
-   {
-      Effect::MessageBox( XO("File could not be loaded") );
-   }
-}
-
-void NyquistPrompt::OnSave(wxCommandEvent & WXUNUSED(evt))
-{
-   FileDialogWrapper dlog(
-      mUIParent,
-      XO("Save Nyquist script"),
-      mFileName.GetPath(),
-      mFileName.GetFullName(),
-      {
-         NyquistScripts,
-         LispScripts,
-         FileNames::AllFiles
-      },
-      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
-
-   if (dlog.ShowModal() != wxID_OK)
-   {
-      return;
-   }
-
-   mFileName = dlog.GetPath();
-
-   if (!mCommandText->SaveFile(mFileName.GetFullPath()))
-   {
-      Effect::MessageBox( XO("File could not be saved") );
-   }
 }
 
 void NyquistEffect::OnSlider(wxCommandEvent & evt)
