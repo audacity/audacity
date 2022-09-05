@@ -19,7 +19,6 @@
 #include <wx/log.h>
 #include <wx/menu.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
 #include <wx/tooltip.h>
 
 #include "../ActiveProject.h"
@@ -178,16 +177,19 @@ void AudioSetupToolBar::MakeAudioSetupButton()
       MakeRecoloredImageSize(bmpRecoloredSetupHiliteSmall, bmpHiliteButtonSmall, size);
    }
 
-   mAudioSetup = MakeButton(this,
-      bmpRecoloredSetupUpSmall, bmpRecoloredSetupDownSmall,
-      bmpRecoloredSetupUpHiliteSmall, bmpRecoloredSetupHiliteSmall,
-      bmpSetup, bmpSetup, bmpSetup,
-      ID_AUDIO_SETUP_BUTTON,
-      wxDefaultPosition,
-      true,
-      theTheme.ImageSize(bmpRecoloredSetupUpSmall));
-
+   mAudioSetup = safenew AButton(this, ID_AUDIO_SETUP_BUTTON);
+   //i18n-hint: Audio setup button text, keep as short as possible
    mAudioSetup->SetLabel(XO("Audio Setup"));
+   mAudioSetup->SetButtonType(AButton::FrameButton);
+   mAudioSetup->SetButtonToggles(true);
+   mAudioSetup->SetImages(
+      theTheme.Image(bmpRecoloredSetupUpSmall),
+      theTheme.Image(bmpRecoloredSetupUpHiliteSmall),
+      theTheme.Image(bmpRecoloredSetupDownSmall),
+      theTheme.Image(bmpRecoloredSetupHiliteSmall),
+      theTheme.Image(bmpRecoloredSetupUpSmall));
+   mAudioSetup->SetIcon(theTheme.Image(bmpSetup));
+   mAudioSetup->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
 }
 
 void AudioSetupToolBar::ArrangeButtons()
@@ -202,21 +204,7 @@ void AudioSetupToolBar::ArrangeButtons()
    }
 
    Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
-
-   auto text = safenew wxStaticText(this, wxID_ANY, "Audio Setup");
-   text->SetBackgroundColour(theTheme.Colour(clrMedium));
-   text->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
-
-   auto vSizer = safenew wxBoxSizer(wxVERTICAL);
-   vSizer->AddSpacer(4);
-   vSizer->Add(mAudioSetup, 0, flags, 2);
-   vSizer->AddSpacer(4);
-   vSizer->Add(text, 0, flags, 2);
-
-   // Start with a little extra space
-   mSizer->Add(5, 55);
-   mSizer->Add(vSizer, 1, wxEXPAND);
-   mSizer->Add(5, 55);
+   mSizer->Add(mAudioSetup, 1, wxEXPAND);
 
    // Layout the sizer
    mSizer->Layout();
@@ -262,21 +250,22 @@ void AudioSetupToolBar::OnFocus(wxFocusEvent &event)
 
 void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
 {
-   // Be sure the pop-up happens even if there are exceptions, except for buttons which toggle.
-   auto cleanup = finally([&] { mAudioSetup->InteractionOver(); });
-
    wxMenu menu;
 
-   AppendSubMenu(menu, mHost, "&Host");
+   //i18n-hint: Audio setup menu
+   AppendSubMenu(menu, mHost, _("&Host"));
    menu.AppendSeparator();
 
-   AppendSubMenu(menu, mOutput, "&Playback Device");
+   //i18n-hint: Audio setup menu
+   AppendSubMenu(menu, mOutput, _("&Playback Device"));
    menu.AppendSeparator();
 
-   AppendSubMenu(menu, mInput, "&Recording Device");
+   //i18n-hint: Audio setup menu
+   AppendSubMenu(menu, mInput, _("&Recording Device"));
    menu.AppendSeparator();
 
-   AppendSubMenu(menu, mInputChannels, "Recording &Channels");
+   //i18n-hint: Audio setup menu
+   AppendSubMenu(menu, mInputChannels, _("Recording &Channels"));
    menu.AppendSeparator();
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
