@@ -998,7 +998,7 @@ bool NyquistEffect::Process(EffectContext &context,
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = ProcessOne();
+         success = ProcessOne(context);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -1189,10 +1189,13 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
    return TransferDataFromEffectWindow();
 }
 
+struct CallbackData{ NyquistEffect &effect; EffectContext &context; };
+
 // NyquistEffect implementation
 
-bool NyquistEffect::ProcessOne()
+bool NyquistEffect::ProcessOne(EffectContext &context)
 {
+   CallbackData data{ *this, context };
    mpException = {};
 
    nyx_rval rval;
@@ -1383,7 +1386,7 @@ bool NyquistEffect::ProcessOne()
       auto curLen = mCurLen.as_long_long();
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
-      nyx_set_input_audio(StaticGetCallback, (void *)this,
+      nyx_set_input_audio(StaticGetCallback, &data,
                           (int)mCurNumChannels,
                           curLen, mCurTrack[0]->GetRate());
    }
@@ -1658,7 +1661,7 @@ bool NyquistEffect::ProcessOne()
    {
       auto vr0 = valueRestorer( mOutputTrack[0], outputTrack[0].get() );
       auto vr1 = valueRestorer( mOutputTrack[1], outputTrack[1].get() );
-      success = nyx_get_audio(StaticPutCallback, (void *)this);
+      success = nyx_get_audio(StaticPutCallback, &data);
    }
 
    // See if GetCallback found read errors
@@ -2510,12 +2513,13 @@ int NyquistEffect::StaticGetCallback(float *buffer, int channel,
                                      int64_t start, int64_t len, int64_t totlen,
                                      void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
-   return This->GetCallback(buffer, channel, start, len, totlen);
+   auto pData = static_cast<CallbackData*>(userdata);
+   return pData->effect.GetCallback(pData->context,
+      buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::GetCallback(float *buffer, int ch,
-                               int64_t start, int64_t len, int64_t WXUNUSED(totlen))
+int NyquistEffect::GetCallback(EffectContext &,
+   float *buffer, int ch, int64_t start, int64_t len, int64_t)
 {
    if (mCurBuffer[ch]) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
@@ -2577,12 +2581,14 @@ int NyquistEffect::StaticPutCallback(float *buffer, int channel,
                                      int64_t start, int64_t len, int64_t totlen,
                                      void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
-   return This->PutCallback(buffer, channel, start, len, totlen);
+   auto pData = static_cast<CallbackData *>(userdata);
+   return pData->effect.PutCallback(pData->context,
+      buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::PutCallback(float *buffer, int channel,
-                               int64_t start, int64_t len, int64_t totlen)
+int NyquistEffect::PutCallback(EffectContext &,
+   float *buffer, int channel,
+   int64_t start, int64_t len, int64_t totlen)
 {
    // Don't let C++ exceptions propagate through the Nyquist library
    return GuardedCall<int>( [&] {

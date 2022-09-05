@@ -145,7 +145,7 @@ private:
    static int mReentryCount;
    // NyquistEffect implementation
 
-   bool ProcessOne();
+   bool ProcessOne(EffectContext &context);
 
    void BuildPromptWindow(ShuttleGui & S);
    void BuildEffectWindow(ShuttleGui & S);
@@ -178,9 +178,9 @@ private:
    static void StaticOutputCallback(int c, void *userdata);
    static void StaticOSCallback(void *userdata);
 
-   int GetCallback(float *buffer, int channel,
+   int GetCallback(EffectContext &context, float *buffer, int channel,
                    int64_t start, int64_t len, int64_t totlen);
-   int PutCallback(float *buffer, int channel,
+   int PutCallback(EffectContext &context, float *buffer, int channel,
                    int64_t start, int64_t len, int64_t totlen);
    void OutputCallback(int c);
    void OSCallback();
