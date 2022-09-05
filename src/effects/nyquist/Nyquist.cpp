@@ -263,9 +263,16 @@ bool NyquistEffect::VisitSettings(
 }
 
 bool NyquistEffect::DoVisitSettings(
-   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
+   ConstSettingsVisitor &visitor, const EffectSettings &) const
 {
-   auto pBinding = mBindings.cbegin();
+   mControls.Visit(mBindings, visitor);
+   return true;
+}
+
+void NyquistControls::Visit(
+   const Bindings &bindings, ConstSettingsVisitor &visitor) const
+{
+   auto pBinding = bindings.cbegin();
    for (const auto &ctrl : mControls) {
       auto &binding = *pBinding++;
       double d = binding.val;
@@ -296,13 +303,18 @@ bool NyquistEffect::DoVisitSettings(
          //parms.Write(ctrl.var, ctrl.valStr);
       }
    }
-   return true;
 }
 
 bool NyquistEffect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+   const EffectSettings &settings, CommandParameters & parms) const
 {
-   auto pBinding = mBindings.cbegin();
+   return mControls.Save(mBindings, parms);
+}
+
+bool NyquistControls::Save(
+   const Bindings &bindings, CommandParameters & parms) const
+{
+   auto pBinding = bindings.cbegin();
    for (const auto &ctrl : mControls) {
       auto &binding = *pBinding++;
       double d = binding.val;
@@ -364,27 +376,24 @@ bool NyquistEffect::DoLoadSettings(
    // When batch processing, we just ignore missing/bad parameters.
    // We'll end up using defaults in those cases.
    if (!IsBatchProcessing()) {
-      badCount = SetLispVarsFromParameters(*pParms, kTestOnly);
+      badCount = mControls.Load(mBindings, *pParms, kTestOnly);
       if (badCount > 0)
          return false;
    }
 
-   badCount = SetLispVarsFromParameters(*pParms, kTestAndSet);
+   badCount = mControls.Load(mBindings, *pParms, kTestAndSet);
    // We never do anything with badCount here.
    // It might be non zero, for missing parameters, and we allow that,
    // and don't distinguish that from an out-of-range value.
    return true;
 }
 
-// Sets the lisp variables form the parameters.
-// returns the number of bad settings.
-// We can run this just testing for bad values, or actually setting when
-// the values are good.
-int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly)
+int NyquistControls::Load(Bindings &bindings,
+   const CommandParameters & parms, bool bTestOnly)
 {
    int badCount = 0;
    // First pass verifies values
-   auto pBinding = mBindings.begin();
+   auto pBinding = bindings.begin();
    for (const auto &ctrl : mControls) {
       auto &binding = *pBinding++;
       bool good = false;
@@ -1143,35 +1152,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *tracenable* NIL)\n");
    }
 
-   auto pBinding = mBindings.cbegin();
-   for (const auto &ctrl : mControls) {
-      auto &binding = *pBinding++;
-      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
-          ctrl.type == NYQ_CTRL_TIME) {
-         // We use Internat::ToString() rather than "%f" here because we
-         // always have to use the dot as decimal separator when giving
-         // numbers to Nyquist, whereas using "%f" will use the user's
-         // decimal separator which may be a comma in some countries.
-         cmd += wxString::Format(wxT("(setf %s %s)\n"),
-                                 ctrl.var,
-                                 Internat::ToString(binding.val, 14));
-      }
-      else if (ctrl.type == NYQ_CTRL_INT ||
-            ctrl.type == NYQ_CTRL_INT_TEXT ||
-            ctrl.type == NYQ_CTRL_CHOICE) {
-         cmd += wxString::Format(wxT("(setf %s %d)\n"),
-                                 ctrl.var,
-                                 (int)(binding.val));
-      }
-      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE) {
-         cmd += wxT("(setf ");
-         // restrict variable names to 7-bit ASCII:
-         cmd += ctrl.var;
-         cmd += wxT(" \"");
-         cmd += EscapeString(binding.valStr); // unrestricted value will become quoted UTF-8
-         cmd += wxT("\")\n");
-      }
-   }
+   cmd += mControls.Expression(mBindings);
 
    if (mIsSal) {
       wxString str = EscapeString(mCmd);
@@ -1454,6 +1435,42 @@ bool NyquistEffect::ProcessOne()
 
    mProjectChanged = true;
    return true;
+}
+
+wxString NyquistControls::Expression(const Bindings &bindings) const
+{
+   wxString cmd;
+   auto pBinding = bindings.cbegin();
+   for (const auto &ctrl : mControls) {
+      auto &binding = *pBinding++;
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+          ctrl.type == NYQ_CTRL_TIME) {
+         // We use Internat::ToString() rather than "%f" here because we
+         // always have to use the dot as decimal separator when giving
+         // numbers to Nyquist, whereas using "%f" will use the user's
+         // decimal separator which may be a comma in some countries.
+         cmd += wxString::Format(wxT("(setf %s %s)\n"),
+                                 ctrl.var,
+                                 Internat::ToString(binding.val, 14));
+      }
+      else if (ctrl.type == NYQ_CTRL_INT ||
+            ctrl.type == NYQ_CTRL_INT_TEXT ||
+            ctrl.type == NYQ_CTRL_CHOICE) {
+         cmd += wxString::Format(wxT("(setf %s %d)\n"),
+                                 ctrl.var,
+                                 (int)(binding.val));
+      }
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE) {
+         cmd += wxT("(setf ");
+         // restrict variable names to 7-bit ASCII:
+         cmd += ctrl.var;
+         cmd += wxT(" \"");
+         cmd += NyquistFormatting::EscapeString(binding.valStr);
+         // unrestricted value will become quoted UTF-8
+         cmd += wxT("\")\n");
+      }
+   }
+   return cmd;
 }
 
 bool NyquistEffect::AcceptsAllNyquistTypes()
@@ -2129,7 +2146,7 @@ bool NyquistEffect::Parse(
       if( ! make_iterator_range( mPresetNames ).contains( ctrl.var ) )
       {
          SetControlBounds(ctrl);
-         mControls.push_back(ctrl);
+         mControls.emplace_back(std::move(ctrl));
          mBindings.push_back(binding);
       }
    }

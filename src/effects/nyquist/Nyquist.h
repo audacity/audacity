@@ -66,6 +66,8 @@ struct NyqValue {
    double val = 0.0;
 };
 
+using NyquistBindings = std::vector<NyqValue>;
+
 class NyqControl
 {
 public:
@@ -88,7 +90,41 @@ public:
    int ticks;
 };
 
-using NyquistControls = std::vector</*const*/ NyqControl>;
+class NyquistControls {
+public:
+   using Bindings = NyquistBindings;
+
+   const size_t size() const { return mControls.size(); }
+   auto begin() const { return mControls.cbegin(); }
+   auto end() const { return mControls.cend(); }
+   void emplace_back(const NyqControl &ctrl)
+      { mControls.push_back(std::move(ctrl)); }
+   void clear() { mControls.clear(); }
+   const auto &operator[] (size_t ii) const { return mControls[ii]; }
+
+   void Visit(const Bindings &bindings, ConstSettingsVisitor &visitor)
+      const;
+   bool Save(const Bindings &bindings, CommandParameters &parms) const;
+   //! Sets the lisp variables form the parameters.
+   /*!
+    We can run this just testing for bad values, or actually setting when
+    the values are good.
+
+    @return the number of bad settings.
+    */
+   int Load(Bindings &bindings,
+      const CommandParameters & parms, bool bTestOnly);
+
+   //! Generate Lisp assignment expressions for the interpreter
+   wxString Expression(const Bindings &bindings) const;
+
+   void SetControls(std::vector</*const*/ NyqControl> controls)
+      { mControls = move(controls); }
+   std::vector</*const*/ NyqControl> MoveControls() { return move(mControls); }
+
+private:
+   std::vector</*const*/ NyqControl> mControls;
+};
 
 struct NyquistSettings {
    // other settings, for the Nyquist prompt; else null
@@ -146,7 +182,6 @@ public:
    virtual bool DoVisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings)
       const;
-   int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation
 
@@ -173,10 +208,11 @@ public:
 
    void SetDebug(bool value) { mDebug = value; }
    void SetControls(std::vector</*const*/ NyqControl> controls)
-      { mControls = move(controls); }
+      { mControls.SetControls(move(controls)); }
    void SetBindings(std::vector<NyqValue> bindings)
       { mBindings = move(bindings); }
-   std::vector</*const*/ NyqControl> MoveControls() { return move(mControls); }
+   std::vector</*const*/ NyqControl> MoveControls()
+      { return mControls.MoveControls(); }
    std::vector<NyqValue> MoveBindings() { return move(mBindings); }
 
 private:
@@ -314,7 +350,7 @@ private:
 protected:
    int               mVersion{ 4 }; // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
    NyquistControls   mControls;
-   std::vector<NyqValue> mBindings; //!< in correspondence with mControls
+   NyquistBindings   mBindings; //!< in correspondence with mControls
 
 private:
    unsigned          mCurNumChannels;
