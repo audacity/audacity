@@ -186,7 +186,7 @@ namespace  EffectUI {
    // Audacity's standard UI.
    AUDACITY_DLL_API bool DoEffect(AudacityProject &project,
       const std::shared_ptr<EffectContext> &pContext,
-      const PluginID & ID, unsigned flags );
+      const PluginID & ID);
 }
 
 class ShuttleGui;

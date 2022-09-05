@@ -605,8 +605,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   EffectUI::DoEffect(project, mpContext, GetID(mEffectUIHost),
-      EffectManager::kConfigured);
+   mpContext->uiFlags = EffectManager::kConfigured;
+   EffectUI::DoEffect(project, mpContext, GetID(mEffectUIHost));
 }
 
 void EffectUIHost::DoCancel()
@@ -1258,8 +1258,9 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
 /* static */ bool EffectUI::DoEffect(AudacityProject &project,
    const std::shared_ptr<EffectContext> &pContext,
-   const PluginID & ID, unsigned flags )
+   const PluginID & ID)
 {
+   const auto flags = pContext->uiFlags;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
@@ -1361,7 +1362,6 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
                &tracks,
                &trackFactory,
                selectedRegion,
-               flags,
                pAccess);
             return nullptr;
          });
@@ -1371,10 +1371,8 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    if (!success)
       return false;
 
-   if (em.GetSkipStateFlag())
-      flags = flags | EffectManager::kSkipState;
-
-   if (!(flags & EffectManager::kSkipState))
+   if (!em.GetSkipStateFlag() &&
+       !(flags & EffectManager::kSkipState))
    {
       auto shortDesc = em.GetCommandName(ID);
       auto longDesc = em.GetCommandDescription(ID);

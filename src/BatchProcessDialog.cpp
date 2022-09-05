@@ -1408,9 +1408,9 @@ void OnRepeatLastTool(const CommandContext& context)
       auto lastEffect = menuManager.mLastTool;
       if (!lastEffect.empty()) {
          // EffectContext construction
-         auto pContext = std::make_shared<EffectContext>();
-         EffectUI::DoEffect(context.project, pContext, lastEffect,
-            menuManager.mRepeatToolFlags);
+         auto pContext =
+            std::make_shared<EffectContext>(menuManager.mRepeatToolFlags);
+         EffectUI::DoEffect(context.project, pContext, lastEffect);
       }
    }
    break;

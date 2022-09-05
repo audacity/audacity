@@ -529,11 +529,12 @@ bool MacroCommands::ApplyEffectCommand(
       else {
          // and apply the effect...
          // EffectContext construction
-         auto pContext = std::make_shared<EffectContext>();
-         res = EffectUI::DoEffect(Context.project, pContext, ID,
+         auto pContext = std::make_shared<EffectContext>(
             EffectManager::kConfigured |
             EffectManager::kSkipState |
-            EffectManager::kDontRepeatLast);
+            EffectManager::kDontRepeatLast
+         );
+         res = EffectUI::DoEffect(Context.project, pContext, ID);
       }
    }
 

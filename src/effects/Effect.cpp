@@ -297,10 +297,6 @@ OptionalMessage Effect::LoadSettingsFromString(
    return result;
 }
 
-unsigned Effect::TestUIFlags(unsigned mask) {
-   return mask & mUIFlags;
-}
-
 bool Effect::IsBatchProcessing() const
 {
    return mIsBatch;
@@ -335,7 +331,7 @@ bool Effect::Delegate(
    region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect(context, settings, {},
-      mProjectRate, mTracks, mFactory, region, mUIFlags, nullptr);
+      mProjectRate, mTracks, mFactory, region, nullptr);
 }
 
 void Effect::GetBounds(

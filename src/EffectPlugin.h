@@ -27,6 +27,10 @@ class TrackList;
 //! Information about dialogs connected to an effect instance,
 //! and the selection of tracks, time, and frequencies to process
 struct EffectContext {
+   explicit EffectContext(unsigned uiFlags = 0)
+      : uiFlags{ uiFlags }
+   {}
+
    //! Count wave tracks and stereo groups
    void CountWaveTracks(const TrackList &tracks);
 
@@ -47,11 +51,17 @@ struct EffectContext {
    bool TrackGroupProgress(int whichGroup, double frac,
       const TranslatableString & = {}) const;
 
+   unsigned TestUIFlags(unsigned mask) {
+      return mask & uiFlags;
+   }
+
    BasicUI::ProgressDialog *pProgress{};
    /* const */ unsigned numTracks{}; //!< This is really mNumWaveTracks
    /* const */ unsigned numGroups{};
 
    bool isPreviewing{ false };
+
+   unsigned       uiFlags{ 0 };
 };
 
 class TrackList;
@@ -122,7 +132,6 @@ public:
       const InstanceFinder &finder,
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-      unsigned flags,
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;

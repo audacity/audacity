@@ -55,7 +55,6 @@ public:
       const InstanceFinder &finder,
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-      unsigned flags,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
 
@@ -111,7 +110,6 @@ protected:
    double         mF1{};
 #endif
    wxArrayString  mPresetNames;
-   unsigned       mUIFlags{ 0 };
 
 private:
    friend class Effect;

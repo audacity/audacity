@@ -103,8 +103,6 @@ class AUDACITY_DLL_API Effect /* not final */
 
    // Effect implementation
 
-   unsigned TestUIFlags(unsigned mask);
-
    //! Re-invoke DoEffect on another Effect object that implements the work
    bool Delegate(
       EffectContext &context, Effect &delegate, EffectSettings &settings);

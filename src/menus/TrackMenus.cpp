@@ -612,10 +612,10 @@ namespace {
 void OnStereoToMono(const CommandContext &context)
 {
    // EffectContext construction
-   auto pContext = std::make_shared<EffectContext>();
+   auto pContext =
+      std::make_shared<EffectContext>(EffectManager::kConfigured);
    EffectUI::DoEffect(context.project, pContext,
-      EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-      EffectManager::kConfigured);
+      EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")));
 }
 
 void OnMixAndRender(const CommandContext &context)

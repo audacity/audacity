@@ -63,10 +63,8 @@ bool EffectBase::DoEffect(EffectContext &context, EffectSettings &settings,
    TrackList *list,
    WaveTrackFactory *factory,
    NotifyingSelectedRegion &selectedRegion,
-   unsigned flags,
    const EffectSettingsAccessPtr &pAccess)
 {
-   auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
 
    mOutputTracks.reset();

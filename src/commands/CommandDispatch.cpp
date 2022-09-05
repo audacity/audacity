@@ -43,10 +43,10 @@ bool CommandDispatch::HandleTextualCommand( CommandManager &commandManager,
    for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
       if (em.GetCommandIdentifier(plug.GetID()) == Str) {
          // EffectContext construction
-         auto pContext = std::make_shared<EffectContext>();
+         auto pContext =
+            std::make_shared<EffectContext>(EffectManager::kConfigured);
          return EffectUI::DoEffect(context.project, pContext,
-            plug.GetID(),
-            EffectManager::kConfigured);
+            plug.GetID());
       }
 
    return false;

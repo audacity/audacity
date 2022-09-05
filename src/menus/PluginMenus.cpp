@@ -777,7 +777,7 @@ void OnEffect(const CommandContext &context)
    // using GET to interpret parameter as a PluginID
    // EffectContext construction
    auto pContext = std::make_shared<EffectContext>();
-   EffectUI::DoEffect(context.project, pContext, context.parameter.GET(), 0);
+   EffectUI::DoEffect(context.project, pContext, context.parameter.GET());
 }
 
 void OnManageEffects(const CommandContext &context)
@@ -800,9 +800,9 @@ void OnRepeatLastGenerator(const CommandContext &context)
    auto lastEffect = menuManager.mLastGenerator;
    if (!lastEffect.empty()) {
       // EffectContext construction
-      auto pContext = std::make_shared<EffectContext>();
-      EffectUI::DoEffect(context.project, pContext, lastEffect,
+      auto pContext = std::make_shared<EffectContext>(
          menuManager.mRepeatGeneratorFlags | EffectManager::kRepeatGen);
+      EffectUI::DoEffect(context.project, pContext, lastEffect);
    }
 }
 
@@ -812,9 +812,9 @@ void OnRepeatLastEffect(const CommandContext &context)
    auto lastEffect = menuManager.mLastEffect;
    if (!lastEffect.empty()) {
       // EffectContext construction
-      auto pContext = std::make_shared<EffectContext>();
-      EffectUI::DoEffect(context.project, pContext, lastEffect,
-         menuManager.mRepeatEffectFlags);
+      auto pContext =
+         std::make_shared<EffectContext>(menuManager.mRepeatEffectFlags);
+      EffectUI::DoEffect(context.project, pContext, lastEffect);
    }
 }
 
@@ -826,9 +826,9 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
       auto lastEffect = menuManager.mLastAnalyzer;
       if (!lastEffect.empty()) {
          // EffectContext construction
-         auto pContext = std::make_shared<EffectContext>();
-         EffectUI::DoEffect(context.project, pContext, lastEffect,
-            menuManager.mRepeatAnalyzerFlags);
+         auto pContext =
+            std::make_shared<EffectContext>(menuManager.mRepeatAnalyzerFlags);
+         EffectUI::DoEffect(context.project, pContext, lastEffect);
       }
    }
    break;

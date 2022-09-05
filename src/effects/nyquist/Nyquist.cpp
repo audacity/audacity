@@ -1060,7 +1060,7 @@ int NyquistEffect::ShowHostInterface(
    bool forceModal)
 {
    int res = wxID_APPLY;
-   if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
+   if (!(pContext->TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
       res = EffectUIServices::ShowHostInterface(pContext, plugin,
          parent, factory, pInstance, access, forceModal);
