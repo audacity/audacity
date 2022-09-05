@@ -286,6 +286,11 @@ std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
 
 bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    mStagesS->SetValue((int) (mStages * Stages.scale));
    mDryWetS->SetValue((int) (mDryWet * DryWet.scale));
    mFreqS->SetValue((int) (mFreq * Freq.scale));
@@ -299,6 +304,11 @@ bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 
 bool EffectPhaser::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    if (mStages & 1)    // must be even
    {
       mStages &= ~1;

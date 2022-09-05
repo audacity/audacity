@@ -365,6 +365,11 @@ bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 {
    mbLoopDetect = true;
 
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    if (mFromVinyl == kVinyl_NA)
    {
       mFromVinyl = kVinyl_33AndAThird;
@@ -396,6 +401,10 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 {
    // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
    double exactPercent = m_PercentChange;
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
    m_PercentChange = exactPercent;
 
    // TODO: just visit these effect settings the default way

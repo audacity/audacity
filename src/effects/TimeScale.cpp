@@ -256,8 +256,23 @@ std::unique_ptr<EffectUIValidator> EffectTimeScale::PopulateOrExchange(
 
 bool EffectTimeScale::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    Update_Slider_RatePercentChangeStart();
    Update_Slider_RatePercentChangeEnd();
+
+   return true;
+}
+
+bool EffectTimeScale::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
 
    return true;
 }

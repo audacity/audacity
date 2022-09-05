@@ -318,6 +318,26 @@ std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
    return nullptr;
 }
 
+bool EffectClickRemoval::TransferDataToWindow(const EffectSettings &)
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
+bool EffectClickRemoval::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
 void EffectClickRemoval::OnWidthText(wxCommandEvent & WXUNUSED(evt))
 {
    mWidthT->GetValidator()->TransferFromWindow();

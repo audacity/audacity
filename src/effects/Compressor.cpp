@@ -292,6 +292,10 @@ bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
 
 bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
    return DoTransferDataFromWindow();
 }
 
