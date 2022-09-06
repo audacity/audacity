@@ -184,7 +184,7 @@ void ShareAudioToolbar::MakeShareAudioButton()
       theTheme.Image(bmpRecoloredSetupDownSmall),
       theTheme.Image(bmpRecoloredSetupHiliteSmall),
       theTheme.Image(bmpRecoloredSetupUpSmall));
-   mShareAudioButton->SetIcon(theTheme.Image(bmpSetup));
+   mShareAudioButton->SetIcon(theTheme.Image(bmpShareAudio));
    mShareAudioButton->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
 
    mShareAudioButton->Bind(
