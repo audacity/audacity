@@ -21,7 +21,7 @@
 #include "XMLTagHandler.h"
 #include <wx/weakref.h>
 
-#include <unordered_map>
+#include <map>
 #include <optional>
 #include <mutex>
 
