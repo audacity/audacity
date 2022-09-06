@@ -94,7 +94,7 @@ private:
    mutable std::mutex mDataBufferMutex;
    std::deque<uint8_t> mDataBuffer;
 
-   mutable std::mutex mStatusMutex;
+   mutable std::recursive_mutex mStatusMutex;
 
    NetworkError mNetworkError { NetworkError::NoError };
    std::string mErrorString;
