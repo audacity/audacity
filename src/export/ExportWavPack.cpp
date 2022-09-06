@@ -375,7 +375,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
-         auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
+         auto samplesThisRun = mixer->Process();
 
          if (samplesThisRun == 0)
             break;
