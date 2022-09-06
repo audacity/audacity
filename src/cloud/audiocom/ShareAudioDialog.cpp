@@ -673,6 +673,8 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
 
    if (!avatarPath.empty())
       avatar->SetBitmap(avatarPath);
+   else
+      avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
 }
 
 void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
