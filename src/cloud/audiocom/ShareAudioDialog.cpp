@@ -700,9 +700,12 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
 
          s.StartHorizontalLay(wxEXPAND, 0);
          {
-            link = s.AddTextBox(TranslatableString {}, "https://audio.com", 60);
+            link = s.AddTextBox(TranslatableString {}, "https://audio.com", 0);
             link->SetName(XO("Shareable link").Translation());
             link->SetEditable(false);
+            link->SetMinSize({ 360, -1 });
+
+            s.AddSpace(1, 0, 1);
 
             copyButton = s.AddButton(XO("Copy"));
             copyButton->Bind(
