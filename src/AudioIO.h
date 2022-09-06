@@ -598,6 +598,9 @@ private:
    void FillPlayBuffers();
    void TransformPlayBuffers(
       std::optional<RealtimeEffects::ProcessingScope> &scope);
+   void ProcessPlaybackSlices(
+      std::optional<RealtimeEffects::ProcessingScope> &pScope,
+      size_t available);
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();
