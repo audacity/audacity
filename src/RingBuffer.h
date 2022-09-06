@@ -30,6 +30,11 @@ class RingBuffer final : public NonInterferingBase {
    size_t Put(constSamplePtr buffer, sampleFormat format, size_t samples,
               // optional number of trailing zeroes
               size_t padding = 0);
+   //! Remove an initial segment of data that has been Put but not Flushed yet
+   /*!
+    @return how many were unput
+    */
+   size_t Unput(size_t size);
    size_t Clear(sampleFormat format, size_t samples);
    //! Get access to written but unflushed data, which is in at most two blocks
    //! Excludes the padding of the most recent Put()

@@ -27,6 +27,7 @@
 
 #include "RingBuffer.h"
 #include "Dither.h"
+#include <cstring>
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
    : mBufferSize{ std::max<size_t>(size, 64) }
@@ -111,6 +112,53 @@ size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
 
    mWritten = pos;
    return copied;
+}
+
+size_t RingBuffer::Unput(size_t size)
+{
+   const auto sampleSize = SAMPLE_SIZE(mFormat);
+   const auto buffer = mBuffer.ptr();
+
+   // un-put some of the un-flushed data which is from mEnd to mWritten
+   // bound the result
+   auto end = mEnd.load(std::memory_order_relaxed);
+   size = std::min(size, Filled(end, mWritten));
+   const auto result = size;
+
+   // First memmove
+   auto limit = end < mWritten ? mWritten : mBufferSize;
+   // Source offset for move
+   auto source = std::min(end + size, limit);
+   // How many to move
+   auto count = limit - source;
+   auto pDst = buffer + end * sampleSize;
+   auto pSrc = buffer + source * sampleSize;
+   memmove(pDst, pSrc, count * sampleSize);
+   // Discount how many really discarded
+   size -= (source - end);
+   
+   if (end >= mWritten) {
+      // The unflushed data were wrapped around, not contiguous
+      end += count;
+      auto pDst = buffer + end * sampleSize;
+      // Rotate some samples from start of buffer, but discarding
+      // any remaining number that must be un-put
+      // Then shift samples near the start of buffer
+      pSrc = buffer + size * sampleSize;
+      auto toMove = mWritten - size;
+      auto toMove1 = std::min(toMove, mBufferSize - end);
+      auto toMove2 = toMove - toMove1;
+      memmove(pDst, pSrc, toMove1 * sampleSize);
+      memmove(buffer, pSrc + toMove1 * sampleSize, toMove2 * sampleSize);
+   }
+
+   // Move mWritten backwards by result
+   mWritten = (mWritten + (mBufferSize - result)) % mBufferSize;
+
+   // Adjust mLastPadding
+   mLastPadding = std::min(mLastPadding, Filled(end, mWritten));
+
+   return result;
 }
 
 size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
