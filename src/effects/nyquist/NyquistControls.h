@@ -110,7 +110,7 @@ public:
       { mControls = move(controls); }
    std::vector</*const*/ NyqControl> MoveControls() { return move(mControls); }
 
-private:
+protected:
    std::vector</*const*/ NyqControl> mControls;
 };
 

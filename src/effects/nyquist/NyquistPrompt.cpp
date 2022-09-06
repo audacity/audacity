@@ -139,7 +139,6 @@ bool NyquistPrompt::Init()
    mType = mPromptType;
    mIsSpectral = false;
    mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
-   mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
    mVersion = 4;
    return true;
 }
@@ -270,7 +269,7 @@ bool NyquistPrompt::TransferDataToWindow(const EffectSettings &)
 {
    mUIParent->TransferDataToWindow();
    mCommandText->ChangeValue(mInputCmd);
-   EnablePreview(mEnablePreview);
+   EnablePreview(mControls.mEnablePreview);
    return true;
 }
 

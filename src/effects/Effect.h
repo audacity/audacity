@@ -180,9 +180,9 @@ class AUDACITY_DLL_API Effect /* not final */
 
    bool EnableApply(bool enable = true);
 
- protected:
-
    bool EnablePreview(bool enable = true);
+
+protected:
 
    //! Default implementation returns false
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;

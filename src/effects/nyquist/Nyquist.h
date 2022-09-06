@@ -30,6 +30,31 @@ class wxTextCtrl;
 
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
+struct NyquistUIControls : NyquistControls, wxEvtHandler {
+   explicit NyquistUIControls(Effect &effect, Bindings &bindings)
+      : mEffect{ effect }
+      , mBindings{ bindings }
+   {}
+   virtual ~NyquistUIControls();
+   bool UpdateUI();
+   bool ValidateUI();
+   void Populate(ShuttleGui &S,
+      const NumericFormatSymbol &selectionFormat, double projectRate);
+
+   void OnText(wxCommandEvent & evt);
+   void OnSlider(wxCommandEvent & evt);
+   void OnChoice(wxCommandEvent & evt);
+   void OnTime(wxCommandEvent & evt);
+   void OnFileButton(wxCommandEvent & evt);
+
+   bool validatePath(wxString path);
+   wxString ToTimeFormat(double t);
+
+   Effect &mEffect;
+   Bindings &mBindings;
+   bool mEnablePreview { true };
+};
+
 class AUDACITY_DLL_API NyquistEffect
    : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
@@ -171,15 +196,6 @@ private:
 
    void OnDebug(wxCommandEvent & evt);
 
-   void OnText(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & evt);
-   void OnTime(wxCommandEvent & evt);
-   void OnFileButton(wxCommandEvent & evt);
-
-   bool validatePath(wxString path);
-   wxString ToTimeFormat(double t);
-
    std::pair<bool, FilePath> CheckHelpPage() const;
 
 private:
@@ -231,7 +247,6 @@ private:
 
 protected:
    EffectType        mType;
-   bool              mEnablePreview;
    bool              mDebugButton;  // Set to false to disable Debug button.
    bool              mDebug{ false }; // When true, debug window is shown.
 
@@ -243,8 +258,8 @@ private:
 
 protected:
    int               mVersion{ 4 }; // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
-   NyquistControls   mControls;
    NyquistBindings   mBindings; //!< in correspondence with mControls
+   NyquistUIControls mControls;
 
 private:
    unsigned          mCurNumChannels;
