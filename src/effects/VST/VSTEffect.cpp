@@ -782,8 +782,6 @@ void VSTEffect::ResourceHandle::reset()
 VSTEffect::VSTEffect(const PluginPath & path)
 :  VSTEffectWrapper(path)
 {
-   //mTimer = std::make_unique<VSTEffectTimer>(this);
-
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
    mTimeInfo.sampleRate = 44100.0;  // this is a bogus value, but it's only for the display
