@@ -234,10 +234,28 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
 void ShareAudioDialog::OnCancel()
 {
-   // If export has started, notify it that it should be canceled
-   if (mExportProgressHelper != nullptr)
-      static_cast<ExportProgressHelper&>(*mExportProgressHelper).Cancel();
-   // If upload is running - ask it to discard the result
+   const auto hasExportStarted = mExportProgressHelper != nullptr;
+   const auto hasUploadStarted = !!mServices->uploadPromise;
+
+   if (mInProgress)
+   {
+      AudacityMessageDialog dlgMessage(
+         this, XO("Are you sure you want to cancel?"), XO("Cancel upload to Audio.com"),
+         wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
+      
+      const auto result = dlgMessage.ShowModal();
+
+      if (result != wxID_YES)
+         return;
+
+      // If export has started, notify it that it should be canceled
+      if (mExportProgressHelper != nullptr)
+         static_cast<ExportProgressHelper&>(*mExportProgressHelper).Cancel();
+   }
+
+   
+   // If upload was started - ask it to discard the result.
+   // The result should be discarded even after the upload has finished
    if (mServices->uploadPromise)
       mServices->uploadPromise->DiscardResult();
 
@@ -303,6 +321,8 @@ wxString ShareAudioDialog::ExportProject()
 
 void ShareAudioDialog::StartUploadProcess()
 {
+   mInProgress = true;
+   
    mInitialStatePanel.root->Hide();
    mProgressPanel.root->Show();
 
@@ -340,6 +360,8 @@ void ShareAudioDialog::StartUploadProcess()
          CallAfter(
             [this, result]()
             {
+               mInProgress = false;
+               
                if (result.result == UploadOperationCompleted::Result::Success)
                   HandleUploadSucceeded(result.finishUploadURL, result.audioSlug);
                else if (result.result != UploadOperationCompleted::Result::Aborted)

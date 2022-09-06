@@ -123,5 +123,7 @@ private:
    wxString mFilePath;
 
    std::function<void()> mContinueAction;
+
+   bool mInProgress { false };
 };
 } // namespace cloud::audiocom
