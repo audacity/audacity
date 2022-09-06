@@ -99,6 +99,8 @@ public:
          Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
             const std::shared_ptr<EffectInstance> pInstance
          ) {
+            if(settings.counter == slot.mSettings.counter)
+               return;
             settings.counter = slot.mSettings.counter;
             if (pInstance)
                pInstance->AssignSettings(
@@ -529,6 +531,10 @@ bool RealtimeEffectState::Finalize() noexcept
       return false;
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
+   if(result)
+      //update mLastSettings so that Flush didn't
+      //overwrite what was read from the worker
+      GetAccessState()->Initialize(mMainSettings);
    mInitialized = false;
    return result;
 }
