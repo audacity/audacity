@@ -213,10 +213,10 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
             mContinueButton = s.AddButton(XXO("C&ontinue"));
             mContinueButton->Bind(wxEVT_BUTTON, [this](auto) { OnContinue(); });
 
-            mGotoButton = s.AddButton(XXO("&Go to my file"));
-
-            mCloseButton = s.AddButton(XXO("C&lose"));
+            mCloseButton = s.AddButton(XXO("&Close"));
             mCloseButton->Bind(wxEVT_BUTTON, [this](auto) { OnClose(); });
+            
+            mGotoButton = s.AddButton(XXO("&Go to my file"));
          }
          s.EndHorizontalLay();
       }
