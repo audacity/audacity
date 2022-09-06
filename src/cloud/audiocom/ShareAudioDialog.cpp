@@ -451,6 +451,8 @@ void SetTimeLabel(wxStaticText* label, std::chrono::milliseconds time)
 
 void ShareAudioDialog::UpdateProgress(uint64_t current, uint64_t total)
 {
+   using namespace std::chrono;
+
    const auto now = Clock::now();
 
    if (current == 0)
@@ -477,21 +479,19 @@ void ShareAudioDialog::UpdateProgress(uint64_t current, uint64_t total)
 
    const auto elapsedSinceUIUpdate = now - mLastUIUpdateTime;
 
-   constexpr auto uiUpdateTimeout = std::chrono::milliseconds(500);
+   constexpr auto uiUpdateTimeout = 500ms;
 
    if (elapsedSinceUIUpdate < uiUpdateTimeout && current < total)
       return;
 
    mLastUIUpdateTime = now;
 
-   const auto elapsed = now - mStageStartTime;
+   const auto elapsed = duration_cast<milliseconds>(now - mStageStartTime);
 
-   SetTimeLabel(
-      mProgressPanel.elapsedTime,
-      std::chrono::duration_cast<std::chrono::milliseconds>(elapsed));
+   SetTimeLabel(mProgressPanel.elapsedTime, elapsed);
 
    const auto estimate = elapsed * total / current;
-   const auto remains = (mStageStartTime + estimate) - now;
+   const auto remains = estimate - elapsed;
 
    SetTimeLabel(
       mProgressPanel.remainingTime,
