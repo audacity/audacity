@@ -434,10 +434,6 @@ private:
 
    
    wxSizer *BuildProgramBar();
-   
-
-   // Utility methods
- 
 
  private:
 
