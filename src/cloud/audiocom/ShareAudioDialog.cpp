@@ -367,7 +367,7 @@ void ShareAudioDialog::HandleUploadSucceeded(
    {
       mProgressPanel.info->SetLabel(
          "By pressing continue, you will be taken to audio.com and given a shareable link.");
-      mProgressPanel.info->Wrap(mProgressPanel.info->GetSize().GetWidth());
+      mProgressPanel.info->Wrap(mProgressPanel.root->GetSize().GetWidth());
 
       mContinueAction = [this, url = std::string(finishUploadURL)]()
       {
