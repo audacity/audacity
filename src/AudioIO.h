@@ -600,7 +600,7 @@ private:
    void FillPlayBuffers();
    void TransformPlayBuffers(
       std::optional<RealtimeEffects::ProcessingScope> &scope);
-   void ProcessPlaybackSlices(
+   bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope,
       size_t available);
 

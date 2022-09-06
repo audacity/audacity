@@ -1822,22 +1822,57 @@ void AudioIO::FillPlayBuffers()
 
    // More than mPlaybackSamplesToCopy might be copied:
    // May produce a larger amount when initially priming the buffer, or
-   // perhaps again later in play to avoid underfilling the queue and falling
-   // behind the real-time demand on the consumer side in the callback.
-   auto nReady = GetCommonlyWrittenForPlayback();
-   auto nNeeded =
-      mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+   // perhaps again later in play to avoid underfilling the queue and
+   // falling behind the real-time demand on the consumer side in the
+   // callback.
+   auto GetNeeded = [&]() -> size_t {
+      // Note that reader might concurrently consume between loop passes below
+      // So this might not be nondecreasing
+      auto nReady = GetCommonlyWrittenForPlayback();
+      return mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+   };
+   auto nNeeded = GetNeeded();
 
    // wxASSERT( nNeeded <= nAvailable );
 
-   // Limit maximum buffer size (increases performance)
-   auto available = std::min( nAvailable,
-      std::max( nNeeded, mPlaybackSamplesToCopy ) );
+   auto Flush = [&]{
+      /* The flushing of all the Puts to the RingBuffers is lifted out of the
+      do-loop in ProcessPlaybackSlices, and also after transformation of the
+      stream for realtime effects.
 
-   ProcessPlaybackSlices(pScope, available);
+      It's only here that a release is done on the atomic variable that
+      indicates the readiness of sample data to the consumer.  That atomic
+      also synchronizes the use of the TimeQueue.
+      */
+      for (size_t i = 0; i < std::max(size_t{1}, mPlaybackTracks.size()); ++i)
+         mPlaybackBuffers[i]->Flush();
+   };
+
+   while (true) {
+      // Limit maximum buffer size (increases performance)
+      auto available = std::min( nAvailable,
+         std::max( nNeeded, mPlaybackSamplesToCopy ) );
+
+      // After each loop pass or after break
+      Finally Do{ Flush };
+
+      if (!ProcessPlaybackSlices(pScope, available))
+         // We are not making progress.  May fail to satisfy the minimum but
+         // won't loop forever
+         break;
+
+      // Loop again to satisfy the minimum queue requirement in case there
+      // was discarding of processed data for effect latencies
+      nNeeded = GetNeeded();
+      if (nNeeded == 0)
+         break;
+
+      // Might increase because the reader consumed some
+      nAvailable = GetCommonlyFreePlayback();
+   }
 }
 
-void AudioIO::ProcessPlaybackSlices(
+bool AudioIO::ProcessPlaybackSlices(
    std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t available)
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
@@ -1849,10 +1884,12 @@ void AudioIO::ProcessPlaybackSlices(
    // PRL: or, when scrubbing, we may get work repeatedly from the
    // user interface.
    bool done = false;
+   bool progress = false;
    do {
       const auto slice =
          policy.GetPlaybackSlice(mPlaybackSchedule, available);
       const auto &[frames, toProduce] = slice;
+      progress = progress || toProduce > 0;
 
       // Update the time queue.  This must be done before writing to the
       // ring buffers of samples, for proper synchronization with the
@@ -1899,18 +1936,9 @@ void AudioIO::ProcessPlaybackSlices(
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per track, after all the little slices have been written.
    TransformPlayBuffers(pScope);
-
-   /* The flushing of all the Puts to the RingBuffers is lifted out of the
-   do-loop above, and also after transformation of the stream for realtime
-   effects.
-
-   It's only here that a release is done on the atomic variable that
-   indicates the readiness of sample data to the consumer.  That atomic
-   also synchronizes the use of the TimeQueue.
-   */
-   for (size_t i = 0; i < std::max(size_t{1}, mPlaybackTracks.size()); ++i)
-      mPlaybackBuffers[i]->Flush();
+   return progress;
 }
+
 
 void AudioIO::TransformPlayBuffers(
    std::optional<RealtimeEffects::ProcessingScope> &pScope)
