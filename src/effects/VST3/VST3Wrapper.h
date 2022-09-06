@@ -75,17 +75,27 @@ public:
 
    bool IsActive() const noexcept;
 
-   void FetchSettings(const EffectSettings&);
+   //!Fetch state from settings object, may change internal runtime data
+   void FetchSettings(EffectSettings&);
+   //!Saves current state inside settings object, clears all runtime data
    void StoreSettings(EffectSettings&) const;
-
+   
    bool LoadPreset(Steinberg::IBStream* fileStream);
    bool SavePreset(Steinberg::IBStream* fileStream) const;
 
-   bool Initialize(const EffectSettings& settings, Steinberg::Vst::SampleRate sampleRate, Steinberg::int32 processMode, Steinberg::int32 maxSamplesPerBlock);
+   //!Initializes effect for processing using settings.
+   bool Initialize(EffectSettings& settings,
+      Steinberg::Vst::SampleRate sampleRate,
+      Steinberg::int32 processMode,
+      Steinberg::int32 maxSamplesPerBlock);
+   //!Frees up resources allocated for processing, should be called
+   //!after processing is complete. Optionally settings object may
+   //!be passed to update runtime data with current internal state.
    void Finalize(EffectSettings* settings);
 
-   //Updates internal state with changes from settings
-   void ConsumeChanges(const EffectSettings& settings);
+   //!Prepares effect to process next block with changes written to the settings object
+   void ProcessBlockStart(const EffectSettings& settings);
+
    //Used to send EffectSettings changes to the IAudioProcessor, while effect is inactive(!)
    void FlushParameters(EffectSettings& settings);
 
@@ -99,7 +109,9 @@ public:
    void EndParameterEdit();
 
    Steinberg::int32 GetLatencySamples() const;
-   
+
+   void AssignSettings(EffectSettings& dst, EffectSettings&& src) const;
+
    static EffectSettings MakeSettings();
 
    static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);
@@ -107,10 +119,13 @@ public:
    static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
-   static void AssignSettings(EffectSettings& dst, EffectSettings&& src);
    static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection);
 
 private:
+
+   //Reads runtime data changes to apply them during next processing pass
+   void ConsumeChanges(const EffectSettings& settings);
+
    bool mActive {false};
    const VST3::UID mEffectUID;
 

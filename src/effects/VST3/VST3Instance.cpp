@@ -110,9 +110,9 @@ bool VST3Instance::RealtimeProcessEnd(EffectSettings& settings) noexcept
 
 bool VST3Instance::RealtimeProcessStart(EffectSettings& settings)
 {
-   mWrapper->ConsumeChanges(settings);
+   mWrapper->ProcessBlockStart(settings);
    for (auto &pProcessor : mProcessors)
-      pProcessor->mWrapper->ConsumeChanges(settings);
+      pProcessor->mWrapper->ProcessBlockStart(settings);
    return true;
 }
 
