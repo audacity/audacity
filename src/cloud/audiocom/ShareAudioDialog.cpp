@@ -184,6 +184,22 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
       if (mInitialStatePanel.root->IsShown())
          StartUploadProcess();
    };
+
+   Bind(
+      wxEVT_CHAR_HOOK,
+      [this](auto& evt)
+      {
+         if (!IsEscapeKey(evt))
+         {
+            evt.Skip();
+            return;
+         }
+
+         if (mCancelButton->IsShown())
+            OnCancel();
+         else
+            OnClose();
+      });
 }
 
 ShareAudioDialog::~ShareAudioDialog()
