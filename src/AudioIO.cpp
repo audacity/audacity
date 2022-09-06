@@ -1952,42 +1952,48 @@ void AudioIO::TransformPlayBuffers(
    const auto numPlaybackTracks = mPlaybackTracks.size();
    for (unsigned t = 0; t < numPlaybackTracks; ++t) {
       const auto vt = mPlaybackTracks[t].get();
-      if (!vt)
+      if (!(vt && vt->IsLeader()))
          continue;
-      if ( vt->IsLeader() ) {
-         // vt is mono, or is the first of its group of channels
-         const auto nChannels = std::min<size_t>(
-            mNumPlaybackChannels, TrackList::Channels(vt).size());
+      // vt is mono, or is the first of its group of channels
+      const auto nChannels = std::min<size_t>(
+         mNumPlaybackChannels, TrackList::Channels(vt).size());
 
-         // Loop over the blocks of unflushed data, at most two
-         for (unsigned iBlock : {0, 1}) {
-            size_t len = 0;
-            size_t iChannel = 0;
+      // Loop over the blocks of unflushed data, at most two
+      for (unsigned iBlock : {0, 1}) {
+         size_t len = 0;
+         size_t iChannel = 0;
+         for (; iChannel < nChannels; ++iChannel) {
+            auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
+            const auto pair =
+               ringBuffer.GetUnflushed(iBlock);
+            // Playback RingBuffers have float format: see AllocateBuffers
+            pointers[iChannel] = reinterpret_cast<float*>(pair.first);
+            // The lengths of corresponding unflushed blocks should be
+            // the same for all channels
+            if (len == 0)
+               len = pair.second;
+            else
+               assert(len == pair.second);
+         }
+
+         // Are there more output device channels than channels of vt?
+         // Such as when a mono track is processed for stereo play?
+         // Then supply some non-null fake input buffers, because the
+         // various ProcessBlock overrides of effects may crash without it.
+         // But it would be good to find the fixes to make this unnecessary.
+         float **scratch = &mScratchPointers[mNumPlaybackChannels];
+         while (iChannel < mNumPlaybackChannels)
+            memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
+
+         if (len && pScope) {
+            auto discardable = pScope->Process( *vt, &pointers[0],
+               mScratchPointers.data(), mNumPlaybackChannels, len);
+            iChannel = 0;
             for (; iChannel < nChannels; ++iChannel) {
-               const auto pair =
-                  mPlaybackBuffers[t + iChannel]->GetUnflushed(iBlock);
-               // Playback RingBuffers have float format: see AllocateBuffers
-               pointers[iChannel] = reinterpret_cast<float*>(pair.first);
-               // The lengths of corresponding unflushed blocks should be
-               // the same for all channels
-               if (len == 0)
-                  len = pair.second;
-               else
-                  assert(len == pair.second);
+               auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
+               auto discarded = ringBuffer.Unput(discardable);
+               // assert(discarded == discardable);
             }
-
-            // Are there more output device channels than channels of vt?
-            // Such as when a mono track is processed for stereo play?
-            // Then supply some non-null fake input buffers, because the
-            // various ProcessBlock overrides of effects may crash without it.
-            // But it would be good to find the fixes to make this unnecessary.
-            float **scratch = &mScratchPointers[mNumPlaybackChannels];
-            while (iChannel < mNumPlaybackChannels)
-               memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
-
-            if (len && pScope)
-               pScope->Process(*vt, &pointers[0], mScratchPointers.data(),
-                  mNumPlaybackChannels, len);
          }
       }
    }
