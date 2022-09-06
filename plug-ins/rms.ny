@@ -3,6 +3,7 @@
 ;type analyze
 ;name "Measure RMS"
 ;manpage "Measure_RMS"
+;debugbutton false
 ;action "Measuring RMS level..."
 ;author "Steve Daulton"
 ;release 2.3.1

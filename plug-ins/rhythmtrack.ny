@@ -3,6 +3,7 @@ $version 4
 $type generate
 $name (_ "Rhythm Track")
 $manpage "Rhythm_Track"
+$debugbutton false
 $preview linear
 $action (_ "Generating Rhythm...")
 $author (_ "Dominic Mazzoni")

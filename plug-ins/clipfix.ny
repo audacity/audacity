@@ -4,6 +4,7 @@ $type process
 $preview enabled
 $name (_ "Clip Fix")
 $manpage "Clip_Fix"
+$debugbutton false
 $action (_ "Reconstructing clips...")
 $author (_ "Benjamin Schwartz and Steve Daulton")
 $release 2.3.0

@@ -4,6 +4,7 @@ $type process spectral
 $preview linear
 $name (_ "Spectral edit parametric EQ")
 $manpage "Spectral_edit_parametric_EQ"
+$debugbutton false
 $action (_ "Filtering...")
 $author (_ "Paul Licameli")
 $release 2.3.0

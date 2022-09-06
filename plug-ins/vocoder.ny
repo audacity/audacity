@@ -4,6 +4,7 @@ $type process
 $preview enabled
 $name (_ "Vocoder")
 $manpage "Vocoder"
+$debugbutton false
 $action (_ "Processing Vocoder...")
 $author (_ "Edgar-RFT and Steve Daulton")
 $release 3.1.2

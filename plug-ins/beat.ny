@@ -3,6 +3,7 @@ $version 4
 $type analyze
 $name (_ "Beat Finder")
 $manpage "Beat_Finder"
+$debugbutton false
 $action (_ "Finding beats...")
 $author (_ "Audacity")
 $release 2.3.2

@@ -4,6 +4,7 @@ $type process
 $preview linear
 $name (_ "Vocal Reduction and Isolation")
 $manpage "Vocal_Reduction_and_Isolation"
+$debugbutton false
 $action (_ "Applying Action...")
 $author (_ "Robert Haenggi")
 $release 3.0.1
