@@ -374,33 +374,20 @@ class VSTEffect final
    
 
    EffectSettings MakeSettings() const override;
-
-
-   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
-   std::mutex mSettingsMutex;    // to avoid read/write races on mSettings - this is needed temporarily
-                                 // and will be removed when the Validator will be implemented
-
-   //! This function will be rewritten when the effect is really stateless
-   VSTEffectSettings& GetSettings(EffectSettings&) const
+   
+   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
    {
-      return const_cast<VSTEffect*>(this)->mSettings;
-   }
-
-   //! This function will be rewritten when the effect is really stateless
-   const VSTEffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
-
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
+      auto pSettings = settings.cast<VSTEffectSettings>();
       assert(pSettings);
       return *pSettings;
    }
-   */
+
+   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
 
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
@@ -560,10 +547,6 @@ private:
 
    VSTEffectSettings& GetSettings(EffectSettings& settings) const
    {
-      return GetEffect().GetSettings(settings);
-   }
-
-   const VSTEffectSettings& GetSettings(const EffectSettings& settings) const {
       return GetEffect().GetSettings(settings);
    }
 

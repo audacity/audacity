@@ -1079,32 +1079,19 @@ bool VSTEffectInstance::RealtimeResume()
 
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
+
    auto &settings = package.settings;
+
+   // It has been suggested that this loop is now useless and the StoreSettings can
+   // be called directly on "this" - however, this was tried and it did not work,
+   // i.e. sliders changes would not be heard in the realtime processed.
+   //
+   // If anything, the loop could be replaced with mSlaves[0].StoreSettings(...)
+   //
+   for (auto& slave : mSlaves)
    {
-      // This mutex protection is temporarily needed because:
-      //
-      //  - VSTEffectValidator::Automate ultimately writes to   VSTEffect::mSettings
-      //  - this method                             reads  from VSTEffect::mSettings
-      //
-      // And the two things above will happen when realtime processing and moving a slider -
-      // tests have shown that without this mutex, crashes will happen.
-      //
-      // Anyway, this mutex should go when the transition to stateless is complete.
-      //
-      auto guard = std::lock_guard{ GetEffect().mSettingsMutex };
-
-      // It has been suggested that this loop is now useless and the StoreSettings can
-      // be called directly on "this" - however, this was tried and it did not work,
-      // i.e. sliders changes would not be heard in the realtime processed.
-      //
-      // If anything, the loop could be replaced with mSlaves[0].StoreSettings(...)
-      //
-      for (auto& slave : mSlaves)
-      {
-         slave->StoreSettings(GetSettings(settings));
-      }
+      slave->StoreSettings(GetSettings(settings));
    }
-
    return true;
 }
 
@@ -1214,8 +1201,17 @@ bool VSTEffect::CopySettingsContents(const EffectSettings& src, EffectSettings& 
 
    assert(pDst->mParamsMap.size() == pSrc->mParamsMap.size());
 
-   // ? 
-   //pDst->mChunk = pSrc->mChunk;
+   // TODO
+   // Without this assignment, changes in sound will not be heard when
+   // realtime processing and moving a slider (for plugins which use the chunk).
+   // 
+   // We must be sure that this assignment does not create a memory allocation -
+   // it is not allowed in the thread which executes this.
+   //
+   // If this could allocate, we must disable it and somehow force effects
+   // which use the chunk, to use the fallback key-value map instead.
+   //
+   pDst->mChunk = pSrc->mChunk;
 
    // Do an in-place rewrite of dst, avoiding allocations
    auto& dstMap = pDst->mParamsMap;
@@ -3684,21 +3680,14 @@ bool VSTEffectValidator::StoreSettings(const EffectSettings& settings)
 
 bool VSTEffectValidator::ValidateUI()
 {
+   mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
-      //
-      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
+      const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
+      if (eff.GetType() == EffectTypeGenerate)
+         settings.extra.SetDuration(mDuration->GetValue());
 
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
-         if (eff.GetType() == EffectTypeGenerate)
-            settings.extra.SetDuration(mDuration->GetValue());
-
-         FetchSettingsFromInstance(settings);
-      });
-
-   }
+      FetchSettingsFromInstance(settings);
+   });
 
    return true;
 }
