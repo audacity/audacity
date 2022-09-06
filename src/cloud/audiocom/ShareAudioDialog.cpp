@@ -200,9 +200,9 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
    s.StartHorizontalLay(wxEXPAND, 0);
    {
-      s.StartInvisiblePanel(16);
+      s.StartInvisiblePanel(14);
       {
-         s.SetBorder(0);
+         s.SetBorder(2);
          s.StartHorizontalLay(wxEXPAND, 0);
          {
             s.AddSpace(0, 0, 1);
@@ -210,11 +210,13 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
             mCancelButton = s.AddButton(XXO("&Cancel"));
             mCancelButton->Bind(wxEVT_BUTTON, [this](auto) { OnCancel(); });
 
-            mContinueButton = s.AddButton(XXO("C&ontinue"));
-            mContinueButton->Bind(wxEVT_BUTTON, [this](auto) { OnContinue(); });
-
             mCloseButton = s.AddButton(XXO("&Close"));
             mCloseButton->Bind(wxEVT_BUTTON, [this](auto) { OnClose(); });
+            
+            s.AddSpace(4, 0, 0);
+
+            mContinueButton = s.AddButton(XXO("C&ontinue"));
+            mContinueButton->Bind(wxEVT_BUTTON, [this](auto) { OnContinue(); });
             
             mGotoButton = s.AddButton(XXO("&Go to my file"));
          }
