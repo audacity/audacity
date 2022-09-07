@@ -279,8 +279,6 @@ private:
 
    std::exception_ptr mpException {};
 
-   DECLARE_EVENT_TABLE()
-
    friend class NyquistEffectsModule;
 };
 

@@ -89,7 +89,6 @@ int NyquistEffect::mReentryCount = 0;
 
 enum
 {
-   ID_Editor = 10000,
    ID_Slider = 11000,
    ID_Text = 12000,
    ID_Choice = 13000,
@@ -102,19 +101,6 @@ enum
 // NyquistEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
-
-BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_Slider, ID_Slider+99,
-                     wxEVT_COMMAND_SLIDER_UPDATED, NyquistEffect::OnSlider)
-   EVT_COMMAND_RANGE(ID_Text, ID_Text+99,
-                     wxEVT_COMMAND_TEXT_UPDATED, NyquistEffect::OnText)
-   EVT_COMMAND_RANGE(ID_Choice, ID_Choice + 99,
-                     wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice)
-   EVT_COMMAND_RANGE(ID_Time, ID_Time + 99,
-                     wxEVT_COMMAND_TEXT_UPDATED, NyquistEffect::OnTime)
-   EVT_COMMAND_RANGE(ID_FILE, ID_FILE + 99,
-                     wxEVT_COMMAND_BUTTON_CLICKED, NyquistEffect::OnFileButton)
-END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
 : mName{
@@ -2426,17 +2412,21 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                {
                   S.AddSpace(10, 10);
 
-                  auto item = S.Id(ID_Text + i)
+                  S.Id(ID_Text + i)
                      .Validator<wxGenericValidator>(&binding.valStr)
                      .Name( prompt )
-                     .AddTextBox( {}, wxT(""), 50);
+                     .AddTextBox( {}, wxT(""), 50)
+                        ->Bind(wxEVT_COMMAND_TEXT_UPDATED,
+                           &NyquistEffect::OnText, this);
                }
                else if (ctrl.type == NYQ_CTRL_CHOICE)
                {
                   S.AddSpace(10, 10);
 
                   S.Id(ID_Choice + i).AddChoice( {},
-                     Msgids( ctrl.choices.data(), ctrl.choices.size() ) );
+                     Msgids( ctrl.choices.data(), ctrl.choices.size() ) )
+                        ->Bind(wxEVT_COMMAND_CHOICE_SELECTED,
+                           &NyquistEffect::OnChoice, this);
                }
                else if (ctrl.type == NYQ_CTRL_TIME)
                {
@@ -2457,7 +2447,9 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                   S
                      .Name( prompt )
                      .Position(wxALIGN_LEFT | wxALL)
-                     .AddWindow(time);
+                     .AddWindow(time)
+                        ->Bind(wxEVT_COMMAND_TEXT_UPDATED,
+                           &NyquistEffect::OnTime, this);
                }
                else if (ctrl.type == NYQ_CTRL_FILE)
                {
@@ -2473,9 +2465,11 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                   NyquistFormatting::
                   resolveFilePath(binding.valStr, defaultExtension);
 
-                  wxTextCtrl *item = S.Id(ID_Text+i)
+                  auto item = S.Id(ID_Text+i)
                      .Name( prompt )
                      .AddTextBox( {}, wxT(""), 40);
+                  item->Bind(wxEVT_COMMAND_TEXT_UPDATED,
+                     &NyquistEffect::OnText, this);
                   item->SetValidator(wxGenericValidator(&binding.valStr));
 
                   S.Id(ID_FILE + i).AddButton(
@@ -2484,7 +2478,9 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                         // translated, but apparently not.
                         ? wxGetTranslation( wxFileSelectorPromptStr )
                         : ctrl.label ),
-                     wxALIGN_LEFT);
+                     wxALIGN_LEFT)
+                        ->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+                           &NyquistEffect::OnFileButton, this);
                }
                else
                {
@@ -2516,18 +2512,22 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                         &binding.val, NumValidatorStyle::DEFAULT,
                         (int) ctrl.low, (int) ctrl.high);
                   }
-                  wxTextCtrl *item = S
+                  S
                      .Name( prompt )
                      .AddTextBox( {}, wxT(""),
                         (ctrl.type == NYQ_CTRL_INT_TEXT ||
-                         ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
+                         ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12)
+                        ->Bind(wxEVT_COMMAND_TEXT_UPDATED,
+                           &NyquistEffect::OnText, this);
 
                   if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_FLOAT)
                   {
                      S.Id(ID_Slider + i)
                         .Style(wxSL_HORIZONTAL)
                         .MinSize( { 150, -1 } )
-                        .AddSlider( {}, 0, ctrl.ticks, 0);
+                        .AddSlider( {}, 0, ctrl.ticks, 0)
+                           ->Bind(wxEVT_COMMAND_SLIDER_UPDATED,
+                              &NyquistEffect::OnSlider, this);
                   }
                }
 
