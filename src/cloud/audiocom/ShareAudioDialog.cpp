@@ -34,6 +34,7 @@
 #include "CloudExportersRegistry.h"
 #include "CloudExporterPlugin.h"
 
+#include "AuthorizationHandler.h"
 #include "LinkAccountDialog.h"
 #include "UserImage.h"
 
@@ -159,6 +160,8 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
     , mProject(project)
     , mServices(std::make_unique<Services>())
 {
+   GetAuthorizationHandler().PushSuppressDialogs();
+
    ShuttleGui s(this, eIsCreating);
 
    s.StartVerticalLay();
@@ -199,6 +202,7 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
 
 ShareAudioDialog::~ShareAudioDialog()
 {
+   GetAuthorizationHandler().PopSuppressDialogs();
    // Clean up the temp file when the dialog is closed
    if (!mFilePath.empty() && wxFileExists(mFilePath))
       wxRemoveFile(mFilePath);
