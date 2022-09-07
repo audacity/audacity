@@ -152,6 +152,7 @@ different formats.
 **********************************************************************/
 #include "NumericConverter.h"
 #include "SampleCount.h"
+#include "Beats.h"
 
 #include <cmath>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -188,13 +189,23 @@ void NumericField::CreateDigitFormatStr()
    }
 }
 
+static const TranslatableString BuildBeatsFormat() {
+   double bpm = BeatsPerMinute.Read();
+   int uts = UpperTimeSignature.Read();
+   int lts = LowerTimeSignature.Read();
+
+   return XO("01000 bars 0%d beats|%f").Format(
+      uts, (bpm * lts) / (60 * uts)
+   );
+}
+
 namespace {
 
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-static const BuiltinFormatString TimeConverterFormats_[] =  {
+static BuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
    { XO("seconds") },
@@ -408,7 +419,29 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * translate 'frames' and leave the rest alone */
    XO("01000,01000 frames|75")
    },
+
+   {
+   /* i18n-hint: Name of time display format that shows time beats and measures */
+   { XO("beats and measures") },
+   /* i18n-hint: Format string for displaying time in beats and measures.
+      * Look at the function for more detail */
+   BuildBeatsFormat()
+   },
 };
+
+namespace {
+struct BeatsUpdater : PrefsListener {
+   void UpdatePrefs() override
+   {
+      TimeConverterFormats_[16] =
+      {
+         { XO("beats and measures") },
+         BuildBeatsFormat()
+      };
+   }
+   BeatsUpdater() { UpdatePrefs(); }
+} theBeatsUpdater;
+}
 
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
