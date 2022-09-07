@@ -671,6 +671,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       NyquistEffect proxy{ NYQUIST_WORKER_ID };
       proxy.SetCommand(mInputCmd);
       proxy.mDebug = nyquistSettings.proxyDebug;
+      proxy.mControls = move(nyquistSettings.controls);
       auto result = Delegate(proxy, nyquistSettings.proxySettings);
       if (result) {
          mT0 = proxy.mT0;
@@ -1120,6 +1121,7 @@ int NyquistEffect::ShowHostInterface(
          auto &nyquistSettings = GetSettings(settings);
          nyquistSettings.proxySettings = std::move(newSettings);
          nyquistSettings.proxyDebug = this->mDebug;
+         nyquistSettings.controls = move(effect.mControls);
       });
    }
    if (!pNewInstance)
