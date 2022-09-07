@@ -12,11 +12,13 @@
 #include "EffectInterface.h"
 #include "ModuleManager.h"
 #include "PluginManager.h"
+#include "PluginStartupRegistration.h"
 #include "ShuttleGui.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/dir.h>
 #include <wx/dynlib.h>
@@ -359,6 +361,7 @@ enum
    ID_List,
    ID_ClearAll,
    ID_SelectAll,
+   ID_Rescan,
    ID_Enable,
    ID_Disable,
 };
@@ -376,6 +379,7 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_LIST_COL_CLICK(ID_List, PluginRegistrationDialog::OnSort)
    EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
+   EVT_BUTTON(ID_Rescan, PluginRegistrationDialog::OnRescan)
    EVT_BUTTON(ID_ClearAll, PluginRegistrationDialog::OnClearAll)
    EVT_BUTTON(ID_SelectAll, PluginRegistrationDialog::OnSelectAll)
    EVT_BUTTON(ID_Enable, PluginRegistrationDialog::OnEnable)
@@ -510,6 +514,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          {
             S.Id(ID_SelectAll).AddButton(XXO("&Select All"));
             S.Id(ID_ClearAll).AddButton(XXO("C&lear All"));
+            S.Id(ID_Rescan).AddButton(XXO("Rescan"));
 
             S.StartHorizontalLay(wxALIGN_CENTER);
             {
@@ -543,45 +548,20 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
 
    PluginManager & pm = PluginManager::Get();
-   for (auto &plug : pm.AllPlugins()) {
-      PluginType plugType = plug.GetPluginType();
-      if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
-         continue;
+   PopulateItemsList(pm);
 
-      const auto &path = plug.GetPath();
-      ItemData & item = mItems[path];  // will create NEW entry
-      item.plugs.push_back(&plug);
-      item.path = path;
-      item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
-      item.valid = plug.IsValid();
-
-      if (plugType == PluginTypeEffect)
-      {
-         item.name = plug.GetSymbol().Translation();
-      }
-      // This is not right and will not work when other plugin types are added.
-      // But it's presumed that the plugin manager dialog will be fully developed
-      // by then.
-      else if (plugType == PluginTypeStub)
-      {
-         wxFileName fname { path };
-         item.name = fname.GetName().Trim(false).Trim(true);
-#ifndef DISABLE_STATE_NEW
-         if (!item.valid)
-         {
-            item.state = STATE_New;
-         }
-#endif
-      }
+   for (const auto& item : mItems)
+   {
+      const auto& itemData = item.second;
 
       int x;
-      mEffects->GetTextExtent(item.name, &x, NULL);
+      mEffects->GetTextExtent(itemData.name, &x, NULL);
       colWidths[COL_Name] = wxMax(colWidths[COL_Name], x);
 
-      mEffects->GetTextExtent(item.path, &x, NULL);
+      mEffects->GetTextExtent(itemData.path, &x, NULL);
       if (x > colWidths[COL_Path])
       {
-         mLongestPath = item.path;
+         mLongestPath = itemData.path;
       }
       colWidths[COL_Path] = wxMax(colWidths[COL_Path], x);
    }
@@ -624,6 +604,42 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 #endif
    }
 
+}
+
+void PluginRegistrationDialog::PopulateItemsList(PluginManager& pm)
+{
+   for (auto& plug : pm.AllPlugins())
+   {
+      PluginType plugType = plug.GetPluginType();
+      if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
+         continue;
+
+      const auto& path = plug.GetPath();
+      ItemData& item = mItems[path];  // will create NEW entry
+      item.plugs.push_back(&plug);
+      item.path = path;
+      item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
+      item.valid = plug.IsValid();
+
+      if (plugType == PluginTypeEffect)
+      {
+         item.name = plug.GetSymbol().Translation();
+      }
+      // This is not right and will not work when other plugin types are added.
+      // But it's presumed that the plugin manager dialog will be fully developed
+      // by then.
+      else if (plugType == PluginTypeStub)
+      {
+         wxFileName fname{ path };
+         item.name = fname.GetName().Trim(false).Trim(true);
+#ifndef DISABLE_STATE_NEW
+         if (!item.valid)
+         {
+            item.state = STATE_New;
+         }
+#endif
+      }
+   }
 }
 
 void PluginRegistrationDialog::RegenerateEffectsList(int filter)
@@ -849,6 +865,28 @@ void PluginRegistrationDialog::OnClearAll(wxCommandEvent & WXUNUSED(evt))
    {
       mEffects->SetItemState(i, 0, wxLIST_STATE_SELECTED);
    }
+}
+
+void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
+{
+   mItems.clear();
+   mEffects->DeleteAllItems();
+   mEffects->Update();
+
+   wxTheApp->CallAfter([this] {
+      auto& pm = PluginManager::Get();
+      pm.ClearEffectPlugins();
+
+      auto newPlugins = PluginManager::Get().CheckPluginUpdates();
+      if (!newPlugins.empty())
+      {
+         PluginStartupRegistration reg(newPlugins);
+         reg.Run();
+      }
+
+      PopulateItemsList(pm);
+      RegenerateEffectsList(mFilter);
+   });
 }
 
 void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
