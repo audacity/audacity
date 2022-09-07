@@ -534,7 +534,8 @@ bool RealtimeEffectState::Finalize() noexcept
    if(result)
       //update mLastSettings so that Flush didn't
       //overwrite what was read from the worker
-      GetAccessState()->Initialize(mMainSettings);
+      if (auto state = GetAccessState())
+         state->Initialize(mMainSettings);
    mInitialized = false;
    return result;
 }
