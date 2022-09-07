@@ -2,90 +2,24 @@
 
   Audacity: A Digital Audio Editor
 
-  Nyquist.cpp
+  @file NyquistUIControls.cpp
 
   Dominic Mazzoni
 
-******************************************************************//**
+  Paul Licameli split from Nyquist.cpp
 
-\class NyquistEffect
-\brief An Effect that calls up a Nyquist (XLISP) plug-in, i.e. many possible
-effects from this one class.
-
-*//****************************************************************//**
-
-\class NyquistOutputDialog
-\brief Dialog used with NyquistEffect
-
-*//*******************************************************************/
-
-
-#include "Nyquist.h"
-
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-
-#include <locale.h>
-
+**********************************************************************/
+#include "NyquistUIControls.h"
+#include "../Effect.h"
 #include <wx/button.h>
-#include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/datetime.h>
-#include <wx/intl.h>
-#include <wx/log.h>
-#include <wx/scrolwin.h>
-#include <wx/sizer.h>
 #include <wx/slider.h>
-#include <wx/sstream.h>
-#include <wx/stattext.h>
 #include <wx/tokenzr.h>
-#include <wx/txtstrm.h>
 #include <wx/valgen.h>
-#include <wx/wfstream.h>
-#include <wx/numformatter.h>
-#include <wx/stdpaths.h>
-
-#include "../EffectManager.h"
-#include "FileNames.h"
-#include "../../LabelTrack.h"
-#include "Languages.h"
-#include "../../NoteTrack.h"
-#include "../../TimeTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
-#include "PluginManager.h"
-#include "Project.h"
-#include "ProjectRate.h"
-#include "../../ShuttleAutomation.h"
-#include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
-#include "TempDirectory.h"
-#include "SyncLock.h"
-#include "ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "Prefs.h"
-#include "../../prefs/GUIPrefs.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/ProgressDialog.h"
-
-#include "../../widgets/FileDialog/FileDialog.h"
-
-#ifndef nyx_returns_start_and_end_time
-#error You need to update lib-src/libnyquist
-#endif
-
-#include <locale.h>
-#include <iostream>
-#include <ostream>
-#include <sstream>
-#include <float.h>
-
-int NyquistEffect::mReentryCount = 0;
+#include "../../widgets/wxPanelWrapper.h"
 
 enum
 {
@@ -96,6 +30,7 @@ enum
    ID_FILE = 15000
 };
 
+#if 0
 ///////////////////////////////////////////////////////////////////////////////
 //
 // NyquistEffect
@@ -2204,6 +2139,8 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
    return mControls.UpdateUI();
 }
 
+#endif
+
 NyquistUIControls::~NyquistUIControls() = default;
 
 bool NyquistUIControls::UpdateUI()
@@ -2247,13 +2184,6 @@ bool NyquistUIControls::UpdateUI()
 
    mEffect.EnablePreview(mEnablePreview);
    return true;
-}
-
-bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-      return false;
-   return mControls.ValidateUI();
 }
 
 bool NyquistUIControls::ValidateUI()
@@ -2353,70 +2283,6 @@ bool NyquistUIControls::ValidateUI()
    }
    
    return true;
-}
-
-void SetControlBounds(NyqControl &ctrl)
-{
-   using namespace NyquistFormatting;
-   if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
-      ctrl.low = INT_MIN;
-   }
-   else if ((ctrl.type == NYQ_CTRL_FLOAT_TEXT || ctrl.type == NYQ_CTRL_TIME) &&
-            ctrl.lowStr.IsSameAs(wxT("nil"), false))
-   {
-      ctrl.low = -(FLT_MAX);
-   }
-   else
-   {
-      ctrl.low = GetCtrlValue(ctrl.lowStr);
-   }
-
-   if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
-      ctrl.high = INT_MAX;
-   }
-   else if ((ctrl.type == NYQ_CTRL_FLOAT_TEXT || ctrl.type == NYQ_CTRL_TIME) &&
-            ctrl.highStr.IsSameAs(wxT("nil"), false))
-   {
-      ctrl.high = FLT_MAX;
-   }
-   else
-   {
-      ctrl.high = GetCtrlValue(ctrl.highStr);
-   }
-
-   if (ctrl.high < ctrl.low)
-   {
-      ctrl.high = ctrl.low + 1;
-   }
-
-   ctrl.ticks = 1000;
-   if (ctrl.type == NYQ_CTRL_INT &&
-       (ctrl.high - ctrl.low < ctrl.ticks))
-   {
-      ctrl.ticks = (int)(ctrl.high - ctrl.low);
-   }
-}
-
-std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
-{
-   wxScrolledWindow *scroller = S.Style(wxVSCROLL | wxTAB_TRAVERSAL)
-      .StartScroller(2);
-   {
-      S.StartMultiColumn(4);
-      {
-         mControls.Populate(S, GetSelectionFormat(), mProjectRate);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndScroller();
-
-   scroller->SetScrollRate(0, 20);
-
-   // This fools NVDA into not saying "Panel" when the dialog gets focus
-   scroller->SetName(wxT("\a"));
-   scroller->SetLabel(wxT("\a"));
-   return nullptr;
 }
 
 void NyquistUIControls::Populate(ShuttleGui &S,
@@ -2580,13 +2446,6 @@ void NyquistUIControls::Populate(ShuttleGui &S,
          }
       }
    }
-}
-
-// NyquistEffect implementation
-
-bool NyquistEffect::IsOk()
-{
-   return mOK;
 }
 
 void NyquistUIControls::OnSlider(wxCommandEvent & evt)
@@ -2786,194 +2645,5 @@ void NyquistUIControls::OnText(wxCommandEvent & evt)
             mEffect.GetUIParent()->FindWindow(ID_Slider + i));
          slider->SetValue(pos);
       }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// NyquistOutputDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-
-BEGIN_EVENT_TABLE(NyquistOutputDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, NyquistOutputDialog::OnOk)
-END_EVENT_TABLE()
-
-NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
-                                       const TranslatableString & title,
-                                       const TranslatableString & prompt,
-                                       const TranslatableString &message)
-: wxDialogWrapper{ parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
-{
-   SetName();
-
-   ShuttleGui S{ this, eIsCreating };
-   {
-      S.SetBorder(10);
-
-      S.AddVariableText( prompt, false, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT );
-
-      // TODO: use ShowInfoDialog() instead.
-      // Beware this dialog MUST work with screen readers.
-      S.Prop( 1 )
-         .Position(wxEXPAND | wxALL)
-         .MinSize( { 480, 250 } )
-         .Style(wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH)
-         .AddTextWindow( message.Translation() );
-
-      S.SetBorder( 5 );
-
-      S.StartHorizontalLay(wxALIGN_CENTRE | wxLEFT | wxBOTTOM | wxRIGHT, 0 );
-      {
-         /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
-         S.Id(wxID_OK).AddButton( XXO("OK"), wxALIGN_CENTRE, true );
-      }
-      S.EndHorizontalLay();
-
-   }
-
-   SetAutoLayout(true);
-   GetSizer()->Fit(this);
-   GetSizer()->SetSizeHints(this);
-}
-
-// ============================================================================
-// NyquistOutputDialog implementation
-// ============================================================================
-
-void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
-{
-   EndModal(wxID_OK);
-}
-
-// Registration of extra functions in XLisp.
-#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
-
-static LVAL gettext()
-{
-   auto string = UTF8CTOWX(getstring(xlgastring()));
-#if !HAS_I18N_CONTEXTS
-   // allow ignored context argument
-   if ( moreargs() )
-      nextarg();
-#endif
-   xllastarg();
-   return cvstring(GetCustomTranslation(string).mb_str(wxConvUTF8));
-}
-
-static LVAL gettextc()
-{
-#if HAS_I18N_CONTEXTS
-   auto string = UTF8CTOWX(getstring(xlgastring()));
-   auto context = UTF8CTOWX(getstring(xlgastring()));
-   xllastarg();
-   return cvstring(wxGetTranslation( string, "", 0, "", context )
-      .mb_str(wxConvUTF8));
-#else
-   return gettext();
-#endif
-}
-
-static LVAL ngettext()
-{
-   auto string1 = UTF8CTOWX(getstring(xlgastring()));
-   auto string2 = UTF8CTOWX(getstring(xlgastring()));
-   auto number = getfixnum(xlgafixnum());
-#if !HAS_I18N_CONTEXTS
-   // allow ignored context argument
-   if ( moreargs() )
-      nextarg();
-#endif
-   xllastarg();
-   return cvstring(
-      wxGetTranslation(string1, string2, number).mb_str(wxConvUTF8));
-}
-
-static LVAL ngettextc()
-{
-#if HAS_I18N_CONTEXTS
-   auto string1 = UTF8CTOWX(getstring(xlgastring()));
-   auto string2 = UTF8CTOWX(getstring(xlgastring()));
-   auto number = getfixnum(xlgafixnum());
-   auto context = UTF8CTOWX(getstring(xlgastring()));
-   xllastarg();
-   return cvstring(wxGetTranslation( string1, string2, number, "", context )
-      .mb_str(wxConvUTF8));
-#else
-   return ngettext();
-#endif
-}
-
-void * nyq_make_opaque_string( int size, unsigned char *src ){
-    LVAL dst;
-    unsigned char * dstp;
-    dst = new_string((int)(size+2));
-    dstp = getstring(dst);
-
-    /* copy the source to the destination */
-    while (size-- > 0)
-        *dstp++ = *src++;
-    *dstp = '\0';
-
-    return (void*)dst;
-}
-
-void * nyq_reformat_aud_do_response(const wxString & Str) {
-   LVAL dst;
-   LVAL message;
-   LVAL success;
-   wxString Left = Str.BeforeLast('\n').BeforeLast('\n').ToAscii();
-   wxString Right = Str.BeforeLast('\n').AfterLast('\n').ToAscii();
-   message = cvstring(Left);
-   success = Right.EndsWith("OK") ? s_true : nullptr;
-   dst = cons(message, success);
-   return (void *)dst;
-}
-
-#include "../../commands/ScriptCommandRelay.h"
-
-
-/* xlc_aud_do -- interface to C routine aud_do */
-/**/
-LVAL xlc_aud_do(void)
-{
-// Based on string-trim...
-    unsigned char *leftp;
-    LVAL src,dst;
-
-    /* get the string */
-    src = xlgastring();
-    xllastarg();
-
-    /* setup the string pointer */
-    leftp = getstring(src);
-
-    // Go call my real function here...
-    dst = (LVAL)ExecForLisp( (char *)leftp );
-
-    //dst = cons(dst, (LVAL)1);
-    /* return the new string */
-    return (dst);
-}
-
-static void RegisterFunctions()
-{
-   // Add functions to XLisp.  Do this only once,
-   // before the first call to nyx_init.
-   static bool firstTime = true;
-   if (firstTime) {
-      firstTime = false;
-
-      // All function names must be UP-CASED
-      static const FUNDEF functions[] = {
-         { "_", SUBR, gettext },
-         { "_C", SUBR, gettextc },
-         { "NGETTEXT", SUBR, ngettext },
-         { "NGETTEXTC", SUBR, ngettextc },
-         { "AUD-DO",  SUBR, xlc_aud_do },
-       };
-
-      xlbindfunctions( functions, WXSIZEOF( functions ) );
    }
 }

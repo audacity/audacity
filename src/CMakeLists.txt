@@ -652,6 +652,8 @@ list( APPEND SOURCES
          effects/nyquist/NyquistControls.h
          effects/nyquist/NyquistPrompt.cpp
          effects/nyquist/NyquistPrompt.h
+         effects/nyquist/NyquistUIControls.cpp
+         effects/nyquist/NyquistUIControls.h
       >
 
       # VAMP Effects

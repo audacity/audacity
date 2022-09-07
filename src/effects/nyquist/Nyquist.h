@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include "NyquistControls.h"
+#include "NyquistUIControls.h"
 #include "../Effect.h"
 #include "SampleCount.h"
 #include "../../widgets/wxPanelWrapper.h"
@@ -29,31 +29,6 @@ class wxTextCtrl;
 #define NYQ_MAX_LEN (std::numeric_limits<long>::max())
 
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
-
-struct NyquistUIControls : NyquistControls, wxEvtHandler {
-   explicit NyquistUIControls(Effect &effect, Bindings &bindings)
-      : mEffect{ effect }
-      , mBindings{ bindings }
-   {}
-   virtual ~NyquistUIControls();
-   bool UpdateUI();
-   bool ValidateUI();
-   void Populate(ShuttleGui &S,
-      const NumericFormatSymbol &selectionFormat, double projectRate);
-
-   void OnText(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & evt);
-   void OnTime(wxCommandEvent & evt);
-   void OnFileButton(wxCommandEvent & evt);
-
-   bool validatePath(wxString path);
-   wxString ToTimeFormat(double t);
-
-   Effect &mEffect;
-   Bindings &mBindings;
-   bool mEnablePreview { true };
-};
 
 class AUDACITY_DLL_API NyquistEffect
    : public EffectWithSettings<NyquistSettings, StatefulEffect>
