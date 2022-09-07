@@ -18,6 +18,7 @@ class TranslatableString;
 class wxWindow;
 
 #include "Identifier.h"
+#include "Observer.h"
 
 namespace TempDirectory
 {
@@ -34,6 +35,8 @@ namespace TempDirectory
    FILES_API bool FATFilesystemDenied(const FilePath &path,
                             const TranslatableString &msg,
                             const BasicUI::WindowPlacement &placement = {});
-};
+
+   FILES_API Observer::Publisher<FilePath>& GetTempPathObserver();
+}
 
 #endif

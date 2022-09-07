@@ -25,7 +25,6 @@
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "Track.h"
-#include "TempDirectory.h"
 
 #include "ServiceConfig.h"
 #include "OAuthService.h"
@@ -59,14 +58,10 @@ const wxSize avatarSize = { 32, 32 };
 
 wxString GenerateTempPath(FileExtension extension)
 {
-   FilePath pathName = TempDirectory::DefaultTempDir();
-
-   if (!FileNames::WritableLocationCheck(
-          pathName, XO("Cannot proceed to export.")))
-      return {};
+   const auto tempPath = GetUploadTempPath();
 
    wxFileName fileName(
-      pathName + "/cloud/",
+      tempPath,
       wxString::Format(
          "%lld", std::chrono::system_clock::now().time_since_epoch().count()),
       extension);
