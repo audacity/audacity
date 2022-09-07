@@ -16,9 +16,9 @@ void BeatsFormat::SetTickSizes(
 ) const
 {
    // Check that all data is positive
-   wxASSERT(mBpm > 0 && mTimeSigUpper > 0 && mTimeSigLower > 0);
+   if (!(mBpm > 0 && mTimeSigUpper > 0 && mTimeSigLower > 0)) return;
    // Also check that the lower time signature is valid (power of 2)
-   wxASSERT(!(mTimeSigLower & (mTimeSigLower - 1)));
+   if(mTimeSigLower & (mTimeSigLower - 1)) return;
 
    int factor = std::ceil(units);
    major = (60 * mTimeSigUpper * factor) / (mBpm * ((double)mTimeSigLower / 4));

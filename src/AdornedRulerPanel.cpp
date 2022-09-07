@@ -1355,6 +1355,9 @@ void AdornedRulerPanel::UpdatePrefs()
    }
 #endif
 #endif
+
+   RefreshTimelineFormat();
+   // Update();
 }
 
 void AdornedRulerPanel::ReCreateButtons()
@@ -2325,6 +2328,19 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
    auto results = snapManager.Snap(nullptr, mQuickPlayPos[index], false);
    mQuickPlayPos[index] = results.outTime;
    mIsSnapped[index] = results.Snapped();
+}
+
+void AdornedRulerPanel::RefreshTimelineFormat()
+{
+   if (mBeatsAndMeasures) {
+      mBeatsFormat.SetData(BeatsPerMinute.Read(),
+         UpperTimeSignature.Read(), LowerTimeSignature.Read());
+      mRuler.Invalidate();
+   }
+   else {
+      mRuler.SetFormat(&TimeFormat::Instance());
+   }
+   Refresh();
 }
 
 void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
