@@ -12,6 +12,7 @@
 #define __AUDACITY_RULER_FORMAT__
 
 #include <wx/string.h>
+#include <cmath>
 #include <any> // needed for customizable data
 
 class RulerFormat {
