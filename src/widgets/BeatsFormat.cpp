@@ -22,9 +22,9 @@ void BeatsFormat::SetTickSizes(
    const int timeSigLower = beatsData ? beatsData->timeSigLower : 4;
 
    // Check that all data is positive
-   wxASSERT(bpm > 0 && timeSigUpper > 0 && timeSigLower > 0);
+   if (!(bpm > 0 && timeSigUpper > 0 && timeSigLower > 0)) return;
    // Also check that the lower time signature is valid (power of 2)
-   wxASSERT(!(timeSigLower & (timeSigLower - 1)));
+   if(timeSigLower & (timeSigLower - 1)) return;
 
    int factor = std::ceil(units);
    mMajor = (60 * timeSigUpper * factor) / (bpm * ((double)timeSigLower / 4));

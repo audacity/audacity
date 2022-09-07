@@ -194,6 +194,12 @@ static const TranslatableString BuildBeatsFormat() {
    int uts = UpperTimeSignature.Read();
    int lts = LowerTimeSignature.Read();
 
+   // Check that all data is positive
+   if (bpm <= 0) return XO("Invalid tempo");
+   if (uts <= 0 || lts <= 0) return XO("Invalid time signature");
+   // Also check that the lower time signature is valid (power of 2)
+   if (lts & (lts - 1)) return XO("Invalid time signature");
+
    return XO("01000 bars 0%d beats|%f").Format(
       uts, (((double)lts / 4) * bpm) / 60
    );
