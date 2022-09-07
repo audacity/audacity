@@ -199,7 +199,6 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
 
    if (options.hasValue)
       SetValue( options.value );
-
 }
 
 NumericTextCtrl::~NumericTextCtrl()
