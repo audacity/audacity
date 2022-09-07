@@ -195,7 +195,7 @@ static const TranslatableString BuildBeatsFormat() {
    int lts = LowerTimeSignature.Read();
 
    return XO("01000 bars 0%d beats|%f").Format(
-      uts, (bpm * lts) / (60 * uts)
+      uts, (((double)lts / 4) * bpm) / 60
    );
 }
 

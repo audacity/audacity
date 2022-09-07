@@ -27,12 +27,12 @@ void BeatsFormat::SetTickSizes(
    wxASSERT(!(timeSigLower & (timeSigLower - 1)));
 
    int factor = std::ceil(units);
-   mMajor = (60 * timeSigUpper * factor) / (bpm * timeSigLower);
+   mMajor = (60 * timeSigUpper * factor) / (bpm * ((double)timeSigLower / 4));
 
-   if (units < 1)
-      mMinor = (60) / (bpm * timeSigLower);
-   if (units < .5 && timeSigLower < 16)
-      mMinorMinor = (60) / (bpm * 16);
+   if (units < 3 * (60/bpm))
+      mMinor = 60 / (bpm * ((double)timeSigLower / 4));
+   if (units < 1.5 * (60 / bpm) && timeSigLower < 16)
+      mMinorMinor = 60 / (bpm * 4);
    mDigits = 0;
 }
 
@@ -51,7 +51,7 @@ void BeatsFormat::SetLabelString(
       const int timeSigUpper = beatsData ? beatsData->timeSigUpper : 0;
       const int timeSigLower = beatsData ? beatsData->timeSigLower : 0;
 
-      double val = (bpm * d * timeSigLower) / (60 * timeSigUpper);
+      double val = (bpm * ((double)timeSigLower / 4) * d) / (60 * timeSigUpper);
 
       s.Printf(wxT("%d"), (int)round(val + 1));
    }
