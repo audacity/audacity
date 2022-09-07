@@ -20,6 +20,7 @@
 #include "MemoryX.h"
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
+#include "Prefs.h"
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
@@ -168,7 +169,7 @@ protected:
 };
 
 class AUDACITY_DLL_API NumericTextCtrl final
-   : public wxControl, public NumericConverter
+   : public wxControl, public NumericConverter, public PrefsListener
 {
    friend class NumericTextCtrlAx;
 
@@ -242,6 +243,8 @@ class AUDACITY_DLL_API NumericTextCtrl final
 
    int GetFocusedField() { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
+
+   void UpdatePrefs() override;
 
 private:
 

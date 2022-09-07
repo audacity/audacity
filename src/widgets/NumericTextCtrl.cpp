@@ -175,6 +175,7 @@ different formats.
 #include "../KeyboardCapture.h"
 #include "Theme.h"
 #include "wxWidgetsWindowPlacement.h"
+#include "Beats.h"
 
 #include <algorithm>
 #include <math.h>
@@ -361,13 +362,24 @@ public:
    wxRect digitBox;
 };
 
+static const TranslatableString BuildBeatsFormat() {
+   double bpm = BeatsPerMinute.Read();
+   int uts = UpperTimeSignature.Read();
+   int lts = LowerTimeSignature.Read();
+
+   return XO("01000 bars 0%d beats|%f").Format(
+      uts, (bpm * lts) / (60 * uts)
+   );
+}
+
 namespace {
 
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-static const BuiltinFormatString TimeConverterFormats_[] =  {
+
+static BuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
    { XO("seconds") },
@@ -568,6 +580,14 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * in the middle to the 1000s separator for your locale, 
     * translate 'frames' and leave the rest alone */
    XO("01000,01000 frames|75")
+   },
+
+   {
+   /* i18n-hint: Name of time display format that shows time beats and measures */
+   { XO("beats and measures") },
+   /* i18n-hint: Format string for displaying time in beats and measures.
+      * Look at the function for more detail */
+   BuildBeatsFormat()
    },
 };
 
@@ -1413,6 +1433,7 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    if (options.hasValue)
       SetValue( options.value );
 
+   UpdatePrefs();
 }
 
 NumericTextCtrl::~NumericTextCtrl()
@@ -1516,6 +1537,16 @@ void NumericTextCtrl::SetInvalidValue(double invalidValue)
    mInvalidValue = invalidValue;
    if (wasInvalid)
       SetValue(invalidValue);
+}
+
+
+void NumericTextCtrl::UpdatePrefs()
+{
+   TimeConverterFormats_[16] =
+   {
+      { XO("beats and measures") },
+      BuildBeatsFormat()
+   };
 }
 
 wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
