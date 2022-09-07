@@ -1100,7 +1100,7 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 
          mEffectStateSubscription = mpState->Subscribe([this](RealtimeEffectStateChange state) {
             mEnabled = (state == RealtimeEffectStateChange::EffectOn);
-            mEnableBtn->SetBitmap(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+            mEnableBtn->SetBitmapLabel(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
 
             UpdateControls();
          });
