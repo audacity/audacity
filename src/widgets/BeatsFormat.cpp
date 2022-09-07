@@ -11,7 +11,7 @@
 #include "BeatsFormat.h"
 
 void BeatsFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, double &mMinorMinor,
+   double units, double& major, double& minor, double &minorMinor,
    int& mDigits
 ) const
 {
@@ -21,17 +21,17 @@ void BeatsFormat::SetTickSizes(
    wxASSERT(!(mTimeSigLower & (mTimeSigLower - 1)));
 
    int factor = std::ceil(units);
-   mMajor = (60 * mTimeSigUpper * factor) / (mBpm * mTimeSigLower);
+   major = (60 * mTimeSigUpper * factor) / (mBpm * ((double)mTimeSigLower / 4));
 
-   if (units < 1)
-      mMinor = (60) / (mBpm * mTimeSigLower);
-   if (units < .5 && mTimeSigLower < 16)
-      mMinorMinor = (60) / (mBpm * 16);
+   if (units < 3 * (60/mBpm))
+      minor = 60 / (mBpm * ((double)mTimeSigLower / 4));
+   if (units < 1.5 * (60 / mBpm) && mTimeSigLower < 16)
+      minorMinor = 60 / (mBpm * 4);
    mDigits = 0;
 }
 
 void BeatsFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, TickType tickType
+   wxString& s, double d, double minor, int mDigits, TickType tickType
 ) const
 {
    if (tickType == RulerFormat::t_major) {
@@ -39,7 +39,7 @@ void BeatsFormat::SetLabelString(
          return;
       }
 
-      double val = (mBpm * d * mTimeSigLower) / (60 * mTimeSigUpper);
+      double val = (mBpm * ((double)mTimeSigLower / 4) * d) / (60 * mTimeSigUpper);
 
       s.Printf(wxT("%d"), (int)round(val + 1));
    }
