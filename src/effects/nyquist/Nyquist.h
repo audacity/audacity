@@ -66,6 +66,7 @@ struct NyquistSettings {
    // other settings, for the Nyquist prompt; else null
    EffectSettings proxySettings;
    bool proxyDebug{ false };
+   std::vector<NyqControl> controls;
 
    // Other fields, to do
 };
