@@ -364,7 +364,7 @@ void ShareAudioDialog::HandleUploadSucceeded(
    if (!GetOAuthService().HasAccessToken())
    {
       mProgressPanel.info->SetLabel(
-         "By pressing continue, you will be taken to audio.com and given a sharable link.");
+         "By pressing continue, you will be taken to audio.com and given a shareable link.");
       mProgressPanel.info->Wrap(mProgressPanel.info->GetSize().GetWidth());
 
       mContinueAction = [this, url = std::string(finishUploadURL)]()
@@ -377,7 +377,7 @@ void ShareAudioDialog::HandleUploadSucceeded(
    }
    else
    {
-      auto sharableLink = wxString::Format(
+      auto shareableLink = wxString::Format(
          "https://audio.com/%s/%s", GetUserService().GetUserSlug(),
          audacity::ToWXString(audioSlug));
 
@@ -387,13 +387,13 @@ void ShareAudioDialog::HandleUploadSucceeded(
 
       mGotoButton->Bind(
          wxEVT_BUTTON,
-         [this, url = sharableLink](auto)
+         [this, url = shareableLink](auto)
          {
             EndModal(wxID_CLOSE);
             OpenInDefaultBrowser({ url });
          });
 
-      mProgressPanel.link->SetValue(sharableLink);
+      mProgressPanel.link->SetValue(shareableLink);
       mProgressPanel.linkPanel->Show();
    }
 
@@ -694,12 +694,12 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
       {
          s.AddSpace(0, 16, 0);
 
-         s.AddFixedText(XO("Sharable link"));
+         s.AddFixedText(XO("Shareable link"));
 
          s.StartHorizontalLay(wxEXPAND, 0);
          {
             link = s.AddTextBox(TranslatableString {}, "https://audio.com", 60);
-            link->SetName(XO("Sharable link").Translation());
+            link->SetName(XO("Shareable link").Translation());
             link->SetEditable(false);
 
             copyButton = s.AddButton(XO("Copy"));
