@@ -99,8 +99,6 @@ public:
          Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
             const std::shared_ptr<EffectInstance> pInstance
          ) {
-            if(settings.counter == slot.mSettings.counter)
-               return;
             settings.counter = slot.mSettings.counter;
             if (pInstance)
                pInstance->AssignSettings(
