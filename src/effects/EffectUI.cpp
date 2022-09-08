@@ -353,7 +353,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
                {
                   mPlayToggleBtn = S.Id(kPlayID)
                      .ToolTip(XO("Start and stop preview"))
-                     .AddButton( XXO("&Preview"),
+                     .AddButton( { },
                                  wxALIGN_CENTER | wxTOP | wxBOTTOM );
                }
             }
@@ -363,8 +363,18 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
             {
                mPlayToggleBtn = S.Id(kPlayID)
                   .ToolTip(XO("Preview effect"))
-                  .AddButton( XXO("&Preview"),
+                  .AddButton( { },
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
+            }
+            if(mPlayToggleBtn != nullptr)
+            {
+               //wxButton does not implement GetSizeFromText
+               //set button minimum size so that largest text fits
+               mPlayToggleBtn->SetLabel(_("Stop &Preview"));
+               auto a = mPlayToggleBtn->GetBestSize();
+               mPlayToggleBtn->SetLabel(_("&Preview"));
+               auto b = mPlayToggleBtn->GetBestSize();
+               mPlayToggleBtn->SetMinSize(a.x > b.x ? a : b);
             }
          }
 
