@@ -7,7 +7,7 @@ $manpage "Notch_Filter"
 $debugbutton false
 $author (_ "Steve Daulton and Bill Wharrie")
 $release 2.3.0-1
-$copyright (_ "GNU General Public License version 2 or later")
+$copyright (_ "GNU General Public License v2.0 or later")
 
 
 ;; License: GPL v2+

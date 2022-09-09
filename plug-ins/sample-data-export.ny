@@ -265,7 +265,7 @@ $control messages (_ "Show messages") choice ((_ "Yes")
 <html>
 <head>
 <meta name=\"generator\" content=
-\"Sample Data Export by Steve Daulton, (http://www.easyspacepro.com). Released under GPL v2.\">
+\"Sample Data Export by Steve Daulton, (http://www.easyspacepro.com). Released under GPL v2.0\">
 <meta name=\"description\" content=\"Sample Printer, Free Audacity plug-in\" />
 <meta name=\"keywords\" content=\"sample printer,Audacity,plug-ins,plugins,effects,audio,audio processing,music,analyze\" />
 <meta name=\"author\" content=\"Steve Daulton\" />
