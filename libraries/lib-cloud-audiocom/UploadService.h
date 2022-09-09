@@ -117,4 +117,6 @@ private:
    const ServiceConfig& mServiceConfig;
    OAuthService& mOAuthService;
 };
+
+CLOUD_AUDIOCOM_API wxString GetUploadTempPath();
 } // namespace cloud::audiocom
