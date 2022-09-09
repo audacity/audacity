@@ -383,6 +383,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
             mApplyBtn = S.Id(wxID_APPLY)
                .AddButton( XXO("&Apply"),
                            wxALIGN_CENTER | wxTOP | wxBOTTOM );
+            mApplyBtn->SetDefault();
          }
 
          if (mEffectUIHost.GetDefinition().EnablesDebug())
