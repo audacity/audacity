@@ -1172,6 +1172,10 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    std::shared_ptr<EffectInstance> pInstance;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
       *project, host, client, pInstance, access } };
+   if (!pInstance) {
+      dlg->SetClosed();
+      return {};
+   }
    if (dlg->Initialize()) {
       auto pValidator = dlg->GetValidator();
       // release() is safe because parent will own it

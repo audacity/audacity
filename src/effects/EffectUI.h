@@ -66,6 +66,12 @@ public:
 
    bool HandleCommandKeystrokes() override;
 
+   void SetClosed() {
+#if wxDEBUG_LEVEL
+      mClosed = true;
+#endif
+   }
+
 private:
    std::shared_ptr<EffectInstance> InitializeInstance();
 
