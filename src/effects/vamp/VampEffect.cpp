@@ -690,7 +690,23 @@ std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
 
 bool VampEffect::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    UpdateFromPlugin();
+
+   return true;
+}
+
+bool VampEffect::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    return true;
 }
 

@@ -251,6 +251,11 @@ bool EffectFindClipping::TransferDataToWindow(const EffectSettings &)
 
 bool EffectFindClipping::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
+
    ShuttleGui S(mUIParent, eIsGettingFromDialog);
    // To do: eliminate this and just use validators for controls
    DoPopulateOrExchange(S, *mpAccess);

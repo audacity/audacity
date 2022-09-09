@@ -2,6 +2,7 @@
 ;version 4
 ;type analyze
 ;name "Measure RMS"
+;debugbutton false
 ;author "Steve Daulton"
 ;release 2.3.1-1
 $copyright (_ "GNU General Public License v2.0 or later")

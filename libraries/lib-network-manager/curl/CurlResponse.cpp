@@ -126,31 +126,31 @@ CurlResponse::CurlResponse (RequestVerb verb, const Request& request, CurlHandle
 
 bool CurlResponse::isFinished () const noexcept
 {
-    std::lock_guard<std::mutex> lock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
     return mRequestFinished;
 }
 
 unsigned CurlResponse::getHTTPCode () const noexcept
 {
-    std::lock_guard<std::mutex> lock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
     return mHttpCode;
 }
 
 NetworkError CurlResponse::getError () const noexcept
 {
-    std::lock_guard<std::mutex> lock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
     return mNetworkError;
 }
 
 std::string CurlResponse::getErrorString () const
 {
-    std::lock_guard<std::mutex> lock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
     return mErrorString;
 }
 
 bool CurlResponse::headersReceived () const noexcept
 {
-    std::lock_guard<std::mutex> lock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
     return mHeadersReceived;
 }
 
@@ -190,7 +190,7 @@ std::string CurlResponse::getURL () const
 
 void CurlResponse::abort () noexcept
 {
-    std::lock_guard<std::mutex> lock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
     mAbortRequested = true;
 }
 
@@ -210,7 +210,7 @@ void CurlResponse::setRequestFinishedCallback (RequestCallback callback)
 
     mRequestFinishedCallback = std::move (callback);
 
-    std::lock_guard<std::mutex> statusLock (mStatusMutex);
+    std::lock_guard<std::recursive_mutex> statusLock (mStatusMutex);
 
     if (mRequestFinishedCallback && mRequestFinished)
         mRequestFinishedCallback (this);
@@ -361,7 +361,7 @@ void CurlResponse::perform ()
     mCurrentHandle = nullptr;
 
     {
-        std::lock_guard<std::mutex> lock (mStatusMutex);
+        std::lock_guard<std::recursive_mutex> lock (mStatusMutex);
 
         if (result.Code != CURLE_OK)
         {
@@ -394,7 +394,7 @@ void CurlResponse::perform ()
 size_t CurlResponse::WriteCallback (const uint8_t* ptr, size_t size, size_t nmemb, CurlResponse* request) noexcept
 {
     {
-        std::lock_guard<std::mutex> lock (request->mStatusMutex);
+        std::lock_guard<std::recursive_mutex> lock (request->mStatusMutex);
 
         if (request->mAbortRequested)
             return 0;
@@ -429,7 +429,7 @@ size_t CurlResponse::WriteCallback (const uint8_t* ptr, size_t size, size_t nmem
 size_t CurlResponse::HeaderCallback (const char* buffer, size_t size, size_t nitems, CurlResponse* request) noexcept
 {
     {
-        std::lock_guard<std::mutex> lock (request->mStatusMutex);
+        std::lock_guard<std::recursive_mutex> lock (request->mStatusMutex);
 
         if (request->mAbortRequested)
             return 0;
@@ -470,7 +470,7 @@ int CurlResponse::CurlProgressCallback(
    curl_off_t ultotal, curl_off_t ulnow) noexcept
 {
    {
-      std::lock_guard<std::mutex> lock(clientp->mStatusMutex);
+      std::lock_guard<std::recursive_mutex> lock(clientp->mStatusMutex);
 
       if (clientp->mAbortRequested)
          return -1;

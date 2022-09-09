@@ -3,6 +3,7 @@ $version 4
 $type generate
 $name (_ "Rhythm Track")
 $manpage "Rhythm_Track"
+$debugbutton false
 $preview linear
 $author (_ "Dominic Mazzoni, David R. Sky and Steve Daulton")
 $release 3.0.0-1

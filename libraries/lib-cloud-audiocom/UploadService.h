@@ -51,7 +51,7 @@ struct CLOUD_AUDIOCOM_API UploadOperationCompleted final
 
    //! URL to open in browser to finish up the anonymous upload
    std::string finishUploadURL;
-   //! "Slug" to be used for sharable URL construction
+   //! "Slug" to be used for shareable URL construction
    std::string audioSlug;
 };
 

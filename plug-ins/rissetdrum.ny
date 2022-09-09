@@ -5,6 +5,7 @@ $preview linear
 $i18n-hint named for Jean-Claude Risset (silent t)
 $name (_ "Risset Drum")
 $manpage "Risset_Drum"
+$debugbutton false
 $author (_ "Steven Jones")
 $release 2.3.0-1
 $copyright (_ "GNU General Public License v2.0 or later")

@@ -315,6 +315,11 @@ bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    mRatio = DB_TO_LINEAR(std::clamp<double>(mAmp * Amp.scale, Amp.min * Amp.scale, Amp.max * Amp.scale) / Amp.scale);
 
    mCanClip = mClip->GetValue();

@@ -181,10 +181,8 @@ void VST3UIValidator::OnClose()
 
 bool VST3UIValidator::UpdateUI()
 {
-   mWrapper.EndParameterEdit();
-   mWrapper.FetchSettings(mAccess.Get());
-   mWrapper.BeginParameterEdit(mAccess);
-
+   mAccess.ModifySettings([&](EffectSettings& settings) { mWrapper.FetchSettings(settings); });
+   
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
 

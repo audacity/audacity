@@ -316,7 +316,8 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 
    auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
-   wrapper->FetchSettings(settings);
+   auto dummy = EffectSettings { settings };
+   wrapper->FetchSettings(dummy);
 
    if (!wrapper->SavePreset(fileStream))
    {

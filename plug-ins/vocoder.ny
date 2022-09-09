@@ -4,6 +4,7 @@ $type process
 $preview enabled
 $name (_ "Vocoder")
 $manpage "Vocoder"
+$debugbutton false
 $author (_ "Edgar-RFT and Steve Daulton")
 $release 3.1.2-1
 $copyright (_ "GNU General Public License v2.0")

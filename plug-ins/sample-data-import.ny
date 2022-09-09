@@ -3,6 +3,7 @@ $version 4
 $type tool generate
 $name (_ "Sample Data Import")
 $manpage "Sample_Data_Import"
+$debugbutton false
 $author (_ "Steve Daulton")
 $release 3.0.4-1
 $copyright (_ "GNU General Public License v2.0 or later")

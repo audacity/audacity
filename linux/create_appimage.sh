@@ -69,6 +69,8 @@ if create_path "linuxdeploy"; then
 (
     cd "linuxdeploy"
     download_linuxdeploy_component linuxdeploy continuous
+    wget -q https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
+    chmod +x linuxdeploy-plugin-gtk.sh
 )
 fi
 
@@ -102,7 +104,7 @@ fi
 # Prevent linuxdeploy setting RUNPATH in binaries that shouldn't have it
 mv "${appdir}/bin/findlib" "${appdir}/../findlib"
 
-linuxdeploy --appdir "${appdir}" # add all shared library dependencies
+linuxdeploy --appdir "${appdir}" --plugin gtk # add all shared library dependencies
 rm -Rf "${appdir}/lib/audacity"
 
 if [ -f "/etc/debian_version" ]; then
@@ -113,6 +115,7 @@ fi
 # Put the non-RUNPATH binaries back
 mv "${appdir}/../findlib" "${appdir}/bin/findlib"
 
+mv "${appdir}/share/metainfo/audacity.appdata.xml" "${appdir}/share/metainfo/org.audacityteam.Audacity.appdata.xml"
 ##########################################################################
 # BUNDLE REMAINING DEPENDENCIES MANUALLY
 ##########################################################################

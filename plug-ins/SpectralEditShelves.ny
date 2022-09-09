@@ -4,6 +4,7 @@ $type process spectral
 $preview linear
 $name (_ "Spectral Edit Shelves")
 $manpage "Spectral_edit_shelves"
+$debugbutton false
 $author (_ "Paul Licameli")
 $release 2.3.0-1
 $copyright (_ "GNU General Public License v2.0 or later")

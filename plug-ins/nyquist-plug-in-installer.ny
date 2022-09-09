@@ -1,7 +1,7 @@
 $nyquist plug-in
 $version 4
 $type tool
-$name (_ "Nyquist Plug-in Installer")
+$name (_ "Nyquist Plugin Installer")
 $manpage "Nyquist_Plug-in_Installer"
 $debugbutton false
 $preview disabled

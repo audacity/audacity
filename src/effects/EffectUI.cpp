@@ -127,8 +127,6 @@ static const int kDeletePresetDummyID = 20007;
 static const int kMenuID = 20100;
 static const int kEnableID = 20101;
 static const int kPlayID = 20102;
-static const int kApplyID = 20103;
-static const int kDebugID = 20104;
 static const int kPlaybackID = 20105;
 static const int kCaptureID = 20106;
 static const int kUserPresetsID = 21000;
@@ -140,9 +138,9 @@ EVT_INIT_DIALOG(EffectUIHost::OnInitDialog)
 EVT_ERASE_BACKGROUND(EffectUIHost::OnErase)
 EVT_PAINT(EffectUIHost::OnPaint)
 EVT_CLOSE(EffectUIHost::OnClose)
-EVT_BUTTON(kApplyID, EffectUIHost::OnApply)
+EVT_BUTTON(eDebugID, EffectUIHost::OnApply)
 EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
-EVT_BUTTON(kDebugID, EffectUIHost::OnDebug)
+EVT_BUTTON(wxID_APPLY, EffectUIHost::OnDebug)
 EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
 EVT_BUTTON(kEnableID, EffectUIHost::OnEnable)
 EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
@@ -355,7 +353,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
                {
                   mPlayToggleBtn = S.Id(kPlayID)
                      .ToolTip(XO("Start and stop preview"))
-                     .AddButton( XXO("&Preview"),
+                     .AddButton( { },
                                  wxALIGN_CENTER | wxTOP | wxBOTTOM );
                }
             }
@@ -365,21 +363,31 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
             {
                mPlayToggleBtn = S.Id(kPlayID)
                   .ToolTip(XO("Preview effect"))
-                  .AddButton( XXO("&Preview"),
+                  .AddButton( { },
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
+            }
+            if(mPlayToggleBtn != nullptr)
+            {
+               //wxButton does not implement GetSizeFromText
+               //set button minimum size so that largest text fits
+               mPlayToggleBtn->SetLabel(_("Stop &Preview"));
+               auto a = mPlayToggleBtn->GetBestSize();
+               mPlayToggleBtn->SetLabel(_("&Preview"));
+               auto b = mPlayToggleBtn->GetBestSize();
+               mPlayToggleBtn->SetMinSize(a.x > b.x ? a : b);
             }
          }
 
          if (!IsOpenedFromEffectPanel())
          {
-            mApplyBtn = S.Id(kApplyID)
+            mApplyBtn = S.Id(wxID_APPLY)
                .AddButton( XXO("&Apply"),
                            wxALIGN_CENTER | wxTOP | wxBOTTOM );
          }
 
          if (mEffectUIHost.GetDefinition().EnablesDebug())
          {
-            mDebugBtn = S.Id(kDebugID)
+            mDebugBtn = S.Id(eDebugID)
                .AddButton( XXO("Debu&g"),
                            wxALIGN_CENTER | wxTOP | wxBOTTOM );
          }
@@ -448,6 +456,12 @@ bool EffectUIHost::Initialize()
    SetMinSize(GetSize());
    return true;
 }
+
+bool EffectUIHost::HandleCommandKeystrokes()
+{
+   return !IsModal();
+}
+
 
 void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
 {
@@ -1094,7 +1108,7 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 
          mEffectStateSubscription = mpState->Subscribe([this](RealtimeEffectStateChange state) {
             mEnabled = (state == RealtimeEffectStateChange::EffectOn);
-            mEnableBtn->SetBitmap(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+            mEnableBtn->SetBitmapLabel(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
 
             UpdateControls();
          });

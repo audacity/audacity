@@ -3,6 +3,7 @@ $version 4
 $type analyze
 $name (_ "Beat Finder")
 $manpage "Beat_Finder"
+$debugbutton false
 $author (_ "Audacity")
 $release 2.3.2-1
 $copyright (_ "GNU General Public License v2.0")

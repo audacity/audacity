@@ -4,6 +4,7 @@ $type process
 $preview enabled
 $name (_ "Clip Fix")
 $manpage "Clip_Fix"
+$debugbutton false
 $author (_ "Benjamin Schwartz and Steve Daulton")
 $release 2.3.0-1
 $copyright (_ "GNU General Public License v2.0")

@@ -188,6 +188,11 @@ bool EffectRepeat::TransferDataToWindow(const EffectSettings &)
 
 bool EffectRepeat::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
+
    long l;
 
    mRepeatCount->GetValue().ToLong(&l);
