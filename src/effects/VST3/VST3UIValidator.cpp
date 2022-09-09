@@ -175,6 +175,8 @@ void VST3UIValidator::OnClose()
       mWrapper.FlushParameters(settings);
       mWrapper.StoreSettings(settings);
    });
+   //Make sure that new state has been written to the caches...
+   mAccess.Flush();
 
    EffectUIValidator::OnClose();
 }
