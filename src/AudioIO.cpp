@@ -1767,6 +1767,15 @@ size_t AudioIoCallback::GetCommonlyReadyPlayback()
    return commonlyAvail;
 }
 
+size_t AudioIoCallback::GetCommonlyWrittenForPlayback()
+{
+   auto commonlyAvail = mPlaybackBuffers[0]->WrittenForGet();
+   for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mPlaybackBuffers[i]->WrittenForGet());
+   return commonlyAvail;
+}
+
 size_t AudioIO::GetCommonlyAvailCapture()
 {
    auto commonlyAvail = mCaptureBuffers[0]->AvailForGet();
@@ -1815,7 +1824,7 @@ void AudioIO::FillPlayBuffers()
    // May produce a larger amount when initially priming the buffer, or
    // perhaps again later in play to avoid underfilling the queue and falling
    // behind the real-time demand on the consumer side in the callback.
-   auto nReady = GetCommonlyReadyPlayback();
+   auto nReady = GetCommonlyWrittenForPlayback();
    auto nNeeded =
       mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
 

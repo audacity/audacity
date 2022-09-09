@@ -24,6 +24,8 @@ class RingBuffer final : public NonInterferingBase {
    //
 
    size_t AvailForPut();
+   //! Reader may concurrently cause a decrease of what this returns
+   size_t WrittenForGet();
    //! Does not apply dithering
    size_t Put(constSamplePtr buffer, sampleFormat format, size_t samples,
               // optional number of trailing zeroes

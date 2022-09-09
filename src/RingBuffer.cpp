@@ -69,6 +69,12 @@ size_t RingBuffer::AvailForPut()
    // never decrease it, so writer can safely assume this much at least
 }
 
+size_t RingBuffer::WrittenForGet()
+{
+   auto start = mStart.load( std::memory_order_relaxed );
+   return Filled( start, mWritten );
+}
+
 size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
                     size_t samplesToCopy, size_t padding)
 {

@@ -241,6 +241,8 @@ public:
    * they are different. */
    size_t GetCommonlyReadyPlayback();
 
+   size_t GetCommonlyWrittenForPlayback();
+
    /// How many frames of zeros were output due to pauses?
    long    mNumPauseFrames;
 
