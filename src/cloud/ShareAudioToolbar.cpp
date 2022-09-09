@@ -212,7 +212,14 @@ void ShareAudioToolbar::ArrangeButtons()
    // Layout the toolbar
    Layout();
 
+#ifdef __WXGTK__
+   const auto height = 2 * toolbarSingle;
+   const wxSize size(GetSizer()->GetMinSize().GetWidth(), height);
+   SetMinSize(size);
+   SetMaxSize(size);
+#else
    SetMinSize(GetSizer()->GetMinSize());
+#endif
 }
 
 void ShareAudioToolbar::DestroySizer()
