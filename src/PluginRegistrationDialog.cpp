@@ -874,7 +874,20 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
    mEffects->Update();
 
    wxTheApp->CallAfter([this] {
+      PluginPaths disabledPlugins;
       auto& pm = PluginManager::Get();
+
+      // Record list of plugins that are currently disabled
+      for (auto& plug : pm.AllPlugins())
+      {
+         PluginType plugType = plug.GetPluginType();
+         if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
+            continue;
+
+         if (!plug.IsEnabled())
+            disabledPlugins.push_back(plug.GetPath());
+      }
+
       pm.ClearEffectPlugins();
 
       auto newPlugins = PluginManager::Get().CheckPluginUpdates();
@@ -883,6 +896,20 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
          PluginStartupRegistration reg(newPlugins);
          reg.Run();
       }
+
+      // Disable all plugins which were previously disabled
+      for (auto& plug : pm.AllPlugins())
+      {
+         PluginType plugType = plug.GetPluginType();
+         if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
+            continue;
+
+         const auto& path = plug.GetPath();
+         if (make_iterator_range(disabledPlugins).contains(path))
+            plug.SetEnabled(false);
+      }
+
+      pm.Save();
 
       PopulateItemsList(pm);
       RegenerateEffectsList(mFilter);
