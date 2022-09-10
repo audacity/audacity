@@ -30,6 +30,22 @@ using NyquistBindings = std::vector<NyqValue>;
 struct NyquistParser;
 struct NyquistUIControls;
 
+struct NyquistEnvironment {
+   wxString          mDebugOutputStr;
+   bool              mRedirectOutput{ false };
+   TranslatableString mDebugOutput;
+
+   bool              mStop{ false };
+   bool              mBreak{ false };
+   bool              mCont{ false };
+
+   void OutputCallback(int c);
+   void OSCallback();
+
+   static void StaticOutputCallback(int c, void *userdata);
+   static void StaticOSCallback(void *userdata);
+};
+
 //! Transfers data both ways between WaveTrack and the sound object of Nyquist
 class NyquistTrack {
 public:
@@ -173,10 +189,12 @@ public:
    std::vector<NyqValue> MoveBindings();
 
 private:
+   NyquistEnvironment mEnvironment;
+
    static int mReentryCount;
    // NyquistEffect implementation
 
-   bool ProcessOne(NyquistTrack &nyquistTrack);
+   bool ProcessOne(NyquistEnvironment &environment, NyquistTrack &nyquistTrack);
 
    bool IsOk();
    const TranslatableString &InitializationError() const;
@@ -184,12 +202,6 @@ private:
    static FilePaths GetNyquistSearchPath();
 
    static wxString NyquistToWxString(const char *nyqString);
-
-   static void StaticOutputCallback(int c, void *userdata);
-   static void StaticOSCallback(void *userdata);
-
-   void OutputCallback(int c);
-   void OSCallback();
 
    void ParseFile();
 
@@ -216,10 +228,6 @@ private:
 
    wxDateTime        mFileModified; ///< When the script was last modified on disk
 
-   bool              mStop{ false };
-   bool              mBreak{ false };
-   bool              mCont{ false };
-
 protected:
    bool              mExternal{ false };
 
@@ -234,10 +242,7 @@ protected:
    bool              mDebug{ false }; // When true, debug window is shown.
 
 private:
-   bool              mRedirectOutput{ false };
    bool              mProjectChanged;
-   wxString          mDebugOutputStr;
-   TranslatableString mDebugOutput;
 
 private:
    int               mTrackIndex;

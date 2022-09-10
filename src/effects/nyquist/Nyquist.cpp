@@ -369,6 +369,14 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    const auto &mTrace = parser.mTrace;
    const auto &mName = parser.mName;
 
+   auto &environment = mEnvironment;
+   const auto &mRedirectOutput = environment.mRedirectOutput;
+
+   auto &mStop = environment.mStop;
+   auto &mBreak = environment.mBreak;
+   auto &mCont = environment.mCont;
+   auto &mDebugOutput = environment.mDebugOutput;
+
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -571,6 +579,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          goto finish;
       }
 
+      auto &mDebugOutputStr = environment.mDebugOutputStr;
+
       // Prepare to accumulate more debug output in OutputCallback
       mDebugOutputStr = mDebugOutput.Translation();
       mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
@@ -598,8 +608,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          wxSetlocale(LC_NUMERIC, wxString(wxT("C")));
 
          nyx_init();
-         nyx_set_os_callback(StaticOSCallback, (void *)this);
-         nyx_capture_output(StaticOutputCallback, (void *)this);
+         nyx_set_os_callback(NyquistEnvironment::StaticOSCallback, &environment);
+         nyx_capture_output(NyquistEnvironment::StaticOutputCallback, &environment);
 
          auto cleanup = finally( [&] {
             nyx_capture_output(NULL, (void *)NULL);
@@ -645,7 +655,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = ProcessOne(nyquistTrack);
+         success = ProcessOne(environment, nyquistTrack);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -768,7 +778,8 @@ bool NyquistEffect::EnablesDebug() const
 
 // NyquistEffect implementation
 
-bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
+bool NyquistEffect::ProcessOne(
+   NyquistEnvironment &environment, NyquistTrack &nyquistTrack)
 {
    auto &parser = GetParser();
    const auto &mVersion = parser.mVersion;
@@ -782,6 +793,8 @@ bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
    const auto mCurTrack = nyquistTrack.CurTracks();
    const auto mCurLen = nyquistTrack.CurLength();
    const auto mCurNumChannels = nyquistTrack.CurNumChannels();
+
+   auto &mDebugOutput = environment.mDebugOutput;
 
    nyx_rval rval;
 
@@ -1302,7 +1315,7 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
 
 void NyquistEffect::RedirectOutput()
 {
-   mRedirectOutput = true;
+   mEnvironment.mRedirectOutput = true;
 }
 
 void NyquistEffect::SetCommand(const wxString &cmd)
@@ -1316,17 +1329,17 @@ void NyquistEffect::SetCommand(const wxString &cmd)
 
 void NyquistEffect::Break()
 {
-   mBreak = true;
+   mEnvironment.mBreak = true;
 }
 
 void NyquistEffect::Continue()
 {
-   mCont = true;
+   mEnvironment.mCont = true;
 }
 
 void NyquistEffect::Stop()
 {
-   mStop = true;
+   mEnvironment.mStop = true;
 }
 
 NyquistUIControls &NyquistEffect::GetControls()
@@ -1589,12 +1602,12 @@ int NyquistTrack::PutCallback(
    }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
 }
 
-void NyquistEffect::StaticOutputCallback(int c, void *This)
+void NyquistEnvironment::StaticOutputCallback(int c, void *This)
 {
-   ((NyquistEffect *)This)->OutputCallback(c);
+   (static_cast<NyquistEnvironment*>(This))->OutputCallback(c);
 }
 
-void NyquistEffect::OutputCallback(int c)
+void NyquistEnvironment::OutputCallback(int c)
 {
    // Always collect Nyquist error messages for normal plug-ins
    if (!mRedirectOutput) {
@@ -1605,12 +1618,12 @@ void NyquistEffect::OutputCallback(int c)
    std::cout << (char)c;
 }
 
-void NyquistEffect::StaticOSCallback(void *This)
+void NyquistEnvironment::StaticOSCallback(void *This)
 {
-   ((NyquistEffect *)This)->OSCallback();
+   (static_cast<NyquistEnvironment*>(This))->OSCallback();
 }
 
-void NyquistEffect::OSCallback()
+void NyquistEnvironment::OSCallback()
 {
    if (mStop) {
       mStop = false;
