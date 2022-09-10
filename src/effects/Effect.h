@@ -201,6 +201,7 @@ protected:
 
    // No more virtuals!
 
+public:
    // The Progress methods all return true if the user has cancelled;
    // you should exit immediately if this happens (cleaning up memory
    // is okay, but don't try to undo).
@@ -218,6 +219,7 @@ protected:
    bool TrackGroupProgress(
       int whichGroup, double frac, const TranslatableString & = {}) const;
 
+protected:
    int GetNumWaveTracks() const { return mNumTracks; }
    int GetNumWaveGroups() const { return mNumGroups; }
 

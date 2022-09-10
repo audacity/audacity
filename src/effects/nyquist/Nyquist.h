@@ -30,6 +30,44 @@ using NyquistBindings = std::vector<NyqValue>;
 struct NyquistParser;
 struct NyquistUIControls;
 
+//! Transfers data both ways between WaveTrack and the sound object of Nyquist
+struct NyquistTrack {
+   using Buffer = std::unique_ptr<float[]>;
+
+   explicit NyquistTrack(Effect &effect)
+      : mEffect{ effect }
+   {}
+   Effect            &mEffect;
+
+   double            mProgressIn;
+   double            mProgressOut;
+   double            mProgressTot;
+   double            mScale;
+
+   WaveTrack         *mCurTrack[2];
+   sampleCount       mCurStart[2];
+   sampleCount       mCurLen;
+
+   WaveTrack         *mOutputTrack[2]{ nullptr, nullptr };
+   Buffer            mCurBuffer[2];
+   std::exception_ptr mpException {};
+
+   static int StaticGetCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen, void *userdata);
+
+   static int StaticPutCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen, void *userdata);
+
+private:
+   int GetCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen);
+   int PutCallback(float *buffer, int channel,
+      int64_t start, int64_t len, int64_t totlen);
+
+   sampleCount       mCurBufferStart[2];
+   size_t            mCurBufferLen[2];
+};
+
 class AUDACITY_DLL_API NyquistEffect
    : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
@@ -111,10 +149,12 @@ public:
    std::vector<NyqValue> MoveBindings();
 
 private:
+   NyquistTrack mNyquistTrack{ *this };
+
    static int mReentryCount;
    // NyquistEffect implementation
 
-   bool ProcessOne();
+   bool ProcessOne(NyquistTrack &nyquistTrack);
 
    bool IsOk();
    const TranslatableString &InitializationError() const;
@@ -123,19 +163,9 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
 
-   static int StaticGetCallback(float *buffer, int channel,
-                                int64_t start, int64_t len, int64_t totlen,
-                                void *userdata);
-   static int StaticPutCallback(float *buffer, int channel,
-                                int64_t start, int64_t len, int64_t totlen,
-                                void *userdata);
    static void StaticOutputCallback(int c, void *userdata);
    static void StaticOSCallback(void *userdata);
 
-   int GetCallback(float *buffer, int channel,
-                   int64_t start, int64_t len, int64_t totlen);
-   int PutCallback(float *buffer, int channel,
-                   int64_t start, int64_t len, int64_t totlen);
    void OutputCallback(int c);
    void OSCallback();
 
@@ -189,30 +219,14 @@ private:
 
 private:
    unsigned          mCurNumChannels;
-   WaveTrack         *mCurTrack[2];
-   sampleCount       mCurStart[2];
-   sampleCount       mCurLen;
    int               mTrackIndex;
    bool              mFirstInGroup;
    double            mOutputTime;
    unsigned          mCount;
    unsigned          mNumSelectedChannels;
-   double            mProgressIn;
-   double            mProgressOut;
-   double            mProgressTot;
-   double            mScale;
-
-   using Buffer = std::unique_ptr<float[]>;
-   Buffer            mCurBuffer[2];
-   sampleCount       mCurBufferStart[2];
-   size_t            mCurBufferLen[2];
-
-   WaveTrack        *mOutputTrack[2]{ nullptr, nullptr };
 
    wxString          mProps;
    wxString          mPerTrackProps;
-
-   std::exception_ptr mpException {};
 
    friend class NyquistEffectsModule;
 };

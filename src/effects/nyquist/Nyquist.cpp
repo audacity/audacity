@@ -365,6 +365,12 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    const auto &mTrace = parser.mTrace;
    const auto &mName = parser.mName;
 
+   auto &nyquistTrack = mNyquistTrack;
+   auto &mProgressIn = nyquistTrack.mProgressIn;
+   auto &mProgressOut = nyquistTrack.mProgressOut;
+   auto &mProgressTot = nyquistTrack.mProgressTot;
+   auto &mScale = nyquistTrack.mScale;
+
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -564,6 +570,10 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
         bOnePassTool || pRange->first != pRange->second;
         (void) (!pRange || (++pRange->first, true))
    ) {
+      auto &mCurTrack = nyquistTrack.mCurTrack;
+      auto &mCurStart = nyquistTrack.mCurStart;
+      auto &mCurLen = nyquistTrack.mCurLen;
+
       // Prepare to accumulate more debug output in OutputCallback
       mDebugOutputStr = mDebugOutput.Translation();
       mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
@@ -683,7 +693,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = ProcessOne();
+         success = ProcessOne(nyquistTrack);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -760,7 +770,7 @@ bool NyquistEffect::EnablesDebug() const
 
 // NyquistEffect implementation
 
-bool NyquistEffect::ProcessOne()
+bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
 {
    auto &parser = GetParser();
    const auto &mVersion = parser.mVersion;
@@ -770,6 +780,13 @@ bool NyquistEffect::ProcessOne()
    const auto &mName = parser.mName;
    const auto &mMergeClips = parser.mMergeClips;
    const auto &mRestoreSplits = parser.mRestoreSplits;
+
+   const auto &mCurTrack = nyquistTrack.mCurTrack;
+   const auto &mCurLen = nyquistTrack.mCurLen;
+
+   auto &mOutputTrack = nyquistTrack.mOutputTrack;
+   auto &mCurBuffer = nyquistTrack.mCurBuffer;
+   auto &mpException = nyquistTrack.mpException;
 
    mpException = {};
 
@@ -963,9 +980,8 @@ bool NyquistEffect::ProcessOne()
       auto curLen = mCurLen.as_long_long();
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
-      nyx_set_input_audio(StaticGetCallback, (void *)this,
-                          (int)mCurNumChannels,
-                          curLen, mCurTrack[0]->GetRate());
+      nyx_set_input_audio(NyquistTrack::StaticGetCallback, &nyquistTrack,
+         (int)mCurNumChannels, curLen, mCurTrack[0]->GetRate());
    }
 
    // Restore the Nyquist sixteenth note symbol for Generate plug-ins.
@@ -1210,7 +1226,7 @@ bool NyquistEffect::ProcessOne()
    {
       auto vr0 = valueRestorer( mOutputTrack[0], outputTrack[0].get() );
       auto vr1 = valueRestorer( mOutputTrack[1], outputTrack[1].get() );
-      success = nyx_get_audio(StaticPutCallback, (void *)this);
+      success = nyx_get_audio(NyquistTrack::StaticPutCallback, &nyquistTrack);
    }
 
    // See if GetCallback found read errors
@@ -1494,16 +1510,15 @@ bool NyquistEffect::ParseCommand(const wxString & cmd)
    return ParseProgram(stream);
 }
 
-int NyquistEffect::StaticGetCallback(float *buffer, int channel,
-                                     int64_t start, int64_t len, int64_t totlen,
-                                     void *userdata)
+int NyquistTrack::StaticGetCallback(float *buffer,
+   int channel, int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
+   auto This = static_cast<NyquistTrack *>(userdata);
    return This->GetCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::GetCallback(float *buffer, int ch,
-                               int64_t start, int64_t len, int64_t WXUNUSED(totlen))
+int NyquistTrack::GetCallback(float *buffer, int ch,
+   int64_t start, int64_t len, int64_t WXUNUSED(totlen))
 {
    if (mCurBuffer[ch]) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
@@ -1549,41 +1564,36 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
       double progress = mScale *
          ( (start+len)/ mCurLen.as_double() );
 
-      if (progress > mProgressIn) {
+      if (progress > mProgressIn)
          mProgressIn = progress;
-      }
 
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+      if (mEffect.TotalProgress(mProgressIn + mProgressOut + mProgressTot))
          return -1;
-      }
    }
 
    return 0;
 }
 
-int NyquistEffect::StaticPutCallback(float *buffer, int channel,
-                                     int64_t start, int64_t len, int64_t totlen,
-                                     void *userdata)
+int NyquistTrack::StaticPutCallback(float *buffer,
+   int channel, int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
-   NyquistEffect *This = (NyquistEffect *)userdata;
+   auto This = static_cast<NyquistTrack *>(userdata);
    return This->PutCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::PutCallback(float *buffer, int channel,
-                               int64_t start, int64_t len, int64_t totlen)
+int NyquistTrack::PutCallback(
+   float *buffer, int channel, int64_t start, int64_t len, int64_t totlen)
 {
    // Don't let C++ exceptions propagate through the Nyquist library
    return GuardedCall<int>( [&] {
       if (channel == 0) {
          double progress = mScale*((float)(start+len)/totlen);
 
-         if (progress > mProgressOut) {
+         if (progress > mProgressOut)
             mProgressOut = progress;
-         }
 
-         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+         if (mEffect.TotalProgress(mProgressIn + mProgressOut + mProgressTot))
             return -1;
-         }
       }
 
       mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len);
