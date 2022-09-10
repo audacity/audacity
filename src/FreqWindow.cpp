@@ -917,7 +917,7 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
    float xPos = xMin;
 
    // Find the peak nearest the cursor and plot it
-   if ( r.Contains(mMouseX, mMouseY) & (mMouseX!=0) & (mMouseX!=r.width-1) ) {
+   if ( r.Contains(mMouseX, mMouseY) && (mMouseX!=0) && (mMouseX!=r.width-1) ) {
       if (mLogAxis)
          xPos = xMin * pow(xStep, mMouseX - (r.x + 1));
       else
