@@ -82,6 +82,22 @@ effects from this one class.
 
 int NyquistEffect::mReentryCount = 0;
 
+NyquistParser::NyquistParser(const wxString &fName, Effect &effect)
+   : mName{
+      (fName == NYQUIST_PROMPT_ID) ? NYQUIST_PROMPT_NAME
+   /* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */
+      : (fName == NYQUIST_WORKER_ID) ? XO("Nyquist Worker")
+   // Use the file name verbatim as effect name.
+   // This is only a default name, overridden if we find a $name line:
+      : Verbatim(wxFileName{ fName }.GetName())
+   }
+   , mControls{ effect, mBindings }
+{
+   if (!(fName == NYQUIST_PROMPT_ID || fName == NYQUIST_WORKER_ID)) {
+      mFileName = fName;
+   }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // NyquistEffect
@@ -89,18 +105,9 @@ int NyquistEffect::mReentryCount = 0;
 ///////////////////////////////////////////////////////////////////////////////
 
 NyquistEffect::NyquistEffect(const wxString &fName)
-: mName{
-     (fName == NYQUIST_PROMPT_ID) ? NYQUIST_PROMPT_NAME
-   /* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */
-   : (fName == NYQUIST_WORKER_ID) ? XO("Nyquist Worker")
-   // Use the file name verbatim as effect name.
-   // This is only a default name, overridden if we find a $name line:
-   : Verbatim(wxFileName{ fName }.GetName())
-}
-, mControls{ *this, mBindings }
+   : NyquistParser{ fName, *this }
 {
    if (!(fName == NYQUIST_PROMPT_ID || fName == NYQUIST_WORKER_ID)) {
-      mFileName = fName;
       mFileModified = mFileName.GetModificationTime();
       ParseFile();
 
@@ -172,6 +179,11 @@ FilePath NyquistEffect::HelpPage() const
 // EffectDefinitionInterface implementation
 
 EffectType NyquistEffect::GetType() const
+{
+   return NyquistParser::GetType();
+}
+
+EffectType NyquistParser::GetType() const
 {
    return mType;
 }
@@ -695,7 +707,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 finish:
 
    // Show debug window if trace set in plug-in header and something to show.
-   mDebug = (mTrace && !mDebugOutput.Translation().empty())? true : mDebug;
+   mDebug = (mTrace && !mDebugOutput.Translation().empty())
+      ? true : mDebug;
 
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
@@ -772,7 +785,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *TRACK* '*unbound*)\n");
    }
 
-   if(mVersion >= 4) {
+   if (mVersion >= 4) {
       cmd += mProps;
       cmd += mPerTrackProps;
    }
@@ -1278,7 +1291,7 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
     return str;
 }
 
-std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
+std::vector<EnumValueSymbol> NyquistParser::ParseChoice(const wxString & text)
 {
    std::vector<EnumValueSymbol> results;
    if (text[0] == wxT('(')) {
@@ -1310,7 +1323,7 @@ std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
    return results;
 }
 
-FileExtensions NyquistEffect::ParseFileExtensions(const wxString & text)
+FileExtensions NyquistParser::ParseFileExtensions(const wxString & text)
 {
    // todo: error handling
    FileExtensions results;
@@ -1323,7 +1336,7 @@ FileExtensions NyquistEffect::ParseFileExtensions(const wxString & text)
    return results;
 }
 
-FileNames::FileType NyquistEffect::ParseFileType(const wxString & text)
+FileNames::FileType NyquistParser::ParseFileType(const wxString & text)
 {
    // todo: error handling
    FileNames::FileType result;
@@ -1338,7 +1351,7 @@ FileNames::FileType NyquistEffect::ParseFileType(const wxString & text)
    return result;
 }
 
-FileNames::FileTypes NyquistEffect::ParseFileTypes(const wxString & text)
+FileNames::FileTypes NyquistParser::ParseFileTypes(const wxString & text)
 {
    // todo: error handling
    FileNames::FileTypes results;
@@ -1405,8 +1418,8 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
-TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowParens,
-                                wxString *pExtraString)
+TranslatableString NyquistParser::UnQuoteMsgid(
+   const wxString &s, bool allowParens, wxString *pExtraString)
 {
    if (pExtraString)
       *pExtraString = wxString{};
@@ -1446,13 +1459,13 @@ TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowPare
       return Verbatim( s );
 }
 
-wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
-                                wxString *pExtraString)
+wxString NyquistParser::UnQuote(
+   const wxString &s, bool allowParens, wxString *pExtraString)
 {
    return UnQuoteMsgid( s, allowParens, pExtraString ).Translation();
 }
 
-bool NyquistEffect::Tokenizer::Tokenize(
+bool NyquistParser::Tokenizer::Tokenize(
    const wxString &line, bool eof,
    size_t trimStart, size_t trimEnd)
 {
@@ -1553,7 +1566,7 @@ bool NyquistEffect::Tokenizer::Tokenize(
 
 static void SetControlBounds(NyqControl &ctrl);
 
-bool NyquistEffect::Parse(
+bool NyquistParser::Parse(
    Tokenizer &tzer, const wxString &line, bool eof, bool first)
 {
    if ( !tzer.Tokenize(line, eof, first ? 1 : 0, 0) )
