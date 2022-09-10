@@ -1686,15 +1686,15 @@ bool NyquistEffect::Parse(
    if (len >= 2 && tokens[0] == wxT("preview")) {
       if (tokens[1] == wxT("enabled") || tokens[1] == wxT("true")) {
          mControls.mEnablePreview = true;
-         SetLinearEffectFlag(false);
+         mLinear = false;
       }
       else if (tokens[1] == wxT("linear")) {
          mControls.mEnablePreview = true;
-         SetLinearEffectFlag(true);
+         mLinear = true;
       }
       else if (tokens[1] == wxT("selection")) {
          mControls.mEnablePreview = true;
-         SetPreviewFullSelectionFlag(true);
+         mPreview = true;
       }
       else if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
          mControls.mEnablePreview = false;
@@ -1998,6 +1998,9 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    const auto helpStuff = CheckHelpPage();
    mHelpFileExists = helpStuff.first;
    mHelpPage       = helpStuff.second;
+
+   SetLinearEffectFlag(mLinear);
+   SetPreviewFullSelectionFlag(mPreview);
 
    return true;
 }

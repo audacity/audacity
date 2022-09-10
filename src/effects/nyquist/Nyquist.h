@@ -270,6 +270,9 @@ private:
    std::exception_ptr mpException {};
 
    friend class NyquistEffectsModule;
+
+   bool mLinear{ false };
+   bool mPreview{ false };
 };
 
 class NyquistOutputDialog final : public wxDialogWrapper
