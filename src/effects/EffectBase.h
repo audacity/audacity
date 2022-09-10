@@ -111,7 +111,6 @@ protected:
    double         mF0{};
    double         mF1{};
 #endif
-   wxArrayString  mPresetNames;
    unsigned       mUIFlags{ 0 };
 
 private:

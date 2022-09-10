@@ -106,7 +106,6 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
          trans.Commit();
 
       ReplaceProcessedTracks( false );
-      mPresetNames.clear();
    } );
 
    // We don't yet know the effect type for code in the Nyquist Prompt, so
@@ -146,15 +145,6 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    if (pAccess)
       pAccess->ModifySettings(updater);
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   mF0 = selectedRegion.f0();
-   mF1 = selectedRegion.f1();
-   if( mF0 != SelectedRegion::UndefinedFrequency )
-      mPresetNames.push_back(L"control-f0");
-   if( mF1 != SelectedRegion::UndefinedFrequency )
-      mPresetNames.push_back(L"control-f1");
-
-#endif
    CountWaveTracks();
 
    // Allow the dialog factory to fill this in, but it might not

@@ -1895,7 +1895,12 @@ bool NyquistEffect::Parse(
          }
       }
 
-      if( ! make_iterator_range( mPresetNames ).contains( ctrl.var ) )
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      // Skip creation of controls and bindings for spectral editing
+      // Will instead initialize Lisp variables specially before processing,
+      // taking values from the given selection
+      if (!(ctrl.var == "control-f0" || ctrl.var == "control-f1"))
+#endif
       {
          SetControlBounds(ctrl);
          mControls.emplace_back(std::move(ctrl));
