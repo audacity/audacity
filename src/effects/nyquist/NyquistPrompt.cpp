@@ -238,7 +238,7 @@ int NyquistPrompt::ShowHostInterface(
       access.ModifySettings([&](EffectSettings &settings){
          auto &nyquistSettings = GetSettings(settings);
          nyquistSettings.proxySettings = std::move(newSettings);
-         nyquistSettings.proxyDebug = this->mDebug;
+         nyquistSettings.proxyDebug = mDebug;
          nyquistSettings.controls = effect.MoveControls();
          nyquistSettings.bindings = effect.MoveBindings();
       });

@@ -90,7 +90,7 @@ int NyquistEffect::mReentryCount = 0;
 ///////////////////////////////////////////////////////////////////////////////
 
 NyquistEffect::NyquistEffect(const wxString &fName)
-   : mParser{ std::make_unique<NyquistParser>(fName, *this) }
+   : mProgram{ std::make_unique<NyquistProgram>(fName, *this) }
 {
    auto &parser = GetParser();
    const auto &mFileName = parser.mFileName;
@@ -391,7 +391,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // Beware!  A global!
    int nEffectsSoFar = nEffectsDone;
 
-   mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
 
@@ -401,14 +400,9 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    //  mProgress->Hide();
    //}
 
-   mOutputTime = 0;
-   mCount = 0;
-
    mStop = false;
    mBreak = false;
    mCont = false;
-
-   mTrackIndex = 0;
 
    // If in tool mode, then we don't do anything with the track and selection.
    const bool bOnePassTool = (GetType() == EffectTypeTool);
@@ -419,9 +413,27 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    if ( !bOnePassTool )
       CopyInputTracks(true);
 
-   mNumSelectedChannels = bOnePassTool
-      ? 0
-      : mOutputTracks->Selected< const WaveTrack >().size();
+   NyquistProgram::EffectContext eContext{
+      inputTracks(),
+      mOutputTracks.get(),
+      mT0, mT1,
+      mDebug
+   };
+   NyquistProgram::Context context{ eContext,
+      // mNumSelectedChannels
+      bOnePassTool
+         ? 0
+         : (unsigned)mOutputTracks->Selected< const WaveTrack >().size(),
+      AcceptsAllNyquistTypes(),
+      mExternal
+   };
+   auto &mCount = context.mCount;
+   auto &mProps = context.mProps;
+   auto &mPerTrackProps = context.mPerTrackProps;
+   const auto &mNumSelectedChannels = context.mNumSelectedChannels;
+   const auto &mProjectChanged = context.mProjectChanged;
+   const auto &mOutputTime = context.mOutputTime;
+   auto &mFirstInGroup = context.mFirstInGroup;
 
    TranslatableString initMessage;
    if (!mHelpFile.empty() && !mHelpFileExists)
@@ -561,10 +573,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    if (!bOnePassTool)
       pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 
-   // Keep track of whether the current track is first selected in its sync-lock group
-   // (we have no idea what the length of the returned audio will be, so we have
-   // to handle sync-lock group behavior the "old" way).
-   mFirstInGroup = true;
    Track *gtLast = NULL;
 
    for (;
@@ -639,7 +647,8 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = ProcessOne(environment, nyquistTrack);
+         success = mProgram->ProcessOne(environment, context,
+            nyquistTrack, mCmd);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -716,21 +725,29 @@ bool NyquistEffect::EnablesDebug() const
 
 // NyquistEffect implementation
 
-bool NyquistEffect::ProcessOne(
-   NyquistEnvironment &environment, NyquistTrack &nyquistTrack)
+bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
+   Context &context, NyquistTrack &nyquistTrack, const wxString &mCmd) const
 {
-   auto &parser = GetParser();
-   const auto &mVersion = parser.mVersion;
-   const auto &mTrace = parser.mTrace;
-   const auto &mIsSal = parser.mIsSal;
-   const auto &mCompiler = parser.mCompiler;
-   const auto &mName = parser.mName;
-   const auto &mMergeClips = parser.mMergeClips;
-   const auto &mRestoreSplits = parser.mRestoreSplits;
+   auto &mEffect = mControls.mEffect;
 
    const auto mCurTrack = nyquistTrack.CurTracks();
    const auto mCurLen = nyquistTrack.CurLength();
    const auto mCurNumChannels = nyquistTrack.CurNumChannels();
+
+   const auto &mProps = context.mProps;
+   const auto &mPerTrackProps = context.mPerTrackProps;
+   const auto &mT0 = context.mContext.mT0;
+   const auto &mT1 = context.mContext.mT1;
+   const auto &mInputTracks = context.mContext.mInputTracks;
+   const auto &mOutputTracks = context.mContext.mOutputTracks;
+   const auto &mCount = context.mCount;
+   const auto &mNumSelectedChannels = context.mNumSelectedChannels;
+   auto &mProjectChanged = context.mProjectChanged;
+   auto &mOutputTime = context.mOutputTime;
+   auto &mFirstInGroup = context.mFirstInGroup;
+   auto &mTrackIndex = context.mTrackIndex;
+   auto &mDebug = context.mContext.mDebug;
+   const auto &mExternal = context.mExternal;
 
    nyx_rval rval;
 
@@ -1002,10 +1019,10 @@ bool NyquistEffect::ProcessOne(
    // so notify the user that process has completed (bug 558)
    if ((rval != nyx_audio) && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
       if (mCurNumChannels == 1) {
-         TrackProgress(mCount, 1.0, XO("Processing complete."));
+         mEffect.TrackProgress(mCount, 1.0, XO("Processing complete."));
       }
       else {
-         TrackGroupProgress(mCount, 1.0, XO("Processing complete."));
+         mEffect.TrackGroupProgress(mCount, 1.0, XO("Processing complete."));
       }
    }
 
@@ -1047,12 +1064,12 @@ bool NyquistEffect::ProcessOne(
       if (GetType() == EffectTypeTool) {
          mProjectChanged = true;
       } else {
-         Effect::MessageBox(XO("Nyquist returned a list.") );
+         mEffect.MessageBox(XO("Nyquist returned a list.") );
       }
       return true;
    }
 
-   const bool acceptAll = AcceptsAllNyquistTypes();
+   const auto acceptAll = context.mAcceptsAll;
 
    if (rval == nyx_string) {
       // Assume the string has already been translated within the Lisp runtime
@@ -1060,7 +1077,7 @@ bool NyquistEffect::ProcessOne(
       // is communicated back to C++
       auto msg = Verbatim( NyquistToWxString(nyx_get_string()) );
       if (!msg.empty()) { // Empty string may be used as a No-Op return value.
-         Effect::MessageBox( msg );
+         mEffect.MessageBox( msg );
       }
       else if (GetType() == EffectTypeTool) {
          // ;tools may change the project with aud-do commands so
@@ -1079,14 +1096,14 @@ bool NyquistEffect::ProcessOne(
    if (rval == nyx_double) {
       auto str = XO("Nyquist returned the value: %f")
          .Format(nyx_get_double());
-      Effect::MessageBox( str );
+      mEffect.MessageBox( str );
       return acceptAll;
    }
 
    if (rval == nyx_int) {
       auto str = XO("Nyquist returned the value: %d")
          .Format(nyx_get_int());
-      Effect::MessageBox( str );
+      mEffect.MessageBox( str );
       return acceptAll;
    }
 
@@ -1094,13 +1111,13 @@ bool NyquistEffect::ProcessOne(
       mProjectChanged = true;
       unsigned int numLabels = nyx_get_num_labels();
       unsigned int l;
-      auto ltrack = * mOutputTracks->Any< LabelTrack >().begin();
+      auto ltrack = * mOutputTracks->Any<LabelTrack>().begin();
       if (!ltrack) {
          auto newTrack = std::make_shared<LabelTrack>();
          //new track name should be unique among the names in the list of input tracks, not output
-         newTrack->SetName(inputTracks()->MakeUniqueTrackName(LabelTrack::GetDefaultName()));
+         newTrack->SetName(mInputTracks->MakeUniqueTrackName(LabelTrack::GetDefaultName()));
          ltrack = static_cast<LabelTrack*>(
-            AddToOutputTracks(newTrack));
+            mEffect.AddToOutputTracks(newTrack));
       }
 
       for (l = 0; l < numLabels; l++) {
@@ -1120,18 +1137,18 @@ bool NyquistEffect::ProcessOne(
 
    int outChannels = nyx_get_audio_num_channels();
    if (outChannels > (int)mCurNumChannels) {
-      Effect::MessageBox( XO("Nyquist returned too many audio channels.\n") );
+      mEffect.MessageBox( XO("Nyquist returned too many audio channels.\n") );
       return false;
    }
 
    if (outChannels == -1) {
-      Effect::MessageBox(
+      mEffect.MessageBox(
          XO("Nyquist returned one audio channel as an array.\n") );
       return false;
    }
 
    if (outChannels == 0) {
-      Effect::MessageBox( XO("Nyquist returned an empty array.\n") );
+      mEffect.MessageBox( XO("Nyquist returned an empty array.\n") );
       return false;
    }
 
@@ -1188,7 +1205,7 @@ bool NyquistEffect::AcceptsAllNyquistTypes()
 // NyquistEffect Implementation
 // ============================================================================
 
-wxString NyquistEffect::NyquistToWxString(const char *nyqString)
+wxString NyquistProgram::NyquistToWxString(const char *nyqString)
 {
     wxString str(nyqString, wxConvUTF8);
     if (nyqString != NULL && nyqString[0] && str.empty()) {
