@@ -18678,7 +18678,7 @@ msgstr "Steve Daulton"
 #: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
 msgid "GNU General Public License v2.0 or later"
-msgstr "Licencja GNU General Public License v2.0 lub nowsza"
+msgstr "Licencja GNU General Public License wersja 2.0 lub nowsza"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
