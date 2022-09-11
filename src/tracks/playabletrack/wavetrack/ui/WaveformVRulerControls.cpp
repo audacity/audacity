@@ -34,7 +34,7 @@ using LinearDBValues = std::vector<double>;
 
 static LinearDBValues majorValues{}, minorValues{}, minorMinorValues{};
 
-void RegenerateLinearDBValues(int dBRange)
+void RegenerateLinearDBValues(int dBRange, float min, float max)
 {
    majorValues.clear();
    minorValues.clear();
@@ -45,21 +45,29 @@ void RegenerateLinearDBValues(int dBRange)
    majorValues.push_back(2 * -dBRange);
 
    const double EPSILON = .01;
+   const double CHECK = 3 *(max - min) / 10;
 
    for (double major = 0.1; major <= 2 + EPSILON; major += .1) {
-      double val = std::round(major * 10) / 10;
-      if (fabs(major - 1) > EPSILON)
-         majorValues.push_back(std::trunc(-dBRange * val));
-   }
-   for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
-      double val = std::round(minor * 100) / 100;
-      minorValues.push_back(std::trunc(-dBRange * val));
-   }
-   for (int minorMinor = 0; minorMinor <= 2 * dBRange; minorMinor++) {
-      if ((minorMinor % (int) std::round(dBRange / 20)) != 0) {
-         minorMinorValues.push_back(-minorMinor);
+      if (fabs(1 - major) + EPSILON >= CHECK) {
+         double val = std::round(major * 10) / 10;
+         if (fabs(major - 1) > EPSILON)
+            majorValues.push_back(std::trunc(-dBRange * val));
       }
    }
+   for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
+      if (fabs(1 - minor) + EPSILON >= CHECK) {
+         double val = std::round(minor * 100) / 100;
+         minorValues.push_back(std::trunc(-dBRange * val));
+      }
+   }
+   for (int minorMinor = 0; minorMinor <= 2 * dBRange; minorMinor++) {
+      if (fabs(dBRange - minorMinor) + EPSILON >= dBRange * CHECK) {
+         if ((minorMinor % (int)std::round(dBRange / 20)) != 0) {
+            minorMinorValues.push_back(-minorMinor);
+         }
+      }
+   }
+
 }
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
@@ -236,11 +244,12 @@ void WaveformVRulerControls::DoUpdateVRuler(
    auto &settings = WaveformSettings::Get(*wt);
    const float dBRange = settings.dBRange;
 
+   float min, max;
    auto &cache = WaveformScale::Get(*wt);
+   cache.GetDisplayBounds(min, max);
    if (dBRange != cache.GetLastDBRange())
    {
       SetLastdBRange(cache, *wt);
-      RegenerateLinearDBValues(dBRange);
    }
 
    auto scaleType = settings.scaleType;
@@ -248,8 +257,6 @@ void WaveformVRulerControls::DoUpdateVRuler(
    if (settings.isLinear()) {
       // Waveform
       
-      float min, max;
-      cache.GetDisplayBounds(min, max);
       if (cache.GetLastScaleType() != WaveformSettings::stLinearAmp &&
           cache.GetLastScaleType() != WaveformSettings::stLinearDb &&
           cache.GetLastScaleType() != -1)
@@ -288,6 +295,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          vruler->SetUpdater(std::make_unique<LinearUpdater>());
       }
       else {
+         RegenerateLinearDBValues(dBRange, min, max);
          vruler->SetLabelEdges(true);
          vruler->SetUnits(XO("dB"));
          vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
@@ -334,9 +342,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
    else {
       vruler->SetUnits(XO("dB"));
       
-      float min, max;
       auto &cache = WaveformScale::Get(*wt);
-      cache.GetDisplayBounds(min, max);
       float lastdBRange;
       
       if (cache.GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
