@@ -45,12 +45,7 @@ most commonly asked questions about Audacity.
 #include "Prefs.h"
 #include "HelpText.h"
 
-// DA: Logo for Splash Dialog (welcome dialog)
-#ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
-#else
 #include "../images/AudacityLogoWithName.xpm"
-#endif
 
 #ifdef HAS_WHATS_NEW
 
@@ -59,7 +54,7 @@ most commonly asked questions about Audacity.
 
 namespace
 {
-#   include "../images/WhatsNewBtn.png.h"
+#   include "../images/WhatsNewBtn.jpeg.h"
 
 struct FSHelper final
 {
@@ -69,13 +64,13 @@ struct FSHelper final
       wxFileSystem::AddHandler(mMemoryFSHandler.get());
 
       wxMemoryFSHandler::AddFile(
-         "whats_new_btn.png", bin2c_whats_new_btn_png,
-         sizeof(bin2c_whats_new_btn_png));
+         "whats_new_btn.jpeg", bin2c_whats_new_btn_jpeg,
+         sizeof(bin2c_whats_new_btn_jpeg));
    }
 
    ~FSHelper()
    {
-      wxMemoryFSHandler::RemoveFile("whats_new_btn.png");
+      wxMemoryFSHandler::RemoveFile("whats_new_btn.jpeg");
       wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
    }
 
