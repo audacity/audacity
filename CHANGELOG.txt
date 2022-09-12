@@ -11,6 +11,8 @@ Changes in version 3.2.0
     * Added a new Audio Setup button, replacing the Device Toolbar by default. The device toolbar can be re-added via the View > Toolbars menu.
     * The Effects menu has gotten a new sorting. Other sorting and grouping options can be found in the Effects preferences.
     * Updated the icons.
+    * Added a quick audio sharing feature.
+       More info can be found on https://support.audacityteam.org/basics/sharing-audio-online
 
  Plugin changes
     You can find plugins on https://plugins.audacityteam.org
