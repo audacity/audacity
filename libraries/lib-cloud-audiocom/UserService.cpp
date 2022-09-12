@@ -105,8 +105,8 @@ void UserService::UpdateUserData()
              profileName = std::string(profileName),
              avatar = std::string(avatar)]()
             {
-               userName.Write(username);
-               displayName.Write(profileName);
+               userName.Write(audacity::ToWXString(username));
+               displayName.Write(audacity::ToWXString(profileName));
                
                gPrefs->Flush();
 
