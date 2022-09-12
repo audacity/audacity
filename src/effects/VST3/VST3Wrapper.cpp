@@ -499,12 +499,11 @@ bool VST3Wrapper::Initialize(EffectSettings& settings, Steinberg::Vst::SampleRat
 
    if(mEffectComponent->setActive(true) == kResultOk)
    {
-      if(mAudioProcessor->setProcessing(true) == kResultOk)
-      {
-         //...make sure they are delivered to the processor
-         ConsumeChanges(settings);
-         return true;
-      }
+      //Omit the return value check - some plugins return unexpected values (see bug #3581)
+      mAudioProcessor->setProcessing(true);
+      //...make sure they are delivered to the processor
+      ConsumeChanges(settings);
+      return true;
    }
    mActive = false;
    return false;
