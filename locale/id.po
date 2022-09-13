@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-10-14 10:06-0400\n"
+"POT-Creation-Date: 2022-09-13 07:25-0400\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
@@ -38,7 +38,6 @@ msgid "Problem Report for Audacity"
 msgstr "Preferensi..."
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
 msgstr ""
 
@@ -47,7 +46,7 @@ msgstr ""
 msgid "Problem details"
 msgstr ""
 
-#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: crashreports/crashreporter/CrashReportApp.cpp src/TagsEditor.cpp
 #: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
 msgid "Comments"
 msgstr "Kommentar"
@@ -55,7 +54,6 @@ msgstr "Kommentar"
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#: src/widgets/ErrorReportDialog.cpp
 #, fuzzy, c-format
 msgid "See %s for more info."
 msgstr "Pilih satu atau lebih file audio..."
@@ -63,8 +61,6 @@ msgstr "Pilih satu atau lebih file audio..."
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an
-#. object of "See".
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -232,6 +228,11 @@ msgstr "Selesai merekam"
 msgid "Message"
 msgstr ""
 
+#: libraries/lib-cloud-audiocom/UploadService.cpp
+#, fuzzy
+msgid "Cannot proceed to upload."
+msgstr "Tidak ada label untuk diekspor."
+
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
 msgid ""
@@ -330,6 +331,7 @@ msgid "%s files"
 msgstr "File MP3"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
+#: src/effects/lv2/LV2Validator.cpp
 #, c-format
 msgid "(%s)"
 msgstr ""
@@ -342,12 +344,13 @@ msgid ""
 msgstr "Direktori %s belum ada. Buat dulu?"
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
-#: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectBase.cpp
+#: src/effects/Generator.cpp src/effects/VST3/VST3Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -385,7 +388,9 @@ msgstr "Tidak Ada"
 msgid "Rectangle"
 msgstr "Persegi"
 
-#: libraries/lib-math/Dither.cpp src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#: libraries/lib-math/Dither.cpp
+#, fuzzy
+msgctxt "dither"
 msgid "Triangle"
 msgstr "Segitiga"
 
@@ -482,6 +487,132 @@ msgstr "32-bit float"
 msgid "Unknown format"
 msgstr ""
 
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Module Unsuitable"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to load the \"%s\" module.\n"
+"\n"
+"Error: %s"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" does not provide a version string.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" is matched with Audacity version \"%s\".\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" failed to initialize.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid "Module \"%s\" found."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid ""
+"\n"
+"\n"
+"Only use modules from trusted sources"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/sample-data-export.ny
+msgid "Yes"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#, fuzzy
+msgid "No"
+msgstr "Tidak Ada"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy
+msgid "Audacity Module Loader"
+msgstr "Modulator"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Try and load this module?"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" does not provide any of the required functions.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy, c-format
+msgid "Overwrite the plug-in file %s?"
+msgstr "Meniban file yang sudah ada"
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in file is in use. Failed to overwrite"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr "Tidak bisa membuang '%s'"
+
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgctxt "plug-ins"
+msgid "Enable this plug-in?\n"
+msgid_plural "Enable these plug-ins?\n"
+msgstr[0] "Maaf, gagal mengambil Plug-in Vamp."
+msgstr[1] "Maaf, gagal mengambil Plug-in Vamp."
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgid "Enable new plug-ins"
+msgstr "Maaf, gagal mengambil Plug-in Vamp."
+
+#: libraries/lib-module-manager/PluginManager.h
+#, fuzzy
+msgid "Nyquist Prompt"
+msgstr "Prompt Nyquist..."
+
+#: libraries/lib-network-manager/MultipartData.cpp
+#, fuzzy, c-format
+msgid "Failed to open the file for upload: %s"
+msgstr "Tidak bisa membuang '%s'"
+
+#: libraries/lib-project-history/ProjectHistory.cpp
+msgid "Created new project"
+msgstr "Membuat proyek baru"
+
 #: libraries/lib-project-rate/QualitySettings.cpp
 #, fuzzy
 msgid "16-bit"
@@ -506,6 +637,16 @@ msgstr ""
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
 msgstr ""
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Sample Track"
+msgstr "Menyempel Ulang Trek"
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Writable Sample Track"
+msgstr "Menyempel Ulang Trek"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
@@ -550,25 +691,36 @@ msgstr "Tanggal Mulai"
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
-#: libraries/lib-theme/ClassicThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/ClassicThemeAsCeeCode.cpp
 msgid "Classic"
 msgstr ""
 
-#: libraries/lib-theme/DarkThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/DarkThemeAsCeeCode.cpp
 msgid "Dark"
 msgstr ""
 
 #. i18n-hint: greater difference between foreground and
 #. background colors
-#: libraries/lib-theme/HiContrastThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/HighContrastThemeAsCeeCode.cpp
 #, fuzzy
 msgid "High Contrast"
 msgstr "Kontras..."
 
 #. i18n-hint: Light meaning opposite of dark
-#: libraries/lib-theme/LightThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
 msgid "Light"
 msgstr "Cahaya"
+
+#. i18n-hint: A theme is a consistent visual style across an application's
+#. graphical user interface, including choices of colors, and similarity of images
+#. such as those on button controls.  Audacity can load and save alternative
+#. themes.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/%s."
+msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -578,17 +730,6 @@ msgid ""
 msgstr ""
 "Audacity tidak bisa menulis file:\n"
 "  %s."
-
-#. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
-#. themes.
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme written to:\n"
-"  %s."
-msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -609,14 +750,6 @@ msgid ""
 msgstr ""
 "Audacity tidak bisa menulis gambar ke file:\n"
 "  %s."
-
-#. i18n-hint "Cee" means the C computer programming language
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme as Cee code written to:\n"
-"  %s."
-msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -650,6 +783,11 @@ msgstr ""
 "Tolong segera laporkan masalah ini."
 
 #: libraries/lib-theme/Theme.cpp
+#, fuzzy, c-format
+msgid "Couldn't read from file: %s"
+msgstr "Tidak bisa menulis file:"
+
+#: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid ""
 "None of the expected theme component files\n"
@@ -659,6 +797,13 @@ msgstr ""
 "Tidak ditemukan file komponen\n"
 " tema di:\n"
 "  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/Components/."
+msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -689,10 +834,52 @@ msgstr ""
 "Audacity tidak bisa menyimpan file:\n"
 "  %s"
 
+#: libraries/lib-theme/Theme.cpp src/FreqWindow.cpp src/LabelDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#, fuzzy, c-format
+msgid "Couldn't write to file: %s"
+msgstr "Tidak bisa menulis file:"
+
+#. i18n-hint "Cee" means the C computer programming language
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes as Cee code written to:\n"
+"  %s/*%s."
+msgstr ""
+
 #. i18n-hint: user defined
 #: libraries/lib-theme/Theme.cpp
 msgid "Custom"
 msgstr ""
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Generic Track"
+msgstr "&Buat"
+
+#: libraries/lib-track/Track.cpp
+msgid "Audio Track"
+msgstr "Trek Audio"
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Playable Track"
+msgstr "Memainkan"
+
+#: libraries/lib-transactions/TransactionScope.cpp
+msgid "Database error.  Sorry, but we don't have more details."
+msgstr ""
+
+#: libraries/lib-transactions/TransactionScope.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
+#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
+#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
+#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
+#: src/menus/EditMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+msgid "Warning"
+msgstr "Perhatian"
 
 #: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -863,16 +1050,6 @@ msgstr ""
 msgid "Script was not saved."
 msgstr ""
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
-#: src/ProjectFileIO.cpp src/ProjectHistory.cpp src/SqliteSampleBlock.cpp
-#: src/WaveClip.cpp src/WaveTrack.cpp src/export/Export.cpp
-#: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
-msgid "Warning"
-msgstr "Perhatian"
-
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Save Nyquist script"
@@ -968,7 +1145,7 @@ msgstr "Simpan Sebagai..."
 msgid "Save script as..."
 msgstr "Simpan &Proyek Sebagai..."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Salin"
@@ -979,7 +1156,6 @@ msgid "Copy to clipboard"
 msgstr "Potong ke Clipboard"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Potong"
@@ -990,7 +1166,6 @@ msgid "Cut to clipboard"
 msgstr "Potong ke Clipboard"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Tempel"
@@ -1105,8 +1280,8 @@ msgstr "Awal"
 msgid "Start script"
 msgstr "Prompt Nyquist..."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
-#: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
+#: src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Berhenti"
 
@@ -1130,6 +1305,12 @@ msgstr ""
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, designer"
+msgstr "Amplop"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -1226,47 +1407,6 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#. i18n-hint: First and third %s will be the program's name,
-#. second %s will be "volunteers", fourth "available"
-#: src/AboutDialog.cpp
-#, fuzzy, c-format
-msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Audacity adalah program bebas dan gratis yang dicanangkan oleh para<a href=\"http://audacity.sourceforge.net/community/developers\">pengembang</a> di seluruh dunia. Kami berterima kasih kepada <a href=\"http://sourceforge.net\">Sourceforge.net</a> dan <a href=\"http://code.google.com\">Google Code</a> untuk penempatan proyek kami. Audacity tersedia untuk Windows 98 atau yang lebih baru, Mac OS X, Linux, atau sistem operasi lainnya yang mirip dengan sistem operasi Unix. Untuk Mac OS 9, gunakan versi 1.0.0."
-
-#. i18n-hint: substitutes into "a worldwide team of %s"
-#: src/AboutDialog.cpp
-msgid "volunteers"
-msgstr ""
-
-#. i18n-hint: substitutes into "Audacity is %s"
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "available"
-msgstr "Variabel"
-
-#. i18n-hint first and third %s will be "forum", second "wiki"
-#: src/AboutDialog.cpp
-#, fuzzy, c-format
-msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr "Ini adalah versi yang sudah stabil. Tetapi, jika Anda menemukan bug atau mempunyai saran, silahkan hubungi ke alamat <a href=\"mailto:feedback@audacityteam.org\">Tanggapan</a> kami. Untuk bantuan, gunakan menu Bantuan di program, lihat tips dan trik di <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> kami, atau kunjungi <a href=\"http://audacityteam.org/forum/\">Forum</a> kami."
-
-#. i18n-hint substitutes into "write to our %s"
-#: src/AboutDialog.cpp
-msgctxt "dative"
-msgid "forum"
-msgstr ""
-
-#. i18n-hint substitutes into "view the tips and tricks on our %s"
-#: src/AboutDialog.cpp
-msgid "wiki"
-msgstr ""
-
-#. i18n-hint substitutes into "visit our %s"
-#: src/AboutDialog.cpp
-msgctxt "accusative"
-msgid "forum"
-msgstr ""
-
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -1290,15 +1430,16 @@ msgstr ""
 msgid "Credits"
 msgstr "Orang-Orang yang Berjasa"
 
-#: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr ""
-
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "%s Team Members"
 msgstr "Anggota Tim Emeritus Lainnya"
+
+#. i18n-hint: Musers are people working at Muse Group
+#: src/AboutDialog.cpp
+msgid "Former Musers"
+msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -1403,6 +1544,11 @@ msgid "%s, 64 bits"
 msgstr ""
 
 #: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 32 bits"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "Build type:"
 msgstr "Tipe perubahan:"
 
@@ -1419,7 +1565,22 @@ msgstr "Awalan Instalasi:"
 
 #: src/AboutDialog.cpp
 #, fuzzy
+msgid "Cache folder:"
+msgstr "Folder pengaturan:"
+
+#: src/AboutDialog.cpp
+#, fuzzy
 msgid "Settings folder:"
+msgstr "Folder pengaturan:"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Data folder:"
+msgstr "Folder pengaturan:"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "State folder:"
 msgstr "Folder pengaturan:"
 
 #. i18n-hint: Libraries that are essential to audacity
@@ -1485,10 +1646,6 @@ msgstr "Impor melalui QuickTime"
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Fitur"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Plug-in support"
@@ -1633,7 +1790,7 @@ msgstr "&Perbaharui tampilan ketika memainkan"
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
-msgid "Clear Looping Region"
+msgid "Clear Loop"
 msgstr "&Hapus"
 
 #: src/AdornedRulerPanel.cpp
@@ -1705,7 +1862,7 @@ msgstr "B&uka..."
 msgid "Open &Recent..."
 msgstr "Buka yang &Sebelumnya..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/AudacityApp.cpp
 msgid "&About Audacity..."
 msgstr "&Tentang Audacity"
 
@@ -1783,17 +1940,25 @@ msgid "Audacity is already running"
 msgstr "Audacity sudah berjalan"
 
 #: src/AudacityApp.cpp
+#, c-format
 msgid ""
-"Unable to acquire semaphores.\n"
+"Unable to create shared memory segment.\n"
 "\n"
-"This is likely due to a resource shortage\n"
-"and a reboot may be required."
+"error code=%d : \"%s\"."
 msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
 msgid "Audacity Startup Failure"
 msgstr "File Proyek Audacity"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1869,6 +2034,11 @@ msgstr "\t-versi (tampilan versi Audacity)"
 #, fuzzy
 msgid "audio or project file name"
 msgstr "Tidak bisa membuka file proyek"
+
+#. i18n-hint: This option is used to handle custom URLs in Audacity
+#: src/AudacityApp.cpp
+msgid "Handle 'audacity://' url"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
@@ -2254,7 +2424,9 @@ msgstr "Mengaplikasikan..."
 msgid "File"
 msgstr "Berkas"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Cancel"
 msgstr "&Batal"
 
@@ -2324,8 +2496,8 @@ msgstr "Pindah ke &Atas"
 msgid "Move &Down"
 msgstr "Pindak ke &Bawah"
 
-#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/HelpMenus.cpp
+#: src/BatchProcessDialog.cpp src/HelpUtilities.cpp
+#: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "&Save"
 msgstr "Simpan"
@@ -2413,8 +2585,8 @@ msgid "Run"
 msgstr ""
 
 #. i18n-hint verb
-#: src/Benchmark.cpp src/tracks/ui/TrackButtonHandles.cpp
-#: src/widgets/HelpSystem.cpp
+#: src/Benchmark.cpp src/RealtimeEffectPanel.cpp
+#: src/tracks/ui/TrackButtonHandles.cpp src/widgets/HelpSystem.cpp
 msgid "Close"
 msgstr "Tutup"
 
@@ -2693,10 +2865,6 @@ msgid ""
 "%s"
 msgstr "Tidak bisa membuang '%s'"
 
-#: src/DBConnection.cpp
-msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
-
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
 msgstr "Menghapus Ketergantungan"
@@ -2825,6 +2993,28 @@ msgstr ""
 #, fuzzy
 msgid "Dependency Check"
 msgstr "Cek ketergantungan"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence of audio sample data from the
+#. recording
+#: src/DropoutDetector.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
@@ -3123,12 +3313,6 @@ msgstr "spektrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Ekspor data spektral sebagai:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
-#, fuzzy, c-format
-msgid "Couldn't write to file: %s"
-msgstr "Tidak bisa menulis file:"
-
 #: src/FreqWindow.cpp
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "Frekuensi (Hz)\tTingkatan (dB)"
@@ -3280,6 +3464,16 @@ msgstr ""
 msgid "Check Online"
 msgstr "Mengecek %s"
 
+#: src/HelpUtilities.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Tersimpan %s"
+
+#: src/HelpUtilities.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Tidak bisa membuang '%s'"
+
 #: src/HistoryWindow.cpp
 #, fuzzy
 msgid "History"
@@ -3340,8 +3534,34 @@ msgstr ""
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
 #: src/HistoryWindow.cpp
-msgid "&History..."
+#, fuzzy
+msgid "&History"
 msgstr "&History..."
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "New Plugins"
+msgstr "Maaf, gagal mengambil Plug-in Vamp."
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "Incompatible plugin(s) found"
+msgstr "Referensi FFmpeg yang tidak kompetibel ditemukan"
+
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Maaf, gagal mengambil Plug-in Vamp."
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Kontributor Lainnya"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, c-format
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
 
 #: src/JournalEvents.cpp
 #, fuzzy
@@ -3428,6 +3648,11 @@ msgstr "Masukkan nama trek"
 msgid "Label Track"
 msgstr "Trek Label"
 
+#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "Label"
+
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
@@ -3477,17 +3702,17 @@ msgstr "Membuka Proyek Audacity"
 msgid "Audacity Log"
 msgstr "Proyek Audacity"
 
-#: src/LogWindow.cpp src/Tags.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp
 msgid "&Save..."
 msgstr "Sim&pan..."
 
 #. i18n-hint: (verb)
-#: src/LogWindow.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "Hap&us"
 
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
+#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Tutup"
 
@@ -3511,7 +3736,8 @@ msgid "Audacity Karaoke%s"
 msgstr "Karaoke%s Audacity"
 
 #: src/LyricsWindow.cpp
-msgid "&Karaoke..."
+#, fuzzy
+msgid "&Karaoke"
 msgstr "&Karaoke..."
 
 #: src/MIDIPlay.cpp
@@ -3560,22 +3786,17 @@ msgstr ""
 msgid "Disallowed"
 msgstr "Tidak Diperbolehkan"
 
-#. i18n-hint: noun, means a track, made by mixing other tracks
-#: src/Mix.cpp
-msgid "Mix"
-msgstr "Mix"
-
-#: src/Mix.cpp src/menus/TrackMenus.cpp
+#: src/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
 msgstr "Mix dan Render"
 
-#: src/Mix.cpp
+#: src/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
 msgstr "Trek Mix dan Render"
 
 #: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
+#, fuzzy, c-format
+msgid "Audacity Mixer%s"
 msgstr "Mixer Board%s Audacity"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
@@ -3641,84 +3862,9 @@ msgid "Moved pan slider"
 msgstr "Pindahkan slider pan"
 
 #: src/MixerBoard.cpp
-msgid "&Mixer Board..."
-msgstr "Tempat &Mixer..."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to load the \"%s\" module.\n"
-"\n"
-"Error: %s"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/ModuleManager.cpp
-msgid "Module Unsuitable"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide a version string.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\".\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid "Module \"%s\" found."
-msgstr ""
-
-#: src/ModuleManager.cpp
-msgid ""
-"\n"
-"\n"
-"Only use modules from trusted sources"
-msgstr ""
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
-msgid "Yes"
-msgstr ""
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny
 #, fuzzy
-msgid "No"
-msgstr "Tidak Ada"
-
-#: src/ModuleManager.cpp
-#, fuzzy
-msgid "Audacity Module Loader"
-msgstr "Modulator"
-
-#: src/ModuleManager.cpp
-msgid "Try and load this module?"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
+msgid "&Mixer"
+msgstr "Mixer"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3876,51 +4022,6 @@ msgstr ""
 msgid "A♯/B♭"
 msgstr ""
 
-#: src/PluginManager.cpp
-#, fuzzy, c-format
-msgid "Overwrite the plug-in file %s?"
-msgstr "Meniban file yang sudah ada"
-
-#: src/PluginManager.cpp
-msgid "Plug-in already exists"
-msgstr ""
-
-#: src/PluginManager.cpp
-msgid "Plug-in file is in use. Failed to overwrite"
-msgstr ""
-
-#: src/PluginManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to register:\n"
-"%s"
-msgstr "Tidak bisa membuang '%s'"
-
-#. i18n-hint A plug-in is an optional added program for a sound
-#. effect, or generator, or analyzer
-#: src/PluginManager.cpp
-#, fuzzy
-msgctxt "plug-ins"
-msgid "Enable this plug-in?\n"
-msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Maaf, gagal mengambil Plug-in Vamp."
-msgstr[1] "Maaf, gagal mengambil Plug-in Vamp."
-
-#: src/PluginManager.cpp
-#, fuzzy
-msgid "Enable new plug-ins"
-msgstr "Maaf, gagal mengambil Plug-in Vamp."
-
-#: src/PluginManager.h
-#, fuzzy
-msgid "Nyquist Prompt"
-msgstr "Prompt Nyquist..."
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Manage Plug-ins"
-msgstr "Maaf, gagal mengambil Plug-in Vamp."
-
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
@@ -3993,8 +4094,12 @@ msgstr "Pilih"
 msgid "C&lear All"
 msgstr "&Hapus"
 
-#: src/PluginRegistrationDialog.cpp src/effects/EffectUI.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Rescan"
+msgstr "Efek"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 #, fuzzy
 msgid "&Enable"
 msgstr "Dibolehkan"
@@ -4029,6 +4134,10 @@ msgstr ""
 "Encoder FLAC gagal menginisialisasi\n"
 "Status: %d"
 
+#: src/PluginStartupRegistration.cpp
+msgid "Searching for plugins"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Ada masalah dalam mencetak"
@@ -4042,7 +4151,7 @@ msgstr "Cetak"
 msgid "Actual Rate: %d"
 msgstr "Rate Asli: %d"
 
-#: src/ProjectAudioManager.cpp src/effects/Effect.cpp
+#: src/ProjectAudioManager.cpp src/effects/EffectBase.cpp
 #, fuzzy
 msgid ""
 "Error opening sound device.\n"
@@ -4083,28 +4192,6 @@ msgstr "Rekaman Audio"
 #: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Rekam"
-
-#. i18n-hint:  A name given to a track, appearing as its menu button.
-#. The translation should be short or else it will not display well.
-#. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence of audio sample data from the
-#. recording
-#: src/ProjectAudioManager.cpp
-msgid "Dropouts"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid ""
-"Recorded audio was lost at the labeled locations. Possible causes:\n"
-"\n"
-"Other applications are competing with Audacity for processor time\n"
-"\n"
-"You are saving directly to a slow external storage device\n"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid "Turn off dropout detection"
-msgstr ""
 
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
@@ -4257,8 +4344,8 @@ msgstr "Anak file blok: (%s)"
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
-#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/UndoManager.cpp
-#: src/menus/TransportMenus.cpp
+#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/TransportUtilities.cpp
 msgid "Progress"
 msgstr "Kemajuan"
 
@@ -4328,23 +4415,6 @@ msgid ""
 "\n"
 "%s"
 msgstr "Tidak bisa membuang '%s'"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to prepare project file command:\n"
-"\n"
-"%s"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Failed to retrieve data from the project file.\n"
-"The following command failed:\n"
-"\n"
-"%s"
-msgstr ""
 
 #. i18n-hint: An error message.
 #: src/ProjectFileIO.cpp
@@ -4449,6 +4519,14 @@ msgid "Unable to switch to fast journaling mode"
 msgstr ""
 
 #: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to bind SQL parameter"
 msgstr "Gagal mencari codec"
@@ -4528,11 +4606,6 @@ msgstr "Gagal mencari codec"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
-msgid "Unable to decode project document"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to parse project information."
 msgstr "Tidak bisa membuka atau membuat file tes"
 
@@ -4575,6 +4648,11 @@ msgstr ""
 #, fuzzy
 msgid "Backing up project"
 msgstr "M&enyimpan proyek kosong"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Automatic database backup failed."
+msgstr "Pengembalian Otomatis Akibat Crash"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -4840,15 +4918,6 @@ msgstr "Tidak bisa membuka file proyek"
 msgid "Compact"
 msgstr ""
 
-#: src/ProjectHistory.cpp
-msgid "Created new project"
-msgstr "Membuat proyek baru"
-
-#: src/ProjectHistory.cpp
-#, fuzzy
-msgid "Automatic database backup failed."
-msgstr "Pengembalian Otomatis Akibat Crash"
-
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
@@ -4916,12 +4985,10 @@ msgid ""
 "You need to run that version of Audacity to recover the project."
 msgstr ""
 
-#. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
-#. Other tabs in that notebook may have instruments, patch panels etc.
 #: src/ProjectWindow.cpp
-msgid "Main Mix"
-msgstr "Mix Utama"
+#, fuzzy
+msgid "Realtime effects"
+msgstr "Pre&view"
 
 #: src/ProjectWindow.cpp
 #, fuzzy
@@ -4932,6 +4999,134 @@ msgstr "Stereo Horizontal"
 #, fuzzy
 msgid "Vertical Scrollbar"
 msgstr "Stereo Vertikal"
+
+#. i18n-hint: argument - position of the effect in the effect stack
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Effect %d"
+msgstr "Efek"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Power"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Replace effect"
+msgstr "Hapus aturan lanjut '%s'?"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "%s (missing)"
+msgstr "Lima Mnt"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Removed %s from %s"
+msgstr "Diimpor label dari '%s'"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Remove %s"
+msgstr "Buang"
+
+#. i18n-hint: undo history,
+#. first and second parameters - realtime effect names
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replaced %s with %s"
+msgstr "Hapus aturan lanjut '%s'?"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replace %s"
+msgstr "Hapus aturan lanjut '%s'?"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Efek"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Preferensi..."
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Add effect"
+msgstr "Efek"
+
+#. i18n-hint: Hyperlink to the effects stack panel tutorial video
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s up in %s"
+msgstr "Dipindahkan '%s' %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s down in %s"
+msgstr "Dipindahkan '%s' %s"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Change effect order"
+msgstr "Mengubah Kecepatan"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Added %s to %s"
+msgstr "Diubah '%s' ke %s"
+
+#. i18n-hint: undo history record
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Add %s"
+msgstr "Diratakan"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "Bolehkan efek"
+
+#. i18n-hint: argument - track name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Realtime effects for %s"
+msgstr "Efek teraplikasi: %s"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -5042,8 +5237,7 @@ msgstr "Alat"
 msgid "Transport"
 msgstr "T&ransportasi"
 
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp
 msgid "Mixer"
 msgstr "Mixer"
 
@@ -5169,12 +5363,6 @@ msgid "Specify New Filename:"
 msgstr "Tentukan Nama File Baru:"
 
 #: src/SelectUtilities.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/SelectUtilities.cpp
 msgid "Position"
 msgstr "Posisi"
 
@@ -5190,6 +5378,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Anak file blok: (%s)"
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 #, fuzzy
 msgid "&Preview"
@@ -5205,7 +5395,7 @@ msgstr "Preview Potongan"
 msgid "&Settings"
 msgstr "&Opsi..."
 
-#: src/ShuttleGui.cpp
+#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 #, fuzzy
 msgid "Debu&g"
 msgstr "&Benah"
@@ -5291,114 +5481,118 @@ msgstr "Jangan tampilkan lagi waktu start up"
 msgid "Connection to project file is null"
 msgstr "Memeriksa data file proyek..."
 
-#: src/Tags.cpp
+#: src/SqliteSampleBlock.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
+#: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Nama Artis"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Title"
 msgstr "Judul Trek"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Album Title"
 msgstr "Judul album"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Number"
 msgstr "Nomor Trek"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Year"
 msgstr "Tahun"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genre"
 msgstr "Genre"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr "Gunakan tombol arah (atau tombol RETURN setelah mengedit) untuk navigasi."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Tag"
 msgstr "Tag"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Value"
 msgstr "Nilai"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Add"
 msgstr "&Tambah"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Remove"
 msgstr "&Buang"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genres"
 msgstr "Genre"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "E&dit..."
 msgstr "E&dit..."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Rese&t..."
 msgstr "A&tur ulang..."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Template"
 msgstr "Sketsa"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Load..."
 msgstr "&Ambil..."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Set De&fault"
 msgstr "Atur Nor&mal"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Don't show this when exporting audio"
 msgstr "Jangan perlihatkan peringatan lagi"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Edit Genres"
 msgstr "Edit Genre"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to save genre file."
 msgstr "Tidak bisa menyimpan file genre."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Reset Genres"
 msgstr "Atur Ulang Genre"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
 msgstr "Anda yakin ingin mengatur ulang daftar genre Anda?"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to open genre file."
 msgstr "Tidak bisa membuka file genre."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Load Metadata As:"
 msgstr "Ambil Metadata Sebagai:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Error Loading Metadata"
 msgstr "Error mengambil metadata"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Save Metadata As:"
 msgstr "Simpan Metadata Sebagai:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Error Saving Tags File"
 msgstr "Error menyimpan file tags"
@@ -5413,8 +5607,8 @@ msgstr "Error menyimpan file tags"
 #.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Validator.cpp
 msgid "Duration"
 msgstr "Durasi"
 
@@ -5500,7 +5694,7 @@ msgid "Recording start:"
 msgstr "Mulai merekam"
 
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/VST3/VST3UIValidator.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "Durasi"
 
@@ -5750,13 +5944,6 @@ msgstr ""
 msgid "TrackView"
 msgstr "LihatTrek"
 
-#. i18n-hint: The %d is replaced by the number of the track.
-#. i18n-hint: compose a name identifying an unnamed track by number
-#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Trek %d"
-
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
@@ -5785,6 +5972,12 @@ msgstr "Pilih"
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
 msgstr ""
+
+#. i18n-hint: The %d is replaced by the number of the track.
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Trek %d"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
@@ -5868,9 +6061,21 @@ msgstr "Pindahkan Trek ke Atas"
 msgid "Move Track Down"
 msgstr "Pindahkan Trek ke Bawah"
 
-#: src/UndoManager.cpp
-msgid "Discarding undo/redo history"
-msgstr ""
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
+#, fuzzy
+msgid "Playing"
+msgstr "Play"
+
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
+msgid "Recording"
+msgstr "Merekam"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5911,6 +6116,16 @@ msgstr "Hasil Kalibrasi\n"
 msgid "Resampling failed."
 msgstr "Sampel ulang dimatikan."
 
+#: src/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "Audio"
+msgstr "&Audio..."
+
+#: src/WaveTrack.cpp
+#, fuzzy
+msgid "Wave Track"
+msgstr "Pindahkan Trek"
+
 #. i18n-hint Template for clip name generation on copy-paste
 #: src/WaveTrack.cpp
 #, c-format
@@ -5933,6 +6148,151 @@ msgstr "Tidak ada ruang cukup untuk menempel itu"
 msgid "There is not enough room available to expand the cut line"
 msgstr "Tidak ada ruang yang tersedia untuk menyebarkan garis potong"
 
+#. i18n-hint: Share audio button text, keep as short as possible
+#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Salin Label"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: src/cloud/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "Toolbar &Terpilih"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "Link account"
+msgstr "Distorsi"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "&Ok"
+msgstr "&OK"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "&Go to my file"
+msgstr "Ekspor Banyak"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr "anda yakin mau menghapus %s?"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Membuat cache audio"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload complete!"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Export error"
+msgstr "Ekspor MIDI"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "Tidak dapat membuka file target untuk ditulis"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Mencari Clipping..."
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
+"\n"
+"If you have problems uploading, try the Link Account button."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Membuat cache audio"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Waktu Berjalan:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Remaining Time:"
+msgstr "Waktu Tersisa:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Shareable link"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only people you share this link with can access your audio"
+msgstr ""
+
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
@@ -5947,7 +6307,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/AudacityCommand.cpp src/effects/EffectBase.cpp
 #, fuzzy, c-format
 msgid "Applying %s..."
 msgstr "Mengaplikasikan..."
@@ -6132,11 +6492,6 @@ msgstr "Clipping"
 msgid "Envelopes"
 msgstr "Amplop"
 
-#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "Label"
-
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
 msgstr ""
@@ -6238,7 +6593,8 @@ msgid "Builtin Commands"
 msgstr "Pilih Komando"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3EffectsModule.cpp
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
@@ -6383,6 +6739,8 @@ msgstr "&Toolbar"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Effects"
 msgstr "Efek"
 
@@ -6546,7 +6904,7 @@ msgstr "Atur"
 msgid "Add"
 msgstr "&Tambah"
 
-#: src/commands/SelectCommand.cpp src/effects/EffectUI.cpp
+#: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "Buang"
@@ -6830,7 +7188,7 @@ msgstr "Trek Baru"
 msgid "Sets various values for a track."
 msgstr ""
 
-#: src/effects/Amplify.cpp
+#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
 msgstr "Amplify"
 
@@ -6857,7 +7215,7 @@ msgstr "Amplitudo yang baru (dB):"
 msgid "Allo&w clipping"
 msgstr "Dibolehkan clipping"
 
-#: src/effects/AutoDuck.cpp
+#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
 msgid "Auto Duck"
 msgstr "Auto Duck"
 
@@ -6930,7 +7288,7 @@ msgstr "Ambang Batas:"
 msgid "Preview not available"
 msgstr "Preview tidak tersedia"
 
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
 msgstr ""
 
@@ -6980,7 +7338,7 @@ msgstr "Tingkat:"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/ChangePitch.cpp
+#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
 msgstr "Mengubah Pitch"
 
@@ -7110,13 +7468,13 @@ msgstr "48"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
-#: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/ChangeSpeed.cpp src/effects/EffectUI.cpp
+#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "n/a"
 msgstr "tidak ada"
 
-#: src/effects/ChangeSpeed.cpp
+#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Speed"
 msgstr "Mengubah Kecepatan"
 
@@ -7203,7 +7561,7 @@ msgctxt "change speed"
 msgid "to"
 msgstr "ke"
 
-#: src/effects/ChangeTempo.cpp
+#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Tempo"
 msgstr "Mengubah Tempo"
 
@@ -7275,7 +7633,7 @@ msgstr "ke"
 msgid "Length in seconds from %s, to"
 msgstr "Ke panjang dalam detik"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
 msgid "Click Removal"
 msgstr "Click Removal"
 
@@ -7311,7 +7669,7 @@ msgstr "Besar Spike maksimal (lebih tinggi, lebih sensitif):"
 msgid "Max Spike Width"
 msgstr "Ketebalan Maksimal"
 
-#: src/effects/Compressor.cpp
+#: src/effects/Compressor.cpp resources/EffectsMenuDefaults.xml
 msgid "Compressor"
 msgstr "Kompresor"
 
@@ -7533,7 +7891,7 @@ msgstr "Ulang"
 msgid "&Difference:"
 msgstr "Perbedaan:"
 
-#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUISettings.cpp
 msgid "&Help"
 msgstr "&Bantuan"
 
@@ -7864,7 +8222,7 @@ msgstr "Parameter"
 msgid "Number of repeats"
 msgstr "Number of times to repeat:"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
 msgid "Distortion"
 msgstr "Distorsi"
 
@@ -8006,7 +8364,7 @@ msgstr "Amplitudo (0-1)"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Validator.cpp
 #, fuzzy
 msgid "&Duration:"
 msgstr "Durasi"
@@ -8045,7 +8403,7 @@ msgstr "Durasi diam:"
 msgid "%0.f ms"
 msgstr "%.0f:1"
 
-#: src/effects/Echo.cpp
+#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
 msgstr "Echo"
 
@@ -8111,11 +8469,11 @@ msgstr "Tidak bisa membuka atau membuat file tes"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr ""
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Preparing preview"
 msgstr "Meyiapkan preview"
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Previewing"
 msgstr "Melihat preview"
 
@@ -8123,7 +8481,7 @@ msgstr "Melihat preview"
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
-#: src/effects/Effect.h
+#: src/effects/EffectBase.h
 msgid "Nyquist"
 msgstr "Nyquist"
 
@@ -8201,141 +8559,44 @@ msgstr ""
 "Encoder FLAC gagal menginisialisasi\n"
 "Status: %d"
 
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Effects Rack"
-msgstr "Efek"
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Buat"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "&Apply"
-msgstr "Mengaplikasikan %s"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Latency: 0"
-msgstr "Laten"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "&Bypass"
-msgstr "Batas Band"
-
-#: src/effects/EffectUI.cpp
-msgid "Active State"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Set effect active state"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Show/Hide Editor"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Open/close effect editor"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move Up"
-msgstr "Pindah ke &Atas"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move effect up in the rack"
-msgstr "Telah dipindah ke trek yang lain"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move Down"
-msgstr "Pindak ke &Bawah"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move effect down in the rack"
-msgstr "Telah dipindah ke trek yang lain"
-
-#: src/effects/EffectUI.cpp
-msgid "Favorite"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Mark effect as a favorite"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Remove effect from the rack"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Name of the effect"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy, c-format
-msgid "Latency: %4d"
-msgstr "Laten"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Some Command"
-msgstr "Pilih Komando"
+msgid "Enable"
+msgstr "Dibolehkan"
 
 #: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
 msgstr ""
 
 #: src/effects/EffectUI.cpp
-msgid "&Manage"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Start and stop playback"
-msgstr ""
-
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "Start &Playback"
-msgstr "Memainkan"
+msgid "Presets && settings"
+msgstr "Aturan Efek"
+
+#: src/effects/EffectUI.cpp
+msgid "Start and stop preview"
+msgstr ""
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
 msgid "Preview effect"
 msgstr "Pre&view"
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "&Preview effect"
-msgstr "Preview se&belum wilayah dipotong:"
+msgid "Stop &Preview"
+msgstr "Pre&view"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "Skip backward"
-msgstr "Percepat ke Awal"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip &Backward"
-msgstr "Percepat ke Awal"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip forward"
-msgstr "Langsung ke Awal"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip &Forward"
-msgstr "Percepat ke Akhir"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Enable"
-msgstr "Dibolehkan"
+msgid "&Apply"
+msgstr "Mengaplikasikan %s"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
@@ -8421,17 +8682,6 @@ msgid ""
 "Replace?"
 msgstr "File bernama \"%s\" telah ada. Ganti?"
 
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Stop &Playback"
-msgstr "Memainkan"
-
-#: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
-msgid "Play"
-msgstr "Play"
-
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
 msgid "B-spline"
@@ -8450,11 +8700,13 @@ msgid "Equalization"
 msgstr "Ekualisasi"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Filter Curve EQ"
 msgstr "Pilih kurva:"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafik EQ"
 
@@ -8860,11 +9112,11 @@ msgid ""
 "SSE Threaded: %s\n"
 msgstr ""
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
 msgstr "Fade Masuk"
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
 msgstr "Fade Keluar"
 
@@ -8903,7 +9155,7 @@ msgstr "Ambang batas akhir (sampel):"
 msgid "There is not enough room available to generate the audio"
 msgstr "Tidak ada ruang cukup untuk membuat audio"
 
-#: src/effects/Invert.cpp
+#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
 msgid "Invert"
 msgstr "Tukar"
 
@@ -8933,7 +9185,7 @@ msgstr "Menormalkan amplitudo maksimum ke:"
 msgid "RMS"
 msgstr ""
 
-#: src/effects/Loudness.cpp
+#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
 msgstr ""
 
@@ -9038,6 +9290,7 @@ msgid "Old"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Reduction"
 msgstr "Pengurangan bising"
@@ -9315,7 +9568,7 @@ msgstr "Waktu baru/usang"
 msgid "Re&move"
 msgstr "Buang"
 
-#: src/effects/Normalize.cpp
+#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
 msgstr "Normalize"
 
@@ -9384,7 +9637,7 @@ msgstr "Amplitudo yang baru (dB):"
 msgid "N&ormalize stereo channels independently"
 msgstr ""
 
-#: src/effects/Paulstretch.cpp
+#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Paulstretch"
 msgstr "Awal"
@@ -9437,7 +9690,7 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Phaser.cpp
+#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
 msgid "Phaser"
 msgstr "Phaser"
 
@@ -9509,7 +9762,13 @@ msgstr "Pen&guatan (dB):"
 msgid "Output gain (dB)"
 msgstr "Pen&guatan (dB):"
 
-#: src/effects/Repair.cpp
+#. i18n-hint: First %s is an effect name, second is a track name
+#: src/effects/RealtimeEffectStateUI.cpp
+#, fuzzy, c-format
+msgid "%s - %s"
+msgstr " - Kiri"
+
+#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
 msgstr "Perbaiki"
 
@@ -9541,7 +9800,7 @@ msgstr ""
 "\n"
 "Audio lebih mengelegar, lebih baik performanya."
 
-#: src/effects/Repeat.cpp
+#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
 msgid "Repeat"
 msgstr "Ulang"
 
@@ -9617,7 +9876,7 @@ msgstr ""
 msgid "Cathedral"
 msgstr ""
 
-#: src/effects/Reverb.cpp
+#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
 msgstr "Reverb"
 
@@ -9669,12 +9928,7 @@ msgstr ""
 msgid "Wet O&nly"
 msgstr ""
 
-#: src/effects/Reverb.cpp
-#, fuzzy, c-format
-msgid "Reverb: %s"
-msgstr "Reverb"
-
-#: src/effects/Reverse.cpp
+#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
 msgstr "Tukar Balik"
 
@@ -9909,7 +10163,7 @@ msgstr "Bagian Kanan"
 msgid "Mixing down to mono"
 msgstr "Mix-kan ke &mono waktu mengekspor"
 
-#: src/effects/TimeScale.cpp
+#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Sliding Stretch"
 msgstr "Awal"
@@ -9970,6 +10224,12 @@ msgstr "Gerigi"
 msgid "Square, no alias"
 msgstr "Persegi, tanpa samaran"
 
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Segitiga"
+
 #: src/effects/ToneGen.cpp
 #, fuzzy
 msgid "Chirp"
@@ -10028,7 +10288,7 @@ msgstr "Pangkas Diam"
 msgid "Compress Excess Silence"
 msgstr ""
 
-#: src/effects/TruncSilence.cpp
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Pangkas Diam"
 
@@ -10071,41 +10331,34 @@ msgstr "Efek VST"
 msgid "Adds the ability to use VST effects in Audacity."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
-#, fuzzy
-msgid "Scanning Shell VST"
-msgstr "Memindai Plugin VST"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr ""
-
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
 msgid "Could not load the library"
 msgstr "Tidak bisa membuka referensi encoding MP3!"
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #, fuzzy
 msgid "VST Effect Options"
 msgstr "Aturan Efek"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Buffer Size"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Latency Compensation"
 msgstr "Kompresi diam:"
@@ -10114,13 +10367,15 @@ msgstr "Kompresi diam:"
 msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Enable &compensation"
 msgstr "Kompresi diam:"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Graphical Mode"
 msgstr "Grafik EQ"
@@ -10129,7 +10384,8 @@ msgstr "Grafik EQ"
 msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Enable &graphical interface"
 msgstr ""
 
@@ -10187,7 +10443,7 @@ msgid "Unable to load presets file."
 msgstr "Tidak bisa membuka atau membuat file tes"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Ports.cpp
 msgid "Effect Settings"
 msgstr "Aturan Efek"
 
@@ -10212,7 +10468,75 @@ msgstr "parameter ini disimpan dari %s. Lanjutkan?"
 msgid "VST"
 msgstr "V&ST"
 
-#: src/effects/Wahwah.cpp
+#: src/effects/VST3/VST3Effect.cpp
+msgid "VST3"
+msgstr ""
+
+#. i18n-hint VST3 effect description string
+#: src/effects/VST3/VST3Effect.cpp
+#, c-format
+msgid "SubCategories: %s"
+msgstr ""
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Save VST3 Preset As:"
+msgstr "Simpan Program VST sebagai:"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "VST3 preset file"
+msgstr "Pilih file MIDI..."
+
+#. i18n-hint: VST3 preset export error
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Cannot open file"
+msgstr "Tidak bisa membuka file"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Failed to save VST3 preset to file"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Load VST3 preset:"
+msgstr "Ambil Aturan Lanjut"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Cannot open VST3 preset file %s"
+msgstr "Tidak bisa membuka file proyek"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Unable to apply VST3 preset file %s"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "VST3 Effects"
+msgstr "Efek VST"
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+msgid "Adds the ability to use VST3 effects in Audacity."
+msgstr ""
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy, c-format
+msgid "VST3 module error: %s"
+msgstr "GStreamer %s: %s"
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Wahwah"
 
@@ -10243,89 +10567,6 @@ msgstr "Frekuensi Offset Wah (%):"
 msgid "Wah frequency offset in percent"
 msgstr "Frekuensi Offset Wah dalam persen"
 
-#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Audio Unit Effects"
-msgstr "Efek Unit Audio"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Provides Audio Unit Effects support to Audacity"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Could not find component"
-msgstr "Tidak bisa membuka file"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Could not initialize component"
-msgstr "Tidak bisa membuka referensi encoding MP3!"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Audio Unit Effect Options"
-msgstr "Efek Unit Audio"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "User Interface"
-msgstr "Tampilan"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Select &interface"
-msgstr "PErangkat Output"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "&Buat"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Import Audio Unit Presets"
-msgstr "Impor Aturan Lajut"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Presets (may select multiple)"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/export/ExportMP3.cpp
-msgid "Preset"
-msgstr "Aturan Lanjut"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Location"
-msgstr "&Lokasi:"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid "Couldn't open \"%s\""
-msgstr "Tidak bisa membuka file:\"%s\""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid "Unable to read the preset from \"%s\""
-msgstr "Tidak bisa membuka atau membuat file tes"
-
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
 msgid "Failed to encode preset from \"%s\""
@@ -10335,16 +10576,6 @@ msgstr "Tidak bisa membuang '%s'"
 #, fuzzy
 msgid "Unable to store preset in config file"
 msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid ""
-"Could not import \"%s\" preset\n"
-"\n"
-"%s"
-msgstr ""
-"Tidak dapat mengatur parameters efek %s\n"
-"ke %s."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
@@ -10377,23 +10608,24 @@ msgid "Import Audio Unit Preset As %s:"
 msgstr "Impor Aturan Lajut"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Failed to set preset name"
-msgstr "Tidak bisa membuka atau membuat file tes"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Failed to retrieve preset content"
-msgstr "Tidak bisa menerima deskripsi aliran"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert property list to XML data"
+#, fuzzy, c-format
+msgid ""
+"Could not import \"%s\" preset\n"
+"\n"
+"%s"
 msgstr ""
+"Tidak dapat mengatur parameters efek %s\n"
+"ke %s."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
-msgid "XML data is empty after conversion"
-msgstr "Konversi sample rate"
+msgid "Import Audio Unit Presets"
+msgstr "Impor Aturan Lajut"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy, c-format
+msgid "Couldn't open \"%s\""
+msgstr "Tidak bisa membuka file:\"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
@@ -10401,23 +10633,110 @@ msgid "Failed to write XML preset to \"%s\""
 msgstr "Tidak bisa membuang '%s'"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert preset to internal format"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to create property list for preset"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
-msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+#, fuzzy, c-format
+msgid "Unable to read the preset from \"%s\""
+msgstr "Tidak bisa membuka atau membuat file tes"
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
 msgstr "Unit Audio"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "Audio Unit Effect Options"
+msgstr "Efek Unit Audio"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "User Interface"
+msgstr "Tampilan"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "Select &interface"
+msgstr "PErangkat Output"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#, fuzzy
+msgid "Generic"
+msgstr "&Buat"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+msgid "Basic"
+msgstr ""
+
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Audio Unit Effects"
+msgstr "Efek Unit Audio"
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Provides Audio Unit Effects support to Audacity"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#, fuzzy
+msgid "Could not find component"
+msgstr "Tidak bisa membuka file"
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#, fuzzy
+msgid "Could not initialize component"
+msgstr "Tidak bisa membuka referensi encoding MP3!"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to decode \"%s\" preset"
+msgstr "Tidak bisa membuang '%s'"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to convert \"%s\" preset to internal format"
+msgstr "Tidak bisa menerima deskripsi aliran"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to create property list for \"%s\" preset"
+msgstr "Tidak bisa membuang '%s'"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, c-format
+msgid "Failed to set class info for \"%s\" preset"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "Failed to set preset name"
+msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "Failed to retrieve preset content"
+msgstr "Tidak bisa menerima deskripsi aliran"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to convert property list to XML data"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "XML data is empty after conversion"
+msgstr "Konversi sample rate"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -10467,46 +10786,36 @@ msgid "LADSPA"
 msgstr "&LADSPA"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
-msgid "LV2 Effect Settings"
-msgstr "Aturan Efek"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "&Buffer Size (8 to %d) samples:"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported feature %s\n"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported option %s\n"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "Generator"
-msgstr "Generator"
 
 #. i18n-hint: abbreviates
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
 msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, fuzzy
+msgid "LV2 Effect Settings"
+msgstr "Aturan Efek"
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d) samples:"
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/lv2/LV2Validator.cpp
+msgid "Generator"
+msgstr "Generator"
 
 #: src/effects/lv2/LoadLV2.cpp
 #, fuzzy
@@ -11050,6 +11359,10 @@ msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
+msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
+msgstr ""
+
+#: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr ""
 
@@ -11067,10 +11380,6 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
-msgstr ""
-
-#: src/export/ExportFFmpeg.cpp
-msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
@@ -11140,6 +11449,7 @@ msgid "%d kbps"
 msgstr "kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Bit Rate:"
 msgstr "Bit Rate:"
 
@@ -11206,11 +11516,6 @@ msgstr "Konstan"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
 msgstr ""
-
-#: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
-msgid "Audio"
-msgstr "&Audio..."
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11777,11 +12082,11 @@ msgstr "Gagal menebak format"
 msgid "Failed to find the codec"
 msgstr "Gagal mencari codec"
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 bit"
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 bit"
 
@@ -11837,6 +12142,7 @@ msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Tidak bisa mengekspor MP2 dengan rate sampel dan bit rate ini"
 
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Tidak dapat membuka file target untuk ditulis"
 
@@ -11929,6 +12235,10 @@ msgid "Medium"
 msgstr "Sedang"
 
 #: src/export/ExportMP3.cpp
+msgid "Preset"
+msgstr "Aturan Lanjut"
+
+#: src/export/ExportMP3.cpp
 msgid "Variable"
 msgstr "Variabel"
 
@@ -11953,7 +12263,8 @@ msgid "Bit Rate Mode:"
 msgstr "Mode Bit Rate:"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/export/ExportMP3.cpp src/export/ExportWavPack.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kualitas"
 
@@ -12134,6 +12445,19 @@ msgid ""
 msgstr ""
 
 #: src/export/ExportMultiple.cpp
+msgid "Using Label/Track Name"
+msgstr "Menggunakan Nama Label/Trek"
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering before Label/Track Name"
+msgstr "Penomoran sebelum Nama Trek/Label"
+
+#: src/export/ExportMultiple.cpp
+#, fuzzy
+msgid "Numbering after File name prefix"
+msgstr "Awalan naman file"
+
+#: src/export/ExportMultiple.cpp
 #, fuzzy
 msgid "Export files to:"
 msgstr "Lokasi ekspor:"
@@ -12170,19 +12494,6 @@ msgstr "Nama file pertama"
 #: src/export/ExportMultiple.cpp
 msgid "Name files:"
 msgstr "Nama file:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Using Label/Track Name"
-msgstr "Menggunakan Nama Label/Trek"
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering before Label/Track Name"
-msgstr "Penomoran sebelum Nama Trek/Label"
-
-#: src/export/ExportMultiple.cpp
-#, fuzzy
-msgid "Numbering after File name prefix"
-msgstr "Awalan naman file"
 
 #: src/export/ExportMultiple.cpp
 msgid "File name prefix:"
@@ -12380,6 +12691,71 @@ msgid ""
 msgstr ""
 "Error ketika menulis %s file (diska penuh?). \n"
 "Libsndfile bilang \"%s\""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Low Quality (Fast)"
+msgstr "Kualitas:"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Normal Quality"
+msgstr "Kualitas"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "High Quality (Slow)"
+msgstr "Kualitas"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Very High Quality (Slowest)"
+msgstr "(Kualitas Terbaik)"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "32 bit float "
+msgstr "32-bit float"
+
+#. i18n-hint bps abbreviates "bits per sample"
+#: src/export/ExportWavPack.cpp
+#, fuzzy, c-format
+msgid "%.1f bps"
+msgstr "%.1f detik"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Bit Depth"
+msgstr "Kedalaman bit:"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Hybrid Mode"
+msgstr "Mode"
+
+#: src/export/ExportWavPack.cpp
+msgid "Create Correction(.wvc) File"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "WavPack Files"
+msgstr "Simpan File"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Unable to create target file for writing"
+msgstr "Tidak dapat membuka file target untuk ditulis"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting selected audio as WavPack"
+msgstr "Exporting selected audio as %s"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting the audio as WavPack"
+msgstr "Exporting selected audio as %s"
 
 #: src/import/Import.cpp
 #, fuzzy
@@ -12650,11 +13026,6 @@ msgid "Internal error in importer...tag not recognized"
 msgstr ""
 
 #: src/import/ImportAUP.cpp
-#, c-format
-msgid "Invalid project '%s' attribute."
-msgstr ""
-
-#: src/import/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr ""
 
@@ -12879,11 +13250,11 @@ msgstr ": Tipe file tidak benar."
 msgid "Could not open file %s."
 msgstr "Tidak bisa membuka file"
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp src/import/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "File MP3"
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp
 msgid ""
 "Import failed\n"
 "\n"
@@ -13225,6 +13596,21 @@ msgstr "Membuat tugas di Diam"
 msgid "&Import"
 msgstr "&Impor"
 
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack files"
+msgstr "Simpan File"
+
+#: src/import/ImportWavPack.cpp
+#, c-format
+msgid "Encountered %d errors decoding WavPack file!"
+msgstr ""
+
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack Importer"
+msgstr "Proyek"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
 msgstr ""
@@ -13317,8 +13703,9 @@ msgid "clip not moved"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
-msgid "Clip B&oundaries"
-msgstr ""
+#, fuzzy
+msgid "Audi&o Clips"
+msgstr "File audio"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -13567,12 +13954,13 @@ msgstr "Membuat tugas di Diam"
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
-msgid "&Metadata..."
+msgid "&Metadata"
 msgstr "Edit Metadata"
 
 #: src/menus/EditMenus.cpp
-msgid "Pre&ferences..."
-msgstr "Pre&ferensi..."
+#, fuzzy
+msgid "Pre&ferences"
+msgstr "Preferensi..."
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
@@ -13854,16 +14242,6 @@ msgid "Export as FLAC"
 msgstr "Ekspor label sebagai:"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
-msgid "Save %s"
-msgstr "Tersimpan %s"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
-msgid "Unable to save %s"
-msgstr "Tidak bisa membuang '%s'"
-
-#: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "Do you have these problems?"
 msgstr "Anda mau menyimpan perubahan?"
@@ -13912,11 +14290,6 @@ msgstr "Info Perangkat Audio"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
-msgid "MIDI Device Info"
-msgstr "Perangkat MIDI"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
 msgstr "&Bantuan"
 
@@ -13948,11 +14321,6 @@ msgstr "\t-test (jalankan diagnosa otomatis)"
 msgid "Au&dio Device Info..."
 msgstr ""
 
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&MIDI Device Info..."
-msgstr "Perangkat MIDI"
-
 #: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Tunjukkan &Log..."
@@ -13962,9 +14330,18 @@ msgid "&Generate Support Data..."
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "&Check for Updates..."
 msgstr "Ce&k Ketergantungan..."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&About Audacity"
+msgstr "Tentang Audacity..."
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -14091,6 +14468,16 @@ msgid "Detach Labeled Audio"
 msgstr "Lepaskan Label"
 
 #: src/menus/LabelMenus.cpp
+msgid "Created new label track"
+msgstr "Trek label baru telah dibuat"
+
+#: src/menus/LabelMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "New Track"
+msgstr "Trek Baru"
+
+#: src/menus/LabelMenus.cpp
 #, fuzzy
 msgid "&Labels"
 msgstr "Label"
@@ -14191,6 +14578,10 @@ msgstr "Label Edit"
 msgid "Label Join"
 msgstr "Label Edit"
 
+#: src/menus/LabelMenus.cpp
+msgid "&Label Track"
+msgstr "&Trek Label"
+
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
 msgstr ""
@@ -14254,16 +14645,12 @@ msgid "Toggle Focuse&d Track"
 msgstr "Fokuskan ke Trek Terpilih"
 
 #: src/menus/PluginMenus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
 #, fuzzy
 msgid "..."
 msgstr "Baru..."
 
 #: src/menus/PluginMenus.cpp
-msgid "Unknown"
+msgid "Uncategorized"
 msgstr ""
 
 #. i18n-hint a "journal" is a text file that records
@@ -14285,16 +14672,13 @@ msgstr "Ulangi %s"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy, c-format
-msgid "Plug-in %d to %d"
+msgid "Plugin %d to %d"
 msgstr "Plugin %i ke %i"
 
 #: src/menus/PluginMenus.cpp
-msgid "&Generate"
-msgstr "&Buat"
-
-#: src/menus/PluginMenus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr ""
+#, fuzzy
+msgid "Plugin Manager"
+msgstr "Aturan Plugin"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14304,6 +14688,11 @@ msgstr "Ulangi Efek Terakhir"
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
 msgstr "E&fek"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Add Realtime Effects"
+msgstr "Bolehkan efek"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -14329,9 +14718,8 @@ msgid "Repeat Last Tool"
 msgstr "Ulangi Efek Terakhir"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "&Macros..."
-msgstr "&Label..."
+msgid "&Macro Manager"
+msgstr ""
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14832,6 +15220,10 @@ msgid "Reset Toolb&ars"
 msgstr "&Kembalikan Toolbar"
 
 #: src/menus/TrackMenus.cpp
+msgid "Mix"
+msgstr "Mix"
+
+#: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "Semua audio di trek '%s' telah di-render"
@@ -15023,30 +15415,6 @@ msgid "Adjusted Pan"
 msgstr "Pengubahan Pan"
 
 #: src/menus/TrackMenus.cpp
-msgid "Created new audio track"
-msgstr "Trek audio baru telah dibuat"
-
-#: src/menus/TrackMenus.cpp
-msgid "New Track"
-msgstr "Trek Baru"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new stereo audio track"
-msgstr "Trek stereo baru telah dibuat"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new label track"
-msgstr "Trek label baru telah dibuat"
-
-#: src/menus/TrackMenus.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new time track"
-msgstr "Dibuat trek waktu yang baru"
-
-#: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "New sample rate (Hz):"
 msgstr "New sample rate (Hz):"
@@ -15117,23 +15485,6 @@ msgstr "Tidak bisa menghapus trek yang sedang aktif"
 #: src/menus/TrackMenus.cpp
 msgid "Add &New"
 msgstr "Add &New"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "Pindahkan Trek"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Stereo Track"
-msgstr "Trek &Stereo"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Label Track"
-msgstr "&Trek Label"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Time Track"
-msgstr "Trek &Waktu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x"
@@ -15337,22 +15688,6 @@ msgstr "Tutup trek yang terfokus"
 #, fuzzy
 msgid "Move Focused Track to &Bottom"
 msgstr "Pindahkan Trek ke Bawah"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy
-msgid "Playing"
-msgstr "Play"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
-#: src/toolbars/ControlToolBar.cpp
-msgid "Recording"
-msgstr "Merekam"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -15735,11 +16070,6 @@ msgstr "Overdub (nyala/mati)"
 msgid "&Show Clipping (on/off)"
 msgstr "&Lihat Clipping"
 
-#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Show Effects Rack"
-msgstr "Efek VST"
-
 #: src/menus/WindowMenus.cpp
 #, fuzzy
 msgid "&Window"
@@ -16095,6 +16425,11 @@ msgstr ""
 msgid "Grouped by Type"
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Default"
+msgstr "&Normal"
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -16145,20 +16480,6 @@ msgstr ""
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Maximum effects per group (0 to disable):"
 msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "Plugin Options"
-msgstr "Aturan Plugin"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Check for updated plugins when Audacity starts"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "Rescan plugins next time Audacity is started"
-msgstr "Pindai ulang efek VST sewaktu Audacity dimulai"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -16378,13 +16699,13 @@ msgstr ""
 msgid "Show Scrub Ruler"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-#, c-format
-msgid "Language \"%s\" is unknown"
-msgstr ""
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
+msgstr ""
+
+#: src/prefs/GUISettings.cpp
+#, c-format
+msgid "Language \"%s\" is unknown"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
@@ -16474,15 +16795,6 @@ msgid "&Hotkey:"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "Key Bindings"
-msgstr "Kunci-kunci Keyboard"
-
-#: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
-msgid "View by:"
-msgstr "&Lihat"
-
-#: src/prefs/KeyConfigPrefs.cpp
 msgid "&Tree"
 msgstr ""
 
@@ -16494,6 +16806,15 @@ msgstr "Nama"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Key"
 msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Key Bindings"
+msgstr "Kunci-kunci Keyboard"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "View by:"
+msgstr "&Lihat"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by tree"
@@ -17519,10 +17840,7 @@ msgid ""
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
-"\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.)"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
 msgstr ""
 "Tema adalah fitur percobaan.\n"
 "\n"
@@ -17776,11 +18094,6 @@ msgstr ""
 msgid "Default audio track &name:"
 msgstr "Trek audio baru telah dibuat"
 
-#. i18n-hint: The default name for an audio track.
-#: src/prefs/TracksPrefs.cpp
-msgid "Audio Track"
-msgstr "Trek Audio"
-
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Zoom Toggle"
@@ -17850,6 +18163,63 @@ msgstr "Preferensi..."
 msgid "Waveform dB &range:"
 msgstr "Jangkauan dB meter/Wavefo&rm:"
 
+#. i18n-hint: Audio setup button text, keep as short as possible
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Setup"
+msgstr "File audio"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Host"
+msgstr "&Host"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Playback Device"
+msgstr "Memainkan Berdasarkan Kecepatan"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Recording Device"
+msgstr "Selesai merekam"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Recording &Channels"
+msgstr "Selesai merekam"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Settings..."
+msgstr "Spektrogram"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "1 (Mono) Recording Channel"
+msgstr "Selesai merekam"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "2 (Stereo) Recording Channels"
+msgstr "%d Saluran"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Settings:"
+msgstr "Aturan Plugin"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages the audio devices
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Setup Toolbar"
+msgstr "Toolbar &Edit"
+
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
@@ -17861,6 +18231,10 @@ msgstr "Berhenti"
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
 msgstr "Pause"
+
+#: src/toolbars/ControlToolBar.cpp
+msgid "Play"
+msgstr "Play"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Skip to Start"
@@ -17938,16 +18312,6 @@ msgstr "Selesai merekam"
 
 #: src/toolbars/DeviceToolBar.cpp
 #, fuzzy
-msgid "1 (Mono) Recording Channel"
-msgstr "Selesai merekam"
-
-#: src/toolbars/DeviceToolBar.cpp
-#, fuzzy
-msgid "2 (Stereo) Recording Channels"
-msgstr "%d Saluran"
-
-#: src/toolbars/DeviceToolBar.cpp
-#, fuzzy
 msgid "Select Recording Device"
 msgstr "Pilih Sumber Input"
 
@@ -17978,14 +18342,18 @@ msgid "&Device Toolbar"
 msgstr "Toolbar &Perangkat"
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Cut selection"
-msgstr "Fit-kan ke Pilihan"
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Zoom In"
+msgstr "Perbesar"
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Copy selection"
-msgstr "Pilihan"
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Zoom Out"
+msgstr "Perkecil"
 
 #: src/toolbars/EditToolBar.cpp
 #, fuzzy
@@ -18003,20 +18371,6 @@ msgid "Sync-Lock Tracks"
 msgstr "Link Trek"
 
 #: src/toolbars/EditToolBar.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom In"
-msgstr "Perbesar"
-
-#: src/toolbars/EditToolBar.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom Out"
-msgstr "Perkecil"
-
-#: src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Fit selection to width"
 msgstr "Fit-kan pilihan dengan jendela"
@@ -18025,11 +18379,6 @@ msgstr "Fit-kan pilihan dengan jendela"
 #, fuzzy
 msgid "Fit project to width"
 msgstr "Fit-kan proyek dengan jendela"
-
-#: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Open Effects Rack"
-msgstr "Efek"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
@@ -18088,42 +18437,6 @@ msgstr "Pengukur Rekaman"
 #, fuzzy
 msgid "&Playback Meter Toolbar"
 msgstr "Pengukur Permainan"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Recording Volume"
-msgstr "Selesai merekam"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Playback Volume"
-msgstr "Memainkan"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
-msgid "Recording Volume: %.2f"
-msgstr "Selesai merekam"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Tak dapat mengendalikan level input; gunakan mixer sistem."
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
-msgid "Playback Volume: %.2f"
-msgstr "Memainkan"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Tak dapat mengendalikan level input; gunakan mixer sistem."
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the mixer
-#: src/toolbars/MixerToolBar.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Toolbar Mi&xer"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -18326,10 +18639,6 @@ msgid "Envelope Tool"
 msgstr "Alat Envelop"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "Zoom Tool"
-msgstr "Alat Memperbesar"
-
-#: src/toolbars/ToolsToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Draw Tool"
 msgstr "Alat Menggambar"
@@ -18359,11 +18668,6 @@ msgstr "Alat Envelop"
 #, fuzzy
 msgid "&Draw Tool"
 msgstr "Alat Menggambar"
-
-#: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "Alat Memperbesar"
 
 #: src/toolbars/ToolsToolBar.cpp
 #, fuzzy
@@ -18494,6 +18798,16 @@ msgstr "Oktaf Atas"
 #, fuzzy
 msgid "Down Octa&ve"
 msgstr "Oktaf Bawah"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+#, fuzzy
+msgid "MIDI Device Info"
+msgstr "Perangkat MIDI"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+#, fuzzy
+msgid "&MIDI Device Info..."
+msgstr "Perangkat MIDI"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -18627,11 +18941,6 @@ msgid "S&pectrogram Settings..."
 msgstr "Spektrogram"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
-msgid "Click and drag to move clip boundary in time"
-msgstr "Klik dan dorong ubtuk memindahkan trek ke waktu tertentu"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
 
@@ -18644,6 +18953,16 @@ msgstr ""
 #, fuzzy
 msgid "Clip-Trim-Right"
 msgstr "Clipping"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Clip-Trim-Between"
+msgstr "Clipping"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Click and drag to move clip boundary in time"
+msgstr "Klik dan dorong ubtuk memindahkan trek ke waktu tertentu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -18664,17 +18983,6 @@ msgstr "Label yang Telah Diubah"
 #, fuzzy
 msgid "Clip Name Edit"
 msgstr "Sampel Edit"
-
-#. i18n-hint:
-#. string is the name of a clip
-#. first number is the position of that clip in a sequence of clips,
-#. second number counts the clips
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, c-format
-msgid "%s, %d of %d clip"
-msgid_plural "%s, %d of %d clips"
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -18886,6 +19194,23 @@ msgstr "Kiri,"
 msgid "Right, %dHz"
 msgstr "Kanan,"
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new audio track"
+msgstr "Trek audio baru telah dibuat"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new stereo audio track"
+msgstr "Trek stereo baru telah dibuat"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "Pindahkan Trek"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "&Stereo Track"
+msgstr "Trek &Stereo"
+
 #. i18n-hint dB abbreviates decibels
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -18939,6 +19264,17 @@ msgstr "Diam/Hidupkan suara trek yang terfokus"
 #, fuzzy
 msgid "Rename clip..."
 msgstr "&Sampel Ulang..."
+
+#. i18n-hint:
+#. string is the name of a clip
+#. first number is the position of that clip in a sequence of clips,
+#. second number counts the clips
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, c-format
+msgid "%s, %d of %d clip"
+msgid_plural "%s, %d of %d clips"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
@@ -19045,6 +19381,18 @@ msgstr "&Sampel Ulang..."
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "Interpolasi Sinc yang Cepat"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "Created new time track"
+msgstr "Dibuat trek waktu yang baru"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "&Time Track"
+msgstr "Trek &Waktu"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
@@ -19495,6 +19843,24 @@ msgstr "R"
 msgid "%.2fx"
 msgstr "%.1f dB"
 
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "More information about this error may be available %s."
+msgstr "Informasi sumber input tidak ada"
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "here"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Would you like to send a report to help us fix this issue?"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "All reports are anonymous. See %s for more info."
+msgstr "Pilih satu atau lebih file audio..."
+
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
@@ -19551,26 +19917,6 @@ msgstr "Bantuan di Internet"
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click to Start Monitoring"
-msgstr "Mulai Pemantauan"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click for Monitoring"
-msgstr "Hentikan Pemantauan"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click to Start"
-msgstr "Langsung ke Awal"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click"
-msgstr "Klik-Kiri"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
@@ -19673,10 +20019,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
 msgstr ""
-
-#: src/widgets/MultiDialog.cpp
-msgid "Please select an action"
-msgstr "Silahkan pilih aksinya"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -20029,14 +20371,6 @@ msgid "%s (%s)"
 msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Waktu Berjalan:"
-
-#: src/widgets/ProgressDialog.cpp
-msgid "Remaining Time:"
-msgstr "Waktu Tersisa:"
-
-#: src/widgets/ProgressDialog.cpp
 msgid "Cancel"
 msgstr "Batal"
 
@@ -20171,16 +20505,10 @@ msgstr "Direktori"
 msgid "File Dialog"
 msgstr ""
 
-#: plug-ins/SpectralEditMulti.ny
+#: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit multi tool"
+msgid "Spectral Edit Multi Tool"
 msgstr "Pilihan"
-
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Filtering..."
-msgstr "Penyaring"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -20188,12 +20516,10 @@ msgid "Paul Licameli"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/beat.ny plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
+#: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-msgid "Released under terms of the GNU General Public License version 2"
+msgid "GNU General Public License v2.0"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -20224,9 +20550,9 @@ msgstr ""
 msgid "Error.~%"
 msgstr "Error"
 
-#: plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditParametricEQ.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit parametric EQ"
+msgid "Spectral Edit Parametric EQ"
 msgstr "Pilihan"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -20265,20 +20591,26 @@ msgid ""
 "                         Please select a frequency range."
 msgstr ""
 
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit shelves"
+msgid "Spectral Edit Shelves"
 msgstr "Pilihan"
 
-#: plug-ins/StudioFadeOut.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
+#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "GNU General Public License v2.0 or later"
+msgstr ""
+
+#: plug-ins/StudioFadeOut.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Studio Fade Out"
 msgstr "Fade Keluar"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Applying Fade..."
-msgstr "Mengaplikasikan..."
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
@@ -20290,20 +20622,12 @@ msgstr "Mengaplikasikan..."
 msgid "Steve Daulton"
 msgstr "Atur Nor&mal"
 
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-msgid "GNU General Public License v2.0 or later"
-msgstr ""
-
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Adjustable Fade"
 msgstr "Pengubahan Pan"
@@ -20457,30 +20781,16 @@ msgstr "Ulang"
 
 #: plug-ins/beat.ny
 #, fuzzy
-msgid "Finding beats..."
-msgstr "Mencari Clipping..."
-
-#: plug-ins/beat.ny
-#, fuzzy
 msgid "Threshold Percentage"
 msgstr "Ambang Batas untuk Bising:"
 
-#: plug-ins/clipfix.ny
+#: plug-ins/clipfix.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Clip Fix"
 msgstr "Clipping"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
-msgid "Reconstructing clips..."
-msgstr "Membuang klik dan pop..."
-
-#: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
-msgstr ""
-
-#: plug-ins/clipfix.ny
-msgid "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
 
 #: plug-ins/clipfix.ny
@@ -20491,14 +20801,9 @@ msgstr ""
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr ""
 
-#: plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Crossfade Clips"
-msgstr "Trek Nada"
-
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Crossfading..."
 msgstr "Trek Nada"
 
 #: plug-ins/crossfadeclips.ny
@@ -20516,7 +20821,7 @@ msgstr ""
 msgid "Error.~%Crossfade Clips may only be applied to one track."
 msgstr ""
 
-#: plug-ins/crossfadetracks.ny
+#: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Crossfade Tracks"
 msgstr "Trek Nada"
@@ -20569,14 +20874,9 @@ msgstr ""
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr ""
 
-#: plug-ins/delay.ny
+#: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
 msgstr "Pembeda"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Applying Delay Effect..."
-msgstr "Mengaplikasikan Efek Nyquist..."
 
 #: plug-ins/delay.ny
 #, fuzzy
@@ -20687,10 +20987,6 @@ msgstr "Error (file tidak mungkin ditulis): %s"
 msgid "Regular Interval Labels"
 msgstr ""
 
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -20699,7 +20995,7 @@ msgstr "Penggabungan file berdasarkan:"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
-msgid "Number & Interval"
+msgid "Number and Interval"
 msgstr "Label Edit"
 
 #: plug-ins/equalabel.ny
@@ -20790,6 +21086,11 @@ msgstr "Peringatan"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
+msgid "Error: There is insufficient space to create labels.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
 msgid "Warning: Overlapping region labels.~%"
 msgstr ""
 
@@ -20815,17 +21116,12 @@ msgstr ""
 msgid "~aRegion length = ~a seconds."
 msgstr "Dari panjang dalam detik"
 
-#: plug-ins/highpass.ny
+#: plug-ins/highpass.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "High-Pass Filter"
 msgstr "Ambil File"
 
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "Mengekualisasi"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, fuzzy
 msgid "Dominic Mazzoni"
 msgstr "dari Dominic Mazzoni"
@@ -20977,15 +21273,10 @@ msgstr ""
 msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Limiter"
 msgstr "Pembatas"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiting..."
-msgstr "Menormalkan..."
 
 #: plug-ins/limiter.ny
 #, fuzzy
@@ -21039,17 +21330,12 @@ msgstr ""
 msgid "Apply Make-up Gain"
 msgstr "Mengaplikasikan Untaian"
 
-#: plug-ins/lowpass.ny
+#: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Low-Pass Filter"
 msgstr "Ambil File"
 
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "Mengekualisasi"
-
-#: plug-ins/noisegate.ny
+#: plug-ins/noisegate.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Gate"
 msgstr "Tpie Bising"
@@ -21146,15 +21432,10 @@ msgstr ""
 msgid "~ah ~am"
 msgstr ""
 
-#: plug-ins/notch.ny
+#: plug-ins/notch.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Notch Filter"
 msgstr "Panjang filter:"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Applying Notch Filter..."
-msgstr "Mengaplikasikan Leveller..."
 
 #: plug-ins/notch.ny
 #, fuzzy
@@ -21175,7 +21456,7 @@ msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy
-msgid "Nyquist Plug-in Installer"
+msgid "Nyquist Plugin Installer"
 msgstr "Output Nyquist:"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
@@ -21276,15 +21557,6 @@ msgid "Pluck"
 msgstr ""
 
 #: plug-ins/pluck.ny
-#, fuzzy
-msgid "Generating pluck sound..."
-msgstr "Membuat Nada"
-
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
 msgid "David R.Sky"
 msgstr ""
 
@@ -21316,9 +21588,8 @@ msgid "Rhythm Track"
 msgstr "Buang Trek"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
-msgid "Generating Rhythm..."
-msgstr "Membuat Chirp"
+msgid "Dominic Mazzoni, David R. Sky and Steve Daulton"
+msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -21445,11 +21716,6 @@ msgstr "Membuat Bising"
 
 #: plug-ins/rissetdrum.ny
 #, fuzzy
-msgid "Generating Risset Drum..."
-msgstr "Membuat Bising"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Steven Jones"
 msgstr "Atur Nor&mal"
 
@@ -21480,11 +21746,6 @@ msgstr "Amplitudo (0-1)"
 #, fuzzy
 msgid "Sample Data Export"
 msgstr "Tidak bisa mengekspor"
-
-#: plug-ins/sample-data-export.ny
-#, fuzzy
-msgid "Analyzing..."
-msgstr "Mengaplikasikan..."
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -21780,11 +22041,6 @@ msgstr "Pengkon&versi Rate Sampel:"
 
 #: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Reading and rendering samples..."
-msgstr "Trek Mix dan Render"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Select file"
 msgstr "Pilih file MIDI..."
 
@@ -21830,7 +22086,7 @@ msgstr ""
 msgid "Error.~%Unable to open file"
 msgstr "Tidak bisa membuka file genre."
 
-#: plug-ins/spectral-delete.ny
+#: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Spectral Delete"
 msgstr "Pilihan"
@@ -21840,14 +22096,9 @@ msgstr "Pilihan"
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
 msgstr ""
 
-#: plug-ins/tremolo.ny
+#: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
 msgstr ""
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Applying Tremolo..."
-msgstr "Mengaplikasikan Leveller..."
 
 #: plug-ins/tremolo.ny
 #, fuzzy
@@ -21869,14 +22120,9 @@ msgstr "Fase Awal LFO dalam derajat"
 msgid "Wet level (percent)"
 msgstr "2 level"
 
-#: plug-ins/vocalrediso.ny
+#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
 msgid "Vocal Reduction and Isolation"
 msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Applying Action..."
-msgstr "Mengaplikasikan..."
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
@@ -22007,18 +22253,14 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/vocoder.ny
+#: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr ""
 
 #: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Processing Vocoder..."
-msgstr "Memproses Auto Duck..."
-
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr ""
+msgid "Edgar-RFT and Steve Daulton"
+msgstr "Atur Nor&mal"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
@@ -22046,7 +22288,7 @@ msgstr "Number of times to repeat:"
 
 #: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Amplitude of original audio (percent)"
+msgid "Amplitude of carrier wave (percent)"
 msgstr "Frekuensi (Hz)"
 
 #: plug-ins/vocoder.ny
@@ -22066,8 +22308,326 @@ msgstr "Frekuensi (Hz)"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
-msgid "Error.~%Stereo track required."
+msgid "Error.~%No modulation carrier."
 msgstr ""
+
+#. Effects menu group name; audio dynamics compression, not data compression
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Volume and Compression"
+msgstr "Kompresi:"
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Fading"
+msgstr "Membuat Fade Masuk"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Pitch and Tempo"
+msgstr "Pitch dan Tempo"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "EQ and Filters"
+msgstr "Ambil File"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Noise Removal and Repair"
+msgstr "Pembuang Bising"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Delay and Reverb"
+msgstr "Mengaplikasikan Leveller..."
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Distortion and Modulation"
+msgstr "Distorsi"
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Special"
+msgstr "Terima kasih untuk:"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "Pembuangan Trek"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Spectral Tools"
+msgstr "Spektrum"
+
+#, fuzzy, c-format
+#~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+#~ msgstr "Audacity adalah program bebas dan gratis yang dicanangkan oleh para<a href=\"http://audacity.sourceforge.net/community/developers\">pengembang</a> di seluruh dunia. Kami berterima kasih kepada <a href=\"http://sourceforge.net\">Sourceforge.net</a> dan <a href=\"http://code.google.com\">Google Code</a> untuk penempatan proyek kami. Audacity tersedia untuk Windows 98 atau yang lebih baru, Mac OS X, Linux, atau sistem operasi lainnya yang mirip dengan sistem operasi Unix. Untuk Mac OS 9, gunakan versi 1.0.0."
+
+#, fuzzy
+#~ msgid "available"
+#~ msgstr "Variabel"
+
+#, fuzzy, c-format
+#~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+#~ msgstr "Ini adalah versi yang sudah stabil. Tetapi, jika Anda menemukan bug atau mempunyai saran, silahkan hubungi ke alamat <a href=\"mailto:feedback@audacityteam.org\">Tanggapan</a> kami. Untuk bantuan, gunakan menu Bantuan di program, lihat tips dan trik di <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> kami, atau kunjungi <a href=\"http://audacityteam.org/forum/\">Forum</a> kami."
+
+#, fuzzy
+#~ msgid "Clear Looping Region"
+#~ msgstr "&Hapus"
+
+#~ msgid "&History..."
+#~ msgstr "&History..."
+
+#~ msgid "&Mixer Board..."
+#~ msgstr "Tempat &Mixer..."
+
+#, fuzzy
+#~ msgid "Unable to decode project document"
+#~ msgstr "Tidak bisa membuka atau membuat file tes"
+
+#~ msgid "Main Mix"
+#~ msgstr "Mix Utama"
+
+#, fuzzy
+#~ msgid "Effects Rack"
+#~ msgstr "Efek"
+
+#, fuzzy
+#~ msgid "Latency: 0"
+#~ msgstr "Laten"
+
+#, fuzzy
+#~ msgid "&Bypass"
+#~ msgstr "Batas Band"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Pindah ke &Atas"
+
+#, fuzzy
+#~ msgid "Move effect up in the rack"
+#~ msgstr "Telah dipindah ke trek yang lain"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Pindak ke &Bawah"
+
+#, fuzzy
+#~ msgid "Move effect down in the rack"
+#~ msgstr "Telah dipindah ke trek yang lain"
+
+#, fuzzy, c-format
+#~ msgid "Latency: %4d"
+#~ msgstr "Laten"
+
+#, fuzzy
+#~ msgid "Some Command"
+#~ msgstr "Pilih Komando"
+
+#, fuzzy
+#~ msgid "Start &Playback"
+#~ msgstr "Memainkan"
+
+#, fuzzy
+#~ msgid "&Preview effect"
+#~ msgstr "Preview se&belum wilayah dipotong:"
+
+#, fuzzy
+#~ msgid "Skip backward"
+#~ msgstr "Percepat ke Awal"
+
+#, fuzzy
+#~ msgid "Skip &Backward"
+#~ msgstr "Percepat ke Awal"
+
+#, fuzzy
+#~ msgid "Skip forward"
+#~ msgstr "Langsung ke Awal"
+
+#, fuzzy
+#~ msgid "Skip &Forward"
+#~ msgstr "Percepat ke Akhir"
+
+#, fuzzy
+#~ msgid "Stop &Playback"
+#~ msgstr "Memainkan"
+
+#, fuzzy, c-format
+#~ msgid "Reverb: %s"
+#~ msgstr "Reverb"
+
+#, fuzzy
+#~ msgid "Scanning Shell VST"
+#~ msgstr "Memindai Plugin VST"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "&Lokasi:"
+
+#~ msgid "Pre&ferences..."
+#~ msgstr "Pre&ferensi..."
+
+#, fuzzy
+#~ msgid "&Macros..."
+#~ msgstr "&Label..."
+
+#, fuzzy
+#~ msgid "Show Effects Rack"
+#~ msgstr "Efek VST"
+
+#, fuzzy
+#~ msgid "Plugin Options"
+#~ msgstr "Aturan Plugin"
+
+#, fuzzy
+#~ msgid "Rescan plugins next time Audacity is started"
+#~ msgstr "Pindai ulang efek VST sewaktu Audacity dimulai"
+
+#, fuzzy
+#~ msgid "Cut selection"
+#~ msgstr "Fit-kan ke Pilihan"
+
+#, fuzzy
+#~ msgid "Copy selection"
+#~ msgstr "Pilihan"
+
+#, fuzzy
+#~ msgid "Open Effects Rack"
+#~ msgstr "Efek"
+
+#, fuzzy
+#~ msgid "Recording Volume"
+#~ msgstr "Selesai merekam"
+
+#, fuzzy
+#~ msgid "Playback Volume"
+#~ msgstr "Memainkan"
+
+#, fuzzy, c-format
+#~ msgid "Recording Volume: %.2f"
+#~ msgstr "Selesai merekam"
+
+#, fuzzy
+#~ msgid "Recording Volume (Unavailable; use system mixer.)"
+#~ msgstr "Tak dapat mengendalikan level input; gunakan mixer sistem."
+
+#, fuzzy, c-format
+#~ msgid "Playback Volume: %.2f"
+#~ msgstr "Memainkan"
+
+#, fuzzy
+#~ msgid "Playback Volume (Unavailable; use system mixer.)"
+#~ msgstr "Tak dapat mengendalikan level input; gunakan mixer sistem."
+
+#~ msgid "Mi&xer Toolbar"
+#~ msgstr "Toolbar Mi&xer"
+
+#~ msgid "Zoom Tool"
+#~ msgstr "Alat Memperbesar"
+
+#, fuzzy
+#~ msgid "&Zoom Tool"
+#~ msgstr "Alat Memperbesar"
+
+#, fuzzy
+#~ msgid "Click to Start Monitoring"
+#~ msgstr "Mulai Pemantauan"
+
+#, fuzzy
+#~ msgid "Click for Monitoring"
+#~ msgstr "Hentikan Pemantauan"
+
+#, fuzzy
+#~ msgid "Click to Start"
+#~ msgstr "Langsung ke Awal"
+
+#, fuzzy
+#~ msgid "Click"
+#~ msgstr "Klik-Kiri"
+
+#~ msgid "Please select an action"
+#~ msgstr "Silahkan pilih aksinya"
+
+#, fuzzy
+#~ msgid "Filtering..."
+#~ msgstr "Penyaring"
+
+#, fuzzy
+#~ msgid "Applying Fade..."
+#~ msgstr "Mengaplikasikan..."
+
+#, fuzzy
+#~ msgid "Finding beats..."
+#~ msgstr "Mencari Clipping..."
+
+#, fuzzy
+#~ msgid "Reconstructing clips..."
+#~ msgstr "Membuang klik dan pop..."
+
+#, fuzzy
+#~ msgid "Crossfading..."
+#~ msgstr "Trek Nada"
+
+#, fuzzy
+#~ msgid "Applying Delay Effect..."
+#~ msgstr "Mengaplikasikan Efek Nyquist..."
+
+#, fuzzy
+#~ msgid "Performing High-Pass Filter..."
+#~ msgstr "Mengekualisasi"
+
+#, fuzzy
+#~ msgid "Limiting..."
+#~ msgstr "Menormalkan..."
+
+#, fuzzy
+#~ msgid "Performing Low-Pass Filter..."
+#~ msgstr "Mengekualisasi"
+
+#, fuzzy
+#~ msgid "Applying Notch Filter..."
+#~ msgstr "Mengaplikasikan Leveller..."
+
+#, fuzzy
+#~ msgid "Generating pluck sound..."
+#~ msgstr "Membuat Nada"
+
+#, fuzzy
+#~ msgid "Generating Rhythm..."
+#~ msgstr "Membuat Chirp"
+
+#, fuzzy
+#~ msgid "Generating Risset Drum..."
+#~ msgstr "Membuat Bising"
+
+#, fuzzy
+#~ msgid "Analyzing..."
+#~ msgstr "Mengaplikasikan..."
+
+#, fuzzy
+#~ msgid "Reading and rendering samples..."
+#~ msgstr "Trek Mix dan Render"
+
+#, fuzzy
+#~ msgid "Applying Tremolo..."
+#~ msgstr "Mengaplikasikan Leveller..."
+
+#, fuzzy
+#~ msgid "Applying Action..."
+#~ msgstr "Mengaplikasikan..."
+
+#, fuzzy
+#~ msgid "Processing Vocoder..."
+#~ msgstr "Memproses Auto Duck..."
+
+#, fuzzy
+#~ msgid "Amplitude of original audio (percent)"
+#~ msgstr "Frekuensi (Hz)"
 
 #, fuzzy
 #~ msgid "Lock Play Region"
@@ -22197,10 +22757,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Select any uncompressed audio file"
 #~ msgstr "Pilih file audio tanpa kompresi apa saja..."
-
-#, fuzzy
-#~ msgid "Files Missing"
-#~ msgstr "Lima Mnt"
 
 #, fuzzy
 #~ msgid "decode an autosave file"
@@ -22454,20 +23010,8 @@ msgstr ""
 #~ msgstr "Pembuat Diam"
 
 #, fuzzy
-#~ msgid "Finding sound..."
-#~ msgstr "Mencari Clipping..."
-
-#, fuzzy
-#~ msgid "Gating audio..."
-#~ msgstr "Membuat cache audio"
-
-#, fuzzy
 #~ msgid "Apply Low-Cut filter"
 #~ msgstr "Mengaplikasikan Leveller..."
-
-#, fuzzy
-#~ msgid "About Audacity"
-#~ msgstr "Tentang Audacity..."
 
 #, fuzzy
 #~ msgid "<h3>Audacity "
@@ -22700,10 +23244,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
 #~ msgstr "Untuk menggunakan Gambar, pilih 'Waveform' pada Menu Trek."
-
-#, fuzzy
-#~ msgid "Vocal Remover"
-#~ msgstr "Pembuangan Trek"
 
 #, fuzzy
 #~ msgid "Removing center-panned audio..."
@@ -22970,10 +23510,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "End to End"
 #~ msgstr "Langsung ke akhir"
-
-#, fuzzy
-#~ msgid "Aligned %s"
-#~ msgstr "Diratakan"
 
 #, fuzzy
 #~ msgid "Duration:\n"
@@ -23666,10 +24202,6 @@ msgstr ""
 #~ msgstr "Batas"
 
 #, fuzzy
-#~ msgid "Default"
-#~ msgstr "&Normal"
-
-#, fuzzy
 #~ msgid "LV2 Effects Module"
 #~ msgstr "Efek VST"
 
@@ -23953,9 +24485,6 @@ msgstr ""
 #~ msgid "Performing Equalization"
 #~ msgstr "Mengekualisasi"
 
-#~ msgid "Fading In"
-#~ msgstr "Membuat Fade Masuk"
-
 #~ msgid "Fading Out"
 #~ msgstr "Membuat Fade Keluar"
 
@@ -24020,10 +24549,6 @@ msgstr ""
 #~ msgstr "Repeat...."
 
 #, fuzzy
-#~ msgid "User settings:"
-#~ msgstr "Aturan Efek"
-
-#, fuzzy
 #~ msgid "R&ename"
 #~ msgstr "&Ganti Nama"
 
@@ -24042,10 +24567,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Reverb..."
 #~ msgstr "Reverb"
-
-#, fuzzy
-#~ msgid "Applying Reverb"
-#~ msgstr "Mengaplikasikan Leveller..."
 
 #, fuzzy
 #~ msgid "Classic Filters..."
@@ -24084,10 +24605,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Buffer Delay Compensation"
 #~ msgstr "Kombinasi Tombol Keyboard"
-
-#, fuzzy
-#~ msgid "Rescan Effects"
-#~ msgstr "Efek"
 
 #, fuzzy
 #~ msgid "VST Effect"

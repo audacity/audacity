@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-10-14 10:06-0400\n"
+"POT-Creation-Date: 2022-09-13 07:25-0400\n"
 "PO-Revision-Date: 2006-03-07 11:16-0000\n"
 "Last-Translator: \n"
 "Language-Team: Audacity Cymru <f00@hushmail.com>\n"
@@ -40,7 +40,6 @@ msgid "Problem Report for Audacity"
 msgstr "Hoffterau Audacity"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
 msgstr ""
 
@@ -49,7 +48,7 @@ msgstr ""
 msgid "Problem details"
 msgstr ""
 
-#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: crashreports/crashreporter/CrashReportApp.cpp src/TagsEditor.cpp
 #: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
 msgid "Comments"
 msgstr "Sylwadau"
@@ -57,7 +56,6 @@ msgstr "Sylwadau"
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#: src/widgets/ErrorReportDialog.cpp
 #, fuzzy, c-format
 msgid "See %s for more info."
 msgstr "Dewis un neu fwy o ffeiliau sain..."
@@ -65,8 +63,6 @@ msgstr "Dewis un neu fwy o ffeiliau sain..."
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an
-#. object of "See".
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -233,6 +229,10 @@ msgstr "Recordio"
 msgid "Message"
 msgstr ""
 
+#: libraries/lib-cloud-audiocom/UploadService.cpp
+msgid "Cannot proceed to upload."
+msgstr ""
+
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
 msgid ""
@@ -323,6 +323,7 @@ msgid "%s files"
 msgstr "Enwi ffeiliau:"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
+#: src/effects/lv2/LV2Validator.cpp
 #, c-format
 msgid "(%s)"
 msgstr ""
@@ -335,12 +336,13 @@ msgid ""
 msgstr "Nid yw'r ffolder %s yn bod. Ei greu?"
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
-#: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectBase.cpp
+#: src/effects/Generator.cpp src/effects/VST3/VST3Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -378,7 +380,9 @@ msgstr "Dim"
 msgid "Rectangle"
 msgstr "Petryal"
 
-#: libraries/lib-math/Dither.cpp src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#: libraries/lib-math/Dither.cpp
+#, fuzzy
+msgctxt "dither"
 msgid "Triangle"
 msgstr "Triongl"
 
@@ -473,6 +477,131 @@ msgstr ""
 msgid "Unknown format"
 msgstr ""
 
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Module Unsuitable"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to load the \"%s\" module.\n"
+"\n"
+"Error: %s"
+msgstr "Methu penodi"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" does not provide a version string.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" is matched with Audacity version \"%s\".\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" failed to initialize.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid "Module \"%s\" found."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid ""
+"\n"
+"\n"
+"Only use modules from trusted sources"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/sample-data-export.ny
+msgid "Yes"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#, fuzzy
+msgid "No"
+msgstr "Dim"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy
+msgid "Audacity Module Loader"
+msgstr "Rhedeiad Cyntaf Audacity"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Try and load this module?"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" does not provide any of the required functions.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy, c-format
+msgid "Overwrite the plug-in file %s?"
+msgstr "Ysgrifennu dros ffeiliau cyfredol"
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in file is in use. Failed to overwrite"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, c-format
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr ""
+
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgctxt "plug-ins"
+msgid "Enable this plug-in?\n"
+msgid_plural "Enable these plug-ins?\n"
+msgstr[0] "Methu penodi"
+msgstr[1] "Methu penodi"
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgid "Enable new plug-ins"
+msgstr "Methu penodi"
+
+#: libraries/lib-module-manager/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr ""
+
+#: libraries/lib-network-manager/MultipartData.cpp
+#, fuzzy, c-format
+msgid "Failed to open the file for upload: %s"
+msgstr "Methu penodi"
+
+#: libraries/lib-project-history/ProjectHistory.cpp
+msgid "Created new project"
+msgstr "Crëwyd cywaith newydd"
+
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "16-bit"
 msgstr ""
@@ -495,6 +624,16 @@ msgstr ""
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
 msgstr ""
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Sample Track"
+msgstr "Trac Newydd"
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Writable Sample Track"
+msgstr "Label Trac"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
@@ -538,30 +677,23 @@ msgstr ""
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
-#: libraries/lib-theme/ClassicThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/ClassicThemeAsCeeCode.cpp
 msgid "Classic"
 msgstr ""
 
-#: libraries/lib-theme/DarkThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/DarkThemeAsCeeCode.cpp
 msgid "Dark"
 msgstr ""
 
 #. i18n-hint: greater difference between foreground and
 #. background colors
-#: libraries/lib-theme/HiContrastThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/HighContrastThemeAsCeeCode.cpp
 msgid "High Contrast"
 msgstr ""
 
 #. i18n-hint: Light meaning opposite of dark
-#: libraries/lib-theme/LightThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
 msgid "Light"
-msgstr ""
-
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not write file:\n"
-"  %s."
 msgstr ""
 
 #. i18n-hint: A theme is a consistent visual style across an application's
@@ -571,7 +703,14 @@ msgstr ""
 #: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid ""
-"Theme written to:\n"
+"Themes written to:\n"
+"  %s/*/%s."
+msgstr ""
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not write file:\n"
 "  %s."
 msgstr ""
 
@@ -587,14 +726,6 @@ msgstr ""
 #, c-format
 msgid ""
 "Audacity could not write images to file:\n"
-"  %s."
-msgstr ""
-
-#. i18n-hint "Cee" means the C computer programming language
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme as Cee code written to:\n"
 "  %s."
 msgstr ""
 
@@ -622,11 +753,23 @@ msgid ""
 msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
+#, fuzzy, c-format
+msgid "Couldn't read from file: %s"
+msgstr "Methwyd ysgrifennu i'r ffeil: "
+
+#: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid ""
 "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
+msgstr ""
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/Components/."
 msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
@@ -651,10 +794,52 @@ msgid ""
 "  %s"
 msgstr ""
 
+#: libraries/lib-theme/Theme.cpp src/FreqWindow.cpp src/LabelDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#, fuzzy, c-format
+msgid "Couldn't write to file: %s"
+msgstr "Methwyd ysgrifennu i'r ffeil: "
+
+#. i18n-hint "Cee" means the C computer programming language
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes as Cee code written to:\n"
+"  %s/*%s."
+msgstr ""
+
 #. i18n-hint: user defined
 #: libraries/lib-theme/Theme.cpp
 msgid "Custom"
 msgstr ""
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Generic Track"
+msgstr "Cy&nhyrchu"
+
+#: libraries/lib-track/Track.cpp
+msgid "Audio Track"
+msgstr "Trac Sain"
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Playable Track"
+msgstr "Chwarae Nôl"
+
+#: libraries/lib-transactions/TransactionScope.cpp
+msgid "Database error.  Sorry, but we don't have more details."
+msgstr ""
+
+#: libraries/lib-transactions/TransactionScope.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
+#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
+#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
+#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
+#: src/menus/EditMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+msgid "Warning"
+msgstr "Rhybudd"
 
 #: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -822,16 +1007,6 @@ msgstr ""
 msgid "Script was not saved."
 msgstr ""
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
-#: src/ProjectFileIO.cpp src/ProjectHistory.cpp src/SqliteSampleBlock.cpp
-#: src/WaveClip.cpp src/WaveTrack.cpp src/export/Export.cpp
-#: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
-msgid "Warning"
-msgstr "Rhybudd"
-
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Save Nyquist script"
@@ -922,7 +1097,7 @@ msgstr "Cadwyd %s"
 msgid "Save script as..."
 msgstr "Cadw Cywaith &Fel..."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Copio"
@@ -933,7 +1108,6 @@ msgid "Copy to clipboard"
 msgstr "Torri i'r clipfwrdd"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Torri"
@@ -944,7 +1118,6 @@ msgid "Cut to clipboard"
 msgstr "Torri i'r clipfwrdd"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Gludo"
@@ -1055,8 +1228,8 @@ msgstr ""
 msgid "Start script"
 msgstr "Annog Nyquist..."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
-#: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
+#: src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Aros"
 
@@ -1080,6 +1253,12 @@ msgstr ""
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, designer"
+msgstr "Chwyddamlen"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -1176,46 +1355,6 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#. i18n-hint: First and third %s will be the program's name,
-#. second %s will be "volunteers", fourth "available"
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr ""
-
-#. i18n-hint: substitutes into "a worldwide team of %s"
-#: src/AboutDialog.cpp
-msgid "volunteers"
-msgstr ""
-
-#. i18n-hint: substitutes into "Audacity is %s"
-#: src/AboutDialog.cpp
-msgid "available"
-msgstr ""
-
-#. i18n-hint first and third %s will be "forum", second "wiki"
-#: src/AboutDialog.cpp
-#, c-format
-msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr ""
-
-#. i18n-hint substitutes into "write to our %s"
-#: src/AboutDialog.cpp
-msgctxt "dative"
-msgid "forum"
-msgstr ""
-
-#. i18n-hint substitutes into "view the tips and tricks on our %s"
-#: src/AboutDialog.cpp
-msgid "wiki"
-msgstr ""
-
-#. i18n-hint substitutes into "visit our %s"
-#: src/AboutDialog.cpp
-msgctxt "accusative"
-msgid "forum"
-msgstr ""
-
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -1239,15 +1378,16 @@ msgstr ""
 msgid "Credits"
 msgstr "Rhestr Clod"
 
-#: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr ""
-
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "%s Team Members"
 msgstr "Hoffterau Audacity"
+
+#. i18n-hint: Musers are people working at Muse Group
+#: src/AboutDialog.cpp
+msgid "Former Musers"
+msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -1349,6 +1489,11 @@ msgid "%s, 64 bits"
 msgstr ""
 
 #: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 32 bits"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "Build type:"
 msgstr ""
 
@@ -1363,7 +1508,22 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 #, fuzzy
+msgid "Cache folder:"
+msgstr "Gosodiadau'r Effaith"
+
+#: src/AboutDialog.cpp
+#, fuzzy
 msgid "Settings folder:"
+msgstr "Gosodiadau'r Effaith"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Data folder:"
+msgstr "Gosodiadau'r Effaith"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "State folder:"
 msgstr "Gosodiadau'r Effaith"
 
 #. i18n-hint: Libraries that are essential to audacity
@@ -1427,10 +1587,6 @@ msgstr "Mewnforio Data Crai"
 
 #: src/AboutDialog.cpp
 msgid "Features"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -1572,7 +1728,7 @@ msgstr ""
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-msgid "Clear Looping Region"
+msgid "Clear Loop"
 msgstr ""
 
 #: src/AdornedRulerPanel.cpp
@@ -1641,7 +1797,7 @@ msgstr "&Agor..."
 msgid "Open &Recent..."
 msgstr ""
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/AudacityApp.cpp
 msgid "&About Audacity..."
 msgstr "&Ynglyn â Audacity..."
 
@@ -1714,17 +1870,25 @@ msgid "Audacity is already running"
 msgstr "Mae Audacity yn rhedeg yn barod"
 
 #: src/AudacityApp.cpp
+#, c-format
 msgid ""
-"Unable to acquire semaphores.\n"
+"Unable to create shared memory segment.\n"
 "\n"
-"This is likely due to a resource shortage\n"
-"and a reboot may be required."
+"error code=%d : \"%s\"."
 msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
 msgid "Audacity Startup Failure"
 msgstr "Ffeiliau Cywaith Audacity"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1797,6 +1961,11 @@ msgstr "Hoffterau Audacity"
 #, fuzzy
 msgid "audio or project file name"
 msgstr "Methu agor ffeil cywaith"
+
+#. i18n-hint: This option is used to handle custom URLs in Audacity
+#: src/AudacityApp.cpp
+msgid "Handle 'audacity://' url"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
@@ -2158,7 +2327,9 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Cancel"
 msgstr ""
 
@@ -2223,8 +2394,8 @@ msgstr ""
 msgid "Move &Down"
 msgstr ""
 
-#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/HelpMenus.cpp
+#: src/BatchProcessDialog.cpp src/HelpUtilities.cpp
+#: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "&Save"
 msgstr "Cadwyd %s"
@@ -2310,8 +2481,8 @@ msgid "Run"
 msgstr ""
 
 #. i18n-hint verb
-#: src/Benchmark.cpp src/tracks/ui/TrackButtonHandles.cpp
-#: src/widgets/HelpSystem.cpp
+#: src/Benchmark.cpp src/RealtimeEffectPanel.cpp
+#: src/tracks/ui/TrackButtonHandles.cpp src/widgets/HelpSystem.cpp
 msgid "Close"
 msgstr "Cau"
 
@@ -2579,10 +2750,6 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/DBConnection.cpp
-msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
-
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
 msgstr ""
@@ -2697,6 +2864,28 @@ msgstr ""
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
+msgstr ""
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence of audio sample data from the
+#. recording
+#: src/DropoutDetector.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid "Turn off dropout detection"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -2978,12 +3167,6 @@ msgstr "sbectrwm.txt"
 msgid "Export Spectral Data As:"
 msgstr "Allforio Data Sbectral Fel:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
-#, fuzzy, c-format
-msgid "Couldn't write to file: %s"
-msgstr "Methwyd ysgrifennu i'r ffeil: "
-
 #: src/FreqWindow.cpp
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "Amledd (Hz)\tLefel (dB)"
@@ -3129,6 +3312,16 @@ msgstr ""
 msgid "Check Online"
 msgstr ""
 
+#: src/HelpUtilities.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "Cadwyd %s"
+
+#: src/HelpUtilities.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Methu penodi"
+
 #: src/HistoryWindow.cpp
 #, fuzzy
 msgid "History"
@@ -3187,8 +3380,32 @@ msgstr ""
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
 #: src/HistoryWindow.cpp
-msgid "&History..."
+#, fuzzy
+msgid "&History"
 msgstr "&Hanes..."
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "New Plugins"
+msgstr "Methu penodi"
+
+#: src/IncompatiblePluginsDialog.cpp
+msgid "Incompatible plugin(s) found"
+msgstr ""
+
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Methu penodi"
+
+#: src/IncompatiblePluginsDialog.cpp
+msgid "Continue"
+msgstr ""
+
+#: src/IncompatiblePluginsDialog.cpp
+#, c-format
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
 
 #: src/JournalEvents.cpp
 #, fuzzy
@@ -3276,6 +3493,11 @@ msgstr ""
 msgid "Label Track"
 msgstr ""
 
+#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "Labeli"
+
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
@@ -3324,17 +3546,17 @@ msgstr "Yn Agor Cywaith Audacity"
 msgid "Audacity Log"
 msgstr "Rhedeiad Cyntaf Audacity"
 
-#: src/LogWindow.cpp src/Tags.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp
 msgid "&Save..."
 msgstr ""
 
 #. i18n-hint: (verb)
-#: src/LogWindow.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr ""
 
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
+#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Cau"
 
@@ -3357,7 +3579,7 @@ msgid "Audacity Karaoke%s"
 msgstr ""
 
 #: src/LyricsWindow.cpp
-msgid "&Karaoke..."
+msgid "&Karaoke"
 msgstr ""
 
 #: src/MIDIPlay.cpp
@@ -3402,23 +3624,18 @@ msgstr ""
 msgid "Disallowed"
 msgstr ""
 
-#. i18n-hint: noun, means a track, made by mixing other tracks
-#: src/Mix.cpp
-msgid "Mix"
-msgstr "Cymysgu"
-
-#: src/Mix.cpp src/menus/TrackMenus.cpp
+#: src/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
 msgstr ""
 
-#: src/Mix.cpp
+#: src/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
 msgstr ""
 
 #: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr ""
+#, fuzzy, c-format
+msgid "Audacity Mixer%s"
+msgstr "Rhedeiad Cyntaf Audacity"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
@@ -3481,83 +3698,7 @@ msgid "Moved pan slider"
 msgstr "Symudwyd y llithrydd trem"
 
 #: src/MixerBoard.cpp
-msgid "&Mixer Board..."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to load the \"%s\" module.\n"
-"\n"
-"Error: %s"
-msgstr "Methu penodi"
-
-#: src/ModuleManager.cpp
-msgid "Module Unsuitable"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide a version string.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\".\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid "Module \"%s\" found."
-msgstr ""
-
-#: src/ModuleManager.cpp
-msgid ""
-"\n"
-"\n"
-"Only use modules from trusted sources"
-msgstr ""
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
-msgid "Yes"
-msgstr ""
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny
-#, fuzzy
-msgid "No"
-msgstr "Dim"
-
-#: src/ModuleManager.cpp
-#, fuzzy
-msgid "Audacity Module Loader"
-msgstr "Rhedeiad Cyntaf Audacity"
-
-#: src/ModuleManager.cpp
-msgid "Try and load this module?"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions.\n"
-"\n"
-"It will not be loaded."
+msgid "&Mixer"
 msgstr ""
 
 #. i18n-hint: This is for screen reader software and indicates that
@@ -3714,50 +3855,6 @@ msgstr ""
 msgid "A♯/B♭"
 msgstr ""
 
-#: src/PluginManager.cpp
-#, fuzzy, c-format
-msgid "Overwrite the plug-in file %s?"
-msgstr "Ysgrifennu dros ffeiliau cyfredol"
-
-#: src/PluginManager.cpp
-msgid "Plug-in already exists"
-msgstr ""
-
-#: src/PluginManager.cpp
-msgid "Plug-in file is in use. Failed to overwrite"
-msgstr ""
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Failed to register:\n"
-"%s"
-msgstr ""
-
-#. i18n-hint A plug-in is an optional added program for a sound
-#. effect, or generator, or analyzer
-#: src/PluginManager.cpp
-#, fuzzy
-msgctxt "plug-ins"
-msgid "Enable this plug-in?\n"
-msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Methu penodi"
-msgstr[1] "Methu penodi"
-
-#: src/PluginManager.cpp
-#, fuzzy
-msgid "Enable new plug-ins"
-msgstr "Methu penodi"
-
-#: src/PluginManager.h
-msgid "Nyquist Prompt"
-msgstr ""
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Manage Plug-ins"
-msgstr "Methu penodi"
-
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
@@ -3828,8 +3925,11 @@ msgstr "Dewis"
 msgid "C&lear All"
 msgstr ""
 
-#: src/PluginRegistrationDialog.cpp src/effects/EffectUI.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/PluginRegistrationDialog.cpp
+msgid "Rescan"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 #, fuzzy
 msgid "&Enable"
 msgstr "Galluogwyd"
@@ -3862,6 +3962,10 @@ msgid ""
 "%s"
 msgstr ""
 
+#: src/PluginStartupRegistration.cpp
+msgid "Searching for plugins"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Roedd anhawster wrth argraffu."
@@ -3875,7 +3979,7 @@ msgstr "Argraffu"
 msgid "Actual Rate: %d"
 msgstr ""
 
-#: src/ProjectAudioManager.cpp src/effects/Effect.cpp
+#: src/ProjectAudioManager.cpp src/effects/EffectBase.cpp
 #, fuzzy
 msgid ""
 "Error opening sound device.\n"
@@ -3916,28 +4020,6 @@ msgstr "Sain a Recordwyd"
 #: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Recordio"
-
-#. i18n-hint:  A name given to a track, appearing as its menu button.
-#. The translation should be short or else it will not display well.
-#. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence of audio sample data from the
-#. recording
-#: src/ProjectAudioManager.cpp
-msgid "Dropouts"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid ""
-"Recorded audio was lost at the labeled locations. Possible causes:\n"
-"\n"
-"Other applications are competing with Audacity for processor time\n"
-"\n"
-"You are saving directly to a slow external storage device\n"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid "Turn off dropout detection"
-msgstr ""
 
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
@@ -4069,8 +4151,8 @@ msgstr ""
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
-#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/UndoManager.cpp
-#: src/menus/TransportMenus.cpp
+#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/TransportUtilities.cpp
 msgid "Progress"
 msgstr "Cynnydd"
 
@@ -4133,23 +4215,6 @@ msgstr "Methu penodi"
 #, c-format
 msgid ""
 "Failed to execute a project file command:\n"
-"\n"
-"%s"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to prepare project file command:\n"
-"\n"
-"%s"
-msgstr "Methu penodi"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Failed to retrieve data from the project file.\n"
-"The following command failed:\n"
 "\n"
 "%s"
 msgstr ""
@@ -4257,6 +4322,14 @@ msgid "Unable to switch to fast journaling mode"
 msgstr ""
 
 #: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr "Methu penodi"
+
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to bind SQL parameter"
 msgstr "Methu penodi"
@@ -4331,11 +4404,6 @@ msgstr "Methu penodi"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
-msgid "Unable to decode project document"
-msgstr "Methu penodi"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to parse project information."
 msgstr "Methu penodi"
 
@@ -4376,6 +4444,10 @@ msgstr ""
 
 #: src/ProjectFileIO.cpp
 msgid "Backing up project"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+msgid "Automatic database backup failed."
 msgstr ""
 
 #: src/ProjectFileManager.cpp
@@ -4612,14 +4684,6 @@ msgstr "Methu agor ffeil cywaith"
 msgid "Compact"
 msgstr ""
 
-#: src/ProjectHistory.cpp
-msgid "Created new project"
-msgstr "Crëwyd cywaith newydd"
-
-#: src/ProjectHistory.cpp
-msgid "Automatic database backup failed."
-msgstr ""
-
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
@@ -4681,12 +4745,10 @@ msgid ""
 "You need to run that version of Audacity to recover the project."
 msgstr ""
 
-#. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
-#. Other tabs in that notebook may have instruments, patch panels etc.
 #: src/ProjectWindow.cpp
-msgid "Main Mix"
-msgstr ""
+#, fuzzy
+msgid "Realtime effects"
+msgstr "Gweithredwyd effaith : %s"
 
 #: src/ProjectWindow.cpp
 #, fuzzy
@@ -4697,6 +4759,134 @@ msgstr "Stereo Llorweddol"
 #, fuzzy
 msgid "Vertical Scrollbar"
 msgstr "Stereo Fertigol"
+
+#. i18n-hint: argument - position of the effect in the effect stack
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Effect %d"
+msgstr "&Effeithio"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Power"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Replace effect"
+msgstr "Ailenwyd '%s' i '%s'"
+
+#: src/RealtimeEffectPanel.cpp
+#, c-format
+msgid "%s (missing)"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Removed %s from %s"
+msgstr "Mewnforwyd labeli o '%s'"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Remove %s"
+msgstr "&Dileu Traciau"
+
+#. i18n-hint: undo history,
+#. first and second parameters - realtime effect names
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replaced %s with %s"
+msgstr "Ailenwyd '%s' i '%s'"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replace %s"
+msgstr "Ailenwyd '%s' i '%s'"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "&Effeithio"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Hoffterau Audacity"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Add effect"
+msgstr "&Effeithio"
+
+#. i18n-hint: Hyperlink to the effects stack panel tutorial video
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s up in %s"
+msgstr "Symudwyd '%s' %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s down in %s"
+msgstr "Symudwyd '%s' %s"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Change effect order"
+msgstr "Newid Cyflymder"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Added %s to %s"
+msgstr "Newidwyd '%s' i %s"
+
+#. i18n-hint: undo history record
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Add %s"
+msgstr "Wedi Alinio"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "&Effeithio"
+
+#. i18n-hint: argument - track name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Realtime effects for %s"
+msgstr "Gweithredwyd effaith : %s"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -4806,8 +4996,7 @@ msgstr ""
 msgid "Transport"
 msgstr ""
 
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp
 msgid "Mixer"
 msgstr ""
 
@@ -4932,12 +5121,6 @@ msgid "Specify New Filename:"
 msgstr ""
 
 #: src/SelectUtilities.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/SelectUtilities.cpp
 msgid "Position"
 msgstr ""
 
@@ -4952,6 +5135,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr ""
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
 msgstr ""
@@ -4965,7 +5150,7 @@ msgstr ""
 msgid "&Settings"
 msgstr "Gosodiadau'r Effaith"
 
-#: src/ShuttleGui.cpp
+#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "Debu&g"
 msgstr ""
 
@@ -5050,113 +5235,117 @@ msgstr ""
 msgid "Connection to project file is null"
 msgstr "Methu agor ffeil cywaith"
 
-#: src/Tags.cpp
+#: src/SqliteSampleBlock.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
+#: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Title"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Album Title"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Track Number"
 msgstr "Rhif Trac:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Year"
 msgstr "Blwyddyn"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genre"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Tag"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Value"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Add"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Remove"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genres"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "E&dit..."
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Rese&t..."
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Template"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Load..."
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Set De&fault"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Don't show this when exporting audio"
 msgstr "Peidio dangos y rhybydd yma eto"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Edit Genres"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to save genre file."
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Reset Genres"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to open genre file."
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Load Metadata As:"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Error Loading Metadata"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Save Metadata As:"
 msgstr ""
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Error Saving Tags File"
 msgstr ""
 
@@ -5170,8 +5359,8 @@ msgstr ""
 #.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Validator.cpp
 msgid "Duration"
 msgstr ""
 
@@ -5251,7 +5440,7 @@ msgid "Recording start:"
 msgstr "Recordio"
 
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/VST3/VST3UIValidator.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr ""
 
@@ -5490,13 +5679,6 @@ msgstr ""
 msgid "TrackView"
 msgstr ""
 
-#. i18n-hint: The %d is replaced by the number of the track.
-#. i18n-hint: compose a name identifying an unnamed track by number
-#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
-#, c-format
-msgid "Track %d"
-msgstr ""
-
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
@@ -5524,6 +5706,12 @@ msgstr "Dewis"
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
+msgstr ""
+
+#. i18n-hint: The %d is replaced by the number of the track.
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
 msgstr ""
 
 #: src/TrackPanelAx.cpp
@@ -5608,9 +5796,21 @@ msgstr "Symud Trac i Fynu"
 msgid "Move Track Down"
 msgstr "Symud Trac i Lawr"
 
-#: src/UndoManager.cpp
-msgid "Discarding undo/redo history"
-msgstr ""
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
+#, fuzzy
+msgid "Playing"
+msgstr "Gweithredu'r Gweddydd"
+
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
+msgid "Recording"
+msgstr "Recordio"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5650,6 +5850,16 @@ msgstr ""
 msgid "Resampling failed."
 msgstr "Analluogwyd ailsamplo."
 
+#: src/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "Audio"
+msgstr "Trac Sain"
+
+#: src/WaveTrack.cpp
+#, fuzzy
+msgid "Wave Track"
+msgstr "Symud Trac"
+
 #. i18n-hint Template for clip name generation on copy-paste
 #: src/WaveTrack.cpp
 #, c-format
@@ -5672,6 +5882,149 @@ msgstr ""
 msgid "There is not enough room available to expand the cut line"
 msgstr ""
 
+#. i18n-hint: Share audio button text, keep as short as possible
+#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Sain a Recordwyd"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: src/cloud/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "Erfyn"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "Link account"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "&Go to my file"
+msgstr "Allforio Niferus"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr " Ydych wir eisiau cadw'r ffeil fel \""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Newid enw trac i:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload complete!"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Export error"
+msgstr "Allforio Niferus"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "Methu agor y ffeil ar gyfer ysgrifennu"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Yn Cynhyrchu  Distawrwydd"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
+"\n"
+"If you have problems uploading, try the Link Account button."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Newid enw trac i:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Remaining Time:"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Shareable link"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only people you share this link with can access your audio"
+msgstr ""
+
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
@@ -5686,7 +6039,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/AudacityCommand.cpp src/effects/EffectBase.cpp
 #, fuzzy, c-format
 msgid "Applying %s..."
 msgstr "Gweithredu'r Gweddydd"
@@ -5866,11 +6219,6 @@ msgstr ""
 msgid "Envelopes"
 msgstr "Chwyddamlen"
 
-#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "Labeli"
-
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
 msgstr ""
@@ -5970,7 +6318,8 @@ msgid "Builtin Commands"
 msgstr ""
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3EffectsModule.cpp
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
@@ -6110,6 +6459,8 @@ msgstr "Erfyn"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Effects"
 msgstr ""
 
@@ -6268,7 +6619,7 @@ msgstr "Dewis"
 msgid "Add"
 msgstr ""
 
-#: src/commands/SelectCommand.cpp src/effects/EffectUI.cpp
+#: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr ""
@@ -6547,7 +6898,7 @@ msgstr "Trac Newydd"
 msgid "Sets various values for a track."
 msgstr ""
 
-#: src/effects/Amplify.cpp
+#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
 msgstr "Chwyddo"
 
@@ -6574,7 +6925,7 @@ msgstr "Osged Frig Newydd (dB):"
 msgid "Allo&w clipping"
 msgstr "Caniatau Clipio"
 
-#: src/effects/AutoDuck.cpp
+#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
 msgid "Auto Duck"
 msgstr ""
 
@@ -6642,7 +6993,7 @@ msgstr "Trothwy:"
 msgid "Preview not available"
 msgstr ""
 
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
 msgstr ""
 
@@ -6689,7 +7040,7 @@ msgstr ""
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/ChangePitch.cpp
+#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
 msgstr "Newid Traw"
 
@@ -6814,13 +7165,13 @@ msgstr ""
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
-#: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/ChangeSpeed.cpp src/effects/EffectUI.cpp
+#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "n/a"
 msgstr "cdda mun:eil:fframau 75 fye"
 
-#: src/effects/ChangeSpeed.cpp
+#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Speed"
 msgstr "Newid Cyflymder"
 
@@ -6903,7 +7254,7 @@ msgctxt "change speed"
 msgid "to"
 msgstr "i"
 
-#: src/effects/ChangeTempo.cpp
+#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Tempo"
 msgstr "Newid Tempo"
 
@@ -6969,7 +7320,7 @@ msgstr "i"
 msgid "Length in seconds from %s, to"
 msgstr "Hyd (eiliadau)"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
 msgid "Click Removal"
 msgstr ""
 
@@ -7002,7 +7353,7 @@ msgstr ""
 msgid "Max Spike Width"
 msgstr ""
 
-#: src/effects/Compressor.cpp
+#: src/effects/Compressor.cpp resources/EffectsMenuDefaults.xml
 msgid "Compressor"
 msgstr ""
 
@@ -7213,7 +7564,7 @@ msgstr ""
 msgid "&Difference:"
 msgstr ""
 
-#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUISettings.cpp
 msgid "&Help"
 msgstr "&Help"
 
@@ -7531,7 +7882,7 @@ msgstr ""
 msgid "Number of repeats"
 msgstr "Nifer o weithiau i ailadrodd: "
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
 msgid "Distortion"
 msgstr ""
 
@@ -7667,7 +8018,7 @@ msgstr "Osgled (0-1)"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Validator.cpp
 msgid "&Duration:"
 msgstr ""
 
@@ -7705,7 +8056,7 @@ msgstr ""
 msgid "%0.f ms"
 msgstr ""
 
-#: src/effects/Echo.cpp
+#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
 msgstr "Atsain"
 
@@ -7769,11 +8120,11 @@ msgstr "Methu penodi"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr ""
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Preparing preview"
 msgstr ""
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Previewing"
 msgstr ""
 
@@ -7781,7 +8132,7 @@ msgstr ""
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
-#: src/effects/Effect.h
+#: src/effects/EffectBase.h
 msgid "Nyquist"
 msgstr "Nyquist"
 
@@ -7851,132 +8202,41 @@ msgstr ""
 msgid "Command failed to initialize"
 msgstr ""
 
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Effects Rack"
-msgstr "&Effeithio"
-
-#: src/effects/EffectUI.cpp
-msgid "&Apply"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Latency: 0"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "&Bypass"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Active State"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Set effect active state"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Show/Hide Editor"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Open/close effect editor"
-msgstr ""
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "Cy&nhyrchu"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "Move Up"
-msgstr "Symud Trac i Fynu"
-
-#: src/effects/EffectUI.cpp
-msgid "Move effect up in the rack"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move Down"
-msgstr "Symud Trac i Lawr"
-
-#: src/effects/EffectUI.cpp
-msgid "Move effect down in the rack"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Favorite"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Mark effect as a favorite"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Remove effect from the rack"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Name of the effect"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, c-format
-msgid "Latency: %4d"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Some Command"
-msgstr "Gweithred Orchymun"
+msgid "Enable"
+msgstr "Galluogwyd"
 
 #: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
 msgstr ""
 
 #: src/effects/EffectUI.cpp
-msgid "&Manage"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Start and stop playback"
-msgstr ""
-
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "Start &Playback"
-msgstr "Chwarae Nôl"
+msgid "Presets && settings"
+msgstr "Gosodiadau'r Effaith"
+
+#: src/effects/EffectUI.cpp
+msgid "Start and stop preview"
+msgstr ""
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
 msgstr ""
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/effects/EffectUI.cpp
-msgid "&Preview effect"
+msgid "Stop &Preview"
 msgstr ""
 
 #: src/effects/EffectUI.cpp
-msgid "Skip backward"
+msgid "&Apply"
 msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Skip &Backward"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip forward"
-msgstr "Neidio i'r Dechrau"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip &Forward"
-msgstr "Neidio i'r Dechrau"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Enable"
-msgstr "Galluogwyd"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
@@ -8061,17 +8321,6 @@ msgid ""
 "Replace?"
 msgstr ""
 
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Stop &Playback"
-msgstr "Chwarae Nôl"
-
-#: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
-msgid "Play"
-msgstr ""
-
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
 msgid "B-spline"
@@ -8090,11 +8339,13 @@ msgid "Equalization"
 msgstr "Hafalu"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Filter Curve EQ"
 msgstr "Dewis"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr ""
 
@@ -8466,11 +8717,11 @@ msgid ""
 "SSE Threaded: %s\n"
 msgstr ""
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
 msgstr "Mewnhidlo"
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
 msgstr "Allhidlo"
 
@@ -8507,7 +8758,7 @@ msgstr ""
 msgid "There is not enough room available to generate the audio"
 msgstr ""
 
-#: src/effects/Invert.cpp
+#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
 msgid "Invert"
 msgstr "Gwrthdroi"
 
@@ -8536,7 +8787,7 @@ msgstr "Normaleiddio"
 msgid "RMS"
 msgstr ""
 
-#: src/effects/Loudness.cpp
+#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
 msgstr ""
 
@@ -8634,6 +8885,7 @@ msgid "Old"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Reduction"
 msgstr "Tynnu Sŵn"
@@ -8891,7 +9143,7 @@ msgstr ""
 msgid "Re&move"
 msgstr ""
 
-#: src/effects/Normalize.cpp
+#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
 msgstr "Normaleiddio"
 
@@ -8959,7 +9211,7 @@ msgstr "Osged Frig Newydd (dB):"
 msgid "N&ormalize stereo channels independently"
 msgstr ""
 
-#: src/effects/Paulstretch.cpp
+#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
 msgid "Paulstretch"
 msgstr ""
 
@@ -9011,7 +9263,7 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Phaser.cpp
+#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
 msgid "Phaser"
 msgstr "Gweddydd"
 
@@ -9080,7 +9332,13 @@ msgstr ""
 msgid "Output gain (dB)"
 msgstr ""
 
-#: src/effects/Repair.cpp
+#. i18n-hint: First %s is an effect name, second is a track name
+#: src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "%s - %s"
+msgstr ""
+
+#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
 msgstr ""
 
@@ -9104,7 +9362,7 @@ msgid ""
 "The more surrounding audio, the better it performs."
 msgstr ""
 
-#: src/effects/Repeat.cpp
+#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
 msgid "Repeat"
 msgstr "Ailadrodd"
 
@@ -9177,7 +9435,7 @@ msgstr ""
 msgid "Cathedral"
 msgstr ""
 
-#: src/effects/Reverb.cpp
+#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
 msgstr ""
 
@@ -9227,12 +9485,7 @@ msgstr ""
 msgid "Wet O&nly"
 msgstr ""
 
-#: src/effects/Reverb.cpp
-#, fuzzy, c-format
-msgid "Reverb: %s"
-msgstr "Troi o Chwith"
-
-#: src/effects/Reverse.cpp
+#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
 msgstr "Troi o Chwith"
 
@@ -9455,7 +9708,7 @@ msgstr "Sianel Dde"
 msgid "Mixing down to mono"
 msgstr "Hollti Trac Stereo"
 
-#: src/effects/TimeScale.cpp
+#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Sliding Stretch"
 msgstr "Ffactor Gwanhau:"
@@ -9512,6 +9765,12 @@ msgstr "Dant llif"
 msgid "Square, no alias"
 msgstr ""
 
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Triongl"
+
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
 msgstr ""
@@ -9567,7 +9826,7 @@ msgstr ""
 msgid "Compress Excess Silence"
 msgstr ""
 
-#: src/effects/TruncSilence.cpp
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr ""
 
@@ -9609,40 +9868,34 @@ msgstr ""
 msgid "Adds the ability to use VST effects in Audacity."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
-msgid "Scanning Shell VST"
-msgstr ""
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr ""
-
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
 msgid "Could not load the library"
 msgstr "Methwyd agor y rhaglengell amgodio MP3!"
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #, fuzzy
 msgid "VST Effect Options"
 msgstr "Gosodiadau'r Effaith"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Buffer Size"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Latency Compensation"
 msgstr "Cyfuniad Bysyll"
@@ -9651,12 +9904,14 @@ msgstr "Cyfuniad Bysyll"
 msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 msgid "Enable &compensation"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Graphical Mode"
 msgstr ""
 
@@ -9664,7 +9919,8 @@ msgstr ""
 msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Enable &graphical interface"
 msgstr ""
 
@@ -9718,7 +9974,7 @@ msgid "Unable to load presets file."
 msgstr "Methu penodi"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Ports.cpp
 msgid "Effect Settings"
 msgstr "Gosodiadau'r Effaith"
 
@@ -9742,7 +9998,75 @@ msgstr ""
 msgid "VST"
 msgstr ""
 
-#: src/effects/Wahwah.cpp
+#: src/effects/VST3/VST3Effect.cpp
+msgid "VST3"
+msgstr ""
+
+#. i18n-hint VST3 effect description string
+#: src/effects/VST3/VST3Effect.cpp
+#, c-format
+msgid "SubCategories: %s"
+msgstr ""
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Save VST3 Preset As:"
+msgstr "Cadw Cywaith &Fel..."
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "VST3 preset file"
+msgstr "Dewis ffeil MIDI..."
+
+#. i18n-hint: VST3 preset export error
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Cannot open file"
+msgstr "Methwyd agor y ffeil: "
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Failed to save VST3 preset to file"
+msgstr "Methu penodi"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Load VST3 preset:"
+msgstr "Cadw Cywaith &Fel..."
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Cannot open VST3 preset file %s"
+msgstr "Methu agor ffeil cywaith"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Unable to apply VST3 preset file %s"
+msgstr "Methu penodi"
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "VST3 Effects"
+msgstr "&Effeithio"
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+msgid "Adds the ability to use VST3 effects in Audacity."
+msgstr ""
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, c-format
+msgid "VST3 module error: %s"
+msgstr ""
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Wa-wa"
 
@@ -9773,88 +10097,6 @@ msgstr "Atred Amledd Wa-wa  (%):"
 msgid "Wah frequency offset in percent"
 msgstr ""
 
-#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Audio Unit Effects"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Provides Audio Unit Effects support to Audacity"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Could not find component"
-msgstr "Methwyd agor y ffeil: "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Could not initialize component"
-msgstr "Methwyd agor y rhaglengell amgodio MP3!"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Audio Unit Effect Options"
-msgstr "Gosodiadau'r Effaith"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "User Interface"
-msgstr "Rhyngwyneb"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Select &interface"
-msgstr "Lleihau'r Dewisiad i'r Chwith"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "Cy&nhyrchu"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Import Audio Unit Presets"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Presets (may select multiple)"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/export/ExportMP3.cpp
-msgid "Preset"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Location"
-msgstr "Gweithred"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid "Couldn't open \"%s\""
-msgstr "Methwyd agor y ffeil: \"%s\""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid "Unable to read the preset from \"%s\""
-msgstr "Methu penodi"
-
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to encode preset from \"%s\""
@@ -9864,14 +10106,6 @@ msgstr ""
 #, fuzzy
 msgid "Unable to store preset in config file"
 msgstr "Methu penodi"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid ""
-"Could not import \"%s\" preset\n"
-"\n"
-"%s"
-msgstr "Methwyd agor y ffeil: \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
@@ -9902,21 +10136,21 @@ msgid "Import Audio Unit Preset As %s:"
 msgstr "Allforio Niferus"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Failed to set preset name"
-msgstr "Methu penodi"
+#, fuzzy, c-format
+msgid ""
+"Could not import \"%s\" preset\n"
+"\n"
+"%s"
+msgstr "Methwyd agor y ffeil: \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to retrieve preset content"
+msgid "Import Audio Unit Presets"
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert property list to XML data"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "XML data is empty after conversion"
-msgstr ""
+#, fuzzy, c-format
+msgid "Couldn't open \"%s\""
+msgstr "Methwyd agor y ffeil: \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9924,22 +10158,107 @@ msgid "Failed to write XML preset to \"%s\""
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert preset to internal format"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to create property list for preset"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
-msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+#, fuzzy, c-format
+msgid "Unable to read the preset from \"%s\""
+msgstr "Methu penodi"
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "Audio Unit Effect Options"
+msgstr "Gosodiadau'r Effaith"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "User Interface"
+msgstr "Rhyngwyneb"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "Select &interface"
+msgstr "Lleihau'r Dewisiad i'r Chwith"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#, fuzzy
+msgid "Generic"
+msgstr "Cy&nhyrchu"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+msgid "Basic"
+msgstr ""
+
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Audio Unit Effects"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Provides Audio Unit Effects support to Audacity"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#, fuzzy
+msgid "Could not find component"
+msgstr "Methwyd agor y ffeil: "
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#, fuzzy
+msgid "Could not initialize component"
+msgstr "Methwyd agor y rhaglengell amgodio MP3!"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to decode \"%s\" preset"
+msgstr "Methu penodi"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to convert \"%s\" preset to internal format"
+msgstr "Methu penodi"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to create property list for \"%s\" preset"
+msgstr "Methu penodi"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, c-format
+msgid "Failed to set class info for \"%s\" preset"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "Failed to set preset name"
+msgstr "Methu penodi"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to retrieve preset content"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to convert property list to XML data"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "XML data is empty after conversion"
 msgstr ""
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
@@ -9990,45 +10309,35 @@ msgid "LADSPA"
 msgstr "&Effeithio"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
-msgid "LV2 Effect Settings"
-msgstr "Gosodiadau'r Effaith"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "&Buffer Size (8 to %d) samples:"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported feature %s\n"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported option %s\n"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "Generator"
 msgstr ""
 
 #. i18n-hint: abbreviates
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, fuzzy
+msgid "LV2 Effect Settings"
+msgstr "Gosodiadau'r Effaith"
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d) samples:"
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/lv2/LV2Validator.cpp
+msgid "Generator"
 msgstr ""
 
 #: src/effects/lv2/LoadLV2.cpp
@@ -10554,6 +10863,10 @@ msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
+msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
+msgstr ""
+
+#: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr ""
 
@@ -10571,10 +10884,6 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
-msgstr ""
-
-#: src/export/ExportFFmpeg.cpp
-msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
@@ -10640,6 +10949,7 @@ msgid "%d kbps"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Bit Rate:"
 msgstr "Cyfradd Ddidau:"
 
@@ -10702,11 +11012,6 @@ msgstr ""
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
 msgstr ""
-
-#: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
-msgid "Audio"
-msgstr "Trac Sain"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11199,11 +11504,11 @@ msgstr ""
 msgid "Failed to find the codec"
 msgstr ""
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "16 bit"
 msgstr ""
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "24 bit"
 msgstr ""
 
@@ -11257,6 +11562,7 @@ msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr ""
 
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Methu agor y ffeil ar gyfer ysgrifennu"
 
@@ -11347,6 +11653,10 @@ msgid "Medium"
 msgstr "Big-endian"
 
 #: src/export/ExportMP3.cpp
+msgid "Preset"
+msgstr ""
+
+#: src/export/ExportMP3.cpp
 msgid "Variable"
 msgstr ""
 
@@ -11371,7 +11681,8 @@ msgid "Bit Rate Mode:"
 msgstr ""
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/export/ExportMP3.cpp src/export/ExportWavPack.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Ansawdd"
 
@@ -11542,6 +11853,18 @@ msgid ""
 msgstr ""
 
 #: src/export/ExportMultiple.cpp
+msgid "Using Label/Track Name"
+msgstr "Yn Defnyddio Label/Enw Trac"
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering before Label/Track Name"
+msgstr ""
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering after File name prefix"
+msgstr ""
+
+#: src/export/ExportMultiple.cpp
 #, fuzzy
 msgid "Export files to:"
 msgstr "Lleoliad allforio:"
@@ -11578,18 +11901,6 @@ msgstr ""
 #: src/export/ExportMultiple.cpp
 msgid "Name files:"
 msgstr "Enwi ffeiliau:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Using Label/Track Name"
-msgstr "Yn Defnyddio Label/Enw Trac"
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering before Label/Track Name"
-msgstr ""
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering after File name prefix"
-msgstr ""
 
 #: src/export/ExportMultiple.cpp
 msgid "File name prefix:"
@@ -11777,6 +12088,68 @@ msgid ""
 "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
 msgstr ""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Low Quality (Fast)"
+msgstr "Ansawdd"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Normal Quality"
+msgstr "Ansawdd"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "High Quality (Slow)"
+msgstr "Ansawdd"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Very High Quality (Slowest)"
+msgstr "Ansawdd"
+
+#: src/export/ExportWavPack.cpp
+msgid "32 bit float "
+msgstr ""
+
+#. i18n-hint bps abbreviates "bits per sample"
+#: src/export/ExportWavPack.cpp
+#, c-format
+msgid "%.1f bps"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Bit Depth"
+msgstr "Dyfnder:"
+
+#: src/export/ExportWavPack.cpp
+msgid "Hybrid Mode"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+msgid "Create Correction(.wvc) File"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+msgid "WavPack Files"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Unable to create target file for writing"
+msgstr "Methu agor y ffeil ar gyfer ysgrifennu"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting selected audio as WavPack"
+msgstr "Allforio'r sain dewisiedig fel Ogg Vorbis"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting the audio as WavPack"
+msgstr "Allforio'r sain dewisiedig fel Ogg Vorbis"
 
 #: src/import/Import.cpp
 #, fuzzy
@@ -11986,11 +12359,6 @@ msgstr ""
 
 #: src/import/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
-msgstr ""
-
-#: src/import/ImportAUP.cpp
-#, c-format
-msgid "Invalid project '%s' attribute."
 msgstr ""
 
 #: src/import/ImportAUP.cpp
@@ -12213,11 +12581,11 @@ msgstr "Methwyd agor y ffeil: "
 msgid "Could not open file %s."
 msgstr "Methwyd agor y ffeil: \"%s\""
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp src/import/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr ""
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp
 msgid ""
 "Import failed\n"
 "\n"
@@ -12550,6 +12918,21 @@ msgstr "Yn Cynhyrchu  Distawrwydd"
 msgid "&Import"
 msgstr ""
 
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack files"
+msgstr "Enwi ffeiliau:"
+
+#: src/import/ImportWavPack.cpp
+#, c-format
+msgid "Encountered %d errors decoding WavPack file!"
+msgstr ""
+
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack Importer"
+msgstr "i Ddechrau y Dewisiad"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
 msgstr ""
@@ -12639,7 +13022,7 @@ msgid "clip not moved"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
-msgid "Clip B&oundaries"
+msgid "Audi&o Clips"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp
@@ -12881,12 +13264,13 @@ msgid "Detac&h at Silences"
 msgstr ""
 
 #: src/menus/EditMenus.cpp
-msgid "&Metadata..."
+msgid "&Metadata"
 msgstr ""
 
 #: src/menus/EditMenus.cpp
-msgid "Pre&ferences..."
-msgstr ""
+#, fuzzy
+msgid "Pre&ferences"
+msgstr "Hoffterau Audacity"
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
@@ -13163,16 +13547,6 @@ msgid "Export as FLAC"
 msgstr "Allforio Labeli Fel:"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
-msgid "Save %s"
-msgstr "Cadwyd %s"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
-msgid "Unable to save %s"
-msgstr "Methu penodi"
-
-#: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
 msgstr ""
 
@@ -13218,10 +13592,6 @@ msgid "Audio Device Info"
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
-msgid "MIDI Device Info"
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "&Quick Fix..."
 msgstr "&Help"
@@ -13252,10 +13622,6 @@ msgstr ""
 msgid "Au&dio Device Info..."
 msgstr ""
 
-#: src/menus/HelpMenus.cpp
-msgid "&MIDI Device Info..."
-msgstr ""
-
 #: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr ""
@@ -13265,8 +13631,17 @@ msgid "&Generate Support Data..."
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
 msgstr ""
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&About Audacity"
+msgstr "&Ynglyn â Audacity..."
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -13376,6 +13751,16 @@ msgid "Detach Labeled Audio"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
+msgid "Created new label track"
+msgstr "Crëwyd trac label newydd"
+
+#: src/menus/LabelMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "New Track"
+msgstr "Trac Newydd"
+
+#: src/menus/LabelMenus.cpp
 #, fuzzy
 msgid "&Labels"
 msgstr "Labeli"
@@ -13475,6 +13860,11 @@ msgstr "Golygu Label"
 msgid "Label Join"
 msgstr "Golygu Label"
 
+#: src/menus/LabelMenus.cpp
+#, fuzzy
+msgid "&Label Track"
+msgstr "Label Trac"
+
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
 msgstr ""
@@ -13535,16 +13925,12 @@ msgid "Toggle Focuse&d Track"
 msgstr "Symud Trac i Fynu"
 
 #: src/menus/PluginMenus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
 #, fuzzy
 msgid "..."
 msgstr "&Help"
 
 #: src/menus/PluginMenus.cpp
-msgid "Unknown"
+msgid "Uncategorized"
 msgstr ""
 
 #. i18n-hint a "journal" is a text file that records
@@ -13566,15 +13952,11 @@ msgstr "Ailadrodd %s"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy, c-format
-msgid "Plug-in %d to %d"
+msgid "Plugin %d to %d"
 msgstr "Ategion %i i %i"
 
 #: src/menus/PluginMenus.cpp
-msgid "&Generate"
-msgstr "Cy&nhyrchu"
-
-#: src/menus/PluginMenus.cpp
-msgid "Add / Remove Plug-ins..."
+msgid "Plugin Manager"
 msgstr ""
 
 #: src/menus/PluginMenus.cpp
@@ -13583,6 +13965,11 @@ msgstr ""
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
+msgstr "&Effeithio"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Add Realtime Effects"
 msgstr "&Effeithio"
 
 #: src/menus/PluginMenus.cpp
@@ -13608,7 +13995,7 @@ msgid "Repeat Last Tool"
 msgstr "Ailadrodd %s"
 
 #: src/menus/PluginMenus.cpp
-msgid "&Macros..."
+msgid "&Macro Manager"
 msgstr ""
 
 #: src/menus/PluginMenus.cpp
@@ -14095,6 +14482,10 @@ msgid "Reset Toolb&ars"
 msgstr "Erfyn"
 
 #: src/menus/TrackMenus.cpp
+msgid "Mix"
+msgstr "Cymysgu"
+
+#: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr ""
@@ -14284,30 +14675,6 @@ msgid "Adjusted Pan"
 msgstr ""
 
 #: src/menus/TrackMenus.cpp
-msgid "Created new audio track"
-msgstr "Crëwyd trac sain newydd"
-
-#: src/menus/TrackMenus.cpp
-msgid "New Track"
-msgstr "Trac Newydd"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new stereo audio track"
-msgstr "Crëwyd trac sain stereo newydd"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new label track"
-msgstr "Crëwyd trac label newydd"
-
-#: src/menus/TrackMenus.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new time track"
-msgstr "Wedi creu trac amser newydd"
-
-#: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "New sample rate (Hz):"
 msgstr ""
@@ -14376,25 +14743,6 @@ msgstr ""
 #: src/menus/TrackMenus.cpp
 msgid "Add &New"
 msgstr ""
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "Symud Trac"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Stereo Track"
-msgstr ""
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "&Label Track"
-msgstr "Label Trac"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "&Time Track"
-msgstr "Track Amser"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x"
@@ -14594,22 +14942,6 @@ msgstr "Symud Trac i Fynu"
 #, fuzzy
 msgid "Move Focused Track to &Bottom"
 msgstr "Symud Trac i Lawr"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy
-msgid "Playing"
-msgstr "Gweithredu'r Gweddydd"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
-#: src/toolbars/ControlToolBar.cpp
-msgid "Recording"
-msgstr "Recordio"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -14977,10 +15309,6 @@ msgstr ""
 msgid "&Show Clipping (on/off)"
 msgstr "Caniatau Clipio"
 
-#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr ""
-
 #: src/menus/WindowMenus.cpp
 #, fuzzy
 msgid "&Window"
@@ -15325,6 +15653,11 @@ msgstr ""
 msgid "Grouped by Type"
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Default"
+msgstr "256 - rhagosodedig"
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -15375,19 +15708,6 @@ msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Maximum effects per group (0 to disable):"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "Plugin Options"
-msgstr "Ategion 1 i %i"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Check for updated plugins when Audacity starts"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Rescan plugins next time Audacity is started"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -15593,13 +15913,13 @@ msgstr ""
 msgid "Show Scrub Ruler"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-#, c-format
-msgid "Language \"%s\" is unknown"
-msgstr ""
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
+msgstr ""
+
+#: src/prefs/GUISettings.cpp
+#, c-format
+msgid "Language \"%s\" is unknown"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
@@ -15685,15 +16005,6 @@ msgid "&Hotkey:"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "Key Bindings"
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
-msgid "View by:"
-msgstr "G&weld"
-
-#: src/prefs/KeyConfigPrefs.cpp
 msgid "&Tree"
 msgstr ""
 
@@ -15705,6 +16016,15 @@ msgstr "Enwi..."
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Key"
 msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Key Bindings"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "View by:"
+msgstr "G&weld"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by tree"
@@ -16700,10 +17020,7 @@ msgid ""
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
-"\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.)"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
 msgstr ""
 
 #: src/prefs/ThemePrefs.cpp
@@ -16937,11 +17254,6 @@ msgstr ""
 msgid "Default audio track &name:"
 msgstr "Crëwyd trac sain newydd"
 
-#. i18n-hint: The default name for an audio track.
-#: src/prefs/TracksPrefs.cpp
-msgid "Audio Track"
-msgstr "Trac Sain"
-
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Zoom Toggle"
@@ -17010,6 +17322,62 @@ msgstr "Hoffterau Audacity"
 msgid "Waveform dB &range:"
 msgstr "Tonffurf (dB)"
 
+#. i18n-hint: Audio setup button text, keep as short as possible
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Setup"
+msgstr "Ni ddewiswyd digon o ddata."
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+msgid "&Host"
+msgstr ""
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Playback Device"
+msgstr "Chwarae Nôl"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Recording Device"
+msgstr "Recordio"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Recording &Channels"
+msgstr "Sianel Dde"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Settings..."
+msgstr "Sbectrogramau"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "1 (Mono) Recording Channel"
+msgstr "Sianel Dde"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "2 (Stereo) Recording Channels"
+msgstr "Sianel Dde"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Settings:"
+msgstr "Gosodiadau'r Effaith"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages the audio devices
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Setup Toolbar"
+msgstr "Erfyn"
+
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
@@ -17021,6 +17389,10 @@ msgstr "Aros"
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
 msgstr "Seibio"
+
+#: src/toolbars/ControlToolBar.cpp
+msgid "Play"
+msgstr ""
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Skip to Start"
@@ -17096,16 +17468,6 @@ msgstr "Sianel Dde"
 
 #: src/toolbars/DeviceToolBar.cpp
 #, fuzzy
-msgid "1 (Mono) Recording Channel"
-msgstr "Sianel Dde"
-
-#: src/toolbars/DeviceToolBar.cpp
-#, fuzzy
-msgid "2 (Stereo) Recording Channels"
-msgstr "Sianel Dde"
-
-#: src/toolbars/DeviceToolBar.cpp
-#, fuzzy
 msgid "Select Recording Device"
 msgstr "Recordio"
 
@@ -17134,14 +17496,18 @@ msgid "&Device Toolbar"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Cut selection"
-msgstr "Tocio tu allan i'r dewisiad"
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Zoom In"
+msgstr "Nesáu"
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Copy selection"
-msgstr "Distewi'r dewisiad"
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Zoom Out"
+msgstr "Pellhau"
 
 #: src/toolbars/EditToolBar.cpp
 #, fuzzy
@@ -17158,20 +17524,6 @@ msgid "Sync-Lock Tracks"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom In"
-msgstr "Nesáu"
-
-#: src/toolbars/EditToolBar.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom Out"
-msgstr "Pellhau"
-
-#: src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Fit selection to width"
 msgstr "Ffitio'r dewisiad i'r ffenest"
@@ -17180,10 +17532,6 @@ msgstr "Ffitio'r dewisiad i'r ffenest"
 #, fuzzy
 msgid "Fit project to width"
 msgstr "Ffitio'r cywaith i'r ffenest"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Open Effects Rack"
-msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
@@ -17241,40 +17589,6 @@ msgstr "Recordio"
 #, fuzzy
 msgid "&Playback Meter Toolbar"
 msgstr "Chwarae Nôl"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Recording Volume"
-msgstr "Recordio"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Playback Volume"
-msgstr "Chwarae Nôl"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
-msgid "Recording Volume: %.2f"
-msgstr "Recordio"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr ""
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
-msgid "Playback Volume: %.2f"
-msgstr "Chwarae Nôl"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the mixer
-#: src/toolbars/MixerToolBar.cpp
-msgid "Mi&xer Toolbar"
-msgstr ""
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -17472,10 +17786,6 @@ msgid "Envelope Tool"
 msgstr "Erfyn Chwyddamlen"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "Zoom Tool"
-msgstr "Erfyn Chwyddo"
-
-#: src/toolbars/ToolsToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Draw Tool"
 msgstr "Erfyn Darlunio"
@@ -17505,11 +17815,6 @@ msgstr "Erfyn Chwyddamlen"
 #, fuzzy
 msgid "&Draw Tool"
 msgstr "Erfyn Darlunio"
-
-#: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "Erfyn Chwyddo"
 
 #: src/toolbars/ToolsToolBar.cpp
 #, fuzzy
@@ -17638,6 +17943,14 @@ msgstr "I fynu Wythfed"
 #, fuzzy
 msgid "Down Octa&ve"
 msgstr "I Lawr Wythfed"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+msgid "MIDI Device Info"
+msgstr ""
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+msgid "&MIDI Device Info..."
+msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -17771,11 +18084,6 @@ msgid "S&pectrogram Settings..."
 msgstr "Sbectrogramau"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
-msgid "Click and drag to move clip boundary in time"
-msgstr "Cliciwch a llusgwch i symud y trac yn ôl neu ymlaen"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
 
@@ -17788,6 +18096,16 @@ msgstr ""
 #, fuzzy
 msgid "Clip-Trim-Right"
 msgstr "Cyrchydd i'r Dde"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Clip-Trim-Between"
+msgstr "Cyrchydd i'r Dde"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Click and drag to move clip boundary in time"
+msgstr "Cliciwch a llusgwch i symud y trac yn ôl neu ymlaen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -17808,17 +18126,6 @@ msgstr "Newidwyd Label"
 #, fuzzy
 msgid "Clip Name Edit"
 msgstr "Golygu Sampl"
-
-#. i18n-hint:
-#. string is the name of a clip
-#. first number is the position of that clip in a sequence of clips,
-#. second number counts the clips
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, c-format
-msgid "%s, %d of %d clip"
-msgid_plural "%s, %d of %d clips"
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -18029,6 +18336,23 @@ msgstr "Chwith,"
 msgid "Right, %dHz"
 msgstr "Dde,"
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new audio track"
+msgstr "Crëwyd trac sain newydd"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new stereo audio track"
+msgstr "Crëwyd trac sain stereo newydd"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "Symud Trac"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "&Stereo Track"
+msgstr ""
+
 #. i18n-hint dB abbreviates decibels
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -18082,6 +18406,17 @@ msgstr "Symud Trac i Fynu"
 #, fuzzy
 msgid "Rename clip..."
 msgstr "Ailenwyd '%s' i '%s'"
+
+#. i18n-hint:
+#. string is the name of a clip
+#. first number is the position of that clip in a sequence of clips,
+#. second number counts the clips
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, c-format
+msgid "%s, %d of %d clip"
+msgid_plural "%s, %d of %d clips"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
@@ -18186,6 +18521,19 @@ msgstr "Gosod Amrediad..."
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "Rhyngosodiad Sinc Chwim"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "Created new time track"
+msgstr "Wedi creu trac amser newydd"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+#, fuzzy
+msgid "&Time Track"
+msgstr "Track Amser"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
@@ -18633,6 +18981,24 @@ msgstr "Dd"
 msgid "%.2fx"
 msgstr ""
 
+#: src/widgets/ErrorReportDialog.cpp
+#, c-format
+msgid "More information about this error may be available %s."
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "here"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Would you like to send a report to help us fix this issue?"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "All reports are anonymous. See %s for more info."
+msgstr "Dewis un neu fwy o ffeiliau sain..."
+
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
@@ -18687,24 +19053,6 @@ msgstr ""
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid "Click to Start Monitoring"
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid "Click for Monitoring"
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click to Start"
-msgstr "Neidio i'r Dechrau"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click"
-msgstr "Clic-Chwith"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
@@ -18798,10 +19146,6 @@ msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
-msgstr ""
-
-#: src/widgets/MultiDialog.cpp
-msgid "Please select an action"
 msgstr ""
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
@@ -19149,14 +19493,6 @@ msgid "%s (%s)"
 msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr ""
-
-#: src/widgets/ProgressDialog.cpp
-msgid "Remaining Time:"
-msgstr ""
-
-#: src/widgets/ProgressDialog.cpp
 msgid "Cancel"
 msgstr ""
 
@@ -19284,16 +19620,10 @@ msgstr "Ffolderau"
 msgid "File Dialog"
 msgstr ""
 
-#: plug-ins/SpectralEditMulti.ny
+#: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit multi tool"
+msgid "Spectral Edit Multi Tool"
 msgstr "Gosod Pwynt Dewisiad"
-
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Filtering..."
-msgstr "Yn Normaleiddio..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -19301,12 +19631,10 @@ msgid "Paul Licameli"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/beat.ny plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
+#: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-msgid "Released under terms of the GNU General Public License version 2"
+msgid "GNU General Public License v2.0"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -19337,9 +19665,9 @@ msgstr ""
 msgid "Error.~%"
 msgstr "Gwall"
 
-#: plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditParametricEQ.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit parametric EQ"
+msgid "Spectral Edit Parametric EQ"
 msgstr "Gosod Pwynt Dewisiad"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -19378,20 +19706,26 @@ msgid ""
 "                         Please select a frequency range."
 msgstr ""
 
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit shelves"
+msgid "Spectral Edit Shelves"
 msgstr "Gosod Pwynt Dewisiad"
 
-#: plug-ins/StudioFadeOut.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
+#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "GNU General Public License v2.0 or later"
+msgstr ""
+
+#: plug-ins/StudioFadeOut.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Studio Fade Out"
 msgstr "Allhidlo"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Applying Fade..."
-msgstr "Gweithredu'r Gweddydd"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
@@ -19402,20 +19736,12 @@ msgstr "Gweithredu'r Gweddydd"
 msgid "Steve Daulton"
 msgstr ""
 
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-msgid "GNU General Public License v2.0 or later"
-msgstr ""
-
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
 msgstr ""
 
@@ -19567,30 +19893,16 @@ msgstr "Ailadrodd"
 
 #: plug-ins/beat.ny
 #, fuzzy
-msgid "Finding beats..."
-msgstr "Yn Cynhyrchu  Distawrwydd"
-
-#: plug-ins/beat.ny
-#, fuzzy
 msgid "Threshold Percentage"
 msgstr "Trothwy:"
 
-#: plug-ins/clipfix.ny
+#: plug-ins/clipfix.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Clip Fix"
 msgstr "Cyrchydd i'r Dde"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
-msgid "Reconstructing clips..."
-msgstr "Yn tynnu cliciau a popiau..."
-
-#: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
-msgstr ""
-
-#: plug-ins/clipfix.ny
-msgid "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
 
 #: plug-ins/clipfix.ny
@@ -19601,14 +19913,9 @@ msgstr ""
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr ""
 
-#: plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Crossfade Clips"
-msgstr "Trac Nodau"
-
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Crossfading..."
 msgstr "Trac Nodau"
 
 #: plug-ins/crossfadeclips.ny
@@ -19626,7 +19933,7 @@ msgstr ""
 msgid "Error.~%Crossfade Clips may only be applied to one track."
 msgstr ""
 
-#: plug-ins/crossfadetracks.ny
+#: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Crossfade Tracks"
 msgstr "Trac Nodau"
@@ -19676,15 +19983,10 @@ msgstr ""
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr ""
 
-#: plug-ins/delay.ny
+#: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Delay"
 msgstr "Allhidlo"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Applying Delay Effect..."
-msgstr "Gweithredu'r Effaith Nyquist..."
 
 #: plug-ins/delay.ny
 #, fuzzy
@@ -19791,10 +20093,6 @@ msgstr "Gwall (efallai na gadwyd y ffeil): %s"
 msgid "Regular Interval Labels"
 msgstr ""
 
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -19803,7 +20101,7 @@ msgstr "Hollti ffeiliau ar sail:"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
-msgid "Number & Interval"
+msgid "Number and Interval"
 msgstr "Golygu Label"
 
 #: plug-ins/equalabel.ny
@@ -19893,6 +20191,11 @@ msgstr "Rhybudd"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
+msgid "Error: There is insufficient space to create labels.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
 msgid "Warning: Overlapping region labels.~%"
 msgstr ""
 
@@ -19918,17 +20221,12 @@ msgstr ""
 msgid "~aRegion length = ~a seconds."
 msgstr ""
 
-#: plug-ins/highpass.ny
+#: plug-ins/highpass.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "High-Pass Filter"
 msgstr "Gweithredu Hafalu"
 
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "Gweithredu Hafalu"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, fuzzy
 msgid "Dominic Mazzoni"
 msgstr "Tynnu Sŵn gan Dominic Mazzoni"
@@ -20076,14 +20374,9 @@ msgstr ""
 msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiting..."
-msgstr "Yn Normaleiddio..."
 
 #: plug-ins/limiter.ny
 #, fuzzy
@@ -20136,17 +20429,12 @@ msgstr ""
 msgid "Apply Make-up Gain"
 msgstr ""
 
-#: plug-ins/lowpass.ny
+#: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Low-Pass Filter"
 msgstr "Gweithredu Hafalu"
 
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "Gweithredu Hafalu"
-
-#: plug-ins/noisegate.ny
+#: plug-ins/noisegate.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Gate"
 msgstr "Tynnu Sŵn"
@@ -20240,14 +20528,9 @@ msgstr ""
 msgid "~ah ~am"
 msgstr ""
 
-#: plug-ins/notch.ny
+#: plug-ins/notch.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Notch Filter"
-msgstr "Gweithredu'r Gweddydd"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Applying Notch Filter..."
 msgstr "Gweithredu'r Gweddydd"
 
 #: plug-ins/notch.ny
@@ -20268,7 +20551,7 @@ msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy
-msgid "Nyquist Plug-in Installer"
+msgid "Nyquist Plugin Installer"
 msgstr "Allbwn Nyquist: "
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
@@ -20369,15 +20652,6 @@ msgid "Pluck"
 msgstr ""
 
 #: plug-ins/pluck.ny
-#, fuzzy
-msgid "Generating pluck sound..."
-msgstr "Yn Cynhyrchu Tôn"
-
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
 msgid "David R.Sky"
 msgstr ""
 
@@ -20408,9 +20682,8 @@ msgid "Rhythm Track"
 msgstr "Gwaredu Trac"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
-msgid "Generating Rhythm..."
-msgstr "Yn Cynhyrchu Tôn"
+msgid "Dominic Mazzoni, David R. Sky and Steve Daulton"
+msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -20532,11 +20805,6 @@ msgid "Risset Drum"
 msgstr "Yn Cynhyrchu  Distawrwydd"
 
 #: plug-ins/rissetdrum.ny
-#, fuzzy
-msgid "Generating Risset Drum..."
-msgstr "Yn Cynhyrchu  Distawrwydd"
-
-#: plug-ins/rissetdrum.ny
 msgid "Steven Jones"
 msgstr ""
 
@@ -20567,11 +20835,6 @@ msgstr "Osgled (0-1)"
 #, fuzzy
 msgid "Sample Data Export"
 msgstr "Golygu Sampl"
-
-#: plug-ins/sample-data-export.ny
-#, fuzzy
-msgid "Analyzing..."
-msgstr "&Dadansoddi"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -20866,10 +21129,6 @@ msgid "Sample Data Import"
 msgstr "Graddfa Samplo:"
 
 #: plug-ins/sample-data-import.ny
-msgid "Reading and rendering samples..."
-msgstr ""
-
-#: plug-ins/sample-data-import.ny
 #, fuzzy
 msgid "Select file"
 msgstr "Dewis ffeil MIDI..."
@@ -20916,7 +21175,7 @@ msgstr ""
 msgid "Error.~%Unable to open file"
 msgstr "Gwall wrth agor ffeil"
 
-#: plug-ins/spectral-delete.ny
+#: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Spectral Delete"
 msgstr "Gosod Pwynt Dewisiad"
@@ -20926,14 +21185,9 @@ msgstr "Gosod Pwynt Dewisiad"
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
 msgstr ""
 
-#: plug-ins/tremolo.ny
+#: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
 msgstr ""
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Applying Tremolo..."
-msgstr "Gweithredu'r Gweddydd"
 
 #: plug-ins/tremolo.ny
 #, fuzzy
@@ -20954,14 +21208,9 @@ msgstr "Gwedd Gychwyn LFO (gradd):"
 msgid "Wet level (percent)"
 msgstr ""
 
-#: plug-ins/vocalrediso.ny
+#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
 msgid "Vocal Reduction and Isolation"
 msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Applying Action..."
-msgstr "Gweithredu'r Gweddydd"
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
@@ -21092,16 +21341,12 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/vocoder.ny
+#: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr ""
 
 #: plug-ins/vocoder.ny
-msgid "Processing Vocoder..."
-msgstr ""
-
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
+msgid "Edgar-RFT and Steve Daulton"
 msgstr ""
 
 #: plug-ins/vocoder.ny
@@ -21130,7 +21375,7 @@ msgstr "Nifer o weithiau i ailadrodd: "
 
 #: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Amplitude of original audio (percent)"
+msgid "Amplitude of carrier wave (percent)"
 msgstr "Amledd LFO (Hz):"
 
 #: plug-ins/vocoder.ny
@@ -21150,8 +21395,216 @@ msgstr "Amledd LFO (Hz):"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
-msgid "Error.~%Stereo track required."
+msgid "Error.~%No modulation carrier."
 msgstr ""
+
+#. Effects menu group name; audio dynamics compression, not data compression
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Volume and Compression"
+msgstr "Cywasgydd..."
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Fading"
+msgstr "Yn Mewnhidlo"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Pitch and Tempo"
+msgstr "Traw (EAC)"
+
+#: resources/EffectsMenuDefaults.xml
+msgid "EQ and Filters"
+msgstr ""
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Noise Removal and Repair"
+msgstr "Tynnu Sŵn"
+
+#: resources/EffectsMenuDefaults.xml
+msgid "Delay and Reverb"
+msgstr ""
+
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion and Modulation"
+msgstr ""
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Special"
+msgstr "Diolchiadau arbennig:"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "Dileu Trac"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Spectral Tools"
+msgstr "Sbectrwm"
+
+#~ msgid "&History..."
+#~ msgstr "&Hanes..."
+
+#, fuzzy
+#~ msgid "Unable to decode project document"
+#~ msgstr "Methu penodi"
+
+#, fuzzy
+#~ msgid "Effects Rack"
+#~ msgstr "&Effeithio"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Symud Trac i Fynu"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Symud Trac i Lawr"
+
+#, fuzzy
+#~ msgid "Some Command"
+#~ msgstr "Gweithred Orchymun"
+
+#, fuzzy
+#~ msgid "Start &Playback"
+#~ msgstr "Chwarae Nôl"
+
+#, fuzzy
+#~ msgid "Skip forward"
+#~ msgstr "Neidio i'r Dechrau"
+
+#, fuzzy
+#~ msgid "Skip &Forward"
+#~ msgstr "Neidio i'r Dechrau"
+
+#, fuzzy
+#~ msgid "Stop &Playback"
+#~ msgstr "Chwarae Nôl"
+
+#, fuzzy, c-format
+#~ msgid "Reverb: %s"
+#~ msgstr "Troi o Chwith"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "Gweithred"
+
+#, fuzzy
+#~ msgid "Plugin Options"
+#~ msgstr "Ategion 1 i %i"
+
+#, fuzzy
+#~ msgid "Cut selection"
+#~ msgstr "Tocio tu allan i'r dewisiad"
+
+#, fuzzy
+#~ msgid "Copy selection"
+#~ msgstr "Distewi'r dewisiad"
+
+#, fuzzy
+#~ msgid "Recording Volume"
+#~ msgstr "Recordio"
+
+#, fuzzy
+#~ msgid "Playback Volume"
+#~ msgstr "Chwarae Nôl"
+
+#, fuzzy, c-format
+#~ msgid "Recording Volume: %.2f"
+#~ msgstr "Recordio"
+
+#, fuzzy, c-format
+#~ msgid "Playback Volume: %.2f"
+#~ msgstr "Chwarae Nôl"
+
+#~ msgid "Zoom Tool"
+#~ msgstr "Erfyn Chwyddo"
+
+#, fuzzy
+#~ msgid "&Zoom Tool"
+#~ msgstr "Erfyn Chwyddo"
+
+#, fuzzy
+#~ msgid "Click to Start"
+#~ msgstr "Neidio i'r Dechrau"
+
+#, fuzzy
+#~ msgid "Click"
+#~ msgstr "Clic-Chwith"
+
+#, fuzzy
+#~ msgid "Filtering..."
+#~ msgstr "Yn Normaleiddio..."
+
+#, fuzzy
+#~ msgid "Applying Fade..."
+#~ msgstr "Gweithredu'r Gweddydd"
+
+#, fuzzy
+#~ msgid "Finding beats..."
+#~ msgstr "Yn Cynhyrchu  Distawrwydd"
+
+#, fuzzy
+#~ msgid "Reconstructing clips..."
+#~ msgstr "Yn tynnu cliciau a popiau..."
+
+#, fuzzy
+#~ msgid "Crossfading..."
+#~ msgstr "Trac Nodau"
+
+#, fuzzy
+#~ msgid "Applying Delay Effect..."
+#~ msgstr "Gweithredu'r Effaith Nyquist..."
+
+#, fuzzy
+#~ msgid "Performing High-Pass Filter..."
+#~ msgstr "Gweithredu Hafalu"
+
+#, fuzzy
+#~ msgid "Limiting..."
+#~ msgstr "Yn Normaleiddio..."
+
+#, fuzzy
+#~ msgid "Performing Low-Pass Filter..."
+#~ msgstr "Gweithredu Hafalu"
+
+#, fuzzy
+#~ msgid "Applying Notch Filter..."
+#~ msgstr "Gweithredu'r Gweddydd"
+
+#, fuzzy
+#~ msgid "Generating pluck sound..."
+#~ msgstr "Yn Cynhyrchu Tôn"
+
+#, fuzzy
+#~ msgid "Generating Rhythm..."
+#~ msgstr "Yn Cynhyrchu Tôn"
+
+#, fuzzy
+#~ msgid "Generating Risset Drum..."
+#~ msgstr "Yn Cynhyrchu  Distawrwydd"
+
+#, fuzzy
+#~ msgid "Analyzing..."
+#~ msgstr "&Dadansoddi"
+
+#, fuzzy
+#~ msgid "Applying Tremolo..."
+#~ msgstr "Gweithredu'r Gweddydd"
+
+#, fuzzy
+#~ msgid "Applying Action..."
+#~ msgstr "Gweithredu'r Gweddydd"
+
+#, fuzzy
+#~ msgid "Amplitude of original audio (percent)"
+#~ msgstr "Amledd LFO (Hz):"
 
 #, fuzzy
 #~ msgid "Playback volume is emulated\n"
@@ -21309,20 +21762,8 @@ msgstr ""
 #~ msgstr "Distewi"
 
 #, fuzzy
-#~ msgid "Finding sound..."
-#~ msgstr "Yn Cynhyrchu  Distawrwydd"
-
-#, fuzzy
-#~ msgid "Gating audio..."
-#~ msgstr "Newid enw trac i:"
-
-#, fuzzy
 #~ msgid "Apply Low-Cut filter"
 #~ msgstr "Gweithredu'r Gweddydd"
-
-#, fuzzy
-#~ msgid "About Audacity"
-#~ msgstr "&Ynglyn â Audacity..."
 
 #, fuzzy
 #~ msgid "<h3>Audacity "
@@ -21416,10 +21857,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not decode file: %s"
 #~ msgstr "Methwyd agor y ffeil: "
-
-#, fuzzy
-#~ msgid "Vocal Remover"
-#~ msgstr "Dileu Trac"
 
 #, fuzzy
 #~ msgid "Removing center-panned audio..."
@@ -21538,10 +21975,6 @@ msgstr ""
 #~ msgstr "Neidio i'r Diwedd"
 
 #, fuzzy
-#~ msgid "Aligned %s"
-#~ msgstr "Wedi Alinio"
-
-#, fuzzy
 #~ msgid ""
 #~ "Timer Recording completed.\n"
 #~ "\n"
@@ -21642,10 +22075,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Phase"
 #~ msgstr "Gweddydd"
-
-#, fuzzy
-#~ msgid "Depth"
-#~ msgstr "Dyfnder:"
 
 #, fuzzy
 #~ msgid "Feedback"
@@ -21909,9 +22338,6 @@ msgstr ""
 
 #~ msgid "Performing Equalization"
 #~ msgstr "Gweithredu Hafalu"
-
-#~ msgid "Fading In"
-#~ msgstr "Yn Mewnhidlo"
 
 #~ msgid "Inverting"
 #~ msgstr "Yn Gwrthdroi"
