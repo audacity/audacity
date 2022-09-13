@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-08-06 23:36+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
+"PO-Revision-Date: 2022-09-11 07:44+0000\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2022\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -265,7 +265,7 @@ msgstr "Audacity nie otworzył pliku %s."
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity failed to read from a file in %s."
-msgstr "Audacity nie odczytał z pliku %s."
+msgstr "Audacity nie wczytał z pliku %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -605,7 +605,7 @@ msgid ""
 "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr "Audacity nie mógł znaleźć pliku:\n%s.\nMotyw nie został wczytany."
+msgstr "Audacity nie mógł znaleźć pliku:\n%s.\nMotyw nie został załadowany."
 
 #. i18n-hint: Do not translate png.  It is the name of a file format.
 #: libraries/lib-theme/Theme.cpp
@@ -614,13 +614,13 @@ msgid ""
 "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr "Audacity nie mógł wczytać pliku:\n%s.\nByć może format png jest nieprawidłowy?"
+msgstr "Audacity nie mógł załadować pliku:\n  %s.\nByć może format png jest nieprawidłowy?"
 
 #: libraries/lib-theme/Theme.cpp
 msgid ""
 "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr "Audacity nie mógł odczytać tego domyślnego motywu.\nZgłoś problem."
+msgstr "Audacity nie mógł wczytać tego motywu domyślnego.\nZgłoś problem."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -671,7 +671,7 @@ msgstr "Błąd: %s w wierszu %lu"
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
 msgid "Could not load file: \"%s\""
-msgstr "Nie można wczytać pliku: \"%s\""
+msgstr "Nie można załadować pliku: \"%s\""
 
 #: libraries/lib-xml/XMLFileReader.cpp
 msgid "Could not parse XML"
@@ -801,7 +801,7 @@ msgstr "Wyjście"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Load Nyquist script"
-msgstr "Wczytaj skrypt Nyquista"
+msgstr "Załaduj skrypt Nyquista"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
@@ -2373,7 +2373,7 @@ msgstr "Czas na sprawdzenie wszystkich danych: %ld ms\n"
 
 #: src/Benchmark.cpp
 msgid "Reading data again...\n"
-msgstr "Ponowne odczytywanie danych...\n"
+msgstr "Ponowne wczytywanie danych...\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -2659,7 +2659,7 @@ msgid ""
 "but this time Audacity failed to load it at startup. \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr "FFmpeg został wcześniej skonfigurowany w Ustawieniach i pomyślnie\nwczytany, ale tym razem nie udało się Audacity wczytać go przy starcie.\n\nMożesz rozważyć powrót do 'Ustawienia... > Biblioteki' i ponownie go skonfigurować."
+msgstr "FFmpeg został wcześniej skonfigurowany w Ustawieniach i pomyślnie\nzaładowany, ale tym razem nie udało się Audacity załadować go przy starcie.\n\nMożesz rozważyć powrót do 'Ustawienia... > Biblioteki' i ponownie go skonfigurować."
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -2752,7 +2752,7 @@ msgstr "&Kopiuj nieskompresowane pliki do projektu (bezpieczniejsze)"
 
 #: src/FileFormats.cpp
 msgid "&Read uncompressed files from original location (faster)"
-msgstr "&Czytaj nieskompresowane pliki dźwiękowe z oryginalnej lokacji (szybsze)"
+msgstr "&Wczytaj nieskompresowane pliki dźwiękowe z oryginalnej lokacji (szybsze)"
 
 #: src/FileFormats.cpp
 msgid "&Copy all audio into project (safest)"
@@ -3251,7 +3251,7 @@ msgstr "Etykieta ścieżki"
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
-msgstr "Nie można było przeczytać jednej lub więcej zapisanych etykiet."
+msgstr "Nie można było wczytać jednej lub więcej zapisanych etykiet."
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -3912,7 +3912,7 @@ msgstr "Wyłącz wykrywanie przerwań"
 #. "Found problems with <sequence> when checking project file."
 #: src/ProjectFSCK.cpp
 msgid "Project check read faulty Sequence tags."
-msgstr "Sprawdzanie projektu odczytało błędne znaczniki sekwencji."
+msgstr "Sprawdzanie projektu wczytało błędne znaczniki sekwencji."
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no changes"
@@ -3927,7 +3927,7 @@ msgstr "Kontynuuj z naprawami wymienionymi w dzienniku i poszukaj kolejnych bł�
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
-msgstr "Ostrzeżenie - Problemy odczytywania znaczników sekwencji"
+msgstr "Ostrzeżenie - Problemy wczytywania znaczników sekwencji"
 
 #: src/ProjectFSCK.cpp
 msgid "Inspecting project file data"
@@ -5053,7 +5053,7 @@ msgstr "Szablon"
 
 #: src/Tags.cpp
 msgid "&Load..."
-msgstr "&Wczytaj..."
+msgstr "&Załaduj..."
 
 #: src/Tags.cpp
 msgid "Set De&fault"
@@ -5085,11 +5085,11 @@ msgstr "Nie można otworzyć pliku z gatunkami."
 
 #: src/Tags.cpp
 msgid "Load Metadata As:"
-msgstr "Wczytaj metadane jako:"
+msgstr "Załaduj metadane jako:"
 
 #: src/Tags.cpp
 msgid "Error Loading Metadata"
-msgstr "Błąd wczytywania metadanych"
+msgstr "Błąd ładowania metadanych"
 
 #: src/Tags.cpp
 msgid "Save Metadata As:"
@@ -5605,7 +5605,7 @@ msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
 "\n"
 "%s"
-msgstr "%s: Nie udało się wczytać poniższych ustawień. Zostaną użyte ustawienia domyślne.\n\n%s"
+msgstr "%s: Nie udało się załadować poniższych ustawień. Zostaną użyte ustawienia domyślne.\n\n%s"
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
@@ -5667,7 +5667,7 @@ msgid ""
 "The following commands have had their shortcuts removed, because their "
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
-msgstr "Poniższe polecenia zostały usunięte, ponieważ ich domyślny skrót jest nowy lub zmieniony i jest tym samym skrótem, który masz przypisany do innego polecenia."
+msgstr "Poniższe polecenia zostały usunięte, ponieważ ich skrót domyślny jest nowy lub zmieniony i jest tym samym skrótem, który masz przypisany do innego polecenia."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -7553,7 +7553,7 @@ msgstr "Błąd zapisywania presetów efektu"
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #, c-format
 msgid "Error writing to file: \"%s\""
-msgstr "Błąd zapisu do pliku: \"%s\""
+msgstr "Błąd zapisywania do pliku: \"%s\""
 
 #: src/effects/Effect.cpp
 msgid "Import Effect Parameters"
@@ -8087,11 +8087,11 @@ msgid ""
 "%s\n"
 "Error message says:\n"
 "%s"
-msgstr "Błąd wczytywania krzywych korektora graficznego z pliku:\n%s\nKomunikat o błędzie:\n%s"
+msgstr "Błąd ładowania krzywych korektora graficznego z pliku:\n%s\nKomunikat o błędzie:\n%s"
 
 #: src/effects/Equalization.cpp
 msgid "Error Loading EQ Curves"
-msgstr "Błąd wczytywania krzywych korektora graficznego"
+msgstr "Błąd ładowania krzywych korektora graficznego"
 
 #: src/effects/Equalization.cpp
 msgid "Error Saving Equalization Curves"
@@ -9368,7 +9368,7 @@ msgstr "Rejestrowanie %d z %d: %-64.64s"
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
 msgid "Could not load the library"
-msgstr "Nie można wczytać biblioteki"
+msgstr "Nie można załadować biblioteki"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effect Options"
@@ -9454,7 +9454,7 @@ msgstr "Błąd zapisywania presetów VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Load VST Preset:"
-msgstr "Wczytaj preset VST:"
+msgstr "Załaduj preset VST:"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST preset files"
@@ -9462,11 +9462,11 @@ msgstr "Pliki presetów VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Error Loading VST Presets"
-msgstr "Błąd wczytywania presetów VST"
+msgstr "Błąd ładowania presetów VST"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to load presets file."
-msgstr "Nie można wczytać pliku presetów."
+msgstr "Nie można załadować pliku presetów."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
@@ -9475,7 +9475,7 @@ msgstr "Ustawienia efektu"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to allocate memory when loading presets file."
-msgstr "Nie można przydzielić pamięci przy wczytywaniu pliku presetów."
+msgstr "Nie można przydzielić pamięci przy ładowaniu pliku presetów."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to read presets file."
@@ -9964,7 +9964,7 @@ msgstr "Podaj polecenie Nyquista:"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
-msgstr "&Wczytaj"
+msgstr "&Załaduj"
 
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
@@ -9984,7 +9984,7 @@ msgstr "Bieżący program został zmodyfikowany.\nPorzucić zmiany?"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "File could not be loaded"
-msgstr "Plik nie może zostać wczytany"
+msgstr "Plik nie może zostać załadowany"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "File could not be saved"
@@ -10290,7 +10290,7 @@ msgstr "Nie można otworzyć kodeka \"%s\" (0x%x)\n\n%s"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg : BŁĄD - Nie można przydzielić bufora do zapoznania się z dźwiękiem FIFO."
+msgstr "FFmpeg : BŁĄD - Nie można przydzielić bufora do odczytu z dźwiękiem FIFO."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
@@ -10628,7 +10628,7 @@ msgstr "Preset:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Load Preset"
-msgstr "Wczytaj preset"
+msgstr "Załaduj preset"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Import Presets"
@@ -11685,7 +11685,7 @@ msgid ""
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr "Audacity rozpoznał typ pliku '%s'.\nProgramy przypuszczalnie importujące takie pliki to:\n%s,\nale żaden z nich nie odczytał tego formatu pliku."
+msgstr "Audacity rozpoznał typ pliku '%s'.\nProgramy przypuszczalnie importujące takie pliki to:\n%s,\nale żaden z nich nie wczytał tego formatu pliku."
 
 #: src/import/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
@@ -15236,7 +15236,7 @@ msgstr "Plik ze skrótami zawiera niedozwolone duplikaty skrótów dla \"%s\" i 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid "Loaded %d keyboard shortcuts\n"
-msgstr "Wczytano %d skróty klawiaturowe\n"
+msgstr "Załadowano %d skróty klawiaturowe\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
@@ -15246,7 +15246,7 @@ msgstr "\nNastępujące polecenia nie są wymienione w importowanym pliku, ale i
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
-msgstr "Wczytywanie skrótów klawiaturowych"
+msgstr "Ładowanie skrótów klawiaturowych"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Export Keyboard Shortcuts As:"
@@ -15548,7 +15548,7 @@ msgstr "Kliknięcie rolką myszki"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom default"
-msgstr "Ustaw domyślne powiększenie"
+msgstr "Ustaw powiększenie domyślne"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Move clip left/right or between tracks"
@@ -16133,13 +16133,13 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr "Ubieranie w motywy jest funkcją eksperymentalną.\n\nAby ją wypróbować, kliknij \"Zapisz pamięć podręczną motywu\", a następnie znajdź i zmodyfikuj obrazy i kolory w\nImageCacheVxx.png, wykorzystując edytor obrazów, np. Gimpa.\n\nKliknij \"Wczytaj pamięć podręczną motywu\", aby wczytać zmienione obrazy i kolory z powrotem do Audacity.\n\n(Na razie tylko pasek narzędzi transportu i kolory na ścieżce fali są zmieniane, nawet\nw przypadku, gdy plik obrazu pokazuje także inne ikony.)"
+msgstr "Ubieranie w motywy jest funkcją eksperymentalną.\n\nAby ją wypróbować, kliknij \"Zapisz pamięć podręczną motywu\", a następnie znajdź i zmodyfikuj obrazy i kolory w\nImageCacheVxx.png, wykorzystując edytor obrazów, np. Gimpa.\n\nKliknij \"Załaduj pamięć podręczną motywu\", aby załadować zmienione obrazy i kolory z powrotem do Audacity.\n\n(Na razie tylko pasek narzędzi transportu i kolory na ścieżce fali są zmieniane, nawet\nw przypadku, gdy plik obrazu pokazuje także inne ikony.)"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr "Zapisywanie i wczytywanie indywidualnych plików motywów używa oddzielnego pliku\ndla każdego obrazu, ale jest pod każdym względem tym samym pomysłem."
+msgstr "Zapisywanie i ładowanie indywidualnych plików motywów używa oddzielnego pliku\ndla każdego obrazu, ale jest pod każdym względem tym samym pomysłem."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
 #. * so keep it as is
@@ -16153,7 +16153,7 @@ msgstr "Zapisz pamięć podręczną motywu"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Load Theme Cache"
-msgstr "Wczytaj pamięć podręczną motywu"
+msgstr "Załaduj pamięć podręczną motywu"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Individual Theme Files"
@@ -16165,7 +16165,7 @@ msgstr "Zapisz pliki"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Load Files"
-msgstr "Wczytaj pliki"
+msgstr "Załaduj pliki"
 
 #. i18n-hint: i.e. the behaviors of tracks
 #: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
@@ -16255,7 +16255,7 @@ msgstr "Powiększ do zaznaczenia"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Zoom Default"
-msgstr "Ustaw domyślne powiększenie"
+msgstr "Ustaw powiększenie domyślne"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Minutes"
@@ -18678,7 +18678,7 @@ msgstr "Steve Daulton"
 #: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
 msgid "GNU General Public License v2.0 or later"
-msgstr "Licencja GNU General Public License v2.0 lub nowsza"
+msgstr "Licencja GNU General Public License wersja 2.0 lub nowsza"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -19525,7 +19525,7 @@ msgstr "Pliki skopiowane do folderu wtyczek:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Not found or cannot be read:"
-msgstr "Nie znaleziono lub nie można odczytać:"
+msgstr "Nie znaleziono lub nie można wczytać:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Unsupported file type:"
@@ -20009,7 +20009,7 @@ msgstr "Importuj przykładowe dane"
 
 #: plug-ins/sample-data-import.ny
 msgid "Reading and rendering samples..."
-msgstr "Odczytywanie i renderowanie sampli..."
+msgstr "Wczytywanie i renderowanie sampli..."
 
 #: plug-ins/sample-data-import.ny
 msgid "Select file"
@@ -20025,7 +20025,7 @@ msgstr "Odrzuć błąd"
 
 #: plug-ins/sample-data-import.ny
 msgid "Read as Zero"
-msgstr "Odczytaj jako zero"
+msgstr "Wczytaj jako zero"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
