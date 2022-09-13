@@ -567,6 +567,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       auto &mCurTrack = nyquistTrack.mCurTrack;
       auto &mCurStart = nyquistTrack.mCurStart;
       auto &mCurLen = nyquistTrack.mCurLen;
+      auto &mCurNumChannels = nyquistTrack.mCurNumChannels;
 
       // Prepare to accumulate more debug output in OutputCallback
       mDebugOutputStr = mDebugOutput.Translation();
@@ -774,12 +775,7 @@ bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
 
    const auto &mCurTrack = nyquistTrack.mCurTrack;
    const auto &mCurLen = nyquistTrack.mCurLen;
-
-   auto &mOutputTrack = nyquistTrack.mOutputTrack;
-   auto &mCurBuffer = nyquistTrack.mCurBuffer;
-   auto &mpException = nyquistTrack.mpException;
-
-   mpException = {};
+   const auto &mCurNumChannels = nyquistTrack.mCurNumChannels;
 
    nyx_rval rval;
 
@@ -1033,10 +1029,6 @@ bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
       cmd += mCmd;
    }
 
-   // Put the fetch buffers in a clean initial state
-   for (size_t i = 0; i < mCurNumChannels; i++)
-      mCurBuffer[i].reset();
-
    // Evaluate the expression, which may invoke the get callback, but often does
    // not, leaving that to delayed evaluation of the output sound
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
@@ -1190,60 +1182,18 @@ bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
       return false;
    }
 
-   std::shared_ptr<WaveTrack> outputTrack[2];
-
-   double rate = mCurTrack[0]->GetRate();
-   for (int i = 0; i < outChannels; i++) {
-      if (outChannels == (int)mCurNumChannels) {
-         rate = mCurTrack[i]->GetRate();
-      }
-
-      outputTrack[i] = mCurTrack[i]->EmptyCopy();
-      outputTrack[i]->SetRate( rate );
-
-      // Clean the initial buffer states again for the get callbacks
-      // -- is this really needed?
-      mCurBuffer[i].reset();
-   }
-
-   // Now fully evaluate the sound
-   int success;
-   {
-      auto vr0 = valueRestorer( mOutputTrack[0], outputTrack[0].get() );
-      auto vr1 = valueRestorer( mOutputTrack[1], outputTrack[1].get() );
-      success = nyx_get_audio(NyquistTrack::StaticPutCallback, &nyquistTrack);
-   }
-
-   // See if GetCallback found read errors
-   {
-      auto pException = mpException;
-      mpException = {};
-      if (pException)
-         std::rethrow_exception( pException );
-   }
-
-   if (!success)
+   // May throw other errors
+   auto outputTracks = nyquistTrack.GetResult(outChannels, mOutputTime);
+   if (outputTracks.empty())
       return false;
-
-   for (int i = 0; i < outChannels; i++) {
-      outputTrack[i]->Flush();
-      mOutputTime = outputTrack[i]->GetEndTime();
-
-      if (mOutputTime <= 0) {
-         Effect::MessageBox( XO("Nyquist returned nil audio.\n") );
-         return false;
-      }
-   }
 
    for (size_t i = 0; i < mCurNumChannels; i++) {
       WaveTrack *out;
 
-      if (outChannels == (int)mCurNumChannels) {
-         out = outputTrack[i].get();
-      }
-      else {
-         out = outputTrack[0].get();
-      }
+      if (outChannels == (int)mCurNumChannels)
+         out = outputTracks[i].get();
+      else
+         out = outputTracks[0].get();
 
       if (mMergeClips < 0) {
          // Use sample counts to determine default behaviour - times will rarely be equal.
@@ -1271,6 +1221,52 @@ bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
 
    mProjectChanged = true;
    return true;
+}
+
+void NyquistTrack::NewOutputTrack(unsigned outChannels)
+{
+   mpException = {};
+   double rate = mCurTrack[0]->GetRate();
+   unsigned i = 0;
+   for (; i < outChannels; ++i) {
+      if (outChannels == (int)mCurNumChannels)
+         rate = mCurTrack[i]->GetRate();
+
+      mOutputTrack[i] = mCurTrack[i]->EmptyCopy();
+      mOutputTrack[i]->SetRate( rate );
+   }
+   for (; i < 2; ++i)
+      mOutputTrack[i] = NULL;
+}
+
+std::vector<std::shared_ptr<WaveTrack>>
+NyquistTrack::GetResult(unsigned outChannels, double &outputTime)
+{
+   for (auto &buffer : mCurBuffer)
+      buffer.reset();
+
+   NewOutputTrack(outChannels);
+
+   // Now fully evaluate the sound
+   int success = nyx_get_audio(NyquistTrack::StaticPutCallback, this);
+   if (mpException)
+      std::rethrow_exception(mpException);
+   else if (!success)
+      return {};
+
+   std::vector<std::shared_ptr<WaveTrack>> result;
+   for (auto &outputTrack : mOutputTrack) {
+      if (!outputTrack)
+         break;
+      outputTrack->Flush();
+      outputTime = outputTrack->GetEndTime();
+      if (outputTime <= 0) {
+         mEffect.MessageBox( XO("Nyquist returned nil audio.\n") );
+         return {};
+      }
+      result.push_back(move(outputTrack));
+   }
+   return result;
 }
 
 bool NyquistEffect::AcceptsAllNyquistTypes()

@@ -31,22 +31,21 @@ struct NyquistParser;
 struct NyquistUIControls;
 
 //! Transfers data both ways between WaveTrack and the sound object of Nyquist
-struct NyquistTrack {
+class NyquistTrack {
+public:
    using Buffer = std::unique_ptr<float[]>;
 
    NyquistTrack(Effect &effect, double scale)
       : mEffect{ effect }
       , mScale{ scale }
    {}
+
    Effect            &mEffect;
 
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
    sampleCount       mCurLen;
-
-   WaveTrack         *mOutputTrack[2]{ nullptr, nullptr };
-   Buffer            mCurBuffer[2];
-   std::exception_ptr mpException {};
+   unsigned          mCurNumChannels;
 
    static int StaticGetCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen, void *userdata);
@@ -60,12 +59,23 @@ struct NyquistTrack {
       mProgressIn = 0.0;
       mProgressOut = 0.0;
    }
-   
+
+   //! Resets some state for the next pass
+   //! May throw exceptions
+   std::vector<std::shared_ptr<WaveTrack>>
+   GetResult(unsigned outChannels, double &outputTime);
+
 private:
+   void NewOutputTrack(unsigned outChannels);
+
    const double      mScale;
    double            mProgressIn{ 0 };
    double            mProgressOut{ 0 };
    double            mProgressTot{ 0 };
+
+   std::shared_ptr<WaveTrack> mOutputTrack[2];
+   Buffer            mCurBuffer[2];
+   std::exception_ptr mpException{};
 
    int GetCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen);
@@ -224,7 +234,6 @@ private:
    TranslatableString mDebugOutput;
 
 private:
-   unsigned          mCurNumChannels;
    int               mTrackIndex;
    bool              mFirstInGroup;
    double            mOutputTime;
