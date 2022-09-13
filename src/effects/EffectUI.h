@@ -110,6 +110,8 @@ private:
 
    void CleanupRealtime();
 
+   void StopPlayback();
+
 private:
    Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 

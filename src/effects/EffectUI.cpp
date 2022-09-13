@@ -501,6 +501,9 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
+   if (mPlaying)
+      StopPlayback();
+
    DoCancel();
    CleanupRealtime();
 
@@ -530,6 +533,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    {
       return;
    }
+
+   if (mPlaying)
+      StopPlayback();
    
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch &&
@@ -735,10 +741,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    
    if (mPlaying)
    {
-      auto gAudioIO = AudioIO::Get();
-      mPlayPos = gAudioIO->GetStreamTime();
-      auto &projectAudioManager = ProjectAudioManager::Get( mProject );
-      projectAudioManager.Stop();
+      StopPlayback();
    }
    else
    {
@@ -1158,6 +1161,17 @@ void EffectUIHost::CleanupRealtime()
       }
       mInitialized = false;
    }
+}
+
+void EffectUIHost::StopPlayback()
+{
+   if (!mPlaying)
+      return;
+   
+   auto gAudioIO = AudioIO::Get();
+   mPlayPos = gAudioIO->GetStreamTime();
+   auto& projectAudioManager = ProjectAudioManager::Get(mProject);
+   projectAudioManager.Stop();
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
