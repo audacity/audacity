@@ -34,15 +34,11 @@ struct NyquistUIControls;
 struct NyquistTrack {
    using Buffer = std::unique_ptr<float[]>;
 
-   explicit NyquistTrack(Effect &effect)
+   NyquistTrack(Effect &effect, double scale)
       : mEffect{ effect }
+      , mScale{ scale }
    {}
    Effect            &mEffect;
-
-   double            mProgressIn;
-   double            mProgressOut;
-   double            mProgressTot;
-   double            mScale;
 
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
@@ -58,7 +54,19 @@ struct NyquistTrack {
    static int StaticPutCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen, void *userdata);
 
+   void AccumulateProgress()
+   {
+      mProgressTot += mProgressIn + mProgressOut;
+      mProgressIn = 0.0;
+      mProgressOut = 0.0;
+   }
+   
 private:
+   const double      mScale;
+   double            mProgressIn{ 0 };
+   double            mProgressOut{ 0 };
+   double            mProgressTot{ 0 };
+
    int GetCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen);
    int PutCallback(float *buffer, int channel,
@@ -149,8 +157,6 @@ public:
    std::vector<NyqValue> MoveBindings();
 
 private:
-   NyquistTrack mNyquistTrack{ *this };
-
    static int mReentryCount;
    // NyquistEffect implementation
 

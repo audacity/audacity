@@ -358,18 +358,16 @@ static void RegisterFunctions();
 
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
+   NyquistTrack nyquistTrack{ *this,
+      (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups()
+   };
+
    auto &parser = GetParser();
    const auto &mHelpFile = parser.mHelpFile;
    const auto &mVersion = parser.mVersion;
    const auto &mMaxLen = parser.mMaxLen;
    const auto &mTrace = parser.mTrace;
    const auto &mName = parser.mName;
-
-   auto &nyquistTrack = mNyquistTrack;
-   auto &mProgressIn = nyquistTrack.mProgressIn;
-   auto &mProgressOut = nyquistTrack.mProgressOut;
-   auto &mProgressTot = nyquistTrack.mProgressTot;
-   auto &mScale = nyquistTrack.mScale;
 
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
@@ -398,10 +396,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    mOutputTime = 0;
    mCount = 0;
-   mProgressIn = 0;
-   mProgressOut = 0;
-   mProgressTot = 0;
-   mScale = (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
 
    mStop = false;
    mBreak = false;
@@ -630,9 +624,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mCurLen = std::min(mCurLen, mMaxLen);
          }
 
-         mProgressIn = 0.0;
-         mProgressOut = 0.0;
-
          // libnyquist breaks except in LC_NUMERIC=="C".
          //
          // Note that we must set the locale to "C" even before calling
@@ -701,7 +692,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          if (!success || bOnePassTool) {
             goto finish;
          }
-         mProgressTot += mProgressIn + mProgressOut;
+         nyquistTrack.AccumulateProgress();
       }
 
       mCount += mCurNumChannels;
@@ -1045,12 +1036,6 @@ bool NyquistEffect::ProcessOne(NyquistTrack &nyquistTrack)
    // Put the fetch buffers in a clean initial state
    for (size_t i = 0; i < mCurNumChannels; i++)
       mCurBuffer[i].reset();
-
-   // Guarantee release of memory when done
-   auto cleanup = finally( [&] {
-      for (size_t i = 0; i < mCurNumChannels; i++)
-         mCurBuffer[i].reset();
-   } );
 
    // Evaluate the expression, which may invoke the get callback, but often does
    // not, leaving that to delayed evaluation of the output sound
