@@ -42,16 +42,17 @@ public:
 
    Effect            &mEffect;
 
-   WaveTrack         *mCurTrack[2];
-   sampleCount       mCurStart[2];
-   sampleCount       mCurLen;
-   unsigned          mCurNumChannels;
+   WaveTrack *const *CurTracks() const { return mCurTrack; }
+   sampleCount CurLength() const { return mCurLen; }
+   unsigned CurNumChannels() const { return mCurNumChannels; }
 
    static int StaticGetCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen, void *userdata);
 
    static int StaticPutCallback(float *buffer, int channel,
       int64_t start, int64_t len, int64_t totlen, void *userdata);
+
+   bool NextTrack(WaveTrack *pTrack, double t0, double t1, sampleCount maxLen);
 
    void AccumulateProgress()
    {
@@ -72,6 +73,11 @@ private:
    double            mProgressIn{ 0 };
    double            mProgressOut{ 0 };
    double            mProgressTot{ 0 };
+
+   WaveTrack         *mCurTrack[2];
+   sampleCount       mCurStart[2];
+   sampleCount       mCurLen;
+   unsigned          mCurNumChannels;
 
    std::shared_ptr<WaveTrack> mOutputTrack[2];
    Buffer            mCurBuffer[2];
