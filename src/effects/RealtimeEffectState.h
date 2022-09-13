@@ -12,10 +12,10 @@
 #define __AUDACITY_REALTIMEEFFECTSTATE_H__
 
 #include <atomic>
+#include <cstddef>
+#include <optional>
 #include <unordered_map>
 #include <vector>
-#include <cstddef>
-
 #include "ClientData.h"
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
@@ -72,7 +72,10 @@ public:
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
-   void Process(Track &track,
+   /*!
+    @return how many leading samples are discardable for latency
+    */
+   size_t Process(Track &track,
       unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
@@ -153,6 +156,8 @@ private:
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<SettingsAndCounter> mWorkerSettings;
+   //! How many samples must be discarded
+   std::optional<EffectInstance::SampleCount> mLatency;
    //! Assigned in the worker thread at the start of each processing scope
    bool mLastActive{};
 
@@ -162,7 +167,7 @@ private:
     @{
     */
     
-   std::unordered_map<Track *, size_t> mGroups;
+   std::unordered_map<Track *, std::pair<size_t, double>> mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.
