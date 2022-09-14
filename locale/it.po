@@ -11,7 +11,7 @@
 # Francesco Sercia, 2017
 # Luca Marzo <luca@jeckodevelopment.it>, 2012
 # Marco Mangiacavalli, 2013
-# Michele Locati <michele@locati.it>, 2019,2021
+# Michele Locati <michele@locati.it>, 2019,2022
 # Randy Ichinose <randyichinose@gmail.com>, 2016
 # Riccardo Di Maio <riccardodimaio11@gmail.com>, 2015
 # Saverio <saverio.brancaccio@gmail.com>, 2015
@@ -20,14 +20,14 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2021-10-15 13:44+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>\n"
+"PO-Revision-Date: 2022-09-14 17:54+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2022\n"
 "Language-Team: Italian (http://www.transifex.com/klyok/audacity/language/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. i18n-hint C++ programming assertion
 #: crashreports/crashreporter/CrashReportApp.cpp
@@ -49,8 +49,12 @@ msgid "Problem Report for Audacity"
 msgstr "Rapporto problemi per Audacity"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr "Fare clic su \"Invia\" per inviare il rapporto ad Audacity. Queste informazioni sono collezionate in forma anonima."
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+"Fare clic su \"Invia\" per inviare il rapporto ad Audacity. Queste "
+"informazioni sono collezionate in forma anonima."
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -71,7 +75,8 @@ msgstr "Vedere %s per ulteriori informazioni."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
+#. "See".
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -189,7 +194,9 @@ msgstr "Nessun dispositivo di riproduzione trovato per '%s'.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Impossibile verificare le frequenze di campionamento reciproche senza entrambi i dispositivi.\n"
+msgstr ""
+"Impossibile verificare le frequenze di campionamento reciproche senza "
+"entrambi i dispositivi.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -226,15 +233,14 @@ msgid "Recording volume is native\n"
 msgstr "Il volume di registrazione è nativo\n"
 
 #: libraries/lib-basic-ui/BasicUI.cpp
-#: libraries/lib-exceptions/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.h
+#: libraries/lib-exceptions/AudacityException.h
+#: src/commands/MessageCommand.cpp src/widgets/AudacityMessageBox.h
 msgid "Message"
 msgstr "Messaggio"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
-#, fuzzy
 msgid "Cannot proceed to upload."
-msgstr "Impossibile procedere con l'esportazione."
+msgstr "Impossibile procedere con l'upload."
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -270,8 +276,11 @@ msgstr "Audacity non è riuscito a leggere un file in %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity ha scritto con successo un file in %s ma non è riuscito a rinominarlo in %s."
+msgid ""
+"Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
+"Audacity ha scritto con successo un file in %s ma non è riuscito a "
+"rinominarlo in %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -392,7 +401,6 @@ msgid "Rectangle"
 msgstr "Rettangolo"
 
 #: libraries/lib-math/Dither.cpp
-#, fuzzy
 msgctxt "dither"
 msgid "Triangle"
 msgstr "Triangolo"
@@ -609,6 +617,7 @@ msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "Abilitare questa estensione?\n"
 msgstr[1] "Abilitare queste estensioni?\n"
+msgstr[2] "Abilitare queste estensioni?\n"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -616,15 +625,12 @@ msgstr "Abilita nuove estensioni"
 
 #: libraries/lib-module-manager/PluginManager.h
 msgid "Nyquist Prompt"
-msgstr "Pannello Nyquist"
+msgstr "Richiesta Nyquist"
 
 #: libraries/lib-network-manager/MultipartData.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open the file for upload: %s"
-msgstr ""
-"Non è stato possibile aprire il file del database:\n"
-"\n"
-"%s"
+msgstr "Impossibile aprire il file per l'upload: %s"
 
 #: libraries/lib-project-history/ProjectHistory.cpp
 msgid "Created new project"
@@ -641,12 +647,18 @@ msgstr "24-bit"
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "Il gruppo di estensioni in %s è stato unito a un gruppo definito in precedenza"
+msgstr ""
+"Il gruppo di estensioni in %s è stato unito a un gruppo definito in "
+"precedenza"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "L'elemento dell'estensione in %s è in conflitto con un elemento definito precedentemente ed è stato scartato"
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was "
+"discarded"
+msgstr ""
+"L'elemento dell'estensione in %s è in conflitto con un elemento definito "
+"precedentemente ed è stato scartato"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -654,14 +666,12 @@ msgid "Plug-in items at %s specify conflicting placements"
 msgstr "Gli elementi dell'estensione in %s specificano posizioni in conflitto"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
-#, fuzzy
 msgid "Sample Track"
-msgstr "Ricampiona traccia"
+msgstr "Traccia con campioni"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
-#, fuzzy
 msgid "Writable Sample Track"
-msgstr "Ricampiona traccia"
+msgstr "Traccia con campioni scrivibile"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
@@ -724,17 +734,18 @@ msgid "Light"
 msgstr "Chiaro"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: libraries/lib-theme/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Themes written to:\n"
 "  %s/*/%s."
 msgstr ""
-"Tema scritto in:\n"
-"  %s."
+"Temi scritti in :\n"
+"  %s/*/%s."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -797,9 +808,9 @@ msgstr ""
 "Inviare un report sul problema."
 
 #: libraries/lib-theme/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't read from file: %s"
-msgstr "Impossibile scrivere nel file: %s"
+msgstr "Impossibile leggere dal file: %s"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -813,13 +824,13 @@ msgstr ""
 "  %s."
 
 #: libraries/lib-theme/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Themes written to:\n"
 "  %s/*/Components/."
 msgstr ""
-"Tema scritto in:\n"
-"  %s."
+"Temi scritti in:\n"
+"  %s/*/Components/."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -858,13 +869,13 @@ msgstr "Impossibile scrivere nel file: %s"
 
 #. i18n-hint "Cee" means the C computer programming language
 #: libraries/lib-theme/Theme.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Themes as Cee code written to:\n"
 "  %s/*%s."
 msgstr ""
-"Tema scritto in codice Cee in:\n"
-"  %s."
+"Temi come codice Cee scritti in:\n"
+"  %s/*%s."
 
 #. i18n-hint: user defined
 #: libraries/lib-theme/Theme.cpp
@@ -872,18 +883,16 @@ msgid "Custom"
 msgstr "Personalizzato"
 
 #: libraries/lib-track/Track.cpp
-#, fuzzy
 msgid "Generic Track"
-msgstr "Generico"
+msgstr "Traccia generica"
 
 #: libraries/lib-track/Track.cpp
 msgid "Audio Track"
 msgstr "Traccia audio"
 
 #: libraries/lib-track/Track.cpp
-#, fuzzy
 msgid "Playable Track"
-msgstr "Riproduzione"
+msgstr "Traccia riproducibile"
 
 #: libraries/lib-transactions/TransactionScope.cpp
 msgid "Database error.  Sorry, but we don't have more details."
@@ -1078,8 +1087,11 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 Leland Lucius"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Modulo esterno per Audacity che fornisce un semplice IDE per scrivere effetti."
+msgid ""
+"External Audacity module which provides a simple IDE for writing effects."
+msgstr ""
+"Modulo esterno per Audacity che fornisce un semplice IDE per scrivere "
+"effetti."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -1099,7 +1111,7 @@ msgstr "Senza titolo"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench - "
-msgstr "Spazio di lavoro degli effetti di Nyquist - "
+msgstr "Area di lavoro degli effetti di Nyquist - "
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
@@ -1268,97 +1280,113 @@ msgstr "Ferma script"
 msgid "No revision identifier was provided"
 msgstr "Non è stato fornito alcun identificativo di revisione"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, amministrazione sistema"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, cofondatore e sviluppatore"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, designer"
-msgstr "%s, tester"
+msgstr "%s, designer"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, sviluppatore"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer and support"
 msgstr "%s, sviluppatore e supporto"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s, documentazione e assistenza"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
 msgstr "%s, tester QA, documentazione e supporto"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s, documentazione e assistenza, Francese"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, controllo di qualità"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, consulente accessibilità"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, artista grafico"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, compositore"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, tester"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, estensioni Nyquist"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, sviluppatore web"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
@@ -1375,7 +1403,8 @@ msgstr "%s (contenente %s, %s, %s, %s e %s)"
 msgid "About %s"
 msgstr "Info su %s"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
+#. button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
@@ -1397,8 +1426,12 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s the free, open source, cross-platform software for recording and editing sounds."
-msgstr "%s il software libero, open source, multi-piattaforma per registrare ed elaborare suoni."
+msgid ""
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
+msgstr ""
+"%s il software libero, open source, multi-piattaforma per registrare ed "
+"elaborare suoni."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -1413,7 +1446,7 @@ msgstr "Membri del team %s"
 #. i18n-hint: Musers are people working at Muse Group
 #: src/AboutDialog.cpp
 msgid "Former Musers"
-msgstr ""
+msgstr "Ex dipendenti di Muse"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -1513,9 +1546,9 @@ msgid "%s, 64 bits"
 msgstr "%s, 64 bit"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, 32 bits"
-msgstr "%s, 64 bit"
+msgstr "%s, 32 bit"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -1531,23 +1564,20 @@ msgid "Installation Prefix:"
 msgstr "Prefisso installazione: "
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Cache folder:"
-msgstr "Cartella impostazioni:"
+msgstr "Cartella cache:"
 
 #: src/AboutDialog.cpp
 msgid "Settings folder:"
 msgstr "Cartella impostazioni:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Data folder:"
-msgstr "Cartella impostazioni:"
+msgstr "Cartella dati:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "State folder:"
-msgstr "Cartella impostazioni:"
+msgstr "Cartella stato:"
 
 #. i18n-hint: Libraries that are essential to audacity
 #: src/AboutDialog.cpp
@@ -1643,8 +1673,12 @@ msgid "PRIVACY POLICY"
 msgstr "INFORMATIVA SULLA PRIVACY"
 
 #: src/AboutDialog.cpp
-msgid "App update checking and error reporting require network access. These features are optional."
-msgstr "La verifica di aggiornamenti e la segnalazione degli errori richiedono l'accesso alla rete. Queste funzionalità sono facoltative."
+msgid ""
+"App update checking and error reporting require network access. These "
+"features are optional."
+msgstr ""
+"La verifica di aggiornamenti e la segnalazione degli errori richiedono "
+"l'accesso alla rete. Queste funzionalità sono facoltative."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -1671,7 +1705,6 @@ msgstr "Timeline"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
 msgstr "Fare clic o trascinare per iniziare la ricerca"
@@ -1679,7 +1712,6 @@ msgstr "Fare clic o trascinare per iniziare la ricerca"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
 msgstr "Fare clic o trascinare per iniziare lo scorrimento"
@@ -1687,15 +1719,14 @@ msgstr "Fare clic o trascinare per iniziare lo scorrimento"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Fare clic e spostarsi per scorrere. Fare clic e trascinare per ricercare."
+msgstr ""
+"Fare clic e spostarsi per scorrere. Fare clic e trascinare per ricercare."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
 msgstr "Spostarsi per ricercare"
@@ -1703,7 +1734,6 @@ msgstr "Spostarsi per ricercare"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
 msgstr "Spostarsi per scorrere"
@@ -1730,7 +1760,7 @@ msgstr "Riproduzione rapida abilitata"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline Options"
-msgstr "Opzioni sequenza temporale"
+msgstr "Opzioni timeline"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable dragging selection"
@@ -1742,9 +1772,8 @@ msgstr "Aggiorna visualizzazione durante la riproduzione"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Clear Loop"
-msgstr "Azzera ciclo ripetitivo"
+msgstr "Svuota il loop"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Set Loop To Selection"
@@ -1790,7 +1819,9 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr "L'inizializzazione della libreria SQLite è fallita. Audacity non può procedere."
+msgstr ""
+"L'inizializzazione della libreria SQLite è fallita. Audacity non può "
+"procedere."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -1845,8 +1876,12 @@ msgstr ""
 "Specificare una cartella adatta nella finestra di dialogo delle preferenze."
 
 #: src/AudacityApp.cpp
-msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Si sta uscendo da Audacity. Riavviare Audacity per usare la nuova cartella temporanea."
+msgid ""
+"Audacity is now going to exit. Please launch Audacity again to use the new "
+"temporary directory."
+msgstr ""
+"Si sta uscendo da Audacity. Riavviare Audacity per usare la nuova cartella "
+"temporanea."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1876,7 +1911,8 @@ msgstr "Errore bloccando la cartella dei file temporanei"
 
 #: src/AudacityApp.cpp
 msgid "The system has detected that another copy of Audacity is running.\n"
-msgstr "Il sistema ha rilevato che un'altra copia di Audacity è in esecuzione.\n"
+msgstr ""
+"Il sistema ha rilevato che un'altra copia di Audacity è in esecuzione.\n"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1897,6 +1933,9 @@ msgid ""
 "\n"
 "error code=%d : \"%s\"."
 msgstr ""
+"Impossibile creare un segmento di memoria condivisa.\n"
+"\n"
+"codice errore=%d : \"%s\"."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
@@ -2003,7 +2042,7 @@ msgstr "nome file audio o progetto"
 #. i18n-hint: This option is used to handle custom URLs in Audacity
 #: src/AudacityApp.cpp
 msgid "Handle 'audacity://' url"
-msgstr ""
+msgstr "Gesitsci gli url 'audacity://'"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -2101,35 +2140,61 @@ msgid "Out of memory!"
 msgstr "Memoria esaurita!"
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr "La regolazione automatica del livello di registrazione è stata interrotta. Ottimizzazione ulteriore impossibile. Livello ancora troppo alto."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to "
+"optimize it more. Still too high."
+msgstr ""
+"La regolazione automatica del livello di registrazione è stata interrotta. "
+"Ottimizzazione ulteriore impossibile. Livello ancora troppo alto."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "La regolazione automatica del livello di registrazione ha ridotto il volume a %f."
+msgstr ""
+"La regolazione automatica del livello di registrazione ha ridotto il volume "
+"a %f."
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
-msgstr "La regolazione automatica del livello di registrazione è stata interrotta. Ottimizzazione ulteriore impossibile. Livello ancora troppo basso."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to "
+"optimize it more. Still too low."
+msgstr ""
+"La regolazione automatica del livello di registrazione è stata interrotta. "
+"Ottimizzazione ulteriore impossibile. Livello ancora troppo basso."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "La regolazione automatica del livello di registrazione ha aumentato il volume a %.2f."
+msgstr ""
+"La regolazione automatica del livello di registrazione ha aumentato il "
+"volume a %.2f."
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr "La regolazione automatica del livello di registrazione è stata interrotta. Il numero totale di analisi è stato superato senza trovare un volume accettabile. Livello ancora troppo alto."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses "
+"has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
+"La regolazione automatica del livello di registrazione è stata interrotta. "
+"Il numero totale di analisi è stato superato senza trovare un volume "
+"accettabile. Livello ancora troppo alto."
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr "La regolazione automatica del livello di registrazione è stata interrotta. Il numero totale di analisi è stato superato senza trovare un volume accettabile. Livello ancora troppo basso."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses "
+"has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
+"La regolazione automatica del livello di registrazione è stata interrotta. "
+"Il numero totale di analisi è stato superato senza trovare un volume "
+"accettabile. Livello ancora troppo basso."
 
 #: src/AudioIO.cpp
 #, c-format
-msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr "La regolazione automatica del livello di registrazione è stata interrotta. Sembra che %.2f sia un volume accettabile."
+msgid ""
+"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
+"volume."
+msgstr ""
+"La regolazione automatica del livello di registrazione è stata interrotta. "
+"Sembra che %.2f sia un volume accettabile."
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -2248,7 +2313,8 @@ msgstr "Comando di menu (con parametri)"
 msgid "Menu Command (No Parameters)"
 msgstr "Comando di menu (senza parametri)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
+#. Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -2468,7 +2534,8 @@ msgstr "Nome della nuova macro"
 msgid "Name must not be blank"
 msgstr "Il nome non deve essere vuoto"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
+#. and '\'.
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -2546,7 +2613,8 @@ msgstr "La dimensione dei dati di prova deve essere compresa tra 1 e 2000 MB."
 #: src/Benchmark.cpp
 #, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr "Uso di %lld porzioni da %lld campioni ciascuno, per un totale di %.1f MB.\n"
+msgstr ""
+"Uso di %lld porzioni da %lld campioni ciascuno, per un totale di %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
@@ -2658,7 +2726,8 @@ msgstr "TEST FALLITO!!!\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "Benchmark completato con successo.\n"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -2670,23 +2739,34 @@ msgstr ""
 "\n"
 "Ctrl + A seleziona tutto l'audio."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "Selezionare l'audio da utilizzare per l'azione %s (ad esempio, Cmd + A per selezionare tutto) quindi riprovare."
+msgid ""
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
+" again."
+msgstr ""
+"Selezionare l'audio da utilizzare per l'azione %s (ad esempio, Cmd + A per "
+"selezionare tutto) quindi riprovare."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "Selezionare l'audio da utilizzare per l'azione %s (ad esempio, Ctrl + A per selezionare tutto) quindi riprovare."
+msgid ""
+"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
+"try again."
+msgstr ""
+"Selezionare l'audio da utilizzare per l'azione %s (ad esempio, Ctrl + A per "
+"selezionare tutto) quindi riprovare."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
 msgstr "Nessun audio selezionato"
 
-#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise
+#. Reduction'.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -2749,17 +2829,22 @@ msgstr "(%d): %s"
 #: src/DBConnection.cpp
 #, c-format
 msgid "Failed to set page size for database %s"
-msgstr "Non è stato possibile impostare la dimensione di pagina per il database %s"
+msgstr ""
+"Non è stato possibile impostare la dimensione di pagina per il database %s"
 
 #: src/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Non è stato possibile impostare la modalità sicura per la connessione principale su %s"
+msgstr ""
+"Non è stato possibile impostare la modalità sicura per la connessione "
+"principale su %s"
 
 #: src/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Non è stato possibile impostare la modalità sicura per la connessione al punto di controllo su %s"
+msgstr ""
+"Non è stato possibile impostare la modalità sicura per la connessione al "
+"punto di controllo su %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2913,8 +2998,12 @@ msgid "Missing"
 msgstr "Mancante"
 
 #: src/Dependencies.cpp
-msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
-msgstr "Se si procede il progetto non verrà salvato su disco. Si è sicuri di voler procedere?"
+msgid ""
+"If you proceed, your project will not be saved to disk. Is this what you "
+"want?"
+msgstr ""
+"Se si procede il progetto non verrà salvato su disco. Si è sicuri di voler "
+"procedere?"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2992,7 +3081,9 @@ msgstr "Individua FFmpeg"
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr "Ad Audacity serve il file '%s' per importare ed esportare l'audio tramite FFmpeg."
+msgstr ""
+"Ad Audacity serve il file '%s' per importare ed esportare l'audio tramite "
+"FFmpeg."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -3061,7 +3152,8 @@ msgstr ""
 msgid "Do not show this warning again"
 msgstr "Non mostrare di nuovo questo avviso"
 
-#. i18n-hint: %s will be the error message from the libsndfile software library
+#. i18n-hint: %s will be the error message from the libsndfile software
+#. library
 #: src/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
@@ -3195,13 +3287,20 @@ msgid "&Replot..."
 msgstr "&Ridisegna..."
 
 #: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must be the same sample rate."
-msgstr "Per disegnare lo spettro, tutte le tracce selezionate devono avere la stessa frequenza di campionamento."
+msgid ""
+"To plot the spectrum, all selected tracks must be the same sample rate."
+msgstr ""
+"Per disegnare lo spettro, tutte le tracce selezionate devono avere la stessa"
+" frequenza di campionamento."
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "È stato selezionato troppo audio. Saranno analizzati solo i primi %.1f secondi di audio."
+msgid ""
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
+"analyzed."
+msgstr ""
+"È stato selezionato troppo audio. Saranno analizzati solo i primi %.1f "
+"secondi di audio."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -3212,26 +3311,30 @@ msgstr "I dati selezionati non sono sufficienti."
 msgid "s"
 msgstr "s"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%d Hz (%s) = %d dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%d Hz (%s) = %.1f dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4f sec (%d Hz) (%s) = %f"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
@@ -3317,24 +3420,40 @@ msgid "No Local Help"
 msgstr "Nessuna guida locale"
 
 #: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr "<br><br>La versione di Audacity che si sta usando è una <b>versione alfa di prova</b>."
+msgid ""
+"<br><br>The version of Audacity you are using is an <b>Alpha test "
+"version</b>."
+msgstr ""
+"<br><br>La versione di Audacity che si sta usando è una <b>versione alfa di "
+"prova</b>."
 
 #: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr "<br><br>La versione di Audacity che si sta usando è una <b>versione beta di prova</b>."
+msgid ""
+"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgstr ""
+"<br><br>La versione di Audacity che si sta usando è una <b>versione beta di "
+"prova</b>."
 
 #: src/HelpText.cpp
 msgid "Get the Official Released Version of Audacity"
 msgstr "Ottieni la versione ufficiale di Audacity"
 
 #: src/HelpText.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
-msgstr "Raccomandiamo fortemente la nostra ultima versione stabile rilasciata, che dispone di documentazione completa e di assistenza.<br><br>"
+msgid ""
+"We strongly recommend that you use our latest stable released version, which"
+" has full documentation and support.<br><br>"
+msgstr ""
+"Raccomandiamo fortemente la nostra ultima versione stabile rilasciata, che "
+"dispone di documentazione completa e di assistenza.<br><br>"
 
 #: src/HelpText.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
-msgstr "È possibile aiutarci a rendere Audacity pronto per il rilascio entrando nella nostra [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgid ""
+"You can help us get Audacity ready for release by joining our "
+"[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr ""
+"È possibile aiutarci a rendere Audacity pronto per il rilascio entrando "
+"nella nostra "
+"[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 
 #. i18n-hint: %s is replaced with Audacity version
 #: src/HelpText.cpp
@@ -3352,39 +3471,91 @@ msgstr "Questi sono i nostri canali di supporto:"
 
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
-msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+msgid ""
+"[[help:Quick_Help|Quick Help]] - if not installed locally, "
+"[[https://manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 "[[help:Quick_Help|Guida rapida]] - se non installata localmente,\n"
 "[[https://manual.audacityteam.org/quick_help.html|visualizza online]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
-msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
-msgstr " [[help:Main_Page|Manuale]] - se non installato localmente, [[https://manual.audacityteam.org/|visualizza online]]"
+msgid ""
+" [[help:Main_Page|Manual]] - if not installed locally, "
+"[[https://manual.audacityteam.org/|view online]]"
+msgstr ""
+" [[help:Main_Page|Manuale]] - se non installato localmente, "
+"[[https://manual.audacityteam.org/|visualizza online]]"
 
 #: src/HelpText.cpp
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " [[https://forum.audacityteam.org/|Forum]] - poni direttamente domande, online."
+msgid ""
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
+"online."
+msgstr ""
+" [[https://forum.audacityteam.org/|Forum]] - poni direttamente domande, "
+"online."
 
 #: src/HelpText.cpp
-msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
-msgstr "Inoltre:</b> Visita il nostro [[https://wiki.audacityteam.org/index.php|wiki]] per suggerimenti, trucchi, ulteriori tutorial ed estensioni per gli effetti."
+msgid ""
+"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
+"tips, tricks, extra tutorials and effects plug-ins."
+msgstr ""
+"Inoltre:</b> Visita il nostro "
+"[[https://wiki.audacityteam.org/index.php|wiki]] per suggerimenti, trucchi, "
+"ulteriori tutorial ed estensioni per gli effetti."
 
 #: src/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
-msgstr "Audacity può importare file non protetti in molti altri formati (come M4A e WMA, file WAV compressi da registratori portatili e audio da file video) se si scarica e installa la [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|libreria FFmpeg]] opzionale nel proprio computer."
+msgid ""
+"Audacity can import unprotected files in many other formats (such as M4A and"
+" WMA, compressed WAV files from portable recorders and audio from video "
+"files) if you download and install the optional "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|"
+" FFmpeg library]] to your computer."
+msgstr ""
+"Audacity può importare file non protetti in molti altri formati (come M4A e "
+"WMA, file WAV compressi da registratori portatili e audio da file video) se "
+"si scarica e installa la "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|libreria"
+" FFmpeg]] opzionale nel proprio computer."
 
 #: src/HelpText.cpp
-msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr "È inoltre possibile leggere la nostra guida su come importare [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|file MIDI]] e tracce da [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|CD audio]]."
+msgid ""
+"You can also read our help on importing "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"files]] and tracks from "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
+" audio CDs]]."
+msgstr ""
+"È inoltre possibile leggere la nostra guida su come importare "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|file "
+"MIDI]] e tracce da "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|CD"
+" audio]]."
 
 #: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Sembra che il manuale non sia stato installato. È possibile [[*URL*|consultare il manuale online]].<br><br>Per visualizzare sempre il manuale online, modificare l'opzione \"Posizione del manuale\" nelle preferenze dell'interfaccia, selezionando \"Da internet\"."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
+"online]].<br><br>To always view the Manual online, change \"Location of "
+"Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Sembra che il manuale non sia stato installato. È possibile "
+"[[*URL*|consultare il manuale online]].<br><br>Per visualizzare sempre il "
+"manuale online, modificare l'opzione \"Posizione del manuale\" nelle "
+"preferenze dell'interfaccia, selezionando \"Da internet\"."
 
 #: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Sembra che il manuale non sia stato installato. È possibile [[*URL*|consultare il manuale online]] o [[https://manual.audacityteam.org/man/unzipping_the_manual.html|scaricare il manuale]].<br><br>Per visualizzare sempre il manuale online, modificare l'opzione \"Posizione del manuale\" nelle preferenze dell'interfaccia, selezionando \"Da internet\"."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
+" download the Manual]].<br><br>To always view the Manual online, change "
+"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Sembra che il manuale non sia stato installato. È possibile "
+"[[*URL*|consultare il manuale online]] o "
+"[[https://manual.audacityteam.org/man/unzipping_the_manual.html|scaricare il"
+" manuale]].<br><br>Per visualizzare sempre il manuale online, modificare "
+"l'opzione \"Posizione del manuale\" nelle preferenze dell'interfaccia, "
+"selezionando \"Da internet\"."
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -3453,34 +3624,38 @@ msgstr "La compressione ha liberato %s di spazio disco."
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&History"
-msgstr "Cronologia"
+msgstr "&Cronologia"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "New Plugins"
-msgstr "Gestione estensioni"
+msgstr "Nuove estensioni"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "Incompatible plugin(s) found"
-msgstr "Nessuna libreria compatibile FFmpeg trovata"
+msgstr "Trovate estensioni incompatibili"
 
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Manage Plugins"
-msgstr "Gestione estensioni"
+msgstr "Gestisci estensioni"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "Continue"
-msgstr "Collaboratori"
+msgstr "Continua"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgid ""
+"Audacity has found %d incompatible plugins which could not be loaded. We "
+"have disabled these plugins to avoid any stalling or crashes. If you would "
+"still like to attempt to use these plugins, you can enable them using "
+"\"Manage Plugins\". Otherwise, select \"Continue\"."
 msgstr ""
+"Audacity ha trovato %d estensioni incompatibili che non possono essere "
+"caricate. Queste estensioni sono state disabilitate per evitare blocchi o "
+"arresti anomali. Per provare a utilizzare comunque queste estensioni, è "
+"possibile abilitarle utilizzando \"Gestisci estensioni\". In caso contrario,"
+" selezionare \"Continua\"."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -3528,7 +3703,8 @@ msgstr "Nuovo..."
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
-msgstr "Premere F2 o fare doppio clic per modificare il contenuto della cella."
+msgstr ""
+"Premere F2 o fare doppio clic per modificare il contenuto della cella."
 
 #: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
@@ -3586,8 +3762,12 @@ msgstr "Selezionare la lingua da usare per Audacity:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
-msgstr "La lingua selezionata, %s (%s), non corrisponde alla lingua di sistema, %s (%s)."
+msgid ""
+"The language you have chosen, %s (%s), is not the same as the system "
+"language, %s (%s)."
+msgstr ""
+"La lingua selezionata, %s (%s), non corrisponde alla lingua di sistema, %s "
+"(%s)."
 
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
@@ -3624,8 +3804,9 @@ msgstr "&Salva..."
 msgid "Cl&ear"
 msgstr "Az&zera"
 
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/LogWindow.cpp src/ShuttleGui.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Chiudi"
 
@@ -3648,13 +3829,13 @@ msgid "Audacity Karaoke%s"
 msgstr "Karaoke di Audacity%s"
 
 #: src/LyricsWindow.cpp
-#, fuzzy
 msgid "&Karaoke"
-msgstr "&Karaoke..."
+msgstr "&Karaoke"
 
 #: src/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Si è verificato un errore durante l'inizializzazione del layer I/O MIDI.\n"
+msgstr ""
+"Si è verificato un errore durante l'inizializzazione del layer I/O MIDI.\n"
 
 #: src/MIDIPlay.cpp
 msgid ""
@@ -3707,9 +3888,9 @@ msgid "Mixing and rendering tracks"
 msgstr "Mixaggio e renderizzazione delle tracce"
 
 #: src/MixerBoard.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity Mixer%s"
-msgstr "Pannello mixer di Audacity%s"
+msgstr "Mixer di Audacity %s"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
@@ -3720,7 +3901,8 @@ msgid "Gain"
 msgstr "Guadagno"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
+#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note
+#. tracks
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -3772,9 +3954,8 @@ msgid "Moved pan slider"
 msgstr "Cursore bilanciamento spostato"
 
 #: src/MixerBoard.cpp
-#, fuzzy
 msgid "&Mixer"
-msgstr "Mixer"
+msgstr "&Mixer"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3904,34 +4085,41 @@ msgstr "La♭"
 msgid "B♭"
 msgstr "Si♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "Do♯/Do♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "Re♯/Mi♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "Fa♯/Sol♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "Sol♯/La♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "La♯/Si♭"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Selezionare effetti, fare clic sul pulsante abilita o disabilita, quindi fare clic su OK."
+msgstr ""
+"Selezionare effetti, fare clic sul pulsante abilita o disabilita, quindi "
+"fare clic su OK."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginRegistrationDialog.cpp
@@ -3996,7 +4184,7 @@ msgstr "Cance&lla tutto"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Rescan"
-msgstr ""
+msgstr "Rianalizza"
 
 #: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 msgid "&Enable"
@@ -4039,7 +4227,7 @@ msgstr ""
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
-msgstr ""
+msgstr "Ricerca estensioni"
 
 #: src/Printing.cpp
 msgid "There was a problem printing."
@@ -4064,7 +4252,9 @@ msgstr ""
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr "Le tracce selezionate per la registrazione devono avere tutte la stessa frequenza di campionamento"
+msgstr ""
+"Le tracce selezionate per la registrazione devono avere tutte la stessa "
+"frequenza di campionamento"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
@@ -4084,7 +4274,8 @@ msgstr ""
 msgid "Too Few Compatible Tracks Selected"
 msgstr "Troppo poche tracce compatibili selezionate"
 
-#. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+#. i18n-hint a numerical suffix added to distinguish otherwise like-named
+#. clips when new record started
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
@@ -4113,8 +4304,15 @@ msgid "Close project immediately with no changes"
 msgstr "Chiudi immediatamente progetto senza modifiche"
 
 #: src/ProjectFSCK.cpp
-msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "Continuare con le riparazioni indicate nel registro, e controllare ulteriori errori. Il progetto verrà salvato nel suo stato corrente, a meno che non si selezioni \"Chiudi immediatamente progetto senza modifiche\" in caso di ulteriori avvisi."
+msgid ""
+"Continue with repairs noted in log, and check for more errors. This will "
+"save the project in its current state, unless you \"Close project "
+"immediately\" on further error alerts."
+msgstr ""
+"Continuare con le riparazioni indicate nel registro, e controllare ulteriori"
+" errori. Il progetto verrà salvato nel suo stato corrente, a meno che non si"
+" selezioni \"Chiudi immediatamente progetto senza modifiche\" in caso di "
+"ulteriori avvisi."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -4190,7 +4388,9 @@ msgstr "Rigenera file alias di riepilogo (sicuro e raccomandato)"
 
 #: src/ProjectFSCK.cpp
 msgid "Fill in silence for missing display data (this session only)"
-msgstr "Inserisci silenzio al posto dei dati di visualizzazione mancanti (solo per questa sessione)"
+msgstr ""
+"Inserisci silenzio al posto dei dati di visualizzazione mancanti (solo per "
+"questa sessione)"
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no further changes"
@@ -4371,7 +4571,9 @@ msgstr "Impossibile inizializzare il file del progetto"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr "Impossibile aggiungere la funzione 'inset' (impossibile verificare i blockids)"
+msgstr ""
+"Impossibile aggiungere la funzione 'inset' (impossibile verificare i "
+"blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4541,7 +4743,9 @@ msgstr "Impossibile aprire il file del progetto"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr "Non è stato possibile rimuovere l'informazione di salvataggio automatico dal file del progetto."
+msgstr ""
+"Non è stato possibile rimuovere l'informazione di salvataggio automatico dal"
+" file del progetto."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
@@ -4552,8 +4756,12 @@ msgid "Unable to parse project information."
 msgstr "Non è stato possibile analizzare le informazioni del progetto."
 
 #: src/ProjectFileIO.cpp
-msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr "Non è stato possibile aprire il database del progetto, probabilmente a causa di spazio limitato sul dispositivo di salvataggio."
+msgid ""
+"The project's database failed to reopen, possibly because of limited space "
+"on the storage device."
+msgstr ""
+"Non è stato possibile aprire il database del progetto, probabilmente a causa"
+" di spazio limitato sul dispositivo di salvataggio."
 
 #: src/ProjectFileIO.cpp
 msgid "Saving project"
@@ -4671,8 +4879,12 @@ msgstr ""
 "Selezionare un disco differente con più spazio libero."
 
 #: src/ProjectFileManager.cpp
-msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
-msgstr "Il progetto supera la dimensione massima di 4GB quando si scrive su un file system formattato in formato FAT32."
+msgid ""
+"The project exceeds the maximum size of 4GB when writing to a FAT32 "
+"formatted filesystem."
+msgstr ""
+"Il progetto supera la dimensione massima di 4GB quando si scrive su un file "
+"system formattato in formato FAT32."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4879,7 +5091,8 @@ msgstr "Comprimi"
 msgid "Welcome to Audacity version %s"
 msgstr "Benvenuto nella versione %s di Audacity"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project name.
+#. i18n-hint: The first %s numbers the project, the second %s is the project
+#. name.
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
@@ -4919,14 +5132,16 @@ msgstr "Meno di 1 minuto"
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d ora"
-msgstr[1] "%d ore"
+msgstr[1] "%d di ore"
+msgstr[2] "%d ore"
 
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d minuto"
-msgstr[1] "%d minuti"
+msgstr[1] "%d di minuti"
+msgstr[2] "%d minuti"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
@@ -4943,9 +5158,8 @@ msgstr ""
 "È necessario eseguire quella versione di Audacity per recuperare il progetto."
 
 #: src/ProjectWindow.cpp
-#, fuzzy
 msgid "Realtime effects"
-msgstr "Anteprima effetto"
+msgstr "Effetti in tempo reale"
 
 #: src/ProjectWindow.cpp
 msgid "Horizontal Scrollbar"
@@ -4957,131 +5171,122 @@ msgstr "Barra di scorrimento verticale"
 
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Effect %d"
-msgstr "Effetto"
+msgstr "Effetto %d"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Power"
-msgstr ""
+msgstr "Potenza"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Replace effect"
-msgstr "Sostituire la combinazione '%s'?"
+msgstr "Sostituisci effetto"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s (missing)"
-msgstr "Mancante"
+msgstr "%s (mancante)"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Removed %s from %s"
-msgstr "Etichette importate da '%s'"
+msgstr "%s rimosso da %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Remove %s"
-msgstr "Rimuovi"
+msgstr "Rimuovi %s"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
-#.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Replaced %s with %s"
-msgstr "Sostituire la combinazione '%s'?"
+msgstr "%s sostituito con %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Replace %s"
-msgstr "Sostituire la combinazione '%s'?"
+msgstr "Sostituisci %s"
 
 #: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Unknown"
 msgstr "Sconosciuto"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "No Effect"
-msgstr "Effetto"
+msgstr "Nessun effetto"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Get more effects..."
-msgstr "Ottieni preferenze..."
+msgstr "Ottieni altri effetti..."
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Add effect"
-msgstr "Tutti gli effetti"
+msgstr "Aggiungi effetto"
 
 #. i18n-hint: Hyperlink to the effects stack panel tutorial video
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
-msgstr ""
+msgstr "Guarda video"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %s up in %s"
-msgstr "'%s' spostato su"
+msgstr "%s spostato su in %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %s down in %s"
-msgstr "'%s' spostato giù"
+msgstr "%s spostato giù in %s"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Change effect order"
-msgstr "Cambia velocità"
+msgstr "Cambia ordine effetto"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
 msgstr ""
+"Gli effetti in tempo reale non sono distruttivi e possono essere modificati "
+"in qualsiasi momento."
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Added %s to %s"
-msgstr "'%s' modificato in %s"
+msgstr "%s aggiunto a %s"
 
 #. i18n-hint: undo history record
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Aggiungi %s"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Realtime Effects"
-msgstr "Abilita effetti"
+msgstr "Effetti in tempo reale"
 
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Realtime effects for %s"
-msgstr "Effetto applicato: %s"
+msgstr "Effetti in tempo reale per %s"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -5202,7 +5407,8 @@ msgstr "Monitor"
 msgid "Play Meter"
 msgstr "Monitor riproduzione"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -5237,7 +5443,8 @@ msgid "Ruler"
 msgstr "Righello"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
+#. * data associated with a time line, such as sequences of labels, and
+#. musical
 #. * notes
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
@@ -5303,8 +5510,11 @@ msgid "Long Message"
 msgstr "Messaggio lungo"
 
 #: src/SelectFile.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr "Il nome di file specificato non può essere convertito a causa dell'utilizzo di caratteri Unicode."
+msgid ""
+"The specified filename could not be converted due to Unicode character use."
+msgstr ""
+"Il nome di file specificato non può essere convertito a causa dell'utilizzo "
+"di caratteri Unicode."
 
 #: src/SelectFile.cpp
 msgid "Specify New Filename:"
@@ -5451,7 +5661,9 @@ msgstr "Genere"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr "Usare i tasti freccia (o il tasto INVIO dopo la modifica) per spostarsi tra i campi."
+msgstr ""
+"Usare i tasti freccia (o il tasto INVIO dopo la modifica) per spostarsi tra "
+"i campi."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -5533,14 +5745,18 @@ msgstr "Salva metadati come:"
 msgid "Error Saving Tags File"
 msgstr "Errore nel salvataggio del file dei tag"
 
-#. i18n-hint: This string is used to configure the controls which shows the recording
-#. * duration. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls which shows the
+#. recording
+#. * duration. As such it is important that only the alphabetic parts of the
+#. string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+#. * The string 'days' indicates that the first number in the control will be
+#. the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm'
+#. indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number
+#. displayed is
 #. * seconds.
-#.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
@@ -5742,12 +5958,15 @@ msgstr "099 h 060 m 060 s"
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 giorni 024 h 060 m 060 s"
 
-#. i18n-hint: This string is used to configure the controls for times when the recording is
-#. * started and stopped. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the
+#. recording is
+#. * started and stopped. As such it is important that only the alphabetic
+#. parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-#.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
+#. the second number
+#. * displayed is minutes, and the 's' indicates that the third number
+#. displayed is seconds.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
 msgstr "Data e ora di inizio"
@@ -5792,8 +6011,8 @@ msgstr "Abilitare l'&esportazione automatica?"
 msgid "Export Project As:"
 msgstr "Esporta progetto con nome:"
 
-#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Opzioni"
 
@@ -5917,8 +6136,12 @@ msgid " Select On"
 msgstr " Seleziona attiva"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Fare clic e trascinare per regolare la dimensione relativa delle tracce stereo, doppio clic per renderne uguale le altezze"
+msgid ""
+"Click and drag to adjust relative size of stereo tracks, double-click to "
+"make heights equal"
+msgstr ""
+"Fare clic e trascinare per regolare la dimensione relativa delle tracce "
+"stereo, doppio clic per renderne uguale le altezze"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -5981,14 +6204,16 @@ msgstr "Sposta traccia in alto"
 msgid "Move Track Down"
 msgstr "Sposta traccia in basso"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Riproduzione"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
@@ -6009,7 +6234,8 @@ msgstr "La selezione è troppo piccola per usare la voce chiave."
 msgid "Calibration Results\n"
 msgstr "Risultati calibrazione\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
+#. Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -6038,9 +6264,8 @@ msgid "Audio"
 msgstr "Audio"
 
 #: src/WaveTrack.cpp
-#, fuzzy
 msgid "Wave Track"
-msgstr "Sposta traccia"
+msgstr "Traccia d'onda"
 
 #. i18n-hint Template for clip name generation on copy-paste
 #: src/WaveTrack.cpp
@@ -6066,113 +6291,105 @@ msgstr "Spazio insufficiente per espandere la linea di taglio"
 
 #. i18n-hint: Share audio button text, keep as short as possible
 #: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Share Audio"
-msgstr "Confronta audio"
+msgstr "Condividi audio"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
-#, fuzzy
 msgid "&Share Audio Toolbar"
-msgstr "Barra &selezione"
+msgstr "Barra degli strumenti di &condivisione audio"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 #: src/cloud/audiocom/LinkSucceededDialog.cpp
-#, fuzzy
 msgid "Link account"
-msgstr "Quantità swing"
+msgstr "Collega account"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 msgid "Enter token to link your account"
-msgstr ""
+msgstr "Inserire il token per collegare il proprio account"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "C&ontinue"
-msgstr ""
+msgstr "C&ontinua"
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
-msgstr ""
+msgstr "Non è stato possibile collegare il tuo account. Riprovare."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "&Try again"
-msgstr ""
+msgstr "&Riprova"
 
 #: src/cloud/audiocom/LinkSucceededDialog.cpp
-#, fuzzy
 msgid "Account linked successfully!"
-msgstr "Benchmark completato con successo.\n"
+msgstr "Account collegato con successo!"
 
 #: src/cloud/audiocom/LinkSucceededDialog.cpp
-#, fuzzy
 msgid "&Ok"
-msgstr "&OK"
+msgstr "&Ok"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "&Go to my file"
-msgstr "Esporta in un file."
+msgstr "&Vai al mio file"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Are you sure you want to cancel?"
-msgstr "Annullare?"
+msgstr "Annullare l'operazione?"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Cancel upload to Audio.com"
-msgstr ""
+msgstr "Annulla l'upload su Audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Uploading audio..."
-msgstr "Applicazione dissolvenza in corso..."
+msgstr "Upload dell'audio in corso..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Upload complete!"
-msgstr ""
+msgstr "Upload completato!"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Upload error"
-msgstr "Errore sconosciuto"
+msgstr "Errore nell'upload"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to"
+" your audio.com account before uploading."
 msgstr ""
+"Non è stato possibile fare l'upload di questo file. Riprovare e assicurarsi "
+"di collegare il proprio account audio.com prima di effettuare l'upload."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Export error"
-msgstr "Esporta macro"
+msgstr "Errore di esportazione"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "We are unable to prepare this file for uploading."
-msgstr "Non è stato possibile aprire il file di destinazione per la scrittura"
+msgstr "Non è stato possibile preparare questo file per l'upload."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Finalizing upload..."
-msgstr "Analisi in corso..."
+msgstr "Completamento dell'upload in corso..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Anonymous"
-msgstr ""
+msgstr "Anonimo"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Link Account"
-msgstr ""
+msgstr "Co&llega account"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Press \"Continue\" to upload to audio.com"
-msgstr ""
+msgstr "Premere \"Continua\" per fare l'upload su audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
@@ -6181,19 +6398,21 @@ msgid ""
 "\n"
 "If you have problems uploading, try the Link Account button."
 msgstr ""
+"L'audio verrà caricato sul nostro servizio di condivisione: %s,%%che richiede un account gratuito per essere utilizzato.\n"
+"\n"
+"In caso di problemi con l'upload, provare a premere il pulsante Collega account."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
-msgstr ""
+msgstr "audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Unlink Account"
-msgstr ""
+msgstr "&Scollega account"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Preparing audio..."
-msgstr "Preparazione...\n"
+msgstr "Preparazione dell'audio in corso..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -6205,11 +6424,13 @@ msgstr "Tempo restante:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
+msgstr "Collegamento da condividere"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Only people you share this link with can access your audio"
 msgstr ""
+"Solo le persone con cui condividi questo collegamento possono accedere al "
+"tuo audio."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
@@ -6232,7 +6453,8 @@ msgstr ""
 msgid "Applying %s..."
 msgstr "Applicazione di %s..."
 
-#. i18n-hint: An item name followed by a value, with appropriate separating punctuation
+#. i18n-hint: An item name followed by a value, with appropriate separating
+#. punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/import/ImportRaw.cpp
 #: src/menus/PluginMenus.cpp
@@ -6284,8 +6506,14 @@ msgstr ""
 "* %s, in quanto hai assegnato la combinazione di tasti %s a %s"
 
 #: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "Sono state rimosse le combinazioni di tasti dei seguenti comandi, in quanto le loro combinazioni di tasti preefinite sono nuove o modificate e sono le stesse combinazioni di tasti già assegate a un altro comando."
+msgid ""
+"The following commands have had their shortcuts removed, because their "
+"default shortcut is new or changed, and is the same shortcut that you have "
+"assigned to another command."
+msgstr ""
+"Sono state rimosse le combinazioni di tasti dei seguenti comandi, in quanto "
+"le loro combinazioni di tasti preefinite sono nuove o modificate e sono le "
+"stesse combinazioni di tasti già assegate a un altro comando."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -7032,22 +7260,36 @@ msgid "Auto Duck"
 msgstr "Riduzione automatica volume"
 
 #: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Riduci il volume di una o più tracce se il volume di uno specificato traccia \"di controllo\" raggiunge un particolare livello"
+msgid ""
+"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
+"specified \"control\" track reaches a particular level"
+msgstr ""
+"Riduci il volume di una o più tracce se il volume di uno specificato traccia"
+" \"di controllo\" raggiunge un particolare livello"
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "La traccia selezionata non contiene audio. L'effetto Riduci volume automaticamente può elaborare solo tracce audio."
+msgid ""
+"You selected a track which does not contain audio. AutoDuck can only process"
+" audio tracks."
+msgstr ""
+"La traccia selezionata non contiene audio. L'effetto Riduci volume "
+"automaticamente può elaborare solo tracce audio."
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "La funzione di riduzione automatica del volume necessita di una traccia di controllo che deve essere posizionata al di sotto delle tracce selezionate."
+msgid ""
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
+msgstr ""
+"La funzione di riduzione automatica del volume necessita di una traccia di "
+"controllo che deve essere posizionata al di sotto delle tracce selezionate."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -7273,7 +7515,8 @@ msgstr "Regola la velocità, cambiando tempo e intonazione"
 msgid "&Speed Multiplier:"
 msgstr "Moltiplicatore di &velocità:"
 
-#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
+#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per
+#. minute".
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
@@ -7281,7 +7524,6 @@ msgstr "Giri/minuto vinile:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Da g/m"
@@ -7294,7 +7536,6 @@ msgstr "&da"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "A g/m"
@@ -7508,20 +7749,23 @@ msgid "Attack Time"
 msgstr "Tempo di attacco"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "R&elease Time:"
 msgstr "Tempo di &rilascio:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "Release Time"
 msgstr "Tempo di rilascio"
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
+#. it.
 #: src/effects/Compressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
 msgstr "Componi guadagno per 0 dB dopo la compressione"
@@ -7578,8 +7822,12 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
-msgstr "Analizzatore contrasto, per misurare differenze RMS di volume tra due selezioni di audio."
+msgid ""
+"Contrast Analyzer, for measuring RMS volume differences between two "
+"selections of audio."
+msgstr ""
+"Analizzatore contrasto, per misurare differenze RMS di volume tra due "
+"selezioni di audio."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -7704,7 +7952,8 @@ msgstr "Livello di sfondo troppo alto"
 msgid "Background higher than foreground"
 msgstr "Fondo più alto del primo piano"
 
-#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/
+#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0',
+#. see http://www.w3.org/TR/WCAG20/
 #: src/effects/Contrast.cpp
 msgid "WCAG2 Pass"
 msgstr "WCAG2 superato"
@@ -8062,8 +8311,12 @@ msgid "DTMF Tones"
 msgstr "Toni DTMF"
 
 #: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Genera toni multifrequenza (DTMF - dual-tone multi-frequency) come quelli prodotti dalla tastiera dei telefoni"
+msgid ""
+"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
+"keypad on telephones"
+msgstr ""
+"Genera toni multifrequenza (DTMF - dual-tone multi-frequency) come quelli "
+"prodotti dalla tastiera dei telefoni"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -8147,7 +8400,7 @@ msgstr "Incorporato"
 
 #: src/effects/Effect.cpp
 msgid "Presets"
-msgstr "Preset"
+msgstr "Combinazione"
 
 #: src/effects/Effect.cpp
 msgid "Export Effect Parameters"
@@ -8187,7 +8440,8 @@ msgid "Previewing"
 msgstr "Anteprima"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/effects/EffectBase.h
@@ -8281,14 +8535,12 @@ msgid "Manage presets and options"
 msgstr "Gestisci combinazioni e opzioni"
 
 #: src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Presets && settings"
-msgstr "Impostazioni correnti"
+msgstr "Combinazioni && impostazioni"
 
 #: src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Start and stop preview"
-msgstr "Avvia e arresta riproduzione"
+msgstr "Avvia e arresta anteprima"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
@@ -8297,9 +8549,8 @@ msgstr "Anteprima effetto"
 #. i18n-hint: The access key "&P" should be the same in
 #. "Stop &Preview" and "Start &Preview"
 #: src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Stop &Preview"
-msgstr "Ante&prima"
+msgstr "Arresta ante&prima"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
@@ -8465,12 +8716,17 @@ msgid "Filter Curve EQ needs a different name"
 msgstr "EQ curva del filtro richiede di un nome diverso"
 
 #: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Per applicare l'equalizzazione, tutte le tracce selezionate devono avere la stessa frequenza di campionamento."
+msgid ""
+"To apply Equalization, all selected tracks must have the same sample rate."
+msgstr ""
+"Per applicare l'equalizzazione, tutte le tracce selezionate devono avere la "
+"stessa frequenza di campionamento."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
-msgstr "La frequenza di campionamento della traccia è troppo bassa per questo effetto."
+msgstr ""
+"La frequenza di campionamento della traccia è troppo bassa per questo "
+"effetto."
 
 #: src/effects/Equalization.cpp
 msgid "Effect Unavailable"
@@ -8507,7 +8763,8 @@ msgstr "%d Hz"
 msgid "%g kHz"
 msgstr "%g kHz"
 
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in
+#. translation.
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%gk"
@@ -8968,11 +9225,15 @@ msgstr "I passi per blocco non possono superare la dimensione della finestra."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Median method is not implemented for more than four steps per window."
-msgstr "Il metodo della mediana non è implementato per più di quattro passi per finestra."
+msgstr ""
+"Il metodo della mediana non è implementato per più di quattro passi per "
+"finestra."
 
 #: src/effects/NoiseReduction.cpp
 msgid "You must specify the same window size for steps 1 and 2."
-msgstr "È necessario specificare la stessa dimensione della finestra per i passi 1 e 2."
+msgstr ""
+"È necessario specificare la stessa dimensione della finestra per i passi 1 e"
+" 2."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Warning: window types are not the same as for profiling."
@@ -8980,11 +9241,17 @@ msgstr "Attenzione: i tipi di finestra non sono gli stessi dei profili."
 
 #: src/effects/NoiseReduction.cpp
 msgid "All noise profile data must have the same sample rate."
-msgstr "Tutti i dati del profilo del rumore devono avere la stessa frequenza di campionamento."
+msgstr ""
+"Tutti i dati del profilo del rumore devono avere la stessa frequenza di "
+"campionamento."
 
 #: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "La frequenza di campionamento del profilo del rumore deve corrispondere a quella del suono da elaborare."
+msgid ""
+"The sample rate of the noise profile must match that of the sound to be "
+"processed."
+msgstr ""
+"La frequenza di campionamento del profilo del rumore deve corrispondere a "
+"quella del suono da elaborare."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Selected noise profile is too short."
@@ -9079,7 +9346,8 @@ msgstr "Ri&duci"
 msgid "&Isolate"
 msgstr "&Isola"
 
-#. i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !
+#. i18n-hint: Means the difference between effect and original sound.
+#. Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
 msgstr "Resid&uo"
@@ -9167,7 +9435,8 @@ msgstr "Rimozione rumore"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr "Rimuove rumori costanti di fondo come fruscii, rumore di nastro, o ronzii"
+msgstr ""
+"Rimuove rumori costanti di fondo come fruscii, rumore di nastro, o ronzii"
 
 #: src/effects/NoiseRemoval.cpp
 msgid ""
@@ -9272,12 +9541,13 @@ msgstr "Paulstretch"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Usa Paulstretch solo per un estremo allungamento temporale o un effetto di \"stasi\""
+msgstr ""
+"Usa Paulstretch solo per un estremo allungamento temporale o un effetto di "
+"\"stasi\""
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
-#.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
 msgstr "Fa&ttore di allungamento:"
@@ -9286,7 +9556,8 @@ msgstr "Fa&ttore di allungamento:"
 msgid "&Time Resolution (seconds):"
 msgstr "Risoluzione &temporale (secondi):"
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9300,7 +9571,8 @@ msgstr ""
 "Provare ad aumentare l'audio selezionato ad almeno %.1f secondi,\n"
 "o a ridurre la risoluzione temporale a meno di %.1f secondi."
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9314,7 +9586,8 @@ msgstr ""
 "Per l'audio attualmente selezionato la massima\n"
 "risoluzione temporale è di %.1f secondi."
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9394,9 +9667,9 @@ msgstr "Guadagno uscita (dB)"
 
 #. i18n-hint: First %s is an effect name, second is a track name
 #: src/effects/RealtimeEffectStateUI.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s - %s"
-msgstr "%d - %s\n"
+msgstr "%s - %s"
 
 #: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
@@ -9560,17 +9833,20 @@ msgstr "Inverti l'audio selezionato"
 msgid "SBSMS Time / Pitch Stretch"
 msgstr "Tempo SBSMS / stiramento intonazione"
 
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
 msgstr "Butterworth"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type I"
 msgstr "Chebyshev tipo I"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type II"
 msgstr "Chebyshev tipo II"
@@ -9594,13 +9870,16 @@ msgstr "Esegue filtraggio IIR che simula i filtri analogici"
 
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Per applicare un filtro, tutte le tracce selezionate devono avere la stessa frequenza di campionamento."
+msgstr ""
+"Per applicare un filtro, tutte le tracce selezionate devono avere la stessa "
+"frequenza di campionamento."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
 msgstr "Tipo &filtro:"
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number
+#. between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
 msgstr "O&rdine:"
@@ -9669,32 +9948,40 @@ msgstr "Soglia silenzio:"
 msgid "Silence Threshold"
 msgstr "Soglia silenzio"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
 msgstr "Tempo di pre-smorzamento:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
 msgstr "Tempo di pre-smorzamento"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
 msgstr "Linea tempo:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -9705,8 +9992,10 @@ msgstr "Linea tempo"
 msgid "Smooth Time:"
 msgstr "Tempo smorzamento:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -9813,7 +10102,6 @@ msgid "Square, no alias"
 msgstr "Quadrata, no alias"
 
 #: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-#, fuzzy
 msgctxt "waveform"
 msgid "Triangle"
 msgstr "Triangolo"
@@ -9875,12 +10163,20 @@ msgid "Truncate Silence"
 msgstr "Tronca silenzio"
 
 #: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Riduci automaticamente la lunghezza dei passaggi in cui il volume è al di sotto di uno specificato livello"
+msgid ""
+"Automatically reduces the length of passages where the volume is below a "
+"specified level"
+msgstr ""
+"Riduci automaticamente la lunghezza dei passaggi in cui il volume è al di "
+"sotto di uno specificato livello"
 
 #: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Quando si tronca in modo indipendente, vi può essere solo una traccia audio selezionata in ogni gruppo tracce con sincro bloccata."
+msgid ""
+"When truncating independently, there may only be one selected audio track in"
+" each Sync-Locked Track Group."
+msgstr ""
+"Quando si tronca in modo indipendente, vi può essere solo una traccia audio "
+"selezionata in ogni gruppo tracce con sincro bloccata."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -9926,8 +10222,17 @@ msgstr "Dimensione buffer"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
-msgstr "La dimensione del buffer controlla il numero di campioni inviati all'effetto in ciascuna iterazione. Valori più piccoli comportano una velocità di elaborazione inferiore e alcuni effetti richiedono al massimo 8192 per poter funzionare correttamente. La maggior parte degli effetti accetta tuttavia buffer grandi, garantendo una maggiore velocità di elaborazione."
+msgid ""
+"The buffer size controls the number of samples sent to the effect on each "
+"iteration. Smaller values will cause slower processing and some effects "
+"require 8192 samples or less to work properly. However most effects can "
+"accept large buffers and using them will greatly reduce processing time."
+msgstr ""
+"La dimensione del buffer controlla il numero di campioni inviati all'effetto"
+" in ciascuna iterazione. Valori più piccoli comportano una velocità di "
+"elaborazione inferiore e alcuni effetti richiedono al massimo 8192 per poter"
+" funzionare correttamente. La maggior parte degli effetti accetta tuttavia "
+"buffer grandi, garantendo una maggiore velocità di elaborazione."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9940,8 +10245,17 @@ msgid "Latency Compensation"
 msgstr "Compensazione latenza"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
-msgstr "Come parte del loro processo, alcuni effetti VST ritardano l'audio restituito ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per fornire questa compensazione; notare che tuttavia potrebbe non funzionare con tutti gli effetti VST."
+msgid ""
+"As part of their processing, some VST effects must delay returning audio to "
+"Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all VST effects."
+msgstr ""
+"Come parte del loro processo, alcuni effetti VST ritardano l'audio "
+"restituito ad Audacity. Quando questo ritardo non è compensato verranno "
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -9955,8 +10269,14 @@ msgid "Graphical Mode"
 msgstr "Modo grafico"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "La maggior parte degli effetti VST dispone di una interfaccia grafica per impostare i valori dei parametri. È disponibile anche una modalità solo testo.  Riaprire l'effetto per applicare questa modifica."
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values. A "
+"basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"La maggior parte degli effetti VST dispone di una interfaccia grafica per "
+"impostare i valori dei parametri. È disponibile anche una modalità solo "
+"testo.  Riaprire l'effetto per applicare questa modifica."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
@@ -10015,7 +10335,9 @@ msgstr "Impostazioni effetto"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to allocate memory when loading presets file."
-msgstr "Impossibile allocare memoria durante il caricamento del file delle combinazioni."
+msgstr ""
+"Impossibile allocare memoria durante il caricamento del file delle "
+"combinazioni."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to read presets file."
@@ -10026,7 +10348,8 @@ msgstr "Non è stato possibile leggere il file delle combinazioni."
 msgid "This parameter file was saved from %s. Continue?"
 msgstr "Questo file di parametri è stato salvato da %s. Procedere?"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
@@ -10034,82 +10357,92 @@ msgstr "VST"
 
 #: src/effects/VST3/VST3Effect.cpp
 msgid "VST3"
-msgstr ""
+msgstr "VST3"
 
 #. i18n-hint VST3 effect description string
 #: src/effects/VST3/VST3Effect.cpp
 #, c-format
 msgid "SubCategories: %s"
-msgstr ""
+msgstr "SottoCategorie: %s"
 
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
 msgid "Save VST3 Preset As:"
-msgstr "Salva combinazione VST come:"
+msgstr "Salva combinazione VST3 come:"
 
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
 msgid "VST3 preset file"
-msgstr "File combinazioni VST"
+msgstr "File di combinazione VST3"
 
 #. i18n-hint: VST3 preset export error
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
 msgid "Cannot open file"
 msgstr "Impossibile aprire il file"
 
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
 msgid "Failed to save VST3 preset to file"
-msgstr "Non è stato possibile impostare il nome della combinazione"
+msgstr "Non è stato possibile scrivere su file la combinazione VST3"
 
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy
 msgid "Load VST3 preset:"
-msgstr "Carica combinazione VST:"
+msgstr "Carica combinazione VST3:"
 
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot open VST3 preset file %s"
-msgstr "Impossibile aprire il file del progetto"
+msgstr "Impossibile aprire il file della combinazione VST3 %s"
 
 #: src/effects/VST3/VST3Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to apply VST3 preset file %s"
-msgstr "Impossibile caricare il file delle combinazioni."
+msgstr "Impossibile applicare il file della combinazione VST3 %s"
 
 #: src/effects/VST3/VST3EffectsModule.cpp
-#, fuzzy
 msgid "VST3 Effects"
-msgstr "Effetti VST"
+msgstr "Effetti VST3"
 
 #: src/effects/VST3/VST3EffectsModule.cpp
-#, fuzzy
 msgid "Adds the ability to use VST3 effects in Audacity."
-msgstr "Aggiunge la capacità di utilizzare effetti VST in Audacity."
+msgstr "Aggiunge la possibilità di usare effetti VST3 in Audacity."
 
 #: src/effects/VST3/VST3EffectsModule.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "VST3 module error: %s"
-msgstr "Errore GStreamer: %s"
+msgstr "Errore nel modulo VST3: %s"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-#, fuzzy
-msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
-msgstr "Come parte del loro processo, alcuni effetti VST ritardano l'audio restituito ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per fornire questa compensazione; notare che tuttavia potrebbe non funzionare con tutti gli effetti VST."
+msgid ""
+"As part of their processing, some VST3 effects must delay returning audio to"
+" Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+"Come parte della loro elaborazione, alcuni effetti VST3 devono ritardare la "
+"restituzione dell'audio ad Audacity. Quando questo ritardo non viene "
+"compensato, si noterà che nell'audio vengono inseriti dei brevi silenzi. "
+"Abilitare questa opzione per applicare tale compensazione, che tuttavia "
+"potrebbe non funzionare con tutti gli effetti VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-#, fuzzy
-msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "La maggior parte degli effetti VST dispone di una interfaccia grafica per impostare i valori dei parametri. È disponibile anche una modalità solo testo.  Riaprire l'effetto per applicare questa modifica."
+msgid ""
+"Most VST3 effects have a graphical interface for setting parameter values. A"
+" basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"La maggior parte degli effetti VST3 dispone di un'interfaccia grafica per "
+"impostare i valori dei parametri. È disponibile anche un metodo di base di "
+"solo testo. Riaprire l'effetto affinché venga applicato."
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Wahwah"
 
 #: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Rapide variazioni della qualità del tono, come i suoni della chitarra così popolari negli anni 1970"
+msgid ""
+"Rapid tone quality variations, like that guitar sound so popular in the "
+"1970's"
+msgstr ""
+"Rapide variazioni della qualità del tono, come i suoni della chitarra così "
+"popolari negli anni 1970"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -10138,7 +10471,8 @@ msgstr "Non è stato possibile codificare la combinazione da \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Unable to store preset in config file"
-msgstr "Non è stato possibile salvare la combinazione nel file di configurazione"
+msgstr ""
+"Non è stato possibile salvare la combinazione nel file di configurazione"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -10210,16 +10544,34 @@ msgid "Audio Unit Effect Options"
 msgstr "Opzioni effetti unità audio"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr "Come parte del loro processo, alcuni effetti Audio Unit ritardano l'audio restituito ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per fornire questa compensazione; notare che tuttavia potrebbe non funzionare con tutti gli effetti Audio Unit."
+msgid ""
+"As part of their processing, some Audio Unit effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will notice "
+"that small silences have been inserted into the audio. Enabling this option "
+"will provide that compensation, but it may not work for all Audio Unit "
+"effects."
+msgstr ""
+"Come parte del loro processo, alcuni effetti Audio Unit ritardano l'audio "
+"restituito ad Audacity. Quando questo ritardo non è compensato verranno "
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
 msgstr "Interfaccia utente"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr "Selezionare \"Completo\" per usare l'interfaccia grafica se fornita dall'Audio Unit. Selezionare \"Generico\" per usare l'interfaccia di sistema generica. Selezionare \"Di base\" per un'interfaccia di base con solo testo. Riaprire l'effetto per applicare questa impostazione."
+msgid ""
+"Select \"Full\" to use the graphical interface if supplied by the Audio "
+"Unit. Select \"Generic\" to use the system supplied generic interface. "
+"Select \"Basic\" for a basic text-only interface. Reopen the effect for this"
+" to take effect."
+msgstr ""
+"Selezionare \"Completo\" per usare l'interfaccia grafica se fornita "
+"dall'Audio Unit. Selezionare \"Generico\" per usare l'interfaccia di sistema"
+" generica. Selezionare \"Di base\" per un'interfaccia di base con solo "
+"testo. Riaprire l'effetto per applicare questa impostazione."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -10256,24 +10608,30 @@ msgid "Could not initialize component"
 msgstr "Impossibile inizializzare componente"
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to decode \"%s\" preset"
-msgstr "Non è stato impossibile impostare le informazioni della classe per la combinazione \"%s\""
+msgstr "Non è stato impossibile decodificare la combinazione \"%s\""
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to convert \"%s\" preset to internal format"
-msgstr "Non è stato possibile convertire la combinazione nel formato interno"
+msgstr ""
+"Non è stato impossibile convertire la combinazione \"%s\" nel formato "
+"interno"
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create property list for \"%s\" preset"
-msgstr "Non è stato possibile creare la lista delle proprietà della combinazione"
+msgstr ""
+"Non è stato impossibile creare l'elenco delle proprietà della combinazione "
+"\"%s\""
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr "Non è stato impossibile impostare le informazioni della classe per la combinazione \"%s\""
+msgstr ""
+"Non è stato impossibile impostare le informazioni della classe per la "
+"combinazione \"%s\""
 
 #: src/effects/audiounits/AudioUnitWrapper.cpp
 msgid "Failed to set preset name"
@@ -10293,7 +10651,6 @@ msgstr "I dati XML sono vuoti dopo la conversione"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "Effetti LADSPA"
@@ -10311,11 +10668,22 @@ msgid "LADSPA Effect Options"
 msgstr "Opzioni effetti LADSPA"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
-msgstr "Come parte del loro processo, alcuni effetti LADSPA ritardano l'audio restituito ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per fornire questa compensazione; notare che tuttavia potrebbe non funzionare con tutti gli effetti LADSPA."
+msgid ""
+"As part of their processing, some LADSPA effects must delay returning audio "
+"to Audacity. When not compensating for this delay, you will notice that "
+"small silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all LADSPA effects."
+msgstr ""
+"Come parte del loro processo, alcuni effetti LADSPA ritardano l'audio "
+"restituito ad Audacity. Quando questo ritardo non è compensato verranno "
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti LADSPA."
 
-#. i18n-hint: An item name introducing a value, which is not part of the string but
-#. appears in a following text box window; translate with appropriate punctuation
+#. i18n-hint: An item name introducing a value, which is not part of the
+#. string but
+#. appears in a following text box window; translate with appropriate
+#. punctuation
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -10329,7 +10697,6 @@ msgstr "Uscita effetto"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr "LADSPA"
@@ -10354,12 +10721,27 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "Dimensione &buffer (8 to %d) in campioni:"
 
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr "Come parte del loro processo, alcuni effetti LV2 ritardano l'audio restituito ad Audacity. Quando questo ritardo non è compensato verranno inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione per fornire questa compensazione; notare che tuttavia potrebbe non funzionare con tutti gli effetti LV2."
+msgid ""
+"As part of their processing, some LV2 effects must delay returning audio to "
+"Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this setting will "
+"provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+"Come parte del loro processo, alcuni effetti LV2 ritardano l'audio "
+"restituito ad Audacity. Quando questo ritardo non è compensato verranno "
+"inseriti dei silenzi di breve durata nell'audio. Abilitare questa opzione "
+"per fornire questa compensazione; notare che tuttavia potrebbe non "
+"funzionare con tutti gli effetti LV2."
 
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Gli effetti LV2 possono disporre di una interfaccia grafica per impostare i valori dei parametri. È disponibile anche una modalità solo testo.  Riaprire l'effetto per applicare questa modifica."
+msgid ""
+"LV2 effects can have a graphical interface for setting parameter values. A "
+"basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"Gli effetti LV2 possono disporre di una interfaccia grafica per impostare i "
+"valori dei parametri. È disponibile anche una modalità solo testo.  Riaprire"
+" l'effetto per applicare questa modifica."
 
 #: src/effects/lv2/LV2Validator.cpp
 msgid "Generator"
@@ -10385,7 +10767,8 @@ msgstr "Fornisce ad Audacity il supporto agli effetti Nyquist"
 msgid "Applying Nyquist Effect..."
 msgstr "Applicazione dell'effetto Nyquist..."
 
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
 msgstr "Operatore Nyquist"
@@ -10415,7 +10798,9 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "errore: il file \"%s\" è specificato nell'intestazione ma non è stato trovato nel percorso dell'estensione.\n"
+msgstr ""
+"errore: il file \"%s\" è specificato nell'intestazione ma non è stato "
+"trovato nel percorso dell'estensione.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Audio selection required."
@@ -10426,8 +10811,11 @@ msgid "Nyquist Error"
 msgstr "Errore Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr "Non è possibile applicare effetti sulle tracce stereo quando i canali individuali non corrispondono."
+msgid ""
+"Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+msgstr ""
+"Non è possibile applicare effetti sulle tracce stereo quando i canali "
+"individuali non corrispondono."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10499,13 +10887,18 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist non ha restituito un audio nullo.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Attenzione: Nyquist ha segnalato una stringa UTF-8 non valida, convertita qui in Latin-1]"
+msgid ""
+"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+"[Attenzione: Nyquist ha segnalato una stringa UTF-8 non valida, convertita "
+"qui in Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Questa versione di Audacity non supporta la versione %ld dell'estensione Nyquist"
+msgstr ""
+"Questa versione di Audacity non supporta la versione %ld dell'estensione "
+"Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -10620,8 +11013,12 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr "Fornisce ad Audacity il supporto agli effetti Vamp"
 
 #: src/effects/vamp/VampEffect.cpp
-msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
-msgstr "Le estensioni Vamp non possono essere applicate a tracce stereo i cui singoli canali della traccia non corrispondono."
+msgid ""
+"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
+"channels of the track do not match."
+msgstr ""
+"Le estensioni Vamp non possono essere applicate a tracce stereo i cui "
+"singoli canali della traccia non corrispondono."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -10639,7 +11036,8 @@ msgstr "Impostazioni estensione"
 msgid "Program"
 msgstr "Programma"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
@@ -10707,8 +11105,12 @@ msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr "Le tracce verranno miscelate ed esportate come file stereo."
 
 #: src/export/Export.cpp
-msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
-msgstr "Le tracce saranno miscelate in un file esportato in base alle impostazioni del codificatore."
+msgid ""
+"Your tracks will be mixed down to one exported file according to the encoder"
+" settings."
+msgstr ""
+"Le tracce saranno miscelate in un file esportato in base alle impostazioni "
+"del codificatore."
 
 #: src/export/Export.cpp
 msgid "Advanced Mixing Options"
@@ -10760,12 +11162,17 @@ msgstr "Mostra output"
 #. i18n-hint: Some programmer-oriented terminology here:
 #. "Data" refers to the sound to be exported, "piped" means sent,
 #. and "standard in" means the default input stream that the external program,
-#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
+#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually
+#. used
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
-msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
-msgstr "I dati verranno convogliati allo standard input. \"%f\" è il nome file selezionato nella finestra di esportazione."
+msgid ""
+"Data will be piped to standard in. \"%f\" uses the file name in the export "
+"window."
+msgstr ""
+"I dati verranno convogliati allo standard input. \"%f\" è il nome file "
+"selezionato nella finestra di esportazione."
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
@@ -10791,7 +11198,9 @@ msgstr "Esporta"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Esportazione dell'audio selezionato usando un codificatore a linea di comando"
+msgstr ""
+"Esportazione dell'audio selezionato usando un codificatore a linea di "
+"comando"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
@@ -10834,7 +11243,9 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr "FFmpeg : ERRORE - Impossibile determinare la descrizione del formato per il file \"%s\"."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile determinare la descrizione del formato per il "
+"file \"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg Error"
@@ -10842,22 +11253,31 @@ msgstr "Errore FFmpeg"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
-msgstr "FFmpeg : ERRORE - Impossibile allocare il contesto del formato di output."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile allocare il contesto del formato di output."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr "FFmpeg : ERRORE - Impossibile aggiungere flusso audio al file di output \"%s\"."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile aggiungere flusso audio al file di output "
+"\"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr "FFmpeg : ERRORE - Impossibile aprire file di output \"%s\" in scrittura. Il codice d'errore è %d."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile aprire file di output \"%s\" in scrittura. Il "
+"codice d'errore è %d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr "FFmpeg : ERRORE - Impossibile scrivere le intestazioni nel file di output \"%s\". Il codice d'errore è %d."
+msgid ""
+"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
+"%d."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile scrivere le intestazioni nel file di output "
+"\"%s\". Il codice d'errore è %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -10891,20 +11311,24 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg : ERRORE - Impossibile allocare il buffer per la lettura FIFO dell'audio."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile allocare il buffer per la lettura FIFO "
+"dell'audio."
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
-msgstr "FFmpeg : ERRORE - Impossibile scrivere l'ultimo frame audio nel file di output."
+msgstr ""
+"FFmpeg : ERRORE - Impossibile scrivere il frame audio nel file di output."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
-msgstr "FFmpeg : ERRORE - Impossibile ottenere la dimensione del buffer dei campioni"
+msgstr ""
+"FFmpeg : ERRORE - Impossibile ottenere la dimensione del buffer dei campioni"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
-msgstr "FFmpeg : ERRORE - Impossibile allocare byte per il buffer dei campioni"
+msgstr ""
+"FFmpeg : ERRORE - Impossibile allocare byte per il buffer dei campioni"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
@@ -10928,8 +11352,12 @@ msgstr "FFmpeg : ERRORE - Impossibile codificare il frame audio."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
-msgstr "Si è tentato di esportare %d canali, ma il numero massimo di canali per il formato di destinazione selezionato è %d"
+msgid ""
+"Attempted to export %d channels, but maximum number of channels for selected"
+" output format is %d"
+msgstr ""
+"Si è tentato di esportare %d canali, ma il numero massimo di canali per il "
+"formato di destinazione selezionato è %d"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11245,8 +11673,12 @@ msgid "Codec:"
 msgstr "Codec:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
-msgstr "Non tutti i formati e codec sono compatibili. Non tutte le combinazioni di opzioni sono compatibili con tutti i codec."
+msgid ""
+"Not all formats and codecs are compatible. Nor are all option combinations "
+"compatible with all codecs."
+msgstr ""
+"Non tutti i formati e codec sono compatibili. Non tutte le combinazioni di "
+"opzioni sono compatibili con tutti i codec."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -11527,15 +11959,19 @@ msgstr ""
 "Opzionale\n"
 "0 - predefinito"
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
+#. several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
+#. MPEG
 #. it has a hard to predict effect on the degree of compression
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Mux Rate:"
 msgstr "Mux rate:"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "Packet size\n"
@@ -11546,8 +11982,10 @@ msgstr ""
 "Opzionale\n"
 "0 - predefinito"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Packet Size:"
 msgstr "Dimensione pacchetti:"
@@ -11653,7 +12091,9 @@ msgstr "File MP2"
 
 #: src/export/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
-msgstr "Non è possibile esportare in formato MP2 con questa frequenza di campionamento e questa frequenza di bit"
+msgstr ""
+"Non è possibile esportare in formato MP2 con questa frequenza di "
+"campionamento e questa frequenza di bit"
 
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
 #: src/export/ExportWavPack.cpp
@@ -11787,7 +12227,8 @@ msgstr "Modalità canale:"
 msgid "Force export to mono"
 msgstr "Forza esportazione in mono"
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be
+#. translated
 #: src/export/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "Individua LAME"
@@ -12042,8 +12483,10 @@ msgstr "Esportazione interrotta dopo l'esportazione dei seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
-msgid "Something went really wrong after exporting the following %lld file(s)."
-msgstr "Qualcosa è andato davvero storto dopo l'esportazione dei seguenti %lld file."
+msgid ""
+"Something went really wrong after exporting the following %lld file(s)."
+msgstr ""
+"Qualcosa è andato davvero storto dopo l'esportazione dei seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -12200,69 +12643,58 @@ msgstr ""
 "Libsndfile indica \"%s\""
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Low Quality (Fast)"
-msgstr "Bassa qualità (la più veloce)"
+msgstr "Qualità bassa (veloce)"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Normal Quality"
-msgstr "Qualità"
+msgstr "Qualità normale"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "High Quality (Slow)"
-msgstr "Qualità alta"
+msgstr "Qualità alta (lento)"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Very High Quality (Slowest)"
-msgstr "Qualità migliore (la più lenta)"
+msgstr "Qualità molto alta (più lento)"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "32 bit float "
-msgstr "32 bit virgola mobile"
+msgstr "32 bit virgola mobile "
 
 #. i18n-hint bps abbreviates "bits per sample"
 #: src/export/ExportWavPack.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f bps"
-msgstr "%.1f sec"
+msgstr "%.1f bps"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Bit Depth"
-msgstr "Profondità bit:"
+msgstr "Profondità bit"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Hybrid Mode"
-msgstr "Modalità VBR:"
+msgstr "Modalità ibrida"
 
 #: src/export/ExportWavPack.cpp
 msgid "Create Correction(.wvc) File"
-msgstr ""
+msgstr "Crea file di correzione (.wvc)"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "WavPack Files"
-msgstr "Salva file"
+msgstr "File WavPack"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Unable to create target file for writing"
-msgstr "Non è stato possibile aprire il file di destinazione per la scrittura"
+msgstr "Impossibile creare il file di destinazione per la scrittura"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Exporting selected audio as WavPack"
-msgstr "Esportazione dell'audio selezionato come %s"
+msgstr "Esportazione dell'audio selezionato come WavPack"
 
 #: src/export/ExportWavPack.cpp
-#, fuzzy
 msgid "Exporting the audio as WavPack"
-msgstr "Esportazione dell'audio come %s"
+msgstr "Esportazione dell'audio come WavPack"
 
 #: src/import/Import.cpp
 msgid "All supported files"
@@ -12299,7 +12731,8 @@ msgstr "Selezionare i flussi da importare"
 #: src/import/Import.cpp
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
-msgstr "Questa versione di Audacity non è stata compilata con il supporto per %s."
+msgstr ""
+"Questa versione di Audacity non è stata compilata con il supporto per %s."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12574,16 +13007,24 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Non è stato possibile trovare la cartella coi dati del progetto: \"%s\""
 
 #: src/import/ImportAUP.cpp
-msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
-msgstr "Nel progetto sono state trovate tracce MIDI, tuttavia questa versione di Audacity non supporta i MIDI: le tracce verranno ignorate."
+msgid ""
+"MIDI tracks found in project file, but this build of Audacity does not "
+"include MIDI support, bypassing track."
+msgstr ""
+"Nel progetto sono state trovate tracce MIDI, tuttavia questa versione di "
+"Audacity non supporta i MIDI: le tracce verranno ignorate."
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
 msgstr "Importa progetto"
 
 #: src/import/ImportAUP.cpp
-msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
-msgstr "Il progetto attivo ha già una traccia temporale e ne è stata trovata un'altra nel progetto che si sta importando: tale traccia verrà ignorate."
+msgid ""
+"The active project already has a time track and one was encountered in the "
+"project being imported, bypassing imported time track."
+msgstr ""
+"Il progetto attivo ha già una traccia temporale e ne è stata trovata "
+"un'altra nel progetto che si sta importando: tale traccia verrà ignorate."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -12672,8 +13113,10 @@ msgstr "File compatibili con FFmpeg"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
-msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr "Indice[%02x] Codec[%s], Lingua[%s], Bitrate[%s], Canali[%d], Durata[%d]"
+msgid ""
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr ""
+"Indice[%02x] Codec[%s], Lingua[%s], Bitrate[%s], Canali[%d], Durata[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -12706,7 +13149,8 @@ msgstr "Il file non contiene alcun flusso audio."
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to import file, state change failed."
-msgstr "Impossibile importare il file, il cambiamento di stato non è riuscito."
+msgstr ""
+"Impossibile importare il file, il cambiamento di stato non è riuscito."
 
 #: src/import/ImportGStreamer.cpp
 #, c-format
@@ -12734,7 +13178,9 @@ msgstr "Durata non valida in un file LOF."
 
 #: src/import/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr "Le tracce MIDI non possono essere spostate individualmente, solo i file audio possono esserlo."
+msgstr ""
+"Le tracce MIDI non possono essere spostate individualmente, solo i file "
+"audio possono esserlo."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
@@ -13106,19 +13552,17 @@ msgid "&Import"
 msgstr "&Importa"
 
 #: src/import/ImportWavPack.cpp
-#, fuzzy
 msgid "WavPack files"
-msgstr "Salva file come"
+msgstr "File WavPack"
 
 #: src/import/ImportWavPack.cpp
 #, c-format
 msgid "Encountered %d errors decoding WavPack file!"
-msgstr ""
+msgstr "Sono stati rilevati %d errori durante la decodifica del file WavPack!"
 
 #: src/import/ImportWavPack.cpp
-#, fuzzy
 msgid "WavPack Importer"
-msgstr "Importa progetto"
+msgstr "Importatore WavPack"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
@@ -13145,13 +13589,13 @@ msgstr "%s destra"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
 msgstr[0] "%s %s, %d di %d clip %s"
-msgstr[1] "%s %s, %d di %d clip %s"
+msgstr[1] "%s %s, %d di %d di clip %s"
+msgstr[2] "%s %s, %d di %d clip %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -13170,13 +13614,13 @@ msgstr "fine"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
 msgstr[0] "%s %s e %s %s, %d e %d di %d clip %s"
-msgstr[1] "%s %s e %s %s, %d e %d di %d clip %s"
+msgstr[1] "%s %s e%s %s, %d e %d di %d di clip %s"
+msgstr[2] "%s %s e %s %s, %d e %d di %d clip %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -13189,7 +13633,8 @@ msgstr[1] "%s %s e %s %s, %d e %d di %d clip %s"
 msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
 msgstr[0] "%s, %d di %d clip %s"
-msgstr[1] "%s, %d di %d clip %s"
+msgstr[1] "%s, %d di %d di clip %s"
+msgstr[2] "%s, %d di %d clip %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -13209,9 +13654,8 @@ msgid "clip not moved"
 msgstr "clip non spostata"
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Audi&o Clips"
-msgstr "File audio"
+msgstr "Clip audi&o"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -13328,7 +13772,7 @@ msgstr "Tracce selezionate silenziate per %.2f secondi a %.2f"
 #: src/menus/EditMenus.cpp
 msgctxt "command"
 msgid "Silence"
-msgstr "Silenzia"
+msgstr "Silenzio"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -13445,14 +13889,12 @@ msgid "Detac&h at Silences"
 msgstr "Separ&a ai silenzi"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "&Metadata"
-msgstr "Me&tadati..."
+msgstr "&Metadati"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Pre&ferences"
-msgstr "Preferenze"
+msgstr "Pre&ferenze"
 
 #: src/menus/EditMenus.cpp
 msgid "&Delete Key"
@@ -13779,16 +14221,15 @@ msgstr "&Genera dati di supporto..."
 
 #: src/menus/HelpMenus.cpp
 msgid "L&ink audio.com account..."
-msgstr ""
+msgstr "C&ollega account audio.com..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
 msgstr "&Controlla aggiornamenti..."
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&About Audacity"
-msgstr "Informazioni su &Audacity..."
+msgstr "&Informazioni su Audacity"
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -14062,13 +14503,15 @@ msgstr "Non classificato"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
-msgstr "Verrà salvato un giornale di registrazione dopo il riavvio di Audacity."
+msgstr ""
+"Verrà salvato un giornale di registrazione dopo il riavvio di Audacity."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
-msgstr "Nessun giornale di registrazione verrà salvato dopo il riavvio di Audacity."
+msgstr ""
+"Nessun giornale di registrazione verrà salvato dopo il riavvio di Audacity."
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -14076,14 +14519,13 @@ msgid "&Repeat %s"
 msgstr "&Ripeti %s"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Plugin %d to %d"
 msgstr "Estensione %d a %d"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Plugin Manager"
-msgstr "Impostazioni estensione"
+msgstr "Gestore delle estensioni"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Generator"
@@ -14094,9 +14536,8 @@ msgid "Effe&ct"
 msgstr "Effe&tti"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Add Realtime Effects"
-msgstr "Abilita effetti"
+msgstr "Aggiungi effetti in tempo reale"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -14119,9 +14560,8 @@ msgid "Repeat Last Tool"
 msgstr "Ripeti ultimo strumento"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "&Macro Manager"
-msgstr "&Gestisci"
+msgstr "Gestione &macro"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
@@ -14508,7 +14948,6 @@ msgstr "Sposta&mento lungo del cursore a destra"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "Cer&ca"
@@ -14732,8 +15171,11 @@ msgstr "Selezionare almeno una traccia audio e una traccia MIDI."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Allineamento completato: MIDI da %.2f a %.2f sec, audio da %.2f a %.2f sec."
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Allineamento completato: MIDI da %.2f a %.2f sec, audio da %.2f a %.2f sec."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -14741,8 +15183,12 @@ msgstr "Sincronizza MIDI con audio"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Errore di allineamento: input troppo breve: MIDI da %.2f a %.2f sec, audio da %.2f a %.2f sec."
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Errore di allineamento: input troppo breve: MIDI da %.2f a %.2f sec, audio "
+"da %.2f a %.2f sec."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -14953,7 +15399,6 @@ msgstr "nessuna traccia etichette nella o sotto la traccia evidenziata"
 #. first number gives the position of that label in a sequence
 #. of labels,
 #. and the last number is the total number of labels in the sequence.
-#.
 #: src/menus/TransportMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, c-format
 msgid "%s %d of %d"
@@ -15297,7 +15742,8 @@ msgstr "Minimizza tutti i progetti"
 msgid "Preferences for Application"
 msgstr "Preferenze dell'applicazione"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the update notifications panel in the preferences
+#. dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
 msgstr "Notifiche aggiornamenti"
@@ -15309,8 +15755,13 @@ msgid "&Check for updates"
 msgstr "&Verifica aggiornamenti"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "La verifica di aggiornamenti dell'applicazione richiede l'accesso alla rete. Al fine di tutelare la privacy, Audacity non colleziona nessuna informazione personale."
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr ""
+"La verifica di aggiornamenti dell'applicazione richiede l'accesso alla rete."
+" Al fine di tutelare la privacy, Audacity non colleziona nessuna "
+"informazione personale."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15543,8 +15994,12 @@ msgid "Directory %s is not writable"
 msgstr "La cartella %s non è scrivibile"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "I cambiamenti della cartella temporanea non avranno effetto finché Audacity non viene riavviato"
+msgid ""
+"Changes to temporary directory will not take effect until Audacity is "
+"restarted"
+msgstr ""
+"I cambiamenti della cartella temporanea non avranno effetto finché Audacity "
+"non viene riavviato"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -15595,13 +16050,11 @@ msgid "Grouped by Type"
 msgstr "Raggruppati per tipo"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Default"
 msgstr "Predefinito"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/prefs/EffectsPrefs.cpp
 msgid "&LADSPA"
 msgstr "&LADSPA"
@@ -15613,20 +16066,23 @@ msgid "LV&2"
 msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/prefs/EffectsPrefs.cpp
 msgid "N&yquist"
 msgstr "N&yquist"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Vamp"
 msgstr "&Vamp"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: src/prefs/EffectsPrefs.cpp
 msgid "V&ST"
@@ -15715,8 +16171,16 @@ msgid "Unused filters:"
 msgstr "Filtri inutilizzati:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr "Sono presenti caratteri spazio (spazi, nuove linee, tabulazioni o avanzamenti di riga) in uno degli elementi. Questi sono in grado di interrompere il processo di confronto. In caso di incertezza, si consiglia di eliminare gli spazi. Rimuovere automaticamente gli spazi?"
+msgid ""
+"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
+"the items. They are likely to break the pattern matching. Unless you know "
+"what you are doing, it is recommended to trim spaces. Do you want Audacity "
+"to trim spaces for you?"
+msgstr ""
+"Sono presenti caratteri spazio (spazi, nuove linee, tabulazioni o "
+"avanzamenti di riga) in uno degli elementi. Questi sono in grado di "
+"interrompere il processo di confronto. In caso di incertezza, si consiglia "
+"di eliminare gli spazi. Rimuovere automaticamente gli spazi?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15784,7 +16248,8 @@ msgstr "Locale"
 msgid "From Internet"
 msgstr "Da internet"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Visualizzazione"
 
@@ -15839,7 +16304,7 @@ msgstr "Non usare mai la virgola come separatore decimale"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
-msgstr "Mostra messaggi nella sequenza temporale"
+msgstr "Mostra messaggi nella timeline"
 
 #: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
 msgid "Show Scrub Ruler"
@@ -15983,7 +16448,9 @@ msgstr "Impo&sta"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Nota: la pressione di Cmd+Q provocherà la chiusura. Tutti gli altri tasti sono validi."
+msgstr ""
+"Nota: la pressione di Cmd+Q provocherà la chiusura. Tutti gli altri tasti "
+"sono validi."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -16004,7 +16471,8 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "Selezionare un file XML contenente le combinazioni di tasti di Audacity..."
+msgstr ""
+"Selezionare un file XML contenente le combinazioni di tasti di Audacity..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -16186,7 +16654,8 @@ msgstr "La latenza del sintetizzatore MIDI deve essere un numero intero"
 msgid "Midi IO"
 msgstr "IO MIDI"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
+#. i18n-hint: Modules are optional extensions to Audacity that add NEW
+#. features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Moduli"
@@ -16205,13 +16674,19 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr "  'Chiedi' indica che Audacity chiederà se caricare il modulo ad ogni avvio."
+msgid ""
+"  'Ask' means Audacity will ask if you want to load the module each time it "
+"starts."
+msgstr ""
+"  'Chiedi' indica che Audacity chiederà se caricare il modulo ad ogni avvio."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr "  'Non riuscito' indica che Audacity ritiene che il modulo sia guasto e non lo esegue."
+msgid ""
+"  'Failed' means Audacity thinks the module is broken and won't run it."
+msgstr ""
+"  'Non riuscito' indica che Audacity ritiene che il modulo sia guasto e non "
+"lo esegue."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -16220,7 +16695,9 @@ msgstr "  'Nuovo' indica che nessuna scelta è stata ancora fatta."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
-msgstr "I cambiamenti a queste impostazioni hanno effetto solo all'avvio di Audacity."
+msgstr ""
+"I cambiamenti a queste impostazioni hanno effetto solo all'avvio di "
+"Audacity."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Ask"
@@ -16540,7 +17017,8 @@ msgstr "Conversione in tempo reale"
 msgid "Sample Rate Con&verter:"
 msgstr "Con&vertitore della frequenza di campionamento:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
 msgstr "&Retinatura:"
@@ -16553,7 +17031,8 @@ msgstr "Conversione ad alta qualità"
 msgid "Sample Rate Conver&ter:"
 msgstr "Conver&titore della frequenza di campionamento:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Reti&natura:"
@@ -16578,7 +17057,8 @@ msgstr "&Software Playthrough dell'ingresso"
 msgid "Record on a new track"
 msgstr "Registra in una nuova traccia"
 
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the
+#. recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
 msgstr "Rileva cadute del segnale audio"
@@ -16675,12 +17155,14 @@ msgstr "Cross&fade:"
 msgid "Mel"
 msgstr "Mel"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for
+#. Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Bark"
 msgstr "Bark"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates
+#. Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp
 msgid "ERB"
 msgstr "ERB"
@@ -16841,7 +17323,8 @@ msgstr "A&bilita selezione spettrale"
 msgid "Show a grid along the &Y-axis"
 msgstr "Mostra una griglia sull'asse &Y"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
+#. translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
 msgstr "Trova note FFT"
@@ -16903,7 +17386,8 @@ msgid "The maximum number of notes must be in the range 1..128"
 msgstr "Il numero massimo di note deve essere compreso tra 1 e 128"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
@@ -16919,7 +17403,6 @@ msgid "Info"
 msgstr "Informazioni"
 
 #: src/prefs/ThemePrefs.cpp
-#, fuzzy
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
@@ -16933,16 +17416,15 @@ msgstr ""
 "Per provarlo, fare clic su \"Salva cache tema\" quindi trovare e modificare immagini e colori\n"
 "in ImageCacheVxx.png usando un editor di immagini come Gimp.\n"
 "\n"
-"Fare clic su \"Carica cache tema\" per caricare in Audacity le immagini e i colori modificati.\n"
-"\n"
-"[Solo la barra delle attività e i colori delle onde delle tracce sono realmente influenzati,\n"
-"anche se il file immagine mostra altre icone)."
+"Fare clic su \"Carica cache tema\" per caricare in Audacity le immagini e i colori modificati."
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
 "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr "Il salvataggio e il caricamento di singoli file del tema usano un file separato per ciascuna immagine, altrimenti l'approccio è il medesimo."
+msgstr ""
+"Il salvataggio e il caricamento di singoli file del tema usano un file "
+"separato per ciascuna immagine, altrimenti l'approccio è il medesimo."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
 #. * so keep it as is
@@ -17006,7 +17488,8 @@ msgstr "La modifica di una clip può &spostare altre clip"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
-msgstr "\"Sposta evidenziazione traccia\" in modo c&iclico e ripetuto tra le tracce"
+msgstr ""
+"\"Sposta evidenziazione traccia\" in modo c&iclico e ripetuto tra le tracce"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
@@ -17195,7 +17678,9 @@ msgstr "Quando si applica il mixaggio &stereo in esportazione"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "Quando si applica il mixaggio in esportazione (FFmpeg &personalizzato o programma esterno)"
+msgstr ""
+"Quando si applica il mixaggio in esportazione (FFmpeg &personalizzato o "
+"programma esterno)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Missing file &name extension during export"
@@ -17216,38 +17701,32 @@ msgstr "Inte&rvallo dB forma d'onda:"
 
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "Audio Setup"
-msgstr "File audio"
+msgstr "Configurazione audio"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Host"
-msgstr "&Sistema:"
+msgstr "&Sistema"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Playback Device"
-msgstr "Dispositivo di riproduzione"
+msgstr "Dispositivo di ri&produzione"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Recording Device"
-msgstr "Dispositivo di registrazione"
+msgstr "Dispositivo di &registrazione"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "Recording &Channels"
-msgstr "Canali di registrazione"
+msgstr "&Canali della registrazione"
 
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Audio Settings..."
-msgstr "Impostazioni s&pettrogramma..."
+msgstr "Impostazioni &audio..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
@@ -17258,18 +17737,17 @@ msgid "2 (Stereo) Recording Channels"
 msgstr "2 (stereo) canali di registrazione"
 
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "Audio Settings:"
-msgstr "Impostazioni estensione"
+msgstr "Impostazioni audio:"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Audio Setup Toolbar"
-msgstr "Barra &modifica"
+msgstr "Barra degli strumenti di configurazione dell'&audio"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
@@ -17312,7 +17790,8 @@ msgstr "Seleziona fino alla fine"
 msgid "Select to Start"
 msgstr "Seleziona fino all'inizio"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -17425,7 +17904,8 @@ msgstr "Monitor registrazione"
 msgid "Playback Meter"
 msgstr "Monitor riproduzione"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17474,7 +17954,6 @@ msgstr "Scorrimento"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Scrubbing"
 msgstr "Ferma scorrimento"
@@ -17482,7 +17961,6 @@ msgstr "Ferma scorrimento"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
 msgstr "Inizia scorrimento"
@@ -17490,7 +17968,6 @@ msgstr "Inizia scorrimento"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Seeking"
 msgstr "Ferma ricerca"
@@ -17498,7 +17975,6 @@ msgstr "Ferma ricerca"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Seeking"
 msgstr "Inizia ricerca"
@@ -17698,7 +18174,9 @@ msgstr "Barra riproduc&i a velocità"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr "Trascina etichetta. Tenere premuto Maiusc e trascinare per spostare tutte le etichette nella stessa traccia."
+msgstr ""
+"Trascina etichetta. Tenere premuto Maiusc e trascinare per spostare tutte le"
+" etichette nella stessa traccia."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17789,8 +18267,12 @@ msgstr "Informazioni sui dispositivi &MIDI..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
-msgstr "Fare clic per ingrandire verticalmente, Maiusc-clic per ridurre. Trascinare per specificare una regione d'ingrandimento."
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
+" region."
+msgstr ""
+"Fare clic per ingrandire verticalmente, Maiusc-clic per ridurre. Trascinare "
+"per specificare una regione d'ingrandimento."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -17869,7 +18351,9 @@ msgstr "Fare clic e trascinare per modificare i campioni"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr "Per disegnare, aumentare lo zoom finché non vengono mostrati i singoli campioni."
+msgstr ""
+"Per disegnare, aumentare lo zoom finché non vengono mostrati i singoli "
+"campioni."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -17922,9 +18406,8 @@ msgid "Clip-Trim-Right"
 msgstr "Clip-Ritaglia-Destra"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
 msgid "Clip-Trim-Between"
-msgstr "Clip-Ritaglia-Sinistra"
+msgstr "Clip-Ritaglia-Tra"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Click and drag to move clip boundary in time"
@@ -17969,7 +18452,8 @@ msgid "Processing...   %i%%"
 msgstr "Elaborazione...   %i%%"
 
 #. i18n-hint: The strings name a track and a format
-#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or
+#. right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 #, c-format
@@ -18181,8 +18665,11 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% destra"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Fare clic e trascinare per ridimensionare le sotto-viste, doppio clic per dividere in modo unoforme"
+msgid ""
+"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr ""
+"Fare clic e trascinare per ridimensionare le sotto-viste, doppio clic per "
+"dividere in modo unoforme"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18217,7 +18704,8 @@ msgstr "Rinomina clip..."
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d di %d clip"
-msgstr[1] "%s, %d di %d clip"
+msgstr[1] "%s, %d di %d di clip"
+msgstr[2] "%s, %d di %d clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -18315,8 +18803,11 @@ msgid "Logarithmic &Interpolation"
 msgstr "&Interpolazione logaritmica"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Questa versione di Audacity permette solo una traccia temporale per ciascuna finestra di progetto."
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Questa versione di Audacity permette solo una traccia temporale per ciascuna"
+" finestra di progetto."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -18328,8 +18819,12 @@ msgstr "Traccia &temporale"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
-msgstr "Trascina le clip per riposizionarle. Tenere premuto Maiusc e trascinare per spostare tutte le clip nella stessa traccia."
+msgid ""
+"Drag clips to reposition them. Hold Shift and drag to move all clips on the "
+"same track."
+msgstr ""
+"Trascina le clip per riposizionarle. Tenere premuto Maiusc e trascinare per "
+"spostare tutte le clip nella stessa traccia."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -18408,7 +18903,6 @@ msgstr "Inviluppo regolato."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "&Scorri"
@@ -18420,7 +18914,6 @@ msgstr "Ricerca"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
 msgstr "&Righello scorrimento"
@@ -18451,7 +18944,8 @@ msgstr "Scorri a&vanti"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
-msgstr "Fare clic e trascinare per spostare il limite sinistro della selezione."
+msgstr ""
+"Fare clic e trascinare per spostare il limite sinistro della selezione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move right selection boundary."
@@ -18459,30 +18953,39 @@ msgstr "Fare clic e trascinare per spostare il limite destro della selezione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move bottom selection frequency."
-msgstr "Fare clic e trascinare per spostare il limite inferiore della selezione frequenza."
+msgstr ""
+"Fare clic e trascinare per spostare il limite inferiore della selezione "
+"frequenza."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move top selection frequency."
-msgstr "Fare clic e trascinare per spostare il limite superiore della selezione frequenza."
+msgstr ""
+"Fare clic e trascinare per spostare il limite superiore della selezione "
+"frequenza."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "Fare clic e trascinare per spostare il centro della selezione frequenza a un picco dello spettro."
+msgstr ""
+"Fare clic e trascinare per spostare il centro della selezione frequenza a un"
+" picco dello spettro."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
-msgstr "Fare clic e trascinare per spostare il centro della selezione frequenza."
+msgstr ""
+"Fare clic e trascinare per spostare il centro della selezione frequenza."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "Fare clic e trascinare per regolare la larghezza della banda di frequenza."
+msgstr ""
+"Fare clic e trascinare per regolare la larghezza della banda di frequenza."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Edit, Preferences..."
 msgstr "Modifica, preferenze..."
 
-#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
+#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux,
+#. "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
@@ -18490,13 +18993,15 @@ msgstr "Modo multi-strumento: %s per preferenze mouse e tastiera."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to set frequency bandwidth."
-msgstr "Fare clic e trascinare per impostare la larghezza della banda di frequenza."
+msgstr ""
+"Fare clic e trascinare per impostare la larghezza della banda di frequenza."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
 msgstr "Fare clic e trascinare per selezionare l'audio"
 
-#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any
+#. nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
 msgstr "(ancoraggio)"
@@ -18553,13 +19058,17 @@ msgstr "Comando+Clic"
 msgid "Ctrl+Click"
 msgstr "Ctrl+Clic"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr "%s per selezionare o deselezionare traccia. Trascinare in alto o in basso per cambiare l'ordine della traccia."
+msgstr ""
+"%s per selezionare o deselezionare traccia. Trascinare in alto o in basso "
+"per cambiare l'ordine della traccia."
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
@@ -18586,7 +19095,8 @@ msgstr "Clic per zoom avanti, Maiusc-Clic per zoom indietro"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Trascinare per fare lo zoom su una regione, clic destro per zoom indietro"
+msgstr ""
+"Trascinare per fare lo zoom su una regione, clic destro per zoom indietro"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -18604,10 +19114,15 @@ msgstr "Verifica aggiornamenti"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "È possibile modificare le opzioni sulla verifica automatica di aggiornamenti in %s."
+msgid ""
+"If you want to change your preference for automatic updates checking, you "
+"can find it in %s."
+msgstr ""
+"È possibile modificare le opzioni sulla verifica automatica di aggiornamenti"
+" in %s."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Application
+#. page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
@@ -18621,7 +19136,8 @@ msgstr "Errore durante la verifica di aggiornamenti"
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr "Non è stato possibile collegarsi al server degli aggiornamenti di Audacity."
+msgstr ""
+"Non è stato possibile collegarsi al server degli aggiornamenti di Audacity."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -18653,17 +19169,28 @@ msgid "App update checking"
 msgstr "Verifica aggiornamento applicazione"
 
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Per rimanete aggiornati si riceverà una notifica in-app qualora ci sia una nuova versione di Audacity disponibile per lo scaricamento."
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there "
+"is a new version of Audacity available to download."
+msgstr ""
+"Per rimanete aggiornati si riceverà una notifica in-app qualora ci sia una "
+"nuova versione di Audacity disponibile per lo scaricamento."
 
 #: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Al fine di tutelare la privacy, Audacity non colleziona nessuna informazione personale. Tuttavia la verifica della presenza di aggiornamenti richiede l'accesso alla rete."
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal "
+"information. However, app update checking does require network access."
+msgstr ""
+"Al fine di tutelare la privacy, Audacity non colleziona nessuna informazione"
+" personale. Tuttavia la verifica della presenza di aggiornamenti richiede "
+"l'accesso alla rete."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr "È possibile disabilitare la verifica della presenza di aggiornamenti in qualsiasi momento tramite %s."
+msgstr ""
+"È possibile disabilitare la verifica della presenza di aggiornamenti in "
+"qualsiasi momento tramite %s."
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -18733,22 +19260,25 @@ msgid "%.2fx"
 msgstr "%.2fx"
 
 #: src/widgets/ErrorReportDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "More information about this error may be available %s."
-msgstr "Informazioni sul dispositivo non disponibili."
+msgstr ""
+"Ulteriori informazioni su questo errore potrebbero essere disponibili %s."
 
 #: src/widgets/ErrorReportDialog.cpp
 msgid "here"
-msgstr ""
+msgstr "qui"
 
 #: src/widgets/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
 msgstr ""
+"Desideri inviare una segnalazione per aiutarci a risolvere questo problema?"
 
 #: src/widgets/ErrorReportDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "All reports are anonymous. See %s for more info."
-msgstr "Vedere %s per ulteriori informazioni."
+msgstr ""
+"Tutte le segnalazioni sono anonime. Vedere %s per ulteriori informazioni."
 
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -18942,10 +19472,12 @@ msgstr "hh:mm:ss + centesimi"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
+#. seconds
 #. * (the hundredths are shown as decimal seconds). Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>0100 s"
@@ -18958,11 +19490,13 @@ msgid "hh:mm:ss + milliseconds"
 msgstr "hh:mm:ss + millisecondi"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
+#. the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>01000 s"
@@ -18979,7 +19513,8 @@ msgstr "hh:mm:ss + campioni"
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
@@ -18988,7 +19523,6 @@ msgstr "0100 h 060 m 060 s+># campioni"
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
-#.
 #: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "campioni"
@@ -19012,7 +19546,8 @@ msgstr "hh:mm:ss + fotogrammi film (24 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
@@ -19043,7 +19578,8 @@ msgstr "hh:mm:ss + fotogrammi NTSC saltati"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
@@ -19061,7 +19597,8 @@ msgstr "hh:mm:ss + fotogrammi NTSC non saltati"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
@@ -19092,7 +19629,8 @@ msgstr "hh:mm:ss + fotogrammi PAL (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
@@ -19122,7 +19660,8 @@ msgstr "hh:mm:ss + fotogrammi CDDA (75 frame/sec)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
@@ -19144,7 +19683,8 @@ msgstr "01000,01000 frame|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "010,01000>0100 Hz"
@@ -19161,7 +19701,8 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000>01000 kHz|0.001"
@@ -19179,7 +19720,8 @@ msgstr "ottave"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100>01000 octaves|1.442695041"
@@ -19199,7 +19741,8 @@ msgstr "semitoni + centesimi"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
@@ -19276,8 +19819,12 @@ msgstr "Non è stato possibile scrivere dei file nella cartella: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr "Verificare che la cartella esista, che si abbiano i permessi necessari e che il disco non sia pieno."
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr ""
+"Verificare che la cartella esista, che si abbiano i permessi necessari e che"
+" il disco non sia pieno."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -19285,7 +19832,8 @@ msgstr "Verificare che la cartella esista, che si abbiano i permessi necessari e
 msgid "You can change the directory in %s."
 msgstr "Non è possibile cambiare la cartella in %s."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
+#. page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Preferences > Directories"
 msgstr "Preferenze > Cartelle"
@@ -19363,9 +19911,8 @@ msgid "File Dialog"
 msgstr "Finestra di dialogo selezione file"
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Spectral Edit Multi Tool"
-msgstr "Multistrumento modifica spettrale"
+msgstr "Multi-strumento per la modifica spettrale"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -19376,9 +19923,8 @@ msgstr "Paul Licameli"
 #: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
 #: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-#, fuzzy
 msgid "GNU General Public License v2.0"
-msgstr "GNU General Public License v2.0 o successiva"
+msgstr "GNU General Public License v2.0"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -19415,7 +19961,6 @@ msgid "Error.~%"
 msgstr "Errore.~%"
 
 #: plug-ins/SpectralEditParametricEQ.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Spectral Edit Parametric EQ"
 msgstr "EQ parametrico di modifica spettrale"
 
@@ -19461,7 +20006,6 @@ msgstr ""
 "                         Selezionare un intervallo di frequenza."
 
 #: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Spectral Edit Shelves"
 msgstr "Piattaforma di modifica spettrale"
 
@@ -19659,13 +20203,18 @@ msgstr "Errore.~%Selezione non valida.~%Più di 2 clip audio selezionate."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "Errore.~%Selezione non valida.~%Spazio vuoto all'inizio/fine della selezione."
+msgid ""
+"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Errore.~%Selezione non valida.~%Spazio vuoto all'inizio/fine della "
+"selezione."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr "Errore.~%La dissolvenza incrociata delle clip può essere applicata a una sola traccia."
+msgstr ""
+"Errore.~%La dissolvenza incrociata delle clip può essere applicata a una "
+"sola traccia."
 
 #: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Tracks"
@@ -19818,7 +20367,6 @@ msgid "Create labels based on"
 msgstr "Crea etichette in base a"
 
 #: plug-ins/equalabel.ny
-#, fuzzy
 msgid "Number and Interval"
 msgstr "Numero e intervallo"
 
@@ -19902,7 +20450,7 @@ msgstr "Solo avvisi"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Error: There is insufficient space to create labels.~%"
-msgstr ""
+msgstr "Errore: spazio insufficiente per creare etichette.~%"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
@@ -20055,7 +20603,8 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Troppi silenzi rilevati.~%Sono state aggiunte solo le prime 10000 etichette."
+msgstr ""
+"Troppi silenzi rilevati.~%Sono state aggiunte solo le prime 10000 etichette."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -20065,13 +20614,21 @@ msgstr "Errore.~% La selezione deve essere minore di ~a."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
-msgstr "Nessun suono trovato.~%Provare ad abbassare la 'soglia' o a ridurre la 'Durata minima suono'."
+msgid ""
+"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
+"duration'."
+msgstr ""
+"Nessun suono trovato.~%Provare ad abbassare la 'soglia' o a ridurre la "
+"'Durata minima suono'."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
-msgstr "Etichettare regioni tra suoni richiede ~%almeno due suoni.~%Un solo suono è selezionato."
+msgid ""
+"Labelling regions between sounds requires~%at least two sounds.~%Only one "
+"sound detected."
+msgstr ""
+"Etichettare regioni tra suoni richiede ~%almeno due suoni.~%Un solo suono è "
+"selezionato."
 
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -20089,7 +20646,8 @@ msgstr "Limite morbido"
 msgid "Hard Limit"
 msgstr "Limite rigido"
 
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into
+#. clips
 #: plug-ins/limiter.ny
 msgid "Soft Clip"
 msgstr "Clip morbido"
@@ -20252,9 +20810,8 @@ msgstr ""
 "                 La frequenza deve essere inferiore a ~a Hz."
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Nyquist Plugin Installer"
-msgstr "Installatore estensioni Nyquist"
+msgstr "Installazione estensioni Nyquist"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20302,12 +20859,14 @@ msgstr "Successo.~%File scritti in:~%~s~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Attenzione.~%Fha avuto problemi copiando dei file:~%"
+msgstr "Attenzione.~%Non è stato possibile copiare alcuni file:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr "Estensioni installate.~%(Usare il gestore delle estensioni per abilitare gli effetti):"
+msgstr ""
+"Estensioni installate.~%(Usare il gestore delle estensioni per abilitare gli"
+" effetti):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20372,7 +20931,7 @@ msgstr "Traccia ritmo"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Dominic Mazzoni, David R. Sky and Steve Daulton"
-msgstr ""
+msgstr "Dominic Mazzoni, David R. Sky e Steve Daulton"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -20400,7 +20959,8 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "Impostare 'numero di barre' a zero per abilitare la 'durata traccia ritmo'."
+msgstr ""
+"Impostare 'numero di barre' a zero per abilitare la 'durata traccia ritmo'."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -20611,12 +21171,16 @@ msgstr "~aDati scritti su:~%~a"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
-msgstr "Frequenza di campionamento: ~a Hz.  Valori campioni in scala ~a.~%~a~%~a"
+msgstr ""
+"Frequenza di campionamento: ~a Hz.  Valori campioni in scala ~a.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr "~a   ~a~%~aFrequenza di campionamento: ~a Hz.~%Lunghezza elaborata: ~a campioni ~a secondi.~a"
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+"~a   ~a~%~aFrequenza di campionamento: ~a Hz.~%Lunghezza elaborata: ~a "
+"campioni ~a secondi.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20673,13 +21237,15 @@ msgstr "<b>Frequenza di campionamento:</b> &nbsp;&nbsp;~a Hz."
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>Ampiezza picco:</b> &nbsp;&nbsp;~a (lineare) &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a
+#. signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (non ponderato): &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#. i18n-hint: DC derives from "direct current" in electronics, really means
+#. the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
@@ -20853,7 +21419,8 @@ msgstr "Rimozione spettrale"
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr "Error.~%Frequenze di campionamento della traccia inferiori a 100 Hz non sono supportate."
+msgstr ""
+"Errore.~%Frequenze di campionamento inferiori ai 100 Hz non sono supportate."
 
 #: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
@@ -20954,8 +21521,12 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr "Posizione bilanciamento: ~a~%I canali sinistro e destro sono correlati di circa ~a %. Questo significa:~%~a~%"
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+"Posizione bilanciamento: ~a~%I canali sinistro e destro sono correlati di "
+"circa ~a %. Questo significa:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20976,8 +21547,10 @@ msgstr ""
 "                Molto probabilmente, l'estrazione centrale sarà scarsa."
 
 #: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr " - Un valore abbastanza buono, stereo almeno in media e non troppo diffuso."
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+" - Un valore abbastanza buono, stereo almeno in media e non troppo diffuso."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -21028,9 +21601,8 @@ msgid "Vocoder"
 msgstr "Vocoder"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Edgar-RFT and Steve Daulton"
-msgstr "Steve Daulton"
+msgstr "Edgar-RFT e Steve Daulton"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
@@ -21053,9 +21625,8 @@ msgid "Number of vocoder bands"
 msgstr "Numero di bande vocoder"
 
 #: plug-ins/vocoder.ny
-#, fuzzy
 msgid "Amplitude of carrier wave (percent)"
-msgstr "Ampiezza del rumore bianco (percento)"
+msgstr "Ampiezza dell'onda portante (percentuale)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of white noise (percent)"
@@ -21072,370 +21643,47 @@ msgstr "Frequenza degli aghi radar (Hz)"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%No modulation carrier."
-msgstr ""
+msgstr "Errore.~%Nessuna portante di modulazione."
 
 #. Effects menu group name; audio dynamics compression, not data compression
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Volume and Compression"
-msgstr "Compressione"
+msgstr "Volume e compressione"
 
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Fading"
-msgstr ""
+msgstr "Dissolvenza"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Pitch and Tempo"
-msgstr "Intonazione/tempo"
+msgstr "Intonazione e tempo"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "EQ and Filters"
-msgstr "Carica file"
+msgstr "EQ e filtri"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Noise Removal and Repair"
-msgstr "Rimozione rumore"
+msgstr "Rimozione rumore e riparazione"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Delay and Reverb"
-msgstr "Miscela e renderizza"
+msgstr "Ritardo e riverbero"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Distortion and Modulation"
-msgstr "Entità distorsione"
+msgstr "Distorsione e modulazione"
 
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Special"
-msgstr "Ringraziamenti particolari:"
+msgstr "Speciale"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Vocal Remover"
-msgstr "Rimuovi traccia"
+msgstr "Rimozione voce"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Spectral Tools"
-msgstr "Pennello spettrale"
-
-#, c-format
-#~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-#~ msgstr "%s è un programma libero scritto da una squadra di %s. %s è %s per Windows, Mac, e GNU/Linux (e altri sistemi Unix)."
-
-#~ msgid "volunteers"
-#~ msgstr "volontari"
-
-#~ msgid "available"
-#~ msgstr "disponibile"
-
-#, c-format
-#~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
-#~ msgstr "Se si trova un errore o si hanno dei suggerimenti, sarebbe opportuno scriverci (in inglese) sul nostro %s. Per assistenza, suggerimenti e consigli, visitare il nostro %s o il nostro %s."
-
-#~ msgctxt "dative"
-#~ msgid "forum"
-#~ msgstr "forum"
-
-#~ msgid "wiki"
-#~ msgstr "wiki"
-
-#~ msgctxt "accusative"
-#~ msgid "forum"
-#~ msgstr "forum"
-
-#~ msgid "DarkAudacity Customisation"
-#~ msgstr "Personalizzazione di DarkAudacity"
-
-#~ msgid "Dark Theme Extras"
-#~ msgstr "Funzionalità aggiuntive tema scuro"
-
-#~ msgid "Clear Looping Region"
-#~ msgstr "Azzera regione che si ripete"
-
-#~ msgid "&History..."
-#~ msgstr "&Cronologia..."
-
-#~ msgid "&Mixer Board..."
-#~ msgstr "Pannello &mixer..."
-
-#, c-format
-#~ msgid ""
-#~ "Failed to retrieve data from the project file.\n"
-#~ "The following command failed:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Non è stato possibile recuperare dei dati dal file di progetto.\n"
-#~ "Il comando seguente è fallito:\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Unable to decode project document"
-#~ msgstr "Impossibile decodificare il documento del progetto"
-
-#~ msgid "Main Mix"
-#~ msgstr "Miscelazione principale"
-
-#~ msgid ""
-#~ "Cannot lock region beyond\n"
-#~ "end of project."
-#~ msgstr ""
-#~ "Impossibile bloccare la regione oltre\n"
-#~ "la fine del progetto."
-
-#~ msgid "Effects Rack"
-#~ msgstr "Rack effetti"
-
-#~ msgid "Latency: 0"
-#~ msgstr "Latenza: 0"
-
-#~ msgid "&Bypass"
-#~ msgstr "&Bypass"
-
-#~ msgid "Active State"
-#~ msgstr "Stato attivo"
-
-#~ msgid "Set effect active state"
-#~ msgstr "Imposta stato attivo effetto"
-
-#~ msgid "Show/Hide Editor"
-#~ msgstr "Mostra/nascondi editor"
-
-#~ msgid "Open/close effect editor"
-#~ msgstr "Apri/chiudi editor effetto"
-
-#~ msgid "Move Up"
-#~ msgstr "Sposta su"
-
-#~ msgid "Move effect up in the rack"
-#~ msgstr "Sposta su l'effetto nel rack"
-
-#~ msgid "Move Down"
-#~ msgstr "Sposta giù"
-
-#~ msgid "Move effect down in the rack"
-#~ msgstr "Sposta giù l'effetto nel rack"
-
-#~ msgid "Favorite"
-#~ msgstr "Preferito"
-
-#~ msgid "Mark effect as a favorite"
-#~ msgstr "Contrassegna l'effetto come preferito"
-
-#~ msgid "Remove effect from the rack"
-#~ msgstr "Rimuovi effetto dal rack"
-
-#~ msgid "Name of the effect"
-#~ msgstr "Nome dell'effetto"
-
-#, c-format
-#~ msgid "Latency: %4d"
-#~ msgstr "Latenza: %4d"
-
-#~ msgid "Some Command"
-#~ msgstr "Qualche comando"
-
-#~ msgid "Start &Playback"
-#~ msgstr "Avvia &riproduzione"
-
-#~ msgid "&Preview effect"
-#~ msgstr "Ante&prima effetto"
-
-#~ msgid "Skip backward"
-#~ msgstr "Salta indietro"
-
-#~ msgid "Skip &Backward"
-#~ msgstr "Salta &indietro"
-
-#~ msgid "Skip forward"
-#~ msgstr "Salta avanti"
-
-#~ msgid "Skip &Forward"
-#~ msgstr "Salta &avanti"
-
-#~ msgid "Stop &Playback"
-#~ msgstr "Arresta &riproduzione"
-
-#, c-format
-#~ msgid "Reverb: %s"
-#~ msgstr "Reverbero: %s"
-
-#~ msgid "Scanning Shell VST"
-#~ msgstr "Scansione shell VST"
-
-#, c-format
-#~ msgid "Registering %d of %d: %-64.64s"
-#~ msgstr "Registrazione %d di %d: %-64.64s"
-
-#~ msgid "Presets (may select multiple)"
-#~ msgstr "Combinazioni (selezione multipla possibile)"
-
-#~ msgid "Location"
-#~ msgstr "Posizione"
-
-#, c-format
-#~ msgid "%s requires unsupported feature %s\n"
-#~ msgstr "%s richiede la funzionalità non supportata %s\n"
-
-#, c-format
-#~ msgid "%s requires unsupported option %s\n"
-#~ msgstr "%s richiede l'opzione non supportata %s\n"
-
-#, c-format
-#~ msgid "Invalid project '%s' attribute."
-#~ msgstr "Attributo progetto '%s' non valido."
-
-#~ msgid "Clip B&oundaries"
-#~ msgstr "Li&miti clip"
-
-#~ msgid "Pre&ferences..."
-#~ msgstr "Pre&ferenze..."
-
-#~ msgid "Add / Remove Plug-ins..."
-#~ msgstr "Aggiungi/rimuovi estensioni..."
-
-#~ msgid "&Macros..."
-#~ msgstr "&Macro..."
-
-#~ msgid "Show Effects Rack"
-#~ msgstr "Mostra rack effetti"
-
-#~ msgid "Plugin Options"
-#~ msgstr "Opzioni estensioni"
-
-#~ msgid "Check for updated plugins when Audacity starts"
-#~ msgstr "Controlla aggiornamenti estensioni all'avvio di Audacity"
-
-#~ msgid "Rescan plugins next time Audacity is started"
-#~ msgstr "Rianalizza le estensioni al prossimo avvio di Audacity"
-
-#~ msgid "Cut selection"
-#~ msgstr "Taglia selezione"
-
-#~ msgid "Copy selection"
-#~ msgstr "Copia selezione"
-
-#~ msgid "Open Effects Rack"
-#~ msgstr "Apri rack effetti"
-
-#~ msgid "Recording Volume"
-#~ msgstr "Volume registrazione"
-
-#~ msgid "Playback Volume"
-#~ msgstr "Volume riproduzione"
-
-#, c-format
-#~ msgid "Recording Volume: %.2f"
-#~ msgstr "Volume registrazione: %.2f"
-
-#~ msgid "Recording Volume (Unavailable; use system mixer.)"
-#~ msgstr "Volume registrazione (non disponibile; usa mixer di sistema)."
-
-#, c-format
-#~ msgid "Playback Volume: %.2f"
-#~ msgstr "Volume riproduzione: %.2f"
-
-#~ msgid "Playback Volume (Unavailable; use system mixer.)"
-#~ msgstr "Volume riproduzione (non disponibile; usa mixer di sistema)."
-
-#~ msgid "Mi&xer Toolbar"
-#~ msgstr "Barra mi&xer"
-
-#~ msgid "Zoom Tool"
-#~ msgstr "Strumento zoom"
-
-#~ msgid "&Zoom Tool"
-#~ msgstr "Strumento &zoom"
-
-#~ msgid "Click to Start Monitoring"
-#~ msgstr "Fare clic per avviare il monitoraggio"
-
-#~ msgid "Click for Monitoring"
-#~ msgstr "Fare clic per monitorare"
-
-#~ msgid "Click to Start"
-#~ msgstr "Fare clic per iniziare"
-
-#~ msgid "Click"
-#~ msgstr "Fare clic"
-
-#~ msgid "Please select an action"
-#~ msgstr "Selezionare un'azione"
-
-#~ msgid "Filtering..."
-#~ msgstr "Filtraggio in corso..."
-
-#~ msgid "Released under terms of the GNU General Public License version 2"
-#~ msgstr "Rilasciato sotto i termini della GNU General Public License versione 2"
-
-#~ msgid "Finding beats..."
-#~ msgstr "Ricerca battute in corso..."
-
-#~ msgid "Reconstructing clips..."
-#~ msgstr "Ricostruzione clip in corso..."
-
-#~ msgid "Licensing confirmed under terms of the GNU General Public License version 2"
-#~ msgstr "Licenza confermata secondo i termini della GNU General Public License versione 2"
-
-#~ msgid "Crossfading..."
-#~ msgstr "Dissolvenza incrociata in corso..."
-
-#~ msgid "Applying Delay Effect..."
-#~ msgstr "Applicazione effetto ritardo in corso..."
-
-#~ msgid "Adding equally-spaced labels to the label track..."
-#~ msgstr "Aggiunta di etichette equidistanti alla traccia etichette in corso..."
-
-#~ msgid "Performing High-Pass Filter..."
-#~ msgstr "Applicazione filtro passa-alto in corso..."
-
-#~ msgid "Limiting..."
-#~ msgstr "Limitazione in corso..."
-
-#~ msgid "Performing Low-Pass Filter..."
-#~ msgstr "Applicazione filtro passa-basso in corso..."
-
-#~ msgid "Applying Notch Filter..."
-#~ msgstr "Applicazione filtro notch in corso..."
-
-#~ msgid "Generating pluck sound..."
-#~ msgstr "Generazione suono pizzicato in corso..."
-
-#~ msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-#~ msgstr "Valori MIDI per le note di do: 36, 48, 60 [do centrale], 72, 84, 96."
-
-#~ msgid "Generating Rhythm..."
-#~ msgstr "Generazione ritmo in corso..."
-
-#~ msgid "Generating Risset Drum..."
-#~ msgstr "Generazione tamburo Risset in corso..."
-
-#~ msgid "Reading and rendering samples..."
-#~ msgstr "Lettura e rendering dei campioni in corso..."
-
-#~ msgid "Applying Tremolo..."
-#~ msgstr "Applicazione tremolo in corso..."
-
-#~ msgid "Applying Action..."
-#~ msgstr "Applicazione azione in corso..."
-
-#~ msgid "Processing Vocoder..."
-#~ msgstr "Elaborazione Vocoder in corso..."
-
-#~ msgid "Edgar-RFT"
-#~ msgstr "Edgar-RFT"
-
-#~ msgid "Amplitude of original audio (percent)"
-#~ msgstr "Ampiezza dell'audio originale (percento)"
-
-#, lisp-format
-#~ msgid "Error.~%Stereo track required."
-#~ msgstr "Errore.~%Richiesta traccia stereo."
+msgstr "Strumenti spettrali"
