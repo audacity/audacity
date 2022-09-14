@@ -73,8 +73,6 @@ END_EVENT_TABLE()
 
 EffectBassTreble::EffectBassTreble()
 {
-   Parameters().Reset(*this);
-
    SetLinearEffectFlag(true);
 }
 
@@ -172,7 +170,9 @@ size_t EffectBassTreble::RealtimeProcess(size_t group, EffectSettings &settings,
 
 bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings &) const
 {
-   return (mBass == 0.0 && mTreble == 0.0 && mGain == 0.0);
+   auto& ms = mSettings;
+
+   return (ms.mBass == 0.0 && ms.mTreble == 0.0 && ms.mGain == 0.0);
 }
 
 
@@ -182,6 +182,8 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   auto& ms = mSettings;
+
    S.SetBorder(5);
    S.AddSpace(0, 5);
 
@@ -195,7 +197,7 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
          mBassT = S.Id(ID_Bass)
             .Name(XO("Bass (dB):"))
             .Validator<FloatingPointValidator<double>>(
-               1, &mBass, NumValidatorStyle::DEFAULT, Bass.min, Bass.max)
+               1, &ms.mBass, NumValidatorStyle::DEFAULT, Bass.min, Bass.max)
             .AddTextBox(XXO("Ba&ss (dB):"), L"", 10);
 
          mBassS = S.Id(ID_Bass)
@@ -206,7 +208,7 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
          // Treble control
          mTrebleT = S.Id(ID_Treble)
             .Validator<FloatingPointValidator<double>>(
-               1, &mTreble, NumValidatorStyle::DEFAULT, Treble.min, Treble.max)
+               1, &ms.mTreble, NumValidatorStyle::DEFAULT, Treble.min, Treble.max)
             .AddTextBox(XXO("&Treble (dB):"), L"", 10);
 
          mTrebleS = S.Id(ID_Treble)
@@ -227,7 +229,7 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
          // Gain control
          mGainT = S.Id(ID_Gain)
             .Validator<FloatingPointValidator<double>>(
-               1, &mGain, NumValidatorStyle::DEFAULT, Gain.min, Gain.max)
+               1, &ms.mGain, NumValidatorStyle::DEFAULT, Gain.min, Gain.max)
             .AddTextBox(XXO("&Volume (dB):"), L"", 10);
 
          mGainS = S.Id(ID_Gain)
@@ -254,15 +256,17 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
 
 bool EffectBassTreble::TransferDataToWindow(const EffectSettings &)
 {
+   auto& ms = mSettings;
+
    if (!mUIParent->TransferDataToWindow())
    {
       return false;
    }
 
-   mBassS->SetValue((int) (mBass * Bass.scale));
-   mTrebleS->SetValue((int) mTreble *Treble.scale);
-   mGainS->SetValue((int) mGain * Gain.scale);
-   mLinkCheckBox->SetValue(mLink);
+   mBassS->       SetValue((int)(ms.mBass * Bass.scale));
+   mTrebleS->     SetValue((int)(ms.mTreble *Treble.scale));
+   mGainS->       SetValue((int)(ms.mGain * Gain.scale));
+   mLinkCheckBox->SetValue(      ms.mLink);
 
    return true;
 }
@@ -282,6 +286,8 @@ bool EffectBassTreble::TransferDataFromWindow(EffectSettings &)
 
 void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRate)
 {
+   auto& ms = mSettings;
+
    data.samplerate = sampleRate;
    data.slope = 0.4f;   // same slope for both filters
    data.hzBass = 250.0f;   // could be tunable in a more advanced version
@@ -313,7 +319,7 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 
    data.bass = -1;
    data.treble = -1;
-   data.gain = DB_TO_LINEAR(mGain);
+   data.gain = DB_TO_LINEAR(ms.mGain);
 
 }
 
@@ -321,24 +327,26 @@ size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
    EffectBassTrebleState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   auto& ms = mSettings;
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    // Set value to ensure correct rounding
-   double oldBass = DB_TO_LINEAR(mBass);
-   double oldTreble = DB_TO_LINEAR(mTreble);
+   double oldBass = DB_TO_LINEAR(ms.mBass);
+   double oldTreble = DB_TO_LINEAR(ms.mTreble);
 
-   data.gain = DB_TO_LINEAR(mGain);
+   data.gain = DB_TO_LINEAR(ms.mGain);
 
    // Compute coefficients of the low shelf biquand IIR filter
    if (data.bass != oldBass)
-      Coefficients(data.hzBass, data.slope, mBass, data.samplerate, kBass,
+      Coefficients(data.hzBass, data.slope, ms.mBass, data.samplerate, kBass,
                   data.a0Bass, data.a1Bass, data.a2Bass,
                   data.b0Bass, data.b1Bass, data.b2Bass);
 
    // Compute coefficients of the high shelf biquand IIR filter
    if (data.treble != oldTreble)
-      Coefficients(data.hzTreble, data.slope, mTreble, data.samplerate, kTreble,
+      Coefficients(data.hzTreble, data.slope, ms.mTreble, data.samplerate, kTreble,
                   data.a0Treble, data.a1Treble, data.a2Treble,
                   data.b0Treble, data.b1Treble, data.b2Treble);
 
@@ -407,63 +415,75 @@ float EffectBassTreble::DoFilter(EffectBassTrebleState & data, float in)
 
 void EffectBassTreble::OnBassText(wxCommandEvent & WXUNUSED(evt))
 {
-   double oldBass = mBass;
+   auto& ms = mSettings;
+
+   double oldBass = ms.mBass;
 
    if (!EnableApply(mUIParent->TransferDataFromWindow()))
    {
       return;
    }
 
-   if (mLink) UpdateGain(oldBass, kBass);
-   mBassS->SetValue((int) (mBass * Bass.scale));
+   if (ms.mLink) UpdateGain(oldBass, kBass);
+   mBassS->SetValue((int) (ms.mBass * Bass.scale));
 }
 
 void EffectBassTreble::OnTrebleText(wxCommandEvent & WXUNUSED(evt))
 {
-   double oldTreble = mTreble;
+   auto& ms = mSettings;
+
+   double oldTreble = ms.mTreble;
 
    if (!EnableApply(mUIParent->TransferDataFromWindow()))
    {
       return;
    }
 
-   if (mLink) UpdateGain(oldTreble, kTreble);
-   mTrebleS->SetValue((int) (mTreble * Treble.scale));
+   if (ms.mLink) UpdateGain(oldTreble, kTreble);
+   mTrebleS->SetValue((int) (ms.mTreble * Treble.scale));
 }
 
 void EffectBassTreble::OnGainText(wxCommandEvent & WXUNUSED(evt))
 {
+   auto& ms = mSettings;
+
    if (!EnableApply(mUIParent->TransferDataFromWindow()))
    {
       return;
    }
 
-   mGainS->SetValue((int) (mGain * Gain.scale));
+   mGainS->SetValue((int) (ms.mGain * Gain.scale));
 }
 
 void EffectBassTreble::OnBassSlider(wxCommandEvent & evt)
 {
-   double oldBass = mBass;
-   mBass = (double) evt.GetInt() / Bass.scale;
+   auto& ms = mSettings;
+
+   double oldBass = ms.mBass;
+   ms.mBass = (double) evt.GetInt() / Bass.scale;
    mBassT->GetValidator()->TransferToWindow();
 
-   if (mLink) UpdateGain(oldBass, kBass);
+   if (ms.mLink) UpdateGain(oldBass, kBass);
    EnableApply(mUIParent->Validate());
 }
 
 void EffectBassTreble::OnTrebleSlider(wxCommandEvent & evt)
 {
-   double oldTreble = mTreble;
-   mTreble = (double) evt.GetInt() / Treble.scale;
+   auto& ms = mSettings;
+
+   double oldTreble = ms.mTreble;
+   ms.mTreble = (double) evt.GetInt() / Treble.scale;
    mTrebleT->GetValidator()->TransferToWindow();
 
-   if (mLink) UpdateGain(oldTreble, kTreble);
+   if (ms.mLink) UpdateGain(oldTreble, kTreble);
    EnableApply(mUIParent->Validate());
 }
 
 void EffectBassTreble::OnGainSlider(wxCommandEvent & evt)
 {
-   mGain = (double) evt.GetInt() / Gain.scale;
+   auto& ms = mSettings;
+
+   ms.mGain = (double) evt.GetInt() / Gain.scale;
    mGainT->GetValidator()->TransferToWindow();
 
    EnableApply(mUIParent->Validate());
@@ -471,23 +491,27 @@ void EffectBassTreble::OnGainSlider(wxCommandEvent & evt)
 
 void EffectBassTreble::OnLinkCheckbox(wxCommandEvent& /*evt*/)
 {
-   mLink = mLinkCheckBox->GetValue();
+   auto& ms = mSettings;
+
+   ms.mLink = mLinkCheckBox->GetValue();
 }
 
 void EffectBassTreble::UpdateGain(double oldVal, int control)
 {
+   auto& ms = mSettings;
+
    double newVal;
    oldVal = (oldVal > 0)? oldVal / 2.0 : oldVal / 4.0;
 
    if (control == kBass)
-      newVal = (mBass > 0)? mBass / 2.0 : mBass / 4.0;
+      newVal = (ms.mBass > 0)? ms.mBass / 2.0 : ms.mBass / 4.0;
    else
-      newVal = (mTreble > 0)? mTreble / 2.0 : mTreble / 4.0;
+      newVal = (ms.mTreble > 0)? ms.mTreble / 2.0 : ms.mTreble / 4.0;
 
-   mGain -= newVal - oldVal;
-   mGain = std::min(Gain.max, std::max(Gain.min, mGain));
+   ms.mGain -= newVal - oldVal;
+   ms.mGain = std::min(Gain.max, std::max(Gain.min, ms.mGain));
 
-   mGainS->SetValue(mGain);
+   mGainS->SetValue(ms.mGain);
    mGainT->GetValidator()->TransferToWindow();
 
 }
