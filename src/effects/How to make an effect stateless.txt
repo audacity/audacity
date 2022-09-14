@@ -3,10 +3,12 @@
 Let use use EffectEcho as an example.
 
 
-1) "Define Settings"
+1) "Define Settings" (reference commit: 2d02c26)
 
    In header file:
        before the effect definition, define a struct EffectEchoSettings containing the settings.
+       Cut the class members which qualify for settings and paste them in this new struct; 
+       give them defaults that are equal to the defaults found 
 
        Base class remains as original, i.e. either StatefulPerTrackEffect or StatefulEffect
        

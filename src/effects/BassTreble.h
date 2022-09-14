@@ -34,11 +34,26 @@ public:
    double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
 };
 
+
+struct EffectBassTrebleSettings
+{
+   static constexpr double bassDefault   = 0.0;
+   static constexpr double trebleDefault = 0.0;
+   static constexpr double gainDefault   = 0.0;
+   static constexpr bool   linkDefault   = false;   
+
+   double mBass  { bassDefault   };
+   double mTreble{ trebleDefault };
+   double mGain  { gainDefault   };
+   bool   mLink  { linkDefault   };
+};
+
+
 class EffectBassTreble final : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectBassTreble *
-   FetchParameters(EffectBassTreble &e, EffectSettings &) { return &e; }
+   static inline EffectBassTrebleSettings *
+   FetchParameters(EffectBassTreble &e, EffectSettings &) { return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectBassTreble();
@@ -108,10 +123,7 @@ private:
    EffectBassTrebleState mMaster;
    std::vector<EffectBassTrebleState> mSlaves;
 
-   double      mBass;
-   double      mTreble;
-   double      mGain;
-   bool        mLink;
+   EffectBassTrebleSettings mSettings;
 
    wxSlider    *mBassS;
    wxSlider    *mTrebleS;
@@ -126,14 +138,17 @@ private:
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Bass{ &EffectBassTreble::mBass,
-   L"Bass",          0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Treble{ &EffectBassTreble::mTreble,
-   L"Treble",        0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Gain{ &EffectBassTreble::mGain,
-   L"Gain",          0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Link{ &EffectBassTreble::mLink,
-   L"Link Sliders",  false,    false,  true,    1  };
+   static constexpr EffectParameter Bass{ &EffectBassTrebleSettings::mBass,
+                         L"Bass",          EffectBassTrebleSettings::bassDefault,     -30.0,   30.0,    1  };
+
+   static constexpr EffectParameter Treble{ &EffectBassTrebleSettings::mTreble,
+                         L"Treble",          EffectBassTrebleSettings::trebleDefault, -30.0,   30.0,    1  };
+
+   static constexpr EffectParameter Gain{ &EffectBassTrebleSettings::mGain,
+                         L"Gain",          EffectBassTrebleSettings::gainDefault,     -30.0,   30.0,    1  };
+
+   static constexpr EffectParameter Link{ &EffectBassTrebleSettings::mLink,
+                         L"Link Sliders",  EffectBassTrebleSettings::linkDefault,      false,  true,    1  };
 };
 
 #endif
