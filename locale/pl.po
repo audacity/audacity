@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-09-13 19:26+0000\n"
+"PO-Revision-Date: 2022-09-14 19:58+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -229,6 +229,10 @@ msgstr "Głośność nagrywania jest natywna\n"
 #: src/commands/MessageCommand.cpp src/widgets/AudacityMessageBox.h
 msgid "Message"
 msgstr "Komunikat"
+
+#: libraries/lib-cloud-audiocom/UploadService.cpp
+msgid "Cannot proceed to upload."
+msgstr "Nie można przejść do przesyłania."
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -2419,6 +2423,7 @@ msgid "File"
 msgstr "Plik"
 
 #: src/BatchProcessDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Cancel"
 msgstr "&Anuluj"
@@ -3777,7 +3782,7 @@ msgid "Cl&ear"
 msgstr "Wy&czyść"
 
 #: src/LogWindow.cpp src/ShuttleGui.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp src/effects/Contrast.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Zamknij"
@@ -6264,6 +6269,8 @@ msgid "&Share Audio Toolbar"
 msgstr "&Udostępnij pasek narzędzi dźwięku"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
 msgid "Link account"
 msgstr "Połącz konto"
 
@@ -6281,32 +6288,32 @@ msgid "C&ontinue"
 msgstr "K&ontynuuj"
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "AccountError"
-msgstr "Błąd konta"
+msgid "We were unable to link your account. Please try again."
+msgstr "Nie można połączyć Twojego konta. Spróbuj ponownie."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid ""
-"There has been a problem with verifying your linked account. Please visit "
-"audio.com to confirm your details and try again."
-msgstr ""
-"Wystąpił problem z weryfikacją połączonego konta. Odwiedź stronę audio.com, "
-"aby potwierdzić swoje dane i spróbować ponownie."
+msgid "&Try again"
+msgstr "Spróbuj ponownie"
 
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Go to audio.com"
-msgstr "&Idź na audio.com"
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "Konto połączone pomyślnie!"
 
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/menus/FileMenus.cpp
-msgid "Cannot proceed to export."
-msgstr "Nie można przejść do eksportu."
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
 msgstr "&Idź do mojego pliku"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&lose"
-msgstr "Z&amknij"
+msgid "Are you sure you want to cancel?"
+msgstr "Na pewno chcesz anulować?"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Anuluj przesyłanie na Audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Uploading audio..."
@@ -6326,7 +6333,7 @@ msgid ""
 " your audio.com account before uploading."
 msgstr ""
 "Nie możemy przesłać tego pliku. Spróbuj ponownie i przed przesłaniem upewnij"
-" się, że masz link do swojego konta audio.com."
+" się, że masz link do swojego konta Audio.com."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Export error"
@@ -6350,7 +6357,7 @@ msgstr "&Połącz konto"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Naciśnij \"Kontynuuj\", aby przesłać na audio.com"
+msgstr "Naciśnij \"Kontynuuj\", aby przesłać na Audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, c-format
@@ -6365,7 +6372,7 @@ msgstr ""
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "audio.com"
-msgstr "audio.com"
+msgstr "Audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Unlink Account"
@@ -13897,6 +13904,10 @@ msgid "&Full Screen (on/off)"
 msgstr "&Pełny ekran (włącz/wyłącz)"
 
 #: src/menus/FileMenus.cpp
+msgid "Cannot proceed to export."
+msgstr "Nie można przejść do eksportu."
+
+#: src/menus/FileMenus.cpp
 #, c-format
 msgid ""
 "Cannot create directory '%s'. \n"
@@ -14153,7 +14164,7 @@ msgstr "&Generuj dane pomocy..."
 
 #: src/menus/HelpMenus.cpp
 msgid "L&ink audio.com account..."
-msgstr "P&ołącz konto audio.com..."
+msgstr "P&ołącz konto Audio.com..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -17660,11 +17671,11 @@ msgstr "Ustawienia &dźwięku..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1 (mono) kanał nagrywający"
+msgstr "1 (mono) kanał nagrywania"
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 (stereo) kanały nagrywające"
+msgstr "2 (stereo) kanały nagrywania"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "Audio Settings:"
@@ -17755,7 +17766,7 @@ msgstr "Host dźwięku"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Recording Channels"
-msgstr "Kanały nagrywające"
+msgstr "Kanały nagrywania"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
@@ -19832,7 +19843,7 @@ msgstr "Okno dialogowe katalogu"
 msgid "File Dialog"
 msgstr "Okno dialogowe pliku"
 
-#: plug-ins/SpectralEditMulti.ny
+#: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
 msgstr "Multinarzędzie edycji widma"
 
@@ -19882,7 +19893,7 @@ msgstr ""
 msgid "Error.~%"
 msgstr "Błąd.~%"
 
-#: plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditParametricEQ.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Parametric EQ"
 msgstr "Parametryczna edycja EQ widma"
 
@@ -19927,7 +19938,7 @@ msgstr ""
 "                         częstotliwość wynoszą obie ~a Hz).~%~\n"
 "                         Wybierz zakres częstotliwości."
 
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Shelves"
 msgstr "Półki edycji widma"
 
@@ -21605,15 +21616,3 @@ msgstr "Narzędzie do usuwania wokalu"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Narzędzia widmowe"
-
-#: resources/EffectsMenuDefaults.xml
-msgid "Spectral edit multi tool"
-msgstr "Multinarzędzie edycji widma"
-
-#: resources/EffectsMenuDefaults.xml
-msgid "Spectral edit parametric EQ"
-msgstr "Parametryczna edycja EQ widma"
-
-#: resources/EffectsMenuDefaults.xml
-msgid "Spectral edit shelves"
-msgstr "Półki edycji widma"
