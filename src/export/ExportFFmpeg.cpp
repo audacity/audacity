@@ -449,7 +449,6 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    case FMT_M4A:
    {
       int q = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
-      mEncAudioCodecCtx->SetGlobalQuality(q);
 
       q = wxClip( q, 98 * mChannels, 160 * mChannels );
       // Set bit rate to between 98 kbps and 320 kbps (if two channels)
