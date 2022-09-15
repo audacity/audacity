@@ -22,7 +22,9 @@
 
 #include "OAuthService.h"
 
+#include "AuthorizationHandler.h"
 #include "LinkFailedDialog.h"
+#include "LinkSucceededDialog.h"
 
 namespace cloud::audiocom
 {
@@ -31,6 +33,8 @@ LinkAccountDialog::LinkAccountDialog(wxWindow* parent)
          parent, wxID_ANY, XO("Link account"), wxDefaultPosition, { 480, -1 },
          wxDEFAULT_DIALOG_STYLE)
 {
+   GetAuthorizationHandler().PushSuppressDialogs();
+
    ShuttleGui s(this, eIsCreating);
 
    s.StartVerticalLay();
@@ -76,6 +80,7 @@ LinkAccountDialog::LinkAccountDialog(wxWindow* parent)
 
 LinkAccountDialog::~LinkAccountDialog()
 {
+   GetAuthorizationHandler().PopSuppressDialogs();
 }
 
 void LinkAccountDialog::OnContinue()
@@ -94,7 +99,14 @@ void LinkAccountDialog::OnContinue()
                if (!token.empty())
                {
                   if (weakDialog)
+                  {
+                     auto parent = weakDialog->GetParent();
                      weakDialog->Close();
+
+                     LinkSucceededDialog successDialog { parent };
+                     successDialog.ShowModal();
+                  }
+
                   return;
                }
 

@@ -241,6 +241,8 @@ public:
    * they are different. */
    size_t GetCommonlyReadyPlayback();
 
+   size_t GetCommonlyWrittenForPlayback();
+
    /// How many frames of zeros were output due to pauses?
    long    mNumPauseFrames;
 
@@ -598,6 +600,9 @@ private:
    void FillPlayBuffers();
    void TransformPlayBuffers(
       std::optional<RealtimeEffects::ProcessingScope> &scope);
+   bool ProcessPlaybackSlices(
+      std::optional<RealtimeEffects::ProcessingScope> &pScope,
+      size_t available);
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();

@@ -1767,6 +1767,15 @@ size_t AudioIoCallback::GetCommonlyReadyPlayback()
    return commonlyAvail;
 }
 
+size_t AudioIoCallback::GetCommonlyWrittenForPlayback()
+{
+   auto commonlyAvail = mPlaybackBuffers[0]->WrittenForGet();
+   for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mPlaybackBuffers[i]->WrittenForGet());
+   return commonlyAvail;
+}
+
 size_t AudioIO::GetCommonlyAvailCapture()
 {
    auto commonlyAvail = mCaptureBuffers[0]->AvailForGet();
@@ -1795,35 +1804,78 @@ void AudioIO::FillPlayBuffers()
    if (mNumPlaybackChannels == 0)
       return;
 
-   // Though extremely unlikely, it is possible that some buffers
-   // will have more samples available than others.  This could happen
-   // if we hit this code during the PortAudio callback.  To keep
-   // things simple, we only write as much data as is vacant in
+   // It is possible that some buffers will have more samples available than
+   // others.  This could happen if we hit this code during the PortAudio
+   // callback.  Also, if in a previous pass, unequal numbers of samples were
+   // discarded from ring buffers for differing latencies.
+
+   // To keep things simple, we write no more data than is vacant in
    // ALL buffers, and advance the global time by that much.
    auto nAvailable = GetCommonlyFreePlayback();
 
-   // Don't fill the buffers at all unless we can do the
-   // full mMaxPlaybackSecsToCopy.  This improves performance
+   // Don't fill the buffers at all unless we can do
+   // at least mPlaybackSamplesToCopy.  This improves performance
    // by not always trying to process tiny chunks, eating the
    // CPU unnecessarily.
    if (nAvailable < mPlaybackSamplesToCopy)
       return;
 
-   auto &policy = mPlaybackSchedule.GetPolicy();
-
    // More than mPlaybackSamplesToCopy might be copied:
    // May produce a larger amount when initially priming the buffer, or
-   // perhaps again later in play to avoid underfilling the queue and falling
-   // behind the real-time demand on the consumer side in the callback.
-   auto nReady = GetCommonlyReadyPlayback();
-   auto nNeeded =
-      mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+   // perhaps again later in play to avoid underfilling the queue and
+   // falling behind the real-time demand on the consumer side in the
+   // callback.
+   auto GetNeeded = [&]() -> size_t {
+      // Note that reader might concurrently consume between loop passes below
+      // So this might not be nondecreasing
+      auto nReady = GetCommonlyWrittenForPlayback();
+      return mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+   };
+   auto nNeeded = GetNeeded();
 
    // wxASSERT( nNeeded <= nAvailable );
 
-   // Limit maximum buffer size (increases performance)
-   auto available = std::min( nAvailable,
-      std::max( nNeeded, mPlaybackSamplesToCopy ) );
+   auto Flush = [&]{
+      /* The flushing of all the Puts to the RingBuffers is lifted out of the
+      do-loop in ProcessPlaybackSlices, and also after transformation of the
+      stream for realtime effects.
+
+      It's only here that a release is done on the atomic variable that
+      indicates the readiness of sample data to the consumer.  That atomic
+      also synchronizes the use of the TimeQueue.
+      */
+      for (size_t i = 0; i < std::max(size_t{1}, mPlaybackTracks.size()); ++i)
+         mPlaybackBuffers[i]->Flush();
+   };
+
+   while (true) {
+      // Limit maximum buffer size (increases performance)
+      auto available = std::min( nAvailable,
+         std::max( nNeeded, mPlaybackSamplesToCopy ) );
+
+      // After each loop pass or after break
+      Finally Do{ Flush };
+
+      if (!ProcessPlaybackSlices(pScope, available))
+         // We are not making progress.  May fail to satisfy the minimum but
+         // won't loop forever
+         break;
+
+      // Loop again to satisfy the minimum queue requirement in case there
+      // was discarding of processed data for effect latencies
+      nNeeded = GetNeeded();
+      if (nNeeded == 0)
+         break;
+
+      // Might increase because the reader consumed some
+      nAvailable = GetCommonlyFreePlayback();
+   }
+}
+
+bool AudioIO::ProcessPlaybackSlices(
+   std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t available)
+{
+   auto &policy = mPlaybackSchedule.GetPolicy();
 
    // msmeyer: When playing a very short selection in looped
    // mode, the selection must be copied to the buffer multiple
@@ -1832,10 +1884,12 @@ void AudioIO::FillPlayBuffers()
    // PRL: or, when scrubbing, we may get work repeatedly from the
    // user interface.
    bool done = false;
+   bool progress = false;
    do {
       const auto slice =
          policy.GetPlaybackSlice(mPlaybackSchedule, available);
       const auto &[frames, toProduce] = slice;
+      progress = progress || toProduce > 0;
 
       // Update the time queue.  This must be done before writing to the
       // ring buffers of samples, for proper synchronization with the
@@ -1882,18 +1936,9 @@ void AudioIO::FillPlayBuffers()
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per track, after all the little slices have been written.
    TransformPlayBuffers(pScope);
-
-   /* The flushing of all the Puts to the RingBuffers is lifted out of the
-   do-loop above, and also after transformation of the stream for realtime
-   effects.
-
-   It's only here that a release is done on the atomic variable that
-   indicates the readiness of sample data to the consumer.  That atomic
-   also sychronizes the use of the TimeQueue.
-   */
-   for (size_t i = 0; i < std::max(size_t{1}, mPlaybackTracks.size()); ++i)
-      mPlaybackBuffers[i]->Flush();
+   return progress;
 }
+
 
 void AudioIO::TransformPlayBuffers(
    std::optional<RealtimeEffects::ProcessingScope> &pScope)
@@ -1907,42 +1952,48 @@ void AudioIO::TransformPlayBuffers(
    const auto numPlaybackTracks = mPlaybackTracks.size();
    for (unsigned t = 0; t < numPlaybackTracks; ++t) {
       const auto vt = mPlaybackTracks[t].get();
-      if (!vt)
+      if (!(vt && vt->IsLeader()))
          continue;
-      if ( vt->IsLeader() ) {
-         // vt is mono, or is the first of its group of channels
-         const auto nChannels = std::min<size_t>(
-            mNumPlaybackChannels, TrackList::Channels(vt).size());
+      // vt is mono, or is the first of its group of channels
+      const auto nChannels = std::min<size_t>(
+         mNumPlaybackChannels, TrackList::Channels(vt).size());
 
-         // Loop over the blocks of unflushed data, at most two
-         for (unsigned iBlock : {0, 1}) {
-            size_t len = 0;
-            size_t iChannel = 0;
+      // Loop over the blocks of unflushed data, at most two
+      for (unsigned iBlock : {0, 1}) {
+         size_t len = 0;
+         size_t iChannel = 0;
+         for (; iChannel < nChannels; ++iChannel) {
+            auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
+            const auto pair =
+               ringBuffer.GetUnflushed(iBlock);
+            // Playback RingBuffers have float format: see AllocateBuffers
+            pointers[iChannel] = reinterpret_cast<float*>(pair.first);
+            // The lengths of corresponding unflushed blocks should be
+            // the same for all channels
+            if (len == 0)
+               len = pair.second;
+            else
+               assert(len == pair.second);
+         }
+
+         // Are there more output device channels than channels of vt?
+         // Such as when a mono track is processed for stereo play?
+         // Then supply some non-null fake input buffers, because the
+         // various ProcessBlock overrides of effects may crash without it.
+         // But it would be good to find the fixes to make this unnecessary.
+         float **scratch = &mScratchPointers[mNumPlaybackChannels];
+         while (iChannel < mNumPlaybackChannels)
+            memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
+
+         if (len && pScope) {
+            auto discardable = pScope->Process( *vt, &pointers[0],
+               mScratchPointers.data(), mNumPlaybackChannels, len);
+            iChannel = 0;
             for (; iChannel < nChannels; ++iChannel) {
-               const auto pair =
-                  mPlaybackBuffers[t + iChannel]->GetUnflushed(iBlock);
-               // Playback RingBuffers have float format: see AllocateBuffers
-               pointers[iChannel] = reinterpret_cast<float*>(pair.first);
-               // The lengths of corresponding unflushed blocks should be
-               // the same for all channels
-               if (len == 0)
-                  len = pair.second;
-               else
-                  assert(len == pair.second);
+               auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
+               auto discarded = ringBuffer.Unput(discardable);
+               // assert(discarded == discardable);
             }
-
-            // Are there more output device channels than channels of vt?
-            // Such as when a mono track is processed for stereo play?
-            // Then supply some non-null fake input buffers, because the
-            // various ProcessBlock overrides of effects may crash without it.
-            // But it would be good to find the fixes to make this unnecessary.
-            float **scratch = &mScratchPointers[mNumPlaybackChannels];
-            while (iChannel < mNumPlaybackChannels)
-               memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
-
-            if (len && pScope)
-               pScope->Process(*vt, &pointers[0], mScratchPointers.data(),
-                  mNumPlaybackChannels, len);
          }
       }
    }

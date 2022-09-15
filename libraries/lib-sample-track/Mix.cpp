@@ -94,7 +94,9 @@ Mixer::Mixer(Inputs inputs,
 
    // PRL:  Bug2536: see other comments below for the last, padding argument
    // TODO: more-than-two-channels
-   , mFloatBuffers{ 2, mBufferSize, 1, 1 }
+   // Issue 3565 workaround:  allocate one extra buffer when applying a
+   // GVerb effect stage.  It is simply discarded
+   , mFloatBuffers{ 3, mBufferSize, 1, 1 }
 
    // non-interleaved
    , mTemp{ initVector<float>(mNumChannels, mBufferSize) }
@@ -238,7 +240,7 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    Clear();
    // TODO: more-than-two-channels
-   auto maxChannels = mFloatBuffers.Channels();
+   auto maxChannels = std::max(2u, mFloatBuffers.Channels());
 
    for (auto &[ upstream, downstream ] : mDecoratedSources) {
       auto oResult = downstream.Acquire(mFloatBuffers, maxToProcess);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-10-14 10:06-0400\n"
+"POT-Creation-Date: 2022-09-13 07:25-0400\n"
 "PO-Revision-Date: 2012-06-19 09:34-0000\n"
 "Last-Translator: Mikhail Balabanov\n"
 "Language-Team: .\n"
@@ -40,7 +40,6 @@ msgid "Problem Report for Audacity"
 msgstr "Предпочитания: "
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
 msgstr ""
 
@@ -49,7 +48,7 @@ msgstr ""
 msgid "Problem details"
 msgstr ""
 
-#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: crashreports/crashreporter/CrashReportApp.cpp src/TagsEditor.cpp
 #: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
 msgid "Comments"
 msgstr "Коментари"
@@ -57,7 +56,6 @@ msgstr "Коментари"
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#: src/widgets/ErrorReportDialog.cpp
 #, fuzzy, c-format
 msgid "See %s for more info."
 msgstr "Изберете един или няколко звукови файла…"
@@ -65,8 +63,6 @@ msgstr "Изберете един или няколко звукови файл�
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an
-#. object of "See".
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -234,6 +230,11 @@ msgstr "Край на запис"
 msgid "Message"
 msgstr ""
 
+#: libraries/lib-cloud-audiocom/UploadService.cpp
+#, fuzzy
+msgid "Cannot proceed to upload."
+msgstr "Няма надписи за експортиране."
+
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
 msgid ""
@@ -332,6 +333,7 @@ msgid "%s files"
 msgstr "MP3 файлове"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
+#: src/effects/lv2/LV2Validator.cpp
 #, c-format
 msgid "(%s)"
 msgstr ""
@@ -344,12 +346,13 @@ msgid ""
 msgstr "Директорията %s не съществува. Желаете ли да бъде създадена?"
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
-#: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectBase.cpp
+#: src/effects/Generator.cpp src/effects/VST3/VST3Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -387,7 +390,9 @@ msgstr "Няма"
 msgid "Rectangle"
 msgstr "Правоъгълник"
 
-#: libraries/lib-math/Dither.cpp src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#: libraries/lib-math/Dither.cpp
+#, fuzzy
+msgctxt "dither"
 msgid "Triangle"
 msgstr "Триъгълник"
 
@@ -485,6 +490,131 @@ msgstr "32-битов с ПЗ"
 msgid "Unknown format"
 msgstr ""
 
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Module Unsuitable"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to load the \"%s\" module.\n"
+"\n"
+"Error: %s"
+msgstr "Не е възможно да се отвори/създаде пробен файл."
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" does not provide a version string.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" is matched with Audacity version \"%s\".\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" failed to initialize.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid "Module \"%s\" found."
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid ""
+"\n"
+"\n"
+"Only use modules from trusted sources"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/sample-data-export.ny
+msgid "Yes"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#, fuzzy
+msgid "No"
+msgstr "Няма"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy
+msgid "Audacity Module Loader"
+msgstr "Модулатор"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Try and load this module?"
+msgstr ""
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"The module \"%s\" does not provide any of the required functions.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy, c-format
+msgid "Overwrite the plug-in file %s?"
+msgstr "Презаписване на съществуващи файлове"
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in file is in use. Failed to overwrite"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr "Не е възможно да се премахне „%s“"
+
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgctxt "plug-ins"
+msgid "Enable this plug-in?\n"
+msgid_plural "Enable these plug-ins?\n"
+msgstr[0] "Съжаляваме, не бе възможно да се зареди Vamp приставка."
+msgstr[1] "Съжаляваме, не бе възможно да се зареди Vamp приставка."
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgid "Enable new plug-ins"
+msgstr "Съжаляваме, не бе възможно да се зареди Vamp приставка."
+
+#: libraries/lib-module-manager/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Команда на Nyquist"
+
+#: libraries/lib-network-manager/MultipartData.cpp
+#, fuzzy, c-format
+msgid "Failed to open the file for upload: %s"
+msgstr "Не е възможно да се премахне „%s“"
+
+#: libraries/lib-project-history/ProjectHistory.cpp
+msgid "Created new project"
+msgstr "Създаден бе нов проект"
+
 #: libraries/lib-project-rate/QualitySettings.cpp
 #, fuzzy
 msgid "16-bit"
@@ -509,6 +639,16 @@ msgstr ""
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
 msgstr ""
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Sample Track"
+msgstr "Предискретизиране на писта"
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Writable Sample Track"
+msgstr "Предискретизиране на писта"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
@@ -553,25 +693,36 @@ msgstr "Начална дата"
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
-#: libraries/lib-theme/ClassicThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/ClassicThemeAsCeeCode.cpp
 msgid "Classic"
 msgstr ""
 
-#: libraries/lib-theme/DarkThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/DarkThemeAsCeeCode.cpp
 msgid "Dark"
 msgstr ""
 
 #. i18n-hint: greater difference between foreground and
 #. background colors
-#: libraries/lib-theme/HiContrastThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/HighContrastThemeAsCeeCode.cpp
 #, fuzzy
 msgid "High Contrast"
 msgstr "Контраст…"
 
 #. i18n-hint: Light meaning opposite of dark
-#: libraries/lib-theme/LightThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
 msgid "Light"
 msgstr "Леко"
+
+#. i18n-hint: A theme is a consistent visual style across an application's
+#. graphical user interface, including choices of colors, and similarity of images
+#. such as those on button controls.  Audacity can load and save alternative
+#. themes.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/%s."
+msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -581,17 +732,6 @@ msgid ""
 msgstr ""
 "Audacity не успя да запише във файла:\n"
 "  %s."
-
-#. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
-#. themes.
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme written to:\n"
-"  %s."
-msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -612,14 +752,6 @@ msgid ""
 msgstr ""
 "Audacity не успя да запише изображения във файла\n"
 "  %s."
-
-#. i18n-hint "Cee" means the C computer programming language
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme as Cee code written to:\n"
-"  %s."
-msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -653,6 +785,11 @@ msgstr ""
 "Моля, съобщете за проблема."
 
 #: libraries/lib-theme/Theme.cpp
+#, fuzzy, c-format
+msgid "Couldn't read from file: %s"
+msgstr "Не бе възможно да се записва във файл: "
+
+#: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid ""
 "None of the expected theme component files\n"
@@ -662,6 +799,13 @@ msgstr ""
 "Никой от очакваните файлове с компоненти на темата\n"
 "не бе намерен тук:\n"
 "  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/Components/."
+msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -692,10 +836,52 @@ msgstr ""
 "Audacity не успя да запази файла:\n"
 "  %s"
 
+#: libraries/lib-theme/Theme.cpp src/FreqWindow.cpp src/LabelDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#, fuzzy, c-format
+msgid "Couldn't write to file: %s"
+msgstr "Не бе възможно да се записва във файл: "
+
+#. i18n-hint "Cee" means the C computer programming language
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes as Cee code written to:\n"
+"  %s/*%s."
+msgstr ""
+
 #. i18n-hint: user defined
 #: libraries/lib-theme/Theme.cpp
 msgid "Custom"
 msgstr ""
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Generic Track"
+msgstr "&Генериране"
+
+#: libraries/lib-track/Track.cpp
+msgid "Audio Track"
+msgstr "Аудиописта"
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Playable Track"
+msgstr "Възпроизвеждане"
+
+#: libraries/lib-transactions/TransactionScope.cpp
+msgid "Database error.  Sorry, but we don't have more details."
+msgstr ""
+
+#: libraries/lib-transactions/TransactionScope.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
+#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
+#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
+#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
+#: src/menus/EditMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+msgid "Warning"
+msgstr "Предупреждение"
 
 #: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -866,16 +1052,6 @@ msgstr ""
 msgid "Script was not saved."
 msgstr ""
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
-#: src/ProjectFileIO.cpp src/ProjectHistory.cpp src/SqliteSampleBlock.cpp
-#: src/WaveClip.cpp src/WaveTrack.cpp src/export/Export.cpp
-#: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
-msgid "Warning"
-msgstr "Предупреждение"
-
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Save Nyquist script"
@@ -971,7 +1147,7 @@ msgstr "Запазване като…"
 msgid "Save script as..."
 msgstr "Запазване на проект к&ато…"
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Копиране"
@@ -982,7 +1158,6 @@ msgid "Copy to clipboard"
 msgstr "Изрязване към клипборда"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Изрязване"
@@ -993,7 +1168,6 @@ msgid "Cut to clipboard"
 msgstr "Изрязване към клипборда"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Поставяне"
@@ -1108,8 +1282,8 @@ msgstr "Начало"
 msgid "Start script"
 msgstr "Команда на Nyquist"
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
-#: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
+#: src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Стоп"
 
@@ -1133,6 +1307,12 @@ msgstr ""
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, designer"
+msgstr "Обвиваща крива"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -1229,47 +1409,6 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#. i18n-hint: First and third %s will be the program's name,
-#. second %s will be "volunteers", fourth "available"
-#: src/AboutDialog.cpp
-#, fuzzy, c-format
-msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Audacity е свободна програма, разработвана от екип от <a href=\"http://audacity.sourceforge.net/community/developers\">доброволци</a> от целия свят. Благодарим на <a href=\"http://sourceforge.net\">SourceForge.net</a> и <a href=\"http://code.google.com\">Google Code</a> за подслоняването на нашия проект. Audacity се <a href=\"http://audacity.sourceforge.net/download/\">предлага</a> за Windows, Mac и GNU/Linux (и други съвместими с Unix операционни системи)."
-
-#. i18n-hint: substitutes into "a worldwide team of %s"
-#: src/AboutDialog.cpp
-msgid "volunteers"
-msgstr ""
-
-#. i18n-hint: substitutes into "Audacity is %s"
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "available"
-msgstr "Променлива"
-
-#. i18n-hint first and third %s will be "forum", second "wiki"
-#: src/AboutDialog.cpp
-#, fuzzy, c-format
-msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr "Ако откриете дефект или имате предложение, пишете ни на адреса за <a href=\"mailto:feedback@audacityteam.org\">отзиви</a>. За помощ относно работата с Audacity вижте съветите в нашето <a href=\"http://wiki.audacityteam.org/\">уики</a> или посетете <a href=\"http://forum.audacityteam.org/\">форума ни</a>."
-
-#. i18n-hint substitutes into "write to our %s"
-#: src/AboutDialog.cpp
-msgctxt "dative"
-msgid "forum"
-msgstr ""
-
-#. i18n-hint substitutes into "view the tips and tricks on our %s"
-#: src/AboutDialog.cpp
-msgid "wiki"
-msgstr ""
-
-#. i18n-hint substitutes into "visit our %s"
-#: src/AboutDialog.cpp
-msgctxt "accusative"
-msgid "forum"
-msgstr ""
-
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -1293,15 +1432,16 @@ msgstr ""
 msgid "Credits"
 msgstr "Разработчици"
 
-#: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr ""
-
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "%s Team Members"
 msgstr "Други бивши членове на екипа"
+
+#. i18n-hint: Musers are people working at Muse Group
+#: src/AboutDialog.cpp
+msgid "Former Musers"
+msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -1406,6 +1546,11 @@ msgid "%s, 64 bits"
 msgstr ""
 
 #: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 32 bits"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "Build type:"
 msgstr "Тип на компилата:"
 
@@ -1422,7 +1567,22 @@ msgstr "Префикс на инсталацията: "
 
 #: src/AboutDialog.cpp
 #, fuzzy
+msgid "Cache folder:"
+msgstr "Папка за настройки: "
+
+#: src/AboutDialog.cpp
+#, fuzzy
 msgid "Settings folder:"
+msgstr "Папка за настройки: "
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Data folder:"
+msgstr "Папка за настройки: "
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "State folder:"
 msgstr "Папка за настройки: "
 
 #. i18n-hint: Libraries that are essential to audacity
@@ -1488,10 +1648,6 @@ msgstr "Импортиране чрез QuickTime"
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Функции"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Plug-in support"
@@ -1636,7 +1792,7 @@ msgstr "&Обновяване на визуализацията при възп�
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
-msgid "Clear Looping Region"
+msgid "Clear Loop"
 msgstr "&Изчистване"
 
 #: src/AdornedRulerPanel.cpp
@@ -1711,7 +1867,7 @@ msgstr "&Отваряне…"
 msgid "Open &Recent..."
 msgstr "Последно използвани &файлове…"
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/AudacityApp.cpp
 msgid "&About Audacity..."
 msgstr "&Относно Audacity…"
 
@@ -1788,17 +1944,25 @@ msgid "Audacity is already running"
 msgstr "Audacity вече е стартирана"
 
 #: src/AudacityApp.cpp
+#, c-format
 msgid ""
-"Unable to acquire semaphores.\n"
+"Unable to create shared memory segment.\n"
 "\n"
-"This is likely due to a resource shortage\n"
-"and a reboot may be required."
+"error code=%d : \"%s\"."
 msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
 msgid "Audacity Startup Failure"
 msgstr "Файлове с проекти на Audacity"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1874,6 +2038,11 @@ msgstr "\t-version (показва версията на Audacity)"
 #, fuzzy
 msgid "audio or project file name"
 msgstr "Не е възможно отварянето на файл с проект"
+
+#. i18n-hint: This option is used to handle custom URLs in Audacity
+#: src/AudacityApp.cpp
+msgid "Handle 'audacity://' url"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
@@ -2261,7 +2430,9 @@ msgstr "Прилага се…"
 msgid "File"
 msgstr "Файл"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Cancel"
 msgstr "&Отказ"
 
@@ -2328,8 +2499,8 @@ msgstr "Местене на&горе"
 msgid "Move &Down"
 msgstr "Местене на&долу"
 
-#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/HelpMenus.cpp
+#: src/BatchProcessDialog.cpp src/HelpUtilities.cpp
+#: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "&Save"
 msgstr "Запазване"
@@ -2417,8 +2588,8 @@ msgid "Run"
 msgstr ""
 
 #. i18n-hint verb
-#: src/Benchmark.cpp src/tracks/ui/TrackButtonHandles.cpp
-#: src/widgets/HelpSystem.cpp
+#: src/Benchmark.cpp src/RealtimeEffectPanel.cpp
+#: src/tracks/ui/TrackButtonHandles.cpp src/widgets/HelpSystem.cpp
 msgid "Close"
 msgstr "Затваряне"
 
@@ -2697,10 +2868,6 @@ msgid ""
 "%s"
 msgstr "Не е възможно да се премахне „%s“"
 
-#: src/DBConnection.cpp
-msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
-
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
 msgstr "Премахване на зависимости"
@@ -2826,6 +2993,28 @@ msgstr ""
 #: src/Dependencies.cpp
 msgid "Dependency Check"
 msgstr "Проверка за зависимости"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence of audio sample data from the
+#. recording
+#: src/DropoutDetector.cpp
+msgid "Dropouts"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
@@ -3124,12 +3313,6 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Експорт на спектрални данни като:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
-#, fuzzy, c-format
-msgid "Couldn't write to file: %s"
-msgstr "Не бе възможно да се записва във файл: "
-
 #: src/FreqWindow.cpp
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "Честота (Хц)\tНиво (дБ)"
@@ -3282,6 +3465,16 @@ msgstr ""
 msgid "Check Online"
 msgstr "Проверява се %s"
 
+#: src/HelpUtilities.cpp
+#, fuzzy, c-format
+msgid "Save %s"
+msgstr "%s бе запазен"
+
+#: src/HelpUtilities.cpp
+#, fuzzy, c-format
+msgid "Unable to save %s"
+msgstr "Не е възможно да се премахне „%s“."
+
 #: src/HistoryWindow.cpp
 #, fuzzy
 msgid "History"
@@ -3342,8 +3535,34 @@ msgstr ""
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
 #: src/HistoryWindow.cpp
-msgid "&History..."
+#, fuzzy
+msgid "&History"
 msgstr "&Хронология…"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "New Plugins"
+msgstr "Съжаляваме, не бе възможно да се зареди Vamp приставка."
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "Incompatible plugin(s) found"
+msgstr "Не бе намерена съвместима библиотека FFmpeg"
+
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Съжаляваме, не бе възможно да се зареди Vamp приставка."
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Други сътрудници"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, c-format
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
 
 #: src/JournalEvents.cpp
 #, fuzzy
@@ -3430,6 +3649,11 @@ msgstr "Ввъведете име на писта"
 msgid "Label Track"
 msgstr "Писта с надписи"
 
+#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "Надписи"
+
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr ""
@@ -3478,17 +3702,17 @@ msgstr "Отваря се проект на Audacity"
 msgid "Audacity Log"
 msgstr "Дневник на Audacity"
 
-#: src/LogWindow.cpp src/Tags.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp
 msgid "&Save..."
 msgstr "З&апазване…"
 
 #. i18n-hint: (verb)
-#: src/LogWindow.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "&Изчистване"
 
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
+#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Затваряне"
 
@@ -3512,7 +3736,8 @@ msgid "Audacity Karaoke%s"
 msgstr "Караоке в Audacity%s"
 
 #: src/LyricsWindow.cpp
-msgid "&Karaoke..."
+#, fuzzy
+msgid "&Karaoke"
 msgstr "&Караоке…"
 
 #: src/MIDIPlay.cpp
@@ -3561,22 +3786,17 @@ msgstr ""
 msgid "Disallowed"
 msgstr "Не е разрешено"
 
-#. i18n-hint: noun, means a track, made by mixing other tracks
-#: src/Mix.cpp
-msgid "Mix"
-msgstr "Смесване"
-
-#: src/Mix.cpp src/menus/TrackMenus.cpp
+#: src/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
 msgstr "Смесване и обобщаване"
 
-#: src/Mix.cpp
+#: src/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
 msgstr "Смесване и обобщаване на писти"
 
 #: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
+#, fuzzy, c-format
+msgid "Audacity Mixer%s"
 msgstr "Смесителен пулт на Audacity%s"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
@@ -3640,84 +3860,9 @@ msgid "Moved pan slider"
 msgstr "Извършено бе панорамиране"
 
 #: src/MixerBoard.cpp
-msgid "&Mixer Board..."
-msgstr "&Смесителен пулт…"
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to load the \"%s\" module.\n"
-"\n"
-"Error: %s"
-msgstr "Не е възможно да се отвори/създаде пробен файл."
-
-#: src/ModuleManager.cpp
-msgid "Module Unsuitable"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide a version string.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\".\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid "Module \"%s\" found."
-msgstr ""
-
-#: src/ModuleManager.cpp
-msgid ""
-"\n"
-"\n"
-"Only use modules from trusted sources"
-msgstr ""
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
-msgid "Yes"
-msgstr ""
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny
 #, fuzzy
-msgid "No"
-msgstr "Няма"
-
-#: src/ModuleManager.cpp
-#, fuzzy
-msgid "Audacity Module Loader"
-msgstr "Модулатор"
-
-#: src/ModuleManager.cpp
-msgid "Try and load this module?"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
+msgid "&Mixer"
+msgstr "Смесител"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3875,50 +4020,6 @@ msgstr ""
 msgid "A♯/B♭"
 msgstr ""
 
-#: src/PluginManager.cpp
-#, fuzzy, c-format
-msgid "Overwrite the plug-in file %s?"
-msgstr "Презаписване на съществуващи файлове"
-
-#: src/PluginManager.cpp
-msgid "Plug-in already exists"
-msgstr ""
-
-#: src/PluginManager.cpp
-msgid "Plug-in file is in use. Failed to overwrite"
-msgstr ""
-
-#: src/PluginManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Failed to register:\n"
-"%s"
-msgstr "Не е възможно да се премахне „%s“"
-
-#. i18n-hint A plug-in is an optional added program for a sound
-#. effect, or generator, or analyzer
-#: src/PluginManager.cpp
-#, fuzzy
-msgctxt "plug-ins"
-msgid "Enable this plug-in?\n"
-msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Съжаляваме, не бе възможно да се зареди Vamp приставка."
-msgstr[1] "Съжаляваме, не бе възможно да се зареди Vamp приставка."
-
-#: src/PluginManager.cpp
-#, fuzzy
-msgid "Enable new plug-ins"
-msgstr "Съжаляваме, не бе възможно да се зареди Vamp приставка."
-
-#: src/PluginManager.h
-msgid "Nyquist Prompt"
-msgstr "Команда на Nyquist"
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Manage Plug-ins"
-msgstr "Съжаляваме, не бе възможно да се зареди Vamp приставка."
-
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
@@ -3991,8 +4092,12 @@ msgstr "Избиране"
 msgid "C&lear All"
 msgstr "&Изчистване"
 
-#: src/PluginRegistrationDialog.cpp src/effects/EffectUI.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Rescan"
+msgstr "Ефекти"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 #, fuzzy
 msgid "&Enable"
 msgstr "Да"
@@ -4027,6 +4132,10 @@ msgstr ""
 "Кодерът за FLAC не се инициализира.\n"
 "Състояние: %d"
 
+#: src/PluginStartupRegistration.cpp
+msgid "Searching for plugins"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Възникна грешка при печатане."
@@ -4040,7 +4149,7 @@ msgstr "Печат"
 msgid "Actual Rate: %d"
 msgstr "Действ. скорост: %d"
 
-#: src/ProjectAudioManager.cpp src/effects/Effect.cpp
+#: src/ProjectAudioManager.cpp src/effects/EffectBase.cpp
 #, fuzzy
 msgid ""
 "Error opening sound device.\n"
@@ -4081,28 +4190,6 @@ msgstr "Записан бе звук"
 #: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Запис"
-
-#. i18n-hint:  A name given to a track, appearing as its menu button.
-#. The translation should be short or else it will not display well.
-#. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence of audio sample data from the
-#. recording
-#: src/ProjectAudioManager.cpp
-msgid "Dropouts"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid ""
-"Recorded audio was lost at the labeled locations. Possible causes:\n"
-"\n"
-"Other applications are competing with Audacity for processor time\n"
-"\n"
-"You are saving directly to a slow external storage device\n"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid "Turn off dropout detection"
-msgstr ""
 
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
@@ -4269,8 +4356,8 @@ msgstr "Внимание: осиротели блокови файлове"
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
-#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/UndoManager.cpp
-#: src/menus/TransportMenus.cpp
+#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/TransportUtilities.cpp
 msgid "Progress"
 msgstr "Ход на операцията"
 
@@ -4342,23 +4429,6 @@ msgid ""
 "\n"
 "%s"
 msgstr "Не е възможно да се премахне „%s“"
-
-#: src/ProjectFileIO.cpp
-#, fuzzy, c-format
-msgid ""
-"Unable to prepare project file command:\n"
-"\n"
-"%s"
-msgstr "Не е възможно да се отвори/създаде пробен файл."
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Failed to retrieve data from the project file.\n"
-"The following command failed:\n"
-"\n"
-"%s"
-msgstr ""
 
 #. i18n-hint: An error message.
 #: src/ProjectFileIO.cpp
@@ -4463,6 +4533,14 @@ msgid "Unable to switch to fast journaling mode"
 msgstr ""
 
 #: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr "Не е възможно да се отвори/създаде пробен файл."
+
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to bind SQL parameter"
 msgstr "Кодекът не бе намерен "
@@ -4540,11 +4618,6 @@ msgstr "Кодекът не бе намерен "
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
-msgid "Unable to decode project document"
-msgstr "Не е възможно да се отвори/създаде пробен файл."
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to parse project information."
 msgstr "Не е възможно да се отвори/създаде пробен файл."
 
@@ -4587,6 +4660,11 @@ msgstr ""
 #, fuzzy
 msgid "Backing up project"
 msgstr "При запазване на п&разен проект"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Automatic database backup failed."
+msgstr "Автоматично възстановяване след срив"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -4846,15 +4924,6 @@ msgstr "Не е възможно отварянето на файл с прое�
 msgid "Compact"
 msgstr ""
 
-#: src/ProjectHistory.cpp
-msgid "Created new project"
-msgstr "Създаден бе нов проект"
-
-#: src/ProjectHistory.cpp
-#, fuzzy
-msgid "Automatic database backup failed."
-msgstr "Автоматично възстановяване след срив"
-
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
@@ -4922,12 +4991,10 @@ msgid ""
 "You need to run that version of Audacity to recover the project."
 msgstr ""
 
-#. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
-#. Other tabs in that notebook may have instruments, patch panels etc.
 #: src/ProjectWindow.cpp
-msgid "Main Mix"
-msgstr "Главен смесител"
+#, fuzzy
+msgid "Realtime effects"
+msgstr "&Мостра"
 
 #: src/ProjectWindow.cpp
 #, fuzzy
@@ -4938,6 +5005,134 @@ msgstr "Хоризонтално стерео"
 #, fuzzy
 msgid "Vertical Scrollbar"
 msgstr "Вертикално стерео"
+
+#. i18n-hint: argument - position of the effect in the effect stack
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Effect %d"
+msgstr "Ефекти"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Power"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Replace effect"
+msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "%s (missing)"
+msgstr "Липсващи файлове"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Removed %s from %s"
+msgstr "Импортирани бяха надписи от „%s“"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Remove %s"
+msgstr "Премахване"
+
+#. i18n-hint: undo history,
+#. first and second parameters - realtime effect names
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replaced %s with %s"
+msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replace %s"
+msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Ефекти"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Предпочитания…"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Add effect"
+msgstr "Ефекти"
+
+#. i18n-hint: Hyperlink to the effects stack panel tutorial video
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s up in %s"
+msgstr "Пистата „%s“ бе преместена %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s down in %s"
+msgstr "Пистата „%s“ бе преместена %s"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Change effect order"
+msgstr "Промяна на скоростта"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Added %s to %s"
+msgstr "Пистата „%s“ бе преобразувана в %s"
+
+#. i18n-hint: undo history record
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Add %s"
+msgstr "Извършено бе подравняване"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "Разрешаване на ефекти"
+
+#. i18n-hint: argument - track name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Realtime effects for %s"
+msgstr "Приложен бе ефект: %s"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -5047,8 +5242,7 @@ msgstr "Инструменти"
 msgid "Transport"
 msgstr "Вход/изход"
 
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp
 msgid "Mixer"
 msgstr "Смесител"
 
@@ -5174,12 +5368,6 @@ msgid "Specify New Filename:"
 msgstr "Задайте ново име на файл:"
 
 #: src/SelectUtilities.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-
-#: src/SelectUtilities.cpp
 msgid "Position"
 msgstr "Позиция"
 
@@ -5197,6 +5385,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Внимание: осиротели блокови файлове"
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 #, fuzzy
 msgid "&Preview"
@@ -5213,7 +5403,7 @@ msgid "&Settings"
 msgstr "&Настройки…"
 
 # Далеч не е точен превод, но трябва да е кратко (върху бутон е).
-#: src/ShuttleGui.cpp
+#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 #, fuzzy
 msgid "Debu&g"
 msgstr "&Контрол"
@@ -5299,113 +5489,117 @@ msgstr "Това да не се показва повече при старти�
 msgid "Connection to project file is null"
 msgstr "Инспектират се данните на файл с проект"
 
-#: src/Tags.cpp
+#: src/SqliteSampleBlock.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
+#: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Име на изпълнител"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Title"
 msgstr "Заглавие на песен"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Album Title"
 msgstr "Заглавие на албум"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Number"
 msgstr "Номер на песен"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Year"
 msgstr "Година"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genre"
 msgstr "Жанр"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr "Използвайте клавишите със стрелки (или Return след редактиране) за навигация между полетата."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Tag"
 msgstr "Етикет"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Value"
 msgstr "Стойност"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Add"
 msgstr "&Добавяне"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Remove"
 msgstr "&Премахване"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genres"
 msgstr "Жанрове"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "E&dit..."
 msgstr "&Редактиране…"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Rese&t..."
 msgstr "&Възстановяване..."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Template"
 msgstr "Шаблон"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Load..."
 msgstr "&Зареждане…"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Set De&fault"
 msgstr "По подраз&биране"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 #, fuzzy
 msgid "Don't show this when exporting audio"
 msgstr "Прескачане на това предупреждение в бъдеще"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Edit Genres"
 msgstr "Редактиране на жанрове"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to save genre file."
 msgstr "Не е възможно да се запази файл с жанрове."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Reset Genres"
 msgstr "Възстановяване на жанрове"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
 msgstr "Наистина ли желаете да възстановите първоначалния списък с жанрове?"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to open genre file."
 msgstr "Не е възможно да се отвори файл с жанрове."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Load Metadata As:"
 msgstr "Зареждане на метаданни като:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Error Loading Metadata"
 msgstr "Грешка при зареждане на метаданни"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Save Metadata As:"
 msgstr "Запазване на метаданни като:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Error Saving Tags File"
 msgstr "Грешка при записване на файл с етикети"
 
@@ -5419,8 +5613,8 @@ msgstr "Грешка при записване на файл с етикети"
 #.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Validator.cpp
 msgid "Duration"
 msgstr "Продължителност"
 
@@ -5506,7 +5700,7 @@ msgid "Recording start:"
 msgstr "Начало на запис"
 
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/VST3/VST3UIValidator.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "Продължителност:"
 
@@ -5754,13 +5948,6 @@ msgstr ""
 msgid "TrackView"
 msgstr "Изглед на писта"
 
-#. i18n-hint: The %d is replaced by the number of the track.
-#. i18n-hint: compose a name identifying an unnamed track by number
-#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
-#, c-format
-msgid "Track %d"
-msgstr "Писта %d"
-
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
@@ -5789,6 +5976,12 @@ msgstr "Избиране"
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
 msgstr ""
+
+#. i18n-hint: The %d is replaced by the number of the track.
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "Писта %d"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
@@ -5872,9 +6065,21 @@ msgstr "Местене на пистата на&горе"
 msgid "Move Track Down"
 msgstr "Местене на пистата на&долу"
 
-#: src/UndoManager.cpp
-msgid "Discarding undo/redo history"
-msgstr ""
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
+#, fuzzy
+msgid "Playing"
+msgstr "Възпроизвеждане"
+
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
+msgid "Recording"
+msgstr "Запис"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5915,6 +6120,16 @@ msgstr "Резултати от калибрирането\n"
 msgid "Resampling failed."
 msgstr "Предискретизирането е забранено."
 
+#: src/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
+#, fuzzy
+msgid "Audio"
+msgstr "&Звук…"
+
+#: src/WaveTrack.cpp
+#, fuzzy
+msgid "Wave Track"
+msgstr "Местене на писта"
+
 #. i18n-hint Template for clip name generation on copy-paste
 #: src/WaveTrack.cpp
 #, c-format
@@ -5937,6 +6152,151 @@ msgstr "Няма достатъчно място за поставяне на с
 msgid "There is not enough room available to expand the cut line"
 msgstr "Няма достатъчно място за разгъване на линията на изрязване"
 
+#. i18n-hint: Share audio button text, keep as short as possible
+#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Копиране на надписи"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: src/cloud/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "Лента „С&елекция“"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "Link account"
+msgstr "Изкривяване"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "&Ok"
+msgstr "&OK"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "&Go to my file"
+msgstr "Експортиране на няколко файла"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr "Наистина ли желаете да изтриете %s?"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Кешира се звук"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload complete!"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Export error"
+msgstr "Експортиране на MIDI"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "Не е възможно отварянето за запис на файла – местоназначение"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Търсене на отрязани отчети…"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
+"\n"
+"If you have problems uploading, try the Link Account button."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Кешира се звук"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Изминало време:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Remaining Time:"
+msgstr "Оставащо време:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Shareable link"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only people you share this link with can access your audio"
+msgstr ""
+
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
@@ -5951,7 +6311,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/AudacityCommand.cpp src/effects/EffectBase.cpp
 #, fuzzy, c-format
 msgid "Applying %s..."
 msgstr "Прилага се…"
@@ -6136,11 +6496,6 @@ msgstr "Отрязани отчети"
 msgid "Envelopes"
 msgstr "Обвиваща крива"
 
-#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "Надписи"
-
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
 msgstr ""
@@ -6242,7 +6597,8 @@ msgid "Builtin Commands"
 msgstr "Избор на команда"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3EffectsModule.cpp
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
@@ -6388,6 +6744,8 @@ msgstr "&Ленти с инструменти"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Effects"
 msgstr "Ефекти"
 
@@ -6551,7 +6909,7 @@ msgstr "Настройка"
 msgid "Add"
 msgstr "&Добавяне"
 
-#: src/commands/SelectCommand.cpp src/effects/EffectUI.cpp
+#: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "Премахване"
@@ -6836,7 +7194,7 @@ msgstr "Нова писта"
 msgid "Sets various values for a track."
 msgstr ""
 
-#: src/effects/Amplify.cpp
+#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
 msgstr "Усилване"
 
@@ -6863,7 +7221,7 @@ msgstr "Нова пикова амплитуда (дБ):"
 msgid "Allo&w clipping"
 msgstr "Разрешаване на отрязани отчети"
 
-#: src/effects/AutoDuck.cpp
+#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
 msgid "Auto Duck"
 msgstr "Автоприглушаване"
 
@@ -6936,7 +7294,7 @@ msgstr "Праг:"
 msgid "Preview not available"
 msgstr "Няма мостра"
 
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
 msgstr ""
 
@@ -6986,7 +7344,7 @@ msgstr "Ниво:"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/ChangePitch.cpp
+#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
 msgstr "Промяна на височината"
 
@@ -7116,13 +7474,13 @@ msgstr "48"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
-#: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/ChangeSpeed.cpp src/effects/EffectUI.cpp
+#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "n/a"
 msgstr "–"
 
-#: src/effects/ChangeSpeed.cpp
+#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Speed"
 msgstr "Промяна на скоростта"
 
@@ -7209,7 +7567,7 @@ msgctxt "change speed"
 msgid "to"
 msgstr "към"
 
-#: src/effects/ChangeTempo.cpp
+#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Tempo"
 msgstr "Промяна на темпото"
 
@@ -7281,7 +7639,7 @@ msgstr "към"
 msgid "Length in seconds from %s, to"
 msgstr "Към дължина в секунди"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
 msgid "Click Removal"
 msgstr "Премахване на пукане"
 
@@ -7317,7 +7675,7 @@ msgstr "Макс. ширина на пик (по-висока – по-чувс�
 msgid "Max Spike Width"
 msgstr "Макс. ширина на пик"
 
-#: src/effects/Compressor.cpp
+#: src/effects/Compressor.cpp resources/EffectsMenuDefaults.xml
 msgid "Compressor"
 msgstr "Компресор"
 
@@ -7541,7 +7899,7 @@ msgstr "Нулиране"
 msgid "&Difference:"
 msgstr "Разлика:"
 
-#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUISettings.cpp
 msgid "&Help"
 msgstr "&Помощ"
 
@@ -7872,7 +8230,7 @@ msgstr "Параметри"
 msgid "Number of repeats"
 msgstr "Брой на повторенията:"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
 msgid "Distortion"
 msgstr "Изкривяване"
 
@@ -8018,7 +8376,7 @@ msgstr "Амплитуда (0-1)"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Validator.cpp
 #, fuzzy
 msgid "&Duration:"
 msgstr "Продължителност:"
@@ -8057,7 +8415,7 @@ msgstr "Продължителност на тишината:"
 msgid "%0.f ms"
 msgstr "%.0f:1"
 
-#: src/effects/Echo.cpp
+#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
 msgstr "Ехо"
 
@@ -8123,11 +8481,11 @@ msgstr "Не е възможно да се отвори/създаде проб�
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr ""
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Preparing preview"
 msgstr "Подготвя се мостра"
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Previewing"
 msgstr "Възпроизвежда се мостра"
 
@@ -8135,7 +8493,7 @@ msgstr "Възпроизвежда се мостра"
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
-#: src/effects/Effect.h
+#: src/effects/EffectBase.h
 msgid "Nyquist"
 msgstr "Nyquist"
 
@@ -8213,87 +8571,14 @@ msgstr ""
 "Кодерът за FLAC не се инициализира.\n"
 "Състояние: %d"
 
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Effects Rack"
-msgstr "Ефекти"
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Генериране"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "&Apply"
-msgstr "Прилагане на %s"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Latency: 0"
-msgstr "Закъснение"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "&Bypass"
-msgstr "Лентов филтър"
-
-#: src/effects/EffectUI.cpp
-msgid "Active State"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Set effect active state"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Show/Hide Editor"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Open/close effect editor"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move Up"
-msgstr "Местене на&горе"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move effect up in the rack"
-msgstr "Клип бе преместен в друга писта"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move Down"
-msgstr "Местене на&долу"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Move effect down in the rack"
-msgstr "Клип бе преместен в друга писта"
-
-#: src/effects/EffectUI.cpp
-msgid "Favorite"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Mark effect as a favorite"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Remove effect from the rack"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-msgid "Name of the effect"
-msgstr ""
-
-#: src/effects/EffectUI.cpp
-#, fuzzy, c-format
-msgid "Latency: %4d"
-msgstr "Закъснение"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Some Command"
-msgstr "Избор на команда"
+msgid "Enable"
+msgstr "Да"
 
 #: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
@@ -8301,54 +8586,29 @@ msgstr ""
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "&Manage"
-msgstr "Управление на кривите"
+msgid "Presets && settings"
+msgstr "Настройки на ефекта"
 
 #: src/effects/EffectUI.cpp
-msgid "Start and stop playback"
+msgid "Start and stop preview"
 msgstr ""
-
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Start &Playback"
-msgstr "Възпроизвеждане"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
 msgid "Preview effect"
 msgstr "&Мостра"
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "&Preview effect"
-msgstr "Мостра &преди изрязаното:"
+msgid "Stop &Preview"
+msgstr "&Мостра"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "Skip backward"
-msgstr "Назад"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip &Backward"
-msgstr "Назад"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip forward"
-msgstr "Превъртане до началото"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Skip &Forward"
-msgstr "Напред"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Enable"
-msgstr "Да"
+msgid "&Apply"
+msgstr "Прилагане на %s"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
@@ -8434,17 +8694,6 @@ msgid ""
 "Replace?"
 msgstr "Файл с име „%s“ вече съществува. Да бъде ли презаписан?"
 
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Stop &Playback"
-msgstr "Възпроизвеждане"
-
-#: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
-msgid "Play"
-msgstr "Възпроизвеждане"
-
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
 msgid "B-spline"
@@ -8463,11 +8712,13 @@ msgid "Equalization"
 msgstr "Еквалайзер"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Filter Curve EQ"
 msgstr "Избор на крива"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Графичен еквалайзер"
 
@@ -8854,11 +9105,11 @@ msgid ""
 "SSE Threaded: %s\n"
 msgstr ""
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
 msgstr "Засилване"
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
 msgstr "Затихване"
 
@@ -8897,7 +9148,7 @@ msgstr "Праг за спиране (в отчети):"
 msgid "There is not enough room available to generate the audio"
 msgstr "Няма достатъчно място за генериране на звука"
 
-#: src/effects/Invert.cpp
+#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
 msgid "Invert"
 msgstr "Инвертиране"
 
@@ -8927,7 +9178,7 @@ msgstr "Нормализиране на макс. амплитуда до:"
 msgid "RMS"
 msgstr ""
 
-#: src/effects/Loudness.cpp
+#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
 msgstr ""
 
@@ -9033,6 +9284,7 @@ msgid "Old"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Reduction"
 msgstr "Намаляване на шум"
@@ -9302,7 +9554,7 @@ msgstr "Време за атака/затихване"
 msgid "Re&move"
 msgstr "&Премахване"
 
-#: src/effects/Normalize.cpp
+#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
 msgstr "Нормализиране"
 
@@ -9371,7 +9623,7 @@ msgstr "Нова пикова амплитуда (дБ):"
 msgid "N&ormalize stereo channels independently"
 msgstr "Независимо нормализиране на стереоканалите"
 
-#: src/effects/Paulstretch.cpp
+#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Paulstretch"
 msgstr "Paulstretch..."
@@ -9424,7 +9676,7 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Phaser.cpp
+#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
 msgid "Phaser"
 msgstr "Фейзър"
 
@@ -9496,7 +9748,13 @@ msgstr "&Усилване (дБ):"
 msgid "Output gain (dB)"
 msgstr "&Усилване (дБ):"
 
-#: src/effects/Repair.cpp
+#. i18n-hint: First %s is an effect name, second is a track name
+#: src/effects/RealtimeEffectStateUI.cpp
+#, fuzzy, c-format
+msgid "%s - %s"
+msgstr " - ляв"
+
+#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
 msgstr "Поправяне"
 
@@ -9528,7 +9786,7 @@ msgstr ""
 "\n"
 "Колкото повече е околният звук, толкова по-добре работи функцията."
 
-#: src/effects/Repeat.cpp
+#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
 msgid "Repeat"
 msgstr "Повтаряне"
 
@@ -9604,7 +9862,7 @@ msgstr ""
 msgid "Cathedral"
 msgstr ""
 
-#: src/effects/Reverb.cpp
+#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
 msgstr "Реверберация"
 
@@ -9656,12 +9914,7 @@ msgstr ""
 msgid "Wet O&nly"
 msgstr ""
 
-#: src/effects/Reverb.cpp
-#, fuzzy, c-format
-msgid "Reverb: %s"
-msgstr "Реверберация"
-
-#: src/effects/Reverse.cpp
+#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
 msgstr "Обръщане"
 
@@ -9881,7 +10134,7 @@ msgstr "Десен канал"
 msgid "Mixing down to mono"
 msgstr "При смесване към &моно при експортиране"
 
-#: src/effects/TimeScale.cpp
+#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Sliding Stretch"
 msgstr "Разтягане"
@@ -9939,6 +10192,12 @@ msgstr "Трион"
 #: src/effects/ToneGen.cpp
 msgid "Square, no alias"
 msgstr "Квадрат, без паразитни честоти"
+
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Триъгълник"
 
 #: src/effects/ToneGen.cpp
 #, fuzzy
@@ -9998,7 +10257,7 @@ msgstr "Премахване на тишина"
 msgid "Compress Excess Silence"
 msgstr ""
 
-#: src/effects/TruncSilence.cpp
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Премахване на тишина"
 
@@ -10042,41 +10301,34 @@ msgstr "Ефекти VST"
 msgid "Adds the ability to use VST effects in Audacity."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
-#, fuzzy
-msgid "Scanning Shell VST"
-msgstr "Търсят се ефекти VST"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr ""
-
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
 msgid "Could not load the library"
 msgstr "Не бе възможно да се отвори кодиращата библиотека за MP3!"
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #, fuzzy
 msgid "VST Effect Options"
 msgstr "Настройки на ефекта"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Buffer Size"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Latency Compensation"
 msgstr "Компресия на тишината:"
@@ -10085,13 +10337,15 @@ msgstr "Компресия на тишината:"
 msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Enable &compensation"
 msgstr "Компресия на тишината:"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 #, fuzzy
 msgid "Graphical Mode"
 msgstr "Графичен еквалайзер"
@@ -10100,7 +10354,8 @@ msgstr "Графичен еквалайзер"
 msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Enable &graphical interface"
 msgstr ""
 
@@ -10159,7 +10414,7 @@ msgid "Unable to load presets file."
 msgstr "Не е възможно да се отвори/създаде пробен файл."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Ports.cpp
 msgid "Effect Settings"
 msgstr "Настройки на ефекта"
 
@@ -10184,7 +10439,75 @@ msgstr "Този файл с параметри е запазен от %s.  Пр
 msgid "VST"
 msgstr "Ефекти V&ST"
 
-#: src/effects/Wahwah.cpp
+#: src/effects/VST3/VST3Effect.cpp
+msgid "VST3"
+msgstr ""
+
+#. i18n-hint VST3 effect description string
+#: src/effects/VST3/VST3Effect.cpp
+#, c-format
+msgid "SubCategories: %s"
+msgstr ""
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Save VST3 Preset As:"
+msgstr "Запазване на VST програма като:"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "VST3 preset file"
+msgstr "Изберете MIDI файл..."
+
+#. i18n-hint: VST3 preset export error
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Cannot open file"
+msgstr "Не бе възможно да се отвори файлът "
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Failed to save VST3 preset to file"
+msgstr "Не е възможно да се отвори/създаде пробен файл."
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Load VST3 preset:"
+msgstr "Зареждане"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Cannot open VST3 preset file %s"
+msgstr "Не е възможно отварянето на файл с проект"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Unable to apply VST3 preset file %s"
+msgstr "Не е възможно да се отвори/създаде пробен файл."
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "VST3 Effects"
+msgstr "Ефекти VST"
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+msgid "Adds the ability to use VST3 effects in Audacity."
+msgstr ""
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy, c-format
+msgid "VST3 module error: %s"
+msgstr "GStreamer %s: %s"
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Ефект „Уа-уа“"
 
@@ -10215,89 +10538,6 @@ msgstr "Честотно отместване (%):"
 msgid "Wah frequency offset in percent"
 msgstr "Честотно отместване в проценти"
 
-#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Audio Unit Effects"
-msgstr "Ефекти Audio Unit"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Provides Audio Unit Effects support to Audacity"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Could not find component"
-msgstr "Не бе възможно да се отвори файлът "
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Could not initialize component"
-msgstr "Не бе възможно да се отвори кодиращата библиотека за MP3!"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Audio Unit Effect Options"
-msgstr "Ефекти Audio Unit"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "User Interface"
-msgstr "Интерфейс"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Select &interface"
-msgstr "Избор на изходно устройство"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Generic"
-msgstr "&Генериране"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Import Audio Unit Presets"
-msgstr "Импортиране"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Presets (may select multiple)"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/export/ExportMP3.cpp
-msgid "Preset"
-msgstr "Готова настройка"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Location"
-msgstr "&Местонахождение:"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid "Couldn't open \"%s\""
-msgstr "Не бе възможно да се отвори файл: „%s“"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid "Unable to read the preset from \"%s\""
-msgstr "Не е възможно да се отвори/създаде пробен файл."
-
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
 msgid "Failed to encode preset from \"%s\""
@@ -10307,16 +10547,6 @@ msgstr "Не е възможно да се премахне „%s“"
 #, fuzzy
 msgid "Unable to store preset in config file"
 msgstr "Не е възможно да се отвори/създаде пробен файл."
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
-msgid ""
-"Could not import \"%s\" preset\n"
-"\n"
-"%s"
-msgstr ""
-"Не бе възможно да се зададат параметрите на ефекта %s\n"
-"като %s."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
@@ -10349,23 +10579,24 @@ msgid "Import Audio Unit Preset As %s:"
 msgstr "Импортиране"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Failed to set preset name"
-msgstr "Не е възможно да се отвори/създаде пробен файл."
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
-msgid "Failed to retrieve preset content"
-msgstr "Не е възможно да се извлече описание на поток"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert property list to XML data"
+#, fuzzy, c-format
+msgid ""
+"Could not import \"%s\" preset\n"
+"\n"
+"%s"
 msgstr ""
+"Не бе възможно да се зададат параметрите на ефекта %s\n"
+"като %s."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy
-msgid "XML data is empty after conversion"
-msgstr "Смяна на честотата на дискретизация"
+msgid "Import Audio Unit Presets"
+msgstr "Импортиране"
+
+#: src/effects/audiounits/AudioUnitEffect.cpp
+#, fuzzy, c-format
+msgid "Couldn't open \"%s\""
+msgstr "Не бе възможно да се отвори файл: „%s“"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
@@ -10373,23 +10604,110 @@ msgid "Failed to write XML preset to \"%s\""
 msgstr "Не е възможно да се премахне „%s“"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert preset to internal format"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to create property list for preset"
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
-msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+#, fuzzy, c-format
+msgid "Unable to read the preset from \"%s\""
+msgstr "Не е възможно да се отвори/създаде пробен файл."
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
 msgstr "Ефекти Audio Unit"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "Audio Unit Effect Options"
+msgstr "Ефекти Audio Unit"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "User Interface"
+msgstr "Интерфейс"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#, fuzzy
+msgid "Select &interface"
+msgstr "Избор на изходно устройство"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#, fuzzy
+msgid "Generic"
+msgstr "&Генериране"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+msgid "Basic"
+msgstr ""
+
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Audio Unit Effects"
+msgstr "Ефекти Audio Unit"
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Provides Audio Unit Effects support to Audacity"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#, fuzzy
+msgid "Could not find component"
+msgstr "Не бе възможно да се отвори файлът "
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+#, fuzzy
+msgid "Could not initialize component"
+msgstr "Не бе възможно да се отвори кодиращата библиотека за MP3!"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to decode \"%s\" preset"
+msgstr "Не е възможно да се премахне „%s“"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to convert \"%s\" preset to internal format"
+msgstr "Не е възможно да се извлече описание на поток"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to create property list for \"%s\" preset"
+msgstr "Не е възможно да се премахне „%s“"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, c-format
+msgid "Failed to set class info for \"%s\" preset"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "Failed to set preset name"
+msgstr "Не е възможно да се отвори/създаде пробен файл."
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "Failed to retrieve preset content"
+msgstr "Не е възможно да се извлече описание на поток"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to convert property list to XML data"
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy
+msgid "XML data is empty after conversion"
+msgstr "Смяна на честотата на дискретизация"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -10439,46 +10757,36 @@ msgid "LADSPA"
 msgstr "Ефекти &LADSPA"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
-msgid "LV2 Effect Settings"
-msgstr "Настройки на ефекта"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "&Buffer Size (8 to %d) samples:"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
-msgid "%s requires unsupported feature %s\n"
-msgstr "%d криви бяха експортирани в %s"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
-msgid "%s requires unsupported option %s\n"
-msgstr "%d криви бяха експортирани в %s"
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "Generator"
-msgstr "Генератор"
 
 #. i18n-hint: abbreviates
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
 msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, fuzzy
+msgid "LV2 Effect Settings"
+msgstr "Настройки на ефекта"
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d) samples:"
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/lv2/LV2Validator.cpp
+msgid "Generator"
+msgstr "Генератор"
 
 #: src/effects/lv2/LoadLV2.cpp
 #, fuzzy
@@ -11027,6 +11335,10 @@ msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
+msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
+msgstr ""
+
+#: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr ""
 
@@ -11044,10 +11356,6 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
-msgstr ""
-
-#: src/export/ExportFFmpeg.cpp
-msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
@@ -11117,6 +11425,7 @@ msgid "%d kbps"
 msgstr "%i Кб/с"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Bit Rate:"
 msgstr "Битове в секунда:"
 
@@ -11183,11 +11492,6 @@ msgstr "Постоянна"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
 msgstr ""
-
-#: src/export/ExportFFmpegDialogs.cpp
-#, fuzzy
-msgid "Audio"
-msgstr "&Звук…"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, fuzzy
@@ -11754,11 +12058,11 @@ msgstr "Разпознаването на формата бе неуспешно
 msgid "Failed to find the codec"
 msgstr "Кодекът не бе намерен "
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 бита"
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 бита"
 
@@ -11814,6 +12118,7 @@ msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Не може да се експортира MP2 с тази честота на дискретизация и скорост на потока"
 
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Не е възможно отварянето за запис на файла – местоназначение"
 
@@ -11908,6 +12213,10 @@ msgid "Medium"
 msgstr "Средно"
 
 #: src/export/ExportMP3.cpp
+msgid "Preset"
+msgstr "Готова настройка"
+
+#: src/export/ExportMP3.cpp
 msgid "Variable"
 msgstr "Променлива"
 
@@ -11932,7 +12241,8 @@ msgid "Bit Rate Mode:"
 msgstr "Режим за скорост на потока:"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/export/ExportMP3.cpp src/export/ExportWavPack.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Качество"
 
@@ -12113,6 +12423,18 @@ msgid ""
 msgstr ""
 
 #: src/export/ExportMultiple.cpp
+msgid "Using Label/Track Name"
+msgstr "Надпис/име на писта"
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering before Label/Track Name"
+msgstr "Номер преди надписа/име на писта"
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering after File name prefix"
+msgstr "Номерация след префикса за име"
+
+#: src/export/ExportMultiple.cpp
 #, fuzzy
 msgid "Export files to:"
 msgstr "Местоположение за експортиране:"
@@ -12149,18 +12471,6 @@ msgstr "Име на първия файл"
 #: src/export/ExportMultiple.cpp
 msgid "Name files:"
 msgstr "Имена на файловете:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Using Label/Track Name"
-msgstr "Надпис/име на писта"
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering before Label/Track Name"
-msgstr "Номер преди надписа/име на писта"
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering after File name prefix"
-msgstr "Номерация след префикса за име"
 
 #: src/export/ExportMultiple.cpp
 msgid "File name prefix:"
@@ -12358,6 +12668,72 @@ msgid ""
 msgstr ""
 "Грешка при записване във файла %s (пълен диск?).\n"
 "Съобщението от Libsndfile е „%s“"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Low Quality (Fast)"
+msgstr "Качество:"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Normal Quality"
+msgstr "Качество"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "High Quality (Slow)"
+msgstr "Качество"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Very High Quality (Slowest)"
+msgstr "(най-добро качество)"
+
+# „Плаваща запетая“ е твърде дълго за мястото в панела на писта. :-(
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "32 bit float "
+msgstr "32-битов с ПЗ"
+
+#. i18n-hint bps abbreviates "bits per sample"
+#: src/export/ExportWavPack.cpp
+#, fuzzy, c-format
+msgid "%.1f bps"
+msgstr "%.1f с"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Bit Depth"
+msgstr "Брой разреди:"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Hybrid Mode"
+msgstr "Режими"
+
+#: src/export/ExportWavPack.cpp
+msgid "Create Correction(.wvc) File"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "WavPack Files"
+msgstr "Запазване на файлове"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Unable to create target file for writing"
+msgstr "Не е възможно отварянето за запис на файла – местоназначение"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting selected audio as WavPack"
+msgstr "Избраният звук се експортира като %s"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting the audio as WavPack"
+msgstr "Избраният звук се експортира като %s"
 
 #: src/import/Import.cpp
 #, fuzzy
@@ -12627,11 +13003,6 @@ msgid "Internal error in importer...tag not recognized"
 msgstr "Възникна вътрешна грешка в процеса на подравняване."
 
 #: src/import/ImportAUP.cpp
-#, c-format
-msgid "Invalid project '%s' attribute."
-msgstr ""
-
-#: src/import/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr ""
 
@@ -12856,11 +13227,11 @@ msgstr ": неправилен тип на файл."
 msgid "Could not open file %s."
 msgstr "Не бе възможно да се отвори файлът "
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp src/import/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "MP3 файлове"
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp
 msgid ""
 "Import failed\n"
 "\n"
@@ -13204,6 +13575,21 @@ msgstr "Разделяне в ти&хите места"
 msgid "&Import"
 msgstr "&Импортиране"
 
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack files"
+msgstr "Запазване на файлове"
+
+#: src/import/ImportWavPack.cpp
+#, c-format
+msgid "Encountered %d errors decoding WavPack file!"
+msgstr ""
+
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack Importer"
+msgstr "Проекти"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
 msgstr ""
@@ -13297,8 +13683,8 @@ msgstr ""
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
 #, fuzzy
-msgid "Clip B&oundaries"
-msgstr "Изрязване по &границите"
+msgid "Audi&o Clips"
+msgstr "Аудиофайл"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -13548,12 +13934,13 @@ msgstr "Разделяне в ти&хите места"
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
-msgid "&Metadata..."
+msgid "&Metadata"
 msgstr "Редактиране на метаданни"
 
 #: src/menus/EditMenus.cpp
-msgid "Pre&ferences..."
-msgstr "Предпо&читания…"
+#, fuzzy
+msgid "Pre&ferences"
+msgstr "Предпочитания: "
 
 #: src/menus/EditMenus.cpp
 #, fuzzy
@@ -13835,16 +14222,6 @@ msgid "Export as FLAC"
 msgstr "Експорт на надписи като:"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
-msgid "Save %s"
-msgstr "%s бе запазен"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy, c-format
-msgid "Unable to save %s"
-msgstr "Не е възможно да се премахне „%s“."
-
-#: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "Do you have these problems?"
 msgstr "Желаете ли да запазите промените?"
@@ -13893,11 +14270,6 @@ msgstr "Информация за аудиоустройство"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
-msgid "MIDI Device Info"
-msgstr "MIDI устройства"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
 msgstr "&Помощ"
 
@@ -13929,11 +14301,6 @@ msgstr "\t-test (изпълнение на автодиагностика)"
 msgid "Au&dio Device Info..."
 msgstr "Информация за &аудиоустройство…"
 
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&MIDI Device Info..."
-msgstr "Информация за &аудиоустройство…"
-
 #: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Показване на &дневника…"
@@ -13943,9 +14310,18 @@ msgid "&Generate Support Data..."
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "&Check for Updates..."
 msgstr "Провер&ка за зависимости…"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&About Audacity"
+msgstr "Относно Audacity…"
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -14072,6 +14448,16 @@ msgid "Detach Labeled Audio"
 msgstr "Отделяне на надписи"
 
 #: src/menus/LabelMenus.cpp
+msgid "Created new label track"
+msgstr "Създадена бе нова писта за надписи"
+
+#: src/menus/LabelMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "New Track"
+msgstr "Нова писта"
+
+#: src/menus/LabelMenus.cpp
 #, fuzzy
 msgid "&Labels"
 msgstr "Надписи"
@@ -14171,6 +14557,10 @@ msgstr "Редактиране на надпис"
 msgid "Label Join"
 msgstr "Редактиране на надпис"
 
+#: src/menus/LabelMenus.cpp
+msgid "&Label Track"
+msgstr "Писта за &надписи"
+
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
 msgstr ""
@@ -14234,16 +14624,12 @@ msgid "Toggle Focuse&d Track"
 msgstr "Превключване на фокусираната писта"
 
 #: src/menus/PluginMenus.cpp
-msgid "Uncategorized"
-msgstr ""
-
-#: src/menus/PluginMenus.cpp
 #, fuzzy
 msgid "..."
 msgstr "Нов…"
 
 #: src/menus/PluginMenus.cpp
-msgid "Unknown"
+msgid "Uncategorized"
 msgstr ""
 
 #. i18n-hint a "journal" is a text file that records
@@ -14265,16 +14651,13 @@ msgstr "Повтаряне на „%s“"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy, c-format
-msgid "Plug-in %d to %d"
+msgid "Plugin %d to %d"
 msgstr "Приставки %i – %i"
 
 #: src/menus/PluginMenus.cpp
-msgid "&Generate"
-msgstr "&Генериране"
-
-#: src/menus/PluginMenus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr ""
+#, fuzzy
+msgid "Plugin Manager"
+msgstr "Настройки на приставка"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14284,6 +14667,11 @@ msgstr "Повтаряне на последния ефект"
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
 msgstr "&Ефект"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Add Realtime Effects"
+msgstr "Разрешаване на ефекти"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -14310,8 +14698,8 @@ msgstr "Повтаряне на последния ефект"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
-msgid "&Macros..."
-msgstr "&Надписи…"
+msgid "&Macro Manager"
+msgstr "Управление на кривите"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14810,6 +15198,10 @@ msgid "Reset Toolb&ars"
 msgstr "&Възстановяване на лентите с инструменти"
 
 #: src/menus/TrackMenus.cpp
+msgid "Mix"
+msgstr "Смесване"
+
+#: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "Целият звук бе обобщен в пистата „%s“"
@@ -15000,30 +15392,6 @@ msgid "Adjusted Pan"
 msgstr "Извършено бе панорамиране"
 
 #: src/menus/TrackMenus.cpp
-msgid "Created new audio track"
-msgstr "Създадена бе нова аудиописта"
-
-#: src/menus/TrackMenus.cpp
-msgid "New Track"
-msgstr "Нова писта"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new stereo audio track"
-msgstr "Създадена бе нова стереописта"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new label track"
-msgstr "Създадена бе нова писта за надписи"
-
-#: src/menus/TrackMenus.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Тази версия на Audacity позволява само по една времева писта за всеки прозорец на проект."
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new time track"
-msgstr "Създадена бе нова времева писта"
-
-#: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "New sample rate (Hz):"
 msgstr "Нова честота на дискретизация (Хц):"
@@ -15094,23 +15462,6 @@ msgstr "Не може да се изтрие писта с активен зву
 #: src/menus/TrackMenus.cpp
 msgid "Add &New"
 msgstr "Добавяне на &нова"
-
-#: src/menus/TrackMenus.cpp
-#, fuzzy
-msgid "&Mono Track"
-msgstr "Местене на писта"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Stereo Track"
-msgstr "&Стереописта"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Label Track"
-msgstr "Писта за &надписи"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Time Track"
-msgstr "&Времева писта"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x"
@@ -15314,22 +15665,6 @@ msgstr "Затваряне на фокусираната писта"
 #, fuzzy
 msgid "Move Focused Track to &Bottom"
 msgstr "Местене на пистата на&долу"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy
-msgid "Playing"
-msgstr "Възпроизвеждане"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
-#: src/toolbars/ControlToolBar.cpp
-msgid "Recording"
-msgstr "Запис"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
@@ -15707,11 +16042,6 @@ msgstr "Н&аслагване (вкл./изкл.)"
 msgid "&Show Clipping (on/off)"
 msgstr "Пок&азване на отрязаните отчети"
 
-#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Show Effects Rack"
-msgstr "Ефекти VST"
-
 #: src/menus/WindowMenus.cpp
 #, fuzzy
 msgid "&Window"
@@ -16066,6 +16396,11 @@ msgstr ""
 msgid "Grouped by Type"
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Default"
+msgstr "По по&дразбиране"
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -16116,20 +16451,6 @@ msgstr ""
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Maximum effects per group (0 to disable):"
 msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "Plugin Options"
-msgstr "Настройки на приставка"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Check for updated plugins when Audacity starts"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
-#, fuzzy
-msgid "Rescan plugins next time Audacity is started"
-msgstr "Ново търсене на ефекти VST при следващото стартиране на Audacity"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -16339,13 +16660,13 @@ msgstr ""
 msgid "Show Scrub Ruler"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-#, c-format
-msgid "Language \"%s\" is unknown"
-msgstr ""
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
+msgstr ""
+
+#: src/prefs/GUISettings.cpp
+#, c-format
+msgid "Language \"%s\" is unknown"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
@@ -16437,15 +16758,6 @@ msgid "&Hotkey:"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "Key Bindings"
-msgstr "Клавишни комбинации"
-
-#: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
-msgid "View by:"
-msgstr "&Изглед"
-
-#: src/prefs/KeyConfigPrefs.cpp
 msgid "&Tree"
 msgstr ""
 
@@ -16457,6 +16769,15 @@ msgstr "Име"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Key"
 msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Key Bindings"
+msgstr "Клавишни комбинации"
+
+#: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
+msgid "View by:"
+msgstr "&Изглед"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by tree"
@@ -17474,16 +17795,14 @@ msgid "Info"
 msgstr "Информация"
 
 #: src/prefs/ThemePrefs.cpp
+#, fuzzy
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
-"\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.)"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
 msgstr ""
 "Темите са експериментална възможност.\n"
 "\n"
@@ -17737,11 +18056,6 @@ msgstr ""
 msgid "Default audio track &name:"
 msgstr "Създадена бе нова аудиописта"
 
-#. i18n-hint: The default name for an audio track.
-#: src/prefs/TracksPrefs.cpp
-msgid "Audio Track"
-msgstr "Аудиописта"
-
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Zoom Toggle"
@@ -17811,6 +18125,63 @@ msgstr "Предпочитания: "
 msgid "Waveform dB &range:"
 msgstr "&Обхват на индикатора и вълната в дБ:"
 
+#. i18n-hint: Audio setup button text, keep as short as possible
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Setup"
+msgstr "Аудиофайл"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Host"
+msgstr "&Хост"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Playback Device"
+msgstr "Скорост на възпроизвеждане"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Recording Device"
+msgstr "Край на запис"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Recording &Channels"
+msgstr "Край на запис"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Settings..."
+msgstr "Спектрограми"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "1 (Mono) Recording Channel"
+msgstr "Край на запис"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+#, fuzzy
+msgid "2 (Stereo) Recording Channels"
+msgstr "Избор на входни канали"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Settings:"
+msgstr "Настройки на приставка"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages the audio devices
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Setup Toolbar"
+msgstr "Лента „&Редактиране“"
+
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
@@ -17822,6 +18193,10 @@ msgstr "Стоп"
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
 msgstr "Пауза"
+
+#: src/toolbars/ControlToolBar.cpp
+msgid "Play"
+msgstr "Възпроизвеждане"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Skip to Start"
@@ -17897,16 +18272,6 @@ msgstr "Край на запис"
 
 #: src/toolbars/DeviceToolBar.cpp
 #, fuzzy
-msgid "1 (Mono) Recording Channel"
-msgstr "Край на запис"
-
-#: src/toolbars/DeviceToolBar.cpp
-#, fuzzy
-msgid "2 (Stereo) Recording Channels"
-msgstr "Избор на входни канали"
-
-#: src/toolbars/DeviceToolBar.cpp
-#, fuzzy
 msgid "Select Recording Device"
 msgstr "Избор на входно устройство"
 
@@ -17935,14 +18300,18 @@ msgid "&Device Toolbar"
 msgstr "Лента „У&стройство“"
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Cut selection"
-msgstr "Побиране на селекцията"
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Zoom In"
+msgstr "Увеличаване"
 
 #: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Copy selection"
-msgstr "Селекция"
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Zoom Out"
+msgstr "Умаляване"
 
 #: src/toolbars/EditToolBar.cpp
 #, fuzzy
@@ -17959,20 +18328,6 @@ msgid "Sync-Lock Tracks"
 msgstr "Синхронизиране на писти"
 
 #: src/toolbars/EditToolBar.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom In"
-msgstr "Увеличаване"
-
-#: src/toolbars/EditToolBar.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom Out"
-msgstr "Умаляване"
-
-#: src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Fit selection to width"
 msgstr "Побиране на селекцията в прозореца"
@@ -17981,11 +18336,6 @@ msgstr "Побиране на селекцията в прозореца"
 #, fuzzy
 msgid "Fit project to width"
 msgstr "Побиране на проекта в прозореца"
-
-#: src/toolbars/EditToolBar.cpp
-#, fuzzy
-msgid "Open Effects Rack"
-msgstr "Ефекти"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
@@ -18044,42 +18394,6 @@ msgstr "Индикатор за запис"
 #, fuzzy
 msgid "&Playback Meter Toolbar"
 msgstr "Индикатор за възпроизвеждане"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Recording Volume"
-msgstr "Край на запис"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Playback Volume"
-msgstr "Възпроизвеждане"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
-msgid "Recording Volume: %.2f"
-msgstr "Край на запис"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Не може да се управлява силата на входа. Използвайте системния смесител."
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
-msgid "Playback Volume: %.2f"
-msgstr "Възпроизвеждане"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy
-msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Не може да се управлява силата на входа. Използвайте системния смесител."
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the mixer
-#: src/toolbars/MixerToolBar.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Лента „С&месител“"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -18282,10 +18596,6 @@ msgid "Envelope Tool"
 msgstr "Обвиващи криви"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "Zoom Tool"
-msgstr "Увеличение"
-
-#: src/toolbars/ToolsToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Draw Tool"
 msgstr "Рисуване"
@@ -18315,11 +18625,6 @@ msgstr "Обвиващи криви"
 #, fuzzy
 msgid "&Draw Tool"
 msgstr "Рисуване"
-
-#: src/toolbars/ToolsToolBar.cpp
-#, fuzzy
-msgid "&Zoom Tool"
-msgstr "Увеличение"
 
 #: src/toolbars/ToolsToolBar.cpp
 #, fuzzy
@@ -18448,6 +18753,16 @@ msgstr "О&ктава нагоре"
 msgid "Down Octa&ve"
 msgstr "Октава надол&у"
 
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+#, fuzzy
+msgid "MIDI Device Info"
+msgstr "MIDI устройства"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+#, fuzzy
+msgid "&MIDI Device Info..."
+msgstr "Информация за &аудиоустройство…"
+
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
@@ -18575,11 +18890,6 @@ msgid "S&pectrogram Settings..."
 msgstr "Спектрограми"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
-msgid "Click and drag to move clip boundary in time"
-msgstr "Щракнете и плъзнете, за да местите пистата във времето"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
 
@@ -18592,6 +18902,16 @@ msgstr ""
 #, fuzzy
 msgid "Clip-Trim-Right"
 msgstr "Отрязани отчети"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Clip-Trim-Between"
+msgstr "Отрязани отчети"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Click and drag to move clip boundary in time"
+msgstr "Щракнете и плъзнете, за да местите пистата във времето"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -18612,17 +18932,6 @@ msgstr "Променен бе надпис"
 #, fuzzy
 msgid "Clip Name Edit"
 msgstr "Редактиране на отчети"
-
-#. i18n-hint:
-#. string is the name of a clip
-#. first number is the position of that clip in a sequence of clips,
-#. second number counts the clips
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, c-format
-msgid "%s, %d of %d clip"
-msgid_plural "%s, %d of %d clips"
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
@@ -18832,6 +19141,23 @@ msgstr "Ляв, "
 msgid "Right, %dHz"
 msgstr "Десен, "
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new audio track"
+msgstr "Създадена бе нова аудиописта"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new stereo audio track"
+msgstr "Създадена бе нова стереописта"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#, fuzzy
+msgid "&Mono Track"
+msgstr "Местене на писта"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "&Stereo Track"
+msgstr "&Стереописта"
+
 #. i18n-hint dB abbreviates decibels
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -18885,6 +19211,17 @@ msgstr "Спиране/пускане звука на фокусираната �
 #, fuzzy
 msgid "Rename clip..."
 msgstr "Преименуване…"
+
+#. i18n-hint:
+#. string is the name of a clip
+#. first number is the position of that clip in a sequence of clips,
+#. second number counts the clips
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, c-format
+msgid "%s, %d of %d clip"
+msgid_plural "%s, %d of %d clips"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
@@ -18992,6 +19329,18 @@ msgstr "Преименуване…"
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "Бърза sinc интерполация"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr "Тази версия на Audacity позволява само по една времева писта за всеки прозорец на проект."
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "Created new time track"
+msgstr "Създадена бе нова времева писта"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "&Time Track"
+msgstr "&Времева писта"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
@@ -19441,6 +19790,24 @@ msgstr "Д"
 msgid "%.2fx"
 msgstr "%.1f дБ"
 
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "More information about this error may be available %s."
+msgstr "Не е достъпна информация за устройството."
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "here"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Would you like to send a report to help us fix this issue?"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "All reports are anonymous. See %s for more info."
+msgstr "Изберете един или няколко звукови файла…"
+
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
@@ -19497,26 +19864,6 @@ msgstr "Помощ в Интернет"
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click to Start Monitoring"
-msgstr "Започване на наблюдение"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click for Monitoring"
-msgstr "Спиране на наблюдението"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click to Start"
-msgstr "Превъртане до началото"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid "Click"
-msgstr "Щракване"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
@@ -19619,10 +19966,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
 msgstr "Подробен дневник"
-
-#: src/widgets/MultiDialog.cpp
-msgid "Please select an action"
-msgstr "Моля, изберете действие"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -19975,14 +20318,6 @@ msgid "%s (%s)"
 msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Изминало време:"
-
-#: src/widgets/ProgressDialog.cpp
-msgid "Remaining Time:"
-msgstr "Оставащо време:"
-
-#: src/widgets/ProgressDialog.cpp
 msgid "Cancel"
 msgstr "Отказ"
 
@@ -20117,16 +20452,10 @@ msgstr "Директории"
 msgid "File Dialog"
 msgstr ""
 
-#: plug-ins/SpectralEditMulti.ny
+#: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit multi tool"
+msgid "Spectral Edit Multi Tool"
 msgstr "Селекция"
-
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
-#, fuzzy
-msgid "Filtering..."
-msgstr "Филтър"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -20134,12 +20463,10 @@ msgid "Paul Licameli"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/beat.ny plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
+#: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-msgid "Released under terms of the GNU General Public License version 2"
+msgid "GNU General Public License v2.0"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -20170,9 +20497,9 @@ msgstr ""
 msgid "Error.~%"
 msgstr "Грешка"
 
-#: plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditParametricEQ.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit parametric EQ"
+msgid "Spectral Edit Parametric EQ"
 msgstr "Селекция"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -20211,20 +20538,26 @@ msgid ""
 "                         Please select a frequency range."
 msgstr ""
 
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit shelves"
+msgid "Spectral Edit Shelves"
 msgstr "Селекция"
 
-#: plug-ins/StudioFadeOut.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
+#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "GNU General Public License v2.0 or later"
+msgstr ""
+
+#: plug-ins/StudioFadeOut.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Studio Fade Out"
 msgstr "Затихване"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#, fuzzy
-msgid "Applying Fade..."
-msgstr "Прилага се…"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
@@ -20236,20 +20569,12 @@ msgstr "Прилага се…"
 msgid "Steve Daulton"
 msgstr "По подраз&биране"
 
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-msgid "GNU General Public License v2.0 or later"
-msgstr ""
-
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
 msgstr ""
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Adjustable Fade"
 msgstr "Извършено бе панорамиране"
@@ -20403,30 +20728,16 @@ msgstr "Повтаряне"
 
 #: plug-ins/beat.ny
 #, fuzzy
-msgid "Finding beats..."
-msgstr "Търсене на отрязани отчети…"
-
-#: plug-ins/beat.ny
-#, fuzzy
 msgid "Threshold Percentage"
 msgstr "Праг за шум:"
 
-#: plug-ins/clipfix.ny
+#: plug-ins/clipfix.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Clip Fix"
 msgstr "Отрязани отчети"
 
 #: plug-ins/clipfix.ny
-#, fuzzy
-msgid "Reconstructing clips..."
-msgstr "Премахва се пукане…"
-
-#: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
-msgstr ""
-
-#: plug-ins/clipfix.ny
-msgid "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
 
 #: plug-ins/clipfix.ny
@@ -20437,14 +20748,9 @@ msgstr ""
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr ""
 
-#: plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Crossfade Clips"
-msgstr "Нотна писта"
-
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#, fuzzy
-msgid "Crossfading..."
 msgstr "Нотна писта"
 
 #: plug-ins/crossfadeclips.ny
@@ -20462,7 +20768,7 @@ msgstr ""
 msgid "Error.~%Crossfade Clips may only be applied to one track."
 msgstr ""
 
-#: plug-ins/crossfadetracks.ny
+#: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Crossfade Tracks"
 msgstr "Нотна писта"
@@ -20515,14 +20821,9 @@ msgstr ""
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr ""
 
-#: plug-ins/delay.ny
+#: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
 msgstr "Закъснение"
-
-#: plug-ins/delay.ny
-#, fuzzy
-msgid "Applying Delay Effect..."
-msgstr "Прилага се ефект на Nyquist…"
 
 #: plug-ins/delay.ny
 #, fuzzy
@@ -20633,10 +20934,6 @@ msgstr "Грешка (файлът може да не е записан): %s"
 msgid "Regular Interval Labels"
 msgstr ""
 
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
 #, fuzzy
@@ -20645,7 +20942,7 @@ msgstr "Разделяне на файловете по:"
 
 #: plug-ins/equalabel.ny
 #, fuzzy
-msgid "Number & Interval"
+msgid "Number and Interval"
 msgstr "Редактиране на надпис"
 
 #: plug-ins/equalabel.ny
@@ -20736,6 +21033,11 @@ msgstr "Предупреждения"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
+msgid "Error: There is insufficient space to create labels.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
 msgid "Warning: Overlapping region labels.~%"
 msgstr ""
 
@@ -20761,17 +21063,12 @@ msgstr ""
 msgid "~aRegion length = ~a seconds."
 msgstr "От дължина в секунди"
 
-#: plug-ins/highpass.ny
+#: plug-ins/highpass.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "High-Pass Filter"
 msgstr "Зареждане на файлове"
 
-#: plug-ins/highpass.ny
-#, fuzzy
-msgid "Performing High-Pass Filter..."
-msgstr "Прилага се ефект „Еквалайзер“"
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, fuzzy
 msgid "Dominic Mazzoni"
 msgstr "от Dominic Mazzoni"
@@ -20923,15 +21220,10 @@ msgstr ""
 msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Limiter"
 msgstr "Ограничител"
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Limiting..."
-msgstr "Извършва се нормализиране…"
 
 #: plug-ins/limiter.ny
 #, fuzzy
@@ -20985,17 +21277,12 @@ msgstr ""
 msgid "Apply Make-up Gain"
 msgstr "Прилагане на верига"
 
-#: plug-ins/lowpass.ny
+#: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Low-Pass Filter"
 msgstr "Зареждане на файлове"
 
-#: plug-ins/lowpass.ny
-#, fuzzy
-msgid "Performing Low-Pass Filter..."
-msgstr "Прилага се ефект „Еквалайзер“"
-
-#: plug-ins/noisegate.ny
+#: plug-ins/noisegate.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Noise Gate"
 msgstr "Тип на шума"
@@ -21092,15 +21379,10 @@ msgstr ""
 msgid "~ah ~am"
 msgstr ""
 
-#: plug-ins/notch.ny
+#: plug-ins/notch.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Notch Filter"
 msgstr "Дължина на филтъра"
-
-#: plug-ins/notch.ny
-#, fuzzy
-msgid "Applying Notch Filter..."
-msgstr "Изравнява се силата на звука…"
 
 #: plug-ins/notch.ny
 #, fuzzy
@@ -21121,7 +21403,7 @@ msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy
-msgid "Nyquist Plug-in Installer"
+msgid "Nyquist Plugin Installer"
 msgstr "Изход от Nyquist:"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
@@ -21222,15 +21504,6 @@ msgid "Pluck"
 msgstr ""
 
 #: plug-ins/pluck.ny
-#, fuzzy
-msgid "Generating pluck sound..."
-msgstr "Генерира се тон"
-
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
 msgid "David R.Sky"
 msgstr ""
 
@@ -21262,9 +21535,8 @@ msgid "Rhythm Track"
 msgstr "Премахване на писта"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy
-msgid "Generating Rhythm..."
-msgstr "Генерира се сигнал с ЛЧМ"
+msgid "Dominic Mazzoni, David R. Sky and Steve Daulton"
+msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -21391,11 +21663,6 @@ msgstr "Генерира се шум"
 
 #: plug-ins/rissetdrum.ny
 #, fuzzy
-msgid "Generating Risset Drum..."
-msgstr "Генерира се шум"
-
-#: plug-ins/rissetdrum.ny
-#, fuzzy
 msgid "Steven Jones"
 msgstr "По подраз&биране"
 
@@ -21426,11 +21693,6 @@ msgstr "Амплитуда (0-1)"
 #, fuzzy
 msgid "Sample Data Export"
 msgstr "Не е възможно да се експортира"
-
-#: plug-ins/sample-data-export.ny
-#, fuzzy
-msgid "Analyzing..."
-msgstr "Прилага се…"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -21726,11 +21988,6 @@ msgstr "Реди&скретизация чрез:"
 
 #: plug-ins/sample-data-import.ny
 #, fuzzy
-msgid "Reading and rendering samples..."
-msgstr "Смесване и обобщаване на писти"
-
-#: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Select file"
 msgstr "Изберете MIDI файл..."
 
@@ -21776,7 +22033,7 @@ msgstr ""
 msgid "Error.~%Unable to open file"
 msgstr "Не е възможно да се отвори файл с жанрове."
 
-#: plug-ins/spectral-delete.ny
+#: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Spectral Delete"
 msgstr "Селекция"
@@ -21786,14 +22043,9 @@ msgstr "Селекция"
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
 msgstr ""
 
-#: plug-ins/tremolo.ny
+#: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
 msgstr ""
-
-#: plug-ins/tremolo.ny
-#, fuzzy
-msgid "Applying Tremolo..."
-msgstr "Изравнява се силата на звука…"
 
 #: plug-ins/tremolo.ny
 #, fuzzy
@@ -21815,14 +22067,9 @@ msgstr "Начална фаза на НЧО в градуси"
 msgid "Wet level (percent)"
 msgstr "2 нива"
 
-#: plug-ins/vocalrediso.ny
+#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
 msgid "Vocal Reduction and Isolation"
 msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Applying Action..."
-msgstr "Прилага се…"
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
@@ -21953,18 +22200,14 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/vocoder.ny
+#: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr ""
 
 #: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Processing Vocoder..."
-msgstr "Обработва се: "
-
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr ""
+msgid "Edgar-RFT and Steve Daulton"
+msgstr "По подраз&биране"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
@@ -21992,7 +22235,7 @@ msgstr "Брой на повторенията:"
 
 #: plug-ins/vocoder.ny
 #, fuzzy
-msgid "Amplitude of original audio (percent)"
+msgid "Amplitude of carrier wave (percent)"
 msgstr "Честота (Хц)"
 
 #: plug-ins/vocoder.ny
@@ -22012,8 +22255,338 @@ msgstr "Честота (Хц)"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
-msgid "Error.~%Stereo track required."
+msgid "Error.~%No modulation carrier."
 msgstr ""
+
+#. Effects menu group name; audio dynamics compression, not data compression
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Volume and Compression"
+msgstr "Компресия:"
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Fading"
+msgstr "Прилага се ефект „Засилване“"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Pitch and Tempo"
+msgstr "Височина и темпо"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "EQ and Filters"
+msgstr "Зареждане на файлове"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Noise Removal and Repair"
+msgstr "Премахване на шум"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Delay and Reverb"
+msgstr "Изравнява се силата на звука…"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Distortion and Modulation"
+msgstr "Изкривяване"
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Special"
+msgstr "Специални благодарности:"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "Премахване на писта"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Spectral Tools"
+msgstr "Спектър"
+
+#, fuzzy, c-format
+#~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+#~ msgstr "Audacity е свободна програма, разработвана от екип от <a href=\"http://audacity.sourceforge.net/community/developers\">доброволци</a> от целия свят. Благодарим на <a href=\"http://sourceforge.net\">SourceForge.net</a> и <a href=\"http://code.google.com\">Google Code</a> за подслоняването на нашия проект. Audacity се <a href=\"http://audacity.sourceforge.net/download/\">предлага</a> за Windows, Mac и GNU/Linux (и други съвместими с Unix операционни системи)."
+
+#, fuzzy
+#~ msgid "available"
+#~ msgstr "Променлива"
+
+#, fuzzy, c-format
+#~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+#~ msgstr "Ако откриете дефект или имате предложение, пишете ни на адреса за <a href=\"mailto:feedback@audacityteam.org\">отзиви</a>. За помощ относно работата с Audacity вижте съветите в нашето <a href=\"http://wiki.audacityteam.org/\">уики</a> или посетете <a href=\"http://forum.audacityteam.org/\">форума ни</a>."
+
+#, fuzzy
+#~ msgid "Clear Looping Region"
+#~ msgstr "&Изчистване"
+
+#~ msgid "&History..."
+#~ msgstr "&Хронология…"
+
+#~ msgid "&Mixer Board..."
+#~ msgstr "&Смесителен пулт…"
+
+#, fuzzy
+#~ msgid "Unable to decode project document"
+#~ msgstr "Не е възможно да се отвори/създаде пробен файл."
+
+#~ msgid "Main Mix"
+#~ msgstr "Главен смесител"
+
+#, fuzzy
+#~ msgid "Effects Rack"
+#~ msgstr "Ефекти"
+
+#, fuzzy
+#~ msgid "Latency: 0"
+#~ msgstr "Закъснение"
+
+#, fuzzy
+#~ msgid "&Bypass"
+#~ msgstr "Лентов филтър"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Местене на&горе"
+
+#, fuzzy
+#~ msgid "Move effect up in the rack"
+#~ msgstr "Клип бе преместен в друга писта"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Местене на&долу"
+
+#, fuzzy
+#~ msgid "Move effect down in the rack"
+#~ msgstr "Клип бе преместен в друга писта"
+
+#, fuzzy, c-format
+#~ msgid "Latency: %4d"
+#~ msgstr "Закъснение"
+
+#, fuzzy
+#~ msgid "Some Command"
+#~ msgstr "Избор на команда"
+
+#, fuzzy
+#~ msgid "Start &Playback"
+#~ msgstr "Възпроизвеждане"
+
+#, fuzzy
+#~ msgid "&Preview effect"
+#~ msgstr "Мостра &преди изрязаното:"
+
+#, fuzzy
+#~ msgid "Skip backward"
+#~ msgstr "Назад"
+
+#, fuzzy
+#~ msgid "Skip &Backward"
+#~ msgstr "Назад"
+
+#, fuzzy
+#~ msgid "Skip forward"
+#~ msgstr "Превъртане до началото"
+
+#, fuzzy
+#~ msgid "Skip &Forward"
+#~ msgstr "Напред"
+
+#, fuzzy
+#~ msgid "Stop &Playback"
+#~ msgstr "Възпроизвеждане"
+
+#, fuzzy, c-format
+#~ msgid "Reverb: %s"
+#~ msgstr "Реверберация"
+
+#, fuzzy
+#~ msgid "Scanning Shell VST"
+#~ msgstr "Търсят се ефекти VST"
+
+#, fuzzy
+#~ msgid "Location"
+#~ msgstr "&Местонахождение:"
+
+#, fuzzy, c-format
+#~ msgid "%s requires unsupported feature %s\n"
+#~ msgstr "%d криви бяха експортирани в %s"
+
+#, fuzzy, c-format
+#~ msgid "%s requires unsupported option %s\n"
+#~ msgstr "%d криви бяха експортирани в %s"
+
+#, fuzzy
+#~ msgid "Clip B&oundaries"
+#~ msgstr "Изрязване по &границите"
+
+#~ msgid "Pre&ferences..."
+#~ msgstr "Предпо&читания…"
+
+#, fuzzy
+#~ msgid "&Macros..."
+#~ msgstr "&Надписи…"
+
+#, fuzzy
+#~ msgid "Show Effects Rack"
+#~ msgstr "Ефекти VST"
+
+#, fuzzy
+#~ msgid "Plugin Options"
+#~ msgstr "Настройки на приставка"
+
+#, fuzzy
+#~ msgid "Rescan plugins next time Audacity is started"
+#~ msgstr "Ново търсене на ефекти VST при следващото стартиране на Audacity"
+
+#, fuzzy
+#~ msgid "Cut selection"
+#~ msgstr "Побиране на селекцията"
+
+#, fuzzy
+#~ msgid "Copy selection"
+#~ msgstr "Селекция"
+
+#, fuzzy
+#~ msgid "Open Effects Rack"
+#~ msgstr "Ефекти"
+
+#, fuzzy
+#~ msgid "Recording Volume"
+#~ msgstr "Край на запис"
+
+#, fuzzy
+#~ msgid "Playback Volume"
+#~ msgstr "Възпроизвеждане"
+
+#, fuzzy, c-format
+#~ msgid "Recording Volume: %.2f"
+#~ msgstr "Край на запис"
+
+#, fuzzy
+#~ msgid "Recording Volume (Unavailable; use system mixer.)"
+#~ msgstr "Не може да се управлява силата на входа. Използвайте системния смесител."
+
+#, fuzzy, c-format
+#~ msgid "Playback Volume: %.2f"
+#~ msgstr "Възпроизвеждане"
+
+#, fuzzy
+#~ msgid "Playback Volume (Unavailable; use system mixer.)"
+#~ msgstr "Не може да се управлява силата на входа. Използвайте системния смесител."
+
+#~ msgid "Mi&xer Toolbar"
+#~ msgstr "Лента „С&месител“"
+
+#~ msgid "Zoom Tool"
+#~ msgstr "Увеличение"
+
+#, fuzzy
+#~ msgid "&Zoom Tool"
+#~ msgstr "Увеличение"
+
+#, fuzzy
+#~ msgid "Click to Start Monitoring"
+#~ msgstr "Започване на наблюдение"
+
+#, fuzzy
+#~ msgid "Click for Monitoring"
+#~ msgstr "Спиране на наблюдението"
+
+#, fuzzy
+#~ msgid "Click to Start"
+#~ msgstr "Превъртане до началото"
+
+#, fuzzy
+#~ msgid "Click"
+#~ msgstr "Щракване"
+
+#~ msgid "Please select an action"
+#~ msgstr "Моля, изберете действие"
+
+#, fuzzy
+#~ msgid "Filtering..."
+#~ msgstr "Филтър"
+
+#, fuzzy
+#~ msgid "Applying Fade..."
+#~ msgstr "Прилага се…"
+
+#, fuzzy
+#~ msgid "Finding beats..."
+#~ msgstr "Търсене на отрязани отчети…"
+
+#, fuzzy
+#~ msgid "Reconstructing clips..."
+#~ msgstr "Премахва се пукане…"
+
+#, fuzzy
+#~ msgid "Crossfading..."
+#~ msgstr "Нотна писта"
+
+#, fuzzy
+#~ msgid "Applying Delay Effect..."
+#~ msgstr "Прилага се ефект на Nyquist…"
+
+#, fuzzy
+#~ msgid "Performing High-Pass Filter..."
+#~ msgstr "Прилага се ефект „Еквалайзер“"
+
+#, fuzzy
+#~ msgid "Limiting..."
+#~ msgstr "Извършва се нормализиране…"
+
+#, fuzzy
+#~ msgid "Performing Low-Pass Filter..."
+#~ msgstr "Прилага се ефект „Еквалайзер“"
+
+#, fuzzy
+#~ msgid "Applying Notch Filter..."
+#~ msgstr "Изравнява се силата на звука…"
+
+#, fuzzy
+#~ msgid "Generating pluck sound..."
+#~ msgstr "Генерира се тон"
+
+#, fuzzy
+#~ msgid "Generating Rhythm..."
+#~ msgstr "Генерира се сигнал с ЛЧМ"
+
+#, fuzzy
+#~ msgid "Generating Risset Drum..."
+#~ msgstr "Генерира се шум"
+
+#, fuzzy
+#~ msgid "Analyzing..."
+#~ msgstr "Прилага се…"
+
+#, fuzzy
+#~ msgid "Reading and rendering samples..."
+#~ msgstr "Смесване и обобщаване на писти"
+
+#, fuzzy
+#~ msgid "Applying Tremolo..."
+#~ msgstr "Изравнява се силата на звука…"
+
+#, fuzzy
+#~ msgid "Applying Action..."
+#~ msgstr "Прилага се…"
+
+#, fuzzy
+#~ msgid "Processing Vocoder..."
+#~ msgstr "Обработва се: "
+
+#, fuzzy
+#~ msgid "Amplitude of original audio (percent)"
+#~ msgstr "Честота (Хц)"
 
 #, fuzzy
 #~ msgid "Lock Play Region"
@@ -22159,9 +22732,6 @@ msgstr ""
 #~ "%s\n"
 #~ "Може да има и още липсващи файлове.\n"
 #~ "За да видите списък с местоположенията на липсващите файлове, изберете Файл > Проверка за зависимости."
-
-#~ msgid "Files Missing"
-#~ msgstr "Липсващи файлове"
 
 #, fuzzy
 #~ msgid "decode an autosave file"
@@ -22462,20 +23032,8 @@ msgstr ""
 #~ msgstr "Генератор на тишина"
 
 #, fuzzy
-#~ msgid "Finding sound..."
-#~ msgstr "Търсене на отрязани отчети…"
-
-#, fuzzy
-#~ msgid "Gating audio..."
-#~ msgstr "Кешира се звук"
-
-#, fuzzy
 #~ msgid "Apply Low-Cut filter"
 #~ msgstr "Изравнява се силата на звука…"
-
-#, fuzzy
-#~ msgid "About Audacity"
-#~ msgstr "Относно Audacity…"
 
 #, fuzzy
 #~ msgid "<h3>Audacity "
@@ -22732,10 +23290,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
 #~ msgstr "За да рисувате, изберете „Вълна“ в падащото меню на пистата."
-
-#, fuzzy
-#~ msgid "Vocal Remover"
-#~ msgstr "Премахване на писта"
 
 #, fuzzy
 #~ msgid "Removing center-panned audio..."
@@ -23009,10 +23563,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "End to End"
 #~ msgstr "Превъртане до края"
-
-#, fuzzy
-#~ msgid "Aligned %s"
-#~ msgstr "Извършено бе подравняване"
 
 #, fuzzy
 #~ msgid "Duration:\n"
@@ -23738,10 +24288,6 @@ msgstr ""
 #~ msgstr "Мрежа"
 
 #, fuzzy
-#~ msgid "Default"
-#~ msgstr "По по&дразбиране"
-
-#, fuzzy
 #~ msgid "LV2 Effects Module"
 #~ msgstr "Ефекти VST"
 
@@ -24028,9 +24574,6 @@ msgstr ""
 #~ msgid "Performing Equalization"
 #~ msgstr "Прилага се ефект „Еквалайзер“"
 
-#~ msgid "Fading In"
-#~ msgstr "Прилага се ефект „Засилване“"
-
 #~ msgid "Fading Out"
 #~ msgstr "Прилага се ефект „Затихване“"
 
@@ -24096,10 +24639,6 @@ msgstr ""
 #~ msgstr "Повтаряне…"
 
 #, fuzzy
-#~ msgid "User settings:"
-#~ msgstr "Настройки на ефекта"
-
-#, fuzzy
 #~ msgid "R&ename"
 #~ msgstr "Пре&именуване"
 
@@ -24118,10 +24657,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Reverb..."
 #~ msgstr "Реверберация"
-
-#, fuzzy
-#~ msgid "Applying Reverb"
-#~ msgstr "Изравнява се силата на звука…"
 
 #, fuzzy
 #~ msgid "Classic Filters..."
@@ -24160,10 +24695,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Buffer Delay Compensation"
 #~ msgstr "Клавишна комбинация"
-
-#, fuzzy
-#~ msgid "Rescan Effects"
-#~ msgstr "Ефекти"
 
 #, fuzzy
 #~ msgid "VST Effect"

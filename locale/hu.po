@@ -10,9 +10,9 @@
 # Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.1.3\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-10-14 10:06-0400\n"
+"POT-Creation-Date: 2022-09-13 07:25-0400\n"
 "PO-Revision-Date: 2022-07-04 14:08+0200\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
@@ -43,7 +43,6 @@ msgid "Problem Report for Audacity"
 msgstr "Hibajelentés az Audacity-nek"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-#: src/widgets/ErrorReportDialog.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
 msgstr "A jelentés küldéséhez az Audacity-nek kattints a \"Küldés\" gombra Az információt névtelenül gyűjtjük."
 
@@ -52,7 +51,7 @@ msgstr "A jelentés küldéséhez az Audacity-nek kattints a \"Küldés\" gombra
 msgid "Problem details"
 msgstr "Probléma részletei"
 
-#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: crashreports/crashreporter/CrashReportApp.cpp src/TagsEditor.cpp
 #: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
 msgid "Comments"
 msgstr "Megjegyzések"
@@ -60,7 +59,6 @@ msgstr "Megjegyzések"
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#: src/widgets/ErrorReportDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Lásd további információért: %s."
@@ -68,8 +66,6 @@ msgstr "Lásd további információért: %s."
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an
-#. object of "See".
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -229,6 +225,11 @@ msgstr "A rögzítési hangerő eredeti\n"
 msgid "Message"
 msgstr "Üzenet"
 
+#: libraries/lib-cloud-audiocom/UploadService.cpp
+#, fuzzy
+msgid "Cannot proceed to upload."
+msgstr "Nem lehet folytatni az exportálást."
+
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
 msgid ""
@@ -317,6 +318,7 @@ msgid "%s files"
 msgstr "%s fájl"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
+#: src/effects/lv2/LV2Validator.cpp
 #, c-format
 msgid "(%s)"
 msgstr "(%s)"
@@ -331,12 +333,13 @@ msgstr ""
 "%s könyvtáron nincs írási jogosultsága."
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
-#: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectBase.cpp
+#: src/effects/Generator.cpp src/effects/VST3/VST3Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -376,7 +379,9 @@ msgstr "Nincs"
 msgid "Rectangle"
 msgstr "Négyszög"
 
-#: libraries/lib-math/Dither.cpp src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#: libraries/lib-math/Dither.cpp
+#, fuzzy
+msgctxt "dither"
 msgid "Triangle"
 msgstr "Háromszög"
 
@@ -469,6 +474,148 @@ msgstr "32-bit lebegőpontos"
 msgid "Unknown format"
 msgstr "Ismeretlen formátum"
 
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Module Unsuitable"
+msgstr "Alkalmatlan modul"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid ""
+"Unable to load the \"%s\" module.\n"
+"\n"
+"Error: %s"
+msgstr ""
+"Nem sikerült \"%s\" modult betölteni.\n"
+"\n"
+"Hiba: %s"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"The module \"%s\" does not provide a version string.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+"A(z) %s modul nem tartalmaz verziószöveget.\n"
+"Nem kerül betöltésre."
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"The module \"%s\" is matched with Audacity version \"%s\".\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+"A(z) %s modul az Audacity %s verziójával egyezik.\n"
+"\n"
+"Nem kerül betöltésre."
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"The module \"%s\" failed to initialize.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+"A(z) %s modul nem tartalmaz verziószöveget.\n"
+"Nem kerül betöltésre."
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, c-format
+msgid "Module \"%s\" found."
+msgstr "\"%s\" modul található."
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid ""
+"\n"
+"\n"
+"Only use modules from trusted sources"
+msgstr ""
+"\n"
+"\n"
+"Csak megbízható forrásokból használjon modulokat"
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/sample-data-export.ny
+msgid "Yes"
+msgstr "Igen"
+
+#: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+msgid "No"
+msgstr "Nem"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Audacity Module Loader"
+msgstr "Audacity modulbetöltő"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+msgid "Try and load this module?"
+msgstr "Kipróbálja és betölti ezt a modult?"
+
+#: libraries/lib-module-manager/ModuleManager.cpp
+#, fuzzy, c-format
+msgid ""
+"The module \"%s\" does not provide any of the required functions.\n"
+"\n"
+"It will not be loaded."
+msgstr ""
+"A(z) %s modul nem tartalmaz verziószöveget.\n"
+"Nem kerül betöltésre."
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, c-format
+msgid "Overwrite the plug-in file %s?"
+msgstr "Felülírod a bővítmény fájlt %s?"
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in already exists"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+msgid "Plug-in file is in use. Failed to overwrite"
+msgstr ""
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, c-format
+msgid ""
+"Failed to register:\n"
+"%s"
+msgstr ""
+"Nem sikerült regisztrálni:\n"
+"%s"
+
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
+#: libraries/lib-module-manager/PluginManager.cpp
+msgctxt "plug-ins"
+msgid "Enable this plug-in?\n"
+msgid_plural "Enable these plug-ins?\n"
+msgstr[0] "Bekapcsolod ezt a bővítményt?\n"
+msgstr[1] "Bekapcsolod ezeket a bővítményeket?\n"
+
+#: libraries/lib-module-manager/PluginManager.cpp
+#, fuzzy
+msgid "Enable new plug-ins"
+msgstr "Metszés&vonalak engedélyezése"
+
+#: libraries/lib-module-manager/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist parancssor"
+
+#: libraries/lib-network-manager/MultipartData.cpp
+#, fuzzy, c-format
+msgid "Failed to open the file for upload: %s"
+msgstr ""
+"Nem sikerült megnyitni az adatbázisfájlt:\n"
+"\n"
+"%s"
+
+#: libraries/lib-project-history/ProjectHistory.cpp
+msgid "Created new project"
+msgstr "Új projekt létrehozva"
+
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "16-bit"
 msgstr "16-bit"
@@ -491,6 +638,16 @@ msgstr ""
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
 msgstr ""
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Sample Track"
+msgstr "Sáv újramintavételezése"
+
+#: libraries/lib-sample-track/SampleTrack.cpp
+#, fuzzy
+msgid "Writable Sample Track"
+msgstr "Sáv újramintavételezése"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
@@ -533,24 +690,35 @@ msgstr "Rendszer"
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
-#: libraries/lib-theme/ClassicThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/ClassicThemeAsCeeCode.cpp
 msgid "Classic"
 msgstr "Klasszikus"
 
-#: libraries/lib-theme/DarkThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/DarkThemeAsCeeCode.cpp
 msgid "Dark"
 msgstr "Sötét"
 
 #. i18n-hint: greater difference between foreground and
 #. background colors
-#: libraries/lib-theme/HiContrastThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/HighContrastThemeAsCeeCode.cpp
 msgid "High Contrast"
 msgstr "Magas kontraszt"
 
 #. i18n-hint: Light meaning opposite of dark
-#: libraries/lib-theme/LightThemeAsCeeCode.cpp
+#: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
 msgid "Light"
 msgstr "Világos"
+
+#. i18n-hint: A theme is a consistent visual style across an application's
+#. graphical user interface, including choices of colors, and similarity of images
+#. such as those on button controls.  Audacity can load and save alternative
+#. themes.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/%s."
+msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -560,17 +728,6 @@ msgid ""
 msgstr ""
 "Az Audacity nem tudta írni a fájlt:\n"
 "  %s."
-
-#. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
-#. themes.
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme written to:\n"
-"  %s."
-msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -591,14 +748,6 @@ msgid ""
 msgstr ""
 "Az Audacity nem tudta a képeket fájlba írni:\n"
 "  %s."
-
-#. i18n-hint "Cee" means the C computer programming language
-#: libraries/lib-theme/Theme.cpp
-#, c-format
-msgid ""
-"Theme as Cee code written to:\n"
-"  %s."
-msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -632,6 +781,11 @@ msgstr ""
 "Jelentse ezt a problémát."
 
 #: libraries/lib-theme/Theme.cpp
+#, fuzzy, c-format
+msgid "Couldn't read from file: %s"
+msgstr "Nem sikerült írni a fájlba: %s"
+
+#: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid ""
 "None of the expected theme component files\n"
@@ -640,6 +794,13 @@ msgid ""
 msgstr ""
 "A várt témaösszetevő fájlok egyike sem található itt:\n"
 "  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes written to:\n"
+"  %s/*/Components/."
+msgstr ""
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -670,10 +831,52 @@ msgstr ""
 "Az Audacity nem tudta elmenteni a fájlt:\n"
 "  %s"
 
+#: libraries/lib-theme/Theme.cpp src/FreqWindow.cpp src/LabelDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#, c-format
+msgid "Couldn't write to file: %s"
+msgstr "Nem sikerült írni a fájlba: %s"
+
+#. i18n-hint "Cee" means the C computer programming language
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Themes as Cee code written to:\n"
+"  %s/*%s."
+msgstr ""
+
 #. i18n-hint: user defined
 #: libraries/lib-theme/Theme.cpp
 msgid "Custom"
 msgstr "Egyéni"
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Generic Track"
+msgstr "Általános"
+
+#: libraries/lib-track/Track.cpp
+msgid "Audio Track"
+msgstr "Hangsáv"
+
+#: libraries/lib-track/Track.cpp
+#, fuzzy
+msgid "Playable Track"
+msgstr "Lejátszás"
+
+#: libraries/lib-transactions/TransactionScope.cpp
+msgid "Database error.  Sorry, but we don't have more details."
+msgstr ""
+
+#: libraries/lib-transactions/TransactionScope.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
+#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
+#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
+#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
+#: src/menus/EditMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+msgid "Warning"
+msgstr "Figyelmeztetés"
 
 #: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
 #: src/effects/VST/VSTEffect.cpp
@@ -829,16 +1032,6 @@ msgstr "Nyquist-parancsfájlok (*.ny)|*.ny|Lisp-parancsfájlok (*.lsp)|*.lsp|Min
 msgid "Script was not saved."
 msgstr "A parancsfájl nem lett elmentve."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
-#: src/ProjectFileIO.cpp src/ProjectHistory.cpp src/SqliteSampleBlock.cpp
-#: src/WaveClip.cpp src/WaveTrack.cpp src/export/Export.cpp
-#: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
-msgid "Warning"
-msgstr "Figyelmeztetés"
-
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Save Nyquist script"
 msgstr "Nyquist-parancsfájl mentése"
@@ -920,7 +1113,7 @@ msgstr "Mentés másként"
 msgid "Save script as..."
 msgstr "Parancsfájl mentése másként…"
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Másolás"
@@ -930,7 +1123,6 @@ msgid "Copy to clipboard"
 msgstr "Másolás a vágólapra"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Kivágás"
@@ -940,7 +1132,6 @@ msgid "Cut to clipboard"
 msgstr "Kivágás a vágólapra"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Beillesztés"
@@ -1043,8 +1234,8 @@ msgstr "Kezdés"
 msgid "Start script"
 msgstr "Parancsfájl indítása"
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
-#: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
+#: src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Leállítás"
 
@@ -1067,6 +1258,12 @@ msgstr "%s, rendszeradminisztráció"
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, társalapító és fejlesztő"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, designer"
+msgstr "%s, tesztelő"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -1163,46 +1360,6 @@ msgstr "Névjegy %s"
 msgid "OK"
 msgstr "OK"
 
-#. i18n-hint: First and third %s will be the program's name,
-#. second %s will be "volunteers", fourth "available"
-#: src/AboutDialog.cpp
-#, fuzzy, c-format
-msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Az Audacity egy ingyenes program, amelyet az [[http://www.audacityteam.org/about/credits|önkéntesek]] világméretű csapata készített. Az Audacity [[http://www.audacityteam.org/download|elérhető]] Windows, Mac és GNU/Linux (valamint egyéb Unix-szerű) rendszerekre."
-
-#. i18n-hint: substitutes into "a worldwide team of %s"
-#: src/AboutDialog.cpp
-msgid "volunteers"
-msgstr "önkéntesek"
-
-#. i18n-hint: substitutes into "Audacity is %s"
-#: src/AboutDialog.cpp
-msgid "available"
-msgstr "elérhető"
-
-#. i18n-hint first and third %s will be "forum", second "wiki"
-#: src/AboutDialog.cpp
-#, fuzzy, c-format
-msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr "Ha hibát talál, vagy javaslata van felénk, írjon angolul a [[mailto:feedback@audacityteam.org|visszajelzési címünkre]]. A segítségért nézze meg a tippeket és trükköket a [[http://wiki.audacityteam.org/|wiki]] oldalunkon, vagy látogassa meg a [[http://forum.audacityteam.org/|fórumunkat]]."
-
-#. i18n-hint substitutes into "write to our %s"
-#: src/AboutDialog.cpp
-msgctxt "dative"
-msgid "forum"
-msgstr "fórum"
-
-#. i18n-hint substitutes into "view the tips and tricks on our %s"
-#: src/AboutDialog.cpp
-msgid "wiki"
-msgstr "wiki"
-
-#. i18n-hint substitutes into "visit our %s"
-#: src/AboutDialog.cpp
-msgctxt "accusative"
-msgid "forum"
-msgstr "fórum"
-
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -1232,15 +1389,16 @@ msgstr "%s szabad, nyílt forrású, keresztplatformos szoftver hangok felvétel
 msgid "Credits"
 msgstr "Köszönet"
 
-#: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr ""
-
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s Team Members"
 msgstr "%s Audacity csapattagok"
+
+#. i18n-hint: Musers are people working at Muse Group
+#: src/AboutDialog.cpp
+msgid "Former Musers"
+msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -1340,6 +1498,11 @@ msgid "%s, 64 bits"
 msgstr "%s, 64 bit"
 
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, 32 bits"
+msgstr "%s, 64 bit"
+
+#: src/AboutDialog.cpp
 msgid "Build type:"
 msgstr "Felépítés típusa:"
 
@@ -1353,7 +1516,22 @@ msgid "Installation Prefix:"
 msgstr "Telepítési előtag:"
 
 #: src/AboutDialog.cpp
+#, fuzzy
+msgid "Cache folder:"
+msgstr "Beállítások mappa:"
+
+#: src/AboutDialog.cpp
 msgid "Settings folder:"
+msgstr "Beállítások mappa:"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Data folder:"
+msgstr "Beállítások mappa:"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "State folder:"
 msgstr "Beállítások mappa:"
 
 #. i18n-hint: Libraries that are essential to audacity
@@ -1417,10 +1595,6 @@ msgstr "Importálás GStreamer által"
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Szolgáltatások"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "Plug-in support"
@@ -1556,8 +1730,9 @@ msgstr "Kijelző frissítése lejátszás közben"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-msgid "Clear Looping Region"
-msgstr "Hurokterület törlése"
+#, fuzzy
+msgid "Clear Loop"
+msgstr "&Hurok törlése"
 
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
@@ -1629,7 +1804,7 @@ msgstr "&Megnyitás…"
 msgid "Open &Recent..."
 msgstr "&Legutóbbi megnyitása…"
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/AudacityApp.cpp
 msgid "&About Audacity..."
 msgstr "&Audacity névjegye…"
 
@@ -1707,17 +1882,25 @@ msgid "Audacity is already running"
 msgstr "Az Audacity már fut"
 
 #: src/AudacityApp.cpp
+#, c-format
 msgid ""
-"Unable to acquire semaphores.\n"
+"Unable to create shared memory segment.\n"
 "\n"
-"This is likely due to a resource shortage\n"
-"and a reboot may be required."
+"error code=%d : \"%s\"."
 msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
 msgid "Audacity Startup Failure"
 msgstr "Audacity projektfájlok"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1788,6 +1971,11 @@ msgstr "Audacity verzió megjelenítése"
 #: src/AudacityApp.cpp
 msgid "audio or project file name"
 msgstr "hang- vagy projektfájlnév"
+
+#. i18n-hint: This option is used to handle custom URLs in Audacity
+#: src/AudacityApp.cpp
+msgid "Handle 'audacity://' url"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy
@@ -2146,7 +2334,9 @@ msgstr "Alkalmazás…"
 msgid "File"
 msgstr "Fájl"
 
-#: src/BatchProcessDialog.cpp
+#: src/BatchProcessDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Cancel"
 msgstr "&Mégse"
 
@@ -2209,8 +2399,8 @@ msgstr "Mozgatás &fel"
 msgid "Move &Down"
 msgstr "Mozgatás &le"
 
-#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/HelpMenus.cpp
+#: src/BatchProcessDialog.cpp src/HelpUtilities.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "&Save"
 msgstr "&Mentés"
 
@@ -2294,8 +2484,8 @@ msgid "Run"
 msgstr "Futás"
 
 #. i18n-hint verb
-#: src/Benchmark.cpp src/tracks/ui/TrackButtonHandles.cpp
-#: src/widgets/HelpSystem.cpp
+#: src/Benchmark.cpp src/RealtimeEffectPanel.cpp
+#: src/tracks/ui/TrackButtonHandles.cpp src/widgets/HelpSystem.cpp
 msgid "Close"
 msgstr "Bezárás"
 
@@ -2576,10 +2766,6 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/DBConnection.cpp
-msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
-
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
 msgstr "Függőségek eltávolítása"
@@ -2705,6 +2891,28 @@ msgstr ""
 #: src/Dependencies.cpp
 msgid "Dependency Check"
 msgstr "Függőség-ellenőrzés"
+
+#. i18n-hint:  A name given to a track, appearing as its menu button.
+#. The translation should be short or else it will not display well.
+#. At most, about 11 Latin characters.
+#. Dropout is a loss of a short sequence of audio sample data from the
+#. recording
+#: src/DropoutDetector.cpp
+msgid "Dropouts"
+msgstr "Lemorzsolódás"
+
+#: src/DropoutDetector.cpp
+msgid ""
+"Recorded audio was lost at the labeled locations. Possible causes:\n"
+"\n"
+"Other applications are competing with Audacity for processor time\n"
+"\n"
+"You are saving directly to a slow external storage device\n"
+msgstr ""
+
+#: src/DropoutDetector.cpp
+msgid "Turn off dropout detection"
+msgstr ""
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
@@ -2995,12 +3203,6 @@ msgstr "spectrum.txt"
 msgid "Export Spectral Data As:"
 msgstr "Spektrális adatok exportálása másként:"
 
-#: src/FreqWindow.cpp src/LabelDialog.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
-#, c-format
-msgid "Couldn't write to file: %s"
-msgstr "Nem sikerült írni a fájlba: %s"
-
 #: src/FreqWindow.cpp
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "Frekvencia (Hz)\tSzint (dB)"
@@ -3145,6 +3347,16 @@ msgstr "Úgy tűnik, hogy a kézikönyv nincs telepítve. Nézd meg a [[*URL*|k�
 msgid "Check Online"
 msgstr "Online ellenőrzés"
 
+#: src/HelpUtilities.cpp
+#, c-format
+msgid "Save %s"
+msgstr "%s mentése"
+
+#: src/HelpUtilities.cpp
+#, c-format
+msgid "Unable to save %s"
+msgstr "Nem sikerül menteni %s"
+
 #: src/HistoryWindow.cpp
 msgid "History"
 msgstr "Előzmények"
@@ -3199,8 +3411,34 @@ msgstr ""
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
 #: src/HistoryWindow.cpp
-msgid "&History..."
-msgstr "Elő&zmények…"
+#, fuzzy
+msgid "&History"
+msgstr "Előzmények"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "New Plugins"
+msgstr "Bővítmények kezelése"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "Incompatible plugin(s) found"
+msgstr "Nem található megfelelő FFmpeg programkönyvtár"
+
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Bővítmények kezelése"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Közreműködők"
+
+#: src/IncompatiblePluginsDialog.cpp
+#, c-format
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
 
 #: src/JournalEvents.cpp
 #, fuzzy
@@ -3284,6 +3522,11 @@ msgstr "Sávnév megadása"
 msgid "Label Track"
 msgstr "Címkesáv"
 
+#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportMultiple.cpp
+msgid "Labels"
+msgstr "Címkék"
+
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
 msgstr "Egy vagy több mentett címke nem olvasható."
@@ -3332,17 +3575,17 @@ msgstr "Audacity projekt megnyitása"
 msgid "Audacity Log"
 msgstr "Audacity napló"
 
-#: src/LogWindow.cpp src/Tags.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp
 msgid "&Save..."
 msgstr "&Mentés…"
 
 #. i18n-hint: (verb)
-#: src/LogWindow.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/LogWindow.cpp src/TagsEditor.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "Tör&lés"
 
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
+#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Bezárás"
 
@@ -3365,7 +3608,8 @@ msgid "Audacity Karaoke%s"
 msgstr "Audacity Karaoke%s"
 
 #: src/LyricsWindow.cpp
-msgid "&Karaoke..."
+#, fuzzy
+msgid "&Karaoke"
 msgstr "Ka&raoke…"
 
 #: src/MIDIPlay.cpp
@@ -3414,22 +3658,17 @@ msgstr ""
 msgid "Disallowed"
 msgstr "Nem engedélyezett"
 
-#. i18n-hint: noun, means a track, made by mixing other tracks
-#: src/Mix.cpp
-msgid "Mix"
-msgstr "Keverés"
-
-#: src/Mix.cpp src/menus/TrackMenus.cpp
+#: src/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
 msgstr "Keverés és megjelenítés"
 
-#: src/Mix.cpp
+#: src/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
 msgstr "Sávok keverése és megjelenítése"
 
 #: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
+#, fuzzy, c-format
+msgid "Audacity Mixer%s"
 msgstr "Audacity keverőpult%s"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
@@ -3493,97 +3732,9 @@ msgid "Moved pan slider"
 msgstr "Görgetőcsúszka áthelyezve"
 
 #: src/MixerBoard.cpp
-msgid "&Mixer Board..."
-msgstr "Keverőp&ult…"
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"Unable to load the \"%s\" module.\n"
-"\n"
-"Error: %s"
-msgstr ""
-"Nem sikerült \"%s\" modult betölteni.\n"
-"\n"
-"Hiba: %s"
-
-#: src/ModuleManager.cpp
-msgid "Module Unsuitable"
-msgstr "Alkalmatlan modul"
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" does not provide a version string.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-"A(z) %s modul nem tartalmaz verziószöveget.\n"
-"Nem kerül betöltésre."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\".\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-"A(z) %s modul az Audacity %s verziójával egyezik.\n"
-"\n"
-"Nem kerül betöltésre."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-"A(z) %s modul nem tartalmaz verziószöveget.\n"
-"Nem kerül betöltésre."
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid "Module \"%s\" found."
-msgstr "\"%s\" modul található."
-
-#: src/ModuleManager.cpp
-msgid ""
-"\n"
-"\n"
-"Only use modules from trusted sources"
-msgstr ""
-"\n"
-"\n"
-"Csak megbízható forrásokból használjon modulokat"
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
-msgid "Yes"
-msgstr "Igen"
-
-#: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny
-msgid "No"
-msgstr "Nem"
-
-#: src/ModuleManager.cpp
-msgid "Audacity Module Loader"
-msgstr "Audacity modulbetöltő"
-
-#: src/ModuleManager.cpp
-msgid "Try and load this module?"
-msgstr "Kipróbálja és betölti ezt a modult?"
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions.\n"
-"\n"
-"It will not be loaded."
-msgstr ""
-"A(z) %s modul nem tartalmaz verziószöveget.\n"
-"Nem kerül betöltésre."
+#, fuzzy
+msgid "&Mixer"
+msgstr "Keverő"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3738,50 +3889,6 @@ msgstr "G♯/A♭"
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
-#: src/PluginManager.cpp
-#, c-format
-msgid "Overwrite the plug-in file %s?"
-msgstr "Felülírod a bővítmény fájlt %s?"
-
-#: src/PluginManager.cpp
-msgid "Plug-in already exists"
-msgstr ""
-
-#: src/PluginManager.cpp
-msgid "Plug-in file is in use. Failed to overwrite"
-msgstr ""
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Failed to register:\n"
-"%s"
-msgstr ""
-"Nem sikerült regisztrálni:\n"
-"%s"
-
-#. i18n-hint A plug-in is an optional added program for a sound
-#. effect, or generator, or analyzer
-#: src/PluginManager.cpp
-msgctxt "plug-ins"
-msgid "Enable this plug-in?\n"
-msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Bekapcsolod ezt a bővítményt?\n"
-msgstr[1] "Bekapcsolod ezeket a bővítményeket?\n"
-
-#: src/PluginManager.cpp
-#, fuzzy
-msgid "Enable new plug-ins"
-msgstr "Metszés&vonalak engedélyezése"
-
-#: src/PluginManager.h
-msgid "Nyquist Prompt"
-msgstr "Nyquist parancssor"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plug-ins"
-msgstr "Bővítmények kezelése"
-
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr "Válasszon hatásokat, kattintson az engedélyezés vagy letiltás gombra, majd nyomja meg az OK gombot."
@@ -3847,8 +3954,11 @@ msgstr "Ö&sszes kijelölése"
 msgid "C&lear All"
 msgstr "&Kijelölés törlése"
 
-#: src/PluginRegistrationDialog.cpp src/effects/EffectUI.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/PluginRegistrationDialog.cpp
+msgid "Rescan"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
 msgid "&Enable"
 msgstr "&Engedélyezés"
 
@@ -3887,6 +3997,10 @@ msgstr ""
 "Hatás vagy parancs %s regisztrálása sikertelen:\n"
 "%s"
 
+#: src/PluginStartupRegistration.cpp
+msgid "Searching for plugins"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Nyomtatási probléma volt."
@@ -3900,7 +4014,7 @@ msgstr "Nyomtatás"
 msgid "Actual Rate: %d"
 msgstr "Jelenlegi arány: %d"
 
-#: src/ProjectAudioManager.cpp src/effects/Effect.cpp
+#: src/ProjectAudioManager.cpp src/effects/EffectBase.cpp
 #, fuzzy
 msgid ""
 "Error opening sound device.\n"
@@ -3940,28 +4054,6 @@ msgstr "Hang felvéve"
 #: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
 msgid "Record"
 msgstr "Felvétel"
-
-#. i18n-hint:  A name given to a track, appearing as its menu button.
-#. The translation should be short or else it will not display well.
-#. At most, about 11 Latin characters.
-#. Dropout is a loss of a short sequence of audio sample data from the
-#. recording
-#: src/ProjectAudioManager.cpp
-msgid "Dropouts"
-msgstr "Lemorzsolódás"
-
-#: src/ProjectAudioManager.cpp
-msgid ""
-"Recorded audio was lost at the labeled locations. Possible causes:\n"
-"\n"
-"Other applications are competing with Audacity for processor time\n"
-"\n"
-"You are saving directly to a slow external storage device\n"
-msgstr ""
-
-#: src/ProjectAudioManager.cpp
-msgid "Turn off dropout detection"
-msgstr ""
 
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
@@ -4129,8 +4221,8 @@ msgstr "Figyelmeztetés - Árva blokkfájlok"
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
-#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/UndoManager.cpp
-#: src/menus/TransportMenus.cpp
+#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/TransportUtilities.cpp
 msgid "Progress"
 msgstr "Folyamat"
 
@@ -4203,30 +4295,6 @@ msgid ""
 "%s"
 msgstr ""
 "Nem sikerült előkészíteni a projektfájl parancsot:\n"
-"\n"
-"%s"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Unable to prepare project file command:\n"
-"\n"
-"%s"
-msgstr ""
-"Nem sikerült előkészíteni a projektfájl parancsot:\n"
-"\n"
-"%s"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"Failed to retrieve data from the project file.\n"
-"The following command failed:\n"
-"\n"
-"%s"
-msgstr ""
-"Nem sikerült adat kinyerni a projektfájlból.\n"
-"A következő parancs futása sikertelen::\n"
 "\n"
 "%s"
 
@@ -4329,6 +4397,17 @@ msgid "Unable to switch to fast journaling mode"
 msgstr "Nem lehet gyors naplózási módra váltani"
 
 #: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr ""
+"Nem sikerült előkészíteni a projektfájl parancsot:\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
 msgstr "Nem sikerült kötni az SQL paramétert"
 
@@ -4406,10 +4485,6 @@ msgid "Unable to bind to blob"
 msgstr "Nem sikerült kötni blob-hoz"
 
 #: src/ProjectFileIO.cpp
-msgid "Unable to decode project document"
-msgstr "Nem sikerült dekódolni a projektdokumentumot"
-
-#: src/ProjectFileIO.cpp
 msgid "Unable to parse project information."
 msgstr "Nem sikerült elemezni a projektinformációkat."
 
@@ -4454,6 +4529,10 @@ msgstr ""
 #: src/ProjectFileIO.cpp
 msgid "Backing up project"
 msgstr "Projekt biztonsági mentése"
+
+#: src/ProjectFileIO.cpp
+msgid "Automatic database backup failed."
+msgstr "Adatbázis automatikus biztonsági mentése nem sikerült."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4718,14 +4797,6 @@ msgstr "A projektfájl nem nyitható meg"
 msgid "Compact"
 msgstr "Kompakt"
 
-#: src/ProjectHistory.cpp
-msgid "Created new project"
-msgstr "Új projekt létrehozva"
-
-#: src/ProjectHistory.cpp
-msgid "Automatic database backup failed."
-msgstr "Adatbázis automatikus biztonsági mentése nem sikerült."
-
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
@@ -4792,12 +4863,10 @@ msgid ""
 "You need to run that version of Audacity to recover the project."
 msgstr ""
 
-#. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
-#. Other tabs in that notebook may have instruments, patch panels etc.
 #: src/ProjectWindow.cpp
-msgid "Main Mix"
-msgstr "Főkeverő"
+#, fuzzy
+msgid "Realtime effects"
+msgstr "Hatás előnézete"
 
 #: src/ProjectWindow.cpp
 msgid "Horizontal Scrollbar"
@@ -4806,6 +4875,134 @@ msgstr "Vízszintes görgetősáv"
 #: src/ProjectWindow.cpp
 msgid "Vertical Scrollbar"
 msgstr "Függőleges görgetősáv"
+
+#. i18n-hint: argument - position of the effect in the effect stack
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Effect %d"
+msgstr "Hatás"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Power"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Replace effect"
+msgstr "Lecseréli a(z) „%s” előbeállítást?"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "%s (missing)"
+msgstr "Hiányzó fájlok"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Removed %s from %s"
+msgstr "Címkék importálva innen: „%s”"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Remove %s"
+msgstr "Eltávolítás"
+
+#. i18n-hint: undo history,
+#. first and second parameters - realtime effect names
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replaced %s with %s"
+msgstr "Lecseréli a(z) „%s” előbeállítást?"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Replace %s"
+msgstr "Lecseréli a(z) „%s” előbeállítást?"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+msgid "Unknown"
+msgstr "Ismeretlen"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Hatás"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Beállítások értékei…"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Add effect"
+msgstr "Összes hatás"
+
+#. i18n-hint: Hyperlink to the effects stack panel tutorial video
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s up in %s"
+msgstr "'%s' felfelé mozgatva"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Moved %s down in %s"
+msgstr "'%s' lefelé mozgatva"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Change effect order"
+msgstr "Sebesség módosítása"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#. second parameter - track name
+#.
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Added %s to %s"
+msgstr "„%s” módosítva erre: %s"
+
+#. i18n-hint: undo history record
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Add %s"
+msgstr "%s igazítva"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "Hatások engedélyezése"
+
+#. i18n-hint: argument - track name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "Realtime effects for %s"
+msgstr "Alkalmazott hatás: %s"
 
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
@@ -4910,8 +5107,7 @@ msgstr "Eszközök"
 msgid "Transport"
 msgstr "Átvitel"
 
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MixerToolBar.cpp
+#: src/Screenshot.cpp
 msgid "Mixer"
 msgstr "Keverő"
 
@@ -5036,14 +5232,6 @@ msgid "Specify New Filename:"
 msgstr "Új fájlnév megadása:"
 
 #: src/SelectUtilities.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Nem zárolható terület\n"
-"a projekt végén túl."
-
-#: src/SelectUtilities.cpp
 msgid "Position"
 msgstr "Pozíció"
 
@@ -5060,6 +5248,8 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Figyelmeztetés - Túl hosszú blokkfájlok csonkítása"
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
 msgstr "&Előnézet"
@@ -5072,7 +5262,7 @@ msgstr "Tiszta elő&nézet"
 msgid "&Settings"
 msgstr "&Beállítások"
 
-#: src/ShuttleGui.cpp
+#: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "Debu&g"
 msgstr "Hibake&resés"
 
@@ -5152,111 +5342,115 @@ msgstr "Ne jelenjen meg többet indításkor"
 msgid "Connection to project file is null"
 msgstr "Projektfájladatok vizsgálata"
 
-#: src/Tags.cpp
+#: src/SqliteSampleBlock.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
+#: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Előadó neve"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Title"
 msgstr "Szám címe"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Album Title"
 msgstr "Album címe"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Track Number"
 msgstr "Szám sorszáma"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Year"
 msgstr "Év"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genre"
 msgstr "Műfaj"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr "A mezőkben való navigáláshoz használja a nyíl billentyűket (vagy szerkesztés után az ENTER-t)."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Tag"
 msgstr "Címke"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Value"
 msgstr "Érték"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Add"
 msgstr "&Hozzáadás"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Remove"
 msgstr "&Eltávolítás"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Genres"
 msgstr "Műfajok"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "E&dit..."
 msgstr "Szer&kesztés…"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Rese&t..."
 msgstr "Visszaállí&tás…"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Template"
 msgstr "Sablon"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "&Load..."
 msgstr "&Betöltés…"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Set De&fault"
 msgstr "Beállítás ala&pértelmezettként"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Don't show this when exporting audio"
 msgstr "Ne jelenjen meg többet hang exportálásakor"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Edit Genres"
 msgstr "Műfajok szerkesztése"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to save genre file."
 msgstr "Nem sikerült elmenteni a műfajfájl."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Reset Genres"
 msgstr "Műfajok visszaállítása"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
 msgstr "Biztosan vissza kívánja állítani a műfajok listáját az alapértékekre?"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Unable to open genre file."
 msgstr "A műfajfájl nem nyitható meg."
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Load Metadata As:"
 msgstr "Metaadatok betöltése másként:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Error Loading Metadata"
 msgstr "Hiba a metaadatok betöltésekor"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Save Metadata As:"
 msgstr "Metaadatok mentése másként:"
 
-#: src/Tags.cpp
+#: src/TagsEditor.cpp
 msgid "Error Saving Tags File"
 msgstr "Hiba a címkefájl mentésekor"
 
@@ -5270,8 +5464,8 @@ msgstr "Hiba a címkefájl mentésekor"
 #.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Validator.cpp
 msgid "Duration"
 msgstr "Időtartam"
 
@@ -5351,7 +5545,7 @@ msgid "Recording start:"
 msgstr "Felvétel kezdete:"
 
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp
+#: src/effects/VST3/VST3UIValidator.cpp src/effects/ladspa/LadspaEffect.cpp
 msgid "Duration:"
 msgstr "Időtartam:"
 
@@ -5593,13 +5787,6 @@ msgstr "(Esc a mégsem)"
 msgid "TrackView"
 msgstr "Sávnézet"
 
-#. i18n-hint: The %d is replaced by the number of the track.
-#. i18n-hint: compose a name identifying an unnamed track by number
-#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
-#, c-format
-msgid "Track %d"
-msgstr "%d. sáv"
-
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
@@ -5625,6 +5812,12 @@ msgstr " Kiválasztott"
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
 msgstr " Szinkronizáció zárolva"
+
+#. i18n-hint: The %d is replaced by the number of the track.
+#: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
+#, c-format
+msgid "Track %d"
+msgstr "%d. sáv"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
@@ -5707,9 +5900,20 @@ msgstr "Sáv mozgatása &fel"
 msgid "Move Track Down"
 msgstr "Sáv mozgatása &le"
 
-#: src/UndoManager.cpp
-msgid "Discarding undo/redo history"
-msgstr ""
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
+msgid "Playing"
+msgstr "Lejátszás"
+
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
+msgid "Recording"
+msgstr "Felvétel"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5748,6 +5952,15 @@ msgstr "Kalibrálás befejeződött"
 msgid "Resampling failed."
 msgstr "Újramintavételezés sikertelen."
 
+#: src/WaveTrack.cpp src/export/ExportFFmpegDialogs.cpp
+msgid "Audio"
+msgstr "Hang"
+
+#: src/WaveTrack.cpp
+#, fuzzy
+msgid "Wave Track"
+msgstr "Sáv mozgatása"
+
 #. i18n-hint Template for clip name generation on copy-paste
 #: src/WaveTrack.cpp
 #, c-format
@@ -5770,6 +5983,153 @@ msgstr "Nincs elég elérhető hely a kijelölés beillesztéséhez"
 msgid "There is not enough room available to expand the cut line"
 msgstr "Nincs elég elérhető hely a metszésvonal kibővítéséhez"
 
+#. i18n-hint: Share audio button text, keep as short as possible
+#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Hang összehasonlítása"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: src/cloud/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "K&ijelölés eszköztár"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "Link account"
+msgstr "Lengés mennyisége"
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: src/cloud/audiocom/LinkAccountDialog.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: src/cloud/audiocom/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "Account linked successfully!"
+msgstr "A fájl sikeresen visszafejtve\n"
+
+#: src/cloud/audiocom/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "&Ok"
+msgstr "&OK"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "&Go to my file"
+msgstr "Exportálása fájlba."
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr "Biztosan meg szeretné szakítani?"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Hang gyorsítótárazása"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Upload complete!"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Upload error"
+msgstr "Ismeretlen hiba"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Export error"
+msgstr "Makró exportálása"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "A célfájl nem sikerült megnyitása írásra"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Elemzés…"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
+"\n"
+"If you have problems uploading, try the Link Account button."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Hang gyorsítótárazása"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Eltelt idő:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
+msgid "Remaining Time:"
+msgstr "Hátralévő idő:"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Shareable link"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only people you share this link with can access your audio"
+msgstr ""
+
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
@@ -5786,7 +6146,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/AudacityCommand.cpp src/effects/EffectBase.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "%s alkalmazása…"
@@ -5956,11 +6316,6 @@ msgstr "Klipek"
 msgid "Envelopes"
 msgstr "Burkológörbe"
 
-#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
-#: src/export/ExportMultiple.cpp
-msgid "Labels"
-msgstr "Címkék"
-
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
 msgstr "Dobozok"
@@ -6054,7 +6409,8 @@ msgid "Builtin Commands"
 msgstr "Beépített parancsok"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3EffectsModule.cpp
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
@@ -6180,6 +6536,8 @@ msgstr "Eszköztárak"
 
 #: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Effects"
 msgstr "Hatások"
 
@@ -6319,7 +6677,7 @@ msgstr "Beállítás"
 msgid "Add"
 msgstr "Hozzáadás"
 
-#: src/commands/SelectCommand.cpp src/effects/EffectUI.cpp
+#: src/commands/SelectCommand.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "Eltávolítás"
@@ -6572,7 +6930,7 @@ msgstr "Sáv beállítása"
 msgid "Sets various values for a track."
 msgstr "Egy sáv több értékét beállítja."
 
-#: src/effects/Amplify.cpp
+#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
 msgstr "Erősítés"
 
@@ -6596,7 +6954,7 @@ msgstr "Ú&j csúcsamplitúdó (dB):"
 msgid "Allo&w clipping"
 msgstr "Le&vágás engedélyezése"
 
-#: src/effects/AutoDuck.cpp
+#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
 msgid "Auto Duck"
 msgstr "Automatikus lehalkítás"
 
@@ -6663,7 +7021,7 @@ msgstr "&Küszöbszint:"
 msgid "Preview not available"
 msgstr "Előnézet nem érhető el"
 
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
 msgstr "Basszus és szoprán"
 
@@ -6707,7 +7065,7 @@ msgstr "Szint"
 msgid "&Link Volume control to Tone controls"
 msgstr "Hangerőszabályzó össze&kapcsolása a hangvezérlőkkel"
 
-#: src/effects/ChangePitch.cpp
+#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
 msgstr "Hangmagasság változtatása"
 
@@ -6822,13 +7180,13 @@ msgstr "78"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
-#: src/effects/ChangeSpeed.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/ChangeSpeed.cpp src/effects/EffectUI.cpp
+#: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "n/a"
 msgstr "n/a"
 
-#: src/effects/ChangeSpeed.cpp
+#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Speed"
 msgstr "Sebesség módosítása"
 
@@ -6905,7 +7263,7 @@ msgctxt "change speed"
 msgid "to"
 msgstr "eddig"
 
-#: src/effects/ChangeTempo.cpp
+#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Tempo"
 msgstr "Tempó módosítása"
 
@@ -6969,7 +7327,7 @@ msgstr "e&ddig"
 msgid "Length in seconds from %s, to"
 msgstr "Hossz másodpercekben ettől %s, eddig"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
 msgid "Click Removal"
 msgstr "Kattogás eltávolítás"
 
@@ -7002,7 +7360,7 @@ msgstr "Legnagyobb tüskeszélesség (minél nagyobb, annál érzékenyebb):"
 msgid "Max Spike Width"
 msgstr "Legnagyobb tüskeszélesség"
 
-#: src/effects/Compressor.cpp
+#: src/effects/Compressor.cpp resources/EffectsMenuDefaults.xml
 msgid "Compressor"
 msgstr "Tömörítő"
 
@@ -7212,7 +7570,7 @@ msgstr "&Visszaállítás"
 msgid "&Difference:"
 msgstr "&Különbség:"
 
-#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUIPrefs.cpp
+#: src/effects/Contrast.cpp src/menus/HelpMenus.cpp src/prefs/GUISettings.cpp
 msgid "&Help"
 msgstr "&Súgó"
 
@@ -7526,7 +7884,7 @@ msgstr "2. paraméter"
 msgid "Number of repeats"
 msgstr "Ismétlések száma"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
 msgid "Distortion"
 msgstr "Torzítás"
 
@@ -7654,7 +8012,7 @@ msgstr "&Amplitúdó (0-1):"
 
 #: src/effects/DtmfGen.cpp src/effects/Noise.cpp src/effects/Silence.cpp
 #: src/effects/ToneGen.cpp src/effects/TruncSilence.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Validator.cpp
 msgid "&Duration:"
 msgstr "I&dőtartam:"
 
@@ -7691,7 +8049,7 @@ msgstr "Némítása időtartama:"
 msgid "%0.f ms"
 msgstr "%0.f mp"
 
-#: src/effects/Echo.cpp
+#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
 msgstr "Visszhang"
 
@@ -7749,11 +8107,11 @@ msgstr "%s: nem egy érvényes előbeállítás-fájl.\n"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s: másik hatáshoz, előállítóhoz és elemzőhöz való.\n"
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Preparing preview"
 msgstr "Előnézet előkészítése"
 
-#: src/effects/Effect.cpp
+#: src/effects/EffectBase.cpp
 msgid "Previewing"
 msgstr "Előnézet"
 
@@ -7761,7 +8119,7 @@ msgstr "Előnézet"
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
-#: src/effects/Effect.h
+#: src/effects/EffectBase.h
 msgid "Nyquist"
 msgstr "Nyquist"
 
@@ -7837,124 +8195,42 @@ msgstr ""
 msgid "Command failed to initialize"
 msgstr "A parancs inicializálása nem sikerült"
 
-#: src/effects/EffectUI.cpp
-msgid "Effects Rack"
-msgstr "Hatások tár"
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+msgid "&Generate"
+msgstr "&Előállítás"
 
 #: src/effects/EffectUI.cpp
-msgid "&Apply"
-msgstr "&Alkalmaz"
-
-#: src/effects/EffectUI.cpp
-msgid "Latency: 0"
-msgstr "Késleltetés: 0"
-
-#: src/effects/EffectUI.cpp
-msgid "&Bypass"
-msgstr "&Kitérés"
-
-#: src/effects/EffectUI.cpp
-msgid "Active State"
-msgstr "Aktív állapot"
-
-#: src/effects/EffectUI.cpp
-msgid "Set effect active state"
-msgstr "Hatás aktív állapotának beállítása"
-
-#: src/effects/EffectUI.cpp
-msgid "Show/Hide Editor"
-msgstr "Szerkesztő megjelenítése/elrejtése"
-
-#: src/effects/EffectUI.cpp
-msgid "Open/close effect editor"
-msgstr "Hatásszerkesztő megnyitása vagy bezárása"
-
-#: src/effects/EffectUI.cpp
-msgid "Move Up"
-msgstr "Mozgatás fel"
-
-#: src/effects/EffectUI.cpp
-msgid "Move effect up in the rack"
-msgstr "Hatás áthelyezése felfelé a tárban"
-
-#: src/effects/EffectUI.cpp
-msgid "Move Down"
-msgstr "Mozgatás le"
-
-#: src/effects/EffectUI.cpp
-msgid "Move effect down in the rack"
-msgstr "Hatás áthelyezése lefelé a tárban"
-
-#: src/effects/EffectUI.cpp
-msgid "Favorite"
-msgstr "Kedvenc"
-
-#: src/effects/EffectUI.cpp
-msgid "Mark effect as a favorite"
-msgstr "Hatás megjelölése kedvencként"
-
-#: src/effects/EffectUI.cpp
-msgid "Remove effect from the rack"
-msgstr "Hatás eltávolítása a tárból"
-
-#: src/effects/EffectUI.cpp
-msgid "Name of the effect"
-msgstr "A hatás neve"
-
-#: src/effects/EffectUI.cpp
-#, c-format
-msgid "Latency: %4d"
-msgstr "Késleltetés: %4d"
-
-#: src/effects/EffectUI.cpp
-msgid "Some Command"
-msgstr "Néhány parancs"
+msgid "Enable"
+msgstr "Engedélyezés"
 
 #: src/effects/EffectUI.cpp
 msgid "Manage presets and options"
 msgstr "Előbeállítások és opciók kezelése"
 
 #: src/effects/EffectUI.cpp
-msgid "&Manage"
-msgstr "Ke&zelés"
+#, fuzzy
+msgid "Presets && settings"
+msgstr "Jelenlegi beállítások"
 
 #: src/effects/EffectUI.cpp
-msgid "Start and stop playback"
+#, fuzzy
+msgid "Start and stop preview"
 msgstr "Lejátszás indítása és megállítása"
-
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
-msgid "Start &Playback"
-msgstr "Lejátszás &indítása"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
 msgstr "Hatás előnézete"
 
+#. i18n-hint: The access key "&P" should be the same in
+#. "Stop &Preview" and "Start &Preview"
 #: src/effects/EffectUI.cpp
-msgid "&Preview effect"
-msgstr "&Hatás előnézete"
+#, fuzzy
+msgid "Stop &Preview"
+msgstr "&Előnézet"
 
 #: src/effects/EffectUI.cpp
-msgid "Skip backward"
-msgstr "Kihagyás visszafelé"
-
-#: src/effects/EffectUI.cpp
-msgid "Skip &Backward"
-msgstr "Kihagyás &visszafelé"
-
-#: src/effects/EffectUI.cpp
-msgid "Skip forward"
-msgstr "Kihagyás előre"
-
-#: src/effects/EffectUI.cpp
-msgid "Skip &Forward"
-msgstr "Kihagyás &előre"
-
-#: src/effects/EffectUI.cpp
-msgid "Enable"
-msgstr "Engedélyezés"
+msgid "&Apply"
+msgstr "&Alkalmaz"
 
 #: src/effects/EffectUI.cpp
 msgid "Save Preset..."
@@ -8036,16 +8312,6 @@ msgstr ""
 "\n"
 "Lecseréli?"
 
-#. i18n-hint: The access key "&P" should be the same in
-#. "Stop &Playback" and "Start &Playback"
-#: src/effects/EffectUI.cpp
-msgid "Stop &Playback"
-msgstr "Lejátszás me&gállítása"
-
-#: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
-msgid "Play"
-msgstr "Lejátszás"
-
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
 msgid "B-spline"
@@ -8064,10 +8330,12 @@ msgid "Equalization"
 msgstr "Kiegyenlítés"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Szűrőgörbe EQ"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafikus EQ"
 
@@ -8447,11 +8715,11 @@ msgstr ""
 "SSE: %s\n"
 "SSE menetes: %s\n"
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
 msgstr "Felkeverés"
 
-#: src/effects/Fade.cpp
+#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
 msgstr "Lekeverés"
 
@@ -8487,7 +8755,7 @@ msgstr "&Leállító küszöbszint (minták):"
 msgid "There is not enough room available to generate the audio"
 msgstr "Nincs elég elérhető hely a hang előállításához"
 
-#: src/effects/Invert.cpp
+#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
 msgid "Invert"
 msgstr "Megfordítás"
 
@@ -8515,7 +8783,7 @@ msgstr "észlelt hangosság"
 msgid "RMS"
 msgstr "RMS"
 
-#: src/effects/Loudness.cpp
+#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
 msgstr "Hangosság normalizálása"
 
@@ -8611,6 +8879,7 @@ msgid "Old"
 msgstr "Régi"
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
+#: resources/EffectsMenuDefaults.xml
 msgid "Noise Reduction"
 msgstr "Zajcsökkentés"
 
@@ -8861,7 +9130,7 @@ msgstr "Válasz-/lecsengési idő"
 msgid "Re&move"
 msgstr "Eltá&volítás"
 
-#: src/effects/Normalize.cpp
+#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
 msgstr "Normalizálás"
 
@@ -8926,7 +9195,7 @@ msgstr "Csúcsamplitúdó dB"
 msgid "N&ormalize stereo channels independently"
 msgstr "Sztereócsatornák &független normalizálása"
 
-#: src/effects/Paulstretch.cpp
+#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
 msgid "Paulstretch"
 msgstr "Paul-nyújtás"
 
@@ -8988,7 +9257,7 @@ msgstr ""
 "Próbálja meg növelni a hangkijelölést legalább %.1f másodpercre,\n"
 "vagy csökkentse az „Időfelbontást” kevesebb mint %.1f másodpercre."
 
-#: src/effects/Phaser.cpp
+#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
 msgid "Phaser"
 msgstr "Fézer"
 
@@ -9052,7 +9321,13 @@ msgstr "&Kimeneti növekedés (dB):"
 msgid "Output gain (dB)"
 msgstr "Kimeneti növekedés (dB)"
 
-#: src/effects/Repair.cpp
+#. i18n-hint: First %s is an effect name, second is a track name
+#: src/effects/RealtimeEffectStateUI.cpp
+#, fuzzy, c-format
+msgid "%s - %s"
+msgstr "%d - %s\n"
+
+#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
 msgstr "Javítás"
 
@@ -9084,7 +9359,7 @@ msgstr ""
 "\n"
 "A több körülvevő hang jobban végrehajtható."
 
-#: src/effects/Repeat.cpp
+#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
 msgid "Repeat"
 msgstr "Ismétlés"
 
@@ -9155,7 +9430,7 @@ msgstr "Templomcsarnok"
 msgid "Cathedral"
 msgstr "Katedrális"
 
-#: src/effects/Reverb.cpp
+#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
 msgstr "Visszaverődés"
 
@@ -9203,12 +9478,7 @@ msgstr "S&ztereószélesség (%):"
 msgid "Wet O&nly"
 msgstr "Csak ne&dves"
 
-#: src/effects/Reverb.cpp
-#, c-format
-msgid "Reverb: %s"
-msgstr "Visszaverődés: %s"
-
-#: src/effects/Reverse.cpp
+#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
 msgstr "Megfordítás"
 
@@ -9416,7 +9686,7 @@ msgstr "Jobb csatorna újramintavételezése"
 msgid "Mixing down to mono"
 msgstr "Lekeverés monóra"
 
-#: src/effects/TimeScale.cpp
+#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Sliding Stretch"
 msgstr "Nyújtás"
@@ -9473,6 +9743,12 @@ msgstr "Fűrészfog"
 msgid "Square, no alias"
 msgstr "Négyszög, nincs álnév"
 
+#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Háromszög"
+
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
 msgstr "Ciripelés"
@@ -9526,7 +9802,7 @@ msgstr "Felismert csend csonkítása"
 msgid "Compress Excess Silence"
 msgstr "Felesleges csend tömörítése"
 
-#: src/effects/TruncSilence.cpp
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Csend csonkítása"
 
@@ -9567,38 +9843,32 @@ msgstr "VST-hatások"
 msgid "Adds the ability to use VST effects in Audacity."
 msgstr "Hozzáadja a VST-hatások használatának képességét az Audacity programhoz."
 
-#: src/effects/VST/VSTEffect.cpp
-msgid "Scanning Shell VST"
-msgstr "Héj VST vizsgálata"
-
-#: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "Registering %d of %d: %-64.64s"
-msgstr "%d / %d regisztrálása: %-64.64s"
-
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LoadLV2.cpp src/effects/vamp/LoadVamp.cpp
 msgid "Could not load the library"
 msgstr "Nem sikerült betölteni a könyvtárat"
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "VST Effect Options"
 msgstr "VST-hatás beállításai"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Buffer Size"
 msgstr "Pufferméret"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
 msgstr "&Pufferméret (8-tól 1048576 mintáig):"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 msgid "Latency Compensation"
 msgstr "Késleltetési kompenzáció"
 
@@ -9606,12 +9876,14 @@ msgstr "Késleltetési kompenzáció"
 msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
-#: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
-#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+#: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Preferences.cpp
 msgid "Enable &compensation"
 msgstr "&Kompenzáció engedélyezése"
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Graphical Mode"
 msgstr "Grafikus mód"
 
@@ -9620,7 +9892,8 @@ msgstr "Grafikus mód"
 msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "A legtöbb VST-hatásnak grafikus felülete van a paraméterértékek beállításához."
 
-#: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
+#: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
+#: src/effects/lv2/LV2Preferences.cpp
 msgid "Enable &graphical interface"
 msgstr "&Grafikus felület engedélyezése"
 
@@ -9670,7 +9943,7 @@ msgid "Unable to load presets file."
 msgstr "Az előbeállítás-fájl nem tölthető be."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
-#: src/effects/lv2/LV2Effect.cpp
+#: src/effects/lv2/LV2Ports.cpp
 msgid "Effect Settings"
 msgstr "Hatásbeállítások"
 
@@ -9693,7 +9966,77 @@ msgstr "Ez a paraméterfájl innen lett elmentve: %s. Folytatja?"
 msgid "VST"
 msgstr "VST"
 
-#: src/effects/Wahwah.cpp
+#: src/effects/VST3/VST3Effect.cpp
+msgid "VST3"
+msgstr ""
+
+#. i18n-hint VST3 effect description string
+#: src/effects/VST3/VST3Effect.cpp
+#, c-format
+msgid "SubCategories: %s"
+msgstr ""
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Save VST3 Preset As:"
+msgstr "VST-előbeállítás mentése másként:"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "VST3 preset file"
+msgstr "VST-előbeállítás fájlok"
+
+#. i18n-hint: VST3 preset export error
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Cannot open file"
+msgstr "Nem sikerült megnyitni a fájlt"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Failed to save VST3 preset to file"
+msgstr "Nem sikerült beállítani az előbeállítás nevét"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy
+msgid "Load VST3 preset:"
+msgstr "VST-előbeállítás betöltése:"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Cannot open VST3 preset file %s"
+msgstr "A projektfájl nem nyitható meg"
+
+#: src/effects/VST3/VST3Effect.cpp
+#, fuzzy, c-format
+msgid "Unable to apply VST3 preset file %s"
+msgstr "Az előbeállítás-fájl nem tölthető be."
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "VST3 Effects"
+msgstr "VST-hatások"
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, fuzzy
+msgid "Adds the ability to use VST3 effects in Audacity."
+msgstr "Hozzáadja a VST-hatások használatának képességét az Audacity programhoz."
+
+#: src/effects/VST3/VST3EffectsModule.cpp
+#, c-format
+msgid "VST3 module error: %s"
+msgstr ""
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+
+#: src/effects/VST3/VST3OptionsDialog.cpp
+#, fuzzy
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "A legtöbb VST-hatásnak grafikus felülete van a paraméterértékek beállításához."
+
+#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Wahwah"
 
@@ -9721,81 +10064,6 @@ msgstr "Wah frekvencia&eltolás (%):"
 msgid "Wah frequency offset in percent"
 msgstr "Wah frekvenciaeltolás százalékban"
 
-#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Audio Unit Effects"
-msgstr "Hangegység hatások"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Hangegység hatások támogatását biztosítja az Audacity programhoz"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Could not find component"
-msgstr "Az összetevő nem található"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Could not initialize component"
-msgstr "Nem sikerült inicializálni az összetevőt"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Audio Unit Effect Options"
-msgstr "Hangegység hatás beállításai"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "User Interface"
-msgstr "Felhasználói felület"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr ""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Select &interface"
-msgstr "&Felület kiválasztása"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Full"
-msgstr "Teljes"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Generic"
-msgstr "Általános"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Basic"
-msgstr "Alap"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Import Audio Unit Presets"
-msgstr "Hangegység előbeállítások importálása"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Presets (may select multiple)"
-msgstr "Előbeállítások (több is kiválasztható)"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp src/export/ExportMP3.cpp
-msgid "Preset"
-msgstr "Előbeállítás"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Location"
-msgstr "Hely"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
-msgid "Couldn't open \"%s\""
-msgstr "Nem sikerült megnyitni \"%s\""
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
-msgid "Unable to read the preset from \"%s\""
-msgstr "Nem sikerült olvasni az előbeállítás-fájlt: \"%s\""
-
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to encode preset from \"%s\""
@@ -9804,14 +10072,6 @@ msgstr "Nem sikerült az előbeállítása titkosítása \"%s\""
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Unable to store preset in config file"
 msgstr "Nem sikerült tárolni az előbeállítást a konfigurációs fájlban"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, c-format
-msgid ""
-"Could not import \"%s\" preset\n"
-"\n"
-"%s"
-msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9840,20 +10100,21 @@ msgid "Import Audio Unit Preset As %s:"
 msgstr "Hangegység-előbeállítások importálása mint %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to set preset name"
-msgstr "Nem sikerült beállítani az előbeállítás nevét"
+#, c-format
+msgid ""
+"Could not import \"%s\" preset\n"
+"\n"
+"%s"
+msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to retrieve preset content"
-msgstr "Nem lehet lekérni az előbeállítás tartalmát"
+msgid "Import Audio Unit Presets"
+msgstr "Hangegység előbeállítások importálása"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert property list to XML data"
-msgstr "Nem sikerült konvertálni a tulajdonságlistát XML adattá"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "XML data is empty after conversion"
-msgstr "Az XML adat üres konverzió után"
+#, c-format
+msgid "Couldn't open \"%s\""
+msgstr "Nem sikerült megnyitni \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9861,23 +10122,101 @@ msgid "Failed to write XML preset to \"%s\""
 msgstr "Nem sikerült az XML előbeállítása írása \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to convert preset to internal format"
-msgstr "Nem sikerült importálni az előbeállítást belső formumúra"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Failed to create property list for preset"
-msgstr "Nem sikerült konvertálni a tulajdonságlistát előbeállítássá"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
-msgid "Failed to set class info for \"%s\" preset"
-msgstr "Nem sikerült beállítani az osztályinformáció \"%s\" előbeállításúra"
+msgid "Unable to read the preset from \"%s\""
+msgstr "Nem sikerült olvasni az előbeállítás-fájlt: \"%s\""
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
 msgstr "Hangegység"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "Audio Unit Effect Options"
+msgstr "Hangegység hatás beállításai"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "User Interface"
+msgstr "Felhasználói felület"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
+msgstr ""
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
+msgid "Select &interface"
+msgstr "&Felület kiválasztása"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Full"
+msgstr "Teljes"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+msgid "Generic"
+msgstr "Általános"
+
+#: src/effects/audiounits/AudioUnitEffectOptionsDialog.h
+msgid "Basic"
+msgstr "Alap"
+
+#. i18n-hint: Audio Unit is the name of an Apple audio software protocol
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Audio Unit Effects"
+msgstr "Hangegység hatások"
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Provides Audio Unit Effects support to Audacity"
+msgstr "Hangegység hatások támogatását biztosítja az Audacity programhoz"
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Could not find component"
+msgstr "Az összetevő nem található"
+
+#: src/effects/audiounits/AudioUnitEffectsModule.cpp
+msgid "Could not initialize component"
+msgstr "Nem sikerült inicializálni az összetevőt"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to decode \"%s\" preset"
+msgstr "Nem sikerült beállítani az osztályinformáció \"%s\" előbeállításúra"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to convert \"%s\" preset to internal format"
+msgstr "Nem sikerült importálni az előbeállítást belső formumúra"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, fuzzy, c-format
+msgid "Failed to create property list for \"%s\" preset"
+msgstr "Nem sikerült konvertálni a tulajdonságlistát előbeállítássá"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+#, c-format
+msgid "Failed to set class info for \"%s\" preset"
+msgstr "Nem sikerült beállítani az osztályinformáció \"%s\" előbeállításúra"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to set preset name"
+msgstr "Nem sikerült beállítani az előbeállítás nevét"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to retrieve preset content"
+msgstr "Nem lehet lekérni az előbeállítás tartalmát"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "Failed to convert property list to XML data"
+msgstr "Nem sikerült konvertálni a tulajdonságlistát XML adattá"
+
+#: src/effects/audiounits/AudioUnitWrapper.cpp
+msgid "XML data is empty after conversion"
+msgstr "Az XML adat üres konverzió után"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -9923,46 +10262,36 @@ msgid "LADSPA"
 msgstr "LADSPA"
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 Effect Settings"
-msgstr "LV2 hatásbeállítások"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "&Buffer Size (8 to %d) samples:"
-msgstr "&Pufferméret (8-tól %d) mintáig:"
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, fuzzy
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Az LV2 hatásoknak lehet grafikus felületük a paraméterértékek beállításához."
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported feature %s\n"
-msgstr "%s számára nem támogatott tulajdonság kell %s\n"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported option %s\n"
-msgstr "%s számára nem támogatott beállítás kell %s\n"
-
-#: src/effects/lv2/LV2Effect.cpp
-msgid "Generator"
-msgstr "Előállító"
 
 #. i18n-hint: abbreviates
 #. "Linux Audio Developer's Simple Plugin API (LADSPA) version 2"
 #: src/effects/lv2/LV2Effect.h
 msgid "LV2"
 msgstr "LV2"
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "LV2 Effect Settings"
+msgstr "LV2 hatásbeállítások"
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, c-format
+msgid "&Buffer Size (8 to %d) samples:"
+msgstr "&Pufferméret (8-tól %d) mintáig:"
+
+#: src/effects/lv2/LV2Preferences.cpp
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+
+#: src/effects/lv2/LV2Preferences.cpp
+#, fuzzy
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "Az LV2 hatásoknak lehet grafikus felületük a paraméterértékek beállításához."
+
+#: src/effects/lv2/LV2Validator.cpp
+msgid "Generator"
+msgstr "Előállító"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "LV2 Effects"
@@ -10491,6 +10820,11 @@ msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr "FFmpeg: HIBA - Nem foglalható le puffer a hang FIFO-ból való beolvasásához."
 
 #: src/export/ExportFFmpeg.cpp
+#, fuzzy
+msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
+msgstr "FFmpeg: HIBA - Nem sikerült kiírni az utolsó hangkeretet a kimeneti fájlba."
+
+#: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr "FFmpeg: HIBA - Nem sikerült lekérdezni a mintapuffer méretét"
 
@@ -10509,10 +10843,6 @@ msgstr "FFmpeg: HIBA - A keret kódolása sikertelen"
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
 msgstr "FFmpeg: HIBA - Túl sok megmaradt adat."
-
-#: src/export/ExportFFmpeg.cpp
-msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
-msgstr "FFmpeg: HIBA - Nem sikerült kiírni az utolsó hangkeretet a kimeneti fájlba."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
@@ -10581,6 +10911,7 @@ msgid "%d kbps"
 msgstr "%d kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Bit Rate:"
 msgstr "Bitsebesség:"
 
@@ -10641,10 +10972,6 @@ msgstr "Korlátozott"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "VOIP"
 msgstr "VOIP"
-
-#: src/export/ExportFFmpegDialogs.cpp
-msgid "Audio"
-msgstr "Hang"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Low Delay"
@@ -11199,11 +11526,11 @@ msgstr "Nem sikerült kitalálni a formátumot"
 msgid "Failed to find the codec"
 msgstr "Nem sikerült megtalálni a kodeket"
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 bit"
 
-#: src/export/ExportFLAC.cpp
+#: src/export/ExportFLAC.cpp src/export/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 bit"
 
@@ -11258,6 +11585,7 @@ msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Az MP2 nem exportálható ezzel a mintavételezési gyakorisággal és bitsebességgel"
 
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
+#: src/export/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "A célfájl nem sikerült megnyitása írásra"
 
@@ -11347,6 +11675,10 @@ msgid "Medium"
 msgstr "Közepes"
 
 #: src/export/ExportMP3.cpp
+msgid "Preset"
+msgstr "Előbeállítás"
+
+#: src/export/ExportMP3.cpp
 msgid "Variable"
 msgstr "Változó"
 
@@ -11371,7 +11703,8 @@ msgid "Bit Rate Mode:"
 msgstr "Bitsebesség mód:"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/export/ExportMP3.cpp src/export/ExportWavPack.cpp
+#: src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Minőség"
 
@@ -11548,6 +11881,18 @@ msgstr ""
 "címkéi, így nem tudod különálló hangfájlokba exportálni."
 
 #: src/export/ExportMultiple.cpp
+msgid "Using Label/Track Name"
+msgstr "Címke / sávnév használata"
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering before Label/Track Name"
+msgstr "Számozás a címke / sávnév előtt"
+
+#: src/export/ExportMultiple.cpp
+msgid "Numbering after File name prefix"
+msgstr "Számozás a fájlnév előtagja után"
+
+#: src/export/ExportMultiple.cpp
 msgid "Export files to:"
 msgstr "Fájlok exportálása ide:"
 
@@ -11582,18 +11927,6 @@ msgstr "Első fájlnév"
 #: src/export/ExportMultiple.cpp
 msgid "Name files:"
 msgstr "Fájlok elnevezése:"
-
-#: src/export/ExportMultiple.cpp
-msgid "Using Label/Track Name"
-msgstr "Címke / sávnév használata"
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering before Label/Track Name"
-msgstr "Számozás a címke / sávnév előtt"
-
-#: src/export/ExportMultiple.cpp
-msgid "Numbering after File name prefix"
-msgstr "Számozás a fájlnév előtagja után"
 
 #: src/export/ExportMultiple.cpp
 msgid "File name prefix:"
@@ -11793,6 +12126,71 @@ msgid ""
 msgstr ""
 "Hiba a(z) %s fájl írásakor (megtelt a lemez?).\n"
 "A libsndfile üzenete: „%s”"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Low Quality (Fast)"
+msgstr "Alacsony minőség (leggyorsabb)"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Normal Quality"
+msgstr "Minőség"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "High Quality (Slow)"
+msgstr "Magas minőség"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Very High Quality (Slowest)"
+msgstr "Legjobb minőség (leglassabb)"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "32 bit float "
+msgstr "32-bit lebegőpontos"
+
+#. i18n-hint bps abbreviates "bits per sample"
+#: src/export/ExportWavPack.cpp
+#, fuzzy, c-format
+msgid "%.1f bps"
+msgstr "%.1f mp"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Bit Depth"
+msgstr "Bitmélység:"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Hybrid Mode"
+msgstr "Vbr mód:"
+
+#: src/export/ExportWavPack.cpp
+msgid "Create Correction(.wvc) File"
+msgstr ""
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "WavPack Files"
+msgstr "Fájlok mentése"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Unable to create target file for writing"
+msgstr "A célfájl nem sikerült megnyitása írásra"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting selected audio as WavPack"
+msgstr "A kijelölt hang exportálása mint %s"
+
+#: src/export/ExportWavPack.cpp
+#, fuzzy
+msgid "Exporting the audio as WavPack"
+msgstr "A hang exportálása mint %s"
 
 #: src/import/Import.cpp
 msgid "All supported files"
@@ -12070,11 +12468,6 @@ msgid "Internal error in importer...tag not recognized"
 msgstr "Belső hiba az importálóban...címke nem azonosítható be"
 
 #: src/import/ImportAUP.cpp
-#, c-format
-msgid "Invalid project '%s' attribute."
-msgstr ""
-
-#: src/import/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr ""
 
@@ -12291,11 +12684,11 @@ msgstr "%s fájl megnyitása sikertelen: Helytelen fájltípus."
 msgid "Could not open file %s."
 msgstr "Nem sikerült megnyitni %s fájlt."
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp src/import/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "MP3-fájlok"
 
-#: src/import/ImportMP3.cpp
+#: src/import/ImportMP3_MAD.cpp
 msgid ""
 "Import failed\n"
 "\n"
@@ -12627,6 +13020,21 @@ msgstr "Detektálás"
 msgid "&Import"
 msgstr "&Importálás"
 
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack files"
+msgstr "Fájl mentése mint"
+
+#: src/import/ImportWavPack.cpp
+#, c-format
+msgid "Encountered %d errors decoding WavPack file!"
+msgstr ""
+
+#: src/import/ImportWavPack.cpp
+#, fuzzy
+msgid "WavPack Importer"
+msgstr "Projekt importálása"
+
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
 msgstr ""
@@ -12717,8 +13125,9 @@ msgid "clip not moved"
 msgstr "klip nem mozdult el"
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
-msgid "Clip B&oundaries"
-msgstr "Határ&ok levágása"
+#, fuzzy
+msgid "Audi&o Clips"
+msgstr "Hangfájl"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -12957,12 +13366,14 @@ msgid "Detac&h at Silences"
 msgstr "&Leválasztás csendeknél"
 
 #: src/menus/EditMenus.cpp
-msgid "&Metadata..."
+#, fuzzy
+msgid "&Metadata"
 msgstr "Me&taadat…"
 
 #: src/menus/EditMenus.cpp
-msgid "Pre&ferences..."
-msgstr "&Beállítások…"
+#, fuzzy
+msgid "Pre&ferences"
+msgstr "Beállítások"
 
 #: src/menus/EditMenus.cpp
 msgid "&Delete Key"
@@ -13210,16 +13621,6 @@ msgid "Export as FLAC"
 msgstr "Exportálása FLAC-ként"
 
 #: src/menus/HelpMenus.cpp
-#, c-format
-msgid "Save %s"
-msgstr "%s mentése"
-
-#: src/menus/HelpMenus.cpp
-#, c-format
-msgid "Unable to save %s"
-msgstr "Nem sikerül menteni %s"
-
-#: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
 msgstr "Ezek e problémáid?"
 
@@ -13262,10 +13663,6 @@ msgid "Audio Device Info"
 msgstr "Hangeszköz-információk"
 
 #: src/menus/HelpMenus.cpp
-msgid "MIDI Device Info"
-msgstr "MIDI-eszközök infó"
-
-#: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
 msgstr "&Gyors segítség..."
 
@@ -13294,10 +13691,6 @@ msgstr "&Diagnosztika"
 msgid "Au&dio Device Info..."
 msgstr "&Hangeszköz információk…"
 
-#: src/menus/HelpMenus.cpp
-msgid "&MIDI Device Info..."
-msgstr "&MIDI-eszközök infó…"
-
 #: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "&Napló megjelenítése…"
@@ -13307,8 +13700,17 @@ msgid "&Generate Support Data..."
 msgstr "&Támogatási adatok előállítása…"
 
 #: src/menus/HelpMenus.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
 msgstr "&Frissítések keresése…"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&About Audacity"
+msgstr "Az Audacity névjegye"
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -13417,6 +13819,16 @@ msgid "Detach Labeled Audio"
 msgstr "Címkézett hang leválasztása"
 
 #: src/menus/LabelMenus.cpp
+msgid "Created new label track"
+msgstr "Új címkesáv létrehozva"
+
+#: src/menus/LabelMenus.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "New Track"
+msgstr "Új sáv"
+
+#: src/menus/LabelMenus.cpp
 msgid "&Labels"
 msgstr "&Címkék"
 
@@ -13506,6 +13918,10 @@ msgstr "Címke feldarabolása"
 msgid "Label Join"
 msgstr "Címke egyesítése"
 
+#: src/menus/LabelMenus.cpp
+msgid "&Label Track"
+msgstr "&Címkesáv"
+
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
 msgstr "Visszafelé mozgatás az &aktív ablakokon keresztül"
@@ -13567,16 +13983,12 @@ msgid "Toggle Focuse&d Track"
 msgstr "Ki&választott sáv be- és kikapcsolása"
 
 #: src/menus/PluginMenus.cpp
-msgid "Uncategorized"
-msgstr "Kategorizálatlan"
-
-#: src/menus/PluginMenus.cpp
 msgid "..."
 msgstr "..."
 
 #: src/menus/PluginMenus.cpp
-msgid "Unknown"
-msgstr "Ismeretlen"
+msgid "Uncategorized"
+msgstr "Kategorizálatlan"
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
@@ -13596,17 +14008,14 @@ msgid "&Repeat %s"
 msgstr "&Ismétlés %s"
 
 #: src/menus/PluginMenus.cpp
-#, c-format
-msgid "Plug-in %d to %d"
+#, fuzzy, c-format
+msgid "Plugin %d to %d"
 msgstr "Bővítmény %d -> %d"
 
 #: src/menus/PluginMenus.cpp
-msgid "&Generate"
-msgstr "&Előállítás"
-
-#: src/menus/PluginMenus.cpp
-msgid "Add / Remove Plug-ins..."
-msgstr "Bővítmények hozzáadása / eltávolítása…"
+#, fuzzy
+msgid "Plugin Manager"
+msgstr "Bővítmény-beállítások"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Generator"
@@ -13615,6 +14024,11 @@ msgstr "Utolsó előállító ismétlése"
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
 msgstr "&Hatás"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Add Realtime Effects"
+msgstr "Hatások engedélyezése"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -13637,8 +14051,9 @@ msgid "Repeat Last Tool"
 msgstr "Utolsó eszköz ismétlése"
 
 #: src/menus/PluginMenus.cpp
-msgid "&Macros..."
-msgstr "&Makrók…"
+#, fuzzy
+msgid "&Macro Manager"
+msgstr "Ke&zelés"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
@@ -14075,6 +14490,10 @@ msgid "Reset Toolb&ars"
 msgstr "Eszköztár&ak visszaállítása"
 
 #: src/menus/TrackMenus.cpp
+msgid "Mix"
+msgstr "Keverés"
+
+#: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "Minden hang megjelenítése a(z) „%s” sávból"
@@ -14236,30 +14655,6 @@ msgid "Adjusted Pan"
 msgstr "Görgetés beállítva"
 
 #: src/menus/TrackMenus.cpp
-msgid "Created new audio track"
-msgstr "Új hangsáv létrehozva"
-
-#: src/menus/TrackMenus.cpp
-msgid "New Track"
-msgstr "Új sáv"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new stereo audio track"
-msgstr "Új sztereó hangsáv létrehozva"
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new label track"
-msgstr "Új címkesáv létrehozva"
-
-#: src/menus/TrackMenus.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Az Audacity ezen verziója projektablakonként csak egyetlen idősávot engedélyez."
-
-#: src/menus/TrackMenus.cpp
-msgid "Created new time track"
-msgstr "Új idősáv létrehozva"
-
-#: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "New sample rate (Hz):"
 msgstr "Új mintavételezési gyakoriság (Hz):"
@@ -14327,22 +14722,6 @@ msgstr "Aktív hanggal rendelkező sáv nem törölhető"
 #: src/menus/TrackMenus.cpp
 msgid "Add &New"
 msgstr "Új &hozzáadása"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Mono Track"
-msgstr "&Monósáv"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Stereo Track"
-msgstr "&Sztereósáv"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Label Track"
-msgstr "&Címkesáv"
-
-#: src/menus/TrackMenus.cpp
-msgid "&Time Track"
-msgstr "&Idősáv"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x"
@@ -14523,21 +14902,6 @@ msgstr "Kiválasztott sáv mozgatása a tetejére"
 #, fuzzy
 msgid "Move Focused Track to &Bottom"
 msgstr "Kiválasztott sáv mozgatása az aljára"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
-msgid "Playing"
-msgstr "Lejátszás"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused;
-#. progressive verb form
-#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
-#: src/toolbars/ControlToolBar.cpp
-msgid "Recording"
-msgstr "Felvétel"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
@@ -14876,10 +15240,6 @@ msgstr "Sáv &neve (be/ki)"
 msgid "&Show Clipping (on/off)"
 msgstr "&Levágás megjelenítése (be/ki)"
 
-#: src/menus/ViewMenus.cpp src/toolbars/EditToolBar.cpp
-msgid "Show Effects Rack"
-msgstr "Hatások tár megjelenítése"
-
 #: src/menus/WindowMenus.cpp
 msgid "&Window"
 msgstr "&Ablak"
@@ -15201,6 +15561,11 @@ msgstr "Kiadó szerint csoportosítva"
 msgid "Grouped by Type"
 msgstr "Típus szerint csoportosítva"
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Default"
+msgstr "Alapbeállítások"
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -15249,18 +15614,6 @@ msgstr "&Rendezés vagy csoportosítás:"
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Maximum effects per group (0 to disable):"
 msgstr "Legtöbb hatás csoportonként (0 = kikapcsolás):"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Plugin Options"
-msgstr "Bővítmény beállítások"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Check for updated plugins when Audacity starts"
-msgstr "Frissített bővítmények keresése az Audacity indításakor"
-
-#: src/prefs/EffectsPrefs.cpp
-msgid "Rescan plugins next time Audacity is started"
-msgstr "Bővítmények újraolvasása az Audacity következő indításakor"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -15460,14 +15813,14 @@ msgstr "Idővonal buboréksúgók megjelenítése"
 msgid "Show Scrub Ruler"
 msgstr "Változó sebességű lejátszás vonalzó megjelenítése"
 
-#: src/prefs/GUIPrefs.cpp
-#, c-format
-msgid "Language \"%s\" is unknown"
-msgstr "A(z) „%s” nyelv ismeretlen"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI"
+
+#: src/prefs/GUISettings.cpp
+#, c-format
+msgid "Language \"%s\" is unknown"
+msgstr "A(z) „%s” nyelv ismeretlen"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
@@ -15549,14 +15902,6 @@ msgid "&Hotkey:"
 msgstr "&Gyorsbillentyű:"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "Key Bindings"
-msgstr "Gyorsbillentyűk"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "View by:"
-msgstr "Nézet:"
-
-#: src/prefs/KeyConfigPrefs.cpp
 msgid "&Tree"
 msgstr "&Fa"
 
@@ -15567,6 +15912,14 @@ msgstr "&Név"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Key"
 msgstr "&Kulcs"
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "Key Bindings"
+msgstr "Gyorsbillentyűk"
+
+#: src/prefs/KeyConfigPrefs.cpp
+msgid "View by:"
+msgstr "Nézet:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by tree"
@@ -16534,16 +16887,14 @@ msgid "Info"
 msgstr "Információ"
 
 #: src/prefs/ThemePrefs.cpp
+#, fuzzy
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
-"\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.)"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
 msgstr ""
 "A témázási lehetőség egy kísérleti funkció.\n"
 "\n"
@@ -16773,11 +17124,6 @@ msgstr "&Minták megjelenítése:"
 msgid "Default audio track &name:"
 msgstr "Alapértelmezett hangsáv&név:"
 
-#. i18n-hint: The default name for an audio track.
-#: src/prefs/TracksPrefs.cpp
-msgid "Audio Track"
-msgstr "Hangsáv"
-
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
 msgstr "Nagyítás váltása"
@@ -16839,6 +17185,61 @@ msgstr "Hullámforma beállításai"
 msgid "Waveform dB &range:"
 msgstr "Hullámforma dB &tartománya:"
 
+#. i18n-hint: Audio setup button text, keep as short as possible
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Setup"
+msgstr "Hangfájl"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Host"
+msgstr "&Kiszolgáló:"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Playback Device"
+msgstr "Lejátszóeszköz"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Recording Device"
+msgstr "Felvevőeszköz"
+
+#. i18n-hint: Audio setup menu
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Recording &Channels"
+msgstr "Felvételi csatornák"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Settings..."
+msgstr "Sp&ektrogram beállítások…"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+msgid "1 (Mono) Recording Channel"
+msgstr "1 (monó) felvételi csatorna"
+
+#: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
+msgid "2 (Stereo) Recording Channels"
+msgstr "2 (sztereó) felvételi csatorna"
+
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "Audio Settings:"
+msgstr "Bővítmény-beállítások"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that manages the audio devices
+#: src/toolbars/AudioSetupToolBar.cpp
+#, fuzzy
+msgid "&Audio Setup Toolbar"
+msgstr "&Szerkesztés eszköztár"
+
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
@@ -16849,6 +17250,10 @@ msgstr "Leállítva"
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
 msgstr "Szünet"
+
+#: src/toolbars/ControlToolBar.cpp
+msgid "Play"
+msgstr "Lejátszás"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Skip to Start"
@@ -16915,14 +17320,6 @@ msgid "Recording Channels"
 msgstr "Felvételi csatornák"
 
 #: src/toolbars/DeviceToolBar.cpp
-msgid "1 (Mono) Recording Channel"
-msgstr "1 (monó) felvételi csatorna"
-
-#: src/toolbars/DeviceToolBar.cpp
-msgid "2 (Stereo) Recording Channels"
-msgstr "2 (sztereó) felvételi csatorna"
-
-#: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
 msgstr "Felvevőeszköz kiválasztása"
 
@@ -16949,26 +17346,6 @@ msgid "&Device Toolbar"
 msgstr "&Eszköz eszköztár"
 
 #: src/toolbars/EditToolBar.cpp
-msgid "Cut selection"
-msgstr "Kijelölés kivágása"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Copy selection"
-msgstr "Kijelölés másolása"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Trim audio outside selection"
-msgstr "Hang levágása a kijelölésen kívül"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Silence audio selection"
-msgstr "Hangkijelölés némítása"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Sync-Lock Tracks"
-msgstr "Sávok szinkronzárolása"
-
-#: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
@@ -16983,6 +17360,18 @@ msgid "Zoom Out"
 msgstr "Kicsinyítés"
 
 #: src/toolbars/EditToolBar.cpp
+msgid "Trim audio outside selection"
+msgstr "Hang levágása a kijelölésen kívül"
+
+#: src/toolbars/EditToolBar.cpp
+msgid "Silence audio selection"
+msgstr "Hangkijelölés némítása"
+
+#: src/toolbars/EditToolBar.cpp
+msgid "Sync-Lock Tracks"
+msgstr "Sávok szinkronzárolása"
+
+#: src/toolbars/EditToolBar.cpp
 #, fuzzy
 msgid "Fit selection to width"
 msgstr "Kijelölés igazítása az ablakban"
@@ -16991,10 +17380,6 @@ msgstr "Kijelölés igazítása az ablakban"
 #, fuzzy
 msgid "Fit project to width"
 msgstr "Projekt igazítása az ablakban"
-
-#: src/toolbars/EditToolBar.cpp
-msgid "Open Effects Rack"
-msgstr "Hatások tár megnyitása"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
@@ -17046,38 +17431,6 @@ msgstr "&Felvételmérő eszköztár"
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Playback Meter Toolbar"
 msgstr "&Lejátszásmérő eszköz"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Recording Volume"
-msgstr "Felvételi hangerő"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Playback Volume"
-msgstr "Lejátszási hangerő"
-
-#: src/toolbars/MixerToolBar.cpp
-#, c-format
-msgid "Recording Volume: %.2f"
-msgstr "Felvételi hangerő: %.2f"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Felvételi hangerő (nem érhető el; rendszerkeverő használata.)"
-
-#: src/toolbars/MixerToolBar.cpp
-#, c-format
-msgid "Playback Volume: %.2f"
-msgstr "Lejátszási hangerő: %.2f"
-
-#: src/toolbars/MixerToolBar.cpp
-msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Lejátszási hangerő (nem érhető el; rendszerkeverő használata.)"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. with the mixer
-#: src/toolbars/MixerToolBar.cpp
-msgid "Mi&xer Toolbar"
-msgstr "Ke&verő eszköztár"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
@@ -17261,10 +17614,6 @@ msgid "Envelope Tool"
 msgstr "Burkológörbe eszköz"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "Zoom Tool"
-msgstr "Nagyítás eszköz"
-
-#: src/toolbars/ToolsToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Draw Tool"
 msgstr "Rajzeszköz"
@@ -17291,10 +17640,6 @@ msgstr "&Burkológörbe eszköz"
 #, fuzzy
 msgid "&Draw Tool"
 msgstr "Rajzeszköz"
-
-#: src/toolbars/ToolsToolBar.cpp
-msgid "&Zoom Tool"
-msgstr "&Nagyítás eszköz"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Multi Tool"
@@ -17408,6 +17753,14 @@ msgstr "Egy &oktávval feljebb"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Down Octa&ve"
 msgstr "Egy oktá&vval lejjebb"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+msgid "MIDI Device Info"
+msgstr "MIDI-eszközök infó"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
+msgid "&MIDI Device Info..."
+msgstr "&MIDI-eszközök infó…"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -17532,11 +17885,6 @@ msgid "S&pectrogram Settings..."
 msgstr "Sp&ektrogram beállítások…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
-msgid "Click and drag to move clip boundary in time"
-msgstr "Kattintás és húzás a sáv áthelyezéséhez az időben"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
 
@@ -17549,6 +17897,16 @@ msgstr ""
 #, fuzzy
 msgid "Clip-Trim-Right"
 msgstr "Levágás"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Clip-Trim-Between"
+msgstr "Levágás"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Click and drag to move clip boundary in time"
+msgstr "Kattintás és húzás a sáv áthelyezéséhez az időben"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Set Wave Clip Name"
@@ -17566,17 +17924,6 @@ msgstr "Módosított klipnév"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Clip Name Edit"
 msgstr "Klipnév módosítása"
-
-#. i18n-hint:
-#. string is the name of a clip
-#. first number is the position of that clip in a sequence of clips,
-#. second number counts the clips
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, c-format
-msgid "%s, %d of %d clip"
-msgid_plural "%s, %d of %d clips"
-msgstr[0] "%s, %d / %d klip"
-msgstr[1] "%s, %d / %d klip"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Rename Clip..."
@@ -17776,6 +18123,22 @@ msgstr "Bal, %dHz"
 msgid "Right, %dHz"
 msgstr "Jobb, %dHz"
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new audio track"
+msgstr "Új hangsáv létrehozva"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "Created new stereo audio track"
+msgstr "Új sztereó hangsáv létrehozva"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "&Mono Track"
+msgstr "&Monósáv"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
+msgid "&Stereo Track"
+msgstr "&Sztereósáv"
+
 #. i18n-hint dB abbreviates decibels
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -17825,6 +18188,17 @@ msgstr "Sáv némítása/visszahangosítása"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rename clip..."
 msgstr "Klip átnevezése…"
+
+#. i18n-hint:
+#. string is the name of a clip
+#. first number is the position of that clip in a sequence of clips,
+#. second number counts the clips
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, c-format
+msgid "%s, %d of %d clip"
+msgid_plural "%s, %d of %d clips"
+msgstr[0] "%s, %d / %d klip"
+msgstr[1] "%s, %d / %d klip"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17920,6 +18294,18 @@ msgstr "&Tartomány…"
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritmikus &interpoláció"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr "Az Audacity ezen verziója projektablakonként csak egyetlen idősávot engedélyez."
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "Created new time track"
+msgstr "Új idősáv létrehozva"
+
+#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
+msgid "&Time Track"
+msgstr "&Idősáv"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
@@ -18333,6 +18719,24 @@ msgstr "J"
 msgid "%.2fx"
 msgstr "%.2fx"
 
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "More information about this error may be available %s."
+msgstr "Eszközinformáció nem érhető el."
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "here"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Would you like to send a report to help us fix this issue?"
+msgstr ""
+
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "All reports are anonymous. See %s for more info."
+msgstr "Lásd további információért: %s."
+
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
@@ -18387,22 +18791,6 @@ msgstr "Sugó az interneten"
 #: src/widgets/KeyView.cpp
 msgid "Menu"
 msgstr "Menü"
-
-#: src/widgets/MeterPanel.cpp
-msgid "Click to Start Monitoring"
-msgstr "Kattintás a megfigyelés indításához"
-
-#: src/widgets/MeterPanel.cpp
-msgid "Click for Monitoring"
-msgstr "Kattintás a megfigyeléshez"
-
-#: src/widgets/MeterPanel.cpp
-msgid "Click to Start"
-msgstr "Kattintás az indításhoz"
-
-#: src/widgets/MeterPanel.cpp
-msgid "Click"
-msgstr "Kattintás"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
@@ -18496,10 +18884,6 @@ msgstr " Levágott "
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
 msgstr "Napló megjelenítése a részletekhez"
-
-#: src/widgets/MultiDialog.cpp
-msgid "Please select an action"
-msgstr "Válasszon egy műveletet"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -18846,14 +19230,6 @@ msgid "%s (%s)"
 msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Eltelt idő:"
-
-#: src/widgets/ProgressDialog.cpp
-msgid "Remaining Time:"
-msgstr "Hátralévő idő:"
-
-#: src/widgets/ProgressDialog.cpp
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -18975,14 +19351,10 @@ msgstr "Mappa párbeszédablak"
 msgid "File Dialog"
 msgstr "Fájl párbeszédablak"
 
-#: plug-ins/SpectralEditMulti.ny
-msgid "Spectral edit multi tool"
+#: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Spectral Edit Multi Tool"
 msgstr "Spektrális szerkesztő többfunkciós eszköz"
-
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
-msgid "Filtering..."
-msgstr "Szűrés..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18990,12 +19362,10 @@ msgid "Paul Licameli"
 msgstr "Paul Licameli"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/beat.ny plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#: plug-ins/beat.ny plug-ins/clipfix.ny plug-ins/delay.ny plug-ins/highpass.ny
+#: plug-ins/lowpass.ny plug-ins/pluck.ny plug-ins/rhythmtrack.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
-msgid "Released under terms of the GNU General Public License version 2"
+msgid "GNU General Public License v2.0"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
@@ -19026,9 +19396,9 @@ msgstr ""
 msgid "Error.~%"
 msgstr "Hiba.~%"
 
-#: plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditParametricEQ.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit parametric EQ"
+msgid "Spectral Edit Parametric EQ"
 msgstr "Spektrális kijelölés"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -19066,18 +19436,25 @@ msgid ""
 "                         Please select a frequency range."
 msgstr ""
 
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
-msgid "Spectral edit shelves"
+msgid "Spectral Edit Shelves"
 msgstr "Spektrális kijelölés"
 
-#: plug-ins/StudioFadeOut.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
+#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "GNU General Public License v2.0 or later"
+msgstr ""
+
+#: plug-ins/StudioFadeOut.ny resources/EffectsMenuDefaults.xml
 msgid "Studio Fade Out"
 msgstr "Stúdió lekeverés"
-
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-msgid "Applying Fade..."
-msgstr "Előtűnés alkalmazása..."
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
@@ -19088,20 +19465,12 @@ msgstr "Előtűnés alkalmazása..."
 msgid "Steve Daulton"
 msgstr "Steve Daulton"
 
-#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-msgid "GNU General Public License v2.0 or later"
-msgstr ""
-
 #: plug-ins/StudioFadeOut.ny
 #, fuzzy, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
 msgstr "A kijelölésnek nagyobbnak kell lennie %d mintánál."
 
-#: plug-ins/adjustable-fade.ny
+#: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
 msgstr "Állítható elkeverés"
 
@@ -19233,29 +19602,17 @@ msgid "Beat Finder"
 msgstr "Ütemkereső"
 
 #: plug-ins/beat.ny
-msgid "Finding beats..."
-msgstr "Ütemek keresés..."
-
-#: plug-ins/beat.ny
 msgid "Threshold Percentage"
 msgstr "Küszöbszint-százalék"
 
-#: plug-ins/clipfix.ny
+#: plug-ins/clipfix.ny resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Clip Fix"
 msgstr "Levágás"
 
 #: plug-ins/clipfix.ny
-msgid "Reconstructing clips..."
-msgstr "Klipek rekonstruálása..."
-
-#: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
 msgstr "Benjamin Schwartz és Steve Daulton"
-
-#: plug-ins/clipfix.ny
-msgid "Licensing confirmed under terms of the GNU General Public License version 2"
-msgstr ""
 
 #: plug-ins/clipfix.ny
 msgid "Threshold of Clipping (%)"
@@ -19265,13 +19622,9 @@ msgstr ""
 msgid "Reduce amplitude to allow for restored peaks (dB)"
 msgstr ""
 
-#: plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Clips"
 msgstr "Keresztátmenetes klipek"
-
-#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
-msgid "Crossfading..."
-msgstr "Keresztátmenet..."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -19288,7 +19641,7 @@ msgstr "Hiba.~%Érvénytelen kijelölés.~%Üres rész a kijelölt részt elejé
 msgid "Error.~%Crossfade Clips may only be applied to one track."
 msgstr "Hiba.~%A keresztátmenetes vágások csak egy sávon használhatók."
 
-#: plug-ins/crossfadetracks.ny
+#: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Tracks"
 msgstr "Keresztátmenetes sávok"
 
@@ -19333,13 +19686,9 @@ msgstr "Váltakozó Be / Ki"
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
 msgstr "Hiba.~% 2 (vagy több) sávot válassz a keresztátmenethez."
 
-#: plug-ins/delay.ny
+#: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
 msgstr "Késleltetés"
-
-#: plug-ins/delay.ny
-msgid "Applying Delay Effect..."
-msgstr "Késleltető hatás alkalmazása…"
 
 #: plug-ins/delay.ny
 msgid "Delay type"
@@ -19438,17 +19787,14 @@ msgstr "Hiba~%A fájl nem írható:~%\"~a.txt\""
 msgid "Regular Interval Labels"
 msgstr "Szabályos intervallumú címkék"
 
-#: plug-ins/equalabel.ny
-msgid "Adding equally-spaced labels to the label track..."
-msgstr ""
-
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
 msgid "Create labels based on"
 msgstr "Címkék létrehozása ez alapján"
 
 #: plug-ins/equalabel.ny
-msgid "Number & Interval"
+#, fuzzy
+msgid "Number and Interval"
 msgstr "Szám & Intervallum"
 
 #: plug-ins/equalabel.ny
@@ -19530,6 +19876,11 @@ msgstr "Csak figyelmeztetések"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
+msgid "Error: There is insufficient space to create labels.~%"
+msgstr ""
+
+#: plug-ins/equalabel.ny
+#, lisp-format
 msgid "Warning: Overlapping region labels.~%"
 msgstr ""
 
@@ -19553,15 +19904,11 @@ msgstr ""
 msgid "~aRegion length = ~a seconds."
 msgstr ""
 
-#: plug-ins/highpass.ny
+#: plug-ins/highpass.ny resources/EffectsMenuDefaults.xml
 msgid "High-Pass Filter"
 msgstr "Felüláteresztő szűrő"
 
-#: plug-ins/highpass.ny
-msgid "Performing High-Pass Filter..."
-msgstr "Felüláteresztő szűrő végrehajtása..."
-
-#: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
+#: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Dominic Mazzoni"
 msgstr "Dominic Mazzoni"
 
@@ -19698,13 +20045,9 @@ msgstr ""
 msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Korlátozó"
-
-#: plug-ins/limiter.ny
-msgid "Limiting..."
-msgstr "Korlátozás..."
 
 #: plug-ins/limiter.ny
 msgid "Type"
@@ -19751,15 +20094,11 @@ msgstr "Tartás (db)"
 msgid "Apply Make-up Gain"
 msgstr "Helyrehozó erősítés alkalmazása"
 
-#: plug-ins/lowpass.ny
+#: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 msgid "Low-Pass Filter"
 msgstr "Aluláteresztő szűrő"
 
-#: plug-ins/lowpass.ny
-msgid "Performing Low-Pass Filter..."
-msgstr "Aluláteresztő szűrő végrehajtása..."
-
-#: plug-ins/noisegate.ny
+#: plug-ins/noisegate.ny resources/EffectsMenuDefaults.xml
 msgid "Noise Gate"
 msgstr "Zajkapu"
 
@@ -19851,13 +20190,9 @@ msgstr ""
 msgid "~ah ~am"
 msgstr "~ah ~am"
 
-#: plug-ins/notch.ny
+#: plug-ins/notch.ny resources/EffectsMenuDefaults.xml
 msgid "Notch Filter"
 msgstr "Bevágás szűrő"
-
-#: plug-ins/notch.ny
-msgid "Applying Notch Filter..."
-msgstr "Bevágás szűrő alkalmazása…"
 
 #: plug-ins/notch.ny
 msgid "Steve Daulton and Bill Wharrie"
@@ -19876,7 +20211,8 @@ msgid ""
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Nyquist Plug-in Installer"
+#, fuzzy
+msgid "Nyquist Plugin Installer"
 msgstr "Nyquist bővítmény telepítő"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
@@ -19966,14 +20302,6 @@ msgid "Pluck"
 msgstr "Pendítés"
 
 #: plug-ins/pluck.ny
-msgid "Generating pluck sound..."
-msgstr "Pendítés hang előállítása..."
-
-#: plug-ins/pluck.ny
-msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
-msgstr ""
-
-#: plug-ins/pluck.ny
 msgid "David R.Sky"
 msgstr "David R.Sky"
 
@@ -20002,8 +20330,8 @@ msgid "Rhythm Track"
 msgstr "Ritmussáv"
 
 #: plug-ins/rhythmtrack.ny
-msgid "Generating Rhythm..."
-msgstr "Ritmus létrehozása..."
+msgid "Dominic Mazzoni, David R. Sky and Steve Daulton"
+msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -20116,10 +20444,6 @@ msgid "Risset Drum"
 msgstr "Karcos dob"
 
 #: plug-ins/rissetdrum.ny
-msgid "Generating Risset Drum..."
-msgstr "Karcos dob létrehozása..."
-
-#: plug-ins/rissetdrum.ny
 msgid "Steven Jones"
 msgstr "Steven Jones"
 
@@ -20146,10 +20470,6 @@ msgstr "Amplitúdó (0 - 1)"
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
 msgstr "Mintaadat exportálása"
-
-#: plug-ins/sample-data-export.ny
-msgid "Analyzing..."
-msgstr "Elemzés…"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -20422,10 +20742,6 @@ msgid "Sample Data Import"
 msgstr "Mintaadat importálása"
 
 #: plug-ins/sample-data-import.ny
-msgid "Reading and rendering samples..."
-msgstr "Minták beolvasása és renderelése..."
-
-#: plug-ins/sample-data-import.ny
 msgid "Select file"
 msgstr "Válassz fájlt"
 
@@ -20476,7 +20792,7 @@ msgstr ""
 msgid "Error.~%Unable to open file"
 msgstr "Hiba.~%Nem sikerült megnyitni a fájlt"
 
-#: plug-ins/spectral-delete.ny
+#: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Delete"
 msgstr "Spektrális törlés"
 
@@ -20485,13 +20801,9 @@ msgstr "Spektrális törlés"
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
 msgstr "Hiba.~%100 Hz alatti mintavételezű sáv nem támogatott."
 
-#: plug-ins/tremolo.ny
+#: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
 msgstr "Tremolo"
-
-#: plug-ins/tremolo.ny
-msgid "Applying Tremolo..."
-msgstr "Tremolo alkalmazása…"
 
 #: plug-ins/tremolo.ny
 msgid "Waveform type"
@@ -20509,13 +20821,9 @@ msgstr "Kezdőfázis (fok)"
 msgid "Wet level (percent)"
 msgstr "Nedves szint (százalék)"
 
-#: plug-ins/vocalrediso.ny
+#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
 msgid "Vocal Reduction and Isolation"
 msgstr "Vokálcsökkentés és -izolálás"
-
-#: plug-ins/vocalrediso.ny
-msgid "Applying Action..."
-msgstr "Művelet alkalmazása…"
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
@@ -20653,17 +20961,14 @@ msgstr ""
 msgid "This plug-in works only with stereo tracks."
 msgstr ""
 
-#: plug-ins/vocoder.ny
+#: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "Vocoder"
 
 #: plug-ins/vocoder.ny
-msgid "Processing Vocoder..."
-msgstr "Vocoder feldolgozása..."
-
-#: plug-ins/vocoder.ny
-msgid "Edgar-RFT"
-msgstr "Edgar-RFT"
+#, fuzzy
+msgid "Edgar-RFT and Steve Daulton"
+msgstr "Steve Daulton"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
@@ -20686,8 +20991,9 @@ msgid "Number of vocoder bands"
 msgstr "Vocoder sávok száma"
 
 #: plug-ins/vocoder.ny
-msgid "Amplitude of original audio (percent)"
-msgstr "Az eredeti hang amplitúdója (százalék)"
+#, fuzzy
+msgid "Amplitude of carrier wave (percent)"
+msgstr "Az fehér zaj amplitúdója (százalék)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of white noise (percent)"
@@ -20703,8 +21009,355 @@ msgstr "Radartűk frekvenciája (Hz)"
 
 #: plug-ins/vocoder.ny
 #, lisp-format
-msgid "Error.~%Stereo track required."
-msgstr "Hiba.~%Sztereó sávnak kell lennie."
+msgid "Error.~%No modulation carrier."
+msgstr ""
+
+#. Effects menu group name; audio dynamics compression, not data compression
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Volume and Compression"
+msgstr "Tömörítés"
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+msgid "Fading"
+msgstr ""
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Pitch and Tempo"
+msgstr "Hangmagasság/Tempó"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "EQ and Filters"
+msgstr "Fájlok betöltése"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Noise Removal and Repair"
+msgstr "Zajszűrés"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Delay and Reverb"
+msgstr "Keverés és megjelenítés"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Distortion and Modulation"
+msgstr "Torzítás mértéke"
+
+#. Effects menu group name
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Special"
+msgstr "Külön köszönet:"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Vocal Remover"
+msgstr "Sáveltávolítás"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Spectral Tools"
+msgstr "Spektrális ecset"
+
+#, fuzzy, c-format
+#~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+#~ msgstr "Az Audacity egy ingyenes program, amelyet az [[http://www.audacityteam.org/about/credits|önkéntesek]] világméretű csapata készített. Az Audacity [[http://www.audacityteam.org/download|elérhető]] Windows, Mac és GNU/Linux (valamint egyéb Unix-szerű) rendszerekre."
+
+#~ msgid "volunteers"
+#~ msgstr "önkéntesek"
+
+#~ msgid "available"
+#~ msgstr "elérhető"
+
+#, fuzzy, c-format
+#~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+#~ msgstr "Ha hibát talál, vagy javaslata van felénk, írjon angolul a [[mailto:feedback@audacityteam.org|visszajelzési címünkre]]. A segítségért nézze meg a tippeket és trükköket a [[http://wiki.audacityteam.org/|wiki]] oldalunkon, vagy látogassa meg a [[http://forum.audacityteam.org/|fórumunkat]]."
+
+#~ msgctxt "dative"
+#~ msgid "forum"
+#~ msgstr "fórum"
+
+#~ msgid "wiki"
+#~ msgstr "wiki"
+
+#~ msgctxt "accusative"
+#~ msgid "forum"
+#~ msgstr "fórum"
+
+#~ msgid "Clear Looping Region"
+#~ msgstr "Hurokterület törlése"
+
+#~ msgid "&History..."
+#~ msgstr "Elő&zmények…"
+
+#~ msgid "&Mixer Board..."
+#~ msgstr "Keverőp&ult…"
+
+#, c-format
+#~ msgid ""
+#~ "Failed to retrieve data from the project file.\n"
+#~ "The following command failed:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Nem sikerült adat kinyerni a projektfájlból.\n"
+#~ "A következő parancs futása sikertelen::\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Unable to decode project document"
+#~ msgstr "Nem sikerült dekódolni a projektdokumentumot"
+
+#~ msgid "Main Mix"
+#~ msgstr "Főkeverő"
+
+#~ msgid ""
+#~ "Cannot lock region beyond\n"
+#~ "end of project."
+#~ msgstr ""
+#~ "Nem zárolható terület\n"
+#~ "a projekt végén túl."
+
+#~ msgid "Effects Rack"
+#~ msgstr "Hatások tár"
+
+#~ msgid "Latency: 0"
+#~ msgstr "Késleltetés: 0"
+
+#~ msgid "&Bypass"
+#~ msgstr "&Kitérés"
+
+#~ msgid "Active State"
+#~ msgstr "Aktív állapot"
+
+#~ msgid "Set effect active state"
+#~ msgstr "Hatás aktív állapotának beállítása"
+
+#~ msgid "Show/Hide Editor"
+#~ msgstr "Szerkesztő megjelenítése/elrejtése"
+
+#~ msgid "Open/close effect editor"
+#~ msgstr "Hatásszerkesztő megnyitása vagy bezárása"
+
+#~ msgid "Move Up"
+#~ msgstr "Mozgatás fel"
+
+#~ msgid "Move effect up in the rack"
+#~ msgstr "Hatás áthelyezése felfelé a tárban"
+
+#~ msgid "Move Down"
+#~ msgstr "Mozgatás le"
+
+#~ msgid "Move effect down in the rack"
+#~ msgstr "Hatás áthelyezése lefelé a tárban"
+
+#~ msgid "Favorite"
+#~ msgstr "Kedvenc"
+
+#~ msgid "Mark effect as a favorite"
+#~ msgstr "Hatás megjelölése kedvencként"
+
+#~ msgid "Remove effect from the rack"
+#~ msgstr "Hatás eltávolítása a tárból"
+
+#~ msgid "Name of the effect"
+#~ msgstr "A hatás neve"
+
+#, c-format
+#~ msgid "Latency: %4d"
+#~ msgstr "Késleltetés: %4d"
+
+#~ msgid "Some Command"
+#~ msgstr "Néhány parancs"
+
+#~ msgid "Start &Playback"
+#~ msgstr "Lejátszás &indítása"
+
+#~ msgid "&Preview effect"
+#~ msgstr "&Hatás előnézete"
+
+#~ msgid "Skip backward"
+#~ msgstr "Kihagyás visszafelé"
+
+#~ msgid "Skip &Backward"
+#~ msgstr "Kihagyás &visszafelé"
+
+#~ msgid "Skip forward"
+#~ msgstr "Kihagyás előre"
+
+#~ msgid "Skip &Forward"
+#~ msgstr "Kihagyás &előre"
+
+#~ msgid "Stop &Playback"
+#~ msgstr "Lejátszás me&gállítása"
+
+#, c-format
+#~ msgid "Reverb: %s"
+#~ msgstr "Visszaverődés: %s"
+
+#~ msgid "Scanning Shell VST"
+#~ msgstr "Héj VST vizsgálata"
+
+#, c-format
+#~ msgid "Registering %d of %d: %-64.64s"
+#~ msgstr "%d / %d regisztrálása: %-64.64s"
+
+#~ msgid "Presets (may select multiple)"
+#~ msgstr "Előbeállítások (több is kiválasztható)"
+
+#~ msgid "Location"
+#~ msgstr "Hely"
+
+#, c-format
+#~ msgid "%s requires unsupported feature %s\n"
+#~ msgstr "%s számára nem támogatott tulajdonság kell %s\n"
+
+#, c-format
+#~ msgid "%s requires unsupported option %s\n"
+#~ msgstr "%s számára nem támogatott beállítás kell %s\n"
+
+#~ msgid "Clip B&oundaries"
+#~ msgstr "Határ&ok levágása"
+
+#~ msgid "Pre&ferences..."
+#~ msgstr "&Beállítások…"
+
+#~ msgid "Add / Remove Plug-ins..."
+#~ msgstr "Bővítmények hozzáadása / eltávolítása…"
+
+#~ msgid "&Macros..."
+#~ msgstr "&Makrók…"
+
+#~ msgid "Show Effects Rack"
+#~ msgstr "Hatások tár megjelenítése"
+
+#~ msgid "Plugin Options"
+#~ msgstr "Bővítmény beállítások"
+
+#~ msgid "Check for updated plugins when Audacity starts"
+#~ msgstr "Frissített bővítmények keresése az Audacity indításakor"
+
+#~ msgid "Rescan plugins next time Audacity is started"
+#~ msgstr "Bővítmények újraolvasása az Audacity következő indításakor"
+
+#~ msgid "Cut selection"
+#~ msgstr "Kijelölés kivágása"
+
+#~ msgid "Copy selection"
+#~ msgstr "Kijelölés másolása"
+
+#~ msgid "Open Effects Rack"
+#~ msgstr "Hatások tár megnyitása"
+
+#~ msgid "Recording Volume"
+#~ msgstr "Felvételi hangerő"
+
+#~ msgid "Playback Volume"
+#~ msgstr "Lejátszási hangerő"
+
+#, c-format
+#~ msgid "Recording Volume: %.2f"
+#~ msgstr "Felvételi hangerő: %.2f"
+
+#~ msgid "Recording Volume (Unavailable; use system mixer.)"
+#~ msgstr "Felvételi hangerő (nem érhető el; rendszerkeverő használata.)"
+
+#, c-format
+#~ msgid "Playback Volume: %.2f"
+#~ msgstr "Lejátszási hangerő: %.2f"
+
+#~ msgid "Playback Volume (Unavailable; use system mixer.)"
+#~ msgstr "Lejátszási hangerő (nem érhető el; rendszerkeverő használata.)"
+
+#~ msgid "Mi&xer Toolbar"
+#~ msgstr "Ke&verő eszköztár"
+
+#~ msgid "Zoom Tool"
+#~ msgstr "Nagyítás eszköz"
+
+#~ msgid "&Zoom Tool"
+#~ msgstr "&Nagyítás eszköz"
+
+#~ msgid "Click to Start Monitoring"
+#~ msgstr "Kattintás a megfigyelés indításához"
+
+#~ msgid "Click for Monitoring"
+#~ msgstr "Kattintás a megfigyeléshez"
+
+#~ msgid "Click to Start"
+#~ msgstr "Kattintás az indításhoz"
+
+#~ msgid "Click"
+#~ msgstr "Kattintás"
+
+#~ msgid "Please select an action"
+#~ msgstr "Válasszon egy műveletet"
+
+#~ msgid "Filtering..."
+#~ msgstr "Szűrés..."
+
+#~ msgid "Applying Fade..."
+#~ msgstr "Előtűnés alkalmazása..."
+
+#~ msgid "Finding beats..."
+#~ msgstr "Ütemek keresés..."
+
+#~ msgid "Reconstructing clips..."
+#~ msgstr "Klipek rekonstruálása..."
+
+#~ msgid "Crossfading..."
+#~ msgstr "Keresztátmenet..."
+
+#~ msgid "Applying Delay Effect..."
+#~ msgstr "Késleltető hatás alkalmazása…"
+
+#~ msgid "Performing High-Pass Filter..."
+#~ msgstr "Felüláteresztő szűrő végrehajtása..."
+
+#~ msgid "Limiting..."
+#~ msgstr "Korlátozás..."
+
+#~ msgid "Performing Low-Pass Filter..."
+#~ msgstr "Aluláteresztő szűrő végrehajtása..."
+
+#~ msgid "Applying Notch Filter..."
+#~ msgstr "Bevágás szűrő alkalmazása…"
+
+#~ msgid "Generating pluck sound..."
+#~ msgstr "Pendítés hang előállítása..."
+
+#~ msgid "Generating Rhythm..."
+#~ msgstr "Ritmus létrehozása..."
+
+#~ msgid "Generating Risset Drum..."
+#~ msgstr "Karcos dob létrehozása..."
+
+#~ msgid "Reading and rendering samples..."
+#~ msgstr "Minták beolvasása és renderelése..."
+
+#~ msgid "Applying Tremolo..."
+#~ msgstr "Tremolo alkalmazása…"
+
+#~ msgid "Applying Action..."
+#~ msgstr "Művelet alkalmazása…"
+
+#~ msgid "Processing Vocoder..."
+#~ msgstr "Vocoder feldolgozása..."
+
+#~ msgid "Edgar-RFT"
+#~ msgstr "Edgar-RFT"
+
+#~ msgid "Amplitude of original audio (percent)"
+#~ msgstr "Az eredeti hang amplitúdója (százalék)"
+
+#, lisp-format
+#~ msgid "Error.~%Stereo track required."
+#~ msgstr "Hiba.~%Sztereó sávnak kell lennie."
 
 #~ msgid "Enable Quick-Play"
 #~ msgstr "Gyors lejátszás engedélyezése"
@@ -20877,12 +21530,6 @@ msgstr "Hiba.~%Sztereó sávnak kell lennie."
 #~ "%s\n"
 #~ "További hiányzó fájlok is lehetnek.\n"
 #~ "Válassza a Fájl > Függőségek ellenőrzése menüpontot a hiányzó fájlok helyei listájának megtekintéséhez."
-
-#~ msgid "Files Missing"
-#~ msgstr "Hiányzó fájlok"
-
-#~ msgid "File decoded successfully\n"
-#~ msgstr "A fájl sikeresen visszafejtve\n"
 
 #~ msgid "decode an autosave file"
 #~ msgstr "egy automatikusan mentett fájl visszafejtése"
@@ -21237,18 +21884,11 @@ msgstr "Hiba.~%Sztereó sávnak kell lennie."
 #~ msgstr "Csend"
 
 #, fuzzy
-#~ msgid "Gating audio..."
-#~ msgstr "Hang gyorsítótárazása"
-
-#, fuzzy
 #~ msgid "Apply Low-Cut filter"
 #~ msgstr "Nyquist-hatás alkalmazása…"
 
 #~ msgid "File dialog failed with error code %0lx."
 #~ msgstr "A fájl párbeszédablak meghiúsult a következő hibakóddal: %0lx."
-
-#~ msgid "About Audacity"
-#~ msgstr "Az Audacity névjegye"
 
 #, fuzzy
 #~ msgid "<h3>Audacity "
@@ -21593,10 +22233,6 @@ msgstr "Hiba.~%Sztereó sávnak kell lennie."
 #~ msgstr "Rajzolás használatához válassza a „Hullámformát” a sáv lenyíló menüjében."
 
 #, fuzzy
-#~ msgid "Vocal Remover"
-#~ msgstr "Sáveltávolítás"
-
-#, fuzzy
 #~ msgid "Remove vocals or view Help"
 #~ msgstr "&Speciális eltávolítása"
 
@@ -21866,9 +22502,6 @@ msgstr "Hiba.~%Sztereó sávnak kell lennie."
 
 #~ msgid "Together"
 #~ msgstr "Együtt"
-
-#~ msgid "Aligned %s"
-#~ msgstr "%s igazítva"
 
 #~ msgid "Duration:\n"
 #~ msgstr "Időtartam:\n"

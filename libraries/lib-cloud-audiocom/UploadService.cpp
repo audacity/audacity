@@ -31,6 +31,9 @@
 
 #include "CodeConversions.h"
 
+#include "TempDirectory.h"
+#include "FileNames.h"
+
 namespace cloud::audiocom
 {
 namespace
@@ -542,6 +545,44 @@ UploadOperationHandle::operator bool() const noexcept
 UploadOperation* UploadOperationHandle::operator->() const noexcept
 {
    return mOperation.operator->();
+}
+
+wxString GetUploadTempPath()
+{
+   const auto tempPath = TempDirectory::DefaultTempDir();
+
+   if (!wxDirExists(tempPath))
+   {
+      // Temp directory was not created yet.
+      // Is it a first run of Audacity?
+      // In any case, let's wait for some better time
+      return {};
+   }
+
+   if (!FileNames::WritableLocationCheck(
+          tempPath, XO("Cannot proceed to upload.")))
+      return {};
+
+   return tempPath + "/cloud/";
+}
+
+namespace
+{
+const auto tempChangedSubscription = TempDirectory::GetTempPathObserver().Subscribe([](const auto&) {
+   const auto tempPath = GetUploadTempPath();
+
+   if (!wxDirExists(tempPath))
+      return;
+
+   wxArrayString files;
+
+   wxDir::GetAllFiles(tempPath, &files, {}, wxDIR_FILES);
+
+   for (const auto& file : files)
+      wxRemoveFile(file);
+
+   return;
+});
 }
 
 } // namespace cloud::audiocom

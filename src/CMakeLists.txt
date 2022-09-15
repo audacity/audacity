@@ -1118,10 +1118,14 @@ list( APPEND SOURCES
       $<$<BOOL:${${_OPT}has_audiocom_upload}>:
          cloud/ShareAudioToolbar.cpp
          cloud/ShareAudioToolbar.h
+         cloud/audiocom/AuthorizationHandler.cpp
+         cloud/audiocom/AuthorizationHandler.h
          cloud/audiocom/LinkAccountDialog.cpp
          cloud/audiocom/LinkAccountDialog.h
          cloud/audiocom/LinkFailedDialog.cpp
          cloud/audiocom/LinkFailedDialog.h
+         cloud/audiocom/LinkSucceededDialog.cpp
+         cloud/audiocom/LinkSucceededDialog.h
          cloud/audiocom/ShareAudioDialog.cpp
          cloud/audiocom/ShareAudioDialog.h
          cloud/audiocom/UserImage.cpp

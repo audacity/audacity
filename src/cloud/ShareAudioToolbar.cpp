@@ -120,9 +120,18 @@ void ShareAudioToolbar::EnableDisableButtons()
    const bool audioStreamActive = gAudioIO &&
       gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
 
-   const bool hasTracks = !TrackList::Get(mProject).Any<PlayableTrack>().empty();
+   bool hasAudio = false;
+   
+   for (const auto& track : TrackList::Get(mProject).Leaders<PlayableTrack>())
+   {
+      if (track->GetStartTime() != track->GetEndTime())
+      {
+         hasAudio = true;
+         break;
+      }
+   }
 
-   mShareAudioButton->SetEnabled(hasTracks && !audioStreamActive);
+   mShareAudioButton->SetEnabled(hasAudio && !audioStreamActive);
 }
 
 void ShareAudioToolbar::ReCreateButtons()
@@ -212,7 +221,14 @@ void ShareAudioToolbar::ArrangeButtons()
    // Layout the toolbar
    Layout();
 
+#ifdef __WXGTK__
+   const auto height = 2 * toolbarSingle;
+   const wxSize size(GetSizer()->GetMinSize().GetWidth(), height);
+   SetMinSize(size);
+   SetMaxSize(size);
+#else
    SetMinSize(GetSizer()->GetMinSize());
+#endif
 }
 
 void ShareAudioToolbar::DestroySizer()

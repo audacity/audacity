@@ -135,7 +135,8 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
       return false;
 
    if (!BypassEffect(false))
-      return false;
+      // Ignore bad return value.  Some (like Xfer OTT) give a bad status.
+      ;
 
    return true;
 }
@@ -223,20 +224,24 @@ return GuardedCall<bool>([&]{
 bool AudioUnitInstance::RealtimeSuspend()
 {
    if (!BypassEffect(true))
-      return false;
+      //return false
+      ;
    for (auto &pSlave : mSlaves)
       if (!pSlave->BypassEffect(true))
-         return false;
+         //return false
+         ;
    return true;
 }
 
 bool AudioUnitInstance::RealtimeResume()
 {
    if (!BypassEffect(false))
-      return false;
+      //return false
+      ;
    for (auto &pSlave: mSlaves)
       if (!pSlave->BypassEffect(false))
-         return false;
+         //return false
+         ;
    return true;
 }
 

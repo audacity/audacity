@@ -129,7 +129,7 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
    if (suspended)
-      return numSamples;
+      return 0;
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
@@ -152,10 +152,11 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // output of one effect as the input to the next effect
    // Tracks how many processors were called
    size_t called = 0;
+   size_t discardable = 0;
    VisitGroup(track,
       [&](RealtimeEffectState &state, bool)
       {
-         state.Process(track, nBuffers, ibuf, obuf, numSamples);
+         discardable += state.Process(track, nBuffers, ibuf, obuf, numSamples);
          for (auto i = 0; i < nBuffers; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
@@ -177,7 +178,7 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    //
    // This is wrong...needs to handle tails
    //
-   return numSamples;
+   return discardable;
 }
 
 //

@@ -105,14 +105,14 @@ void UserService::UpdateUserData()
              profileName = std::string(profileName),
              avatar = std::string(avatar)]()
             {
-               userName.Write(username);
-               displayName.Write(profileName);
+               userName.Write(audacity::ToWXString(username));
+               displayName.Write(audacity::ToWXString(profileName));
                
                gPrefs->Flush();
 
-               Publish({});
-
                DownloadAvatar(avatar);
+
+               Publish({});
             });
       });
 }
@@ -142,6 +142,14 @@ void UserService::DownloadAvatar(std::string_view url)
 {
    const auto avatarPath = MakeAvatarPath();
    const auto avatarTempPath = avatarPath + ".tmp";
+
+   if (url.empty())
+   {
+      if (wxFileExists(avatarPath))
+         wxRemoveFile(avatarPath);
+
+      return;
+   }
    
    std::shared_ptr<wxFile> avatarFile = std::make_shared<wxFile>();
 
@@ -179,7 +187,7 @@ void UserService::DownloadAvatar(std::string_view url)
 
          if (httpCode != 200)
          {
-            // For any response excpept 200 just remove the temp file
+            // For any response except 200 just remove the temp file
             wxRemoveFile(avatarTempPath);
             return;
          }

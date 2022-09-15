@@ -29,6 +29,9 @@ struct VST3EffectSettings
 {
    ///Holds the parameter that has been changed since last processing pass.
    std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> parameterChanges;
+   ///Incremented whenever changes has been made to parameters, helps to avoid
+   ///redundant store operations when processing is active
+   int changesCounter { 0 };
 
    ///Holds the last known processor/component state, rarely updates (usually only on UI or preset change)
    std::optional<wxString> processorState;
@@ -204,6 +207,7 @@ public:
          for(auto& p : mParametersCache)
             vst3settings.parameterChanges[p.first] = p.second;
          mParametersCache.clear();
+         ++vst3settings.changesCounter;
       }
       mStateChangeSettings = nullptr;
    }
@@ -226,6 +230,7 @@ public:
          {
             auto& vst3settings = GetSettings(settings);
             vst3settings.parameterChanges[id] = valueNormalized;
+            ++vst3settings.changesCounter;
             if(!mWrapper.IsActive())
             {
                mWrapper.FlushParameters(settings);
@@ -479,22 +484,26 @@ bool VST3Wrapper::Initialize(EffectSettings& settings, Steinberg::Vst::SampleRat
       maxSamplesPerBlock,
       sampleRate
    };
-   if(!SetupProcessing(*mEffectComponent.get(), setup))
-      return false;
-   mSetup = setup;
 
    //Set mActive before FetchSettings and IComponent::setActive
    //to prevent redundant calls to AccessState::Flush.
    mActive = true;
    FetchSettings(settings);//Updates runtime settings...
+
+   if(!SetupProcessing(*mEffectComponent.get(), setup))
+   {
+      mActive = false;
+      return false;
+   }
+   mSetup = setup;
+
    if(mEffectComponent->setActive(true) == kResultOk)
    {
-      if(mAudioProcessor->setProcessing(true) == kResultOk)
-      {
-         //...make sure they are delivered to the processor
-         ConsumeChanges(settings);
-         return true;
-      }
+      //Omit the return value check - some plugins return unexpected values (see bug #3581)
+      mAudioProcessor->setProcessing(true);
+      //...make sure they are delivered to the processor
+      ConsumeChanges(settings);
+      return true;
    }
    mActive = false;
    return false;
@@ -749,28 +758,32 @@ void VST3Wrapper::AssignSettings(EffectSettings& dst, EffectSettings&& src) cons
    if(!dst.has_value())
       dst = src;
 
+   auto& from = GetSettings(src);
+   auto& to = GetSettings(dst);
+
    //To avoid allocations we can't copy state part of settings
    //in CopySettingsContents, so instead we recreate them with
    //StoreSettings when the main thread performs reading.
-   StoreSettings(dst);
-
-   if(src.has_value())
+   if(from.changesCounter != to.changesCounter)
    {
+      StoreSettings(dst);
+      to.changesCounter = from.changesCounter;
       //We can't discard parameter changes as it's not guaranteed that
-      //all of those changes were consumed when processing is active
-      GetSettings(dst).parameterChanges = std::move(GetSettings(src).parameterChanges);
-      dst.extra = std::move(src.extra);
+      //::Process was called
+      to.parameterChanges = std::move(from.parameterChanges);
    }
+   dst.extra = std::move(src.extra);
 }
 
 void VST3Wrapper::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection)
 {
+   auto& from = GetSettings(*const_cast<EffectSettings*>(&src));
+   auto& to = GetSettings(dst);
+
+   to.changesCounter = from.changesCounter;
    if(copyDirection == SettingsCopyDirection::MainToWorker)
    {
       //Don't allocate in worker
-      std::swap(
-         GetSettings(*const_cast<EffectSettings*>(&src)).parameterChanges,
-         GetSettings(dst).parameterChanges
-      );
+      std::swap(from.parameterChanges, to.parameterChanges);
    }
 }

@@ -383,6 +383,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
             mApplyBtn = S.Id(wxID_APPLY)
                .AddButton( XXO("&Apply"),
                            wxALIGN_CENTER | wxTOP | wxBOTTOM );
+            mApplyBtn->SetDefault();
          }
 
          if (mEffectUIHost.GetDefinition().EnablesDebug())
@@ -500,6 +501,9 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
+   if (mPlaying)
+      StopPlayback();
+
    DoCancel();
    CleanupRealtime();
 
@@ -529,6 +533,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    {
       return;
    }
+
+   if (mPlaying)
+      StopPlayback();
    
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch &&
@@ -734,10 +741,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    
    if (mPlaying)
    {
-      auto gAudioIO = AudioIO::Get();
-      mPlayPos = gAudioIO->GetStreamTime();
-      auto &projectAudioManager = ProjectAudioManager::Get( mProject );
-      projectAudioManager.Stop();
+      StopPlayback();
    }
    else
    {
@@ -1159,6 +1163,17 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
+void EffectUIHost::StopPlayback()
+{
+   if (!mPlaying)
+      return;
+   
+   auto gAudioIO = AudioIO::Get();
+   mPlayPos = gAudioIO->GetStreamTime();
+   auto& projectAudioManager = ProjectAudioManager::Get(mProject);
+   projectAudioManager.Stop();
+}
+
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    EffectPlugin &host, EffectUIClientInterface &client,
    EffectSettingsAccess &access)
@@ -1172,6 +1187,10 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    std::shared_ptr<EffectInstance> pInstance;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
       *project, host, client, pInstance, access } };
+   if (!pInstance) {
+      dlg->SetClosed();
+      return {};
+   }
    if (dlg->Initialize()) {
       auto pValidator = dlg->GetValidator();
       // release() is safe because parent will own it

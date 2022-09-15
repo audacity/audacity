@@ -25,7 +25,6 @@
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "Track.h"
-#include "TempDirectory.h"
 
 #include "ServiceConfig.h"
 #include "OAuthService.h"
@@ -35,6 +34,7 @@
 #include "CloudExportersRegistry.h"
 #include "CloudExporterPlugin.h"
 
+#include "AuthorizationHandler.h"
 #include "LinkAccountDialog.h"
 #include "UserImage.h"
 
@@ -59,14 +59,10 @@ const wxSize avatarSize = { 32, 32 };
 
 wxString GenerateTempPath(FileExtension extension)
 {
-   FilePath pathName = TempDirectory::DefaultTempDir();
-
-   if (!FileNames::WritableLocationCheck(
-          pathName, XO("Cannot proceed to export.")))
-      return {};
+   const auto tempPath = GetUploadTempPath();
 
    wxFileName fileName(
-      pathName + "/cloud/",
+      tempPath,
       wxString::Format(
          "%lld", std::chrono::system_clock::now().time_since_epoch().count()),
       extension);
@@ -164,6 +160,8 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
     , mProject(project)
     , mServices(std::make_unique<Services>())
 {
+   GetAuthorizationHandler().PushSuppressDialogs();
+
    ShuttleGui s(this, eIsCreating);
 
    s.StartVerticalLay();
@@ -184,10 +182,27 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
       if (mInitialStatePanel.root->IsShown())
          StartUploadProcess();
    };
+
+   Bind(
+      wxEVT_CHAR_HOOK,
+      [this](auto& evt)
+      {
+         if (!IsEscapeKey(evt))
+         {
+            evt.Skip();
+            return;
+         }
+
+         if (mCancelButton->IsShown())
+            OnCancel();
+         else
+            OnClose();
+      });
 }
 
 ShareAudioDialog::~ShareAudioDialog()
 {
+   GetAuthorizationHandler().PopSuppressDialogs();
    // Clean up the temp file when the dialog is closed
    if (!mFilePath.empty() && wxFileExists(mFilePath))
       wxRemoveFile(mFilePath);
@@ -200,9 +215,9 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
    s.StartHorizontalLay(wxEXPAND, 0);
    {
-      s.StartInvisiblePanel(16);
+      s.StartInvisiblePanel(14);
       {
-         s.SetBorder(0);
+         s.SetBorder(2);
          s.StartHorizontalLay(wxEXPAND, 0);
          {
             s.AddSpace(0, 0, 1);
@@ -210,13 +225,15 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
             mCancelButton = s.AddButton(XXO("&Cancel"));
             mCancelButton->Bind(wxEVT_BUTTON, [this](auto) { OnCancel(); });
 
+            mCloseButton = s.AddButton(XXO("&Close"));
+            mCloseButton->Bind(wxEVT_BUTTON, [this](auto) { OnClose(); });
+            
+            s.AddSpace(4, 0, 0);
+
             mContinueButton = s.AddButton(XXO("C&ontinue"));
             mContinueButton->Bind(wxEVT_BUTTON, [this](auto) { OnContinue(); });
-
+            
             mGotoButton = s.AddButton(XXO("&Go to my file"));
-
-            mCloseButton = s.AddButton(XXO("C&lose"));
-            mCloseButton->Bind(wxEVT_BUTTON, [this](auto) { OnClose(); });
          }
          s.EndHorizontalLay();
       }
@@ -232,10 +249,28 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
 void ShareAudioDialog::OnCancel()
 {
-   // If export has started, notify it that it should be canceled
-   if (mExportProgressHelper != nullptr)
-      static_cast<ExportProgressHelper&>(*mExportProgressHelper).Cancel();
-   // If upload is running - ask it to discard the result
+   const auto hasExportStarted = mExportProgressHelper != nullptr;
+   const auto hasUploadStarted = !!mServices->uploadPromise;
+
+   if (mInProgress)
+   {
+      AudacityMessageDialog dlgMessage(
+         this, XO("Are you sure you want to cancel?"), XO("Cancel upload to Audio.com"),
+         wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
+      
+      const auto result = dlgMessage.ShowModal();
+
+      if (result != wxID_YES)
+         return;
+
+      // If export has started, notify it that it should be canceled
+      if (mExportProgressHelper != nullptr)
+         static_cast<ExportProgressHelper&>(*mExportProgressHelper).Cancel();
+   }
+
+   
+   // If upload was started - ask it to discard the result.
+   // The result should be discarded even after the upload has finished
    if (mServices->uploadPromise)
       mServices->uploadPromise->DiscardResult();
 
@@ -301,6 +336,8 @@ wxString ShareAudioDialog::ExportProject()
 
 void ShareAudioDialog::StartUploadProcess()
 {
+   mInProgress = true;
+   
    mInitialStatePanel.root->Hide();
    mProgressPanel.root->Show();
 
@@ -338,6 +375,8 @@ void ShareAudioDialog::StartUploadProcess()
          CallAfter(
             [this, result]()
             {
+               mInProgress = false;
+               
                if (result.result == UploadOperationCompleted::Result::Success)
                   HandleUploadSucceeded(result.finishUploadURL, result.audioSlug);
                else if (result.result != UploadOperationCompleted::Result::Aborted)
@@ -365,7 +404,7 @@ void ShareAudioDialog::HandleUploadSucceeded(
    {
       mProgressPanel.info->SetLabel(
          "By pressing continue, you will be taken to audio.com and given a shareable link.");
-      mProgressPanel.info->Wrap(mProgressPanel.info->GetSize().GetWidth());
+      mProgressPanel.info->Wrap(mProgressPanel.root->GetSize().GetWidth());
 
       mContinueAction = [this, url = std::string(finishUploadURL)]()
       {
@@ -451,6 +490,8 @@ void SetTimeLabel(wxStaticText* label, std::chrono::milliseconds time)
 
 void ShareAudioDialog::UpdateProgress(uint64_t current, uint64_t total)
 {
+   using namespace std::chrono;
+
    const auto now = Clock::now();
 
    if (current == 0)
@@ -477,21 +518,19 @@ void ShareAudioDialog::UpdateProgress(uint64_t current, uint64_t total)
 
    const auto elapsedSinceUIUpdate = now - mLastUIUpdateTime;
 
-   constexpr auto uiUpdateTimeout = std::chrono::milliseconds(500);
+   constexpr auto uiUpdateTimeout = 500ms;
 
    if (elapsedSinceUIUpdate < uiUpdateTimeout && current < total)
       return;
 
    mLastUIUpdateTime = now;
 
-   const auto elapsed = now - mStageStartTime;
+   const auto elapsed = duration_cast<milliseconds>(now - mStageStartTime);
 
-   SetTimeLabel(
-      mProgressPanel.elapsedTime,
-      std::chrono::duration_cast<std::chrono::milliseconds>(elapsed));
+   SetTimeLabel(mProgressPanel.elapsedTime, elapsed);
 
    const auto estimate = elapsed * total / current;
-   const auto remains = (mStageStartTime + estimate) - now;
+   const auto remains = estimate - elapsed;
 
    SetTimeLabel(
       mProgressPanel.remainingTime,
@@ -633,6 +672,8 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
 
    if (!avatarPath.empty())
       avatar->SetBitmap(avatarPath);
+   else
+      avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
 }
 
 void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
@@ -698,9 +739,12 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
 
          s.StartHorizontalLay(wxEXPAND, 0);
          {
-            link = s.AddTextBox(TranslatableString {}, "https://audio.com", 60);
+            link = s.AddTextBox(TranslatableString {}, "https://audio.com", 0);
             link->SetName(XO("Shareable link").Translation());
             link->SetEditable(false);
+            link->SetMinSize({ 360, -1 });
+
+            s.AddSpace(1, 0, 1);
 
             copyButton = s.AddButton(XO("Copy"));
             copyButton->Bind(
