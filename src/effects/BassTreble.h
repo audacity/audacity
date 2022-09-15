@@ -15,9 +15,6 @@
 #include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
-class wxSlider;
-class wxCheckBox;
-class wxTextCtrl;
 class ShuttleGui;
 
 class EffectBassTrebleState
@@ -91,10 +88,10 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
+
+   struct Validator;
 
 private:
    // EffectBassTreble implementation
@@ -108,16 +105,6 @@ private:
                     double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
    float DoFilter(EffectBassTrebleState & data, float in);
 
-   void OnBassText(wxCommandEvent & evt);
-   void OnTrebleText(wxCommandEvent & evt);
-   void OnGainText(wxCommandEvent & evt);
-   void OnBassSlider(wxCommandEvent & evt);
-   void OnTrebleSlider(wxCommandEvent & evt);
-   void OnGainSlider(wxCommandEvent & evt);
-   void OnLinkCheckbox(wxCommandEvent & evt);
-
-   // Auto-adjust gain to reduce variation in peak level
-   void UpdateGain(double oldVal, int control );
 
 private:
    EffectBassTrebleState mMaster;
@@ -125,18 +112,7 @@ private:
 
    EffectBassTrebleSettings mSettings;
 
-   wxSlider    *mBassS;
-   wxSlider    *mTrebleS;
-   wxSlider    *mGainS;
-
-   wxTextCtrl  *mBassT;
-   wxTextCtrl  *mTrebleT;
-   wxTextCtrl  *mGainT;
-
-   wxCheckBox  *mLinkCheckBox;
-
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
    static constexpr EffectParameter Bass{ &EffectBassTrebleSettings::mBass,
                          L"Bass",          EffectBassTrebleSettings::bassDefault,     -30.0,   30.0,    1  };

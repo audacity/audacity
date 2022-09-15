@@ -33,7 +33,7 @@ Let use use EffectEcho as an example.
        As the initializations it did, now happen in the constructor of EffectEchoSettings because we use in-struct initializers with the same default values as in the EffectParmeters.
         
     
-2) "Define validator"
+2) "Define validator"  (reference commit: 2592061)
 
 
     In header file:
@@ -106,6 +106,12 @@ Let use use EffectEcho as an example.
 
            return true;
         }
+        
+        If the effect has an override of ::TransferDataToWindow():
+        copy its steps into the ValidateUI() function above
+        (actually, transform in-place ::TransferDataToWindow like it was done in 2592061)
+        
+        
 
 
     - modify PopulateOrExchange to make it belong to the Validator
@@ -153,7 +159,7 @@ Let use use EffectEcho as an example.
          
          where: 
          1st arg is the just created widget
-         2nd arg is either wxEVT_TEXT or wxEVT_SLIDER according to the widget type
+         2nd arg is either wxEVT_TEXT or wxEVT_SLIDER or wxEVT_CHECKBOX according to the widget type
          3rd arg is the handler which is meant to handle events coming from the widget
 
     - change
@@ -178,7 +184,7 @@ Let use use EffectEcho as an example.
 
 
 
-3) "Define the instance"
+3) "Define the instance"  (reference commit: 5961be1)
 
     In header file, 
     
@@ -260,7 +266,7 @@ Let use use EffectEcho as an example.
     
 
 
-4) "Real Statelessness"
+4) "Real Statelessness" (reference commit: )
 
     In header file:
     
