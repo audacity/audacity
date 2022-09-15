@@ -17,6 +17,7 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 
+#include <set>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/app.h>
 #include <wx/defs.h>
@@ -874,7 +875,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
    mEffects->Update();
 
    wxTheApp->CallAfter([this] {
-      PluginPaths disabledPlugins;
+      std::set<PluginPath> disabledPlugins;
       auto& pm = PluginManager::Get();
 
       // Record list of plugins that are currently disabled
@@ -885,7 +886,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
             continue;
 
          if (!plug.IsEnabled())
-            disabledPlugins.push_back(plug.GetPath());
+            disabledPlugins.insert(plug.GetPath());
       }
 
       pm.ClearEffectPlugins();
@@ -905,7 +906,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
             continue;
 
          const auto& path = plug.GetPath();
-         if (make_iterator_range(disabledPlugins).contains(path))
+         if (disabledPlugins.find(path) != disabledPlugins.end())
             plug.SetEnabled(false);
       }
 
