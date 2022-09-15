@@ -1539,7 +1539,8 @@ bool AudacityApp::InitPart2()
 
          if(!failedPlugins.empty())
          {
-            auto dialog = safenew IncompatiblePluginsDialog(GetTopWindow(), wxID_ANY, failedPlugins);
+            auto dialog = safenew IncompatiblePluginsDialog(GetTopWindow(), wxID_ANY, ScanType::Startup, failedPlugins);
+            dialog->Bind(wxEVT_CLOSE_WINDOW, [dialog](wxCloseEvent&) { dialog->Destroy(); });
             dialog->Show();
          }
       }

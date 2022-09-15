@@ -10,6 +10,7 @@
 #include "PluginRegistrationDialog.h"
 
 #include "EffectInterface.h"
+#include "IncompatiblePluginsDialog.h"
 #include "ModuleManager.h"
 #include "PluginManager.h"
 #include "PluginStartupRegistration.h"
@@ -876,6 +877,8 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
 
    wxTheApp->CallAfter([this] {
       std::set<PluginPath> disabledPlugins;
+      std::vector<wxString> failedPlugins;
+
       auto& pm = PluginManager::Get();
 
       // Record list of plugins that are currently disabled
@@ -896,6 +899,8 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
       {
          PluginStartupRegistration reg(newPlugins);
          reg.Run();
+
+         failedPlugins = reg.GetFailedPluginsPaths();
       }
 
       // Disable all plugins which were previously disabled
@@ -911,6 +916,12 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
       }
 
       pm.Save();
+
+      if (!failedPlugins.empty())
+      {
+         auto dialog = safenew IncompatiblePluginsDialog(this, wxID_ANY, ScanType::Manual, failedPlugins);
+         dialog->ShowModal();
+      }
 
       PopulateItemsList(pm);
       RegenerateEffectsList(mFilter);
