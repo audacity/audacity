@@ -46,7 +46,7 @@ struct EffectBassTrebleSettings
 };
 
 
-class EffectBassTreble final : public StatefulPerTrackEffect
+class EffectBassTreble final : public PerTrackEffect
 {
 public:
    static inline EffectBassTrebleSettings *
@@ -67,21 +67,6 @@ public:
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
 
    // Effect Implementation
 
@@ -93,22 +78,12 @@ public:
 
    struct Validator;
 
-private:
-   // EffectBassTreble implementation
+   struct Instance;
 
-   void InstanceInit(EffectBassTrebleState & data, float sampleRate);
-   size_t InstanceProcess(EffectSettings &settings,
-      EffectBassTrebleState & data,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
-
-   void Coefficients(double hz, double slope, double gain, double samplerate, int type,
-                    double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
-   float DoFilter(EffectBassTrebleState & data, float in);
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 
 private:
-   EffectBassTrebleState mMaster;
-   std::vector<EffectBassTrebleState> mSlaves;
 
    EffectBassTrebleSettings mSettings;
 

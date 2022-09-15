@@ -108,6 +108,61 @@ struct EffectBassTreble::Validator
    }
 };
 
+
+struct EffectBassTreble::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+                          double          sampleRate,
+                          ChannelNames     chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs* pOutputs,
+      unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
+   void InstanceInit(EffectBassTrebleState& data, float sampleRate);
+
+   size_t InstanceProcess(EffectSettings&        settings,
+                          EffectBassTrebleState& data,
+                          const float* const*    inBlock,
+                          float* const*          outBlock,
+                          size_t                 blockLen);
+
+   void Coefficients(double hz, double slope, double gain, double samplerate, int type,
+      double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
+
+   float DoFilter(EffectBassTrebleState& data, float in);
+
+   EffectBassTrebleState mMaster;
+   std::vector<EffectBassTrebleState> mSlaves;
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectBassTreble::MakeInstance() const
+{
+   return std::make_shared<Instance>(*this);
+}
+
+
 EffectBassTreble::EffectBassTreble()
 {
    SetLinearEffectFlag(true);
@@ -148,38 +203,40 @@ auto EffectBassTreble::RealtimeSupport() const -> RealtimeSince
 //   return RealtimeSince::Always;
 }
 
-unsigned EffectBassTreble::GetAudioInCount() const
+unsigned EffectBassTreble::Instance::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectBassTreble::GetAudioOutCount() const
+unsigned EffectBassTreble::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectBassTreble::ProcessInitialize(
+bool EffectBassTreble::Instance::ProcessInitialize(
    EffectSettings &, double sampleRate, ChannelNames)
 {
    InstanceInit(mMaster, sampleRate);
    return true;
 }
 
-size_t EffectBassTreble::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+
+size_t EffectBassTreble::Instance::ProcessBlock(EffectSettings& settings,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectBassTreble::RealtimeInitialize(EffectSettings &, double)
+bool EffectBassTreble::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectBassTreble::RealtimeAddProcessor(
-   EffectSettings &, EffectOutputs *, unsigned, float sampleRate)
+bool EffectBassTreble::Instance::RealtimeAddProcessor(
+   EffectSettings& settings, EffectOutputs* pOutputs,
+   unsigned numChannels, float sampleRate)
 {
    EffectBassTrebleState slave;
 
@@ -190,14 +247,14 @@ bool EffectBassTreble::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectBassTreble::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectBassTreble::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectBassTreble::RealtimeProcess(size_t group, EffectSettings &settings,
+size_t EffectBassTreble::Instance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
@@ -339,9 +396,12 @@ bool EffectBassTreble::Validator::UpdateUI()
 
 // EffectBassTreble implementation
 
-void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRate)
+void EffectBassTreble::Instance::InstanceInit(EffectBassTrebleState& data, float sampleRate)
 {
-   auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectBassTreble&>(mProcessor).mSettings;
 
    data.samplerate = sampleRate;
    data.slope = 0.4f;   // same slope for both filters
@@ -378,11 +438,14 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 
 }
 
-size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
+size_t EffectBassTreble::Instance::InstanceProcess(EffectSettings &settings,
    EffectBassTrebleState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectBassTreble&>(mProcessor).mSettings;
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
@@ -417,7 +480,7 @@ size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
 // Effect implementation
 
 
-void EffectBassTreble::Coefficients(double hz, double slope, double gain, double samplerate, int type,
+void EffectBassTreble::Instance::Coefficients(double hz, double slope, double gain, double samplerate, int type,
                                    double& a0, double& a1, double& a2,
                                    double& b0, double& b1, double& b2)
 {
@@ -445,7 +508,7 @@ void EffectBassTreble::Coefficients(double hz, double slope, double gain, double
    }
 }
 
-float EffectBassTreble::DoFilter(EffectBassTrebleState & data, float in)
+float EffectBassTreble::Instance::DoFilter(EffectBassTrebleState & data, float in)
 {
    // Bass filter
    float out = (data.b0Bass * in + data.b1Bass * data.xn1Bass + data.b2Bass * data.xn2Bass -
