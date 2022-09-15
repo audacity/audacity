@@ -59,7 +59,7 @@ struct EffectBassTreble::Validator
    : EffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, EffectBassTrebleSettings& settings)
+      EffectSettingsAccess& access, const EffectBassTrebleSettings& settings)
       : EffectUIValidator{ effect, access }
       , mSettings{ settings }
    {}
@@ -72,7 +72,7 @@ struct EffectBassTreble::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
-   EffectBassTrebleSettings& mSettings;
+   EffectBassTrebleSettings mSettings;
 
    wxSlider* mBassS;
    wxSlider* mTrebleS;
@@ -138,7 +138,7 @@ struct EffectBassTreble::Instance
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   void InstanceInit(EffectBassTrebleState& data, float sampleRate);
+   void InstanceInit(EffectSettings& settings, EffectBassTrebleState& data, float sampleRate);
 
    size_t InstanceProcess(EffectSettings&        settings,
                           EffectBassTrebleState& data,
@@ -214,9 +214,9 @@ unsigned EffectBassTreble::Instance::GetAudioOutCount() const
 }
 
 bool EffectBassTreble::Instance::ProcessInitialize(
-   EffectSettings &, double sampleRate, ChannelNames)
+   EffectSettings& settings, double sampleRate, ChannelNames)
 {
-   InstanceInit(mMaster, sampleRate);
+   InstanceInit(settings, mMaster, sampleRate);
    return true;
 }
 
@@ -240,7 +240,7 @@ bool EffectBassTreble::Instance::RealtimeAddProcessor(
 {
    EffectBassTrebleState slave;
 
-   InstanceInit(slave, sampleRate);
+   InstanceInit(settings, slave, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -262,9 +262,9 @@ size_t EffectBassTreble::Instance::RealtimeProcess(size_t group, EffectSettings 
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings &) const
+bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings& settings) const
 {
-   auto& ms = mSettings;
+   auto& ms = GetSettings(settings);;
 
    return (ms.mBass == 0.0 && ms.mTreble == 0.0 && ms.mGain == 0.0);
 }
@@ -276,17 +276,13 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access, 
    const EffectOutputs *)
 {
-   // ENABLE AT LAST STEP
-   // auto& settings = access.Get();
-   // auto& myEffSettings = GetSettings(settings);
-
-   // DISABLE AT LAST STEP
-   auto& myEffSettings = mSettings;
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
 
    auto result = std::make_unique<Validator>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
-}
+ }
 
 void EffectBassTreble::Validator::PopulateOrExchange(ShuttleGui & S)
 {
@@ -369,13 +365,10 @@ void EffectBassTreble::Validator::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectBassTreble::Validator::UpdateUI()
 {
-   auto& ms = mSettings;
-
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();
 
-   // TODO uncomment at last step
-   //mSettings = GetSettings(settings);
+   mSettings = GetSettings(settings);
 
    Effect& actualEffect = static_cast<Effect&>(mEffect);
 
@@ -384,10 +377,10 @@ bool EffectBassTreble::Validator::UpdateUI()
       return false;
    }
 
-   mBassS->       SetValue((int)(ms.mBass * Bass.scale));
-   mTrebleS->     SetValue((int)(ms.mTreble *Treble.scale));
-   mGainS->       SetValue((int)(ms.mGain * Gain.scale));
-   mLinkCheckBox->SetValue(      ms.mLink);
+   mBassS->       SetValue((int)(mSettings.mBass * Bass.scale));
+   mTrebleS->     SetValue((int)(mSettings.mTreble *Treble.scale));
+   mGainS->       SetValue((int)(mSettings.mGain * Gain.scale));
+   mLinkCheckBox->SetValue(mSettings.mLink);
 
    return true;
 }
@@ -396,13 +389,10 @@ bool EffectBassTreble::Validator::UpdateUI()
 
 // EffectBassTreble implementation
 
-void EffectBassTreble::Instance::InstanceInit(EffectBassTrebleState& data, float sampleRate)
+void EffectBassTreble::Instance::InstanceInit(EffectSettings& settings, EffectBassTrebleState& data, float sampleRate)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectBassTreble&>(mProcessor).mSettings;
-
+   auto& ms = GetSettings(settings);
+   
    data.samplerate = sampleRate;
    data.slope = 0.4f;   // same slope for both filters
    data.hzBass = 250.0f;   // could be tunable in a more advanced version
@@ -442,10 +432,7 @@ size_t EffectBassTreble::Instance::InstanceProcess(EffectSettings &settings,
    EffectBassTrebleState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectBassTreble&>(mProcessor).mSettings;
+   auto& ms = GetSettings(settings);
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
@@ -674,9 +661,8 @@ bool EffectBassTreble::Validator::ValidateUI()
       [this](EffectSettings& settings)
    {
       // pass back the modified settings to the MessageBuffer
-
-      // TODO uncomment at last step
-      //EffectBassTreble::GetSettings(settings) = mSettings;
+      //
+      EffectBassTreble::GetSettings(settings) = mSettings;
 
       return nullptr;
    }

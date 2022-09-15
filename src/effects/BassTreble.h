@@ -46,11 +46,10 @@ struct EffectBassTrebleSettings
 };
 
 
-class EffectBassTreble final : public PerTrackEffect
+class EffectBassTreble final : public EffectWithSettings<EffectBassTrebleSettings, PerTrackEffect>
 {
 public:
-   static inline EffectBassTrebleSettings *
-   FetchParameters(EffectBassTreble &e, EffectSettings &) { return &e.mSettings; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectBassTreble();
@@ -84,8 +83,6 @@ public:
 
 
 private:
-
-   EffectBassTrebleSettings mSettings;
 
    const EffectParameterMethods& Parameters() const override;
 
