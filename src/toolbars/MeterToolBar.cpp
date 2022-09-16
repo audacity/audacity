@@ -294,7 +294,7 @@ bool MeterToolBar::Expose( bool show )
 int MeterToolBar::GetInitialWidth()
 {
    return (mWhichMeters ==
-      (kWithRecordMeter + kWithPlayMeter)) ? 338 : 260;
+      (kWithRecordMeter + kWithPlayMeter)) ? 338 : 290;
 }
 
 // The meter's sizing code does not take account of the resizer
