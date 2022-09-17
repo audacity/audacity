@@ -742,9 +742,25 @@ std::unique_ptr<EffectUIValidator> EffectTruncSilence::PopulateOrExchange(
    return nullptr;
 }
 
+bool EffectTruncSilence::TransferDataToWindow(const EffectSettings &)
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
 bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    mbIndependent = mIndependent->IsChecked();
+
    return true;
 }
 

@@ -35,7 +35,6 @@ void PluginStartupRegistration::OnInternalError(const wxString& error)
 
 void PluginStartupRegistration::OnPluginFound(const PluginDescriptor& desc)
 {
-   auto& pluginManager = PluginManager::Get();
    //Multiple providers can report same module paths
    if(desc.GetPluginType() == PluginTypeStub)
       //do not register until all associated providers have tried to load the module

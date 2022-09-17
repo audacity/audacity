@@ -305,6 +305,29 @@ void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel, bool bHighl
       Bmp.GetWidth() - r2, 0, wxCOPY, true );
 }
 
+void AColor::DrawHStretch(wxDC& dc, const wxRect& rect, wxBitmap& bitmap)
+{
+   wxMemoryDC srcDC;
+   srcDC.SelectObject(bitmap);
+
+   const auto sh = bitmap.GetHeight();
+   const auto dh = rect.height;
+   const auto w0 = std::min((bitmap.GetWidth() - 1) / 2, rect.width / 2);
+   const auto dx0 = rect.x;
+   const auto dx1 = rect.x + w0;
+   const auto dx2 = rect.x + rect.width - w0;
+
+   dc.StretchBlit(dx0, rect.y, w0, dh, &srcDC, 0, 0, w0, sh);
+   dc.StretchBlit(dx1, rect.y, rect.width - w0 * 2, dh, &srcDC, w0, 0, 1, sh);
+   dc.StretchBlit(dx2, rect.y, w0, dh, &srcDC, bitmap.GetWidth() - w0, 0, w0, sh);
+}
+
+void AColor::DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap)
+{
+   DrawNinePatch(dc, bitmap, r);
+}
+
+
 wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
 {
    wxColour c3(

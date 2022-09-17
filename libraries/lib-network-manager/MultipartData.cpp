@@ -164,12 +164,12 @@ void MultipartData::Part::SetHeader(
 
 void MultipartData::Part::SetContentType(const std::string& mimeType)
 {
-   SetHeader("Content-Type", mimeType);
+   SetHeader(common_headers::ContentType, mimeType);
 }
 
 void MultipartData::Part::SetContentDisposition(const std::string& disposition)
 {
-   SetHeader("Content-Disposition", disposition);
+   SetHeader(common_headers::ContentDisposition, disposition);
 }
 
 const HeadersList& MultipartData::Part::GetHeaders() const

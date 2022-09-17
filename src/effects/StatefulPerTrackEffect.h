@@ -42,8 +42,6 @@ public:
       size_t ProcessBlock(EffectSettings &settings,
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-      sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const override;
 
    protected:
       StatefulPerTrackEffect &GetEffect() const
@@ -58,11 +56,6 @@ public:
 
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
-
-   /*!
-    @copydoc PerTrackEffect::Instance::GetLatency()
-    */
-   virtual sampleCount GetLatency() const;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessInitialize()

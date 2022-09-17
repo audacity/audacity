@@ -16,6 +16,8 @@
 
 #include "EffectPlugin.h"
 
+class sampleCount;
+
 //! A mix-in class for effects that are not yet migrated to statelessness.
 //! To be eliminated when all effects are migrated
 class AUDACITY_DLL_API StatefulEffectBase {
@@ -136,6 +138,11 @@ public:
      Default implementation returns 0
    */
    virtual unsigned GetAudioOutCount() const;
+
+   /*!
+    @copydoc StateEffectBase::Instance::GetLatency()
+    */
+   virtual sampleCount GetLatency() const;
 
 private:
 

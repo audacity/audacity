@@ -1098,6 +1098,11 @@ void ProgressDialog::Reinit()
    wxDialogWrapper::Show(true);
 }
 
+void ProgressDialog::SetDialogTitle(const TranslatableString& title)
+{
+   SetTitle(title);
+}
+
 // Add a NEW text column each time this is called.
 void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer,
                                         const MessageColumn & column,
@@ -1486,6 +1491,13 @@ ProgressResult ProgressDialog::Update(
    {
       return Update(1000, message);
    }
+}
+
+ProgressResult ProgressDialog::Poll(
+   unsigned long long numerator, unsigned long long denominator,
+   const TranslatableString& message)
+{
+   return Update(numerator, denominator, message);
 }
 
 //

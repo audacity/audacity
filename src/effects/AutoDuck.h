@@ -51,6 +51,7 @@ public:
    override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool DoTransferDataToWindow();
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectAutoDuck implementation

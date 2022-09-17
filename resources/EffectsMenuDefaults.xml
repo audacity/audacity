@@ -88,9 +88,9 @@
         <Name>Spectral Tools</Name>
         <Effects>
             <Effect>Spectral Delete</Effect>
-            <Effect>Spectral edit multi tool</Effect>
-            <Effect>Spectral edit parametric EQ</Effect>
-            <Effect>Spectral edit shelves</Effect>
+            <Effect>Spectral Edit Multi Tool</Effect>
+            <Effect>Spectral Edit Parametric EQ</Effect>
+            <Effect>Spectral Edit Shelves</Effect>
         </Effects>
     </Group>
 </EffectMenuList>

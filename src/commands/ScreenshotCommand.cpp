@@ -445,9 +445,9 @@ void ScreenshotCommand::CaptureEffects(
       "PlotSpectrum",
 
       "Auto Duck...",  // needs a track below.
-      //"Spectral edit multi tool",
-      "Spectral edit parametric EQ...", // Needs a spectral selection.
-      "Spectral edit shelves...",
+      //"Spectral Edit Multi Tool",
+      "Spectral Edit Parametric EQ...", // Needs a spectral selection.
+      "Spectral Edit Shelves...",
 
       //"Noise Reduction...", // Exits twice...
       //"SC4...", //Has 'Close' rather than 'Cancel'.

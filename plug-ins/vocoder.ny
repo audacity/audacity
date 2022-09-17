@@ -4,22 +4,22 @@ $type process
 $preview enabled
 $name (_ "Vocoder")
 $manpage "Vocoder"
-$action (_ "Processing Vocoder...")
+$debugbutton false
 $author (_ "Edgar-RFT and Steve Daulton")
-$release 3.1.2
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 3.1.2-1
+$copyright (_ "GNU General Public License v2.0")
 
-;; Based on vocoder.ny by Edgar-RFT
-;;
+
 ;; If selected track is mono, the vocoder uses sine waves as the modulation
 ;; carrier, mixed with noise and radar needles according to slider settings.
 ;; If selected track is stereo, the right channel is used as the carrier wave.
 
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
 
 $control dst (_ "Distance: (1 to 120, default = 20)") float "" 20 1 120
 $control mst (_ "Output choice") choice (("BothChannels" (_ "Both Channels"))

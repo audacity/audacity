@@ -13,20 +13,34 @@
 #define __AUDACITY_BUTTON__
 
 #include <vector>
+#include <array>
+#include <memory>
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/window.h> // to inherit
-
-#include "ImageRoll.h" // member variable
+#include <wx/image.h>
 
 class wxImage;
 class TranslatableString;
 
-class AUDACITY_DLL_API AButton final : public wxWindow {
+class AUDACITY_DLL_API AButton : public wxWindow {
    friend class AButtonAx;
    class Listener;
 
- public:
+public:
+
+   enum Type
+   {
+      TextButton,
+      ImageButton,
+      FrameButton
+   };
+
+   AButton(wxWindow* parent = nullptr,
+      wxWindowID id = wxID_ANY,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      bool toggle = false);
 
     // Construct button, specifying images (button up, highlight, button down,
     // and disabled) for the default state
@@ -34,14 +48,16 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
            wxWindowID id,
            const wxPoint & pos,
            const wxSize & size,
-           ImageRoll up,
-           ImageRoll over,
-           ImageRoll down,
-           ImageRoll overDown,
-           ImageRoll dis,
+           const wxImage& up,
+           const wxImage& over,
+           const wxImage& down,
+           const wxImage& overDown,
+           const wxImage& dis,
            bool toggle);
 
    virtual ~ AButton();
+
+   void SetButtonType(Type type);
 
    // hide the inherited function that takes naked wxString:
    void SetToolTip(const TranslatableString &toolTip);
@@ -54,23 +70,23 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
 
    void SetFocusFromKbd() override;
 
-   // Associate a set of four images (button up, highlight, button down,
-   // disabled) with one nondefault state of the button
-   void SetAlternateImages(unsigned idx,
-                                   ImageRoll up,
-                                   ImageRoll over,
-                                   ImageRoll down,
-                                   ImageRoll overDown,
-                                   ImageRoll dis);
+   //Same as SetAlternateImages(0, ...);
+   void SetImages(const wxImage& up,
+                    const wxImage& over,
+                    const wxImage& down,
+                    const wxImage& overDown,
+                    const wxImage& dis);
 
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
    void SetAlternateImages(unsigned idx,
-                                   wxImage up,
-                                   wxImage over,
-                                   wxImage down,
-                                   wxImage overDown,
-                                   wxImage dis);
+                                   const wxImage& up,
+                                   const wxImage& over,
+                                   const wxImage& down,
+                                   const wxImage& overDown,
+                                   const wxImage& dis);
+
+   void SetIcon(const wxImage& icon);
 
    // Choose state of the button
    void SetAlternateIdx(unsigned idx);
@@ -80,7 +96,7 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
    // Use state 2 when CTRL is down, else 1 when SHIFT is down, else 0
    void FollowModifierKeys();
 
-   void SetFocusRect(wxRect & r);
+   void SetFocusRect(const wxRect & r);
 
    bool IsEnabled() const { return mEnabled; }
    void Disable();
@@ -117,6 +133,7 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
    void ClearDoubleClicked() { mIsDoubleClicked = false; }
 
    void SetButtonToggles( bool toggler ){ mToggle = toggler;}
+   bool IsToggle() const noexcept;
    // When click is over and mouse has moved away, a normal button
    // should pop up.
    void InteractionOver(){ if( !mToggle ) PopUp();}
@@ -125,12 +142,16 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
    void SetShift(bool shift);
    void SetControl(bool control);
 
+   wxSize DoGetBestClientSize() const override;
+
    enum AButtonState {
       AButtonUp,
       AButtonOver,
       AButtonDown,
       AButtonOverDown,
-      AButtonDis
+      AButtonDis,
+
+      AButtonStateCount
    };
 
    AButtonState GetState();
@@ -147,44 +168,37 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
 
  private:
 
-   bool HasAlternateImages(unsigned idx);
+   bool HasAlternateImages(unsigned idx) const;
 
-   void Init(wxWindow * parent,
-             wxWindowID id,
-             const wxPoint & pos,
-             const wxSize & size,
-             ImageRoll up,
-             ImageRoll over,
-             ImageRoll down,
-             ImageRoll overDown,
-             ImageRoll dis,
-             bool toggle);
+   void Init(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, bool toggle);
 
-   unsigned mAlternateIdx;
-   bool mToggle;   // This bool, if true, makes the button able to
+   unsigned mAlternateIdx{0};
+   bool mToggle{false};   // This bool, if true, makes the button able to
                    // process events when it is in the down state, and
                    // moving to the opposite state when it is clicked.
                    // It is used for the Pause button, and possibly
                    // others.  If false, it (should) behave just like
                    // a standard button.
 
-   bool mWasShiftDown;
-   bool mWasControlDown;
+   bool mWasShiftDown {false};
+   bool mWasControlDown {false};
 
-   bool mCursorIsInWindow;
-   bool mButtonIsDown;
-   bool mIsClicking;
-   bool mEnabled;
-   bool mUseDisabledAsDownHiliteImage;
-   bool mIsDoubleClicked {};
+   bool mCursorIsInWindow{false};
+   bool mButtonIsDown{false};
+   bool mIsClicking{false};
+   bool mEnabled{true};
+   bool mUseDisabledAsDownHiliteImage{false};
+   bool mIsDoubleClicked{false};
 
-   struct ImageArr { ImageRoll mArr[5]; };
-   std::vector<ImageArr> mImages;
+   wxImage mIcon;
+   std::vector<std::array<wxImage, AButtonStateCount>> mImages;
 
    wxRect mFocusRect;
-   bool mForceFocusRect;
+   bool mForceFocusRect{false};
 
    std::unique_ptr<Listener> mListener;
+
+   Type mType{ImageButton};
 
 public:
 

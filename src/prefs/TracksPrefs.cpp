@@ -436,6 +436,7 @@ bool TracksPrefs::Commit()
       gPrefs->Flush();
    }
 
+   AudioTrackNameSetting.Invalidate();
    return true;
 }
 

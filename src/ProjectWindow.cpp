@@ -48,8 +48,13 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "TrackPanel.h"
 
-namespace {
+namespace
+{
+#ifdef HAS_AUDIOCOM_UPLOAD
+   constexpr int DEFAULT_WINDOW_WIDTH = 1260;
+#else
    constexpr int DEFAULT_WINDOW_WIDTH = 1200;
+#endif
    constexpr int DEFAULT_WINDOW_HEIGHT = 674;
 }
 
@@ -641,6 +646,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mContainerWindow->Initialize(mTrackListWindow);
 
    auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mProject, mContainerWindow, wxID_ANY);
+   effectsPanel->SetName(_("Realtime effects"));
    effectsPanel->SetBackgroundColorIndex(clrMedium);
    effectsPanel->Hide();//initially hidden
    effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&)
@@ -699,7 +705,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
          {
             auto& project = GetProject();
             auto& trackFocus = TrackFocus::Get(project);
-            ShowEffectsPanel(trackFocus.Get());
+            ShowEffectsPanel(trackFocus.Get(), false);
          }
       });
 
@@ -1906,7 +1912,7 @@ void ProjectWindow::DoZoomFit()
    window.TP_ScrollWindow(start);
 }
 
-void ProjectWindow::ShowEffectsPanel(Track* track)
+void ProjectWindow::ShowEffectsPanel(Track* track, bool focus)
 {
    if(track == nullptr)
    {
@@ -1926,6 +1932,8 @@ void ProjectWindow::ShowEffectsPanel(Track* track)
          mTrackListWindow,
          mEffectsWindow->GetSize().GetWidth());
    }
+   if(focus)
+      mEffectsWindow->SetFocus();
    Layout();
 }
 
@@ -1939,6 +1947,7 @@ void ProjectWindow::HideEffectsPanel()
       mContainerWindow->SplitVertically(mEffectsWindow, mTrackListWindow);
 
    mContainerWindow->Unsplit(mEffectsWindow);
+   mTrackListWindow->SetFocus();
    Layout();
 }
 

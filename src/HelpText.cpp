@@ -30,7 +30,7 @@
 
 namespace
 {
-const char* WhatsNewURL = "https://audacityteam.org/3.1.0-video";
+const char* WhatsNewURL = "https://audacityteam.org/3.2.0-video";
 }
 
 #endif
@@ -273,7 +273,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          /* i18n-hint: %s is replaced with Audacity version */
          << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING)
          << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
-         << wxT(R"(<img src="memory:whats_new_btn.png" width="263" height="148" /></a></p>)")
+         << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /></a></p>)")
 #endif
          << wxT("</h3><h3>")
          << XO("How to get help")

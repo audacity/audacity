@@ -188,3 +188,8 @@ bool StatefulEffectBase::Init()
 {
    return true;
 }
+
+sampleCount StatefulEffectBase::GetLatency() const
+{
+   return 0;
+}

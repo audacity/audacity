@@ -59,8 +59,7 @@ class MeterToolBar final : public ToolBar {
    void OnSize(wxSizeEvent & event);
    bool Expose(bool show) override;
 
-   int GetInitialWidth() override {return (mWhichMeters ==
-      (kWithRecordMeter + kWithPlayMeter)) ? 338 : 460;} // Separate bars used to be smaller.
+   int GetInitialWidth() override;
    int GetMinToolbarWidth()  override { return 150; }
    wxSize GetDockedSize() override {
       return GetSmartDockedSize();

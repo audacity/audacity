@@ -100,7 +100,10 @@ env:
   BUILD_TYPE: ${{ (inputs && inputs.build_type) || (github.event.inputs && github.event.inputs.build_type) || 'RelWithDebInfo' }}
   CONFIGURATION_TYPES: ${{ (inputs && inputs.configuration_types) || (github.event.inputs && github.event.inputs.configuration_types) || 'RelWithDebInfo' }}
 
-  CONFIGURE_CMAKE_OPTIONS: ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
+  CONFIGURE_CMAKE_OPTIONS: |
+    -Daudacity_has_url_schemes_support=On
+    -Daudacity_has_audiocom_upload=On
+    ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
 
   BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}
 
@@ -139,7 +142,7 @@ jobs:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Build
       uses: audacity/audacity-actions/build@v1
@@ -198,7 +201,7 @@ jobs:
         arch: ${{ matrix.config.arch }}
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: |
           ${{ env.CONFIGURE_CMAKE_OPTIONS }}
           -DCMAKE_SYSTEM_VERSION=${{ matrix.config.windows_sdk }}
@@ -232,7 +235,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
@@ -266,7 +269,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
@@ -279,7 +282,7 @@ jobs:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: arm64
         image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
@@ -317,7 +320,7 @@ jobs:
           macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
     - name: Install Apple codesigning certificates
       uses: apple-actions/import-codesign-certs@v1
-      if: github.event_name == 'push' && github.repository_owner == 'audacity'
+      if: github.event_name != 'pull_request' && github.repository_owner == 'audacity'
       with:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}

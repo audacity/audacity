@@ -184,10 +184,9 @@ bool AudioUnitEffect::IsDefault() const
 
 auto AudioUnitEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Always;
-   // return GetType() == EffectTypeProcess
-      // ? RealtimeSince::Always
-      // : RealtimeSince::Never;
+   return GetType() == EffectTypeProcess
+      ? RealtimeSince::Since_3_2
+      : RealtimeSince::Never;
 }
 
 bool AudioUnitEffect::SupportsAutomation() const
@@ -228,6 +227,10 @@ bool AudioUnitEffect::InitializePlugin()
    if (!CreateAudioUnit())
       return false;
 
+   // Use an arbitrary rate while completing the discovery of channel support
+   if (!SetRateAndChannels(44100.0, GetSymbol().Internal()))
+      return false;
+
    // Determine interactivity
    mInteractive = (Count(mParameters) > 0);
    if (!mInteractive) {
@@ -246,6 +249,7 @@ bool AudioUnitEffect::InitializePlugin()
             kAudioUnitProperty_GetUIComponentList, compDesc);
       }
    }
+
    return true;
 }
 

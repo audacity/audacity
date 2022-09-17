@@ -1,5 +1,51 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.2.0
+
+ This version adds realtime effects and VST3. 
+
+ Prominent changes
+    * Added a new Effects button to the tracks menu, allowing you to place realtime effects. 
+       Further information can be found can be found on https://support.audacityteam.org/audio-editing/using-realtime-effects
+    * Merged the mixer bar with the meter bars.
+    * Added a new Audio Setup button, replacing the Device Toolbar by default. The device toolbar can be re-added via the View > Toolbars menu.
+    * The Effects menu has gotten a new sorting. Other sorting and grouping options can be found in the Effects preferences.
+    * Updated the icons.
+    * Added a quick audio sharing feature.
+       More info can be found on https://support.audacityteam.org/basics/sharing-audio-online
+
+ Plugin changes
+    You can find plugins on https://plugins.audacityteam.org
+    * VST3 effects are now supported.
+    * The following plugin formats are now realtime capable: VST3, LV2, LADSPA, Audio Units.
+    * Plugins now automatically get scanned, tested and enabled when Audacity starts.
+ 
+ System changes
+    * Apple Silicon (arm64) and Universal Binaries are now supported on macOS
+    * FFMPEG 5.0 (avformat 59) is now supported, in addition to avformat 55, 57 and 58
+    * Added support for Wavpack
+    * On Linux, Audacity can now be compiled without JACK present.
+    * Audacity now uses XDG directories on Linux. 
+       Note: If you are upgrading from a previous version, Audacity will keep using the ~/.audacity-data and ~/.audacity folders until you delete them.
+    * Switched from mad to mpg123 as MP3 importer
+ 
+ License update
+    * Audacity binaries are now licensed under the GNU General Public License, Version 3. 
+      Most code files remain GPLv2-or-later, but VST3 support required this license update. 
+      More information can be found in the announcement post: https://github.com/audacity/audacity/discussions/2142
+ 
+ Other changes
+   * Removed the Zoom Tool. You can use the zoom buttons or Ctrl+Scroll (macOS: Cmd+Scroll) to zoom instead.
+
+ Fixed bugs:
+   * #3079 Fixed Audacity sometimes not being able to import MP3 files (or reporting Huffman Data Overruns)
+   * #2590 Fixed rare data loss bug when placing labels during recording
+   * #2272 Fixed clip titles being able to disappear off-screen when editing them
+   * #2162 Fixed Punch and Roll not paying tracks in sync
+   * #1889 Fixed clip titles changing name when applying some effects
+   * #1624 During batch processing, Audacity will no longer stop to ask for a sample rate when an unsupported one is chosen, but choose the nearest supported one instead.
+   * #2265 Fixed mod-script-pipe not being installed on Linux 
+
 Changes in version 3.1.3
 
  This is a patch release. It improves the following aspects:

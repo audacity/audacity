@@ -13,6 +13,7 @@
 
 #include "../Effect.h"
 #include "FileNames.h"
+#include "SampleCount.h"
 #include "../../widgets/wxPanelWrapper.h"
 
 #include "nyx.h"
@@ -65,6 +66,7 @@ struct NyquistSettings {
    // other settings, for the Nyquist prompt; else null
    EffectSettings proxySettings;
    bool proxyDebug{ false };
+   std::vector<NyqControl> controls;
 
    // Other fields, to do
 };

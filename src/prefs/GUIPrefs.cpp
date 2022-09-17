@@ -239,6 +239,7 @@ bool GUIPrefs::Commit()
    }
    AColor::ApplyUpdatedImages();
 
+   GUIBlendThemes.Invalidate();
    return true;
 }
 

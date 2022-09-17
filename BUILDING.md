@@ -238,7 +238,7 @@ This option implies `-Daudacity_obey_system_dependencies=On` and disables `local
 
 ### Disabling pre-built binaries downloads for Conan
 
-It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. 
+It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudacity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. 
 
 Additionally, passing `-Daudacity_conan_force_build_dependencies=On` will force Conan to rebuild all the packaged during *every* configuration. This can be usefull for the offline builds against the Conan download cache.
 
@@ -297,7 +297,7 @@ The default build architecture is selected based on `CMAKE_HOST_SYSTEM_PROCESSOR
 When cross-compiling from Intel to AppleSilicon, or if *Rosetta 2* is not installed on the AppleSilicon Mac, 
 a native Audacity version build directory is required, as Audacity needs a working `image-compiler`. 
 
-For example, to build ARM64 version of Audaicty on Intel Mac:
+For example, to build ARM64 version of Audacity on Intel Mac:
 
 ```
 $ mkdir build.x64

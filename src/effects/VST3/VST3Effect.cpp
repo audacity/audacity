@@ -105,7 +105,7 @@ VST3Effect::~VST3Effect()
 }
 
 VST3Effect::VST3Effect(
-   std::shared_ptr<VST3::Hosting::Module> module, 
+   std::shared_ptr<VST3::Hosting::Module> module,
    VST3::Hosting::ClassInfo effectClassInfo)
       : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
@@ -143,7 +143,7 @@ EffectType VST3Effect::GetType() const
    if(mEffectClassInfo.subCategoriesString() == kFxGenerator)
       return EffectTypeGenerate;
    const auto& cats = mEffectClassInfo.subCategories();
-   
+
    if(std::find(cats.begin(), cats.end(), kFx) != cats.end())
       return EffectTypeProcess;
 
@@ -167,7 +167,9 @@ bool VST3Effect::IsDefault() const
 
 auto VST3Effect::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Always;
+   return GetType() == EffectTypeProcess
+      ? RealtimeSince::Since_3_2
+      : RealtimeSince::Never;
 }
 
 bool VST3Effect::SupportsAutomation() const
@@ -314,7 +316,8 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 
    auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
-   wrapper->FetchSettings(settings);
+   auto dummy = EffectSettings { settings };
+   wrapper->FetchSettings(dummy);
 
    if (!wrapper->SavePreset(fileStream))
    {

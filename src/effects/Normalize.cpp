@@ -266,7 +266,23 @@ std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
 
 bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    UpdateUI();
+
+   return true;
+}
+
+bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    return true;
 }
 

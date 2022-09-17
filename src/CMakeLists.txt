@@ -1114,6 +1114,27 @@ list( APPEND SOURCES
           update/NoUpdatesAvailableDialog.cpp
       >
 
+      # Audio.com
+      $<$<BOOL:${${_OPT}has_audiocom_upload}>:
+         cloud/ShareAudioToolbar.cpp
+         cloud/ShareAudioToolbar.h
+         cloud/audiocom/AuthorizationHandler.cpp
+         cloud/audiocom/AuthorizationHandler.h
+         cloud/audiocom/LinkAccountDialog.cpp
+         cloud/audiocom/LinkAccountDialog.h
+         cloud/audiocom/LinkFailedDialog.cpp
+         cloud/audiocom/LinkFailedDialog.h
+         cloud/audiocom/LinkSucceededDialog.cpp
+         cloud/audiocom/LinkSucceededDialog.h
+         cloud/audiocom/ShareAudioDialog.cpp
+         cloud/audiocom/ShareAudioDialog.h
+         cloud/audiocom/UserImage.cpp
+         cloud/audiocom/UserImage.h
+      >
+
+      $<$<AND:$<BOOL:${${_OPT}has_audiocom_upload}>,$<BOOL:${${_OPT}has_url_schemes_support}>>:
+         cloud/audiocom/LinkUrlHandler.cpp
+      >
       Experimental.cmake
 )
 
@@ -1138,8 +1159,7 @@ list( APPEND INCLUDES
 # Define resources
 #
 list( APPEND RESOURCES
-   ../resources/EQDefaultCurves.xml
-   ../resources/EffectsMenuDefaults.xml
+   ${topdir}/resources/EffectsMenuDefaults.xml
 )
 
 #
@@ -1264,7 +1284,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          # Make sure we're a GUI application and not a console tool
          WIN32_EXECUTABLE ON
          # Add the resources
-         RESOURCE "${WIN_RESOURCES};${RESOURCES}"
+         RESOURCE "${WIN_RESOURCES}"
    )
 
    # Copy over the wxWidgets DLLs
@@ -1287,6 +1307,15 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          ${TARGET}
       COMMAND
          ${CMAKE_COMMAND} -E copy ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} ${_DEST}
+      POST_BUILD
+   )
+
+   # Copy resource files into build folder
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -E copy ${RESOURCES} ${_DEST}
       POST_BUILD
    )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
@@ -1467,6 +1496,7 @@ else()
 
    add_executable(findlib ../linux/findlib.c)
    target_link_libraries(findlib ${CMAKE_DL_LIBS})
+   set_target_property_all( findlib SKIP_BUILD_RPATH On )
 endif()
 
 if(CRASH_REPORT_URL)
@@ -1537,6 +1567,12 @@ endif()
 if( ${_OPT}has_url_schemes_support )
    list( APPEND AUDACITY_LIBRARIES
       lib-url-schemes-interface
+   )
+endif()
+
+if( ${_OPT}has_audiocom_upload )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-cloud-audiocom-interface
    )
 endif()
 

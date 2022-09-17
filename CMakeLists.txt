@@ -31,7 +31,7 @@ endif()
 # Increment as appropriate after release of a new version, and set back
 # AUDACITY_BUILD_LEVEL to 0
 set( AUDACITY_VERSION 3 )
-set( AUDACITY_RELEASE 2 )
+set( AUDACITY_RELEASE 3 )
 set( AUDACITY_REVISION 0 )
 set( AUDACITY_MODLEVEL 0 )
 
@@ -209,6 +209,14 @@ cmake_dependent_option(
    "Enables automated testing support"
    On
    "${_OPT}conan_enabled"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_audiocom_upload
+   "Enables uploading of Audacity recordings to Audio.com"
+   Off
+   "${_OPT}has_networking"
    Off
 )
 

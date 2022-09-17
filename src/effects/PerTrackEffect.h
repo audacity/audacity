@@ -18,6 +18,7 @@
 #include "AudioGraphSource.h" // to inherit
 #include "Effect.h" // to inherit
 #include "MemoryX.h"
+#include "SampleCount.h"
 #include <functional>
 
 //! Base class for Effects that treat each (mono or stereo) track independently
@@ -49,11 +50,6 @@ public:
          double sampleRate, ChannelNames chanMap) override;
 
       bool ProcessFinalize() noexcept override;
-
-      //! Default implementation returns zero
-      sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const override;
-
    protected:
       const PerTrackEffect &mProcessor;
    };
@@ -72,8 +68,7 @@ private:
    using Buffers = AudioGraph::Buffers;
 
    bool ProcessPass(Instance &instance, EffectSettings &settings);
-   //! Type of function returning false if user cancels progress
-   using Poller = std::function<bool(sampleCount blockSize)>;
+   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
    /*!
     Previous contents of inBuffers and outBuffers are ignored
 
@@ -82,10 +77,11 @@ private:
     @pre `sink.AcceptsBuffers(outBuffers)`
     @pre `inBuffers.BlockSize() == outBuffers.BlockSize()`
     */
-   static bool ProcessTrack(Instance &instance, EffectSettings &settings,
+   static bool ProcessTrack(bool multi,
+      const Factory &factory, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
-      double sampleRate, ChannelNames map,
+      double sampleRate, const Track &track,
       Buffers &inBuffers, Buffers &outBuffers);
 };
 #endif

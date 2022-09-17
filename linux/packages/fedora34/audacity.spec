@@ -119,7 +119,7 @@ rm %{buildroot}%{_datadir}/doc/%{name}/LICENSE.txt
 %{_bindir}/%{name}
 %{_libdir}/%{name}
 %dir %{_datadir}/%{name}
-%{_datadir}/%{name}/EQDefaultCurves.xml
+%{_datadir}/%{name}/EffectsMenuDefaults.xml
 %{_datadir}/%{name}/nyquist/
 %{_datadir}/%{name}/plug-ins/
 %exclude %{_datadir}/%{name}/help

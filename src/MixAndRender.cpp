@@ -97,8 +97,11 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    // EmptyCopy carries over any interesting channel group information
    // But make sure the left is unlinked before we re-link
+   // And reset pan and gain
    auto mixLeft =
       first->EmptyCopy(trackFactory->GetSampleBlockFactory(), false);
+   mixLeft->SetPan(0);
+   mixLeft->SetGain(1);
    mixLeft->SetRate(rate);
    mixLeft->ConvertToSampleFormat(format);
    if (oneinput)
@@ -196,34 +199,6 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 }
 
-#include "EffectInterface.h"
-unsigned MakeChannelMap(
-   const Track &track, bool multichannel, ChannelName map[3])
-{
-   // Iterate either over one track which could be any channel,
-   // or if multichannel, then over all channels of track,
-   // which is a leader.
-   unsigned numChannels = 0;
-   for (auto channel : TrackList::Channels(&track).StartingWith(&track)) {
-      if (channel->GetChannel() == Track::LeftChannel)
-         map[numChannels] = ChannelNameFrontLeft;
-      else if (channel->GetChannel() == Track::RightChannel)
-         map[numChannels] = ChannelNameFrontRight;
-      else
-         map[numChannels] = ChannelNameMono;
-      ++ numChannels;
-      map[numChannels] = ChannelNameEOL;
-      if (! multichannel)
-         break;
-      if (numChannels == 2) {
-         // TODO: more-than-two-channels
-         // Ignore other channels
-         break;
-      }
-   }
-   return numChannels;
-}
-
 #include "effects/RealtimeEffectList.h"
 #include "effects/RealtimeEffectState.h"
 
@@ -244,13 +219,10 @@ GetEffectStages(const WaveTrack &track)
       const auto &settings = pState->GetSettings();
       if (!settings.has_value())
          continue;
-      const auto pInstance =
-         std::dynamic_pointer_cast<EffectInstanceEx>(pEffect->MakeInstance());
-      if (!pInstance)
-         continue;
       auto &stage = result.emplace_back(MixerOptions::StageSpecification{
-         move(pInstance), settings });
-      MakeChannelMap(track, stage.mpInstance->GetAudioInCount() > 1, stage.map);
+         [pEffect]{ return std::dynamic_pointer_cast<EffectInstanceEx>(
+            pEffect->MakeInstance()); },
+         settings });
    }
    return result;
 }

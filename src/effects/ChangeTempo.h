@@ -61,6 +61,7 @@ public:
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectChangeTempo implementation

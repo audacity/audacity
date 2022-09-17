@@ -278,7 +278,7 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    )
 endif()
 
-if( ${_OPT}has_sentry_reporting )
+if( ${_OPT}has_sentry_reporting OR ${_OPT}has_audiocom_upload )
    add_conan_lib(
       RapidJSON
       rapidjson/1.1.0

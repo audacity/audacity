@@ -324,7 +324,11 @@ FilePath FileNames::DataDir() { return GetUserTargetDir(DirTarget::Data); }
 FilePath FileNames::StateDir() { return GetUserTargetDir(DirTarget::State); }
 
 FilePath FileNames::ResourcesDir(){
-   wxString resourcesDir( LowerCaseAppNameInPath( wxStandardPaths::Get().GetResourcesDir() ));
+#if __WXMSW__
+   static auto resourcesDir = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
+#else
+   static auto resourcesDir = LowerCaseAppNameInPath(wxStandardPaths::Get().GetResourcesDir());
+#endif
    return resourcesDir;
 }
 

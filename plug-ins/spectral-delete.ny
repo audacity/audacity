@@ -2,12 +2,11 @@ $nyquist plug-in
 $version 4
 $type process spectral
 $name (_ "Spectral Delete")
-$manpage "Spectral_Delete"
 $author (_ "Steve Daulton")
-$release 3.0.4
+$release 3.0.4-1
 $copyright (_ "GNU General Public License v2.0 or later")
 
-;; Released under terms of the GNU General Public License v2.0 or later:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

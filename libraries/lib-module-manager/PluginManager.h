@@ -17,6 +17,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "EffectInterface.h"
 #include "PluginInterface.h"
@@ -153,6 +154,8 @@ public:
    const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
    ComponentInterface *Load(const PluginID & ID);
 
+   void ClearEffectPlugins();
+
    /**
     * \brief Ensures that all currently registered plugins still exist
     * and scans for new ones.
@@ -220,6 +223,7 @@ private:
 
    PluginMap mRegisteredPlugins;
    std::map<PluginID, std::unique_ptr<ComponentInterface>> mLoadedInterfaces;
+   std::vector<PluginDescriptor> mEffectPluginsCleared;
 
    PluginRegistryVersion mRegver;
 };

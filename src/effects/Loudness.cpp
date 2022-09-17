@@ -312,9 +312,23 @@ std::unique_ptr<EffectUIValidator> EffectLoudness::PopulateOrExchange(
 
 bool EffectLoudness::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    // adjust controls which depend on mchoice
    wxCommandEvent dummy;
    OnChoice(dummy);
+   return true;
+}
+
+bool EffectLoudness::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
    return true;
 }
 

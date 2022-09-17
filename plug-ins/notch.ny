@@ -5,14 +5,12 @@ $preview linear
 $name (_ "Notch Filter")
 $manpage "Notch_Filter"
 $debugbutton false
-$action (_ "Applying Notch Filter...")
 $author (_ "Steve Daulton and Bill Wharrie")
-$release 2.3.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 2.3.0-1
+$copyright (_ "GNU General Public License v2.0 or later")
 
-;; notch.ny by Steve Daulton and Bill Wharrie
 
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

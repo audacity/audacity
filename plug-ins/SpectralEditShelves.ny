@@ -2,22 +2,22 @@ $nyquist plug-in
 $version 4
 $type process spectral
 $preview linear
-$name (_ "Spectral edit shelves")
+$name (_ "Spectral Edit Shelves")
 $manpage "Spectral_edit_shelves"
-$action (_ "Filtering...")
+$debugbutton false
 $author (_ "Paul Licameli")
-$release 2.3.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 2.3.0-1
+$copyright (_ "GNU General Public License v2.0 or later")
 
-
-;; SpectralEditShelves.ny by Paul Licameli, November 2014.
-;; Updated by Steve Daulton 2014 / 2015.
-
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+;; SpectralEditShelves.ny by Paul Licameli, November 2014.
+;; Updated by Steve Daulton 2014 / 2015.
+
 
 $control control-gain (_ "Gain (dB)") real "" 0 -24 24
 

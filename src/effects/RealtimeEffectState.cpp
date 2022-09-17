@@ -14,6 +14,7 @@
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
+#include "SampleCount.h"
 
 #include <chrono>
 #include <thread>
@@ -25,14 +26,19 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
+      Initialize(state.mMainSettings);
+   }
+
+   void Initialize(SettingsAndCounter &settings)
+   {
       // Clean initial state of the counter
-      auto &mainSettings = state.mMainSettings;
-      mainSettings.counter = 0;
+      settings.counter = 0;
+      mLastSettings = settings;
       // Initialize each message buffer with two copies of settings
-      mChannelToMain.Write(ToMainSlot{ mainSettings });
-      mChannelToMain.Write(ToMainSlot{ mainSettings });
-      mChannelFromMain.Write(FromMainSlot{ mainSettings });
-      mChannelFromMain.Write(FromMainSlot{ mainSettings });
+      mChannelToMain.Write(ToMainSlot{ settings });
+      mChannelToMain.Write(ToMainSlot{ settings });
+      mChannelFromMain.Write(FromMainSlot{ settings });
+      mChannelFromMain.Write(FromMainSlot{ settings });
    }
 
    const SettingsAndCounter &MainRead() {
@@ -47,8 +53,6 @@ public:
    }
    const SettingsAndCounter &
    MainWriteThrough(const SettingsAndCounter &settings) {
-      // Send a copy of settings for worker to update from later
-      MainWrite(SettingsAndCounter{ settings });
       // Main thread assumes worker isn't processing and bypasses the echo
       return (mMainThreadCache = settings);
    }
@@ -160,16 +164,17 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    static const SettingsAndCounter *FlushAttempt(AccessState &state) {
       auto &lastSettings = state.mLastSettings;
       auto pResult = &state.MainRead();
-      if (!lastSettings.settings.has_value() ||
+      if (!state.mState.mInitialized) {
+         // not relying on the other thread to make progress
+         // and no fear of data races
+         state.Initialize(lastSettings);
+         return &state.MainWriteThrough(lastSettings);
+      }
+      else if (!lastSettings.settings.has_value() ||
          pResult->counter == lastSettings.counter
       ){
          // First time test, or echo is completed
          return pResult;
-      }
-      else if (!state.mState.mInitialized) {
-         // not relying on the other thread to make progress
-         // and no fear of data races
-         return &state.MainWriteThrough(lastSettings);
       }
       return nullptr;
    }
@@ -288,14 +293,13 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
       if (!pInstance)
          return {};
 
-      mInitialized = true;
-
       // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
       // number was important
       pInstance->SetBlockSize(512);
 
       if (!pInstance->RealtimeInitialize(mMainSettings.settings, sampleRate))
          return {};
+      mInitialized = true;
       return pInstance;
    }
    return pInstance;
@@ -318,7 +322,34 @@ RealtimeEffectState::Initialize(double sampleRate)
 
    mCurrentProcessor = 0;
    mGroups.clear();
+   mLatency = {};
    return EnsureInstance(sampleRate);
+}
+
+namespace {
+// The caller passes the number of channels to process and specifies
+// the number of input and output buffers.  There will always be the
+// same number of output buffers as there are input buffers.
+//
+// Effects require a certain number of input and output buffers.
+// The number of channels we're currently processing may mismatch
+// the effect's requirements.  Allocate some inputs repeatedly to a processor
+// that needs more, or allocate multiple processors if they accept too few.
+// Continue until the output buffers are all allocated.
+template<typename F>
+void AllocateChannelsToProcessors(
+   unsigned chans, const unsigned numAudioIn, const unsigned numAudioOut,
+   const F &f)
+{
+   unsigned indx = 0;
+   for (unsigned ondx = 0; ondx < chans; ondx += numAudioOut) {
+      // Pass the function indices into the arrays of buffers
+      if (!f(indx, ondx))
+         return;
+      indx += numAudioIn;
+      indx %= chans;
+   }
+}
 }
 
 //! Set up processors to be visited repeatedly in Process.
@@ -329,68 +360,28 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
    auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
       return {};
-
    if (!mPlugin)
       return {};
-
-   auto ichans = chans;
-   auto ochans = chans;
-   auto gchans = chans;
-
    auto first = mCurrentProcessor;
-
    const auto numAudioIn = pInstance->GetAudioInCount();
    const auto numAudioOut = pInstance->GetAudioOutCount();
-
-   // Call the client until we run out of input or output channels
-   while (ichans > 0 && ochans > 0)
-   {
-      // If we don't have enough input channels to accommodate the client's
-      // requirements, then we replicate the input channels until the
-      // client's needs are met.
-      if (ichans < numAudioIn)
-      {
-         // All input channels have been consumed
-         ichans = 0;
-      }
-      // Otherwise fulfill the client's needs with as many input channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ichans >= numAudioIn)
-      {
-         gchans = numAudioIn;
-         ichans -= gchans;
-      }
-
-      // If we don't have enough output channels to accommodate the client's
-      // requirements, then we provide all of the output channels and fulfill
-      // the client's needs with dummy buffers.  These will just get tossed.
-      if (ochans < numAudioOut)
-      {
-         // All output channels have been consumed
-         ochans = 0;
-      }
-      // Otherwise fulfill the client's needs with as many output channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ochans >= numAudioOut)
-      {
-         ochans -= numAudioOut;
-      }
-
+   AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
+   [&](unsigned, unsigned){
       // Add a NEW processor
       // Pass reference to worker settings, not main -- such as, for connecting
       // Ladspa ports to the proper addresses.
       if (pInstance->RealtimeAddProcessor(
-         mWorkerSettings.settings, gchans, sampleRate)
-      )
+         mWorkerSettings.settings, numAudioIn, sampleRate)
+      ) {
          mCurrentProcessor++;
+         return true;
+      }
       else
-         break;
-   }
-
+         return false;
+   });
    if (mCurrentProcessor > first) {
-      mGroups[&track] = first;
+      // Remember the sampleRate of the track, so latency can be computed later
+      mGroups[&track] = { first, sampleRate };
       return pInstance;
    }
    return {};
@@ -426,9 +417,11 @@ bool RealtimeEffectState::ProcessStart(bool running)
    return pInstance->RealtimeProcessStart(mWorkerSettings.settings);
 }
 
+#define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
+
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
-void RealtimeEffectState::Process(Track &track, unsigned chans,
+size_t RealtimeEffectState::Process(Track &track, unsigned chans,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
@@ -436,102 +429,70 @@ void RealtimeEffectState::Process(Track &track, unsigned chans,
       // Process trivially
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
-      return;
+      return 0;
    }
-
-   // The caller passes the number of channels to process and specifies
-   // the number of input and output buffers.  There will always be the
-   // same number of output buffers as there are input buffers.
-   //
-   // Effects always require a certain number of input and output buffers,
-   // so if the number of channels we're currently processing are different
-   // than what the effect expects, then we use a few methods of satisfying
-   // the effects requirements.
    const auto numAudioIn = pInstance->GetAudioInCount();
    const auto numAudioOut = pInstance->GetAudioOutCount();
-
-   const auto clientIn =
-      static_cast<const float **>(alloca(numAudioIn * sizeof(float *)));
-   const auto clientOut =
-      static_cast<float **>(alloca(numAudioOut * sizeof(float *)));
-   decltype(numSamples) len = 0;
-   auto ichans = chans;
-   auto ochans = chans;
-   auto gchans = chans;
-   unsigned indx = 0;
-   unsigned ondx = 0;
-
-   auto processor = mGroups[&track];
-
-   // Call the client until we run out of input or output channels
-   while (ichans > 0 && ochans > 0)
-   {
-      // Assume sufficient buffers of zeroes given when the stored track
-      // did not have enough channels
-      if (ichans < numAudioIn)
-      {
-         for (size_t i = 0; i < numAudioIn; i++)
-            clientIn[i] = inbuf[indx++];
-
-         // All input channels have been consumed
-         ichans = 0;
-      }
-      // Otherwise fulfill the client's needs with as many input channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ichans >= numAudioIn)
-      {
-         gchans = 0;
-         for (size_t i = 0; i < numAudioIn; i++, ichans--, gchans++)
-         {
-            clientIn[i] = inbuf[indx++];
-         }
+   const auto clientIn = stackAllocate(const float *, numAudioIn);
+   const auto clientOut = stackAllocate(float *, numAudioOut);
+   size_t len = 0;
+   const auto &pair = mGroups[&track];
+   auto processor = pair.first;
+   // Outer loop over processors
+   AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
+   [&](unsigned indx, unsigned ondx){
+      // Point at the correct input buffers
+      unsigned copied = std::min(chans - indx, numAudioIn);
+      std::copy(inbuf + indx, inbuf + indx + copied, clientIn);
+      // If there are too few input channels for what the processor requires,
+      // re-use input channels from the beginning
+      while (auto need = numAudioIn - copied) {
+         auto moreCopied = std::min(chans, need);
+         std::copy(inbuf, inbuf + moreCopied, clientIn + copied);
+         copied += moreCopied;
       }
 
-      // If we don't have enough output channels to accommodate the client's
-      // requirements, then we provide all of the output channels and fulfill
-      // the client's needs with dummy buffers.  These will just get tossed.
-      if (ochans < numAudioOut)
-      {
-         for (size_t i = 0; i < numAudioOut; i++)
-            clientOut[i] = outbuf[i];
-
-         // All output channels have been consumed
-         ochans = 0;
-      }
-      // Otherwise fulfill the client's needs with as many output channels as possible.
-      // After calling the client with this set, we will loop back up to process more
-      // of the input/output channels.
-      else if (ochans >= numAudioOut)
-      {
-         for (size_t i = 0; i < numAudioOut; i++, ochans--)
-         {
-            clientOut[i] = outbuf[ondx++];
-         }
+      // Point at the correct output buffers
+      copied = std::min(chans - ondx, numAudioOut);
+      std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
+      if (copied < numAudioOut) {
+         // This is unexpected.  Is a bad instance demanding 3 channels out?
+         assert(false);
+         // Make determinate pointers
+         std::fill(clientOut + copied, clientOut + numAudioOut, nullptr);
       }
 
-      // Finally call the plugin to process the block
-      len = 0;
+      // Inner loop over blocks
       const auto blockSize = pInstance->GetBlockSize();
-      for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
-      {
+      for (size_t block = 0; block < numSamples; block += blockSize) {
          auto cnt = std::min(numSamples - block, blockSize);
          // Assuming we are in a processing scope, use the worker settings
-         len += pInstance->RealtimeProcess(processor,
+         auto processed = pInstance->RealtimeProcess(processor,
             mWorkerSettings.settings, clientIn, clientOut, cnt);
-
+         if (!mLatency)
+            // Find latency once only per initialization scope,
+            // after processing one block
+            mLatency.emplace(
+               pInstance->GetLatency(mWorkerSettings.settings, pair.second));
          for (size_t i = 0 ; i < numAudioIn; i++)
-         {
             clientIn[i] += cnt;
-         }
-
          for (size_t i = 0 ; i < numAudioOut; i++)
-         {
             clientOut[i] += cnt;
+         if (ondx == 0) {
+            // For the first processor only
+            len += processed;
+            auto discard = limitSampleBufferSize(len, *mLatency);
+            len -= discard;
+            *mLatency -= discard;
          }
       }
-      processor++;
-   }
+      ++processor;
+      return true;
+   });
+   // Report the number discardable during the processing scope
+   // We are assuming len as calculated above is the same in case of multiple
+   // processors
+   return numSamples - len;
 }
 
 bool RealtimeEffectState::ProcessEnd()
@@ -562,6 +523,19 @@ bool RealtimeEffectState::IsActive() const noexcept
    return mWorkerSettings.settings.extra.GetActive();
 }
 
+void RealtimeEffectState::SetActive(bool active)
+{
+   auto access = GetAccess();
+   access->ModifySettings([&](EffectSettings &settings) {
+      settings.extra.SetActive(active);
+   });
+   access->Flush();
+
+   Publish(active
+      ? RealtimeEffectStateChange::EffectOn
+      : RealtimeEffectStateChange::EffectOff);
+}
+
 bool RealtimeEffectState::Finalize() noexcept
 {
    // This is the main thread cleaning up a state not now used in processing
@@ -575,6 +549,12 @@ bool RealtimeEffectState::Finalize() noexcept
       return false;
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
+   if(result)
+      //update mLastSettings so that Flush didn't
+      //overwrite what was read from the worker
+      if (auto state = GetAccessState())
+         state->Initialize(mMainSettings);
+   mLatency = {};
    mInitialized = false;
    return result;
 }

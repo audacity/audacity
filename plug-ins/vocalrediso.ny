@@ -4,23 +4,20 @@ $type process
 $preview linear
 $name (_ "Vocal Reduction and Isolation")
 $manpage "Vocal_Reduction_and_Isolation"
-$action (_ "Applying Action...")
+$debugbutton false
 $author (_ "Robert Haenggi")
-$release 3.0.1
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 3.0.1-1
+$copyright (_ "GNU General Public License v2.0")
 
 
 ;; vocrediso.ny, based on rjh-stereo-tool.ny
-;; Released under terms of the GNU General Public License version 2:
+
+;; License: GPL v2
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-;;
-;; Plug-in version 1.7, May  2017
-;; added legacy Vocal Remover since V. 1.56, 06-2015
-;; Requires Audacity 2.1.1  or later, developed under Audacity 2.2.0 Alpha
-;; requires Audacity 2.2.0 for embedded help (button)
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
 
 $control action (_ "Action") choice (
     ("RemoveToMono" (_ "Remove Vocals: to mono"))

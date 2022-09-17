@@ -671,6 +671,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       NyquistEffect proxy{ NYQUIST_WORKER_ID };
       proxy.SetCommand(mInputCmd);
       proxy.mDebug = nyquistSettings.proxyDebug;
+      proxy.mControls = move(nyquistSettings.controls);
       auto result = Delegate(proxy, nyquistSettings.proxySettings);
       if (result) {
          mT0 = proxy.mT0;
@@ -1120,6 +1121,7 @@ int NyquistEffect::ShowHostInterface(
          auto &nyquistSettings = GetSettings(settings);
          nyquistSettings.proxySettings = std::move(newSettings);
          nyquistSettings.proxyDebug = this->mDebug;
+         nyquistSettings.controls = move(effect.mControls);
       });
    }
    if (!pNewInstance)
@@ -1145,6 +1147,8 @@ bool NyquistEffect::EnablesDebug() const
 
 bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
+   mUIParent->TransferDataToWindow();
+
    bool success;
    if (mIsPrompt)
    {
@@ -1165,6 +1169,11 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
 bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    if (mIsPrompt)
    {
       return TransferDataFromPromptWindow();

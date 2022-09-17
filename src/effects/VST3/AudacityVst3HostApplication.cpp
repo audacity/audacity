@@ -1,7 +1,11 @@
 #include "AudacityVst3HostApplication.h"
 
+#include <pluginterfaces/vst/ivstaudioprocessor.h>
+#include <pluginterfaces/vst/ivstcomponent.h>
+#include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <public.sdk/source/vst/hosting/hostclasses.h>
 #include <public.sdk/source/vst/utility/stringconvert.h>
+#include <algorithm>
 
 
 AudacityVst3HostApplication::AudacityVst3HostApplication()
@@ -14,7 +18,7 @@ AudacityVst3HostApplication::~AudacityVst3HostApplication()
    FUNKNOWN_DTOR
 }
 
-AudacityVst3HostApplication& AudacityVst3HostApplication::Get()
+Steinberg::Vst::IHostApplication& AudacityVst3HostApplication::Get()
 {
    static AudacityVst3HostApplication instance;
    return instance;
@@ -23,8 +27,9 @@ AudacityVst3HostApplication& AudacityVst3HostApplication::Get()
 
 Steinberg::tresult PLUGIN_API AudacityVst3HostApplication::queryInterface (const char* _iid, void** obj)
 {
-	QUERY_INTERFACE (_iid, obj, FUnknown::iid, IHostApplication)
-	QUERY_INTERFACE (_iid, obj, IHostApplication::iid, IHostApplication)
+   QUERY_INTERFACE (_iid, obj, FUnknown::iid, IHostApplication)
+   QUERY_INTERFACE (_iid, obj, IHostApplication::iid, IHostApplication)
+   QUERY_INTERFACE (_iid, obj, IPlugInterfaceSupport::iid, IPlugInterfaceSupport)
 
 	*obj = nullptr;
 	return Steinberg::kResultFalse;
@@ -65,3 +70,19 @@ Steinberg::tresult PLUGIN_API AudacityVst3HostApplication::createInstance(Steinb
 	*obj = nullptr;
 	return kResultFalse;
 }
+
+Steinberg::tresult AudacityVst3HostApplication::isPlugInterfaceSupported(const Steinberg::TUID _iid)
+{
+   static auto supportedInterfaces = {
+      Steinberg::Vst::IComponent::iid,
+      Steinberg::Vst::IAudioProcessor::iid,
+      Steinberg::Vst::IEditController::iid,
+      Steinberg::Vst::IConnectionPoint::iid
+   };
+
+   auto uid = Steinberg::FUID::fromTUID(_iid);
+   if(std::find(supportedInterfaces.begin(), supportedInterfaces.end(), uid) != supportedInterfaces.end())
+      return Steinberg::kResultTrue;
+   return Steinberg::kResultFalse;
+}
+

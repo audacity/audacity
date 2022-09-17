@@ -127,7 +127,7 @@ bool LadspaEffect::CopySettingsContents(
    // of the destination vector, which will not allocate memory if dstControls
    // began with sufficient capacity.
    const auto portCount = mData->PortCount;
-   
+
    auto &srcControls = GetSettings(src).controls;
    auto &dstControls = GetSettings(dst).controls;
 
@@ -145,14 +145,14 @@ bool LadspaEffect::CopySettingsContents(
    for (unsigned long p = 0; p < portCount; ++p)
    {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
-      
+
       if (!(LADSPA_IS_PORT_CONTROL(d)))
          continue;
 
       if (LADSPA_IS_PORT_INPUT(d) || copyOutputs)
          dstControls[p] = srcControls[p];
    }
-   
+
    return true;
 }
 
@@ -283,7 +283,7 @@ PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface & pm)
    pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
 
 #else
-   
+
    // Recursively scan for all shared objects
    pm.FindFilesInPathList(wxT("*.so"), pathList, files, true);
 
@@ -742,9 +742,9 @@ bool LadspaEffect::IsDefault() const
 
 auto LadspaEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return GetType() == EffectTypeGenerate
-      ? RealtimeSince::Never
-      : RealtimeSince::Always;
+   return GetType() == EffectTypeProcess
+      ? RealtimeSince::Since_3_2
+      : RealtimeSince::Never;
 }
 
 bool LadspaEffect::SupportsAutomation() const
@@ -829,7 +829,7 @@ bool LadspaEffect::InitializePlugin()
 
       // Collect the audio ports
       if (LADSPA_IS_PORT_AUDIO(d)) {
-         if (LADSPA_IS_PORT_INPUT(d)) 
+         if (LADSPA_IS_PORT_INPUT(d))
             mInputPorts[mAudioIns++] = p;
          else if (LADSPA_IS_PORT_OUTPUT(d))
             mOutputPorts[mAudioOuts++] = p;
@@ -897,7 +897,7 @@ struct LadspaEffect::Instance
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   sampleCount GetLatency(const EffectSettings &settings, double sampleRate)
+   SampleCount GetLatency(const EffectSettings &settings, double sampleRate)
       const override;
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
@@ -932,14 +932,13 @@ std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
    return std::make_shared<Instance>(*this);
 }
 
-sampleCount LadspaEffect::Instance::GetLatency(
-   const EffectSettings &settings, double) const
+auto LadspaEffect::Instance::GetLatency(
+   const EffectSettings &settings, double) const -> SampleCount
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
-   if (effect.mUseLatency && effect.mLatencyPort >= 0) {
-      return sampleCount{ controls[effect.mLatencyPort] };
-   }
+   if (effect.mUseLatency && effect.mLatencyPort >= 0)
+      return controls[effect.mLatencyPort];
    return 0;
 }
 
@@ -1722,7 +1721,7 @@ void LadspaEffect::Validator::RefreshControls()
       if (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor))
          forceint = true;
 
-      if (LADSPA_IS_PORT_OUTPUT(d)) 
+      if (LADSPA_IS_PORT_OUTPUT(d))
          continue;
 
       if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) {

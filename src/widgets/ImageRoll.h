@@ -69,32 +69,4 @@ class AUDACITY_DLL_API ImageRoll
    wxSize       mMaxSize;
 };
 
-// A very simple class that just display an ImageRoll that doesn't
-// do anything
-class ImageRollPanel final : public wxPanelWrapper
-{
- public:
-   DECLARE_DYNAMIC_CLASS(ImageRollPanel)
-
-   ImageRollPanel(wxWindow *parent,
-                  wxWindowID id,
-                  //ImageRoll &imgRoll,
-                  const wxPoint& pos = wxDefaultPosition,
-                  const wxSize& size = wxDefaultSize,
-                  long style = wxTAB_TRAVERSAL);
-
-   void SetLogicalFunction(int /*wxRasterOperationMode*/ func);
-
-   void OnPaint(wxPaintEvent &evt);
-   void OnSize(wxSizeEvent &evt);
-
- protected:
-   //ImageRoll mImageRoll;
-
-   int /*wxRasterOperationMode*/ mLogicalFunction;
-
-   DECLARE_EVENT_TABLE()
-
-};
-
 #endif // __AUDACITY_IMAGE_ROLL__

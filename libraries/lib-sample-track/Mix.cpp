@@ -58,8 +58,14 @@ size_t FindBufferSize(const Mixer::Inputs &inputs, size_t bufferSize)
          break;
       }
       auto increment = finally([&]{ i += nInChannels; });
-      for (const auto &stage : input.stages)
-         blockSize = std::min(blockSize, stage.mpInstance->SetBlockSize(blockSize));
+      for (const auto &stage : input.stages) {
+         // Need an instance to query acceptable block size
+         const auto pInstance = stage.factory();
+         if (pInstance)
+            blockSize = std::min(blockSize, pInstance->SetBlockSize(blockSize));
+         // Cache the first factory call
+         stage.mpFirstInstance = move(pInstance);
+      }
    }
    return blockSize;
 }
@@ -88,7 +94,9 @@ Mixer::Mixer(Inputs inputs,
 
    // PRL:  Bug2536: see other comments below for the last, padding argument
    // TODO: more-than-two-channels
-   , mFloatBuffers{ 2, mBufferSize, 1, 1 }
+   // Issue 3565 workaround:  allocate one extra buffer when applying a
+   // GVerb effect stage.  It is simply discarded
+   , mFloatBuffers{ 3, mBufferSize, 1, 1 }
 
    // non-interleaved
    , mTemp{ initVector<float>(mNumChannels, mBufferSize) }
@@ -133,12 +141,25 @@ Mixer::Mixer(Inputs inputs,
          // TODO: more-than-two-channels
          // Like mFloatBuffers but padding not needed for soxr
          auto &stageInput = mStageBuffers.emplace_back(2, mBufferSize, 1);
-         pDownstream =
-         mStages.emplace_back(std::make_unique<AudioGraph::EffectStage>(
+         const auto &factory = [&stage]{
+            // Avoid unnecessary repeated calls to the factory
+            return stage.mpFirstInstance
+               ? move(stage.mpFirstInstance)
+               : stage.factory();
+         };
+         auto &pNewDownstream =
+         mStages.emplace_back(AudioGraph::EffectStage::Create(true,
             *pDownstream, stageInput,
-            *stage.mpInstance, settings, outRate, std::nullopt,
-            stage.map
-         )).get();
+            factory, settings, outRate, std::nullopt, *leader
+         ));
+         if (pNewDownstream)
+            pDownstream = pNewDownstream.get();
+         else {
+            // Just omit the failed stage from rendering
+            // TODO propagate the error?
+            mStageBuffers.pop_back();
+            mSettings.pop_back();
+         }
       }
       mDecoratedSources.emplace_back(Source{ source, *pDownstream });
    }
@@ -219,7 +240,7 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    Clear();
    // TODO: more-than-two-channels
-   auto maxChannels = mFloatBuffers.Channels();
+   auto maxChannels = std::max(2u, mFloatBuffers.Channels());
 
    for (auto &[ upstream, downstream ] : mDecoratedSources) {
       auto oResult = downstream.Acquire(mFloatBuffers, maxToProcess);

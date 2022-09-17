@@ -31,11 +31,12 @@ class AudacityProject;
  * an individual track, provides controls for accessing effect settings,
  * stack manipulation (reorder, add, remove)
  */
-class RealtimeEffectPanel : public wxWindow
+class RealtimeEffectPanel : public wxPanel
 {
-   ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
+   AButton* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
+   wxWindow* mHeader{nullptr};
    AudacityProject& mProject;
 
    std::weak_ptr<Track> mCurrentTrack;
@@ -67,4 +68,11 @@ public:
     */
    void SetTrack(const std::shared_ptr<Track>& track);
    void ResetTrack();
+
+   bool IsTopNavigationDomain(NavigationKind) const override { return true; }
+   
+   void SetFocus() override;
+   
+private:
+   void OnCharHook(wxKeyEvent& evt);
 };

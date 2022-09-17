@@ -282,6 +282,7 @@ bool MidiIOPrefs::Commit()
             wxString(wxSafeConvertMB2WX(info->name))));
    }
 #endif
+   MIDISynthLatency_ms.Invalidate();
    return gPrefs->Flush();
 }
 

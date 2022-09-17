@@ -12,25 +12,29 @@
 #define __AUDACITY_REALTIMEEFFECTSTATE_H__
 
 #include <atomic>
+#include <cstddef>
+#include <optional>
 #include <unordered_map>
 #include <vector>
-#include <cstddef>
-
 #include "ClientData.h"
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
 #include "MemoryX.h"
+#include "Observer.h"
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
 class EffectSettingsAccess;
 class Track;
 
+enum class RealtimeEffectStateChange { EffectOff, EffectOn };
+
 class RealtimeEffectState
    : public XMLTagHandler
    , public std::enable_shared_from_this<RealtimeEffectState>
    , public SharedNonInterfering<RealtimeEffectState>
    , public ClientData::Site<RealtimeEffectState>
+   , public Observer::Publisher<RealtimeEffectStateChange>
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
@@ -68,8 +72,11 @@ public:
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
-   void Process(Track &track,
-      unsigned chans,
+   /*!
+    @return how many leading samples are discardable for latency
+    */
+   size_t Process(Track &track,
+      unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
       size_t numSamples);
@@ -83,6 +90,9 @@ public:
 
    //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;
+
+   //! Set only in the main thread
+   void SetActive(bool active);
 
    //! Main thread cleans up playback
    bool Finalize() noexcept;
@@ -102,7 +112,7 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
-      
+
    std::shared_ptr<EffectInstance> EnsureInstance(double rate);
 
    struct Access;
@@ -146,6 +156,8 @@ private:
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<SettingsAndCounter> mWorkerSettings;
+   //! How many samples must be discarded
+   std::optional<EffectInstance::SampleCount> mLatency;
    //! Assigned in the worker thread at the start of each processing scope
    bool mLastActive{};
 
@@ -155,7 +167,7 @@ private:
     @{
     */
     
-   std::unordered_map<Track *, size_t> mGroups;
+   std::unordered_map<Track *, std::pair<size_t, double>> mGroups;
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.

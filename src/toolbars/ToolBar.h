@@ -83,6 +83,9 @@ enum ToolBarID
    SpectralSelectionBarID,
 #endif
    AudioSetupBarID,
+#ifdef HAS_AUDIOCOM_UPLOAD
+   ShareAudioBarID,
+#endif
    TimeBarID,
    ToolBarCount
 };

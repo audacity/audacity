@@ -138,10 +138,6 @@ private:
    const wxString mName;
    const wxString mVendor;
 
-   // Initialized in GetChannelCounts()
-   unsigned mAudioIns{ 2 };
-   unsigned mAudioOuts{ 2 };
-
    bool mInteractive{ false };
    bool mUseLatency{ true };
 

@@ -209,7 +209,7 @@ public:
 
    void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
+               std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -241,7 +241,7 @@ ExportFLAC::ExportFLAC()
 }
 
 ProgressResult ExportFLAC::Export(AudacityProject *project,
-                        std::unique_ptr<ProgressDialog> &pDialog,
+                        std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                         unsigned numChannels,
                         const wxFileNameWrapper &fName,
                         bool selectionOnly,
@@ -407,7 +407,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
          }
          if (updateResult == ProgressResult::Success)
             updateResult =
-               progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+               progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 
@@ -482,6 +482,36 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "FLAC",
    []{ return std::make_unique< ExportFLAC >(); }
 };
+
+#ifdef HAS_CLOUD_UPLOAD
+#include "CloudExporterPlugin.h"
+#include "CloudExportersRegistry.h"
+
+class FlacCloudHelper : public cloud::CloudExporterPlugin
+{
+public:
+   wxString GetExporterID() const override
+   {
+      return "FLAC";
+   }
+
+   FileExtension GetFileExtension() const override
+   {
+      return "flac";
+   }
+
+   void OnBeforeExport() override
+   {
+      FLACBitDepth.Write("24");
+      FLACLevel.Write("5");
+   }
+
+}; // WavPackCloudHelper
+
+static bool cloudExporterRegisterd = cloud::RegisterCloudExporter(
+   "audio/x-flac",
+   [](const AudacityProject&) { return std::make_unique<FlacCloudHelper>(); });
+#endif
 
 #endif // USE_LIBFLAC
 

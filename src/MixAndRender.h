@@ -50,15 +50,6 @@ void AUDACITY_DLL_API MixAndRender(
 enum ChannelName : int;
 using ChannelNames = const ChannelName *;
 
-/*
- @param multichannel true only when effect does not process each channel
-    of track independently
- @param[out] map terminated with ChannelNameEOL
- */
-unsigned MakeChannelMap(const Track &track, bool multichannel,
-   // TODO: more-than-two-channels
-   ChannelName map[3]);
-
 AUDACITY_DLL_API
 std::vector<MixerOptions::StageSpecification>
 GetEffectStages(const WaveTrack &track);
