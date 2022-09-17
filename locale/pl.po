@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-09-14 19:58+0000\n"
+"PO-Revision-Date: 2022-09-17 12:04+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -8894,16 +8894,16 @@ msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
-"Zmień nazwę 'nienazwanego', aby zapisać nowy wpis.\n"
+"Zmień nazwę 'nienazwanej', aby zapisać nowy wpis.\n"
 "'OK' zapisuje wszystkie zmiany, 'Anuluj' nie zapisuje zmian."
 
 #: src/effects/Equalization.cpp
 msgid "'unnamed' always stays at the bottom of the list"
-msgstr "'nienazwany' zawsze pozostaje na dole listy"
+msgstr "'nienazwana' zawsze pozostaje na dole listy"
 
 #: src/effects/Equalization.cpp
 msgid "'unnamed' is special"
-msgstr "'nienazwany' jest specjalny"
+msgstr "'nienazwana' jest specjalna"
 
 #: src/effects/Equalization.cpp
 #, c-format
@@ -21333,7 +21333,7 @@ msgid ""
 "              '~a' is not a numeric value."
 msgstr ""
 "Błąd~%~\n"
-"              Dane muszą być liczbami w prostym tekście ASCII.~%~\n"
+"              Dane muszą być liczbami w zwykłym tekście ASCII.~%~\n"
 "              '~a' nie jest wartością liczbową."
 
 #: plug-ins/sample-data-import.ny
