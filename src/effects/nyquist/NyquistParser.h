@@ -44,7 +44,6 @@ struct NyquistParser {
 
    EffectType GetType() const;
 
-protected:
    //! Name of the Effect (untranslated)
    TranslatableString mName;
    //! in correspondence with mControls

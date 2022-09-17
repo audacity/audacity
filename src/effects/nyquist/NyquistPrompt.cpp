@@ -10,6 +10,7 @@
 
 **********************************************************************/
 #include "NyquistPrompt.h"
+#include "NyquistParser.h"
 
 #include <wx/textdlg.h>
 #include "BasicUI.h"
@@ -35,11 +36,12 @@ END_EVENT_TABLE()
 NyquistPrompt::NyquistPrompt() : NyquistEffect{ NYQUIST_PROMPT_ID }
 {
    // Interactive Nyquist
-   mType = EffectTypeTool;
-   mIsTool = true;
-   mPromptName = mName;
-   mPromptType = mType;
-   mOK = true;
+   auto &parser = GetParser();
+   parser.mType = EffectTypeTool;
+   parser.mIsTool = true;
+   mPromptName = parser.mName;
+   mPromptType = parser.mType;
+   parser.mOK = true;
 }
 
 PluginPath NyquistPrompt::GetPath() const
@@ -92,6 +94,8 @@ bool NyquistPrompt::SaveSettings(
 bool NyquistPrompt::DoLoadSettings(
    const CommandParameters *pParms, EffectSettings &settings)
 {
+   auto &parser = GetParser();
+
    // Due to a constness problem that happens when using the prompt, we need
    // to be ready to switch the params to a local instance.
    CommandParameters localParms;
@@ -112,11 +116,11 @@ bool NyquistPrompt::DoLoadSettings(
 
    if (!IsBatchProcessing())
    {
-      mType = EffectTypeTool;
+      parser.mType = EffectTypeTool;
    }
 
-   mPromptType = mType;
-   mIsTool = (mPromptType == EffectTypeTool);
+   mPromptType = parser.mType;
+   parser.mIsTool = (mPromptType == EffectTypeTool);
    mExternal = true;
 
    if (!IsBatchProcessing())
@@ -129,17 +133,19 @@ bool NyquistPrompt::DoLoadSettings(
 
 bool NyquistPrompt::Init()
 {
+   auto &parser = GetParser();
+
    // When Nyquist Prompt spawns an effect GUI, Init() is called for Nyquist Prompt,
    // and then again for the spawned (mExternal) effect.
 
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
-   mName = mPromptName;
+   parser.mName = mPromptName;
    // Reset effect type each time we call the Nyquist Prompt.
-   mType = mPromptType;
-   mIsSpectral = false;
-   mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
-   mVersion = 4;
+   parser.mType = mPromptType;
+   parser.mIsSpectral = false;
+   parser.mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
+   parser.mVersion = 4;
    return true;
 }
 
@@ -251,6 +257,8 @@ bool NyquistPrompt::AcceptsAllNyquistTypes()
 
 bool NyquistPrompt::RecoverParseTypeFailed()
 {
+   auto &parser = GetParser();
+
    /* i1n-hint: SAL and LISP are names for variant syntaxes for the
     Nyquist programming language.  Leave them, and 'return', untranslated. */
    Effect::MessageBox(
@@ -261,7 +269,7 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
       Effect::DefaultMessageBoxStyle,
       XO("Error in Nyquist code") );
    /* i18n-hint: refers to programming "languages" */
-   mInitError = XO("Could not determine language");
+   parser.mInitError = XO("Could not determine language");
    return false;
 }
 
@@ -337,6 +345,9 @@ static const FileNames::FileType
 
 void NyquistPrompt::OnLoad(wxCommandEvent & WXUNUSED(evt))
 {
+   auto &parser = GetParser();
+   auto &mFileName = parser.mFileName;
+
    if (mCommandText->IsModified())
    {
       if (wxNO == Effect::MessageBox(
@@ -375,6 +386,9 @@ void NyquistPrompt::OnLoad(wxCommandEvent & WXUNUSED(evt))
 
 void NyquistPrompt::OnSave(wxCommandEvent & WXUNUSED(evt))
 {
+   auto &parser = GetParser();
+   auto &mFileName = parser.mFileName;
+
    FileDialogWrapper dlog(
       mUIParent,
       XO("Save Nyquist script"),

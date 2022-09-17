@@ -21,6 +21,7 @@ effects from this one class.
 
 
 #include "Nyquist.h"
+#include "NyquistParser.h"
 
 #include <algorithm>
 #include <cmath>
@@ -89,8 +90,13 @@ int NyquistEffect::mReentryCount = 0;
 ///////////////////////////////////////////////////////////////////////////////
 
 NyquistEffect::NyquistEffect(const wxString &fName)
-   : NyquistParser{ fName, *this }
+   : mParser{ std::make_unique<NyquistParser>(fName, *this) }
 {
+   auto &parser = GetParser();
+   const auto &mFileName = parser.mFileName;
+   auto &mInitError = parser.mInitError;
+   const auto &mOK = parser.mOK;
+
    if (!(fName == NYQUIST_PROMPT_ID || fName == NYQUIST_WORKER_ID)) {
       mFileModified = mFileName.GetModificationTime();
       ParseFile();
@@ -108,34 +114,34 @@ NyquistEffect::~NyquistEffect()
 
 PluginPath NyquistEffect::GetPath() const
 {
-   return mFileName.GetFullPath();
+   return GetParser().mFileName.GetFullPath();
 }
 
 ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
 {
-   return mName;
+   return GetParser().mName;
 }
 
 VendorSymbol NyquistEffect::GetVendor() const
 {
-   return mAuthor;
+   return GetParser().mAuthor;
 }
 
 wxString NyquistEffect::GetVersion() const
 {
    // Are Nyquist version strings really supposed to be translatable?
    // See commit a06e561 which used XO for at least one of them
-   return mReleaseVersion.Translation();
+   return GetParser().mReleaseVersion.Translation();
 }
 
 TranslatableString NyquistEffect::GetDescription() const
 {
-   return mCopyright;
+   return GetParser().mCopyright;
 }
 
 ManualPageID NyquistEffect::ManualPage() const
 {
-   return mManPage;
+   return GetParser().mManPage;
 }
 
 
@@ -145,7 +151,7 @@ std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
-      fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
+      fileName = wxFileName(paths[i] + wxT("/") + GetParser().mHelpFile).GetFullPath();
       if (wxFileExists(fileName))
       {
          return { true, fileName };
@@ -164,14 +170,14 @@ FilePath NyquistEffect::HelpPage() const
 
 EffectType NyquistEffect::GetType() const
 {
-   return NyquistParser::GetType();
+   return GetParser().GetType();
 }
 
 EffectType NyquistEffect::GetClassification() const
 {
-   if (mIsTool)
+   if (GetParser().mIsTool)
       return EffectTypeTool;
-   return mType;
+   return GetParser().mType;
 }
 
 EffectFamilySymbol NyquistEffect::GetFamily() const
@@ -267,6 +273,11 @@ bool NyquistEffect::DoLoadSettings(
 // Effect Implementation
 bool NyquistEffect::Init()
 {
+   auto &parser = GetParser();
+   const auto &mIsSpectral = parser.mIsSpectral;
+   const auto &mFileName = parser.mFileName;
+   auto &mMaxLen = parser.mMaxLen;
+
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
    // the selected track(s) are in a spectrogram view, and there is at
    // least one frequency bound and Spectral Selection is enabled for the
@@ -347,6 +358,13 @@ static void RegisterFunctions();
 
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
+   auto &parser = GetParser();
+   const auto &mHelpFile = parser.mHelpFile;
+   const auto &mVersion = parser.mVersion;
+   const auto &mMaxLen = parser.mMaxLen;
+   const auto &mTrace = parser.mTrace;
+   const auto &mName = parser.mName;
+
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -737,13 +755,22 @@ int NyquistEffect::ShowHostInterface(
 
 bool NyquistEffect::EnablesDebug() const
 {
-   return mDebugButton;
+   return GetParser().mDebugButton;
 }
 
 // NyquistEffect implementation
 
 bool NyquistEffect::ProcessOne()
 {
+   auto &parser = GetParser();
+   const auto &mVersion = parser.mVersion;
+   const auto &mTrace = parser.mTrace;
+   const auto &mIsSal = parser.mIsSal;
+   const auto &mCompiler = parser.mCompiler;
+   const auto &mName = parser.mName;
+   const auto &mMergeClips = parser.mMergeClips;
+   const auto &mRestoreSplits = parser.mRestoreSplits;
+
    mpException = {};
 
    nyx_rval rval;
@@ -1301,22 +1328,22 @@ void NyquistEffect::Stop()
 
 NyquistUIControls &NyquistEffect::GetControls()
 {
-   return mControls;
+   return GetParser().mControls;
 }
 
 const NyquistUIControls &NyquistEffect::GetControls() const
 {
-   return mControls;
+   return GetParser().mControls;
 }
 
 NyquistBindings &NyquistEffect::GetBindings()
 {
-   return mBindings;
+   return GetParser().mBindings;
 }
 
 const NyquistBindings &NyquistEffect::GetBindings() const
 {
-   return mBindings;
+   return GetParser().mBindings;
 }
 
 void NyquistEffect::SetControls(std::vector</*const*/ NyqControl> controls)
@@ -1341,11 +1368,25 @@ std::vector<NyqValue> NyquistEffect::MoveBindings()
 
 const TranslatableString &NyquistEffect::InitializationError() const
 {
-   return mInitError;
+   return GetParser().mInitError;
 }
 
 bool NyquistEffect::ParseProgram(wxInputStream & stream)
 {
+   auto &parser = GetParser();
+   auto &mInitError = parser.mInitError;
+   auto &mIsSal = parser.mIsSal;
+   auto &mCategories = parser.mCategories;
+   auto &mIsSpectral = parser.mIsSpectral;
+   auto &mTrace = parser.mTrace;
+   auto &mManPage = parser.mManPage;
+   auto &mHelpFile = parser.mHelpFile;
+   auto &mDebugButton = parser.mDebugButton;
+   auto &mType = parser.mType;
+   auto &mFoundType = parser.mFoundType;
+   auto &mLinear = parser.mLinear;
+   auto &mPreview = parser.mPreview;
+
    if (!stream.IsOk())
    {
       mInitError = XO("Could not open file");
@@ -1384,14 +1425,14 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
           // and will extract the strings they contain
           (line[0] == wxT(';') || line[0] == wxT('$')) )
       {
-         Tokenizer tzer;
+         NyquistParser::Tokenizer tzer;
          unsigned nLines = 1;
          bool done;
          // Allow continuations within control lines.
          bool control =
             line[0] == wxT('$') || line.StartsWith( wxT(";control") );
          do
-            done = Parse(tzer, line, !control || stream.Eof(), nLines == 1);
+            done = GetParser().Parse(tzer, line, !control || stream.Eof(), nLines == 1);
          while(!done &&
             (line = pgm.ReadLine(), ++nLines, true));
 
@@ -1440,7 +1481,7 @@ bool NyquistEffect::RecoverParseTypeFailed()
 
 void NyquistEffect::ParseFile()
 {
-   wxFileInputStream rawStream(mFileName.GetFullPath());
+   wxFileInputStream rawStream(GetParser().mFileName.GetFullPath());
    wxBufferedInputStream stream(rawStream, 10000);
 
    ParseProgram(stream);
@@ -1658,7 +1699,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
 
 bool NyquistEffect::IsOk()
 {
-   return mOK;
+   return GetParser().mOK;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include "NyquistParser.h"
 #include "NyquistUIControls.h"
 #include "../Effect.h"
 #include "SampleCount.h"
@@ -26,9 +25,13 @@ class wxTextCtrl;
 
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 
+struct NyqValue;
+using NyquistBindings = std::vector<NyqValue>;
+struct NyquistParser;
+struct NyquistUIControls;
+
 class AUDACITY_DLL_API NyquistEffect
    : public EffectWithSettings<NyquistSettings, StatefulEffect>
-   , protected NyquistParser
 {
 public:
 
@@ -149,7 +152,13 @@ private:
 
    std::pair<bool, FilePath> CheckHelpPage() const;
 
+protected:
+   NyquistParser &GetParser() { return *mParser; }
+   const NyquistParser &GetParser() const { return *mParser; }
+
 private:
+   //! @invariant not null
+   std::unique_ptr<NyquistParser> mParser;
 
    wxString          mXlispPath;
 
