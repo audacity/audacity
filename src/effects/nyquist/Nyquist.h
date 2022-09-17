@@ -98,13 +98,14 @@ public:
    void Stop();
 
    void SetDebug(bool value) { mDebug = value; }
-   void SetControls(std::vector</*const*/ NyqControl> controls)
-      { mControls.SetControls(move(controls)); }
-   void SetBindings(std::vector<NyqValue> bindings)
-      { mBindings = move(bindings); }
-   std::vector</*const*/ NyqControl> MoveControls()
-      { return mControls.MoveControls(); }
-   std::vector<NyqValue> MoveBindings() { return move(mBindings); }
+   NyquistUIControls &GetControls();
+   const NyquistUIControls &GetControls() const;
+   NyquistBindings &GetBindings();
+   const NyquistBindings &GetBindings() const;
+   void SetControls(std::vector</*const*/ NyqControl> controls);
+   void SetBindings(std::vector<NyqValue> bindings);
+   std::vector</*const*/ NyqControl> MoveControls();
+   std::vector<NyqValue> MoveBindings();
 
 private:
    static int mReentryCount;
@@ -113,7 +114,7 @@ private:
    bool ProcessOne();
 
    bool IsOk();
-   const TranslatableString &InitializationError() const { return mInitError; }
+   const TranslatableString &InitializationError() const;
 
    static FilePaths GetNyquistSearchPath();
 

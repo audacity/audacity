@@ -145,7 +145,7 @@ bool NyquistPrompt::Init()
 
 bool NyquistPrompt::Process(EffectInstance &instance, EffectSettings &settings)
 {
-   if (mControls.size() > 0 && !IsBatchProcessing()) {
+   if (IsInteractive() && !IsBatchProcessing()) {
       auto &nyquistSettings = GetSettings(settings);
       auto cleanup = finally([&]{
          // Free up memory
@@ -183,7 +183,7 @@ int NyquistPrompt::ShowHostInterface(
 
    // We're done if the user clicked "Close",
    // or the program currently loaded into the prompt doesn't have a UI.
-   if (!res || mControls.size() == 0 || !pInstance)
+   if (!res || !IsInteractive() || !pInstance)
       return res;
 
    // Nyquist prompt was OK, but gave us some magic ;control comments to
@@ -269,7 +269,7 @@ bool NyquistPrompt::TransferDataToWindow(const EffectSettings &)
 {
    mUIParent->TransferDataToWindow();
    mCommandText->ChangeValue(mInputCmd);
-   EnablePreview(mControls.mEnablePreview);
+   EnablePreview(GetControls().mEnablePreview);
    return true;
 }
 

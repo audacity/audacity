@@ -181,7 +181,7 @@ EffectFamilySymbol NyquistEffect::GetFamily() const
 
 bool NyquistEffect::IsInteractive() const
 {
-   return mControls.size() != 0;
+   return GetControls().size() != 0;
 }
 
 bool NyquistEffect::IsDefault() const
@@ -221,14 +221,14 @@ bool NyquistEffect::VisitSettings(
 bool NyquistEffect::DoVisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &) const
 {
-   mControls.Visit(mBindings, visitor);
+   GetControls().Visit(GetBindings(), visitor);
    return true;
 }
 
 bool NyquistEffect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
-   return mControls.Save(mBindings, parms);
+   return GetControls().Save(GetBindings(), parms);
 }
 
 bool NyquistEffect::LoadSettings(
@@ -252,12 +252,12 @@ bool NyquistEffect::DoLoadSettings(
    // When batch processing, we just ignore missing/bad parameters.
    // We'll end up using defaults in those cases.
    if (!IsBatchProcessing()) {
-      badCount = mControls.Load(mBindings, *pParms, kTestOnly);
+      badCount = GetControls().Load(GetBindings(), *pParms, kTestOnly);
       if (badCount > 0)
          return false;
    }
 
-   badCount = mControls.Load(mBindings, *pParms, kTestAndSet);
+   badCount = GetControls().Load(GetBindings(), *pParms, kTestAndSet);
    // We never do anything with badCount here.
    // It might be non zero, for missing parameters, and we allow that,
    // and don't distinguish that from an out-of-range value.
@@ -960,7 +960,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *tracenable* NIL)\n");
    }
 
-   cmd += mControls.Expression(mBindings);
+   cmd += GetControls().Expression(GetBindings());
 
    if (mIsSal) {
       wxString str = EscapeString(mCmd);
@@ -1299,6 +1299,51 @@ void NyquistEffect::Stop()
    mStop = true;
 }
 
+NyquistUIControls &NyquistEffect::GetControls()
+{
+   return mControls;
+}
+
+const NyquistUIControls &NyquistEffect::GetControls() const
+{
+   return mControls;
+}
+
+NyquistBindings &NyquistEffect::GetBindings()
+{
+   return mBindings;
+}
+
+const NyquistBindings &NyquistEffect::GetBindings() const
+{
+   return mBindings;
+}
+
+void NyquistEffect::SetControls(std::vector</*const*/ NyqControl> controls)
+{
+   GetControls().SetControls(move(controls));
+}
+
+void NyquistEffect::SetBindings(std::vector<NyqValue> bindings)
+{
+   GetBindings() = move(bindings);
+}
+
+std::vector</*const*/ NyqControl> NyquistEffect::MoveControls()
+{
+   return GetControls().MoveControls();
+}
+
+std::vector<NyqValue> NyquistEffect::MoveBindings()
+{
+   return move(GetBindings());
+}
+
+const TranslatableString &NyquistEffect::InitializationError() const
+{
+   return mInitError;
+}
+
 bool NyquistEffect::ParseProgram(wxInputStream & stream)
 {
    if (!stream.IsOk())
@@ -1312,8 +1357,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mCmd = wxT("");
    mCmd.Alloc(10000);
    mIsSal = false;
-   mControls.clear();
-   mBindings.clear();
+   GetControls().clear();
+   GetBindings().clear();
    mCategories.clear();
    mIsSpectral = false;
    mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
@@ -1322,7 +1367,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mDebug = false;
    mTrace = false;
    mDebugButton = true;    // Debug button enabled by default.
-   mControls.mEnablePreview = true;  // Preview button enabled by default.
+   GetControls().mEnablePreview = true;  // Preview button enabled by default.
 
    // Bug 1934.
    // All Nyquist plug-ins should have a ';type' field, but if they don't we default to
@@ -1577,14 +1622,14 @@ FilePaths NyquistEffect::GetNyquistSearchPath()
 bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
    mUIParent->TransferDataToWindow();
-   return mControls.UpdateUI();
+   return GetControls().UpdateUI();
 }
 
 bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
       return false;
-   return mControls.ValidateUI();
+   return GetControls().ValidateUI();
 }
 
 std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
@@ -1595,7 +1640,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
    {
       S.StartMultiColumn(4);
       {
-         mControls.Populate(S, GetSelectionFormat(), mProjectRate);
+         GetControls().Populate(S, GetSelectionFormat(), mProjectRate);
       }
       S.EndMultiColumn();
    }
