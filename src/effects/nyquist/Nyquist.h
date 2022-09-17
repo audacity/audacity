@@ -30,14 +30,51 @@ using NyquistBindings = std::vector<NyqValue>;
 struct NyquistParser;
 struct NyquistUIControls;
 
-struct NyquistEnvironment {
-   wxString          mDebugOutputStr;
+//! A long lived object that creates short-lived RAII scope objects
+class NyquistEnvironment {
+public:
    bool              mRedirectOutput{ false };
-   TranslatableString mDebugOutput;
 
    bool              mStop{ false };
    bool              mBreak{ false };
    bool              mCont{ false };
+
+   // RAII for set-up and tear-down of processing of a selection
+   class Scope_t {
+      friend NyquistEnvironment;
+      Scope_t(NyquistEnvironment &env, TranslatableString message);
+      Scope_t(const Scope_t &) = delete;
+      NyquistEnvironment &mEnv;
+   public:
+      ~Scope_t();
+   };
+   [[nodiscard]] Scope_t Scope(TranslatableString message)
+      { return { *this, std::move(message) }; }
+
+   // RAII for set-up and tear-down of processing of a track
+   class Subscope_t {
+      friend NyquistEnvironment;
+      Subscope_t(NyquistEnvironment &env, Scope_t &);
+      Subscope_t(const Scope_t &) = delete;
+      NyquistEnvironment &mEnv;
+   public:
+      ~Subscope_t();
+   };
+   [[nodiscard]] Subscope_t Subscope(Scope_t &scope)
+      { return { *this, scope }; }
+
+   //! Get debug output, applying any needed translations
+   const wxString &DebugOutput() const;
+
+   //! Add translatable strings to the beginning of pending debug output
+   void PrependDebug(TranslatableString message);
+
+private:
+   wxString          mDebugOutputStr;
+   //! The complete translation of this string depends on mDebugOutputStr
+   TranslatableString mDebugOutput;
+   //! This caches the computation of mDebugOutput.Translation()
+   mutable wxString mTranslation;
 
    void OutputCallback(int c);
    void OSCallback();

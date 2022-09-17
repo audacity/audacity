@@ -356,6 +356,60 @@ bool NyquistEffect::Init()
 
 static void RegisterFunctions();
 
+const wxString &NyquistEnvironment::DebugOutput() const
+{
+   if (mTranslation.empty())
+      mTranslation = mDebugOutput.Translation();
+   return mTranslation;
+}
+
+void NyquistEnvironment::PrependDebug(TranslatableString message)
+{
+   mDebugOutput = message + mDebugOutput;
+   mTranslation.clear();
+}
+
+NyquistEnvironment::Scope_t::Scope_t(
+   NyquistEnvironment &env, TranslatableString message
+)  : mEnv{ env }
+{
+   mEnv.mDebugOutput = std::move(message);
+   mEnv.mTranslation.clear();
+}
+
+NyquistEnvironment::Scope_t::~Scope_t()
+{
+   mEnv.mTranslation = wxString{};
+}
+
+NyquistEnvironment::Subscope_t::Subscope_t(NyquistEnvironment &env, Scope_t &
+)  : mEnv{ env }
+{
+   // Prepare to accumulate more debug output in OutputCallback
+   // Assign the accumulated output, translating any translatables, to wxString
+   mEnv.mDebugOutputStr = mEnv.DebugOutput();
+   // Then this trick lets mDebugOutputStr have more raw characters appended,
+   // while the + operator of TranslatableString allows more translatables
+   // to be prepended; because TranslatableString::Format knows how to
+   // capture a std::reference_wrapper differently from a by-value string and
+   // do delayed interpolation only at Translate()
+   mEnv.mDebugOutput = Verbatim( "%s" )
+      .Format( std::cref( mEnv.mDebugOutputStr ) );
+   // Clear the cached translation
+   mEnv.mTranslation.clear();
+
+   nyx_init();
+   nyx_set_os_callback(NyquistEnvironment::StaticOSCallback, &mEnv);
+   nyx_capture_output(NyquistEnvironment::StaticOutputCallback, &mEnv);
+}
+
+NyquistEnvironment::Subscope_t::~Subscope_t()
+{
+   nyx_capture_output(nullptr, nullptr);
+   nyx_set_os_callback(nullptr, nullptr);
+   nyx_cleanup();
+}
+
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
    NyquistTrack nyquistTrack{ *this,
@@ -375,7 +429,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    auto &mStop = environment.mStop;
    auto &mBreak = environment.mBreak;
    auto &mCont = environment.mCont;
-   auto &mDebugOutput = environment.mDebugOutput;
 
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
@@ -424,12 +477,12 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       ? 0
       : mOutputTracks->Selected< const WaveTrack >().size();
 
-   mDebugOutput = {};
-   if (!mHelpFile.empty() && !mHelpFileExists) {
-      mDebugOutput = XO(
+   TranslatableString initMessage;
+   if (!mHelpFile.empty() && !mHelpFileExists)
+      initMessage = XO(
 "error: File \"%s\" specified in header but not found in plug-in path.\n")
          .Format( mHelpFile );
-   }
+   auto scope{ environment.Scope(std::move(initMessage)) };
 
    using namespace NyquistFormatting;
 
@@ -579,11 +632,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          goto finish;
       }
 
-      auto &mDebugOutputStr = environment.mDebugOutputStr;
-
-      // Prepare to accumulate more debug output in OutputCallback
-      mDebugOutputStr = mDebugOutput.Translation();
-      mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
+      auto subscope{ environment.Subscope(scope) };
 
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
@@ -606,17 +655,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          // for further info about this thread safety question.
          wxString prevlocale = wxSetlocale(LC_NUMERIC, NULL);
          wxSetlocale(LC_NUMERIC, wxString(wxT("C")));
-
-         nyx_init();
-         nyx_set_os_callback(NyquistEnvironment::StaticOSCallback, &environment);
-         nyx_capture_output(NyquistEnvironment::StaticOutputCallback, &environment);
-
-         auto cleanup = finally( [&] {
-            nyx_capture_output(NULL, (void *)NULL);
-            nyx_set_os_callback(NULL, (void *)NULL);
-            nyx_cleanup();
-         } );
-
 
          if (mVersion >= 4)
          {
@@ -676,14 +714,14 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 finish:
 
    // Show debug window if trace set in plug-in header and something to show.
-   mDebug = (mTrace && !mDebugOutput.Translation().empty())
-      ? true : mDebug;
+   auto &debugOutput = environment.DebugOutput();
+   mDebug = (mDebug || (mTrace && !debugOutput.empty()));
 
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
                                mName,
                                XO("Debug Output: "),
-                               mDebugOutput);
+                               Verbatim(debugOutput));
       dlog.CentreOnParent();
       dlog.ShowModal();
    }
@@ -793,8 +831,6 @@ bool NyquistEffect::ProcessOne(
    const auto mCurTrack = nyquistTrack.CurTracks();
    const auto mCurLen = nyquistTrack.CurLength();
    const auto mCurNumChannels = nyquistTrack.CurNumChannels();
-
-   auto &mDebugOutput = environment.mDebugOutput;
 
    nyx_rval rval;
 
@@ -1053,7 +1089,7 @@ bool NyquistEffect::ProcessOne(
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
    // If we're not showing debug window, log errors and warnings:
-   const auto output = mDebugOutput.Translation();
+   const auto &output = environment.DebugOutput();
    if (!output.empty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
       wxLogMessage(wxT("\'%s\' returned:\n%s"),
@@ -1075,19 +1111,17 @@ bool NyquistEffect::ProcessOne(
 
    if ((rval == nyx_audio) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
-      mDebugOutput =
+      environment.PrependDebug(
          /* i18n-hint: Don't translate ';type tool'.  */
-         XO("';type tool' effects cannot return audio from Nyquist.\n")
-         + mDebugOutput;
+         XO("';type tool' effects cannot return audio from Nyquist.\n"));
       rval = nyx_error;
    }
 
    if ((rval == nyx_labels) && (GetType() == EffectTypeTool)) {
       // Catch this first so that we can also handle other errors.
-      mDebugOutput =
+      environment.PrependDebug(
          /* i18n-hint: Don't translate ';type tool'.  */
-         XO("';type tool' effects cannot return labels from Nyquist.\n")
-         + mDebugOutput;
+         XO("';type tool' effects cannot return labels from Nyquist.\n"));
       rval = nyx_error;
    }
 
@@ -1095,15 +1129,15 @@ bool NyquistEffect::ProcessOne(
       // Return value is not valid type.
       // Show error in debug window if trace enabled, otherwise log.
       if (mTrace) {
-         /* i18n-hint: "%s" is replaced by name of plug-in.*/
-         mDebugOutput = XO("nyx_error returned from %s.\n")
-            .Format( mName.empty() ? XO("plug-in") : mName )
-         + mDebugOutput;
+         environment.PrependDebug(
+            /* i18n-hint: "%s" is replaced by name of plug-in.*/
+            XO("nyx_error returned from %s.\n")
+               .Format( mName.empty() ? XO("plug-in") : mName ));
          mDebug = true;
       }
       else {
          wxLogMessage(
-            "Nyquist returned nyx_error:\n%s", mDebugOutput.Translation());
+            "Nyquist returned nyx_error:\n%s", environment.DebugOutput());
       }
       return false;
    }
@@ -1612,9 +1646,10 @@ void NyquistEnvironment::OutputCallback(int c)
    // Always collect Nyquist error messages for normal plug-ins
    if (!mRedirectOutput) {
       mDebugOutputStr += (wxChar)c;
+      // Invalidate any cached translation
+      mTranslation.clear();
       return;
    }
-
    std::cout << (char)c;
 }
 
