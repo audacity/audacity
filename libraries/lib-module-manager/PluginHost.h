@@ -54,12 +54,12 @@ public:
     * the main application)
     * \return true if host has started successfully
     */
-   static bool Start();
+   static bool Start(int connectPort);
 
    ///Returns true if current process is considered to be a plugin host process
    static bool IsHostProcess();
 
-   PluginHost();
+   explicit PluginHost(int connectPort);
 
    void OnConnect(IPCChannel& channel) noexcept override;
    void OnDisconnect() noexcept override;
