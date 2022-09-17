@@ -58,7 +58,7 @@ namespace
    }
 }
 
-PluginHost::PluginHost()
+PluginHost::PluginHost(int connectPort)
 {
    FileNames::InitializePathList();
 
@@ -73,7 +73,7 @@ PluginHost::PluginHost()
    moduleManager.Initialize();
    moduleManager.DiscoverProviders();
 
-   mClient = std::make_unique<IPCClient>(*this);
+   mClient = std::make_unique<IPCClient>(connectPort, *this);
 }
 
 void PluginHost::OnConnect(IPCChannel& channel) noexcept
@@ -168,9 +168,12 @@ void PluginHost::Stop() noexcept
    mRequestCondition.notify_one();
 }
 
-bool PluginHost::Start()
+bool PluginHost::Start(int connectPort)
 {
-   const auto cmd = wxString::Format("\"%s\" %s", PlatformCompatibility::GetExecutablePath(), PluginHost::HostArgument);
+   const auto cmd = wxString::Format("\"%s\" %s %d",
+      PlatformCompatibility::GetExecutablePath(),
+      PluginHost::HostArgument,
+      connectPort);
 
    auto process = std::make_unique<wxProcess>();
    process->Detach();
@@ -185,7 +188,7 @@ bool PluginHost::Start()
 
 bool PluginHost::IsHostProcess()
 {
-   return wxTheApp && wxTheApp->argc >= 2 && wxStrcmp(wxTheApp->argv[1], HostArgument) == 0;
+   return wxTheApp && wxTheApp->argc >= 3 && wxStrcmp(wxTheApp->argv[1], HostArgument) == 0;
 }
 
 class PluginHostModule final :
@@ -198,12 +201,16 @@ public:
    {
       if(PluginHost::IsHostProcess())
       {
+         long connectPort;
+         if(!wxTheApp->argv[2].ToLong(&connectPort))
+            return false;
+
          //log messages will appear in a separate window
          //redirect to log file later
          wxLog::EnableLogging(false);
 
          //Handle requests...
-         PluginHost host;
+         PluginHost host(connectPort);
          while(host.Serve()) { }
          //...and terminate app
          return false;

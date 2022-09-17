@@ -14,6 +14,7 @@
 
 #ifdef _WIN32
 #include <WinSock2.h>
+#include <WS2tcpip.h>
 #define CLOSE_SOCKET closesocket
 #define NFDS(x) (0)//not used on winsock2
 #else

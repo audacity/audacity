@@ -27,6 +27,7 @@ class IPCServer::Impl
    std::mutex mSync;
    std::unique_ptr<BufferedIPCChannel> mChannel;
    std::unique_ptr<std::thread> mConnectionRoutine;
+   int mConnectPort{0};
 
    socket_guard mListenSocket;
 public:
@@ -37,20 +38,27 @@ public:
       if(!mListenSocket)
          throw std::runtime_error("cannot create socket");
       
-      sockaddr_in addrin {};
-      addrin.sin_family = AF_INET;
-      addrin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-      addrin.sin_port = htons(static_cast<u_short>(IPC_TCP_CONNECTION_PORT));
+      sockaddr_in addrhint{};
+      addrhint.sin_family = AF_INET;
+      addrhint.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+      addrhint.sin_port = htons(INADDR_ANY);
 
       static const int yes { 1 };
       if(setsockopt(*mListenSocket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&yes), sizeof(yes)) == SOCKET_ERROR)
          throw std::runtime_error("cannot configure listen socket");
 
-      if(bind(*mListenSocket, reinterpret_cast<const sockaddr*>(&addrin), sizeof(addrin)) == SOCKET_ERROR)
+      if(bind(*mListenSocket, reinterpret_cast<const sockaddr*>(&addrhint), sizeof(addrhint)) == SOCKET_ERROR)
          throw std::runtime_error("socket bind error");
 
       if(listen(*mListenSocket, 1) == SOCKET_ERROR)
          throw std::runtime_error("socket listen error");
+
+      sockaddr_in addr{};
+      socklen_t addr_len { sizeof (addr) };
+      if(getsockname(*mListenSocket, reinterpret_cast<sockaddr*>(&addr), &addr_len) == SOCKET_ERROR)
+         throw std::runtime_error("failed to get socket name");
+
+      mConnectPort = ntohs(addr.sin_port);
 
       mChannel = std::make_unique<BufferedIPCChannel>();
       mConnectionRoutine = std::make_unique<std::thread>([this, &callback]
@@ -106,8 +114,9 @@ public:
             }
          }
       });
-
    }
+
+   int GetConnectPort() const noexcept { return mConnectPort; }
 
    ~Impl()
    {
@@ -136,4 +145,10 @@ IPCServer::IPCServer(IPCChannelStatusCallback& callback)
 }
 
 IPCServer::~IPCServer() = default;
+
+int IPCServer::GetConnectPort() const noexcept
+{
+   return mImpl->GetConnectPort();
+}
+
 
