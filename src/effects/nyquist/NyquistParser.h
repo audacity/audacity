@@ -17,9 +17,6 @@
 #include "PluginManager.h"
 #include "SampleCount.h"
 
-// Protect Nyquist from selections greater than 2^31 samples (bug 439)
-#define NYQ_MAX_LEN (std::numeric_limits<long>::max())
-
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 class Effect;

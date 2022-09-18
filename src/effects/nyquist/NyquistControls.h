@@ -16,6 +16,9 @@
 #include "EffectInterface.h"
 #include "FileNames.h"
 
+// Protect Nyquist from selections greater than 2^31 samples (bug 439)
+#define NYQ_MAX_LEN (std::numeric_limits<long>::max())
+
 namespace NyquistFormatting {
 
 wxString EscapeString(const wxString & inStr);
