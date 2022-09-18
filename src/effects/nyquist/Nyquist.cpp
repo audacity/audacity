@@ -385,6 +385,8 @@ NyquistEnvironment::Scope_t::~Scope_t()
 NyquistEnvironment::Subscope_t::Subscope_t(NyquistEnvironment &env, Scope_t &
 )  : mEnv{ env }
 {
+   RegisterFunctions();
+
    // Prepare to accumulate more debug output in OutputCallback
    // Assign the accumulated output, translating any translatables, to wxString
    mEnv.mDebugOutputStr = mEnv.DebugOutput();
@@ -441,7 +443,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // Restore the reentry counter (to zero) when we exit.
    auto countRestorer = valueRestorer( mReentryCount);
    mReentryCount++;
-   RegisterFunctions();
 
    bool success = true;
    int nEffectsSoFar = nEffectsDone;
