@@ -16,8 +16,6 @@
 #include "SampleCount.h"
 #include "../../widgets/wxPanelWrapper.h"
 
-#include "nyx.h"
-
 class wxArrayString;
 class wxFileName;
 class wxCheckBox;

@@ -22,6 +22,7 @@ effects from this one class.
 
 #include "Nyquist.h"
 #include "NyquistParser.h"
+#include "nyx.h"
 
 #include <algorithm>
 #include <cmath>

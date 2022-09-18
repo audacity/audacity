@@ -11,6 +11,7 @@
 
 
 #include "LoadNyquist.h"
+#include "nyx.h"
 
 #include <wx/log.h>
 
