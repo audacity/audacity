@@ -178,7 +178,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   auto pathList = NyquistProgram::GetNyquistSearchPath();
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
@@ -221,7 +221,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
 PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
-   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   auto pathList = NyquistProgram::GetNyquistSearchPath();
    FilePaths files;
 
    // Add the Nyquist prompt

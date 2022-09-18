@@ -34,6 +34,8 @@ struct NyquistProgram : NyquistParser
 {
    using NyquistParser::NyquistParser;
 
+   static FilePaths GetNyquistSearchPath();
+
    // When there is a more general EffectContext for all effects, these will
    // move into that
    struct EffectContext {
@@ -79,6 +81,7 @@ struct NyquistProgram : NyquistParser
    bool ProcessOne(NyquistEnvironment &environment, Context &context,
       NyquistTrack &nyquistTrack, const wxString &mCmd) const;
 
+   std::pair<bool, FilePath> CheckHelpPage() const;
    static wxString NyquistToWxString(const char *nyqString);
 };
 
@@ -171,8 +174,6 @@ private:
    bool IsOk();
    const TranslatableString &InitializationError() const;
 
-   static FilePaths GetNyquistSearchPath();
-
    void ParseFile();
 
 protected:
@@ -183,8 +184,6 @@ private:
    bool ParseProgram(wxInputStream & stream);
 
    void OnDebug(wxCommandEvent & evt);
-
-   std::pair<bool, FilePath> CheckHelpPage() const;
 
 protected:
    NyquistParser &GetParser() { return *mProgram; }

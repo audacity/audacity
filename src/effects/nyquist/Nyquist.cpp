@@ -145,13 +145,13 @@ ManualPageID NyquistEffect::ManualPage() const
 }
 
 
-std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
+std::pair<bool, FilePath> NyquistProgram::CheckHelpPage() const
 {
-   auto paths = NyquistEffect::GetNyquistSearchPath();
+   auto paths = GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
-      fileName = wxFileName(paths[i] + wxT("/") + GetParser().mHelpFile).GetFullPath();
+      fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
       if (wxFileExists(fileName))
       {
          return { true, fileName };
@@ -467,7 +467,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
 
-      auto paths = NyquistEffect::GetNyquistSearchPath();
+      auto paths = NyquistProgram::GetNyquistSearchPath();
       wxString list;
       for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
       {
@@ -1384,7 +1384,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    if (!mFoundType && !RecoverParseTypeFailed())
       return false;
 
-   const auto helpStuff = CheckHelpPage();
+   const auto helpStuff = mProgram->CheckHelpPage();
    mHelpFileExists = helpStuff.first;
    mHelpPage       = helpStuff.second;
 
@@ -1415,7 +1415,7 @@ bool NyquistEffect::ParseCommand(const wxString & cmd)
    return ParseProgram(stream);
 }
 
-FilePaths NyquistEffect::GetNyquistSearchPath()
+FilePaths NyquistProgram::GetNyquistSearchPath()
 {
    const auto &audacityPathList = FileNames::AudacityPathList();
    FilePaths pathList;
