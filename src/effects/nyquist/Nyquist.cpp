@@ -356,27 +356,6 @@ bool NyquistEffect::Init()
 
 bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
-   NyquistTrack nyquistTrack{ *this,
-      (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups()
-   };
-
-   auto &parser = GetParser();
-   const auto &mHelpFile = parser.mHelpFile;
-   const auto &mVersion = parser.mVersion;
-   const auto &mMaxLen = parser.mMaxLen;
-   const auto &mTrace = parser.mTrace;
-   const auto &mName = parser.mName;
-
-   auto &environment = mEnvironment;
-   const auto &mRedirectOutput = environment.mRedirectOutput;
-
-   auto &mStop = environment.mStop;
-   auto &mBreak = environment.mBreak;
-   auto &mCont = environment.mCont;
-
-   auto &program = *mProgram;
-   const auto &mHelpFileExists = program.mHelpFileExists;
-
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -389,10 +368,65 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    auto countRestorer = valueRestorer( mReentryCount);
    mReentryCount++;
 
+   // If in tool mode, then we don't do anything with the track and selection.
+   const bool bOnePassTool = (GetType() == EffectTypeTool);
+
+   // We must copy all the tracks, because Paste needs label tracks to ensure
+   // correct sync-lock group behavior when the timeline is affected; then we just want
+   // to operate on the selected wave tracks
+   if ( !bOnePassTool )
+      CopyInputTracks(true);
+
+   NyquistProgram::EffectContext eContext{
+      inputTracks(), mOutputTracks.get(),
+      mUIParent,
+      GetNumWaveGroups(),
+      IsPreviewing(),
+      mF0, mF1,
+      mT0, mT1,
+      mDebug
+   };
+   NyquistProgram::Context context{ eContext,
+      // mNumSelectedChannels
+      bOnePassTool
+         ? 0
+         : (unsigned)mOutputTracks->Selected< const WaveTrack >().size(),
+      AcceptsAllNyquistTypes(),
+      mExternal
+   };
+
+   return mProgram->Process(FindProject(), mEnvironment, context, settings);
+}
+
+bool NyquistProgram::Process(const AudacityProject *const project,
+   NyquistEnvironment &environment, Context &context,
+   EffectSettings &settings) const
+{
+   auto &mEffect = mControls.mEffect;
+
+   const auto &mRedirectOutput = environment.mRedirectOutput;
+
+   auto &mStop = environment.mStop;
+   auto &mBreak = environment.mBreak;
+   auto &mCont = environment.mCont;
+
+   const auto &mIsPreviewing = context.mContext.mIsPreviewing;
+   const auto &mOutputTracks = context.mContext.mOutputTracks;
+   const auto &mNumWaveGroups = context.mContext.mNumWaveGroups;
+   const auto &mUIParent = context.mContext.mUIParent;
+   const auto &mF0 = context.mContext.mF0;
+   const auto &mF1 = context.mContext.mF1;
+   auto &mT0 = context.mContext.mT0;
+   auto &mT1 = context.mContext.mT1;
+   auto &mDebug = context.mContext.mDebug;
+
+   // If in tool mode, then we don't do anything with the track and selection.
+   const bool bOnePassTool = (GetType() == EffectTypeTool);
+
    bool success = true;
 
    // Beware!  A global!
-   int nEffectsSoFar = nEffectsDone;
+   int nEffectsSoFar = EffectBase::nEffectsDone;
 
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);
@@ -407,29 +441,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    mBreak = false;
    mCont = false;
 
-   // If in tool mode, then we don't do anything with the track and selection.
-   const bool bOnePassTool = (GetType() == EffectTypeTool);
-
-   // We must copy all the tracks, because Paste needs label tracks to ensure
-   // correct sync-lock group behavior when the timeline is affected; then we just want
-   // to operate on the selected wave tracks
-   if ( !bOnePassTool )
-      CopyInputTracks(true);
-
-   NyquistProgram::EffectContext eContext{
-      inputTracks(),
-      mOutputTracks.get(),
-      mT0, mT1,
-      mDebug
-   };
-   NyquistProgram::Context context{ eContext,
-      // mNumSelectedChannels
-      bOnePassTool
-         ? 0
-         : (unsigned)mOutputTracks->Selected< const WaveTrack >().size(),
-      AcceptsAllNyquistTypes(),
-      mExternal
-   };
    auto &mCount = context.mCount;
    auto &mProps = context.mProps;
    auto &mPerTrackProps = context.mPerTrackProps;
@@ -449,8 +460,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
    if (mVersion >= 4)
    {
-      auto project = FindProject();
-
       mProps = wxEmptyString;
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
@@ -470,7 +479,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
 
-      auto paths = NyquistProgram::GetNyquistSearchPath();
+      auto paths = GetNyquistSearchPath();
       wxString list;
       for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
       {
@@ -552,7 +561,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                                  Internat::ToString(previewLen));
 
       // *PREVIEWP* is true when previewing (better than relying on track view).
-      wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
+      wxString isPreviewing = (mIsPreviewing)? wxT("T") : wxT("NIL");
       mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
@@ -566,7 +575,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // Nyquist Prompt does not require a selection, but effects do.
    if (!bOnePassTool && (mNumSelectedChannels == 0)) {
       auto message = XO("Audio selection required.");
-      Effect::MessageBox(
+      mEffect.MessageBox(
          message,
          wxOK | wxCENTRE | wxICON_EXCLAMATION,
          XO("Nyquist Error") );
@@ -577,6 +586,10 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 
    Track *gtLast = NULL;
+
+   NyquistTrack nyquistTrack{ mEffect,
+      (GetType() == EffectTypeProcess ? 0.5 : 1.0) / mNumWaveGroups
+   };
 
    for (;
         bOnePassTool || pRange->first != pRange->second;
@@ -650,7 +663,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = mProgram->ProcessOne(environment, context, nyquistTrack);
+         success = ProcessOne(environment, context, nyquistTrack);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -684,12 +697,11 @@ finish:
    }
 
    // Has rug been pulled from under us by some effect done within Nyquist??
-   if( !bOnePassTool && ( nEffectsSoFar == nEffectsDone ))
-      ReplaceProcessedTracks(success);
+   if( !bOnePassTool && ( nEffectsSoFar == EffectBase::nEffectsDone ))
+      mEffect.ReplaceProcessedTracks(success);
    else{
-      ReplaceProcessedTracks(false); // Do not use the results.
+      mEffect.ReplaceProcessedTracks(false); // Do not use the results.
       // Selection is to be set to whatever it is in the project.
-      auto project = FindProject();
       if (project) {
          auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
          mT0 = selectedRegion.t0();

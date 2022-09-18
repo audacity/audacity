@@ -41,6 +41,13 @@ struct NyquistProgram : NyquistParser
    struct EffectContext {
       const TrackList *const mInputTracks{};
       TrackList *const mOutputTracks{};
+      wxWindow *const mUIParent{};
+      const int mNumWaveGroups;
+      const bool mIsPreviewing;
+
+      // spectral selection
+      const double      mF0;
+      const double      mF1;
 
       // time selection -- which may be modified by processing!
       double            &mT0;
@@ -82,6 +89,9 @@ struct NyquistProgram : NyquistParser
 
    // All state is externalized into context,
    // so the member function can be const
+   bool Process(const AudacityProject *project,
+      NyquistEnvironment &environment, Context &context,
+      EffectSettings &settings) const;
    bool ProcessOne(NyquistEnvironment &environment, Context &context,
       NyquistTrack &nyquistTrack) const;
 
