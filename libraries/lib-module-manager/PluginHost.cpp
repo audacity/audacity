@@ -35,14 +35,18 @@ namespace
          if(auto provider = ModuleManager::Get().CreateProviderInstance(providerId, wxEmptyString))
          {
             TranslatableString errorMessage{};
-
-            provider->DiscoverPluginsAtPath(pluginPath, errorMessage, [&result](PluginProvider *provider, ComponentInterface *ident)
+            auto validator = provider->MakeValidator();
+            provider->DiscoverPluginsAtPath(pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
             {
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
                auto id = PluginManager::DefaultRegistrationCallback(provider, ident);
                if(const auto desc = PluginManager::Get().GetPlugin(id))
+               {
+                  if(validator)
+                     validator->Validate(*ident);
                   result.Add(PluginDescriptor { *desc });
+               }
                return id;
             });
             if(!errorMessage.empty())
