@@ -39,6 +39,7 @@
 #include "effects/RealtimeEffectStateUI.h"
 #include "UndoManager.h"
 #include "Prefs.h"
+#include "BasicUI.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -1005,12 +1006,21 @@ public:
       addEffectHint->SetForegroundColorIndex(clrTrackPanelText);
       mAddEffectHint = addEffectHint;
 
-      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, _("Watch video"), "https://www.audacityteam.org/realtime-video", wxDefaultPosition, wxDefaultSize, wxHL_ALIGN_LEFT | wxHL_CONTEXTMENU);
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(
+         this, wxID_ANY, _("Watch video"),
+         "https://www.audacityteam.org/realtime-video", wxDefaultPosition,
+         wxDefaultSize, wxHL_ALIGN_LEFT | wxHL_CONTEXTMENU);
+      
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
 #if wxUSE_ACCESSIBILITY
       safenew WindowAccessible(addEffectTutorialLink);
 #endif
+
+      addEffectTutorialLink->Bind(
+         wxEVT_HYPERLINK, [](wxHyperlinkEvent& event)
+         { BasicUI::OpenInDefaultBrowser(event.GetURL()); });
+
       mAddEffectTutorialLink = addEffectTutorialLink;
 
       //indicates the insertion position of the item
