@@ -163,7 +163,7 @@ std::pair<bool, FilePath> NyquistProgram::CheckHelpPage() const
 
 FilePath NyquistEffect::HelpPage() const
 {
-   return mHelpPage;
+   return mProgram->mHelpPage;
 }
 
 // EffectDefinitionInterface implementation
@@ -373,6 +373,9 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    auto &mStop = environment.mStop;
    auto &mBreak = environment.mBreak;
    auto &mCont = environment.mCont;
+
+   auto &program = *mProgram;
+   const auto &mHelpFileExists = program.mHelpFileExists;
 
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
@@ -647,8 +650,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
          }
 
-         success = mProgram->ProcessOne(environment, context,
-            nyquistTrack, mCmd);
+         success = mProgram->ProcessOne(environment, context, nyquistTrack);
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -726,7 +728,7 @@ bool NyquistEffect::EnablesDebug() const
 // NyquistEffect implementation
 
 bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
-   Context &context, NyquistTrack &nyquistTrack, const wxString &mCmd) const
+   Context &context, NyquistTrack &nyquistTrack) const
 {
    auto &mEffect = mControls.mEffect;
 
@@ -1307,6 +1309,11 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    auto &mFoundType = parser.mFoundType;
    auto &mLinear = parser.mLinear;
    auto &mPreview = parser.mPreview;
+
+   auto &program = *mProgram;
+   auto &mHelpFileExists = program.mHelpFileExists;
+   auto &mHelpPage = program.mHelpPage;
+   auto &mCmd = program.mCmd;
 
    if (!stream.IsOk())
    {

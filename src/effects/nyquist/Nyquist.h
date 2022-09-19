@@ -71,6 +71,10 @@ struct NyquistProgram : NyquistParser
 
    };
 
+   wxString          mCmd;      // the command to be processed
+   bool              mHelpFileExists;
+   FilePath          mHelpPage;
+
    NyquistControls &GetControls() { return mControls; }
    const NyquistControls &GetControls() const { return mControls; }
    NyquistBindings &GetBindings() { return mBindings; }
@@ -79,7 +83,7 @@ struct NyquistProgram : NyquistParser
    // All state is externalized into context,
    // so the member function can be const
    bool ProcessOne(NyquistEnvironment &environment, Context &context,
-      NyquistTrack &nyquistTrack, const wxString &mCmd) const;
+      NyquistTrack &nyquistTrack) const;
 
    std::pair<bool, FilePath> CheckHelpPage() const;
    static wxString NyquistToWxString(const char *nyqString);
@@ -199,13 +203,6 @@ private:
 
 protected:
    bool              mExternal{ false };
-
-private:
-   wxString          mCmd;      // the command to be processed
-   bool              mHelpFileExists;
-   FilePath          mHelpPage;
-
-protected:
    bool              mDebug{ false }; // When true, debug window is shown.
 
    friend class NyquistEffectsModule;
