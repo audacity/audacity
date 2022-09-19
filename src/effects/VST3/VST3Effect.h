@@ -37,6 +37,8 @@ class VST3ParametersWindow;
  */
 class VST3Effect final : public PerTrackEffect
 {
+   friend class VST3PluginValidator;
+
    // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
    // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
    std::shared_ptr<VST3::Hosting::Module> mModule;
