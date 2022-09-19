@@ -16,6 +16,7 @@ Functions that find and load all LV2 plugins on the system.
 
 
 
+#include "LV2Wrapper.h"
 #if defined(USE_LV2)
 
 #if defined(__GNUC__)
@@ -275,6 +276,43 @@ bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
 {
    return GetPlugin(path) != nullptr;
 }
+
+class LV2PluginValidator : public PluginProvider::Validator
+{
+public:
+   void Validate(ComponentInterface& pluginInterface) override
+   {
+      if(auto lv2effect = dynamic_cast<LV2Effect*>(&pluginInterface))
+      {
+         LV2_Atom_Forge forge;
+         lv2_atom_forge_init(&forge, lv2effect->mFeatures.URIDMapFeature());
+
+         LV2PortStates portStates { lv2effect->mPorts };
+         LV2InstanceFeaturesList instanceFeatures { lv2effect->mFeatures };
+         
+         auto settings = lv2effect->MakeSettings();
+         auto wrapper = LV2Wrapper::Create(
+            instanceFeatures,
+            lv2effect->mPorts,
+            portStates,
+            GetSettings(settings),
+            44100.0,
+            false);
+
+         if(!wrapper)
+            throw std::runtime_error("Cannot create LV2 instance");
+         
+      }
+      else
+         throw std::runtime_error("Not a LV2Effect");
+   }
+};
+
+std::unique_ptr<PluginProvider::Validator> LV2EffectsModule::MakeValidator() const
+{
+   return std::make_unique<LV2PluginValidator>();
+}
+
 
 // ============================================================================
 // LV2EffectsModule implementation
