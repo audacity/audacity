@@ -105,12 +105,25 @@ fi
 mv "${appdir}/bin/findlib" "${appdir}/../findlib"
 
 linuxdeploy --appdir "${appdir}" --plugin gtk # add all shared library dependencies
-rm -Rf "${appdir}/lib/audacity"
+
+echo "###########################################"
+echo "Cleaning up package"
+echo "###########################################"
+
+find "${appdir}/lib/audacity" -maxdepth 1 ! \( -type d \) -exec rm -v {} \;
 
 if [ -f "/etc/debian_version" ]; then
    archDir=$(dpkg-architecture -qDEB_HOST_MULTIARCH)
-   rm -Rf "${appdir}/lib/${archDir}/audacity"
+
+   if [[ -d "${appdir}/lib/${archDir}/audacity" ]]; then
+      find "${appdir}/lib/${archDir}/audacity" -maxdepth 1 ! \( -type d \) -exec rm -v {} \;
+   fi
 fi
+
+##########################################################################
+# Fix permissions
+##########################################################################
+chmod +x "${appdir}/AppRun.wrapped"
 
 # Put the non-RUNPATH binaries back
 mv "${appdir}/../findlib" "${appdir}/bin/findlib"
