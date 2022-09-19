@@ -40,7 +40,7 @@ function download_appimage_release()
 function download_linuxdeploy_component()
 {
     local -r component="$1" tag="$2"
-    download_appimage_release "linuxdeploy/$1" "$1" "$2"
+    download_appimage_release "audacity/$1" "$1" "$2"
 }
 
 function create_path()
