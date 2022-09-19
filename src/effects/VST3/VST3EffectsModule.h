@@ -58,5 +58,5 @@ public:
    bool CheckPluginExist(const PluginPath& path) const override;
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginPath& path) override;
-
+   std::unique_ptr<Validator> MakeValidator() const override;
 };

@@ -26,8 +26,10 @@
 #include "wxArrayStringEx.h"
 #include "PluginInterface.h"
 #include "PluginProvider.h"
+#include "PluginProvider.h"
 #include "VST3Effect.h"
 #include "VST3Utils.h"
+#include "VST3Wrapper.h"
 #include "widgets/AButton.h"
 
 
@@ -279,6 +281,29 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
    }
    return nullptr;
 }
+
+class VST3PluginValidator final : public PluginProvider::Validator
+{
+public:
+   
+   void Validate(ComponentInterface& component) override
+   {
+      if(auto vst3effect = dynamic_cast<VST3Effect*>(&component))
+         VST3Wrapper wrapper (
+            *vst3effect->mModule,
+            vst3effect->mEffectClassInfo.ID()
+         );
+      else
+         throw std::runtime_error("Not a VST3Effect");
+   }
+
+};
+
+std::unique_ptr<PluginProvider::Validator> VST3EffectsModule::MakeValidator() const
+{
+   return std::make_unique<VST3PluginValidator>();
+}
+
 
 bool VST3EffectsModule::CheckPluginExist(const PluginPath& path) const
 {
