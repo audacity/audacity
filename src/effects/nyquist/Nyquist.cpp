@@ -387,7 +387,10 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    mReentryCount++;
 
    bool success = true;
+
+   // Beware!  A global!
    int nEffectsSoFar = nEffectsDone;
+
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
    em.SetSkipStateFlag(false);

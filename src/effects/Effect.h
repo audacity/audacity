@@ -296,6 +296,7 @@ protected:
    ModifiedAnalysisTrack ModifyAnalysisTrack
       (const LabelTrack *pOrigTrack, const wxString &name = wxString());
 
+public:
    // Use this to append a NEW output track.
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 

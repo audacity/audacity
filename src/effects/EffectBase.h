@@ -89,7 +89,9 @@ protected:
    // preview copies of all wave tracks.
    void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
 
+public:
    // A global counter of all the successful Effect invocations.
+   // It's here only to hack the problems of Nyquist reentrancy with tools.
    static int nEffectsDone;
 
    // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
@@ -97,6 +99,7 @@ protected:
    // Else clear and DELETE mOutputTracks copies.
    void ReplaceProcessedTracks(const bool bGoodResult);
 
+protected:
    BasicUI::ProgressDialog *mProgress{}; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate{}; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
