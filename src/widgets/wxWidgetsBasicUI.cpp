@@ -20,6 +20,7 @@ Paul Licameli
 #include <wx/app.h>
 #include <wx/progdlg.h>
 #include <wx/windowptr.h>
+#include <wx/utils.h>
 
 using namespace BasicUI;
 
@@ -211,4 +212,9 @@ int wxWidgetsBasicUI::DoMultiDialog(const TranslatableString &message,
    const TranslatableString &boxMsg, bool log)
 {
    return ::ShowMultiDialog(message, title, buttons, helpPage, boxMsg, log);
+}
+
+bool wxWidgetsBasicUI::DoOpenInDefaultBrowser(const wxString &url)
+{
+   return wxLaunchDefaultBrowser(url);
 }
