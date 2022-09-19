@@ -35,6 +35,9 @@ class LV2Validator;
 
 class LV2Effect final : public PerTrackEffect
 {
+
+   friend class LV2PluginValidator;
+
 public:
    LV2Effect(const LilvPlugin &plug);
    virtual ~LV2Effect();

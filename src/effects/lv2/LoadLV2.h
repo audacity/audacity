@@ -62,6 +62,8 @@ public:
 
    // LV2EffectModule implementation
 
+   std::unique_ptr<Validator> MakeValidator() const override;
+
 private:
    static const LilvPlugin *GetPlugin(const PluginPath & path);
 };
