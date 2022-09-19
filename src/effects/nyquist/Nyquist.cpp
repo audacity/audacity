@@ -1308,30 +1308,22 @@ const TranslatableString &NyquistEffect::InitializationError() const
 
 bool NyquistEffect::ParseProgram(wxInputStream & stream)
 {
-   auto &parser = GetParser();
-   auto &mInitError = parser.mInitError;
-   auto &mIsSal = parser.mIsSal;
-   auto &mCategories = parser.mCategories;
-   auto &mIsSpectral = parser.mIsSpectral;
-   auto &mTrace = parser.mTrace;
-   auto &mManPage = parser.mManPage;
-   auto &mHelpFile = parser.mHelpFile;
-   auto &mDebugButton = parser.mDebugButton;
-   auto &mType = parser.mType;
-   auto &mFoundType = parser.mFoundType;
-   auto &mLinear = parser.mLinear;
-   auto &mPreview = parser.mPreview;
+   mDebug = false;
+   auto result = mProgram->Parse(stream);
+   SetLinearEffectFlag(mProgram->mLinear);
+   SetPreviewFullSelectionFlag(mProgram->mPreview);
+   return result;
+}
 
-   auto &program = *mProgram;
-   auto &mHelpFileExists = program.mHelpFileExists;
-   auto &mHelpPage = program.mHelpPage;
-   auto &mCmd = program.mCmd;
-
+bool NyquistProgram::Parse(wxInputStream & stream)
+{
    if (!stream.IsOk())
    {
       mInitError = XO("Could not open file");
       return false;
    }
+
+   auto &mEffect = mControls.mEffect;
 
    wxTextInputStream pgm(stream, wxT(" \t"), wxConvAuto());
 
@@ -1345,10 +1337,9 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
    mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
    mHelpFileExists = false;
-   mDebug = false;
    mTrace = false;
    mDebugButton = true;    // Debug button enabled by default.
-   GetControls().mEnablePreview = true;  // Preview button enabled by default.
+   mControls.mEnablePreview = true;  // Preview button enabled by default.
 
    // Bug 1934.
    // All Nyquist plug-ins should have a ';type' field, but if they don't we default to
@@ -1372,7 +1363,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
          bool control =
             line[0] == wxT('$') || line.StartsWith( wxT(";control") );
          do
-            done = GetParser().Parse(tzer, line, !control || stream.Eof(), nLines == 1);
+            done = NyquistParser::Parse(
+               tzer, line, !control || stream.Eof(), nLines == 1);
          while(!done &&
             (line = pgm.ReadLine(), ++nLines, true));
 
@@ -1400,15 +1392,12 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
          mCmd += line + wxT("\n");
       }
    }
-   if (!mFoundType && !RecoverParseTypeFailed())
+   if (!mFoundType && !mEffect.RecoverParseTypeFailed())
       return false;
 
-   const auto helpStuff = mProgram->CheckHelpPage();
+   const auto helpStuff = CheckHelpPage();
    mHelpFileExists = helpStuff.first;
    mHelpPage       = helpStuff.second;
-
-   SetLinearEffectFlag(mLinear);
-   SetPreviewFullSelectionFlag(mPreview);
 
    return true;
 }
@@ -1430,7 +1419,6 @@ void NyquistEffect::ParseFile()
 bool NyquistEffect::ParseCommand(const wxString & cmd)
 {
    wxStringInputStream stream(cmd + wxT(" "));
-
    return ParseProgram(stream);
 }
 

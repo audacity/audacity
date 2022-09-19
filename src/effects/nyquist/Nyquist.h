@@ -86,6 +86,8 @@ struct NyquistProgram : NyquistParser
    NyquistBindings &GetBindings() { return mBindings; }
    const NyquistBindings &GetBindings() const { return mBindings; }
 
+   bool Parse(wxInputStream & stream);
+
    // All state is externalized into context,
    // so the member function can be const
    bool Process(const AudacityProject *project,
