@@ -132,9 +132,9 @@ private:
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Threshold{ &EffectCompressor::mThreshold,
+static constexpr EffectParameter Threshold{ &EffectCompressor::mThresholdDB,
    L"Threshold",     -12.0,   -60.0,   -1.0,    1   };
-static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloor,
+static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloorDB,
    L"NoiseFloor",    -40.0,   -80.0,   -20.0,   0.2   };
 static constexpr EffectParameter Ratio{ &EffectCompressor::mRatio,
    L"Ratio",         2.0,     1.1,     10.0,    10  };
