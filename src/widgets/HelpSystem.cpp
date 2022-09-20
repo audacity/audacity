@@ -284,16 +284,24 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    }
    else if( localfile.empty() || !wxFileExists( localfile ))
    {
-      // If you give an empty remote URL, you should have already ensured
-      // that the file exists!
-      wxASSERT( !remoteURL.empty() );
-      // I can't find it'.
-      // Use Built-in browser to suggest you use the remote url.
-      wxString Text = HelpText( wxT("remotehelp") );
-      Text.Replace( wxT("*URL*"), remoteURL.GET() );
-      // Always make the 'help on the internet' dialog modal.
-      // Fixes Bug 1411.
-      ShowHtmlText( parent, XO("Help on the Internet"), Text, false, true );
+      if (remoteURL.empty())
+      {
+         // If you give an empty remote URL, you should have already ensured
+         // that the file exists!
+         wxASSERT(!remoteURL.empty());
+         // I can't find it'.
+         // Use Built-in browser to suggest you use the remote url.
+         wxString Text = HelpText(wxT("remotehelp"));
+         Text.Replace(wxT("*URL*"), remoteURL.GET());
+         // Always make the 'help on the internet' dialog modal.
+         // Fixes Bug 1411.
+         ShowHtmlText(parent, XO("Help on the Internet"), Text, false, true);
+      }
+      else
+      {
+         // Use External browser to go to remote URL.
+         OpenInDefaultBrowser(remoteURL);
+      }
    }
    else if( HelpMode == wxT("Local") || alwaysDefaultBrowser)
    {

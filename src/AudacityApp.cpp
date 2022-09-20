@@ -406,7 +406,7 @@ void PopulatePreferences()
       gPrefs->Write(wxT("/GUI/Toolbars/Control/W"), -1);
    }
 
-   if(std::pair{vMajor, vMinor}< std::pair{3, 2})
+   if(std::pair{vMajor, vMinor} < std::pair{3, 2})
    {
       if(gPrefs->Exists(wxT("/GUI/ToolBars")))
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
@@ -414,6 +414,8 @@ void PopulatePreferences()
          gPrefs->DeleteGroup(wxT("Window"));
       if(gPrefs->Exists("/GUI/ShowSplashScreen"))
          gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+      if(gPrefs->Exists("/GUI/Help"))
+         gPrefs->DeleteEntry("/GUI/Help");
    }
 
    // write out the version numbers to the prefs file for future checking
