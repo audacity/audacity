@@ -14,7 +14,6 @@
 #include "NyquistParser.h"
 #include "NyquistUIControls.h"
 #include "NyquistEnvironment.h"
-#include "../Effect.h"
 #include "SampleCount.h"
 #include "../../widgets/wxPanelWrapper.h"
 
@@ -100,7 +99,7 @@ struct NyquistProgram : NyquistParser
 };
 
 class AUDACITY_DLL_API NyquistEffect
-   : public EffectWithSettings<NyquistSettings, StatefulEffect>
+   : public NyquistEffectBase
 {
 public:
 
@@ -192,7 +191,7 @@ private:
 
 protected:
    bool ParseCommand(const wxString & cmd);
-   virtual bool RecoverParseTypeFailed();
+   bool RecoverParseTypeFailed() override;
 
 private:
    bool ParseProgram(wxInputStream & stream);

@@ -19,10 +19,10 @@
 
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
-class Effect;
+class NyquistEffectBase;
 
 struct NyquistParser {
-   NyquistParser(const wxString &fName, Effect &effect);
+   NyquistParser(const wxString &fName, NyquistEffectBase &effect);
 
    struct Tokenizer {
       bool sl { false };

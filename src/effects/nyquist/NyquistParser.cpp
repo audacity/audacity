@@ -15,7 +15,7 @@
 #include <wx/tokenzr.h>
 #include <float.h>
 
-NyquistParser::NyquistParser(const wxString &fName, Effect &effect)
+NyquistParser::NyquistParser(const wxString &fName, NyquistEffectBase &effect)
    : mName{
       (fName == NYQUIST_PROMPT_ID) ? NYQUIST_PROMPT_NAME
    /* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */

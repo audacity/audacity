@@ -10,7 +10,6 @@
 
 **********************************************************************/
 #include "NyquistUIControls.h"
-#include "../Effect.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/slider.h>
@@ -20,6 +19,8 @@
 #include "../../widgets/valnum.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/wxPanelWrapper.h"
+
+NyquistEffectBase::~NyquistEffectBase() = default;
 
 enum
 {

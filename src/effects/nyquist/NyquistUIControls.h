@@ -14,11 +14,18 @@
 #define __AUDACITY_EFFECT_NYQUIST_UI_CONTROLS__
 
 #include "NyquistControls.h"
+#include "../Effect.h"
 
-class Effect;
+class AUDACITY_DLL_API NyquistEffectBase
+   : public EffectWithSettings<NyquistSettings, StatefulEffect>
+{
+public:
+   ~NyquistEffectBase() override;
+   virtual bool RecoverParseTypeFailed() = 0;
+};
 
 struct NyquistUIControls : NyquistControls, wxEvtHandler {
-   explicit NyquistUIControls(Effect &effect, Bindings &bindings)
+   explicit NyquistUIControls(NyquistEffectBase &effect, Bindings &bindings)
       : mEffect{ effect }
       , mBindings{ bindings }
    {}
@@ -37,7 +44,7 @@ struct NyquistUIControls : NyquistControls, wxEvtHandler {
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 
-   Effect &mEffect;
+   NyquistEffectBase &mEffect;
    Bindings &mBindings;
    bool mEnablePreview { true };
 };
