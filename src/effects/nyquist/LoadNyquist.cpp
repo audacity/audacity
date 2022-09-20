@@ -7,15 +7,14 @@
   Dominic Mazzoni
 
 **********************************************************************/
-
-
+#include "Nyquist.h"
+#include "NyquistProgram.h"
 
 #include "LoadNyquist.h"
 #include "nyx.h"
 
 #include <wx/log.h>
 
-#include "Nyquist.h"
 #include "NyquistPrompt.h"
 
 #include "FileNames.h"

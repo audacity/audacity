@@ -10,7 +10,7 @@
 
 **********************************************************************/
 #include "NyquistPrompt.h"
-#include "NyquistParser.h"
+#include "NyquistProgram.h"
 
 #include <wx/textdlg.h>
 #include "BasicUI.h"

@@ -654,6 +654,8 @@ list( APPEND SOURCES
          effects/nyquist/NyquistEnvironment.h
          effects/nyquist/NyquistParser.cpp
          effects/nyquist/NyquistParser.h
+         effects/nyquist/NyquistProgram.cpp
+         effects/nyquist/NyquistProgram.h
          effects/nyquist/NyquistPrompt.cpp
          effects/nyquist/NyquistPrompt.h
          effects/nyquist/NyquistUIControls.cpp
