@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-09-14 16:34+0200\n"
+"PO-Revision-Date: 2022-09-19 17:27+0200\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. i18n-hint C++ programming assertion
 #: crashreports/crashreporter/CrashReportApp.cpp
@@ -5123,7 +5123,7 @@ msgstr "Effekt %d"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Power"
-msgstr ""
+msgstr "Tænd/sluk"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -6248,11 +6248,11 @@ msgstr "Tilkobl konto"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 msgid "Enter token to link your account"
-msgstr ""
+msgstr "Indsæt godkendelseskoden for at koble din konto til"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 msgid "Token"
-msgstr ""
+msgstr "Godkendelseskode"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/ShareAudioDialog.cpp
@@ -6261,7 +6261,7 @@ msgstr "F&ortsæt"
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
-msgstr "Vi kunne ikke koble på din konto. Forsøg venligst igen."
+msgstr "Vi kunne ikke koble din konto til. Forsøg venligst igen."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "&Try again"
@@ -21503,7 +21503,7 @@ msgstr "Frekvens af radarnåle (Hz)"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%No modulation carrier."
-msgstr ""
+msgstr "Fejl.~%Intet modulationssignal."
 
 #. Effects menu group name; audio dynamics compression, not data compression
 #: resources/EffectsMenuDefaults.xml
