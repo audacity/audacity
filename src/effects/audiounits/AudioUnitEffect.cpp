@@ -381,6 +381,11 @@ bool AudioUnitEffect::SaveUserPreset(
 
 bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
+   // Issue 3441: Some factory presets of some effects do not reassign all
+   // controls.  So first put controls into a default state, not contaminated
+   // by previous importing or other loading of settings into this wrapper.
+   LoadPreset(FactoryDefaultsGroup(), settings);
+
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
    if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
