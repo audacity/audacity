@@ -428,7 +428,7 @@ void PopulatePreferences()
 void InitBreakpad()
 {
     wxFileName databasePath;
-    databasePath.SetPath(wxStandardPaths::Get().GetUserLocalDataDir());
+    databasePath.SetPath(FileNames::StateDir());
     databasePath.AppendDir("crashreports");
     databasePath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
     
