@@ -311,7 +311,7 @@ FilePath GetUserTargetDir(DirTarget target, bool allowRoaming)
          // Use OS-provided user data dir folder
          wxString newDir(FileNames::LowerCaseAppNameInPath(
             allowRoaming ? wxStandardPaths::Get().GetUserDataDir() :
-                           wxStandardPaths::Get().GetLocalDataDir()));
+                           wxStandardPaths::Get().GetUserLocalDataDir()));
 #endif
          dir = FileNames::MkDir(newDir);
       }
