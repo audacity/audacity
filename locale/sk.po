@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2022-09-13 17:28+0200\n"
+"PO-Revision-Date: 2022-09-20 22:36+0200\n"
 "Last-Translator: Jozef Matta <jozef.m923@gmail.com>\n"
 "Language-Team: jozefM\n"
 "Language: sk\n"
@@ -1564,7 +1564,7 @@ msgstr "Ťahajte pre vyhľadávanie. Uvoľnite pre ukončenie vyhľadávania."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Ťahajte pre vyhľadávanie. Uvoľnite a posúvajte pre snímanie."
+msgstr "Ťahajte pre vyhľadávanie. Uvoľnite a posúvajte pre pretáčanie."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
@@ -1601,7 +1601,7 @@ msgstr "Nastaviť slučku na výber"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Pinned Play Head"
-msgstr "Pripnutá snímacia &hlava"
+msgstr "Pripnutá pretáčacia &hlava"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -1887,6 +1887,19 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
 "state which will be recovered the next time you open it."
 msgstr ""
+"Prístup k tomuto súboru bol odmietnutý. Dôvodov:\n"
+"\n"
+"\t%s\n"
+"\n"
+"Dôvodou môže byť veľa, ale jedným z nich môže byť nedostatok voľného miesta "
+"na disku, prípadne ste nedali súboru povolenie. Ďalšiu pomoc získate po "
+"kliknutí na tlačidlo pomocník.\n"
+"\n"
+"Môžete sa pokúsiť o vyriešenie tohto problému a potom kliknite na tlačidlo "
+"znovu.\n"
+"\n"
+"Ak zvolíte možnosť ukončiť Audacity, váš projekt môže byť v stave "
+"neuložených projektov a môže byť obnovený, ak ho otvoríte."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
@@ -2480,9 +2493,9 @@ msgid "Doing correctness check...\n"
 msgstr "Prebieha kontrola správnosti...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Bad: chunk %lld sample %lld\n"
-msgstr "Zlý: kus %ld snímka %ld\n"
+msgstr "Zlý: kus %lld vzorka %lld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
@@ -3375,7 +3388,7 @@ msgstr "&Príkaz"
 #: src/HistoryWindow.cpp src/ProjectFileManager.cpp
 #, c-format
 msgid "Compacting actually freed %s of disk space."
-msgstr ""
+msgstr "Komprimuje sa aktuálne miesto na disku %s."
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -4423,6 +4436,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Získanie údajov z projektového súboru zlihalo. \n"
+"Nasledujúci príkaz zlihal:\n"
+"\n"
+"%s"
 
 #. i18n-hint: An error message.
 #: src/ProjectFileIO.cpp
@@ -4430,6 +4447,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"Projekt je v priečinku, ktorý je iba na čítanie.\n"
+"Nie je možné vytvoriť požadované dočasné súbory."
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4442,6 +4461,8 @@ msgid ""
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
+"Tento projekt bol vytvorený v novej verzii Audacity. Musíte Audacity "
+"aktualizovať."
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4459,6 +4480,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projekt je iba na čítanie\n"
+"(Nie je možné pracovať s blokovými súbormi)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -7089,7 +7112,7 @@ msgstr "Zmeniť rýchlosť, ovplyvní zmenu tempa a zmenu výšky tónu"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
-msgstr "&Násobič rýchlosti:"
+msgstr "Nás&obič rýchlosti:"
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
@@ -8739,11 +8762,11 @@ msgstr "Strihy"
 
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
-msgstr "&Počiatočný prah (snímky):"
+msgstr "&Počiatočný prah (vzorky):"
 
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
-msgstr "Kon&cový prah (snímky):"
+msgstr "Kon&cový prah (vzorky):"
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -15078,7 +15101,7 @@ msgstr "Zvukom a&ktivované nahrávanie (zap/vyp)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Pripnutá snímacia &hlava (zap/vyp)"
+msgstr "Pripnutá pretáčacia &hlava (zap/vyp)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Overdub (on/off)"
@@ -15293,7 +15316,7 @@ msgstr "Nastavenie kvality"
 #. i18n-hint: Title for the update notifications panel in the preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Upozornenie o aktualizácii"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -15306,7 +15329,7 @@ msgstr "&Skontrolovať aktualizácie..."
 msgid ""
 "App update checking requires network access. In order to protect your "
 "privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Kontrola aktualizácie aplikácie vyžaduje pripojenie na internet."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16563,7 +16586,7 @@ msgstr "Iné..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Sampling"
-msgstr "Snímanie"
+msgstr "Vzorkovanie"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Default Sample &Rate:"
@@ -16571,7 +16594,7 @@ msgstr "Predvolená vzorkovacia &frekvencia:"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Default Sample &Format:"
-msgstr "Predvolený snímací &formát:"
+msgstr "Predvolený vzorkovací &formát:"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Real-time Conversion"
@@ -17526,7 +17549,7 @@ msgstr "Pravítko pretáčania"
 
 #: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
 msgid "Scrubbing"
-msgstr "pretáčanie"
+msgstr "Pretáčanie"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -17534,7 +17557,7 @@ msgstr "pretáčanie"
 #.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Scrubbing"
-msgstr "Zastaviť snímanie"
+msgstr "Zastaviť pretáčanie"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -17542,7 +17565,7 @@ msgstr "Zastaviť snímanie"
 #.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
-msgstr "Začať snímanie"
+msgstr "Začať pretáčanie"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -17562,13 +17585,13 @@ msgstr "Spustiť hľadanie"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Hide Scrub Ruler"
-msgstr "Skryť pravítko snímania"
+msgstr "Skryť pravítko pretáčania"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that enables Scrub or Seek playback and Scrub Ruler
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scru&b Toolbar"
-msgstr "Panel nástrojov &snímania"
+msgstr "Panel nástrojov pre&táčania"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Project Rate (Hz)"
@@ -18462,7 +18485,7 @@ msgstr "Úprava obalu."
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
-msgstr "&Snímanie"
+msgstr "&pretáčanie"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -18474,7 +18497,7 @@ msgstr "Vyhľadávanie"
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
-msgstr "&Pravítko snímania"
+msgstr "&Pravítko pretáčania"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Playing at Speed"
@@ -18486,19 +18509,19 @@ msgstr "Pre vyhľadávanie posúvajte kurzorom myši"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Scrub"
-msgstr "Pre snímanie posúvajte kurzorom myši"
+msgstr "Pre pretáčanieposúvajte kurzorom myši"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scru&bbing"
-msgstr "S&nímanie"
+msgstr "Pre&táčanie"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub Bac&kwards"
-msgstr "Snímať do&zadu"
+msgstr "Pretočiť do&zadu"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub For&wards"
-msgstr "Snímať do&predu"
+msgstr "Pretočiť do&predu"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
@@ -18714,7 +18737,7 @@ msgstr "Stiahnuť"
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "Kontrola aktualizácie aplikácie"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid ""
@@ -21025,7 +21048,7 @@ msgstr "Spektrálne odstránenie"
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr "Chyba.~%Snímková frekvencia stopy pod 100 Hz nie je podporovaná."
+msgstr "Chyba.~%Vzorkovacia frekvencia stopy pod 100 Hz nie je podporovaná."
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
