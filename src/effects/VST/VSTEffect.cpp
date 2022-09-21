@@ -1339,7 +1339,8 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 
    auto pParent = S.GetParent();
 
-   auto validator = std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
+   auto validator = std::make_unique<VSTEffectValidator>
+      (dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent, (GetType() == EffectTypeGenerate));
 
    // Build the appropriate dialog type
    if (mGui)
@@ -3566,13 +3567,15 @@ VSTEffectValidator::VSTEffectValidator
    VSTEffectInstance&       instance,
    EffectUIClientInterface& effect,
    EffectSettingsAccess&    access,
-   wxWindow*                pParent
+   wxWindow*                pParent,
+   bool                     isGenerator
 )
    : EffectUIValidator(effect, access),
      VSTEffectWrapper(instance.mPath),
      mInstance(instance),
      mParent(pParent),
-     mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) )
+     mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
+     mIsGenerator(isGenerator)
 {   
    // Make the settings of the instance up to date before using it to
    // build a UI
@@ -3656,25 +3659,19 @@ VSTEffectInstance::~VSTEffectInstance()
 
 bool VSTEffectValidator::FetchSettingsFromInstance(EffectSettings& settings)
 {
-   return mInstance.FetchSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+   return mInstance.FetchSettings( GetSettings(settings) );
 }
 
 
 bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
 {
-   return mInstance.StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+   return mInstance.StoreSettings( GetSettings(settings) );
 }
 
 
 bool VSTEffectValidator::StoreSettings(const EffectSettings& settings)
 {   
-   return VSTEffectWrapper::StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+   return VSTEffectWrapper::StoreSettings( GetSettings(settings) );
 }
 
 
@@ -3682,8 +3679,7 @@ bool VSTEffectValidator::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
-      if (eff.GetType() == EffectTypeGenerate)
+      if (mIsGenerator)
          settings.extra.SetDuration(mDuration->GetValue());
 
       FetchSettingsFromInstance(settings);

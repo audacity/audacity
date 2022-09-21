@@ -279,6 +279,20 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
 
+   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
+   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
 };
 
 class VSTEffectInstance;
@@ -375,19 +389,6 @@ class VSTEffect final
 
    EffectSettings MakeSettings() const override;
    
-   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VSTEffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-
-   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VSTEffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
 
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
@@ -567,7 +568,8 @@ public:
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
                        EffectSettingsAccess&    access,
-                       wxWindow*                pParent
+                       wxWindow*                pParent,
+                       bool                     isGenerator
                       );
 
    ~VSTEffectValidator() override;
@@ -626,6 +628,8 @@ private:
    wxWeakRef<wxDialog> mDialog;
    
    VSTControl* mControl;
+
+   const bool mIsGenerator;
 };
 
 
