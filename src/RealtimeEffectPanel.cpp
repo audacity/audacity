@@ -1181,9 +1181,12 @@ public:
       {
          insertItem();
       }
-      else if(msg.type == RealtimeEffectListMessage::Type::Replace)
+      else if(msg.type == RealtimeEffectListMessage::Type::WillReplace)
       {
          removeItem();
+      }
+      else if(msg.type == RealtimeEffectListMessage::Type::DidReplace)
+      {
          insertItem();
       }
       else if(msg.type == RealtimeEffectListMessage::Type::Remove)
