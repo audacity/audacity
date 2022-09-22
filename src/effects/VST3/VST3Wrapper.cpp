@@ -25,6 +25,15 @@ constexpr auto processorStateKey  = wxT("ProcessorState");
 constexpr auto controllerStateKey = wxT("ControllerState");
 constexpr auto parametersKey = wxT("Parameters");
 
+Steinberg::Vst::SpeakerArrangement GetBusArragementForChannels(
+   int32_t channelsCount, Steinberg::Vst::SpeakerArrangement defaultArragment)
+{
+   if (channelsCount == 1)
+      return defaultArragment;
+
+   return Steinberg::Vst::SpeakerArr::kStereo;
+}
+
 struct VST3EffectSettings
 {
    ///Holds the parameter that has been changed since last processing pass.
@@ -102,26 +111,33 @@ bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
    {
       Vst::BusInfo busInfo {};
       Vst::SpeakerArrangement arrangement {0ull};
-      int32 channelCount{};
-      if(component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo) == kResultOk)
-         channelCount = busInfo.busType == Vst::kMain
-            ? std::min(busInfo.channelCount, MaxChannelsPerAudioBus)
-            : MaxChannelsPerAudioBus;
-      arrangement = (1ull << channelCount) - 1ull;
+      
+      component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo);
+
+      Vst::SpeakerArrangement defaultArragement {};
+      processor->getBusArrangement(Vst::kInput, i, defaultArragement);
+
+      arrangement =
+         GetBusArragementForChannels(busInfo.channelCount, defaultArragement);
       
       component.activateBus(Vst::kAudio, Vst::kInput, i, busInfo.busType == Vst::kMain);
+
       defaultInputSpeakerArrangements.push_back(arrangement);
    }
    for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
    {
       Vst::BusInfo busInfo {};
       Vst::SpeakerArrangement arrangement {0ull};
-      int32 channelCount{};
-      if(component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo) == kResultOk)
-         channelCount = busInfo.busType == Vst::kMain
-            ? std::min(busInfo.channelCount, MaxChannelsPerAudioBus)
-            : MaxChannelsPerAudioBus;
-      arrangement = (1ull << channelCount) - 1ull;
+      
+      component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo);
+
+      Vst::SpeakerArrangement defaultArragement {};
+      processor->getBusArrangement(Vst::kOutput, i, defaultArragement);
+
+      arrangement =
+         busInfo.busType == Vst::kMain ?
+            GetBusArragementForChannels(busInfo.channelCount, defaultArragement) :
+            Vst::SpeakerArr::kEmpty;
 
       component.activateBus(Vst::kAudio, Vst::kOutput, i, busInfo.busType == Vst::kMain);
       defaultOutputSpeakerArrangements.push_back(arrangement);
