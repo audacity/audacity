@@ -16,6 +16,7 @@
 #include "RealtimeEffectState.h"
 
 #include "EffectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "Track.h"
 
@@ -93,13 +94,20 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
    }
 
    mProjectWindowDestroyedSubscription = projectWindow.Subscribe(
-      [this](ProjectWindowDestroyedMessage) { Hide(); });
+      [this, &project](ProjectWindowDestroyedMessage) {
+         // This achieves autosave on close of project before other important
+         // project state is destroyed
+         Hide(&project);
+      });
 }
 
-void RealtimeEffectStateUI::Hide()
+void RealtimeEffectStateUI::Hide(AudacityProject* project)
 {
    if (mEffectUIHost != nullptr)
    {
+      if (project)
+         AutoSave(*project);
+
       // EffectUIHost calls Destroy in OnClose handler
       mEffectUIHost->Close();
       mEffectUIHost = {};
@@ -109,7 +117,7 @@ void RealtimeEffectStateUI::Hide()
 void RealtimeEffectStateUI::Toggle(AudacityProject& project)
 {
    if(IsShown())
-      Hide();
+      Hide(&project);
    else
       Show(project);
 }
@@ -156,3 +164,7 @@ void RealtimeEffectStateUI::UpdateTitle()
    mEffectUIHost->SetName(title);
 }
 
+void RealtimeEffectStateUI::AutoSave(AudacityProject &project)
+{
+   ProjectHistory::AutoSave::Call(project);
+}

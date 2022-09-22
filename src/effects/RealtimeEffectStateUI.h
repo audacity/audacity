@@ -35,13 +35,17 @@ public:
    [[nodiscard]] bool IsShown() const noexcept;
 
    void Show(AudacityProject& project);
-   void Hide();
+   // Pass non-null to cause autosave
+   void Hide(AudacityProject* project = nullptr);
    void Toggle(AudacityProject& project);
 
    void UpdateTrackData(const Track& track);
 
    static RealtimeEffectStateUI &Get(RealtimeEffectState &state);
    static const RealtimeEffectStateUI &Get(const RealtimeEffectState &state);
+
+   // Cause immediate or delayed autosave at a time when transport is stopped
+   void AutoSave(AudacityProject &project);
 
 private:
    void UpdateTitle();

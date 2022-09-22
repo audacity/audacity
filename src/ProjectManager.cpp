@@ -506,6 +506,9 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    window.ShowFullScreen(false);
 #endif
 
+   // This achieves auto save on close of project before other important
+   // project state is destroyed
+   window.Publish(ProjectWindowDestroyedMessage {});
    ModuleManager::Get().Dispatch(ProjectClosing);
 
    // Stop the timer since there's no need to update anything anymore
@@ -587,7 +590,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // to save the state of the toolbars.
    ToolManager::Get( project ).Destroy();
 
-   window.Publish(ProjectWindowDestroyedMessage {});
    window.DestroyChildren();
 
    // Close project only now, because TrackPanel might have been holding

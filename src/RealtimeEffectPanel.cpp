@@ -65,11 +65,6 @@ namespace
          track, [&](auto& ui) { ui.UpdateTrackData(track); });
    }
 
-   void HideRealtimeUIForTrack(Track& track)
-   {
-      VisitRealtimeEffectStateUIs(track, [](auto& ui) { ui.Hide(); });
-   }
-
    void ReopenRealtimeEffectUIData(AudacityProject& project, Track& track)
    {
       VisitRealtimeEffectStateUIs(
@@ -78,7 +73,7 @@ namespace
          {
             if (ui.IsShown())
             {
-               ui.Hide();
+               ui.Hide(&project);
                ui.Show(project);
             }
          });
@@ -757,6 +752,7 @@ namespace
             return;
 
          auto& ui = RealtimeEffectStateUI::Get(*mEffectState);
+         // Don't need autosave for the effect that is being removed
          ui.Hide();
 
          auto effectName = GetEffectName();
@@ -1138,6 +1134,8 @@ public:
       };
       const auto removeItem = [&](){
          auto& ui = RealtimeEffectStateUI::Get(*msg.affectedState);
+         // Don't need to auto-save changed settings of effect that is deleted
+         // Undo history push will do it anyway
          ui.Hide();
          
          auto window = sizer->GetItem(msg.srcIndex)->GetWindow();
@@ -1493,6 +1491,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             }
 
             if (!reachable)
+               // Don't need to autosave for an unreachable state
                effectUI->Hide();
          }
 
