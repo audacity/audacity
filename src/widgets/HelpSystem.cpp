@@ -47,6 +47,8 @@
 #include "wxFileNameWrapper.h"
 #include "../prefs/GUIPrefs.h"
 
+#include "BasicUI.h"
+
 #ifdef USE_ALPHA_MANUAL
 const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/man/");
@@ -282,16 +284,24 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    }
    else if( localfile.empty() || !wxFileExists( localfile ))
    {
-      // If you give an empty remote URL, you should have already ensured
-      // that the file exists!
-      wxASSERT( !remoteURL.empty() );
-      // I can't find it'.
-      // Use Built-in browser to suggest you use the remote url.
-      wxString Text = HelpText( wxT("remotehelp") );
-      Text.Replace( wxT("*URL*"), remoteURL.GET() );
-      // Always make the 'help on the internet' dialog modal.
-      // Fixes Bug 1411.
-      ShowHtmlText( parent, XO("Help on the Internet"), Text, false, true );
+      if (remoteURL.empty())
+      {
+         // If you give an empty remote URL, you should have already ensured
+         // that the file exists!
+         wxASSERT(!remoteURL.empty());
+         // I can't find it'.
+         // Use Built-in browser to suggest you use the remote url.
+         wxString Text = HelpText(wxT("remotehelp"));
+         Text.Replace(wxT("*URL*"), remoteURL.GET());
+         // Always make the 'help on the internet' dialog modal.
+         // Fixes Bug 1411.
+         ShowHtmlText(parent, XO("Help on the Internet"), Text, false, true);
+      }
+      else
+      {
+         // Use External browser to go to remote URL.
+         OpenInDefaultBrowser(remoteURL);
+      }
    }
    else if( HelpMode == wxT("Local") || alwaysDefaultBrowser)
    {
@@ -378,7 +388,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       // replace 'special characters' with underscores.
       // RFC 2396 defines the characters a-z, A-Z, 0-9 and ".-_" as "always safe"
       // mw2html also replaces "-" with "_" so replace that too.
-      
+
       // If PageName contains a %xx code, mw2html will transform it:
       // '%xx' => '%25xx' => '_'
       re.Compile(wxT("%.."));
@@ -415,7 +425,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    wxASSERT(parent); // to justify safenew
 
    HelpSystem::ShowHelp(
-      parent, 
+      parent,
       localHelpPage,
       webHelpPage,
       bModal
@@ -522,7 +532,7 @@ void BrowserDialog::UpdateButtons()
 void OpenInDefaultBrowser(const URLString& link)
 {
    wxURI uri(link.GET());
-   wxLaunchDefaultBrowser(uri.BuildURI());
+   BasicUI::OpenInDefaultBrowser(uri.BuildURI());
 }
 
 LinkingHtmlWindow::LinkingHtmlWindow(wxWindow *parent, wxWindowID id /*= -1*/,

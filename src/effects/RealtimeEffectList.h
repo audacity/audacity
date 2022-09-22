@@ -30,7 +30,8 @@ struct RealtimeEffectListMessage final
    enum class Type
    {
       Insert,///<New effect item was added to the list at srcIndex position. affectedState is a new state
-      Replace,///<Effect item was replaced with a new item at srcIndex position. affectedState is an old state.
+      WillReplace,///<Effect item will be replaced with a new item at srcIndex position. affectedState is the state to be replaced.
+      DidReplace,///<Effect item was replaced with a new item at srcIndex position. affectedState is an old state.
       Remove,///<Effect item was removed from the list at srcIndex position. affectedState is removed state.
       Move ///<Item position has changed, from srcIndex to dstIndex.  affectedState is the moved state
    };

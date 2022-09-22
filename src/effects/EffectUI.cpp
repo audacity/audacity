@@ -226,6 +226,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mProject{ project }
 , mParent{ parent }
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
+, mHadPriorState{ (pPriorState != nullptr) }
 , mpInstance{ InitializeInstance() }
 {
    // Assign the out parameter
@@ -509,9 +510,7 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
    if (mpValidator)
       mpValidator->OnClose();
-
-   ProjectHistory::AutoSave::Call(mProject);
-
+   
    Hide();
    Destroy();
    
@@ -588,11 +587,14 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
 void EffectUIHost::DoCancel()
 {
    if (!mDismissed) {
-      // Restore effect state from last updated preferences
-      mpAccess->ModifySettings([&](EffectSettings &settings) {
-         mEffectUIHost.GetDefinition()
-           .LoadUserPreset(CurrentSettingsGroup(), settings);
-      });
+      if (!mHadPriorState) {
+         // For the destructive effect dialog only
+         // Restore effect state from last updated preferences
+         mpAccess->ModifySettings([&](EffectSettings &settings) {
+            mEffectUIHost.GetDefinition()
+              .LoadUserPreset(CurrentSettingsGroup(), settings);
+         });
+      }
       if (IsModal())
          EndModal(0);
       else

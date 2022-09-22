@@ -280,7 +280,7 @@ FilePath GetXDGTargetDir(DirTarget target)
 }
 #endif
 
-FilePath GetUserTargetDir(DirTarget target)
+FilePath GetUserTargetDir(DirTarget target, bool allowRoaming)
 {
    auto& dir = gTargetDirs[size_t(target)];
    if (dir.empty())
@@ -309,7 +309,9 @@ FilePath GetUserTargetDir(DirTarget target)
          wxString newDir(GetXDGTargetDir(target));
 #else
          // Use OS-provided user data dir folder
-         wxString newDir( FileNames::LowerCaseAppNameInPath( wxStandardPaths::Get().GetUserDataDir() ));
+         wxString newDir(FileNames::LowerCaseAppNameInPath(
+            allowRoaming ? wxStandardPaths::Get().GetUserDataDir() :
+                           wxStandardPaths::Get().GetUserLocalDataDir()));
 #endif
          dir = FileNames::MkDir(newDir);
       }
@@ -318,10 +320,10 @@ FilePath GetUserTargetDir(DirTarget target)
 }
 } // End of implementation for user directories
 
-FilePath FileNames::CacheDir() { return GetUserTargetDir(DirTarget::Cache); }
-FilePath FileNames::ConfigDir() { return GetUserTargetDir(DirTarget::Config); }
-FilePath FileNames::DataDir() { return GetUserTargetDir(DirTarget::Data); }
-FilePath FileNames::StateDir() { return GetUserTargetDir(DirTarget::State); }
+FilePath FileNames::CacheDir() { return GetUserTargetDir(DirTarget::Cache, false); }
+FilePath FileNames::ConfigDir() { return GetUserTargetDir(DirTarget::Config, true); }
+FilePath FileNames::DataDir() { return GetUserTargetDir(DirTarget::Data, true); }
+FilePath FileNames::StateDir() { return GetUserTargetDir(DirTarget::State, false); }
 
 FilePath FileNames::ResourcesDir(){
 #if __WXMSW__

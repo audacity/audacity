@@ -16,6 +16,7 @@
 #include "RealtimeEffectState.h"
 
 #include "EffectManager.h"
+#include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "Track.h"
 
@@ -26,6 +27,10 @@ const RealtimeEffectState::RegisteredFactory realtimeEffectStateUIFactory { [](a
 };
 } // namespace
 
+
+BEGIN_EVENT_TABLE(RealtimeEffectStateUI, wxEvtHandler)
+   EVT_CLOSE(RealtimeEffectStateUI::OnClose)
+END_EVENT_TABLE()
 
 RealtimeEffectStateUI::RealtimeEffectStateUI(RealtimeEffectState& state)
     : mRealtimeEffectState(state)
@@ -92,14 +97,24 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
       mEffectUIHost = {};
    }
 
+   if (mEffectUIHost) {
+      mEffectUIHost->PushEventHandler(this);
+      mpProject = &project;
+   }
+
    mProjectWindowDestroyedSubscription = projectWindow.Subscribe(
-      [this](ProjectWindowDestroyedMessage) { Hide(); });
+      [this, &project](ProjectWindowDestroyedMessage) {
+         // This achieves autosave on close of project before other important
+         // project state is destroyed
+         Hide(&project);
+      });
 }
 
-void RealtimeEffectStateUI::Hide()
+void RealtimeEffectStateUI::Hide(AudacityProject* project)
 {
    if (mEffectUIHost != nullptr)
    {
+      mpProject = project; // May reassign as null to skip autosave in OnClose
       // EffectUIHost calls Destroy in OnClose handler
       mEffectUIHost->Close();
       mEffectUIHost = {};
@@ -109,7 +124,7 @@ void RealtimeEffectStateUI::Hide()
 void RealtimeEffectStateUI::Toggle(AudacityProject& project)
 {
    if(IsShown())
-      Hide();
+      Hide(&project);
    else
       Show(project);
 }
@@ -156,3 +171,21 @@ void RealtimeEffectStateUI::UpdateTitle()
    mEffectUIHost->SetName(title);
 }
 
+void RealtimeEffectStateUI::AutoSave(AudacityProject &project)
+{
+   ProjectHistory::AutoSave::Call(project);
+}
+
+void RealtimeEffectStateUI::OnClose(wxCloseEvent & evt)
+{
+   auto next = GetNextHandler();
+   mEffectUIHost->RemoveEventHandler(this);
+   auto pProject = mpProject;
+   mpProject = nullptr;
+   if (pProject)
+      AutoSave(*pProject);
+
+   // Pass the event through to the dialog
+   if (next)
+      next->ProcessEvent(evt);
+}

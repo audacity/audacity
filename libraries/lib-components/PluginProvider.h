@@ -79,6 +79,22 @@ class COMPONENTS_API PluginProvider  /* not final */
    : public ComponentInterface
 {
 public:
+
+   //![Optional] Implementation may provide plugin validator
+   //!that may be used to perform additional checks. It's expected
+   //!that validation does actions that possibly can crash or throw,
+   //!for that reason it's not supposed to run within a main process.
+   //TODO: it may seem reasonable to require providers to perform that check
+   //in DiscoverPluginsAtPath, but some plugin types can safely provide meta
+   //data, which is a good reason to ask to avoid such checks during plugin
+   //discovery...
+   class Validator
+   {
+   public:
+      //!\param pluginInterface loaded plugin
+      virtual void Validate(ComponentInterface& pluginInterface) = 0;
+   };
+
    virtual ~PluginProvider();
 
    //! Called immediately after creation. Let provider initialize
@@ -162,6 +178,10 @@ public:
     * or module path returned by FindModulePaths
     */
    virtual bool CheckPluginExist(const PluginPath& path) const = 0;
+
+   //! Implementation can provide plugin specific checks to the plugin instances.
+   //! By default returns null.
+   virtual std::unique_ptr<Validator> MakeValidator() const;
 
    //! Load the plug-in at a path reported by DiscoverPluginsAtPath
    /*!

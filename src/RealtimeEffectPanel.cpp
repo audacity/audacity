@@ -39,6 +39,7 @@
 #include "effects/RealtimeEffectStateUI.h"
 #include "UndoManager.h"
 #include "Prefs.h"
+#include "BasicUI.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -64,11 +65,6 @@ namespace
          track, [&](auto& ui) { ui.UpdateTrackData(track); });
    }
 
-   void HideRealtimeUIForTrack(Track& track)
-   {
-      VisitRealtimeEffectStateUIs(track, [](auto& ui) { ui.Hide(); });
-   }
-
    void ReopenRealtimeEffectUIData(AudacityProject& project, Track& track)
    {
       VisitRealtimeEffectStateUIs(
@@ -77,7 +73,7 @@ namespace
          {
             if (ui.IsShown())
             {
-               ui.Hide();
+               ui.Hide(&project);
                ui.Show(project);
             }
          });
@@ -756,6 +752,7 @@ namespace
             return;
 
          auto& ui = RealtimeEffectStateUI::Get(*mEffectState);
+         // Don't need autosave for the effect that is being removed
          ui.Hide();
 
          auto effectName = GetEffectName();
@@ -1005,12 +1002,21 @@ public:
       addEffectHint->SetForegroundColorIndex(clrTrackPanelText);
       mAddEffectHint = addEffectHint;
 
-      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, _("Watch video"), "https://www.audacityteam.org/realtime-video", wxDefaultPosition, wxDefaultSize, wxHL_ALIGN_LEFT | wxHL_CONTEXTMENU);
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(
+         this, wxID_ANY, _("Watch video"),
+         "https://www.audacityteam.org/realtime-video", wxDefaultPosition,
+         wxDefaultSize, wxHL_ALIGN_LEFT | wxHL_CONTEXTMENU);
+      
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
 #if wxUSE_ACCESSIBILITY
       safenew WindowAccessible(addEffectTutorialLink);
 #endif
+
+      addEffectTutorialLink->Bind(
+         wxEVT_HYPERLINK, [](wxHyperlinkEvent& event)
+         { BasicUI::OpenInDefaultBrowser(event.GetURL()); });
+
       mAddEffectTutorialLink = addEffectTutorialLink;
 
       //indicates the insertion position of the item
@@ -1128,6 +1134,8 @@ public:
       };
       const auto removeItem = [&](){
          auto& ui = RealtimeEffectStateUI::Get(*msg.affectedState);
+         // Don't need to auto-save changed settings of effect that is deleted
+         // Undo history push will do it anyway
          ui.Hide();
          
          auto window = sizer->GetItem(msg.srcIndex)->GetWindow();
@@ -1171,9 +1179,12 @@ public:
       {
          insertItem();
       }
-      else if(msg.type == RealtimeEffectListMessage::Type::Replace)
+      else if(msg.type == RealtimeEffectListMessage::Type::WillReplace)
       {
          removeItem();
+      }
+      else if(msg.type == RealtimeEffectListMessage::Type::DidReplace)
+      {
          insertItem();
       }
       else if(msg.type == RealtimeEffectListMessage::Type::Remove)
@@ -1480,6 +1491,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             }
 
             if (!reachable)
+               // Don't need to autosave for an unreachable state
                effectUI->Hide();
          }
 

@@ -456,8 +456,6 @@ size_t RealtimeEffectState::Process(Track &track, unsigned chans,
       copied = std::min(chans - ondx, numAudioOut);
       std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
       if (copied < numAudioOut) {
-         // This is unexpected.  Is a bad instance demanding 3 channels out?
-         assert(false);
          // Make determinate pointers
          std::fill(clientOut + copied, clientOut + numAudioOut, nullptr);
       }
@@ -475,9 +473,11 @@ size_t RealtimeEffectState::Process(Track &track, unsigned chans,
             mLatency.emplace(
                pInstance->GetLatency(mWorkerSettings.settings, pair.second));
          for (size_t i = 0 ; i < numAudioIn; i++)
-            clientIn[i] += cnt;
+            if (clientIn[i])
+               clientIn[i] += cnt;
          for (size_t i = 0 ; i < numAudioOut; i++)
-            clientOut[i] += cnt;
+            if (clientOut[i])
+               clientOut[i] += cnt;
          if (ondx == 0) {
             // For the first processor only
             len += processed;

@@ -42,6 +42,8 @@ void PluginStartupRegistration::OnPluginFound(const PluginDescriptor& desc)
    else
    {
       mValidProviderFound = true;
+      if(!desc.IsValid())
+         mFailedPluginsCache.push_back(desc);
       PluginManager::Get().RegisterPlugin(PluginDescriptor { desc });
    }
 }
@@ -52,14 +54,26 @@ void PluginStartupRegistration::OnValidationFinished()
    if(mValidProviderFound ||
       mPluginsToProcess[mCurrentPluginIndex].second.size() == mCurrentPluginProviderIndex)
    {
-      //we've tried all providers associated with same module path...
-      if(!mValidProviderFound && !mFailedPluginsCache.empty())
+      if(!mFailedPluginsCache.empty())
       {
-         //...but none of them succeeded
-         mFailedPluginsPaths.push_back(mFailedPluginsCache[0].GetPath());
+         //we've tried all providers associated with same module path...
+         if(!mValidProviderFound)
+         {
+            //...but none of them succeeded
+            mFailedPluginsPaths.push_back(mFailedPluginsCache[0].GetPath());
 
-         for(auto& desc : mFailedPluginsCache)
-            PluginManager::Get().RegisterPlugin(std::move(desc));
+            for(auto& desc : mFailedPluginsCache)
+               PluginManager::Get().RegisterPlugin(std::move(desc));
+         }
+         //plugin type was detected, but provider wasn't able to validate it
+         else
+         {
+            for(auto& desc : mFailedPluginsCache)
+            {
+               if(desc.GetPluginType() != PluginTypeStub)
+                  mFailedPluginsPaths.push_back(desc.GetPath());
+            }
+         }
       }
       ++mCurrentPluginIndex;
       mCurrentPluginProviderIndex = 0;

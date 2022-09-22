@@ -56,7 +56,7 @@ class AsyncPluginValidator::Impl final :
    void StartHost()
    {
       auto server = std::make_unique<IPCServer>(*this);
-      if(!PluginHost::Start())
+      if(!PluginHost::Start(server->GetConnectPort()))
          throw std::runtime_error("cannot start plugin host process");
       mServer = std::move(server);
    }

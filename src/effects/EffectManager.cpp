@@ -792,6 +792,14 @@ void InitializePreset(
       !haveDefaults
    ) {
       manager.SaveUserPreset(FactoryDefaultsGroup(), settings);
+      // Also initialize the "current" settings --
+      if (bool haveCurrent{};
+         GetConfig(manager, PluginSettings::Private, CurrentSettingsGroup(),
+            InitializedKey, haveCurrent, false),
+         !haveCurrent
+      ) {
+         manager.SaveUserPreset(CurrentSettingsGroup(), settings);
+      }
       SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
          InitializedKey, true);
    }

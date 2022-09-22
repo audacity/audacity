@@ -25,6 +25,15 @@ constexpr auto processorStateKey  = wxT("ProcessorState");
 constexpr auto controllerStateKey = wxT("ControllerState");
 constexpr auto parametersKey = wxT("Parameters");
 
+Steinberg::Vst::SpeakerArrangement GetBusArragementForChannels(
+   int32_t channelsCount, Steinberg::Vst::SpeakerArrangement defaultArragment)
+{
+   if (channelsCount == 1)
+      return defaultArragment;
+
+   return Steinberg::Vst::SpeakerArr::kStereo;
+}
+
 struct VST3EffectSettings
 {
    ///Holds the parameter that has been changed since last processing pass.
@@ -87,29 +96,63 @@ const VST3EffectSettings& GetSettings(const EffectSettings& settings)
 
 
 //Activates main audio input/output buses and disables others (event, audio aux)
-void ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
+bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
 {
    using namespace Steinberg;
-   
+
+   constexpr int32 MaxChannelsPerAudioBus = 2;
+
+   std::vector<Vst::SpeakerArrangement> defaultInputSpeakerArrangements;
+   std::vector<Vst::SpeakerArrangement> defaultOutputSpeakerArrangements;
+
    const auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
 
    for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kInput); i < count; ++i)
    {
-      Vst::BusInfo busInfo{};
-      if(component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo) == kResultOk)
-         component.activateBus(Vst::kAudio, Vst::kInput, i, busInfo.busType == Vst::kMain);
+      Vst::BusInfo busInfo {};
+      Vst::SpeakerArrangement arrangement {0ull};
+      
+      component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo);
+
+      Vst::SpeakerArrangement defaultArragement {};
+      processor->getBusArrangement(Vst::kInput, i, defaultArragement);
+
+      arrangement =
+         GetBusArragementForChannels(busInfo.channelCount, defaultArragement);
+      
+      component.activateBus(Vst::kAudio, Vst::kInput, i, busInfo.busType == Vst::kMain);
+
+      defaultInputSpeakerArrangements.push_back(arrangement);
    }
    for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
    {
-      Vst::BusInfo busInfo{};
-      if(component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo) == kResultOk)
-         component.activateBus(Vst::kAudio, Vst::kOutput, i, busInfo.busType == Vst::kMain);
-   }
+      Vst::BusInfo busInfo {};
+      Vst::SpeakerArrangement arrangement {0ull};
+      
+      component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo);
 
+      Vst::SpeakerArrangement defaultArragement {};
+      processor->getBusArrangement(Vst::kOutput, i, defaultArragement);
+
+      arrangement =
+         busInfo.busType == Vst::kMain ?
+            GetBusArragementForChannels(busInfo.channelCount, defaultArragement) :
+            Vst::SpeakerArr::kEmpty;
+
+      component.activateBus(Vst::kAudio, Vst::kOutput, i, busInfo.busType == Vst::kMain);
+      defaultOutputSpeakerArrangements.push_back(arrangement);
+   }
    for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kInput); i < count; ++i)
       component.activateBus(Vst::kEvent, Vst::kInput, i, 0);
    for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kOutput); i < count; ++i)
       component.activateBus(Vst::kEvent, Vst::kOutput, i, 0);
+
+   auto result = processor->setBusArrangements(
+      defaultInputSpeakerArrangements.empty() ? nullptr : defaultInputSpeakerArrangements.data(), defaultInputSpeakerArrangements.size(),
+      defaultOutputSpeakerArrangements.empty() ? nullptr : defaultOutputSpeakerArrangements.data(), defaultOutputSpeakerArrangements.size()
+   );
+
+   return result == kResultOk;
 }
 
 //The component should be disabled
@@ -123,8 +166,7 @@ bool SetupProcessing(Steinberg::Vst::IComponent& component, Steinberg::Vst::Proc
       //We don't (yet) support custom input/output channel configuration
       //on the host side. No support for event bus. Use default bus and
       //channel configuration
-      ActivateMainAudioBuses(component);
-      return true;
+      return ActivateMainAudioBuses(component);
    }
    return false;
 }
@@ -319,6 +361,9 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
 
    mEffectComponent = effectComponent;
    mAudioProcessor = audioProcessor;
+
+   if(!SetupProcessing(*mEffectComponent, mSetup))
+      throw std::runtime_error("bus configuration not supported");
 
    auto editController = FUnknownPtr<Vst::IEditController>(mEffectComponent);
    if(editController.get() == nullptr)

@@ -153,6 +153,7 @@ private:
    double mPlayPos{ 0.0 };
 
    bool mDismissed{};
+   const bool mHadPriorState;
 
 #if wxDEBUG_LEVEL
    // Used only in an assertion

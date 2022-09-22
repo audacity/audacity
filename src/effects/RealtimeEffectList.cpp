@@ -110,12 +110,20 @@ RealtimeEffectList::ReplaceState(size_t index,
    const auto &id = pState->GetID();
    if (pState->GetEffect() != nullptr) {     
       auto shallowCopy = mStates;
+
+      Publisher<RealtimeEffectListMessage>::Publish({
+         RealtimeEffectListMessage::Type::WillReplace,
+         index,
+         { },
+         shallowCopy[index]
+      });
+
       swap(pState, shallowCopy[index]);
       // Lock for only a short time
       (LockGuard{ mLock }, swap(shallowCopy, mStates));
 
       Publisher<RealtimeEffectListMessage>::Publish({
-         RealtimeEffectListMessage::Type::Replace,
+         RealtimeEffectListMessage::Type::DidReplace,
          index,
          { },
          pState

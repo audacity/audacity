@@ -46,6 +46,8 @@ protected:
       const TranslatableStrings &buttons,
       const ManualPageID &helpPage,
       const TranslatableString &boxMsg, bool log) override;
+
+   bool DoOpenInDefaultBrowser(const wxString &url) override;
 };
 
 #endif
