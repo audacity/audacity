@@ -1622,10 +1622,6 @@ else()
                RESOURCE DESTINATION "${_APPDIR}/Resources" )
    else()
       install( TARGETS ${TARGET} RUNTIME )
-      install( DIRECTORY "${_DEST}/${_LIBDIR}/"
-               DESTINATION "${_LIBDIR}"
-               USE_SOURCE_PERMISSIONS
-               FILES_MATCHING PATTERN "*.so*" )
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"

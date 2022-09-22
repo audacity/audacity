@@ -338,6 +338,17 @@ function( canonicalize_node_name var node )
    set( "${var}" "${node}" PARENT_SCOPE )
 endfunction()
 
+# Call install(TARGETS...) only on Linux systems (i.e. exclude MacOS and Windows)
+macro( install_target_linux target destination )
+   if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" AND NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      install( TARGETS "${target}" DESTINATION "${destination}" )
+   endif()
+endmacro()
+
+macro( install_audacity_module target )
+   install_target_linux( "${target}" "${_PKGMODULE}" )
+endmacro()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
@@ -382,6 +393,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
          PROPERTIES
             PREFIX ""
             FOLDER "modules" # for IDE organization
+            INSTALL_RPATH "$ORIGIN/.."
       )
       if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
          add_custom_command(
@@ -423,6 +435,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             PREFIX ""
             FOLDER "libraries" # for IDE organization
             INSTALL_NAME_DIR ""
+            INSTALL_RPATH "$ORIGIN"
             BUILD_WITH_INSTALL_NAME_DIR YES
       )
    endif()
@@ -524,6 +537,12 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+
+   # Note: Some modules set EXCLUDE_FROM_ALL afterwards to not be installed.
+   # Therefore only install libraries, but not modules here.
+   if( NOT REAL_LIBTYPE STREQUAL "MODULE" )
+      install_target_linux( "${TARGET}" "${_PKGLIB}" )
+   endif()
 
    # collect unit test targets if they are present
    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")

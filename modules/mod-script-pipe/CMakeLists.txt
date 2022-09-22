@@ -15,3 +15,4 @@ set( DEFINES
 )
 audacity_module( mod-script-pipe "${SOURCES}" "Audacity"
    "${DEFINES}" "" )
+install_audacity_module( mod-script-pipe )
