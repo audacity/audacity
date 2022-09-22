@@ -629,7 +629,7 @@ bool NyquistParser::Parse(
       // Skip creation of controls and bindings for spectral editing
       // Will instead initialize Lisp variables specially before processing,
       // taking values from the given selection
-      if (!(ctrl.var == "control-f0" || ctrl.var == "control-f1"))
+      if (!(ctrl.var.mName == "control-f0" || ctrl.var.mName == "control-f1"))
 #endif
       {
          SetControlBounds(ctrl);

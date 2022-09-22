@@ -131,10 +131,11 @@ inline const Value *end(Multiple multiple)
 
 //! Names a Lisp symbol
 struct Symbol {
+   Symbol() = default;
    Symbol(const wxString &name);
    Symbol(const char *name) : Symbol{ wxString{name} } {}
    Symbol(const wxChar *name) : Symbol{ wxString{name} } {}
-   const wxString mName;
+   wxString mName;
 };
 
 struct Assignment {

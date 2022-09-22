@@ -15,6 +15,7 @@
 
 #include "EffectInterface.h"
 #include "FileNames.h"
+#include "NyquistFormatting.h"
 
 // Protect Nyquist from selections greater than 2^31 samples (bug 439)
 #define NYQ_MAX_LEN (std::numeric_limits<long>::max())
@@ -52,7 +53,7 @@ public:
    //NyqControl &operator = ( NyqControl && ) = default;
 
    int type;
-   wxString var;
+   NyquistFormatting::Symbol var;
    wxString name;
    wxString label;
    std::vector<EnumValueSymbol> choices;

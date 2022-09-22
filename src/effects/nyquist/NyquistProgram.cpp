@@ -11,7 +11,7 @@
 **********************************************************************/
 #include "NyquistProgram.h"
 
-#include "NyquistFormatting.h"
+#include "NyquistProperties.h"
 #include "nyx.h"
 
 #include <wx/log.h>
@@ -601,57 +601,15 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
       cmd += wxT("(setf s 0.25)\n");
    }
 
-   if (mDebug || mTrace) {
-      cmd += wxT("(setf *tracenable* T)\n");
-      if (mExternal) {
-         cmd += wxT("(setf *breakenable* T)\n");
-      }
-   }
-   else {
-      // Explicitly disable backtrace and prevent values
-      // from being carried through to the output.
-      // This should be the final command before evaluating the Nyquist script.
-      cmd += wxT("(setf *tracenable* NIL)\n");
-   }
+   const bool trace = mDebug || mTrace;
+   cmd += NyquistProperties::TraceAssignments(trace, mExternal);
 
    cmd += GetControls().Expression(GetBindings());
 
-   if (mIsSal) {
-      wxString str = EscapeString(mCmd);
-      // this is tricky: we need SAL to call main so that we can get a
-      // SAL traceback in the event of an error (sal-compile catches the
-      // error and calls sal-error-output), but SAL does not return values.
-      // We will catch the value in a special global aud:result and if no
-      // error occurs, we will grab the value with a LISP expression
-      str += wxT("\nset aud:result = main()\n");
-
-      if (mDebug || mTrace) {
-         // since we're about to evaluate SAL, remove LISP trace enable and
-         // break enable (which stops SAL processing) and turn on SAL stack
-         // trace
-         cmd += wxT("(setf *tracenable* nil)\n");
-         cmd += wxT("(setf *breakenable* nil)\n");
-         cmd += wxT("(setf *sal-traceback* t)\n");
-      }
-
-      if (mCompiler) {
-         cmd += wxT("(setf *sal-compiler-debug* t)\n");
-      }
-
-      cmd += wxT("(setf *sal-call-stack* nil)\n");
-      // if we do not set this here and an error occurs in main, another
-      // error will be raised when we try to return the value of aud:result
-      // which is unbound
-      cmd += wxT("(setf aud:result nil)\n");
-      cmd += wxT("(sal-compile-audacity \"") + str + wxT("\" t t nil)\n");
-      // Capture the value returned by main (saved in aud:result), but
-      // set aud:result to nil so sound results can be evaluated without
-      // retaining audio in memory
-      cmd += wxT("(prog1 aud:result (setf aud:result nil))\n");
-   }
-   else {
+   if (mIsSal)
+      cmd += NyquistProperties::SalCommand(trace, mCompiler, mCmd);
+   else
       cmd += mCmd;
-   }
 
    // Evaluate the expression, which may invoke the get callback, but often does
    // not, leaving that to delayed evaluation of the output sound
