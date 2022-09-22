@@ -1033,6 +1033,13 @@ bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double samp
 bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
    EffectOutputs &, unsigned numChannels, float sampleRate)
 {
+   if (!mRecruited)
+   {
+      // Assign self to the first processor
+      mRecruited = true;
+      return true;
+   }
+
    auto slave = std::make_unique<VSTEffectInstance>(GetEffect(), mPath, mBlockSize, mUserBlockSize, mUseLatency);
 
    slave->SetBlockSize(mBlockSize);
@@ -1047,6 +1054,9 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
+
+   mRecruited = false;
+
    for (const auto &slave : mSlaves)
       slave->ProcessFinalize();
    mSlaves.clear();
@@ -1077,15 +1087,10 @@ bool VSTEffectInstance::RealtimeResume()
 
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
-
    auto &settings = package.settings;
 
-   // It has been suggested that this loop is now useless and the StoreSettings can
-   // be called directly on "this" - however, this was tried and it did not work,
-   // i.e. sliders changes would not be heard in the realtime processed.
-   //
-   // If anything, the loop could be replaced with mSlaves[0].StoreSettings(...)
-   //
+   StoreSettings(GetSettings(settings));
+
    for (auto& slave : mSlaves)
    {
       slave->StoreSettings(GetSettings(settings));
@@ -1096,10 +1101,25 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 size_t VSTEffectInstance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   wxASSERT(numSamples <= mBlockSize);
-   if (group >= mSlaves.size())
+   if (!mRecruited)
+   {
+      // unexpected!
       return 0;
-   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   }
+
+   wxASSERT(numSamples <= mBlockSize);
+   
+   if (group == 0)
+   {
+      // use the recruited "this" instance
+      return ProcessBlock(settings, inbuf, outbuf, numSamples);
+   }
+   else
+   {
+      // use the slave which maps to the group
+      assert(group <= mSlaves.size());
+      return mSlaves[group-1]->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   }   
 }
 
 bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
@@ -3698,8 +3718,6 @@ void VSTEffectValidator::OnClose()
 #endif
    mControl->Close();
 #endif
-
-   GetInstance().PowerOff();
 
    NeedEditIdle(false);
 

@@ -557,7 +557,9 @@ private:
 
    size_t mUserBlockSize{ mBlockSize };
 
-   bool mReady{ false };     
+   bool mReady{ false };
+
+   bool mRecruited{ false };
 };
 
 
