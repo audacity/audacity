@@ -28,6 +28,10 @@ const RealtimeEffectState::RegisteredFactory realtimeEffectStateUIFactory { [](a
 } // namespace
 
 
+BEGIN_EVENT_TABLE(RealtimeEffectStateUI, wxEvtHandler)
+   EVT_CLOSE(RealtimeEffectStateUI::OnClose)
+END_EVENT_TABLE()
+
 RealtimeEffectStateUI::RealtimeEffectStateUI(RealtimeEffectState& state)
     : mRealtimeEffectState(state)
 {
@@ -93,6 +97,11 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
       mEffectUIHost = {};
    }
 
+   if (mEffectUIHost) {
+      mEffectUIHost->PushEventHandler(this);
+      mpProject = &project;
+   }
+
    mProjectWindowDestroyedSubscription = projectWindow.Subscribe(
       [this, &project](ProjectWindowDestroyedMessage) {
          // This achieves autosave on close of project before other important
@@ -105,9 +114,7 @@ void RealtimeEffectStateUI::Hide(AudacityProject* project)
 {
    if (mEffectUIHost != nullptr)
    {
-      if (project)
-         AutoSave(*project);
-
+      mpProject = project; // May reassign as null to skip autosave in OnClose
       // EffectUIHost calls Destroy in OnClose handler
       mEffectUIHost->Close();
       mEffectUIHost = {};
@@ -167,4 +174,18 @@ void RealtimeEffectStateUI::UpdateTitle()
 void RealtimeEffectStateUI::AutoSave(AudacityProject &project)
 {
    ProjectHistory::AutoSave::Call(project);
+}
+
+void RealtimeEffectStateUI::OnClose(wxCloseEvent & evt)
+{
+   auto next = GetNextHandler();
+   mEffectUIHost->RemoveEventHandler(this);
+   auto pProject = mpProject;
+   mpProject = nullptr;
+   if (pProject)
+      AutoSave(*pProject);
+
+   // Pass the event through to the dialog
+   if (next)
+      next->ProcessEvent(evt);
 }

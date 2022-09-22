@@ -13,6 +13,7 @@
 // wx/weakref.h misses this include
 #include <type_traits>
 #include <wx/weakref.h>
+#include <wx/event.h>
 
 #include "ClientData.h"
 #include "Observer.h"
@@ -25,8 +26,9 @@ class EffectInstance;
 class AudacityProject;
 
 //! UI state for realtime effect
-class RealtimeEffectStateUI final :
-    public ClientData::Base
+class RealtimeEffectStateUI final
+   : public wxEvtHandler // Must be the first base class!
+   , public ClientData::Base
 {
 public:
    explicit RealtimeEffectStateUI(RealtimeEffectState& state);
@@ -56,6 +58,10 @@ private:
 
    TranslatableString mEffectName;
    wxString mTrackName;
+   AudacityProject *mpProject{};
 
    Observer::Subscription mProjectWindowDestroyedSubscription;
+
+   void OnClose(wxCloseEvent & evt);
+   DECLARE_EVENT_TABLE()
 }; // class RealtimeEffectStateUI
