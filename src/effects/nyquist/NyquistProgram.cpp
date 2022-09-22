@@ -9,9 +9,9 @@
   Paul Licameli split from Nyquist.cpp
 
 **********************************************************************/
-
-
 #include "NyquistProgram.h"
+
+#include "NyquistFormatting.h"
 #include "nyx.h"
 
 #include <wx/log.h>

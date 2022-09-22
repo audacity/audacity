@@ -11,6 +11,7 @@
 **********************************************************************/
 #include "NyquistParser.h"
 
+#include "NyquistFormatting.h"
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 #include <float.h>

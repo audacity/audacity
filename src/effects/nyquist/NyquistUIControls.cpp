@@ -10,6 +10,8 @@
 
 **********************************************************************/
 #include "NyquistUIControls.h"
+
+#include "NyquistFormatting.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/slider.h>
