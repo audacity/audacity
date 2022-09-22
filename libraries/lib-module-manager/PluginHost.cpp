@@ -41,11 +41,20 @@ namespace
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
                auto id = PluginManager::DefaultRegistrationCallback(provider, ident);
-               if(const auto desc = PluginManager::Get().GetPlugin(id))
+               if(const auto ptr = PluginManager::Get().GetPlugin(id))
                {
-                  if(validator)
-                     validator->Validate(*ident);
-                  result.Add(PluginDescriptor { *desc });
+                  auto desc = *ptr;
+                  try
+                  {
+                     if(validator)
+                        validator->Validate(*ident);
+                  }
+                  catch(...)
+                  {
+                     desc.SetEnabled(false);
+                     desc.SetValid(false);
+                  }
+                  result.Add(std::move(desc));
                }
                return id;
             });
