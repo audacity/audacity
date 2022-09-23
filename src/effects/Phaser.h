@@ -40,11 +40,43 @@ public:
    int laststages;
 };
 
+
+struct EffectPhaserSettings
+{
+   /*
+    Phaser Parameters
+
+    mFreq       - Phaser's LFO frequency
+    mPhase      - Phaser's LFO startphase (radians), needed for stereo Phasers
+    mDepth      - Phaser depth (0 - no depth, 255 - max depth)
+    mStages     - Phaser stages (recomanded from 2 to 16-24, and EVEN NUMBER)
+    mDryWet     - Dry/wet mix, (0 - dry, 128 - dry=wet, 255 - wet)
+    mFeedback   - Phaser FeedBack (0 - no feedback, 100 = 100% Feedback,
+                                  -100 = -100% FeedBack)
+   */
+
+   static constexpr int    stagesDefault   = 2;
+   static constexpr int    dryWetDefault   = 128;
+   static constexpr double freqDefault     = 0.4;
+   static constexpr double phaseDefault    = 0.0;
+   static constexpr int    depthDefault    = 100;
+   static constexpr int    feedbackDefault = 0;
+   static constexpr double outGainDefault  = -6.0;
+
+   int    mStages  { stagesDefault   };
+   int    mDryWet  { dryWetDefault   };
+   double mFreq    { freqDefault     };
+   double mPhase   { phaseDefault    };
+   int    mDepth   { depthDefault    };
+   int    mFeedback{ feedbackDefault };
+   double mOutGain { outGainDefault  };
+};
+
 class EffectPhaser final : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectPhaser *
-   FetchParameters(EffectPhaser &e, EffectSettings &) { return &e; }
+   static inline EffectPhaserSettings *
+   FetchParameters(EffectPhaser &e, EffectSettings &) { return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPhaser();
@@ -107,29 +139,11 @@ private:
    void OnPhaseText(wxCommandEvent & evt);
    void OnFreqText(wxCommandEvent & evt);
    void OnGainText(wxCommandEvent & evt);
-/*
-    Phaser Parameters
-
- mFreq       - Phaser's LFO frequency
- mPhase      - Phaser's LFO startphase (radians), needed for stereo Phasers
- mDepth      - Phaser depth (0 - no depth, 255 - max depth)
- mStages     - Phaser stages (recomanded from 2 to 16-24, and EVEN NUMBER)
- mDryWet     - Dry/wet mix, (0 - dry, 128 - dry=wet, 255 - wet)
- mFeedback   - Phaser FeedBack (0 - no feedback, 100 = 100% Feedback,
-                               -100 = -100% FeedBack)
-*/
 
    EffectPhaserState mMaster;
    std::vector<EffectPhaserState> mSlaves;
 
-   // parameters
-   int mStages;
-   int mDryWet;
-   double mFreq;
-   double mPhase;
-   int mDepth;
-   int mFeedback;
-   double mOutGain;
+   EffectPhaserSettings mSettings;
 
    wxTextCtrl *mStagesT;
    wxTextCtrl *mDryWetT;
@@ -150,20 +164,33 @@ private:
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Stages{ &EffectPhaser::mStages,
-   L"Stages",     2,    2,    NUM_STAGES, 1  };
-static constexpr EffectParameter DryWet{ &EffectPhaser::mDryWet,
-   L"DryWet",     128,  0,    255,        1  };
-static constexpr EffectParameter Freq{ &EffectPhaser::mFreq,
-   L"Freq",       0.4,  0.001,4.0,        10.0 };
-static constexpr EffectParameter Phase{ &EffectPhaser::mPhase,
-   L"Phase",      0.0,  0.0,  360.0,      1  };
-static constexpr EffectParameter Depth{ &EffectPhaser::mDepth,
-   L"Depth",      100,  0,    255,        1  };
-static constexpr EffectParameter Feedback{ &EffectPhaser::mFeedback,
-   L"Feedback",   0,    -100, 100,        1  };
-static constexpr EffectParameter OutGain{ &EffectPhaser::mOutGain,
-   L"Gain",      -6.0,    -30.0,    30.0,    1   };
+static constexpr EffectParameter Stages
+{ &EffectPhaserSettings::mStages, L"Stages",
+   EffectPhaserSettings::stagesDefault,  2,    NUM_STAGES, 1  };
+
+static constexpr EffectParameter DryWet
+{ &EffectPhaserSettings::mDryWet, L"DryWet",
+   EffectPhaserSettings::dryWetDefault,  0,    255,        1  };
+
+static constexpr EffectParameter Freq
+{ &EffectPhaserSettings::mFreq,     L"Freq",
+   EffectPhaserSettings::freqDefault,  0.001, 4.0,        10.0 };
+
+static constexpr EffectParameter Phase
+{ &EffectPhaserSettings::mPhase,   L"Phase",
+   EffectPhaserSettings::phaseDefault,  0.0,  360.0,      1  };
+
+static constexpr EffectParameter Depth
+{ &EffectPhaserSettings::mDepth,   L"Depth",
+   EffectPhaserSettings::depthDefault,  0,    255,        1  };
+
+static constexpr EffectParameter Feedback
+{ &EffectPhaserSettings::mFeedback, L"Feedback",
+   EffectPhaserSettings::feedbackDefault,    -100, 100,        1  };
+
+static constexpr EffectParameter OutGain
+{ &EffectPhaserSettings::mOutGain, L"Gain",
+   EffectPhaserSettings::outGainDefault,    -30.0,    30.0,    1   };
 };
 
 #endif
