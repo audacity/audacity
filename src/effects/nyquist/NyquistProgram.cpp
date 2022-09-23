@@ -601,11 +601,11 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
       cmd += wxT("(setf s 0.25)\n");
    }
 
-   const bool trace = mDebug || mTrace;
-   cmd += NyquistProperties::TraceAssignments(trace, mExternal);
-
    cmd += GetControls().Expression(GetBindings());
 
+   const bool trace = mDebug || mTrace;
+   if (!(mIsSal && trace))
+      cmd += NyquistProperties::TraceAssignments(trace, mExternal);
    if (mIsSal)
       cmd += NyquistProperties::SalCommand(trace, mCompiler, mCmd);
    else
