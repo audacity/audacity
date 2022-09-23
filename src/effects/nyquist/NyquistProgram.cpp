@@ -406,18 +406,8 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
    wxString cmd;
    cmd += wxT("(snd-set-latency  0.1)");
 
-   // A tool may be using AUD-DO which will potentially invalidate *TRACK*
-   // so tools do not get *TRACK*.
-   if (GetType() == EffectTypeTool)
-      cmd += wxT("(setf S 0.25)\n");  // No Track.
-   else if (mVersion >= 4) {
-      nyx_set_audio_name("*TRACK*");
-      cmd += wxT("(setf S 0.25)\n");
-   }
-   else {
-      nyx_set_audio_name("S");
-      cmd += wxT("(setf *TRACK* '*unbound*)\n");
-   }
+   // Assign the symbols for the track, and the sixteenth note
+   cmd += NyquistProperties::TrackNameAssignment(GetType(), mVersion);
 
    if (mVersion >= 4) {
       cmd += mProps;
@@ -597,9 +587,9 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
 
    // Restore the Nyquist sixteenth note symbol for Generate plug-ins.
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490.
-   if (GetType() == EffectTypeGenerate) {
-      cmd += wxT("(setf s 0.25)\n");
-   }
+   if (GetType() == EffectTypeGenerate)
+      cmd += NyquistFormatting::Assignments{
+         NyquistProperties::restoreSixteenth };
 
    cmd += GetControls().Expression(GetBindings());
 

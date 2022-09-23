@@ -9,9 +9,16 @@
 **********************************************************************/
 #ifndef __AUDACITY_EFFECT_NYQUIST_PROPERTIES__
 #define __AUDACITY_EFFECT_NYQUIST_PROPERTIES__
-class wxString;
+
+#include "NyquistFormatting.h"
+enum EffectType : int;
 
 namespace NyquistProperties {
+//! Assignment to fix the sixteenth note because of a variable name collision
+//! in older versions of Nyquist
+extern const NyquistFormatting::Assignment restoreSixteenth;
+
+wxString TrackNameAssignment(EffectType type, int version);
 
 // Format some assignments for the Lisp reader.  If not tracing,
 // explicitly disable backtrace and prevent values

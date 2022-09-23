@@ -8,7 +8,8 @@
 
 **********************************************************************/
 #include "NyquistProperties.h"
-#include "NyquistFormatting.h"
+#include "EffectInterface.h"
+#include "nyx.h"
 
 namespace {
 // TODO: don't duplicate literals from xlinit.c sources, but put in a header
@@ -18,6 +19,35 @@ const NyquistFormatting::Symbol sal_traceback = "*sal-traceback*";
 const NyquistFormatting::Symbol sal_compiler_debug = "*sal-compiler-debug*";
 const NyquistFormatting::Symbol sal_call_stack = "*sal-call-stack*";
 const NyquistFormatting::Symbol aud_result = "aud:result";
+
+// Lisp symbol bound to the input track object
+// Before version 4, "s" was used, but that collided with a constant defined
+// in nyquist/nyquist.lsp (for sixteenth note) with value 0.25
+const NyquistFormatting::Symbol oldTrack = "s";
+// version 4 and later
+const NyquistFormatting::Symbol newTrack = "*track*";
+}
+
+const NyquistFormatting::Assignment
+NyquistProperties::restoreSixteenth{ oldTrack, 0.25 };
+
+wxString NyquistProperties::TrackNameAssignment(EffectType type, int version)
+{
+   NyquistFormatting::Assignments assignments;
+   // A tool may be using AUD-DO which will potentially invalidate *TRACK*
+   // so tools do not get *TRACK*.
+   if (type == EffectTypeTool)
+      assignments.Append(NyquistProperties::restoreSixteenth); // No Track.
+   else {
+      const NyquistFormatting::Symbol &track =
+         version >= 4 ? newTrack : oldTrack;
+      nyx_set_audio_name(track.mName);
+      if (version >= 4)
+         assignments.Append(NyquistProperties::restoreSixteenth);
+      else
+         assignments.Append({ track, {} }); // unbound
+   }
+   return std::move(assignments);
 }
 
 wxString NyquistProperties::TraceAssignments(bool trace, bool external)
