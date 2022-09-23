@@ -19,8 +19,6 @@
 #include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
-class wxSlider;
-class wxTextCtrl;
 class ShuttleGui;
 
 #define NUM_STAGES 24
@@ -114,8 +112,8 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
+
+   struct Validator;
 
 private:
    // EffectPhaser implementation
@@ -124,45 +122,13 @@ private:
    size_t InstanceProcess(EffectSettings &settings, EffectPhaserState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
-   void OnStagesSlider(wxCommandEvent & evt);
-   void OnDryWetSlider(wxCommandEvent & evt);
-   void OnFeedbackSlider(wxCommandEvent & evt);
-   void OnDepthSlider(wxCommandEvent & evt);
-   void OnPhaseSlider(wxCommandEvent & evt);
-   void OnFreqSlider(wxCommandEvent & evt);
-   void OnGainSlider(wxCommandEvent & evt);
-
-   void OnStagesText(wxCommandEvent & evt);
-   void OnDryWetText(wxCommandEvent & evt);
-   void OnFeedbackText(wxCommandEvent & evt);
-   void OnDepthText(wxCommandEvent & evt);
-   void OnPhaseText(wxCommandEvent & evt);
-   void OnFreqText(wxCommandEvent & evt);
-   void OnGainText(wxCommandEvent & evt);
 
    EffectPhaserState mMaster;
    std::vector<EffectPhaserState> mSlaves;
 
    EffectPhaserSettings mSettings;
 
-   wxTextCtrl *mStagesT;
-   wxTextCtrl *mDryWetT;
-   wxTextCtrl *mFreqT;
-   wxTextCtrl *mPhaseT;
-   wxTextCtrl *mDepthT;
-   wxTextCtrl *mFeedbackT;
-   wxTextCtrl *mOutGainT;
-
-   wxSlider *mStagesS;
-   wxSlider *mDryWetS;
-   wxSlider *mFreqS;
-   wxSlider *mPhaseS;
-   wxSlider *mDepthS;
-   wxSlider *mFeedbackS;
-   wxSlider *mOutGainS;
-
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
 static constexpr EffectParameter Stages
 { &EffectPhaserSettings::mStages, L"Stages",
