@@ -14,6 +14,8 @@
 enum EffectType : int;
 
 namespace NyquistProperties {
+FilePaths GetNyquistSearchPath();
+
 wxString Global();
 
 //! Assignment to fix the sixteenth note because of a variable name collision

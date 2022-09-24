@@ -10,14 +10,36 @@
 #include "NyquistProperties.h"
 #include "EffectInterface.h"
 #include "Languages.h"
+#include "TempDirectory.h"
 #include "nyx.h"
 #include <wx/numformatter.h>
+#include <wx/stdpaths.h>
+
+FilePaths NyquistProperties::GetNyquistSearchPath()
+{
+   const auto &audacityPathList = FileNames::AudacityPathList();
+   FilePaths pathList;
+
+   for (size_t i = 0; i < audacityPathList.size(); i++)
+   {
+      wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
+      FileNames::AddUniquePathToPathList(prefix + wxT("nyquist"), pathList);
+      FileNames::AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
+      FileNames::AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);
+   }
+   pathList.push_back(FileNames::PlugInDir());
+
+   return pathList;
+}
 
 wxString NyquistProperties::Global()
 {
    using List = std::initializer_list<const NyquistFormatting::Value>;
+   using Vec = std::vector<const NyquistFormatting::Value>;
+   using NyquistFormatting::Eval;
    const NyquistFormatting::Symbol audacity{ "*audacity*" };
    const NyquistFormatting::Symbol separator{ "*decimal-separator*" };
+   const NyquistFormatting::Symbol dir{ "*system-dir*" };
 
    return NyquistFormatting::Assignments{
       { audacity, List{
@@ -31,6 +53,23 @@ wxString NyquistProperties::Global()
       }(), "language" },
 
       { separator, (char)wxNumberFormatter::GetDecimalSeparator() },
+
+      { dir, FileNames::BaseDir(), "base" },
+      { dir, FileNames::DataDir(), "data" },
+      { dir, FileNames::HtmlHelpDir().RemoveLast(), "help" },
+      { dir, TempDirectory::TempDir(), "temp" },
+      { dir, wxStandardPaths::Get().GetTempDir(), "sys-temp" },
+      { dir, wxStandardPaths::Get().GetDocumentsDir(), "documents" },
+      { dir, wxGetHomeDir(), "home" },
+      { dir, []{
+         auto path = GetNyquistSearchPath();
+         return Vec(path.begin(), path.end());
+      }(), "plugin"},
+      { dir, FileNames::PlugInDir(), "user-plugin" },
+      //! Synonymous property names
+      { dir, Eval{ "(get '" + dir.mName + " 'plugin)" }, "plug-in" },
+      { dir, Eval{ "(get '" + dir.mName + " 'user-plugin)" },
+         "user-plug-in" },
    };
 }
 

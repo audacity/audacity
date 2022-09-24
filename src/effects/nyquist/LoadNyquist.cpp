@@ -8,7 +8,7 @@
 
 **********************************************************************/
 #include "Nyquist.h"
-#include "NyquistProgram.h"
+#include "NyquistProperties.h"
 
 #include "LoadNyquist.h"
 #include "nyx.h"
@@ -177,7 +177,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   auto pathList = NyquistProgram::GetNyquistSearchPath();
+   auto pathList = NyquistProperties::GetNyquistSearchPath();
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
@@ -220,7 +220,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
 PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
-   auto pathList = NyquistProgram::GetNyquistSearchPath();
+   auto pathList = NyquistProperties::GetNyquistSearchPath();
    FilePaths files;
 
    // Add the Nyquist prompt

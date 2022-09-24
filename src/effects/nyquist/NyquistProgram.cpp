@@ -17,7 +17,6 @@
 #include <wx/log.h>
 #include <wx/sizer.h>
 #include <wx/txtstrm.h>
-#include <wx/stdpaths.h>
 #include <wx/textctrl.h>
 
 #include "../EffectManager.h"
@@ -28,7 +27,6 @@
 #include "Project.h"
 #include "ProjectRate.h"
 #include "../../ShuttleGui.h"
-#include "TempDirectory.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "../../WaveClip.h"
@@ -40,7 +38,7 @@
 
 std::pair<bool, FilePath> NyquistProgram::CheckHelpPage() const
 {
-   auto paths = GetNyquistSearchPath();
+   auto paths = NyquistProperties::GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
@@ -118,27 +116,6 @@ bool NyquistProgram::Process(const AudacityProject *const project,
    {
       mProps = NyquistProperties::Global()
       ;
-
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"), EscapeString(FileNames::BaseDir()));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'TEMP)\n"), EscapeString(TempDirectory::TempDir()));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'SYS-TEMP)\n"), EscapeString(wxStandardPaths::Get().GetTempDir()));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
-
-      auto paths = GetNyquistSearchPath();
-      wxString list;
-      for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
-      {
-         list += wxT("\"") + EscapeString(paths[i]) + wxT("\" ");
-      }
-      list = list.RemoveLast();
-
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list);
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list);
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'USER-PLUG-IN)\n"),
-                                 EscapeString(FileNames::PlugInDir()));
 
       // Date and time:
       wxDateTime now = wxDateTime::Now();
@@ -877,23 +854,6 @@ bool NyquistProgram::Parse(wxInputStream & stream)
    mHelpPage       = helpStuff.second;
 
    return true;
-}
-
-FilePaths NyquistProgram::GetNyquistSearchPath()
-{
-   const auto &audacityPathList = FileNames::AudacityPathList();
-   FilePaths pathList;
-
-   for (size_t i = 0; i < audacityPathList.size(); i++)
-   {
-      wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
-      FileNames::AddUniquePathToPathList(prefix + wxT("nyquist"), pathList);
-      FileNames::AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
-      FileNames::AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);
-   }
-   pathList.push_back(FileNames::PlugInDir());
-
-   return pathList;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

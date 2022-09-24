@@ -20,8 +20,6 @@ struct NyquistProgram : NyquistParser
 {
    using NyquistParser::NyquistParser;
 
-   static FilePaths GetNyquistSearchPath();
-
    // When there is a more general EffectContext for all effects, these will
    // move into that
    struct EffectContext {
