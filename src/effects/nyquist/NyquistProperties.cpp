@@ -11,11 +11,13 @@
 #include "EffectInterface.h"
 #include "Languages.h"
 #include "nyx.h"
+#include <wx/numformatter.h>
 
 wxString NyquistProperties::Global()
 {
    using List = std::initializer_list<const NyquistFormatting::Value>;
    const NyquistFormatting::Symbol audacity{ "*audacity*" };
+   const NyquistFormatting::Symbol separator{ "*decimal-separator*" };
 
    return NyquistFormatting::Assignments{
       { audacity, List{
@@ -27,6 +29,8 @@ wxString NyquistProperties::Global()
             ? Languages::GetSystemLanguageCode(FileNames::AudacityPathList())
             : lang;
       }(), "language" },
+
+      { separator, (char)wxNumberFormatter::GetDecimalSeparator() },
    };
 }
 

@@ -17,7 +17,6 @@
 #include <wx/log.h>
 #include <wx/sizer.h>
 #include <wx/txtstrm.h>
-#include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 #include <wx/textctrl.h>
 
@@ -119,8 +118,6 @@ bool NyquistProgram::Process(const AudacityProject *const project,
    {
       mProps = NyquistProperties::Global()
       ;
-
-      mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
 
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'BASE)\n"), EscapeString(FileNames::BaseDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DATA)\n"), EscapeString(FileNames::DataDir()));
