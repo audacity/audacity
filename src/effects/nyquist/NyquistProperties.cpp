@@ -40,6 +40,16 @@ wxString NyquistProperties::Global()
    const NyquistFormatting::Symbol audacity{ "*audacity*" };
    const NyquistFormatting::Symbol separator{ "*decimal-separator*" };
    const NyquistFormatting::Symbol dir{ "*system-dir*" };
+   const NyquistFormatting::Symbol time{ "*system-time*" };
+
+   // Date and time:
+   wxDateTime now = wxDateTime::Now();
+   int year = now.GetYear();
+   int doy = now.GetDayOfYear();
+   int dom = now.GetDay();
+   // enumerated constants
+   wxDateTime::Month month = now.GetMonth();
+   wxDateTime::WeekDay day = now.GetWeekDay();
 
    return NyquistFormatting::Assignments{
       { audacity, List{
@@ -70,6 +80,19 @@ wxString NyquistProperties::Global()
       { dir, Eval{ "(get '" + dir.mName + " 'plugin)" }, "plug-in" },
       { dir, Eval{ "(get '" + dir.mName + " 'user-plugin)" },
          "user-plug-in" },
+
+      // Date/time as a list: year, day of year, hour, minute, seconds
+      { time, List{
+         year, doy, now.GetHour(), now.GetMinute(), now.GetSecond() } },
+      { time, now.FormatDate(), "date" },
+      { time, now.FormatTime(), "time" },
+      { time, now.FormatISODate(), "iso-date" },
+      { time, now.FormatISOTime(), "iso-time" },
+      { time, year, "year" },
+      { time, dom, "day" }, // day of month
+      { time, month, "month" },
+      { time, now.GetMonthName(month), "month-name" },
+      { time, now.GetWeekDayName(day), "day-name" },
    };
 }
 

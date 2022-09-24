@@ -117,29 +117,6 @@ bool NyquistProgram::Process(const AudacityProject *const project,
       mProps = NyquistProperties::Global()
       ;
 
-      // Date and time:
-      wxDateTime now = wxDateTime::Now();
-      int year = now.GetYear();
-      int doy = now.GetDayOfYear();
-      int dom = now.GetDay();
-      // enumerated constants
-      wxDateTime::Month month = now.GetMonth();
-      wxDateTime::WeekDay day = now.GetWeekDay();
-
-      // Date/time as a list: year, day of year, hour, minute, seconds
-      mProps += wxString::Format(wxT("(setf *SYSTEM-TIME* (list %d %d %d %d %d))\n"),
-                                 year, doy, now.GetHour(), now.GetMinute(), now.GetSecond());
-
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DATE)\n"), now.FormatDate());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'TIME)\n"), now.FormatTime());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-DATE)\n"), now.FormatISODate());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-TIME)\n"), now.FormatISOTime());
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'YEAR)\n"), year);
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'DAY)\n"), dom);   // day of month
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'MONTH)\n"), month);
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month));
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day));
-
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"),
          (int) AllProjects{}.size());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), EscapeString(project->GetProjectName()));
