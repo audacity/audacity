@@ -9,7 +9,26 @@
 **********************************************************************/
 #include "NyquistProperties.h"
 #include "EffectInterface.h"
+#include "Languages.h"
 #include "nyx.h"
+
+wxString NyquistProperties::Global()
+{
+   using List = std::initializer_list<const NyquistFormatting::Value>;
+   const NyquistFormatting::Symbol audacity{ "*audacity*" };
+
+   return NyquistFormatting::Assignments{
+      { audacity, List{
+         AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION
+      }, "version" },
+      { audacity, []{
+         auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+         return (lang.empty())
+            ? Languages::GetSystemLanguageCode(FileNames::AudacityPathList())
+            : lang;
+      }(), "language" },
+   };
+}
 
 namespace {
 // TODO: don't duplicate literals from xlinit.c sources, but put in a header

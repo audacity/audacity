@@ -14,6 +14,8 @@
 enum EffectType : int;
 
 namespace NyquistProperties {
+wxString Global();
+
 //! Assignment to fix the sixteenth note because of a variable name collision
 //! in older versions of Nyquist
 extern const NyquistFormatting::Assignment restoreSixteenth;
