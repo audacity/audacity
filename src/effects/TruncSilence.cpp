@@ -523,8 +523,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    auto end = wt->TimeToLongSamples(mT1);
    sampleCount outLength = 0;
 
-   double previewLength;
-   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLength, 6.0);
+   const auto previewLength = EffectsPreviewLen.Read();
    // Minimum required length in samples.
    const sampleCount previewLen( previewLength * wt->GetRate() );
 

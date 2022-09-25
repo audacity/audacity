@@ -157,8 +157,7 @@ bool NyquistProgram::Process(const AudacityProject *const project,
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'MIDITRACKS)\n"), numMidi);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TIMETRACKS)\n"), numTime);
 
-      double previewLen = 6.0;
-      gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+      const auto previewLen = EffectsPreviewLen.Read();
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
                                  Internat::ToString(previewLen));
 

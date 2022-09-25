@@ -269,8 +269,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       maxTimeRes = maxTimeRes / track->GetRate();
 
       if (this->IsPreviewing()) {
-         double defaultPreviewLen;
-         gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &defaultPreviewLen, 6.0);
+         const auto defaultPreviewLen = EffectsPreviewLen.Read();
 
          if ((minDuration / mProjectRate) < defaultPreviewLen) {
             ::Effect::MessageBox(

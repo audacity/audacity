@@ -25,6 +25,7 @@
 #include <wx/textctrl.h>
 
 #include "../ShuttleGui.h"
+#include "../effects/EffectBase.h"
 #include "Prefs.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
@@ -87,10 +88,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XXO("&Length:"),
-                                 {wxT("/AudioIO/EffectsPreviewLen"),
-                                  6.0},
-                                 9);
+            .TieNumericTextBox(XXO("&Length:"), EffectsPreviewLen, 9);
          S.AddUnits(XO("seconds"));
       }
       S.EndThreeColumn();
@@ -179,6 +177,7 @@ bool PlaybackPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   EffectsPreviewLen.Invalidate();
    return true;
 }
 
