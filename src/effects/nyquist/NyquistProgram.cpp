@@ -24,8 +24,6 @@
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
-#include "Project.h"
-#include "ProjectRate.h"
 #include "../../ShuttleGui.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
@@ -109,57 +107,26 @@ bool NyquistProgram::Process(const AudacityProject *const project,
          .Format( mHelpFile );
    auto scope{ environment.Scope(std::move(initMessage)) };
 
-   using namespace NyquistFormatting;
-
    mProps = mPerTrackProps = wxString{};
    if (mVersion >= 4)
    {
       mProps = NyquistProperties::Global()
+         + NyquistProperties::Project(*project)
       ;
 
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"),
-         (int) AllProjects{}.size());
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), EscapeString(project->GetProjectName()));
-
       int numTracks = 0;
-      int numWave = 0;
-      int numLabel = 0;
-      int numMidi = 0;
-      int numTime = 0;
       wxString waveTrackList;   // track positions of selected audio tracks.
 
       {
          auto countRange = TrackList::Get( *project ).Leaders();
          for (auto t : countRange) {
             t->TypeSwitch( [&](const WaveTrack *) {
-               numWave++;
                if (t->GetSelected())
                   waveTrackList += wxString::Format(wxT("%d "), 1 + numTracks);
             });
             numTracks++;
          }
-         numLabel = countRange.Filter<const LabelTrack>().size();
-   #if defined(USE_MIDI)
-         numMidi = countRange.Filter<const NoteTrack>().size();
-   #endif
-         numTime = countRange.Filter<const TimeTrack>().size();
       }
-
-      // We use Internat::ToString() rather than "%g" here because we
-      // always have to use the dot as decimal separator when giving
-      // numbers to Nyquist, whereas using "%g" will use the user's
-      // decimal separator which may be a comma in some countries.
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'RATE)\n"),
-         Internat::ToString(ProjectRate::Get(*project).GetRate()));
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TRACKS)\n"), numTracks);
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'WAVETRACKS)\n"), numWave);
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'LABELTRACKS)\n"), numLabel);
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'MIDITRACKS)\n"), numMidi);
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TIMETRACKS)\n"), numTime);
-
-      const auto previewLen = EffectsPreviewLen.Read();
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
-                                 Internat::ToString(previewLen));
 
       // *PREVIEWP* is true when previewing (better than relying on track view).
       wxString isPreviewing = (mIsPreviewing)? wxT("T") : wxT("NIL");

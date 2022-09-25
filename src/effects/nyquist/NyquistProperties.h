@@ -11,12 +11,14 @@
 #define __AUDACITY_EFFECT_NYQUIST_PROPERTIES__
 
 #include "NyquistFormatting.h"
+class AudacityProject;
 enum EffectType : int;
 
 namespace NyquistProperties {
 FilePaths GetNyquistSearchPath();
 
 wxString Global();
+wxString Project(const AudacityProject &project);
 
 //! Assignment to fix the sixteenth note because of a variable name collision
 //! in older versions of Nyquist

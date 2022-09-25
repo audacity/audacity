@@ -8,9 +8,16 @@
 
 **********************************************************************/
 #include "NyquistProperties.h"
+#include "../EffectBase.h"
 #include "EffectInterface.h"
+#include "../../LabelTrack.h"
 #include "Languages.h"
+#include "../../NoteTrack.h"
+#include "Project.h"
+#include "ProjectRate.h"
 #include "TempDirectory.h"
+#include "../../TimeTrack.h"
+#include "../../WaveTrack.h"
 #include "nyx.h"
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
@@ -93,6 +100,27 @@ wxString NyquistProperties::Global()
       { time, month, "month" },
       { time, now.GetMonthName(month), "month-name" },
       { time, now.GetWeekDayName(day), "day-name" },
+   };
+}
+
+wxString NyquistProperties::Project(const AudacityProject &project)
+{
+   const NyquistFormatting::Symbol proj{ "*project*" };
+   auto countRange = TrackList::Get(project).Leaders();
+   return NyquistFormatting::Assignments{
+      { proj, AllProjects{}.size(), "projects" },
+      { proj, project.GetProjectName(), "name" },
+      { proj, ProjectRate::Get(project).GetRate(), "rate" },
+
+      { proj, countRange.size(), "tracks" },
+      { proj, countRange.Filter<const WaveTrack>().size(), "wavetracks" },
+      { proj, countRange.Filter<const LabelTrack>().size(), "labeltracks" },
+#if defined(USE_MIDI)
+      { proj, countRange.Filter<const NoteTrack>().size(), "miditracks" },
+#endif
+      { proj, countRange.Filter<const TimeTrack>().size(), "timetracks" },
+
+      { proj, EffectsPreviewLen.Read(), "preview-duration" },
    };
 }
 
