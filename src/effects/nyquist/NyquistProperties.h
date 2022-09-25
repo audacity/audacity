@@ -19,6 +19,8 @@ FilePaths GetNyquistSearchPath();
 
 wxString Global();
 wxString Project(const AudacityProject &project, bool isPreviewing);
+wxString Selection(const AudacityProject &project,
+   double t0, double t1, double f0, double f1, size_t numSelectedChannels);
 
 //! Assignment to fix the sixteenth note because of a variable name collision
 //! in older versions of Nyquist

@@ -144,10 +144,61 @@ const NyquistFormatting::Symbol aud_result = "aud:result";
 const NyquistFormatting::Symbol oldTrack = "s";
 // version 4 and later
 const NyquistFormatting::Symbol newTrack = "*track*";
+
+const NyquistFormatting::Symbol selection{ "*selection*" };
 }
 
 const NyquistFormatting::Assignment
 NyquistProperties::restoreSixteenth{ oldTrack, 0.25 };
+
+wxString NyquistProperties::Selection(const AudacityProject &project,
+   const double t0, const double t1, const double f0, const double f1,
+   const size_t numSelectedChannels)
+{
+   using Vec = std::vector<const NyquistFormatting::Value>;
+   using std::optional;
+   using std::nullopt;
+   const auto hasF0 = (f0 >= 0.0);
+   const auto hasF1 = (f1 >= 0.0);
+   return NyquistFormatting::Assignments{
+      { selection, t0, "start" },
+      { selection, t1, "end" },
+      // List of track positions of selected audio tracks
+      { selection, [&]{
+         int numTracks = 0;
+         std::vector<int> positions;
+         auto countRange = TrackList::Get(project).Leaders();
+         for (auto t : countRange) {
+            t->TypeSwitch( [&](const WaveTrack *) {
+               if (t->GetSelected())
+                  positions.push_back(1 + numTracks);
+            });
+            numTracks++;
+         }
+         return Vec(positions.begin(), positions.end());
+      }(), "tracks"},
+      { selection, numSelectedChannels, "channels" },
+
+#if defined(EXPERIMENTAL_SPECTRAL_EDITING)
+      { selection, hasF0 ? optional{f0} : nullopt, "low-hz" },
+      { selection,
+         // geometric mean
+         hasF0 && hasF1 ? optional{sqrt(f0 * f1)} : nullopt,
+         "center-hz" },
+      { selection, hasF1 ? optional{f1} : nullopt, "high-hz" },
+      { selection, [&]() -> optional<double> {
+         // with very small values, bandwidth calculation may be inf.
+         // (Observed on Linux)
+         if ((f0 > 0.0) && (f1 >= f0)) {
+            auto bw = log(f1 / f0) / log(2.0);
+            if (!std::isinf(bw))
+               return bw;
+         }
+         return nullopt;
+      }(), "bandwidth" },
+#endif
+   };
+}
 
 wxString NyquistProperties::TrackNameAssignment(EffectType type, int version)
 {

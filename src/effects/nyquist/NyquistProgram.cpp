@@ -94,7 +94,6 @@ bool NyquistProgram::Process(const AudacityProject *const project,
 
    auto &mCount = context.mCount;
    auto &mProps = context.mProps;
-   auto &mPerTrackProps = context.mPerTrackProps;
    const auto &mNumSelectedChannels = context.mNumSelectedChannels;
    const auto &mProjectChanged = context.mProjectChanged;
    const auto &mOutputTime = context.mOutputTime;
@@ -107,34 +106,13 @@ bool NyquistProgram::Process(const AudacityProject *const project,
          .Format( mHelpFile );
    auto scope{ environment.Scope(std::move(initMessage)) };
 
-   mProps = mPerTrackProps = wxString{};
+   mProps.clear();
    if (mVersion >= 4)
-   {
       mProps = NyquistProperties::Global()
          + NyquistProperties::Project(*project, mIsPreviewing)
+         + NyquistProperties::Selection(*project,
+            mT0, mT1, mF0, mF1, mNumSelectedChannels)
       ;
-
-      int numTracks = 0;
-      wxString waveTrackList;   // track positions of selected audio tracks.
-
-      {
-         auto countRange = TrackList::Get( *project ).Leaders();
-         for (auto t : countRange) {
-            t->TypeSwitch( [&](const WaveTrack *) {
-               if (t->GetSelected())
-                  waveTrackList += wxString::Format(wxT("%d "), 1 + numTracks);
-            });
-            numTracks++;
-         }
-      }
-
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
-                                 Internat::ToString(mT0));
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
-                                 Internat::ToString(mT1));
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList);
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), mNumSelectedChannels);
-   }
 
    // Nyquist Prompt does not require a selection, but effects do.
    if (!bOnePassTool && (mNumSelectedChannels == 0)) {
@@ -189,43 +167,6 @@ bool NyquistProgram::Process(const AudacityProject *const project,
          // for further info about this thread safety question.
          wxString prevlocale = wxSetlocale(LC_NUMERIC, NULL);
          wxSetlocale(LC_NUMERIC, wxString(wxT("C")));
-
-         if (mVersion >= 4)
-         {
-            mPerTrackProps = wxEmptyString;
-            wxString lowHz = wxT("nil");
-            wxString highHz = wxT("nil");
-            wxString centerHz = wxT("nil");
-            wxString bandwidth = wxT("nil");
-
-#if defined(EXPERIMENTAL_SPECTRAL_EDITING)
-            if (mF0 >= 0.0) {
-               lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0));
-            }
-
-            if (mF1 >= 0.0) {
-               highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1));
-            }
-
-            if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-               centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)));
-            }
-
-            if ((mF0 > 0.0) && (mF1 >= mF0)) {
-               // with very small values, bandwidth calculation may be inf.
-               // (Observed on Linux)
-               double bw = log(mF1 / mF0) / log(2.0);
-               if (!std::isinf(bw)) {
-                  bandwidth.Printf(wxT("(float %s)"), Internat::ToString(bw));
-               }
-            }
-
-#endif
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'LOW-HZ)\n"), lowHz);
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz);
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
-            mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth);
-         }
 
          success = ProcessOne(environment, context, nyquistTrack);
 
@@ -294,7 +235,6 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
    const auto mCurNumChannels = nyquistTrack.CurNumChannels();
 
    const auto &mProps = context.mProps;
-   const auto &mPerTrackProps = context.mPerTrackProps;
    const auto &mT0 = context.mContext.mT0;
    const auto &mT1 = context.mContext.mT1;
    const auto &mInputTracks = context.mContext.mInputTracks;
@@ -313,7 +253,6 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
       // Assign the symbols for the track, and the sixteenth note
       + NyquistProperties::TrackNameAssignment(GetType(), mVersion)
       + mProps
-      + mPerTrackProps
    ;
 
    using namespace NyquistFormatting;

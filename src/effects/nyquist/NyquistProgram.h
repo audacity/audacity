@@ -48,7 +48,6 @@ struct NyquistProgram : NyquistParser
       const bool        mExternal{};
 
       wxString          mProps;
-      wxString          mPerTrackProps;
       int               mTrackIndex{ 0 };
       unsigned          mCount{ 0 };
       bool              mProjectChanged{ false };
