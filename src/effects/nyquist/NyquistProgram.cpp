@@ -115,10 +115,9 @@ bool NyquistProgram::Process(const AudacityProject *const project,
 
    using namespace NyquistFormatting;
 
+   mProps = mPerTrackProps = wxString{};
    if (mVersion >= 4)
    {
-      mProps = wxEmptyString;
-
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
       lang = (lang.empty())
@@ -402,17 +401,12 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
    const auto &mExternal = context.mExternal;
 
    nyx_rval rval;
-
-   wxString cmd;
-   cmd += wxT("(snd-set-latency  0.1)");
-
-   // Assign the symbols for the track, and the sixteenth note
-   cmd += NyquistProperties::TrackNameAssignment(GetType(), mVersion);
-
-   if (mVersion >= 4) {
-      cmd += mProps;
-      cmd += mPerTrackProps;
-   }
+   auto cmd = wxString{ "(snd-set-latency  0.1)" }
+      // Assign the symbols for the track, and the sixteenth note
+      + NyquistProperties::TrackNameAssignment(GetType(), mVersion)
+      + mProps
+      + mPerTrackProps
+   ;
 
    using namespace NyquistFormatting;
 
