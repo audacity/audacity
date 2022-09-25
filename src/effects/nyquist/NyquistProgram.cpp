@@ -143,13 +143,9 @@ bool NyquistProgram::Process(const AudacityProject *const project,
          success = false;
          goto finish;
       }
-
       auto subscope{ environment.Subscope(scope) };
-
       if ( (mT1 >= mT0) || bOnePassTool ) {
-         if (bOnePassTool) {
-         }
-         else {
+         if (!bOnePassTool) {
             // Check whether we're in the same group as the last selected track
             Track *gt = *SyncLock::Group(nyquistTrack.CurTracks()[0]).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
@@ -167,24 +163,21 @@ bool NyquistProgram::Process(const AudacityProject *const project,
          // for further info about this thread safety question.
          wxString prevlocale = wxSetlocale(LC_NUMERIC, NULL);
          wxSetlocale(LC_NUMERIC, wxString(wxT("C")));
+         Finally Do{ [&]{
+            // Reset previous locale
+            wxSetlocale(LC_NUMERIC, prevlocale);
+         } };
 
          success = ProcessOne(environment, context, nyquistTrack);
-
-         // Reset previous locale
-         wxSetlocale(LC_NUMERIC, prevlocale);
-
-         if (!success || bOnePassTool) {
+         if (!success || bOnePassTool)
             goto finish;
-         }
          nyquistTrack.AccumulateProgress();
       }
-
       mCount += nyquistTrack.CurNumChannels();
    }
 
-   if (mOutputTime > 0.0) {
+   if (mOutputTime > 0.0)
       mT1 = mT0 + mOutputTime;
-   }
 
 finish:
 
