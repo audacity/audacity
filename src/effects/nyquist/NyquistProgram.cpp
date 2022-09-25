@@ -111,7 +111,7 @@ bool NyquistProgram::Process(const AudacityProject *const project,
    if (mVersion >= 4)
    {
       mProps = NyquistProperties::Global()
-         + NyquistProperties::Project(*project)
+         + NyquistProperties::Project(*project, mIsPreviewing)
       ;
 
       int numTracks = 0;
@@ -127,10 +127,6 @@ bool NyquistProgram::Process(const AudacityProject *const project,
             numTracks++;
          }
       }
-
-      // *PREVIEWP* is true when previewing (better than relying on track view).
-      wxString isPreviewing = (mIsPreviewing)? wxT("T") : wxT("NIL");
-      mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
                                  Internat::ToString(mT0));
@@ -652,7 +648,7 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
          XO("Nyquist returned one audio channel as an array.\n") );
       return false;
    }
-
+ 
    if (outChannels == 0) {
       mEffect.MessageBox( XO("Nyquist returned an empty array.\n") );
       return false;

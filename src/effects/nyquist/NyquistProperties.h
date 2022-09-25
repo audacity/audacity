@@ -18,7 +18,7 @@ namespace NyquistProperties {
 FilePaths GetNyquistSearchPath();
 
 wxString Global();
-wxString Project(const AudacityProject &project);
+wxString Project(const AudacityProject &project, bool isPreviewing);
 
 //! Assignment to fix the sixteenth note because of a variable name collision
 //! in older versions of Nyquist

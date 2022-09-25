@@ -103,9 +103,11 @@ wxString NyquistProperties::Global()
    };
 }
 
-wxString NyquistProperties::Project(const AudacityProject &project)
+wxString NyquistProperties::Project(
+   const AudacityProject &project, bool isPreviewing)
 {
    const NyquistFormatting::Symbol proj{ "*project*" };
+   const NyquistFormatting::Symbol previewp{ "*previewp*" };
    auto countRange = TrackList::Get(project).Leaders();
    return NyquistFormatting::Assignments{
       { proj, AllProjects{}.size(), "projects" },
@@ -121,6 +123,9 @@ wxString NyquistProperties::Project(const AudacityProject &project)
       { proj, countRange.Filter<const TimeTrack>().size(), "timetracks" },
 
       { proj, EffectsPreviewLen.Read(), "preview-duration" },
+
+      // *previewp* is true when previewing (better than relying on track view).
+      { previewp, isPreviewing },
    };
 }
 
