@@ -412,8 +412,8 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
          else if(mIcon.IsOk())
          {
             dc.DrawBitmap(mIcon,
-               buttonRect.x + (buttonRect.width - mIcon.GetWidth() / 2),
-                  buttonRect.y + (buttonRect.height - mIcon.GetHeight() / 2));
+               buttonRect.x + (buttonRect.width - mIcon.GetWidth()) / 2,
+                  buttonRect.y + (buttonRect.height - mIcon.GetHeight()) / 2);
          }
       }
       else
@@ -687,26 +687,29 @@ wxSize AButton::DoGetBestClientSize() const
       {
       case FrameButton:
          {
-            const auto border = image.GetSize() / 4;
-            wxSize bestSize { -1 , -1 };
             if(!GetLabel().IsEmpty())
             {
+               const auto border = image.GetSize() / 4;
+               
                wxMemoryDC dc;
                dc.SetFont(GetFont());
-               bestSize = dc.GetTextExtent(GetLabel());
+               auto bestSize = dc.GetTextExtent(GetLabel());
+               if(mIcon.IsOk())
+               {
+                  bestSize.x = std::max(bestSize.x, mIcon.GetWidth());
+                  bestSize.y = bestSize.y > 0
+                     ? bestSize.y + border.y + mIcon.GetHeight()
+                     : mIcon.GetHeight();
+               }
+               if(bestSize.x > 0)
+                  bestSize.x += border.x * 2;
+               if(bestSize.y > 0)
+                  bestSize.y += border.y * 2;
+               return bestSize;
             }
-            if(mIcon.IsOk())
-            {
-               bestSize.x = std::max(bestSize.x, mIcon.GetWidth());
-               bestSize.y = bestSize.y > 0
-                  ? bestSize.y + border.y + mIcon.GetHeight()
-                  : mIcon.GetHeight();
-            }
-            if(bestSize.x > 0)
-               bestSize.x += border.x * 2;
-            if(bestSize.y > 0)
-               bestSize.y += border.y * 2;
-            return bestSize;
+            if(mIcon.Ok())
+               return mIcon.GetSize();
+            return image.GetSize();
          }
       case TextButton:
          return {-1, image.GetHeight() };
