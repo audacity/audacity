@@ -523,8 +523,6 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
          // A true no-op.
          return true;
       }
-
-      return acceptAll;
    }
 
    if (rval == nyx_double) {
