@@ -70,7 +70,7 @@ struct EffectPhaserSettings
    double mOutGain { outGainDefault  };
 };
 
-class EffectPhaser final : public StatefulPerTrackEffect
+class EffectPhaser final : public PerTrackEffect
 {
 public:
    static inline EffectPhaserSettings *
@@ -91,21 +91,6 @@ public:
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
 
    // Effect implementation
 
@@ -118,13 +103,9 @@ public:
 private:
    // EffectPhaser implementation
 
-   void InstanceInit(EffectPhaserState & data, float sampleRate);
-   size_t InstanceProcess(EffectSettings &settings, EffectPhaserState & data,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
+   struct Instance;
 
-
-   EffectPhaserState mMaster;
-   std::vector<EffectPhaserState> mSlaves;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    EffectPhaserSettings mSettings;
 

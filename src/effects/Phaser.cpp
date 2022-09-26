@@ -130,6 +130,61 @@ struct EffectPhaser::Validator
 };
 
 
+struct EffectPhaser::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+      double          sampleRate,
+      ChannelNames     chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
+   void InstanceInit(EffectPhaserState& data, float sampleRate);
+
+   size_t InstanceProcess(EffectSettings& settings,
+      EffectPhaserState& data,
+      const float* const* inBlock,
+      float* const* outBlock,
+      size_t                 blockLen);
+
+   void Coefficients(double hz, double slope, double gain, double samplerate, int type,
+      double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
+
+   float DoFilter(EffectPhaserState& data, float in);
+
+   EffectPhaserState mMaster;
+   std::vector<EffectPhaserState> mSlaves;
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectPhaser::MakeInstance() const
+{
+   return std::make_shared<Instance>(*this);
+}
+
+
+
 EffectPhaser::EffectPhaser()
 {
    SetLinearEffectFlag(true);
@@ -166,21 +221,21 @@ EffectType EffectPhaser::GetType() const
 auto EffectPhaser::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   // return RealtimeSince::Never;
+   return RealtimeSince::Always;
 }
 
-unsigned EffectPhaser::GetAudioInCount() const
+unsigned EffectPhaser::Instance::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectPhaser::GetAudioOutCount() const
+unsigned EffectPhaser::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectPhaser::ProcessInitialize(
+bool EffectPhaser::Instance::ProcessInitialize(
    EffectSettings &, double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(mMaster, sampleRate);
@@ -189,20 +244,20 @@ bool EffectPhaser::ProcessInitialize(
    return true;
 }
 
-size_t EffectPhaser::ProcessBlock(EffectSettings &settings,
+size_t EffectPhaser::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::RealtimeInitialize(EffectSettings &, double)
+bool EffectPhaser::Instance::RealtimeInitialize(EffectSettings&, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectPhaser::RealtimeAddProcessor(
+bool EffectPhaser::Instance::RealtimeAddProcessor(
    EffectSettings &, unsigned, float sampleRate)
 {
    EffectPhaserState slave;
@@ -214,14 +269,14 @@ bool EffectPhaser::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectPhaser::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectPhaser::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectPhaser::RealtimeProcess(size_t group, EffectSettings &settings,
+size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
@@ -417,9 +472,12 @@ bool EffectPhaser::Validator::ValidateUI()
 
 // EffectPhaser implementation
 
-void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
+void EffectPhaser::Instance::InstanceInit(EffectPhaserState & data, float sampleRate)
 {
-   auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectPhaser&>(mProcessor).mSettings;
 
    data.samplerate = sampleRate;
 
@@ -437,11 +495,15 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    return;
 }
 
-size_t EffectPhaser::InstanceProcess(EffectSettings &settings,
+size_t EffectPhaser::Instance::InstanceProcess(EffectSettings &settings,
    EffectPhaserState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectPhaser&>(mProcessor).mSettings;
+
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
