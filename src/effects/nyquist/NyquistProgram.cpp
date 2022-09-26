@@ -21,8 +21,6 @@
 
 #include "../EffectManager.h"
 #include "../../LabelTrack.h"
-#include "../../NoteTrack.h"
-#include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../ShuttleGui.h"
 #include "SyncLock.h"
@@ -283,7 +281,9 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
                   view += wxT(")");
                }
             }
-         },
+         }
+#if 0
+         ,
 #if defined(USE_MIDI)
          [&](const NoteTrack *) {
             type = wxT("midi");
@@ -298,6 +298,7 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
             type = wxT("time");
             view = wxT("\"Time\"");
          }
+#endif
       );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
