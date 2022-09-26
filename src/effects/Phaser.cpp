@@ -67,7 +67,7 @@ struct EffectPhaser::Validator
    : EffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, EffectPhaserSettings& settings)
+      EffectSettingsAccess& access, const EffectPhaserSettings& settings)
       : EffectUIValidator{ effect, access }
       , mSettings{ settings }
    {}
@@ -80,7 +80,7 @@ struct EffectPhaser::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
-   EffectPhaserSettings& mSettings;
+   EffectPhaserSettings mSettings;
 
    wxTextCtrl* mStagesT;
    wxTextCtrl* mDryWetT;
@@ -159,7 +159,7 @@ struct EffectPhaser::Instance
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   void InstanceInit(EffectPhaserState& data, float sampleRate);
+   void InstanceInit(EffectSettings& settings, EffectPhaserState& data, float sampleRate);
 
    size_t InstanceProcess(EffectSettings& settings,
       EffectPhaserState& data,
@@ -221,8 +221,8 @@ EffectType EffectPhaser::GetType() const
 auto EffectPhaser::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   // return RealtimeSince::Never;
-   return RealtimeSince::Always;
+   return RealtimeSince::Never;
+//   return RealtimeSince::Always;
 }
 
 unsigned EffectPhaser::Instance::GetAudioInCount() const
@@ -236,9 +236,9 @@ unsigned EffectPhaser::Instance::GetAudioOutCount() const
 }
 
 bool EffectPhaser::Instance::ProcessInitialize(
-   EffectSettings &, double sampleRate, ChannelNames chanMap)
+   EffectSettings& settings, double sampleRate, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, sampleRate);
+   InstanceInit(settings, mMaster, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
       mMaster.phase += M_PI;
    return true;
@@ -258,11 +258,11 @@ bool EffectPhaser::Instance::RealtimeInitialize(EffectSettings&, double)
 }
 
 bool EffectPhaser::Instance::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings& settings, unsigned, float sampleRate)
 {
    EffectPhaserState slave;
 
-   InstanceInit(slave, sampleRate);
+   InstanceInit(settings, slave, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -288,12 +288,8 @@ size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &set
 std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
 {
-   // ENABLE AT LAST STEP
-   // auto& settings = access.Get();
-   // auto& myEffSettings = GetSettings(settings);
-
-   // DISABLE AT LAST STEP
-   auto& myEffSettings = mSettings;
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
 
    auto result = std::make_unique<Validator>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
@@ -411,13 +407,10 @@ void EffectPhaser::Validator::PopulateOrExchange(ShuttleGui& S)
 
 bool EffectPhaser::Validator::UpdateUI()
 {
-   auto& ms = mSettings;
-
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();
 
-   // TODO uncomment at last step
-   //mSettings = GetSettings(settings);
+   mSettings = GetSettings(settings);
 
    Effect& actualEffect = static_cast<Effect&>(mEffect);
 
@@ -426,13 +419,13 @@ bool EffectPhaser::Validator::UpdateUI()
       return false;
    }
 
-   mStagesS->  SetValue((int) (ms.mStages * Stages.scale));
-   mDryWetS->  SetValue((int) (ms.mDryWet * DryWet.scale));
-   mFreqS->    SetValue((int) (ms.mFreq * Freq.scale));
-   mPhaseS->   SetValue((int) (ms.mPhase * Phase.scale));
-   mDepthS->   SetValue((int) (ms.mDepth * Depth.scale));
-   mFeedbackS->SetValue((int) (ms.mFeedback * Feedback.scale));
-   mOutGainS-> SetValue((int) (ms.mOutGain * OutGain.scale));
+   mStagesS->  SetValue((int) (mSettings.mStages * Stages.scale));
+   mDryWetS->  SetValue((int) (mSettings.mDryWet * DryWet.scale));
+   mFreqS->    SetValue((int) (mSettings.mFreq * Freq.scale));
+   mPhaseS->   SetValue((int) (mSettings.mPhase * Phase.scale));
+   mDepthS->   SetValue((int) (mSettings.mDepth * Depth.scale));
+   mFeedbackS->SetValue((int) (mSettings.mFeedback * Feedback.scale));
+   mOutGainS-> SetValue((int) (mSettings.mOutGain * OutGain.scale));
 
    return true;
 }
@@ -461,8 +454,7 @@ bool EffectPhaser::Validator::ValidateUI()
       {
          // pass back the modified settings to the MessageBuffer
 
-         // TODO uncomment at last step
-         //EffectBassTreble::GetSettings(settings) = mSettings;
+         GetSettings(settings) = mSettings;
       }
    );
 
@@ -472,12 +464,9 @@ bool EffectPhaser::Validator::ValidateUI()
 
 // EffectPhaser implementation
 
-void EffectPhaser::Instance::InstanceInit(EffectPhaserState & data, float sampleRate)
+void EffectPhaser::Instance::InstanceInit(EffectSettings& settings, EffectPhaserState & data, float sampleRate)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectPhaser&>(mProcessor).mSettings;
+   auto& ms = GetSettings(settings);
 
    data.samplerate = sampleRate;
 
@@ -499,11 +488,7 @@ size_t EffectPhaser::Instance::InstanceProcess(EffectSettings &settings,
    EffectPhaserState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectPhaser&>(mProcessor).mSettings;
-
+   auto& ms = GetSettings(settings);
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

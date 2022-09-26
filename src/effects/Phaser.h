@@ -70,11 +70,10 @@ struct EffectPhaserSettings
    double mOutGain { outGainDefault  };
 };
 
-class EffectPhaser final : public PerTrackEffect
+class EffectPhaser final : public EffectWithSettings<EffectPhaserSettings, PerTrackEffect>
 {
 public:
-   static inline EffectPhaserSettings *
-   FetchParameters(EffectPhaser &e, EffectSettings &) { return &e.mSettings; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPhaser();
@@ -106,8 +105,6 @@ private:
    struct Instance;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-
-   EffectPhaserSettings mSettings;
 
    const EffectParameterMethods& Parameters() const override;
 
