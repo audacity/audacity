@@ -8,6 +8,7 @@
 
 **********************************************************************/
 #include "NyquistProperties.h"
+#include "NyquistEnvironment.h"
 #include "../EffectBase.h"
 #include "EffectInterface.h"
 #include "../../LabelTrack.h"
@@ -15,12 +16,18 @@
 #include "../../NoteTrack.h"
 #include "Project.h"
 #include "ProjectRate.h"
+#include "../../prefs/SpectrogramSettings.h"
 #include "TempDirectory.h"
 #include "../../TimeTrack.h"
+#include "../../WaveClip.h"
 #include "../../WaveTrack.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "nyx.h"
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
+#include <array>
+#include <float.h>
 
 FilePaths NyquistProperties::GetNyquistSearchPath()
 {
@@ -266,4 +273,160 @@ wxString NyquistProperties::SalCommand(
    // doing the rest only for side-effect)
       + wxT("(prog1 aud:result (setf aud:result nil))\n");
    return std::move(assignments) + command;
+}
+
+// On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
+static inline bool GoodValue(float value)
+{
+   return !std::isinf(value) && !std::isnan(value) && (value < FLT_MAX);
+}
+static NyquistFormatting::Value ValueOrNil(float value)
+{
+   if (GoodValue(value))
+      return value;
+   return nullptr;
+}
+static NyquistFormatting::Value ValueOrVector(
+   const std::vector<const NyquistFormatting::Value> &values)
+{
+   if (values.size() == 1)
+      return values[0];
+   return NyquistFormatting::Vector{ values };
+}
+
+wxString NyquistProperties::Track(
+   NyquistTrack &nyquistTrack, const double t0, const double t1,
+   const int trackIndex)
+{
+   using NyquistFormatting::Value;
+
+   const auto mCurNumChannels = nyquistTrack.CurNumChannels();
+   if (mCurNumChannels < 1)
+      return {};
+   const auto mCurTrack = nyquistTrack.CurTracks();
+   const auto channel = mCurTrack[0];
+
+   auto channels = TrackList::Channels(channel);
+   bool spectralEditp = channel->GetSpectrogramSettings()
+      .SpectralSelectionEnabled();
+
+   // Set the track TYPE and VIEW properties
+   const auto type = "wave";
+   wxString view;
+   std::vector<Value> views;
+
+   // Find() not Get() to avoid creation-on-demand of views in case we are
+   // only previewing
+   if (const auto pView = WaveTrackView::Find(channel)) {
+      auto displays = pView->GetDisplays();
+      auto format = [&](auto &display) {
+         // Get the English name of the view type, without menu codes
+         return display.name.Stripped().Debug();
+      };
+      if (displays.size() == 1)
+         // Make one string
+         view = format(displays[0]);
+      else
+         for (auto display : displays)
+            // Make a list of strings
+            views.push_back(format(display));
+   }
+
+#if 0
+   // There was code to add type and view properties for other tracks, but
+   // this was never executed, because mCurTracks never held any but Wave tracks
+   channel->TypeSwitch(
+#if defined(USE_MIDI)
+      [&](const NoteTrack *) {
+         type = wxT("midi");
+         view = wxT("Midi");
+      },
+#endif
+      [&](const LabelTrack *) {
+         type = wxT("label");
+         view = wxT("Label");
+      },
+      [&](const TimeTrack *) {
+         type = wxT("time");
+         view = wxT("Time");
+      }
+   );
+#endif
+
+   // For each channel collect clip starts and ends and peaks and rms values
+   // Collect too the maxmimum of peaks across channels
+   float maxPeakLevel = 0.0;
+   std::vector<const Value> peaks, rmss;
+   std::vector<const Value> allClips;
+   for (size_t i = 0; i < mCurNumChannels; i++) {
+      using NyquistFormatting::Eval;
+      using NyquistFormatting::List;
+      auto ca = mCurTrack[i]->SortedClipArray();
+      std::vector<const Value> clips;
+
+      // For each channel, there is a list of 2-element lists of start and end
+      // times, possibly with a final nil
+      // Limit number of clips added to avoid argument stack overflow error
+      // (bug 2300).
+      for (size_t i = 0; i < ca.size(); ++i) {
+         auto &clip = ca[i];
+         if (i < 1000) {
+            std::array<const Value, 2> pair{
+               clip->GetPlayStartTime(), clip->GetPlayEndTime() };
+            clips.emplace_back(Eval{ std::move(pair) });
+         }
+         else if (i == 1000)
+            // If final clip is NIL, plug-in developer knows there are more
+            // than 1000 clips in channel.
+            clips.emplace_back(std::nullopt);
+         else if (i > 1000)
+            break;
+      }
+      // Format list of pairs as a string before clips is out of scope
+      allClips.emplace_back(Eval{ clips });
+
+      auto [min, max] = mCurTrack[i]->GetMinMax(t0, t1); // may throw
+      auto peak = std::max(fabs(min), fabs(max));
+      peaks.emplace_back(ValueOrNil(peak));
+      maxPeakLevel = std::max(maxPeakLevel, peak);
+      rmss.emplace_back(ValueOrNil(mCurTrack[i]->GetRMS(t0, t1))); // may throw
+   }
+
+   const auto &track = newTrack;
+   auto result = NyquistFormatting::Assignments{
+      { track, trackIndex, "index" },
+      { track, channel->GetName(), "name" },
+      { track, type, "type" },
+      // Note: "View" property may change when Audacity's choice of track views
+      // has stabilized.
+      { track, (view.empty() ? Value{ views } : Value{ view }), "view" },
+      { track, mCurNumChannels, "channels" },
+      //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
+      { track, spectralEditp, "spectral-edit-enabled" },
+      { track, channels.min(&Track::GetStartTime), "start-time" },
+      { track, channels.max(&Track::GetEndTime), "end-time" },
+      { track, channel->GetGain(), "gain" },
+      { track, channel->GetPan(), "pan" },
+      { track, channel->GetRate(), "rate" },
+      { track, [&]() -> Value{
+         switch (channel->GetSampleFormat()) {
+            case int16Sample:
+               return 16;
+            case int24Sample:
+               return 24;
+            case floatSample:
+               return 32.0;
+         }
+      }(), "format" },
+
+      // A list of clips for mono, or an array of lists for multi-channel.
+      // Each clip is a list (start-time, end-time)
+      { track, ValueOrVector(allClips), "clips" },
+      { selection, ValueOrVector(peaks), "peak" },
+      // Deprecated as of 2.1.3:
+      { selection, ValueOrNil(maxPeakLevel), "peak-level" },
+      { selection, ValueOrVector(rmss), "rms" },
+   };
+
+   return std::move(result);
 }

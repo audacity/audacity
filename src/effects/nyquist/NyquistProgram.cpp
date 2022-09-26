@@ -21,16 +21,10 @@
 
 #include "../EffectManager.h"
 #include "../../LabelTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
 #include "../../ShuttleGui.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "../../WaveClip.h"
 #include "../../WaveTrack.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
-
-#include <float.h>
 
 std::pair<bool, FilePath> NyquistProgram::CheckHelpPage() const
 {
@@ -246,167 +240,8 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
       + mProps
    ;
 
-   using namespace NyquistFormatting;
-
-   if( (mVersion >= 4) && (GetType() != EffectTypeTool) ) {
-      // Set the track TYPE and VIEW properties
-      wxString type;
-      wxString view;
-      wxString bitFormat;
-      wxString spectralEditp;
-
-      mCurTrack[0]->TypeSwitch(
-         [&](const WaveTrack *wt) {
-            type = wxT("wave");
-            spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            view = wxT("NIL");
-            // Find() not Get() to avoid creation-on-demand of views in case we are
-            // only previewing
-            if ( const auto pView = WaveTrackView::Find( wt ) ) {
-               auto displays = pView->GetDisplays();
-               auto format = [&]( decltype(displays[0]) display ) {
-                  // Get the English name of the view type, without menu codes,
-                  // as a string that Lisp can examine
-                  return wxString::Format( wxT("\"%s\""),
-                     display.name.Stripped().Debug() );
-               };
-               if (displays.empty())
-                  ;
-               else if (displays.size() == 1)
-                  view = format( displays[0] );
-               else {
-                  view = wxT("(list");
-                  for ( auto display : displays )
-                     view += wxString(wxT(" ")) + format( display );
-                  view += wxT(")");
-               }
-            }
-         }
-#if 0
-         ,
-#if defined(USE_MIDI)
-         [&](const NoteTrack *) {
-            type = wxT("midi");
-            view = wxT("\"Midi\"");
-         },
-#endif
-         [&](const LabelTrack *) {
-            type = wxT("label");
-            view = wxT("\"Label\"");
-         },
-         [&](const TimeTrack *) {
-            type = wxT("time");
-            view = wxT("\"Time\"");
-         }
-#endif
-      );
-
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurTrack[0]->GetName()));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type);
-      // Note: "View" property may change when Audacity's choice of track views has stabilized.
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
-
-      //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
-
-      auto channels = TrackList::Channels( mCurTrack[0] );
-      double startTime = channels.min( &Track::GetStartTime );
-      double endTime = channels.max( &Track::GetEndTime );
-
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
-                              Internat::ToString(startTime));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
-                              Internat::ToString(endTime));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetGain()));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
-                              Internat::ToString(mCurTrack[0]->GetPan()));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'RATE)\n"),
-                              Internat::ToString(mCurTrack[0]->GetRate()));
-
-      switch (mCurTrack[0]->GetSampleFormat())
-      {
-         case int16Sample:
-            bitFormat = wxT("16");
-            break;
-         case int24Sample:
-            bitFormat = wxT("24");
-            break;
-         case floatSample:
-            bitFormat = wxT("32.0");
-            break;
-      }
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat);
-
-      float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
-      wxString clips, peakString, rmsString;
-      for (size_t i = 0; i < mCurNumChannels; i++) {
-         auto ca = mCurTrack[i]->SortedClipArray();
-         float peak = 0.0;
-
-         // A list of clips for mono, or an array of lists for multi-channel.
-         if (mCurNumChannels > 1) {
-            clips += wxT("(list ");
-         }
-         // Each clip is a list (start-time, end-time)
-         // Limit number of clips added to avoid argument stack overflow error (bug 2300).
-         for (size_t i=0; i<ca.size(); i++) {
-            if (i < 1000) {
-               clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                         Internat::ToString(ca[i]->GetPlayStartTime()),
-                                         Internat::ToString(ca[i]->GetPlayEndTime()));
-            } else if (i == 1000) {
-               // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
-               clips += "NIL";
-            } else if (i > 1000) {
-               break;
-            }
-         }
-         if (mCurNumChannels > 1) clips += wxT(" )");
-
-         float min, max;
-         auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
-         min = pair.first, max = pair.second;
-         peak = wxMax(fabs(min), fabs(max));
-         maxPeakLevel = wxMax(maxPeakLevel, peak);
-
-         // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
-         if (!std::isinf(peak) && !std::isnan(peak) && (peak < FLT_MAX)) {
-            peakString +=
-               wxString::Format(wxT("(float %s) "), Internat::ToString(peak));
-         } else {
-            peakString += wxT("nil ");
-         }
-
-         float rms = mCurTrack[i]->GetRMS(mT0, mT1); // may throw
-         if (!std::isinf(rms) && !std::isnan(rms)) {
-            rmsString += wxString::Format(wxT("(float %s) "), Internat::ToString(rms));
-         } else {
-            rmsString += wxT("NIL ");
-         }
-      }
-      // A list of clips for mono, or an array of lists for multi-channel.
-      cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
-                              (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
-                              clips);
-
-      (mCurNumChannels > 1)?
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'PEAK)\n"), peakString);
-
-      if (!std::isinf(maxPeakLevel) && !std::isnan(maxPeakLevel) && (maxPeakLevel < FLT_MAX)) {
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
-                                 Internat::ToString(maxPeakLevel));
-      }
-      else
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* NIL 'PEAK-LEVEL)"));
-
-      (mCurNumChannels > 1)?
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'RMS)\n"), rmsString) :
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'RMS)\n"), rmsString);
-   }
+   if ((mVersion >= 4) && (GetType() != EffectTypeTool))
+      cmd += NyquistProperties::Track(nyquistTrack, mT0, mT1, ++mTrackIndex);
 
    // If in tool mode, then we don't do anything with the track and selection.
    if (GetType() == EffectTypeTool) {
