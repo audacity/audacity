@@ -40,6 +40,7 @@ depends=(zlib
    mpg123
    wavpack
    wxwidgets-gtk3
+   vst3sdk
 )
 
 makedepends=(
@@ -75,6 +76,8 @@ build() {
 
     export CONAN_USER_HOME="$depsDir/conan"
 
+    export VST3_SDK_DIR="/usr/include/vst3sdk"
+
     conan config home
     conan config init
     conan config set storage.download_cache="$CONAN_USER_HOME/download_cache"
@@ -94,6 +97,7 @@ build() {
         -D audacity_use_sbsms=local # sbsms is only available in AUR
 
         -D audacity_has_vst3=no
+        #-D audacity_use_vst3sdk=system
     )
 
     sourceDir=$(echo audacity-sources-*/)
