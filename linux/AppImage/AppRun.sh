@@ -23,7 +23,6 @@ export LD_LIBRARY_PATH="${APPDIR}/lib:${LD_LIBRARY_PATH}${fallback_libs}"
 
 export AUDACITY_PATH="${AUDACITY_PATH}:${APPDIR}/share/audacity"
 export AUDACITY_MODULES_PATH="${AUDACITY_MODULES_PATH}:${APPDIR}/lib/modules"
-export UBUNTU_MENUPROXY=0
 
 function help()
 {
