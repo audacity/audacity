@@ -64,7 +64,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
    static CapturedParameters<EffectDistortion,
       TableTypeIndx, DCBlock, Threshold_dB, NoiseFloor, Param1, Param2, Repeats
    > parameters{
-      [](EffectDistortion &e, EffectSettings &settings, Params &p,
+      [](EffectDistortion &e, EffectSettings &settings, EffectDistortionSettings &p,
          bool updating) {
          if (!updating)
             e.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
@@ -80,7 +80,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
 static const struct
 {
    const TranslatableString name;
-   EffectDistortion::Params params;
+   EffectDistortionSettings params;
 }
 FactoryPresets[] =
 {
@@ -189,8 +189,8 @@ EffectType EffectDistortion::GetType() const
 auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   //return RealtimeSince::Never;
+   return RealtimeSince::Always;
 }
 
 unsigned EffectDistortion::GetAudioInCount() const
@@ -276,8 +276,8 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
       return {};
    }
 
-   mParams = FactoryPresets[id].params;
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
+   mSettings = FactoryPresets[id].params;
+   mThreshold = DB_TO_LINEAR(mSettings.mThreshold_dB);
 
    return { nullptr };
 }
@@ -289,6 +289,8 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   auto& ms = mSettings;
+
    S.AddSpace(0, 5);
    S.StartVerticalLay();
    {
@@ -296,7 +298,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
       {
          mTypeChoiceCtrl = S.Id(ID_Type)
             .MinSize( { -1, -1 } )
-            .Validator<wxGenericValidator>(&mParams.mTableChoiceIndx)
+            .Validator<wxGenericValidator>(&ms.mTableChoiceIndx)
             .AddChoice(XXO("Distortion type:"),
                Msgids(kTableTypeStrings, nTableTypes));
 
@@ -321,7 +323,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             mThresholdT = S.Id(ID_Threshold)
                .Name(defaultLabel(0))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mThreshold_dB, NumValidatorStyle::DEFAULT,
+                  2, &ms.mThreshold_dB, NumValidatorStyle::DEFAULT,
                   Threshold_dB.min, Threshold_dB.max)
                .AddTextBox( {}, wxT(""), 10);
 
@@ -339,7 +341,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             mNoiseFloorT = S.Id(ID_NoiseFloor)
                .Name(defaultLabel(1))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mNoiseFloor, NumValidatorStyle::DEFAULT,
+                  2, &ms.mNoiseFloor, NumValidatorStyle::DEFAULT,
                   NoiseFloor.min, NoiseFloor.max
                )
                .AddTextBox( {}, wxT(""), 10);
@@ -368,7 +370,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             mParam1T = S.Id(ID_Param1)
                .Name(defaultLabel(2))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mParam1, NumValidatorStyle::DEFAULT,
+                  2, &ms.mParam1, NumValidatorStyle::DEFAULT,
                   Param1.min, Param1.max
                )
                .AddTextBox( {}, wxT(""), 10);
@@ -385,7 +387,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             mParam2T = S.Id(ID_Param2)
                .Name(defaultLabel(3))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mParam2, NumValidatorStyle::DEFAULT,
+                  2, &ms.mParam2, NumValidatorStyle::DEFAULT,
                   Param2.min, Param2.max
                )
                .AddTextBox( {}, wxT(""), 10);
@@ -402,7 +404,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             mRepeatsT = S.Id(ID_Repeats)
                .Name(defaultLabel(4))
                .Validator<IntegerValidator<int>>(
-                  &mParams.mRepeats, NumValidatorStyle::DEFAULT,
+                  &ms.mRepeats, NumValidatorStyle::DEFAULT,
                   Repeats.min, Repeats.max
                )
                .AddTextBox( {}, wxT(""), 10);
@@ -424,19 +426,21 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
 
 bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 {
+   const auto& ms = mSettings;
+
    if (!mUIParent->TransferDataToWindow())
    {
       return false;
    }
 
-   mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
-   mDCBlockCheckBox->SetValue(mParams.mDCBlock);
-   mNoiseFloorS->SetValue((int) mParams.mNoiseFloor + 0.5);
-   mParam1S->SetValue((int) mParams.mParam1 + 0.5);
-   mParam2S->SetValue((int) mParams.mParam2 + 0.5);
-   mRepeatsS->SetValue(mParams.mRepeats);
+   mThresholdS->     SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
+   mDCBlockCheckBox->SetValue(     ms.mDCBlock);
+   mNoiseFloorS->    SetValue((int)ms.mNoiseFloor + 0.5);
+   mParam1S->        SetValue((int)ms.mParam1 + 0.5);
+   mParam2S->        SetValue((int)ms.mParam2 + 0.5);
+   mRepeatsS->       SetValue(     ms.mRepeats);
 
-   mbSavedFilterState = mParams.mDCBlock;
+   mbSavedFilterState = ms.mDCBlock;
 
    UpdateUI();
 
@@ -445,27 +449,31 @@ bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 
 bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
 {
+   const auto& ms = mSettings;
+
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;
    }
 
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
+   mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
 
    return true;
 }
 
 void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRate)
 {
+   const auto& ms = mSettings;
+
    data.samplerate = sampleRate;
    data.skipcount = 0;
-   data.tablechoiceindx = mParams.mTableChoiceIndx;
-   data.dcblock = mParams.mDCBlock;
-   data.threshold = mParams.mThreshold_dB;
-   data.noisefloor = mParams.mNoiseFloor;
-   data.param1 = mParams.mParam1;
-   data.param2 = mParams.mParam2;
-   data.repeats = mParams.mRepeats;
+   data.tablechoiceindx = ms.mTableChoiceIndx;
+   data.dcblock         = ms.mDCBlock;
+   data.threshold       = ms.mThreshold_dB;
+   data.noisefloor      = ms.mNoiseFloor;
+   data.param1          = ms.mParam1;
+   data.param2          = ms.mParam2;
+   data.repeats         = ms.mRepeats;
 
    // DC block filter variables
    data.queuetotal = 0.0;
@@ -483,31 +491,33 @@ size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
    EffectDistortionState& data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   const auto& ms = mSettings;
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
-   bool update = (mParams.mTableChoiceIndx == data.tablechoiceindx &&
-                  mParams.mNoiseFloor == data.noisefloor &&
-                  mParams.mThreshold_dB == data.threshold &&
-                  mParams.mParam1 == data.param1 &&
-                  mParams.mParam2 == data.param2 &&
-                  mParams.mRepeats == data.repeats)? false : true;
+   bool update = (ms.mTableChoiceIndx == data.tablechoiceindx &&
+                  ms.mNoiseFloor == data.noisefloor &&
+                  ms.mThreshold_dB == data.threshold &&
+                  ms.mParam1 == data.param1 &&
+                  ms.mParam2 == data.param2 &&
+                  ms.mRepeats == data.repeats)? false : true;
 
-   double p1 = mParams.mParam1 / 100.0;
-   double p2 = mParams.mParam2 / 100.0;
+   double p1 = ms.mParam1 / 100.0;
+   double p2 = ms.mParam2 / 100.0;
 
-   data.tablechoiceindx = mParams.mTableChoiceIndx;
-   data.threshold = mParams.mThreshold_dB;
-   data.noisefloor = mParams.mNoiseFloor;
-   data.param1 = mParams.mParam1;
-   data.repeats = mParams.mRepeats;
+   data.tablechoiceindx = ms.mTableChoiceIndx;
+   data.threshold = ms.mThreshold_dB;
+   data.noisefloor = ms.mNoiseFloor;
+   data.param1 = ms.mParam1;
+   data.repeats = ms.mRepeats;
 
    for (decltype(blockLen) i = 0; i < blockLen; i++) {
       if (update && ((data.skipcount++) % skipsamples == 0)) {
          MakeTable();
       }
 
-      switch (mParams.mTableChoiceIndx)
+      switch (ms.mTableChoiceIndx)
       {
       case kHardClip:
          // Param2 = make-up gain.
@@ -548,7 +558,7 @@ size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
       default:
          obuf[i] = WaveShaper(ibuf[i]);
       }
-      if (mParams.mDCBlock) {
+      if (ms.mDCBlock) {
          obuf[i] = DCFilter(data, obuf[i]);
       }
    }
@@ -565,82 +575,106 @@ void EffectDistortion::OnTypeChoice(wxCommandEvent& /*evt*/)
 
 void EffectDistortion::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
 {
-   mParams.mDCBlock = mDCBlockCheckBox->GetValue();
-   mbSavedFilterState = mParams.mDCBlock;
+   auto& ms = mSettings;
+
+   ms.mDCBlock = mDCBlockCheckBox->GetValue();
+   mbSavedFilterState = ms.mDCBlock;
 }
 
 
 void EffectDistortion::OnThresholdText(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
    mThresholdT->GetValidator()->TransferFromWindow();
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
+   mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
    mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
 }
 
 void EffectDistortion::OnThresholdSlider(wxCommandEvent& evt)
 {
+   auto& ms = mSettings;
+
    static const double MIN_Threshold_Linear = DB_TO_LINEAR(Threshold_dB.min);
 
    mThreshold = (double) evt.GetInt() / Threshold_dB.scale;
-   mParams.mThreshold_dB = wxMax(LINEAR_TO_DB(mThreshold), Threshold_dB.min);
+   ms.mThreshold_dB = wxMax(LINEAR_TO_DB(mThreshold), Threshold_dB.min);
    mThreshold = std::max(MIN_Threshold_Linear, mThreshold);
    mThresholdT->GetValidator()->TransferToWindow();
 }
 
 void EffectDistortion::OnNoiseFloorText(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
    mNoiseFloorT->GetValidator()->TransferFromWindow();
-   mNoiseFloorS->SetValue((int) floor(mParams.mNoiseFloor + 0.5));
+   mNoiseFloorS->SetValue((int) floor(ms.mNoiseFloor + 0.5));
 }
 
 void EffectDistortion::OnNoiseFloorSlider(wxCommandEvent& evt)
 {
-   mParams.mNoiseFloor = (double) evt.GetInt();
+   auto& ms = mSettings;
+
+   ms.mNoiseFloor = (double) evt.GetInt();
    mNoiseFloorT->GetValidator()->TransferToWindow();
 }
 
 
 void EffectDistortion::OnParam1Text(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
    mParam1T->GetValidator()->TransferFromWindow();
-   mParam1S->SetValue((int) floor(mParams.mParam1 + 0.5));
+   mParam1S->SetValue((int) floor(ms.mParam1 + 0.5));
 }
 
 void EffectDistortion::OnParam1Slider(wxCommandEvent& evt)
 {
-   mParams.mParam1 = (double) evt.GetInt();
+   auto& ms = mSettings;
+
+   ms.mParam1 = (double) evt.GetInt();
    mParam1T->GetValidator()->TransferToWindow();
 }
 
 void EffectDistortion::OnParam2Text(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
    mParam2T->GetValidator()->TransferFromWindow();
-   mParam2S->SetValue((int) floor(mParams.mParam2 + 0.5));
+   mParam2S->SetValue((int) floor(ms.mParam2 + 0.5));
 }
 
 void EffectDistortion::OnParam2Slider(wxCommandEvent& evt)
 {
-   mParams.mParam2 = (double) evt.GetInt();
+   auto& ms = mSettings;
+
+   ms.mParam2 = (double) evt.GetInt();
    mParam2T->GetValidator()->TransferToWindow();
 }
 
 void EffectDistortion::OnRepeatsText(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
    mRepeatsT->GetValidator()->TransferFromWindow();
-   mRepeatsS->SetValue(mParams.mRepeats);
+   mRepeatsS->SetValue(ms.mRepeats);
 }
 
 void EffectDistortion::OnRepeatsSlider(wxCommandEvent& evt)
 {
-   mParams.mRepeats = evt.GetInt();
+   auto& ms = mSettings;
+
+   ms.mRepeats = evt.GetInt();
    mRepeatsT->GetValidator()->TransferToWindow();
    
 }
 
 void EffectDistortion::UpdateUI()
 {
+   const auto& ms = mSettings;
+
    // set control text and names to match distortion type
-   switch (mParams.mTableChoiceIndx)
+   switch (ms.mTableChoiceIndx)
       {
       case kHardClip:
          UpdateControlText(mThresholdT, mOldThresholdTxt, true);
@@ -809,6 +843,8 @@ void EffectDistortion::UpdateUI()
 void EffectDistortion::UpdateControl(
    control id, bool enabled, TranslatableString name)
 {
+   auto& ms = mSettings;
+
    auto suffix = XO("(Not Used):");
    switch (id)
    {
@@ -818,7 +854,7 @@ void EffectDistortion::UpdateControl(
          name.Join( suffix, wxT(" ") );
 
          // Logarithmic slider is set indirectly
-         mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
+         mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
          mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
 
          auto translated = name.Translation();
@@ -884,11 +920,11 @@ void EffectDistortion::UpdateControl(
       case ID_DCBlock: {
          if (enabled) {
             mDCBlockCheckBox->SetValue(mbSavedFilterState);
-            mParams.mDCBlock = mbSavedFilterState;
+            ms.mDCBlock = mbSavedFilterState;
          }
          else {
             mDCBlockCheckBox->SetValue(false);
-            mParams.mDCBlock = false;
+            ms.mDCBlock = false;
          }
 
          mDCBlockCheckBox->Enable(enabled);
@@ -916,7 +952,9 @@ void EffectDistortion::UpdateControlText(wxTextCtrl* textCtrl, wxString& string,
 
 void EffectDistortion::MakeTable()
 {
-   switch (mParams.mTableChoiceIndx)
+   const auto& ms = mSettings;
+
+   switch (ms.mTableChoiceIndx)
    {
       case kHardClip:
          HardClip();
@@ -978,8 +1016,10 @@ void EffectDistortion::HardClip()
 
 void EffectDistortion::SoftClip()
 {
+   const auto& ms = mSettings;
+
    double threshold = 1 + mThreshold;
-   double amount = std::pow(2.0, 7.0 * mParams.mParam1 / 100.0); // range 1 to 128
+   double amount = std::pow(2.0, 7.0 * ms.mParam1 / 100.0); // range 1 to 128
    double peak = LogCurve(mThreshold, 1.0, amount);
    mMakeupGain = 1.0 / peak;
    mTable[STEPS] = 0.0;   // origin
@@ -1001,7 +1041,9 @@ float EffectDistortion::LogCurve(double threshold, float value, double ratio)
 
 void EffectDistortion::ExponentialTable()
 {
-   double amount = std::min(0.999, DB_TO_LINEAR(-1 * mParams.mParam1));   // avoid divide by zero
+   const auto& ms = mSettings;
+
+   double amount = std::min(0.999, DB_TO_LINEAR(-1 * ms.mParam1));   // avoid divide by zero
 
    for (int n = STEPS; n < TABLESIZE; n++) {
       double linVal = n/(float)STEPS;
@@ -1014,7 +1056,9 @@ void EffectDistortion::ExponentialTable()
 
 void EffectDistortion::LogarithmicTable()
 {
-   double amount = mParams.mParam1;
+   const auto& ms = mSettings;
+
+   double amount = ms.mParam1;
    double stepsize = 1.0 / STEPS;
    double linVal = 0;
 
@@ -1035,8 +1079,10 @@ void EffectDistortion::LogarithmicTable()
 
 void EffectDistortion::HalfSinTable()
 {
-   int iter = std::floor(mParams.mParam1 / 20.0);
-   double fractionalpart = (mParams.mParam1 / 20.0) - iter;
+   const auto& ms = mSettings;
+
+   int iter = std::floor(ms.mParam1 / 20.0);
+   double fractionalpart = (ms.mParam1 / 20.0) - iter;
    double stepsize = 1.0 / STEPS;
    double linVal = 0;
 
@@ -1053,7 +1099,9 @@ void EffectDistortion::HalfSinTable()
 
 void EffectDistortion::CubicTable()
 {
-   double amount = mParams.mParam1 * std::sqrt(3.0) / 100.0;
+   const auto& ms = mSettings;
+
+   double amount = ms.mParam1 * std::sqrt(3.0) / 100.0;
    double gain = 1.0;
    if (amount != 0.0)
       gain = 1.0 / Cubic(std::min(amount, 1.0));
@@ -1069,7 +1117,7 @@ void EffectDistortion::CubicTable()
    else {
       for (int i = 0; i < TABLESIZE; i++) {
          mTable[i] = gain * Cubic(x);
-         for (int j = 0; j < mParams.mRepeats; j++) {
+         for (int j = 0; j < ms.mRepeats; j++) {
             mTable[i] = gain * Cubic(mTable[i] * amount);
          }
          x += stepsize;
@@ -1079,7 +1127,9 @@ void EffectDistortion::CubicTable()
 
 double EffectDistortion::Cubic(double x)
 {
-   if (mParams.mParam1 == 0.0)
+   const auto& ms = mSettings;
+
+   if (ms.mParam1 == 0.0)
       return x;
 
    return x - (std::pow(x, 3.0) / 3.0);
@@ -1088,9 +1138,11 @@ double EffectDistortion::Cubic(double x)
 
 void EffectDistortion::EvenHarmonicTable()
 {
-   double amount = mParams.mParam1 / -100.0;
+   const auto& ms = mSettings;
+
+   double amount = ms.mParam1 / -100.0;
    // double C = std::sin(std::max(0.001, mParams.mParam2) / 100.0) * 10.0;
-   double C = std::max(0.001, mParams.mParam2) / 10.0;
+   double C = std::max(0.001, ms.mParam2) / 10.0;
 
    double step = 1.0 / STEPS;
    double xval = -1.0;
@@ -1104,8 +1156,10 @@ void EffectDistortion::EvenHarmonicTable()
 
 void EffectDistortion::SineTable()
 {
-   int iter = std::floor(mParams.mParam1 / 20.0);
-   double fractionalpart = (mParams.mParam1 / 20.0) - iter;
+   const auto& ms = mSettings;
+
+   int iter = std::floor(ms.mParam1 / 20.0);
+   double fractionalpart = (ms.mParam1 / 20.0) - iter;
    double stepsize = 1.0 / STEPS;
    double linVal = 0.0;
 
@@ -1122,9 +1176,11 @@ void EffectDistortion::SineTable()
 
 void EffectDistortion::Leveller()
 {
-   double noiseFloor = DB_TO_LINEAR(mParams.mNoiseFloor);
-   int numPasses = mParams.mRepeats;
-   double fractionalPass = mParams.mParam1 / 100.0;
+   const auto& ms = mSettings;
+
+   double noiseFloor = DB_TO_LINEAR(ms.mNoiseFloor);
+   int numPasses = ms.mRepeats;
+   double fractionalPass = ms.mParam1 / 100.0;
 
    const int numPoints = 6;
    const double gainFactors[numPoints] = { 0.80, 1.00, 1.20, 1.20, 1.00, 0.80 };
@@ -1179,7 +1235,9 @@ void EffectDistortion::Leveller()
 
 void EffectDistortion::Rectifier()
 {
-   double amount = (mParams.mParam1 / 50.0) - 1;
+   const auto& ms = mSettings;
+
+   double amount = (ms.mParam1 / 50.0) - 1;
    double stepsize = 1.0 / STEPS;
    int index = STEPS;
 
@@ -1226,12 +1284,14 @@ float EffectDistortion::WaveShaper(float sample)
    double xOffset;
    double amount = 1;
 
-   switch (mParams.mTableChoiceIndx)
+   const auto& ms = mSettings;
+
+   switch (ms.mTableChoiceIndx)
    {
       // Do any pre-processing here
       case kHardClip:
          // Pre-gain
-         amount = mParams.mParam1 / 100.0;
+         amount = ms.mParam1 / 100.0;
          sample *= 1+amount;
          break;
       default: break;

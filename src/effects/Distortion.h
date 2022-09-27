@@ -44,27 +44,38 @@ public:
    double queuetotal;
 };
 
+
+struct EffectDistortionSettings
+{
+   static constexpr int    mDefaultTableChoiceIndx = 0;
+   static constexpr bool   mDefaultDCBlock         = false;
+   static constexpr double mDefaultThreshold_dB    = -6.0;
+   static constexpr double mDefaultNoiseFloor      = -70.0;
+   static constexpr double mDefaultParam1          =  50.0;
+   static constexpr double mDefaultParam2          =  50.0;
+   static constexpr int    mDefaultRepeats         = 1;
+
+   int    mTableChoiceIndx{ mDefaultTableChoiceIndx };
+   bool   mDCBlock        { mDefaultDCBlock };
+   double mThreshold_dB   { mDefaultThreshold_dB };
+   double mNoiseFloor     { mDefaultNoiseFloor };
+   double mParam1         { mDefaultParam1 };
+   double mParam2         { mDefaultParam2 };
+   int    mRepeats        { mDefaultRepeats };
+};
+
+
 class EffectDistortion final : public StatefulPerTrackEffect
 {
 public:
    struct Params;
-   static inline Params *
-   FetchParameters(EffectDistortion &e, EffectSettings &) { return &e.mParams; }
+   static inline EffectDistortionSettings*
+   FetchParameters(EffectDistortion &e, EffectSettings &) { return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDistortion();
    virtual ~EffectDistortion();
 
-   struct Params
-   {
-      int    mTableChoiceIndx;
-      bool   mDCBlock;
-      double mThreshold_dB;
-      double mNoiseFloor;
-      double mParam1;
-      double mParam2;
-      int    mRepeats;
-   };
 
    // ComponentInterface implementation
 
@@ -215,7 +226,7 @@ private:
    wxString mOldParam2Txt;
    wxString mOldRepeatsTxt;
 
-   Params mParams;
+   EffectDistortionSettings mSettings;
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
@@ -239,20 +250,33 @@ private:
    static const EnumValueSymbol kTableTypeStrings[nTableTypes];
 
 // (Note: 'Repeats' is the total number of times the effect is applied.)
-static constexpr EnumParameter TableTypeIndx{ &EffectDistortion::Params::mTableChoiceIndx,
-   L"Type",           0,       0,      nTableTypes-1,    1, kTableTypeStrings, nTableTypes    };
-static constexpr EffectParameter DCBlock{ &EffectDistortion::Params::mDCBlock,
-   L"DC Block",      false,   false,   true,                1    };
-static constexpr EffectParameter Threshold_dB{ &EffectDistortion::Params::mThreshold_dB,
-   L"Threshold dB",  -6.0,  -100.0,     0.0,             1000.0f };
-static constexpr EffectParameter NoiseFloor{ &EffectDistortion::Params::mNoiseFloor,
-   L"Noise Floor",   -70.0,  -80.0,   -20.0,                1    };
-static constexpr EffectParameter Param1{ &EffectDistortion::Params::mParam1,
-   L"Parameter 1",    50.0,    0.0,   100.0,                1    };
-static constexpr EffectParameter Param2{ &EffectDistortion::Params::mParam2,
-   L"Parameter 2",    50.0,    0.0,   100.0,                1    };
-static constexpr EffectParameter Repeats{ &EffectDistortion::Params::mRepeats,
-   L"Repeats",        1,       0,       5,                  1    };
+static constexpr EnumParameter TableTypeIndx
+{ &EffectDistortionSettings::mTableChoiceIndx, L"Type",
+   EffectDistortionSettings::mDefaultTableChoiceIndx,    0,      nTableTypes-1,    1, kTableTypeStrings, nTableTypes    };
+
+static constexpr EffectParameter DCBlock
+{ &EffectDistortionSettings::mDCBlock, L"DC Block",
+   EffectDistortionSettings::mDefaultDCBlock ,   false,   true,                1    };
+
+static constexpr EffectParameter Threshold_dB
+{ &EffectDistortionSettings::mThreshold_dB, L"Threshold dB",
+   EffectDistortionSettings::mDefaultThreshold_dB,  -100.0,     0.0,             1000.0f };
+
+static constexpr EffectParameter NoiseFloor
+{ &EffectDistortionSettings::mNoiseFloor, L"Noise Floor",
+   EffectDistortionSettings::mDefaultNoiseFloor ,  -80.0,   -20.0,                1    };
+
+static constexpr EffectParameter Param1
+{ &EffectDistortionSettings::mParam1, L"Parameter 1",
+   EffectDistortionSettings::mDefaultParam1,    0.0,   100.0,                1    };
+
+static constexpr EffectParameter Param2
+{ &EffectDistortionSettings::mParam2, L"Parameter 2",    50.0,    0.0,   100.0,                1    };
+
+static constexpr EffectParameter Repeats{
+   &EffectDistortionSettings::mRepeats,  L"Repeats",
+    EffectDistortionSettings::mDefaultRepeats,       0,       5,                  1    };
+
 };
 
 #endif
