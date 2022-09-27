@@ -343,7 +343,7 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
       wxString clips, peakString, rmsString;
       for (size_t i = 0; i < mCurNumChannels; i++) {
          auto ca = mCurTrack[i]->SortedClipArray();
-         float maxPeak = 0.0;
+         float peak = 0.0;
 
          // A list of clips for mono, or an array of lists for multi-channel.
          if (mCurNumChannels > 1) {
@@ -368,12 +368,13 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
          float min, max;
          auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
          min = pair.first, max = pair.second;
-         maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
-         maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
+         peak = wxMax(fabs(min), fabs(max));
+         maxPeakLevel = wxMax(maxPeakLevel, peak);
 
          // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
-         if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
-            peakString += wxString::Format(wxT("(float %s) "), Internat::ToString(maxPeak));
+         if (!std::isinf(peak) && !std::isnan(peak) && (peak < FLT_MAX)) {
+            peakString +=
+               wxString::Format(wxT("(float %s) "), Internat::ToString(peak));
          } else {
             peakString += wxT("nil ");
          }
