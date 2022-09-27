@@ -172,8 +172,8 @@ struct EffectPhaser::Instance
 
    float DoFilter(EffectPhaserState& data, float in);
 
-   EffectPhaserState mMaster;
-   std::vector<EffectPhaserState> mSlaves;
+   EffectPhaserState mState;
+   std::vector<EffectPhaser::Instance> mSlaves;
 };
 
 
@@ -238,16 +238,16 @@ unsigned EffectPhaser::Instance::GetAudioOutCount() const
 bool EffectPhaser::Instance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames chanMap)
 {
-   InstanceInit(settings, mMaster, sampleRate);
+   InstanceInit(settings, mState, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
-      mMaster.phase += M_PI;
+      mState.phase += M_PI;
    return true;
 }
 
 size_t EffectPhaser::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
 bool EffectPhaser::Instance::RealtimeInitialize(EffectSettings&, double)
@@ -260,9 +260,9 @@ bool EffectPhaser::Instance::RealtimeInitialize(EffectSettings&, double)
 bool EffectPhaser::Instance::RealtimeAddProcessor(
    EffectSettings& settings, unsigned, float sampleRate)
 {
-   EffectPhaserState slave;
+   EffectPhaser::Instance slave(mProcessor);
 
-   InstanceInit(settings, slave, sampleRate);
+   InstanceInit(settings, slave.mState, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -281,7 +281,7 @@ size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &set
 {
    if (group >= mSlaves.size())
       return 0;
-   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
 }
 
 // Effect implementation
