@@ -198,6 +198,8 @@ class AUDACITY_DLL_API MeterPanel final
    void Increase(float steps);
    void Decrease(float steps);
    void UpdateSliderControl();
+   
+   void ShowMenu(const wxPoint & pos);
 
  private:
    void UpdatePrefs() override;
@@ -233,7 +235,6 @@ class AUDACITY_DLL_API MeterPanel final
    //
    // Pop-up menu
    //
-   void ShowMenu(const wxPoint & pos);
    void OnMonitor(wxCommandEvent &evt);
    void OnPreferences(wxCommandEvent &evt);
 

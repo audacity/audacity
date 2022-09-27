@@ -19,6 +19,7 @@
 
 
 #include "MeterToolBar.h"
+#include "widgets/AButton.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -63,9 +64,6 @@ MeterToolBar::MeterToolBar(AudacityProject &project, int type)
    } else {
       mWhichMeters = kWithPlayMeter | kWithRecordMeter;
    }
-   mSizer = NULL;
-   mPlayMeter = NULL;
-   mRecordMeter = NULL;
 }
 
 MeterToolBar::~MeterToolBar()
@@ -146,43 +144,87 @@ void MeterToolBar::ReCreateButtons()
 void MeterToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   Add((mSizer = safenew wxGridBagSizer()), 1, wxEXPAND);
 
    if( mWhichMeters & kWithRecordMeter ){
       //JKC: Record on left, playback on right.  Left to right flow
       //(maybe we should do it differently for Arabic language :-)  )
+      mRecordSetupButton = safenew AButton(this);
+      mRecordSetupButton->SetLabel({});
+      mRecordSetupButton->SetName(_("Record"));
+      mRecordSetupButton->SetImages(
+         theTheme.Image(bmpUpButtonSmall),
+         theTheme.Image(bmpHiliteUpButtonSmall),
+         theTheme.Image(bmpDownButtonSmall),
+         theTheme.Image(bmpHiliteButtonSmall),
+         theTheme.Image(bmpUpButtonSmall));
+      mRecordSetupButton->SetIcon(theTheme.Image(bmpMic));
+      mRecordSetupButton->SetButtonType(AButton::Type::FrameButton);
+      mRecordSetupButton->SetMinSize({toolbarSingle, toolbarSingle});
+      mRecordSetupButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
+      {
+         mRecordMeter->ShowMenu(
+            mRecordMeter->ScreenToClient(
+               ClientToScreen(mRecordSetupButton->GetClientRect().GetRightBottom())
+            )
+         );
+      });
+
+
       mRecordMeter = safenew MeterPanel( &mProject,
                                 this,
                                 wxID_ANY,
                                 true,
                                 wxDefaultPosition,
-                                wxSize( 260, 28 ) );
+                                wxSize( 260, toolbarSingle) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.*/
       mRecordMeter->SetName( XO("Record Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
       mRecordMeter->SetLabel( XO("Meter-Record") );
-      mSizer->Add( mRecordMeter, wxGBPosition( 0, 0 ), wxDefaultSpan, wxEXPAND );
    }
 
    if( mWhichMeters & kWithPlayMeter ){
+      mPlaySetupButton = safenew AButton(this);
+      mPlaySetupButton->SetLabel({});
+      mPlaySetupButton->SetName(_("Playback"));
+      mPlaySetupButton->SetImages(
+         theTheme.Image(bmpUpButtonSmall),
+         theTheme.Image(bmpHiliteUpButtonSmall),
+         theTheme.Image(bmpDownButtonSmall),
+         theTheme.Image(bmpHiliteButtonSmall),
+         theTheme.Image(bmpUpButtonSmall));
+      mPlaySetupButton->SetIcon(theTheme.Image(bmpSpeaker));
+      mPlaySetupButton->SetButtonType(AButton::Type::FrameButton);
+      mPlaySetupButton->SetMinSize({toolbarSingle, toolbarSingle});
+      mPlaySetupButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
+      {
+         mPlayMeter->ShowMenu(
+            mPlayMeter->ScreenToClient(
+               ClientToScreen(mPlaySetupButton->GetClientRect().GetRightBottom())
+            )
+         );
+      });
+
       mPlayMeter = safenew MeterPanel( &mProject,
                               this,
                               wxID_ANY,
                               false,
                               wxDefaultPosition,
-                              wxSize( 260, 28 ) );
+                              wxSize( 260, toolbarSingle ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
       mPlayMeter->SetName( XO("Play Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
       mPlayMeter->SetLabel( XO("Meter-Play"));
-      mSizer->Add( mPlayMeter, wxGBPosition( (mWhichMeters & kWithRecordMeter)?1:0, 0 ), wxDefaultSpan, wxEXPAND );
    }
 
+   RebuildLayout(true);
+
    RegenerateTooltips();
+
+   Layout();
 }
 
 void MeterToolBar::UpdatePrefs()
@@ -215,54 +257,62 @@ void MeterToolBar::RegenerateTooltips()
 #endif
 }
 
-void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
+void MeterToolBar::RebuildLayout(bool force)
 {
-   event.Skip();
-   int width, height;
+   const auto size = GetSize();
+   const auto isHorizontal = size.x > size.y;
 
-   // We can be resized before populating...protect against it
-   if( !mSizer ) {
-      return;
-   }
-
-   // Update the layout
-   Layout();
-
-   // Get the usable area
-   wxSize sz = GetSizer()->GetSize();
-   width = sz.x; height = sz.y;
-
-   int nMeters = 
-      ((mRecordMeter ==NULL) ? 0:1) +
-      ((mPlayMeter ==NULL) ? 0:1);
-
-   bool bHorizontal = ( width > height );
-   bool bEndToEnd   = ( nMeters > 1 ) && wxMin( width, height ) < (60 * nMeters);
-
-   // Default location for second meter
-   wxGBPosition pos( 0, 0 );
-   // If 2 meters, share the height or width.
-   if( nMeters > 1 ){
-      if( bHorizontal ^ bEndToEnd ){
-         height /= nMeters;
-         pos = wxGBPosition( 1, 0 );
-      } else {
-         width /= nMeters;
-         pos = wxGBPosition( 0, 1 );
+   if(!force)
+   {
+      const auto sizerOrientation = mWhichMeters == kCombinedMeter
+         ? (isHorizontal ? wxVERTICAL : wxHORIZONTAL)
+         : (isHorizontal ? wxHORIZONTAL : wxVERTICAL);
+      
+      if(mRootSizer->GetOrientation() == sizerOrientation)
+      {
+         Layout();
+         return;
       }
    }
 
-   if( mRecordMeter ) {
-      mRecordMeter->SetMinSize( wxSize( width, height ));
+   if(mRootSizer != nullptr)
+      GetSizer()->Remove(mRootSizer);
+
+   std::unique_ptr<wxBoxSizer> playBarSizer;
+   std::unique_ptr<wxBoxSizer> recordBarSizer;
+   if(mWhichMeters & kWithPlayMeter)
+   {
+      playBarSizer = std::make_unique<wxBoxSizer>(isHorizontal ? wxHORIZONTAL : wxVERTICAL);
+      playBarSizer->Add(mPlaySetupButton, 0, wxEXPAND);
+      playBarSizer->Add(mPlayMeter, 1, wxEXPAND);
    }
-   if( mPlayMeter ) {
-      mPlayMeter->SetMinSize( wxSize( width, height));
-      mSizer->SetItemPosition( mPlayMeter, pos );
+   if(mWhichMeters & kWithRecordMeter)
+   {
+      recordBarSizer = std::make_unique<wxBoxSizer>(isHorizontal ? wxHORIZONTAL : wxVERTICAL);
+      recordBarSizer->Add(mRecordSetupButton, 0, wxEXPAND);
+      recordBarSizer->Add(mRecordMeter, 1, wxEXPAND);
    }
 
-   // And make it happen
-   Layout();
-   Fit();
+   if(playBarSizer && recordBarSizer)
+   {
+      Add(mRootSizer = safenew wxBoxSizer(isHorizontal ? wxVERTICAL : wxHORIZONTAL), 1, wxEXPAND);
+      mRootSizer->Add(playBarSizer.release());
+      mRootSizer->Add(recordBarSizer.release());
+   }
+   else if(playBarSizer)
+      Add(mRootSizer = playBarSizer.release(), 1, wxEXPAND);
+   else if(recordBarSizer)
+      Add(mRootSizer = recordBarSizer.release(), 1, wxEXPAND);
+}
+
+
+void MeterToolBar::OnSize( wxSizeEvent & event)
+{
+   event.Skip();
+
+   if(mRootSizer == nullptr)
+      return;// We can be resized before populating...protect against it
+   RebuildLayout(false);
 }
 
 bool MeterToolBar::Expose( bool show )
