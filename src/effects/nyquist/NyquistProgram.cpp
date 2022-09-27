@@ -399,6 +399,8 @@ bool NyquistProgram::ProcessOne(NyquistEnvironment &environment,
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
                                  Internat::ToString(maxPeakLevel));
       }
+      else
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* NIL 'PEAK-LEVEL)"));
 
       (mCurNumChannels > 1)?
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'RMS)\n"), rmsString) :
