@@ -491,6 +491,14 @@ void MeterPanel::UpdateSliderControl()
 
    if (mSlider && (mSlider->Get() != volume))
       mSlider->Set(volume);
+
+#if wxUSE_ACCESSIBILITY
+   GetAccessible()->NotifyEvent( wxACC_EVENT_OBJECT_VALUECHANGE,
+                                 this,
+                                 wxOBJID_CLIENT,
+                                 wxACC_SELF );
+#endif
+
 #endif // USE_PORTMIXER
 }
 
@@ -795,12 +803,6 @@ void MeterPanel::OnKeyDown(wxKeyEvent &evt)
       mHadKeyDown = true;
 #endif
       break;
-   case WXK_RIGHT:
-      Navigate(wxNavigationKeyEvent::IsForward);
-      break;
-   case WXK_LEFT:
-      Navigate(wxNavigationKeyEvent::IsBackward);
-      break;
    case WXK_TAB:
       if (evt.ShiftDown())
          Navigate(wxNavigationKeyEvent::IsBackward);
@@ -808,7 +810,7 @@ void MeterPanel::OnKeyDown(wxKeyEvent &evt)
          Navigate(wxNavigationKeyEvent::IsForward);
       break;
    default:
-      evt.Skip();
+      mSlider->OnKeyDown(evt);
       break;
    }
 }
@@ -2280,7 +2282,7 @@ wxAccStatus MeterAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
    if (m->mAccSilent)
       *role = wxROLE_NONE;    // Jaws and nvda both read nothing
    else
-      *role = wxROLE_SYSTEM_BUTTONDROPDOWN;
+      *role = wxROLE_SYSTEM_SLIDER;
 
    return wxACC_OK;
 }
@@ -2311,9 +2313,18 @@ wxAccStatus MeterAx::GetState(int WXUNUSED(childId), long* state)
 
 // Returns a localized string representing the value for the object
 // or child.
-wxAccStatus MeterAx::GetValue(int WXUNUSED(childId), wxString* WXUNUSED(strValue))
+wxAccStatus MeterAx::GetValue(int WXUNUSED(childId), wxString* strValue)
 {
-   return wxACC_NOT_SUPPORTED;
+   MeterPanel *m = wxDynamicCast(GetWindow(), MeterPanel);
+   if(m->mAccSilent)
+   {
+      strValue->Clear();
+      return wxACC_OK;
+   }
+
+   auto value = m->GetDBRange() - m->mSlider->Get() * m->GetDBRange();
+   *strValue = wxString::Format("%2.f", value);
+   return wxACC_OK;
 }
 
 #endif
