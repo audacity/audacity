@@ -154,6 +154,16 @@ bool EffectInstance::RealtimeResume()
    return true;
 }
 
+auto EffectInstance::MakeMessage() const -> Message
+{
+   return {};
+}
+
+bool EffectInstance::MoveMessageContents(Message &&, Message &, bool) const
+{
+   return true;
+}
+
 bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;

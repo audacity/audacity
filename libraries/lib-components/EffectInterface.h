@@ -464,6 +464,31 @@ public:
    //! describe the transitions of settings (instead of their states)
    using Message = EffectSettingsAccess::Message;
 
+   //! Called on the main thread, in which the result may be copied
+   /*! Default implementation returns a null */
+   virtual Message MakeMessage() const;
+
+   //! Update one Message object from another, which is then left "empty"
+   /*!
+    This may run in a worker thread, and should avoid allocating and freeing.
+    Therefore do not copy the underlying std::any, or grow or clear any
+    containers in it, but assign the preallocated contents of one container from
+    another, which then should be reassigned to an initial state.
+
+    Assume that src and dst were created and previously modified only by `this`
+
+    Default implementation does nothing and returns true
+
+    @pre `src.has_value() && dst.has_value()`
+    @param src settings to copy from
+    @param dst settings to copy into
+    @param merge if true, should keep values in dst that were undefined in src
+    else, should invalidate such values in dst
+    @return success
+    */
+   virtual bool MoveMessageContents(Message &&src, Message &dst, bool merge)
+      const;
+
    // TODO make it just an alias for Message
    struct MessagePackage { EffectSettings &settings; Message &message; };
 
