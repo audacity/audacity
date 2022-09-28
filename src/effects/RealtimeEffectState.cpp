@@ -28,10 +28,12 @@ public:
    {
       // Clean initial state of the counter
       state.mMainSettings.counter = 0;
-      Initialize(state.mMainSettings.settings, state.mMovedOutputs.get());
+      Initialize(state.mMainSettings.settings,
+         state.mMessage.get(), state.mMovedOutputs.get());
    }
 
    void Initialize(const EffectSettings &settings,
+      const EffectInstance::Message *,
       const EffectOutputs *pOutputs)
    {
       mLastSettings = { settings, 0 };
