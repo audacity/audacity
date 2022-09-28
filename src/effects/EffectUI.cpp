@@ -165,7 +165,7 @@ public:
    EffectSettingsAccessTee(EffectSettingsAccess &main,
       const std::shared_ptr<EffectSettingsAccess> &pSide = {});
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings, Message message) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -187,12 +187,12 @@ const EffectSettings &EffectSettingsAccessTee::Get() {
    return mpMain->Get();
 }
 
-void EffectSettingsAccessTee::Set(EffectSettings &&settings) {
-   // Move a copy of the given settings into the side
+void EffectSettingsAccessTee::Set(EffectSettings &&settings, Message message) {
+   // Move copies of the given settings and message into the side
    if (auto pSide = mwSide.lock())
-      pSide->Set(EffectSettings{ settings });
-   // Move the given settings through
-   mpMain->Set(std::move(settings));
+      pSide->Set(EffectSettings{ settings }, Message{ message });
+   // Move the given settings and message through
+   mpMain->Set(std::move(settings), std::move(message));
 }
 
 void EffectSettingsAccessTee::Flush()

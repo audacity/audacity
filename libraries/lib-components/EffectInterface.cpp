@@ -24,7 +24,7 @@ const EffectSettings &SimpleEffectSettingsAccess::Get()
    return mSettings;
 }
 
-void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
+void SimpleEffectSettingsAccess::Set(EffectSettings &&settings, Message)
 {
    mSettings = std::move(settings);
 }

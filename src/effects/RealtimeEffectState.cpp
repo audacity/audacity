@@ -176,7 +176,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       static EffectSettings empty;
       return empty;
    }
-   void Set(EffectSettings &&settings) override {
+   void Set(EffectSettings &&settings, Message) override {
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;

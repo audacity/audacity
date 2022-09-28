@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <type_traits>
 #include <wx/event.h>
 
 class ShuttleGui;
@@ -113,9 +114,14 @@ struct EffectOutputs : audacity::TypedAny<EffectOutputs> {
 class COMPONENTS_API EffectSettingsAccess
    : public std::enable_shared_from_this<EffectSettingsAccess> {
 public:
+   //! Type of messages to send from main thread to processing
+   struct Message : audacity::TypedAny<Message> {
+      using TypedAny::TypedAny;
+   };
+
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
-   virtual void Set(EffectSettings &&settings) = 0;
+   virtual void Set(EffectSettings &&settings, Message message = {}) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
    virtual void Flush() = 0;
@@ -125,15 +131,24 @@ public:
 
    //! Do a correct read-modify-write of settings
    /*!
-    @param function takes EffectSettings & and its return is ignored.
+    @param function takes EffectSettings & and its return is a Message (which
+    may be an empty any) or void.
     If it throws an exception, then the settings will not be updated.
     Thus, a strong exception safety guarantee.
     */
    template<typename Function>
    void ModifySettings(Function &&function) {
       auto settings = this->Get();
-      std::forward<Function>(function)(settings);
-      this->Set(std::move(settings));
+      using Result = std::invoke_result_t<Function, EffectSettings &>;
+      if constexpr (std::is_void_v<Result>){
+         std::forward<Function>(function)(settings);
+         this->Set(std::move(settings));
+      }
+      else {
+         static_assert(std::is_same_v<Result, Message>);
+         auto result = std::forward<Function>(function)(settings);
+         this->Set(std::move(settings), std::move(result));
+      }
    }
 };
 
@@ -145,7 +160,7 @@ public:
       : mSettings{settings} {}
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings, Message message) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
