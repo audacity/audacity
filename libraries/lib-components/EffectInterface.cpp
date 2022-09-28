@@ -154,6 +154,11 @@ bool EffectInstance::RealtimeResume()
    return true;
 }
 
+auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
+{
+   return nullptr;
+}
+
 bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;

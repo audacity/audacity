@@ -154,6 +154,31 @@ public:
    public:
       virtual ~Message();
       virtual std::unique_ptr<Message> Clone() const = 0;
+
+      //! Update one Message object from another, which is then left "empty"
+      /*!
+       This may run in a worker thread, and should avoid allocating and freeing.
+       Therefore do not copy, grow or clear any containers in it, but assign the
+       preallocated contents of *this from another, which then should be
+       reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Assign(Message &&src) = 0;
+
+      //! Combine one Message object with another, which is then left "empty"
+      /*!
+       This runs in the main thread.
+       Combine the contents of one message into *this, and then the other
+       should be reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Merge(Message &&src) = 0;
    };
 
    virtual ~EffectSettingsAccess();
@@ -477,6 +502,10 @@ public:
    //! Type of messages to send from main thread to processing, which can
    //! describe the transitions of settings (instead of their states)
    using Message = EffectSettingsAccess::Message;
+
+   //! Called on the main thread, in which the result may be cloned
+   /*! Default implementation returns a null */
+   virtual std::unique_ptr<Message> MakeMessage() const;
 
    // TODO make it just an alias for Message *
    struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
