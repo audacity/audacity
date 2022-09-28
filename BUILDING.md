@@ -310,3 +310,14 @@ $ cmake --build build.arm64 --config Release
 
 This will place ARM64 version into `build.arm64/Release/`.
 
+### Building with VST3SDK without Conan (Linux only)
+
+Set one of the following environment variables to the path to the VST3 SDK (i.e. the folder containing the `pluginterfaces` folder):
+
+* `VST3_SDK_DIR`
+* `VST3SDK_PATH`
+* `VST3SDK`
+
+or copy the VST3 SDK to `vst3sdk` directory in the Audacity source tree.
+
+Pass `-Daudacity_use_vst3sdk=system` to CMake. CMake will build the SDK during the configuration.
