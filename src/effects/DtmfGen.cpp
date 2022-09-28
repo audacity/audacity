@@ -459,6 +459,7 @@ bool EffectDtmf::Validator::ValidateUI()
       // recalculate to make sure all values are up-to-date. This is especially
       // important if the user did not change any values in the dialog
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
 
    return true;
@@ -666,6 +667,7 @@ void EffectDtmf::Validator::OnSequence(wxCommandEvent & WXUNUSED(evt))
       auto &dtmfSettings = mSettings;
       dtmfSettings.dtmfSequence = mDtmfSequenceT->GetValue();
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
    DoUpdateUI();
 }
@@ -677,6 +679,7 @@ void EffectDtmf::Validator::OnDuration(wxCommandEvent & WXUNUSED(evt))
       auto &effect = GetEffect();
       settings.extra.SetDuration(mDtmfDurationT->GetValue());
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
    DoUpdateUI();
 }
@@ -687,6 +690,7 @@ void EffectDtmf::Validator::OnDutyCycle(wxCommandEvent & evt)
       auto &dtmfSettings = mSettings;
       dtmfSettings.dtmfDutyCycle = (double) evt.GetInt() / DutyCycle.scale;
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
    DoUpdateUI();
 }

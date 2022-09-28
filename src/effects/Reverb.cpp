@@ -176,6 +176,7 @@ bool EffectReverb::Validator::ValidateUI()
          // pass back the modified settings to the MessageBuffer
 
          EffectReverb::GetSettings(settings) = mSettings;
+         return nullptr;
       }
    );
 

@@ -236,6 +236,7 @@ bool EffectEcho::Validator::ValidateUI()
       // pass back the modified settings to the MessageBuffer
 
       EffectEcho::GetSettings(settings) = mSettings;
+      return nullptr;
    }
    );
 
