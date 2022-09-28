@@ -154,7 +154,7 @@ bool EffectInstance::RealtimeResume()
    return true;
 }
 
-bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }

@@ -79,9 +79,10 @@ bool StatefulEffectBase::Instance::RealtimeResume()
    return GetEffect().RealtimeResume();
 }
 
-bool StatefulEffectBase::Instance::RealtimeProcessStart(EffectSettings &settings)
+bool StatefulEffectBase::Instance::RealtimeProcessStart(
+   MessagePackage &package)
 {
-   return GetEffect().RealtimeProcessStart(settings);
+   return GetEffect().RealtimeProcessStart(package);
 }
 
 size_t StatefulEffectBase::Instance::RealtimeProcess(size_t group,
@@ -164,7 +165,7 @@ bool StatefulEffectBase::RealtimeResume()
    return true;
 }
 
-bool StatefulEffectBase::RealtimeProcessStart(EffectSettings &settings)
+bool StatefulEffectBase::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
