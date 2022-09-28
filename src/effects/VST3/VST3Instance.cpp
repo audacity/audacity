@@ -109,8 +109,9 @@ bool VST3Instance::RealtimeProcessEnd(EffectSettings& settings) noexcept
    return true;
 }
 
-bool VST3Instance::RealtimeProcessStart(EffectSettings& settings)
+bool VST3Instance::RealtimeProcessStart(MessagePackage& package)
 {
+   auto &settings = package.settings;
    mWrapper->ProcessBlockStart(settings);
    for (auto &pProcessor : mProcessors)
       pProcessor->mWrapper->ProcessBlockStart(settings);

@@ -52,10 +52,10 @@ public:
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
    bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
+   bool RealtimeProcessStart(MessagePackage& package) override;
    size_t RealtimeProcess(size_t group, EffectSettings& settings, const float* const* inBuf, float* const* outBuf,
       size_t numSamples) override;
    bool RealtimeProcessEnd(EffectSettings& settings) noexcept override;
-   bool RealtimeProcessStart(EffectSettings& settings) override;
    bool RealtimeResume() override;
    bool RealtimeSuspend() override;
    SampleCount GetLatency(const EffectSettings& settings, double sampleRate)
