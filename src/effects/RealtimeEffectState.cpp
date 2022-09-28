@@ -28,12 +28,13 @@ public:
    {
       // Clean initial state of the counter
       state.mMainSettings.counter = 0;
-      Initialize(state.mMainSettings, state.mMovedOutputs);
+      Initialize(state.mMainSettings.settings, state.mMovedOutputs);
    }
 
-   void Initialize(SettingsAndCounter &settings, const EffectOutputs &outputs)
+   void Initialize(const EffectSettings &settings,
+      const EffectOutputs &outputs)
    {
-      mLastSettings = settings;
+      mLastSettings = { settings, 0 };
       // Initialize each message buffer with two copies
       mChannelToMain.Write(ToMainSlot{ { 0, outputs } });
       mChannelToMain.Write(ToMainSlot{ { 0, outputs } });
@@ -103,9 +104,9 @@ public:
    struct FromMainSlot {
       // For initialization of the channel
       FromMainSlot() = default;
-      explicit FromMainSlot(const SettingsAndCounter &settings)
+      explicit FromMainSlot(const EffectSettings &settings)
          // Copy std::any
-         : mSettings{ settings }
+         : mSettings{ settings, 0 }
       {}
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
@@ -159,7 +160,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          // and no fear of data races
          // Clean initial state of the counter
          lastSettings.counter = 0;
-         state.Initialize(lastSettings, state.mState.mMovedOutputs);
+         state.Initialize(lastSettings.settings, state.mState.mMovedOutputs);
          state.mCounter = lastSettings.counter;
          return true;
       }
