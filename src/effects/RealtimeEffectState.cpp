@@ -28,14 +28,14 @@ public:
    {
       // Clean initial state of the counter
       state.mMainSettings.counter = 0;
-      Initialize(state.mMainSettings, state.mMovedOutputs.get());
+      Initialize(state.mMainSettings.settings, state.mMovedOutputs.get());
    }
 
-   void Initialize(SettingsAndCounter &settings,
+   void Initialize(const EffectSettings &settings,
       const EffectOutputs *pOutputs)
    {
-      mLastSettings = settings;
-      // Initialize each message buffer with two copies of settings
+      mLastSettings = { settings, 0 };
+      // Initialize each message buffer with two copies
       mChannelToMain.Write(ToMainSlot{ { 0,
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelToMain.Write(ToMainSlot{ { 0,
@@ -103,9 +103,9 @@ public:
    struct FromMainSlot {
       // For initialization of the channel
       FromMainSlot() = default;
-      explicit FromMainSlot(const SettingsAndCounter &settings)
+      explicit FromMainSlot(const EffectSettings &settings)
          // Copy std::any
-         : mSettings{ settings }
+         : mSettings{ settings, 0 }
       {}
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
