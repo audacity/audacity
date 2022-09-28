@@ -21,12 +21,15 @@ SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
 
 EffectOutputs::~EffectOutputs() = default;
 
+EffectSettingsAccess::Message::~Message() = default;
+
 const EffectSettings &SimpleEffectSettingsAccess::Get()
 {
    return mSettings;
 }
 
-void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
+void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
+   std::unique_ptr<Message>)
 {
    mSettings = std::move(settings);
 }

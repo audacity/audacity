@@ -120,6 +120,7 @@ bool EffectWahwah::Validator::ValidateUI()
       {
          // pass back the modified settings to the MessageBuffer
          GetSettings(settings) = mSettings;
+         return nullptr;
       }
    );
 

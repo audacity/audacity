@@ -175,7 +175,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       static EffectSettings empty;
       return empty;
    }
-   void Set(EffectSettings &&settings) override {
+   void Set(EffectSettings &&settings, std::unique_ptr<Message>) override {
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
@@ -515,6 +515,7 @@ void RealtimeEffectState::SetActive(bool active)
    auto access = GetAccess();
    access->ModifySettings([&](EffectSettings &settings) {
       settings.extra.SetActive(active);
+      return nullptr;
    });
    access->Flush();
 

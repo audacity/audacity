@@ -1524,6 +1524,7 @@ bool LadspaEffect::Validator::ValidateUI()
       if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
       GetSettings(settings) = mSettings;
+      return nullptr;
    });
    return true;
 }

@@ -138,6 +138,7 @@ bool LV2Validator::ValidateUI()
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
+      return nullptr;
    });
    return true;
 }
@@ -710,6 +711,7 @@ void LV2Validator::OnTrigger(wxCommandEvent &evt)
    auto & port = mPorts.mControlPorts[idx];
    mAccess.ModifySettings([&](EffectSettings &settings) {
       GetSettings(settings).values[idx] = port->mDef;
+      return nullptr;
    });
 }
 
@@ -718,6 +720,7 @@ void LV2Validator::OnToggle(wxCommandEvent &evt)
    size_t idx = evt.GetId() - ID_Toggles;
    mAccess.ModifySettings([&](EffectSettings &settings) {
       GetSettings(settings).values[idx] = evt.GetInt() ? 1.0 : 0.0;
+      return nullptr;
    });
 }
 
@@ -727,6 +730,7 @@ void LV2Validator::OnChoice(wxCommandEvent &evt)
    auto & port = mPorts.mControlPorts[idx];
    mAccess.ModifySettings([&](EffectSettings &settings) {
       GetSettings(settings).values[idx] = port->mScaleValues[evt.GetInt()];
+      return nullptr;
    });
 }
 
@@ -740,6 +744,7 @@ void LV2Validator::OnText(wxCommandEvent &evt)
       mAccess.ModifySettings([&](EffectSettings &settings) {
          GetSettings(settings).values[idx] =
             port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+         return nullptr;
       });
       SetSlider(state, ctrl);
    }
@@ -762,6 +767,7 @@ void LV2Validator::OnSlider(wxCommandEvent &evt)
    mAccess.ModifySettings([&](EffectSettings &settings) {
       GetSettings(settings).values[idx] =
          port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      return nullptr;
    });
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
@@ -933,6 +939,7 @@ void LV2Validator::suil_port_write(uint32_t port_index,
          mAccess.ModifySettings([&](EffectSettings &settings){
             GetSettings(settings).values[it->second] =
                *static_cast<const float *>(buffer);
+            return nullptr;
          });
    }
    // Handle event transfers

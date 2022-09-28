@@ -1122,6 +1122,7 @@ int NyquistEffect::ShowHostInterface(
          nyquistSettings.proxySettings = std::move(newSettings);
          nyquistSettings.proxyDebug = this->mDebug;
          nyquistSettings.controls = move(effect.mControls);
+         return nullptr;
       });
    }
    if (!pNewInstance)

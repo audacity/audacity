@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <type_traits>
 #include <wx/event.h>
 
 class ShuttleGui;
@@ -148,9 +149,17 @@ public:
 class COMPONENTS_API EffectSettingsAccess
    : public std::enable_shared_from_this<EffectSettingsAccess> {
 public:
+   //! Type of messages to send from main thread to processing
+   class COMPONENTS_API Message {
+   public:
+      virtual ~Message();
+      virtual std::unique_ptr<Message> Clone() const = 0;
+   };
+
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
-   virtual void Set(EffectSettings &&settings) = 0;
+   virtual void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
    virtual void Flush() = 0;
@@ -160,15 +169,16 @@ public:
 
    //! Do a correct read-modify-write of settings
    /*!
-    @param function takes EffectSettings & and its return is ignored.
+    @param function takes EffectSettings & and its return is a unique pointer
+    to Message, possibly null.
     If it throws an exception, then the settings will not be updated.
     Thus, a strong exception safety guarantee.
     */
    template<typename Function>
    void ModifySettings(Function &&function) {
       auto settings = this->Get();
-      std::forward<Function>(function)(settings);
-      this->Set(std::move(settings));
+      auto result = std::forward<Function>(function)(settings);
+      this->Set(std::move(settings), std::move(result));
    }
 };
 
@@ -180,7 +190,8 @@ public:
       : mSettings{settings} {}
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
