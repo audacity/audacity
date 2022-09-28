@@ -26,14 +26,14 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
+      // Clean initial state of the counter
+      state.mMainSettings.counter = 0;
       Initialize(state.mMainSettings, state.mMovedOutputs.get());
    }
 
    void Initialize(SettingsAndCounter &settings,
       const EffectOutputs *pOutputs)
    {
-      // Clean initial state of the counter
-      settings.counter = 0;
       mLastSettings = settings;
       // Initialize each message buffer with two copies of settings
       mChannelToMain.Write(ToMainSlot{ { 0,
