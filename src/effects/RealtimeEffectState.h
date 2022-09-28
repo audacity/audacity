@@ -116,6 +116,7 @@ public:
 
 private:
 
+   std::shared_ptr<EffectInstance> MakeInstance();
    std::shared_ptr<EffectInstance> EnsureInstance(double rate);
 
    struct Access;
@@ -159,6 +160,7 @@ private:
    //! Updated immediately by Access::Set in the main thread
    NonInterfering<SettingsAndCounter> mMainSettings;
 
+   EffectInstance::Message mMessage;
    EffectOutputs mMovedOutputs;
 
    /*! @name Members that are changed also in the worker thread
@@ -169,8 +171,9 @@ private:
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<SettingsAndCounter> mWorkerSettings;
 
+   EffectInstance::Message mMovedMessage;
    EffectOutputs mOutputs;
-
+ 
    //! How many samples must be discarded
    std::optional<EffectInstance::SampleCount> mLatency;
    //! Assigned in the worker thread at the start of each processing scope
