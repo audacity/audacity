@@ -28,10 +28,12 @@ public:
    {
       // Clean initial state of the counter
       state.mMainSettings.counter = 0;
-      Initialize(state.mMainSettings.settings, state.mMovedOutputs);
+      Initialize(state.mMainSettings.settings,
+         state.mMessage, state.mMovedOutputs);
    }
 
    void Initialize(const EffectSettings &settings,
+      const EffectInstance::Message &,
       const EffectOutputs &outputs)
    {
       mLastSettings = { settings, 0 };
@@ -160,7 +162,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          // and no fear of data races
          // Clean initial state of the counter
          lastSettings.counter = 0;
-         state.Initialize(lastSettings.settings, state.mState.mMovedOutputs);
+         state.Initialize(lastSettings.settings,
+            state.mState.mMessage, state.mState.mMovedOutputs);
          state.mCounter = lastSettings.counter;
          return true;
       }
