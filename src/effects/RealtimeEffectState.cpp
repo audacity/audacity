@@ -401,7 +401,11 @@ bool RealtimeEffectState::ProcessStart(bool running)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
-   return pInstance->RealtimeProcessStart(mWorkerSettings.settings);
+   // TODO get a real message from WorkerRead
+   EffectInstance::MessagePackage package{
+      mWorkerSettings.settings, nullptr
+   };
+   return pInstance->RealtimeProcessStart(package);
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))

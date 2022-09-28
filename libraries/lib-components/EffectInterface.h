@@ -474,12 +474,19 @@ public:
     */
    virtual bool RealtimeResume();
 
+   //! Type of messages to send from main thread to processing, which can
+   //! describe the transitions of settings (instead of their states)
+   using Message = EffectSettingsAccess::Message;
+
+   // TODO make it just an alias for Message *
+   struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeProcessStart(EffectSettings &settings);
+   virtual bool RealtimeProcessStart(MessagePackage &package);
 
    /*!
     @return success

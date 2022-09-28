@@ -201,7 +201,7 @@ bool LV2Instance::RealtimeResume()
    return true;
 }
 
-bool LV2Instance::RealtimeProcessStart(EffectSettings &)
+bool LV2Instance::RealtimeProcessStart(MessagePackage &)
 {
    mNumSamples = 0;
    for (auto & state : mPortStates.mAtomPortStates)
