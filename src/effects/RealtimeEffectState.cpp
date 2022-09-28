@@ -33,15 +33,15 @@ public:
    }
 
    void Initialize(const EffectSettings &settings,
-      const EffectInstance::Message &,
+      const EffectInstance::Message &message,
       const EffectOutputs &outputs)
    {
       mLastSettings = { settings, 0 };
       // Initialize each message buffer with two copies
       mChannelToMain.Write(ToMainSlot{ { 0, outputs } });
       mChannelToMain.Write(ToMainSlot{ { 0, outputs } });
-      mChannelFromMain.Write(FromMainSlot{ settings });
-      mChannelFromMain.Write(FromMainSlot{ settings });
+      mChannelFromMain.Write(FromMainSlot{ settings, message });
+      mChannelFromMain.Write(FromMainSlot{ settings, message });
    }
 
    void MainRead() {
@@ -104,34 +104,39 @@ public:
    };
 
    struct FromMainSlot {
+      struct Message : SettingsAndCounter {
+         EffectInstance::Message message;
+      };
+
       // For initialization of the channel
       FromMainSlot() = default;
-      explicit FromMainSlot(const EffectSettings &settings)
+      explicit FromMainSlot(const EffectSettings &settings,
+         const EffectInstance::Message &message)
          // Copy std::any
-         : mSettings{ settings, 0 }
+         : mMessage{ settings, 0, message }
       {}
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
       // Main thread writes the slot
       FromMainSlot& operator=(SettingsAndCounter &&settings) {
-         mSettings.swap(settings);
+         mMessage.SettingsAndCounter::swap(settings);
          return *this;
       }
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
          const EffectSettingsManager &effect, SettingsAndCounter &settings) {
-         if(slot.mSettings.counter == settings.counter)
+         if(slot.mMessage.counter == settings.counter)
             return;//copy once
 
-         settings.counter = slot.mSettings.counter;
+         settings.counter = slot.mMessage.counter;
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(
-               slot.mSettings.settings, settings.settings);
-            settings.settings.extra = slot.mSettings.settings.extra;
+               slot.mMessage.settings, settings.settings);
+            settings.settings.extra = slot.mMessage.settings.extra;
       } };
 
-      SettingsAndCounter mSettings;
+      Message mMessage;
    };
 
    const EffectSettingsManager &mEffect;
