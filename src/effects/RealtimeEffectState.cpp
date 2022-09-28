@@ -26,13 +26,13 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
+      // Clean initial state of the counter
+      state.mMainSettings.counter = 0;
       Initialize(state.mMainSettings, state.mMovedOutputs);
    }
 
    void Initialize(SettingsAndCounter &settings, const EffectOutputs &outputs)
    {
-      // Clean initial state of the counter
-      settings.counter = 0;
       mLastSettings = settings;
       // Initialize each message buffer with two copies
       mChannelToMain.Write(ToMainSlot{ { 0, outputs } });
@@ -157,6 +157,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       if (!state.mState.mInitialized) {
          // not relying on the other thread to make progress
          // and no fear of data races
+         // Clean initial state of the counter
+         lastSettings.counter = 0;
          state.Initialize(lastSettings, state.mState.mMovedOutputs);
          state.mCounter = lastSettings.counter;
          return true;
