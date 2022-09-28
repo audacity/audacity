@@ -377,15 +377,18 @@ void AudioSetupToolBar::UpdatePrefs()
       }
    }
 
-   long oldChannels;
+   long oldChannels = 0;
    for (const auto & item : mInputChannels->GetMenuItems()) {
       if (item->IsChecked())
          oldChannels = item->GetId() - kInputChannels + 1;
    }
 
    auto newChannels = AudioIORecordChannels.ReadWithDefault(0);
-   if (newChannels > 0 && oldChannels != newChannels)
-      mInputChannels->FindChildItem(kInputChannels + newChannels - 1)->Check();
+   if (newChannels > 0 && oldChannels != newChannels) {
+      auto item = mInputChannels->FindChildItem(kInputChannels + newChannels - 1);
+      if (item != nullptr)
+         item->Check();
+   }
 
    selectedHost = GetSelectedRadioItemLabel(*mHost);
    if (!hostName.empty() && selectedHost && selectedHost != hostName) {
@@ -624,7 +627,9 @@ void AudioSetupToolBar::FillInputChannels()
             newChannels = oldChannels;
          }
          if (newChannels >= 1) {
-            mInputChannels->FindItem(kInputChannels + newChannels - 1)->Check();
+            auto item = mInputChannels->FindItem(kInputChannels + newChannels - 1);
+            if (item != nullptr)
+               item->Check();
          }
          AudioIORecordChannels.Write(newChannels);
          break;
