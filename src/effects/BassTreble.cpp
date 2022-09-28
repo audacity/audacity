@@ -138,21 +138,21 @@ struct EffectBassTreble::Instance
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   void InstanceInit(EffectSettings& settings, EffectBassTrebleState& data, float sampleRate);
+   static void InstanceInit(EffectSettings& settings, EffectBassTrebleState& data, float sampleRate);
 
-   size_t InstanceProcess(EffectSettings&        settings,
-                          EffectBassTrebleState& data,
-                          const float* const*    inBlock,
-                          float* const*          outBlock,
-                          size_t                 blockLen);
+   static size_t InstanceProcess(EffectSettings&        settings,
+                                 EffectBassTrebleState& data,
+                                 const float* const*    inBlock,
+                                 float* const*          outBlock,
+                                 size_t                 blockLen);
 
-   void Coefficients(double hz, double slope, double gain, double samplerate, int type,
+   static void Coefficients(double hz, double slope, double gain, double samplerate, int type,
       double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
 
-   float DoFilter(EffectBassTrebleState& data, float in);
+   static float DoFilter(EffectBassTrebleState& data, float in);
 
-   EffectBassTrebleState mMaster;
-   std::vector<EffectBassTrebleState> mSlaves;
+   EffectBassTrebleState mState;
+   std::vector<EffectBassTreble::Instance> mSlaves;
 };
 
 
@@ -200,7 +200,7 @@ auto EffectBassTreble::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
    return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   //return RealtimeSince::Always;
 }
 
 unsigned EffectBassTreble::Instance::GetAudioInCount() const
@@ -216,7 +216,7 @@ unsigned EffectBassTreble::Instance::GetAudioOutCount() const
 bool EffectBassTreble::Instance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames)
 {
-   InstanceInit(settings, mMaster, sampleRate);
+   InstanceInit(settings, mState, sampleRate);
    return true;
 }
 
@@ -224,7 +224,7 @@ bool EffectBassTreble::Instance::ProcessInitialize(
 size_t EffectBassTreble::Instance::ProcessBlock(EffectSettings& settings,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
-   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
 bool EffectBassTreble::Instance::RealtimeInitialize(EffectSettings &, double)
@@ -238,9 +238,9 @@ bool EffectBassTreble::Instance::RealtimeAddProcessor(
    EffectSettings& settings, EffectOutputs* pOutputs,
    unsigned numChannels, float sampleRate)
 {
-   EffectBassTrebleState slave;
+   EffectBassTreble::Instance slave(mProcessor);
 
-   InstanceInit(settings, slave, sampleRate);
+   InstanceInit(settings, slave.mState, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -259,12 +259,12 @@ size_t EffectBassTreble::Instance::RealtimeProcess(size_t group, EffectSettings 
 {
    if (group >= mSlaves.size())
       return 0;
-   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
 }
 
 bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings& settings) const
 {
-   auto& ms = GetSettings(settings);;
+   auto& ms = GetSettings(settings);
 
    return (ms.mBass == 0.0 && ms.mTreble == 0.0 && ms.mGain == 0.0);
 }
