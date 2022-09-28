@@ -50,9 +50,11 @@ public:
       mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
          mCounter);
    }
-   void MainWrite(SettingsAndCounter &&settings) {
+   void MainWrite(SettingsAndCounter &&settings,
+      std::unique_ptr<EffectInstance::Message> pMessage) {
       // Main thread may simply swap new content into place
-      mChannelFromMain.Write(std::move(settings));
+      mChannelFromMain.Write(FromMainSlot::Message{
+         std::move(settings.settings), settings.counter, std::move(pMessage) });
    }
 
    struct CounterAndOutputs{
@@ -61,8 +63,7 @@ public:
    };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(
-         mEffect, mState.mWorkerSettings);
+      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mState);
    }
    void WorkerWrite() {
       // Worker thread avoids memory allocation.
@@ -117,22 +118,29 @@ public:
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
       // Main thread writes the slot
-      FromMainSlot& operator=(SettingsAndCounter &&settings) {
-         mMessage.SettingsAndCounter::swap(settings);
+      FromMainSlot& operator=(Message &&message) {
+         mMessage.SettingsAndCounter::swap(message);
+         if (message.pMessage && mMessage.pMessage)
+            // Merge the incoming message with any still unconsumed message
+            mMessage.pMessage->Merge(std::move(*message.pMessage));
          return *this;
       }
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
-         const EffectSettingsManager &effect, SettingsAndCounter &settings) {
+         const EffectSettingsManager &effect, RealtimeEffectState &state) {
+         auto &settings = state.mWorkerSettings;
          if(slot.mMessage.counter == settings.counter)
             return;//copy once
-
          settings.counter = slot.mMessage.counter;
-            // This happens during MessageBuffer's busying of the slot
-            effect.CopySettingsContents(
-               slot.mMessage.settings, settings.settings);
-            settings.settings.extra = slot.mMessage.settings.extra;
+
+         // This happens during MessageBuffer's busying of the slot
+         effect.CopySettingsContents(
+            slot.mMessage.settings, settings.settings);
+         settings.settings.extra = slot.mMessage.settings.extra;
+         if (slot.mMessage.pMessage && state.mMovedMessage)
+            // Copy the message from the buffer (not a merge)
+            state.mMovedMessage->Assign(std::move(*slot.mMessage.pMessage));
       } };
 
       Message mMessage;
@@ -182,7 +190,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       static EffectSettings empty;
       return empty;
    }
-   void Set(EffectSettings &&settings, std::unique_ptr<Message>) override {
+   void Set(EffectSettings &&settings, std::unique_ptr<Message> pMessage)
+   override {
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
@@ -190,7 +199,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             lastSettings.settings = std::move(settings);
             ++lastSettings.counter;
             // move a copy to there
-            pAccessState->MainWrite(SettingsAndCounter{ lastSettings });
+            pAccessState->MainWrite(
+               SettingsAndCounter{ lastSettings }, std::move(pMessage));
          }
    }
    void Flush() override {
@@ -422,9 +432,8 @@ bool RealtimeEffectState::ProcessStart(bool running)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
-   // TODO get a real message from WorkerRead
    EffectInstance::MessagePackage package{
-      mWorkerSettings.settings, nullptr
+      mWorkerSettings.settings, mMovedMessage.get()
    };
    return pInstance->RealtimeProcessStart(package);
 }
