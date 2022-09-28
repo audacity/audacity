@@ -264,6 +264,20 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
    return mPlugin;
 }
 
+std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
+{
+   mMovedMessage.reset();
+   mMessage.reset();
+   auto result = mPlugin->MakeInstance();
+   if (result) {
+      // Allocate presized containers in messages, so later
+      // copies of contents might avoid free store operations
+      mMessage = result->MakeMessage();
+      mMovedMessage = result->MakeMessage();
+   }
+   return result;
+}
+
 std::shared_ptr<EffectInstance>
 RealtimeEffectState::EnsureInstance(double sampleRate)
 {
@@ -278,7 +292,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
 
       //! If there was already an instance, recycle it; else make one here
       if (!pInstance)
-         mwInstance = pInstance = mPlugin->MakeInstance();
+         mwInstance = pInstance = MakeInstance();
       if (!pInstance)
          return {};
 
@@ -299,7 +313,7 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
    //! If there was already an instance, recycle it; else make one here
    auto pInstance = mwInstance.lock();
    if (!pInstance && mPlugin)
-      mwInstance = pInstance = mPlugin->MakeInstance();
+      mwInstance = pInstance = MakeInstance();
    return pInstance;
 }
 
