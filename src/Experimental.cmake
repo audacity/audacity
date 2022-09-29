@@ -107,23 +107,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Paul Licameli (PRL) 29 Nov 2014
    #IMPROVED_SEEKING
 
-   #MIDI_IN
-
-   # RBD, 1 Sep 2008
-   # Enables MIDI Output of NoteTrack (MIDI) data during playback
-   # USE_MIDI must be defined in order for MIDI_OUT to work
-   MIDI_OUT
-
-   # JKC, 17 Aug 2017
-   # Enables the MIDI note stretching feature, which currently
-   # a) Is broken on Linux (Bug 1646)
-   # b) Crashes with Sync-Lock (Bug 1719)
-   # c) Needs UI design review.
-   #MIDI_STRETCHING
-
-   # USE_MIDI must be defined in order for SCOREALIGN to work
-   #SCOREALIGN
-
    #Automatically tries to find an acceptable input volume
    #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 
@@ -187,6 +170,27 @@ set( EXPERIMENTAL_OPTIONS_LIST
 )
 
 # Some more flags that depend on other configuration options
+
+if( NOT audacity_use_midi STREQUAL "off" )
+   list( APPEND EXPERIMENTAL_OPTIONS_LIST
+      #MIDI_IN
+
+      # RBD, 1 Sep 2008
+      # Enables MIDI Output of NoteTrack (MIDI) data during playback
+      # USE_MIDI must be defined in order for MIDI_OUT to work
+      MIDI_OUT
+
+      # JKC, 17 Aug 2017
+      # Enables the MIDI note stretching feature, which currently
+      # a) Is broken on Linux (Bug 1646)
+      # b) Crashes with Sync-Lock (Bug 1719)
+      # c) Needs UI design review.
+      #MIDI_STRETCHING
+
+      # USE_MIDI must be defined in order for SCOREALIGN to work
+      #SCOREALIGN
+   )
+endif()
 
 if( "SCRUBBING_SUPPORT" IN_LIST EXPERIMENTAL_OPTIONS_LIST )
    list( APPEND EXPERIMENTAL_OPTIONS_LIST SCRUBBING_SCROLL_WHEEL )
