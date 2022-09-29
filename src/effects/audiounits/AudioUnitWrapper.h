@@ -82,9 +82,21 @@ struct AudioUnitWrapper
 {
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
 
-   static AudioUnitEffectSettings &GetSettings(EffectSettings &settings);
-   static const AudioUnitEffectSettings &GetSettings(
-      const EffectSettings &settings);
+   template<typename Settings>
+   static AudioUnitEffectSettings &GetSettings(Settings &settings)
+   {
+      auto pSettings = settings.template cast<AudioUnitEffectSettings>();
+      // Assume the settings object ultimately came from AudioUnitEffect's
+      // FetchSettings, or was copied from such
+      assert(pSettings);
+      return *pSettings;
+   }
+
+   template<typename Settings>
+   static const AudioUnitEffectSettings &GetSettings(const Settings &settings)
+   {
+      return GetSettings(const_cast<Settings &>(settings));
+   }
 
    /*!
     @param pParameters if non-null, use those; else, fetch from the AudioUnit

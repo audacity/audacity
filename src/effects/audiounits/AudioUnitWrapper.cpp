@@ -22,20 +22,6 @@
 #include <wx/osx/core/private.h>
 #include <wx/log.h>
 
-AudioUnitEffectSettings &
-AudioUnitWrapper::GetSettings(EffectSettings &settings) {
-   auto pSettings = settings.cast<AudioUnitEffectSettings>();
-   // Assume the settings object ultimately came from AudioUnitEffect's
-   // MakeSettings or copying of that
-   assert(pSettings);
-   return *pSettings;
-}
-
-const AudioUnitEffectSettings &
-AudioUnitWrapper::GetSettings(const EffectSettings &settings) {
-   return GetSettings(const_cast<EffectSettings &>(settings));
-}
-
 //
 // When a plug-in's state is saved to the settings file (as a preset),
 // it is in binary and gets base64 encoded before storing.
