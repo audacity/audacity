@@ -32,9 +32,6 @@ class AudioUnitWrapper;
 //! This works as a cached copy of state stored in an AudioUnit, but can also
 //! outlive it
 struct AudioUnitEffectSettings {
-   //! Object from which settings were fetched
-   const AudioUnitWrapper *pSource{};
-
    //! The effect object and all Settings objects coming from it share this
    //! set of strings, which allows Pair below to copy without allocations.
    /*!
