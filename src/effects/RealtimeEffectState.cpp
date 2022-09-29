@@ -270,6 +270,7 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
          mMainSettings.counter = 0;
          mMainSettings.settings = mPlugin->MakeSettings();
          mMainSettings.settings.extra.SetActive(wasActive);
+         mMainOutputs = mPlugin->MakeOutputs();
       }
    }
    return mPlugin;
