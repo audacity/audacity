@@ -19,6 +19,8 @@ EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
 
+EffectOutputs::~EffectOutputs() = default;
+
 const EffectSettings &SimpleEffectSettingsAccess::Get()
 {
    return mSettings;
@@ -107,6 +109,12 @@ bool EffectSettingsManager::VisitSettings(
 auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 {
    return {};
+}
+
+auto EffectSettingsManager::MakeOutputs() const
+   -> std::unique_ptr<EffectOutputs>
+{
+   return nullptr;
 }
 
 bool EffectSettingsManager::CopySettingsContents(
