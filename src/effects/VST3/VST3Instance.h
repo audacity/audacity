@@ -48,7 +48,8 @@ public:
 
    size_t GetTailSize() const override;
    bool Init() override;
-   bool RealtimeAddProcessor(EffectSettings& settings, unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs &outputs,
+      unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
    bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
    size_t RealtimeProcess(size_t group, EffectSettings& settings, const float* const* inBuf, float* const* outBuf,

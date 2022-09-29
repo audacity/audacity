@@ -146,7 +146,7 @@ struct EffectWahwah::Instance
    bool RealtimeInitialize(EffectSettings& settings, double) override;
 
    bool RealtimeAddProcessor(EffectSettings& settings,
-      unsigned numChannels, float sampleRate) override;
+      EffectOutputs &outputs, unsigned numChannels, float sampleRate) override;
 
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
 
@@ -234,7 +234,7 @@ bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectWahwah::Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs &, unsigned, float sampleRate)
 {
    EffectWahwahState slave;
 

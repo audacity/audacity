@@ -224,7 +224,7 @@ bool EffectDistortion::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectDistortion::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &, EffectOutputs &, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
 

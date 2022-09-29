@@ -908,8 +908,8 @@ struct LadspaEffect::Instance
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate)
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      EffectOutputs &outputs, unsigned numChannels, float sampleRate)
    override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
@@ -997,7 +997,7 @@ bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool LadspaEffect::Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs &, unsigned, float sampleRate)
 {
    auto &effect = GetEffect();
    auto &ladspaSettings = GetSettings(settings);

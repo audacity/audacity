@@ -62,7 +62,7 @@ public:
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs &outputs,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;

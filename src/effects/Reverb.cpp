@@ -208,7 +208,7 @@ struct EffectReverb::Instance
       return true;
    }
 
-   bool RealtimeAddProcessor(EffectSettings& settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs &,
       unsigned numChannels, float sampleRate) override
    {
       EffectReverbState slave;

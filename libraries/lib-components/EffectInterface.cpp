@@ -132,7 +132,8 @@ bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
    return false;
 }
 
-bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
+bool EffectInstance::RealtimeAddProcessor(
+   EffectSettings &, EffectOutputs&, unsigned, float)
 {
    return true;
 }

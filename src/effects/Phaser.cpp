@@ -162,7 +162,7 @@ bool EffectPhaser::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectPhaser::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &, EffectOutputs &, unsigned, float sampleRate)
 {
    EffectPhaserState slave;
 

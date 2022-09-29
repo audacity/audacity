@@ -61,10 +61,12 @@ bool StatefulEffectBase::Instance::RealtimeInitialize(
    return GetEffect().RealtimeInitialize(settings, sampleRate);
 }
 
-bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
-   unsigned numChannels, float sampleRate)
+bool StatefulEffectBase::Instance::
+RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs &outputs, unsigned numChannels, float sampleRate)
 {
-   return GetEffect().RealtimeAddProcessor(settings, numChannels, sampleRate);
+   return GetEffect()
+      .RealtimeAddProcessor(settings, outputs, numChannels, sampleRate);
 }
 
 bool StatefulEffectBase::Instance::RealtimeSuspend()
@@ -146,8 +148,8 @@ bool StatefulEffectBase::RealtimeInitialize(EffectSettings &, double)
    return false;
 }
 
-bool StatefulEffectBase::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
+bool StatefulEffectBase::RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs &, unsigned numChannels, float sampleRate)
 {
    return true;
 }

@@ -51,7 +51,8 @@ bool VST3Instance::Init()
    return Instance::Init();
 }
 
-bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings, unsigned, float sampleRate)
+bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings,
+   EffectOutputs &, unsigned, float sampleRate)
 {
    if (!mRecruited) {
       // Assign self to the first processor

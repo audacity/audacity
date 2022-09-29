@@ -1042,8 +1042,8 @@ bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double samp
    return DoProcessInitialize(sampleRate);
 }
 
-bool VSTEffectInstance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
+bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs &, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<VSTEffectInstance>(GetEffect(), mPath, mBlockSize, mUserBlockSize, mUseLatency);
 
