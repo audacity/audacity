@@ -100,6 +100,8 @@ private:
       const EffectSettings &src, EffectSettings &dst,
       SettingsCopyDirection copyDirection) const override;
 
+   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
+
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(

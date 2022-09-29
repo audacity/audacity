@@ -156,6 +156,13 @@ bool LadspaEffect::CopySettingsContents(
    return true;
 }
 
+auto LadspaEffect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
+{
+   auto result = std::make_unique<LadspaEffectOutputs>();
+   result->controls.resize(mData->PortCount);
+   return result;
+}
+
 // ============================================================================
 // ComponentInterface implementation
 // ============================================================================
@@ -655,6 +662,8 @@ void LadspaEffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    Refresh(false);
 }
+
+LadspaEffectOutputs::~LadspaEffectOutputs() = default;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
