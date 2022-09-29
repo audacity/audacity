@@ -148,8 +148,6 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
 bool AudioUnitWrapper::FetchSettings(
    AudioUnitEffectSettings &settings, bool fetchValues) const
 {
-   settings.pSource = this;
-
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(

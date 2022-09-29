@@ -28,7 +28,12 @@ public:
    void EventListener(const AudioUnitEvent *inEvent,
       AudioUnitParameterValue inParameterValue);
 
+   // Override the virtual function to allocate an empty message
    std::unique_ptr<Message> MakeMessage() const override;
+
+   // A non-virtual overload makes a non-empty message
+   std::unique_ptr<Message>
+      MakeMessage(AudioUnitParameterID id, AudioUnitParameterValue value) const;
 
 private:
    size_t InitialBlockSize() const;
