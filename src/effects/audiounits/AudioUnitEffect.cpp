@@ -308,7 +308,6 @@ bool AudioUnitEffect::CopySettingsContents(
 {
    auto &dstSettings = GetSettings(dst);
    auto &srcSettings = GetSettings(src);
-   dstSettings.pSource = srcSettings.pSource;
    return AudioUnitWrapper::CopySettingsContents(srcSettings, dstSettings);
 }
 

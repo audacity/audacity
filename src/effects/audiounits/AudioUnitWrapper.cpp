@@ -148,8 +148,6 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
 bool AudioUnitWrapper::FetchSettings(
    AudioUnitEffectSettings &settings, bool fetchValues) const
 {
-   settings.pSource = this;
-
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(
@@ -243,12 +241,11 @@ bool AudioUnitWrapper::TransferSettingsContents(
    auto &dstMap = dst.values;
    auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
    auto &srcMap = src.values;
-   // Iterate the two maps in parallel, assuming correspondence of
-   // keys, because the settings objects ultimately came from FetchSettings()
-   // and copies.  Nothing else ever inserts or removes keys.
-   assert(srcMap.size() == dstMap.size());
    for (auto &[key, oValue] : srcMap) {
-      assert(dstIter != dstEnd);
+      while (dstIter != dstEnd && dstIter->first != key)
+         ++dstIter;
+      if (dstIter == dstEnd)
+         break;
       auto &[dstKey, dstOValue] = *dstIter;
       assert(dstKey == key);
       if (oValue) {
@@ -259,9 +256,7 @@ bool AudioUnitWrapper::TransferSettingsContents(
       else if (!doMerge)
          // Don't accumulate non-nulls only, but copy the nulls
          dstOValue.reset();
-      ++dstIter;
    }
-   assert(dstIter == dstEnd);
    return true;
 }
 

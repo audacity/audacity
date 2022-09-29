@@ -200,26 +200,34 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
 {
    // Modify the instance and its workers
    mInstance.EventListener(inEvent, inParameterValue);
-   // Fetch changed settings and send them to the framework
-   // (Maybe we need a way to fetch just one changed setting, but this is
-   // the easy way to write it)
-   ValidateUI();
 
-   if (inEvent->mEventType != kAudioUnitEvent_ParameterValueChange)
-      return;
+   if (inEvent->mEventType == kAudioUnitEvent_ParameterValueChange) {
+      constexpr AudioUnitParameterValue epsilon = 1e-6;
 
-   constexpr AudioUnitParameterValue epsilon = 1e-6;
+      auto it = mParameterValues.find(inEvent->mArgument.mParameter.mParameterID);
 
-   auto it = mParameterValues.find(inEvent->mArgument.mParameter.mParameterID);
+      // When the UI is opened - EventListener is called for each parameter
+      // with the current value.
+      if (it == mParameterValues.end())
+         mParameterValues.insert(std::make_pair(inEvent->mArgument.mParameter.mParameterID, inParameterValue));
+      else if (std::abs(it->second - inParameterValue) > epsilon)
+      {
+        it->second = inParameterValue;
+        Publish({inEvent->mArgument.mParameter.mParameterID, inParameterValue});
+      }
 
-   // When the UI is opened - EventListener is called for each parameter
-   // with the current value.
-   if (it == mParameterValues.end())
-      mParameterValues.insert(std::make_pair(inEvent->mArgument.mParameter.mParameterID, inParameterValue));
-   else if (std::abs(it->second - inParameterValue) > epsilon)
-   {
-     it->second = inParameterValue;
-     Publish({inEvent->mArgument.mParameter.mParameterID, inParameterValue});
+      mAccess.ModifySettings([&](EffectSettings &settings){
+         // Reassign settings, so that there is "stickiness" when dialog is
+         // closed and opened again
+         FetchSettingsFromInstance(settings);
+
+         // But send changed settings (only) to the worker thread, which
+         // ignores the settings
+         auto result = mInstance.MakeMessage(
+            inEvent->mArgument.mParameter.mParameterID,
+            inParameterValue);
+         return result;
+      });
    }
 }
 
