@@ -156,7 +156,7 @@ return GuardedCall<bool>([&]{
 }
 
 bool LV2Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
    auto pInstance = LV2Wrapper::Create(mFeatures,
       mPorts, mPortStates, GetSettings(settings), sampleRate, false);

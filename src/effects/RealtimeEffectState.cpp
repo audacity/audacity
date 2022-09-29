@@ -369,10 +369,11 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned, unsigned){
       // Add a NEW processor
-      // Pass reference to worker settings, not main -- such as, for connecting
-      // Ladspa ports to the proper addresses.
+      // Pass mMainOutputs for now -- though strictly speaking,
+      // that may cause data races with the main thread doing unsynchronized
+      // reads to update the UI.
       if (pInstance->RealtimeAddProcessor(
-         mWorkerSettings.settings, numAudioIn, sampleRate)
+         mWorkerSettings.settings, mMainOutputs.get(), numAudioIn, sampleRate)
       ) {
          mCurrentProcessor++;
          return true;

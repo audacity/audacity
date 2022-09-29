@@ -190,7 +190,7 @@ bool AudioUnitInstance::RealtimeInitialize(
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
    if (!mRecruited) {
       // Assign self to the first processor

@@ -36,6 +36,7 @@ public:
       bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
          override;
       bool RealtimeAddProcessor(EffectSettings &settings,
+         EffectOutputs *pOutputs,
          unsigned numChannels, float sampleRate) override;
       bool RealtimeSuspend() override;
       bool RealtimeResume() override;
@@ -75,8 +76,8 @@ public:
      @copydoc StatefulEffectBase::Instance::RealtimeAddProcessor()
      Default implementation does nothing, returns true
    */
-   virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+   virtual bool RealtimeAddProcessor(EffectSettings &settings,
+      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate);
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeSuspend()

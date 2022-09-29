@@ -444,7 +444,8 @@ public:
     Default implementation does nothing, returns true
     */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+      EffectSettings &settings, EffectOutputs *pOutputs,
+      unsigned numChannels, float sampleRate);
 
    /*!
     @return success
