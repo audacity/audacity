@@ -228,6 +228,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
 , mHadPriorState{ (pPriorState != nullptr) }
 , mpInstance{ InitializeInstance() }
+, mpOutputs{ pPriorState ? pPriorState->GetOutputs() : nullptr }
 {
    // Assign the out parameter
    pInstance = mpInstance;
