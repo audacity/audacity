@@ -109,6 +109,11 @@ auto EffectSettingsManager::MakeSettings() const -> EffectSettings
    return {};
 }
 
+auto EffectSettingsManager::MakeOutputs() const -> EffectOutputs
+{
+   return {};
+}
+
 bool EffectSettingsManager::CopySettingsContents(
    const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
 {

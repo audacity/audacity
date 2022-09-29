@@ -101,6 +101,11 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
    }
 };
 
+//! Hold values to send to effect output meters
+struct EffectOutputs : audacity::TypedAny<EffectOutputs> {
+   using TypedAny::TypedAny;
+};
+
 //! Interface for accessing an EffectSettings that may change asynchronously in
 //! another thread; to be used in the main thread, only.
 /*! Updates are communicated atomically both ways.  The address of Get() should
@@ -306,6 +311,16 @@ public:
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
+
+   /*! @name outputs
+    @{
+    */
+   //! Produce an object to hold values to send to effect output meters
+   /*!
+    Default implementation returns an empty any
+    */
+   virtual EffectOutputs MakeOutputs() const;
+   //! @}
 };
 
 class wxDialog;
