@@ -3,17 +3,17 @@
 # This file is distributed under the same license as the Audacity package.
 #
 # Translators:
-# Márton Balázs <documan@mailbox.hu>, 2008.
-# Pelládi Gábor <pelladigabor@gmail.com>, 2008.
-# Koncz László <koncz.l@upcmail.hu>, 2014.
-# Balázs Úr <urbalazs@gmail.com>, 2014, 2015, 2016.
 # Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2022.
+# Balázs Úr <urbalazs@gmail.com>, 2014, 2015, 2016.
+# Koncz László <koncz.l@upcmail.hu>, 2014.
+# Pelládi Gábor <pelladigabor@gmail.com>, 2008.
+# Márton Balázs <documan@mailbox.hu>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.2.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-09-28 09:56+0200\n"
+"PO-Revision-Date: 2022-09-29 14:10+0200\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -61,7 +61,7 @@ msgstr "Megjegyzések"
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
-msgstr "Lásd további információért: %s."
+msgstr "További információért lásd: %s."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
@@ -448,7 +448,7 @@ msgstr "Alacsony minőség (leggyorsabb)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Medium Quality"
-msgstr "Közepe minőség"
+msgstr "Közepes minőség"
 
 #: libraries/lib-math/Resample.cpp
 msgid "High Quality"
@@ -1462,7 +1462,7 @@ msgstr "%s egy bejegyzett védjegy."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
-msgstr "Fordítási információ"
+msgstr "Build információ"
 
 #: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
@@ -1477,11 +1477,11 @@ msgstr "Letiltva"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr "A változat"
+msgstr "A Build"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
-msgstr "Program elkészítésének dátuma:"
+msgstr "Program build dátuma:"
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
@@ -1490,12 +1490,12 @@ msgstr "Véglegesítés-azonosító:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr "Hibakeresési változat (hibakeresési szint %d)"
+msgstr "Hibakeresési build (hibakeresési szint %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Release build (debug level %d)"
-msgstr "Kiadási változat (hibakeresési szint %d)"
+msgstr "Kiadási build (hibakeresési szint %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -1509,7 +1509,7 @@ msgstr "%s, 32 bites"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
-msgstr "Felépítés típusa:"
+msgstr "Build típusa:"
 
 #: src/AboutDialog.cpp
 msgid "Compiler:"
@@ -1522,11 +1522,11 @@ msgstr "Telepítési előtag:"
 
 #: src/AboutDialog.cpp
 msgid "Cache folder:"
-msgstr "Gyorsítótár mappa:"
+msgstr "Gyorsítótár-mappa:"
 
 #: src/AboutDialog.cpp
 msgid "Settings folder:"
-msgstr "Beállítások mappa:"
+msgstr "Beállítások-mappa:"
 
 #: src/AboutDialog.cpp
 msgid "Data folder:"
@@ -1534,7 +1534,7 @@ msgstr "Adatmappa:"
 
 #: src/AboutDialog.cpp
 msgid "State folder:"
-msgstr "Állapot mappa:"
+msgstr "Állapotmappa:"
 
 #. i18n-hint: Libraries that are essential to audacity
 #: src/AboutDialog.cpp
@@ -1617,7 +1617,7 @@ msgstr "Extrém hangmagasság- és a tempóváltoztatás támogatása"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr "Legális"
+msgstr "Jogi nyilatkozat"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1627,7 +1627,7 @@ msgstr "GPL licenc"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "PRIVACY POLICY"
-msgstr "Adatvédelmi Szabályzat"
+msgstr "ADATVÉDELMI SZABÁLYZAT"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
@@ -1818,22 +1818,22 @@ msgid ""
 "Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Az Audacity nem talált biztonságos helyet az átmeneti fájlok tárolására.\n"
+"Az Audacity nem talált biztonságos helyet az ideiglenes fájlok tárolására.\n"
 "Az Audacity programnak egy olyan helyre van szüksége, ahol az automatikus\n"
-"takarító programok nem fogják törölni az átmeneti fájlokat.\n"
-"Adjon meg egy megfelelő könyvtárat a beállítások párbeszédablakban."
+"takarító programok nem fogják törölni az ideiglenes fájlokat.\n"
+"Adjon meg egy megfelelő mappát a beállítások párbeszédablakban."
 
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Az Audacity nem talált megfelelő helyet az átmeneti fájlok tárolására.\n"
-"Adjon meg egy megfelelő könyvtárat a beállítások párbeszédablakban."
+"Az Audacity nem talált megfelelő helyet az ideiglenes fájlok tárolására.\n"
+"Adj meg egy megfelelő mappát a beállítások párbeszédablakban."
 
 #: src/AudacityApp.cpp
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Az Audacity most ki fog lépni. Indítsa el újra a programot az új átmeneti könyvtár használatához."
+msgstr "Az Audacity most bezárul. Indítsd újra a programot az új ideiglenes mappa használatához."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1850,8 +1850,8 @@ msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
 msgstr ""
-"Az Audacity nem tudta zárolni az átmeneti fájlok könyvtárát.\n"
-"Lehet, hogy ezt a könyvtárat az Audacity egy másik példánya használja.\n"
+"Az Audacity nem tudta zárolni az ideiglenes fájlok mappáját.\n"
+"Lehet, hogy ezt a mappát az Audacity egy másik példánya használja.\n"
 
 #: src/AudacityApp.cpp
 msgid "Do you still want to start Audacity?"
@@ -1859,7 +1859,7 @@ msgstr "Még mindig el szeretné indítani az Audacity programot?"
 
 #: src/AudacityApp.cpp
 msgid "Error Locking Temporary Folder"
-msgstr "Hiba az átmeneti mappa zárolásakor"
+msgstr "Hiba az ideiglenes mappa zárolásakor"
 
 #: src/AudacityApp.cpp
 msgid "The system has detected that another copy of Audacity is running.\n"
@@ -2667,13 +2667,13 @@ msgstr ""
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "Válaszd ki a használni kívánt hangot %s számára (például Cmd + A az összes kijelöléséhez), majd próbáld újra."
+msgstr "'%s' használatához előbb jelöld ki a használni kívánt hangot (például Cmd + A az összes kijelöléséhez), utána próbáld újra."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "Válaszd ki a használni kívánt hangot %s számára (például Ctrl + A az összes kijelöléséhez), majd próbáld újra."
+msgstr "'%s' használatához előbb jelöld ki a használni kívánt hangot (például Ctrl + A az összes kijelöléséhez), utána próbáld újra."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -3687,11 +3687,11 @@ msgstr "Nem engedélyezett"
 
 #: src/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
-msgstr "Keverés és megjelenítés"
+msgstr "Összekeverés és renderelés"
 
 #: src/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
-msgstr "Sávok keverése és megjelenítése"
+msgstr "Sávok összekeverése és megjelenítése"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -4268,7 +4268,7 @@ msgid ""
 msgstr ""
 "A projektellenőrzés ellentmondásos fájlokat talált az automatikus helyreállítás közben.\n"
 "\n"
-"A részletekért válassza a Súgó > Diagnosztika > Napló megjelenítése… menüpontot."
+"A részletekért válaszd a Súgó > Diagnosztika > Napló megjelenítése… menüpontot."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
@@ -4291,7 +4291,7 @@ msgid ""
 "Directories Preferences."
 msgstr ""
 "Nagyon kevés szabad hely van %s köteten.\n"
-"Válassz egy másik átmeneti könyvtárat a Beállításokban."
+"Válassz egy másik ideiglenes mappát a Beállításokban."
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
@@ -4493,7 +4493,7 @@ msgid ""
 msgstr ""
 "Nem sikerült írni a lemezre %s fájlt.\n"
 "Lehet, hogy a lemez nem írható, esetleg megtelt.\n"
-"Hely felszabadítási tippekért kattints a súgóra. "
+"Hely felszabadítási tippekért kattints a súgóra."
 
 #: src/ProjectFileIO.cpp
 msgid "Compacting project"
@@ -4884,7 +4884,7 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 "\n"
-"Ha elmenti, a projektnek nem lesznek sávjai.\n"
+"Ha elmented, a projektnek nem lesznek sávjai.\n"
 "\n"
 "Bármely korábban megnyitott sáv mentéséhez:\n"
 "Mégse, Szerkesztés > Visszavonás, amíg minden sáv\n"
@@ -7054,7 +7054,7 @@ msgstr "Belső fel&erősítés hossza:"
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
 #: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
-msgstr "&Küszöbérték"
+msgstr "&Küszöbérték:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
@@ -7546,7 +7546,7 @@ msgstr ""
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
-msgstr "Kontrasztelemző a hang két kijelölése közti RMS hangerő különbségének méréséhez."
+msgstr "Kontrasztelemző a hang két kijelölése közti négyzetes középérték hangerő különbségének méréséhez."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -7614,7 +7614,7 @@ msgstr "&Súgó"
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "RMS = %s."
-msgstr "RMS = %s."
+msgstr "Négyzetes középérték = %s."
 
 #. i18n-hint: dB abbreviates decibels
 #: src/effects/Contrast.cpp
@@ -7651,13 +7651,13 @@ msgstr "A különbség bizonytalan."
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "Difference = %.2f RMS dB."
-msgstr "Különbség = %.2f RMS dB."
+msgstr "Különbség = %.2f Négyzetes középérték dB."
 
 #. i18n-hint: dB abbreviates decibels
 #. RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
 msgid "Difference = infinite RMS dB."
-msgstr "Különbség = végtelen RMS dB."
+msgstr "Különbség = végtelen négyzetes középérték dB."
 
 #: src/effects/Contrast.cpp
 msgid "Foreground level too high"
@@ -8277,7 +8277,7 @@ msgstr "Előbeállítás törlése"
 
 #: src/effects/EffectUI.cpp
 msgid "Defaults"
-msgstr "Alapbeállítások"
+msgstr "Alapértékek"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "Import..."
@@ -8815,7 +8815,7 @@ msgstr "észlelt hangosság"
 
 #: src/effects/Loudness.cpp src/widgets/MeterPanel.cpp
 msgid "RMS"
-msgstr "RMS"
+msgstr "Négyzetes középérték"
 
 #: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
@@ -8854,7 +8854,7 @@ msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr "RMS dB"
+msgstr "Négyzetes középérték dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
@@ -9025,8 +9025,8 @@ msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
-"Jelölje ki az összes hangot, amit szűrni szeretne, válassza ki, hogy mennyi\n"
-"zajt szeretne kiszűrni, majd kattintson az 'OK' gombra a zaj csökkentéséhez.\n"
+"Jelöld ki az összes hangot, amit szűrni szeretnél, válaszd ki, hogy mennyi\n"
+"zajt szeretnél kiszűrni, majd kattints az 'OK' gombra a zaj csökkentéséhez.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -9136,8 +9136,8 @@ msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
 msgstr ""
-"Jelölje ki az összes hangot, amit szűrni szeretne, válassza ki, hogy mennyi\n"
-"zajt szeretne kiszűrni, majd kattintson az 'OK' gombra a zaj eltávolításához.\n"
+"Jelöld ki az összes hangot, amit szűrni szeretnél, válaszd ki, hogy mennyi\n"
+"zajt szeretnél kiszűrni, majd kattints az 'OK' gombra a zaj eltávolításához.\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -9716,7 +9716,7 @@ msgstr "Jobb csatorna újramintavételezése"
 
 #: src/effects/StereoToMono.cpp
 msgid "Mixing down to mono"
-msgstr "Lekeverés monóra"
+msgstr "Összekeverés monóra"
 
 #: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
 msgid "Sliding Stretch"
@@ -9972,7 +9972,7 @@ msgstr "Az előbeállítás-fájl nem tölthető be."
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Ports.cpp
 msgid "Effect Settings"
-msgstr "Hatásbeállítások"
+msgstr "Hatás beállításai"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to allocate memory when loading presets file."
@@ -10095,11 +10095,11 @@ msgstr "Nem sikerült tárolni az előbeállítást a konfigurációs fájlban"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Export Audio Unit Preset As %s:"
-msgstr "Hangegység-előbeállítások exportálása mint %s:"
+msgstr "Audio Unit előbeállításainak exportálása mint %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Standard Audio Unit preset file"
-msgstr "Standard hangegység-előbeállítások fájl"
+msgstr "Standard Audio Unit előbeállítások fájl"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -10114,12 +10114,12 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
-msgstr "Hangegység előbeállítások exportálása"
+msgstr "Audio Unit előbeállítások exportálása"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Import Audio Unit Preset As %s:"
-msgstr "Hangegység-előbeállítások importálása mint %s:"
+msgstr "Audio Unit előbeállítások importálása mint %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -10134,7 +10134,7 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Import Audio Unit Presets"
-msgstr "Hangegység előbeállítások importálása"
+msgstr "Audio Unit előbeállítások importálása"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -10155,11 +10155,11 @@ msgstr "Nem sikerült olvasni az előbeállítás-fájlt: \"%s\""
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.h src/prefs/EffectsPrefs.cpp
 msgid "Audio Unit"
-msgstr "Hangegység"
+msgstr "Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Audio Unit Effect Options"
-msgstr "Hangegység hatás beállításai"
+msgstr "Audio Unit hatás beállításai"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
@@ -10171,7 +10171,7 @@ msgstr "Felhasználói felület"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr "Válaszd a \"Teljes\" lehetőséget a grafikus felület használatához, ha az audioegység biztosítja. Válassza az \"Általános\" lehetőséget a rendszerrel szállított általános interfész használatához. Az alapszintű, csak szöveges felülethez válassza az \"Alap\" lehetőséget. Nyisd meg újra a hatást, hogy ez érvénybe lépjen."
+msgstr "Válaszd a \"Teljes\" lehetőséget a grafikus felület használatához, ha az Audio Unit biztosítja. Válaszd az \"Általános\" lehetőséget a rendszerrel szállított általános interfész használatához. Az alapszintű, csak szöveges felülethez válaszd az \"Alap\" lehetőséget. Nyisd meg újra a hatást, hogy ez érvénybe lépjen."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -10193,11 +10193,11 @@ msgstr "Alap"
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffectsModule.cpp
 msgid "Audio Unit Effects"
-msgstr "Hangegység hatások"
+msgstr "Audio Unit hatások"
 
 #: src/effects/audiounits/AudioUnitEffectsModule.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Hangegység hatások támogatását biztosítja az Audacity programhoz"
+msgstr "Audio Unit hatások támogatását biztosítja az Audacity programhoz"
 
 #: src/effects/audiounits/AudioUnitEffectsModule.cpp
 msgid "Could not find component"
@@ -13146,7 +13146,7 @@ msgstr "klip nem mozdult el"
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
 msgid "Audi&o Clips"
-msgstr "Hang &klipek"
+msgstr "Hang&klipek"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
@@ -13272,7 +13272,7 @@ msgstr "A kijelölt hangsávok levágása %.2f másodperctől %.2f másodpercig"
 
 #: src/menus/EditMenus.cpp
 msgid "Trim Audio"
-msgstr "Hang levágása"
+msgstr "Hang nyírása"
 
 #: src/menus/EditMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -13285,7 +13285,7 @@ msgstr "Szétvágás új sávra"
 
 #: src/menus/EditMenus.cpp
 msgid "Split New"
-msgstr "Új szétvágása"
+msgstr "Szétvágása újba"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -13339,7 +13339,7 @@ msgstr "K&ettőzés"
 
 #: src/menus/EditMenus.cpp
 msgid "R&emove Special"
-msgstr "&Speciális eltávolítása"
+msgstr "&Speciális eltávolítás"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
@@ -13359,7 +13359,7 @@ msgstr "Hang &né&mítása"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Tri&m Audio"
-msgstr "H&ang levágása"
+msgstr "H&ang nyírása"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/EditMenus.cpp
@@ -13368,7 +13368,7 @@ msgstr "&Szétvágás"
 
 #: src/menus/EditMenus.cpp
 msgid "Split Ne&w"
-msgstr "Új fel&osztott"
+msgstr "&Szétvágás új sávba"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
@@ -13377,7 +13377,7 @@ msgstr "&Egyesítés"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "Detac&h at Silences"
-msgstr "&Leválasztás csendeknél"
+msgstr "&Levágás csendeknél"
 
 #: src/menus/EditMenus.cpp
 msgid "&Metadata"
@@ -13429,7 +13429,7 @@ msgstr "Felvételi hangerő csö&kkentése"
 
 #: src/menus/ExtraMenus.cpp
 msgid "De&vice"
-msgstr "E&szköz"
+msgstr "Esz&köz"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Recording Device..."
@@ -13462,7 +13462,7 @@ msgid ""
 "File already exists that is not a directory"
 msgstr ""
 "'%s' mappát nem lehet létrehozni. \n"
-"A fájl már létezik, ami nem mappa."
+"A fájl már létezik, ami nem mappa"
 
 #: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
@@ -13640,7 +13640,7 @@ msgstr "Ezek e problémáid?"
 
 #: src/menus/HelpMenus.cpp
 msgid "Fix"
-msgstr "Keverés"
+msgstr "Javítás"
 
 #: src/menus/HelpMenus.cpp
 msgid "Quick Fixes"
@@ -14034,7 +14034,7 @@ msgstr "Utolsó hatás ismétlése"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Analyze"
-msgstr "Ele&mzés"
+msgstr "E&lemzés"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Analyzer"
@@ -14042,7 +14042,7 @@ msgstr "Utolsó elemző ismétlése"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
-msgstr "E&szközök"
+msgstr "Esz&közök"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Tool"
@@ -14192,7 +14192,7 @@ msgstr "Kijelölés jobboldali határának beállítása"
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
 msgid "&Select"
-msgstr "K&ijelölés"
+msgstr "Ki&jelölés"
 
 #: src/menus/SelectMenus.cpp
 msgid "&None"
@@ -14460,7 +14460,7 @@ msgstr "Nagy tekerés &jobbra a lejátszás alatt"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
-msgstr "E&szköztárak"
+msgstr "Esz&köztárak"
 
 #. i18n-hint: (verb)
 #: src/menus/ToolbarMenus.cpp
@@ -14469,7 +14469,7 @@ msgstr "Eszköztár&ak visszaállítása"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix"
-msgstr "Keverés"
+msgstr "Összekeverés"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -14485,12 +14485,12 @@ msgstr "Render"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d sáv keverve és megjelenítve egy új sztereósávba"
+msgstr "%d sáv keverve és renderelve egy új sztereósávba"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d sáv keverve és megjelenítve egy új monósávba"
+msgstr "%d sáv keverve és renderelve egy új monósávba"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
@@ -14703,19 +14703,19 @@ msgstr "Új &hozzáadása"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x"
-msgstr "&Keverés"
+msgstr "Össze&keverés"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix Stereo Down to &Mono"
-msgstr "&Lekeverés sztereóra vagy &monóra"
+msgstr "Összekeverés sztereóra vagy &monóra"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x and Render"
-msgstr "&Keverés és megjelenítés"
+msgstr "Össze&keverés és renderelés"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Keverés és megje&lenítés új sávba"
+msgstr "Össze&keverés és renderelés új sávba"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
@@ -14751,7 +14751,7 @@ msgstr "&Balansz"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Left"
-msgstr "&Bal"
+msgstr "&Balra"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan Left"
@@ -14759,7 +14759,7 @@ msgstr "Balansz balra"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Right"
-msgstr "&Jobb"
+msgstr "&Jobbra"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan Right"
@@ -14767,7 +14767,7 @@ msgstr "Balansz jobbra"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Center"
-msgstr "&Közép"
+msgstr "&Középra"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan Center"
@@ -14943,7 +14943,7 @@ msgstr "Válassz egy időt a klipen belül."
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
 msgid "Tra&nsport"
-msgstr "Át&vitel"
+msgstr "Á&tvitel"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pl&aying"
@@ -15239,7 +15239,7 @@ msgstr "&Frissítések keresése"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Az frissítések kereséséhez internetelérés szükséges. A személyes adataid védelme érdekében az Audacity nem tárol semmilyen ilyen jellegű adatot."
+msgstr "A frissítések kereséséhez internetelérés szükséges. A személyes adataid védelme érdekében az Audacity nem tárol semmilyen ilyen jellegű adatot."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15278,7 +15278,7 @@ msgstr "&Kiszolgáló:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
-msgstr "Használva:"
+msgstr "Használja:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
@@ -15298,7 +15298,7 @@ msgstr "Felvétel"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
-msgstr "E&szköz:"
+msgstr "Esz&köz:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Cha&nnels:"
@@ -15323,7 +15323,7 @@ msgstr "&Késleltetési kompenzáció:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
-msgstr "Nincsenek hangcsatolók"
+msgstr "Nincsenek hanginterfészek"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "No devices found"
@@ -15341,7 +15341,7 @@ msgstr "2 (sztereó)"
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
-msgstr "Könyvtárak"
+msgstr "Mappák"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Preferences for Directories"
@@ -15397,7 +15397,7 @@ msgstr "Makró &kimenete:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
-msgstr "Átmeneti fájlok könyvtára"
+msgstr "Ideiglenes fájlok mappája"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Location:"
@@ -15409,7 +15409,7 @@ msgstr "Az ideiglenes fájlok mappája nem lehet FAT meghajtón."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Brow&se..."
-msgstr "Tallózá&s…"
+msgstr "&Tallózás…"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
@@ -15417,7 +15417,7 @@ msgstr "&Szabad hely:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
-msgstr "Válassz egy helyet az átmeneti mappa számára"
+msgstr "Válassz egy helyet az ideiglenes mappának"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Cannot set the preference."
@@ -15438,7 +15438,7 @@ msgid ""
 "Directory %s does not exist. Create it?"
 msgstr ""
 "\n"
-"%s könyvtár nem létezik. Létrehozod?"
+"'%s' mappa nem létezik. Létrehozod?"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Directory creation failed."
@@ -15456,7 +15456,7 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
 msgid "Directory %s is not suitable (at risk of being cleaned out)"
-msgstr "A(z) %s könyvtár nem megfelelő (veszélyben van, hogy kitakarítják)"
+msgstr "'%s' mappa nem megfelelő (veszélyben van, hogy kitakarítják)"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Temporary Directory' cannot be set."
@@ -15464,20 +15464,20 @@ msgstr "'Ideiglenes mappa' nem állítható be."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Temporary files' directory cannot be set."
-msgstr "'Átmeneti fájlok' mappája nem állítható be."
+msgstr "'Ideiglenes fájlok' mappája nem állítható be."
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
 msgid "Directory %s is not writable"
-msgstr "A(z) %s könyvtár nem írható"
+msgstr "%s könyvtár nem írható"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Az átmeneti könyvtár megváltoztatása az Audacity újraindításakor lép életbe"
+msgstr "Az ideiglenes könyvtár megváltoztatása az Audacity újraindításakor lép életbe"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
-msgstr "Átmeneti könyvtár frissítés"
+msgstr "Ideiglenes könyvtár frissítés"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Open' directory cannot be set."
@@ -15566,7 +15566,7 @@ msgstr "Hatások engedélyezése"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
-msgstr "Hatásbeállítások"
+msgstr "Hatás beállításai"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "S&ort or Group:"
@@ -15574,7 +15574,7 @@ msgstr "&Rendezés vagy csoportosítás:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Maximum effects per group (0 to disable):"
-msgstr "Legtöbb hatás csoportonként (0 = kikapcsolás):"
+msgstr "Hatások &maximális száma csoportonként (0 = kikapcsolás):"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -15592,7 +15592,7 @@ msgstr "Bővített importálás"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Preferences for ExtImport"
-msgstr "ExtImport beállításai"
+msgstr "ExtImport tujaldonságai"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -15759,7 +15759,7 @@ msgstr "Rendszer és Audacity téma &egyvelege"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr "Leginkább balról jobbra haladó elrendezést használj RTL (jobbról-balra) nyelveken"
+msgstr "Legtöbbször balról jobbra haladó elrendezést használj RTL (jobbról-balra) nyelvek esetén"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
@@ -15792,7 +15792,7 @@ msgstr "ImpoerExport tulajdonságai"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Mix down to Stereo or Mono"
-msgstr "&Lekeverés sztereóra vagy monóra"
+msgstr "&Összekeverés sztereóra vagy monóra"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use Advanced Mixing Options"
@@ -16967,7 +16967,7 @@ msgstr "Spektrogram"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Connect dots"
-msgstr "Csatlakoztassa a pontokat"
+msgstr "Pontok összekötése"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Stem plot"
@@ -17100,7 +17100,7 @@ msgstr "Figyelmeztetések beállításai"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
-msgstr "Figyelmeztetések/Felszólítások megjelenítése ennél"
+msgstr "Figyelmeztetések/Felugrók megjelenítése"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &projects"
@@ -17112,15 +17112,15 @@ msgstr "Ü&res projekt mentése"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &mono during export"
-msgstr "Lekeverés &monóra exportálás közben"
+msgstr "Összekeverés &monóra exportálás közben"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &stereo during export"
-msgstr "Lekeverés &sztereóra exportálás közben"
+msgstr "Összekeverés &sztereóra exportálás közben"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "Lekeverés exportáláskor (&egyéni FFmpeg vagy külső program)"
+msgstr "Összekeverés exportáláskor (&egyéni FFmpeg vagy külső program)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Missing file &name extension during export"
@@ -17184,7 +17184,7 @@ msgstr "Hangbeállítások:"
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Setup Toolbar"
-msgstr "Hangbeállítások eszköztár"
+msgstr "&Hangbeállítások eszköztár"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -17234,7 +17234,7 @@ msgstr "Kijelölés a kezdetéig"
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
 msgid "%s Paused."
-msgstr "%s Szüneteltetve."
+msgstr "%s szüneteltetve."
 
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
@@ -17786,7 +17786,7 @@ msgstr "Kattintás és húzás a minták szerkesztéséhez"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr "Rajzolás használatához nagyítson tovább addig, amíg nem látja az egyes mintákat."
+msgstr "A Rajzeszköz használatához nagyíts addig, amíg nem látod a különálló mintákat."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -19723,7 +19723,7 @@ msgstr "Hiba~%A fájl nem írható:~%\"~a.txt\""
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
-msgstr "Szabályos intervallumú címkék"
+msgstr "Azonos távolságú címkék"
 
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
@@ -19732,7 +19732,7 @@ msgstr "Címkék létrehozása ez alapján"
 
 #: plug-ins/equalabel.ny
 msgid "Number and Interval"
-msgstr "Szám és Intervallum"
+msgstr "Szám és távolság"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -19740,7 +19740,7 @@ msgstr "Címkék száma"
 
 #: plug-ins/equalabel.ny
 msgid "Label Interval"
-msgstr "Címke intervalluma"
+msgstr "Címkék távolsága"
 
 #: plug-ins/equalabel.ny
 msgid "Number of labels"
@@ -19748,7 +19748,7 @@ msgstr "Címkék száma"
 
 #: plug-ins/equalabel.ny
 msgid "Label interval (seconds)"
-msgstr "Címke intervalluma (másodperc)"
+msgstr "Címkék távolsága (másodperc)"
 
 #: plug-ins/equalabel.ny
 msgid "Length of label region (seconds)"
@@ -19756,7 +19756,7 @@ msgstr "Kijelölt terület hossza (másodperc)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
-msgstr "A címkeintervallumok igazítása a hosszhoz"
+msgstr "Címkék távolságának igazítása a hosszhoz"
 
 #. i18n-hint: Do not translate '##1'
 #: plug-ins/equalabel.ny plug-ins/label-sounds.ny
@@ -19819,16 +19819,16 @@ msgstr "Hiba: Nincs elég hely a címkék létrehozásához.~%"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr "Figyelmeztetés: Átfedő régiócímkék.~%"
+msgstr "Figyelmeztetés: Átfedő címketerületek.~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
 msgid "region labels"
-msgstr "régió címkék"
+msgstr "címketerület"
 
 #: plug-ins/equalabel.ny
 msgid "point labels"
-msgstr "pont címkék"
+msgstr "címkepont"
 
 #. i18n-hint:  Number of labels produced at specified intervals.
 #: plug-ins/equalabel.ny
@@ -21016,7 +21016,7 @@ msgstr "Torzítás és moduláció"
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Special"
-msgstr "Különösen"
+msgstr "Speciális"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
