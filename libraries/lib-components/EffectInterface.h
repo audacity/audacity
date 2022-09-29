@@ -122,6 +122,12 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
    }
 };
 
+//! Hold values to send to effect output meters
+class COMPONENTS_API EffectOutputs {
+public:
+   virtual ~EffectOutputs();
+};
+
 //! Interface for accessing an EffectSettings that may change asynchronously in
 //! another thread; to be used in the main thread, only.
 /*! Updates are communicated atomically both ways.  The address of Get() should
@@ -327,6 +333,16 @@ public:
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
+
+   /*! @name outputs
+    @{
+    */
+   //! Produce an object to hold values to send to effect output meters
+   /*!
+    Default implementation returns nullptr
+    */
+   virtual std::unique_ptr<EffectOutputs> MakeOutputs() const;
+   //! @}
 };
 
 class wxDialog;
