@@ -144,7 +144,7 @@ bool EffectBassTreble::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectBassTreble::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectBassTrebleState slave;
 
