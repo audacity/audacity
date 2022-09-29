@@ -50,6 +50,14 @@ struct LadspaEffectSettings {
    std::vector<float> controls;
 };
 
+//! Carry output control port information back to main thread
+struct LadspaEffectOutputs : EffectOutputs {
+   ~LadspaEffectOutputs() override;
+   // Allocate as many slots as there are ports, although some may correspond
+   // to input and audio ports and remain unused
+   std::vector<float> controls;
+};
+
 class LadspaEffect final
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
@@ -65,6 +73,8 @@ public:
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst,
       SettingsCopyDirection copyDirection) const override;
+
+   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
 
    // ComponentInterface implementation
 
