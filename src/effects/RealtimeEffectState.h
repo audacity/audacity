@@ -63,6 +63,9 @@ public:
     */
    std::shared_ptr<EffectInstance> GetInstance();
 
+   //! Get locations that a GUI can connect meters to
+   EffectOutputs &GetOutputs() { return mMainOutputs; }
+
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
@@ -148,6 +151,7 @@ private:
    
    //! Updated immediately by Access::Set in the main thread
    NonInterfering<SettingsAndCounter> mMainSettings;
+   EffectOutputs mMainOutputs;
 
    /*! @name Members that are changed also in the worker thread
     @{
