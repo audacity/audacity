@@ -40,15 +40,32 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
-struct LadspaEffectSettings {
-   explicit LadspaEffectSettings(size_t nPorts = 0)
+struct LadspaPortValues {
+   explicit LadspaPortValues(size_t nPorts = 0)
       : controls( nPorts )
    {}
 
    // Allocate as many slots as there are ports, although some may correspond
-   // to audio, not control, ports and so rest unused
+   // to audio ports, or control ports with irrelevant in/out direction, and so
+   // waste a little space, which is not likely to be large
    std::vector<float> controls;
 };
+
+//! Assume outputs originated from LadspaEffect::MakeOutputs()
+//! and copies thereof
+static inline LadspaPortValues &GetValues(EffectOutputs &outputs)
+{
+   auto pValues = outputs.cast<LadspaPortValues>();
+   assert(pValues);
+   return *pValues;
+}
+
+static inline const LadspaPortValues &GetValues(const EffectOutputs &outputs)
+{
+   return GetValues(const_cast<EffectOutputs &>(outputs));
+}
+
+using LadspaEffectSettings = LadspaPortValues;
 
 class LadspaEffect final
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
@@ -65,6 +82,8 @@ public:
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst,
       SettingsCopyDirection copyDirection) const override;
+
+   EffectOutputs MakeOutputs() const override;
 
    // ComponentInterface implementation
 

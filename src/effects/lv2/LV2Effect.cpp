@@ -182,6 +182,7 @@ EffectSettings LV2Effect::MakeSettings() const
 {
    auto result = EffectSettings::make<LV2EffectSettings>();
    auto &settings = GetSettings(result);
+   // This may waste a bit of space on output ports, but not likely much
    settings.values.reserve(mPorts.mControlPorts.size());
    for (auto &controlPort : mPorts.mControlPorts) {
       auto &value = settings.values.emplace_back();
@@ -229,6 +230,19 @@ bool LV2Effect::CopySettingsContents(
    // Ignore mpState
 
    return true;
+}
+
+auto LV2Effect::MakeOutputs() const -> EffectOutputs
+{
+   auto result = EffectOutputs::make<LV2PortValues>();
+   auto &values = GetValues(result);
+   // This may waste a bit of space on input ports, but not likely much
+   values.values.reserve(mPorts.mControlPorts.size());
+   for (auto &controlPort : mPorts.mControlPorts) {
+      auto &value = values.values.emplace_back();
+      value = controlPort->mDef;
+   }
+   return result;
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const

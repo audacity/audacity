@@ -156,6 +156,12 @@ bool LadspaEffect::CopySettingsContents(
    return true;
 }
 
+auto LadspaEffect::MakeOutputs() const -> EffectOutputs
+{
+   auto result = EffectOutputs::make<LadspaPortValues>( mData->PortCount );
+   return result;
+}
+
 // ============================================================================
 // ComponentInterface implementation
 // ============================================================================

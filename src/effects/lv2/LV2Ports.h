@@ -203,14 +203,31 @@ using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
 using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 
 //! Storage locations to be connected to LV2 control ports
-struct LV2EffectSettings final {
+struct LV2PortValues {
    //! vector of values in correspondence with the control ports
    std::vector<float> values;
+};
+
+//! Assume outputs originated from LV2Effect::MakeOutputs()
+//! and copies thereof
+static inline LV2PortValues &GetValues(EffectOutputs &outputs)
+{
+   auto pValues = outputs.cast<LV2PortValues>();
+   assert(pValues);
+   return *pValues;
+}
+
+static inline const LV2PortValues &GetValues(const EffectOutputs &outputs)
+{
+   return GetValues(const_cast<EffectOutputs &>(outputs));
+}
+
+struct LV2EffectSettings final : LV2PortValues {
    //! Result of last load of a preset; may be null
    mutable std::shared_ptr<const LilvState> mpState;
 };
 
-//! Assume settings originated from LV2Effecct::MakeSettings()
+//! Assume settings originated from LV2Effect::MakeSettings()
 //! and copies thereof
 inline LV2EffectSettings &GetSettings(EffectSettings &settings)
 {
