@@ -733,7 +733,7 @@ Steinberg::int32 VST3Wrapper::GetLatencySamples() const
 
 EffectSettings VST3Wrapper::MakeSettings()
 {
-   return EffectSettings::Make<VST3EffectSettings>();
+   return EffectSettings::make<VST3EffectSettings>();
 }
 
 void VST3Wrapper::LoadSettings(const CommandParameters& parms, EffectSettings& settings)

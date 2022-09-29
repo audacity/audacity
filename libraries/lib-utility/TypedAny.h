@@ -73,9 +73,21 @@ public:
 
    //! Like make_any but a static member function
    template<typename T, typename... Args>
-   static TypedAny make(Args &&... args)
+   static Tag make(Args &&... args)
    {
-      return TypedAny(std::in_place_type<T>, std::forward<Args>(args)...);
+      return Tag(std::in_place_type<T>, std::forward<Args>(args)...);
+   }
+
+   template<typename T>
+   static bool copy(const TypedAny &src, TypedAny &dst)
+   {
+      const T *pSrc = src.cast<T>();
+      T *pDst = dst.cast<T>();
+      if (pSrc && pDst) {
+         *pDst = *pSrc;
+         return true;
+      }
+      return false;
    }
 
    //! @}

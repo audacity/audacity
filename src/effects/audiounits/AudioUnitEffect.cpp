@@ -300,7 +300,7 @@ EffectSettings AudioUnitEffect::MakeSettings() const
 {
    AudioUnitEffectSettings settings;
    FetchSettings(settings);
-   return EffectSettings::Make<AudioUnitEffectSettings>(std::move(settings));
+   return EffectSettings::make<AudioUnitEffectSettings>(std::move(settings));
 }
 
 bool AudioUnitEffect::CopySettingsContents(

@@ -115,7 +115,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 // the structure.  Instead allocate a number of values chosen by the plug-in
 EffectSettings LadspaEffect::MakeSettings() const
 {
-   auto result = EffectSettings::Make<LadspaEffectSettings>( mData->PortCount );
+   auto result = EffectSettings::make<LadspaEffectSettings>( mData->PortCount );
    InitializeControls(GetSettings(result));
    return result;
 }

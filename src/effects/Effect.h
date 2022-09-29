@@ -319,12 +319,12 @@ class EffectWithSettings : public Base {
 public:
    EffectSettings MakeSettings() const override
    {
-      return EffectSettings::Make<Settings>();
+      return EffectSettings::make<Settings>();
    }
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override
    {
-      return EffectSettings::Copy<Settings>(src, dst);
+      return EffectSettings::copy<Settings>(src, dst);
    }
    //! Assume settings originated from MakeSettings() and copies thereof
    static inline Settings &GetSettings(EffectSettings &settings)

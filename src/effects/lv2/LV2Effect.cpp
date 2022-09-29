@@ -180,7 +180,7 @@ bool LV2Effect::InitializePlugin()
 
 EffectSettings LV2Effect::MakeSettings() const
 {
-   auto result = EffectSettings::Make<LV2EffectSettings>();
+   auto result = EffectSettings::make<LV2EffectSettings>();
    auto &settings = GetSettings(result);
    settings.values.reserve(mPorts.mControlPorts.size());
    for (auto &controlPort : mPorts.mControlPorts) {
