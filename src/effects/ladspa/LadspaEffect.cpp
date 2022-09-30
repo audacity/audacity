@@ -1473,7 +1473,8 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 
 std::unique_ptr<EffectUIValidator>
 LadspaEffect::PopulateOrExchange(ShuttleGui & S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto result =
       std::make_unique<Validator>(*this, access, mProjectRate, GetType());

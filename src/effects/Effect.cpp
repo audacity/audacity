@@ -279,7 +279,7 @@ bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
 
 std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *pOutputs)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
@@ -287,7 +287,7 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
 //   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
-   auto result = PopulateOrExchange(S, instance, access);
+   auto result = PopulateOrExchange(S, instance, access, pOutputs);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
@@ -586,7 +586,8 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
 }
 
 std::unique_ptr<EffectUIValidator> Effect::PopulateOrExchange(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    return nullptr;
 }
