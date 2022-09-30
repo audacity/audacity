@@ -81,5 +81,11 @@ if( NOT vst3sdk_FOUND )
       INTERFACE_INCLUDE_DIRECTORIES ${vst3sdk_DIR}
    )
 
+   find_package(X11 REQUIRED)
+
+   if( X11_FOUND )
+      target_link_libraries(vst3sdk::base INTERFACE X11::X11)
+   endif()
+
    set(vst3sdk_FOUND TRUE)
 endif()
