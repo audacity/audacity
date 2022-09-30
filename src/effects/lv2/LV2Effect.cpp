@@ -324,7 +324,8 @@ bool LV2Effect::LoadSettings(
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access, EffectOutputs *)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   EffectOutputs *pOutputs)
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
@@ -332,7 +333,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    auto pWrapper =
-      myInstance.MakeWrapper(settings, mProjectRate, true);
+      myInstance.MakeWrapper(settings, mProjectRate, pOutputs);
    if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -349,7 +350,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mProjectRate, mFeatures, mPorts, parent, useGUI);
+      access, pOutputs, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
    if (result->mUseGUI)
       result->mUseGUI = result->BuildFancy(move(pWrapper), settings);

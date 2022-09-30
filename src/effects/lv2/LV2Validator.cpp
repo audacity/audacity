@@ -89,13 +89,15 @@ void LV2Validator::UI::Destroy()
 
 LV2Validator::LV2Validator(EffectBase &effect,
    const LilvPlugin &plug, LV2Instance &instance,
-   EffectSettingsAccess &access, double sampleRate,
+   EffectSettingsAccess &access, EffectOutputs *pOutputs,
+   double sampleRate,
    const LV2FeaturesList &features,
    const LV2Ports &ports, wxWindow *parent, bool useGUI
 )  : EffectUIValidator{ effect, access }
    , mPlug{ plug }
    , mType{ effect.GetType() }
    , mInstance{ instance }
+   , mpOutputs{ pOutputs }
    , mSampleRate{ sampleRate }
    , mPorts{ ports }
    , mPortUIStates{ instance.GetPortStates(), ports }
@@ -469,8 +471,13 @@ bool LV2Validator::BuildPlain(EffectSettingsAccess &access)
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
 
+               static float sink;
+               const auto pOutputValues =
+                  mpOutputs ? &GetValues(*mpOutputs) : nullptr;
+               const auto pValue =
+                  pOutputValues ? &pOutputValues->values[p] : &sink;
                //! Captures a const reference to value!
-               auto m = safenew LV2EffectMeter(w, port, value);
+               auto m = safenew LV2EffectMeter(w, port, *pValue);
                gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
                ctrl.meter = m;
 
@@ -791,17 +798,25 @@ void LV2Validator::OnIdle(wxIdleEvent &evt)
    // In case of output control port values though, it is needed for metering.
    mAccess.Flush();
    auto& values = GetSettings(mAccess.Get()).values;
+   auto pOutputValues = mpOutputs ? &GetValues(*mpOutputs) : nullptr;
 
    size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
-      const auto& value = values[index];
-      // Let UI know that a port's value has changed
-      if (value != state.mLst) {
-         suil_instance_port_event(mUI.mSuilInstance.get(),
-            port->mIndex, sizeof(value),
-            /* Means this event sends a float: */ 0,
-            &value);
-         state.mLst = value;
+      
+      const auto pValue = port->mIsInput
+         ? &values[index]
+         : pOutputValues ? &pOutputValues->values[index]
+         : nullptr;
+      if (pValue) {
+         auto &value = *pValue;
+         // Let UI know that a port's value has changed
+         if (value != state.mLst) {
+            suil_instance_port_event(mUI.mSuilInstance.get(),
+               port->mIndex, sizeof(value),
+               /* Means this event sends a float: */ 0,
+               &value);
+            state.mLst = value;
+         }
       }
       ++index;
    }

@@ -30,6 +30,7 @@
 #include <thread>
 #include <wx/msgqueue.h>
 
+struct EffectOutputs;
 struct LV2EffectSettings;
 class LV2Ports;
 class LV2PortStates;
@@ -55,7 +56,8 @@ public:
    static std::unique_ptr<LV2Wrapper> Create(
       LV2InstanceFeaturesList &baseFeatures,
       const LV2Ports &ports, LV2PortStates &portStates,
-      const LV2EffectSettings &settings, float sampleRate, bool useOutput);
+      const LV2EffectSettings &settings, float sampleRate,
+      EffectOutputs *pOutputs);
 
    //! Constructor may spawn a thread
    LV2Wrapper(CreateToken&&,
@@ -66,10 +68,10 @@ public:
    ~LV2Wrapper();
 
    void ConnectControlPorts(const LV2Ports &ports,
-      const LV2EffectSettings &settings, bool useOutput);
+      const LV2EffectSettings &settings, EffectOutputs *pOutputs);
    void ConnectPorts(const LV2Ports &ports,
       LV2PortStates &portStates, const LV2EffectSettings &settings,
-      bool useOutput);
+      EffectOutputs *pOutputs);
    void Activate();
    void Deactivate();
    LilvInstance &GetInstance() const;
