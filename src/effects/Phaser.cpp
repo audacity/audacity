@@ -221,8 +221,8 @@ EffectType EffectPhaser::GetType() const
 auto EffectPhaser::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   // return RealtimeSince::Never;
+   return RealtimeSince::Always;
 }
 
 unsigned EffectPhaser::Instance::GetAudioInCount() const
