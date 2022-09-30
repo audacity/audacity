@@ -192,8 +192,7 @@ EffectSettings LV2Effect::MakeSettings() const
 }
 
 bool LV2Effect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst,
-   SettingsCopyDirection copyDirection) const
+   const EffectSettings &src, EffectSettings &dst) const
 {
    auto &srcControls = GetSettings(src).values;
    auto &dstControls = GetSettings(dst).values;
@@ -215,13 +214,11 @@ bool LV2Effect::CopySettingsContents(
    if (portValuesCount != portsCount)
       return false;
 
-   const auto copyOutputs = copyDirection == SettingsCopyDirection::WorkerToMain;
-   
    size_t portIndex {};
 
    for (auto& port : controlPorts)
    {
-      if (port->mIsInput || copyOutputs)
+      if (port->mIsInput)
          dstControls[portIndex] = srcControls[portIndex];
 
       ++portIndex;

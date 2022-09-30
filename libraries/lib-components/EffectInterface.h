@@ -251,15 +251,6 @@ public:
    virtual bool IsHiddenFromMenus() const;
 };
 
-//! Direction in which settings are copied
-enum class SettingsCopyDirection
-{
-   //! Main thread settings replicated to the worker thread
-   MainToWorker,
-   //! Worker thread settings replicated to main thread
-   WorkerToMain
-};
-
 /*************************************************************************************//**
 
 \class EffectSettingsManager
@@ -302,7 +293,7 @@ public:
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const;
+      const EffectSettings &src, EffectSettings &dst) const;
 
    //! Store settings as keys and values
    /*!

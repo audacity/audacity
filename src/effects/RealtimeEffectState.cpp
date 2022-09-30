@@ -42,9 +42,9 @@ public:
       settings.counter = 0;
       mLastSettings = settings;
       // Initialize each message buffer with two copies of settings
-      mChannelToMain.Write(ToMainSlot{ { settings,
+      mChannelToMain.Write(ToMainSlot{ { 0,
          pOutputs ? pOutputs->Clone() : nullptr } });
-      mChannelToMain.Write(ToMainSlot{ { settings,
+      mChannelToMain.Write(ToMainSlot{ { 0,
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings });
       mChannelFromMain.Write(FromMainSlot{ settings });
@@ -54,16 +54,15 @@ public:
 
    void MainRead() {
       mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
-         mMainThreadCache);
+         mCounter);
    }
    void MainWrite(SettingsAndCounter &&settings) {
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(std::move(settings));
    }
 
-   struct EffectAndResponse{
-      const EffectSettingsManager &effect;
-      const SettingsAndCounter &settings;
+   struct CounterAndOutputs{
+      Response::Counter counter;
       EffectOutputs *pOutputs{};
    };
    void WorkerRead() {
@@ -72,9 +71,9 @@ public:
          mEffect, mState.mWorkerSettings);
    }
    void WorkerWrite() {
-      // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelToMain.Write(EffectAndResponse{
-         mEffect, mState.mWorkerSettings, mState.mOutputs.get() });
+      // Worker thread avoids memory allocation.
+      mChannelToMain.Write(CounterAndOutputs{
+         mState.mWorkerSettings.counter, mState.mOutputs.get() });
    }
 
    struct ToMainSlot {
@@ -86,34 +85,25 @@ public:
       ToMainSlot &operator=(ToMainSlot &&) = default;
 
       // Worker thread writes the slot
-      ToMainSlot& operator=(EffectAndResponse &&arg) {
-         mResponse.settings.counter = arg.settings.counter;
+      ToMainSlot& operator=(CounterAndOutputs &&arg) {
          // This happens during MessageBuffer's busying of the slot
-         arg.effect.CopySettingsContents(
-            arg.settings.settings, mResponse.settings.settings,
-            SettingsCopyDirection::WorkerToMain);
+         mResponse.counter = arg.counter;
          if (mResponse.pOutputs && arg.pOutputs)
             mResponse.pOutputs->Assign(std::move(*arg.pOutputs));
-         mResponse.settings.settings.extra =
-            arg.settings.settings.extra;
          return *this;
       }
 
-      // Main thread doesn't move out of the slot, but copies std::any
-      // and extra fields
-      struct Reader {
-         Reader(ToMainSlot &&slot, EffectOutputs *pOutputs,
-            SettingsAndCounter &settings
-         ) {
-            // Main thread is not under the performance constraints of the
-            // worker, but Assign is still used so that
-            // members of underlying vectors or other containers do not
-            // relocate
-            if (pOutputs && slot.mResponse.pOutputs)
-               pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
-            settings.counter = slot.mResponse.settings.counter;
-         }
-      };
+      struct Reader { Reader(ToMainSlot &&slot, EffectOutputs *pOutputs,
+         Response::Counter &counter
+      ) {
+         // Main thread is not under the performance constraints of the
+         // worker, but Assign is still used so that
+         // members of underlying vectors or other containers do not
+         // relocate
+         if (pOutputs && slot.mResponse.pOutputs)
+            pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
+         counter = slot.mResponse.counter;
+      } };
 
       Response mResponse;
    };
@@ -142,8 +132,7 @@ public:
          settings.counter = slot.mSettings.counter;
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(
-               slot.mSettings.settings, settings.settings,
-               SettingsCopyDirection::MainToWorker);
+               slot.mSettings.settings, settings.settings);
             settings.settings.extra = slot.mSettings.settings.extra;
       } };
 
@@ -154,7 +143,7 @@ public:
    RealtimeEffectState &mState;
 
    MessageBuffer<FromMainSlot> mChannelFromMain;
-   SettingsAndCounter mMainThreadCache; // only the counter is used
+   Response::Counter mCounter;
    SettingsAndCounter mLastSettings;
 
    MessageBuffer<ToMainSlot> mChannelToMain;
@@ -173,10 +162,10 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    static bool FlushAttempt(AccessState &state) {
       assert(state.mState.mInitialized);
       auto &lastSettings = state.mLastSettings;
-      // Assigns to mMainThreadCache
+      // Assigns to mCounter
       state.MainRead();
       // If true, then first time test, or echo is completed
-      return state.mMainThreadCache.counter == lastSettings.counter;
+      return state.mCounter == lastSettings.counter;
    }
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
