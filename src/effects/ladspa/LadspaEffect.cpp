@@ -955,7 +955,8 @@ bool LadspaEffect::Instance::ProcessInitialize(
    if (!mReady) {
       auto &effect = GetEffect();
       auto &ladspaSettings = GetSettings(settings);
-      mMaster = effect.InitInstance(sampleRate, ladspaSettings);
+      // Destructive effect processing doesn't need output ports
+      mMaster = effect.InitInstance(sampleRate, ladspaSettings, nullptr);
       if (!mMaster)
          return false;
       mReady = true;
@@ -997,18 +998,18 @@ bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool LadspaEffect::Instance::RealtimeAddProcessor(
-   EffectSettings &settings, EffectOutputs &, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs &outputs, unsigned, float sampleRate)
 {
    auto &effect = GetEffect();
    auto &ladspaSettings = GetSettings(settings);
-   LADSPA_Handle slave = effect.InitInstance(sampleRate, ladspaSettings);
+  // Connect to outputs only if this is the first processor for the track.
+  // (What's right when a mono effect is on a stereo channel?  Unclear, but
+  // this definitely causes connection with the first channel.)
+   auto pLadspaOutputs = mSlaves.empty() ? &GetValues(outputs) : nullptr;
+   auto slave = effect.InitInstance(sampleRate, ladspaSettings, pLadspaOutputs);
    if (!slave)
-   {
       return false;
-   }
-
    mSlaves.push_back(slave);
-
    return true;
 }
 
@@ -1156,12 +1157,14 @@ bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 
 struct LadspaEffect::Validator : EffectUIValidator {
    Validator(EffectUIClientInterface &effect,
-      EffectSettingsAccess &access, double sampleRate, EffectType type)
+      EffectSettingsAccess &access, double sampleRate, EffectType type,
+      LadspaPortValues *pOutputs)
       : EffectUIValidator{ effect, access }
       , mSampleRate{ sampleRate }
       , mType{ type }
       // Copy settings
       , mSettings{ GetSettings(access.Get()) }
+      , mpOutputs{ pOutputs }
    {}
 
    bool UpdateUI() override;
@@ -1180,6 +1183,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
    const double mSampleRate;
    const EffectType mType;
    LadspaEffectSettings mSettings;
+   LadspaPortValues *const mpOutputs;
 
    NumericTextCtrl *mDuration{};
    wxWeakRef<wxDialog> mDialog;
@@ -1444,8 +1448,10 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 
             // Capture const reference to output control value for later
             // display update
+            static float sink;
+            auto pOutput = mpOutputs ? &mpOutputs->controls[p] : &sink;
             mMeters[p] = safenew LadspaEffectMeter(
-               w, controls[p], lower, upper);
+               w, *pOutput, lower, upper);
             mMeters[p]->SetLabel(labelText);    // for screen readers
             gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          }
@@ -1471,10 +1477,11 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 std::unique_ptr<EffectUIValidator>
 LadspaEffect::PopulateOrExchange(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access,
-   EffectOutputs *)
+   EffectOutputs *pOutputs)
 {
-   auto result =
-      std::make_unique<Validator>(*this, access, mProjectRate, GetType());
+   auto pValues = pOutputs ? &GetValues(*pOutputs) : nullptr;
+   auto result = std::make_unique<Validator>(*this, access, mProjectRate,
+      GetType(), pValues);
    result->PopulateUI(S);
    return result;
 }
@@ -1603,7 +1610,8 @@ bool LadspaEffect::SaveParameters(
 }
 
 LADSPA_Handle LadspaEffect::InitInstance(
-   float sampleRate, LadspaEffectSettings &settings) const
+   float sampleRate, LadspaEffectSettings &settings,
+   LadspaPortValues *pOutputs) const
 {
    /* Instantiate the plugin */
    LADSPA_Handle handle = mData->instantiate(mData, sampleRate);
@@ -1613,8 +1621,15 @@ LADSPA_Handle LadspaEffect::InitInstance(
    auto &controls = settings.controls;
    for (unsigned long p = 0; p < mData->PortCount; ++p) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
-      if (LADSPA_IS_PORT_CONTROL(d))
-         mData->connect_port(handle, p, &controls[p]);
+      if (LADSPA_IS_PORT_CONTROL(d)) {
+         if (LADSPA_IS_PORT_INPUT(d))
+            mData->connect_port(handle, p, &controls[p]);
+         else {
+            static LADSPA_Data sink;
+            mData->connect_port(handle, p,
+               pOutputs ? &pOutputs->controls[p] : &sink);
+         }
+      }
    }
    if (mData->activate)
       mData->activate(handle);

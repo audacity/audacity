@@ -149,7 +149,8 @@ private:
       const RegistryPath & group, const EffectSettings &settings) const;
 
    LADSPA_Handle InitInstance(
-      float sampleRate, LadspaEffectSettings &settings) const;
+      float sampleRate, LadspaEffectSettings &settings,
+      LadspaPortValues *pOutputs) const;
    void FreeInstance(LADSPA_Handle handle) const;
 
 private:
