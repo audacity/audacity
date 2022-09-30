@@ -121,7 +121,7 @@ bool EffectSettingsManager::MoveOutputsContents(
 }
 
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
+   const EffectSettings &, EffectSettings &) const
 {
    return true;
 }

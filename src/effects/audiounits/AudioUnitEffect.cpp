@@ -304,7 +304,7 @@ EffectSettings AudioUnitEffect::MakeSettings() const
 }
 
 bool AudioUnitEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const
+   const EffectSettings &src, EffectSettings &dst) const
 {
    auto &dstSettings = GetSettings(dst);
    auto &srcSettings = GetSettings(src);

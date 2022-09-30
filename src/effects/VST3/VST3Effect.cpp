@@ -403,8 +403,8 @@ EffectSettings VST3Effect::MakeSettings() const
    return VST3Wrapper::MakeSettings();
 }
 
-bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
+bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
 {
-   VST3Wrapper::CopySettingsContents(src, dst, copyDirection);
+   VST3Wrapper::CopySettingsContents(src, dst);
    return true;
 }

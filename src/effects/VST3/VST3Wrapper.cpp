@@ -798,15 +798,12 @@ void VST3Wrapper::SaveUserPreset(const EffectDefinitionInterface& effect, const 
       SetConfig(effect, PluginSettings::Private, name, parametersKey, ParametersToString(vst3settings.parameterChanges));
 }
 
-void VST3Wrapper::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection)
+void VST3Wrapper::CopySettingsContents(const EffectSettings& src, EffectSettings& dst)
 {
    auto& from = GetSettings(*const_cast<EffectSettings*>(&src));
    auto& to = GetSettings(dst);
 
    to.changesCounter = from.changesCounter;
-   if(copyDirection == SettingsCopyDirection::MainToWorker)
-   {
-      //Don't allocate in worker
-      std::swap(from.parameterChanges, to.parameterChanges);
-   }
+   //Don't allocate in worker
+   std::swap(from.parameterChanges, to.parameterChanges);
 }
