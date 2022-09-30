@@ -95,8 +95,8 @@ public:
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      EffectOutputs *pOutputs) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;

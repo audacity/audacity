@@ -1281,7 +1281,7 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance& instance, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access, EffectOutputs *)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));

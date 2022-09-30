@@ -359,8 +359,8 @@ class VSTEffect final
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      EffectOutputs *pOutputs) override;
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;

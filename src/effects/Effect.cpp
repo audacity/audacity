@@ -278,7 +278,7 @@ bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
 // EffectUIClientInterface implementation
 
 std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access, EffectOutputs *)
 {
    auto parent = S.GetParent();
    mUIParent = parent;

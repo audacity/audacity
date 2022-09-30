@@ -257,7 +257,7 @@ std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
-   EffectInstance& instance, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access, EffectOutputs *)
 {
    bool useGUI { true };
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),

@@ -127,8 +127,8 @@ class AUDACITY_DLL_API Effect /* not final */
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      EffectOutputs *pOutputs) override;
    //! @return false
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;

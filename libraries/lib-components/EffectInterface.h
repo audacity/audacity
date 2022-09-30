@@ -641,13 +641,16 @@ public:
     object
     @param access guaranteed to have a lifetime containing that of the returned
     object
+    @param pOutputs null, or else points to outputs with lifetime containing
+    that of the returned object
 
     @return null for failure; else an object invoked to retrieve values of UI
     controls; it might also hold some state needed to implement event handlers
     of the controls; it will exist only while the dialog continues to exist
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
-      EffectInstance &instance, EffectSettingsAccess &access) = 0;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      EffectOutputs *pOutputs) = 0;
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;
