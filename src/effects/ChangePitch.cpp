@@ -232,7 +232,8 @@ bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
 }
 
 std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 

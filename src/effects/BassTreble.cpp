@@ -179,7 +179,8 @@ bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings &) const
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

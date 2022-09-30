@@ -213,7 +213,8 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 }
 
 std::unique_ptr<EffectUIValidator> EffectLoudness::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    S.StartVerticalLay(0);
    {
