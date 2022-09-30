@@ -604,13 +604,15 @@ BEGIN_EVENT_TABLE(LadspaEffectMeter, wxWindow)
 END_EVENT_TABLE()
 
 LadspaEffectMeter::LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max)
-:  wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxDEFAULT_CONTROL_BORDER),
+:  wxWindow{ parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+      wxSIMPLE_BORDER },
    mVal(val)
 {
    mMin = min;
    mMax = max;
    mLastValue = -mVal;
    SetBackgroundColour(*wxWHITE);
+   SetMinSize({ 20, 20 });
 }
 
 LadspaEffectMeter::~LadspaEffectMeter()
