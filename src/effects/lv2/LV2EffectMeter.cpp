@@ -33,13 +33,14 @@ END_EVENT_TABLE()
 
 LV2EffectMeter::LV2EffectMeter(
    wxWindow *parent, const LV2ControlPortPtr port, const float &value
-)  : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-      wxDEFAULT_CONTROL_BORDER)
+)  : wxWindow{ parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+      wxSIMPLE_BORDER }
    , mControlPort(port)
    , mValue{ value }
 {
    mLastValue = -value;
    SetBackgroundColour(*wxWHITE);
+   SetMinSize({ 20, 20 });
 }
 
 LV2EffectMeter::~LV2EffectMeter()
