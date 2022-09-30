@@ -297,7 +297,7 @@ public:
             portStates,
             GetSettings(settings),
             44100.0,
-            false);
+            nullptr);
 
          if(!wrapper)
             throw std::runtime_error("Cannot create LV2 instance");
