@@ -422,7 +422,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    mParent = S.GetParent();
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);

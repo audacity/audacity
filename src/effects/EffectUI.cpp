@@ -422,7 +422,7 @@ bool EffectUIHost::Initialize()
 
       // Let the client add things to the panel
       ShuttleGui S1{ uw.get(), eIsCreating };
-      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess);
+      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess, mpOutputs);
       if (!mpValidator)
          return false;
 

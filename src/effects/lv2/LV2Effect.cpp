@@ -320,7 +320,8 @@ bool LV2Effect::LoadSettings(
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
