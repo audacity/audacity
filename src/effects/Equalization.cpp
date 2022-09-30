@@ -679,7 +679,8 @@ bool EffectEqualization::CloseUI()
 }
 
 std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   EffectOutputs *)
 {
    S.SetBorder(0);
 

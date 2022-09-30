@@ -414,7 +414,8 @@ void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectDtmf::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   EffectOutputs *)
 {
    auto &settings = access.Get();
    auto &dtmfSettings = GetSettings(settings);

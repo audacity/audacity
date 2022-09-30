@@ -206,7 +206,8 @@ void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
 }
 
 std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   EffectOutputs *)
 {
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 

@@ -90,8 +90,8 @@ public:
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, EffectOutputs *pOutputs) override;
 
    struct Validator;
    struct Instance;

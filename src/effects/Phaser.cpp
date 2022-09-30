@@ -191,7 +191,8 @@ size_t EffectPhaser::RealtimeProcess(size_t group, EffectSettings &settings,
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   EffectOutputs *)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

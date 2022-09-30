@@ -197,7 +197,8 @@ class AUDACITY_DLL_API Effect /* not final */
     DefaultEffectUIValidator; default implementation returns null
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access);
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      EffectOutputs *pOutputs);
 
    // No more virtuals!
 

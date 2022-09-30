@@ -1131,7 +1131,8 @@ int NyquistEffect::ShowHostInterface(
 }
 
 std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   EffectOutputs *)
 {
    if (mIsPrompt)
       BuildPromptWindow(S);

@@ -127,8 +127,8 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    struct Validator;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, EffectOutputs *pOutputs) override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
