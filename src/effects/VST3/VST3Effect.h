@@ -105,7 +105,7 @@ public:
    void ShowOptions() override;
 
    EffectSettings MakeSettings() const override;
-   bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const override;
+   bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
 private:
    

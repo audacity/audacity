@@ -117,7 +117,7 @@ public:
    static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
-   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection);
+   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst);
 
 private:
 
