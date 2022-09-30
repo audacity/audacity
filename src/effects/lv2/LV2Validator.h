@@ -54,7 +54,8 @@ class LV2Validator final : public EffectUIValidator
 public:
    LV2Validator(EffectBase &effect,
       const LilvPlugin &plug, LV2Instance &instance,
-      EffectSettingsAccess &access, double sampleRate,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs,
+      double sampleRate,
       const LV2FeaturesList &features,
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
@@ -98,6 +99,7 @@ public:
    const LilvPlugin &mPlug;
    const EffectType mType;
    LV2Instance &mInstance;
+   const EffectOutputs *mpOutputs{};
    const double mSampleRate;
    const LV2Ports &mPorts;
    std::unique_ptr<LV2Wrapper> mpWrapper;
