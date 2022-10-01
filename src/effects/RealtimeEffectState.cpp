@@ -26,7 +26,7 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
-      Initialize(state.mMainSettings, nullptr);
+      Initialize(state.mMainSettings, state.mMovedOutputs.get());
    }
 
    void Initialize(SettingsAndCounter &settings,
@@ -73,7 +73,7 @@ public:
    void WorkerWrite() {
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelToMain.Write(EffectAndResponse{
-         mEffect, mState.mWorkerSettings, nullptr });
+         mEffect, mState.mWorkerSettings, mState.mOutputs.get() });
    }
 
    const SettingsAndCounter &MainThreadCache() const { return mMainThreadCache; }
@@ -172,7 +172,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       if (!state.mState.mInitialized) {
          // not relying on the other thread to make progress
          // and no fear of data races
-         state.Initialize(lastSettings, {});
+         state.Initialize(lastSettings, state.mState.mMovedOutputs.get());
          return &state.MainWriteThrough(lastSettings);
       }
       else if (!lastSettings.settings.has_value() ||
@@ -275,7 +275,8 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
          mMainSettings.counter = 0;
          mMainSettings.settings = mPlugin->MakeSettings();
          mMainSettings.settings.extra.SetActive(wasActive);
-         mMainOutputs = mPlugin->MakeOutputs();
+         mOutputs = mPlugin->MakeOutputs();
+         mMovedOutputs = mPlugin->MakeOutputs();
       }
    }
    return mPlugin;
@@ -374,11 +375,11 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned, unsigned){
       // Add a NEW processor
-      // Pass mMainOutputs for now -- though strictly speaking,
+      // Pass mMovedOutputs for now -- though strictly speaking,
       // that may cause data races with the main thread doing unsynchronized
       // reads to update the UI.
       if (pInstance->RealtimeAddProcessor(
-         mWorkerSettings.settings, mMainOutputs.get(), numAudioIn, sampleRate)
+         mWorkerSettings.settings, mMovedOutputs.get(), numAudioIn, sampleRate)
       ) {
          mCurrentProcessor++;
          return true;
@@ -557,10 +558,11 @@ bool RealtimeEffectState::Finalize() noexcept
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
    if(result) {
+      // Reinitialize
       //update mLastSettings so that Flush didn't
       //overwrite what was read from the worker
       if (auto state = GetAccessState())
-         state->Initialize(mMainSettings, {});
+         state->Initialize(mMainSettings, mMovedOutputs.get());
    }
    mLatency = {};
    mInitialized = false;
