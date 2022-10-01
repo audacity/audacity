@@ -43,7 +43,7 @@ public:
 
    const SettingsAndCounter &MainRead() {
       // Main thread clones the object in the std::any, then gives a reference
-      mChannelToMain.Read<ToMainSlot::Reader>(
+      mChannelToMain.Read<ToMainSlot::Reader>(mEffect, mState.mMovedOutputs,
          mMainThreadCache, mState.mwInstance.lock());
       return mMainThreadCache;
    }
@@ -91,6 +91,8 @@ public:
          arg.effect.CopySettingsContents(
             arg.settings.settings, mResponse.settings.settings,
             SettingsCopyDirection::WorkerToMain);
+         arg.effect.MoveOutputsContents(
+            std::move(arg.outputs), mResponse.outputs);
          mResponse.settings.settings.extra =
             arg.settings.settings.extra;
          return *this;
@@ -99,9 +101,17 @@ public:
       // Main thread doesn't move out of the slot, but copies std::any
       // and extra fields
       struct Reader {
-         Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
+         Reader(ToMainSlot &&slot,
+            const EffectSettingsManager &effect, EffectOutputs &outputs,
+            SettingsAndCounter &settings,
             const std::shared_ptr<EffectInstance> pInstance
          ) {
+            // Main thread is not under the performance constraints of the
+            // worker, but MoveOutputsContents is still used so that
+            // members of underlying vectors or other containers do not
+            // relocate
+            effect.MoveOutputsContents(
+               std::move(slot.mResponse.outputs), outputs);
             settings.counter = slot.mResponse.settings.counter;
             if (pInstance)
                pInstance->AssignSettings(
@@ -373,11 +383,8 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned, unsigned){
       // Add a NEW processor
-      // Pass mMovedOutputs for now -- though strictly speaking,
-      // that may cause data races with the main thread doing unsynchronized
-      // reads to update the UI.
       if (pInstance->RealtimeAddProcessor(
-         mWorkerSettings.settings, mMovedOutputs, numAudioIn, sampleRate)
+         mWorkerSettings.settings, mOutputs, numAudioIn, sampleRate)
       ) {
          mCurrentProcessor++;
          return true;
