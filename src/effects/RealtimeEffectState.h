@@ -148,9 +148,15 @@ private:
          std::swap(counter, other.counter);
       }
    };
-   
+
+   struct Response {
+      SettingsAndCounter settings;
+      EffectOutputs outputs;
+   };
+
    //! Updated immediately by Access::Set in the main thread
    NonInterfering<SettingsAndCounter> mMainSettings;
+
    EffectOutputs mMainOutputs;
 
    /*! @name Members that are changed also in the worker thread
@@ -160,6 +166,7 @@ private:
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<SettingsAndCounter> mWorkerSettings;
+
    //! How many samples must be discarded
    std::optional<EffectInstance::SampleCount> mLatency;
    //! Assigned in the worker thread at the start of each processing scope
