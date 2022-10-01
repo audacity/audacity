@@ -126,6 +126,7 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
 class COMPONENTS_API EffectOutputs {
 public:
    virtual ~EffectOutputs();
+   virtual std::unique_ptr<EffectOutputs> Clone() const = 0;
 };
 
 //! Interface for accessing an EffectSettings that may change asynchronously in

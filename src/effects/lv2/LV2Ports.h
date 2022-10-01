@@ -227,6 +227,7 @@ inline const LV2EffectSettings &GetSettings(const EffectSettings &settings)
 //! Carry output control port information back to main thread
 struct LV2EffectOutputs : EffectOutputs {
    ~LV2EffectOutputs() override;
+   std::unique_ptr<EffectOutputs> Clone() const override;
    //! vector of values in correspondence with the control ports
    std::vector<float> values;
 };

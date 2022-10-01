@@ -26,17 +26,20 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
-      Initialize(state.mMainSettings);
+      Initialize(state.mMainSettings, nullptr);
    }
 
-   void Initialize(SettingsAndCounter &settings)
+   void Initialize(SettingsAndCounter &settings,
+      const EffectOutputs *pOutputs)
    {
       // Clean initial state of the counter
       settings.counter = 0;
       mLastSettings = settings;
       // Initialize each message buffer with two copies of settings
-      mChannelToMain.Write(ToMainSlot{ settings });
-      mChannelToMain.Write(ToMainSlot{ settings });
+      mChannelToMain.Write(ToMainSlot{ { settings,
+         pOutputs ? pOutputs->Clone() : nullptr } });
+      mChannelToMain.Write(ToMainSlot{ { settings,
+         pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings });
       mChannelFromMain.Write(FromMainSlot{ settings });
    }
@@ -57,9 +60,10 @@ public:
       return (mMainThreadCache = settings);
    }
 
-   struct EffectAndSettings{
+   struct EffectAndResponse{
       const EffectSettingsManager &effect;
       const SettingsAndCounter &settings;
+      EffectOutputs *pOutputs{};
    };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
@@ -68,8 +72,8 @@ public:
    }
    void WorkerWrite() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelToMain.Write(EffectAndSettings{
-         mEffect, mState.mWorkerSettings });
+      mChannelToMain.Write(EffectAndResponse{
+         mEffect, mState.mWorkerSettings, nullptr });
    }
 
    const SettingsAndCounter &MainThreadCache() const { return mMainThreadCache; }
@@ -77,20 +81,20 @@ public:
    struct ToMainSlot {
       // For initialization of the channel
       ToMainSlot() = default;
-      explicit ToMainSlot(const SettingsAndCounter &settings)
-         // Copy std::any
-         : mSettings{ settings }
+      explicit ToMainSlot(Response response)
+         : mResponse{ std::move(response) }
       {}
       ToMainSlot &operator=(ToMainSlot &&) = default;
 
       // Worker thread writes the slot
-      ToMainSlot& operator=(EffectAndSettings &&arg) {
-         mSettings.counter = arg.settings.counter;
+      ToMainSlot& operator=(EffectAndResponse &&arg) {
+         mResponse.settings.counter = arg.settings.counter;
          // This happens during MessageBuffer's busying of the slot
          arg.effect.CopySettingsContents(
-            arg.settings.settings, mSettings.settings,
+            arg.settings.settings, mResponse.settings.settings,
             SettingsCopyDirection::WorkerToMain);
-         mSettings.settings.extra = arg.settings.settings.extra;
+         mResponse.settings.settings.extra =
+            arg.settings.settings.extra;
          return *this;
       }
 
@@ -100,14 +104,15 @@ public:
          Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
             const std::shared_ptr<EffectInstance> pInstance
          ) {
-            settings.counter = slot.mSettings.counter;
+            settings.counter = slot.mResponse.settings.counter;
             if (pInstance)
                pInstance->AssignSettings(
-                  settings.settings, std::move(slot.mSettings.settings));
+                  settings.settings,
+                  std::move(slot.mResponse.settings.settings));
          }
       };
 
-      SettingsAndCounter mSettings;
+      Response mResponse;
    };
 
    struct FromMainSlot {
@@ -167,7 +172,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       if (!state.mState.mInitialized) {
          // not relying on the other thread to make progress
          // and no fear of data races
-         state.Initialize(lastSettings);
+         state.Initialize(lastSettings, {});
          return &state.MainWriteThrough(lastSettings);
       }
       else if (!lastSettings.settings.has_value() ||
@@ -551,11 +556,12 @@ bool RealtimeEffectState::Finalize() noexcept
       return false;
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
-   if(result)
+   if(result) {
       //update mLastSettings so that Flush didn't
       //overwrite what was read from the worker
       if (auto state = GetAccessState())
-         state->Initialize(mMainSettings);
+         state->Initialize(mMainSettings, {});
+   }
    mLatency = {};
    mInitialized = false;
    return result;

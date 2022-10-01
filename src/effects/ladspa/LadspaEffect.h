@@ -53,6 +53,8 @@ struct LadspaEffectSettings {
 //! Carry output control port information back to main thread
 struct LadspaEffectOutputs : EffectOutputs {
    ~LadspaEffectOutputs() override;
+   std::unique_ptr<EffectOutputs> Clone() const override;
+
    // Allocate as many slots as there are ports, although some may correspond
    // to input and audio ports and remain unused
    std::vector<float> controls;
