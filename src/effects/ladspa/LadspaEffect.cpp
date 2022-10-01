@@ -162,6 +162,18 @@ auto LadspaEffect::MakeOutputs() const -> EffectOutputs
    return result;
 }
 
+bool LadspaEffect::MoveOutputsContents(
+   EffectOutputs &&src, EffectOutputs &dst) const
+{
+   // Don't really need to modify src
+   const auto &srcValues = GetValues(src).controls;
+   auto &dstValues = GetValues(dst).controls;
+   assert(srcValues.size() == dstValues.size());
+   dstValues.clear();
+   copy(srcValues.begin(), srcValues.end(), back_inserter(dstValues));
+   return true;
+}
+
 // ============================================================================
 // ComponentInterface implementation
 // ============================================================================

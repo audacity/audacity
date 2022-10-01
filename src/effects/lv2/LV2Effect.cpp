@@ -245,6 +245,18 @@ auto LV2Effect::MakeOutputs() const -> EffectOutputs
    return result;
 }
 
+bool LV2Effect::MoveOutputsContents(
+   EffectOutputs &&src, EffectOutputs &dst) const
+{
+   // Don't really need to modify src
+   const auto &srcValues = GetValues(src).values;
+   auto &dstValues = GetValues(dst).values;
+   assert(srcValues.size() == dstValues.size());
+   dstValues.clear();
+   copy(srcValues.begin(), srcValues.end(), back_inserter(dstValues));
+   return true;
+}
+
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 {
    auto result = std::make_shared<LV2Instance>(*this, mFeatures, mPorts);

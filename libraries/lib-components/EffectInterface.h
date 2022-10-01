@@ -320,6 +320,23 @@ public:
     Default implementation returns an empty any
     */
    virtual EffectOutputs MakeOutputs() const;
+
+
+   //! Update one Outputs object from another
+   /*!
+    This may run in a worker thread, and should avoid allocating and freeing.
+    Even on the main thread, it must avoid relocation of members of containers.
+    Therefore do not copy the underlying std::any, or grow or clear any
+    containers in it, but assign the preallocated contents of one container from
+    another, or swap.
+
+    Default implementation does nothing and returns true
+
+    @param src settings to copy from
+    @param dst settings to copy into
+    */
+   virtual bool MoveOutputsContents(
+      EffectOutputs &&src, EffectOutputs &dst) const;
    //! @}
 };
 

@@ -101,6 +101,8 @@ private:
       SettingsCopyDirection copyDirection) const override;
 
    EffectOutputs MakeOutputs() const override;
+   bool MoveOutputsContents(
+      EffectOutputs &&src, EffectOutputs &dst) const override;
 
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
