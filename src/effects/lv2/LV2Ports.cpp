@@ -136,6 +136,11 @@ size_t LV2ControlPort::Discretize(float value) const
 
 LV2EffectOutputs::~LV2EffectOutputs() = default;
 
+auto LV2EffectOutputs::Clone() const -> std::unique_ptr<EffectOutputs>
+{
+   return std::make_unique<LV2EffectOutputs>(*this);
+}
+
 LV2Ports::LV2Ports(const LilvPlugin &plug)
 {
    using namespace LV2Symbols;
