@@ -64,7 +64,7 @@ public:
    std::shared_ptr<EffectInstance> GetInstance();
 
    //! Get locations that a GUI can connect meters to
-   EffectOutputs &GetOutputs() { return mMainOutputs; }
+   EffectOutputs &GetOutputs() { return mMovedOutputs; }
 
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
@@ -157,7 +157,7 @@ private:
    //! Updated immediately by Access::Set in the main thread
    NonInterfering<SettingsAndCounter> mMainSettings;
 
-   EffectOutputs mMainOutputs;
+   EffectOutputs mMovedOutputs;
 
    /*! @name Members that are changed also in the worker thread
     @{
@@ -166,6 +166,8 @@ private:
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<SettingsAndCounter> mWorkerSettings;
+
+   EffectOutputs mOutputs;
 
    //! How many samples must be discarded
    std::optional<EffectInstance::SampleCount> mLatency;
