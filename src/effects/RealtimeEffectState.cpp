@@ -46,7 +46,7 @@ public:
 
    const SettingsAndCounter &MainRead() {
       // Main thread clones the object in the std::any, then gives a reference
-      mChannelToMain.Read<ToMainSlot::Reader>(
+      mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
          mMainThreadCache, mState.mwInstance.lock());
       return mMainThreadCache;
    }
@@ -93,6 +93,8 @@ public:
          arg.effect.CopySettingsContents(
             arg.settings.settings, mResponse.settings.settings,
             SettingsCopyDirection::WorkerToMain);
+         if (mResponse.pOutputs && arg.pOutputs)
+            mResponse.pOutputs->Assign(std::move(*arg.pOutputs));
          mResponse.settings.settings.extra =
             arg.settings.settings.extra;
          return *this;
@@ -101,9 +103,16 @@ public:
       // Main thread doesn't move out of the slot, but copies std::any
       // and extra fields
       struct Reader {
-         Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
+         Reader(ToMainSlot &&slot, EffectOutputs *pOutputs,
+            SettingsAndCounter &settings,
             const std::shared_ptr<EffectInstance> pInstance
          ) {
+            // Main thread is not under the performance constraints of the
+            // worker, but Assign is still used so that
+            // members of underlying vectors or other containers do not
+            // relocate
+            if (pOutputs && slot.mResponse.pOutputs)
+               pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
             settings.counter = slot.mResponse.settings.counter;
             if (pInstance)
                pInstance->AssignSettings(
@@ -375,11 +384,8 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned, unsigned){
       // Add a NEW processor
-      // Pass mMovedOutputs for now -- though strictly speaking,
-      // that may cause data races with the main thread doing unsynchronized
-      // reads to update the UI.
       if (pInstance->RealtimeAddProcessor(
-         mWorkerSettings.settings, mMovedOutputs.get(), numAudioIn, sampleRate)
+         mWorkerSettings.settings, mOutputs.get(), numAudioIn, sampleRate)
       ) {
          mCurrentProcessor++;
          return true;
