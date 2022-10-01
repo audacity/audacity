@@ -127,6 +127,18 @@ class COMPONENTS_API EffectOutputs {
 public:
    virtual ~EffectOutputs();
    virtual std::unique_ptr<EffectOutputs> Clone() const = 0;
+
+   //! Update one Outputs object from another
+   /*!
+    This may run in a worker thread, and should avoid allocating and freeing.
+    Even on the main thread, it must avoid relocation of members of containers.
+    Therefore do not grow or clear any containers, but assign the preallocated
+    contents of one container from another.
+
+    @param src settings to copy from; assume it comes from the same
+    EffectSettingsManager as *this
+    */
+   virtual void Assign(EffectOutputs &&src) = 0;
 };
 
 //! Interface for accessing an EffectSettings that may change asynchronously in

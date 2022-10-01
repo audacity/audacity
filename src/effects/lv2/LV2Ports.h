@@ -228,6 +228,7 @@ inline const LV2EffectSettings &GetSettings(const EffectSettings &settings)
 struct LV2EffectOutputs : EffectOutputs {
    ~LV2EffectOutputs() override;
    std::unique_ptr<EffectOutputs> Clone() const override;
+   void Assign(EffectOutputs &&src) override;
    //! vector of values in correspondence with the control ports
    std::vector<float> values;
 };
