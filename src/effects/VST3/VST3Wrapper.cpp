@@ -244,14 +244,25 @@ public:
    {
       assert(mStateChangeSettings != nullptr);
       if(!mParametersCache.empty())
-      {
-         auto& vst3settings = GetSettings(*mStateChangeSettings);
-         for(auto& p : mParametersCache)
-            vst3settings.parameterChanges[p.first] = p.second;
-         mParametersCache.clear();
-         ++vst3settings.changesCounter;
-      }
+         FlushCache(*mStateChangeSettings);
       mStateChangeSettings = nullptr;
+   }
+
+   void FlushCache(EffectSettings& settings)
+   {
+      if(mParametersCache.empty())
+         return;
+
+      auto& vst3settings = GetSettings(settings);
+      for(auto& p : mParametersCache)
+         vst3settings.parameterChanges[p.first] = p.second;
+      mParametersCache.clear();
+      ++vst3settings.changesCounter;
+   }
+
+   void ResetCache()
+   {
+      mParametersCache.clear();
    }
 
    Steinberg::tresult PLUGIN_API beginEdit(Steinberg::Vst::ParamID id) override { return Steinberg::kResultOk; }
@@ -261,26 +272,18 @@ public:
       if(std::this_thread::get_id() != mThreadId)
          return Steinberg::kResultFalse;
 
-      if(mStateChangeSettings != nullptr)
+      if(mStateChangeSettings != nullptr || !mWrapper.IsActive())
          // Collecting edit callbacks from the plug-in, in response to changes
-         // of complete state, while doing FetchSettings()
+         // of complete state, while doing FetchSettings() (which may be delayed...)
          mParametersCache[id] = valueNormalized;
       else if(mAccess)
       {
-         // Handling a UI event from a dialog
          mAccess->ModifySettings([&](EffectSettings& settings)
          {
             auto& vst3settings = GetSettings(settings);
             vst3settings.parameterChanges[id] = valueNormalized;
             ++vst3settings.changesCounter;
-            if(!mWrapper.IsActive())
-            {
-               mWrapper.FlushParameters(settings);
-               mWrapper.StoreSettings(settings);
-            }
          });
-         if(!mWrapper.IsActive())
-            mAccess->Flush();
       }
 
       return Steinberg::kResultOk;
@@ -438,6 +441,7 @@ void VST3Wrapper::FetchSettings(EffectSettings& settings)
    //TODO: perform version check
    {
       auto componentHandler = static_cast<ComponentHandler*>(mComponentHandler.get());
+      componentHandler->ResetCache();
       componentHandler->BeginStateChange(settings);
       auto cleanup = finally([&] { componentHandler->EndStateChange(); });
 
@@ -529,28 +533,26 @@ bool VST3Wrapper::Initialize(EffectSettings& settings, Steinberg::Vst::SampleRat
       maxSamplesPerBlock,
       sampleRate
    };
-
-   //Set mActive before FetchSettings and IComponent::setActive
-   //to prevent redundant calls to AccessState::Flush.
-   mActive = true;
-   FetchSettings(settings);//Updates runtime settings...
-
+   
    if(!SetupProcessing(*mEffectComponent.get(), setup))
-   {
-      mActive = false;
       return false;
-   }
+
    mSetup = setup;
+
+   FetchSettings(settings);
 
    if(mEffectComponent->setActive(true) == kResultOk)
    {
-      //Omit the return value check - some plugins return unexpected values (see bug #3581)
-      mAudioProcessor->setProcessing(true);
-      //...make sure they are delivered to the processor
-      ConsumeChanges(settings);
-      return true;
+      if(mAudioProcessor->setProcessing(true) != kResultFalse)
+      {
+         mActive = true;
+         ConsumeChanges(settings);
+         //make zero-flush, to make sure parameters are delivered to the processor...
+         Process(nullptr, nullptr, 0);
+         StoreSettings(settings);
+         return true;
+      }
    }
-   mActive = false;
    return false;
 }
 
@@ -602,14 +604,19 @@ void VST3Wrapper::FlushParameters(EffectSettings& settings)
 {
    if(!mActive)
    {
+      auto componentHandler = static_cast<ComponentHandler*>(mComponentHandler.get());
+      componentHandler->FlushCache(settings);
+
       SetupProcessing(*mEffectComponent, mSetup);
       mActive = true;
       if(mEffectComponent->setActive(true) == Steinberg::kResultOk)
       {
          ConsumeChanges(settings);
-         mAudioProcessor->setProcessing(true);
-         Process(nullptr, nullptr, 0);
-         mAudioProcessor->setProcessing(false);
+         if(mAudioProcessor->setProcessing(true) != Steinberg::kResultFalse)
+         {
+            Process(nullptr, nullptr, 0);
+            mAudioProcessor->setProcessing(false);
+         }
       }
       mEffectComponent->setActive(false);
       mActive = false;
@@ -721,7 +728,8 @@ void VST3Wrapper::BeginParameterEdit(EffectSettingsAccess& access)
 
 void VST3Wrapper::EndParameterEdit()
 {
-   static_cast<ComponentHandler*>(mComponentHandler.get())->SetAccess(nullptr);
+   auto componentHandler = static_cast<ComponentHandler*>(mComponentHandler.get());
+   componentHandler->SetAccess(nullptr);
 }
 
 
