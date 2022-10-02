@@ -28,6 +28,8 @@ public:
    void EventListener(const AudioUnitEvent *inEvent,
       AudioUnitParameterValue inParameterValue);
 
+   std::unique_ptr<Message> MakeMessage() const override;
+
 private:
    size_t InitialBlockSize() const;
    SampleCount GetLatency(const EffectSettings &settings, double sampleRate)
@@ -53,6 +55,7 @@ private:
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
+
    bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
