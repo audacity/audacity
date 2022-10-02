@@ -110,8 +110,6 @@ public:
 
    Steinberg::int32 GetLatencySamples() const;
 
-   void AssignSettings(EffectSettings& dst, EffectSettings&& src) const;
-
    static EffectSettings MakeSettings();
 
    static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);

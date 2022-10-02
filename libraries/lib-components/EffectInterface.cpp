@@ -180,12 +180,6 @@ size_t EffectInstance::GetTailSize() const
    return 0;
 }
 
-void EffectInstance::AssignSettings(EffectSettings &dst, EffectSettings &&src)
-   const
-{
-   dst = src;
-}
-
 auto EffectInstance::GetLatency(const EffectSettings &, double) const
    -> SampleCount
 {

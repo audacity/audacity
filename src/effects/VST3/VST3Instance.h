@@ -74,6 +74,4 @@ public:
    unsigned GetAudioInCount() const override;
 
    void ReloadUserOptions();
-
-   void AssignSettings(EffectSettings& dst, EffectSettings&& src) const override;
 };
