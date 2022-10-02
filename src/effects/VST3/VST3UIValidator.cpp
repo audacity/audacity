@@ -14,7 +14,7 @@
 #endif
 
 VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
-   : EffectUIValidator(effect, access), mWrapper(wrapper)
+   : EffectUIValidator(effect, access), mWrapper(wrapper), mParent(parent)
 {
    if(effect.GetType() == EffectTypeGenerate)
    {
@@ -55,9 +55,24 @@ VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectB
       );
    }
    mWrapper.BeginParameterEdit(mAccess);
+
+   Bind(wxEVT_IDLE, &VST3UIValidator::OnIdle, this);
+
+   mParent->PushEventHandler(this);
 }
 
 VST3UIValidator::~VST3UIValidator() = default;
+
+void VST3UIValidator::OnIdle(wxIdleEvent& evt)
+{
+   evt.Skip();
+   mAccess.ModifySettings([this](EffectSettings& settings)
+   {
+      if(!mWrapper.IsActive())
+         mWrapper.FlushParameters(settings);
+   });
+}
+
 
 bool VST3UIValidator::TryLoadNativeUI(wxWindow* parent)
 {
@@ -154,6 +169,8 @@ void VST3UIValidator::OnClose()
 {
    using namespace Steinberg;
 
+   mParent->PopEventHandler();
+
    mPlainUI = nullptr;
    mParent = nullptr;
    if(mPlugView)
@@ -165,9 +182,7 @@ void VST3UIValidator::OnClose()
    }
 
    mWrapper.EndParameterEdit();
-
-   //Make sure all previous changes has been processed by the worker
-   mAccess.Flush();
+   
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mDuration != nullptr)
          settings.extra.SetDuration(mDuration->GetValue());
