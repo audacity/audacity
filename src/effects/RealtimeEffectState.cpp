@@ -22,6 +22,8 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
+   //! @pre `state.mMainSettings.settings.has_value()`
+   //! @invariant `mLastSettings.settings.has_value()`
    AccessState(const EffectSettingsManager &effect, RealtimeEffectState &state)
       : mEffect{ effect }
       , mState{ state }
@@ -29,9 +31,13 @@ public:
       Initialize(state.mMainSettings, state.mMovedOutputs.get());
    }
 
+   //! @pre `settings.settings.has_value()`
+   //! @post `mLastSettings.settings.has_value()`
    void Initialize(SettingsAndCounter &settings,
       const EffectOutputs *pOutputs)
    {
+      assert(settings.settings.has_value());
+
       // Clean initial state of the counter
       settings.counter = 0;
       mLastSettings = settings;
@@ -42,6 +48,8 @@ public:
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings });
       mChannelFromMain.Write(FromMainSlot{ settings });
+
+      assert(mLastSettings.settings.has_value());
    }
 
    const SettingsAndCounter &MainRead() {
@@ -75,8 +83,6 @@ public:
       mChannelToMain.Write(EffectAndResponse{
          mEffect, mState.mWorkerSettings, mState.mOutputs.get() });
    }
-
-   const SettingsAndCounter &MainThreadCache() const { return mMainThreadCache; }
 
    struct ToMainSlot {
       // For initialization of the channel
@@ -114,6 +120,9 @@ public:
             if (pOutputs && slot.mResponse.pOutputs)
                pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
             settings.counter = slot.mResponse.settings.counter;
+            // Protecting invariant for mLastSettings; should be true
+            // because this is an echo of what Set() stored
+            assert(slot.mResponse.settings.settings.has_value());
             if (pInstance)
                pInstance->AssignSettings(
                   settings.settings,
@@ -175,33 +184,28 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    ~Access() override = default;
    // Try once to detect that the worker thread has echoed the last write
+   // @pre state.mState.mInitialized
    static const SettingsAndCounter *FlushAttempt(AccessState &state) {
+      // The precondition justifies assumptions made in ToMainSlot::Reader
+      assert(state.mState.mInitialized);
       auto &lastSettings = state.mLastSettings;
       auto pResult = &state.MainRead();
-      if (!state.mState.mInitialized) {
-         // not relying on the other thread to make progress
-         // and no fear of data races
-         state.Initialize(lastSettings, state.mState.mMovedOutputs.get());
-         return &state.MainWriteThrough(lastSettings);
-      }
-      else if (!lastSettings.settings.has_value() ||
-         pResult->counter == lastSettings.counter
-      ){
+      assert(pResult->settings.has_value()); // see comment in Reader
+      if (pResult->counter == lastSettings.counter)
          // First time test, or echo is completed
          return pResult;
-      }
       return nullptr;
    }
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            FlushAttempt(*pAccessState); // try once, ignore success
-            auto &lastSettings = pAccessState->mLastSettings;
-            return lastSettings.settings.has_value()
-               ? lastSettings.settings
-               // If no value there yet, then FlushAttempt did MainRead which
-               // has copied the initial value given to the constructor
-               : pAccessState->MainThreadCache().settings;
+            if (pAccessState->mState.mInitialized)
+               FlushAttempt(*pAccessState); // try once, ignore success
+            else {
+               // Not yet waiting on the other thread's progress
+               // Not necessarily values yet in the state's Settings objects
+            }
+            return pAccessState->mLastSettings.settings;
          }
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
@@ -209,6 +213,9 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       return empty;
    }
    void Set(EffectSettings &&settings) override {
+      if (!settings.has_value())
+         // Protect the invariant!
+         return;
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
@@ -223,11 +230,16 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
             const SettingsAndCounter *pResult{};
-            while (!(pResult = FlushAttempt(*pAccessState))) {
-               // Wait for progress of audio thread
-               using namespace std::chrono;
-               std::this_thread::sleep_for(50ms);
+            if (pAccessState->mState.mInitialized) {
+               while (!(pResult = FlushAttempt(*pAccessState))) {
+                  // Wait for progress of audio thread
+                  using namespace std::chrono;
+                  std::this_thread::sleep_for(50ms);
+               }
             }
+            else
+               pResult = &pAccessState->MainWriteThrough(
+                  pAccessState->mLastSettings);
             pState->mMainSettings.Set(*pResult); // Update the state
             pAccessState->mLastSettings = *pResult;
          }
@@ -567,7 +579,9 @@ bool RealtimeEffectState::Finalize() noexcept
       // Reinitialize
       //update mLastSettings so that Flush didn't
       //overwrite what was read from the worker
-      if (auto state = GetAccessState())
+      if (auto state = GetAccessState()
+         ; state && mMainSettings.settings.has_value()
+      )
          state->Initialize(mMainSettings, mMovedOutputs.get());
    }
    mLatency = {};
@@ -687,8 +701,10 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
 
 std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
 {
-   if (!GetEffect())
-      // Effect not found!  Return a dummy
+   if (!GetEffect() // Effect not found!
+       || !mMainSettings.settings.has_value() // can't satisfy pre of ctor
+   )
+      // Return a dummy
       return std::make_shared<Access>();
 
    // Only the main thread assigns to the atomic pointer, here and
