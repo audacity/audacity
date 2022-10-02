@@ -217,6 +217,31 @@ bool AudioUnitWrapper::StoreSettings(
    return true;
 }
 
+bool AudioUnitWrapper::CopySettingsContents(
+   const AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst) const
+{
+   // Do an in-place rewrite of dst, avoiding allocations
+   auto &dstMap = dst.values;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   auto &srcMap = src.values;
+   // Iterate the two maps in parallel, assuming correspondence of
+   // keys, because the settings objects ultimately came from FetchSettings()
+   // and copies.  Nothing else ever inserts or removes keys.
+   assert(srcMap.size() == dstMap.size());
+   for (auto &[key, oValue] : srcMap) {
+      assert(dstIter != dstEnd);
+      auto &[dstKey, dstOValue] = *dstIter;
+      assert(dstKey == key);
+      if (oValue)
+         dstOValue.emplace(*oValue);
+      else
+         dstOValue.reset();
+      ++dstIter;
+   }
+   assert(dstIter == dstEnd);
+   return true;
+}
+
 bool AudioUnitWrapper::CreateAudioUnit()
 {
    AudioUnit unit{};

@@ -156,6 +156,12 @@ struct AudioUnitWrapper
    bool FetchSettings(AudioUnitEffectSettings &settings) const;
    bool StoreSettings(const AudioUnitEffectSettings &settings) const;
 
+   //! Copy from one map to another
+   bool CopySettingsContents(
+      const AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst) const;
+
+public:
+
    bool CreateAudioUnit();
 
    AudioUnit GetAudioUnit() const { return mUnit.get(); }
