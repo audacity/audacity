@@ -806,28 +806,6 @@ void VST3Wrapper::SaveUserPreset(const EffectDefinitionInterface& effect, const 
       SetConfig(effect, PluginSettings::Private, name, parametersKey, ParametersToString(vst3settings.parameterChanges));
 }
 
-void VST3Wrapper::AssignSettings(EffectSettings& dst, EffectSettings&& src) const
-{
-   if(!dst.has_value())
-      dst = src;
-
-   auto& from = GetSettings(src);
-   auto& to = GetSettings(dst);
-
-   //To avoid allocations we can't copy state part of settings
-   //in CopySettingsContents, so instead we recreate them with
-   //StoreSettings when the main thread performs reading.
-   if(from.changesCounter != to.changesCounter)
-   {
-      StoreSettings(dst);
-      to.changesCounter = from.changesCounter;
-      //We can't discard parameter changes as it's not guaranteed that
-      //::Process was called
-      to.parameterChanges = std::move(from.parameterChanges);
-   }
-   dst.extra = std::move(src.extra);
-}
-
 void VST3Wrapper::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection)
 {
    auto& from = GetSettings(*const_cast<EffectSettings*>(&src));

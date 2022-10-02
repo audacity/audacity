@@ -54,7 +54,7 @@ public:
 
    void MainRead() {
       mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
-         mMainThreadCache, mState.mwInstance.lock());
+         mMainThreadCache);
    }
    void MainWrite(SettingsAndCounter &&settings) {
       // Main thread may simply swap new content into place
@@ -103,8 +103,7 @@ public:
       // and extra fields
       struct Reader {
          Reader(ToMainSlot &&slot, EffectOutputs *pOutputs,
-            SettingsAndCounter &settings,
-            const std::shared_ptr<EffectInstance> pInstance
+            SettingsAndCounter &settings
          ) {
             // Main thread is not under the performance constraints of the
             // worker, but Assign is still used so that
@@ -113,10 +112,6 @@ public:
             if (pOutputs && slot.mResponse.pOutputs)
                pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
             settings.counter = slot.mResponse.settings.counter;
-            if (pInstance)
-               pInstance->AssignSettings(
-                  settings.settings,
-                  std::move(slot.mResponse.settings.settings));
          }
       };
 
@@ -563,15 +558,6 @@ bool RealtimeEffectState::Finalize() noexcept
       return false;
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
-   if(result) {
-      // Reinitialize
-      //update mLastSettings so that Flush didn't
-      //overwrite what was read from the worker
-      if (auto state = GetAccessState()
-         ; state && mMainSettings.settings.has_value()
-      )
-         state->Initialize(mMainSettings, mMovedOutputs.get());
-   }
    mLatency = {};
    mInitialized = false;
    return result;
