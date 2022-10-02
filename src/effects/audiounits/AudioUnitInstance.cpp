@@ -18,6 +18,43 @@
 #include "AudacityException.h"
 #include <wx/log.h>
 
+namespace {
+struct AudioUnitMessage : EffectInstance::Message {
+   explicit AudioUnitMessage(AudioUnitEffectSettings settings)
+      : settings{ std::move(settings) }
+   {}
+   ~AudioUnitMessage() override;
+   std::unique_ptr<Message> Clone() const override;
+   void Assign(Message &&src) override;
+   void Merge(Message &&src) override;
+
+   AudioUnitEffectSettings settings;
+};
+}
+
+AudioUnitMessage::~AudioUnitMessage() = default;
+
+auto AudioUnitMessage::Clone() const -> std::unique_ptr<Message>
+{
+   return std::make_unique<AudioUnitMessage>(*this);
+}
+
+void AudioUnitMessage::Assign(Message &&src)
+{
+   auto &dstSettings = this->settings;
+   auto &srcSettings = static_cast<AudioUnitMessage&>(src).settings;
+   AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, false);
+}
+
+void AudioUnitMessage::Merge(Message &&src)
+{
+   auto &dstSettings = this->settings;
+   auto &srcSettings = static_cast<AudioUnitMessage&>(src).settings;
+   AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, true);
+}
+
 AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    AudioComponent component, Parameters &parameters,
    const wxString &identifier,
@@ -243,6 +280,15 @@ bool AudioUnitInstance::RealtimeResume()
          //return false
          ;
    return true;
+}
+
+auto AudioUnitInstance::MakeMessage() const -> std::unique_ptr<Message>
+{
+   // Like AudioUnitEffect::MakeSettings, except it only allocates map entries
+   // containing nullopt
+   AudioUnitEffectSettings settings;
+   FetchSettings(settings, false);
+   return std::make_unique<AudioUnitMessage>(std::move(settings));
 }
 
 bool AudioUnitInstance::RealtimeProcessStart(MessagePackage &package)

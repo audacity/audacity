@@ -145,30 +145,34 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
    return {};
 }
 
-bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
+bool AudioUnitWrapper::FetchSettings(
+   AudioUnitEffectSettings &settings, bool fetchValues) const
 {
    settings.pSource = this;
 
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(
-   [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID) {
+   [this, &settings, fetchValues]
+   (const ParameterInfo &pi, AudioUnitParameterID ID) {
       // Always make a slot, even for parameter IDs that are known but
       // not gettable from the instance now.  Example:  AUGraphicEQ when
       // you choose 10 bands; the values for bands 10 ... 30 are undefined
       // but the parameter IDs are known
       auto &slot = settings.values[ID];
       slot.reset();
-      AudioUnitParameterValue value;
-      if (!pi.mName ||
-         AudioUnitGetParameter(
-            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
-            // Probably failed because of invalid parameter which can happen
-            // if a plug-in is in a certain mode that doesn't contain the
-            // parameter.  In any case, just ignore it.
-         }
-      else
-         slot.emplace(settings.Intern(*pi.mName), value);
+      if (fetchValues) {
+         AudioUnitParameterValue value;
+         if (!pi.mName ||
+            AudioUnitGetParameter(
+               mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
+               // Probably failed because of invalid parameter which can happen
+               // if a plug-in is in a certain mode that doesn't contain the
+               // parameter.  In any case, just ignore it.
+            }
+         else
+            slot.emplace(settings.Intern(*pi.mName), value);
+      }
       return true;
    });
    return true;
@@ -220,6 +224,21 @@ bool AudioUnitWrapper::StoreSettings(
 bool AudioUnitWrapper::CopySettingsContents(
    const AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst) const
 {
+   // const_cast, but it won't change src when passing false and false
+   return TransferSettingsContents(
+      const_cast<AudioUnitEffectSettings &>(src), dst, false, false);
+}
+
+bool AudioUnitWrapper::MoveSettingsContents(
+   AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge)
+{
+   return TransferSettingsContents(src, dst, true, merge);
+}
+
+bool AudioUnitWrapper::TransferSettingsContents(
+   AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst,
+   bool doMove, bool doMerge)
+{
    // Do an in-place rewrite of dst, avoiding allocations
    auto &dstMap = dst.values;
    auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
@@ -232,9 +251,13 @@ bool AudioUnitWrapper::CopySettingsContents(
       assert(dstIter != dstEnd);
       auto &[dstKey, dstOValue] = *dstIter;
       assert(dstKey == key);
-      if (oValue)
+      if (oValue) {
          dstOValue.emplace(*oValue);
-      else
+         if (doMove)
+            oValue.reset();
+      }
+      else if (!doMerge)
+         // Don't accumulate non-nulls only, but copy the nulls
          dstOValue.reset();
       ++dstIter;
    }
