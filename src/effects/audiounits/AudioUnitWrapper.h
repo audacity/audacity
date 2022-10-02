@@ -165,13 +165,23 @@ struct AudioUnitWrapper
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    //! May allocate memory, so should be called only in the main thread
-   bool FetchSettings(AudioUnitEffectSettings &settings) const;
+   bool FetchSettings(
+      AudioUnitEffectSettings &settings, bool fetchValues = true) const;
    bool StoreSettings(const AudioUnitEffectSettings &settings) const;
 
    //! Copy from one map to another
    bool CopySettingsContents(
       const AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst) const;
 
+   //! Copy, then clear the optionals in src
+   bool MoveSettingsContents(
+      AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge)
+   const;
+
+private:
+   bool TransferSettingsContents(
+      AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst,
+      bool doMove, bool doMerge) const;
 public:
 
    bool CreateAudioUnit();

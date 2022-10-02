@@ -245,6 +245,24 @@ bool AudioUnitInstance::RealtimeResume()
    return true;
 }
 
+auto AudioUnitInstance::MakeMessage() const -> Message
+{
+   // Like AudioUnitEffect::MakeSettings, except it only allocates map entries
+   // containing nullopt
+   AudioUnitEffectSettings settings;
+   FetchSettings(settings, false);
+   return Message::make<AudioUnitEffectSettings>(std::move(settings));
+}
+
+bool AudioUnitInstance::MoveMessageContents(
+   Message &&src, Message &dst, bool merge) const
+{
+   auto &dstSettings = GetSettings(dst);
+   auto &srcSettings = GetSettings(src);
+   return AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, merge);
+}
+
 bool AudioUnitInstance::RealtimeProcessStart(MessagePackage &package)
 {
    auto &settings = package.settings;
