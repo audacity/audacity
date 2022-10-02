@@ -52,20 +52,13 @@ public:
       assert(mLastSettings.settings.has_value());
    }
 
-   const SettingsAndCounter &MainRead() {
-      // Main thread clones the object in the std::any, then gives a reference
+   void MainRead() {
       mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
          mMainThreadCache, mState.mwInstance.lock());
-      return mMainThreadCache;
    }
    void MainWrite(SettingsAndCounter &&settings) {
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(std::move(settings));
-   }
-   const SettingsAndCounter &
-   MainWriteThrough(const SettingsAndCounter &settings) {
-      // Main thread assumes worker isn't processing and bypasses the echo
-      return (mMainThreadCache = settings);
    }
 
    struct EffectAndResponse{
@@ -120,9 +113,6 @@ public:
             if (pOutputs && slot.mResponse.pOutputs)
                pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
             settings.counter = slot.mResponse.settings.counter;
-            // Protecting invariant for mLastSettings; should be true
-            // because this is an echo of what Set() stored
-            assert(slot.mResponse.settings.settings.has_value());
             if (pInstance)
                pInstance->AssignSettings(
                   settings.settings,
@@ -169,7 +159,7 @@ public:
    RealtimeEffectState &mState;
 
    MessageBuffer<FromMainSlot> mChannelFromMain;
-   SettingsAndCounter mMainThreadCache;
+   SettingsAndCounter mMainThreadCache; // only the counter is used
    SettingsAndCounter mLastSettings;
 
    MessageBuffer<ToMainSlot> mChannelToMain;
@@ -185,16 +175,13 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    ~Access() override = default;
    // Try once to detect that the worker thread has echoed the last write
    // @pre state.mState.mInitialized
-   static const SettingsAndCounter *FlushAttempt(AccessState &state) {
-      // The precondition justifies assumptions made in ToMainSlot::Reader
+   static bool FlushAttempt(AccessState &state) {
       assert(state.mState.mInitialized);
       auto &lastSettings = state.mLastSettings;
-      auto pResult = &state.MainRead();
-      assert(pResult->settings.has_value()); // see comment in Reader
-      if (pResult->counter == lastSettings.counter)
-         // First time test, or echo is completed
-         return pResult;
-      return nullptr;
+      // Assigns to mMainThreadCache
+      state.MainRead();
+      // If true, then first time test, or echo is completed
+      return state.mMainThreadCache.counter == lastSettings.counter;
    }
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
@@ -229,19 +216,20 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            const SettingsAndCounter *pResult{};
+            bool bResult{};
             if (pAccessState->mState.mInitialized) {
-               while (!(pResult = FlushAttempt(*pAccessState))) {
+               while (!(bResult = FlushAttempt(*pAccessState))) {
                   // Wait for progress of audio thread
                   using namespace std::chrono;
                   std::this_thread::sleep_for(50ms);
                }
             }
-            else
-               pResult = &pAccessState->MainWriteThrough(
-                  pAccessState->mLastSettings);
-            pState->mMainSettings.Set(*pResult); // Update the state
-            pAccessState->mLastSettings = *pResult;
+
+            // Update what GetSettings() will return, during play and before
+            // Finalize(), but after it is confirmed that any worker thread has
+            // seen the values given to the last Set().  These values will also
+            // be returned by Get().
+            pState->mMainSettings.Set(pAccessState->mLastSettings);
          }
       }
    }
