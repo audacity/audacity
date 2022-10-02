@@ -22,8 +22,6 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
-   //! @pre `state.mMainSettings.settings.has_value()`
-   //! @invariant `mLastSettings.settings.has_value()`
    AccessState(const EffectSettingsManager &effect, RealtimeEffectState &state)
       : mEffect{ effect }
       , mState{ state }
@@ -31,13 +29,9 @@ public:
       Initialize(state.mMainSettings, state.mMovedOutputs.get());
    }
 
-   //! @pre `settings.settings.has_value()`
-   //! @post `mLastSettings.settings.has_value()`
    void Initialize(SettingsAndCounter &settings,
       const EffectOutputs *pOutputs)
    {
-      assert(settings.settings.has_value());
-
       // Clean initial state of the counter
       settings.counter = 0;
       mLastSettings = settings;
@@ -48,8 +42,6 @@ public:
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings });
       mChannelFromMain.Write(FromMainSlot{ settings });
-
-      assert(mLastSettings.settings.has_value());
    }
 
    void MainRead() {
@@ -184,9 +176,6 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       return empty;
    }
    void Set(EffectSettings &&settings) override {
-      if (!settings.has_value())
-         // Protect the invariant!
-         return;
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
@@ -664,9 +653,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
 
 std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
 {
-   if (!GetEffect() // Effect not found!
-       || !mMainSettings.settings.has_value() // can't satisfy pre of ctor
-   )
+   if (!GetEffect())
+      // Effect not found!
       // Return a dummy
       return std::make_shared<Access>();
 
