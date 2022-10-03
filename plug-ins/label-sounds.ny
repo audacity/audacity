@@ -250,7 +250,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
         (setf snd-list (find-sounds sig sel-start (snd-srate sig)))
         (cond
           ((= (length snd-list) 0)
-            (format nil (_ "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'.")))
+            (format nil (_ "No sounds found.~%Try lowering 'Threshold level (dB)'.")))
           ((and (= type 3) (= (length snd-list) 1))
             (format nil (_ "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected.")))
           (t
