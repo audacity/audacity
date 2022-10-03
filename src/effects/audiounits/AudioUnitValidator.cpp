@@ -208,7 +208,7 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
          // But send changed settings (only) to the worker thread, which
          // ignores the settings
          auto result = mInstance.MakeMessage();
-         auto &values = AudioUnitWrapper::GetSettings(result);
+            auto &values = AudioUnitWrapper::GetSettings(result);
          auto &slot =
             values.values[inEvent->mArgument.mParameter.mParameterID];
          slot.emplace(wxString{}, inParameterValue);

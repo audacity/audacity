@@ -205,24 +205,9 @@ bool AudioUnitWrapper::StoreSettings(
    return true;
 }
 
-bool AudioUnitWrapper::CopySettingsContents(
-   const AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst) const
-{
-   // const_cast, but it won't change src when passing false and false
-   return TransferSettingsContents(
-      const_cast<AudioUnitEffectSettings &>(src), dst, false, false);
-}
-
 bool AudioUnitWrapper::MoveSettingsContents(
    AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge)
 const
-{
-   return TransferSettingsContents(src, dst, true, merge);
-}
-
-bool AudioUnitWrapper::TransferSettingsContents(
-   AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst,
-   bool doMove, bool doMerge) const
 {
    // Do an in-place rewrite of dst, avoiding allocations
    auto &dstMap = dst.values;
@@ -238,10 +223,9 @@ bool AudioUnitWrapper::TransferSettingsContents(
       assert(dstKey == key);
       if (oValue) {
          dstOValue.emplace(*oValue);
-         if (doMove)
-            oValue.reset();
+         oValue.reset();
       }
-      else if (!doMerge)
+      else if (!merge)
          // Don't accumulate non-nulls only, but copy the nulls
          dstOValue.reset();
       ++dstIter;
