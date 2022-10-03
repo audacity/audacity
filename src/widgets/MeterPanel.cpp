@@ -305,7 +305,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mDesiredStyle(style),
    mGradient(true),
    mDB(true),
-   mDBRange(DecibelScaleCutoff.GetDefault()),
+   mDBRange(DecibelScaleCutoff.Read()),
    mDecay(true),
    mDecayRate(fDecayRate),
    mClip(true),
@@ -346,11 +346,11 @@ MeterPanel::MeterPanel(AudacityProject *project,
       mSlider = std::make_unique<LWSlider>(this, XO(""),
          pos,
          size,
-         FRAC_SLIDER,
+         PERCENT_SLIDER,
          false,   /* showlabels */
          false,   /* drawticks */
          false,   /* drawtrack */
-         true     /* alwayshidetip */
+         false     /* alwayshidetip */
       );
    }
 
@@ -846,6 +846,9 @@ void MeterPanel::OnSetFocus(wxFocusEvent & WXUNUSED(evt))
 
 void MeterPanel::OnKillFocus(wxFocusEvent & WXUNUSED(evt))
 {
+   if(mSlider)
+      mSlider->OnKillFocus();
+
    mIsFocused = false;
    Refresh(false);
 }
@@ -2261,12 +2264,7 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
          if (m->mBar[i].clipping)
             clipped = true;
       }
-
-      if (m->mDB)
-         *name += wxT(" ") + wxString::Format(_(" Peak %2.f dB"), (peak * m->mDBRange) - m->mDBRange);
-      else
-         *name += wxT(" ") + wxString::Format(_(" Peak %.2f "), peak);
-
+      
       if (clipped)
          *name += wxT(" ") + _(" Clipped ");
    }
@@ -2321,9 +2319,7 @@ wxAccStatus MeterAx::GetValue(int WXUNUSED(childId), wxString* strValue)
       strValue->Clear();
       return wxACC_OK;
    }
-
-   auto value = m->GetDBRange() - m->mSlider->Get() * m->GetDBRange();
-   *strValue = wxString::Format("%2.f", value);
+   *strValue = m->mSlider->GetStringValue();
    return wxACC_OK;
 }
 

@@ -35,6 +35,7 @@
 #include <wx/gbsizer.h>
 
 #include "AllThemeResources.h"
+#include "Decibels.h"
 #include "ToolManager.h"
 #include "../ProjectAudioIO.h"
 #include "../widgets/MeterPanel.h"
@@ -150,7 +151,7 @@ void MeterToolBar::Populate()
       //(maybe we should do it differently for Arabic language :-)  )
       mRecordSetupButton = safenew AButton(this);
       mRecordSetupButton->SetLabel({});
-      mRecordSetupButton->SetName(_("Record"));
+      mRecordSetupButton->SetName(wxString::Format(_("Record meter peak %d db"), -DecibelScaleCutoff.Read()));
       mRecordSetupButton->SetImages(
          theTheme.Image(bmpUpButtonSmall),
          theTheme.Image(bmpHiliteUpButtonSmall),
@@ -187,7 +188,7 @@ void MeterToolBar::Populate()
    if( mWhichMeters & kWithPlayMeter ){
       mPlaySetupButton = safenew AButton(this);
       mPlaySetupButton->SetLabel({});
-      mPlaySetupButton->SetName(_("Playback"));
+      mPlaySetupButton->SetName(wxString::Format(_("Playback meter peak %d db"), -DecibelScaleCutoff.Read()));
       mPlaySetupButton->SetImages(
          theTheme.Image(bmpUpButtonSmall),
          theTheme.Image(bmpHiliteUpButtonSmall),
