@@ -154,19 +154,9 @@ struct AudioUnitWrapper
       AudioUnitEffectSettings &settings, bool fetchValues = true) const;
    bool StoreSettings(const AudioUnitEffectSettings &settings) const;
 
-   //! Copy from one map to another
-   bool CopySettingsContents(
-      const AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst) const;
-
    //! Copy, then clear the optionals in src
    static bool MoveSettingsContents(
       AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge);
-
-private:
-   static bool TransferSettingsContents(
-      AudioUnitEffectSettings &src, AudioUnitEffectSettings &dst,
-      bool doMove, bool doMerge);
-public:
 
    bool CreateAudioUnit();
 
