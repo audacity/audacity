@@ -304,11 +304,10 @@ EffectSettings AudioUnitEffect::MakeSettings() const
 }
 
 bool AudioUnitEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &, EffectSettings &) const
 {
-   auto &dstSettings = GetSettings(dst);
-   auto &srcSettings = GetSettings(src);
-   return AudioUnitWrapper::CopySettingsContents(srcSettings, dstSettings);
+   // Not needed -- rely on EffectInstance::Message instead
+   return true;
 }
 
 bool AudioUnitEffect::SaveSettings(
