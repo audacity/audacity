@@ -1028,6 +1028,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
 
    commit = true;
+
+   WaitForAudioThreadStarted();
+
    return mStreamToken;
 }
 
@@ -3224,14 +3227,6 @@ void AudioIoCallback::WaitForAudioThreadStarted()
    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
 
-
-void AudioIoCallback::StartAudioThreadAndWait()
-{
-   StartAudioThread();
-   WaitForAudioThreadStarted();
-}
-
-
 void AudioIoCallback::StopAudioThread()
 {
    mAudioThreadTrackBufferExchangeLoopRunning.store(false, std::memory_order_release);
@@ -3246,13 +3241,6 @@ void AudioIoCallback::WaitForAudioThreadStopped()
    }
    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
-
-void AudioIoCallback::StopAudioThreadAndWait()
-{
-   StopAudioThread();
-   WaitForAudioThreadStopped();
-}
-
 
 void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
 {
