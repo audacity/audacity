@@ -328,6 +328,10 @@ std::vector<wxString> FFmpegFunctions::GetSearchPaths(bool fromUserPathOnly)
 #elif defined(__WXMAC__)
    paths.emplace_back(wxT("/Library/Application Support/audacity/libs"));
    paths.emplace_back(wxT("/usr/local/lib/audacity"));
+   // x86_64 Homebrew
+   paths.emplace_back(wxT("/usr/local/lib"));
+   // ARM64 Homebrew
+   paths.emplace_back(wxT("/opt/homebrew/lib"));
 #endif
 
    return paths;
