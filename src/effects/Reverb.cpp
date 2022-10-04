@@ -211,13 +211,13 @@ struct EffectReverb::Instance
    bool RealtimeAddProcessor(EffectSettings& settings,
       unsigned numChannels, float sampleRate) override
    {
-      EffectReverbState slave;
+      EffectReverb::Instance slave(mProcessor);
 
       // The notion of ChannelNames is unavailable here,
       // so we'll have to force the stereo init, if this is the case
       //
       InstanceInit(settings, sampleRate,
-         slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
+         slave.mState, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
 
       mSlaves.push_back( std::move(slave) );
       return true;
@@ -234,7 +234,7 @@ struct EffectReverb::Instance
    {
       if (group >= mSlaves.size())
          return 0;
-      return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+      return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
    }
 
    unsigned GetAudioOutCount() const override
@@ -253,8 +253,9 @@ struct EffectReverb::Instance
    size_t InstanceProcess(EffectSettings& settings, EffectReverbState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
-   EffectReverbState mMaster;
-   std::vector<EffectReverbState> mSlaves;
+   EffectReverbState mState;
+   std::vector<EffectReverb::Instance> mSlaves;
+
    unsigned mChannels{ 2 };
 };
 
@@ -315,7 +316,7 @@ bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
    mChannels = rs.mStereoWidth ? 2 : 1;
 
    return InstanceInit(settings,
-      sampleRate, mMaster, chanMap, /* forceStereo = */ false);
+      sampleRate, mState, chanMap, /* forceStereo = */ false);
 }
 
 
@@ -363,7 +364,7 @@ bool EffectReverb::Instance::ProcessFinalize() noexcept
 size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
-   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
 size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectReverbState& state,
