@@ -129,8 +129,8 @@ std::vector<wxString> BuildAVFormatPaths(int version)
 #if defined(__WXMSW__)
       wxString::Format("avformat-%d.dll", version),
 #elif defined(__WXMAC__)
-      wxString::Format("ffmpeg.%d.64bit.dylib", version),
       wxString::Format("libavformat.%d.dylib", version),
+      wxString::Format("ffmpeg.%d.64bit.dylib", version),
 #else
       wxString::Format("libavformat.so.%d", version)
 #endif
@@ -208,6 +208,9 @@ struct FFmpegFunctions::Private final
              functions.AVUtilVersion.Major, UtilFactories))
          return false;
 
+      wxLogInfo("FFmpeg libraries loaded successfully from: %s",
+         FileNames::PathFromAddr(AVFormatLibrary->GetSymbol("avformat_version")));
+
       if (functions.avcodec_register_all)
          functions.avcodec_register_all();
 
@@ -229,6 +232,9 @@ struct FFmpegFunctions::Private final
       {
          const wxString fullName = wxFileName(path, libraryName).GetFullPath();
 
+         if (!wxFileExists(fullName))
+            continue;
+
          auto library = std::make_shared<wxDynamicLibrary>(fullName);
 
          if (library->IsLoaded())
@@ -240,14 +246,6 @@ struct FFmpegFunctions::Private final
       if (library->IsLoaded())
          return library;
 
-      // Loading has failed.
-      // wxLogSysError doesn't report errors correctly on *NIX
-#if defined(_WIN32)
-      wxLogSysError("Failed to load %s", libraryName.c_str());
-#else
-      const char* errorString = dlerror();
-      wxLogError("Failed to load %s (%s)", libraryName.c_str(), errorString);
-#endif
       return {};
    }
 };
@@ -468,7 +466,7 @@ void FFmpegFunctions::FillCodecsList()
    {
       const AVCodec* currentCodec = nullptr;
       void* i = 0;
-      
+
       while ((currentCodec = av_codec_iterate(&i)))
       {
          mCodecs.emplace_back(
