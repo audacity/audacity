@@ -303,7 +303,7 @@ EffectType EffectReverb::GetType() const
 
 auto EffectReverb::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Never;
+   return RealtimeSince::Always;
 }
 
 static size_t BLOCK = 16384;
