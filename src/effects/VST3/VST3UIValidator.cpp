@@ -66,11 +66,13 @@ VST3UIValidator::~VST3UIValidator() = default;
 void VST3UIValidator::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
-   mAccess.ModifySettings([this](EffectSettings& settings)
+   if(!mWrapper.IsActive())
    {
-      if(!mWrapper.IsActive())
+      mAccess.ModifySettings([this](EffectSettings& settings)
+      {
          mWrapper.FlushParameters(settings);
-   });
+      });
+   }
 }
 
 
