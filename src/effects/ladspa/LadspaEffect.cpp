@@ -580,6 +580,13 @@ class LadspaEffectMeter final : public wxWindow
 {
 public:
    LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max);
+
+   void Disconnect()
+   {
+      // Stop using mVal, it might be dangling now
+      mConnected = false;
+   }
+
    virtual ~LadspaEffectMeter();
 
 private:
@@ -589,6 +596,7 @@ private:
    void OnSize(wxSizeEvent & evt);
 
 private:
+   bool mConnected{ true };
    const float & mVal;
    float mMin;
    float mMax;
@@ -621,6 +629,8 @@ LadspaEffectMeter::~LadspaEffectMeter()
 void LadspaEffectMeter::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
+   if (!mConnected)
+      return;
    if (mLastValue != mVal)
       Refresh(false);
 }
@@ -632,6 +642,9 @@ void LadspaEffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void LadspaEffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
+   if (!mConnected)
+      return;
+
    wxPaintDC dc(this);
 
    // Cache some metrics
@@ -1169,6 +1182,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
 
    bool UpdateUI() override;
    bool ValidateUI() override;
+   void Disconnect() override;
 
    void PopulateUI(ShuttleGui &S);
 
@@ -1191,7 +1205,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
    ArrayOf<wxTextCtrl*> mFields;
    ArrayOf<wxStaticText*> mLabels;
    ArrayOf<wxCheckBox*> mToggles;
-   ArrayOf<LadspaEffectMeter *> mMeters;
+   std::vector<LadspaEffectMeter *> mMeters;
 };
 
 bool LadspaEffect::Validator::UpdateUI()
@@ -1213,7 +1227,7 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
    mSliders.reinit( data.PortCount );
    mFields.reinit( data.PortCount, true);
    mLabels.reinit( data.PortCount );
-   mMeters.reinit( data.PortCount );
+   mMeters.resize( data.PortCount );
 
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
@@ -1490,6 +1504,15 @@ bool LadspaEffect::Validator::ValidateUI()
       GetSettings(settings) = mSettings;
    });
    return true;
+}
+
+void LadspaEffect::Validator::Disconnect()
+{
+  for (auto &meter : mMeters)
+     if (meter) {
+        meter->Disconnect();
+        meter = nullptr;
+     }
 }
 
 bool LadspaEffect::CanExportPresets()
