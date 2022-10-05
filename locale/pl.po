@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-09-17 16:44+0000\n"
+"PO-Revision-Date: 2022-09-25 20:12+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -6266,7 +6266,7 @@ msgstr "Udostępnij dźwięk"
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "&Udostępnij pasek narzędzi dźwięku"
+msgstr "Pasek narzędzi &udostępniania dźwięku"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp

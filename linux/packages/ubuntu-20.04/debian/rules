@@ -20,7 +20,8 @@ override_dh_auto_configure:
 	-Daudacity_use_pch=no \
 	-Daudacity_use_wxwidgets=local \
 	-Daudacity_use_vamp=local \
-	-Daudacity_use_sbsms=local
+	-Daudacity_use_sbsms=local \
+   -Daudacity_use_vst3sdk=local
 
 # tests fails with system portaudio
 override_dh_auto_test:

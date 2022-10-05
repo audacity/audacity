@@ -43,6 +43,7 @@ deps=(
    mpg123
    wavpack
    wxwidgets-gtk3
+   vst3sdk
 )
 
 pacman -Syu --noconfirm \
