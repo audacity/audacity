@@ -142,6 +142,18 @@ bool LV2Validator::ValidateUI()
 
 void LV2Validator::Disconnect()
 {
+   // Disconnect the plain UI output meters
+   if (!mPlainUIControls.empty()) {
+      size_t p = 0;
+      for (auto &port : mPorts.mControlPorts) {
+         if (!port->mIsInput)
+            if (auto &pMeter = mPlainUIControls[p].meter) {
+               pMeter->Disconnect();
+               pMeter = nullptr;
+            }
+         ++p;
+      }
+   }
    if (mParent) {
       mParent->PopEventHandler();
       mParent = nullptr;

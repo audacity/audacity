@@ -49,6 +49,8 @@ LV2EffectMeter::~LV2EffectMeter()
 void LV2EffectMeter::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
+   if (!mConnected)
+      return;
    if (mLastValue != mValue)
       Refresh(false);
 }
@@ -60,6 +62,9 @@ void LV2EffectMeter::OnErase(wxEraseEvent &WXUNUSED(evt))
 
 void LV2EffectMeter::OnPaint(wxPaintEvent &WXUNUSED(evt))
 {
+   if (!mConnected)
+      return;
+
    std::unique_ptr<wxDC> dc {wxAutoBufferedPaintDCFactory(this)};
 
    // Cache some metrics
