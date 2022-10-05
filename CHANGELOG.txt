@@ -1,5 +1,16 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.2.1
+
+ This is a patch release. It fixes some bugs and has minor improvements. 
+
+    * #3686 Fixed Audacity crashing on startup on some systems.
+    * #3694 Fixed a crash when applying Waves Berzerk Distortion Mono to a mono track
+    * #3699 Fixed a freeze when very quickly starting and stopping playback.
+    * #3747 macOS: Homebrew FFmpeg installs are now found automatically
+    * #3594 macOS: Fixed Melda VST Plugin UI
+    * #3474 Building with VST3 support is now possible without Conan.
+
 Changes in version 3.2.0
 
  This version adds realtime effects and VST3. 
