@@ -73,7 +73,10 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
 
    mFactory = factory;
    mProjectRate = projectRate;
-   mTracks = list;
+
+   SetTracks(list);
+   // Don't hold a dangling pointer when done
+   Finally Do([&]{ SetTracks(nullptr); });
 
    // This is for performance purposes only, no additional recovery implied
    auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
