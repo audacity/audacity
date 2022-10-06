@@ -74,7 +74,7 @@ class MeterToolBar final : public ToolBar {
    void AdjustInputGain(int adj);
 
  private:
-   void RegenerateTooltips() override;
+   void RegenerateTooltips() override {}
    void RebuildLayout(bool force);
 
    int mWhichMeters;

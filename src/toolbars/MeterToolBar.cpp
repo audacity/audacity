@@ -178,7 +178,7 @@ void MeterToolBar::Populate()
                                 wxDefaultPosition,
                                 wxSize( 260, toolbarSingle) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.*/
-      mRecordMeter->SetName( XO("Record Meter"));
+      mRecordMeter->SetName( XO("Recording Level"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
@@ -214,7 +214,7 @@ void MeterToolBar::Populate()
                               wxDefaultPosition,
                               wxSize( 260, toolbarSingle ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
-      mPlayMeter->SetName( XO("Play Meter"));
+      mPlayMeter->SetName( XO("Playback Level"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
@@ -246,16 +246,6 @@ void MeterToolBar::UpdateControls()
 
    if ( mRecordMeter )
       mRecordMeter->UpdateSliderControl();
-}
-
-void MeterToolBar::RegenerateTooltips()
-{
-#if wxUSE_TOOLTIPS
-   if( mPlayMeter )
-      mPlayMeter->SetToolTip( XO("Playback Level") );
-   if( mRecordMeter )
-      mRecordMeter->SetToolTip( XO("Recording Level") );
-#endif
 }
 
 void MeterToolBar::RebuildLayout(bool force)

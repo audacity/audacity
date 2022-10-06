@@ -616,6 +616,8 @@ void LWSlider::Init(wxWindow * parent,
    AdjustSize(size);
 
    Move(pos);
+
+   CreatePopWin();
 }
 
 LWSlider::~LWSlider()
@@ -630,6 +632,17 @@ wxWindowID LWSlider::GetId()
 void LWSlider::SetId(wxWindowID id)
 {
    mID = id;
+}
+
+void LWSlider::SetName(const TranslatableString& name)
+{
+   mName = name;
+   if(mTipPanel)
+   {
+      mTipPanel->Destroy();
+      mTipPanel = nullptr;
+   }
+   CreatePopWin();
 }
 
 void LWSlider::SetDefaultValue(float value)
@@ -934,36 +947,26 @@ void LWSlider::SetToolTipTemplate(const TranslatableString & tip)
 
 void LWSlider::ShowTip(bool show)
 {
-   if (show && !mAlwaysHideTip)
+   if(!mTipPanel)
+      return;
+
+   if(show)
    {
-      if (mTipPanel)
-      {
-         if (mTipPanel->IsShownOnScreen())
-         {
-            return;
-         }
-
-         mTipPanel.reset();
-      }
-
-      CreatePopWin();
-      FormatPopWin();
+      mTipPanel->SetLabel(GetTip(mCurrentValue));
       SetPopWinPosition();
       mTipPanel->ShowWithoutActivating();
    }
    else
-   {
-      if (mTipPanel)
-      {
-         mTipPanel->Hide();
-         mTipPanel.reset();
-      }
-   }
+      mTipPanel->Hide();
 }
 
 void LWSlider::CreatePopWin()
 {
-   mTipPanel = std::make_unique<TipWindow>(mParent, GetWidestTips());
+   if(mTipPanel || mAlwaysHideTip || mParent == nullptr)
+      return;
+   
+   mTipPanel = safenew TipWindow(mParent, GetWidestTips());
+   mTipPanel->Hide();
 }
 
 void LWSlider::SetPopWinPosition()
@@ -1055,8 +1058,13 @@ TranslatableString LWSlider::GetTip(float value) const
 #endif
       }
 
-      /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
-      label = XO("%s: %s").Format( mName, val );
+      if(!mName.empty())
+      {
+         /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
+         label = XO("%s: %s").Format( mName, val );
+      }
+      else
+         label = val;
    }
    else
    {
@@ -1397,6 +1405,13 @@ void LWSlider::OnKeyDown(wxKeyEvent & event)
       event.Skip();
    }
 }
+
+void LWSlider::SetParent(wxWindow* parent)
+{
+   mParent = parent;
+   CreatePopWin();
+}
+
 
 void LWSlider::SendUpdate( float newValue )
 {

@@ -268,11 +268,13 @@ const static wxChar *PrefStyles[] =
 enum {
    OnMeterUpdateID = 6000,
    OnMonitorID,
-   OnPreferencesID
+   OnPreferencesID,
+   OnTipTimeoutID
 };
 
 BEGIN_EVENT_TABLE(MeterPanel, MeterPanelBase)
    EVT_TIMER(OnMeterUpdateID, MeterPanel::OnMeterUpdate)
+   EVT_TIMER(OnTipTimeoutID, MeterPanel::OnTipTimeout)
    EVT_SLIDER(wxID_ANY, MeterPanel::SetMixer)
    EVT_MOUSE_EVENTS(MeterPanel::OnMouse)
    EVT_CONTEXT_MENU(MeterPanel::OnContext)
@@ -352,6 +354,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
          false,   /* drawtrack */
          false     /* alwayshidetip */
       );
+      mSlider->SetScroll(0.1f, 2.0f);
    }
 
    UpdateSliderControl();
@@ -392,6 +395,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    // We have the tip instead.
    mDisabledBkgndBrush = mBkgndBrush;
 
+   mTipTimer.SetOwner(this, OnTipTimeoutID);
    mTimer.SetOwner(this, OnMeterUpdateID);
    // TODO: Yikes.  Hard coded sample rate.
    // JKC: I've looked at this, and it's benignish.  It just means that the meter
@@ -742,24 +746,17 @@ void MeterPanel::OnMouse(wxMouseEvent &evt)
    if (mStyle == MixerTrackCluster) // MixerTrackCluster style has no menu.
       return;
 
-  #if wxUSE_TOOLTIPS // Not available in wxX11
-   if (evt.Leaving()){
-      ProjectStatus::Get( *mProject ).Set({});
+   if (evt.Entering()) {
+      mTipTimer.StartOnce(500);
    }
-   else if (evt.Entering()) {
-      // Display the tooltip in the status bar
-      wxToolTip * pTip = this->GetToolTip();
-      if( pTip ) {
-         auto tipText = Verbatim( pTip->GetTip() );
-         ProjectStatus::Get( *mProject ).Set(tipText);
-      }
-   }
-  #endif
+   else if(evt.Leaving())
+      mTipTimer.Stop();
 
    if (evt.RightDown())
       ShowMenu(evt.GetPosition());
    else
    {
+      
       if (mSlider)
          mSlider->OnMouseEvent(evt);
    }
@@ -848,6 +845,7 @@ void MeterPanel::OnKillFocus(wxFocusEvent & WXUNUSED(evt))
 {
    if(mSlider)
       mSlider->OnKillFocus();
+   mTipTimer.Stop();
 
    mIsFocused = false;
    Refresh(false);
@@ -1165,6 +1163,13 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       RepaintBarsNow();
    }
 }
+
+void MeterPanel::OnTipTimeout(wxTimerEvent& evt)
+{
+   if(mSlider)
+      mSlider->ShowTip(true);
+}
+
 
 float MeterPanel::GetMaxPeak() const
 {
@@ -1982,6 +1987,14 @@ void MeterPanel::ShowMenu(const wxPoint & pos)
                                 wxACC_SELF);
 #endif
 }
+
+void MeterPanel::SetName(const TranslatableString& tip)
+{
+   wxPanelWrapper::SetName(tip);
+   if(mSlider)
+      mSlider->SetName(tip);
+}
+
 
 void MeterPanel::OnMonitor(wxCommandEvent & WXUNUSED(event))
 {

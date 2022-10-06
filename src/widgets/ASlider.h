@@ -122,6 +122,8 @@ class AUDACITY_DLL_API LWSlider
    wxWindowID GetId();
    void SetId(wxWindowID id);
 
+   void SetName(const TranslatableString& name);
+
    void SetDefaultValue(float value);
    void SetDefaultShortcut(bool value);
 
@@ -161,7 +163,7 @@ class AUDACITY_DLL_API LWSlider
    float GetMinValue() const;
    float GetMaxValue() const;
 
-   void SetParent(wxWindow *parent) { mParent = parent; }
+   void SetParent(wxWindow *parent);
    void SendUpdate(float newValue);
 
    wxString GetStringValue() const;
@@ -242,7 +244,7 @@ class AUDACITY_DLL_API LWSlider
 
    wxWindowID mID;
 
-   std::unique_ptr<TipWindow> mTipPanel;
+   TipWindow* mTipPanel{nullptr};
    TranslatableString mTipTemplate;
 
    bool mIsDragging;

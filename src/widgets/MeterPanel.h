@@ -201,6 +201,8 @@ class AUDACITY_DLL_API MeterPanel final
    
    void ShowMenu(const wxPoint & pos);
 
+   void SetName(const TranslatableString& name);
+
  private:
    void UpdatePrefs() override;
    void UpdateSelectedPrefs( int ) override;
@@ -223,6 +225,7 @@ class AUDACITY_DLL_API MeterPanel final
    void OnAudioCapture(AudioIOEvent);
 
    void OnMeterUpdate(wxTimerEvent &evt);
+   void OnTipTimeout(wxTimerEvent& evt);
 
    void HandleLayout(wxDC &dc);
    void SetActiveStyle(Style style);
@@ -246,6 +249,7 @@ class AUDACITY_DLL_API MeterPanel final
    AudacityProject *mProject;
    MeterUpdateQueue mQueue;
    wxTimer          mTimer;
+   wxTimer          mTipTimer;
 
    int       mWidth;
    int       mHeight;
