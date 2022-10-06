@@ -35,6 +35,8 @@ public:
    EffectBase();
    ~EffectBase() override;
 
+   void SetTracks(TrackList *pTracks) { mTracks = pTracks; }
+
 protected:
    // The EffectBase class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
