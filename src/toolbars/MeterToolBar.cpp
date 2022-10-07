@@ -144,6 +144,7 @@ void MeterToolBar::ReCreateButtons()
 
 void MeterToolBar::Populate()
 {
+   MakeButtonBackgroundsSmall();
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 
    if( mWhichMeters & kWithRecordMeter ){
@@ -153,11 +154,11 @@ void MeterToolBar::Populate()
       mRecordSetupButton->SetLabel({});
       mRecordSetupButton->SetName(wxString::Format(_("Record meter peak %d db"), -DecibelScaleCutoff.Read()));
       mRecordSetupButton->SetImages(
-         theTheme.Image(bmpUpButtonSmall),
-         theTheme.Image(bmpHiliteUpButtonSmall),
-         theTheme.Image(bmpDownButtonSmall),
-         theTheme.Image(bmpHiliteButtonSmall),
-         theTheme.Image(bmpUpButtonSmall));
+         theTheme.Image(bmpRecoloredUpSmall),
+         theTheme.Image(bmpRecoloredUpHiliteSmall),
+         theTheme.Image(bmpRecoloredDownSmall),
+         theTheme.Image(bmpRecoloredHiliteSmall),
+         theTheme.Image(bmpRecoloredUpSmall));
       mRecordSetupButton->SetIcon(theTheme.Image(bmpMic));
       mRecordSetupButton->SetButtonType(AButton::Type::FrameButton);
       mRecordSetupButton->SetMinSize({toolbarSingle, toolbarSingle});
@@ -190,11 +191,11 @@ void MeterToolBar::Populate()
       mPlaySetupButton->SetLabel({});
       mPlaySetupButton->SetName(wxString::Format(_("Playback meter peak %d db"), -DecibelScaleCutoff.Read()));
       mPlaySetupButton->SetImages(
-         theTheme.Image(bmpUpButtonSmall),
-         theTheme.Image(bmpHiliteUpButtonSmall),
-         theTheme.Image(bmpDownButtonSmall),
-         theTheme.Image(bmpHiliteButtonSmall),
-         theTheme.Image(bmpUpButtonSmall));
+         theTheme.Image(bmpRecoloredUpSmall),
+         theTheme.Image(bmpRecoloredUpHiliteSmall),
+         theTheme.Image(bmpRecoloredDownSmall),
+         theTheme.Image(bmpRecoloredHiliteSmall),
+         theTheme.Image(bmpRecoloredUpSmall));
       mPlaySetupButton->SetIcon(theTheme.Image(bmpSpeaker));
       mPlaySetupButton->SetButtonType(AButton::Type::FrameButton);
       mPlaySetupButton->SetMinSize({toolbarSingle, toolbarSingle});
