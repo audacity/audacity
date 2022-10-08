@@ -107,7 +107,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
       private:
          void Populate(ShuttleGui & S);
 
-         void OnAudioIO(wxCommandEvent & evt);
+         void OnAudioIO(AudioIOEvent ev);
          void DoUpdate();
 
          void OnCloseWindow(wxCloseEvent &event);
@@ -172,13 +172,8 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject &parent)
    Populate(S);
    CentreOnParent();
 
-   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                  &SpectralDataDialog::OnAudioIO,
-                  this);
-
-   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                  &SpectralDataDialog::OnAudioIO,
-                  this);
+   mAudioIOSubscription = AudioIO::Get()
+      ->Subscribe(*this, &SpectralDataDialog::OnAudioIO);
 
    Clipboard::Get().Bind( EVT_CLIPBOARD_CHANGE,
       &::SpectralDataDialog::UpdateDisplayForClipboard, this);
@@ -244,14 +239,10 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
    SetMinSize(GetSize());
 }
 
-void SpectralDataDialog::OnAudioIO(wxCommandEvent& evt)
+void SpectralDataDialog::OnAudioIO(AudioIOEvent ev)
 {
-   evt.Skip();
-
-   if (evt.GetInt() != 0)
-      mAudioIOBusy = true;
-   else
-      mAudioIOBusy = false;
+   if (ev.type != AudioIOEvent::MONITOR)
+      mAudioIOBusy = ev.on;
 }
 
 void SpectralDataDialog::UpdateDisplayForClipboard(wxEvent& e)
