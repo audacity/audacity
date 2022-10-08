@@ -7,7 +7,7 @@
   { "SND-SREF",  S, xlc_snd_sref}, 
   { "SREF-INVERSE",  S, xlc_sref_inverse}, 
   { "SND-STOP-TIME",  S, xlc_snd_stop_time}, 
-  { "SND-TIME",  S, xlc_snd_time}, 
+  { "SND-TIME",  S, xlc_snd_time_legacy}, 
   { "SND-SRATE",  S, xlc_snd_srate}, 
   { "SND-T0",  S, xlc_snd_t0}, 
   { "SND-XFORM",  S, xlc_snd_xform}, 

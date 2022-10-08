@@ -63,7 +63,7 @@ W'(u) = 1/P(V(u))
 thus, W(u) = Integral[1/P(V(u))]
 
 
-INTERFACE WTIH CMUPV
+INTERFACE WITH CMUPV
 --------------------
 
 f is the input sound
