@@ -153,6 +153,11 @@ extern int debug;
 #include "xlisp.h"
 #endif
 
+// also defined in cmtio.c, which seems to be the correct place for it:
+// int     IOinputfd;      /* input file descriptor (usually 0) */
+
+int     IOnochar;       /* Value to be returned by IOgetchar()
+                           where there is no input to be had */
 
 /****************************************************************************
 *
@@ -1189,6 +1194,7 @@ public int wait_ascii()
 }
 #endif
 
+#ifndef BUFFERED_SYNCHRONOUS_INPUT
 #ifdef DOS
 public int wait_ascii()
 {
@@ -1252,6 +1258,7 @@ public int wait_ascii()
 }
 #endif
 #endif
+#endif(load )
 
 #ifdef AMIGA
 /******************************************************************

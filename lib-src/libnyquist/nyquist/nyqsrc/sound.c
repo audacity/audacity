@@ -288,7 +288,7 @@ sound_type sound_create(
     last_sound = sound; /* debug */
     if (t0 < 0) xlfail("attempt to create a sound with negative starting time");
     /* nyquist_printf("sound_create %p gets %g\n", sound, t0); */
-    sound->t0 = sound->true_t0 = sound->time = t0;
+    sound->t0 = sound->true_t0 = /* sound->time = */ t0;
     sound->stop = MAX_STOP;
     sound->sr = sr;
     sound->current = 0;
@@ -784,6 +784,16 @@ time_type snd_stop_time(sound_type s)
 
 /* snd_xform -- return a sound with transformations applied */
 /*
+ * Makes a copy of sound and then alters it in the following order:
+ * (1) the start time (snd-t0) of the sound is shifted to time,
+ * (2) the sound is stretched as a result of setting the sample rate
+ * to sr (the start time is unchanged by this),
+ * (3) the sound is clipped from start to stop, 
+ * (4) if start is greater than time, the sound is shifted shifted by
+ * time - start, so that the start time is time, 
+ * (5) the sound is scaled by scale.  An empty (zero) sound at time
+ * will be returned if all samples are clipped.
+ *
  * The "logical" sound starts at snd->time and runs until some
  * as yet unknown termination time.  (There is also a possibly
  * as yet unknown logical stop time that is irrelevant here.)
@@ -1110,7 +1120,21 @@ sample_block_type SND_get_first(sound_type snd, int *cnt)
             /* block boundary: replace with zero sound */
             snd->list = zero_snd_list;
             snd_list_unref(snd_list);
-        } else {
+        // the idea here is that we have reached snd->stop, which
+        // means the next samples have to be zero, but we are reading
+        // from the middle of a block of samples. Maybe, for example,
+        // snd was constructed by snd_xform that imposed a new stop
+        // time. Since we haven't read the next sample, we can take
+        // care of this by just creating a new snd_list with a shorter
+        // block_len to take whatever samples we need before stop, then
+        // link ot zero_snd_list so that subsequent samples are zero.
+        // However, if we actually start reading zeros from zero_snd_list,
+        // the test above for > snd->stop will bring us back here. We
+        // ignore these cases just below by testing if the current list
+        // is the zero_snd_list. If so, we're just reading zeros, we're
+        // past the stop time, and we can just keep reading zeros, so
+        // do nothing.
+        } else if (snd->list != zero_snd_list) {
             /* not a block boundary: build new list */
             snd->list = snd_list_create((snd_susp_type) zero_snd_list);
             snd->list->block_len = (short) (snd->stop - snd->current);
@@ -1122,6 +1146,7 @@ sample_block_type SND_get_first(sound_type snd, int *cnt)
     }
 
     *cnt = snd_list->block_len;
+    assert(snd_list->block_len >= 0);
     /* this should never happen */
     if (*cnt == 0) {
         stdputstr("SND_get_first returned 0 samples\n");
@@ -1766,7 +1791,7 @@ sound_type sound_zero(time_type t0,rate_type sr)
     sound->get_next = SND_get_first;
     sound->list = zero_snd_list;
     sound->logical_stop_cnt = sound->current = 0;
-    sound->true_t0 = sound->t0 = sound->time = t0;
+    sound->true_t0 = sound->t0 = /* sound->time = */ t0;
     sound->stop = MAX_STOP;
     sound->sr = sr;
     sound->scale = 1.0F;

@@ -13,6 +13,13 @@ HISTORY
 
 /* system specific definitions */
 
+#ifndef __XLISP__
+#define __XLISP__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h> /* needed for getenv(); note that this was a problem
     for PMAX implementation, but I assume PMAX is obsolete now. 
     - RBD 16apr04 */
@@ -154,7 +161,7 @@ extern long ptrtoabs();
 #endif
 
 /* Linux on Pentium */
-#if defined(__linux__) || defined(__GLIBC__)
+#if defined(__linux__) || defined(__GLIBC__) || defined(__CYGWIN__)
 #define AFMT            "%p"
 #include <inttypes.h>
 #include <endian.h>
@@ -378,7 +385,7 @@ void dbg_gc_xlsave(LVAL *n);
 
 /* function definition structure */
 typedef struct {
-    char *fd_name;	/* function name */
+    const char *fd_name;	/* function name */
     int fd_type;	/* function type */
     LVAL (*fd_subr)(void);	/* function entry point */
 } FUNDEF;
@@ -1048,3 +1055,9 @@ void localinit(void);
 void localsymbols(void);
 void print_local_gc_info(void);
 void local_toplevel(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

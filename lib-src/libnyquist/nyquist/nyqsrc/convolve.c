@@ -62,12 +62,13 @@
  */
 
 // You can turn on debugging output with: #define D if (1)
-#define D if (0) 
+#define D if (0)
 
 #define MAX_IR_LEN 4000000 /* maximum impulse response length */
 #define MAX_LOG_FFT_SIZE 16 /* maximum fft size for convolution */
 //#define MAX_LOG_FFT_SIZE 4 /* maximum fft size for convolution */
 #define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
+#include <assert.h>
 #include <math.h>
 #include "stdio.h"
 #ifndef mips
@@ -191,11 +192,16 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             }
             /* zero fill to size 2N */
             memset(Xj + N, 0, N * sizeof(Xj[0]));
-            D printf("Xj at offset %td: ", Xj - susp->X);
-            D for (i = 0; i < susp->N * 2; i++) {
-                printf("%g ", Xj[i]);
+            D {
+                printf("Xj at offset %td: ", Xj - susp->X);
+                printf("    %d samples ", susp->N * 2);
+                float big = 0.0;
+                for (i = 0; i < susp->N * 2; i++) {
+                    // printf("%g ", Xj[i]);
+                    big = max(big, fabs(Xj[i]));
+                }
+                printf("MAX: %g\n", big);
             }
-            D printf("\n");
             /* Compute FFT of Xj in place */
             fftInit(susp->M);
             rffts(Xj, susp->M, 1);
@@ -208,20 +214,28 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 /* Compute IFFT of Y in place */
                 riffts(Y, susp->M, 1);
                 /* R += Y */
-                D printf("Output block %d, X offset %td: ", k, X - susp->X);
+                D { printf("Output block %d, X offset %td: ", k, X - susp->X);
+                    printf(" %d samples ", 2 * N);
+                    float big = 0.0;
+                    for (i = 0; i < 2 * N; i++) {
+                        big = max(big, fabs(Y[i]));
+                    }
+                    printf("MAX: %g\n", big);
+                }
                 for (i = 0; i < 2 * N; i++) {
                     R[i] += Y[i];
-                    D printf("%g ", Y[i]);
                 }
-                D printf("\n");
             }
             /* now N samples of R can be output */
             susp->R_current = R;
-            D printf("R: ");
-            D for (i = 0; i < susp->N; i++) {
-                printf("%g ", R[i]);
+            D printf("R: %d samples ", susp->N);
+            D { float big = 0.0;
+                for (i = 0; i < susp->N; i++) {
+                    // printf("%g ", R[i]);
+                    big = max(big, fabs(R[i]));
+                }
+                printf("MAX: %g\n", big);
             }
-            D printf("\n");
             susp->j = (susp->j + 1) % susp->L;
         }
         /* compute togo, the number of samples to "compute" */
@@ -338,12 +352,22 @@ void fill_with_samples(sample_type *x, sound_type s, long n)
             s->CNT = s->INDEX = 0;
         }
         int icnt = (int) s->CNT;  /* need this to be int type */
+        assert(icnt >= 0);
         if (icnt == s->INDEX) {
             sound_get_next(s, &icnt);
+            assert(icnt >= 0);
             s->CNT = icnt;  /* save the count back into s->extra */
             s->INDEX = 0;
         }
         x[i] = s->SAMPLES[s->INDEX++] * s->scale;
+        assert(x[i] < 2);
+    }
+    D { float big = 0.0;
+        for (i = 0; i < n; i++) {
+            big = max(big, fabs(x[i]));
+            assert(big < 2);
+        }
+        printf("fill_with_samples n %ld scale %g max %g\n", n, s->scale, big);
     }
 }
 
@@ -400,9 +424,16 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     for (i = 0; i < susp->L; i++) {
         int j;
         float *H = susp->H + i * susp->N * 2;
-        D printf("H_%d at %td: ", i, H - susp->H);
-        D for (j = 0; j < susp->N * 2; j++) printf("%g ", H[j]);
-        D printf("\n");
+        D { printf("H_%d at %td: ", i, H - susp->H);
+            printf("%d samples ", susp->N * 2);
+            float big = 0.0;
+            for (j = 0; j < susp->N * 2; j++) {
+                big = max(big, fabs(H[j]));
+                assert(big < 2);
+                // printf("%g ", H[j]);
+            }
+            printf("big %g\n", big);
+        }
     }
     sound_unref(h_snd);
     h_snd = NULL;

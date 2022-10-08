@@ -177,15 +177,15 @@ LVAL xlc_snd_stop_time(void)
 }
 
 
-/* xlc_snd_time -- interface to C routine snd_time */
+/* xlc_snd_time_legacy -- interface to C routine snd_time_legacy */
 /**/
-LVAL xlc_snd_time(void)
+LVAL xlc_snd_time_legacy(void)
 {
     sound_type arg1 = getsound(xlgasound());
     double result;
 
     xllastarg();
-    result = snd_time(arg1);
+    result = snd_time_legacy(arg1);
     return cvflonum(result);
 }
 
@@ -588,7 +588,7 @@ LVAL xlc_snd_from_array(void)
 LVAL xlc_snd_samples(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = (long) getfixnum(xlgafixnum());
+    int64_t arg2 = getfixnum(xlgafixnum());
     LVAL result;
 
     xllastarg();

@@ -12,6 +12,7 @@ HISTORY
 
 */
 
+#include <string.h> /* for memcpy */
 #include "switches.h"
 #include "xlisp.h"
 

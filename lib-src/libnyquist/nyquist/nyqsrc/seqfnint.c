@@ -36,78 +36,6 @@ LVAL xlc_seq_reset(void)
 }
 
 
-/* xlc_seq_insert_ctrl -- interface to C routine insert_ctrl */
-/**/
-LVAL xlc_seq_insert_ctrl(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    long arg2 = (long) getfixnum(xlgafixnum());
-    long arg3 = (long) getfixnum(xlgafixnum());
-    long arg4 = (long) getfixnum(xlgafixnum());
-    long arg5 = (long) getfixnum(xlgafixnum());
-    long arg6 = (long) getfixnum(xlgafixnum());
-
-    xllastarg();
-    insert_ctrl(arg1, arg2, arg3, arg4, arg5, arg6);
-    return NIL;
-}
-
-
-/* xlc_seq_insert_ramp -- interface to C routine insert_ctrlramp */
-/**/
-LVAL xlc_seq_insert_ramp(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    long arg2 = (long) getfixnum(xlgafixnum());
-    long arg3 = (long) getfixnum(xlgafixnum());
-    long arg4 = (long) getfixnum(xlgafixnum());
-    long arg5 = (long) getfixnum(xlgafixnum());
-    long arg6 = (long) getfixnum(xlgafixnum());
-    long arg7 = (long) getfixnum(xlgafixnum());
-    long arg8 = (long) getfixnum(xlgafixnum());
-    long arg9 = (long) getfixnum(xlgafixnum());
-
-    xllastarg();
-    insert_ctrlramp(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-    return NIL;
-}
-
-
-/* xlc_seq_insert_macctrl -- interface to C routine insert_macctrl */
-/**/
-LVAL xlc_seq_insert_macctrl(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    long arg2 = (long) getfixnum(xlgafixnum());
-    long arg3 = (long) getfixnum(xlgafixnum());
-    long arg4 = (long) getfixnum(xlgafixnum());
-    long arg5 = (long) getfixnum(xlgafixnum());
-    long arg6 = (long) getfixnum(xlgafixnum());
-
-    xllastarg();
-    insert_macctrl(arg1, arg2, arg3, arg4, arg5, arg6);
-    return NIL;
-}
-
-
-/* xlc_seq_insert_note -- interface to C routine insert_note */
-/**/
-LVAL xlc_seq_insert_note(void)
-{
-    seq_type arg1 = getseq(xlgaseq());
-    long arg2 = (long) getfixnum(xlgafixnum());
-    long arg3 = (long) getfixnum(xlgafixnum());
-    long arg4 = (long) getfixnum(xlgafixnum());
-    long arg5 = (long) getfixnum(xlgafixnum());
-    long arg6 = (long) getfixnum(xlgafixnum());
-    long arg7 = (long) getfixnum(xlgafixnum());
-
-    xllastarg();
-    insert_note(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-    return NIL;
-}
-
-
 /* xlc_seq_copy -- interface to C routine seq_copy */
 /**/
 LVAL xlc_seq_copy(void)
@@ -182,6 +110,42 @@ LVAL xlc_seq_get(void)
     }
     result = getvalue(RSLT_sym);
     return result;
+}
+
+
+/* xlc_seq_insert_note -- interface to C routine seq_insert_note */
+/**/
+LVAL xlc_seq_insert_note(void)
+{
+    seq_type arg1 = getseq(xlgaseq());
+    long arg2 = (long) getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
+    long arg5 = (long) getfixnum(xlgafixnum());
+    long arg6 = (long) getfixnum(xlgafixnum());
+    long arg7 = (long) getfixnum(xlgafixnum());
+
+    xllastarg();
+    seq_insert_note(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+    return NIL;
+}
+
+
+/* xlc_seq_insert_ctrl -- interface to C routine seq_insert_ctrl */
+/**/
+LVAL xlc_seq_insert_ctrl(void)
+{
+    seq_type arg1 = getseq(xlgaseq());
+    long arg2 = (long) getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
+    long arg5 = (long) getfixnum(xlgafixnum());
+    long arg6 = (long) getfixnum(xlgafixnum());
+    long arg7 = (long) getfixnum(xlgafixnum());
+
+    xllastarg();
+    seq_insert_ctrl(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+    return NIL;
 }
 
 

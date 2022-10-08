@@ -274,12 +274,23 @@ typedef struct {
 /* forward declaration for circular type dependencies */
 typedef struct snd_list_struct *snd_list_type;
 
+struct snd_susp_struct;
+
+typedef void  (*snd_fetch_fn)(struct snd_susp_struct *, snd_list_type snd_list);
+typedef void  (*snd_keep_fetch_fn)(struct snd_susp_struct *,
+                                   snd_list_type snd_list);
+typedef void  (*snd_free_fn)(struct snd_susp_struct *);
+/* marks LVAL nodes for GC: */
+typedef void  (*snd_mark_fn)(struct snd_susp_struct *);
+/* debugging: */
+typedef void  (*snd_print_tree_fn)(struct snd_susp_struct *, int);
+
 typedef struct snd_susp_struct {
-    void  (*fetch)(struct snd_susp_struct *, snd_list_type snd_list);
-    void  (*keep_fetch)(struct snd_susp_struct *, snd_list_type snd_list);
-    void  (*free)(struct snd_susp_struct *);
-    void  (*mark)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
-    void  (*print_tree)(struct snd_susp_struct *, int);    /* debugging */
+    snd_fetch_fn fetch;
+    snd_keep_fetch_fn keep_fetch;
+    snd_free_fn free;
+    snd_mark_fn mark;
+    snd_print_tree_fn print_tree;
     char *name;        /* string name for debugging */
     int64_t toss_cnt;  /* return this many zeros, then compute */
     int64_t current;   /* current sample number */
@@ -317,9 +328,24 @@ typedef struct table_struct {
  */
 #define UNKNOWN (-10-max_sample_block_len)
 
+/* The normal start time of a sound is t0.
+ * If you want to access a sound at a time before t0, you should call
+ * sound_prepend_zeros() with the time where you want to start reading.
+ * (This will modify the sound by changing t0 and using SND_get_zeros
+ * as get_next until prepend_cnt samples have been returned.)
+ *
+ * true_t0 is the exact time of the first sample. If
+ * sound_prepend_zeros() is called multiple times, rounding errors
+ * could occur, so true_t0 is used so that the original time of the
+ * first sample is not shifted more than 1/2 sample period.
+ *
+ * time, like t0 is also (normally) the start time of the sound.
+ * 
+ */
 typedef struct sound_struct {
     sample_block_type (*get_next)(struct sound_struct *snd, int *cnt);
-    time_type         time;    /* logical starting time */
+// time is no longer used in sound_type
+//    time_type         time;    /* logical starting time */
     time_type         t0;      /* quantized time of first sample */
     int64_t           stop;    /* stop (clipping) sample no. */
     time_type         true_t0; /* exact time of first sample */
@@ -394,7 +420,9 @@ double snd_sref_inverse(sound_type s, double val);
     /* LISP: (SREF-INVERSE SOUND ANYNUM) */
 
 double snd_stop_time(sound_type s); /* LISP: (SND-STOP-TIME SOUND) */
-#define snd_time(s) (s)->time
+// for backward compatibility, we keep SND-TIME, but while it used to
+// access (s)->time, now it is identical to SND-T0
+#define snd_time_legacy(s) (s)->t0
     /* LISP: double (SND-TIME SOUND) */
 
 #define snd_srate(s) (s)->sr

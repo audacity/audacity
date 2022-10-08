@@ -506,8 +506,15 @@ event_type insert_note(seq, ntime, nline, voice, pitch, dur, loud)
     }
     
     if (event) {
-        seq_used_mask(seq) |= 1 << (voice - 1);
-        event->nvoice = voice - 1;
+        // safety: make date in range
+        voice = (voice - 1) & 0x0F;
+        pitch &= 0x7F;
+        // allow 3 bytes for dur, which is packed with 1 byte for velocity
+        // disallow durations less than 1
+        dur = MAX(1, MIN(dur, 0x7FFFFF));
+        loud &= 0x7F;
+        seq_used_mask(seq) |= 1 << voice;
+        event->nvoice = voice;
         event->value = pitch;
         event->u.note.ndur = (dur << 8) + loud;
         seq_notecount(seq)++;

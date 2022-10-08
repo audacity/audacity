@@ -239,10 +239,8 @@ event_type insert_clock(seq_type seq, time_type ctime, int cline,
                         time_type ticksize);
 event_type insert_ctrl(seq_type seq, time_type ctime, int cline, int ctrl,
                        int voice, int value);
- /* LISP: (SEQ-INSERT-CTRL SEQ LONG LONG LONG LONG LONG) */
 event_type insert_ctrlramp(seq_type seq, time_type rtime, int rline, int voice,
                       time_type step, time_type dur, int ctrl, int v1, int v2);
- /* LISP: (SEQ-INSERT-RAMP SEQ LONG LONG LONG LONG LONG LONG LONG LONG) */
 def_type insert_def(seq_type seq, char *symbol, unsigned char *definition,
                     int deflen);
 event_type insert_deframp(seq_type seq, time_type rtime, int rline, int voice,
@@ -250,12 +248,10 @@ event_type insert_deframp(seq_type seq, time_type rtime, int rline, int voice,
                      int nparms, short parms[], int parm_num, int to_value);
 event_type insert_macctrl(seq_type seq, time_type ctime, int cline, int ctrl,
                           int voice, int value);
- /* LISP: (SEQ-INSERT-MACCTRL SEQ LONG LONG LONG LONG LONG) */
 event_type insert_macro(seq_type seq, time_type ctime, int cline,
                         def_type def, int voice, int nparms, short *parms);
 event_type insert_note(seq_type seq, time_type ntime, int nline, int voice,
                        int pitch, time_type dur, int loud);
- /* LISP: (SEQ-INSERT-NOTE SEQ LONG LONG LONG LONG LONG LONG) */
 event_type insert_seti(seq_type seq, time_type stime, int sline, int voice,
                        int *addr, int value);
 void noop(seq_type seq);

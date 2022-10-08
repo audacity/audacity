@@ -185,14 +185,14 @@ int xlload(const char *fname, int vflag, int pflag)
 
     /* read, evaluate and possibly print each expression in the file */
     xlbegin(&cntxt,CF_ERROR,s_true);
-    if (_setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf)) {
         sts = FALSE;
         #ifdef DEBUG_INPUT
             if (read_by_xlisp) {
 		fprintf(read_by_xlisp, ";;;;xlload: catch longjump, back to %s\n", fullname);
             }
         #endif
-    else {
+    } else {
         #ifdef DEBUG_INPUT
             if (read_by_xlisp) {
 		fprintf(read_by_xlisp, ";;;;xlload: about to read from %s (%x)\n", fullname, fptr);
@@ -277,15 +277,15 @@ int xlread(LVAL fptr, LVAL *pval, int rflag)
     int sts;
 
     /* read an expression */
-    while ((sts = readone(fptr,pval)) == FALSE)
+    while ((sts = readone(fptr,pval)) == FALSE) {
 #ifdef DEBUG_INPUT
-    if (debug_input_fp) {
-        int c = getc(debug_input_fp);
-        ungetc(c, debug_input_fp);
-    }
+        if (debug_input_fp) {
+            int c = getc(debug_input_fp);
+            ungetc(c, debug_input_fp);
+        }
 #endif
         ;
-
+    }
     /* return status */
     return (sts == EOF ? FALSE : TRUE);
 }
@@ -840,7 +840,9 @@ LVAL tentry(int ch)
 {
     LVAL rtable;
     rtable = getvalue(s_rtable);
-    if (!vectorp(rtable) || ch < 0 || ch >= getsize(rtable))
+    /* RBD: coerce to positive integer to treat UTF-8 bytes as constituents */
+    ch &= 0xff;
+    if (!vectorp(rtable) /* || ch < 0 */ || ch >= getsize(rtable))
         return (NIL);
     return (getelement(rtable,ch));
 }
@@ -980,6 +982,14 @@ void xlrinit(void)
         setelement(rtable,ch,k_const);
     for (p = CONST2; (ch = *p++); )
         setelement(rtable,ch,k_const);
+    /* extended char set to allow UTF-8; WARNING: this allows some invalid
+       byte sequences and XLISP functions cannot properly manipulate
+       strings containing multi-byte sequences */
+    for (ch = 128; ch < 0xf5; ch++)
+        setelement(rtable, ch, k_const);
+    /* C0 and C1 do not appear in valid UTF-8 */
+    setelement(rtable, 192, NULL); /* 0xc2 */
+    setelement(rtable, 193, NULL); /* 0xc3 */
 
     /* setup the escape characters */
     setelement(rtable,'\\',k_sescape);

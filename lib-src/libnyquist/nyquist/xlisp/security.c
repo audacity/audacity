@@ -5,7 +5,7 @@
 
 #include <stdlib.h>
 #include "switches.h"
-#if defined(UNIX) || defined(__APPLE__)
+#if defined(UNIX) || defined(__APPLE__) || defined(__CYGWIN__)
 #include <unistd.h>
 #endif
 #ifdef WIN32

@@ -48,7 +48,7 @@ the previous value so re-reading will not re-trigger.)
 #include "cext.h"
 #include "assert.h"
 
-#define TRIGGERDBG 1
+#define TRIGGERDBG 0
 #define D if (TRIGGERDBG) 
 
 /* Note: this structure is identical to an add_susp structure up
@@ -207,11 +207,12 @@ D               nyquist_printf("in trigger: after evaluation; "
                     susp->susp.fetch = add_s1_s2_nn_fetch;
                     susp->susp.name = "trigger:add_s1_s2_nn_fetch";
                 }
-
+/*
 D               stdputstr("in trigger: calling add's fetch\n");
-                /* fetch will get called later ..
-                   (*(susp->susp.fetch))(a_susp, snd_list); */
+                fetch will get called later ..
+                   (*(susp->susp.fetch))(a_susp, snd_list);
 D               stdputstr("in trigger: returned from add's fetch\n");
+*/
                 xlpop();
 
                 susp->closure = NULL;   /* allow garbage collection now */

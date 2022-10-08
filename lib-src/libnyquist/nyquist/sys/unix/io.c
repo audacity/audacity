@@ -16,10 +16,10 @@
 #include <sgtty.h>
 #include "cext.h"
 
-int     IOinputfd;      /* input file descriptor (usually 0) */
+extern int     IOinputfd;      /* input file descriptor (usually 0) */
 
-int     IOnochar;       /* Value to be returned by IOgetchar()
-                   where there is no input to be had */
+extern int     IOnochar;       /* Value to be returned by IOgetchar()
+                                  where there is no input to be had */
 
 static  struct sgttyb IOoldmodes, IOcurrentmodes;
                 /* Initial and current tty modes */

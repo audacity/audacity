@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "falloc.h"
 #include "samples.h"
+#include <limits.h>
 
 
 LVAL s_next = NULL;
@@ -109,21 +110,27 @@ double snd_maxsamp(sound_type s)
 
 /* snd_samples -- convert sound (prefix) to lisp array */
 /**/
-LVAL snd_samples(sound_type s, long len)
+LVAL snd_samples(sound_type s, int64_t len)
 {
     LVAL v;
     long vx = 0;
     int blocklen;
     register double scale_factor = s->scale;
-    len = (long) snd_length(s, len);
+    len = snd_length(s, len);
     s = sound_copy(s);
 
     xlsave1(v);
-    v = newvector(len);
+    
+    // xlisp's maximum vector size is limited. If we exceed the limit,
+    // we'll return a shorter array of samples than requested.
+    if (len > INT_MAX / sizeof(LVAL)) {
+        len = INT_MAX / sizeof(LVAL);
+    }
+    v = newvector((int) len);
 
     while (len > 0) {
         sample_block_type sampblock = sound_get_next(s, &blocklen);
-        long togo = MIN(blocklen, len);
+        long togo = MIN(blocklen, (int) len);
         long i;
         sample_block_values_type sbufp = sampblock->samples;
         for (i = 0; i < togo; i++) {

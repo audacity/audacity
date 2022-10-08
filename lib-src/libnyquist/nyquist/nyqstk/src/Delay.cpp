@@ -72,12 +72,7 @@ void Delay :: setMaximumDelay(unsigned long delay)
 {
   if ( delay < inputs_.size() ) return;
 
-  if ( delay < 0 ) {
-    errorString_ << "Delay::setMaximumDelay: argument (" << delay << ") less than zero!\n";
-    handleError( StkError::WARNING );
-    return;
-  }
-  else if (delay < delay_ ) {
+  if (delay < delay_ ) {
     errorString_ << "Delay::setMaximumDelay: argument (" << delay << ") less than current delay setting (" << delay_ << ")!\n";
     handleError( StkError::WARNING );
     return;
@@ -119,19 +114,19 @@ unsigned long Delay :: getDelay(void) const
 StkFloat Delay :: energy(void) const
 {
   unsigned long i;
-  register StkFloat e = 0;
+  StkFloat e = 0;
   if (inPoint_ >= outPoint_) {
     for (i=outPoint_; i<inPoint_; i++) {
-      register StkFloat t = inputs_[i];
+      StkFloat t = inputs_[i];
       e += t*t;
     }
   } else {
     for (i=outPoint_; i<inputs_.size(); i++) {
-      register StkFloat t = inputs_[i];
+      StkFloat t = inputs_[i];
       e += t*t;
     }
     for (i=0; i<inPoint_; i++) {
-      register StkFloat t = inputs_[i];
+      StkFloat t = inputs_[i];
       e += t*t;
     }
   }
