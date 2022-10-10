@@ -3668,6 +3668,10 @@ bool VSTEffectValidator::ValidateUI()
             settings.extra.SetDuration(mDuration->GetValue());
 
          FetchSettingsFromInstance(settings);
+
+         // TODO: return a message with what setting(s) have changed
+         // check out what AU does now 
+         return nullptr;
       });
 
    }
