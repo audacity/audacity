@@ -921,6 +921,174 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
+
+bool VSTEffectWrapper::TransferSettingsContents
+(
+   VSTEffectSettings& src,
+   VSTEffectSettings& dst,
+   bool doMove,
+   bool doMerge
+)
+{
+   dst.mNumParams = src.mNumParams;
+   dst.mUniqueID  = src.mUniqueID;
+   dst.mVersion   = src.mVersion;
+
+   assert(dst.mParamsMap.size() == src.mParamsMap.size());
+
+   bool discard = false;
+
+   // Do the chunk first
+   if (src.mChunk)
+   {
+      dst.mChunk = src.mChunk;
+      if (doMove)
+      {
+         src.mChunk = std::nullopt;
+      }
+
+      // If a new chunk is merged, any unconsumed slider movements in the
+      // parameters map are discarded before the other thread sees them
+      discard = doMerge;
+   }
+   else if(!doMerge)
+   {
+      dst.mChunk = std::nullopt;
+   }
+   
+
+   // Then do an in-place rewrite of dst, avoiding allocations
+   auto& dstMap = dst.mParamsMap;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   auto& srcMap = src.mParamsMap;
+
+   for (auto& [key, srcValue] : srcMap)
+   {
+      assert(dstIter != dstEnd);
+      auto& [dstKey, dstValue] = *dstIter;
+      assert(dstKey == key);
+
+      if (discard || (!srcValue && !doMerge))
+      {
+         // Merging a chunk message, or else,
+         // source has no value, and we do not want to merge (i.e. keep any
+         // dest value that might be there) - delete the destination value
+         dstValue = std::nullopt;
+      }
+      else if (srcValue)
+      {
+         dstValue = srcValue;
+      }
+
+      if (doMove)
+      {
+         srcValue = std::nullopt;
+      }
+
+      dstIter++;
+   }
+
+   assert(dstIter == dstEnd);
+
+   return true;
+}
+
+
+bool VSTEffectWrapper::CopySettingsContents(const VSTEffectSettings& src,
+                                                  VSTEffectSettings& dst) const
+{
+   return TransferSettingsContents(
+      const_cast<VSTEffectSettings&>(src), dst, /*move =*/ false, /*merge =*/ false);
+}
+
+
+bool VSTEffectWrapper::MoveSettingsContents(VSTEffectSettings&& src,
+                                            VSTEffectSettings&  dst,
+                                            bool                merge)
+{
+   return TransferSettingsContents(src, dst, /*move =*/ true, merge);
+}
+
+
+namespace
+{
+   struct VSTEffectMessage : EffectInstance::Message
+   {
+      explicit VSTEffectMessage(VSTEffectSettings settings)
+         : settings{ std::move(settings) }
+      {}
+
+      ~VSTEffectMessage() override;
+
+      std::unique_ptr<Message> Clone() const override;
+      void Assign(Message&& src) override;
+      void Merge(Message&& src) override;
+
+      VSTEffectSettings settings;
+   };
+}
+
+
+VSTEffectMessage::~VSTEffectMessage() = default;
+
+auto VSTEffectMessage::Clone() const -> std::unique_ptr<Message>
+{
+   return std::make_unique<VSTEffectMessage>(*this);
+}
+
+void VSTEffectMessage::Assign(Message && src)
+{
+   auto& dstSettings = this->settings;
+   auto& srcSettings = static_cast<VSTEffectMessage&>(src).settings;
+
+   VSTEffectWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, /*merge=*/false);
+}
+
+void VSTEffectMessage::Merge(Message && src)
+{
+   auto& dstSettings = this->settings;
+
+   auto& srcSettings = static_cast<VSTEffectMessage&>(src).settings;
+
+
+   VSTEffectWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, /*merge=*/true);
+}
+
+
+std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage() const
+{
+   VSTEffectSettings settings;
+   FetchSettings(settings, false);
+   return std::make_unique<VSTEffectMessage>(std::move(settings));
+}
+
+
+std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage(int id, double value) const
+{
+   VSTEffectSettings settings;
+
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         if (pi.mID == id)
+         {
+            settings.mParamsMap[pi.mName] = { id, value };
+         }
+         else
+         {
+            settings.mParamsMap[pi.mName] = std::nullopt;
+         }
+         return true;
+      }
+   );
+
+   return std::make_unique<VSTEffectMessage>(std::move(settings));
+}
+
+
 std::shared_ptr<EffectInstance> VSTEffect::MakeInstance() const
 {
    return const_cast<VSTEffect*>(this)->DoMakeInstance();
@@ -1181,8 +1349,8 @@ bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& 
 
    for (const auto& item : vstSettings.mParamsMap)
    {
-      const auto& name  = item.first;
-      const auto& value = item.second;
+      const auto& name  =  item.first;
+      const auto& value =  item.second->second;
 
       if (!parms.Write(name, value))
       {
@@ -1197,7 +1365,6 @@ bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& 
 bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
    VSTEffectSettings& vstSettings = GetSettings(settings);
-   vstSettings.mParamsMap.clear();
 
    long index{};
    wxString key;
@@ -1206,11 +1373,21 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    {
       do
       {
-         if (parms.Read(key, &value))
-            vstSettings.mParamsMap[key] = value;
-         else
-            return false;
-
+         if (parms.Read(key, &value)) {
+            auto &map = vstSettings.mParamsMap;
+            auto iter = map.find(key);
+            if (iter != map.end()) {
+               if (iter->second)
+                  // Should be guaranteed by MakeSettings
+                  iter->second->second = value;
+               else {
+                  assert(false);
+               }
+            }
+            else
+               // Unknown parameter name in the file
+               return false;
+         }
       } while (parms.GetNextEntry(key, index));
    }
 
@@ -3440,15 +3617,22 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
 }
 
 
-bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings) const
+bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetch) const
 {
    // Get the fallback ID-value parameters
    ForEachParameter
    (
       [&](const ParameterInfo& pi)
       {
-         float val = callGetParameter(pi.mID);
-         vstSettings.mParamsMap[pi.mName] = val;
+         if (doFetch)
+         {
+            float val = callGetParameter(pi.mID);
+            vstSettings.mParamsMap[pi.mName] = { pi.mID, val };
+         }
+         else
+         {
+            vstSettings.mParamsMap[pi.mName] = std::nullopt;
+         }
          return true;
       }
    );
@@ -3460,13 +3644,17 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings) const
 
    // Get the chunk (if supported)
    vstSettings.mChunk = std::nullopt;
-   if (mAEffect->flags & effFlagsProgramChunks)
+
+   if (doFetch)
    {
-      void* chunk = NULL;
-      int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
-      if (clen > 0)
+      if (mAEffect->flags & effFlagsProgramChunks)
       {
-         vstSettings.mChunk = Base64::Encode(chunk, clen);
+         void* chunk = NULL;
+         int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+         if (clen > 0)
+         {
+            vstSettings.mChunk = Base64::Encode(chunk, clen);
+         }
       }
    }
 
@@ -3512,7 +3700,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
          const auto itr = vstSettings.mParamsMap.find(pi.mName);
          if (itr != vstSettings.mParamsMap.end())
          {
-            const float& value = itr->second;
+            const float& value = itr->second->second;
 
             if (value >= -1.0 && value <= 1.0)
             {
@@ -3556,6 +3744,12 @@ EffectSettings VSTEffect::MakeSettings() const
 
 VSTEffectValidator::~VSTEffectValidator() = default;
 
+
+std::unique_ptr<EffectInstance::Message> VSTEffectValidator::MakeMessage(
+   VSTEffectSettings &settings)
+{
+   return std::make_unique<VSTEffectMessage>(settings);
+}
 
 VSTEffectValidator::VSTEffectValidator
 (

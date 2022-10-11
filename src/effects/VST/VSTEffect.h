@@ -21,7 +21,7 @@
 #include "XMLTagHandler.h"
 #include <wx/weakref.h>
 
-#include <unordered_map>
+#include <map>
 #include <optional>
 #include <mutex>
 
@@ -96,7 +96,7 @@ struct VSTEffectSettings
    std::optional<wxString> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::unordered_map<wxString, double> mParamsMap;
+   std::map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
 };
 
 
@@ -142,7 +142,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    void ForEachParameter(ParameterVisitor visitor) const;
 
-   bool FetchSettings(VSTEffectSettings& vst3Settings) const;
+   bool FetchSettings(VSTEffectSettings& vst3Settings, bool doFetch=true) const;
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
@@ -282,6 +282,21 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
 
+
+   static bool TransferSettingsContents(VSTEffectSettings& src,
+                                        VSTEffectSettings& dst,
+                                        bool doMove,
+                                        bool doMerge);
+
+   //! Copy from one map to another
+   bool CopySettingsContents(const VSTEffectSettings& src,
+                                   VSTEffectSettings& dst) const;
+
+   //! Copy, then clear the optionals in src
+   static bool MoveSettingsContents(VSTEffectSettings&& src,
+                                    VSTEffectSettings&  dst,
+                                    bool merge);
+   
 };
 
 class VSTEffectInstance;
@@ -593,6 +608,10 @@ private:
          const_cast<PerTrackEffect&>(mProcessor));
    }
 
+   std::unique_ptr<Message> MakeMessage() const override;
+
+   std::unique_ptr<Message> MakeMessage(int id, double value) const;
+
    VSTEffectSettings& GetSettings(EffectSettings& settings) const
    {
       return GetEffect().GetSettings(settings);
@@ -617,6 +636,10 @@ private:
 class VSTEffectValidator final : public DefaultEffectUIValidator
 {
 public:
+   // Make message carrying all the information in settings, including chunks
+   static std::unique_ptr<EffectInstance::Message>
+      MakeMessage(VSTEffectSettings &settings);
+
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
                        EffectSettingsAccess&    access,
