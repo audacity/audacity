@@ -96,7 +96,7 @@ struct VSTEffectSettings
    std::optional<wxString> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::unordered_map<wxString, double> mParamsMap;
+   std::unordered_map<wxString, std::optional<double> > mParamsMap;
 };
 
 
@@ -139,7 +139,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    void ForEachParameter(ParameterVisitor visitor) const;
 
-   bool FetchSettings(VSTEffectSettings& vst3Settings) const;
+   bool FetchSettings(VSTEffectSettings& vst3Settings, bool doFetch=true) const;
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
@@ -279,6 +279,21 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
 
+
+   static bool TransferSettingsContents(VSTEffectSettings& src,
+                                        VSTEffectSettings& dst,
+                                        bool doMove,
+                                        bool doMerge);
+
+   //! Copy from one map to another
+   bool CopySettingsContents(const VSTEffectSettings& src,
+                                   VSTEffectSettings& dst) const;
+
+   //! Copy, then clear the optionals in src
+   static bool MoveSettingsContents(VSTEffectSettings&& src,
+                                    VSTEffectSettings&  dst,
+                                    bool merge);
+   
 };
 
 class VSTEffectInstance;
@@ -550,6 +565,8 @@ public:
       return static_cast<VSTEffect&>(
          const_cast<PerTrackEffect&>(mProcessor));
    }
+
+   std::unique_ptr<Message> MakeMessage() const override;
 
 private:
 
