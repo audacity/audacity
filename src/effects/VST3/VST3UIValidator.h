@@ -42,5 +42,4 @@ private:
    void OnIdle(wxIdleEvent&);
 
    bool TryLoadNativeUI(wxWindow* parent);
-   void OnEffectWindowResize(wxSizeEvent & evt);
 };

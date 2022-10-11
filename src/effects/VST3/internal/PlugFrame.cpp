@@ -11,6 +11,7 @@
 **********************************************************************/
 
 #include "PlugFrame.h"
+#include <wx/wupdlock.h>
 
 internal::PlugFrame::PlugFrame(wxWindow* window)
    : mWindow(window)
@@ -23,26 +24,32 @@ internal::PlugFrame::~PlugFrame()
    FUNKNOWN_DTOR;
 }
 
-static void UpdateWindowSize(wxWindow* window, const wxSize& newSize, bool fixed)
+void internal::PlugFrame::init(Steinberg::IPlugView* view, Steinberg::ViewRect* size)
 {
-   if(fixed)
-   {
-      //Update min/max if plugin window has fixed size
-      //but for some reason resize was requested
-      window->SetMinSize(newSize);
-      window->SetMaxSize(newSize);
-   }
-   window->SetSize(newSize);
+   if(!mInitialized)
+      resizeView(view, size);
 }
 
 Steinberg::tresult internal::PlugFrame::resizeView(Steinberg::IPlugView* view, Steinberg::ViewRect* newSize)
 {
    if(auto window = mWindow.get())
    {
-      auto fixed = view->canResize() != Steinberg::kResultTrue;
-      UpdateWindowSize(window, {newSize->getWidth(), newSize->getHeight()}, fixed);
+      auto topWindow = wxGetTopLevelParent(window);
 
-      return Steinberg::kResultTrue;
+      wxWindowUpdateLocker windowUpdateLocker(topWindow);
+
+      window->SetInitialSize({newSize->getWidth(), newSize->getHeight() });
+
+      topWindow->SetMinSize(wxDefaultSize);
+      topWindow->Fit();
+      topWindow->SetMinSize(topWindow->GetSize());
+
+      if(!mInitialized)
+      {
+         mInitialized = true;
+         topWindow->Center();
+      }
+      return view->onSize(newSize);
    }
    return Steinberg::kResultFalse;
 }
