@@ -16,6 +16,7 @@
 
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
+#include "BasicUI.h"
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
@@ -1250,8 +1251,16 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    auto &window = ProjectWindow::Get( project );
 
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-   if (!plug)
+
+   if (!plug || !PluginManager::IsPluginAvailable(*plug))
+   {
+      BasicUI::ShowMessageBox(
+         XO("This plugin could not be loaded.\nIt may have been deleted."),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Plugin Error")));
+
       return false;
+   }
 
    EffectType type = plug->GetEffectType();
 

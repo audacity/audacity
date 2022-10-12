@@ -110,6 +110,8 @@ public:
    // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString(PluginType type);
 
+   static bool IsPluginAvailable(const PluginDescriptor& plug);
+
    int GetPluginCount(PluginType type);
    const PluginDescriptor *GetPlugin(const PluginID & ID) const;
 
