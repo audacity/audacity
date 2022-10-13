@@ -680,6 +680,20 @@ void LadspaEffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 
 LadspaEffectOutputs::~LadspaEffectOutputs() = default;
 
+auto LadspaEffectOutputs::Clone() const -> std::unique_ptr<EffectOutputs>
+{
+   return std::make_unique<LadspaEffectOutputs>(*this);
+}
+
+void LadspaEffectOutputs::Assign(EffectOutputs &&src)
+{
+   // Don't really need to modify src
+   const auto &srcValues = static_cast<LadspaEffectOutputs&>(src).controls;
+   auto &dstValues = controls;
+   assert(srcValues.size() == dstValues.size());
+   copy(srcValues.begin(), srcValues.end(), dstValues.data());
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LadspaEffect
