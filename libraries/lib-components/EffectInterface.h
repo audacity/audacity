@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <type_traits>
 #include <wx/event.h>
 
 class ShuttleGui;
@@ -148,9 +149,42 @@ public:
 class COMPONENTS_API EffectSettingsAccess
    : public std::enable_shared_from_this<EffectSettingsAccess> {
 public:
+   //! Type of messages to send from main thread to processing
+   class COMPONENTS_API Message {
+   public:
+      virtual ~Message();
+      virtual std::unique_ptr<Message> Clone() const = 0;
+
+      //! Update one Message object from another, which is then left "empty"
+      /*!
+       This may run in a worker thread, and should avoid allocating and freeing.
+       Therefore do not copy, grow or clear any containers in it, but assign the
+       preallocated contents of *this from another, which then should be
+       reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Assign(Message &&src) = 0;
+
+      //! Combine one Message object with another, which is then left "empty"
+      /*!
+       This runs in the main thread.
+       Combine the contents of one message into *this, and then the other
+       should be reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Merge(Message &&src) = 0;
+   };
+
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
-   virtual void Set(EffectSettings &&settings) = 0;
+   virtual void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
    virtual void Flush() = 0;
@@ -160,15 +194,16 @@ public:
 
    //! Do a correct read-modify-write of settings
    /*!
-    @param function takes EffectSettings & and its return is ignored.
+    @param function takes EffectSettings & and its return is a unique pointer
+    to Message, possibly null.
     If it throws an exception, then the settings will not be updated.
     Thus, a strong exception safety guarantee.
     */
    template<typename Function>
    void ModifySettings(Function &&function) {
       auto settings = this->Get();
-      std::forward<Function>(function)(settings);
-      this->Set(std::move(settings));
+      auto result = std::forward<Function>(function)(settings);
+      this->Set(std::move(settings), std::move(result));
    }
 };
 
@@ -180,7 +215,8 @@ public:
       : mSettings{settings} {}
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -463,12 +499,23 @@ public:
     */
    virtual bool RealtimeResume();
 
+   //! Type of messages to send from main thread to processing, which can
+   //! describe the transitions of settings (instead of their states)
+   using Message = EffectSettingsAccess::Message;
+
+   //! Called on the main thread, in which the result may be cloned
+   /*! Default implementation returns a null */
+   virtual std::unique_ptr<Message> MakeMessage() const;
+
+   // TODO make it just an alias for Message *
+   struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeProcessStart(EffectSettings &settings);
+   virtual bool RealtimeProcessStart(MessagePackage &package);
 
    /*!
     @return success

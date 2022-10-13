@@ -26,31 +26,35 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
-      Initialize(state.mMainSettings, state.mMovedOutputs.get());
+      // Clean initial state of the counter
+      state.mMainSettings.counter = 0;
+      Initialize(state.mMainSettings.settings,
+         state.mMessage.get(), state.mMovedOutputs.get());
    }
 
-   void Initialize(SettingsAndCounter &settings,
+   void Initialize(const EffectSettings &settings,
+      const EffectInstance::Message *pMessage,
       const EffectOutputs *pOutputs)
    {
-      // Clean initial state of the counter
-      settings.counter = 0;
-      mLastSettings = settings;
-      // Initialize each message buffer with two copies of settings
+      mLastSettings = { settings, 0 };
+      // Initialize each message buffer with two copies
       mChannelToMain.Write(ToMainSlot{ { 0,
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelToMain.Write(ToMainSlot{ { 0,
          pOutputs ? pOutputs->Clone() : nullptr } });
-      mChannelFromMain.Write(FromMainSlot{ settings });
-      mChannelFromMain.Write(FromMainSlot{ settings });
+      mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
+      mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
    }
 
    void MainRead() {
       mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
          mCounter);
    }
-   void MainWrite(SettingsAndCounter &&settings) {
+   void MainWrite(SettingsAndCounter &&settings,
+      std::unique_ptr<EffectInstance::Message> pMessage) {
       // Main thread may simply swap new content into place
-      mChannelFromMain.Write(std::move(settings));
+      mChannelFromMain.Write(FromMainSlot::Message{
+         std::move(settings.settings), settings.counter, std::move(pMessage) });
    }
 
    struct CounterAndOutputs{
@@ -59,8 +63,7 @@ public:
    };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(
-         mEffect, mState.mWorkerSettings);
+      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mState);
    }
    void WorkerWrite() {
       // Worker thread avoids memory allocation.
@@ -101,34 +104,46 @@ public:
    };
 
    struct FromMainSlot {
+      struct Message : SettingsAndCounter {
+         std::unique_ptr<EffectInstance::Message> pMessage;
+      };
+
       // For initialization of the channel
       FromMainSlot() = default;
-      explicit FromMainSlot(const SettingsAndCounter &settings)
+      explicit FromMainSlot(const EffectSettings &settings,
+         const EffectInstance::Message *pMessage)
          // Copy std::any
-         : mSettings{ settings }
+         : mMessage{ settings, 0, pMessage ? pMessage->Clone() : nullptr }
       {}
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
       // Main thread writes the slot
-      FromMainSlot& operator=(SettingsAndCounter &&settings) {
-         mSettings.swap(settings);
+      FromMainSlot& operator=(Message &&message) {
+         mMessage.SettingsAndCounter::swap(message);
+         if (message.pMessage && mMessage.pMessage)
+            // Merge the incoming message with any still unconsumed message
+            mMessage.pMessage->Merge(std::move(*message.pMessage));
          return *this;
       }
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
-         const EffectSettingsManager &effect, SettingsAndCounter &settings) {
-         if(slot.mSettings.counter == settings.counter)
+         const EffectSettingsManager &effect, RealtimeEffectState &state) {
+         auto &settings = state.mWorkerSettings;
+         if(slot.mMessage.counter == settings.counter)
             return;//copy once
+         settings.counter = slot.mMessage.counter;
 
-         settings.counter = slot.mSettings.counter;
-            // This happens during MessageBuffer's busying of the slot
-            effect.CopySettingsContents(
-               slot.mSettings.settings, settings.settings);
-            settings.settings.extra = slot.mSettings.settings.extra;
+         // This happens during MessageBuffer's busying of the slot
+         effect.CopySettingsContents(
+            slot.mMessage.settings, settings.settings);
+         settings.settings.extra = slot.mMessage.settings.extra;
+         if (slot.mMessage.pMessage && state.mMovedMessage)
+            // Copy the message from the buffer (not a merge)
+            state.mMovedMessage->Assign(std::move(*slot.mMessage.pMessage));
       } };
 
-      SettingsAndCounter mSettings;
+      Message mMessage;
    };
 
    const EffectSettingsManager &mEffect;
@@ -175,7 +190,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       static EffectSettings empty;
       return empty;
    }
-   void Set(EffectSettings &&settings) override {
+   void Set(EffectSettings &&settings, std::unique_ptr<Message> pMessage)
+   override {
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
@@ -183,7 +199,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             lastSettings.settings = std::move(settings);
             ++lastSettings.counter;
             // move a copy to there
-            pAccessState->MainWrite(SettingsAndCounter{ lastSettings });
+            pAccessState->MainWrite(
+               SettingsAndCounter{ lastSettings }, std::move(pMessage));
          }
    }
    void Flush() override {
@@ -264,6 +281,20 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
    return mPlugin;
 }
 
+std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
+{
+   mMovedMessage.reset();
+   mMessage.reset();
+   auto result = mPlugin->MakeInstance();
+   if (result) {
+      // Allocate presized containers in messages, so later
+      // copies of contents might avoid free store operations
+      mMessage = result->MakeMessage();
+      mMovedMessage = result->MakeMessage();
+   }
+   return result;
+}
+
 std::shared_ptr<EffectInstance>
 RealtimeEffectState::EnsureInstance(double sampleRate)
 {
@@ -278,7 +309,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
 
       //! If there was already an instance, recycle it; else make one here
       if (!pInstance)
-         mwInstance = pInstance = mPlugin->MakeInstance();
+         mwInstance = pInstance = MakeInstance();
       if (!pInstance)
          return {};
 
@@ -299,7 +330,7 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
    //! If there was already an instance, recycle it; else make one here
    auto pInstance = mwInstance.lock();
    if (!pInstance && mPlugin)
-      mwInstance = pInstance = mPlugin->MakeInstance();
+      mwInstance = pInstance = MakeInstance();
    return pInstance;
 }
 
@@ -401,7 +432,10 @@ bool RealtimeEffectState::ProcessStart(bool running)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
-   return pInstance->RealtimeProcessStart(mWorkerSettings.settings);
+   EffectInstance::MessagePackage package{
+      mWorkerSettings.settings, mMovedMessage.get()
+   };
+   return pInstance->RealtimeProcessStart(package);
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
@@ -515,6 +549,7 @@ void RealtimeEffectState::SetActive(bool active)
    auto access = GetAccess();
    access->ModifySettings([&](EffectSettings &settings) {
       settings.extra.SetActive(active);
+      return nullptr;
    });
    access->Flush();
 

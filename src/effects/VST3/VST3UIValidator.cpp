@@ -71,6 +71,7 @@ void VST3UIValidator::OnIdle(wxIdleEvent& evt)
       mAccess.ModifySettings([this](EffectSettings& settings)
       {
          mWrapper.FlushParameters(settings);
+         return nullptr;
       });
    }
 }
@@ -162,6 +163,7 @@ bool VST3UIValidator::ValidateUI()
          settings.extra.SetDuration(mDuration->GetValue());
       mWrapper.FlushParameters(settings);
       mWrapper.StoreSettings(settings);
+      return nullptr;
    });
 
    return true;
@@ -191,6 +193,7 @@ void VST3UIValidator::OnClose()
       //Flush changes if there is no processing performed at the moment
       mWrapper.FlushParameters(settings);
       mWrapper.StoreSettings(settings);
+      return nullptr;
    });
    //Make sure that new state has been written to the caches...
    mAccess.Flush();
@@ -200,7 +203,10 @@ void VST3UIValidator::OnClose()
 
 bool VST3UIValidator::UpdateUI()
 {
-   mAccess.ModifySettings([&](EffectSettings& settings) { mWrapper.FetchSettings(settings); });
+   mAccess.ModifySettings([&](EffectSettings& settings) {
+      mWrapper.FetchSettings(settings);
+      return nullptr;
+   });
    
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();

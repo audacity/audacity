@@ -943,7 +943,7 @@ struct LadspaEffect::Instance
    override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
+   bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples)
    override;
@@ -1082,7 +1082,7 @@ bool LadspaEffect::Instance::RealtimeResume()
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeProcessStart(EffectSettings &)
+bool LadspaEffect::Instance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
@@ -1524,6 +1524,7 @@ bool LadspaEffect::Validator::ValidateUI()
       if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
       GetSettings(settings) = mSettings;
+      return nullptr;
    });
    return true;
 }

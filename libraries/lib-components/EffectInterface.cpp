@@ -21,12 +21,15 @@ SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
 
 EffectOutputs::~EffectOutputs() = default;
 
+EffectSettingsAccess::Message::~Message() = default;
+
 const EffectSettings &SimpleEffectSettingsAccess::Get()
 {
    return mSettings;
 }
 
-void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
+void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
+   std::unique_ptr<Message>)
 {
    mSettings = std::move(settings);
 }
@@ -151,7 +154,12 @@ bool EffectInstance::RealtimeResume()
    return true;
 }
 
-bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
+{
+   return nullptr;
+}
+
+bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }

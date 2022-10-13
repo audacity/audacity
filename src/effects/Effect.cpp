@@ -883,6 +883,7 @@ bool DefaultEffectUIValidator::ValidateUI()
    bool result {};
    mAccess.ModifySettings([&](EffectSettings &settings){
       result = mEffect.ValidateUI(settings);
+      return nullptr;
    });
    return result;
 }

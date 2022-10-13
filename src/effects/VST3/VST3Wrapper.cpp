@@ -283,6 +283,7 @@ public:
             auto& vst3settings = GetSettings(settings);
             vst3settings.parameterChanges[id] = valueNormalized;
             ++vst3settings.changesCounter;
+            return nullptr;
          });
       }
 

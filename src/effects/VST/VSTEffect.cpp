@@ -1087,8 +1087,9 @@ bool VSTEffectInstance::RealtimeResume()
    return true;
 }
 
-bool VSTEffectInstance::RealtimeProcessStart(EffectSettings& settings)
+bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
+   auto &settings = package.settings;
    {
       // If we assume that the user might be moving knobs during realtime processing and wants
       // to hear how the sound changes, we must protect mSettings from data races then
