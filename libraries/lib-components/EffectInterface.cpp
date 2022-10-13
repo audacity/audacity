@@ -19,6 +19,8 @@ EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
 
+EffectOutputs::~EffectOutputs() = default;
+
 const EffectSettings &SimpleEffectSettingsAccess::Get()
 {
    return mSettings;
@@ -109,6 +111,12 @@ auto EffectSettingsManager::MakeSettings() const -> EffectSettings
    return {};
 }
 
+auto EffectSettingsManager::MakeOutputs() const
+   -> std::unique_ptr<EffectOutputs>
+{
+   return nullptr;
+}
+
 bool EffectSettingsManager::CopySettingsContents(
    const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
 {
@@ -127,7 +135,8 @@ bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
    return false;
 }
 
-bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
+bool EffectInstance::RealtimeAddProcessor(
+   EffectSettings &, EffectOutputs *, unsigned, float)
 {
    return true;
 }

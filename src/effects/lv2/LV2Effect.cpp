@@ -182,6 +182,7 @@ EffectSettings LV2Effect::MakeSettings() const
 {
    auto result = EffectSettings::Make<LV2EffectSettings>();
    auto &settings = GetSettings(result);
+   // This may waste a bit of space on output ports, but not likely much
    settings.values.reserve(mPorts.mControlPorts.size());
    for (auto &controlPort : mPorts.mControlPorts) {
       auto &value = settings.values.emplace_back();
@@ -229,6 +230,15 @@ bool LV2Effect::CopySettingsContents(
    // Ignore mpState
 
    return true;
+}
+
+auto LV2Effect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
+{
+   auto result = std::make_unique<LV2EffectOutputs>();
+   auto &values = result->values;
+   // This may waste a bit of space on input ports, but not likely much
+   values.resize(mPorts.mControlPorts.size());
+   return result;
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
@@ -310,7 +320,8 @@ bool LV2Effect::LoadSettings(
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
@@ -318,7 +329,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    auto pWrapper =
-      myInstance.MakeWrapper(settings, mProjectRate, true);
+      // Output port connection isn't needed for fancy UI wrapper.  Its
+      // features are needed to make the suil_instance
+      myInstance.MakeWrapper(settings, mProjectRate, nullptr);
    if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -335,7 +348,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mProjectRate, mFeatures, mPorts, parent, useGUI);
+      access, pOutputs, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
    if (result->mUseGUI)
       result->mUseGUI = result->BuildFancy(move(pWrapper), settings);

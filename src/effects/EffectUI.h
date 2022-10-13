@@ -161,6 +161,7 @@ private:
 #endif
 
    const std::shared_ptr<EffectInstance> mpInstance;
+   const EffectOutputs *const mpOutputs;
 
    DECLARE_EVENT_TABLE()
 };

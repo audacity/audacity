@@ -122,6 +122,12 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
    }
 };
 
+//! Hold values to send to effect output meters
+class COMPONENTS_API EffectOutputs {
+public:
+   virtual ~EffectOutputs();
+};
+
 //! Interface for accessing an EffectSettings that may change asynchronously in
 //! another thread; to be used in the main thread, only.
 /*! Updates are communicated atomically both ways.  The address of Get() should
@@ -327,6 +333,16 @@ public:
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
+
+   /*! @name outputs
+    @{
+    */
+   //! Produce an object to hold values to send to effect output meters
+   /*!
+    Default implementation returns nullptr
+    */
+   virtual std::unique_ptr<EffectOutputs> MakeOutputs() const;
+   //! @}
 };
 
 class wxDialog;
@@ -428,7 +444,8 @@ public:
     Default implementation does nothing, returns true
     */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+      EffectSettings &settings, EffectOutputs *pOutputs,
+      unsigned numChannels, float sampleRate);
 
    /*!
     @return success
@@ -647,13 +664,16 @@ public:
     object
     @param access guaranteed to have a lifetime containing that of the returned
     object
+    @param pOutputs null, or else points to outputs with lifetime containing
+    that of the returned object
 
     @return null for failure; else an object invoked to retrieve values of UI
     controls; it might also hold some state needed to implement event handlers
     of the controls; it will exist only while the dialog continues to exist
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
-      EffectInstance &instance, EffectSettingsAccess &access) = 0;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) = 0;
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;

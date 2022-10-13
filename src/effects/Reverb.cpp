@@ -208,7 +208,7 @@ struct EffectReverb::Instance
       return true;
    }
 
-   bool RealtimeAddProcessor(EffectSettings& settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *,
       unsigned numChannels, float sampleRate) override
    {
       EffectReverbState slave;
@@ -457,7 +457,8 @@ bool EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 
 // Effect implementation
 std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
-   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
+   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

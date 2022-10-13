@@ -50,6 +50,14 @@ struct LadspaEffectSettings {
    std::vector<float> controls;
 };
 
+//! Carry output control port information back to main thread
+struct LadspaEffectOutputs : EffectOutputs {
+   ~LadspaEffectOutputs() override;
+   // Allocate as many slots as there are ports, although some may correspond
+   // to input and audio ports and remain unused
+   std::vector<float> controls;
+};
+
 class LadspaEffect final
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
@@ -65,6 +73,8 @@ public:
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst,
       SettingsCopyDirection copyDirection) const override;
+
+   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
 
    // ComponentInterface implementation
 
@@ -108,8 +118,8 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    struct Validator;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
@@ -130,7 +140,8 @@ private:
       const RegistryPath & group, const EffectSettings &settings) const;
 
    LADSPA_Handle InitInstance(
-      float sampleRate, LadspaEffectSettings &settings) const;
+      float sampleRate, LadspaEffectSettings &settings,
+      LadspaEffectOutputs *pOutputs) const;
    void FreeInstance(LADSPA_Handle handle) const;
 
 private:

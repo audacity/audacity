@@ -33,13 +33,14 @@ END_EVENT_TABLE()
 
 LV2EffectMeter::LV2EffectMeter(
    wxWindow *parent, const LV2ControlPortPtr port, const float &value
-)  : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-      wxDEFAULT_CONTROL_BORDER)
+)  : wxWindow{ parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+      wxSIMPLE_BORDER }
    , mControlPort(port)
    , mValue{ value }
 {
    mLastValue = -value;
    SetBackgroundColour(*wxWHITE);
+   SetMinSize({ 20, 20 });
 }
 
 LV2EffectMeter::~LV2EffectMeter()
@@ -49,6 +50,8 @@ LV2EffectMeter::~LV2EffectMeter()
 void LV2EffectMeter::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
+   if (!mConnected)
+      return;
    if (mLastValue != mValue)
       Refresh(false);
 }
@@ -60,6 +63,9 @@ void LV2EffectMeter::OnErase(wxEraseEvent &WXUNUSED(evt))
 
 void LV2EffectMeter::OnPaint(wxPaintEvent &WXUNUSED(evt))
 {
+   if (!mConnected)
+      return;
+
    std::unique_ptr<wxDC> dc {wxAutoBufferedPaintDCFactory(this)};
 
    // Cache some metrics

@@ -224,7 +224,7 @@ bool EffectDistortion::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectDistortion::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
 
@@ -285,7 +285,8 @@ bool EffectDistortion::DoLoadFactoryPreset(int id)
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();

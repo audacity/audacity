@@ -134,6 +134,8 @@ size_t LV2ControlPort::Discretize(float value) const
    return s;
 }
 
+LV2EffectOutputs::~LV2EffectOutputs() = default;
+
 LV2Ports::LV2Ports(const LilvPlugin &plug)
 {
    using namespace LV2Symbols;
