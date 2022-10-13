@@ -979,7 +979,7 @@ bool VSTEffectWrapper::CopySettingsContents(const VSTEffectSettings& src,
                                                   VSTEffectSettings& dst) const
 {
    return TransferSettingsContents(
-      const_cast<VSTEffectSettings&>(src), dst, /*move =*/ true, /*merge =*/ false);
+      const_cast<VSTEffectSettings&>(src), dst, /*move =*/ false, /*merge =*/ false);
 }
 
 
@@ -1324,7 +1324,7 @@ bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& 
    for (const auto& item : vstSettings.mParamsMap)
    {
       const auto& name  =  item.first;
-      const auto& value = *item.second;
+      const auto& value =  item.second->second;
 
       if (!parms.Write(name, value))
       {
@@ -1344,14 +1344,17 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    long index{};
    wxString key;
    float value = 0.0f;
+   int intKey = 0;
    if (parms.GetFirstEntry(key, index))
    {
       do
       {
          if (parms.Read(key, value))
-            vstSettings.mParamsMap[key] = value;
+            vstSettings.mParamsMap[key] = { intKey, value };
          else
             return false;
+
+         intKey++;
 
       } while (parms.GetNextEntry(key, index));
    }
@@ -3558,7 +3561,7 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
          if (doFetch)
          {
             float val = callGetParameter(pi.mID);
-            vstSettings.mParamsMap[pi.mName] = val;
+            vstSettings.mParamsMap[pi.mName] = { pi.mID, val };
          }
          else
          {
@@ -3631,7 +3634,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
          const auto itr = vstSettings.mParamsMap.find(pi.mName);
          if (itr != vstSettings.mParamsMap.end())
          {
-            const float& value = *itr->second;
+            const float& value = itr->second->second;
 
             if (value >= -1.0 && value <= 1.0)
             {

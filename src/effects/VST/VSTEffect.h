@@ -96,7 +96,7 @@ struct VSTEffectSettings
    std::optional<wxString> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::unordered_map<wxString, std::optional<double> > mParamsMap;
+   std::unordered_map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
 };
 
 
