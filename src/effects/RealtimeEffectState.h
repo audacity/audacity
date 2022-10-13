@@ -150,7 +150,9 @@ private:
    };
 
    struct Response {
-      SettingsAndCounter settings;
+      using Counter = unsigned char;
+
+      Counter counter{ 0 };
       std::unique_ptr<EffectOutputs> pOutputs;
    };
 

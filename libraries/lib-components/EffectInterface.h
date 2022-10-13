@@ -251,15 +251,6 @@ public:
    virtual bool IsHiddenFromMenus() const;
 };
 
-//! Direction in which settings are copied
-enum class SettingsCopyDirection
-{
-   //! Main thread settings replicated to the worker thread
-   MainToWorker,
-   //! Worker thread settings replicated to main thread
-   WorkerToMain
-};
-
 /*************************************************************************************//**
 
 \class EffectSettingsManager
@@ -302,7 +293,7 @@ public:
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const;
+      const EffectSettings &src, EffectSettings &dst) const;
 
    //! Store settings as keys and values
    /*!
@@ -502,13 +493,6 @@ public:
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
    virtual size_t GetTailSize() const;
-
-   //! Main thread receives updates to settings from a processing thread
-   /*!
-    Default implementation simply assigns by copy, not move
-    This might be overridden to copy contents only selectively
-    */
-   virtual void AssignSettings(EffectSettings &dst, EffectSettings &&src) const;
 
    using SampleCount = uint64_t;
 

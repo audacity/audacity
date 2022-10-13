@@ -118,7 +118,7 @@ auto EffectSettingsManager::MakeOutputs() const
 }
 
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
+   const EffectSettings &, EffectSettings &) const
 {
    return true;
 }
@@ -175,12 +175,6 @@ bool EffectInstance::RealtimeFinalize(EffectSettings &) noexcept
 size_t EffectInstance::GetTailSize() const
 {
    return 0;
-}
-
-void EffectInstance::AssignSettings(EffectSettings &dst, EffectSettings &&src)
-   const
-{
-   dst = src;
 }
 
 auto EffectInstance::GetLatency(const EffectSettings &, double) const

@@ -69,7 +69,7 @@ public:
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override;
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;

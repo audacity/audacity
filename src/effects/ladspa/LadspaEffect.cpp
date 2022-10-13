@@ -121,7 +121,7 @@ EffectSettings LadspaEffect::MakeSettings() const
 }
 
 bool LadspaEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const
+   const EffectSettings &src, EffectSettings &dst) const
 {
    // Do not use the copy constructor of std::vector.  Do an in-place rewrite
    // of the destination vector, which will not allocate memory if dstControls
@@ -140,8 +140,6 @@ bool LadspaEffect::CopySettingsContents(
    if (portValuesCount != portCount)
       return false;
 
-   const auto copyOutputs = copyDirection == SettingsCopyDirection::WorkerToMain;
-
    for (unsigned long p = 0; p < portCount; ++p)
    {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
@@ -149,7 +147,7 @@ bool LadspaEffect::CopySettingsContents(
       if (!(LADSPA_IS_PORT_CONTROL(d)))
          continue;
 
-      if (LADSPA_IS_PORT_INPUT(d) || copyOutputs)
+      if (LADSPA_IS_PORT_INPUT(d))
          dstControls[p] = srcControls[p];
    }
 

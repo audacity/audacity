@@ -110,8 +110,6 @@ public:
 
    Steinberg::int32 GetLatencySamples() const;
 
-   void AssignSettings(EffectSettings& dst, EffectSettings&& src) const;
-
    static EffectSettings MakeSettings();
 
    static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);
@@ -119,7 +117,7 @@ public:
    static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
-   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection);
+   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst);
 
 private:
 

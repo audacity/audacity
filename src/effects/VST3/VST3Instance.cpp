@@ -217,9 +217,3 @@ void VST3Instance::ReloadUserOptions()
 
    SetBlockSize(mUserBlockSize);
 }
-
-void VST3Instance::AssignSettings(EffectSettings& dst, EffectSettings&& src) const
-{
-   mWrapper->AssignSettings(dst, std::move(src));
-}
-
