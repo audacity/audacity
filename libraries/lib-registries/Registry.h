@@ -31,11 +31,15 @@ namespace Registry {
          Unspecified // keep this last
       } type{ Unspecified };
 
-      //! What to do in case a registered SingleItem is at the same path as a predefined SingleItem
+      //! What to do in case a registered SingleItem is at the same path as a
+      //! predefined SingleItem
       enum ConflictResolutionPolicy : int {
-         Error,   //!< By default, ignore the registered item and display an error
+         Error,   /*!<
+            By default, ignore the registered item and display an error */
          Ignore,  //!< Yield to any other item
-         Replace, //!< At most one registered SingleItem may replace the predefined without error
+         Replace, /*!<
+            At most one registered SingleItem may replace the predefined
+            without error */
       } policy{ Error };
 
       // name of some other BaseItem; significant only when type is Before or
@@ -47,11 +51,13 @@ namespace Registry {
          const wxString &name = {}, ConflictResolutionPolicy policy = Error )
          : type{ type }, name{ name }, policy{ policy } {}
 
-      //! The conflict resoution policy is not significant in equality comparison
+      //! The conflict resolution policy is not significant in equality
+      //! comparison
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
 
-      //! The conflict resoution policy is not significant in ordering comparison
+      //! The conflict resolution policy is not significant in ordering
+      //! comparison
       /*! This sorts unspecified placements later */
       bool operator < ( const OrderingHint &other ) const
       {
@@ -63,8 +69,8 @@ namespace Registry {
    // TODO C++17: maybe use std::variant (discriminated unions) to achieve
    // polymorphism by other means, not needing unique_ptr and dynamic_cast
    // and using less heap.
-   // Most items in the table will be the large ones describing commands, so the
-   // waste of space in unions for separators and sub-menus should not be
+   // Most items in the table will be the large ones describing commands, so
+   // the waste of space in unions for separators and sub-menus should not be
    // large.
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
@@ -107,6 +113,8 @@ namespace Registry {
    // the ComputedItem is visited
    // The name of the substitute is significant for path calculations, but the
    // ComputedItem's ordering hint is used if the substitute has none
+   // It expects a certain Visitor subtype as context for the function, but
+   // which type that is -- is type-erased
    struct REGISTRIES_API ComputedItem final : BaseItem {
       // The type of functions that generate descriptions of items.
       // Return type is a shared_ptr to let the function decide whether to
@@ -152,6 +160,7 @@ namespace Registry {
    };
    
    // GroupItem adding variadic constructor conveniences
+   // The template parameter is what ComputedItems will accept
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct InlineGroupItem : GroupItem {
       using GroupItem::GroupItem;
@@ -162,20 +171,13 @@ namespace Registry {
          { Append( std::forward< Args >( args )... ); }
 
    private:
-      // nullary overload grounds the recursion
-      void Append() {}
-      // recursive overload
-      template< typename Arg, typename... Args >
-         void Append( Arg &&arg, Args&&... moreArgs )
-         {
-            // Dispatch one argument to the proper overload of AppendOne.
-            // std::forward preserves rvalue/lvalue distinction of the actual
-            // argument of the constructor call; that is, it inserts a
-            // std::move() if and only if the original argument is rvalue
-            AppendOne( std::forward<Arg>( arg ) );
-            // recur with the rest of the arguments
-            Append( std::forward<Args>(moreArgs)... );
-         };
+      template< typename... Args > void Append( Args&&... args ) {
+         // Dispatch each argument to the proper overload of AppendOne
+         // std::forward preserves rvalue/lvalue distinction of the actual
+         // argument of the constructor call; that is, it inserts a
+         // std::move() if and only if the original argument is rvalue
+         ( AppendOne( std::forward<Args>( args ) ), ... );
+      };
 
       // Move one unique_ptr to an item into our array
       void AppendOne( BaseItemPtr&& ptr )
@@ -183,13 +185,14 @@ namespace Registry {
          items.push_back( std::move( ptr ) );
       }
       // This overload allows a lambda or function pointer in the variadic
-      // argument lists without any other syntactic wrapping, and also
-      // allows implicit conversions to type Factory.
-      // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
-      // Factory's return type is shared_ptr, and the needed conversion is
+      // argument lists without any other syntactic wrapping, and makes a
+      // ComputedItem.
+      // (The factory can return a unique_ptr<BaseItem> rvalue even though
+      // Factory's return type is shared_ptr.  The needed conversion is
       // applied implicitly.)
       void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
       {
+         // Note type erasure of VisitorType, and copy of factory
          auto adaptedFactory = [factory]( Registry::Visitor &visitor ){
             return factory( dynamic_cast< VisitorType& >( visitor ) );
          };
@@ -212,9 +215,9 @@ namespace Registry {
    };
 
    // Concrete subclass of GroupItem that adds nothing else
-   // TransparentGroupItem with an empty name is transparent to item path calculations
-   // and propagates its ordering hint if subordinates don't specify hints
-   // and it does specify one
+   // TransparentGroupItem with an empty name is transparent to item path
+   // calculations and propagates its ordering hint if subordinates don't
+   // specify hints and it does specify one
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
@@ -240,7 +243,7 @@ namespace Registry {
    // This function puts one more item into the registry.
    // The sequence of calls to RegisterItem has no significance for
    // determining the visitation ordering.  When sequence is important, register
-   // a GroupItem.
+   // a GroupItem as a subgroup.
    REGISTRIES_API
    void RegisterItem( GroupItem &registry, const Placement &placement,
       BaseItemPtr pItem //!< Registry takes ownership
@@ -249,14 +252,17 @@ namespace Registry {
    // Undo registration of an item, returning success
    REGISTRIES_API
    bool UnregisterItem( GroupItem &registry, const Placement &placement,
-      const BaseItem *pItem //!< Registry already has ownership, and will delete it if found
+      const BaseItem *pItem /*!<
+         Registry already has ownership, and will delete it if found */
    );
 
-   //! Generates classes whose instances register and unregister items at construction and destruction
+   //! Generates classes whose instances register and unregister items at
+   //! construction and destruction
    /*!
        Usually constructed statically
        @tparam Item inherits `BaseItem`
-       @tparam RegistryClass defines static member `Registry()` returning `GroupItem&`
+       @tparam RegistryClass defines static member `Registry()` returning
+       `GroupItem&`
     */
    template<typename Item, typename RegistryClass = Item> class RegisteredItem {
    public:
@@ -336,7 +342,7 @@ namespace Registry {
          // desired ordering at one node of the tree:
          Pairs pairs );
 
-      void operator () () override;
+      void operator () () final;
 
    private:
       Pairs mPairs;
