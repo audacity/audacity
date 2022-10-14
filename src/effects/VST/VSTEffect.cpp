@@ -1044,6 +1044,26 @@ std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage() const
 }
 
 
+std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage(int id, double value) const
+{
+   VSTEffectSettings settings;
+
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         if (pi.mID == id)
+         {
+            settings.mParamsMap[pi.mName] = { id, value };
+         }
+         return true;
+      }
+   );
+
+   return std::make_unique<VSTEffectMessage>(std::move(settings));
+}
+
+
 std::shared_ptr<EffectInstance> VSTEffect::MakeInstance() const
 {
    return const_cast<VSTEffect*>(this)->DoMakeInstance();

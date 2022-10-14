@@ -568,6 +568,8 @@ public:
 
    std::unique_ptr<Message> MakeMessage() const override;
 
+   std::unique_ptr<Message> MakeMessage(int id, double value) const;
+
 private:
 
    void callProcessReplacing(
