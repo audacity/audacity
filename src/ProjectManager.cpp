@@ -52,6 +52,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/app.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
+#include <wx/splitter.h>
 
 #ifdef __WXGTK__
 #include "../images/AudacityLogoAlpha.xpm"

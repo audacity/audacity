@@ -78,7 +78,7 @@ public:
     * track list windows
     * \return Pointer to a container window (not null)
     */
-   wxWindow* GetContainerWindow() noexcept;
+   wxSplitterWindow* GetContainerWindow() noexcept;
    /**
     * \brief Top panel contains project-related controls and tools.
     * \return Pointer to a top panel window (not null)
@@ -135,7 +135,6 @@ public:
    double GetZoomOfToFit() const;
    void DoZoomFit();
    
-   void ShowEffectsPanel(Track* track = nullptr, bool focus = false);
    void HideEffectsPanel();
 
    void ApplyUpdatedTheme();
@@ -237,8 +236,6 @@ private:
    Observer::Subscription mUndoSubscription
       , mThemeChangeSubscription;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
-
-   Observer::Subscription mFocusChangeSubscription;
 
    DECLARE_EVENT_TABLE()
 };

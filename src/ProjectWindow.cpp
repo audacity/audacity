@@ -688,17 +688,6 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mThemeChangeSubscription =
       theTheme.Subscribe(*this, &ProjectWindow::OnThemeChange);
-
-   mFocusChangeSubscription = TrackFocus::Get(project)
-      .Subscribe([this](const TrackFocusChangeMessage& msg) {
-         if(GetEffectsWindow().IsShown())
-         {
-            auto& project = GetProject();
-            auto& trackFocus = TrackFocus::Get(project);
-            ShowEffectsPanel(trackFocus.Get(), false);
-         }
-      });
-
 }
 
 ProjectWindow::~ProjectWindow()
@@ -1266,7 +1255,7 @@ wxWindow* ProjectWindow::GetTrackListWindow() noexcept
    return mTrackListWindow;
 }
 
-wxWindow* ProjectWindow::GetContainerWindow() noexcept
+wxSplitterWindow* ProjectWindow::GetContainerWindow() noexcept
 {
    return mContainerWindow;
 }
@@ -1900,32 +1889,6 @@ void ProjectWindow::DoZoomFit()
 
    window.Zoom( window.GetZoomOfToFit() );
    window.TP_ScrollWindow(start);
-}
-
-void ProjectWindow::ShowEffectsPanel(Track* track, bool focus)
-{
-   auto &effectsWindow = GetEffectsWindow();
-   if(track == nullptr)
-   {
-      effectsWindow.ResetTrack();
-      return;
-   }
-
-   wxWindowUpdateLocker freeze(this);
-
-   effectsWindow.SetTrack(track->shared_from_this());
-
-   if(mContainerWindow->GetWindow1() != &effectsWindow)
-   {
-      //Restore previous effects window size
-      mContainerWindow->SplitVertically(
-         &effectsWindow,
-         mTrackListWindow,
-         effectsWindow.GetSize().GetWidth());
-   }
-   if(focus)
-      effectsWindow.SetFocus();
-   Layout();
 }
 
 void ProjectWindow::HideEffectsPanel()

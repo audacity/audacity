@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Project.h"
 #include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
+#include "../../../RealtimeEffectPanel.h"
 #include "Track.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackInfo.h"
@@ -24,7 +25,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/window.h>
 
-#include "ProjectWindow.h"
 MuteButtonHandle::MuteButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
    : ButtonHandle{ pTrack, rect }
@@ -150,7 +150,7 @@ EffectsButtonHandle::~EffectsButtonHandle()
 UIHandle::Result EffectsButtonHandle::CommitChanges
 (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
 {
-   ProjectWindow::Get(*pProject).ShowEffectsPanel(mpTrack.lock().get(), true);
+   RealtimeEffectPanel::Get(*pProject).ShowPanel(mpTrack.lock().get(), true);
    return RefreshCode::RefreshNone;
 }
 

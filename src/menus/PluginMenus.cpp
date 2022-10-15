@@ -435,10 +435,11 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
    auto &trackFocus = TrackFocus::Get(project);
    auto &projectWindow = ProjectWindow::Get(project);
 
-   if (RealtimeEffectPanel::Get(project).IsShown())
+   auto &panel = RealtimeEffectPanel::Get(project);
+   if (panel.IsShown())
       projectWindow.HideEffectsPanel();
    else
-      projectWindow.ShowEffectsPanel(trackFocus.Get(), true);
+      panel.ShowPanel(trackFocus.Get(), true);
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)

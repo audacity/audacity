@@ -12,6 +12,7 @@
 
 #include <wx/app.h>
 #include <wx/sizer.h>
+#include <wx/splitter.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/menu.h>
@@ -31,6 +32,7 @@
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "Track.h"
+#include "TrackPanelAx.h"
 #include "AColor.h"
 #include "WaveTrack.h"
 #include "effects/EffectUI.h"
@@ -1527,10 +1529,46 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
          mPotentiallyRemovedTracks.clear();
       });
+
+   mFocusChangeSubscription = TrackFocus::Get(project)
+      .Subscribe([this](const TrackFocusChangeMessage& msg) {
+         if (IsShown())
+         {
+            auto& trackFocus = TrackFocus::Get(mProject);
+            ShowPanel(trackFocus.Get(), false);
+         }
+      });
 }
 
 RealtimeEffectPanel::~RealtimeEffectPanel()
 {
+}
+
+void RealtimeEffectPanel::ShowPanel(Track* track, bool focus)
+{
+   if(track == nullptr)
+   {
+      ResetTrack();
+      return;
+   }
+
+   wxWindowUpdateLocker freeze(this);
+
+   SetTrack(track->shared_from_this());
+
+   auto &projectWindow = ProjectWindow::Get(mProject);
+   const auto pContainerWindow = projectWindow.GetContainerWindow();
+   if (pContainerWindow->GetWindow1() != this)
+   {
+      //Restore previous effects window size
+      pContainerWindow->SplitVertically(
+         this,
+         projectWindow.GetTrackListWindow(),
+         this->GetSize().GetWidth());
+   }
+   if(focus)
+      SetFocus();
+   projectWindow.Layout();
 }
 
 void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)
