@@ -29,6 +29,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "Track.h"
 #include "AColor.h"
 #include "WaveTrack.h"
@@ -1319,6 +1320,35 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
          ReopenRealtimeEffectUIData(mProject, *waveTrack);
    }
 };
+
+namespace {
+AttachedWindows::RegisteredFactory sKey{
+[](AudacityProject &project) -> wxWeakRef<wxWindow> {
+   wxWeakRef<ProjectWindow> pProjectWindow = &ProjectWindow::Get(project);
+   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(
+      project, pProjectWindow->GetContainerWindow(), wxID_ANY);
+   effectsPanel->SetName(_("Realtime effects"));
+   effectsPanel->SetBackgroundColorIndex(clrMedium);
+   effectsPanel->Hide();//initially hidden
+   effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [pProjectWindow](wxCloseEvent&) {
+      if (pProjectWindow)
+         pProjectWindow->HideEffectsPanel();
+   });
+   return effectsPanel;
+}
+};
+}
+
+RealtimeEffectPanel &RealtimeEffectPanel::Get(AudacityProject &project)
+{
+   return GetAttachedWindows(project).Get<RealtimeEffectPanel>(sKey);
+}
+
+const RealtimeEffectPanel &
+RealtimeEffectPanel::Get(const AudacityProject &project)
+{
+   return Get(const_cast<AudacityProject &>(project));
+}
 
 RealtimeEffectPanel::RealtimeEffectPanel(
    AudacityProject& project, wxWindow* parent, wxWindowID id, const wxPoint& pos,

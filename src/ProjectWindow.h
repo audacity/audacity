@@ -64,12 +64,10 @@ public:
 
    void Reset();
 
-   /**
-    * \brief Effect window contains list off effects assigned to
-    * a selected track.
-    * \return Pointer to an effects side-panel window (not null)
-    */
-   wxWindow* GetEffectsWindow() noexcept;
+private:
+   RealtimeEffectPanel &GetEffectsWindow() noexcept;
+
+public:
    /**
     * \brief Track list window is the parent container for TrackPanel
     * \return Pointer to a track list window (not null)
@@ -139,7 +137,6 @@ public:
    
    void ShowEffectsPanel(Track* track = nullptr, bool focus = false);
    void HideEffectsPanel();
-   bool IsEffectsPanelShown();
 
    void ApplyUpdatedTheme();
 
@@ -219,7 +216,6 @@ private:
 
    wxPanel *mTopPanel{};
    wxSplitterWindow* mContainerWindow;
-   RealtimeEffectPanel* mEffectsWindow{};
    wxWindow* mTrackListWindow{};
    
    wxScrollBar *mHsbar{};
