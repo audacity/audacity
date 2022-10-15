@@ -1326,16 +1326,12 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
 namespace {
 AttachedWindows::RegisteredFactory sKey{
 [](AudacityProject &project) -> wxWeakRef<wxWindow> {
-   wxWeakRef<ProjectWindow> pProjectWindow = &ProjectWindow::Get(project);
+   const auto pProjectWindow = &ProjectWindow::Get(project);
    auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(
       project, pProjectWindow->GetContainerWindow(), wxID_ANY);
    effectsPanel->SetName(_("Realtime effects"));
    effectsPanel->SetBackgroundColorIndex(clrMedium);
    effectsPanel->Hide();//initially hidden
-   effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [pProjectWindow](wxCloseEvent&) {
-      if (pProjectWindow)
-         pProjectWindow->HideEffectsPanel();
-   });
    return effectsPanel;
 }
 };
@@ -1538,6 +1534,9 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             ShowPanel(trackFocus.Get(), false);
          }
       });
+
+   Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&) {
+      HidePanel(); });
 }
 
 RealtimeEffectPanel::~RealtimeEffectPanel()
@@ -1568,6 +1567,23 @@ void RealtimeEffectPanel::ShowPanel(Track* track, bool focus)
    }
    if(focus)
       SetFocus();
+   projectWindow.Layout();
+}
+
+void RealtimeEffectPanel::HidePanel()
+{
+   wxWindowUpdateLocker freeze(this);
+
+   auto &projectWindow = ProjectWindow::Get(mProject);
+   const auto pContainerWindow = projectWindow.GetContainerWindow();
+   const auto pTrackListWindow = projectWindow.GetTrackListWindow();
+   if (pContainerWindow->GetWindow2() == nullptr)
+      //only effects panel is present, restore split positions before removing effects panel
+      //Workaround: ::Replace and ::Initialize do not work here...
+      pContainerWindow->SplitVertically(this, pTrackListWindow);
+
+   pContainerWindow->Unsplit(this);
+   pTrackListWindow->SetFocus();
    projectWindow.Layout();
 }
 

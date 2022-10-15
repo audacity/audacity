@@ -433,11 +433,9 @@ void DoManagePluginsMenu(AudacityProject &project)
 void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
 {
    auto &trackFocus = TrackFocus::Get(project);
-   auto &projectWindow = ProjectWindow::Get(project);
-
    auto &panel = RealtimeEffectPanel::Get(project);
    if (panel.IsShown())
-      projectWindow.HideEffectsPanel();
+      panel.HidePanel();
    else
       panel.ShowPanel(trackFocus.Get(), true);
 }

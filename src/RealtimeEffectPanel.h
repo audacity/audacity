@@ -67,6 +67,7 @@ public:
    ~RealtimeEffectPanel() override;
 
    void ShowPanel(Track* track, bool focus);
+   void HidePanel();
 
    /**
     * \brief Shows effects from the effect stack of the track
