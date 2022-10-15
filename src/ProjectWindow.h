@@ -64,10 +64,6 @@ public:
 
    void Reset();
 
-private:
-   RealtimeEffectPanel &GetEffectsWindow() noexcept;
-
-public:
    /**
     * \brief Track list window is the parent container for TrackPanel
     * \return Pointer to a track list window (not null)
@@ -135,8 +131,6 @@ public:
    double GetZoomOfToFit() const;
    void DoZoomFit();
    
-   void HideEffectsPanel();
-
    void ApplyUpdatedTheme();
 
    // Scrollbars

@@ -37,7 +37,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/WindowAccessible.h"
 
 #include "ThemedWrappers.h"
-#include "RealtimeEffectPanel.h"
 
 #include <wx/app.h>
 #include <wx/display.h>
@@ -1245,11 +1244,6 @@ bool ProjectWindow::IsIconized() const
    return mIconized;
 }
 
-RealtimeEffectPanel &ProjectWindow::GetEffectsWindow() noexcept
-{
-   return RealtimeEffectPanel::Get(mProject);
-}
-
 wxWindow* ProjectWindow::GetTrackListWindow() noexcept
 {
    return mTrackListWindow;
@@ -1889,21 +1883,6 @@ void ProjectWindow::DoZoomFit()
 
    window.Zoom( window.GetZoomOfToFit() );
    window.TP_ScrollWindow(start);
-}
-
-void ProjectWindow::HideEffectsPanel()
-{
-   wxWindowUpdateLocker freeze(this);
-
-   auto &effectsWindow = GetEffectsWindow();
-   if(mContainerWindow->GetWindow2() == nullptr)
-      //only effects panel is present, restore split positions before removing effects panel
-      //Workaround: ::Replace and ::Initialize do not work here...
-      mContainerWindow->SplitVertically(&effectsWindow, mTrackListWindow);
-
-   mContainerWindow->Unsplit(&effectsWindow);
-   mTrackListWindow->SetFocus();
-   Layout();
 }
 
 static ToolManager::TopPanelHook::Scope scope {
