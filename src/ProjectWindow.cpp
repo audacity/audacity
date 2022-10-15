@@ -645,16 +645,6 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mContainerWindow->Initialize(mTrackListWindow);
 
-   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mProject, mContainerWindow, wxID_ANY);
-   effectsPanel->SetName(_("Realtime effects"));
-   effectsPanel->SetBackgroundColorIndex(clrMedium);
-   effectsPanel->Hide();//initially hidden
-   effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&)
-   {
-      HideEffectsPanel();
-   });
-   mEffectsWindow = effectsPanel;
-
 #ifdef EXPERIMENTAL_DA2
    mTrackListWindow->SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
@@ -701,7 +691,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mFocusChangeSubscription = TrackFocus::Get(project)
       .Subscribe([this](const TrackFocusChangeMessage& msg) {
-         if(mEffectsWindow->IsShown())
+         if(GetEffectsWindow().IsShown())
          {
             auto& project = GetProject();
             auto& trackFocus = TrackFocus::Get(project);
@@ -1266,9 +1256,9 @@ bool ProjectWindow::IsIconized() const
    return mIconized;
 }
 
-wxWindow* ProjectWindow::GetEffectsWindow() noexcept
+RealtimeEffectPanel &ProjectWindow::GetEffectsWindow() noexcept
 {
-   return mEffectsWindow;
+   return RealtimeEffectPanel::Get(mProject);
 }
 
 wxWindow* ProjectWindow::GetTrackListWindow() noexcept
@@ -1914,26 +1904,27 @@ void ProjectWindow::DoZoomFit()
 
 void ProjectWindow::ShowEffectsPanel(Track* track, bool focus)
 {
+   auto &effectsWindow = GetEffectsWindow();
    if(track == nullptr)
    {
-      mEffectsWindow->ResetTrack();
+      effectsWindow.ResetTrack();
       return;
    }
 
    wxWindowUpdateLocker freeze(this);
 
-   mEffectsWindow->SetTrack(track->shared_from_this());
+   effectsWindow.SetTrack(track->shared_from_this());
 
-   if(mContainerWindow->GetWindow1() != mEffectsWindow)
+   if(mContainerWindow->GetWindow1() != &effectsWindow)
    {
       //Restore previous effects window size
       mContainerWindow->SplitVertically(
-         mEffectsWindow,
+         &effectsWindow,
          mTrackListWindow,
-         mEffectsWindow->GetSize().GetWidth());
+         effectsWindow.GetSize().GetWidth());
    }
    if(focus)
-      mEffectsWindow->SetFocus();
+      effectsWindow.SetFocus();
    Layout();
 }
 
@@ -1941,19 +1932,15 @@ void ProjectWindow::HideEffectsPanel()
 {
    wxWindowUpdateLocker freeze(this);
 
+   auto &effectsWindow = GetEffectsWindow();
    if(mContainerWindow->GetWindow2() == nullptr)
       //only effects panel is present, restore split positions before removing effects panel
       //Workaround: ::Replace and ::Initialize do not work here...
-      mContainerWindow->SplitVertically(mEffectsWindow, mTrackListWindow);
+      mContainerWindow->SplitVertically(&effectsWindow, mTrackListWindow);
 
-   mContainerWindow->Unsplit(mEffectsWindow);
+   mContainerWindow->Unsplit(&effectsWindow);
    mTrackListWindow->SetFocus();
    Layout();
-}
-
-bool ProjectWindow::IsEffectsPanelShown()
-{
-   return mEffectsWindow->IsShown();
 }
 
 static ToolManager::TopPanelHook::Scope scope {

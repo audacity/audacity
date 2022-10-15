@@ -14,6 +14,7 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../ProjectSelectionManager.h"
+#include "RealtimeEffectPanel.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
 #include "../TrackPanelAx.h"
@@ -434,7 +435,7 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
    auto &trackFocus = TrackFocus::Get(project);
    auto &projectWindow = ProjectWindow::Get(project);
 
-   if (projectWindow.IsEffectsPanelShown())
+   if (RealtimeEffectPanel::Get(project).IsShown())
       projectWindow.HideEffectsPanel();
    else
       projectWindow.ShowEffectsPanel(trackFocus.Get(), true);
