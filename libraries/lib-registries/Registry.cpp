@@ -465,7 +465,7 @@ auto CollectedItems::MergeWithExistingItem(
                   found->visitNow = pItem;
                   break;
                }
-               /* fallthrough */
+               [[fallthrough]] ;
             case OrderingHint::Error:
             default:
                // Unresolved collision of non-group items is the worst case!
