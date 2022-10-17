@@ -1369,13 +1369,13 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
 
    long index{};
    wxString key;
-   float value = 0.0f;
+   double value = 0.0f;
    int intKey = 0;
    if (parms.GetFirstEntry(key, index))
    {
       do
       {
-         if (parms.Read(key, value))
+         if (parms.Read(key, &value))
             vstSettings.mParamsMap[key] = { intKey, value };
          else
             return false;
@@ -1386,7 +1386,7 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    }
 
    vstSettings.mChunk     = std::nullopt;
-   vstSettings.mVersion   = VSTEffectWrapper::mVstVersion;
+   vstSettings.mVersion   = VSTEffectWrapper::mVersion;
    vstSettings.mUniqueID  = VSTEffectWrapper::mAEffect->uniqueID;
    vstSettings.mNumParams = VSTEffectWrapper::mAEffect->numParams;
 
@@ -3626,7 +3626,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 {
    // First, make sure settings are compatibile with the plugin
    if ((vstSettings.mUniqueID  != mAEffect->uniqueID)   ||
-       (vstSettings.mVersion   != mAEffect->version)    ||
+//       (vstSettings.mVersion   != mAEffect->version)    ||
        (vstSettings.mNumParams != mAEffect->numParams)      )
    {
       return false;
@@ -3721,9 +3721,11 @@ VSTEffectValidator::VSTEffectValidator
 {   
    // Make the settings of the instance up to date before using it to
    // build a UI
-   StoreSettingsToInstance(mAccess.Get());
+   auto settings = mAccess.Get();
+   StoreSettingsToInstance(settings);
 
    Load();
+   StoreSettings(settings);
 
    mTimer = std::make_unique<VSTEffectTimer>(this);   
 }
@@ -3763,8 +3765,6 @@ void VSTEffectValidator::Automate(int index, float value)
       // TOFIX stickiness is still not preserved
       auto& vst2Settings = VSTEffect::GetSettings(settings);
 
-         float dbgOldGain = vst2Settings.mParamsMap.at("Gain").value().second;
-
       ForEachParameter
       (
          [&](const ParameterInfo& pi)
@@ -3777,9 +3777,6 @@ void VSTEffectValidator::Automate(int index, float value)
             return true;
          }
       );
-
-         float dbgNewGain = vst2Settings.mParamsMap.at("Gain").value().second;
-
 
       // But send changed settings (only) to the worker thread, which
       // ignores the settings
