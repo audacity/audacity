@@ -95,6 +95,7 @@ struct CollectedItems
 
 // When a computed or shared item, or nameless grouping, specifies a hint and
 // the subordinate does not, propagate the hint.
+// Likewise for conflict resolution.
 OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 {
    auto result =
@@ -102,7 +103,7 @@ OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
       ? hint
       : delegate->orderingHint;
    auto policy =
-      !delegate || delegate->orderingHint.policy == OrderingHint::Error
+      !delegate || delegate->orderingHint.policy == OrderingHint::Unspecified
       ? hint.policy
       : delegate->orderingHint.policy;
    result.policy = policy;
@@ -139,7 +140,7 @@ void CollectItem( Registry::Visitor &visitor,
       if ( delegate )
          // recursion
          CollectItem( visitor, collection, delegate,
-            ChooseHint( delegate, hint ) );
+            ChooseHint(delegate, ChooseHint(pShared, hint)) );
    }
    else
    if (const auto pComputed =
@@ -150,7 +151,7 @@ void CollectItem( Registry::Visitor &visitor,
          collection.computedItems.push_back( result );
          // recursion
          CollectItem( visitor, collection, result.get(),
-            ChooseHint( result.get(), hint ) );
+            ChooseHint(result.get(), ChooseHint(pComputed, hint)));
       }
    }
    else

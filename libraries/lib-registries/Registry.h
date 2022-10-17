@@ -22,9 +22,9 @@ namespace Registry {
    // the same ordering), but this is not treated as an error.
    struct OrderingHint
    {
-      // The default Unspecified hint is just like End, except that in case the
+      // The default Unspecified hint is like End, but is overridden if the
       // item is delegated to (by a SharedItem, ComputedItem, or nameless
-      // transparent group), the delegating item's hint will be used instead
+      // transparent group).  The delegating item's hint will be used instead
       enum Type : int {
          Begin, End,
          Before, After,
@@ -33,6 +33,9 @@ namespace Registry {
 
       //! What to do in case a registered SingleItem is at the same path as a
       //! predefined SingleItem
+      // The default Unspecified policy is like Error, but is overridden if the
+      // item is delegated to (by a SharedItem, ComputedItem, or nameless
+      // transparent group).  The delegating item's hint will be used instead
       enum ConflictResolutionPolicy : int {
          Error,   /*!<
             By default, ignore the registered item and display an error */
@@ -40,7 +43,8 @@ namespace Registry {
          Replace, /*!<
             At most one registered SingleItem may replace the predefined
             without error */
-      } policy{ Error };
+         Unspecified
+      } policy{ Unspecified };
 
       // name of some other BaseItem; significant only when type is Before or
       // After:
@@ -216,8 +220,8 @@ namespace Registry {
 
    // Concrete subclass of GroupItem that adds nothing else
    // TransparentGroupItem with an empty name is transparent to item path
-   // calculations and propagates its ordering hint if subordinates don't
-   // specify hints and it does specify one
+   // calculations and propagates its ordering hint and conflict resolution
+   // if subordinates don't specify them and it does
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
