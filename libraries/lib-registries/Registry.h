@@ -55,12 +55,12 @@ namespace Registry {
          const wxString &name = {}, ConflictResolutionPolicy policy = Error )
          : type{ type }, name{ name }, policy{ policy } {}
 
-      //! The conflict resoution policy is not significant in equality
+      //! The conflict resolution policy is not significant in equality
       //! comparison
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
 
-      //! The conflict resoution policy is not significant in ordering
+      //! The conflict resolution policy is not significant in ordering
       //! comparison
       /*! This sorts unspecified placements later */
       bool operator < ( const OrderingHint &other ) const

@@ -49,7 +49,7 @@ void BuiltinCommandsModule::UndoRegistration(
 {
    auto &items = Entry::Registry();
    auto end = items.end();
-   auto iter = std::find_if( items.begin(), end, [&](auto &entry){
+   auto iter = std::find_if( items.begin(), end, [&](const auto &entry){
       return name == entry.name;
    } );
    if ( iter != end )

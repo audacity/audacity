@@ -749,7 +749,7 @@ void VisitItems(
             if ( !name.empty() )
                newValue += newValue.empty()
                   ? name
-                  : ',' + name   ;
+                  : ',' + name;
          }
          if (newValue != itemOrdering.strValue) {
             gPrefs->Write( itemOrdering.key, newValue );
