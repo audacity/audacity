@@ -96,7 +96,7 @@ struct VSTEffectSettings
    std::optional<wxString> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::unordered_map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
+   std::map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
 };
 
 
@@ -390,32 +390,20 @@ class VSTEffect final
 
    EffectSettings MakeSettings() const override;
 
-
-   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
-   std::mutex mSettingsMutex;    // to avoid read/write races on mSettings - this is needed temporarily
-                                 // and will be removed when the Validator will be implemented
-
-   //! This function will be rewritten when the effect is really stateless
-   VSTEffectSettings& GetSettings(EffectSettings&) const
+   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
    {
-      return const_cast<VSTEffect*>(this)->mSettings;
-   }
-
-   //! This function will be rewritten when the effect is really stateless
-   const VSTEffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
-
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
+      auto pSettings = settings.cast<VSTEffectSettings>();
       assert(pSettings);
       return *pSettings;
    }
-   */
+
+   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
 
 protected:
    void NeedIdle() override;
@@ -459,7 +447,7 @@ private:
    
    friend class VSTEffectsModule;
 
-   mutable bool mInitialFetchDone{ false };
+   //mutable bool mInitialFetchDone{ false };
 };
 
 class VSTEffectsModule final : public PluginProvider

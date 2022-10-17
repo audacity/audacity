@@ -884,6 +884,8 @@ bool VSTEffect::IsDefault() const
 
 auto VSTEffect::RealtimeSupport() const -> RealtimeSince
 {
+   return RealtimeSince::Always;
+
    // TODO reenable after achieving statelessness
    return RealtimeSince::Never;
    /* return GetType() == EffectTypeProcess
@@ -1029,7 +1031,11 @@ void VSTEffectMessage::Assign(Message && src)
 void VSTEffectMessage::Merge(Message && src)
 {
    auto& dstSettings = this->settings;
+
+   auto& tmp = static_cast<VSTEffectMessage&>(src);
+
    auto& srcSettings = static_cast<VSTEffectMessage&>(src).settings;
+
 
    VSTEffectWrapper::MoveSettingsContents(
       std::move(srcSettings), dstSettings, /*merge=*/true);
@@ -1055,6 +1061,10 @@ std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage(int id, 
          if (pi.mID == id)
          {
             settings.mParamsMap[pi.mName] = { id, value };
+         }
+         else
+         {
+            settings.mParamsMap[pi.mName] = std::nullopt;
          }
          return true;
       }
@@ -1232,29 +1242,25 @@ bool VSTEffectInstance::RealtimeResume()
 
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
-   auto &settings = package.settings;
-   {
-      // This mutex protection is temporarily needed because:
-      //
-      //  - VSTEffectValidator::Automate ultimately writes to   VSTEffect::mSettings
-      //  - this method                             reads  from VSTEffect::mSettings
-      //
-      // And the two things above will happen when realtime processing and moving a slider -
-      // tests have shown that without this mutex, crashes will happen.
-      //
-      // Anyway, this mutex should go when the transition to stateless is complete.
-      //
-      auto guard = std::lock_guard{ GetEffect().mSettingsMutex };
+   if (!package.pMessage)
+      return true;
 
-      // It has been suggested that this loop is now useless and the StoreSettings can
-      // be called directly on "this" - however, this was tried and it did not work,
-      // i.e. sliders changes would not be heard in the realtime processed.
-      //
-      // If anything, the loop could be replaced with mSlaves[0].StoreSettings(...)
-      //
-      for (auto& slave : mSlaves)
+   auto& paramsMap = static_cast<VSTEffectMessage&>(*package.pMessage).settings.mParamsMap;
+
+   for (auto& mapItem : paramsMap)
+   {
+      if (mapItem.second)
       {
-         slave->StoreSettings(GetSettings(settings));
+         const int&    key = mapItem.second->first;
+         const double& val = mapItem.second->second;
+
+         for (auto& slave : mSlaves)
+         {
+            slave->callSetParameter(key, (float)val);
+         }        
+
+         // clear the used info
+         mapItem.second = std::nullopt;
       }
    }
 
@@ -3672,8 +3678,8 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 bool VSTEffectValidator::UpdateUI()
 {
-   if ( ! StoreSettingsToInstance(mAccess.Get()) )
-      return false;
+   //if ( ! StoreSettingsToInstance(mAccess.Get()) )
+   //   return false;
 
    // Update the controls on the GUI too
    if ( ! StoreSettings(mAccess.Get()) )
@@ -3692,13 +3698,9 @@ ComponentInterfaceSymbol VSTEffectWrapper::GetSymbol() const
 
 EffectSettings VSTEffect::MakeSettings() const
 {
-   auto result = PerTrackEffect::MakeSettings();
-   // Cause initial population of the map stored in the stateful effect
-   if (!mInitialFetchDone) {
-      FetchSettings(GetSettings(result));
-      mInitialFetchDone = true;
-   }
-   return result;
+   VSTEffectSettings settings;
+   FetchSettings(settings);
+   return EffectSettings::Make<VSTEffectSettings>(std::move(settings));
 }
 
 VSTEffectValidator::~VSTEffectValidator() = default;
@@ -3754,9 +3756,37 @@ void VSTEffectWrapper::Automate(int index, float value)
 
 void VSTEffectValidator::Automate(int index, float value)
 {
-   GetInstance().callSetParameter(index, value);
+   mAccess.ModifySettings([&](EffectSettings& settings)
+   {
+      // Write the parameter change in the settings
+      // (this to preserve stickiness when the effect is closed/reopened)
+      // TOFIX stickiness is still not preserved
+      auto& vst2Settings = VSTEffect::GetSettings(settings);
 
-   ValidateUI();
+         float dbgOldGain = vst2Settings.mParamsMap.at("Gain").value().second;
+
+      ForEachParameter
+      (
+         [&](const ParameterInfo& pi)
+         {
+            if (pi.mID == index)
+            {
+               vst2Settings.mParamsMap[pi.mName] = { index, value };
+            }
+
+            return true;
+         }
+      );
+
+         float dbgNewGain = vst2Settings.mParamsMap.at("Gain").value().second;
+
+
+      // But send changed settings (only) to the worker thread, which
+      // ignores the settings
+      auto result = GetInstance().MakeMessage(index, value);
+
+      return result;
+   });
 }
 
 
@@ -3823,25 +3853,18 @@ bool VSTEffectValidator::StoreSettings(const EffectSettings& settings)
 
 bool VSTEffectValidator::ValidateUI()
 {
+   mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      // Please see comments at ::RealtimeProcessStart on why this mutex is needed
-      //
-      auto guard = std::lock_guard{ GetInstance().GetEffect().mSettingsMutex };
+      const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
+      if (eff.GetType() == EffectTypeGenerate)
+         settings.extra.SetDuration(mDuration->GetValue());
 
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
-         if (eff.GetType() == EffectTypeGenerate)
-            settings.extra.SetDuration(mDuration->GetValue());
+      FetchSettingsFromInstance(settings);
 
-         FetchSettingsFromInstance(settings);
-
-         // TODO: return a message with what setting(s) have changed
-         // check out what AU does now 
-         return nullptr;
-      });
-
-   }
+      // TODO: return a message with what setting(s) have changed
+      // check out what AU does now 
+      return GetInstance().MakeMessage();
+   });
 
    return true;
 }
@@ -3868,6 +3891,8 @@ void VSTEffectValidator::OnClose()
 
    mParent = NULL;
    mDialog = NULL;
+
+   mAccess.Flush();
 }
 
 #endif // USE_VST
