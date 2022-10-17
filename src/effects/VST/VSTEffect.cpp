@@ -3478,7 +3478,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 {
    // First, make sure settings are compatibile with the plugin
    if ((vstSettings.mUniqueID  != mAEffect->uniqueID)   ||
-       (vstSettings.mVersion   != mAEffect->version)    ||
+//       (vstSettings.mVersion   != mAEffect->version)    ||
        (vstSettings.mNumParams != mAEffect->numParams)      )
    {
       return false;
