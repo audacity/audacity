@@ -33,7 +33,7 @@ namespace Registry {
 
       //! What to do in case a registered SingleItem is at the same path as a
       //! predefined SingleItem
-      // The default Unspecified policy is like Error, but is overridden if the
+      // The default None policy is like Error, but is overridden if the
       // item is delegated to (by a SharedItem, ComputedItem, or nameless
       // transparent group).  The delegating item's hint will be used instead
       enum ConflictResolutionPolicy : int {
@@ -43,8 +43,8 @@ namespace Registry {
          Replace, /*!<
             At most one registered SingleItem may replace the predefined
             without error */
-         Unspecified
-      } policy{ Unspecified };
+         None
+      } policy{ None };
 
       // name of some other BaseItem; significant only when type is Before or
       // After:

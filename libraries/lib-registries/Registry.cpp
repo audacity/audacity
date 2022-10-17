@@ -103,7 +103,7 @@ OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
       ? hint
       : delegate->orderingHint;
    auto policy =
-      !delegate || delegate->orderingHint.policy == OrderingHint::Unspecified
+      !delegate || delegate->orderingHint.policy == OrderingHint::None
       ? hint.policy
       : delegate->orderingHint.policy;
    result.policy = policy;
