@@ -1198,6 +1198,13 @@ bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double samp
 bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
    EffectOutputs *, unsigned numChannels, float sampleRate)
 {
+   if (!mRecruited)
+   {
+      // Assign self to the first processor
+      mRecruited = true;
+      return true;
+   }
+
    auto slave = std::make_unique<VSTEffectInstance>(GetEffect(), mPath, mBlockSize, mUserBlockSize, mUseLatency);
 
    slave->SetBlockSize(mBlockSize);
@@ -1212,6 +1219,9 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
+
+   mRecruited = false;
+
    for (const auto &slave : mSlaves)
       slave->ProcessFinalize();
    mSlaves.clear();
@@ -1254,6 +1264,10 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
          const int&    key = mapItem.second->first;
          const double& val = mapItem.second->second;
 
+         // set the change on the recruited "this" instance
+         callSetParameter(key, (float)val);
+
+         // set the change on any existing slaves
          for (auto& slave : mSlaves)
          {
             slave->callSetParameter(key, (float)val);
@@ -1270,10 +1284,25 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 size_t VSTEffectInstance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   wxASSERT(numSamples <= mBlockSize);
-   if (group >= mSlaves.size())
+   if (!mRecruited)
+   {
+      // unexpected!
       return 0;
-   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   }
+
+   wxASSERT(numSamples <= mBlockSize);
+
+   if (group == 0)
+   {
+      // use the recruited "this" instance
+      return ProcessBlock(settings, inbuf, outbuf, numSamples);
+   }
+   else
+   {
+      // use the slave which maps to the group
+      assert(group <= mSlaves.size());
+      return mSlaves[group - 1]->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   }
 }
 
 bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
@@ -3877,7 +3906,6 @@ void VSTEffectValidator::OnClose()
    mControl->Close();
 #endif
 
-   GetInstance().PowerOff();
 
    NeedEditIdle(false);
 
