@@ -40,6 +40,87 @@
 #include "../ProjectAudioIO.h"
 #include "../widgets/MeterPanel.h"
 
+#if wxUSE_ACCESSIBILITY
+
+class MeterButtonAx : public AButtonAx
+{
+   wxWeakRef<MeterPanel> mAssociatedMeterPanel{nullptr};
+   bool mAccSilent{false};
+public:
+
+   MeterButtonAx(AButton& button, MeterPanel& panel)
+      : AButtonAx(&button)
+      , mAssociatedMeterPanel(&panel)
+   { }
+
+   wxAccStatus GetName(int childId, wxString* name) override
+   {
+      if(childId != wxACC_SELF)
+         return wxACC_NOT_IMPLEMENTED;
+
+      if(mAccSilent)
+         *name = wxEmptyString; // Jaws reads nothing, and nvda reads "unknown"
+      else
+      {
+         const auto button = static_cast<AButton*>(GetWindow());
+
+         *name = button->GetName();
+
+         if(const auto panel = mAssociatedMeterPanel.get())
+         {
+            // translations of strings such as " Monitoring " did not
+            // always retain the leading space. Therefore a space has
+            // been added to ensure at least one space, and stop
+            // words from being merged
+            if(panel->IsMonitoring())
+               *name += wxT(" ") + _(" Monitoring ");
+            else if(panel->IsActive())
+               *name += wxT(" ") + _(" Active ");
+
+            const auto dbRange = panel->GetDBRange();
+            if (dbRange != -1)
+               *name += wxT(" ") + wxString::Format(_(" Peak %2.f dB"), panel->GetPeakHold() * dbRange - dbRange);
+            else
+               *name += wxT(" ") + wxString::Format(_(" Peak %.2f "), panel->GetPeakHold());
+
+            if(panel->IsClipping())
+               *name += wxT(" ") + _(" Clipped ");
+         }
+      }
+      return wxACC_OK;
+   }
+
+   wxAccStatus GetRole(int childId, wxAccRole* role) override
+   {
+      if(childId != wxACC_SELF)
+         return wxACC_NOT_IMPLEMENTED;
+
+      if(mAccSilent)
+         *role = wxROLE_NONE; // Jaws and nvda both read nothing 
+      else
+         *role = wxROLE_SYSTEM_PUSHBUTTON;
+      return wxACC_OK;
+   }
+
+   void SetSilent(bool silent)
+   {
+      if(mAccSilent != silent)
+      {
+         mAccSilent = silent;
+         if(!silent)
+         {
+            NotifyEvent(
+               wxACC_EVENT_OBJECT_FOCUS,
+               GetWindow(),
+               wxOBJID_CLIENT,
+               wxACC_SELF);
+         }
+      }
+   }
+};
+
+#endif
+
 IMPLEMENT_CLASS(MeterToolBar, ToolBar);
 
 ////////////////////////////////////////////////////////////
@@ -152,7 +233,7 @@ void MeterToolBar::Populate()
       //(maybe we should do it differently for Arabic language :-)  )
       mRecordSetupButton = safenew AButton(this);
       mRecordSetupButton->SetLabel({});
-      mRecordSetupButton->SetName(wxString::Format(_("Record meter peak %d db"), -DecibelScaleCutoff.Read()));
+      mRecordSetupButton->SetName(_("Record Meter"));
       mRecordSetupButton->SetImages(
          theTheme.Image(bmpRecoloredUpSmall),
          theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -162,15 +243,6 @@ void MeterToolBar::Populate()
       mRecordSetupButton->SetIcon(theTheme.Image(bmpMic));
       mRecordSetupButton->SetButtonType(AButton::Type::FrameButton);
       mRecordSetupButton->SetMinSize({toolbarSingle, toolbarSingle});
-      mRecordSetupButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
-      {
-         mRecordMeter->ShowMenu(
-            mRecordMeter->ScreenToClient(
-               ClientToScreen(mRecordSetupButton->GetClientRect().GetRightBottom())
-            )
-         );
-      });
-
 
       mRecordMeter = safenew MeterPanel( &mProject,
                                 this,
@@ -184,12 +256,34 @@ void MeterToolBar::Populate()
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
       mRecordMeter->SetLabel( XO("Meter-Record") );
+
+#if wxUSE_ACCESSIBILITY
+      auto meterButtonAcc = safenew MeterButtonAx(*mRecordSetupButton, *mRecordMeter);
+#endif
+      mRecordSetupButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent&)
+      {
+#if wxUSE_ACCESSIBILITY
+         meterButtonAcc->SetSilent(true);
+#endif
+         mRecordMeter->ShowMenu(
+            mRecordMeter->ScreenToClient(
+               ClientToScreen(mRecordSetupButton->GetClientRect().GetBottomLeft())
+            )
+         );
+#if wxUSE_ACCESSIBILITY
+         /* if stop/start monitoring was chosen in the menu, then by this point
+         OnMonitoring has been called and variables which affect the accessibility
+         name have been updated so it's now ok for screen readers to read the name of
+         the button */
+         meterButtonAcc->SetSilent(false);
+#endif
+      });
    }
 
    if( mWhichMeters & kWithPlayMeter ){
       mPlaySetupButton = safenew AButton(this);
       mPlaySetupButton->SetLabel({});
-      mPlaySetupButton->SetName(wxString::Format(_("Playback meter peak %d db"), -DecibelScaleCutoff.Read()));
+      mPlaySetupButton->SetName(_("Playback Meter"));
       mPlaySetupButton->SetImages(
          theTheme.Image(bmpRecoloredUpSmall),
          theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -199,14 +293,7 @@ void MeterToolBar::Populate()
       mPlaySetupButton->SetIcon(theTheme.Image(bmpSpeaker));
       mPlaySetupButton->SetButtonType(AButton::Type::FrameButton);
       mPlaySetupButton->SetMinSize({toolbarSingle, toolbarSingle});
-      mPlaySetupButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
-      {
-         mPlayMeter->ShowMenu(
-            mPlayMeter->ScreenToClient(
-               ClientToScreen(mPlaySetupButton->GetClientRect().GetRightBottom())
-            )
-         );
-      });
+
 
       mPlayMeter = safenew MeterPanel( &mProject,
                               this,
@@ -220,6 +307,24 @@ void MeterToolBar::Populate()
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
       mPlayMeter->SetLabel( XO("Meter-Play"));
+
+#if wxUSE_ACCESSIBILITY
+      auto meterButtonAcc = safenew MeterButtonAx(*mPlaySetupButton, *mPlayMeter);
+#endif
+      mPlaySetupButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent&)
+      {
+#if wxUSE_ACCESSIBILITY
+         meterButtonAcc->SetSilent(true);
+#endif
+         mPlayMeter->ShowMenu(
+            mPlayMeter->ScreenToClient(
+               ClientToScreen(mPlaySetupButton->GetClientRect().GetBottomLeft())
+            )
+         );
+#if wxUSE_ACCESSIBILITY
+         meterButtonAcc->SetSilent(false);
+#endif
+      });
    }
 
    RebuildLayout(true);

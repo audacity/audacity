@@ -180,6 +180,10 @@ class AUDACITY_DLL_API MeterPanel final
    bool IsMeterDisabled() const override;
 
    float GetMaxPeak() const override;
+   float GetPeakHold() const;
+
+   bool IsMonitoring() const;
+   bool IsActive() const;
 
    bool IsClipping() const override;
 
@@ -311,8 +315,6 @@ class AUDACITY_DLL_API MeterPanel final
 #if defined(__WXMSW__)
    bool mHadKeyDown;
 #endif
-
-   bool mAccSilent;
 
    friend class MeterAx;
 

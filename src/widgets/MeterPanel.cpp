@@ -125,10 +125,7 @@ public:
    // Returns the rectangle for this object (id = 0) or a child element (id > 0).
    // rect is in screen coordinates.
    wxAccStatus GetLocation(wxRect& rect, int elementId) override;
-
-   // Gets the name of the specified object.
-   wxAccStatus GetName(int childId, wxString *name) override;
-
+   
    // Returns a role constant.
    wxAccStatus GetRole(int childId, wxAccRole *role) override;
 
@@ -319,8 +316,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mActive(false),
    mNumBars(0),
    mLayoutValid(false),
-   mBitmap{},
-   mAccSilent(false)
+   mBitmap{}
 {
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
    SetName( XO("Meter") );
@@ -495,13 +491,6 @@ void MeterPanel::UpdateSliderControl()
 
    if (mSlider && (mSlider->Get() != volume))
       mSlider->Set(volume);
-
-#if wxUSE_ACCESSIBILITY
-   GetAccessible()->NotifyEvent( wxACC_EVENT_OBJECT_VALUECHANGE,
-                                 this,
-                                 wxOBJID_CLIENT,
-                                 wxACC_SELF );
-#endif
 
 #endif // USE_PORTMIXER
 }
@@ -883,6 +872,14 @@ void MeterPanel::SetMixer(wxCommandEvent & WXUNUSED(event))
          outputVolume = mSlider->Get();
 
       gAudioIO->SetMixer(inputSource, inputVolume, outputVolume);
+
+#if wxUSE_ACCESSIBILITY
+      GetAccessible()->NotifyEvent( wxACC_EVENT_OBJECT_VALUECHANGE,
+                                    this,
+                                    wxOBJID_CLIENT,
+                                    wxACC_SELF );
+#endif
+
    }
 #endif // USE_PORTMIXER
 }
@@ -1081,7 +1078,6 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       return;
    }
 
-   auto gAudioIO = AudioIO::Get();
 
    // There may have been several update messages since the last
    // time we got to this function.  Catch up to real-time by
@@ -1181,6 +1177,14 @@ float MeterPanel::GetMaxPeak() const
    return(maxPeak);
 }
 
+float MeterPanel::GetPeakHold() const
+{
+   auto peakHold = .0f;
+   for (unsigned int i = 0; i < mNumBars; i++)
+      peakHold = std::max(peakHold, mBar[i].peakPeakHold);
+   return peakHold;
+}
+
 wxFont MeterPanel::GetFont() const
 {
    int fontSize = 10;
@@ -1206,10 +1210,20 @@ void MeterPanel::ResetBar(MeterBar *b, bool resetClipping)
    b->tailPeakCount = 0;
 }
 
+bool MeterPanel::IsActive() const
+{
+   return mActive;
+}
+
+bool MeterPanel::IsMonitoring() const
+{
+   return mMonitoring;
+}
+
 bool MeterPanel::IsClipping() const
 {
-   for (int c = 0; c < kMaxMeterBars; c++)
-      if (mBar[c].isclipping)
+   for (int c = 0; c < mNumBars; c++)
+      if (mBar[c].clipping)
          return true;
    return false;
 }
@@ -1968,24 +1982,10 @@ void MeterPanel::ShowMenu(const wxPoint & pos)
 
    menu.Append(OnPreferencesID, _("Options..."));
 
-   mAccSilent = true;      // temporarily make screen readers say (close to) nothing on focus events
-
    BasicMenu::Handle{ &menu }.Popup(
       wxWidgetsWindowPlacement{ this },
       { pos.x, pos.y }
    );
-
-   /* if stop/start monitoring was chosen in the menu, then by this point
-   OnMonitoring has been called and variables which affect the accessibility
-   name have been updated so it's now ok for screen readers to read the name of
-   the button */
-   mAccSilent = false;
-#if wxUSE_ACCESSIBILITY
-   GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
-                                this,
-                                wxOBJID_CLIENT,
-                                wxACC_SELF);
-#endif
 }
 
 void MeterPanel::SetName(const TranslatableString& tip)
@@ -2242,57 +2242,9 @@ wxAccStatus MeterAx::GetLocation(wxRect & rect, int WXUNUSED(elementId))
    return wxACC_OK;
 }
 
-// Gets the name of the specified object.
-wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
-{
-   MeterPanel *m = wxDynamicCast(GetWindow(), MeterPanel);
-
-   if (m->mAccSilent)
-   {
-      *name = wxT("");     // Jaws reads nothing, and nvda reads "unknown"
-   }
-   else
-   {
-      *name = m->GetName();
-      if (name->empty())
-         *name = m->GetLabel();
-
-      if (name->empty())
-         *name = _("Meter");
-
-      if (m->mMonitoring)
-         // translations of strings such as " Monitoring " did not
-         // always retain the leading space. Therefore a space has
-         // been added to ensure at least one space, and stop
-         // words from being merged
-         *name += wxT(" ") + _(" Monitoring ");
-      else if (m->mActive)
-         *name += wxT(" ") + _(" Active ");
-
-      float peak = 0.;
-      bool clipped = false;
-      for (unsigned int i = 0; i < m->mNumBars; i++)
-      {
-         peak = wxMax(peak, m->mBar[i].peakPeakHold);
-         if (m->mBar[i].clipping)
-            clipped = true;
-      }
-      
-      if (clipped)
-         *name += wxT(" ") + _(" Clipped ");
-   }
-
-   return wxACC_OK;
-}
-
 // Returns a role constant.
 wxAccStatus MeterAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
 {
-   MeterPanel *m = wxDynamicCast(GetWindow(), MeterPanel);
-
-   if (m->mAccSilent)
-      *role = wxROLE_NONE;    // Jaws and nvda both read nothing
-   else
       *role = wxROLE_SYSTEM_SLIDER;
 
    return wxACC_OK;
@@ -2327,11 +2279,7 @@ wxAccStatus MeterAx::GetState(int WXUNUSED(childId), long* state)
 wxAccStatus MeterAx::GetValue(int WXUNUSED(childId), wxString* strValue)
 {
    MeterPanel *m = wxDynamicCast(GetWindow(), MeterPanel);
-   if(m->mAccSilent)
-   {
-      strValue->Clear();
-      return wxACC_OK;
-   }
+
    *strValue = m->mSlider->GetStringValue();
    return wxACC_OK;
 }
