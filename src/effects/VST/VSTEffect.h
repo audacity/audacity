@@ -582,6 +582,8 @@ private:
 
    bool mReady{ false };
 
+   bool mRecruited{ false };
+
    VSTEffectUIWrapper* mpOwningValidator{};
 };
 
