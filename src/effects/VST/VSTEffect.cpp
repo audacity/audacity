@@ -1192,7 +1192,7 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 
 bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   return DoProcessInitialize(sampleRate);
+   return ProcessInitialize(settings, sampleRate, {});
 }
 
 bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
@@ -1398,7 +1398,7 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
 
    long index{};
    wxString key;
-   double value = 0.0f;
+   double value = 0.0;
    int intKey = 0;
    if (parms.GetFirstEntry(key, index))
    {
