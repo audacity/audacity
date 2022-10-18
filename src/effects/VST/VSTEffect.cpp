@@ -1039,7 +1039,7 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 
 bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   return DoProcessInitialize(sampleRate);
+   return ProcessInitialize(settings, sampleRate, {});
 }
 
 bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
