@@ -1394,23 +1394,29 @@ bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& 
 bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
    VSTEffectSettings& vstSettings = GetSettings(settings);
-   vstSettings.mParamsMap.clear();
 
    long index{};
    wxString key;
    double value = 0.0;
-   int intKey = 0;
    if (parms.GetFirstEntry(key, index))
    {
       do
       {
-         if (parms.Read(key, &value))
-            vstSettings.mParamsMap[key] = { intKey, value };
-         else
-            return false;
-
-         intKey++;
-
+         if (parms.Read(key, &value)) {
+            auto &map = vstSettings.mParamsMap;
+            auto iter = map.find(key);
+            if (iter != map.end()) {
+               if (iter->second)
+                  // Should be guaranteed by MakeSettings
+                  iter->second->second = value;
+               else {
+                  assert(false);
+               }
+            }
+            else
+               // Unknown parameter name in the file
+               return false;
+         }
       } while (parms.GetNextEntry(key, index));
    }
 
