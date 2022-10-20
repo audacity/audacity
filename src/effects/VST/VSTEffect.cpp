@@ -3790,9 +3790,15 @@ void VSTEffectWrapper::SizeWindow(int w, int h)
 
 void VSTEffectWrapper::Automate(int index, float value)
 {
+   // This is now called only for the instance;
+   // TODO (?) we'd need to copy here part of what is done in VSTEffectValidator::Automate
+   // - we need to send back to the framework the new value for the parameter
 }
 
 
+/*
+* removed because now it is never called -
+  but temporarily kept for reference
 
 void VSTEffectValidator::Automate(int index, float value)
 {
@@ -3823,6 +3829,7 @@ void VSTEffectValidator::Automate(int index, float value)
       return result;
    });
 }
+*/
 
 
 VSTEffectInstance::VSTEffectInstance

@@ -602,8 +602,6 @@ public:
    bool ValidateUI() override;
    bool UpdateUI() override;
 
-   void Automate(int index, float value) override;
-
    void OnClose() override;
 
    void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
