@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <wx/event.h>
 
@@ -286,6 +287,9 @@ public:
    //! Default is false
    virtual bool IsHiddenFromMenus() const;
 };
+
+using OptionalMessage =
+   std::optional<std::unique_ptr<EffectSettingsAccess::Message>>;
 
 /*************************************************************************************//**
 
@@ -721,7 +725,9 @@ public:
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;
-   virtual void ImportPresets(EffectSettings &settings) = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage
+      ImportPresets(EffectSettings &settings) = 0;
 
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;

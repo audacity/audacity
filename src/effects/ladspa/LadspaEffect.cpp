@@ -1547,8 +1547,9 @@ void LadspaEffect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LadspaEffect::ImportPresets(EffectSettings &)
+OptionalMessage LadspaEffect::ImportPresets(EffectSettings &)
 {
+   return { nullptr };
 }
 
 bool LadspaEffect::HasOptions()

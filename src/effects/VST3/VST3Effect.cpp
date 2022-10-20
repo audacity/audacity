@@ -334,7 +334,7 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings& settings)
+OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -350,9 +350,12 @@ void VST3Effect::ImportPresets(EffectSettings& settings)
       nullptr
    );
    if(path.empty())
-      return;
+      return {};
 
-   LoadPreset(path, settings);
+   if (!LoadPreset(path, settings))
+      return {};
+
+   return { nullptr };
 }
 
 bool VST3Effect::HasOptions()

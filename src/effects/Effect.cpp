@@ -379,7 +379,7 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-void Effect::ImportPresets(EffectSettings &settings)
+OptionalMessage Effect::ImportPresets(EffectSettings &settings)
 {
    wxString params;
 
@@ -392,42 +392,45 @@ void Effect::ImportPresets(EffectSettings &settings)
                                      wxFD_OPEN | wxRESIZE_BORDER,
                                      nullptr);
    if (path.empty()) {
-      return;
+      return {};
    }
 
    wxFFile f(path);
-   if (f.IsOpened()) {
-      if (f.ReadAll(&params)) {
-         wxString ident = params.BeforeFirst(':');
-         params = params.AfterFirst(':');
+   if (!f.IsOpened())
+      return {};
 
-         auto commandId = GetSquashedName(GetSymbol().Internal());
+   if (f.ReadAll(&params)) {
+      wxString ident = params.BeforeFirst(':');
+      params = params.AfterFirst(':');
 
-         if (ident != commandId) {
-            // effect identifiers are a sensible length!
-            // must also have some params.
-            if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30)) 
-            {
-               Effect::MessageBox(
-                  /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is not a valid presets file.\n")
-                  .Format(wxFileNameFromPath(path)));
-            }
-            else
-            {
-               Effect::MessageBox(
-                  /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is for a different Effect, Generator or Analyzer.\n")
-                  .Format(wxFileNameFromPath(path)));
-            }
-            return;
+      auto commandId = GetSquashedName(GetSymbol().Internal());
+
+      if (ident != commandId) {
+         // effect identifiers are a sensible length!
+         // must also have some params.
+         if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30))
+         {
+            Effect::MessageBox(
+               /* i18n-hint %s will be replaced by a file name */
+               XO("%s: is not a valid presets file.\n")
+               .Format(wxFileNameFromPath(path)));
          }
-         LoadSettingsFromString(params, settings);
+         else
+         {
+            Effect::MessageBox(
+               /* i18n-hint %s will be replaced by a file name */
+               XO("%s: is for a different Effect, Generator or Analyzer.\n")
+               .Format(wxFileNameFromPath(path)));
+         }
+         return {};
       }
+      if (!LoadSettingsFromString(params, settings))
+         return {};
    }
 
    //SetWindowTitle();
 
+   return { nullptr };
 }
 
 bool Effect::HasOptions()

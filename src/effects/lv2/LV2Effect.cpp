@@ -444,8 +444,9 @@ void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LV2Effect::ImportPresets(EffectSettings &)
+OptionalMessage LV2Effect::ImportPresets(EffectSettings &)
 {
+   return { nullptr };
 }
 
 bool LV2Effect::HasOptions()
