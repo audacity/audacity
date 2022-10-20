@@ -77,8 +77,9 @@ public:
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool DoLoadFactoryPreset(int id);
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
+   OptionalMessage DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

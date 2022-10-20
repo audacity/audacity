@@ -101,13 +101,14 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
@@ -137,7 +138,7 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(
+   OptionalMessage LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;

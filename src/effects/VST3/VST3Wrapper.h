@@ -114,7 +114,8 @@ public:
 
    static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);
    static void SaveSettings(const EffectSettings& settings, CommandParameters& parms);
-   static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
+   static OptionalMessage LoadUserPreset(
+      const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
    static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst);

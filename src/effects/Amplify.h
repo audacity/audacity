@@ -43,8 +43,9 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool LoadFactoryDefaults(EffectSettings &settings) const override;
-   bool DoLoadFactoryDefaults();
+   OptionalMessage LoadFactoryDefaults(EffectSettings &settings)
+      const override;
+   OptionalMessage DoLoadFactoryDefaults(EffectSettings &settings);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

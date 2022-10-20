@@ -354,16 +354,21 @@ public:
    virtual RegistryPaths GetFactoryPresets() const = 0;
 
    //! Change settings to a user-named preset
-   virtual bool LoadUserPreset(
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const = 0;
    //! Save settings in the configuration file as a user-named preset
    virtual bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const = 0;
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id, EffectSettings &settings) const = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadFactoryPreset(
+      int id, EffectSettings &settings) const = 0;
    //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadFactoryDefaults(
+      EffectSettings &settings) const = 0;
    //! @}
 
    //! Visit settings (and maybe change them), if defined.
