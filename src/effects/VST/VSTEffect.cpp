@@ -2144,17 +2144,9 @@ void VSTEffectValidator::OnTimer()
    }
 }
 
-void VSTEffect::NeedIdle()
-{
-   // do nothing, now "moved" to validator
+void VSTEffectUIWrapper::NeedIdle()
+{   
 }
-
-/*
-void VSTEffectWrapper::NeedEditIdle(bool state)
-{
-   // do nothing, now "moved" to validator
-}
-*/
 
 void VSTEffectValidator::NeedIdle()
 {
@@ -2222,9 +2214,6 @@ void VSTEffectInstance::PowerOff()
    }
 }
 
-void VSTEffect::SizeWindow(int w, int h)
-{
-}
 
 void VSTEffectValidator::SizeWindow(int w, int h)
 {
@@ -3775,16 +3764,12 @@ VSTEffectInstance& VSTEffectValidator::GetInstance() const
 }
 
 
-// Default, do-nothing implementations of virtuals in VSTEffectWrapper
-void VSTEffectWrapper::NeedIdle()
-{   
-}
 
 void VSTEffectWrapper::UpdateDisplay()
 {
 }
 
-void VSTEffectWrapper::SizeWindow(int w, int h)
+void VSTEffectUIWrapper::SizeWindow(int w, int h)
 {
 }
 

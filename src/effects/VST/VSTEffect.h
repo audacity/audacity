@@ -100,7 +100,14 @@ struct VSTEffectSettings
 };
 
 
-struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
+struct VSTEffectUIWrapper
+{
+   virtual void NeedIdle();
+   virtual void SizeWindow(int w, int h);
+};
+
+
+struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VSTEffectUIWrapper
 {
    explicit VSTEffectWrapper(const PluginPath& path)
       : mPath(path)
@@ -269,9 +276,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some of the methods called by the callback make sense for the Effect:
    //
    // - All GUI-related stuff 
-   virtual void NeedIdle();
+   
    virtual void UpdateDisplay();
-   virtual void SizeWindow(int w, int h);
+   
 
    // - Automate is called by the callback whenever a control on the GUI is moved
    virtual void Automate(int index, float value);
@@ -406,9 +413,9 @@ class VSTEffect final
 
 
 protected:
-   void NeedIdle() override;
+   
    void UpdateDisplay() override;
-   void SizeWindow(int w, int h) override;
+   
 
 private:
 
