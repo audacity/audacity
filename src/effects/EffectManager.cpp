@@ -300,10 +300,10 @@ bool EffectManager::SetEffectParameters(
       if (eap.HasEntry(wxT("Use Preset")))
       {
          return effect->LoadSettingsFromString(
-            eap.Read(wxT("Use Preset")), settings);
+            eap.Read(wxT("Use Preset")), settings).has_value();
       }
 
-      return effect->LoadSettingsFromString(params, settings);
+      return effect->LoadSettingsFromString(params, settings).has_value();
    }
    AudacityCommand *command = GetAudacityCommand(ID);
    
@@ -816,7 +816,8 @@ void InitializePreset(
       SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
          InitializedKey, true);
    }
-   manager.LoadUserPreset(CurrentSettingsGroup(), settings);
+   // ignore failure
+   (void) manager.LoadUserPreset(CurrentSettingsGroup(), settings);
 }
 
 std::pair<ComponentInterface *, EffectSettings>

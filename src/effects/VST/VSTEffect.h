@@ -337,14 +337,15 @@ class VSTEffect final
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
    bool DoLoadFactoryPreset(int id);
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
@@ -422,7 +423,8 @@ private:
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings) const;
+   OptionalMessage
+      LoadParameters(const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
        const RegistryPath & group, const EffectSettings &settings) const;
 

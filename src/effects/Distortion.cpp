@@ -262,23 +262,24 @@ RegistryPaths EffectDistortion::GetFactoryPresets() const
    return names;
 }
 
-bool EffectDistortion::LoadFactoryPreset(int id, EffectSettings &) const
+OptionalMessage
+EffectDistortion::LoadFactoryPreset(int id, EffectSettings &) const
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id);
 }
 
-bool EffectDistortion::DoLoadFactoryPreset(int id)
+OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
-      return false;
+      return {};
    }
 
    mParams = FactoryPresets[id].params;
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
 
-   return true;
+   return { nullptr };
 }
 
 

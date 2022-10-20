@@ -1222,16 +1222,15 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    return true;
 }
 
-
-bool VSTEffect::LoadUserPreset(
+OptionalMessage VSTEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    if (!LoadParameters(name, settings))
    {
-      return false;
+      return {};
    }
 
-   return true;
+   return { nullptr };
 }
 
 
@@ -1259,15 +1258,15 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
    return progs;
 }
 
-bool VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage
+VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   bool loadOK = const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
-
-   if (loadOK)
+   bool loadOK = const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id) &&
       FetchSettings(GetSettings(settings));
-
-   return loadOK;
+   if (!loadOK)
+      return {};
+   return { nullptr };
 }
 
 bool VSTEffect::DoLoadFactoryPreset(int id)
@@ -1858,7 +1857,7 @@ bool VSTEffectWrapper::IsCompatible(const VstPatchChunkInfo& info) const
            (info.numElements    == mAEffect->numParams);
 }
 
-bool VSTEffect::LoadParameters(
+OptionalMessage VSTEffect::LoadParameters(
    const RegistryPath & group, EffectSettings &settings) const
 {
    wxString value;
@@ -1874,7 +1873,7 @@ bool VSTEffect::LoadParameters(
 
    if ( ! IsCompatible(info) )
    {
-      return false;
+      return {};
    }
 
    if (GetConfig(*this,
@@ -1886,31 +1885,32 @@ bool VSTEffect::LoadParameters(
       if (len)
       {
          callSetChunk(true, len, buf.get(), &info);
-         FetchSettings(GetSettings(settings));
+         if (!FetchSettings(GetSettings(settings)))
+            return {};
       }
 
-      return true;
+      return { nullptr };
    }
 
    wxString parms;
    if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
    {
-      return false;
+      return {};
    }
 
    CommandParameters eap;
    if (!eap.SetParameters(parms))
    {
-      return false;
+      return {};
    }
 
-   const bool loadOK = LoadSettings(eap, settings);
+   const bool loadOK = LoadSettings(eap, settings) &&
+      FetchSettings(GetSettings(settings));
+   if (!loadOK)
+      return {};
 
-   if (loadOK)
-     FetchSettings(GetSettings(settings));
-
-   return loadOK;
+   return { nullptr };
 }
 
 

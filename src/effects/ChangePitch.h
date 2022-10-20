@@ -54,8 +54,9 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool LoadFactoryDefaults(EffectSettings &settings) const override;
-   bool DoLoadFactoryDefaults(EffectSettings &settings);
+   OptionalMessage LoadFactoryDefaults(EffectSettings &settings)
+      const override;
+   OptionalMessage DoLoadFactoryDefaults(EffectSettings &settings);
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;

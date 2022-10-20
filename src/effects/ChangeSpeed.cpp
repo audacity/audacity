@@ -139,13 +139,14 @@ EffectType EffectChangeSpeed::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectChangeSpeed::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage EffectChangeSpeed::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<EffectChangeSpeed&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
+OptionalMessage
+EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mFromVinyl = kVinyl_33AndAThird;
    mFormat = NumericConverter::DefaultSelectionFormat();
