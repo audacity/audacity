@@ -3875,8 +3875,6 @@ bool VSTEffectValidator::ValidateUI()
 
       FetchSettingsFromInstance(settings);
 
-      // TODO: return a message with what setting(s) have changed
-      // check out what AU does now 
       return GetInstance().MakeMessage();
    });
 
@@ -3904,6 +3902,10 @@ void VSTEffectValidator::OnClose()
 
    mParent = NULL;
    mDialog = NULL;
+
+   // Users might have moved controls since the last load preset -
+   // inform the framework about the changes!
+   ValidateUI();
 
    mAccess.Flush();
 }
