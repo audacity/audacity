@@ -2415,7 +2415,7 @@ void VSTEffectValidator::BuildFancy(EffectInstance& instance)
       return;
    }
 
-   if (!control->Create(mParent, this))
+   if (!control->Create(mParent, &vstEffInstance))
    {
       return;
    }
