@@ -1620,7 +1620,7 @@ void VSTEffect::ExportPresets(const EffectSettings& settings) const
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets(EffectSettings& settings)
+OptionalMessage VSTEffect::ImportPresets(EffectSettings& settings)
 {
    wxString path;
 
@@ -1641,7 +1641,7 @@ void VSTEffect::ImportPresets(EffectSettings& settings)
    // User canceled...
    if (path.empty())
    {
-      return;
+      return {};
    }
 
    wxFileName fn(path);
@@ -1668,7 +1668,7 @@ void VSTEffect::ImportPresets(EffectSettings& settings)
          wxOK | wxCENTRE,
          nullptr);
 
-         return;
+      return {};
    }
 
    if (!success)
@@ -1679,12 +1679,13 @@ void VSTEffect::ImportPresets(EffectSettings& settings)
          wxOK | wxCENTRE,
          nullptr);
 
-      return;
+      return {};
    }
 
-   FetchSettings(GetSettings(settings));
+   if (!FetchSettings(GetSettings(settings)))
+      return {};
 
-   return;
+   return { nullptr };
 }
 
 bool VSTEffect::HasOptions()

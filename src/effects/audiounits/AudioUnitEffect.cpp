@@ -496,7 +496,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
          mParent);
 }
 
-void AudioUnitEffect::ImportPresets(EffectSettings &settings)
+OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
 {
    // Generate the user domain path
    wxFileName fn;
@@ -521,15 +521,19 @@ void AudioUnitEffect::ImportPresets(EffectSettings &settings)
 
    // User canceled...
    if (path.empty())
-      return;
+      return {};
 
    auto msg = Import(GetSettings(settings), path);
-   if (!msg.empty())
+   if (!msg.empty()) {
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
+      return {};
+   }
+
+   return { nullptr };
 }
 
 bool AudioUnitEffect::HasOptions()
