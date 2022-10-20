@@ -1216,8 +1216,22 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
    return true;
 }
 
-bool VSTEffectInstance::RealtimeFinalize(EffectSettings &) noexcept
+bool VSTEffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
+   // User pressed stop: we need to send back to the framework any changes
+   // in user parameters that might have happened since pressing play,
+   // otherwise when the user presses play again, changes would be lost
+   // and the effect would go back to have its startup settings.
+   if (mpAccess)
+   {
+      mpAccess->ModifySettings([this](EffectSettings& settings)
+      {
+         FetchSettings(GetSettings(settings));
+
+         return MakeMessage();
+      });      
+   }
+
 return GuardedCall<bool>([&]{
 
    mRecruited = false;
@@ -3749,7 +3763,9 @@ VSTEffectValidator::VSTEffectValidator
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
 
-   mTimer = std::make_unique<VSTEffectTimer>(this);   
+   mTimer = std::make_unique<VSTEffectTimer>(this);
+
+   instance.mpAccess = &mAccess;
 }
 
 

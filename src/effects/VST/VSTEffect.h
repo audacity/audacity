@@ -565,6 +565,8 @@ public:
 
    std::unique_ptr<Message> MakeMessage(int id, double value) const;
 
+   EffectSettingsAccess* mpAccess{};
+
 private:
 
    void callProcessReplacing(
