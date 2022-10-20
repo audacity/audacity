@@ -64,7 +64,8 @@ public:
 
    EffectType GetType() const override;
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    RealtimeSince RealtimeSupport() const override;
 

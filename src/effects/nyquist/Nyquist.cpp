@@ -653,7 +653,8 @@ bool NyquistEffect::Init()
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
 
-         LoadUserPreset(key, dummySettings);
+         // Ignore failure
+         (void) LoadUserPreset(key, dummySettings);
       }
    }
 

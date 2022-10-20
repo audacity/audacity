@@ -81,12 +81,13 @@ public:
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;

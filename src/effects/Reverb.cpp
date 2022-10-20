@@ -444,16 +444,17 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
 }
 
 
-bool EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage
+EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
-      return false;
+      return {};
    }
 
    EffectReverb::GetSettings(settings) = FactoryPresets[id].preset;
 
-   return true;
+   return { nullptr };
 }
 
 // Effect implementation
