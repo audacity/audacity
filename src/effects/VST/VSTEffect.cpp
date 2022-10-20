@@ -2129,9 +2129,9 @@ void VSTEffectValidator::OnTimer()
       return;
    }
 
-   if (mVstVersion >= 2 && mWantsIdle)
+   if (GetInstance().mVstVersion >= 2 && mWantsIdle)
    {
-      int ret = callDispatcher(effIdle, 0, 0, NULL, 0.0);
+      int ret = GetInstance().callDispatcher(effIdle, 0, 0, NULL, 0.0);
       if (!ret)
       {
          mWantsIdle = false;
@@ -2140,7 +2140,7 @@ void VSTEffectValidator::OnTimer()
 
    if (mWantsEditIdle)
    {
-      callDispatcher(effEditIdle, 0, 0, NULL, 0.0);
+      GetInstance().callDispatcher(effEditIdle, 0, 0, NULL, 0.0);
    }
 }
 
@@ -3739,7 +3739,6 @@ VSTEffectValidator::VSTEffectValidator
    int                      numParams
 )
    : EffectUIValidator(effect, access),
-     VSTEffectWrapper(instance.mPath),
      mInstance(instance),
      mParent(pParent),
      mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
@@ -3749,8 +3748,6 @@ VSTEffectValidator::VSTEffectValidator
    // build a UI
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
-
-   Load();   
 
    mTimer = std::make_unique<VSTEffectTimer>(this);   
 }

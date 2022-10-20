@@ -592,7 +592,7 @@ private:
 
 
 class VSTEffectValidator final : public EffectUIValidator,
-                                 public VSTEffectWrapper
+                                 public VSTEffectUIWrapper
 {
 public:
     VSTEffectValidator(VSTEffectInstance&       instance,
