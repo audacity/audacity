@@ -1508,7 +1508,8 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 
    auto pParent = S.GetParent();
 
-   auto validator = std::make_unique<VSTEffectValidator>(dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent);
+   auto validator = std::make_unique<VSTEffectValidator>(
+      dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent, mAEffect->numParams);
 
    // Build the appropriate dialog type
    if (mGui)
@@ -2470,10 +2471,10 @@ void VSTEffectValidator::BuildPlain(EffectSettingsAccess &access, EffectType eff
       mParent->SetSizer(mainSizer.release());
    }
 
-   mNames.reinit(static_cast<size_t>(mAEffect->numParams));
-   mSliders.reinit(static_cast<size_t>(mAEffect->numParams));
-   mDisplays.reinit(static_cast<size_t>(mAEffect->numParams));
-   mLabels.reinit(static_cast<size_t>(mAEffect->numParams));
+   mNames.reinit(static_cast<size_t>   (mNumParams));
+   mSliders.reinit(static_cast<size_t> (mNumParams));
+   mDisplays.reinit(static_cast<size_t>(mNumParams));
+   mLabels.reinit(static_cast<size_t>  (mNumParams));
 
    {
       auto paramSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, scroller, _("Effect Settings"));
@@ -2506,9 +2507,9 @@ void VSTEffectValidator::BuildPlain(EffectSettingsAccess &access, EffectType eff
          int namew = 0;
          int w;
          int h;
-         for (int i = 0; i < mAEffect->numParams; i++)
+         for (int i = 0; i < mNumParams; i++)
          {
-            wxString text = GetString(effGetParamName, i);
+            wxString text = GetInstance().GetString(effGetParamName, i);
 
             if (text.Right(1) != wxT(':'))
             {
@@ -2524,7 +2525,7 @@ void VSTEffectValidator::BuildPlain(EffectSettingsAccess &access, EffectType eff
 
          scroller->GetTextExtent(wxT("HHHHHHHH"), &w, &h);
 
-         for (int i = 0; i < mAEffect->numParams; i++)
+         for (int i = 0; i < mNumParams; i++)
          {
             mNames[i] = safenew wxStaticText(scroller,
                wxID_ANY,
@@ -2584,9 +2585,9 @@ void VSTEffectValidator::RefreshParameters(int skip) const
       return;
    }
 
-   for (int i = 0; i < mAEffect->numParams; i++)
+   for (int i = 0; i < mNumParams; i++)
    {
-      wxString text = GetString(effGetParamName, i);
+      wxString text = GetInstance().GetString(effGetParamName, i);
 
       text = text.Trim(true).Trim(false);
 
@@ -3746,13 +3747,15 @@ VSTEffectValidator::VSTEffectValidator
    VSTEffectInstance&       instance,
    EffectUIClientInterface& effect,
    EffectSettingsAccess&    access,
-   wxWindow*                pParent
+   wxWindow*                pParent,
+   int                      numParams
 )
    : EffectUIValidator(effect, access),
      VSTEffectWrapper(instance.mPath),
      mInstance(instance),
      mParent(pParent),
-     mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) )
+     mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
+     mNumParams(numParams)
 {   
    // Make the settings of the instance up to date before using it to
    // build a UI

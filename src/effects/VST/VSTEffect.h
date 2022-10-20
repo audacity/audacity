@@ -591,7 +591,8 @@ public:
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
                        EffectSettingsAccess&    access,
-                       wxWindow*                pParent
+                       wxWindow*                pParent,
+                       int                      numParams
                       );
 
    ~VSTEffectValidator() override;
@@ -650,6 +651,8 @@ private:
    wxWeakRef<wxDialog> mDialog;
    
    VSTControl* mControl;
+
+   int mNumParams{ 0 };
 };
 
 
