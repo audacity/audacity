@@ -3703,11 +3703,10 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 bool VSTEffectValidator::UpdateUI()
 {
-   //if ( ! StoreSettingsToInstance(mAccess.Get()) )
-   //   return false;
-
-   // Update the controls on the GUI too
-   if ( ! StoreSettings(mAccess.Get()) )
+   // The plugin fancy GUI is woned by the instance, 
+   // so we need to set the settings to it
+   //
+   if ( ! StoreSettingsToInstance(mAccess.Get()) )
       return false;
 
    // Update the controls on the plain UI
@@ -3751,8 +3750,7 @@ VSTEffectValidator::VSTEffectValidator
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
 
-   Load();
-   StoreSettings(settings);
+   Load();   
 
    mTimer = std::make_unique<VSTEffectTimer>(this);   
 }
@@ -3865,14 +3863,6 @@ bool VSTEffectValidator::FetchSettingsFromInstance(EffectSettings& settings)
 bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
 {
    return mInstance.StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
-}
-
-
-bool VSTEffectValidator::StoreSettings(const EffectSettings& settings)
-{   
-   return VSTEffectWrapper::StoreSettings(
       // Change this when GetSettings becomes a static function
       static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
 }

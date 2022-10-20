@@ -639,8 +639,6 @@ private:
 
    void OnSizeWindow(wxCommandEvent& evt);
 
-   bool StoreSettings(const EffectSettings& settings);
-
    int  mTimerGuard{ 0 };
 
    bool mWantsEditIdle{ false };
