@@ -685,10 +685,6 @@ list( APPEND SOURCES
       export/ExportMultiple.cpp
       export/ExportMultiple.h
 
-      $<$<BOOL:${USE_WAVPACK}>:
-         export/ExportWavPack.cpp
-      >
-
       # Import
 
       import/FormatClassifier.cpp
@@ -721,10 +717,6 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_MIDI}>:
          import/ImportMIDI.cpp
          import/ImportMIDI.h
-      >
-
-      $<$<BOOL:${USE_WAVPACK}>:
-         import/ImportWavPack.cpp
       >
 
       # Menus
@@ -1207,7 +1199,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_common>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
-      $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>

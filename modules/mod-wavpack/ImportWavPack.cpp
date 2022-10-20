@@ -20,8 +20,8 @@
 
 *//*******************************************************************/
 
-#include "Import.h"
-#include "ImportPlugin.h"
+#include "import/Import.h"
+#include "import/ImportPlugin.h"
 
 #include<wx/string.h>
 #include<wx/log.h>
@@ -29,10 +29,10 @@
 #include<wavpack/wavpack.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
-#include "../widgets/ProgressDialog.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "Tags.h"
+#include "WaveTrack.h"
+#include "widgets/ProgressDialog.h"
+#include "widgets/AudacityMessageBox.h"
 #include "CodeConversions.h"
 
 #define DESC XO("WavPack files")
@@ -315,3 +315,6 @@ WavPackImportFileHandle::~WavPackImportFileHandle()
 {
    WavpackCloseFile(mWavPackContext);
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES

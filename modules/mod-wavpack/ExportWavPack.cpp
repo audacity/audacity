@@ -15,7 +15,7 @@
 **********************************************************************/
 
 
-#include "Export.h"
+#include "export/Export.h"
 #include "wxFileNameWrapper.h"
 #include "Prefs.h"
 #include "Mix.h"
@@ -26,13 +26,13 @@
 #include <wx/choice.h>
 #include <wx/stream.h>
 
-#include "../ShuttleGui.h"
-#include "../ProjectSettings.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "ShuttleGui.h"
+#include "ProjectSettings.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ProgressDialog.h"
 #include "Track.h"
 #include "ProjectRate.h"
-#include "../Tags.h"
+#include "Tags.h"
 
 //---------------------------------------------------------------------------
 // ExportWavPackOptions
