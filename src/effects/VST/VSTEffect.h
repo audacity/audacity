@@ -104,6 +104,7 @@ struct VSTEffectUIWrapper
 {
    virtual void NeedIdle();
    virtual void SizeWindow(int w, int h);
+   virtual void Automate(int index, float value);
 };
 
 
@@ -279,9 +280,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    
    virtual void UpdateDisplay();
    
-
-   // - Automate is called by the callback whenever a control on the GUI is moved
-   virtual void Automate(int index, float value);
 
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
@@ -567,7 +565,18 @@ public:
 
    std::unique_ptr<Message> MakeMessage(int id, double value) const;
 
+   // TODO remove this later!
    EffectSettingsAccess* mpAccess{};
+
+   // VSTEffectUIWrapper overrides
+
+   void Automate(int index, float value) override;
+   void NeedIdle()                       override;
+   void SizeWindow(int w, int h)         override;
+
+   // The overrides above will forward calls to them to the corresponding
+   // overrides in the Validator which owns the instance - this sets it.
+   void SetOwningValidator(VSTEffectUIWrapper* vi);
 
 private:
 
@@ -592,6 +601,8 @@ private:
    bool mReady{ false };
 
    bool mRecruited{ false };
+
+   VSTEffectUIWrapper* mpOwningValidator{};
 };
 
 
@@ -623,6 +634,8 @@ public:
    std::unique_ptr<VSTEffectTimer> mTimer;   
 
    void RefreshParameters(int skip = -1) const;
+
+   void Automate(int index, float value) override;
 
    void OnSlider(wxCommandEvent& evt);    
 

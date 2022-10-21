@@ -1569,8 +1569,15 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 
    auto pParent = S.GetParent();
 
+   auto& vst2Instance = dynamic_cast<VSTEffectInstance&>(instance);
+
    auto validator = std::make_unique<VSTEffectValidator>(
-      dynamic_cast<VSTEffectInstance&>(instance), *this, access, pParent, mAEffect->numParams);
+      vst2Instance, *this, access, pParent, mAEffect->numParams);
+
+   // Also let the instance know about the validator, so it can forward
+   // to it calls coming from the vst callback
+   vst2Instance.SetOwningValidator(validator.get());
+
 
    // Build the appropriate dialog type
    if (mGui)
@@ -2211,6 +2218,14 @@ void VSTEffectUIWrapper::NeedIdle()
 {   
 }
 
+void VSTEffectInstance::NeedIdle()
+{
+   if (mpOwningValidator)
+   {
+      mpOwningValidator->NeedIdle();
+   }
+}
+
 void VSTEffectValidator::NeedIdle()
 {
    mWantsIdle = true;
@@ -2277,6 +2292,17 @@ void VSTEffectInstance::PowerOff()
    }
 }
 
+void VSTEffectUIWrapper::SizeWindow(int w, int h)
+{
+}
+
+void VSTEffectInstance::SizeWindow(int w, int h)
+{
+   if (mpOwningValidator)
+   {
+      mpOwningValidator->SizeWindow(w, h);
+   }
+}
 
 void VSTEffectValidator::SizeWindow(int w, int h)
 {
@@ -3796,7 +3822,11 @@ EffectSettings VSTEffect::MakeSettings() const
    return EffectSettings::Make<VSTEffectSettings>(std::move(settings));
 }
 
-VSTEffectValidator::~VSTEffectValidator() = default;
+VSTEffectValidator::~VSTEffectValidator()
+{
+   // Just for extra safety
+   GetInstance().SetOwningValidator(nullptr);
+}
 
 
 VSTEffectValidator::VSTEffectValidator
@@ -3835,22 +3865,30 @@ void VSTEffectWrapper::UpdateDisplay()
 {
 }
 
-void VSTEffectUIWrapper::SizeWindow(int w, int h)
+
+void VSTEffectUIWrapper::Automate(int index, float value)
 {
 }
 
-void VSTEffectWrapper::Automate(int index, float value)
+void VSTEffectInstance::Automate(int index, float value)
 {
-   // This is now called only for the instance;
-   // TODO (?) we'd need to copy here part of what is done in VSTEffectValidator::Automate
-   // - we need to send back to the framework the new value for the parameter
+   if (mpOwningValidator)
+   {
+      mpOwningValidator->Automate(index, value);
+   }
+}
+
+
+void VSTEffectValidator::Automate(int index, float value)
+{
+
+
 }
 
 
 /*
-* removed because now it is never called -
-  but temporarily kept for reference
-
+* TODO remove this later - only here for reference
+* 
 void VSTEffectValidator::Automate(int index, float value)
 {
    mAccess.ModifySettings([&](EffectSettings& settings)
@@ -3920,6 +3958,12 @@ VSTEffectInstance::~VSTEffectInstance()
 }
 
 
+void VSTEffectInstance::SetOwningValidator(VSTEffectUIWrapper* vi)
+{
+   mpOwningValidator = vi;
+}
+
+
 bool VSTEffectValidator::FetchSettingsFromInstance(EffectSettings& settings)
 {
    return mInstance.FetchSettings(
@@ -3963,6 +4007,11 @@ void VSTEffectValidator::OnClose()
    mControl->Close();
 #endif
 
+   // Tell the instance not to use me anymore - if we do not do this,
+   // hiding the gui and then showing it again *while playing*, would leave
+   // the instance with a dangling pointer to the old owning validator
+   // for a fraction of time, thereby causing a crash.
+   GetInstance().SetOwningValidator(nullptr);
 
    NeedEditIdle(false);
 
