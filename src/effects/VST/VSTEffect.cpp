@@ -928,6 +928,8 @@ bool VSTEffectWrapper::TransferSettingsContents
 
    assert(dst.mParamsMap.size() == src.mParamsMap.size());
 
+   bool discard = false;
+
    // Do the chunk first
    if (!src.mChunk.empty())
    {
@@ -936,6 +938,10 @@ bool VSTEffectWrapper::TransferSettingsContents
       {
          src.mChunk = "";
       }
+
+      // If a new chunk is merged, any unconsumed slider movements in the
+      // parameters map are discarded before the other thread sees them
+      discard = doMerge;
    }
    else if(!doMerge)
    {
@@ -954,24 +960,27 @@ bool VSTEffectWrapper::TransferSettingsContents
       auto& [dstKey, dstValue] = *dstIter;
       assert(dstKey == key);
 
-      if (srcValue)
+      if (discard || (!srcValue && !doMerge))
       {
-         dstValue = srcValue;
-
-         if (doMove)
-         {
-            srcValue = std::nullopt;
-         }
-      }
-      else if (!doMerge)
-      {
+         // Merging a chunk message, or else,
          // source has no value, and we do not want to merge (i.e. keep any
          // dest value that might be there) - delete the destination value
          dstValue = std::nullopt;
       }
+      else if (srcValue)
+      {
+         dstValue = srcValue;
+      }
+
+      if (doMove)
+      {
+         srcValue = std::nullopt;
+      }
 
       dstIter++;
-   }   
+   }
+
+   assert(dstIter == dstEnd);
 
    return true;
 }
