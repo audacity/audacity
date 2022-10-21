@@ -1228,7 +1228,10 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
       return true;
    }
 
-   auto slave = std::make_unique<VSTEffectInstance>(GetEffect(), mPath, mBlockSize, mUserBlockSize, mUseLatency);
+   auto &effect = static_cast<const PerTrackEffect &>(mProcessor);
+   auto slave = std::make_unique<VSTEffectInstance>(
+      const_cast<PerTrackEffect &>(effect),
+      mPath, mBlockSize, mUserBlockSize, mUseLatency);
 
    slave->SetBlockSize(mBlockSize);
 
