@@ -203,6 +203,9 @@ void UndoManager::ModifyState(const TrackList &l,
 //   SonifyEndModifyState();
 
    EnqueueMessage({ UndoRedoMessage::Modified });
+
+   if (saved == current)
+      saved = -1;
 }
 
 void UndoManager::RenameState( int state,
