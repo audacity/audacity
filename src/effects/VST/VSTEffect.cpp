@@ -1017,11 +1017,23 @@ namespace
       void Merge(Message&& src) override;
 
       VSTEffectSettings settings;
+
+      // Not copied or merged
+      std::vector<char> scratch;
+      char *GetScratch(size_t size);
    };
 }
 
 
 VSTEffectMessage::~VSTEffectMessage() = default;
+
+char *VSTEffectMessage::GetScratch(size_t size)
+{
+   // This function causes infrequent growth of a reusable scratch array
+   // Sufficient space for the Base64 decoding of size
+   scratch.resize(size / 4 * 3);
+   return scratch.data();
+}
 
 auto VSTEffectMessage::Clone() const -> std::unique_ptr<Message>
 {
@@ -1281,21 +1293,22 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
    if (!package.pMessage)
       return true;
 
-   auto& settings = static_cast<VSTEffectMessage&>(*package.pMessage).settings;
+   auto& message = static_cast<VSTEffectMessage&>(*package.pMessage);
+   auto& settings = message.settings;
 
    auto &chunk = settings.mChunk;
    if (!chunk.empty()) {
       // Apply the chunk first
 
       // TODO avoid this allocation
-      ArrayOf<char> buf{ chunk.length() / 4 * 3 };
+      auto scratch = message.GetScratch(chunk.length());
 
-      if (int len = Base64::Decode(chunk, buf.get())) {
+      if (int len = Base64::Decode(chunk, scratch)) {
          VstPatchChunkInfo info = {
             1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
-         callSetChunk(true, len, buf.get(), &info);
+         callSetChunk(true, len, scratch, &info);
          for (auto& slave : mSlaves)
-            slave->callSetChunk(true, len, buf.get(), &info);
+            slave->callSetChunk(true, len, scratch, &info);
       }
 
       // Don't apply the chunk again until another message supplies a chunk
