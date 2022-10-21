@@ -111,6 +111,20 @@ struct VSTEffectUIWrapper
 
 struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VSTEffectUIWrapper
 {
+   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
+   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
    explicit VSTEffectWrapper(const PluginPath& path)
       : mPath(path)
       , mMainThreadId{ std::this_thread::get_id() }
@@ -399,21 +413,6 @@ class VSTEffect final
 
    EffectSettings MakeSettings() const override;
 
-   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VSTEffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-
-   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VSTEffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-
-
 protected:
    
    void UpdateDisplay() override;
@@ -556,14 +555,6 @@ public:
 
    size_t mBlockSize{ 8192 };
 
-   // Temporarily made public
-   VSTEffect& GetEffect() const
-   {
-      // Tolerate const_cast in this class while it sun-sets
-      return static_cast<VSTEffect&>(
-         const_cast<PerTrackEffect&>(mProcessor));
-   }
-
    std::unique_ptr<Message> MakeMessage() const override;
 
    std::unique_ptr<Message> MakeMessage(int id, double value) const;
@@ -582,15 +573,6 @@ private:
 
    void callProcessReplacing(
       const float* const* inputs, float* const* outputs, int sampleframes);
-
-   VSTEffectSettings& GetSettings(EffectSettings& settings) const
-   {
-      return GetSettings(settings);
-   }
-
-   const VSTEffectSettings& GetSettings(const EffectSettings& settings) const {
-      return GetSettings(settings);
-   }
 
    VSTInstanceArray mSlaves;
 
