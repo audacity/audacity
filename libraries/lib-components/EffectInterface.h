@@ -52,6 +52,8 @@
 #include <type_traits>
 #include <wx/event.h>
 
+#include "Observer.h"
+
 class ShuttleGui;
 template<bool Const> class SettingsVisitorBase;
 using SettingsVisitor = SettingsVisitorBase<false>;
@@ -627,6 +629,18 @@ public:
 
 };
 
+/*************************************************************************************/ /**
+
+ \class EffectSettingChanged
+
+ \brief Message sent by validator when a setting is changed by a user
+
+ *******************************************************************************************/
+struct COMPONENTS_API EffectSettingChanged final
+{
+   size_t index { size_t(-1) };
+   float newValue {};
+};
 /*************************************************************************************//**
 
 \class EffectUIValidator
@@ -635,6 +649,7 @@ public:
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIValidator /* not final */
+    : public Observer::Publisher<EffectSettingChanged>
 {
 public:
    EffectUIValidator(
