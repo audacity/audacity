@@ -592,6 +592,10 @@ class VSTEffectValidator final : public EffectUIValidator,
                                  public VSTEffectUIWrapper
 {
 public:
+   // Make message carrying all the information in settings, including chunks
+   static std::unique_ptr<EffectInstance::Message>
+      MakeMessage(VSTEffectSettings &settings);
+
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
                        EffectSettingsAccess&    access,

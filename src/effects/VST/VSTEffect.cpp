@@ -967,7 +967,7 @@ bool VSTEffectWrapper::TransferSettingsContents
          // dest value that might be there) - delete the destination value
          dstValue = std::nullopt;
       }
-      else if (srcValue)
+      if (srcValue)
       {
          dstValue = srcValue;
       }
@@ -3817,6 +3817,12 @@ VSTEffectValidator::~VSTEffectValidator()
 }
 
 
+std::unique_ptr<EffectInstance::Message> VSTEffectValidator::MakeMessage(
+   VSTEffectSettings &settings)
+{
+   return std::make_unique<VSTEffectMessage>(settings);
+}
+
 VSTEffectValidator::VSTEffectValidator
 (
    VSTEffectInstance&       instance,
@@ -3830,9 +3836,12 @@ VSTEffectValidator::VSTEffectValidator
      mParent(pParent),
      mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
      mNumParams(numParams)
-{   
-   // Make the settings of the instance up to date before using it to
-   // build a UI
+{
+   // In case of nondestructive processing, put an initial message in the
+   // queue for the instance
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      return MakeMessage(VSTEffectInstance::GetSettings(settings));
+   });
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
 
