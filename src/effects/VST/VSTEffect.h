@@ -91,9 +91,9 @@ struct VSTEffectSettings
    // the Config or failing to load, we fall back to loading single parameters (ID, value) pairs.
    //
    // It looks like a plugin might not support this (if their effFlagsProgramChunks bit is off)
-   // this is why it is made optional.
+   // If not, then hold an empty vector
    //
-   std::optional<wxString> mChunk;
+   std::vector<char> mChunk;
 
    // Fallback data used when the chunk is not available.
    std::map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
