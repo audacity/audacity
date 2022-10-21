@@ -1017,22 +1017,18 @@ namespace
       void Merge(Message&& src) override;
 
       VSTEffectSettings settings;
-
-      // Not copied or merged
-      std::vector<char> scratch;
-      char *GetScratch(size_t size);
    };
 }
 
 
 VSTEffectMessage::~VSTEffectMessage() = default;
 
-char *VSTEffectMessage::GetScratch(size_t size)
+char *VSTEffectInstance::GetScratch(size_t size)
 {
    // This function causes infrequent growth of a reusable scratch array
    // Sufficient space for the Base64 decoding of size
-   scratch.resize(size / 4 * 3);
-   return scratch.data();
+   mScratch.resize(size / 4 * 3);
+   return mScratch.data();
 }
 
 auto VSTEffectMessage::Clone() const -> std::unique_ptr<Message>
@@ -1216,6 +1212,9 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 
 bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
+   auto &chunk = GetSettings(settings).mChunk;
+   if (!chunk.empty())
+      GetScratch(2 * chunk.size());
    return ProcessInitialize(settings, sampleRate, {});
 }
 
@@ -1243,6 +1242,7 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
 return GuardedCall<bool>([&]{
+   std::vector<char>{}.swap(mScratch);
 
    mRecruited = false;
 
@@ -1286,8 +1286,7 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
    if (!chunk.empty()) {
       // Apply the chunk first
 
-      // TODO avoid this allocation
-      auto scratch = message.GetScratch(chunk.length());
+      auto scratch = GetScratch(chunk.length());
 
       if (int len = Base64::Decode(chunk, scratch)) {
          VstPatchChunkInfo info = {
@@ -3784,7 +3783,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 bool VSTEffectValidator::UpdateUI()
 {
-   // The plugin fancy GUI is woned by the instance, 
+   // The plugin fancy GUI is owned by the instance,
    // so we need to set the settings to it
    //
    if ( ! StoreSettingsToInstance(mAccess.Get()) )

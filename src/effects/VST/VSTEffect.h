@@ -591,6 +591,9 @@ private:
 
    VSTInstanceArray mSlaves;
 
+   std::vector<char> mScratch;
+   char *GetScratch(size_t size);
+
    bool mHasPower{ false };
 
    size_t mUserBlockSize{ mBlockSize };
