@@ -1242,20 +1242,6 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
-   // User pressed stop: we need to send back to the framework any changes
-   // in user parameters that might have happened since pressing play,
-   // otherwise when the user presses play again, changes would be lost
-   // and the effect would go back to have its startup settings.
-   if (mpAccess)
-   {
-      mpAccess->ModifySettings([this](EffectSettings& settings)
-      {
-         FetchSettings(GetSettings(settings));
-
-         return MakeMessage();
-      });      
-   }
-
 return GuardedCall<bool>([&]{
 
    mRecruited = false;
@@ -3849,8 +3835,6 @@ VSTEffectValidator::VSTEffectValidator
    StoreSettingsToInstance(settings);
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
-
-   instance.mpAccess = &mAccess;
 }
 
 
@@ -3881,26 +3865,15 @@ void VSTEffectInstance::Automate(int index, float value)
 
 void VSTEffectValidator::Automate(int index, float value)
 {
-
-
-}
-
-
-/*
-* TODO remove this later - only here for reference
-* 
-void VSTEffectValidator::Automate(int index, float value)
-{
    mAccess.ModifySettings([&](EffectSettings& settings)
    {
       // Write the parameter change in the settings
       // (this to preserve stickiness when the effect is closed/reopened)
-      // TOFIX stickiness is still not preserved
       auto& vst2Settings = VSTEffect::GetSettings(settings);
 
-      ForEachParameter
+      GetInstance().ForEachParameter
       (
-         [&](const ParameterInfo& pi)
+         [&](const VSTEffectWrapper::ParameterInfo& pi)
          {
             if (pi.mID == index)
             {
@@ -3918,7 +3891,7 @@ void VSTEffectValidator::Automate(int index, float value)
       return result;
    });
 }
-*/
+
 
 
 VSTEffectInstance::VSTEffectInstance
@@ -4022,10 +3995,6 @@ void VSTEffectValidator::OnClose()
 
    mParent = NULL;
    mDialog = NULL;
-
-   // Users might have moved controls since the last load preset -
-   // inform the framework about the changes!
-   ValidateUI();
 
    mAccess.Flush();
 }

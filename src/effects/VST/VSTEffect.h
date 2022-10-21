@@ -565,9 +565,6 @@ public:
 
    std::unique_ptr<Message> MakeMessage(int id, double value) const;
 
-   // TODO remove this later!
-   EffectSettingsAccess* mpAccess{};
-
    // VSTEffectUIWrapper overrides
 
    void Automate(int index, float value) override;
