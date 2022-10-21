@@ -1281,8 +1281,31 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
    if (!package.pMessage)
       return true;
 
-   auto& paramsMap = static_cast<VSTEffectMessage&>(*package.pMessage).settings.mParamsMap;
+   auto& settings = static_cast<VSTEffectMessage&>(*package.pMessage).settings;
 
+   auto &chunk = settings.mChunk;
+   if (!chunk.empty()) {
+      // Apply the chunk first
+
+      // TODO avoid this allocation
+      ArrayOf<char> buf{ chunk.length() / 4 * 3 };
+
+      if (int len = Base64::Decode(chunk, buf.get())) {
+         VstPatchChunkInfo info = {
+            1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+         callSetChunk(true, len, buf.get(), &info);
+         for (auto& slave : mSlaves)
+            slave->callSetChunk(true, len, buf.get(), &info);
+      }
+
+      // Don't apply the chunk again until another message supplies a chunk
+      chunk = "";
+
+      // Don't return yet.  Maybe some slider movements also accumulated after
+      // the change of the chunk.
+   }
+
+   auto& paramsMap = settings.mParamsMap;
    for (auto& mapItem : paramsMap)
    {
       if (mapItem.second)
