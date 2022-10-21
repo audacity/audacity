@@ -929,17 +929,17 @@ bool VSTEffectWrapper::TransferSettingsContents
    assert(dst.mParamsMap.size() == src.mParamsMap.size());
 
    // Do the chunk first
-   if (src.mChunk)
+   if (!src.mChunk.empty())
    {
       dst.mChunk = src.mChunk;
       if (doMove)
       {
-         src.mChunk = std::nullopt;
+         src.mChunk = "";
       }
    }
    else if(!doMerge)
    {
-      dst.mChunk = std::nullopt;
+      dst.mChunk = "";
    }
    
 
@@ -1434,7 +1434,7 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
       } while (parms.GetNextEntry(key, index));
    }
 
-   vstSettings.mChunk     = std::nullopt;
+   vstSettings.mChunk     = "";
    vstSettings.mVersion   = VSTEffectWrapper::mVersion;
    vstSettings.mUniqueID  = VSTEffectWrapper::mAEffect->uniqueID;
    vstSettings.mNumParams = VSTEffectWrapper::mAEffect->numParams;
@@ -3643,7 +3643,7 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
    vstSettings.mNumParams = mAEffect->numParams;
 
    // Get the chunk (if supported)
-   vstSettings.mChunk = std::nullopt;
+   vstSettings.mChunk = "";
 
    if (doFetch)
    {
@@ -3674,11 +3674,11 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 
    // Try using the chunk first (if available)
-   if (vstSettings.mChunk)
+   if (!vstSettings.mChunk.empty())
    {
-      ArrayOf<char> buf{ vstSettings.mChunk->length() / 4 * 3 };
+      ArrayOf<char> buf{ vstSettings.mChunk.length() / 4 * 3 };
 
-      int len = Base64::Decode(*vstSettings.mChunk, buf.get());
+      int len = Base64::Decode(vstSettings.mChunk, buf.get());
       if (len)
       {
          VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
