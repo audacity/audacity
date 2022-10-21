@@ -1016,7 +1016,10 @@ VSTEffectMessage::~VSTEffectMessage() = default;
 
 auto VSTEffectMessage::Clone() const -> std::unique_ptr<Message>
 {
-   return std::make_unique<VSTEffectMessage>(*this);
+   auto result = std::make_unique<VSTEffectMessage>(*this);
+   // Make sure of the chunk string capacity
+   result->settings.mChunk.reserve(this->settings.mChunk.capacity());
+   return result;
 }
 
 void VSTEffectMessage::Assign(Message && src)
@@ -3645,16 +3648,22 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
    // Get the chunk (if supported)
    vstSettings.mChunk = "";
 
-   if (doFetch)
+   if (mAEffect->flags & effFlagsProgramChunks)
    {
-      if (mAEffect->flags & effFlagsProgramChunks)
+      void* chunk = NULL;
+      int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      if (clen > 0)
       {
-         void* chunk = NULL;
-         int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
-         if (clen > 0)
-         {
-            vstSettings.mChunk = Base64::Encode(chunk, clen);
-         }
+         vstSettings.mChunk = Base64::Encode(chunk, clen);
+      }
+
+      if (!doFetch)
+      {
+         // Don't keep the contents, but keep a sufficiently allocated string,
+         // with some extra space in case chunk length might vary
+         auto size = vstSettings.mChunk.size();
+         vstSettings.mChunk = "";
+         vstSettings.mChunk.reserve(2 * size);
       }
    }
 
