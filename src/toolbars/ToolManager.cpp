@@ -447,7 +447,6 @@ void ToolManager::CreateWindows()
    // All have the project as parent window
    wxASSERT(parent);
 
-   size_t ii = 0;
    for (const auto &factory : RegisteredToolbarFactory::GetFactories()) {
       if (factory) {
          auto bar = factory( *parent );
@@ -459,14 +458,15 @@ void ToolManager::CreateWindows()
                bar->Destroy();
                continue;
             }
-            // TODO: assignment of indices independently of registration order
-            bar->SetIndex(ii++);
             slot = std::move(bar);
          }
       }
       else
          wxASSERT( false );
    }
+
+   //! Assign (non-persistent!) sequential ids to the toolbars
+   ForEach([ii = 0](ToolBar *bar) mutable { bar->SetIndex(ii++); });
 
    // We own the timer
    mTimer.SetOwner( this );

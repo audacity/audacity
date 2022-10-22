@@ -93,15 +93,13 @@ EnumValueSymbols ScreenshotCommand::kCaptureWhatStrings()
        */
       auto pProject = ::GetActiveProject().lock();
       if ( pProject ) {
+         // Toolbars will be sorted by textual ID.
+         // Macro programmers do use these English ids no matter what their
+         // preferred language is.
          ToolManager::Get(*pProject).ForEach([&](ToolBar *pBar){
             mSymbols.emplace_back( pBar->GetSection(), pBar->GetLabel() );
          });
       }
-      // Sort toolbars by textual ID, for determinacy (in case of unpredictable
-      // order of registration) of the controls in the macro editing dialog.
-      // Macro programmeers do use these English ids no matter what their
-      // preferred language is.
-      sort(mSymbols.begin() + nFixed, mSymbols.end());
    }
 
    return mSymbols;

@@ -97,8 +97,9 @@ class AUDACITY_DLL_API ToolManager final
 
    bool RestoreFocus();
 
+   //! Visit bars, lexicographically by their textual ids
    template< typename F >
-   void ForEach( const F &fun )
+   void ForEach(F &&fun)
    {
       std::for_each(std::begin(mBars), std::end(mBars), [&fun](auto &pair){
          fun(pair.second.get());
@@ -156,6 +157,7 @@ class AUDACITY_DLL_API ToolManager final
    ToolDock *mTopDock{};
    ToolDock *mBotDock{};
 
+   //! map not unordered_map, for the promise made by ForEach
    std::map<Identifier, ToolBar::Holder> mBars;
 
    wxPoint mPrevPosition {};
