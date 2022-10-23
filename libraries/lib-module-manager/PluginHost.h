@@ -56,7 +56,7 @@ public:
    static bool Start(int connectPort);
 
    ///Returns true if current process is considered to be a plugin host process
-   static bool IsHostProcess(int argc, wxChar** argv);
+   static bool IsHostProcess();
 
    explicit PluginHost(int connectPort);
 

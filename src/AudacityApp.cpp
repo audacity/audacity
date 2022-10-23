@@ -78,6 +78,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "AudioIO.h"
 #include "Benchmark.h"
 #include "Clipboard.h"
+#include "CommandLineArgs.h"
 #include "CrashReport.h" // for HAS_CRASH_REPORT
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
@@ -808,15 +809,16 @@ int main(int argc, char *argv[])
 {
    wxDISABLE_DEBUG_SUPPORT();
 
-   wxCmdLineArgsArray argsArray;
-   argsArray.Init(argc, argv);
-   if(PluginHost::IsHostProcess(argc, argsArray))
+   CommandLineArgs::argc = argc;
+   CommandLineArgs::argv = argv;
+
+   if(PluginHost::IsHostProcess())
    {
       sOSXIsGUIApplication = false;
       ProcessSerialNumber psn = { 0, kCurrentProcess };
       TransformProcessType(&psn, kProcessTransformToUIElementApplication);
    }
-   
+
    return wxEntry(argc, argv);
 }
 
@@ -829,6 +831,9 @@ IMPLEMENT_WX_THEME_SUPPORT
 
 int main(int argc, char *argv[])
 {
+   CommandLineArgs::argc = argc;
+   CommandLineArgs::argv = argv;
+
    wxDISABLE_DEBUG_SUPPORT();
 
    // Bug #1986 workaround - This doesn't actually reduce the number of 
@@ -849,6 +854,9 @@ int main(int argc, char *argv[])
 wxIMPLEMENT_WX_THEME_SUPPORT
 int main(int argc, char *argv[])
 {
+   CommandLineArgs::argc = argc;
+   CommandLineArgs::argv = argv;
+
    wxDISABLE_DEBUG_SUPPORT();
 
    return wxEntry(argc, argv);
@@ -863,6 +871,10 @@ extern "C" int WINAPI WinMain(HINSTANCE hInstance,
                             wxCmdLineArgType lpCmdLine,
                             int nCmdShow)
 {
+   static CommandLineArgs::MSWParser wxArgs;
+   CommandLineArgs::argc = wxArgs.argc;
+   CommandLineArgs::argv = wxArgs.argv.data();
+
    wxDISABLE_DEBUG_SUPPORT();
 
    return wxEntry(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
@@ -1167,7 +1179,7 @@ AudacityApp::AudacityApp()
 
 bool AudacityApp::Initialize(int& argc, wxChar** argv)
 {
-   if(!PluginHost::IsHostProcess(argc, argv))
+   if(!PluginHost::IsHostProcess())
    {
 #if defined(USE_BREAKPAD)
       InitBreakpad();
