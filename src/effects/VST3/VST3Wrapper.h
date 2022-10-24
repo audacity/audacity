@@ -52,7 +52,6 @@ public:
 
 class VST3Wrapper
 {
-   EffectSettings mDefaultSettings;
    VST3::Hosting::Module& mModule;
 public:
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
@@ -110,7 +109,8 @@ public:
 
    Steinberg::int32 GetLatencySamples() const;
 
-   static EffectSettings MakeSettings();
+   static EffectSettings MakeSettings(
+      const EffectSettings &defaultSettings);
 
    static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);
    static void SaveSettings(const EffectSettings& settings, CommandParameters& parms);

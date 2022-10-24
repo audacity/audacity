@@ -46,6 +46,9 @@ struct VST3EffectSettings
    std::optional<wxString> processorState;
    ///Holds the last known controller state, rarely updates (usually only on UI or preset change)
    std::optional<wxString> controllerState;
+
+   ///Points to a common Settings object in the stateless effect
+   const VST3EffectSettings *defaultSettings{};
 };
 
 std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> ParametersFromString(const wxString& str)
@@ -409,9 +412,6 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
       stateStream.seek(0, IBStream::kIBSeekSet, &unused);
       mEditController->setComponentState(&stateStream);
    }
-
-   mDefaultSettings = MakeSettings();
-   StoreSettings(mDefaultSettings);
 }
 
 VST3Wrapper::~VST3Wrapper()
@@ -448,8 +448,9 @@ void VST3Wrapper::FetchSettings(EffectSettings& settings)
 
       //Restore state
       const auto* vst3settings = &GetSettings(settings);
-      if(!vst3settings->processorState.has_value())
-         vst3settings = &GetSettings(mDefaultSettings);
+      if(!vst3settings->processorState.has_value() &&
+         vst3settings->defaultSettings)
+         vst3settings = vst3settings->defaultSettings;
 
       if(vst3settings->processorState.has_value())
       {
@@ -740,9 +741,12 @@ Steinberg::int32 VST3Wrapper::GetLatencySamples() const
    return mAudioProcessor->getLatencySamples();
 }
 
-EffectSettings VST3Wrapper::MakeSettings()
+EffectSettings VST3Wrapper::MakeSettings(const EffectSettings &defaultSettings)
 {
-   return EffectSettings::Make<VST3EffectSettings>();
+   VST3EffectSettings result;
+   if (defaultSettings.has_value())
+      result.defaultSettings = &GetSettings(defaultSettings);
+   return EffectSettings::Make<VST3EffectSettings>(std::move(result));
 }
 
 void VST3Wrapper::LoadSettings(const CommandParameters& parms, EffectSettings& settings)

@@ -50,6 +50,8 @@ class VST3Effect final : public PerTrackEffect
    mutable bool mRescanFactoryPresets { true };
    mutable RegistryPaths mFactoryPresets;
 
+   EffectSettings mDefaultSettings;
+
 public:
 
    static EffectFamilySymbol GetFamilySymbol();

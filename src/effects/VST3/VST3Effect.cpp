@@ -109,6 +109,9 @@ VST3Effect::VST3Effect(
    VST3::Hosting::ClassInfo effectClassInfo)
       : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
+   mDefaultSettings = MakeSettings();
+   VST3Wrapper{ *mModule, mEffectClassInfo.ID() }
+      .StoreSettings(mDefaultSettings);
 }
 
 PluginPath VST3Effect::GetPath() const
@@ -407,7 +410,7 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) cons
 
 EffectSettings VST3Effect::MakeSettings() const
 {
-   return VST3Wrapper::MakeSettings();
+   return VST3Wrapper::MakeSettings(mDefaultSettings);
 }
 
 bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
