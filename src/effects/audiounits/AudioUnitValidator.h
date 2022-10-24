@@ -15,6 +15,7 @@
 #define __AUDACITY_AUDIO_UNIT_VALIDATOR__
 
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include <unordered_map>
 #include "AudioUnitUtils.h"
 #include "EffectInterface.h"
 
@@ -62,5 +63,9 @@ private:
    const EventListenerPtr mEventListenerRef;
    AUControl *const mpControl{};
    const bool mIsGraphical;
+
+   // The map of parameter IDs to their current values
+   std::unordered_map<AudioUnitParameterID, AudioUnitParameterValue>
+      mParameterValues;
 };
 #endif
