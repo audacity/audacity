@@ -1486,7 +1486,8 @@ OptionalMessage VSTEffect::LoadUserPreset(
       return {};
    }
 
-   return { nullptr };
+   return VSTEffectValidator::MakeMessage(
+      VSTEffectInstance::GetSettings(settings));
 }
 
 
@@ -1522,7 +1523,8 @@ VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
       FetchSettings(GetSettings(settings));
    if (!loadOK)
       return {};
-   return { nullptr };
+   return VSTEffectValidator::MakeMessage(
+      VSTEffectInstance::GetSettings(settings));
 }
 
 bool VSTEffect::DoLoadFactoryPreset(int id)
@@ -1727,7 +1729,8 @@ OptionalMessage VSTEffect::ImportPresets(EffectSettings& settings)
    if (!FetchSettings(GetSettings(settings)))
       return {};
 
-   return { nullptr };
+   return VSTEffectValidator::MakeMessage(
+      VSTEffectInstance::GetSettings(settings));
 }
 
 bool VSTEffect::HasOptions()
@@ -2110,7 +2113,8 @@ OptionalMessage VSTEffect::LoadParameters(
             return {};
       }
 
-      return { nullptr };
+      return VSTEffectValidator::MakeMessage(
+         VSTEffectInstance::GetSettings(settings));
    }
 
    wxString parms;
@@ -2131,7 +2135,8 @@ OptionalMessage VSTEffect::LoadParameters(
    if (!loadOK)
       return {};
 
-   return { nullptr };
+   return VSTEffectValidator::MakeMessage(
+      VSTEffectInstance::GetSettings(settings));
 }
 
 
