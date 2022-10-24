@@ -41,6 +41,7 @@ public:
 
       ///Called for each plugin instance found inside module
       virtual void OnPluginFound(const PluginDescriptor& plugin) = 0;
+      virtual void OnPluginValidationFailed(const wxString& providerId, const wxString& path) = 0;
       ///Called when module processing finished
       virtual void OnValidationFinished() = 0;
       ///Called on error, further processing is not possible.

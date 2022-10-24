@@ -114,18 +114,7 @@ class AsyncPluginValidator::Impl final :
                   wxString pluginPath;
                   detail::ParseRequestString(*request, providerId, pluginPath);
 
-                  //Even if plugin validation has failed or no effects were discovered,
-                  //create an entry for it but make it disabled by default
-                  PluginID ID = providerId + wxT("_") + pluginPath;
-                  PluginDescriptor pluginDescriptor;
-                  pluginDescriptor.SetPluginType(PluginTypeStub);
-                  pluginDescriptor.SetID(ID);
-                  pluginDescriptor.SetProviderID(providerId);
-                  pluginDescriptor.SetPath(pluginPath);
-                  pluginDescriptor.SetEnabled(false);
-                  pluginDescriptor.SetValid(false);
-
-                  self->mDelegate->OnPluginFound(pluginDescriptor);
+                  self->mDelegate->OnPluginValidationFailed(providerId, pluginPath);
                }
                self->mDelegate->OnValidationFinished();
             }

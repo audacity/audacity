@@ -47,6 +47,7 @@ public:
 
    void OnInternalError(const wxString& error) override;
    void OnPluginFound(const PluginDescriptor& desc) override;
+   void OnPluginValidationFailed(const wxString& providerId, const wxString& path) override;
    void OnValidationFinished() override;
 
 private:

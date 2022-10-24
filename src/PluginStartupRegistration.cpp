@@ -35,17 +35,29 @@ void PluginStartupRegistration::OnInternalError(const wxString& error)
 
 void PluginStartupRegistration::OnPluginFound(const PluginDescriptor& desc)
 {
-   //Multiple providers can report same module paths
-   if(desc.GetPluginType() == PluginTypeStub)
-      //do not register until all associated providers have tried to load the module
+   if(!mValidProviderFound)
+      mFailedPluginsCache.clear();
+
+   mValidProviderFound = true;
+   if(!desc.IsValid())
       mFailedPluginsCache.push_back(desc);
-   else
-   {
-      mValidProviderFound = true;
-      if(!desc.IsValid())
-         mFailedPluginsCache.push_back(desc);
-      PluginManager::Get().RegisterPlugin(PluginDescriptor { desc });
-   }
+   PluginManager::Get().RegisterPlugin(PluginDescriptor { desc });
+}
+
+void PluginStartupRegistration::OnPluginValidationFailed(const wxString& providerId, const wxString& path)
+{
+   PluginID ID = providerId + wxT("_") + path;
+   PluginDescriptor pluginDescriptor;
+   pluginDescriptor.SetPluginType(PluginTypeStub);
+   pluginDescriptor.SetID(ID);
+   pluginDescriptor.SetProviderID(providerId);
+   pluginDescriptor.SetPath(path);
+   pluginDescriptor.SetEnabled(false);
+   pluginDescriptor.SetValid(false);
+
+   //Multiple providers can report same module paths
+   //do not register until all associated providers have tried to load the module
+   mFailedPluginsCache.push_back(std::move(pluginDescriptor));
 }
 
 void PluginStartupRegistration::OnValidationFinished()
