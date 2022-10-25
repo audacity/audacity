@@ -3735,6 +3735,21 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
 }
 
 
+bool VSTEffectWrapper::GetChunk(wxString& result)
+{
+   if (mAEffect->flags & effFlagsProgramChunks)
+   {
+      void* chunk = NULL;
+      int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      if (clen > 0)
+      {
+         result = Base64::Encode(chunk, clen);
+         return true;
+      }
+   }
+   return false;
+}
+
 bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 {
    // First, make sure settings are compatibile with the plugin
@@ -3899,6 +3914,16 @@ void VSTEffectValidator::Automate(int index, float value)
             return true;
          }
       );
+
+      // Update the chunk too - this fixes these two bugs:
+      //
+      // 1) load a preset, move a slider, press play
+      //    - new slider position is ignored, goes back to previous position
+      // 
+      // 2) load a preset, move a slider, close the gui, reopen it
+      //    - new slider position is ignored, goes back to previous position
+      // 
+      GetInstance().GetChunk(vst2Settings.mChunk);
 
       // But send changed settings (only) to the worker thread, which
       // ignores the settings
