@@ -195,7 +195,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            if (!pAccessState->mState.mInitialized) {
+            if (pMessage && !pAccessState->mState.mInitialized) {
                // Other thread isn't processing.
                // Let the instance consume the message directly.
                if (auto pInstance = pState->mwInstance.lock()) {
