@@ -3887,6 +3887,9 @@ void VSTEffectUIWrapper::Automate(int index, float value)
 
 void VSTEffectInstance::Automate(int index, float value)
 {
+   if (mMainThreadId != std::this_thread::get_id())
+      return;
+
    if (mpOwningValidator)
    {
       mpOwningValidator->Automate(index, value);

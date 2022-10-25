@@ -24,6 +24,7 @@
 #include <map>
 #include <optional>
 #include <mutex>
+#include <thread>
 
 class wxSizerItem;
 class wxSlider;
@@ -126,11 +127,13 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
 
    explicit VSTEffectWrapper(const PluginPath& path)
       : mPath(path)
+      , mMainThreadId{ std::this_thread::get_id() }
    {}
 
    ~VSTEffectWrapper();
 
    AEffect* mAEffect = nullptr;
+   std::thread::id mMainThreadId;
 
    intptr_t callDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) override;
