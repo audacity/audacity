@@ -52,6 +52,7 @@ public:
    }
    void MainWrite(SettingsAndCounter &&settings,
       std::unique_ptr<EffectInstance::Message> pMessage) {
+
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(FromMainSlot::Message{
          std::move(settings.settings), settings.counter, std::move(pMessage) });
@@ -192,8 +193,19 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    void Set(EffectSettings &&settings, std::unique_ptr<Message> pMessage)
    override {
-      if (auto pState = mwState.lock())
+      if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            if (!pAccessState->mState.mInitialized) {
+               // Other thread isn't processing.
+               // Let the instance consume the message directly.
+               if (auto pInstance = pState->mwInstance.lock()) {
+                  EffectInstance::MessagePackage package{
+                     pState->mWorkerSettings.settings, pMessage.get()
+                  };
+                  pInstance->RealtimeProcessStart(package);
+                  return;
+               }
+            }
             auto &lastSettings = pAccessState->mLastSettings;
             // move to remember values here
             lastSettings.settings = std::move(settings);
@@ -202,6 +214,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             pAccessState->MainWrite(
                SettingsAndCounter{ lastSettings }, std::move(pMessage));
          }
+      }
    }
    void Flush() override {
       if (auto pState = mwState.lock()) {
