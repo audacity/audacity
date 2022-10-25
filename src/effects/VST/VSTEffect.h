@@ -586,8 +586,10 @@ private:
 };
 
 
-class VSTEffectValidator final : public EffectUIValidator,
-                                 public VSTEffectUIWrapper
+class VSTEffectValidator final
+   : public wxEvtHandler
+   , public EffectUIValidator
+   , public VSTEffectUIWrapper
 {
 public:
    // Make message carrying all the information in settings, including chunks
@@ -631,6 +633,8 @@ protected:
    void SizeWindow(int w, int h) override;
 
 private:
+   void OnIdle(wxIdleEvent &evt);
+
    VSTEffectInstance& mInstance;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
@@ -644,6 +648,7 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
+   bool mNeedFlush{ false };
 
    ArrayOf<wxStaticText*> mNames;
    ArrayOf<wxSlider*> mSliders;

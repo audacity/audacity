@@ -2252,6 +2252,24 @@ void VSTEffectInstance::SizeWindow(int w, int h)
    }
 }
 
+void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
+{
+   evt.Skip();
+
+   // Be sure the instance has got any messages
+   if (mNeedFlush) {
+      mAccess.Flush();
+      mNeedFlush = false;
+
+      // Update settings, for stickiness
+      mAccess.ModifySettings([this](EffectSettings& settings)
+      {
+         FetchSettingsFromInstance(settings);
+         return nullptr;
+      });
+   }
+}
+
 void VSTEffectValidator::SizeWindow(int w, int h)
 {
    // Queue the event to make the resizes smoother
@@ -2688,6 +2706,7 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
       auto result = GetInstance().MakeMessage(i, value);
       return result;
    });
+   mNeedFlush = true;
 
    RefreshParameters(i);
 }
@@ -3692,7 +3711,6 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
    return true;
 }
 
-
 bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 {
    // First, make sure settings are compatibile with the plugin
@@ -3797,6 +3815,8 @@ VSTEffectValidator::VSTEffectValidator
    StoreSettingsToInstance(settings);
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
+
+   wxTheApp->Bind(wxEVT_IDLE, &VSTEffectValidator::OnIdle, this);
 }
 
 
@@ -3830,31 +3850,12 @@ void VSTEffectInstance::Automate(int index, float value)
 
 void VSTEffectValidator::Automate(int index, float value)
 {
-   mAccess.ModifySettings([&](EffectSettings& settings)
-   {
-      // Write the parameter change in the settings
-      // (this to preserve stickiness when the effect is closed/reopened)
-      auto& vst2Settings = VSTEffect::GetSettings(settings);
-
-      GetInstance().ForEachParameter
-      (
-         [&](const VSTEffectWrapper::ParameterInfo& pi)
-         {
-            if (pi.mID == index)
-            {
-               vst2Settings.mParamsMap[pi.mName] = { index, value };
-            }
-
-            return true;
-         }
-      );
-
-      // But send changed settings (only) to the worker thread, which
-      // ignores the settings
+   // Send changed settings (only) to the worker thread
+   mAccess.ModifySettings([&](EffectSettings&) {
       auto result = GetInstance().MakeMessage(index, value);
-
       return result;
    });
+   mNeedFlush = true;
 }
 
 
