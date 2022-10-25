@@ -593,8 +593,10 @@ private:
 };
 
 
-class VSTEffectValidator final : public EffectUIValidator,
-                                 public VSTEffectUIWrapper
+class VSTEffectValidator final
+   : public wxEvtHandler
+   , public EffectUIValidator
+   , public VSTEffectUIWrapper
 {
 public:
    // Make message carrying all the information in settings, including chunks
@@ -632,12 +634,14 @@ public:
 
    int ShowDialog(bool nonModal);
 
-   bool IsGraphicalUI();
+   bool IsGraphicalUI() override;
 
 protected:
    void SizeWindow(int w, int h) override;
 
 private:
+   void OnIdle(wxIdleEvent &evt);
+
    VSTEffectInstance& mInstance;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);

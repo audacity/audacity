@@ -2297,6 +2297,21 @@ void VSTEffectInstance::SizeWindow(int w, int h)
    }
 }
 
+void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
+{
+   evt.Skip();
+
+   // Be sure the instance has got any messages
+   mAccess.Flush();
+
+   // Update settings, for stickiness
+   mAccess.ModifySettings([this](EffectSettings& settings)
+   {
+      FetchSettingsFromInstance(settings);
+      return nullptr;
+   });
+}
+
 void VSTEffectValidator::SizeWindow(int w, int h)
 {
    // Queue the event to make the resizes smoother
@@ -3860,6 +3875,8 @@ VSTEffectValidator::VSTEffectValidator
    StoreSettingsToInstance(settings);
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
+
+   wxTheApp->Bind(wxEVT_IDLE, &VSTEffectValidator::OnIdle, this);
 }
 
 
@@ -3893,6 +3910,13 @@ void VSTEffectInstance::Automate(int index, float value)
 
 void VSTEffectValidator::Automate(int index, float value)
 {
+   // Send changed settings (only) to the worker thread
+   mAccess.ModifySettings([&](EffectSettings&) {
+      auto result = GetInstance().MakeMessage(index, value);
+      return result;
+   });
+
+   #if 0
    mAccess.ModifySettings([&](EffectSettings& settings)
    {
       // Write the parameter change in the settings
@@ -3921,13 +3945,9 @@ void VSTEffectValidator::Automate(int index, float value)
       //    - new slider position is ignored, goes back to previous position
       // 
       GetInstance().GetChunk(vst2Settings.mChunk);
-
-      // But send changed settings (only) to the worker thread, which
-      // ignores the settings
-      auto result = GetInstance().MakeMessage(index, value);
-
-      return result;
+      return nullptr;
    });
+   #endif
 }
 
 
