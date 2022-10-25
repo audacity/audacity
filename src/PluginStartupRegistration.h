@@ -13,13 +13,11 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <chrono>
 #include <wx/string.h>
+#include <wx/timer.h>
 #include "AsyncPluginValidator.h"
-
-namespace BasicUI
-{
-   class ProgressDialog;
-}
+#include "widgets/wxPanelWrapper.h"
 
 ///Helper class that passes plugins provided in constructor
 ///to plugin validator, then "good" plugins are registered in
@@ -34,13 +32,19 @@ class PluginStartupRegistration final :
    bool mValidProviderFound{false};
    std::vector<wxString> mFailedPluginsPaths;
    std::vector<PluginDescriptor> mFailedPluginsCache;
+   wxWeakRef<wxDialogWrapper> mScanDialog;
+   wxWeakRef<wxTimer> mTimeoutTimer;
+   std::chrono::system_clock::duration mTimeout{};
+   std::chrono::system_clock::time_point mRequestStartTime{};
 public:
 
    PluginStartupRegistration(const std::map<wxString, std::vector<wxString>>& pluginsToProcess);
 
    ///Starts validation, showing dialog that blocks execution until
    ///process is complete or canceled
-   void Run();
+   ///@param timeout Time allowed to spend on a single plugin validation.
+   ///Pass 0 to disable timeout.
+   void Run(std::chrono::seconds timeout = std::chrono::seconds(30));
 
    ///Returns list of paths of plugins that didn't pass validation for some reason
    const std::vector<wxString>& GetFailedPluginsPaths() const noexcept;
@@ -53,6 +57,7 @@ public:
 private:
    
    void Stop();
+   void Skip();
    void StopWithError(const wxString& msg);
    void ProcessNext();
 };

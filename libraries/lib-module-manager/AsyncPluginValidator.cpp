@@ -36,6 +36,7 @@ class AsyncPluginValidator::Impl final :
 
    IPCChannel* mChannel{nullptr};
    std::optional<wxString> mRequest;
+   std::atomic<std::chrono::system_clock::duration::rep> mLastTimeActive;
 
    //The main reason to use spinlock instead of std::mutex here
    //is that in most cases there will be no attempts for simultaneous
@@ -58,6 +59,7 @@ class AsyncPluginValidator::Impl final :
       auto server = std::make_unique<IPCServer>(*this);
       if(!PluginHost::Start(server->GetConnectPort()))
          throw std::runtime_error("cannot start plugin host process");
+      mLastTimeActive = std::chrono::system_clock::now().time_since_epoch().count();
       mServer = std::move(server);
    }
    
@@ -140,6 +142,19 @@ public:
       //important to reset delegate before IPCChannelStatusCallback::OnDisconnect
       //is called by server
       mDelegate = nullptr;
+      mServer.reset();
+   }
+
+   void SetDelegate(Delegate* delegate)
+   {
+      mDelegate = delegate;
+   }
+
+   std::chrono::system_clock::time_point InactiveSince() const noexcept
+   {
+      using std::chrono::system_clock;
+
+      return system_clock::time_point { system_clock::duration{mLastTimeActive.load()} };
    }
 
    void OnConnect(IPCChannel& channel) noexcept override
@@ -181,11 +196,16 @@ public:
       try
       {
          mMessageReader.ConsumeBytes(data, size);
-         if(mMessageReader.CanPop())
+         mLastTimeActive = std::chrono::system_clock::now().time_since_epoch().count();
+         while(mMessageReader.CanPop())
          {
+            auto message = mMessageReader.Pop();
+            if(message.IsEmpty())
+               continue;
+
             detail::PluginValidationResult result;
             XMLFileReader xmlReader;
-            xmlReader.ParseString(&result, mMessageReader.Pop());
+            xmlReader.ParseString(&result, message);
 
             HandleResult(std::move(result));
          }
@@ -223,3 +243,15 @@ void AsyncPluginValidator::Validate(const wxString& providerId, const wxString& 
 {
    mImpl->Validate(providerId, pluginPath);
 }
+
+void AsyncPluginValidator::SetDelegate(Delegate* delegate)
+{
+   mImpl->SetDelegate(delegate);
+}
+
+std::chrono::system_clock::time_point AsyncPluginValidator::InactiveSince() const noexcept
+{
+   return mImpl->InactiveSince();
+}
+
+

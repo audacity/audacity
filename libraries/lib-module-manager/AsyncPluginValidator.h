@@ -12,8 +12,10 @@
 
 #pragma once
 
-#include <wx/string.h>
+#include <chrono>
 #include <memory>
+
+#include <wx/string.h>
 
 class PluginDescriptor;
 
@@ -55,6 +57,10 @@ public:
 
    explicit AsyncPluginValidator(Delegate& delegate);
    ~AsyncPluginValidator();
+
+   void SetDelegate(Delegate* delegate);
+
+   std::chrono::system_clock::time_point InactiveSince() const noexcept;
 
    /**
     * \brief Each call to Validate should result in appropriate call

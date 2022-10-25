@@ -136,6 +136,9 @@ bool PluginHost::Serve()
 
    if(mRequest)
    {
+      if(mChannel)
+         detail::PutMessage(*mChannel, wxEmptyString);
+
       std::optional<wxString> request;
       mRequest.swap(request);
 
