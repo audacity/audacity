@@ -3806,12 +3806,6 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 bool VSTEffectValidator::UpdateUI()
 {
-   // The plugin fancy GUI is owned by the instance,
-   // so we need to set the settings to it
-   //
-   if ( ! StoreSettingsToInstance(mAccess.Get()) )
-      return false;
-
    // Update the controls on the plain UI
    RefreshParameters();
 
