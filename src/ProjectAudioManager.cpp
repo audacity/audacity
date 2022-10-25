@@ -233,12 +233,12 @@ PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
 {
    size_t frames = available;
    size_t toProduce = frames;
-   sampleCount samples1(mDuration1 * mRate);
+   sampleCount samples1(mDuration1 * mRate + 0.5);
    if (samples1 > 0 && samples1 < frames)
       // Shorter slice than requested, up to the discontinuity
       toProduce = frames = samples1.as_size_t();
    else if (samples1 == 0) {
-      sampleCount samples2(mDuration2 * mRate);
+      sampleCount samples2(mDuration2 * mRate + 0.5);
       if (samples2 < frames) {
          toProduce = samples2.as_size_t();
          // Produce some extra silence so that the time queue consumer can
