@@ -45,6 +45,8 @@ public:
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
       mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
+
+      mMainThreadId = std::this_thread::get_id();
    }
 
    void MainRead() {
@@ -165,6 +167,8 @@ public:
 
    std::mutex mLockForCV;
    std::condition_variable mCV;
+
+   std::thread::id mMainThreadId;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
@@ -227,6 +231,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            assert(pAccessState->mMainThreadId == std::this_thread::get_id());
             
             if (pAccessState->mState.mInitialized)
             {
