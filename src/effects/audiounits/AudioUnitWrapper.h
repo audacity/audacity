@@ -187,7 +187,7 @@ public:
    static std::optional<AudioUnitParameterID> ParseKey(const wxString &key);
 
    std::optional<wxString> mName;
-   AudioUnitParameterInfo mInfo{};
+   AudioUnitUtils::ParameterInfo mInfo{};
 
 private:
    // constants
