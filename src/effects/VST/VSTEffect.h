@@ -172,8 +172,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
 
    bool IsCompatible(const VstPatchChunkInfo&) const;
 
-   bool GetChunk(wxString& chunk);
-
    // These are here because they are used by the import/export methods
    int mVstVersion;
    wxString mName;
