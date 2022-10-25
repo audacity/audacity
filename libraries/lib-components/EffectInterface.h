@@ -188,6 +188,9 @@ public:
       std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
+   /*!
+    @pre called on the main thread only
+    */
    virtual void Flush() = 0;
 
    //! @return whether this and the other give access to the same settings

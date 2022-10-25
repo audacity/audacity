@@ -44,6 +44,8 @@ public:
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
       mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
+
+      mMainThreadId = std::this_thread::get_id();
    }
 
    void MainRead() {
@@ -155,6 +157,8 @@ public:
    SettingsAndCounter mLastSettings;
 
    MessageBuffer<ToMainSlot> mChannelToMain;
+
+   std::thread::id mMainThreadId;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
@@ -219,6 +223,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            assert(pAccessState->mMainThreadId == std::this_thread::get_id());
             bool bResult{};
             if (pAccessState->mState.mInitialized) {
                while (!(bResult = FlushAttempt(*pAccessState))) {
