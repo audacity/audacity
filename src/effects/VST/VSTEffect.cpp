@@ -2302,14 +2302,17 @@ void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
    evt.Skip();
 
    // Be sure the instance has got any messages
-   mAccess.Flush();
+   if (mNeedFlush) {
+      mAccess.Flush();
+      mNeedFlush = false;
 
-   // Update settings, for stickiness
-   mAccess.ModifySettings([this](EffectSettings& settings)
-   {
-      FetchSettingsFromInstance(settings);
-      return nullptr;
-   });
+      // Update settings, for stickiness
+      mAccess.ModifySettings([this](EffectSettings& settings)
+      {
+         FetchSettingsFromInstance(settings);
+         return nullptr;
+      });
+   }
 }
 
 void VSTEffectValidator::SizeWindow(int w, int h)
@@ -3899,6 +3902,7 @@ void VSTEffectValidator::Automate(int index, float value)
       auto result = GetInstance().MakeMessage(index, value);
       return result;
    });
+   mNeedFlush = true;
 }
 
 
