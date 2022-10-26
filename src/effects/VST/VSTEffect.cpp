@@ -2744,12 +2744,16 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
 {
    wxSlider *s = (wxSlider *) evt.GetEventObject();
    int i = s->GetId() - ID_Sliders;
+   float value = s->GetValue() / 1000.0;
 
-   GetInstance().callSetParameter(i, s->GetValue() / 1000.0);
+   // Send changed settings (only) to the worker thread
+   mAccess.ModifySettings([&](EffectSettings&) {
+      auto result = GetInstance().MakeMessage(i, value);
+      return result;
+   });
+   mNeedFlush = true;
 
    RefreshParameters(i);
-
-   ValidateUI();
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
