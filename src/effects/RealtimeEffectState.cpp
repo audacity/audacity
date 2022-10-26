@@ -473,7 +473,8 @@ bool RealtimeEffectState::ProcessStart(bool running)
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
 size_t RealtimeEffectState::Process(Track &track, unsigned chans,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, float *const dummybuf,
+   size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
    if (!mPlugin || !pInstance || !mLastActive) {
@@ -508,7 +509,7 @@ size_t RealtimeEffectState::Process(Track &track, unsigned chans,
       std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
       if (copied < numAudioOut) {
          // Make determinate pointers
-         std::fill(clientOut + copied, clientOut + numAudioOut, nullptr);
+         std::fill(clientOut + copied, clientOut + numAudioOut, dummybuf);
       }
 
       // Inner loop over blocks

@@ -123,8 +123,8 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 // This will be called in a thread other than the main GUI thread.
 //
 size_t RealtimeEffectManager::Process(bool suspended, Track &track,
-   float *const *buffers, float *const *scratch, unsigned nBuffers,
-   size_t numSamples)
+   float *const *buffers, float *const *scratch, float *const dummy,
+   unsigned nBuffers, size_t numSamples)
 {
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
@@ -156,7 +156,8 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    VisitGroup(track,
       [&](RealtimeEffectState &state, bool)
       {
-         discardable += state.Process(track, nBuffers, ibuf, obuf, numSamples);
+         discardable +=
+            state.Process(track, nBuffers, ibuf, obuf, dummy, numSamples);
          for (auto i = 0; i < nBuffers; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
