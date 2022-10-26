@@ -1,9 +1,8 @@
-
-
 #include "../CommonCommandFlags.h"
 #include "FileNames.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
+#include "PluginManager.h"
 #include "Prefs.h"
 #include "../Printing.h"
 #include "Project.h"
@@ -21,6 +20,8 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../effects/RealtimeEffectList.h"
+#include "../effects/RealtimeEffectState.h"
 #include "../export/ExportMP3.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
@@ -28,6 +29,7 @@
 #include "../import/ImportRaw.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
+#include "../widgets/MissingPluginsErrorDialog.h"
 #include "../widgets/wxPanelWrapper.h"
 
 #ifdef USE_MIDI
@@ -178,6 +180,35 @@ void OnOpen(const CommandContext &context )
 {
    auto &project = context.project;
    ProjectManager::OpenFiles(&project);
+
+   int unavailablePlugins = 0;
+
+   auto &trackList = TrackList::Get(project);
+   for (auto track : trackList.Leaders<WaveTrack>())
+   {
+      auto& effects = RealtimeEffectList::Get(*track);
+      effects.Visit([&unavailablePlugins](auto& state, bool)
+         {
+            const auto& ID = state.GetID();
+            const PluginDescriptor* plug = PluginManager::Get().GetPlugin(ID);
+
+            if (plug)
+            {
+               if (!PluginManager::IsPluginAvailable(*plug))
+                  unavailablePlugins++;
+            }
+            else
+            {
+               unavailablePlugins++;
+            }
+         });
+   }
+
+   if (unavailablePlugins > 0)
+   {
+      MissingPluginsErrorDialog dlg(nullptr);
+      dlg.ShowModal();
+   }
 }
 
 // JKC: This is like OnClose, except it empties the project in place,
