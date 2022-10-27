@@ -276,7 +276,7 @@ BEGIN_EVENT_TABLE(MeterPanel, MeterPanelBase)
    EVT_MOUSE_EVENTS(MeterPanel::OnMouse)
    EVT_CONTEXT_MENU(MeterPanel::OnContext)
    EVT_KEY_DOWN(MeterPanel::OnKeyDown)
-   EVT_KEY_UP(MeterPanel::OnKeyUp)
+   EVT_CHAR_HOOK(MeterPanel::OnCharHook)
    EVT_SET_FOCUS(MeterPanel::OnSetFocus)
    EVT_KILL_FOCUS(MeterPanel::OnKillFocus)
    EVT_ERASE_BACKGROUND(MeterPanel::OnErase)
@@ -751,11 +751,30 @@ void MeterPanel::OnMouse(wxMouseEvent &evt)
    }
 }
 
+void MeterPanel::OnCharHook(wxKeyEvent& evt)
+{
+   switch(evt.GetKeyCode())
+   {
+   // These are handled in the OnCharHook handler because, on Windows at least, the
+   // key up event will be passed on to the menu if we show it here.  This causes
+   // the default sound to be heard if assigned.
+   case WXK_RETURN:
+   case WXK_NUMPAD_ENTER:
+   case WXK_WINDOWS_MENU:
+   case WXK_MENU:
+      if (mStyle != MixerTrackCluster)
+         ShowMenu(GetClientRect().GetBottomLeft());
+      else
+         evt.Skip();
+      break;
+   default:
+      evt.Skip();
+      break;
+   }
+}
+
 void MeterPanel::OnContext(wxContextMenuEvent &evt)
 {
-#if defined(__WXMSW__)
-   if (mHadKeyDown)
-#endif
    if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
    {
       ShowMenu(GetClientRect().GetBottomLeft());
@@ -764,31 +783,12 @@ void MeterPanel::OnContext(wxContextMenuEvent &evt)
    {
       evt.Skip();
    }
-
-#if defined(__WXMSW__)
-   mHadKeyDown = false;
-#endif
 }
 
 void MeterPanel::OnKeyDown(wxKeyEvent &evt)
 {
    switch (evt.GetKeyCode())
    {
-   // These are handled in the OnKeyUp handler because, on Windows at least, the
-   // key up event will be passed on to the menu if we show it here.  This causes
-   // the default sound to be heard if assigned.
-   //
-   // But, again on Windows, when the user selects a menu item, it is handled by
-   // the menu and the key up event is passed along to our OnKeyUp() handler, so
-   // we have to ignore it, otherwise we'd just show the menu again.
-   case WXK_RETURN:
-   case WXK_NUMPAD_ENTER:
-   case WXK_WINDOWS_MENU:
-   case WXK_MENU:
-#if defined(__WXMSW__)
-      mHadKeyDown = true;
-#endif
-      break;
    case WXK_TAB:
       if (evt.ShiftDown())
          Navigate(wxNavigationKeyEvent::IsBackward);
@@ -797,29 +797,6 @@ void MeterPanel::OnKeyDown(wxKeyEvent &evt)
       break;
    default:
       mSlider->OnKeyDown(evt);
-      break;
-   }
-}
-
-void MeterPanel::OnKeyUp(wxKeyEvent &evt)
-{
-   switch (evt.GetKeyCode())
-   {
-   case WXK_RETURN:
-   case WXK_NUMPAD_ENTER:
-#if defined(__WXMSW__)
-      if (mHadKeyDown)
-#endif
-      if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
-      {
-         ShowMenu(GetClientRect().GetBottomLeft());
-      }
-#if defined(__WXMSW__)
-      mHadKeyDown = false;
-#endif
-      break;
-   default:
-      evt.Skip();
       break;
    }
 }

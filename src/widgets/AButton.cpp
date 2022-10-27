@@ -47,6 +47,7 @@ BEGIN_EVENT_TABLE(AButton, wxWindow)
    EVT_MOUSE_EVENTS(AButton::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(AButton::OnCaptureLost)
    EVT_KEY_DOWN(AButton::OnKeyDown)
+   EVT_CHAR_HOOK(AButton::OnCharHook)
    EVT_SET_FOCUS(AButton::OnSetFocus)
    EVT_KILL_FOCUS(AButton::OnKillFocus)
    EVT_PAINT(AButton::OnPaint)
@@ -499,6 +500,15 @@ void AButton::OnKeyDown(wxKeyEvent & event)
                ? wxNavigationKeyEvent::IsBackward
                : wxNavigationKeyEvent::IsForward));
       break;
+   default:
+      event.Skip();
+   }
+}
+
+void AButton::OnCharHook(wxKeyEvent& event)
+{
+   switch(event.GetKeyCode())
+   {
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
       if( !mEnabled )

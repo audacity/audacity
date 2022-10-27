@@ -220,7 +220,7 @@ class AUDACITY_DLL_API MeterPanel final
    void OnSize(wxSizeEvent &evt);
    void OnMouse(wxMouseEvent &evt);
    void OnKeyDown(wxKeyEvent &evt);
-   void OnKeyUp(wxKeyEvent &evt);
+   void OnCharHook(wxKeyEvent &evt);
    void OnContext(wxContextMenuEvent &evt);
    void OnSetFocus(wxFocusEvent &evt);
    void OnKillFocus(wxFocusEvent &evt);
@@ -312,9 +312,6 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool mIsFocused;
    wxRect mFocusRect;
-#if defined(__WXMSW__)
-   bool mHadKeyDown;
-#endif
 
    friend class MeterAx;
 

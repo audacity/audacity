@@ -199,6 +199,7 @@ public:
    void OnKeyDown(wxKeyEvent & event);
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
+   void OnCharHook(wxKeyEvent& event);
 
    bool WasShiftDown(); // returns true if shift was held down
                                 // the last time the button was clicked
