@@ -198,10 +198,14 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    void Set(EffectSettings &&settings, std::unique_ptr<Message> pMessage)
    override {
       if (auto pState = mwState.lock()) {
-         if (auto pAccessState = pState->GetAccessState()) {
-            if (pMessage && !pAccessState->mState.mInitialized) {
-               // Other thread isn't processing.
-               // Let the instance consume the message directly.
+         if (auto pAccessState = pState->GetAccessState())
+         {
+            if (pMessage && (   !pAccessState->mState.mInitialized
+                             || !pAccessState->mState.IsActive())
+               )
+            {
+               // Other thread isn't processing, or is off;
+               // let the instance consume the message directly.
                if (auto pInstance = pState->mwInstance.lock()) {
                   EffectInstance::MessagePackage package{
                      pState->mWorkerSettings.settings, pMessage.get()
