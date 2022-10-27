@@ -1992,7 +1992,7 @@ void AudioIO::TransformPlayBuffers(
             auto discardable = pScope->Process( *vt, &pointers[0],
                mScratchPointers.data(),
                // The single dummy output buffer:
-               mScratchPointers[mNumPlaybackChannels + 1],
+               mScratchPointers[mNumPlaybackChannels],
                mNumPlaybackChannels, len);
             iChannel = 0;
             for (; iChannel < nChannels; ++iChannel) {
