@@ -1254,9 +1254,48 @@ bool VSTEffectInstance::RealtimeResume()
 
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
-   auto &settings = package.settings;
-   for (auto& slave : mSlaves)
-      slave->StoreSettings(GetSettings(settings));
+   if (!package.pMessage)
+      return true;
+
+   auto& message = static_cast<VSTEffectMessage&>(*package.pMessage);
+   auto& settings = message.settings;
+
+   auto &chunk = settings.mChunk;
+   if (!chunk.empty()) {
+      // Apply the chunk first
+
+      VstPatchChunkInfo info = {
+         1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+      const auto len = chunk.size();
+      const auto data = chunk.data();
+      callSetChunk(true, len, data, &info);
+      for (auto& slave : mSlaves)
+         slave->callSetChunk(true, len, data, &info);
+
+      // Don't apply the chunk again until another message supplies a chunk
+      chunk.resize(0);
+
+      // Don't return yet.  Maybe some slider movements also accumulated after
+      // the change of the chunk.
+   }
+
+   auto& paramsMap = settings.mParamsMap;
+   for (auto& mapItem : paramsMap)
+   {
+      if (mapItem.second)
+      {
+         const int&    key = mapItem.second->first;
+         const double& val = mapItem.second->second;
+
+         for (auto& slave : mSlaves)
+         {
+            slave->callSetParameter(key, (float)val);
+         }        
+
+         // clear the used info
+         mapItem.second = std::nullopt;
+      }
+   }
 
    return true;
 }
@@ -2642,12 +2681,15 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
 {
    wxSlider *s = (wxSlider *) evt.GetEventObject();
    int i = s->GetId() - ID_Sliders;
+   float value = s->GetValue() / 1000.0;
 
-   GetInstance().callSetParameter(i, s->GetValue() / 1000.0);
+   // Send changed settings (only) to the worker thread
+   mAccess.ModifySettings([&](EffectSettings&) {
+      auto result = GetInstance().MakeMessage(i, value);
+      return result;
+   });
 
    RefreshParameters(i);
-
-   ValidateUI();
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3701,12 +3743,6 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 bool VSTEffectValidator::UpdateUI()
 {
-   // The plugin fancy GUI is owned by the instance,
-   // so we need to set the settings to it
-   //
-   if ( ! StoreSettingsToInstance(mAccess.Get()) )
-      return false;
-
    // Update the controls on the plain UI
    RefreshParameters();
 
@@ -3751,9 +3787,12 @@ VSTEffectValidator::VSTEffectValidator
      mParent(pParent),
      mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
      mNumParams(numParams)
-{   
-   // Make the settings of the instance up to date before using it to
-   // build a UI
+{
+   // In case of nondestructive processing, put an initial message in the
+   // queue for the instance
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      return MakeMessage(VSTEffectInstance::GetSettings(settings));
+   });
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
 
