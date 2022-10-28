@@ -156,8 +156,8 @@ struct AudioIoCallback::TransportState {
             }
             unsigned chanCnt = TrackList::Channels(vt).size();
             i += chanCnt; // Visit leaders only
-            mpRealtimeInitialization->AddTrack(*vt,
-               std::min(numPlaybackChannels, chanCnt), sampleRate);
+            mpRealtimeInitialization
+               ->AddTrack(*vt, numPlaybackChannels, sampleRate);
          }
       }
    }
