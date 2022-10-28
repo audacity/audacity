@@ -321,6 +321,9 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
       // copies of contents might avoid free store operations
       mMessage = result->MakeMessage();
       mMovedMessage = result->MakeMessage();
+      if (auto state = GetAccessState())
+         state->Initialize(mMainSettings.settings,
+            mMessage.get(), mMovedOutputs.get());
    }
    return result;
 }
@@ -727,6 +730,10 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
    // Only the main thread assigns to the atomic pointer, here and
    // once only in the lifetime of the state
    if (!GetAccessState())
+   {
+      MakeInstance();
       mpAccessState.emplace(*mPlugin, *this);
+   }
+
    return std::make_shared<Access>(*this);
 }
