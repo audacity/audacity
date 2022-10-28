@@ -6,6 +6,20 @@ import pathlib
 import os
 import shutil
 
+def find_target(path):
+    return os.path.join(args['output'], path.split('/')[-1])
+
+def outdated(path):
+    dst = pathlib.Path(find_target(path))
+    if not dst.exists():
+        return True
+
+    # resolve to follow symlinks; don't take the link's time
+    time1 = pathlib.Path(path).resolve().stat().st_mtime
+    time2 = dst.stat().st_mtime
+    return time1 >= time2
+
+
 class OtoolRunner:
     cache = {}
     search_paths = []
@@ -138,9 +152,12 @@ for path in files:
     file = files[path]
 
     if path != args['input']:
-        target_path = os.path.join(args['output'], path.split('/')[-1])
+        target_path = find_target(path)
         print("Copying {} -> {}".format(path, target_path))
+        dst = pathlib.Path(target_path)
+        dst.parent.mkdir(exist_ok=True)
         shutil.copy2(path, target_path, follow_symlinks=True)
+        dst.touch()
         path = target_path
 
     install_name_tool = [

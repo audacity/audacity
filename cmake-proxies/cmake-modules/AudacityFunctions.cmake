@@ -376,6 +376,8 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif ()
 
    if (LIBTYPE STREQUAL "MODULE")
+      list( APPEND ALL_MODULE_TARGETS ${TARGET} )
+      set( ALL_MODULE_TARGETS "${ALL_MODULE_TARGETS}" PARENT_SCOPE )
       set( ATTRIBUTES "shape=box" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_MODDIR}" )
       set_target_properties( ${TARGET}
@@ -383,38 +385,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             PREFIX ""
             FOLDER "modules" # for IDE organization
       )
-      if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
-         add_custom_command(
-	         TARGET ${TARGET}
-            COMMAND ${CMAKE_COMMAND}
-	            -D SRC="${_MODDIR}/${TARGET}.so"
-               -D DST="${_PKGLIB}"
-               -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
-               -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
-            POST_BUILD )
-      elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
-         add_custom_command(
-            TARGET
-               ${TARGET}
-            COMMAND
-               ${CMAKE_COMMAND} -D SRC="${_MODDIR}/${TARGET}.dll"
-                              -D DST="${_EXEDIR}"
-                              -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
-                              -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
-            POST_BUILD
-         )
-      else()
-         add_custom_command(
-            TARGET
-               ${TARGET}
-            COMMAND
-               ${CMAKE_COMMAND} -D SRC="${_MODDIR}/${TARGET}.so"
-                              -D DST="${_PKGLIB}"
-                              -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
-                              -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
-            POST_BUILD
-         )
-      endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
@@ -477,11 +447,11 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
    endif()
 
-   if( NOT REAL_LIBTYPE STREQUAL "MODULE" )
+   # Rely on fixup-libs.py to move libraries for Darwin.  Doing it here foils the
+   # test there for outdatedness.
+   if( NOT REAL_LIBTYPE STREQUAL "MODULE" AND NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
       if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          set( REQUIRED_LOCATION "${_EXEDIR}" )
-      elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")
-         set( REQUIRED_LOCATION "${_PKGLIB}" )
       else()
          set( REQUIRED_LOCATION "${_DEST}/${_PKGLIB}" )
       endif()
@@ -554,6 +524,7 @@ macro( audacity_module NAME SOURCES IMPORT_TARGETS
       "MODULE"
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+   set( ALL_MODULE_TARGETS "${ALL_MODULE_TARGETS}" PARENT_SCOPE )
 endmacro()
 
 # Set up for defining a library target.
