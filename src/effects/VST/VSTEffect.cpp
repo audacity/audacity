@@ -1052,8 +1052,6 @@ void VSTEffectMessage::Merge(Message && src)
 {
    auto& dstSettings = this->settings;
 
-   auto& tmp = static_cast<VSTEffectMessage&>(src);
-
    auto& srcSettings = static_cast<VSTEffectMessage&>(src).settings;
 
 
