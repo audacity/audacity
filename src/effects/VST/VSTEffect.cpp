@@ -1201,12 +1201,12 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
 
    long index{};
    wxString key;
-   float value = 0.0f;
+   double value = 0.0;
    if (parms.GetFirstEntry(key, index))
    {
       do
       {
-         if (parms.Read(key, value))
+         if (parms.Read(key, &value))
             vstSettings.mParamsMap[key] = value;
          else
             return false;
@@ -1215,7 +1215,7 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    }
 
    vstSettings.mChunk     = std::nullopt;
-   vstSettings.mVersion   = VSTEffectWrapper::mVstVersion;
+   vstSettings.mVersion   = VSTEffectWrapper::mVersion;
    vstSettings.mUniqueID  = VSTEffectWrapper::mAEffect->uniqueID;
    vstSettings.mNumParams = VSTEffectWrapper::mAEffect->numParams;
 

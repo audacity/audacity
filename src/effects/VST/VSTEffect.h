@@ -83,9 +83,9 @@ struct VSTEffectSettings
    // These are saved in the Config and checked against when loading a preset, to make sure
    // that we are loading a Config  which is compatible.
    //
-   int32_t mUniqueID;
-   int32_t mVersion;
-   int32_t mNumParams;
+   int32_t mUniqueID{};
+   int32_t mVersion{};
+   int32_t mNumParams{};
 
    // When loading a preset, the preferred way is to use the chunk; when not present in
    // the Config or failing to load, we fall back to loading single parameters (ID, value) pairs.
