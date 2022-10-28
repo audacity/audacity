@@ -1347,12 +1347,13 @@ size_t VSTEffectInstance::RealtimeProcess(size_t group, EffectSettings &settings
       // use the recruited "this" instance
       return ProcessBlock(settings, inbuf, outbuf, numSamples);
    }
-   else
+   else if (group <= mSlaves.size())
    {
       // use the slave which maps to the group
-      assert(group <= mSlaves.size());
       return mSlaves[group - 1]->ProcessBlock(settings, inbuf, outbuf, numSamples);
    }
+   else
+      return 0;
 }
 
 bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
