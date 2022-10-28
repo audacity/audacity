@@ -43,6 +43,9 @@ void SocketWindow::OnMap(GtkWidget* widget, gpointer data)
          (void*)gtk_socket_get_id(GTK_SOCKET(widget)),
          Steinberg::kPlatformTypeX11EmbedWindowID
       );
+      ViewRect initialSize;
+      if(self->mPlugView->getSize(&initialSize) == kResultOk)
+         frame->init(self->mPlugView.get(), &initialSize);
    }
 }
 

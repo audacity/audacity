@@ -48,11 +48,10 @@ public:
    //! Do nothing if there is already an LV2Wrapper with the desired rate.
    //! The wrapper object remains until this is destroyed
    //! or the wrapper is re-made with another rate.
-   void MakeMaster(const EffectSettings &settings,
-      double sampleRate, bool useOutput);
+   void MakeMaster(const EffectSettings &settings, double sampleRate);
 
    std::unique_ptr<LV2Wrapper> MakeWrapper(const EffectSettings &settings,
-      double sampleRate, bool useOutput);
+      double sampleRate, EffectOutputs *pOutputs);
 
    size_t GetBlockSize() const override;
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -62,12 +61,12 @@ public:
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
+   bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;

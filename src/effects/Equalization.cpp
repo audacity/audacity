@@ -583,22 +583,26 @@ bool EffectEqualization::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   auto trackRange =
-      TrackList::Get( *FindProject() ).Selected< const WaveTrack >();
-   if (trackRange) {
-      rate = (*(trackRange.first++)) -> GetRate();
-      ++selcount;
-
-      for (auto track : trackRange) {
-         if (track->GetRate() != rate) {
-            Effect::MessageBox(
-               XO(
-"To apply Equalization, all selected tracks must have the same sample rate.") );
-            return(false);
-         }
+   if (const auto project = FindProject()) {
+      auto trackRange = TrackList::Get(*project).Selected<const WaveTrack>();
+      if (trackRange) {
+         rate = (*(trackRange.first++)) -> GetRate();
          ++selcount;
+
+         for (auto track : trackRange) {
+            if (track->GetRate() != rate) {
+               Effect::MessageBox(
+                  XO(
+   "To apply Equalization, all selected tracks must have the same sample rate.") );
+               return(false);
+            }
+            ++selcount;
+         }
       }
    }
+   else
+      // Editing macro parameters, use this default
+      rate = 44100.0;
 
    mHiFreq = rate / 2.0;
    // Unlikely, but better than crashing.
@@ -679,7 +683,8 @@ bool EffectEqualization::CloseUI()
 }
 
 std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    S.SetBorder(0);
 

@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <type_traits>
 #include <wx/event.h>
 
 class ShuttleGui;
@@ -122,6 +123,25 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
    }
 };
 
+//! Hold values to send to effect output meters
+class COMPONENTS_API EffectOutputs {
+public:
+   virtual ~EffectOutputs();
+   virtual std::unique_ptr<EffectOutputs> Clone() const = 0;
+
+   //! Update one Outputs object from another
+   /*!
+    This may run in a worker thread, and should avoid allocating and freeing.
+    Even on the main thread, it must avoid relocation of members of containers.
+    Therefore do not grow or clear any containers, but assign the preallocated
+    contents of one container from another.
+
+    @param src settings to copy from; assume it comes from the same
+    EffectSettingsManager as *this
+    */
+   virtual void Assign(EffectOutputs &&src) = 0;
+};
+
 //! Interface for accessing an EffectSettings that may change asynchronously in
 //! another thread; to be used in the main thread, only.
 /*! Updates are communicated atomically both ways.  The address of Get() should
@@ -129,9 +149,42 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
 class COMPONENTS_API EffectSettingsAccess
    : public std::enable_shared_from_this<EffectSettingsAccess> {
 public:
+   //! Type of messages to send from main thread to processing
+   class COMPONENTS_API Message {
+   public:
+      virtual ~Message();
+      virtual std::unique_ptr<Message> Clone() const = 0;
+
+      //! Update one Message object from another, which is then left "empty"
+      /*!
+       This may run in a worker thread, and should avoid allocating and freeing.
+       Therefore do not copy, grow or clear any containers in it, but assign the
+       preallocated contents of *this from another, which then should be
+       reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Assign(Message &&src) = 0;
+
+      //! Combine one Message object with another, which is then left "empty"
+      /*!
+       This runs in the main thread.
+       Combine the contents of one message into *this, and then the other
+       should be reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Merge(Message &&src) = 0;
+   };
+
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
-   virtual void Set(EffectSettings &&settings) = 0;
+   virtual void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
    virtual void Flush() = 0;
@@ -141,15 +194,16 @@ public:
 
    //! Do a correct read-modify-write of settings
    /*!
-    @param function takes EffectSettings & and its return is ignored.
+    @param function takes EffectSettings & and its return is a unique pointer
+    to Message, possibly null.
     If it throws an exception, then the settings will not be updated.
     Thus, a strong exception safety guarantee.
     */
    template<typename Function>
    void ModifySettings(Function &&function) {
       auto settings = this->Get();
-      std::forward<Function>(function)(settings);
-      this->Set(std::move(settings));
+      auto result = std::forward<Function>(function)(settings);
+      this->Set(std::move(settings), std::move(result));
    }
 };
 
@@ -161,7 +215,8 @@ public:
       : mSettings{settings} {}
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -232,15 +287,6 @@ public:
    virtual bool IsHiddenFromMenus() const;
 };
 
-//! Direction in which settings are copied
-enum class SettingsCopyDirection
-{
-   //! Main thread settings replicated to the worker thread
-   MainToWorker,
-   //! Worker thread settings replicated to main thread
-   WorkerToMain
-};
-
 /*************************************************************************************//**
 
 \class EffectSettingsManager
@@ -283,7 +329,7 @@ public:
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const;
+      const EffectSettings &src, EffectSettings &dst) const;
 
    //! Store settings as keys and values
    /*!
@@ -327,6 +373,16 @@ public:
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
+
+   /*! @name outputs
+    @{
+    */
+   //! Produce an object to hold values to send to effect output meters
+   /*!
+    Default implementation returns nullptr
+    */
+   virtual std::unique_ptr<EffectOutputs> MakeOutputs() const;
+   //! @}
 };
 
 class wxDialog;
@@ -428,7 +484,8 @@ public:
     Default implementation does nothing, returns true
     */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+      EffectSettings &settings, EffectOutputs *pOutputs,
+      unsigned numChannels, float sampleRate);
 
    /*!
     @return success
@@ -442,12 +499,23 @@ public:
     */
    virtual bool RealtimeResume();
 
+   //! Type of messages to send from main thread to processing, which can
+   //! describe the transitions of settings (instead of their states)
+   using Message = EffectSettingsAccess::Message;
+
+   //! Called on the main thread, in which the result may be cloned
+   /*! Default implementation returns a null */
+   virtual std::unique_ptr<Message> MakeMessage() const;
+
+   // TODO make it just an alias for Message *
+   struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeProcessStart(EffectSettings &settings);
+   virtual bool RealtimeProcessStart(MessagePackage &package);
 
    /*!
     @return success
@@ -472,13 +540,6 @@ public:
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
    virtual size_t GetTailSize() const;
-
-   //! Main thread receives updates to settings from a processing thread
-   /*!
-    Default implementation simply assigns by copy, not move
-    This might be overridden to copy contents only selectively
-    */
-   virtual void AssignSettings(EffectSettings &dst, EffectSettings &&src) const;
 
    using SampleCount = uint64_t;
 
@@ -647,13 +708,16 @@ public:
     object
     @param access guaranteed to have a lifetime containing that of the returned
     object
+    @param pOutputs null, or else points to outputs with lifetime containing
+    that of the returned object
 
     @return null for failure; else an object invoked to retrieve values of UI
     controls; it might also hold some state needed to implement event handlers
     of the controls; it will exist only while the dialog continues to exist
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
-      EffectInstance &instance, EffectSettingsAccess &access) = 0;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) = 0;
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;

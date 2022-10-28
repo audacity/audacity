@@ -32,7 +32,8 @@
 std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
    LV2InstanceFeaturesList &baseFeatures,
    const LV2Ports &ports, LV2PortStates &portStates,
-   const LV2EffectSettings &settings, float sampleRate, bool useOutput)
+   const LV2EffectSettings &settings, float sampleRate,
+   EffectOutputs *pOutputs)
 {
    auto &plug = baseFeatures.mPlug;
 
@@ -46,7 +47,7 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
 
    const auto instance = &wrapper->GetInstance();
    wrapper->SendBlockSize();
-   wrapper->ConnectPorts(ports, portStates, settings, useOutput);
+   wrapper->ConnectPorts(ports, portStates, settings, pOutputs);
 
    // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
    // this before it can be safely deleted.
@@ -61,10 +62,12 @@ std::unique_ptr<LV2Wrapper> LV2Wrapper::Create(
 }
 
 void LV2Wrapper::ConnectControlPorts(
-   const LV2Ports &ports, const LV2EffectSettings &settings, bool useOutput)
+   const LV2Ports &ports, const LV2EffectSettings &settings,
+   EffectOutputs *pOutputs)
 {
    const auto instance = &GetInstance();
    static float blackHole;
+   auto pValues = static_cast<LV2EffectOutputs *>(pOutputs);
 
    // Connect all control ports
    const auto latencyPort = ports.mLatencyPort;
@@ -74,24 +77,22 @@ void LV2Wrapper::ConnectControlPorts(
    auto &values = settings.values;
    size_t index = 0;
    for (auto & port : ports.mControlPorts) {
-      // If it's not an input port and output values are unwanted,
-      // then connect the port to a dummy.
-      // Otherwise, connect it to the real value field.
-      lilv_instance_connect_port(instance, port->mIndex,
-         !port->mIsInput && useOutput
-            ? &blackHole
-            // Treat settings slot corresponding to an output port as mutable
-            // Otherwise those for input ports must still pass to the library
-            // as nominal pointers to non-const
-            : &const_cast<float&>(values[index]));
+      void *const location = port->mIsInput
+         // Settings slots for input ports must pass to the library
+         // as nominal pointers to non-const
+         ? &const_cast<float&>(values[index])
+         : pValues ? &pValues->values[index]
+         : &blackHole
+      ;
+      lilv_instance_connect_port(instance, port->mIndex, location);
       ++index;
    }
 }
 
 void LV2Wrapper::ConnectPorts(const LV2Ports &ports, LV2PortStates &portStates,
-   const LV2EffectSettings &settings, bool useOutput)
+   const LV2EffectSettings &settings, EffectOutputs *pOutputs)
 {
-   ConnectControlPorts(ports, settings, useOutput);
+   ConnectControlPorts(ports, settings, pOutputs);
 
    const auto instance = &GetInstance();
 

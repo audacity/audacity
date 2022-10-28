@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-09-25 20:12+0000\n"
+"PO-Revision-Date: 2022-10-25 08:08+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -560,7 +560,7 @@ msgstr "Nie"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Audacity Module Loader"
-msgstr "Ładowarka modułu Audacity"
+msgstr "Ładowarka modułów Audacity"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Try and load this module?"
@@ -863,7 +863,7 @@ msgid ""
 "Themes as Cee code written to:\n"
 "  %s/*%s."
 msgstr ""
-"Motyw jak kod Cee zapisany do:\n"
+"Motyw jako kod Cee zapisany do:\n"
 "  %s/*%s."
 
 #. i18n-hint: user defined
@@ -881,7 +881,7 @@ msgstr "Ścieżka dźwiękowa"
 
 #: libraries/lib-track/Track.cpp
 msgid "Playable Track"
-msgstr "Odtwarzana ścieżka"
+msgstr "Ścieżka odtwarzana"
 
 #: libraries/lib-transactions/TransactionScope.cpp
 msgid "Database error.  Sorry, but we don't have more details."
@@ -3629,7 +3629,7 @@ msgid ""
 "still like to attempt to use these plugins, you can enable them using "
 "\"Manage Plugins\". Otherwise, select \"Continue\"."
 msgstr ""
-"Audacity znalazł %d niezgodne wtyczki, których nie można załadować. "
+"Audacity znalazł %d niekompatybilne wtyczki, których nie można załadować. "
 "Wyłączyliśmy je, aby uniknąć przestojów lub awarii. Jeśli nadal chcesz "
 "spróbować z nich skorzystać, możesz je włączyć za pomocą \"Zarządzaj "
 "wtyczkami\". W przeciwnym razie wybierz \"Kontynuuj\"."
@@ -12208,7 +12208,7 @@ msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
-"Łączysz do lame_enc.dll v%d.%d. Ta wersja nie współpracuje z Audacity %d.%d.%d.\n"
+"Łączysz do lame_enc.dll v%d.%d. Ta wersja jest niekompatybilna z Audacity %d.%d.%d.\n"
 "Pobierz najnowszą wersję 'LAME dla Audacity'."
 
 #: src/export/ExportMP3.cpp
@@ -12564,7 +12564,7 @@ msgstr "GSM 6.10 wymaga mono"
 
 #: src/export/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
-msgstr "Formaty WAVEX i GSM 6.10 nie są kompatybilne"
+msgstr "Formaty WAVEX i GSM 6.10 są niekompatybilne"
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -13070,7 +13070,7 @@ msgstr "Pliki kompatybilne z GStreamerem"
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to add decoder to pipeline"
-msgstr "Nie można dodać dekodera do rurociągu"
+msgstr "Nie można dodać dekodera do przetwarzania potokowego"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer Importer"
@@ -14725,7 +14725,7 @@ msgstr "&Odzyskaj zaznaczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "S&pectral"
-msgstr "&Widmowy"
+msgstr "&Widmowe"
 
 #: src/menus/SelectMenus.cpp
 msgid "To&ggle Spectral Selection"
@@ -19789,7 +19789,7 @@ msgstr "-Nieskończoność"
 
 #: src/widgets/valnum.cpp
 msgid "Validation error"
-msgstr "Błąd walidacji"
+msgstr "Błąd weryfikacji"
 
 #: src/widgets/valnum.cpp
 msgid "Empty value"

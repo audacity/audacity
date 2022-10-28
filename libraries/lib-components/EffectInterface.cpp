@@ -19,12 +19,17 @@ EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
 
+EffectOutputs::~EffectOutputs() = default;
+
+EffectSettingsAccess::Message::~Message() = default;
+
 const EffectSettings &SimpleEffectSettingsAccess::Get()
 {
    return mSettings;
 }
 
-void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
+void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
+   std::unique_ptr<Message>)
 {
    mSettings = std::move(settings);
 }
@@ -109,8 +114,14 @@ auto EffectSettingsManager::MakeSettings() const -> EffectSettings
    return {};
 }
 
+auto EffectSettingsManager::MakeOutputs() const
+   -> std::unique_ptr<EffectOutputs>
+{
+   return nullptr;
+}
+
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
+   const EffectSettings &, EffectSettings &) const
 {
    return true;
 }
@@ -127,7 +138,8 @@ bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
    return false;
 }
 
-bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
+bool EffectInstance::RealtimeAddProcessor(
+   EffectSettings &, EffectOutputs *, unsigned, float)
 {
    return true;
 }
@@ -142,7 +154,12 @@ bool EffectInstance::RealtimeResume()
    return true;
 }
 
-bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
+{
+   return nullptr;
+}
+
+bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
@@ -166,12 +183,6 @@ bool EffectInstance::RealtimeFinalize(EffectSettings &) noexcept
 size_t EffectInstance::GetTailSize() const
 {
    return 0;
-}
-
-void EffectInstance::AssignSettings(EffectSettings &dst, EffectSettings &&src)
-   const
-{
-   dst = src;
 }
 
 auto EffectInstance::GetLatency(const EffectSettings &, double) const

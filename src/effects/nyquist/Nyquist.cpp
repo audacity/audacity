@@ -587,45 +587,47 @@ bool NyquistEffect::Init()
    // selected track(s) - (but don't apply to Nyquist Prompt).
 
    if (!mIsPrompt && mIsSpectral) {
-      auto *project = FindProject();
-      bool bAllowSpectralEditing = false;
-      bool hasSpectral = false;
-
-      for ( auto t :
-               TrackList::Get( *project ).Selected< const WaveTrack >() ) {
-         // Find() not Get() to avoid creation-on-demand of views in case we are
-         // only previewing
-         auto pView = WaveTrackView::Find( t );
-         if ( pView ) {
-            const auto displays = pView->GetDisplays();
-            if (displays.end() != std::find(
-               displays.begin(), displays.end(),
-               WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
-               hasSpectral = true;
+      // Completely skip the spectral editing limitations if there is no
+      // project because that is editing of macro parameters
+      if (const auto project = FindProject()) {
+         bool bAllowSpectralEditing = false;
+         bool hasSpectral = false;
+         for ( auto t :
+                  TrackList::Get( *project ).Selected< const WaveTrack >() ) {
+            // Find() not Get() to avoid creation-on-demand of views in case we are
+            // only previewing
+            auto pView = WaveTrackView::Find( t );
+            if ( pView ) {
+               const auto displays = pView->GetDisplays();
+               if (displays.end() != std::find(
+                  displays.begin(), displays.end(),
+                  WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
+                  hasSpectral = true;
+            }
+            if ( hasSpectral &&
+                (t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
+               bAllowSpectralEditing = true;
+               break;
+            }
          }
-         if ( hasSpectral &&
-             (t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
-            bAllowSpectralEditing = true;
-            break;
-         }
-      }
 
-      if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-         if (!hasSpectral) {
-            Effect::MessageBox(
-            XO("Enable track spectrogram view before\n"
-            "applying 'Spectral' effects."),
-            wxOK | wxICON_EXCLAMATION | wxCENTRE,
-            XO("Error") );
-         } else {
-            Effect::MessageBox(
-               XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                           "in the track Spectrogram settings and select the\n"
-                           "frequency range for the effect to act on."),
+         if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
+            if (!hasSpectral) {
+               Effect::MessageBox(
+               XO("Enable track spectrogram view before\n"
+               "applying 'Spectral' effects."),
                wxOK | wxICON_EXCLAMATION | wxCENTRE,
                XO("Error") );
+            } else {
+               Effect::MessageBox(
+                  XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                              "in the track Spectrogram settings and select the\n"
+                              "frequency range for the effect to act on."),
+                  wxOK | wxICON_EXCLAMATION | wxCENTRE,
+                  XO("Error") );
+            }
+            return false;
          }
-         return false;
       }
    }
 
@@ -1122,6 +1124,7 @@ int NyquistEffect::ShowHostInterface(
          nyquistSettings.proxySettings = std::move(newSettings);
          nyquistSettings.proxyDebug = this->mDebug;
          nyquistSettings.controls = move(effect.mControls);
+         return nullptr;
       });
    }
    if (!pNewInstance)
@@ -1131,7 +1134,8 @@ int NyquistEffect::ShowHostInterface(
 }
 
 std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    if (mIsPrompt)
       BuildPromptWindow(S);

@@ -26,127 +26,131 @@ public:
       : mEffect{ effect }
       , mState{ state }
    {
-      Initialize(state.mMainSettings);
-   }
-
-   void Initialize(SettingsAndCounter &settings)
-   {
       // Clean initial state of the counter
-      settings.counter = 0;
-      mLastSettings = settings;
-      // Initialize each message buffer with two copies of settings
-      mChannelToMain.Write(ToMainSlot{ settings });
-      mChannelToMain.Write(ToMainSlot{ settings });
-      mChannelFromMain.Write(FromMainSlot{ settings });
-      mChannelFromMain.Write(FromMainSlot{ settings });
+      state.mMainSettings.counter = 0;
+      Initialize(state.mMainSettings.settings,
+         state.mMessage.get(), state.mMovedOutputs.get());
    }
 
-   const SettingsAndCounter &MainRead() {
-      // Main thread clones the object in the std::any, then gives a reference
-      mChannelToMain.Read<ToMainSlot::Reader>(
-         mMainThreadCache, mState.mwInstance.lock());
-      return mMainThreadCache;
+   void Initialize(const EffectSettings &settings,
+      const EffectInstance::Message *pMessage,
+      const EffectOutputs *pOutputs)
+   {
+      mLastSettings = { settings, 0 };
+      // Initialize each message buffer with two copies
+      mChannelToMain.Write(ToMainSlot{ { 0,
+         pOutputs ? pOutputs->Clone() : nullptr } });
+      mChannelToMain.Write(ToMainSlot{ { 0,
+         pOutputs ? pOutputs->Clone() : nullptr } });
+      mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
+      mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
    }
-   void MainWrite(SettingsAndCounter &&settings) {
+
+   void MainRead() {
+      mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
+         mCounter);
+   }
+   void MainWrite(SettingsAndCounter &&settings,
+      std::unique_ptr<EffectInstance::Message> pMessage) {
       // Main thread may simply swap new content into place
-      mChannelFromMain.Write(std::move(settings));
-   }
-   const SettingsAndCounter &
-   MainWriteThrough(const SettingsAndCounter &settings) {
-      // Main thread assumes worker isn't processing and bypasses the echo
-      return (mMainThreadCache = settings);
+      mChannelFromMain.Write(FromMainSlot::Message{
+         std::move(settings.settings), settings.counter, std::move(pMessage) });
    }
 
-   struct EffectAndSettings{
-      const EffectSettingsManager &effect;
-      const SettingsAndCounter &settings;
+   struct CounterAndOutputs{
+      Response::Counter counter;
+      EffectOutputs *pOutputs{};
    };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(
-         mEffect, mState.mWorkerSettings);
+      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mState);
    }
    void WorkerWrite() {
-      // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelToMain.Write(EffectAndSettings{
-         mEffect, mState.mWorkerSettings });
+      // Worker thread avoids memory allocation.
+      mChannelToMain.Write(CounterAndOutputs{
+         mState.mWorkerSettings.counter, mState.mOutputs.get() });
    }
-
-   const SettingsAndCounter &MainThreadCache() const { return mMainThreadCache; }
 
    struct ToMainSlot {
       // For initialization of the channel
       ToMainSlot() = default;
-      explicit ToMainSlot(const SettingsAndCounter &settings)
-         // Copy std::any
-         : mSettings{ settings }
+      explicit ToMainSlot(Response response)
+         : mResponse{ std::move(response) }
       {}
       ToMainSlot &operator=(ToMainSlot &&) = default;
 
       // Worker thread writes the slot
-      ToMainSlot& operator=(EffectAndSettings &&arg) {
-         mSettings.counter = arg.settings.counter;
+      ToMainSlot& operator=(CounterAndOutputs &&arg) {
          // This happens during MessageBuffer's busying of the slot
-         arg.effect.CopySettingsContents(
-            arg.settings.settings, mSettings.settings,
-            SettingsCopyDirection::WorkerToMain);
-         mSettings.settings.extra = arg.settings.settings.extra;
+         mResponse.counter = arg.counter;
+         if (mResponse.pOutputs && arg.pOutputs)
+            mResponse.pOutputs->Assign(std::move(*arg.pOutputs));
          return *this;
       }
 
-      // Main thread doesn't move out of the slot, but copies std::any
-      // and extra fields
-      struct Reader {
-         Reader(ToMainSlot &&slot, SettingsAndCounter &settings,
-            const std::shared_ptr<EffectInstance> pInstance
-         ) {
-            settings.counter = slot.mSettings.counter;
-            if (pInstance)
-               pInstance->AssignSettings(
-                  settings.settings, std::move(slot.mSettings.settings));
-         }
-      };
+      struct Reader { Reader(ToMainSlot &&slot, EffectOutputs *pOutputs,
+         Response::Counter &counter
+      ) {
+         // Main thread is not under the performance constraints of the
+         // worker, but Assign is still used so that
+         // members of underlying vectors or other containers do not
+         // relocate
+         if (pOutputs && slot.mResponse.pOutputs)
+            pOutputs->Assign(std::move(*slot.mResponse.pOutputs));
+         counter = slot.mResponse.counter;
+      } };
 
-      SettingsAndCounter mSettings;
+      Response mResponse;
    };
 
    struct FromMainSlot {
+      struct Message : SettingsAndCounter {
+         std::unique_ptr<EffectInstance::Message> pMessage;
+      };
+
       // For initialization of the channel
       FromMainSlot() = default;
-      explicit FromMainSlot(const SettingsAndCounter &settings)
+      explicit FromMainSlot(const EffectSettings &settings,
+         const EffectInstance::Message *pMessage)
          // Copy std::any
-         : mSettings{ settings }
+         : mMessage{ settings, 0, pMessage ? pMessage->Clone() : nullptr }
       {}
       FromMainSlot &operator=(FromMainSlot &&) = default;
 
       // Main thread writes the slot
-      FromMainSlot& operator=(SettingsAndCounter &&settings) {
-         mSettings.swap(settings);
+      FromMainSlot& operator=(Message &&message) {
+         mMessage.SettingsAndCounter::swap(message);
+         if (message.pMessage && mMessage.pMessage)
+            // Merge the incoming message with any still unconsumed message
+            mMessage.pMessage->Merge(std::move(*message.pMessage));
          return *this;
       }
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
-         const EffectSettingsManager &effect, SettingsAndCounter &settings) {
-         if(slot.mSettings.counter == settings.counter)
+         const EffectSettingsManager &effect, RealtimeEffectState &state) {
+         auto &settings = state.mWorkerSettings;
+         if(slot.mMessage.counter == settings.counter)
             return;//copy once
+         settings.counter = slot.mMessage.counter;
 
-         settings.counter = slot.mSettings.counter;
-            // This happens during MessageBuffer's busying of the slot
-            effect.CopySettingsContents(
-               slot.mSettings.settings, settings.settings,
-               SettingsCopyDirection::MainToWorker);
-            settings.settings.extra = slot.mSettings.settings.extra;
+         // This happens during MessageBuffer's busying of the slot
+         effect.CopySettingsContents(
+            slot.mMessage.settings, settings.settings);
+         settings.settings.extra = slot.mMessage.settings.extra;
+         if (slot.mMessage.pMessage && state.mMovedMessage)
+            // Copy the message from the buffer (not a merge)
+            state.mMovedMessage->Assign(std::move(*slot.mMessage.pMessage));
       } };
 
-      SettingsAndCounter mSettings;
+      Message mMessage;
    };
 
    const EffectSettingsManager &mEffect;
    RealtimeEffectState &mState;
 
    MessageBuffer<FromMainSlot> mChannelFromMain;
-   SettingsAndCounter mMainThreadCache;
+   Response::Counter mCounter;
    SettingsAndCounter mLastSettings;
 
    MessageBuffer<ToMainSlot> mChannelToMain;
@@ -161,40 +165,33 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    ~Access() override = default;
    // Try once to detect that the worker thread has echoed the last write
-   static const SettingsAndCounter *FlushAttempt(AccessState &state) {
+   // @pre state.mState.mInitialized
+   static bool FlushAttempt(AccessState &state) {
+      assert(state.mState.mInitialized);
       auto &lastSettings = state.mLastSettings;
-      auto pResult = &state.MainRead();
-      if (!state.mState.mInitialized) {
-         // not relying on the other thread to make progress
-         // and no fear of data races
-         state.Initialize(lastSettings);
-         return &state.MainWriteThrough(lastSettings);
-      }
-      else if (!lastSettings.settings.has_value() ||
-         pResult->counter == lastSettings.counter
-      ){
-         // First time test, or echo is completed
-         return pResult;
-      }
-      return nullptr;
+      // Assigns to mCounter
+      state.MainRead();
+      // If true, then first time test, or echo is completed
+      return state.mCounter == lastSettings.counter;
    }
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            FlushAttempt(*pAccessState); // try once, ignore success
-            auto &lastSettings = pAccessState->mLastSettings;
-            return lastSettings.settings.has_value()
-               ? lastSettings.settings
-               // If no value there yet, then FlushAttempt did MainRead which
-               // has copied the initial value given to the constructor
-               : pAccessState->MainThreadCache().settings;
+            if (pAccessState->mState.mInitialized)
+               FlushAttempt(*pAccessState); // try once, ignore success
+            else {
+               // Not yet waiting on the other thread's progress
+               // Not necessarily values yet in the state's Settings objects
+            }
+            return pAccessState->mLastSettings.settings;
          }
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
       static EffectSettings empty;
       return empty;
    }
-   void Set(EffectSettings &&settings) override {
+   void Set(EffectSettings &&settings, std::unique_ptr<Message> pMessage)
+   override {
       if (auto pState = mwState.lock())
          if (auto pAccessState = pState->GetAccessState()) {
             auto &lastSettings = pAccessState->mLastSettings;
@@ -202,20 +199,27 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             lastSettings.settings = std::move(settings);
             ++lastSettings.counter;
             // move a copy to there
-            pAccessState->MainWrite(SettingsAndCounter{ lastSettings });
+            pAccessState->MainWrite(
+               SettingsAndCounter{ lastSettings }, std::move(pMessage));
          }
    }
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
-            const SettingsAndCounter *pResult{};
-            while (!(pResult = FlushAttempt(*pAccessState))) {
-               // Wait for progress of audio thread
-               using namespace std::chrono;
-               std::this_thread::sleep_for(50ms);
+            bool bResult{};
+            if (pAccessState->mState.mInitialized) {
+               while (!(bResult = FlushAttempt(*pAccessState))) {
+                  // Wait for progress of audio thread
+                  using namespace std::chrono;
+                  std::this_thread::sleep_for(50ms);
+               }
             }
-            pState->mMainSettings.Set(*pResult); // Update the state
-            pAccessState->mLastSettings = *pResult;
+
+            // Update what GetSettings() will return, during play and before
+            // Finalize(), but after it is confirmed that any worker thread has
+            // seen the values given to the last Set().  These values will also
+            // be returned by Get().
+            pState->mMainSettings.Set(pAccessState->mLastSettings);
          }
       }
    }
@@ -270,9 +274,25 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
          mMainSettings.counter = 0;
          mMainSettings.settings = mPlugin->MakeSettings();
          mMainSettings.settings.extra.SetActive(wasActive);
+         mOutputs = mPlugin->MakeOutputs();
+         mMovedOutputs = mPlugin->MakeOutputs();
       }
    }
    return mPlugin;
+}
+
+std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
+{
+   mMovedMessage.reset();
+   mMessage.reset();
+   auto result = mPlugin->MakeInstance();
+   if (result) {
+      // Allocate presized containers in messages, so later
+      // copies of contents might avoid free store operations
+      mMessage = result->MakeMessage();
+      mMovedMessage = result->MakeMessage();
+   }
+   return result;
 }
 
 std::shared_ptr<EffectInstance>
@@ -289,7 +309,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
 
       //! If there was already an instance, recycle it; else make one here
       if (!pInstance)
-         mwInstance = pInstance = mPlugin->MakeInstance();
+         mwInstance = pInstance = MakeInstance();
       if (!pInstance)
          return {};
 
@@ -310,7 +330,7 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
    //! If there was already an instance, recycle it; else make one here
    auto pInstance = mwInstance.lock();
    if (!pInstance && mPlugin)
-      mwInstance = pInstance = mPlugin->MakeInstance();
+      mwInstance = pInstance = MakeInstance();
    return pInstance;
 }
 
@@ -368,10 +388,8 @@ RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
    AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
    [&](unsigned, unsigned){
       // Add a NEW processor
-      // Pass reference to worker settings, not main -- such as, for connecting
-      // Ladspa ports to the proper addresses.
       if (pInstance->RealtimeAddProcessor(
-         mWorkerSettings.settings, numAudioIn, sampleRate)
+         mWorkerSettings.settings, mOutputs.get(), numAudioIn, sampleRate)
       ) {
          mCurrentProcessor++;
          return true;
@@ -414,7 +432,10 @@ bool RealtimeEffectState::ProcessStart(bool running)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
-   return pInstance->RealtimeProcessStart(mWorkerSettings.settings);
+   EffectInstance::MessagePackage package{
+      mWorkerSettings.settings, mMovedMessage.get()
+   };
+   return pInstance->RealtimeProcessStart(package);
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
@@ -528,6 +549,7 @@ void RealtimeEffectState::SetActive(bool active)
    auto access = GetAccess();
    access->ModifySettings([&](EffectSettings &settings) {
       settings.extra.SetActive(active);
+      return nullptr;
    });
    access->Flush();
 
@@ -549,11 +571,6 @@ bool RealtimeEffectState::Finalize() noexcept
       return false;
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
-   if(result)
-      //update mLastSettings so that Flush didn't
-      //overwrite what was read from the worker
-      if (auto state = GetAccessState())
-         state->Initialize(mMainSettings);
    mLatency = {};
    mInitialized = false;
    return result;
@@ -672,7 +689,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
 std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
 {
    if (!GetEffect())
-      // Effect not found!  Return a dummy
+      // Effect not found!
+      // Return a dummy
       return std::make_shared<Access>();
 
    // Only the main thread assigns to the atomic pointer, here and

@@ -22,10 +22,13 @@ namespace internal
    class PlugFrame final : public Steinberg::IPlugFrame
    {
       wxWeakRef<wxWindow> mWindow;
+      bool mInitialized{false};
    public:
 
       PlugFrame(wxWindow* window);
       virtual ~PlugFrame();
+
+      void init(Steinberg::IPlugView* view, Steinberg::ViewRect* size);
 
       Steinberg::tresult PLUGIN_API resizeView(Steinberg::IPlugView* view, Steinberg::ViewRect* newSize) override;
 

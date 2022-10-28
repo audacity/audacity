@@ -48,12 +48,12 @@ private:
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
+   bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;

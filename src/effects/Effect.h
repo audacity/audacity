@@ -127,8 +127,8 @@ class AUDACITY_DLL_API Effect /* not final */
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
    //! @return false
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
@@ -197,7 +197,8 @@ class AUDACITY_DLL_API Effect /* not final */
     DefaultEffectUIValidator; default implementation returns null
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access);
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs);
 
    // No more virtuals!
 
@@ -322,7 +323,7 @@ public:
       return EffectSettings::Make<Settings>();
    }
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override
+      const EffectSettings &src, EffectSettings &dst) const override
    {
       return EffectSettings::Copy<Settings>(src, dst);
    }

@@ -81,8 +81,8 @@ public:
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -97,8 +97,9 @@ public:
 private:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst,
-      SettingsCopyDirection copyDirection) const override;
+      const EffectSettings &src, EffectSettings &dst) const override;
+
+   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
 
    bool LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;

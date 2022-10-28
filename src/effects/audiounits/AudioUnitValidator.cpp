@@ -107,6 +107,7 @@ bool AudioUnitValidator::ValidateUI()
          settings.extra.SetDuration(mDuration->GetValue());
 #endif
       FetchSettingsFromInstance(settings);
+      return nullptr;
    });
    return true;
 }

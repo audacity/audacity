@@ -236,14 +236,17 @@ bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
-   EffectUIValidator *, bool forceModal)
+   EffectUIValidator *validator, bool forceModal)
 {
-   if(!IsGraphicalUI())
-   {
-      //Restrict resize of the "plain" dialog
-      dialog.SetMaxSize(dialog.GetSize());
-      dialog.SetMinSize(dialog.GetSize());
-   }
+#ifdef __WXMSW__
+   if(validator->IsGraphicalUI())
+      //Not all platforms support window style change.
+      //Plugins that support resizing provide their own handles,
+      //which may overlap with system handle. Not all plugins
+      //support free sizing (e.g. fixed steps or fixed ratio)
+      dialog.SetWindowStyle(dialog.GetWindowStyle() & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX));
+#endif
+
    if(forceModal)
       return dialog.ShowModal();
 
@@ -257,7 +260,8 @@ std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
-   EffectInstance& instance, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    bool useGUI { true };
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -403,8 +407,8 @@ EffectSettings VST3Effect::MakeSettings() const
    return VST3Wrapper::MakeSettings();
 }
 
-bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
+bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
 {
-   VST3Wrapper::CopySettingsContents(src, dst, copyDirection);
+   VST3Wrapper::CopySettingsContents(src, dst);
    return true;
 }

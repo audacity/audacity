@@ -171,7 +171,8 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 
 
 std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {

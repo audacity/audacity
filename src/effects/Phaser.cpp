@@ -258,7 +258,7 @@ bool EffectPhaser::Instance::RealtimeInitialize(EffectSettings&, double)
 }
 
 bool EffectPhaser::Instance::RealtimeAddProcessor(
-   EffectSettings& settings, unsigned, float sampleRate)
+   EffectSettings& settings, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectPhaser::Instance slave(mProcessor);
 
@@ -286,7 +286,8 @@ size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &set
 
 // Effect implementation
 std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
-   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
+   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

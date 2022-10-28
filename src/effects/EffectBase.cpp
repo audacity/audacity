@@ -73,7 +73,10 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
 
    mFactory = factory;
    mProjectRate = projectRate;
-   mTracks = list;
+
+   SetTracks(list);
+   // Don't hold a dangling pointer when done
+   Finally Do([&]{ SetTracks(nullptr); });
 
    // This is for performance purposes only, no additional recovery implied
    auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
@@ -139,6 +142,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    auto updater = [&](EffectSettings &settings) {
       settings.extra.SetDuration(duration);
       settings.extra.SetDurationFormat( newFormat );
+      return nullptr;
    };
    // Update our copy of settings; update the EffectSettingsAccess too,
    // if we are going to show a dialog
@@ -469,6 +473,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
          // Preview of non-realtime effect
          auto pInstance = MakeInstance();
          success = pInstance && pInstance->Process(settings);
+         return nullptr;
       });
    }
 

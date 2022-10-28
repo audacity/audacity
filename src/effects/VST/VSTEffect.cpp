@@ -1042,8 +1042,8 @@ bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double samp
    return DoProcessInitialize(sampleRate);
 }
 
-bool VSTEffectInstance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
+bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs *, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<VSTEffectInstance>(GetEffect(), mPath, mBlockSize, mUserBlockSize, mUseLatency);
 
@@ -1087,8 +1087,9 @@ bool VSTEffectInstance::RealtimeResume()
    return true;
 }
 
-bool VSTEffectInstance::RealtimeProcessStart(EffectSettings& settings)
+bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
+   auto &settings = package.settings;
    {
       // If we assume that the user might be moving knobs during realtime processing and wants
       // to hear how the sound changes, we must protect mSettings from data races then
@@ -1281,7 +1282,8 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance& instance, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));

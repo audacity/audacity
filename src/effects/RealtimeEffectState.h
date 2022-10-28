@@ -63,6 +63,9 @@ public:
     */
    std::shared_ptr<EffectInstance> GetInstance();
 
+   //! Get locations that a GUI can connect meters to
+   const EffectOutputs *GetOutputs() const { return mMovedOutputs.get(); }
+
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
@@ -113,6 +116,7 @@ public:
 
 private:
 
+   std::shared_ptr<EffectInstance> MakeInstance();
    std::shared_ptr<EffectInstance> EnsureInstance(double rate);
 
    struct Access;
@@ -145,9 +149,18 @@ private:
          std::swap(counter, other.counter);
       }
    };
-   
+
+   struct Response {
+      using Counter = unsigned char;
+
+      Counter counter{ 0 };
+      std::unique_ptr<EffectOutputs> pOutputs;
+   };
+
    //! Updated immediately by Access::Set in the main thread
    NonInterfering<SettingsAndCounter> mMainSettings;
+   std::unique_ptr<EffectInstance::Message> mMessage;
+   std::unique_ptr<EffectOutputs> mMovedOutputs;
 
    /*! @name Members that are changed also in the worker thread
     @{
@@ -156,6 +169,9 @@ private:
    //! Updated with delay, but atomically, in the worker thread; skipped by the
    //! copy constructor so that there isn't a race when pushing an Undo state
    NonInterfering<SettingsAndCounter> mWorkerSettings;
+   std::unique_ptr<EffectInstance::Message> mMovedMessage;
+   std::unique_ptr<EffectOutputs> mOutputs;
+
    //! How many samples must be discarded
    std::optional<EffectInstance::SampleCount> mLatency;
    //! Assigned in the worker thread at the start of each processing scope

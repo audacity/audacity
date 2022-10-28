@@ -121,7 +121,7 @@ EffectSettings LadspaEffect::MakeSettings() const
 }
 
 bool LadspaEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const
+   const EffectSettings &src, EffectSettings &dst) const
 {
    // Do not use the copy constructor of std::vector.  Do an in-place rewrite
    // of the destination vector, which will not allocate memory if dstControls
@@ -140,8 +140,6 @@ bool LadspaEffect::CopySettingsContents(
    if (portValuesCount != portCount)
       return false;
 
-   const auto copyOutputs = copyDirection == SettingsCopyDirection::WorkerToMain;
-
    for (unsigned long p = 0; p < portCount; ++p)
    {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
@@ -149,11 +147,18 @@ bool LadspaEffect::CopySettingsContents(
       if (!(LADSPA_IS_PORT_CONTROL(d)))
          continue;
 
-      if (LADSPA_IS_PORT_INPUT(d) || copyOutputs)
+      if (LADSPA_IS_PORT_INPUT(d))
          dstControls[p] = srcControls[p];
    }
 
    return true;
+}
+
+auto LadspaEffect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
+{
+   auto result = std::make_unique<LadspaEffectOutputs>();
+   result->controls.resize(mData->PortCount);
+   return result;
 }
 
 // ============================================================================
@@ -573,6 +578,13 @@ class LadspaEffectMeter final : public wxWindow
 {
 public:
    LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max);
+
+   void Disconnect()
+   {
+      // Stop using mVal, it might be dangling now
+      mConnected = false;
+   }
+
    virtual ~LadspaEffectMeter();
 
 private:
@@ -582,6 +594,7 @@ private:
    void OnSize(wxSizeEvent & evt);
 
 private:
+   bool mConnected{ true };
    const float & mVal;
    float mMin;
    float mMax;
@@ -598,13 +611,15 @@ BEGIN_EVENT_TABLE(LadspaEffectMeter, wxWindow)
 END_EVENT_TABLE()
 
 LadspaEffectMeter::LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max)
-:  wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxDEFAULT_CONTROL_BORDER),
+:  wxWindow{ parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+      wxSIMPLE_BORDER },
    mVal(val)
 {
    mMin = min;
    mMax = max;
    mLastValue = -mVal;
    SetBackgroundColour(*wxWHITE);
+   SetMinSize({ 20, 20 });
 }
 
 LadspaEffectMeter::~LadspaEffectMeter()
@@ -614,6 +629,8 @@ LadspaEffectMeter::~LadspaEffectMeter()
 void LadspaEffectMeter::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
+   if (!mConnected)
+      return;
    if (mLastValue != mVal)
       Refresh(false);
 }
@@ -625,6 +642,9 @@ void LadspaEffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void LadspaEffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
+   if (!mConnected)
+      return;
+
    wxPaintDC dc(this);
 
    // Cache some metrics
@@ -654,6 +674,22 @@ void LadspaEffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 void LadspaEffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    Refresh(false);
+}
+
+LadspaEffectOutputs::~LadspaEffectOutputs() = default;
+
+auto LadspaEffectOutputs::Clone() const -> std::unique_ptr<EffectOutputs>
+{
+   return std::make_unique<LadspaEffectOutputs>(*this);
+}
+
+void LadspaEffectOutputs::Assign(EffectOutputs &&src)
+{
+   // Don't really need to modify src
+   const auto &srcValues = static_cast<LadspaEffectOutputs&>(src).controls;
+   auto &dstValues = controls;
+   assert(srcValues.size() == dstValues.size());
+   copy(srcValues.begin(), srcValues.end(), dstValues.data());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -902,12 +938,12 @@ struct LadspaEffect::Instance
 
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate)
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate)
    override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
+   bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples)
    override;
@@ -949,7 +985,8 @@ bool LadspaEffect::Instance::ProcessInitialize(
    if (!mReady) {
       auto &effect = GetEffect();
       auto &ladspaSettings = GetSettings(settings);
-      mMaster = effect.InitInstance(sampleRate, ladspaSettings);
+      // Destructive effect processing doesn't need output ports
+      mMaster = effect.InitInstance(sampleRate, ladspaSettings, nullptr);
       if (!mMaster)
          return false;
       mReady = true;
@@ -991,18 +1028,19 @@ bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool LadspaEffect::Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *pOutputs, unsigned, float sampleRate)
 {
    auto &effect = GetEffect();
    auto &ladspaSettings = GetSettings(settings);
-   LADSPA_Handle slave = effect.InitInstance(sampleRate, ladspaSettings);
+   // Connect to outputs only if this is the first processor for the track.
+   // (What's right when a mono effect is on a stereo channel?  Unclear, but
+   // this definitely causes connection with the first channel.)
+   auto pLadspaOutputs = mSlaves.empty()
+      ? static_cast<LadspaEffectOutputs *>(pOutputs) : nullptr;
+   auto slave = effect.InitInstance(sampleRate, ladspaSettings, pLadspaOutputs);
    if (!slave)
-   {
       return false;
-   }
-
    mSlaves.push_back(slave);
-
    return true;
 }
 
@@ -1044,7 +1082,7 @@ bool LadspaEffect::Instance::RealtimeResume()
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeProcessStart(EffectSettings &)
+bool LadspaEffect::Instance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
@@ -1150,16 +1188,19 @@ bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 
 struct LadspaEffect::Validator : EffectUIValidator {
    Validator(EffectUIClientInterface &effect,
-      EffectSettingsAccess &access, double sampleRate, EffectType type)
+      EffectSettingsAccess &access, double sampleRate, EffectType type,
+      const LadspaEffectOutputs *pOutputs)
       : EffectUIValidator{ effect, access }
       , mSampleRate{ sampleRate }
       , mType{ type }
       // Copy settings
       , mSettings{ GetSettings(access.Get()) }
+      , mpOutputs{ pOutputs }
    {}
 
    bool UpdateUI() override;
    bool ValidateUI() override;
+   void Disconnect() override;
 
    void PopulateUI(ShuttleGui &S);
 
@@ -1174,6 +1215,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
    const double mSampleRate;
    const EffectType mType;
    LadspaEffectSettings mSettings;
+   const LadspaEffectOutputs *const mpOutputs;
 
    NumericTextCtrl *mDuration{};
    wxWeakRef<wxDialog> mDialog;
@@ -1182,7 +1224,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
    ArrayOf<wxTextCtrl*> mFields;
    ArrayOf<wxStaticText*> mLabels;
    ArrayOf<wxCheckBox*> mToggles;
-   ArrayOf<LadspaEffectMeter *> mMeters;
+   std::vector<LadspaEffectMeter *> mMeters;
 };
 
 bool LadspaEffect::Validator::UpdateUI()
@@ -1204,7 +1246,7 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
    mSliders.reinit( data.PortCount );
    mFields.reinit( data.PortCount, true);
    mLabels.reinit( data.PortCount );
-   mMeters.reinit( data.PortCount );
+   mMeters.resize( data.PortCount );
 
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
@@ -1438,8 +1480,10 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 
             // Capture const reference to output control value for later
             // display update
+            static float sink;
+            auto pOutput = mpOutputs ? &mpOutputs->controls[p] : &sink;
             mMeters[p] = safenew LadspaEffectMeter(
-               w, controls[p], lower, upper);
+               w, *pOutput, lower, upper);
             mMeters[p]->SetLabel(labelText);    // for screen readers
             gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          }
@@ -1464,10 +1508,12 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 
 std::unique_ptr<EffectUIValidator>
 LadspaEffect::PopulateOrExchange(ShuttleGui & S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
 {
-   auto result =
-      std::make_unique<Validator>(*this, access, mProjectRate, GetType());
+   auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
+   auto result = std::make_unique<Validator>(*this, access, mProjectRate,
+      GetType(), pValues);
    result->PopulateUI(S);
    return result;
 }
@@ -1478,8 +1524,18 @@ bool LadspaEffect::Validator::ValidateUI()
       if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
       GetSettings(settings) = mSettings;
+      return nullptr;
    });
    return true;
+}
+
+void LadspaEffect::Validator::Disconnect()
+{
+  for (auto &meter : mMeters)
+     if (meter) {
+        meter->Disconnect();
+        meter = nullptr;
+     }
 }
 
 bool LadspaEffect::CanExportPresets()
@@ -1596,7 +1652,8 @@ bool LadspaEffect::SaveParameters(
 }
 
 LADSPA_Handle LadspaEffect::InitInstance(
-   float sampleRate, LadspaEffectSettings &settings) const
+   float sampleRate, LadspaEffectSettings &settings,
+   LadspaEffectOutputs *pOutputs) const
 {
    /* Instantiate the plugin */
    LADSPA_Handle handle = mData->instantiate(mData, sampleRate);
@@ -1606,8 +1663,15 @@ LADSPA_Handle LadspaEffect::InitInstance(
    auto &controls = settings.controls;
    for (unsigned long p = 0; p < mData->PortCount; ++p) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
-      if (LADSPA_IS_PORT_CONTROL(d))
-         mData->connect_port(handle, p, &controls[p]);
+      if (LADSPA_IS_PORT_CONTROL(d)) {
+         if (LADSPA_IS_PORT_INPUT(d))
+            mData->connect_port(handle, p, &controls[p]);
+         else {
+            static LADSPA_Data sink;
+            mData->connect_port(handle, p,
+               pOutputs ? &pOutputs->controls[p] : &sink);
+         }
+      }
    }
    if (mData->activate)
       mData->activate(handle);

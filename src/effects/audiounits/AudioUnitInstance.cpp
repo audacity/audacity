@@ -190,7 +190,7 @@ bool AudioUnitInstance::RealtimeInitialize(
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
    if (!mRecruited) {
       // Assign self to the first processor
@@ -245,8 +245,9 @@ bool AudioUnitInstance::RealtimeResume()
    return true;
 }
 
-bool AudioUnitInstance::RealtimeProcessStart(EffectSettings &settings)
+bool AudioUnitInstance::RealtimeProcessStart(MessagePackage &package)
 {
+   auto &settings = package.settings;
    auto &mySettings = GetSettings(settings);
    // Store only into the AudioUnit that was not also the source of the fetch
    // in the main thread.  Not only for efficiency, but also because controls

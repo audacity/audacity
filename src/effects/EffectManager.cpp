@@ -33,6 +33,7 @@ effects.
 #include "../commands/CommandContext.h"
 #include "../commands/AudacityCommand.h"
 #include "PluginManager.h"
+#include "Track.h"
 
 
 /*******************************************************************************
@@ -333,6 +334,18 @@ bool EffectManager::PromptUser(
 {
    bool result = false;
    if (auto effect = GetEffect(ID)) {
+
+      auto empty = TrackList::Create(nullptr);
+      auto pEffectBase = dynamic_cast<EffectBase*>(effect);
+      if (pEffectBase)
+         // This allows effects to call Init() safely
+         pEffectBase->SetTracks(empty.get());
+      Finally Do([&]{
+         // reverse the side-effect
+         if (pEffectBase)
+            pEffectBase->SetTracks(nullptr);
+      });
+
       std::shared_ptr<EffectInstance> pInstance;
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
