@@ -894,8 +894,8 @@ bool VSTEffect::IsDefault() const
 
 auto VSTEffect::RealtimeSupport() const -> RealtimeSince
 {
-   // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
+   return RealtimeSince::Always;
+
    /* return GetType() == EffectTypeProcess
       ? RealtimeSince::Always
       : RealtimeSince::Never; */
