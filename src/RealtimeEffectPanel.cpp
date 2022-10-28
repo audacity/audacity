@@ -12,6 +12,7 @@
 
 #include <wx/app.h>
 #include <wx/sizer.h>
+#include <wx/splitter.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/menu.h>
@@ -29,7 +30,9 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "Track.h"
+#include "TrackPanelAx.h"
 #include "AColor.h"
 #include "WaveTrack.h"
 #include "effects/EffectUI.h"
@@ -1320,6 +1323,31 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
    }
 };
 
+namespace {
+AttachedWindows::RegisteredFactory sKey{
+[](AudacityProject &project) -> wxWeakRef<wxWindow> {
+   const auto pProjectWindow = &ProjectWindow::Get(project);
+   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(
+      project, pProjectWindow->GetContainerWindow(), wxID_ANY);
+   effectsPanel->SetName(_("Realtime effects"));
+   effectsPanel->SetBackgroundColorIndex(clrMedium);
+   effectsPanel->Hide();//initially hidden
+   return effectsPanel;
+}
+};
+}
+
+RealtimeEffectPanel &RealtimeEffectPanel::Get(AudacityProject &project)
+{
+   return GetAttachedWindows(project).Get<RealtimeEffectPanel>(sKey);
+}
+
+const RealtimeEffectPanel &
+RealtimeEffectPanel::Get(const AudacityProject &project)
+{
+   return Get(const_cast<AudacityProject &>(project));
+}
+
 RealtimeEffectPanel::RealtimeEffectPanel(
    AudacityProject& project, wxWindow* parent, wxWindowID id, const wxPoint& pos,
    const wxSize& size,
@@ -1497,10 +1525,66 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
          mPotentiallyRemovedTracks.clear();
       });
+
+   mFocusChangeSubscription = TrackFocus::Get(project)
+      .Subscribe([this](const TrackFocusChangeMessage& msg) {
+         if (IsShown())
+         {
+            auto& trackFocus = TrackFocus::Get(mProject);
+            ShowPanel(trackFocus.Get(), false);
+         }
+      });
+
+   Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&) {
+      HidePanel(); });
 }
 
 RealtimeEffectPanel::~RealtimeEffectPanel()
 {
+}
+
+void RealtimeEffectPanel::ShowPanel(Track* track, bool focus)
+{
+   if(track == nullptr)
+   {
+      ResetTrack();
+      return;
+   }
+
+   wxWindowUpdateLocker freeze(this);
+
+   SetTrack(track->shared_from_this());
+
+   auto &projectWindow = ProjectWindow::Get(mProject);
+   const auto pContainerWindow = projectWindow.GetContainerWindow();
+   if (pContainerWindow->GetWindow1() != this)
+   {
+      //Restore previous effects window size
+      pContainerWindow->SplitVertically(
+         this,
+         projectWindow.GetTrackListWindow(),
+         this->GetSize().GetWidth());
+   }
+   if(focus)
+      SetFocus();
+   projectWindow.Layout();
+}
+
+void RealtimeEffectPanel::HidePanel()
+{
+   wxWindowUpdateLocker freeze(this);
+
+   auto &projectWindow = ProjectWindow::Get(mProject);
+   const auto pContainerWindow = projectWindow.GetContainerWindow();
+   const auto pTrackListWindow = projectWindow.GetTrackListWindow();
+   if (pContainerWindow->GetWindow2() == nullptr)
+      //only effects panel is present, restore split positions before removing effects panel
+      //Workaround: ::Replace and ::Initialize do not work here...
+      pContainerWindow->SplitVertically(this, pTrackListWindow);
+
+   pContainerWindow->Unsplit(this);
+   pTrackListWindow->SetFocus();
+   projectWindow.Layout();
 }
 
 void RealtimeEffectPanel::SetTrack(const std::shared_ptr<Track>& track)

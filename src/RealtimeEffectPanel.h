@@ -43,6 +43,7 @@ class RealtimeEffectPanel : public wxPanel
 
    Observer::Subscription mTrackListChanged;
    Observer::Subscription mUndoSubscription;
+   Observer::Subscription mFocusChangeSubscription;
 
    std::vector<std::shared_ptr<Track>> mPotentiallyRemovedTracks;
 
@@ -52,6 +53,9 @@ class RealtimeEffectPanel : public wxPanel
    std::unique_ptr<PrefsListenerHelper> mPrefsListenerHelper;
 
 public:
+   static RealtimeEffectPanel &Get(AudacityProject &project);
+   static const RealtimeEffectPanel &Get(const AudacityProject &project);
+
    RealtimeEffectPanel(
       AudacityProject& project, wxWindow* parent,
                 wxWindowID id,
@@ -61,6 +65,9 @@ public:
                 const wxString& name = wxPanelNameStr);
 
    ~RealtimeEffectPanel() override;
+
+   void ShowPanel(Track* track, bool focus);
+   void HidePanel();
 
    /**
     * \brief Shows effects from the effect stack of the track

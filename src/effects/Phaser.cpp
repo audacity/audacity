@@ -148,7 +148,7 @@ struct EffectPhaser::Instance
    bool RealtimeInitialize(EffectSettings& settings, double) override;
 
    bool RealtimeAddProcessor(EffectSettings& settings,
-      unsigned numChannels, float sampleRate) override;
+      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate) override;
 
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
 
@@ -456,6 +456,7 @@ bool EffectPhaser::Validator::ValidateUI()
          // pass back the modified settings to the MessageBuffer
 
          GetSettings(settings) = mSettings;
+         return nullptr;
       }
    );
 

@@ -6,6 +6,7 @@
 #include "ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
+#include "../RealtimeEffectPanel.h"
 #include "Track.h"
 #include "../SelectionState.h"
 #include "../TrackPanel.h"
@@ -35,7 +36,7 @@ void NextOrPrevFrame(AudacityProject &project, bool forward)
    if(!ToolManager::Get(project).GetTopDock()->GetChildren().IsEmpty())
       seq.push_back(ProjectWindow::Get( project ).GetTopPanel());
    seq.push_back(&TrackPanel::Get( project ));
-   seq.push_back(ProjectWindow::Get(project).GetEffectsWindow());
+   seq.push_back(&RealtimeEffectPanel::Get(project));
    if(!ToolManager::Get( project ).GetBotDock()->GetChildren().IsEmpty())
       seq.push_back(ToolManager::Get( project ).GetBotDock());
 
