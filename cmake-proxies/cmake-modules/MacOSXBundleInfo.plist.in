@@ -17,6 +17,7 @@
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>application/x-audacity-project</string>
+				<string>application/x-audacity-project+sqlite3</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>Audacity Project</string>

@@ -5,4 +5,9 @@
     <comment>Audacity project</comment>
     <glob pattern="*.aup"/>
   </mime-type>
+  <mime-type type="application/x-audacity-project+sqlite3">
+    <sub-class-of type="application/vdn.sqlite3"/>
+    <comment>Audacity project</comment>
+    <glob pattern="*.aup3"/>
+  </mime-type>
 </mime-info>
