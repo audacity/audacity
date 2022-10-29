@@ -65,7 +65,7 @@ array of Ruler::Label.
 #include "Envelope.h"
 #include "NumberScale.h"
 #include "Theme.h"
-#include "ViewInfo.h"
+#include "ZoomInfo.h"
 
 using std::min;
 using std::max;

@@ -36,7 +36,6 @@ of sample block storage.
 #include "Sequence.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
-#include "ViewInfo.h"
 
 #include "FileNames.h"
 #include "SelectFile.h"

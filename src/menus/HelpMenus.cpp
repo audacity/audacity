@@ -14,7 +14,6 @@
 #include "../HelpUtilities.h"
 #include "../LogWindow.h"
 #include "../Menus.h"
-#include "../NoteTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectSelectionManager.h"

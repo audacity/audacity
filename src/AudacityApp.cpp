@@ -81,7 +81,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
 #include "Journal.h"
-//#include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
 #include "PathList.h"
