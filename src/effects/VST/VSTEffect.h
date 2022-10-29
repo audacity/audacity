@@ -92,9 +92,9 @@ struct VSTEffectSettings
    // the Config or failing to load, we fall back to loading single parameters (ID, value) pairs.
    //
    // It looks like a plugin might not support this (if their effFlagsProgramChunks bit is off)
-   // If not, then hold an empty string
+   // If not, then hold an empty vector
    //
-   wxString mChunk;
+   std::vector<char> mChunk;
 
    // Fallback data used when the chunk is not available.
    std::map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
@@ -575,9 +575,6 @@ private:
       const float* const* inputs, float* const* outputs, int sampleframes);
 
    VSTInstanceArray mSlaves;
-
-   std::vector<char> mScratch;
-   char *GetScratch(size_t size);
 
    bool mHasPower{ false };
 

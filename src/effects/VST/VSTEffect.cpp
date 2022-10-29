@@ -936,16 +936,17 @@ bool VSTEffectWrapper::TransferSettingsContents
       dst.mChunk = src.mChunk;
       if (doMove)
       {
-         src.mChunk = "";
+         src.mChunk.resize(0);
       }
 
       // If a new chunk is merged, any unconsumed slider movements in the
       // parameters map are discarded before the other thread sees them
       discard = doMerge;
    }
-   else if(!doMerge)
+   else if (!doMerge)
    {
-      dst.mChunk = "";
+      // Assignment means copy the emptiness of the chunk
+      dst.mChunk.resize(0);
    }
    
 
@@ -967,7 +968,7 @@ bool VSTEffectWrapper::TransferSettingsContents
          // dest value that might be there) - delete the destination value
          dstValue = std::nullopt;
       }
-      if (srcValue)
+      else if (srcValue)
       {
          dstValue = srcValue;
       }
@@ -1023,18 +1024,10 @@ namespace
 
 VSTEffectMessage::~VSTEffectMessage() = default;
 
-char *VSTEffectInstance::GetScratch(size_t size)
-{
-   // This function causes infrequent growth of a reusable scratch array
-   // Sufficient space for the Base64 decoding of size
-   mScratch.resize(size / 4 * 3);
-   return mScratch.data();
-}
-
 auto VSTEffectMessage::Clone() const -> std::unique_ptr<Message>
 {
    auto result = std::make_unique<VSTEffectMessage>(*this);
-   // Make sure of the chunk string capacity
+   // Make sure of the chunk capacity
    result->settings.mChunk.reserve(this->settings.mChunk.capacity());
    return result;
 }
@@ -1210,9 +1203,6 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 
 bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
-   auto &chunk = GetSettings(settings).mChunk;
-   if (!chunk.empty())
-      GetScratch(2 * chunk.size());
    return ProcessInitialize(settings, sampleRate, {});
 }
 
@@ -1243,8 +1233,6 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
 return GuardedCall<bool>([&]{
-   std::vector<char>{}.swap(mScratch);
-
    mRecruited = false;
 
    for (const auto &slave : mSlaves)
@@ -1287,18 +1275,16 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
    if (!chunk.empty()) {
       // Apply the chunk first
 
-      auto scratch = GetScratch(chunk.length());
-
-      if (int len = Base64::Decode(chunk, scratch)) {
-         VstPatchChunkInfo info = {
-            1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
-         callSetChunk(true, len, scratch, &info);
-         for (auto& slave : mSlaves)
-            slave->callSetChunk(true, len, scratch, &info);
-      }
+      VstPatchChunkInfo info = {
+         1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+      const auto len = chunk.size();
+      const auto data = chunk.data();
+      callSetChunk(true, len, data, &info);
+      for (auto& slave : mSlaves)
+         slave->callSetChunk(true, len, data, &info);
 
       // Don't apply the chunk again until another message supplies a chunk
-      chunk = "";
+      chunk.resize(0);
 
       // Don't return yet.  Maybe some slider movements also accumulated after
       // the change of the chunk.
@@ -1469,7 +1455,8 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
       } while (parms.GetNextEntry(key, index));
    }
 
-   vstSettings.mChunk     = "";
+   // Loads key-value pairs only from a config file -- no chunk
+   vstSettings.mChunk.resize(0);
    vstSettings.mVersion   = VSTEffectWrapper::mVersion;
    vstSettings.mUniqueID  = VSTEffectWrapper::mAEffect->uniqueID;
    vstSettings.mNumParams = VSTEffectWrapper::mAEffect->numParams;
@@ -3731,15 +3718,15 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
    vstSettings.mNumParams = mAEffect->numParams;
 
    // Get the chunk (if supported)
-   vstSettings.mChunk = "";
+   vstSettings.mChunk.resize(0);
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
-      void* chunk = NULL;
+      void* chunk = nullptr;
       int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
-      if (clen > 0)
-      {
-         vstSettings.mChunk = Base64::Encode(chunk, clen);
+      if (clen > 0 && chunk) {
+         vstSettings.mChunk.resize(clen);
+         memcpy(vstSettings.mChunk.data(), chunk, clen);
       }
 
       if (!doFetch)
@@ -3747,7 +3734,7 @@ bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vstSettings, bool doFetc
          // Don't keep the contents, but keep a sufficiently allocated string,
          // with some extra space in case chunk length might vary
          auto size = vstSettings.mChunk.size();
-         vstSettings.mChunk = "";
+         vstSettings.mChunk.resize(0);
          vstSettings.mChunk.reserve(2 * size);
       }
    }
@@ -3767,18 +3754,12 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
 
 
    // Try using the chunk first (if available)
-   if (!vstSettings.mChunk.empty())
+   auto &chunk = vstSettings.mChunk;
+   if (!chunk.empty())
    {
-      ArrayOf<char> buf{ vstSettings.mChunk.length() / 4 * 3 };
-
-      int len = Base64::Decode(vstSettings.mChunk, buf.get());
-      if (len)
-      {
-         VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
-
-         callSetChunk(true, len, buf.get(), &info);
-         return true;
-      }         
+      VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+      callSetChunk(true, chunk.size(), const_cast<char *>(chunk.data()), &info);
+      return true;
    }
 
 
