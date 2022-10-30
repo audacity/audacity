@@ -2,9 +2,11 @@ cmake_minimum_required( VERSION 3.15 )
 project( PaWinDS_GetDeviceGUID )
 
 set( MODULE_DIR "${CMAKE_BINARY_DIR}/../../.." )
+set( MODULE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake-proxies/cmake-modules" )
 
 set( CMAKE_MODULE_PATH 
     ${MODULE_DIR}
+    ${MODULE_SRC}
     ${CMAKE_MODULE_PATH}
 )
 
