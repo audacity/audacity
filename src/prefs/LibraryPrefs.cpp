@@ -31,6 +31,35 @@ MP3 and FFmpeg encoding libraries.
 
 
 ////////////////////////////////////////////////////////////////////////////////
+static const auto PathStart = wxT("LibraryPreferences");
+
+Registry::GroupItem &LibraryPrefs::PopulatorItem::Registry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
+
+LibraryPrefs::PopulatorItem::PopulatorItem(
+   const Identifier &id, Populator populator)
+   : SingleItem{ id }
+   , mPopulator{ move(populator) }
+{}
+
+LibraryPrefs::RegisteredControls::RegisteredControls(
+   const Identifier &id, Populator populator,
+   const Registry::Placement &placement )
+   : RegisteredItem{
+      std::make_unique< PopulatorItem >( id, move(populator) ),
+      placement
+   }
+{}
+
+bool LibraryPrefs::RegisteredControls::Any()
+{
+   return !PopulatorItem::Registry().items.empty();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 #define ID_FFMPEG_FIND_BUTTON       7003
 #define ID_FFMPEG_DOWN_BUTTON       7004
@@ -89,8 +118,27 @@ void LibraryPrefs::Populate()
 /// and others don't.
 void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   using namespace Registry;
+
    S.SetBorder(2);
    S.StartScroller();
+
+   struct MyVisitor final : Visitor {
+      MyVisitor( ShuttleGui &S ) : S{ S }
+      {
+         // visit the registry to collect the plug-ins properly
+         // sorted
+         TransparentGroupItem<> top{ PathStart };
+         Registry::Visit( *this, &top, &PopulatorItem::Registry() );
+      }
+
+      void Visit( Registry::SingleItem &item, const Path &path ) override
+      {
+         static_cast<PopulatorItem&>(item).mPopulator(S);
+      }
+
+      ShuttleGui &S;
+   } visitor{ S };
 
    S.StartStatic(XO("LAME MP3 Export Library"));
    {
@@ -219,3 +267,8 @@ PrefsPanel::Registration sAttachment{ "Library",
 };
 }
 #endif
+
+LibraryPrefs::RegisteredControls::Init::Init()
+{
+   (void) PopulatorItem::Registry();
+}
