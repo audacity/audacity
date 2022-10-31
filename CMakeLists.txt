@@ -609,7 +609,7 @@ add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 
 if(${_OPT}has_crashreports)
-   add_subdirectory( "crashreports" )
+   add_subdirectory( "crashreporter" )
 endif()
 
 add_subdirectory( "tests/journals" )

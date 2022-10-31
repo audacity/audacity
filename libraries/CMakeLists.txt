@@ -52,6 +52,10 @@ if ( ${_OPT}has_audiocom_upload)
    )
 endif()
 
+if( ${_OPT}has_crashreports )
+   list( APPEND LIBRARIES lib-breakpad-configurer )
+endif()
+
 # This library depends on lib-network-manager
 # If Sentry reporting is disabled, an INTERFACE library
 # will be defined

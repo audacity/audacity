@@ -24,7 +24,7 @@
 * Please read official documentation for details:
 * https://chromium.googlesource.com/breakpad/breakpad
 */
-class BreakpadConfigurer final
+class CRASHREPORTS_API BreakpadConfigurer final
 {
 	std::string mDatabasePathUTF8;
 	std::string mSenderPathUTF8;

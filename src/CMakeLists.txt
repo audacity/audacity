@@ -1220,7 +1220,6 @@ set( LIBRARIES
       libmp3lame::libmp3lame
       SndFile::sndfile
       sqlite
-      $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::pluginterfaces>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
@@ -1546,6 +1545,12 @@ endif()
 if( ${_OPT}has_audiocom_upload )
    list( APPEND AUDACITY_LIBRARIES
       lib-cloud-audiocom-interface
+   )
+endif()
+
+if( ${_OPT}has_crashreports )
+   list( APPEND AUDACITY_LIBRARIES 
+      lib-breakpad-configurer-interface
    )
 endif()
 
