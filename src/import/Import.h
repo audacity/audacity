@@ -77,7 +77,7 @@ class ExtImportItem
   wxArrayString mime_types;
 };
 
-class AUDACITY_DLL_API  Importer {
+class AUDACITY_DLL_API Importer {
    struct ImporterItem;
 public:
 
@@ -94,7 +94,7 @@ public:
 
    // Objects of this type are statically constructed in files, to identify
    // unsupported import formats; typically in a conditional compilation
-   struct RegisteredUnusableImportPlugin{
+   struct AUDACITY_DLL_API RegisteredUnusableImportPlugin{
       RegisteredUnusableImportPlugin( std::unique_ptr<UnusableImportPlugin> );
       ~RegisteredUnusableImportPlugin();
 
