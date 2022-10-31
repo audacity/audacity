@@ -1447,12 +1447,6 @@ set( AUDACITY_LIBRARIES
    lib-audio-graph
 )
 
-if (${_OPT}use_ffmpeg)
-   list( APPEND AUDACITY_LIBRARIES
-      lib-ffmpeg-support-interface
-   )
-endif()
-
 if ( ${_OPT}has_networking )
    list( APPEND AUDACITY_LIBRARIES
       lib-network-manager-interface
