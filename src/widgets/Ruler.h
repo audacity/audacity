@@ -27,6 +27,10 @@ class Envelope;
 class AUDACITY_DLL_API Ruler {
  public:
 
+    struct TickLengths {
+       int majorLength, minorLength, minorMinorLength;
+    };
+
    //
    // Constructor / Destructor
    //
@@ -96,6 +100,8 @@ class AUDACITY_DLL_API Ruler {
 
    void SetNumberScale(const NumberScale &scale);
 
+   void SetTickLengths(const TickLengths& tLengths);
+
    // The ruler will not draw text within this (pixel) range.
    // Use this if you have another graphic object obscuring part
    // of the ruler's area.  The values start and end are interpreted
@@ -137,9 +143,12 @@ public:
    bool mbTicksAtExtremes;
 
 private:
+
    RulerStruct mRulerStruct;
+   TickLengths mTickLengths;
 
    wxColour mTickColour;
+
    wxPen mPen;
 
    std::unique_ptr<RulerStruct::Fonts> mpUserFonts;
