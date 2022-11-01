@@ -85,6 +85,27 @@ class wxWidgetsAudacityDependency:
         else:
             global_copy_files(conanfile, dependency_info)
 
+@dataclass
+class CrashpadDependency(AudacityDependency):
+    def __init__(self, version: str, package_options: dict = None):
+        super().__init__(name="crashpad", version=version, package_options=package_options)
+
+    def copy_files(self, conanfile, dependency_info):
+        crashpad_handler_filename = "crashpad_handler"
+        if conanfile.settings.os == "Windows":
+            crashpad_handler_filename += ".exe"
+
+        dst_path = f"{conanfile.build_folder}"
+        if conanfile.settings.os == "Windows":
+            dst_path += f"/{conanfile.settings.build_type}"
+        elif conanfile.settings.os == "Macos":
+            dst_path += "/Audacity.app/Contents/MacOS"
+        else:
+            dst_path += "/bin"
+
+        copy(conanfile, crashpad_handler_filename, dependency_info.cpp_info.bindirs[0], dst_path, keep_path=False)
+        super().copy_files(conanfile, dependency_info)
+
 # PortAudio has addittional options that need to be set
 @dataclass
 class PortAudioDependency(AudacityDependency):
@@ -159,6 +180,8 @@ class AudacityConan(ConanFile):
         AudacityDependency("rapidjson", "1.1.0"),
 
         AudacityDependency("breakpad", "0.1"),
+
+        CrashpadDependency("cci.20220219-audacity"),
 
         AudacityDependency("catch2", "2.13.8")
     ]

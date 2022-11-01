@@ -53,7 +53,11 @@ if ( ${_OPT}has_audiocom_upload)
 endif()
 
 if( ${_OPT}has_crashreports )
-   list( APPEND LIBRARIES lib-breakpad-configurer )
+   if( ${_OPT}crashreport_backend STREQUAL "breakpad" )
+      list( APPEND LIBRARIES lib-breakpad-configurer )
+   elseif( ${_OPT}crashreport_backend STREQUAL "crashpad" )
+      list( APPEND LIBRARIES lib-crashpad-configurer )
+   endif()
 endif()
 
 # This library depends on lib-network-manager
