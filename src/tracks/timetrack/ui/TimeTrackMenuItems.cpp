@@ -37,7 +37,7 @@ void OnNewTimeTrack(const CommandContext &context)
       return;
    }
 
-   auto t = tracks.AddToHead( std::make_shared<TimeTrack>(&viewInfo) );
+   auto t = tracks.AddToHead( std::make_shared<TimeTrack>(viewInfo) );
 
    SelectUtilities::SelectNone( project );
 

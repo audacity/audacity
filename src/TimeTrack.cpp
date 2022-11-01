@@ -44,12 +44,12 @@ TimeTrack *TimeTrack::New( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
-   auto result = tracks.Add(std::make_shared<TimeTrack>(&viewInfo));
+   auto result = tracks.Add(std::make_shared<TimeTrack>(viewInfo));
    result->AttachedTrackObjects::BuildAll();
    return result;
 }
 
-TimeTrack::TimeTrack(const ZoomInfo *zoomInfo):
+TimeTrack::TimeTrack(const ZoomInfo &zoomInfo):
    Track()
    , mZoomInfo(zoomInfo)
 {
@@ -147,6 +147,8 @@ bool TimeTrack::SupportsBasicEditing() const
    return false;
 }
 
+// Don't copy a time track object into another project for pasting, but
+// find or construct one
 Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
 {
    // Maintain uniqueness of the time track!
@@ -154,7 +156,7 @@ Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
    if( auto pTrack = *TrackList::Get( project ).Any<TimeTrack>().begin() )
       pNewTrack = pTrack->SharedPointer<TimeTrack>();
    else
-      pNewTrack = std::make_shared<TimeTrack>( &ViewInfo::Get( project ) );
+      pNewTrack = std::make_shared<TimeTrack>( ViewInfo::Get( project ) );
 
    // Should come here only for .aup3 import, not for paste (because the
    // track is skipped in cut/copy commands)
