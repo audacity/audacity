@@ -87,6 +87,8 @@ Ruler::Ruler()
    mTwoTone = false;
 
    mpUpdater = nullptr;
+
+   mTickLengths = { 4, 2, 2 };
 }
 
 Ruler::~Ruler()
@@ -281,6 +283,25 @@ void Ruler::SetNumberScale(const NumberScale &scale)
       mRulerStruct.mNumberScale = scale;
       Invalidate();
    }
+}
+
+void Ruler::SetTickLengths(const TickLengths& tLengths)
+{
+   bool inv = false;
+   if (mTickLengths.majorLength != tLengths.majorLength) {
+      mTickLengths.majorLength = tLengths.majorLength;
+      inv = true;
+   }
+   if (mTickLengths.minorLength != tLengths.minorLength) {
+      mTickLengths.minorLength = tLengths.minorLength;
+      inv = true;
+   }
+   if (mTickLengths.minorMinorLength != tLengths.minorMinorLength) {
+      mTickLengths.minorMinorLength = tLengths.minorMinorLength;
+      inv = true;
+   }
+
+   if (inv) Invalidate();
 }
 
 void Ruler::OfflimitsPixels(int start, int end)
@@ -525,18 +546,18 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    };
 
    for( const auto &label : cache.mMajorLabels )
-      drawLabel( label, 4 );
+      drawLabel( label, mTickLengths.majorLength );
 
    if( mbMinor ) {
       dc.SetFont( mRulerStruct.mpFonts->minor );
       for( const auto &label : cache.mMinorLabels )
-         drawLabel( label, 3 );
+         drawLabel( label, mTickLengths.minorLength );
    }
 
    dc.SetFont( mRulerStruct.mpFonts->minorMinor );
 
    for( const auto &label : cache.mMinorMinorLabels )
-      drawLabel( label, 1 );
+      drawLabel( label, mTickLengths.minorMinorLength );
 }
 
 // ********** Draw grid ***************************
