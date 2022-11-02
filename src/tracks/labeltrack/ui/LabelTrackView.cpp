@@ -181,6 +181,16 @@ std::shared_ptr<const LabelTrack> LabelTrackView::FindLabelTrack() const
    return const_cast<LabelTrackView*>(this)->FindLabelTrack();
 }
 
+bool LabelTrackView::SelectAll(AudacityProject &project)
+{
+   const auto pTrack = FindTrack();
+   if (pTrack && pTrack->IsSelected()) {
+      if (SelectAllText(project))
+         return true;
+   }
+   return false;
+}
+
 std::vector<UIHandlePtr> LabelTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *WXUNUSED(pProject), int, bool)

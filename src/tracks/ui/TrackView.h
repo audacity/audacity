@@ -109,6 +109,17 @@ public:
 
    virtual void DoSetMinimized( bool isMinimized );
 
+   //! Whether a part of the view (typically text) was "focused" and responded
+   /*!
+    If the view defines a notion of focused sub-object, it may change state
+    to indicate "all selected" and return true; else do nothing, return false
+
+    Not responsible for causing a re-draw
+
+    Default implementation always returns valse
+    */
+   virtual bool SelectAll(AudacityProject &project);
+
    //! Returns no hits
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,

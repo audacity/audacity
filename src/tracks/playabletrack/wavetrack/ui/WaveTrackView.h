@@ -116,6 +116,8 @@ public:
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;
 
+   bool SelectAll(AudacityProject &project) override;
+
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
    // CommonTrackView implementation

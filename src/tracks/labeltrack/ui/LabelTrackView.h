@@ -234,6 +234,8 @@ public:
    void SetNavigationIndex(int index);
    int GetNavigationIndex(AudacityProject& project) const;
 
+   bool SelectAll(AudacityProject &project) override;
+
 private:
 
    // TrackPanelDrawable implementation

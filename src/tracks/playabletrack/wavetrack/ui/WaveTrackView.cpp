@@ -1457,6 +1457,11 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackView) {
    };
 }
 
+bool WaveTrackView::SelectAll(AudacityProject &project)
+{
+   return SelectAllText(project);
+}
+
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 {
    // This should never be called because of delegation to the spectrum or

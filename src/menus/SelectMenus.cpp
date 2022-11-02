@@ -17,13 +17,13 @@
 #include "../SelectUtilities.h"
 #include "../SyncLock.h"
 #include "../TrackPanel.h"
+#include "../tracks/ui/TrackView.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../tracks/ui/SelectHandle.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
@@ -463,19 +463,8 @@ void OnSelectAll(const CommandContext &context)
    auto& trackPanel = TrackPanel::Get(context.project);
    auto& tracks = TrackList::Get(context.project);
    
-   for (auto lt : tracks.Selected< LabelTrack >()) {
-      auto& view = LabelTrackView::Get(*lt);
-      if (view.SelectAllText(context.project)) {
-         trackPanel.Refresh(false);
-         return;
-      }
-   }
-
-   //Presumably, there might be not more than one track
-   //that expects text input
-   for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveTrackView::Get(*wt);
-      if (view.SelectAllText(context.project)) {
+   for (auto track : tracks) {
+      if (TrackView::Get(*track).SelectAll(context.project)) {
          trackPanel.Refresh(false);
          return;
       }

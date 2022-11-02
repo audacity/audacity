@@ -147,6 +147,11 @@ void TrackView::DoSetMinimized(bool isMinimized)
    mMinimized = isMinimized;
 }
 
+bool TrackView::SelectAll(AudacityProject &)
+{
+   return false;
+}
+
 std::shared_ptr<TrackVRulerControls> TrackView::GetVRulerControls()
 {
    if (!mpVRulerControls)
