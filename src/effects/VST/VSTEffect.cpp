@@ -2334,9 +2334,8 @@ void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
    evt.Skip();
 
    // Be sure the instance has got any messages
-   if (mNeedFlush) {
+   if (mNeedFlush != -1) {
       mAccess.Flush();
-      mNeedFlush = false;
 
       // Update settings, for stickiness
       mAccess.ModifySettings([this](EffectSettings& settings)
@@ -2344,6 +2343,9 @@ void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
          FetchSettingsFromInstance(settings);
          return nullptr;
       });
+
+      RefreshParameters(mNeedFlush);
+      mNeedFlush = -1;
    }
 }
 
@@ -2783,9 +2785,7 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
       auto result = GetInstance().MakeMessage(i, value);
       return result;
    });
-   mNeedFlush = true;
-
-   RefreshParameters(i);
+   mNeedFlush = i;
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3944,7 +3944,7 @@ void VSTEffectValidator::Automate(int index, float value)
       auto result = GetInstance().MakeMessage(index, value);
       return result;
    });
-   mNeedFlush = true;
+   mNeedFlush = index;
 }
 
 

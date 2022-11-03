@@ -650,7 +650,7 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
-   bool mNeedFlush{ false };
+   int mNeedFlush{ -1 };
 
    ArrayOf<wxStaticText*> mNames;
    ArrayOf<wxSlider*> mSliders;
