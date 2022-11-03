@@ -97,7 +97,7 @@ struct VSTEffectSettings
    std::vector<char> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::map<wxString, std::optional<std::pair<int,double> > > mParamsMap;
+   std::unordered_map<wxString, std::optional<double> > mParamsMap;
 };
 
 
@@ -315,7 +315,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    static bool MoveSettingsContents(VSTEffectSettings&& src,
                                     VSTEffectSettings&  dst,
                                     bool merge);
-   
+
+   // Make message carrying all the information in settings, including chunks
+   std::unique_ptr<EffectInstance::Message>
+      MakeMessageFS(VSTEffectSettings& settings) const;
 };
 
 class VSTEffectInstance;
@@ -594,9 +597,6 @@ class VSTEffectValidator final
    , public VSTEffectUIWrapper
 {
 public:
-   // Make message carrying all the information in settings, including chunks
-   static std::unique_ptr<EffectInstance::Message>
-      MakeMessage(VSTEffectSettings &settings);
 
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
