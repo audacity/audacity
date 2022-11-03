@@ -428,13 +428,6 @@ private:
    
    std::vector<int> GetEffectIDs();
 
-   // Parameter loading and saving
-   OptionalMessage
-      LoadParameters(const RegistryPath & group, EffectSettings &settings) const;
-   bool SaveParameters(
-       const RegistryPath & group, const EffectSettings &settings) const;
-
-
    // UI
    
    
@@ -650,7 +643,7 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
-   bool mNeedFlush{ false };
+   int mNeedFlush{ -1 };
 
    ArrayOf<wxStaticText*> mNames;
    ArrayOf<wxSlider*> mSliders;
