@@ -175,7 +175,10 @@ void ProjectManager::SaveWindowSize()
 
 void InitProjectWindow( ProjectWindow &window )
 {
-   auto &project = window.GetProject();
+   auto pProject = window.FindProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
