@@ -2692,7 +2692,7 @@ FROM sampleblocks WHERE blockid = ?1;)";
 }
 
 InvisibleTemporaryProject::InvisibleTemporaryProject()
-   : mpProject{ std::make_shared< AudacityProject >() }
+   : mpProject{ AudacityProject::Create() }
 {
 }
 

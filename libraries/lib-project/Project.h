@@ -87,10 +87,14 @@ class PROJECT_API AudacityProject final
    , public AttachedProjectObjects
    , public std::enable_shared_from_this<AudacityProject>
 {
+   struct CreateToken{};
  public:
    using AttachedObjects = ::AttachedProjectObjects;
 
-   AudacityProject();
+   //! Use this factory function
+   static std::shared_ptr<AudacityProject> Create();
+   //! Don't use this constructor directly
+   AudacityProject(CreateToken);
    virtual ~AudacityProject();
 
    int GetProjectNumber(){ return mProjectNo;}

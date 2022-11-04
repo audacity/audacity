@@ -338,7 +338,7 @@ AudacityProject *ProjectManager::New()
    
    // Create and show a NEW project
    // Use a non-default deleter in the smart pointer!
-   auto sp = std::make_shared< AudacityProject >();
+   auto sp = AudacityProject::Create();
    AllProjects{}.Add( sp );
    auto p = sp.get();
    auto &project = *p;
