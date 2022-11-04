@@ -1005,12 +1005,12 @@ namespace
 {
    struct VSTEffectMessage : EffectInstance::Message
    {
-      typedef std::vector<std::optional<double> > ParamVector;
+      using ParamVector = std::vector<std::optional<double> >;
 
       // Make a message from a chunk and ID-value pairs
-      explicit VSTEffectMessage(const std::vector<char>& chunk, const ParamVector& params)
-         : mChunk(chunk),
-           mParamsVec(params)
+      explicit VSTEffectMessage(const std::vector<char>&& chunk, const ParamVector&& params)
+         : mChunk(std::move(chunk)),
+           mParamsVec(std::move(params))
       {
       }
 
@@ -1104,22 +1104,15 @@ void VSTEffectMessage::Merge(Message && src)
 
 std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage() const
 {
+   // The purpose here is just to allocate vectors (chunk and paramVector)
+   // with sufficient size, not to get the values too
    VSTEffectSettings settings;
-   FetchSettings(settings, false);
+   FetchSettings(settings, /* doFetch = */ false);
 
    VSTEffectMessage::ParamVector paramVector;
    paramVector.resize(settings.mParamsMap.size(), std::nullopt);
 
-   ForEachParameter
-   (
-      [&](const ParameterInfo& pi)
-      {
-         paramVector[pi.mID] = settings.mParamsMap[pi.mName];
-         return true;
-      }
-   );
-
-   return std::make_unique<VSTEffectMessage>(settings.mChunk, paramVector);
+   return std::make_unique<VSTEffectMessage>( std::move(settings.mChunk), std::move(paramVector) );
 }
 
 
@@ -1336,7 +1329,7 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 
    assert(message.mParamsVec.size() == mAEffect->numParams);
 
-   for (size_t paramID=0; paramID < message.mParamsVec.size(); paramID++)
+   for (size_t paramID=0; paramID < mAEffect->numParams; paramID++)
    {
       if (message.mParamsVec[paramID])
       {
@@ -3878,7 +3871,7 @@ VSTEffectWrapper::MakeMessageFS(VSTEffectSettings &settings) const
       }
    );   
 
-   return std::make_unique<VSTEffectMessage>(settings.mChunk, paramVector);
+   return std::make_unique<VSTEffectMessage>(std::move(settings.mChunk), std::move(paramVector));
 }
 
 VSTEffectValidator::VSTEffectValidator
