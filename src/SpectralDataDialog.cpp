@@ -476,37 +476,26 @@ void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
 }
 
 namespace {
-struct Handler : CommandHandlerObject {
-   void OnSpectralEditingPanel(const CommandContext &context)
-   {
-      auto &project = context.project;
-      auto &dialog = SpectralDataDialog::Get(project);
-      dialog.Show( !dialog.IsShown() );
-   }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
+void OnSpectralEditingPanel(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &dialog = SpectralDataDialog::Get(project);
+   dialog.Show( !dialog.IsShown() );
 }
 
 using namespace MenuTable;
 MenuTable::AttachedItem sAttachment{
    wxT("View/Other/Toolbars/Toolbars/Other"),
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("ShowSpectralSelectionPanel"),
-         XXO("Spectra&l Selection Panel"),
-         &Handler::OnSpectralEditingPanel,
-         AlwaysEnabledFlag,
-         CommandManager::Options{}
-            .CheckTest( [](AudacityProject &project) {
-               // Find not Get to avoid creating the dialog if not yet done
-               auto pDialog = SpectralDataDialog::Find(&project);
-               return pDialog && pDialog->IsShown();
-            } ) )
-   )
+   Command( wxT("ShowSpectralSelectionPanel"),
+      XXO("Spectra&l Selection Panel"),
+      OnSpectralEditingPanel,
+      AlwaysEnabledFlag,
+      CommandManager::Options{}
+         .CheckTest( [](AudacityProject &project) {
+            // Find not Get to avoid creating the dialog if not yet done
+            auto pDialog = SpectralDataDialog::Find(&project);
+            return pDialog && pDialog->IsShown();
+         } ) )
 };
 
 }

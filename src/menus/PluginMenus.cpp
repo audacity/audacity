@@ -726,11 +726,9 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  );
 
 }
 
-namespace PluginActions {
+namespace {
 
 // Menu handler functions
-
-struct Handler : CommandHandlerObject {
 
 void OnResetConfig(const CommandContext &context)
 {
@@ -852,6 +850,9 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
       break;
    }
 }
+
+void OnApplyMacroDirectlyByName(const CommandContext& context,
+   const MacroID& Name);
 
 void OnRepeatLastTool(const CommandContext& context)
 {
@@ -979,6 +980,7 @@ void OnApplyMacroDirectly(const CommandContext &context )
    const MacroID& Name = context.parameter.GET();
    OnApplyMacroDirectlyByName(context, Name);
 }
+
 void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Name)
 {
    auto &project = context.project;
@@ -1028,23 +1030,9 @@ void OnAudacityCommand(const CommandContext & ctx)
       ctx, EffectManager::kNone);
 }
 
-}; // struct Handler
-
-} // namespace
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static PluginActions::Handler instance;
-   return instance;
-};
-
 // Menu definitions? ...
 
-#define FN(X) (& PluginActions::Handler :: X)
-
-// ... buf first some more helper definitions, which use FN
-namespace {
+// ... buf first some more helper definitions
 
 void AddEffectMenuItemGroup(
    MenuTable::BaseItemPtrs &table,
@@ -1088,7 +1076,6 @@ void AddEffectMenuItemGroup(
 
    using namespace MenuTable;
    // This finder scope may be redundant, but harmless
-   auto scope = FinderScope( findCommandHandler );
    auto pTable = &table;
    BaseItemPtrs temp1;
 
@@ -1116,7 +1103,7 @@ void AddEffectMenuItemGroup(
             if( plug->GetPluginType() == PluginTypeEffect )
                temp2.push_back( Command( plug->GetID(),
                   Verbatim( plug->GetPath() ),
-                  FN(OnEffect),
+                  OnEffect,
                   flags[i],
                   CommandManager::Options{}
                      .IsEffect()
@@ -1137,7 +1124,7 @@ void AddEffectMenuItemGroup(
             pTable->push_back( Command(
                plug->GetID(),
                names[i],
-               FN(OnEffect),
+               OnEffect,
                flags[i],
                CommandManager::Options{}
                   .IsEffect()
@@ -1175,12 +1162,11 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
    int i;
 
    // This finder scope may be redundant, but harmless
-   auto scope = MenuTable::FinderScope( findCommandHandler );
    for (i = 0; i < (int)names.size(); i++) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
       result.push_back( MenuTable::Command( MacroID,
          Verbatim( names[i] ), // file name verbatim
-         FN(OnApplyMacroDirectly),
+         OnApplyMacroDirectly,
          flags,
          CommandManager::Options{}.AllowInMacros()
       ) );
@@ -1189,12 +1175,9 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
    return result;
 }
 
-}
-
 // Menu definitions
 
 // Under /MenuBar
-namespace {
 using namespace MenuTable;
 
 const ReservedCommandFlag&
@@ -1212,11 +1195,10 @@ BaseItemSharedPtr GenerateMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XXO("&Generate"),
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Plugin Manager"),
-            FN(OnManageGenerators), AudioIONotBusyFlag() )
+            OnManageGenerators, AudioIONotBusyFlag() )
       ),
 
       Section("RepeatLast",
@@ -1232,10 +1214,10 @@ BaseItemSharedPtr GenerateMenu()
                buildMenuLabel = XO("Repeat Last Generator");
 
             return Command(wxT("RepeatLastGenerator"), buildMenuLabel,
-               FN(OnRepeatLastGenerator),
+               OnRepeatLastGenerator,
                AudioIONotBusyFlag() |
                    HasLastGeneratorFlag(),
-               Options{}.IsGlobal(), findCommandHandler);
+               Options{}.IsGlobal());
          }
       ),
 
@@ -1248,7 +1230,7 @@ BaseItemSharedPtr GenerateMenu()
             AudioIONotBusyFlag())
          ); }
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1288,16 +1270,15 @@ BaseItemSharedPtr EffectMenu()
    // the plugin manager...sorry! :-(
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XXO("Effe&ct"),
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Plugin Manager"),
-            FN(OnManageEffects), AudioIONotBusyFlag() )
+            OnManageEffects, AudioIONotBusyFlag() )
       ),
 
       Section( "RealtimeEffects",
          Command ( wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
-            FN(OnAddRealtimeEffects),  HasTrackFocusFlag(), wxT("E") )
+            OnAddRealtimeEffects,  HasTrackFocusFlag(), wxT("E") )
       ),
 
       Section( "RepeatLast",
@@ -1313,10 +1294,10 @@ BaseItemSharedPtr EffectMenu()
                buildMenuLabel = XO("Repeat Last Effect");
 
             return Command( wxT("RepeatLastEffect"), buildMenuLabel,
-               FN(OnRepeatLastEffect),
+               OnRepeatLastEffect,
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastEffectFlag(),
-               wxT("Ctrl+R"), findCommandHandler );
+               wxT("Ctrl+R") );
          }
       ),
 
@@ -1329,7 +1310,7 @@ BaseItemSharedPtr EffectMenu()
             IsRealtimeNotActiveFlag() )
          ); }
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1355,11 +1336,10 @@ BaseItemSharedPtr AnalyzeMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XXO("&Analyze"),
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Plugin Manager"),
-            FN(OnManageAnalyzers), AudioIONotBusyFlag() )
+            OnManageAnalyzers, AudioIONotBusyFlag() )
       ),
 
       Section("RepeatLast",
@@ -1375,10 +1355,10 @@ BaseItemSharedPtr AnalyzeMenu()
                buildMenuLabel = XO("Repeat Last Analyzer");
 
             return Command(wxT("RepeatLastAnalyzer"), buildMenuLabel,
-               FN(OnRepeatLastAnalyzer),
+               OnRepeatLastAnalyzer,
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastAnalyzerFlag(),
-               Options{}.IsGlobal(), findCommandHandler);
+               Options{}.IsGlobal());
          }
       ),
 
@@ -1393,7 +1373,7 @@ BaseItemSharedPtr AnalyzeMenu()
             IsRealtimeNotActiveFlag() )
          ); }
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1417,11 +1397,10 @@ BaseItemSharedPtr ToolsMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
          Command( wxT("ManageTools"), XXO("Plugin Manager"),
-            FN(OnManageTools), AudioIONotBusyFlag() ),
+            OnManageTools, AudioIONotBusyFlag() ),
 
          //Separator(),
 
@@ -1438,22 +1417,22 @@ BaseItemSharedPtr ToolsMenu()
                buildMenuLabel = XO("Repeat Last Tool");
 
             return Command( wxT("RepeatLastTool"), buildMenuLabel,
-               FN(OnRepeatLastTool),
+               OnRepeatLastTool,
                AudioIONotBusyFlag() |
                   HasLastToolFlag(),
-               Options{}.IsGlobal(), findCommandHandler );
+               Options{}.IsGlobal() );
          }
       ),
 
       Command( wxT("ManageMacros"), XXO("&Macro Manager"),
-            FN(OnManageMacros), AudioIONotBusyFlag() ),
+            OnManageMacros, AudioIONotBusyFlag() ),
 
          Menu( wxT("Macros"), XXO("&Apply Macro"),
             // Palette has no access key to ensure first letter navigation of
             // sub menu
             Section( "",
                Command( wxT("ApplyMacrosPalette"), XXO("Palette..."),
-                  FN(OnApplyMacrosPalette), AudioIONotBusyFlag() )
+                  OnApplyMacrosPalette, AudioIONotBusyFlag() )
             ),
 
             Section( "",
@@ -1466,11 +1445,11 @@ BaseItemSharedPtr ToolsMenu()
 
       Section( "Other",
          Command( wxT("ConfigReset"), XXO("Reset &Configuration"),
-            FN(OnResetConfig),
+            OnResetConfig,
             AudioIONotBusyFlag() ),
 
          Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
-            FN(OnScreenshot), AudioIONotBusyFlag() ),
+            OnScreenshot, AudioIONotBusyFlag() ),
 
    // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
    // as they used to in 1.3.x
@@ -1478,7 +1457,7 @@ BaseItemSharedPtr ToolsMenu()
          // TODO: What should we do here?  Make benchmark a plug-in?
          // Easy enough to do.  We'd call it mod-self-test.
          Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
-            FN(OnBenchmark), AudioIONotBusyFlag() )
+            OnBenchmark, AudioIONotBusyFlag() )
    //#endif
       ),
 
@@ -1497,14 +1476,14 @@ BaseItemSharedPtr ToolsMenu()
       Section( "",
          Command( wxT("SimulateRecordingErrors"),
             XXO("Simulate Recording Errors"),
-            FN(OnSimulateRecordingErrors),
+            OnSimulateRecordingErrors,
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
                [](AudacityProject&){
                   return AudioIO::Get()->mSimulateRecordingErrors; } ) ),
          Command( wxT("DetectUpstreamDropouts"),
             XXO("Detect Upstream Dropouts"),
-            FN(OnDetectUpstreamDropouts),
+            OnDetectUpstreamDropouts,
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
                [](AudacityProject&){
@@ -1520,14 +1499,14 @@ BaseItemSharedPtr ToolsMenu()
             /* i18n-hint a "journal" is a text file that records
              the user's interactions with the application */
             XXO("Write Journal"),
-            FN(OnWriteJournal),
+            OnWriteJournal,
             AlwaysEnabledFlag,
             Options{}.CheckTest( [](AudacityProject&){
                return Journal::RecordEnabled(); } ) )
       )
 #endif
 
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1540,46 +1519,45 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
 {
    // These are the more useful to VI user Scriptables.
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables1"), XXO("Script&ables I"),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
       // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
       // you would have to use "Compareaudio" here.)
-      Command( wxT("SelectTime"), XXO("Select Time..."), FN(OnAudacityCommand),
+      Command( wxT("SelectTime"), XXO("Select Time..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SelectTracks"), XXO("Select Tracks..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("GetPreference"), XXO("Get Preference..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SetPreference"), XXO("Set Preference..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("SetClip"), XXO("Set Clip..."), FN(OnAudacityCommand),
+      Command( wxT("SetClip"), XXO("Set Clip..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("SetLabel"), XXO("Set Label..."), FN(OnAudacityCommand),
+      Command( wxT("SetLabel"), XXO("Set Label..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("SetProject"), XXO("Set Project..."), FN(OnAudacityCommand),
+      Command( wxT("SetProject"), XXO("Set Project..."), OnAudacityCommand,
          AudioIONotBusyFlag() )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1592,39 +1570,38 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
 {
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
+      Command( wxT("Select"), XXO("Select..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("SetTrack"), XXO("Set Track..."), FN(OnAudacityCommand),
+      Command( wxT("SetTrack"), XXO("Set Track..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("GetInfo"), XXO("Get Info..."), FN(OnAudacityCommand),
+      Command( wxT("GetInfo"), XXO("Get Info..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("Message"), XXO("Message..."), FN(OnAudacityCommand),
+      Command( wxT("Message"), XXO("Message..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("Help"), XXO("Help..."), FN(OnAudacityCommand),
+      Command( wxT("Help"), XXO("Help..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("Import2"), XXO("Import..."), FN(OnAudacityCommand),
+      Command( wxT("Import2"), XXO("Import..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("Export2"), XXO("Export..."), FN(OnAudacityCommand),
+      Command( wxT("Export2"), XXO("Export..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("OpenProject2"), XXO("Open Project..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("SaveProject2"), XXO("Save Project..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
-      Command( wxT("Drag"), XXO("Move Mouse..."), FN(OnAudacityCommand),
+      Command( wxT("Drag"), XXO("Move Mouse..."), OnAudacityCommand,
          AudioIONotBusyFlag() ),
       Command( wxT("CompareAudio"), XXO("Compare Audio..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() ),
       // i18n-hint: Screenshot in the help menu has a much bigger dialog.
       Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
-         FN(OnAudacityCommand),
+         OnAudacityCommand,
          AudioIONotBusyFlag() )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1634,5 +1611,3 @@ AttachedItem sAttachment6{
 };
 
 }
-
-#undef FN

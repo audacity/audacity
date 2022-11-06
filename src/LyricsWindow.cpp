@@ -209,31 +209,21 @@ AttachedWindows::RegisteredFactory sLyricsWindowKey{
 };
 
 // Define our extra menu item that invokes that factory
-struct Handler : CommandHandlerObject {
-   void OnKaraoke(const CommandContext &context)
-   {
-      auto &project = context.project;
+void OnKaraoke(const CommandContext &context)
+{
+   auto &project = context.project;
 
-      auto lyricsWindow = &GetAttachedWindows(project).Get(sLyricsWindowKey);
-      lyricsWindow->Show();
-      lyricsWindow->Raise();
-   }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
+   auto lyricsWindow = &GetAttachedWindows(project).Get(sLyricsWindowKey);
+   lyricsWindow->Show();
+   lyricsWindow->Raise();
 }
 
 // Register that menu item
 
 using namespace MenuTable;
 AttachedItem sAttachment{ wxT("View/Windows"),
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("Karaoke"), XXO("&Karaoke"), &Handler::OnKaraoke,
-         LabelTracksExistFlag() ) )
+   Command( wxT("Karaoke"), XXO("&Karaoke"), OnKaraoke,
+      LabelTracksExistFlag() )
 };
 
 }

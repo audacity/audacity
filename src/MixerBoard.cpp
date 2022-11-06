@@ -1529,32 +1529,22 @@ AttachedWindows::RegisteredFactory sMixerBoardKey{
 };
 
 // Define our extra menu item that invokes that factory
-struct Handler : CommandHandlerObject {
-   void OnMixerBoard(const CommandContext &context)
-   {
-      auto &project = context.project;
+void OnMixerBoard(const CommandContext &context)
+{
+   auto &project = context.project;
 
-      auto mixerBoardFrame = &GetAttachedWindows(project).Get(sMixerBoardKey);
-      mixerBoardFrame->Show();
-      mixerBoardFrame->Raise();
-      mixerBoardFrame->SetFocus();
-   }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
+   auto mixerBoardFrame = &GetAttachedWindows(project).Get(sMixerBoardKey);
+   mixerBoardFrame->Show();
+   mixerBoardFrame->Raise();
+   mixerBoardFrame->SetFocus();
 }
 
 // Register that menu item
 
 using namespace MenuTable;
 AttachedItem sAttachment{ wxT("View/Windows"),
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("MixerBoard"), XXO("&Mixer"), &Handler::OnMixerBoard,
-         PlayableTracksExistFlag()) )
+   Command( wxT("MixerBoard"), XXO("&Mixer"), OnMixerBoard,
+      PlayableTracksExistFlag())
 };
 
 }

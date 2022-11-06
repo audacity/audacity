@@ -25,7 +25,6 @@ Paul Licameli split from TrackMenus.cpp
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 namespace {
-struct Handler : CommandHandlerObject {
 void OnMidiDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
@@ -34,26 +33,13 @@ void OnMidiDeviceInfo(const CommandContext &context)
    ShowDiagnostics( project, info,
       XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
 }
-};
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
-};
 
 using namespace MenuTable;
-#define FN(X) (& Handler :: X)
 AttachedItem sAttachment{
    { wxT("Help/Other/Diagnostics"),
       { OrderingHint::After, wxT("DeviceInfo") } },
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
-         FN(OnMidiDeviceInfo),
-         AudioIONotBusyFlag() )
-   )
+   Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
+      OnMidiDeviceInfo, AudioIONotBusyFlag() )
 };
-#undef FN
 }
 #endif
