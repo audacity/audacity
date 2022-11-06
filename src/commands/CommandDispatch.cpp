@@ -3,7 +3,8 @@
   Audacity: A Digital Audio Editor
 
   @file CommandDispatch.cpp
-  @brief implements functions HandleTextualCommand, DoAudacityCommand
+  @brief implements functions HandleTextualCommand, DoAudacityCommand,
+    OnAudacityCommand
 
   Paul Licameli split from BatchCommands.cpp
 
@@ -18,6 +19,7 @@
 #include "ProjectWindow.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
+#include <wx/log.h>
 
 bool CommandDispatch::HandleTextualCommand( CommandManager &commandManager,
    const CommandID & Str,
@@ -88,4 +90,14 @@ bool CommandDispatch::DoAudacityCommand(
 */
    window.RedrawProject();
    return true;
+}
+
+void CommandDispatch::OnAudacityCommand(const CommandContext & ctx)
+{
+   // using GET in a log message for devs' eyes only
+   wxLogDebug( "Command was: %s", ctx.parameter.GET());
+   // Not configured, so prompt user.
+   CommandDispatch::DoAudacityCommand(
+      EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
+      ctx, EffectManager::kNone);
 }

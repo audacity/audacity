@@ -25,6 +25,8 @@ AUDACITY_DLL_API bool HandleTextualCommand( CommandManager &commandManager,
 
 AUDACITY_DLL_API bool DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags );
+
+AUDACITY_DLL_API void OnAudacityCommand(const CommandContext & ctx);
 }
 
 #endif
