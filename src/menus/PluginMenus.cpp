@@ -1500,14 +1500,8 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
    // These are the more useful to VI user Scriptables.
    static BaseItemSharedPtr menu{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables1"), XXO("Script&ables I"),
-      // Note that the PLUGIN_SYMBOL must have a space between words,
-      // whereas the short-form used here must not.
-      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
-      // you would have to use "CompareAudio" here.)
-      Command( wxT("SetProject"), XXO("Set Project..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   ) };
+   Menu( wxT("Scriptables1"), XXO("Script&ables I") )
+   };
    return menu;
 }
 
