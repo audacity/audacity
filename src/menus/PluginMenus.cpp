@@ -3,6 +3,7 @@
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
+#include "../commands/CommandDispatch.h"
 #include "../CommonCommandFlags.h"
 #include "../Journal.h"
 #include "../Menus.h"
@@ -1018,7 +1019,7 @@ void OnAudacityCommand(const CommandContext & ctx)
    // using GET in a log message for devs' eyes only
    wxLogDebug( "Command was: %s", ctx.parameter.GET());
    // Not configured, so prompt user.
-   MacroCommands::DoAudacityCommand(
+   CommandDispatch::DoAudacityCommand(
       EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
       ctx, EffectManager::kNone);
 }

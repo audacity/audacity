@@ -49,7 +49,8 @@ void ToolBarButtons::OnButton(wxCommandEvent & event)
    auto flags = MenuManager::Get(mProject).GetUpdateFlags();
    const CommandContext context( mProject );
 
-   ::HandleTextualCommand( cm, mButtonList[id].commandName, context, flags, false );
+   CommandDispatch::HandleTextualCommand(cm,
+      mButtonList[id].commandName, context, flags, false );
 
 #if defined(__WXMAC__)
    // Bug 2402
