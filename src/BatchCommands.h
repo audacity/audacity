@@ -55,9 +55,6 @@ private:
 // Stores information for one macro
 class MacroCommands final {
  public:
-   static bool DoAudacityCommand(
-      const PluginID & ID, const CommandContext & context, unsigned flags );
-
    // constructors and destructors
    MacroCommands( AudacityProject &project );
  public:
