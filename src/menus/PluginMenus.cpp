@@ -1515,8 +1515,6 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    static BaseItemSharedPtr menu{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      Command( wxT("Help"), XXO("Help..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("OpenProject2"), XXO("Open Project..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SaveProject2"), XXO("Save Project..."),
