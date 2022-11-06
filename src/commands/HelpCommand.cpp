@@ -17,6 +17,9 @@
 
 #include "HelpCommand.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "../Shuttle.h"
 #include "LoadCommands.h"
 #include "../ShuttleGui.h"
@@ -135,3 +138,19 @@ void CommentCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment{
+   wxT("Optional/Extra/Part2/Scriptables2"),
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("Help"), XXO("Help..."),
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+};
+
+}
