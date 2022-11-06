@@ -36,6 +36,9 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 
 #include "SetTrackInfoCommand.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
 #include "../TrackPanelAx.h"
@@ -496,3 +499,34 @@ bool SetTrackCommand::VisitSettings( SettingsVisitor & S )
 bool SetTrackCommand::VisitSettings( ConstSettingsVisitor & S )
    { return VisitSettings<true>(S); }
 
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment1{
+   wxT("Optional/Extra/Part2/Scriptables1"),
+   Items( wxT(""),
+      // Note that the PLUGIN_SYMBOL must have a space between words,
+      // whereas the short-form used here must not.
+      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "CompareAudio" here.)
+      Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+   )
+};
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part2/Scriptables2"),
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("SetTrack"), XXO("Set Track..."),
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+};
+}
