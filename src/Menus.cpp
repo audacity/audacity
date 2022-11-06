@@ -233,8 +233,8 @@ WholeMenu::~WholeMenu() {}
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {
       // If this default finder function is reached, then FinderScope should
-      // have been used somewhere, or an explicit CommandHandlerFinder passed
-      // to menu item constructors
+      // have been used somewhere but was not, or an explicit
+      // CommandHandlerFinder was not passed to menu item constructors
       wxASSERT( false );
       return project;
    };

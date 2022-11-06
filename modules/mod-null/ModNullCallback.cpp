@@ -58,7 +58,7 @@ void ModNullCallback::OnFuncSecond(const CommandContext &)
 }
 ModNullCallback * pModNullCallback=NULL;
 
-#define ModNullFN(X) static_cast<CommandFunctorPointer>((&ModNullCallback:: X))
+#define ModNullFN(X) (&ModNullCallback:: X)
 
 extern "C" {
 
