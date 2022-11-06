@@ -1504,8 +1504,6 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
       // whereas the short-form used here must not.
       // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
       // you would have to use "CompareAudio" here.)
-      Command( wxT("SetClip"), XXO("Set Clip..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetLabel"), XXO("Set Label..."),
