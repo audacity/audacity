@@ -1514,11 +1514,8 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    // Less useful to VI users.
    static BaseItemSharedPtr menu{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      // i18n-hint: Screenshot in the help menu has a much bigger dialog.
-      Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   ) };
+   Menu( wxT("Scriptables2"), XXO("Scripta&bles II") )
+   };
    return menu;
 }
 
