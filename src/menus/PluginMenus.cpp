@@ -1502,8 +1502,8 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
    Menu( wxT("Scriptables1"), XXO("Script&ables I"),
       // Note that the PLUGIN_SYMBOL must have a space between words,
       // whereas the short-form used here must not.
-      // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
-      // you would have to use "Compareaudio" here.)
+      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "CompareAudio" here.)
       Command( wxT("SelectTime"), XXO("Select Time..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),

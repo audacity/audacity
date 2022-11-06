@@ -389,13 +389,13 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
       MenuPathStart,
       {
          {wxT(""), wxT(
-   "File,Edit,Select,View,Transport,Tracks,Generate,Effect,Analyze,Tools,Window,Optional,Help"
+"File,Edit,Select,View,Transport,Tracks,Generate,Effect,Analyze,Tools,Window,Optional,Help"
           )},
          {wxT("/Optional/Extra/Part1"), wxT(
-   "Transport,Tools,Mixer,Edit,PlayAtSpeed,Seek,Device,Select"
+"Transport,Tools,Mixer,Edit,PlayAtSpeed,Seek,Device,Select"
           )},
          {wxT("/Optional/Extra/Part2"), wxT(
-   "Navigation,Focus,Cursor,Track,Scriptables1,Scriptables2"
+"Navigation,Focus,Cursor,Track,Scriptables1,Scriptables2"
           )},
          {wxT("/View/Windows"), wxT("UndoHistory,Karaoke,MixerBoard")},
          {wxT("/Analyze/Analyzers/Windows"), wxT("ContrastAnalyser,PlotSpectrum")},
@@ -407,7 +407,14 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 "ShowEditTB,ShowTranscriptionTB,ShowScrubbingTB,ShowDeviceTB,ShowSelectionTB,"
 "ShowSpectralSelectionTB") },
          {wxT("/Tracks/Add/Add"), wxT(
-   "NewMonoTrack,NewStereoTrack,NewLabelTrack,NewTimeTrack")},
+"NewMonoTrack,NewStereoTrack,NewLabelTrack,NewTimeTrack")},
+         {wxT("/Optional/Extra/Part2/ScriptablesI"), wxT(
+"SelectTime,SelectFrequencies,SelectTracks,SetTrackStatus,SetTrackAudio,"
+"SetTrackVisuals,GetPreference,SetPreference,SetClip,SetEnvelope,SetLabel"
+"SetProject") },
+         {wxT("/Optional/Extra/Part2/ScriptablesII"), wxT(
+"Select,SetTrack,GetInfo,Message,Help,Import2,Export2,OpenProject2,"
+"SaveProject2,Drag,CompareAudio,Screenshot") },
       }
    };
 
