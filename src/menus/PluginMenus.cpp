@@ -28,7 +28,6 @@
 #include "../prefs/PrefsDialog.h"
 #include "../widgets/AudacityMessageBox.h"
 
-#include <wx/log.h>
 #include <wx/stdpaths.h>
 
 #include "XMLFileReader.h"
@@ -1013,16 +1012,6 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 }
 
-void OnAudacityCommand(const CommandContext & ctx)
-{
-   // using GET in a log message for devs' eyes only
-   wxLogDebug( "Command was: %s", ctx.parameter.GET());
-   // Not configured, so prompt user.
-   CommandDispatch::DoAudacityCommand(
-      EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
-      ctx, EffectManager::kNone);
-}
-
 // Menu definitions? ...
 
 // ... buf first some more helper definitions
@@ -1515,38 +1504,30 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
       // whereas the short-form used here must not.
       // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
       // you would have to use "Compareaudio" here.)
-      Command( wxT("SelectTime"), XXO("Select Time..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+      Command( wxT("SelectTime"), XXO("Select Time..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SelectTracks"), XXO("Select Tracks..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("GetPreference"), XXO("Get Preference..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetPreference"), XXO("Set Preference..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetClip"), XXO("Set Clip..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetClip"), XXO("Set Clip..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetLabel"), XXO("Set Label..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetProject"), XXO("Set Project..."), OnAudacityCommand,
-         AudioIONotBusyFlag() )
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetLabel"), XXO("Set Label..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetProject"), XXO("Set Project..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
    ) };
    return menu;
 }
@@ -1562,35 +1543,31 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    static BaseItemSharedPtr menu{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      Command( wxT("Select"), XXO("Select..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetTrack"), XXO("Set Track..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("GetInfo"), XXO("Get Info..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("Message"), XXO("Message..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("Help"), XXO("Help..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("Import2"), XXO("Import..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("Export2"), XXO("Export..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+      Command( wxT("Select"), XXO("Select..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetTrack"), XXO("Set Track..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("GetInfo"), XXO("Get Info..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("Message"), XXO("Message..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("Help"), XXO("Help..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("Import2"), XXO("Import..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("Export2"), XXO("Export..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("OpenProject2"), XXO("Open Project..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SaveProject2"), XXO("Save Project..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
-      Command( wxT("Drag"), XXO("Move Mouse..."), OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("Drag"), XXO("Move Mouse..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("CompareAudio"), XXO("Compare Audio..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() ),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       // i18n-hint: Screenshot in the help menu has a much bigger dialog.
       Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
-         OnAudacityCommand,
-         AudioIONotBusyFlag() )
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
    ) };
    return menu;
 }
