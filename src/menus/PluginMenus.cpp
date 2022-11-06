@@ -1505,12 +1505,6 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
       // whereas the short-form used here must not.
       // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
       // you would have to use "CompareAudio" here.)
-      Command( wxT("SelectTime"), XXO("Select Time..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
-      Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
-      Command( wxT("SelectTracks"), XXO("Select Tracks..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
@@ -1544,8 +1538,6 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    static BaseItemSharedPtr menu{
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      Command( wxT("Select"), XXO("Select..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("SetTrack"), XXO("Set Track..."),
          CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
       Command( wxT("GetInfo"), XXO("Get Info..."),
