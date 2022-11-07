@@ -1008,7 +1008,7 @@ namespace
       using ParamVector = std::vector<std::optional<double> >;
 
       // Make a message from a chunk and ID-value pairs
-      explicit VSTEffectMessage(const std::vector<char>&& chunk, const ParamVector&& params)
+      explicit VSTEffectMessage(std::vector<char>&& chunk, ParamVector&& params)
          : mChunk(std::move(chunk)),
            mParamsVec(std::move(params))
       {
@@ -1110,7 +1110,7 @@ std::unique_ptr<EffectInstance::Message> VSTEffectInstance::MakeMessage() const
    FetchSettings(settings, /* doFetch = */ false);
 
    VSTEffectMessage::ParamVector paramVector;
-   paramVector.resize(settings.mParamsMap.size(), std::nullopt);
+   paramVector.resize(mAEffect->numParams, std::nullopt);
 
    return std::make_unique<VSTEffectMessage>( std::move(settings.mChunk), std::move(paramVector) );
 }
