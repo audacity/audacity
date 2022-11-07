@@ -45,6 +45,8 @@ public:
          pOutputs ? pOutputs->Clone() : nullptr } });
       mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
       mChannelFromMain.Write(FromMainSlot{ settings, pMessage });
+
+      mMainThreadId = std::this_thread::get_id();
    }
 
    void MainRead() {
@@ -53,6 +55,7 @@ public:
    }
    void MainWrite(SettingsAndCounter &&settings,
       std::unique_ptr<EffectInstance::Message> pMessage) {
+
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(FromMainSlot::Message{
          std::move(settings.settings), settings.counter, std::move(pMessage) });
@@ -164,6 +167,8 @@ public:
 
    std::mutex mLockForCV;
    std::condition_variable mCV;
+
+   std::thread::id mMainThreadId;
 };
 
 //! Main thread's interface to inter-thread communication of changes of settings
@@ -200,8 +205,19 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    void Set(EffectSettings &&settings, std::unique_ptr<Message> pMessage)
    override {
-      if (auto pState = mwState.lock())
+      if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            if (pMessage && !pAccessState->mState.mInitialized) {
+               // Other thread isn't processing.
+               // Let the instance consume the message directly.
+               if (auto pInstance = pState->mwInstance.lock()) {
+                  EffectInstance::MessagePackage package{
+                     pState->mWorkerSettings.settings, pMessage.get()
+                  };
+                  pInstance->RealtimeProcessStart(package);
+                  return;
+               }
+            }
             auto &lastSettings = pAccessState->mLastSettings;
             // move to remember values here
             lastSettings.settings = std::move(settings);
@@ -210,10 +226,12 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             pAccessState->MainWrite(
                SettingsAndCounter{ lastSettings }, std::move(pMessage));
          }
+      }
    }
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            assert(pAccessState->mMainThreadId == std::this_thread::get_id());
             
             if (pAccessState->mState.mInitialized)
             {
@@ -303,6 +321,9 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
       // copies of contents might avoid free store operations
       mMessage = result->MakeMessage();
       mMovedMessage = result->MakeMessage();
+      if (auto state = GetAccessState())
+         state->Initialize(mMainSettings.settings,
+            mMessage.get(), mMovedOutputs.get());
    }
    return result;
 }
@@ -455,7 +476,8 @@ bool RealtimeEffectState::ProcessStart(bool running)
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
 size_t RealtimeEffectState::Process(Track &track, unsigned chans,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, float *const dummybuf,
+   size_t numSamples)
 {
    auto pInstance = mwInstance.lock();
    if (!mPlugin || !pInstance || !mLastActive) {
@@ -490,7 +512,7 @@ size_t RealtimeEffectState::Process(Track &track, unsigned chans,
       std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
       if (copied < numAudioOut) {
          // Make determinate pointers
-         std::fill(clientOut + copied, clientOut + numAudioOut, nullptr);
+         std::fill(clientOut + copied, clientOut + numAudioOut, dummybuf);
       }
 
       // Inner loop over blocks
@@ -708,6 +730,10 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
    // Only the main thread assigns to the atomic pointer, here and
    // once only in the lifetime of the state
    if (!GetAccessState())
+   {
+      MakeInstance();
       mpAccessState.emplace(*mPlugin, *this);
+   }
+
    return std::make_shared<Access>(*this);
 }

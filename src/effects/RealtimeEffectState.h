@@ -82,6 +82,7 @@ public:
       unsigned chans, // How many channels the playback device needs
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
+      float *dummybuf, //!<  one dummy output buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();

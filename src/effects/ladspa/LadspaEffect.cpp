@@ -1160,7 +1160,7 @@ bool LadspaEffect::LoadSettings(
    return true;
 }
 
-bool LadspaEffect::LoadUserPreset(
+OptionalMessage LadspaEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    return LoadParameters(name, settings);
@@ -1177,9 +1177,9 @@ RegistryPaths LadspaEffect::GetFactoryPresets() const
    return {};
 }
 
-bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
+OptionalMessage LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 {
-   return true;
+   return { nullptr };
 }
 
 // ============================================================================
@@ -1547,8 +1547,9 @@ void LadspaEffect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LadspaEffect::ImportPresets(EffectSettings &)
+OptionalMessage LadspaEffect::ImportPresets(EffectSettings &)
 {
+   return { nullptr };
 }
 
 bool LadspaEffect::HasOptions()
@@ -1613,23 +1614,25 @@ void LadspaEffect::Unload()
    }
 }
 
-bool LadspaEffect::LoadParameters(
+OptionalMessage LadspaEffect::LoadParameters(
    const RegistryPath & group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
       parms, wxEmptyString))
    {
-      return false;
+      return {};
    }
 
    CommandParameters eap;
    if (!eap.SetParameters(parms))
    {
-      return false;
+      return {};
    }
 
-   return LoadSettings(eap, settings);
+   if (!LoadSettings(eap, settings))
+      return {};
+   return { nullptr };
 }
 
 bool LadspaEffect::SaveParameters(

@@ -235,7 +235,7 @@ bool Effect::LoadSettings(
    return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
 }
 
-bool Effect::LoadUserPreset(
+OptionalMessage Effect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    // Find one string in the registry and then reinterpret it
@@ -243,7 +243,7 @@ bool Effect::LoadUserPreset(
    wxString parms;
    if (!GetConfig(GetDefinition(), PluginSettings::Private,
       name, wxT("Parameters"), parms))
-      return false;
+      return {};
 
    return LoadSettingsFromString(parms, settings);
 }
@@ -265,12 +265,12 @@ RegistryPaths Effect::GetFactoryPresets() const
    return {};
 }
 
-bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
-   return true;
+   return { nullptr };
 }
 
-bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
@@ -379,7 +379,7 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-void Effect::ImportPresets(EffectSettings &settings)
+OptionalMessage Effect::ImportPresets(EffectSettings &settings)
 {
    wxString params;
 
@@ -392,42 +392,46 @@ void Effect::ImportPresets(EffectSettings &settings)
                                      wxFD_OPEN | wxRESIZE_BORDER,
                                      nullptr);
    if (path.empty()) {
-      return;
+      return {};
    }
 
    wxFFile f(path);
-   if (f.IsOpened()) {
-      if (f.ReadAll(&params)) {
-         wxString ident = params.BeforeFirst(':');
-         params = params.AfterFirst(':');
+   if (!f.IsOpened())
+      return {};
 
-         auto commandId = GetSquashedName(GetSymbol().Internal());
+   OptionalMessage result{};
 
-         if (ident != commandId) {
-            // effect identifiers are a sensible length!
-            // must also have some params.
-            if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30)) 
-            {
-               Effect::MessageBox(
-                  /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is not a valid presets file.\n")
-                  .Format(wxFileNameFromPath(path)));
-            }
-            else
-            {
-               Effect::MessageBox(
-                  /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is for a different Effect, Generator or Analyzer.\n")
-                  .Format(wxFileNameFromPath(path)));
-            }
-            return;
+   if (f.ReadAll(&params)) {
+      wxString ident = params.BeforeFirst(':');
+      params = params.AfterFirst(':');
+
+      auto commandId = GetSquashedName(GetSymbol().Internal());
+
+      if (ident != commandId) {
+         // effect identifiers are a sensible length!
+         // must also have some params.
+         if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30))
+         {
+            Effect::MessageBox(
+               /* i18n-hint %s will be replaced by a file name */
+               XO("%s: is not a valid presets file.\n")
+               .Format(wxFileNameFromPath(path)));
          }
-         LoadSettingsFromString(params, settings);
+         else
+         {
+            Effect::MessageBox(
+               /* i18n-hint %s will be replaced by a file name */
+               XO("%s: is for a different Effect, Generator or Analyzer.\n")
+               .Format(wxFileNameFromPath(path)));
+         }
+         return {};
       }
+      result = LoadSettingsFromString(params, settings);
    }
 
    //SetWindowTitle();
 
+   return result;
 }
 
 bool Effect::HasOptions()
@@ -478,7 +482,7 @@ bool Effect::SaveSettingsAsString(
    return eap.GetParameters(parms);
 }
 
-bool Effect::LoadSettingsFromString(
+OptionalMessage Effect::LoadSettingsFromString(
    const wxString & parms, EffectSettings &settings) const
 {
    // If the string starts with one of certain significant substrings,
@@ -488,28 +492,28 @@ bool Effect::LoadSettingsFromString(
    // ultimately the uses of it by EffectManager::GetPreset, which is used by
    // the macro management dialog)
    wxString preset = parms;
-   bool success = false;
+   OptionalMessage result;
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(UserPresetsGroup(preset), settings);
+      result = LoadUserPreset(UserPresetsGroup(preset), settings);
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
       auto presets = GetFactoryPresets();
-      success = LoadFactoryPreset(
+      result = LoadFactoryPreset(
          make_iterator_range( presets ).index( preset ), settings );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(CurrentSettingsGroup(), settings);
+      result = LoadUserPreset(CurrentSettingsGroup(), settings);
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(FactoryDefaultsGroup(), settings);
+      result = LoadUserPreset(FactoryDefaultsGroup(), settings);
    }
    else
    {
@@ -522,28 +526,30 @@ bool Effect::LoadSettingsFromString(
       S.SetForValidating( &eap );
       // VisitSettings returns false if not defined for this effect.
       // To do: fix const_cast in use of VisitSettings
-      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) )
+      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) ) {
          // the old method...
-         success = LoadSettings(eap, settings);
+         if (LoadSettings(eap, settings))
+            return { nullptr };
+      }
       else if( !S.bOK )
-         success = false;
+         result = {};
       else{
-         success = true;
+         result = { nullptr };
          S.SetForWriting( &eap );
          const_cast<Effect*>(this)->VisitSettings(S, settings);
       }
    }
 
-   if (!success)
+   if (!result)
    {
       Effect::MessageBox(
          XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
             .Format( GetName(), preset ) );
       // We are using default settings and we still wish to continue.
-      return true;
+      result = { nullptr };
       //return false;
    }
-   return true;
+   return result;
 }
 
 unsigned Effect::TestUIFlags(unsigned mask) {
@@ -573,7 +579,8 @@ void Effect::UnsetBatchProcessing()
    // If effect is not stateful, this call doesn't really matter, and the
    // settings object is a dummy
    auto dummySettings = MakeSettings();
-   LoadUserPreset(GetSavedStateGroup(), dummySettings);
+   // Ignore failure
+   (void ) LoadUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
 bool Effect::Delegate(Effect &delegate, EffectSettings &settings)

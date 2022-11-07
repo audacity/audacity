@@ -368,7 +368,7 @@ bool LV2Effect::CloseUI()
    return true;
 }
 
-bool LV2Effect::LoadUserPreset(
+OptionalMessage LV2Effect::LoadUserPreset(
    const RegistryPath &name, EffectSettings &settings) const
 {
    return LoadParameters(name, settings);
@@ -410,29 +410,30 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage
+LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
-      return false;
+      return {};
 
    LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
-      return false;
+      return {};
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
-   if (LilvStatePtr state{
+   LilvStatePtr state{
       lilv_state_new_from_world(gWorld,
          mFeatures.URIDMapFeature(), preset.get())
-   }){
-      auto &mySettings = GetSettings(settings);
-      mPorts.EmitPortValues(*state, mySettings);
-      // Save the state, for whatever might not be contained in port values
-      mySettings.mpState = move(state);
-      return true;
-   }
-   else
-      return false;
+   };
+   if (!state)
+      return {};
+
+   auto &mySettings = GetSettings(settings);
+   mPorts.EmitPortValues(*state, mySettings);
+   // Save the state, for whatever might not be contained in port values
+   mySettings.mpState = move(state);
+   return { nullptr };
 }
 
 bool LV2Effect::CanExportPresets()
@@ -444,8 +445,9 @@ void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LV2Effect::ImportPresets(EffectSettings &)
+OptionalMessage LV2Effect::ImportPresets(EffectSettings &)
 {
+   return { nullptr };
 }
 
 bool LV2Effect::HasOptions()
@@ -462,17 +464,19 @@ void LV2Effect::ShowOptions()
 // LV2Effect Implementation
 // ============================================================================
 
-bool LV2Effect::LoadParameters(
+OptionalMessage LV2Effect::LoadParameters(
    const RegistryPath &group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
-      return false;
+      return {};
    CommandParameters eap;
    if (!eap.SetParameters(parms))
-      return false;
-   return LoadSettings(eap, settings);
+      return {};
+   if (!LoadSettings(eap, settings))
+      return {};
+   return { nullptr };
 }
 
 bool LV2Effect::SaveParameters(

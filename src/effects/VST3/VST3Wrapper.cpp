@@ -773,7 +773,8 @@ void VST3Wrapper::SaveSettings(const EffectSettings& settings, CommandParameters
       parms.Write(parametersKey, ParametersToString(vst3settings.parameterChanges)); 
 }
 
-void VST3Wrapper::LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings)
+OptionalMessage VST3Wrapper::LoadUserPreset(
+   const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings)
 {
    VST3EffectSettings vst3settings;
    
@@ -790,6 +791,7 @@ void VST3Wrapper::LoadUserPreset(const EffectDefinitionInterface& effect, const 
       vst3settings.parameterChanges = ParametersFromString(parametersStr);
 
    std::swap(vst3settings, GetSettings(settings));
+   return { nullptr };
 }
 
 void VST3Wrapper::SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings)

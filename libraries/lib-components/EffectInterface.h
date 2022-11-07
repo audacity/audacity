@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <wx/event.h>
 
@@ -187,6 +188,9 @@ public:
       std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
+   /*!
+    @pre called on the main thread only
+    */
    virtual void Flush() = 0;
 
    //! @return whether this and the other give access to the same settings
@@ -287,6 +291,9 @@ public:
    virtual bool IsHiddenFromMenus() const;
 };
 
+using OptionalMessage =
+   std::optional<std::unique_ptr<EffectSettingsAccess::Message>>;
+
 /*************************************************************************************//**
 
 \class EffectSettingsManager
@@ -350,16 +357,21 @@ public:
    virtual RegistryPaths GetFactoryPresets() const = 0;
 
    //! Change settings to a user-named preset
-   virtual bool LoadUserPreset(
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const = 0;
    //! Save settings in the configuration file as a user-named preset
    virtual bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const = 0;
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id, EffectSettings &settings) const = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadFactoryPreset(
+      int id, EffectSettings &settings) const = 0;
    //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadFactoryDefaults(
+      EffectSettings &settings) const = 0;
    //! @}
 
    //! Visit settings (and maybe change them), if defined.
@@ -721,7 +733,9 @@ public:
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;
-   virtual void ImportPresets(EffectSettings &settings) = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage
+      ImportPresets(EffectSettings &settings) = 0;
 
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
