@@ -912,92 +912,11 @@ bool VSTEffect::InitializePlugin()
 }
 
 
-bool VSTEffectWrapper::TransferSettingsContents
-(
-   VSTEffectSettings& src,
-   VSTEffectSettings& dst,
-   bool doMove,
-   bool doMerge
-)
+bool VSTEffectWrapper::CopySettingsContents(const VSTEffectSettings&,
+                                                  VSTEffectSettings&) const
 {
-   dst.mNumParams = src.mNumParams;
-   dst.mUniqueID  = src.mUniqueID;
-   dst.mVersion   = src.mVersion;
-
-   assert(dst.mParamsMap.size() == src.mParamsMap.size());
-
-   bool discard = false;
-
-   // Do the chunk first
-   if (!src.mChunk.empty())
-   {
-      dst.mChunk = src.mChunk;
-      if (doMove)
-      {
-         src.mChunk.resize(0);
-      }
-
-      // If a new chunk is merged, any unconsumed slider movements in the
-      // parameters map are discarded before the other thread sees them
-      discard = doMerge;
-   }
-   else if (!doMerge)
-   {
-      // Assignment means copy the emptiness of the chunk
-      dst.mChunk.resize(0);
-   }
-   
-
-   // Then do an in-place rewrite of dst, avoiding allocations
-   auto& dstMap = dst.mParamsMap;
-   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
-   auto& srcMap = src.mParamsMap;
-
-   for (auto& [key, srcValue] : srcMap)
-   {
-      assert(dstIter != dstEnd);
-      auto& [dstKey, dstValue] = *dstIter;
-      assert(dstKey == key);
-
-      if (discard || (!srcValue && !doMerge))
-      {
-         // Merging a chunk message, or else,
-         // source has no value, and we do not want to merge (i.e. keep any
-         // dest value that might be there) - delete the destination value
-         dstValue = std::nullopt;
-      }
-      else if (srcValue)
-      {
-         dstValue = srcValue;
-      }
-
-      if (doMove)
-      {
-         srcValue = std::nullopt;
-      }
-
-      dstIter++;
-   }
-
-   assert(dstIter == dstEnd);
-
+   // No longer needs to do anything
    return true;
-}
-
-
-bool VSTEffectWrapper::CopySettingsContents(const VSTEffectSettings& src,
-                                                  VSTEffectSettings& dst) const
-{
-   return TransferSettingsContents(
-      const_cast<VSTEffectSettings&>(src), dst, /*move =*/ false, /*merge =*/ false);
-}
-
-
-bool VSTEffectWrapper::MoveSettingsContents(VSTEffectSettings&& src,
-                                            VSTEffectSettings&  dst,
-                                            bool                merge)
-{
-   return TransferSettingsContents(src, dst, /*move =*/ true, merge);
 }
 
 
