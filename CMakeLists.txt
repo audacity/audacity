@@ -156,6 +156,20 @@ set( _OPT "audacity_" )
 # Our very own project
 project( Audacity )
 
+# XCode 14 no longer allows building unsigned binaries.
+# So for the XCode 14 `-` is passed as the code sign identity, which stands for
+# local signing. `--deep` is passed, because 3d party libraries are copied unsigned.
+# XCODE_VERSION is defined only after the project() command
+
+if( APPLE )
+   if (XCODE_VERSION VERSION_LESS 14)
+      set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
+   else()
+      set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "-" CACHE INTERNAL "" )
+      set( CMAKE_XCODE_ATTRIBUTE_OTHER_CODE_SIGN_FLAGS "--deep" CACHE INTERNAL "")
+   endif()
+endif()
+
 # Load our functions/macros
 include( AudacityFunctions )
 
