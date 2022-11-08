@@ -211,8 +211,10 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                // Other thread isn't processing.
                // Let the instance consume the message directly.
                if (auto pInstance = pState->mwInstance.lock()) {
+                  auto &stateSettings = pState->mMainSettings.settings;
+                  stateSettings = settings;
                   EffectInstance::MessagePackage package{
-                     pState->mWorkerSettings.settings, pMessage.get()
+                     stateSettings, pMessage.get()
                   };
                   pInstance->RealtimeProcessStart(package);
                   return;

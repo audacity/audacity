@@ -1504,24 +1504,6 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    return true;
 }
 
-OptionalMessage VSTEffect::LoadUserPreset(
-   const RegistryPath & name, EffectSettings &settings) const
-{
-   if (!LoadParameters(name, settings))
-   {
-      return {};
-   }
-
-   return MakeMessageFS( VSTEffectInstance::GetSettings(settings) );
-}
-
-
-bool VSTEffect::SaveUserPreset(
-   const RegistryPath & name, const EffectSettings &settings) const
-{
-   return SaveParameters(name, settings);
-}
-
 RegistryPaths VSTEffect::GetFactoryPresets() const
 {
    RegistryPaths progs;
@@ -2106,7 +2088,7 @@ bool VSTEffectWrapper::IsCompatible(const VstPatchChunkInfo& info) const
            (info.numElements    == mAEffect->numParams);
 }
 
-OptionalMessage VSTEffect::LoadParameters(
+OptionalMessage VSTEffect::LoadUserPreset(
    const RegistryPath & group, EffectSettings &settings) const
 {
    wxString value;
@@ -2165,7 +2147,7 @@ OptionalMessage VSTEffect::LoadParameters(
 }
 
 
-bool VSTEffect::SaveParameters(
+bool VSTEffect::SaveUserPreset(
    const RegistryPath & group, const EffectSettings &settings) const
 {
    const auto& vstSettings = GetSettings(settings);

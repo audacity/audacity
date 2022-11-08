@@ -428,13 +428,6 @@ private:
    
    std::vector<int> GetEffectIDs();
 
-   // Parameter loading and saving
-   OptionalMessage
-      LoadParameters(const RegistryPath & group, EffectSettings &settings) const;
-   bool SaveParameters(
-       const RegistryPath & group, const EffectSettings &settings) const;
-
-
    // UI
    
    
