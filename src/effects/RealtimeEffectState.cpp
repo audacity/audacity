@@ -212,7 +212,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                // Let the instance consume the message directly.
                if (auto pInstance = pState->mwInstance.lock()) {
                   auto &stateSettings = pState->mMainSettings.settings;
-                  stateSettings = settings;
+                  stateSettings = std::move(settings);
                   EffectInstance::MessagePackage package{
                      stateSettings, pMessage.get()
                   };
