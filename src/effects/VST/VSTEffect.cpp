@@ -2707,10 +2707,7 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
 
    NotifyParameterChanged(i, value);
    // Send changed settings (only) to the worker thread
-   mAccess.ModifySettings([&](EffectSettings&) {
-      auto result = GetInstance().MakeMessage(i, value);
-      return result;
-   });
+   mAccess.Set(GetInstance().MakeMessage(i, value));
    mNeedFlush = i;
 }
 
@@ -3881,10 +3878,7 @@ void VSTEffectValidator::Automate(int index, float value)
 {
    NotifyParameterChanged(index, value);
    // Send changed settings (only) to the worker thread
-   mAccess.ModifySettings([&](EffectSettings&) {
-      auto result = GetInstance().MakeMessage(index, value);
-      return result;
-   });
+   mAccess.Set(GetInstance().MakeMessage(index, value));
    mNeedFlush = index;
 }
 
