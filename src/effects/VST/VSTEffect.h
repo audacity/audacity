@@ -646,6 +646,9 @@ private:
    
    VSTControl* mControl;
 
+   // Mapping from parameter ID to string
+   std::vector<wxString> mParamNames;
+
    int mNumParams{ 0 };
 };
 
