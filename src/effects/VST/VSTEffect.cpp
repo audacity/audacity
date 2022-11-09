@@ -3837,8 +3837,15 @@ VSTEffectValidator::VSTEffectValidator
    mAccess.ModifySettings([&](EffectSettings &settings){
       return GetInstance().MakeMessageFS(VSTEffectInstance::GetSettings(settings));
    });
+
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
+
+   //! Note the parameter names for later use
+   mInstance.ForEachParameter([&](const VSTEffectWrapper::ParameterInfo &pi) {
+      mParamNames.push_back(pi.mName);
+      return true;
+   } );
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
 
