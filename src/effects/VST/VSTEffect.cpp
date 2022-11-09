@@ -2226,21 +2226,22 @@ void VSTEffectInstance::SizeWindow(int w, int h)
 void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
-
-   // Be sure the instance has got any messages
-   if (mNeedFlush != -1) {
-      mAccess.Flush();
-
-      // Update settings, for stickiness
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         FetchSettingsFromInstance(settings);
-         // Succeed but with a null message
-         return nullptr;
-      });
-
-      RefreshParameters(mNeedFlush);
-      mNeedFlush = -1;
+   if (mLastMovement) {
+      auto index = mLastMovement->first;
+      if (index >= 0 && index < mParamNames.size()) {
+         // Update settings, for stickiness
+         // But don't do a complete FetchSettingsFromInstance
+         const auto &string = mParamNames[index];
+         auto value = mLastMovement->second;
+         mAccess.ModifySettings([&string, value](EffectSettings& settings) {
+            auto &mySettings = VSTEffectWrapper::GetSettings(settings);
+            mySettings.mParamsMap[string] = value;
+            // Succeed but with a null message
+            return nullptr;
+         });
+      }
+      RefreshParameters(index);
+      mLastMovement = {};
    }
 }
 
@@ -2677,7 +2678,7 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
 
    // Send changed settings (only) to the worker thread
    mAccess.Set({}, GetInstance().MakeMessage(i, value));
-   mNeedFlush = i;
+   mLastMovement = { i, value };
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3760,7 +3761,7 @@ VSTEffectWrapper::MakeMessageFS(VSTEffectSettings &settings) const
 {
    VSTEffectMessage::ParamVector paramVector;
    paramVector.resize(settings.mParamsMap.size(), std::nullopt);
-   
+
    ForEachParameter
    (
       [&](const VSTEffectWrapper::ParameterInfo& pi)
@@ -3840,7 +3841,7 @@ void VSTEffectValidator::Automate(int index, float value)
 {
    // Send changed settings (only) to the worker thread
    mAccess.Set({}, GetInstance().MakeMessage(index, value));
-   mNeedFlush = index;
+   mLastMovement = { index, value };
 }
 
 
