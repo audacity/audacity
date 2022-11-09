@@ -211,8 +211,10 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                // Other thread isn't processing.
                // Let the instance consume the message directly.
                if (auto pInstance = pState->mwInstance.lock()) {
+                  auto &stateSettings = pState->mMainSettings.settings;
+                  stateSettings = std::move(settings);
                   EffectInstance::MessagePackage package{
-                     pState->mWorkerSettings.settings, pMessage.get()
+                     stateSettings, pMessage.get()
                   };
                   pInstance->RealtimeProcessStart(package);
                   return;
@@ -461,14 +463,22 @@ bool RealtimeEffectState::ProcessStart(bool running)
       mLastActive = active;
    }
 
+   bool result = false;
+   if (pInstance) {
+      // Consume messages even if not processing
+      // (issue #3855: plain UI for VST 2 effects)
+
+      // Assuming we are in a processing scope, use the worker settings
+      EffectInstance::MessagePackage package{
+         mWorkerSettings.settings, mMovedMessage.get()
+      };
+      result = pInstance->RealtimeProcessStart(package);
+   }
+
    if (!pInstance || !active)
       return false;
-
-   // Assuming we are in a processing scope, use the worker settings
-   EffectInstance::MessagePackage package{
-      mWorkerSettings.settings, mMovedMessage.get()
-   };
-   return pInstance->RealtimeProcessStart(package);
+   else
+      return result;
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
