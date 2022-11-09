@@ -359,6 +359,15 @@ ToolBar::~ToolBar()
 {
 }
 
+bool ToolBar::AcceptsFocusFromKeyboard() const
+{
+   for(auto& child : GetChildren())
+      if(child->AcceptsFocusFromKeyboard())
+         return true;
+   return false;
+}
+
+
 //
 // Returns the toolbar title
 //

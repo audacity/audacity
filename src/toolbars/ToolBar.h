@@ -110,6 +110,7 @@ class AUDACITY_DLL_API ToolBar /* not final */
    virtual ~ToolBar();
 
    bool AcceptsFocus() const override { return false; };
+   bool AcceptsFocusFromKeyboard() const override;
 
    virtual void SetToDefaultSize();
    //NEW virtuals:
