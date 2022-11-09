@@ -631,7 +631,9 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
-   int mNeedFlush{ -1 };
+
+   // Remembers last slider movements until idle time
+   std::vector<std::pair<int, double>> mLastMovements{};
 
    ArrayOf<wxStaticText*> mNames;
    ArrayOf<wxSlider*> mSliders;

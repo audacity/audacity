@@ -2251,20 +2251,25 @@ void VSTEffectValidator::NotifyParameterChanged(int index, float value)
 void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
-
-   // Be sure the instance has got any messages
-   if (mNeedFlush != -1) {
+   if (!mLastMovements.empty()) {
+      // Be sure the instance has got any messages
       mAccess.Flush();
-
-      // Update settings, for stickiness
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         FetchSettingsFromInstance(settings);
+      mAccess.ModifySettings([&](EffectSettings& settings) {
+         // Update settings, for stickiness
+         // But don't do a complete FetchSettingsFromInstance
+         for (auto [index, value] : mLastMovements) {
+            if (index >= 0 && index < mParamNames.size()) {
+               const auto &string = mParamNames[index];
+               auto &mySettings = VSTEffectWrapper::GetSettings(settings);
+               mySettings.mParamsMap[string] = value;
+            }
+         }
+         // Succeed but with a null message
          return nullptr;
       });
-
-      RefreshParameters(mNeedFlush);
-      mNeedFlush = -1;
+      for (auto [index, _] : mLastMovements)
+         RefreshParameters(index);
+      mLastMovements.clear();
    }
 }
 
@@ -2702,7 +2707,7 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
    NotifyParameterChanged(i, value);
    // Send changed settings (only) to the worker thread
    mAccess.Set(GetInstance().MakeMessage(i, value));
-   mNeedFlush = i;
+   mLastMovements.emplace_back(i, value);
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3795,7 +3800,7 @@ VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
 {
    VSTEffectMessage::ParamVector paramVector;
    paramVector.resize(mAEffect->numParams, std::nullopt);
-   
+
    ForEachParameter
    (
       [&](const VSTEffectWrapper::ParameterInfo& pi)
@@ -3881,7 +3886,7 @@ void VSTEffectValidator::Automate(int index, float value)
    NotifyParameterChanged(index, value);
    // Send changed settings (only) to the worker thread
    mAccess.Set(GetInstance().MakeMessage(index, value));
-   mNeedFlush = index;
+   mLastMovements.emplace_back(index, value);
 }
 
 
