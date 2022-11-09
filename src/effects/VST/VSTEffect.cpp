@@ -2235,6 +2235,7 @@ void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
       mAccess.ModifySettings([this](EffectSettings& settings)
       {
          FetchSettingsFromInstance(settings);
+         // Succeed but with a null message
          return nullptr;
       });
 
@@ -3906,7 +3907,8 @@ bool VSTEffectValidator::ValidateUI()
 
       FetchSettingsFromInstance(settings);
 
-      return GetInstance().MakeMessage();
+      // Succeed but with a null message
+      return nullptr;
    });
 
    return true;
