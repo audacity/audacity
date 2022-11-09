@@ -597,9 +597,9 @@ void EffectUIHost::DoCancel()
          // For the destructive effect dialog only
          // Restore effect state from last updated preferences
          mpAccess->ModifySettings([&](EffectSettings &settings) {
-            mEffectUIHost.GetDefinition()
-              .LoadUserPreset(CurrentSettingsGroup(), settings);
-            return nullptr;
+            // ignore failure
+            return mEffectUIHost.GetDefinition().LoadUserPreset(
+               CurrentSettingsGroup(), settings).value_or(nullptr);
          });
       }
       if (IsModal())
@@ -822,9 +822,9 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    int preset = evt.GetId() - kUserPresetsID;
    
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mEffectUIHost.GetDefinition()
-         .LoadUserPreset(UserPresetsGroup(mUserPresets[preset]), settings);
-      return nullptr;
+      // ignore failure
+      return mEffectUIHost.GetDefinition().LoadUserPreset(
+         UserPresetsGroup(mUserPresets[preset]), settings).value_or(nullptr);
    });
    TransferDataToWindow();
    return;
@@ -833,9 +833,9 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mEffectUIHost.GetDefinition()
-         .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
-      return nullptr;
+      //! ignore failure
+      return mEffectUIHost.GetDefinition().LoadFactoryPreset(
+         evt.GetId() - kFactoryPresetsID, settings).value_or(nullptr);
    });
    TransferDataToWindow();
    return;
@@ -943,8 +943,8 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mClient.ImportPresets(settings);
-      return nullptr;
+      // ignore failure
+      return mClient.ImportPresets(settings).value_or(nullptr);
    });
    TransferDataToWindow();
    LoadUserPresets();
@@ -972,8 +972,9 @@ void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
-      return nullptr;
+      // ignore failure
+      return mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings)
+         .value_or(nullptr);
    });
    TransferDataToWindow();
    return;

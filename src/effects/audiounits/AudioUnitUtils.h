@@ -142,9 +142,11 @@ namespace AudioUnitUtils {
       ~ParameterInfo() {
          if (flags & kAudioUnitParameterFlag_CFNameRelease) {
             if (flags & kAudioUnitParameterFlag_HasCFNameString)
-               CFRelease(cfNameString);
+               if (cfNameString)
+                  CFRelease(cfNameString);
             if (flags & kAudioUnitParameterUnit_CustomUnit)
-               CFRelease(unitName);
+               if (unitName)
+                  CFRelease(unitName);
          }
       }
    };

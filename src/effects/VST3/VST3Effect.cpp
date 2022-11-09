@@ -191,11 +191,10 @@ bool VST3Effect::LoadSettings(
    return true;
 }
 
-bool VST3Effect::LoadUserPreset(
+OptionalMessage VST3Effect::LoadUserPreset(
    const RegistryPath& name, EffectSettings& settings) const
 {
-   VST3Wrapper::LoadUserPreset(*this, name, settings);
-   return true;
+   return VST3Wrapper::LoadUserPreset(*this, name, settings);
 }
 
 bool VST3Effect::SaveUserPreset(
@@ -225,14 +224,15 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      return LoadPreset(filename.GetFullPath(), settings);
+      if (!LoadPreset(filename.GetFullPath(), settings))
+         return {};
    }
-   return true;
+   return { nullptr };
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
@@ -334,7 +334,7 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings& settings)
+OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -350,9 +350,12 @@ void VST3Effect::ImportPresets(EffectSettings& settings)
       nullptr
    );
    if(path.empty())
-      return;
+      return {};
 
-   LoadPreset(path, settings);
+   if (!LoadPreset(path, settings))
+      return {};
+
+   return { nullptr };
 }
 
 bool VST3Effect::HasOptions()

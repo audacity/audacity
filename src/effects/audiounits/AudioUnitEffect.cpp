@@ -366,7 +366,7 @@ bool AudioUnitEffect::LoadSettings(
    return true;
 }
 
-bool AudioUnitEffect::LoadUserPreset(
+OptionalMessage AudioUnitEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
@@ -379,28 +379,32 @@ bool AudioUnitEffect::SaveUserPreset(
    return SavePreset(name, GetSettings(settings));
 }
 
-bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage
+AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    // Issue 3441: Some factory presets of some effects do not reassign all
    // controls.  So first put controls into a default state, not contaminated
    // by previous importing or other loading of settings into this wrapper.
-   LoadPreset(FactoryDefaultsGroup(), settings);
+   if (!LoadPreset(FactoryDefaultsGroup(), settings))
+      return {};
 
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
    if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
        id < 0 || id >= CFArrayGetCount(array.get()))
-      return false;
+      return {};
 
    // Mutate the scratch pad AudioUnit in the effect
-   if (!SetProperty(kAudioUnitProperty_PresentPreset,
-      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id)))) {
-      // Repopulate the AudioUnitEffectSettings from the change of state in
-      // the AudioUnit
-      FetchSettings(GetSettings(settings));
-      return true;
-   }
-   return false;
+   if (SetProperty(kAudioUnitProperty_PresentPreset,
+      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id))))
+      return {};
+
+   // Repopulate the AudioUnitEffectSettings from the change of state in
+   // the AudioUnit
+   if (!FetchSettings(GetSettings(settings)))
+      return {};
+
+   return { nullptr };
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -496,7 +500,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
          mParent);
 }
 
-void AudioUnitEffect::ImportPresets(EffectSettings &settings)
+OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
 {
    // Generate the user domain path
    wxFileName fn;
@@ -521,15 +525,19 @@ void AudioUnitEffect::ImportPresets(EffectSettings &settings)
 
    // User canceled...
    if (path.empty())
-      return;
+      return {};
 
    auto msg = Import(GetSettings(settings), path);
-   if (!msg.empty())
+   if (!msg.empty()) {
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
+      return {};
+   }
+
+   return { nullptr };
 }
 
 bool AudioUnitEffect::HasOptions()
@@ -572,11 +580,11 @@ bool AudioUnitEffect::MigrateOldConfigFile(
    return false;
 }
 
-bool AudioUnitEffect::LoadPreset(
+OptionalMessage AudioUnitEffect::LoadPreset(
    const RegistryPath & group, EffectSettings &settings) const
 {
    if (MigrateOldConfigFile(group, settings))
-      return true;
+      return { nullptr };
 
    // Retrieve the preset
    wxString parms;
@@ -585,7 +593,7 @@ bool AudioUnitEffect::LoadPreset(
       // Commented "CurrentSettings" gets tried a lot and useless messages appear
       // in the log
       //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
-      return false;
+      return {};
    }
 
    // Decode it, complementary to what SaveBlobToConfig did
@@ -593,10 +601,10 @@ bool AudioUnitEffect::LoadPreset(
       InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
    if (!error.empty()) {
       wxLogError(error.Debug());
-      return false;
+      return {};
    }
 
-   return true;
+   return { nullptr };
 }
 
 bool AudioUnitEffect::SavePreset(

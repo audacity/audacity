@@ -105,14 +105,16 @@ class AUDACITY_DLL_API Effect /* not final */
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool LoadFactoryDefaults(EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
+   OptionalMessage LoadFactoryDefaults(EffectSettings &settings)
+      const override;
 
    // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
@@ -136,7 +138,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -154,7 +156,7 @@ class AUDACITY_DLL_API Effect /* not final */
       bool forceModal = false) override;
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
-   bool LoadSettingsFromString(
+   [[nodiscard]] OptionalMessage LoadSettingsFromString(
       const wxString & parms, EffectSettings &settings) const override;
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;

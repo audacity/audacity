@@ -422,13 +422,17 @@ bool EffectEqualization::VisitSettings(
    return true;
 }
 
-bool EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage
+EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectEqualization&>(*this).DoLoadFactoryDefaults(settings);
+   if (!const_cast<EffectEqualization&>(*this).DoLoadFactoryDefaults(settings))
+      return {};
+   return { nullptr };
 }
 
-bool EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
+OptionalMessage
+EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mdBMin = dBMin.def;
    mdBMax = dBMax.def;
@@ -485,7 +489,8 @@ RegistryPaths EffectEqualization::GetFactoryPresets() const
    return names;
 }
 
-bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage
+EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    int index = -1;
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
@@ -498,7 +503,7 @@ bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) con
       }
    }
    if (index < 0)
-      return false;
+      return {};
 
    // mParams = 
    wxString params = FactoryPresets[index].values;
@@ -507,8 +512,9 @@ bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) con
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
    // To do: externalize state so const_cast isn't needed
-   const_cast<EffectEqualization*>(this)->VisitSettings(S, settings);
-   return true;
+   if (!const_cast<EffectEqualization*>(this)->VisitSettings(S, settings))
+      return {};
+   return { nullptr };
 }
 
 

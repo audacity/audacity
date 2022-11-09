@@ -147,7 +147,7 @@ private:
    void ProcessStart(bool suspended);
    /*! @copydoc ProcessScope::Process */
    size_t Process(bool suspended, Track &track,
-      float *const *buffers, float *const *scratch,
+      float *const *buffers, float *const *scratch, float *dummy,
       unsigned nBuffers, size_t numSamples);
    void ProcessEnd(bool suspended) noexcept;
 
@@ -266,13 +266,14 @@ public:
    size_t Process(Track &track,
       float *const *buffers,
       float *const *scratch,
+      float *dummy,
       unsigned nBuffers, //!< how many buffers; equal number of scratches
       size_t numSamples //!< length of each buffer
    )
    {
       if (auto pProject = mwProject.lock())
          return RealtimeEffectManager::Get(*pProject)
-            .Process(mSuspended, track, buffers, scratch,
+            .Process(mSuspended, track, buffers, scratch, dummy,
                nBuffers, numSamples);
       else
          return 0; // consider them trivially processed

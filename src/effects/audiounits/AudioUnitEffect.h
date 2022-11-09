@@ -77,13 +77,14 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
@@ -101,7 +102,7 @@ public:
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -125,7 +126,8 @@ private:
 
    bool MigrateOldConfigFile(
       const RegistryPath & group, EffectSettings &settings) const;
-   bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
+   OptionalMessage
+      LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
    bool SavePreset(const RegistryPath & group,
       const AudioUnitEffectSettings &settings) const;
 
