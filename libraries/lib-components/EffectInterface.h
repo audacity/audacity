@@ -219,6 +219,7 @@ public:
       : mSettings{settings} {}
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
+   //! Reassigns mSettings only if settings.has_value()
    void Set(EffectSettings &&settings,
       std::unique_ptr<Message> pMessage) override;
    void Flush() override;

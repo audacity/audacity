@@ -207,12 +207,14 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
+            bool hadValue = settings.has_value();
             if (pMessage && !pAccessState->mState.mInitialized) {
                // Other thread isn't processing.
                // Let the instance consume the message directly.
                if (auto pInstance = pState->mwInstance.lock()) {
                   auto &stateSettings = pState->mMainSettings.settings;
-                  stateSettings = std::move(settings);
+                  if (hadValue)
+                     stateSettings = std::move(settings);
                   EffectInstance::MessagePackage package{
                      stateSettings, pMessage.get()
                   };
@@ -222,11 +224,16 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             }
             auto &lastSettings = pAccessState->mLastSettings;
             // move to remember values here
-            lastSettings.settings = std::move(settings);
+            if (hadValue)
+               lastSettings.settings = std::move(settings);
             ++lastSettings.counter;
             // move a copy to there
             pAccessState->MainWrite(
-               SettingsAndCounter{ lastSettings }, std::move(pMessage));
+               hadValue
+                  ? SettingsAndCounter{ lastSettings }
+                  // else avoid copy of settings
+                  : SettingsAndCounter{ {}, lastSettings.counter },
+               std::move(pMessage));
          }
       }
    }

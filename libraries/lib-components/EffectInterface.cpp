@@ -31,7 +31,8 @@ const EffectSettings &SimpleEffectSettingsAccess::Get()
 void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
    std::unique_ptr<Message>)
 {
-   mSettings = std::move(settings);
+   if (settings.has_value())
+      mSettings = std::move(settings);
 }
 
 void SimpleEffectSettingsAccess::Flush()
@@ -111,7 +112,8 @@ bool EffectSettingsManager::VisitSettings(
 
 auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 {
-   return {};
+   // Return a non-empty any
+   return EffectSettings::Make<nullptr_t>();
 }
 
 auto EffectSettingsManager::MakeOutputs() const
