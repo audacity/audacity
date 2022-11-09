@@ -364,7 +364,7 @@ AudacityProject * TrackPanel::GetProject() const
    while(window != nullptr)
    {
       if(const auto projectWindow = dynamic_cast<ProjectWindow*>(window))
-         return &projectWindow->GetProject();
+         return projectWindow->FindProject().get();
 
       window = window->GetParent();
    }

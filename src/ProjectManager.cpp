@@ -176,7 +176,10 @@ void ProjectManager::SaveWindowSize()
 
 void InitProjectWindow( ProjectWindow &window )
 {
-   auto &project = window.GetProject();
+   auto pProject = window.FindProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -339,7 +342,7 @@ AudacityProject *ProjectManager::New()
    
    // Create and show a NEW project
    // Use a non-default deleter in the smart pointer!
-   auto sp = std::make_shared< AudacityProject >();
+   auto sp = AudacityProject::Create();
    AllProjects{}.Add( sp );
    auto p = sp.get();
    auto &project = *p;
