@@ -1316,8 +1316,31 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
       const auto len = chunk.size();
       const auto data = chunk.data();
       callSetChunk(true, len, data, &info);
+
+      // Emulate what happens for plugins like DeeGain,
+      // i.e. after setting the chunk, the vst callback is called
+      // with message audioMasterAutomate for all parameters.
+      //
+      // This fixes #3842 (for BlueCat Chorus and possibly other plugins)
+      // and does not harm plugins like DeeGain either
+      //
+      for (size_t i = 0; i < message.mParamsVec.size(); i++)
+      {
+         if (message.mParamsVec[i])
+            Automate(i, *message.mParamsVec[i]);
+      }
+
       for (auto& slave : mSlaves)
+      {
          slave->callSetChunk(true, len, data, &info);
+
+         // Emulation of DeeGain-type plugins for the slaves too
+         for (size_t i = 0; i < message.mParamsVec.size(); i++)
+         {
+            if (message.mParamsVec[i])
+               slave->Automate(i, *message.mParamsVec[i]);
+         }
+      }
 
       // Don't apply the chunk again until another message supplies a chunk
       chunk.resize(0);
