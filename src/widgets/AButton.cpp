@@ -519,6 +519,10 @@ void AButton::OnCharHook(wxKeyEvent& event)
       {
          mButtonIsDown = !mButtonIsDown;
          Refresh(false);
+#if wxUSE_ACCESSIBILITY
+         GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
+            this, wxOBJID_CLIENT, wxACC_SELF);
+#endif
       }
       Click();
       break;
@@ -807,13 +811,28 @@ wxAccStatus AButtonAx::GetName(int WXUNUSED(childId), wxString* name)
       *name = _("Button");
    }
 
+   /* In the MSAA frame work, there isn't such a thing as a toggle button.
+   In particular, narrator does not read the wxACC_STATE_SYSTEM_PRESSED state at all.
+   So to imitate a toggle button, include the role and the state in the name, and
+   create a name change event when the state changes. */
+   if (ab->mToggle) {
+      *name += wxT(" ") +
+         _("Button")
+         + wxT(" ") +
+         /* i18n-hint: whether a button is pressed or not pressed */
+         (ab->IsDown() ? _("pressed") : _("not pressed"));
+   }
+
    return wxACC_OK;
 }
 
 // Returns a role constant.
 wxAccStatus AButtonAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
 {
-   *role = wxROLE_SYSTEM_PUSHBUTTON;
+   AButton* ab = wxDynamicCast(GetWindow(), AButton);
+
+   // For a toggle button, the role is included in the name, so read nothing
+   *role = ab->mToggle ? wxROLE_SYSTEM_STATICTEXT : wxROLE_SYSTEM_PUSHBUTTON;
 
    return wxACC_OK;
 }
@@ -840,7 +859,8 @@ wxAccStatus AButtonAx::GetState(int WXUNUSED(childId), long* state)
        *state = wxACC_STATE_SYSTEM_UNAVAILABLE;
    else
    {
-      if(ab->mButtonIsDown)
+      // For a toggle button, the state is included in the name
+      if(ab->mButtonIsDown && !ab->mToggle)
          *state |= wxACC_STATE_SYSTEM_PRESSED;
 
       if(ab->mCursorIsInWindow)
