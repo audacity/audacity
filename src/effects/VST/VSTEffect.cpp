@@ -3704,6 +3704,15 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
       {
          name.Printf(wxT("parm_%d"), i);
       }
+      else
+         /* Easy fix for now for issue 3854, but this should be reconsidered
+          There is the possibility that two parameter names might collide
+          after normalizing.  A question is whether the normalizing was ever
+          really needed for saving in a wxConfigFile.  Maybe not.  But then
+          redefinition of the keys stored in the file may introduce versioning
+          difficulties if there is an attempt to fix this in future Audacity.
+          */
+         name = CommandParameters::NormalizeName(name);
 
       ParameterInfo pi{ i, name };
 
