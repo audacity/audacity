@@ -19,8 +19,7 @@
 
 #include "warning.xpm"
 
-//Temporary solution until lib-strings is added
-#define XC(msg, ctx) (wxGetTranslation(msg, wxEmptyString, ctx))
+#include <Internat.h>
 
 #if defined(_WIN32)
 #include <locale>
@@ -342,8 +341,8 @@ namespace
             }
 
 
-            auto dontSendButton = new wxButton(dialog, wxID_ANY, XC("&Don't send", "crash reporter button"));
-            auto sendButton = new wxButton(dialog, wxID_ANY, XC("&Send", "crash reporter button"));
+            auto dontSendButton = new wxButton(dialog, wxID_ANY, XC("&Don't send", "crash reporter button").Translation());
+            auto sendButton = new wxButton(dialog, wxID_ANY, XC("&Send", "crash reporter button").Translation());
 
             dontSendButton->Bind(wxEVT_BUTTON, [dialog](wxCommandEvent&)
                 {

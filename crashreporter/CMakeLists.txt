@@ -14,7 +14,12 @@ set(SOURCES
 
 add_executable(${TARGET})
 target_sources(${TARGET} ${SOURCES})
-target_link_libraries(${TARGET} breakpad::processor breakpad::sender wxwidgets::wxwidgets)
+target_link_libraries(${TARGET} 
+   breakpad::processor 
+   breakpad::sender 
+   wxwidgets::wxwidgets
+   lib-strings-interface
+)
 
 add_dependencies( ${TARGET} Audacity )
 
