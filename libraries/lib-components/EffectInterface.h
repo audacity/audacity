@@ -209,6 +209,8 @@ public:
       auto result = std::forward<Function>(function)(settings);
       this->Set(std::move(settings), std::move(result));
    }
+
+   virtual void SetLastSettingsEqualToMainSettings() {};
 };
 
 //! Implementation of EffectSettings for cases where there is only one thread.

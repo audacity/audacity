@@ -230,6 +230,18 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          }
       }
    }
+
+   void SetLastSettingsEqualToMainSettings() override
+   {
+      if (auto pState = mwState.lock())
+      {
+         if (auto pAccessState = pState->GetAccessState())
+         {
+            pAccessState->mLastSettings = pState->mMainSettings;
+         }
+      }
+   }
+
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {

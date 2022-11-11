@@ -826,6 +826,9 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
       return mEffectUIHost.GetDefinition().LoadUserPreset(
          UserPresetsGroup(mUserPresets[preset]), settings).value_or(nullptr);
    });
+
+   mpAccess->SetLastSettingsEqualToMainSettings();
+
    TransferDataToWindow();
    return;
 }
@@ -837,6 +840,9 @@ void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
       return mEffectUIHost.GetDefinition().LoadFactoryPreset(
          evt.GetId() - kFactoryPresetsID, settings).value_or(nullptr);
    });
+
+   mpAccess->SetLastSettingsEqualToMainSettings();
+
    TransferDataToWindow();
    return;
 }
