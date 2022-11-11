@@ -1429,6 +1429,22 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Wrapper> "${_EXEDIR}/Wrapper"
       POST_BUILD
    )
+
+   # Because the wrapper is copied into the bundle, we need to
+   # re-sing the bundle as the last post build step.
+   # This is only required when using the Xcode generator with
+   # the  Xcode >= 14.
+   if (XCODE_VERSION VERSION_GREATER_EQUAL 14)
+      add_custom_command(
+         TARGET
+            ${TARGET}
+         COMMAND
+            ${CMAKE_COMMAND} -E echo "Fixing Xcode 14 code signing issues"
+         COMMAND
+            codesign --force --deep --sign - "${_DESTDIR}/Audacity.app"
+         POST_BUILD
+      )
+   endif()
 else()
    set_target_properties(
       ${TARGET}

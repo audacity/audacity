@@ -240,6 +240,7 @@ bool GUIPrefs::Commit()
    AColor::ApplyUpdatedImages();
 
    GUIBlendThemes.Invalidate();
+   DecibelScaleCutoff.Invalidate();
    return true;
 }
 

@@ -180,6 +180,10 @@ class AUDACITY_DLL_API MeterPanel final
    bool IsMeterDisabled() const override;
 
    float GetMaxPeak() const override;
+   float GetPeakHold() const;
+
+   bool IsMonitoring() const;
+   bool IsActive() const;
 
    bool IsClipping() const override;
 
@@ -198,6 +202,10 @@ class AUDACITY_DLL_API MeterPanel final
    void Increase(float steps);
    void Decrease(float steps);
    void UpdateSliderControl();
+   
+   void ShowMenu(const wxPoint & pos);
+
+   void SetName(const TranslatableString& name);
 
  private:
    void UpdatePrefs() override;
@@ -210,10 +218,9 @@ class AUDACITY_DLL_API MeterPanel final
    void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
-   bool InIcon(wxMouseEvent *pEvent = nullptr) const;
    void OnMouse(wxMouseEvent &evt);
    void OnKeyDown(wxKeyEvent &evt);
-   void OnKeyUp(wxKeyEvent &evt);
+   void OnCharHook(wxKeyEvent &evt);
    void OnContext(wxContextMenuEvent &evt);
    void OnSetFocus(wxFocusEvent &evt);
    void OnKillFocus(wxFocusEvent &evt);
@@ -222,6 +229,7 @@ class AUDACITY_DLL_API MeterPanel final
    void OnAudioCapture(AudioIOEvent);
 
    void OnMeterUpdate(wxTimerEvent &evt);
+   void OnTipTimeout(wxTimerEvent& evt);
 
    void HandleLayout(wxDC &dc);
    void SetActiveStyle(Style style);
@@ -234,7 +242,6 @@ class AUDACITY_DLL_API MeterPanel final
    //
    // Pop-up menu
    //
-   void ShowMenu(const wxPoint & pos);
    void OnMonitor(wxCommandEvent &evt);
    void OnPreferences(wxCommandEvent &evt);
 
@@ -246,6 +253,7 @@ class AUDACITY_DLL_API MeterPanel final
    AudacityProject *mProject;
    MeterUpdateQueue mQueue;
    wxTimer          mTimer;
+   wxTimer          mTipTimer;
 
    int       mWidth;
    int       mHeight;
@@ -280,12 +288,10 @@ class AUDACITY_DLL_API MeterPanel final
    bool      mLayoutValid;
 
    std::unique_ptr<wxBitmap> mBitmap;
-   wxRect    mIconRect;
    wxPoint   mLeftTextPos;
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
    wxSize    mRightSize;
-   std::unique_ptr<wxBitmap> mIcon;
    wxPen     mPen;
    wxPen     mDisabledPen;
    wxPen     mPeakPeakPen;
@@ -306,11 +312,6 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool mIsFocused;
    wxRect mFocusRect;
-#if defined(__WXMSW__)
-   bool mHadKeyDown;
-#endif
-
-   bool mAccSilent;
 
    friend class MeterAx;
 

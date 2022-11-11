@@ -31,8 +31,9 @@ using MeterToolBars = std::vector< std::reference_wrapper<MeterToolBar> >;
 using ConstMeterToolBars = std::vector< std::reference_wrapper<const MeterToolBar> >;
 
 // Constants used as bit pattern
-const int kWithRecordMeter = 1;
-const int kWithPlayMeter = 2;
+constexpr int kWithRecordMeter = 1;
+constexpr int kWithPlayMeter = 2;
+constexpr int kCombinedMeter = kWithPlayMeter | kWithRecordMeter;
 
 class MeterToolBar final : public ToolBar {
 
@@ -73,12 +74,15 @@ class MeterToolBar final : public ToolBar {
    void AdjustInputGain(int adj);
 
  private:
-   void RegenerateTooltips() override;
+   void RegenerateTooltips() override {}
+   void RebuildLayout(bool force);
 
    int mWhichMeters;
-   wxGridBagSizer *mSizer;
-   MeterPanel *mPlayMeter;
-   MeterPanel *mRecordMeter;
+   wxBoxSizer *mRootSizer{nullptr};
+   AButton* mPlaySetupButton{nullptr};
+   MeterPanel *mPlayMeter{nullptr};
+   AButton* mRecordSetupButton{nullptr};
+   MeterPanel *mRecordMeter{nullptr};
 
  public:
 
