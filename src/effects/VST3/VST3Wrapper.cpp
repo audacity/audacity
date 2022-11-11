@@ -222,6 +222,8 @@ class ComponentHandler : public Steinberg::Vst::IComponentHandler
    
    EffectSettings* mStateChangeSettings {nullptr};
    std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> mParametersCache;
+   std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> mCurrentParamValues;
+
 public:
    
    ComponentHandler(VST3Wrapper& wrapper)
@@ -230,6 +232,27 @@ public:
       FUNKNOWN_CTOR;
    }
    virtual ~ComponentHandler() { FUNKNOWN_DTOR; }
+
+   void LoadCurrentParamValues()
+   {
+      const auto paramsCount = mWrapper.mEditController->getParameterCount();
+
+      for (int i = 0; i < paramsCount; ++i)
+      {
+         using Steinberg::Vst::ParameterInfo;
+         ParameterInfo info {};
+         mWrapper.mEditController->getParameterInfo(i, info);
+
+         if (info.flags & (ParameterInfo::kIsHidden | ParameterInfo::kIsProgramChange))
+            continue;
+
+         if ((info.flags & ParameterInfo::kCanAutomate)  == 0)
+            continue;
+
+         mCurrentParamValues[info.id] =
+            mWrapper.mEditController->getParamNormalized(info.id);
+      }
+   }
 
    void SetAccess(EffectSettingsAccess* access) { mAccess = access; }
 
@@ -265,12 +288,37 @@ public:
       mParametersCache.clear();
    }
 
+   void NotifyParamChange(
+      Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue valueNormalized)
+   {
+      auto it = mCurrentParamValues.find(id);
+
+      if (it == mCurrentParamValues.end())
+         return;
+
+      // Tolerance to avoid unnecessary updates
+      // Waves plugins constantly update several parameters
+      // with very small changes in the values without any
+      // user input
+      constexpr auto epsilon = Steinberg::Vst::ParamValue(1e-5);
+
+      if (std::abs(it->second - valueNormalized) < epsilon)
+         return;
+
+      it->second = valueNormalized;
+
+      if (mStateChangeSettings == nullptr && mWrapper.ParamChangedHandler)
+         mWrapper.ParamChangedHandler(id, valueNormalized);
+   }
+
    Steinberg::tresult PLUGIN_API beginEdit(Steinberg::Vst::ParamID id) override { return Steinberg::kResultOk; }
 
    Steinberg::tresult PLUGIN_API performEdit(Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue valueNormalized) override
    {
       if(std::this_thread::get_id() != mThreadId)
          return Steinberg::kResultFalse;
+
+      NotifyParamChange(id, valueNormalized);
 
       if(mStateChangeSettings != nullptr || !mWrapper.IsActive())
          // Collecting edit callbacks from the plug-in, in response to changes
@@ -412,6 +460,10 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
 
    mDefaultSettings = MakeSettings();
    StoreSettings(mDefaultSettings);
+
+   
+   static_cast<ComponentHandler*>(mComponentHandler.get())
+      ->LoadCurrentParamValues();
 }
 
 VST3Wrapper::~VST3Wrapper()

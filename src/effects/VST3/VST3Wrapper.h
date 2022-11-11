@@ -120,6 +120,8 @@ public:
 
    static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst);
 
+   std::function<void (Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue)> ParamChangedHandler;
+
 private:
 
    //Reads runtime data changes to apply them during next processing pass
