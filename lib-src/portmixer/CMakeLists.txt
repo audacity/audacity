@@ -6,7 +6,7 @@ def_vars()
 
 if (UNIX AND NOT APPLE)
    include(CheckIncludeFile)
-   set(CMAKE_REQUIRED_LIBRARIES PortAudio::PortAudio)
+   set(CMAKE_REQUIRED_LIBRARIES portaudio::portaudio)
 
    check_include_file( "pa_jack.h" PA_HAS_JACK )
 
@@ -111,7 +111,7 @@ list( APPEND DEFINES
 
 list( APPEND LIBRARIES
    PRIVATE
-      PortAudio::PortAudio
+      portaudio::portaudio
 )
 
 if( PA_HAS_ALSA )

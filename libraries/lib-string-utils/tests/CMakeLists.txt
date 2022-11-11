@@ -5,4 +5,5 @@ add_unit_test(
       FromCharsTests.cpp
    LIBRARIES
       lib-string-utils
+      wxwidgets::base
 )

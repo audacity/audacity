@@ -8,7 +8,7 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
     if( NOT TARGET wxwidgets::wxwidgets )
         add_library( wxwidgets::wxwidgets INTERFACE IMPORTED GLOBAL)
     endif()
-    
+
     if( NOT TARGET wxwidgets::base )
         add_library( wxwidgets::base ALIAS wxwidgets::wxwidgets )
     endif()
@@ -53,7 +53,7 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
         target_include_directories( wxwidgets::wxwidgets INTERFACE ${wxWidgets_INCLUDE_DIRS_NO_SYSTEM} )
     else()
         target_include_directories( wxwidgets::wxwidgets INTERFACE ${wxWidgets_INCLUDE_DIRS} )
-    endif() 
+    endif()
 
     target_compile_definitions( wxwidgets::wxwidgets INTERFACE
         ${wxWidgets_DEFINITIONS_GENERAL}
@@ -103,6 +103,8 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
         set( gtk gtk+-2.0 )
         set( glib glib-2.0 )
     endif()
+
+    find_package(PkgConfig)
 
     pkg_check_modules( GTK REQUIRED IMPORTED_TARGET GLOBAL ${gtk} )
     pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )
