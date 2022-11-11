@@ -2,31 +2,21 @@
 
 ## Prerequisites
 
-* **python3** >= 3.5
-* **conan** >= 1.51.0
+* **python3** >= 3.8
 * **cmake** >= 3.16
 * A working C++ 17 compiler
 * Graphviz (optional)
 
 For Windows see below for important installer settings.
 
+Please note that Xcode 14 support on macOS requires CMake 3.24.0 or later.
 ### Conan
 
-[The best way to install Conan is `pip`.](https://docs.conan.io/en/latest/installation.html)
+Audacity uses [Conan](https://conan.io/) to manage dependencies. If `conan` is not already installed, Audacity will download and install it automatically.
 
-To install Conan on Windows:
-
-```
-$ pip install conan
-```
-
-To install Conan on macOS and Linux:
-
-```
-$ sudo pip3 install conan
-```
-
-Alternatively, on macOS, Conan is available from `brew`.
+However, if you want to install Conan manually, you can do so by following the instructions on the [Conan website](https://docs.conan.io/en/latest/installation.html).
+Manual installation can be useful if you want to use Conan to manage dependencies for other projects or if you plan to have multiple builds of Audacity on the 
+same machine.
 
 ### CMake
 
@@ -40,15 +30,13 @@ On Linux, `cmake` is usually available from the system package manager. Alternat
 
 We build Audacity using [Microsoft Visual Studio](https://visualstudio.microsoft.com/vs/community/) 2019 and 2022. In order to build Audacity **Desktop development with C++** workload is required.
 
-As we require only C++17 - MSVC 2017 should work just fine too.
-
 ### macOS
 
-We build Audacity using XCode versions 12 and 13. However, it is likely possible to build it with XCode 7.
+We build Audacity using XCode versions 12 and later. However, it is likely possible to build it with XCode 7.
 
 ### Linux
 
-We use GCC 9, but any C++17 compliant compiler should work.
+We use GCC 9 and later, but any C++17 compliant compiler should work.
 
 Here are the dependencies you need to install on various distribution families.
 
@@ -92,7 +80,7 @@ You will also be able to change to the scripts directory and run ./graph.pl to g
 
 ## Building on Windows
 
-1. Ensure the Python installer option `Add python to environment variables` is checked. Go to Windows Settings "Add or Remove Programs" and modify Python settings if required.
+1. Ensure the Python installer option `Add Python 3.x to PATH` is checked. Go to Windows Settings "Add or Remove Programs" and check the `Add Python to environment variables` in Python settings if Python is not in `PATH`.
   
 2. Clone Audacity from the Audacity GitHub project. 
   
@@ -119,8 +107,6 @@ You will also be able to change to the scripts directory and run ./graph.pl to g
 7. You can now run and debug Audacity!
       
 Generally, steps 1-5 are only needed the first-time you configure. Then, after you've generated the solution, you can open it in Visual Studio next time. If the project configuration has changed, the IDE will invoke CMake internally. 
-
-> Conan Center provides prebuilt binaries only for **x64**. Configuring the project for Win32 will take much longer, as all the 3rd party libraries will be built during the configuration.
 
 ### Building with ASIO support on Windows
 
@@ -182,7 +168,7 @@ to configure Audacity.
 4. Testing the build:
    Adding a "Portable Settings" folder allows Audacity to ignore the settings of any existing Audacity installation.
    ```
-   $ cd bin/Debug
+   $ cd Debug/bin
    $ mkdir "Portable Settings"
    $ ./audacity
    ```
@@ -197,7 +183,7 @@ to configure Audacity.
 
 ### CMake options
 
-You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include documentation about each option. For convenience, [here is a list](CMAKE_OPTIONS.md) of the most notable options.
+You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include documentation about each option.
 
 ### Building using system libraries
 
@@ -268,6 +254,17 @@ please run
 conan remote remove conan-center
 ```
 
+For errors like:
+
+```
+[package] package_name/package_version: package has 'exports_sources' but sources not found
+```
+
+please run
+
+```
+conan remove package_name/package_version -f
+```
 ### Reducing Conan cache size
 
 In order to reduce the space used by Conan cache, please run:
