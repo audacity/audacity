@@ -96,6 +96,8 @@ Mixer::Mixer(Inputs inputs,
    // TODO: more-than-two-channels
    // Issue 3565 workaround:  allocate one extra buffer when applying a
    // GVerb effect stage.  It is simply discarded
+   // See also issue 3854, when the number of out channels expected by the
+   // plug-in is yet larger
    , mFloatBuffers{ 3, mBufferSize, 1, 1 }
 
    // non-interleaved
@@ -140,7 +142,9 @@ Mixer::Mixer(Inputs inputs,
          auto &settings = mSettings.emplace_back(stage.settings);
          // TODO: more-than-two-channels
          // Like mFloatBuffers but padding not needed for soxr
-         auto &stageInput = mStageBuffers.emplace_back(2, mBufferSize, 1);
+         // Allocate one extra buffer to hold dummy zero inputs
+         // (Issue 3854)
+         auto &stageInput = mStageBuffers.emplace_back(3, mBufferSize, 1);
          const auto &factory = [&stage]{
             // Avoid unnecessary repeated calls to the factory
             return stage.mpFirstInstance
