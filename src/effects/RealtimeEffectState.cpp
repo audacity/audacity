@@ -217,6 +217,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                      stateSettings, pMessage.get()
                   };
                   pInstance->RealtimeProcessStart(package);
+                  pAccessState->mLastSettings.settings = stateSettings;
                   return;
                }
             }
