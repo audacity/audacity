@@ -3851,7 +3851,7 @@ std::unique_ptr<EffectInstance::Message>
 VSTEffectWrapper::MakeMessageFS(VSTEffectSettings &settings) const
 {
    VSTEffectMessage::ParamVector paramVector;
-   paramVector.resize(settings.mParamsMap.size(), std::nullopt);
+   paramVector.resize(mAEffect->numParams, std::nullopt);
    
    ForEachParameter
    (
