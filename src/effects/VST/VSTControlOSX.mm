@@ -129,17 +129,6 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
 
 void VSTControl::CreateCocoa()
 {
-   auto code = 0xffff0000 & mLink->callDispatcher(
-      effCanDo, 0, 0, (void *) "hasCockosViewAsConfig", 0.0);
-   if (!(code == 0 || code == 0xbeef0000))
-   {
-      // PRL: allowing 0 makes Melda plug-ins work.  Allowing the other
-      // value makes many other plug-ins work.
-      // Can this entire test and early return path be eliminated without
-      // bad consequences now that the build is 64 bit?
-      return;
-   }
-
    VstRect *rect;
 
    // Some effects like to have us get their rect before opening them.
