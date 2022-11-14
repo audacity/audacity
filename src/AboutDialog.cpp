@@ -138,6 +138,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
    AddCredit(wxT("Pietro Marcello"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Ryan Miller"), testerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
    AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
