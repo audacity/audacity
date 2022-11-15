@@ -219,14 +219,15 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
       mAccess.ModifySettings([&](EffectSettings &settings){
          // Reassign settings, so that there is "stickiness" when dialog is
          // closed and opened again
-         FetchSettingsFromInstance(settings);
+         // But only for the relevant parameter
+         const auto ID = inEvent->mArgument.mParameter.mParameterID;
+         auto &mySettings = AudioUnitInstance::GetSettings(settings);
+         if (auto &pair = mySettings.values[ID]; pair.has_value())
+            pair->second = inParameterValue;
 
-         // But send changed settings (only) to the worker thread, which
+         // Send changed settings (only) to the worker thread, which
          // ignores the settings
-         auto result = mInstance.MakeMessage(
-            inEvent->mArgument.mParameter.mParameterID,
-            inParameterValue);
-         return result;
+         return mInstance.MakeMessage(ID, inParameterValue);
       });
    }
 }
