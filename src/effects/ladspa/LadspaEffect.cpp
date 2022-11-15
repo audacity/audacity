@@ -77,6 +77,11 @@ const static wxChar *kShippedEffects[] =
 };
 
 // ============================================================================
+// Tolerance to be used when comparing control values.
+constexpr float ControlValueTolerance = 1.0e-5f;
+// ============================================================================
+ 
+// ============================================================================
 // Module registration entry point
 //
 // This is the symbol that Audacity looks for when the module is built as a
@@ -1209,6 +1214,9 @@ struct LadspaEffect::Validator : EffectUIValidator {
    void OnTextCtrl(wxCommandEvent & evt);
    void RefreshControls();
 
+   void UpdateControl(int index, float value, float epsilon);
+   void UpdateControls(const LadspaEffectSettings& src);
+
    const LadspaEffect &GetEffect()
       { return static_cast<const LadspaEffect &>(mEffect); }
 
@@ -1694,15 +1702,14 @@ void LadspaEffect::FreeInstance(LADSPA_Handle handle) const
 
 void LadspaEffect::Validator::OnCheckBox(wxCommandEvent & evt)
 {
-   auto &controls = mSettings.controls;
    int p = evt.GetId() - ID_Toggles;
-   controls[p] = mToggles[p]->GetValue();
+   // 0.5 is a half of the interval
+   UpdateControl(p, mToggles[p]->GetValue(), 0.5f);
    ValidateUI();
 }
 
 void LadspaEffect::Validator::OnSlider(wxCommandEvent & evt)
 {
-   auto &controls = mSettings.controls;
    int p = evt.GetId() - ID_Sliders;
 
    float val;
@@ -1731,13 +1738,13 @@ void LadspaEffect::Validator::OnSlider(wxCommandEvent & evt)
       str = Internat::ToDisplayString(val);
 
    mFields[p]->SetValue(str);
-   controls[p] = val;
+
+   UpdateControl(p, val, ControlValueTolerance);
    ValidateUI();
 }
 
 void LadspaEffect::Validator::OnTextCtrl(wxCommandEvent & evt)
 {
-   auto &controls = mSettings.controls;
    int p = evt.GetId() - ID_Texts;
 
    float val;
@@ -1762,8 +1769,9 @@ void LadspaEffect::Validator::OnTextCtrl(wxCommandEvent & evt)
    if (val > upper)
       val = upper;
 
-   controls[p] = val;
    mSliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));
+
+   UpdateControl(p, val, ControlValueTolerance);
    ValidateUI();
 }
 
@@ -1772,9 +1780,11 @@ void LadspaEffect::Validator::RefreshControls()
    if (!mParent)
       return;
 
-   auto &controls = mSettings.controls;
    // Copy from the dialog
-   controls = GetSettings(mAccess.Get()).controls;
+   UpdateControls(GetSettings(mAccess.Get()));
+
+   auto& controls = mSettings.controls;
+
    const auto &data = *GetEffect().mData;
    for (unsigned long p = 0; p < data.PortCount; ++p) {
       LADSPA_PortDescriptor d = data.PortDescriptors[p];
@@ -1804,5 +1814,43 @@ void LadspaEffect::Validator::RefreshControls()
       // Set the textctrl value.  This will trigger an event so OnTextCtrl()
       // can update the slider.
       mFields[p]->SetValue(fieldText);
+   }
+}
+
+void LadspaEffect::Validator::UpdateControl(int index, float value, float epsilon)
+{
+   auto& controls = mSettings.controls;
+
+   assert(index < static_cast<int>(controls.size()));
+
+   if (std::abs(controls[index] - value) < epsilon)
+      return;
+
+   controls[index] = value;
+   Publish({ size_t(index), value });
+}
+
+void LadspaEffect::Validator::UpdateControls(const LadspaEffectSettings& src)
+{
+   const auto& data = *GetEffect().mData;
+
+   for (size_t portIndex = 0, portsCount = src.controls.size();
+        portIndex < portsCount;
+        ++portIndex)
+   {
+      LADSPA_PortDescriptor d = data.PortDescriptors[portIndex];
+      
+      if (!(LADSPA_IS_PORT_CONTROL(d)) || (LADSPA_IS_PORT_OUTPUT(d)))
+         continue;
+
+      LADSPA_PortRangeHint hint = GetEffect().mData->PortRangeHints[portIndex];
+
+      const bool isIntValue = (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) ||
+                              (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor)) ||
+                              (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor));
+      
+      UpdateControl(
+         portIndex, src.controls[portIndex],
+         isIntValue ? 0.5f : ControlValueTolerance);
    }
 }
