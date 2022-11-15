@@ -1152,6 +1152,17 @@ unsigned VSTEffectInstance::GetAudioOutCount() const
 
 size_t VSTEffectInstance::SetBlockSize(size_t maxBlockSize)
 {
+   // Issue 3935 for IEM plug-ins, VST 2 versions:
+   // It is mysterious why this further limitation of size works to
+   // prevent the crashes in destructive processing, or why this is not
+   // needed for non-destructive, but here it is
+   // Those plugins report many channels (like 64) but most others will not
+   // be affected by these lines with the default size of 8192
+   // Note it may make the Block Size option of the settings dialog misleading
+   auto numChannels = std::max({ 1u, GetAudioInCount(), GetAudioOutCount() });
+   maxBlockSize = std::max(size_t(1),
+      std::min(maxBlockSize, size_t(0x8000u / numChannels)));
+
    mBlockSize = std::min( maxBlockSize, mUserBlockSize );
    return mBlockSize;
 }
