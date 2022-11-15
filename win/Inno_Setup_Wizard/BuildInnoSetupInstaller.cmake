@@ -58,7 +58,6 @@ configure_file("${OUTPUT_DIR}/audacity_InnoWizard_InfoBefore.rtf.in" "${OUTPUT_D
 
 file(COPY
         "${SOURCE_DIR}/LICENSE.txt"
-        "${SOURCE_DIR}/README.txt"
         "${SOURCE_DIR}/win/audacity.ico"
     DESTINATION
         "${OUTPUT_DIR}/Additional"
