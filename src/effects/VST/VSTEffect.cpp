@@ -1177,7 +1177,13 @@ bool VSTEffectInstance::IsReady()
 bool VSTEffectInstance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames)
 {
-   StoreSettings(GetSettings(settings));
+   // Issue 3942: Copy the contents of settings first.
+   // settings may refer to what is in the RealtimeEffectState, but that might
+   // get reassigned by EffectSettingsAccess::Set, when the validator's
+   // Automate() is called-back by the plug-in during callSetParameter.
+   // So this avoids a dangling reference.
+   auto copiedSettings = GetSettings(settings);
+   StoreSettings(copiedSettings);
 
    return DoProcessInitialize(sampleRate);
 }
