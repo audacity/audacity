@@ -628,6 +628,7 @@ protected:
    void SizeWindow(int w, int h) override;
 
 private:
+   void NotifyParameterChanged(int index, float value);
    void OnIdle(wxIdleEvent &evt);
 
    VSTEffectInstance& mInstance;
