@@ -264,19 +264,14 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
 " [[help:Main_Page|Manual]]")
          << wxT("</li><li>")
+         << XO("[[https://support.audacityteam.org/|Tutorials & How-tos]]")
+         << wxT("</li><li>")
          << XO(
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
-         << wxT("</li></ul></p><p>")
-         << wxT("<b>")
-         << XO("More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.")
-         << wxT("</p>")
+         << wxT("</li></ul></p>")
    ;
 
       auto result = o.GetString();
-#ifdef USE_ALPHA_MANUAL
-      result.Replace( "//manual.audacityteam.org/quick_help.html","//alphamanual.audacityteam.org/man/Quick_Help" );
-      result.Replace( "//manual.audacityteam.org/","//alphamanual.audacityteam.org/man/" );
-#endif
 
       return WrapText( result );
    }
