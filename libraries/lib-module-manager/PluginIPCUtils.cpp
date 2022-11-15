@@ -52,7 +52,8 @@ void detail::PutMessage(IPCChannel& channel, const wxString& value)
    auto utf8 = value.ToUTF8();
    const HeaderBlock length = utf8.length();
    channel.Send(&length, HeaderBlockSize);
-   channel.Send(utf8.data(), length);
+   if(length > 0)
+      channel.Send(utf8.data(), length);
 }
 
 void InputMessageReader::ConsumeBytes(const void* bytes, size_t length)
