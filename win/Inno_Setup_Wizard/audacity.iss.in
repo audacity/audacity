@@ -65,7 +65,6 @@ UninstallDisplayIcon="{app}\audacity.exe"
 
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=".\audacity_InnoWizard_InfoBefore.rtf"
-InfoAfterFile=Additional\README.txt
 
 ; We no longer produce new ANSI builds.
 ; As we use Inno Setup (u), the Unicode version, to build this script,
@@ -91,9 +90,6 @@ Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 [Files]
 ; Prime the first time .ini file so the permissions can be set
 Source: ".\FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Permissions: users-modify
-
-; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
-Source: "Additional\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "Additional\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Package\*.exe"; DestDir: "{app}"; Flags: ignoreversion
