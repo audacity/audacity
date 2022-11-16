@@ -36,7 +36,8 @@ namespace
          {
             TranslatableString errorMessage{};
             auto validator = provider->MakeValidator();
-            provider->DiscoverPluginsAtPath(pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
+            auto numPlugins = provider->DiscoverPluginsAtPath(
+               pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
             {
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
@@ -60,6 +61,8 @@ namespace
             });
             if(!errorMessage.empty())
                result.SetError(errorMessage.Debug());
+            else if(numPlugins == 0)
+               result.SetError("no plugins found");
          }
          else
             result.SetError("provider not found");
