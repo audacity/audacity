@@ -2,20 +2,37 @@ from dataclasses import dataclass
 from conan import ConanFile
 from conan.tools.cmake import cmake_layout
 from conan.tools.files import copy
+from conan.errors import ConanInvalidConfiguration
 import os
-import re
 import subprocess
+import textwrap
+
+def run_patchelf(conanfile, args):
+    if conanfile.settings.os != "Linux":
+        raise ConanInvalidConfiguration("patchelf can only be run on Linux")
+
+    patchelf_path = os.path.join(conanfile.dependencies.build["patchelf"].cpp_info.bindirs[0], "patchelf")
+    return subprocess.check_output([patchelf_path] + args).decode("utf-8").strip()
+
+def append_rpath(conanfile, file, rpath):
+    if conanfile.settings.os != "Linux":
+        raise ConanInvalidConfiguration("patchelf can only be run on Linux")
+
+    old_rpath = run_patchelf(conanfile, ["--print-rpath", file])
+    run_patchelf(conanfile, ["--set-rpath", f"{old_rpath}:{rpath}", file])
 
 # A helper function that correctly copies the files from the Conan package to the
 # correct location in the build tree
 def global_copy_files(conanfile, dependency_info):
+    if len(dependency_info.cpp_info.libdirs) == 0:
+        return
+
     if conanfile.settings.os == "Windows":
         copy(conanfile, "*.dll", dependency_info.cpp_info.bindirs[0], f"{conanfile.build_folder}/{conanfile.settings.build_type}")
     elif conanfile.settings.os == "Macos":
         copied_files = copy(conanfile, "*.dylib*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/Audacity.app/Contents/Frameworks")
     elif conanfile.settings.os:
         # On Linux we also set the correct rpath for the copied libraries
-        patchelf_path = os.path.join(conanfile.dependencies.build["patchelf"].cpp_info.bindirs[0], "patchelf")
 
         lib_dir = conanfile.options.lib_dir if conanfile.options.lib_dir else "lib/audacity"
 
@@ -24,7 +41,8 @@ def global_copy_files(conanfile, dependency_info):
         copied_files = copy(conanfile, "*.so*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/{lib_dir}")
         for file in copied_files:
             if not os.path.islink(file):
-                subprocess.check_call([patchelf_path, "--add-rpath", "$ORIGIN", file])
+                run_patchelf(conanfile, ["--add-rpath", "$ORIGIN", file])
+
 
 # Dataclass that holds the information about a dependency
 @dataclass
@@ -114,6 +132,124 @@ class CurlDependency(AudacityDependency):
 
 
 
+@dataclass
+class Qt6Dependency(AudacityDependency):
+    _options = {
+        "opengl": "no",
+        "openssl": False,
+        "with_libjpeg": "libjpeg-turbo",
+        "with_sqlite3": False,
+        "with_pq": False,
+        "with_odbc": False,
+        "with_brotli": False,
+        "with_openal": False,
+        "with_md4c": False,
+    }
+
+    _enabled_modules = [
+        "qtsvg", "qtdeclarative", "qttools", "qttranslations",
+        "qtquicktimeline", "qtlottie",
+        "qtimageformats", "qtlanguageserver", "qtshadertools"
+    ]
+
+    def __init__(self, package_options: dict = None):
+        super().__init__("qt", "6.3.1", package_options=package_options)
+
+    def reference(self, conanfile):
+        return "qt/6.3.1@audacity/testing"
+
+    def apply_options(self, conanfile, package):
+        super().apply_options(conanfile, package)
+
+        for key, value in self._options.items():
+            print(f"\t{self.name}:{key}={value}")
+            setattr(package, key, value)
+
+        for module in self._enabled_modules:
+            print(f"\tEnabling Qt module: {module}")
+            setattr(package, module, True)
+
+        if conanfile.settings.os != "Linux":
+            conanfile.options["harfbuzz"].with_glib=False
+        else:
+            package.qtwayland = False
+
+    @staticmethod
+    def _content_template(path, folder, os_):
+        return textwrap.dedent("""\
+            [Paths]
+            Prefix = {0}
+            ArchData = {1}/archdatadir
+            HostData = {1}/archdatadir
+            Data = {1}/datadir
+            Sysconf = {1}/sysconfdir
+            LibraryExecutables = {1}/archdatadir/{2}
+            HostLibraryExecutables = bin
+            Plugins = {1}/archdatadir/plugins
+            Imports = {1}/archdatadir/imports
+            Qml2Imports = {1}/archdatadir/qml
+            Translations = {1}/datadir/translations
+            Documentation = {1}/datadir/doc""").format(path, folder,
+                "bin" if os_ == "Windows" else "libexec")
+
+    @staticmethod
+    def _qtconf_path(conanfile):
+        if conanfile.settings.os == "Windows":
+            return f"{conanfile.build_folder}/{conanfile.settings.build_type}/qt.conf"
+        elif conanfile.settings.os == "Macos":
+            return f"{conanfile.build_folder}/Audacity.app/Contents/Resources/qt.conf"
+        else:
+            return f"{conanfile.build_folder}/bin/qt.conf"
+
+    def __fix_windows_package(self, conanfile, dependency_info):
+        if conanfile.settings.os != "Windows":
+            return
+        # On Windows, *:shared generates unusable Qt tooling
+        # We need to copy few libraries into the package folder
+        def __copy_dep(name):
+            if conanfile.dependencies[name]:
+                print(f"Copying {name} into the Qt package folder ({dependency_info.cpp_info.bindirs[0]})")
+                copy(conanfile, "*.dll", conanfile.dependencies[name].cpp_info.bindirs[0], dependency_info.cpp_info.bindirs[0])
+
+        print("Fixing Qt tooling on Windows...", flush=True)
+
+        for dep in ["pcre2", "zlib", "double-conversion"]:
+            __copy_dep(dep)
+
+    def __fix_macos_package(self, conanfile, dependency_info):
+        pass
+
+    def __fix_linux_package(self, conanfile, dependency_info):
+        if conanfile.settings.os == "Windows" or conanfile.settings.os == "Macos":
+            return
+
+        for root, dirs, files in os.walk(os.path.join(dependency_info.package_folder, "res", "archdatadir")):
+            for file in files:
+                if file.endswith(".so"):
+                    print(f"Appending RPATH to {file}")
+                    append_rpath(conanfile, os.path.join(root, file), f"$ORIGIN:{dependency_info.cpp_info.libdirs[0]}")
+
+        if conanfile.dependencies["icu"]:
+            icu_libdir= conanfile.dependencies["icu"].cpp_info.libdirs[0]
+
+            for file in os.listdir(icu_libdir):
+                icu_libpath = os.path.join(icu_libdir, file)
+                if os.path.isfile(icu_libpath):
+                    append_rpath(conanfile, icu_libpath, "$ORIGIN")
+
+
+    def copy_files(self, conanfile, dependency_info):
+        self.__fix_windows_package(conanfile, dependency_info)
+        self.__fix_macos_package(conanfile, dependency_info)
+        self.__fix_linux_package(conanfile, dependency_info)
+
+        global_copy_files(conanfile, dependency_info)
+
+        with open(self._qtconf_path(conanfile), "w") as f:
+            f.write(self._content_template(
+                dependency_info.package_folder.replace("\\", "/"),
+                "res", conanfile.settings.os))
+
 class AudacityConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps"
@@ -154,11 +290,15 @@ class AudacityConan(ConanFile):
 
         AudacityDependency("breakpad", "0.1"),
 
-        AudacityDependency("catch2", "2.13.8")
+        AudacityDependency("catch2", "2.13.8"),
+
+        Qt6Dependency()
     ]
 
     options.update({f"use_{dependency.name}": [True, False] for dependency in _dependencies})
     default_options.update({f"use_{dependency.name}": dependency.default_enabled for dependency in _dependencies})
+
+    _additional_cmake_modules = []
 
     def requirements(self):
         for dependency in self._dependencies:
@@ -180,6 +320,10 @@ class AudacityConan(ConanFile):
     def layout(self):
         cmake_layout(self, build_folder="")
 
+    def add_additional_cmake_module(self, module):
+        if os.path.exists(module):
+            self._additional_cmake_modules.append(module)
+
     def generate(self):
         deps_lookup = { dependency.name: dependency for dependency in self._dependencies }
 
@@ -189,3 +333,18 @@ class AudacityConan(ConanFile):
                 deps_lookup[dep.ref.name].copy_files(self, dep)
             else:
                 global_copy_files(self, dep)
+
+        modules_dir = os.path.join(self.build_folder, self.folders.generators, "modules")
+
+        print(f"Copying additional CMake modules to {modules_dir}...", flush=True)
+
+        if not os.path.exists(modules_dir):
+            os.makedirs(modules_dir)
+
+        if self.settings.build_type == "RelWithDebInfo":
+            file_name = os.path.join(modules_dir, "conan_modules.cmake")
+
+            with open(file_name, "w") as f:
+                for module in self._additional_cmake_modules:
+                    module = module.replace("\\", "/")
+                    f.write(f'include("{module}")\n')

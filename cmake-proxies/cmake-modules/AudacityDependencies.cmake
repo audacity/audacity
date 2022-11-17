@@ -204,3 +204,11 @@ file(GLOB dependency_helpers "${AUDACITY_MODULE_PATH}/dependencies/*.cmake")
 foreach(f ${dependency_helpers})
     include(${f})
 endforeach()
+
+if( ${_OPT}conan_enabled )
+   file(GLOB conan_helpers "${CMAKE_BINARY_DIR}/generators/modules/*.cmake")
+
+   foreach(f ${conan_helpers})
+      include(${f})
+   endforeach()
+endif()

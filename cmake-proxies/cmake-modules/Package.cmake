@@ -47,7 +47,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
       # Enable updates. See https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information
       set(CPACK_AUDACITY_APPIMAGE_UPDATE_INFO "gh-releases-zsync|audacity|audacity|latest|${zsync_name}.AppImage.zsync")
    endif()
-   get_property(CPACK_AUDACITY_FINDLIB_LOCATION TARGET findlib PROPERTY RUNTIME_OUTPUT_DIRECTORY)
+
+   if(NOT ${_OPT}enable_experimental_qt_support)
+      get_property(CPACK_AUDACITY_FINDLIB_LOCATION TARGET findlib PROPERTY RUNTIME_OUTPUT_DIRECTORY)
+   endif()
 elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
    set( CPACK_GENERATOR DragNDrop )
 

@@ -5,6 +5,7 @@ build_deps=(
    git
    cmake
    python-pip
+   fuse2
 )
 
 deps=(

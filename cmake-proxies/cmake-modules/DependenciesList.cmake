@@ -81,3 +81,7 @@ endif()
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    find_package(libuuid REQUIRED)
 endif()
+
+if( ${_OPT}enable_experimental_qt_support )
+   audacity_find_package(Qt6 REQUIRED CONAN_PACKAGE_NAME qt FIND_PACKAGE_OPTIONS COMPONENTS Core Gui Quick)
+endif()

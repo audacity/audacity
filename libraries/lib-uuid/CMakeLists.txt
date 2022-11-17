@@ -18,7 +18,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set( LIBRARIES PRIVATE ${CORE_FOUNDATION})
 else()
     set( DEFINES PRIVATE USE_LIBUUID)
-    set( LIBRARIES PRIVATE libuuid::libuuid)
+    set( LIBRARIES PUBLIC libuuid::libuuid)
 endif()
 
 list( APPEND LIBRARIES PRIVATE lib-string-utils lib-utility)

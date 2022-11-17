@@ -99,6 +99,9 @@ if( ${_OPT}has_tests )
       Test name is based on the name component of the ${journal_file}
    ]]
    function( add_journal_test journal_file )
+      if( ${_OPT}enable_experimental_qt_support )
+         return()
+      endif()
       get_filename_component(test_name ${journal_file} NAME_WE)
 
       if( APPLE )

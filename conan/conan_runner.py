@@ -242,7 +242,7 @@ build_type={build_type}
             if args.lib_dir is not None:
                 profile += '&:lib_dir=' + args.lib_dir + '\n'
 
-        if sys.platform == 'darwin':
+        if sys.platform == 'darwin' and args.target_arch != args.build_arch:
             profile += f'[env]\nCONAN_CMAKE_SYSTEM_NAME=Darwin\nCONAN_CMAKE_SYSTEM_PROCESSOR={"x86_64" if args.target_arch == "x86_64" else "arm64"}\n'
 
     profile_name = f'profile-host-{build_type.lower()}.profile' if host_profile else f'profile-build.profile'
@@ -281,6 +281,10 @@ def update_global_config(args):
             subprocess.check_call([get_conan(), 'config', 'rm', 'storage.download_cache'])
 
 
+def sorted_build_types(build_types):
+    return sorted(build_types, key=lambda x: 0 if x == 'RelWithDebInfo' else 1)
+
+
 if __name__ == '__main__':
     args = init_args()
 
@@ -288,7 +292,7 @@ if __name__ == '__main__':
     args_string = generate_args_string(args)
 
     build_profile = generate_profile(args, False, 'Release')
-    host_profiles = [(build_type, generate_profile(args, True, build_type)) for build_type in args.build_types]
+    host_profiles = [(build_type, generate_profile(args, True, build_type)) for build_type in sorted_build_types(args.build_types)]
 
     if os.path.isfile(args_file_path):
         with open(args_file_path, 'r') as args_file:

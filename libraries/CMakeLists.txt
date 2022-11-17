@@ -2,6 +2,8 @@
 
 # The list of modules is ordered so that each library occurs after any others
 # that it depends on
+
+
 set( LIBRARIES
    lib-string-utils
    lib-strings
@@ -21,9 +23,6 @@ set( LIBRARIES
    lib-screen-geometry
    lib-project-rate
    lib-ffmpeg-support
-   lib-theme
-   image-compiler # not a library, but has a place in their dependency graph
-   lib-theme-resources
    lib-track
    lib-transactions
    lib-sample-track
@@ -32,6 +31,15 @@ set( LIBRARIES
    lib-graphics
    lib-audio-graph
 )
+
+if( NOT ${_OPT}enable_experimental_qt_support )
+   list( APPEND LIBRARIES
+      lib-theme
+      image-compiler # not a library, but has a place in their dependency graph
+      lib-theme-resources
+   )
+endif()
+
 
 if ( ${_OPT}has_networking )
    list( APPEND LIBRARIES lib-network-manager)

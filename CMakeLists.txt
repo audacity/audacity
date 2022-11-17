@@ -264,6 +264,8 @@ option(${_OPT}has_vst3
     On
 )
 
+cmd_option( ${_OPT}enable_experimental_qt_support "Enable experimental Qt support" Off)
+
 # Python is used for the manual and (possibly) message catalogs
 find_package( Python3 )
 
@@ -603,7 +605,14 @@ add_subdirectory( "help" )
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
-add_subdirectory( "src" )
+
+if( ${_OPT}enable_experimental_qt_support )
+   set(USE_QT Yes)
+   add_subdirectory( "src/qt" )
+else()
+   add_subdirectory( "src" )
+endif()
+
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
