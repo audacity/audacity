@@ -266,8 +266,7 @@ public:
    void EndStateChange()
    {
       assert(mStateChangeSettings != nullptr);
-      if(!mParametersCache.empty())
-         FlushCache(*mStateChangeSettings);
+      FlushCache(*mStateChangeSettings);
       mStateChangeSettings = nullptr;
    }
 
@@ -275,7 +274,7 @@ public:
    {
       if(mParametersCache.empty())
          return;
-
+      
       auto& vst3settings = GetSettings(settings);
       for(auto& p : mParametersCache)
          vst3settings.parameterChanges[p.first] = p.second;
@@ -653,12 +652,20 @@ void VST3Wrapper::ConsumeChanges(const EffectSettings& settings)
 //
 //As a side effect subsequent call to IAudioProcessor::process may flush
 //plugin internal buffers
-void VST3Wrapper::FlushParameters(EffectSettings& settings)
+void VST3Wrapper::FlushParameters(EffectSettings& settings, bool* hasChanges)
 {
    if(!mActive)
    {
       auto componentHandler = static_cast<ComponentHandler*>(mComponentHandler.get());
       componentHandler->FlushCache(settings);
+
+      const auto doProcessing = !GetSettings(settings).parameterChanges.empty();
+
+      if(hasChanges != nullptr)
+         *hasChanges = doProcessing;
+
+      if(!doProcessing)
+         return;
 
       SetupProcessing(*mEffectComponent, mSetup);
       mActive = true;
@@ -674,6 +681,8 @@ void VST3Wrapper::FlushParameters(EffectSettings& settings)
       mEffectComponent->setActive(false);
       mActive = false;
    }
+   else if(hasChanges != nullptr)
+      *hasChanges = false;
 }
 
 size_t VST3Wrapper::Process(const float* const* inBlock, float* const* outBlock, size_t blockLen)
