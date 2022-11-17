@@ -76,10 +76,16 @@ auto AudioUnitValidator::MakeListener()
 
    // Now set up the other union member
    event = { kAudioUnitEvent_PropertyChange };
-   event.mArgument.mProperty = AudioUnitUtils::Property{
-      unit, kAudioUnitProperty_Latency, kAudioUnitScope_Global };
-   if (AUEventListenerAddEventType(result.get(), this, &event))
-      return nullptr;
+   // And bind the listener function to certain property changes
+   for (auto type : {
+      kAudioUnitProperty_Latency,
+      kAudioUnitProperty_PresentPreset,
+   }) {
+      event.mArgument.mProperty = AudioUnitUtils::Property{
+         unit, type, kAudioUnitScope_Global };
+      if (AUEventListenerAddEventType(result.get(), this, &event))
+         return nullptr;
+   }
 
    return result;
 }
@@ -224,6 +230,12 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
       const auto ID = inEvent->mArgument.mParameter.mParameterID;
       mToUpdate.emplace_back(ID, inParameterValue);
       mAccess.Set(mInstance.MakeMessage(ID, inParameterValue));
+   }
+   else if (inEvent->mEventType == kAudioUnitEvent_PropertyChange &&
+      inEvent->mArgument.mProperty.mPropertyID ==
+         kAudioUnitProperty_PresentPreset
+   ) {
+      ValidateUI();
    }
 }
 
