@@ -79,7 +79,10 @@ void VST3UIValidator::OnIdle(wxIdleEvent& evt)
    {
       mAccess.ModifySettings([this](EffectSettings& settings)
       {
-         mWrapper.FlushParameters(settings);
+         bool hasChanges{false};
+         mWrapper.FlushParameters(settings, &hasChanges);
+         if(hasChanges)
+            mWrapper.StoreSettings(settings);
          return nullptr;
       });
    }
