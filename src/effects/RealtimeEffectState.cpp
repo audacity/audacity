@@ -55,10 +55,14 @@ public:
    }
    void MainWrite(SettingsAndCounter &&settings,
       std::unique_ptr<EffectInstance::Message> pMessage) {
-
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(FromMainSlot::Message{
          std::move(settings.settings), settings.counter, std::move(pMessage) });
+   }
+   void MainWrite(SettingsAndCounter::Counter counter,
+      std::unique_ptr<EffectInstance::Message> pMessage) {
+      mChannelFromMain.Write(FromMainSlot::ShortMessage{
+         counter, std::move(pMessage) });
    }
 
    struct CounterAndOutputs{
@@ -117,6 +121,10 @@ public:
       struct Message : SettingsAndCounter {
          std::unique_ptr<EffectInstance::Message> pMessage;
       };
+      struct ShortMessage {
+         SettingsAndCounter::Counter counter;
+         std::unique_ptr<EffectInstance::Message> pMessage;
+      };
 
       // For initialization of the channel
       FromMainSlot() = default;
@@ -130,6 +138,15 @@ public:
       // Main thread writes the slot
       FromMainSlot& operator=(Message &&message) {
          mMessage.SettingsAndCounter::swap(message);
+         if (message.pMessage && mMessage.pMessage)
+            // Merge the incoming message with any still unconsumed message
+            mMessage.pMessage->Merge(std::move(*message.pMessage));
+         return *this;
+      }
+
+      // Main thread writes the slot
+      FromMainSlot& operator=(ShortMessage &&message) {
+         mMessage.counter = message.counter;
          if (message.pMessage && mMessage.pMessage)
             // Merge the incoming message with any still unconsumed message
             mMessage.pMessage->Merge(std::move(*message.pMessage));
@@ -251,11 +268,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             auto &lastSettings = pAccessState->mLastSettings;
             // Don't update settings, but do count
             ++lastSettings.counter;
-            // move a copy to there
             pAccessState->MainWrite(
-               // Note that a copy of last settings still happens here,
-               // but then the copy is moved or swapped, not copied again
-               SettingsAndCounter{ lastSettings }, std::move(pMessage));
+               lastSettings.counter, std::move(pMessage));
          }
       }
    }
