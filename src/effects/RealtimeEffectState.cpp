@@ -231,6 +231,34 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          }
       }
    }
+   void Set(std::unique_ptr<Message> pMessage)
+   override {
+      if (auto pState = mwState.lock()) {
+         if (auto pAccessState = pState->GetAccessState()) {
+            if (pMessage && !pAccessState->mState.mInitialized) {
+               // Other thread isn't processing.
+               // Let the instance consume the message directly.
+               if (auto pInstance = pState->mwInstance.lock()) {
+                  auto &stateSettings = pState->mMainSettings.settings;
+                  EffectInstance::MessagePackage package{
+                     stateSettings, pMessage.get()
+                  };
+                  pInstance->RealtimeProcessStart(package);
+                  // Don't need to update pAccessState->mLastSettings
+                  return;
+               }
+            }
+            auto &lastSettings = pAccessState->mLastSettings;
+            // Don't update settings, but do count
+            ++lastSettings.counter;
+            // move a copy to there
+            pAccessState->MainWrite(
+               // Note that a copy of last settings still happens here,
+               // but then the copy is moved or swapped, not copied again
+               SettingsAndCounter{ lastSettings }, std::move(pMessage));
+         }
+      }
+   }
    void Flush() override {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
