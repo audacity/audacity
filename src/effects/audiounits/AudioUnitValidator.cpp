@@ -16,6 +16,7 @@
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
 #include "AUControl.h"
+#include <wx/app.h>
 #include <wx/sizer.h>
 #include "../../ShuttleGui.h"
 #include "../../widgets/wxPanelWrapper.h"
@@ -33,6 +34,8 @@ AudioUnitValidator::AudioUnitValidator(CreateToken,
    // Make the settings of the instance up to date before using it to
    // build a UI
    StoreSettingsToInstance(mAccess.Get());
+
+   wxTheApp->Bind(wxEVT_IDLE, &AudioUnitValidator::OnIdle, this);
 }
 
 AudioUnitValidator::~AudioUnitValidator()
@@ -220,10 +223,10 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
          // Reassign settings, so that there is "stickiness" when dialog is
          // closed and opened again
          // But only for the relevant parameter
+         // And not now, but delayed until idle time, where all accumulated
+         // changes will update in just one ModifySettings call
          const auto ID = inEvent->mArgument.mParameter.mParameterID;
-         auto &mySettings = AudioUnitInstance::GetSettings(settings);
-         if (auto &pair = mySettings.values[ID]; pair.has_value())
-            pair->second = inParameterValue;
+         mToUpdate.emplace_back(ID, inParameterValue);
 
          // Send changed settings (only) to the worker thread, which
          // ignores the settings
@@ -239,5 +242,22 @@ void AudioUnitValidator::EventListenerCallback(void *inCallbackRefCon,
 {
    static_cast<AudioUnitValidator *>(inCallbackRefCon)
       ->EventListener(inEvent, inParameterValue);
+}
+
+void AudioUnitValidator::OnIdle(wxIdleEvent &evt)
+{
+   evt.Skip();
+   if (mToUpdate.size()) {
+      mAccess.ModifySettings([&](EffectSettings &settings){
+         // Reassign settings, so that there is "stickiness" when dialog is
+         // closed and opened again
+         auto &mySettings = AudioUnitInstance::GetSettings(settings);
+         for (auto [ID, value] : mToUpdate)
+            if (auto &pair = mySettings.values[ID]; pair.has_value())
+               pair->second = value;
+         return nullptr;
+      });
+      mToUpdate.clear();
+   }
 }
 #endif
