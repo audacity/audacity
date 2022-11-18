@@ -299,7 +299,7 @@ int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
 EffectSettings AudioUnitEffect::MakeSettings() const
 {
    AudioUnitEffectSettings settings;
-   FetchSettings(settings);
+   FetchSettings(settings, true);
    return EffectSettings::Make<AudioUnitEffectSettings>(std::move(settings));
 }
 
@@ -379,7 +379,7 @@ AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
 
    // Repopulate the AudioUnitEffectSettings from the change of state in
    // the AudioUnit
-   if (!FetchSettings(GetSettings(settings)))
+   if (!FetchSettings(GetSettings(settings), true))
       return {};
 
    return { nullptr };

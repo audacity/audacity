@@ -292,7 +292,7 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
 
    // Repopulate the AudioUnitEffectSettings from the change of state in
    // the AudioUnit
-   FetchSettings(settings);
+   FetchSettings(settings, true);
    return {};
 }
 

@@ -150,8 +150,8 @@ struct AudioUnitWrapper
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    //! May allocate memory, so should be called only in the main thread
-   bool FetchSettings(
-      AudioUnitEffectSettings &settings, bool fetchValues = true) const;
+   bool FetchSettings(AudioUnitEffectSettings &settings,
+      bool fetchValues) const;
    bool StoreSettings(const AudioUnitEffectSettings &settings) const;
 
    //! Copy, then clear the optionals in src
