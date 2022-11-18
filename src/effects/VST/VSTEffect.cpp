@@ -919,7 +919,7 @@ namespace
       using ParamVector = std::vector<std::optional<double> >;
 
       // Make a message from a chunk and ID-value pairs
-      explicit VSTEffectMessage(std::vector<char>&& chunk, ParamVector&& params)
+      explicit VSTEffectMessage(std::vector<char> chunk, ParamVector params)
          : mChunk(std::move(chunk)),
            mParamsVec(std::move(params))
       {
@@ -3793,7 +3793,7 @@ VSTEffectValidator::~VSTEffectValidator()
 
 
 std::unique_ptr<EffectInstance::Message>
-VSTEffectWrapper::MakeMessageFS(VSTEffectSettings &settings) const
+VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
 {
    VSTEffectMessage::ParamVector paramVector;
    paramVector.resize(mAEffect->numParams, std::nullopt);
@@ -3802,12 +3802,17 @@ VSTEffectWrapper::MakeMessageFS(VSTEffectSettings &settings) const
    (
       [&](const VSTEffectWrapper::ParameterInfo& pi)
       {
-         paramVector[pi.mID] = settings.mParamsMap[pi.mName];
+         auto &slot = paramVector[pi.mID]; // operator [] may make a nullopt
+         const auto iter = settings.mParamsMap.find(pi.mName),
+            end = settings.mParamsMap.end();
+         if (iter != end)
+            slot = iter->second;
          return true;
       }
    );   
 
-   return std::make_unique<VSTEffectMessage>(std::move(settings.mChunk), std::move(paramVector));
+   return std::make_unique<VSTEffectMessage>(
+      settings.mChunk /* vector copy */, std::move(paramVector));
 }
 
 VSTEffectValidator::VSTEffectValidator

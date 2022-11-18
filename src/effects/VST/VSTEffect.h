@@ -303,8 +303,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
 
 
    // Make message carrying all the information in settings, including chunks
+   // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
-      MakeMessageFS(VSTEffectSettings& settings) const;
+      MakeMessageFS(const VSTEffectSettings& settings) const;
 };
 
 class VSTEffectInstance;
