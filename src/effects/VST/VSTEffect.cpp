@@ -1432,14 +1432,6 @@ int VSTEffect::ShowClientInterface(
 
    VSTEffectValidator* vstValidator = static_cast<VSTEffectValidator*>(validator);
 
-   if (! vstValidator->GetInstance().IsReady() )
-   {
-      // Set some defaults since some VSTs need them...these will be reset when
-      // normal or realtime processing begins
-      vstValidator->GetInstance().mBlockSize = 8192;
-      vstValidator->GetInstance().DoProcessInitialize(mProjectRate);
-   }
-
    return vstValidator->ShowDialog(/* nonModal = */ SupportsRealtime() && !forceModal);
 }
 
@@ -4004,6 +3996,14 @@ VSTEffectInstance::VSTEffectInstance
    mUseLatency = useLatency;
 
    Load();
+
+   if (!IsReady() )
+   {
+      // Set some defaults since some VSTs need them...these will be reset when
+      // normal or realtime processing begins
+      mBlockSize = 8192;
+      DoProcessInitialize(44100.0);
+   }
 }
 
 
