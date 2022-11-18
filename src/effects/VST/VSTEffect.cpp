@@ -2321,6 +2321,30 @@ void VSTEffectInstance::SizeWindow(int w, int h)
    }
 }
 
+void VSTEffectValidator::NotifyParameterChanged(int index, float value)
+{
+   const auto& settings = VSTEffectWrapper::GetSettings(mAccess.Get());
+
+   GetInstance().ForEachParameter(
+      [index, value, &settings, this](const auto& pi)
+      {
+         if (pi.mID != index)
+            return true;
+
+         auto it = settings.mParamsMap.find(pi.mName);
+
+         // For consistency with other plugin families
+         constexpr float epsilon = 1.0e-5f; 
+
+         if (
+            it == settings.mParamsMap.end() || !it->second.has_value() ||
+            std::abs(*it->second - value) > epsilon)
+            Publish(EffectSettingChanged { size_t(index), value });
+
+         return false;
+      });
+}
+
 void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
@@ -2772,6 +2796,7 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
    int i = s->GetId() - ID_Sliders;
    float value = s->GetValue() / 1000.0;
 
+   NotifyParameterChanged(i, value);
    // Send changed settings (only) to the worker thread
    mAccess.ModifySettings([&](EffectSettings&) {
       auto result = GetInstance().MakeMessage(i, value);
@@ -3940,6 +3965,7 @@ void VSTEffectInstance::Automate(int index, float value)
 
 void VSTEffectValidator::Automate(int index, float value)
 {
+   NotifyParameterChanged(index, value);
    // Send changed settings (only) to the worker thread
    mAccess.ModifySettings([&](EffectSettings&) {
       auto result = GetInstance().MakeMessage(index, value);

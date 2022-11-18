@@ -108,6 +108,9 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
          // project state is destroyed
          Hide(&project);
       });
+
+   mParameterChangedSubscription = mEffectUIHost->GetValidator()->Subscribe(
+      [this](auto) { ProjectHistory::Get(*mpProject).ModifyState(false); });
 }
 
 void RealtimeEffectStateUI::Hide(AudacityProject* project)

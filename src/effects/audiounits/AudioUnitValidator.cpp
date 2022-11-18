@@ -204,6 +204,23 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
    // (Maybe we need a way to fetch just one changed setting, but this is
    // the easy way to write it)
    ValidateUI();
+
+   if (inEvent->mEventType != kAudioUnitEvent_ParameterValueChange)
+      return;
+
+   constexpr AudioUnitParameterValue epsilon = 1e-6;
+
+   auto it = mParameterValues.find(inEvent->mArgument.mParameter.mParameterID);
+
+   // When the UI is opened - EventListener is called for each parameter
+   // with the current value.
+   if (it == mParameterValues.end())
+      mParameterValues.insert(std::make_pair(inEvent->mArgument.mParameter.mParameterID, inParameterValue));
+   else if (std::abs(it->second - inParameterValue) > epsilon)
+   {
+     it->second = inParameterValue;
+     Publish({inEvent->mArgument.mParameter.mParameterID, inParameterValue});
+   }
 }
 
 // static
