@@ -302,20 +302,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    void         SetBufferDelay(int samples);
 
 
-   static bool TransferSettingsContents(VSTEffectSettings& src,
-                                        VSTEffectSettings& dst,
-                                        bool doMove,
-                                        bool doMerge);
-
-   //! Copy from one map to another
-   bool CopySettingsContents(const VSTEffectSettings& src,
-                                   VSTEffectSettings& dst) const;
-
-   //! Copy, then clear the optionals in src
-   static bool MoveSettingsContents(VSTEffectSettings&& src,
-                                    VSTEffectSettings&  dst,
-                                    bool merge);
-
    // Make message carrying all the information in settings, including chunks
    std::unique_ptr<EffectInstance::Message>
       MakeMessageFS(VSTEffectSettings& settings) const;
