@@ -38,9 +38,6 @@ struct VST3EffectSettings
 {
    ///Holds the parameter that has been changed since last processing pass.
    std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> parameterChanges;
-   ///Incremented whenever changes has been made to parameters, helps to avoid
-   ///redundant store operations when processing is active
-   int changesCounter { 0 };
 
    ///Holds the last known processor/component state, rarely updates (usually only on UI or preset change)
    std::optional<wxString> processorState;
@@ -279,7 +276,6 @@ public:
       for(auto& p : mParametersCache)
          vst3settings.parameterChanges[p.first] = p.second;
       mParametersCache.clear();
-      ++vst3settings.changesCounter;
    }
 
    void ResetCache()
@@ -329,7 +325,6 @@ public:
          {
             auto& vst3settings = GetSettings(settings);
             vst3settings.parameterChanges[id] = valueNormalized;
-            ++vst3settings.changesCounter;
             return nullptr;
          });
       }
@@ -875,7 +870,6 @@ void VST3Wrapper::CopySettingsContents(const EffectSettings& src, EffectSettings
    auto& from = GetSettings(*const_cast<EffectSettings*>(&src));
    auto& to = GetSettings(dst);
 
-   to.changesCounter = from.changesCounter;
    //Don't allocate in worker
    std::swap(from.parameterChanges, to.parameterChanges);
 }
