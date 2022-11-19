@@ -3731,11 +3731,12 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
    {
       VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
       callSetChunk(true, chunk.size(), const_cast<char *>(chunk.data()), &info);
-      return true;
    }
 
 
-   // Chunk unavailable / decoding it did not work? fall back to param ID-value pairs
+   // Settings (like the message) may store both a chunk, and also accumulated
+   // slider movements to reapply after the chunk change.  Or it might be
+   // no chunk and id-value pairs only
 
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
 
