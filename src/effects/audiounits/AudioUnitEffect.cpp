@@ -310,12 +310,53 @@ bool AudioUnitEffect::CopySettingsContents(
    return true;
 }
 
+constexpr auto PresetStr = "_PRESET";
+
+RegistryPath AudioUnitEffect::ChoosePresetKey(
+   const EffectSettings &settings)
+{
+   // Find a key to use for the preset that does not collide with any
+   // parameter name
+   wxString result = PresetStr;
+
+   // That string probably works but be sure
+   const auto &map = GetSettings(settings).values;
+   using Pair = decltype(*map.begin());
+   while (std::any_of(map.begin(), map.end(), [&](Pair &pair){
+      return pair.second && pair.second->first == result;
+   }))
+      result += "_";
+
+   return result;
+}
+
+RegistryPath AudioUnitEffect::FindPresetKey(const CommandParameters & parms)
+{
+   RegistryPath result;
+   auto len = strlen(PresetStr);
+   if (auto [index, key] = std::tuple(0L, wxString{})
+       ; parms.GetFirstEntry(key, index)
+   ) do {
+      if (key.StartsWith(PresetStr)
+          && key.Mid(len).find_first_not_of("_") == wxString::npos
+          && key.length() > result.length())
+         result = key;
+   } while(parms.GetNextEntry(key, index));
+   return result;
+}
+
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
+   const auto &mySettings = GetSettings(settings);
+   if (mySettings.mPresetNumber) {
+      const auto key = ChoosePresetKey(settings);
+      parms.Write(key, *mySettings.mPresetNumber);
+   }
+
    // Save settings into CommandParameters
    // Iterate the map only, not using any AudioUnit handles
-   for (auto &[ID, pPair] : GetSettings(settings).values)
+   for (auto &[ID, pPair] : mySettings.values)
       if (pPair)
          // Write names, not numbers, as keys in the config file
          parms.Write(pPair->first, pPair->second);
@@ -329,6 +370,13 @@ bool AudioUnitEffect::LoadSettings(
    auto &mySettings = GetSettings(settings);
    mySettings.ResetValues();
    auto &map = mySettings.values;
+
+   // Reload preset first
+   if (auto presetKey = FindPresetKey(parms); !presetKey.empty()) {
+      SInt32 value = 0;
+      if (parms.Read(presetKey, &value))
+         AudioUnitWrapper::LoadFactoryPreset(*this, value, &settings);
+   }
 
    // Load settings from CommandParameters
    // Iterate the config only, not using any AudioUnit handles
