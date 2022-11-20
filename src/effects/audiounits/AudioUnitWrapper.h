@@ -45,6 +45,9 @@ struct AudioUnitEffectSettings {
    using StringSet = std::set<wxString>;
    const std::shared_ptr<StringSet> mSharedNames{
       std::make_shared<StringSet>() };
+
+   //! Optionally store a preset
+   std::optional<SInt32> mPresetNumber;
    
    //! Map from numerical parameter IDs (not always a small initial segment
    //! of the integers) to optional pairs of names and floating point values
@@ -159,7 +162,7 @@ struct AudioUnitWrapper
 
    //! May allocate memory, so should be called only in the main thread
    bool FetchSettings(AudioUnitEffectSettings &settings,
-      bool fetchValues) const;
+      bool fetchValues, bool fetchPreset = false) const;
    bool StoreSettings(const EffectDefinitionInterface &effect,
       const AudioUnitEffectSettings &settings) const;
 

@@ -147,8 +147,17 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
 }
 
 bool AudioUnitWrapper::FetchSettings(
-   AudioUnitEffectSettings &settings, bool fetchValues) const
+   AudioUnitEffectSettings &settings, bool fetchValues, bool fetchPreset) const
 {
+   settings.mPresetNumber = {};
+   if (fetchPreset) {
+      AUPreset preset{};
+      if (!GetFixedSizeProperty(kAudioUnitProperty_PresentPreset, preset))
+         // Only want factory preset number, not a user preset (<0)
+         if (preset.presetNumber >= 0)
+            settings.mPresetNumber = { preset.presetNumber };
+   }
+
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(
@@ -177,7 +186,7 @@ bool AudioUnitWrapper::FetchSettings(
    return true;
 }
 
-bool AudioUnitWrapper::StoreSettings(const EffectDefinitionInterface &,
+bool AudioUnitWrapper::StoreSettings(const EffectDefinitionInterface &effect,
    const AudioUnitEffectSettings &settings) const
 {
    // This is a const member function inherited by AudioUnitEffect, though it
@@ -187,6 +196,14 @@ bool AudioUnitWrapper::StoreSettings(const EffectDefinitionInterface &,
    // reinterprets.
    // So consider mUnit a mutable scratch pad object.  This doesn't really make
    // the AudioUnitEffect stateful.
+
+   // First restore factory preset if it applies
+   if (settings.mPresetNumber) {
+      // Mutate the scratch AudioUnit, don't pass settings
+      LoadFactoryPreset(effect, *settings.mPresetNumber, nullptr);
+      // Then go on to reapply some slider changes that might have been done
+      // after a change of preset
+   }
 
    // Update parameter values in the AudioUnit from const
    // AudioUnitEffectSettings
