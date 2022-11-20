@@ -145,7 +145,8 @@ struct AudioUnitWrapper
     @return smart pointer to data, and an error message
     */
    std::pair<CF_ptr<CFDataRef>, TranslatableString>
-   MakeBlob(const AudioUnitEffectSettings &settings,
+   MakeBlob(const EffectDefinitionInterface &effect,
+      const AudioUnitEffectSettings &settings,
       const wxCFStringRef &cfname, bool binary) const;
 
    //! Interpret the dump made before by MakeBlob
@@ -159,7 +160,8 @@ struct AudioUnitWrapper
    //! May allocate memory, so should be called only in the main thread
    bool FetchSettings(AudioUnitEffectSettings &settings,
       bool fetchValues) const;
-   bool StoreSettings(const AudioUnitEffectSettings &settings) const;
+   bool StoreSettings(const EffectDefinitionInterface &effect,
+      const AudioUnitEffectSettings &settings) const;
 
    //! Copy, then clear the optionals in src
    static bool MoveSettingsContents(

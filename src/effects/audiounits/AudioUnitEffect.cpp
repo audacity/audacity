@@ -553,7 +553,7 @@ bool AudioUnitEffect::SavePreset(
    const RegistryPath & group, const AudioUnitEffectSettings &settings) const
 {
    wxCFStringRef cfname(wxFileNameFromPath(group));
-   const auto &[data, _] = MakeBlob(settings, cfname, true);
+   const auto &[data, _] = MakeBlob(*this, settings, cfname, true);
    if (!data)
       return false;
 
@@ -578,7 +578,7 @@ TranslatableString AudioUnitEffect::Export(
    // First set the name of the preset
    wxCFStringRef cfname(wxFileName(path).GetName());
 
-   const auto &[data, message] = MakeBlob(settings, cfname, false);
+   const auto &[data, message] = MakeBlob(*this, settings, cfname, false);
    if (!data || !message.empty())
       return message;
 

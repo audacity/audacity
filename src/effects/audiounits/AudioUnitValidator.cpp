@@ -128,7 +128,8 @@ bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
 
 bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
 {
-   return mInstance.StoreSettings(AudioUnitInstance::GetSettings(settings));
+   return mInstance.StoreSettings(mInstance.mProcessor,
+      AudioUnitInstance::GetSettings(settings));
 }
 
 std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(

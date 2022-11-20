@@ -177,7 +177,7 @@ bool AudioUnitWrapper::FetchSettings(
    return true;
 }
 
-bool AudioUnitWrapper::StoreSettings(
+bool AudioUnitWrapper::StoreSettings(const EffectDefinitionInterface &,
    const AudioUnitEffectSettings &settings) const
 {
    // This is a const member function inherited by AudioUnitEffect, though it
@@ -365,7 +365,8 @@ const
 }
 
 std::pair<CF_ptr<CFDataRef>, TranslatableString>
-AudioUnitWrapper::MakeBlob(const AudioUnitEffectSettings &settings,
+AudioUnitWrapper::MakeBlob(const EffectDefinitionInterface &effect,
+   const AudioUnitEffectSettings &settings,
    const wxCFStringRef &cfname, bool binary) const
 {
    // This is a const function of AudioUnitEffect, but it mutates
@@ -373,7 +374,7 @@ AudioUnitWrapper::MakeBlob(const AudioUnitEffectSettings &settings,
    // should be the "scratchpad" unit only, not real instance state.
 
    // Update state of the unit from settings
-   StoreSettings(settings);
+   StoreSettings(effect, settings);
 
    CF_ptr<CFDataRef> data;
    TranslatableString message;
