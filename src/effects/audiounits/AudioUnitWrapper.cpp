@@ -14,6 +14,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitWrapper.h"
+#include "ConfigInterface.h"
 #include "EffectInterface.h"
 #include "Internat.h"
 #include "ModuleManager.h"
@@ -304,6 +305,63 @@ void AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
       if (ParameterInfo pi{ mUnit.get(), ID };
          !visitor(pi, ID))
          break;
+}
+
+bool AudioUnitWrapper::LoadPreset(const EffectDefinitionInterface &effect,
+   const RegistryPath & group, EffectSettings &settings) const
+{
+   // Retrieve the preset
+   wxString parms;
+   if (!GetConfig(effect, PluginSettings::Private, group, PRESET_KEY, parms,
+      wxEmptyString)) {
+      // Commented "CurrentSettings" gets tried a lot and useless messages appear
+      // in the log
+      //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
+      return false;
+   }
+
+   // Decode it, complementary to what SaveBlobToConfig did
+   auto error =
+      InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
+   if (!error.empty()) {
+      wxLogError(error.Debug());
+      return false;
+   }
+
+   return true;
+}
+
+bool AudioUnitWrapper::LoadFactoryPreset(
+   const EffectDefinitionInterface &effect, int id, EffectSettings *pSettings)
+const
+{
+   if (pSettings) {
+      // Issue 3441: Some factory presets of some effects do not reassign all
+      // controls.  So first put controls into a default state, not contaminated
+      // by previous importing or other loading of settings into this wrapper.
+      if (!LoadPreset(effect, FactoryDefaultsGroup(), *pSettings))
+         return false;
+   }
+
+   // Retrieve the list of factory presets
+   CF_ptr<CFArrayRef> array;
+   if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
+       id < 0 || id >= CFArrayGetCount(array.get()))
+      return false;
+
+   // Mutate the scratch pad AudioUnit in this wrapper
+   if (SetProperty(kAudioUnitProperty_PresentPreset,
+      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id))))
+      return false;
+
+   if (pSettings) {
+      // Repopulate the AudioUnitEffectSettings from the change of state in
+      // the AudioUnit
+      if (!FetchSettings(GetSettings(*pSettings), true))
+         return false;
+   }
+
+   return true;
 }
 
 std::pair<CF_ptr<CFDataRef>, TranslatableString>

@@ -360,29 +360,9 @@ bool AudioUnitEffect::SaveUserPreset(
 OptionalMessage
 AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
-   // Issue 3441: Some factory presets of some effects do not reassign all
-   // controls.  So first put controls into a default state, not contaminated
-   // by previous importing or other loading of settings into this wrapper.
-   if (!LoadPreset(FactoryDefaultsGroup(), settings))
-      return {};
-
-   // Retrieve the list of factory presets
-   CF_ptr<CFArrayRef> array;
-   if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
-       id < 0 || id >= CFArrayGetCount(array.get()))
-      return {};
-
-   // Mutate the scratch pad AudioUnit in the effect
-   if (SetProperty(kAudioUnitProperty_PresentPreset,
-      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id))))
-      return {};
-
-   // Repopulate the AudioUnitEffectSettings from the change of state in
-   // the AudioUnit
-   if (!FetchSettings(GetSettings(settings), true))
-      return {};
-
-   return { nullptr };
+   if (AudioUnitWrapper::LoadFactoryPreset(*this, id, &settings))
+      return { nullptr };
+   return {};
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -564,25 +544,9 @@ OptionalMessage AudioUnitEffect::LoadPreset(
    if (MigrateOldConfigFile(group, settings))
       return { nullptr };
 
-   // Retrieve the preset
-   wxString parms;
-   if (!GetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms,
-      wxEmptyString)) {
-      // Commented "CurrentSettings" gets tried a lot and useless messages appear
-      // in the log
-      //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
-      return {};
-   }
-
-   // Decode it, complementary to what SaveBlobToConfig did
-   auto error =
-      InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
-   if (!error.empty()) {
-      wxLogError(error.Debug());
-      return {};
-   }
-
-   return { nullptr };
+   if (AudioUnitWrapper::LoadPreset(*this, group, settings))
+      return { nullptr };
+   return {};
 }
 
 bool AudioUnitEffect::SavePreset(

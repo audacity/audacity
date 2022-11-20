@@ -22,9 +22,11 @@
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
+#include "Identifier.h"
 
 class wxCFStringRef;
 class wxMemoryBuffer;
+class EffectDefinitionInterface;
 class EffectSettings;
 class TranslatableString;
 class AudioUnitWrapper;
@@ -130,6 +132,11 @@ struct AudioUnitWrapper
    using ParameterVisitor =
       std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
    void ForEachParameter(ParameterVisitor visitor) const;
+
+   bool LoadPreset(const EffectDefinitionInterface &effect,
+      const RegistryPath & group, EffectSettings &settings) const;
+   bool LoadFactoryPreset(const EffectDefinitionInterface &effect,
+      int id, EffectSettings *pSettings) const;
 
    //! Obtain dump of the setting state of an AudioUnit instance
    /*!
