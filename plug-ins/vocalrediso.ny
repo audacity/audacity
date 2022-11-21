@@ -236,11 +236,14 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
     ((= action 0)
         (display "" low-transition high-transition) ;values are quantized to bins
         (return-from catalog
-                     (sum (: snd 0)
-                          (mult -1 (: snd 1))
-                          (lowpass8 (: snd 1) low-transition)
-                          (highpass8 (diff (: snd 1) (lowpass8 (: snd 1) low-transition))
-                                     high-transition))))
+		     (sum (mult (- 1.0 (/ strength 2500.0))
+				(mult (sum (: snd 0) (: snd 1)) 0.5))
+			  (mult (/ strength 2500.0)
+				(sum (: snd 0)
+				     (mult -1 (: snd 1))
+				     (lowpass8 (: snd 1) low-transition)
+				     (highpass8 (diff (: snd 1) (lowpass8 (: snd 1) low-transition))
+						high-transition))))))
     ((= action 4)
         (return-from catalog (diff (: snd 0) (: snd 1))))
     (t  ;For everything that involves center isolation
