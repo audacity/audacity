@@ -129,7 +129,7 @@ bool AudioUnitValidator::IsGraphicalUI()
 bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
 {
    return mInstance
-      .FetchSettings(AudioUnitInstance::GetSettings(settings), true);
+      .FetchSettings(AudioUnitInstance::GetSettings(settings), true, true);
 }
 
 bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)

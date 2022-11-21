@@ -309,8 +309,8 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
       return XO("Failed to set class info for \"%s\" preset").Format(group);
 
    // Repopulate the AudioUnitEffectSettings from the change of state in
-   // the AudioUnit
-   FetchSettings(settings, true);
+   // the AudioUnit, and include the preset
+   FetchSettings(settings, true, true);
    return {};
 }
 
@@ -374,7 +374,7 @@ const
    if (pSettings) {
       // Repopulate the AudioUnitEffectSettings from the change of state in
       // the AudioUnit
-      if (!FetchSettings(GetSettings(*pSettings), true))
+      if (!FetchSettings(GetSettings(*pSettings), true, true))
          return false;
    }
 
