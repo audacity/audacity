@@ -1,4 +1,4 @@
-/**********************************************************************
+ /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -1236,7 +1236,14 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
    auto& message = static_cast<VSTEffectMessage&>(*package.pMessage);
 
    auto &chunk = message.mChunk;
-   if (!chunk.empty()) {
+
+   // Do not set the chunk if the plugin is by Melda and we are called
+   // in the audio thread - otherwise the whole app will freeze.
+   const bool IsMeldaPlugin = (mVendor == "MeldaProduction");
+   const bool IsAudioThread = (mMainThreadId != std::this_thread::get_id());
+   
+   if (!chunk.empty() && !(IsMeldaPlugin && IsAudioThread) )
+   {
       // Apply the chunk first
 
       VstPatchChunkInfo info = {
