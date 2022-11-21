@@ -331,6 +331,12 @@ PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
                             WXSIZEOF(dpath));
    pathList.push_back(dpath);
 
+   dpath[0] = 0;
+   ExpandEnvironmentStrings(wxT("%COMMONPROGRAMFILES%\\VST2"),
+                            dpath,
+                            WXSIZEOF(dpath));
+   pathList.push_back(dpath);
+
    // Recursively scan for all DLLs
    pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
 
