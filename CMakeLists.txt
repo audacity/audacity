@@ -649,7 +649,6 @@ add_subdirectory( "src" )
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
-add_subdirectory( "scripts" )
 
 if(${_OPT}has_crashreports)
    add_subdirectory( "crashreports" )
