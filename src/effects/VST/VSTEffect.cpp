@@ -1236,6 +1236,8 @@ bool VSTEffectInstance::RealtimeResume()
 
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
+   recm.lock();
+
    if (!package.pMessage)
       return true;
 
@@ -1313,6 +1315,8 @@ size_t VSTEffectInstance::RealtimeProcess(size_t group, EffectSettings &settings
 
 bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
+   recm.unlock();
+
    return true;
 }
 
@@ -2353,7 +2357,10 @@ intptr_t VSTEffectWrapper::callDispatcher(int opcode,
                                    int index, intptr_t value, void *ptr, float opt)
 {
    // Needed since we might be in the dispatcher when the timer pops
-   wxCRIT_SECT_LOCKER(locker, mDispatcherLock);
+   //wxCRIT_SECT_LOCKER(locker, mDispatcherLock);
+
+   std::lock_guard<std::recursive_mutex> lk(recm);
+
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
@@ -2401,6 +2408,7 @@ void VSTEffectWrapper::callSetProgram(int index)
 
 void VSTEffectWrapper::callSetChunk(bool isPgm, int len, void *buf)
 {
+
    VstPatchChunkInfo info;
 
    memset(&info, 0, sizeof(info));
