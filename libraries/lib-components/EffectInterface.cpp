@@ -34,6 +34,10 @@ void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
    mSettings = std::move(settings);
 }
 
+void SimpleEffectSettingsAccess::Set(std::unique_ptr<Message>)
+{
+}
+
 void SimpleEffectSettingsAccess::Flush()
 {
 }

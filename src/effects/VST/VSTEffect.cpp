@@ -2257,20 +2257,25 @@ void VSTEffectValidator::NotifyParameterChanged(int index, float value)
 void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
-
-   // Be sure the instance has got any messages
-   if (mNeedFlush != -1) {
+   if (!mLastMovements.empty()) {
+      // Be sure the instance has got any messages
       mAccess.Flush();
-
-      // Update settings, for stickiness
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         FetchSettingsFromInstance(settings);
+      mAccess.ModifySettings([&](EffectSettings& settings) {
+         // Update settings, for stickiness
+         // But don't do a complete FetchSettingsFromInstance
+         for (auto [index, value] : mLastMovements) {
+            if (index >= 0 && index < mParamNames.size()) {
+               const auto &string = mParamNames[index];
+               auto &mySettings = VSTEffectWrapper::GetSettings(settings);
+               mySettings.mParamsMap[string] = value;
+            }
+         }
+         // Succeed but with a null message
          return nullptr;
       });
-
-      RefreshParameters(mNeedFlush);
-      mNeedFlush = -1;
+      for (auto [index, _] : mLastMovements)
+         RefreshParameters(index);
+      mLastMovements.clear();
    }
 }
 
@@ -2707,11 +2712,8 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
 
    NotifyParameterChanged(i, value);
    // Send changed settings (only) to the worker thread
-   mAccess.ModifySettings([&](EffectSettings&) {
-      auto result = GetInstance().MakeMessage(i, value);
-      return result;
-   });
-   mNeedFlush = i;
+   mAccess.Set(GetInstance().MakeMessage(i, value));
+   mLastMovements.emplace_back(i, value);
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3740,11 +3742,12 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
    {
       VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
       callSetChunk(true, chunk.size(), const_cast<char *>(chunk.data()), &info);
-      return true;
    }
 
 
-   // Chunk unavailable / decoding it did not work? fall back to param ID-value pairs
+   // Settings (like the message) may store both a chunk, and also accumulated
+   // slider movements to reapply after the chunk change.  Or it might be
+   // no chunk and id-value pairs only
 
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
 
@@ -3803,7 +3806,7 @@ VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
 {
    VSTEffectMessage::ParamVector paramVector;
    paramVector.resize(mAEffect->numParams, std::nullopt);
-   
+
    ForEachParameter
    (
       [&](const VSTEffectWrapper::ParameterInfo& pi)
@@ -3840,8 +3843,15 @@ VSTEffectValidator::VSTEffectValidator
    mAccess.ModifySettings([&](EffectSettings &settings){
       return GetInstance().MakeMessageFS(VSTEffectInstance::GetSettings(settings));
    });
+
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
+
+   //! Note the parameter names for later use
+   mInstance.ForEachParameter([&](const VSTEffectWrapper::ParameterInfo &pi) {
+      mParamNames.push_back(pi.mName);
+      return true;
+   } );
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
 
@@ -3881,11 +3891,8 @@ void VSTEffectValidator::Automate(int index, float value)
 {
    NotifyParameterChanged(index, value);
    // Send changed settings (only) to the worker thread
-   mAccess.ModifySettings([&](EffectSettings&) {
-      auto result = GetInstance().MakeMessage(index, value);
-      return result;
-   });
-   mNeedFlush = index;
+   mAccess.Set(GetInstance().MakeMessage(index, value));
+   mLastMovements.emplace_back(index, value);
 }
 
 
