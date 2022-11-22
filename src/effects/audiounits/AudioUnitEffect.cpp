@@ -304,31 +304,9 @@ EffectSettings AudioUnitEffect::MakeSettings() const
 }
 
 bool AudioUnitEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+   const EffectSettings &, EffectSettings &) const
 {
-   auto &dstSettings = GetSettings(dst);
-   auto &srcSettings = GetSettings(src);
-   dstSettings.pSource = srcSettings.pSource;
-
-   // Do an in-place rewrite of dst, avoiding allocations
-   auto &dstMap = dstSettings.values;
-   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
-   const auto &srcMap = srcSettings.values;
-   // Iterate the two maps in parallel, assuming correspondence of
-   // keys, because the settings objects ultimately came from MakeSettings()
-   // and copies.  Nothing else ever inserts or removes keys.
-   assert(srcMap.size() == dstMap.size());
-   for (auto &[key, oValue] : srcMap) {
-      assert(dstIter != dstEnd);
-      auto &[dstKey, dstOValue] = *dstIter;
-      assert(dstKey == key);
-      if (oValue)
-         dstOValue.emplace(*oValue);
-      else
-         dstOValue.reset();
-      ++dstIter;
-   }
-   assert(dstIter == dstEnd);
+   // Not needed -- rely on EffectInstance::Message instead
    return true;
 }
 

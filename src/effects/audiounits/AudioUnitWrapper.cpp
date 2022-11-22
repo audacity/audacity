@@ -145,30 +145,32 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
    return {};
 }
 
-bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
+bool AudioUnitWrapper::FetchSettings(
+   AudioUnitEffectSettings &settings, bool fetchValues) const
 {
-   settings.pSource = this;
-
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(
-   [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID) {
+   [this, &settings, fetchValues]
+   (const ParameterInfo &pi, AudioUnitParameterID ID) {
       // Always make a slot, even for parameter IDs that are known but
       // not gettable from the instance now.  Example:  AUGraphicEQ when
       // you choose 10 bands; the values for bands 10 ... 30 are undefined
       // but the parameter IDs are known
       auto &slot = settings.values[ID];
       slot.reset();
-      AudioUnitParameterValue value;
-      if (!pi.mName ||
-         AudioUnitGetParameter(
-            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
-            // Probably failed because of invalid parameter which can happen
-            // if a plug-in is in a certain mode that doesn't contain the
-            // parameter.  In any case, just ignore it.
-         }
-      else
-         slot.emplace(settings.Intern(*pi.mName), value);
+      if (fetchValues) {
+         AudioUnitParameterValue value;
+         if (!pi.mName ||
+            AudioUnitGetParameter(
+               mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
+               // Probably failed because of invalid parameter which can happen
+               // if a plug-in is in a certain mode that doesn't contain the
+               // parameter.  In any case, just ignore it.
+            }
+         else
+            slot.emplace(settings.Intern(*pi.mName), value);
+      }
       return true;
    });
    return true;
@@ -213,6 +215,31 @@ bool AudioUnitWrapper::StoreSettings(
          }
          return true;
       });
+   }
+   return true;
+}
+
+bool AudioUnitWrapper::MoveSettingsContents(
+   AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge)
+{
+   // Do an in-place rewrite of dst, avoiding allocations
+   auto &dstMap = dst.values;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   auto &srcMap = src.values;
+   for (auto &[key, oValue] : srcMap) {
+      while (dstIter != dstEnd && dstIter->first != key)
+         ++dstIter;
+      if (dstIter == dstEnd)
+         break;
+      auto &[dstKey, dstOValue] = *dstIter;
+      assert(dstKey == key);
+      if (oValue) {
+         dstOValue.emplace(*oValue);
+         oValue.reset();
+      }
+      else if (!merge)
+         // Don't accumulate non-nulls only, but copy the nulls
+         dstOValue.reset();
    }
    return true;
 }
