@@ -2352,8 +2352,17 @@ void VSTEffectWrapper::SetString(int opcode, const wxString & str, int index)
 intptr_t VSTEffectWrapper::callDispatcher(int opcode,
                                    int index, intptr_t value, void *ptr, float opt)
 {
-   // Needed since we might be in the dispatcher when the timer pops
-   wxCRIT_SECT_LOCKER(locker, mDispatcherLock);
+   // Exclusion needed since we might be in the dispatcher when the timer pops
+   if (mMainThreadId == std::this_thread::get_id()) {
+      // Issue3915: some Melda plug-ins seem to need this to make
+      // progress on other threads
+      while (!mMutex.try_lock())
+         BasicUI::Yield();
+   }
+   else
+      mMutex.lock();
+   Finally Do{[&]{ mMutex.unlock(); }};
+
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 

@@ -11,6 +11,7 @@
 #include "RealtimeEffectState.h"
 
 #include "AudioIOBase.h"
+#include "BasicUI.h"
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
@@ -280,14 +281,19 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             
             if (pAccessState->mState.mInitialized)
             {
+               // Periodic wake-ups to yield to events
+               // Issue3915: some Melda plug-ins seem to need this to make
+               // progress on other threads
+               using namespace std::chrono;
                std::unique_lock lk(pAccessState->mLockForCV);
-               pAccessState->mCV.wait(lk,
+               while (!pAccessState->mCV.wait_for(lk, 10ms,
                   [&] {
                         auto& lastSettings = pAccessState->mLastSettings;
                         pAccessState->MainRead();
                         return pAccessState->mCounter == lastSettings.counter;
                       }
-               );
+               ))
+                  BasicUI::Yield();
             }
 
             // Update what GetSettings() will return, during play and before

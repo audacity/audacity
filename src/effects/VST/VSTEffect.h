@@ -141,7 +141,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    intptr_t constCallDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) const;
 
-   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+   std::recursive_mutex mMutex;
 
    float callGetParameter(int index) const;
 
