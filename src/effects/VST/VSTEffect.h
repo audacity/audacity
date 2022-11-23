@@ -277,8 +277,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
 
    int mBufferDelay{ 0 };
 
-   int GetProcessLevel();
-   int mProcessLevel{ 1 };  // in GUI thread
+   virtual int GetProcessLevel();
 
    bool   mUseLatency{ true };
 
@@ -402,6 +401,8 @@ class VSTEffect final
    
 
    EffectSettings MakeSettings() const override;
+
+   virtual int GetProcessLevel() override;
 
 protected:
    
@@ -551,6 +552,8 @@ public:
    // The overrides above will forward calls to them to the corresponding
    // overrides in the Validator which owns the instance - this sets it.
    void SetOwningValidator(VSTEffectUIWrapper* vi);
+
+   virtual int GetProcessLevel() override;
 
 private:
 

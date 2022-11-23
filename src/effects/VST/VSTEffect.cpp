@@ -2179,7 +2179,35 @@ float VSTEffectWrapper::GetSampleRate()
 
 int VSTEffectWrapper::GetProcessLevel()
 {
-   return mProcessLevel;
+   return 1; // i.e. kVstProcessLevelUser
+}
+
+int VSTEffect::GetProcessLevel()
+{
+   return 4;  // kVstProcessLevelOffline 
+}
+
+int VSTEffectInstance::GetProcessLevel()
+{
+   const bool weAreOnMainThread = (mMainThreadId == std::this_thread::get_id());
+
+   if (weAreOnMainThread)
+   {
+      if (mpOwningValidator)
+      {
+         // instance has a validator
+
+         return 1; // i.e. kVstProcessLevelUser 
+      }
+      else
+      {
+         // no validator, so we are doing destructive processing
+
+         return 4;  // i.e. kVstProcessLevelOffline 
+      }
+   }
+
+   return 2; // i.e. kVstProcessLevelRealtime 
 }
 
 void VSTEffectInstance::PowerOn()
