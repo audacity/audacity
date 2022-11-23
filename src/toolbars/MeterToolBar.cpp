@@ -151,6 +151,20 @@ void MeterToolBar::Populate()
    if( mWhichMeters & kWithRecordMeter ){
       //JKC: Record on left, playback on right.  Left to right flow
       //(maybe we should do it differently for Arabic language :-)  )
+      mRecordSetupButton = safenew AButton(this);
+      mRecordSetupButton->SetLabel({});
+      mRecordSetupButton->SetName(_("Record Meter"));
+      mRecordSetupButton->SetToolTip(XO("Record Meter"));
+      mRecordSetupButton->SetImages(
+         theTheme.Image(bmpRecoloredUpSmall),
+         theTheme.Image(bmpRecoloredUpHiliteSmall),
+         theTheme.Image(bmpRecoloredDownSmall),
+         theTheme.Image(bmpRecoloredHiliteSmall),
+         theTheme.Image(bmpRecoloredUpSmall));
+      mRecordSetupButton->SetIcon(theTheme.Image(bmpMic));
+      mRecordSetupButton->SetButtonType(AButton::Type::FrameButton);
+      mRecordSetupButton->SetMinSize({toolbarSingle, toolbarSingle});
+
       mRecordMeter = safenew MeterPanel( &mProject,
                                 this,
                                 wxID_ANY,
@@ -167,6 +181,21 @@ void MeterToolBar::Populate()
    }
 
    if( mWhichMeters & kWithPlayMeter ){
+      mPlaySetupButton = safenew AButton(this);
+      mPlaySetupButton->SetLabel({});
+      mPlaySetupButton->SetName(_("Playback Meter"));
+      mPlaySetupButton->SetToolTip(XO("Playback Meter"));
+      mPlaySetupButton->SetImages(
+         theTheme.Image(bmpRecoloredUpSmall),
+         theTheme.Image(bmpRecoloredUpHiliteSmall),
+         theTheme.Image(bmpRecoloredDownSmall),
+         theTheme.Image(bmpRecoloredHiliteSmall),
+         theTheme.Image(bmpRecoloredUpSmall));
+      mPlaySetupButton->SetIcon(theTheme.Image(bmpSpeaker));
+      mPlaySetupButton->SetButtonType(AButton::Type::FrameButton);
+      mPlaySetupButton->SetMinSize({toolbarSingle, toolbarSingle});
+
+
       mPlayMeter = safenew MeterPanel( &mProject,
                               this,
                               wxID_ANY,
