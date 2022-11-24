@@ -142,7 +142,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    intptr_t constCallDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) const;
 
-   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+   std::recursive_mutex mDispatcherLock;
 
    float callGetParameter(int index) const;
 
@@ -555,6 +555,8 @@ public:
 
    bool OnePresetWasLoadedWhilePlaying();
 
+   void DeferChunkApplication();
+
 private:
 
    void callProcessReplacing(
@@ -573,6 +575,15 @@ private:
    VSTEffectUIWrapper* mpOwningValidator{};
 
    std::atomic_bool mPresetLoadedWhilePlaying{ false };
+
+   std::mutex mDeferredChunkMutex;
+   std::vector<char> mChunkToSetAtIdleTime{};
+
+   void ApplyChunk(std::vector<char>& chunk);
+
+   bool ChunkMustBeAppliedInMainThread() const;
+
+   bool mIsMeldaPlugin{ false };
 };
 
 
