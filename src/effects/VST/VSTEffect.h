@@ -306,6 +306,8 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
       MakeMessageFS(const VSTEffectSettings& settings) const;
+
+   std::mutex mMutex;
 };
 
 class VSTEffectInstance;
