@@ -219,7 +219,8 @@ void MeterToolBar::UpdatePrefs()
    RegenerateTooltips();
 
    // Set label to pull in language change
-   SetLabel(XO("Meter"));
+   auto label = (mWhichMeters & kWithRecordMeter) ? XO("Recording Meter") : XO("Playback Meter");
+   SetLabel(label);
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
