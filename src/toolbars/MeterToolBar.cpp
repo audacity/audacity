@@ -340,8 +340,15 @@ void MeterToolBar::UpdatePrefs()
 {
    RegenerateTooltips();
 
+   // Since the same widget is provides both the Recording Meter as
+   // well as the Playback Meter, we choose an appropriate label
+   // based on which it is
+   auto label = (mWhichMeters & kWithRecordMeter)
+      ? XO("Recording Meter")
+      : XO("Playback Meter");
+
    // Set label to pull in language change
-   SetLabel(XO("Meter"));
+   SetLabel(label);
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
