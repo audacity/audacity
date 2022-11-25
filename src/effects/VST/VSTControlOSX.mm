@@ -72,13 +72,18 @@ VSTControl::~VSTControl()
 
 void VSTControl::Close()
 {
+   auto &resource =
 #if !defined(_LP64)
-   if (mWindowRef)
-   {
-      mLink->callDispatcher(effEditClose, 0, 0, mWindowRef, 0.0);
-      mWindowRef = 0;
-   }
+       mWindowRef
+#else
+       mVSTView
 #endif
+   ;
+   if (resource)
+   {
+      mLink->callDispatcher(effEditClose, 0, 0, resource, 0.0);
+      resource = nullptr;
+   }
 }
 
 bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
