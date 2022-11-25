@@ -38,6 +38,9 @@ class AudacityApp final : public wxApp {
  public:
    AudacityApp();
    ~AudacityApp();
+   
+   bool Initialize(int& argc, wxChar** argv) override;
+   
    bool OnInit() override;
    bool InitPart2();
    int OnRun() override;

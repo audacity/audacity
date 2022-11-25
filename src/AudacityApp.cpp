@@ -139,6 +139,7 @@ It handles initialization and termination by subclassing wxApp.
 //#include "Profiler.h"
 
 #include "ModuleManager.h"
+#include "PluginHost.h"
 
 #include "import/Import.h"
 
@@ -1119,16 +1120,24 @@ bool AudacityApp::OnExceptionInMainLoop()
 
 AudacityApp::AudacityApp()
 {
+}
+
+bool AudacityApp::Initialize(int& argc, wxChar** argv)
+{
+   if(!PluginHost::IsHostProcess(argc, argv))
+   {
 #if defined(USE_BREAKPAD)
-    InitBreakpad();
-// Do not capture crashes in debug builds
+      InitBreakpad();
+      // Do not capture crashes in debug builds
 #elif !defined(_DEBUG)
 #if defined(HAS_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
-   wxHandleFatalExceptions();
+      wxHandleFatalExceptions();
 #endif
 #endif
 #endif
+   }
+   return wxApp::Initialize(argc, argv);
 }
 
 AudacityApp::~AudacityApp()
