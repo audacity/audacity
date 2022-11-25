@@ -42,23 +42,25 @@ LV2Instance::LV2Instance(
 LV2Instance::~LV2Instance() = default;
 
 void LV2Instance::MakeMaster(const EffectSettings &settings,
-   double sampleRate, bool useOutput)
+   double sampleRate)
 {
+   // Come here only when doing non-realtime application of the effect, in which
+   // case, we don't care about capturing the output ports
    if (mMaster && sampleRate == mFeatures.mSampleRate) {
       // Already made but be sure to connect control ports to the right place
-      mMaster->ConnectControlPorts(mPorts, GetSettings(settings), useOutput);
+      mMaster->ConnectControlPorts(mPorts, GetSettings(settings), nullptr);
       return;
    }
-   mMaster = MakeWrapper(settings, sampleRate, useOutput);
+   mMaster = MakeWrapper(settings, sampleRate, nullptr);
    SetBlockSize(mUserBlockSize);
 }
 
 std::unique_ptr<LV2Wrapper>
 LV2Instance::MakeWrapper(const EffectSettings &settings,
-   double sampleRate, bool useOutput)
+   double sampleRate, EffectOutputs *pOutputs)
 {
    return LV2Wrapper::Create(mFeatures, mPorts, mPortStates,
-      GetSettings(settings), sampleRate, useOutput);
+      GetSettings(settings), sampleRate, pOutputs);
 }
 
 size_t LV2Instance::SetBlockSize(size_t maxBlockSize)
@@ -99,7 +101,7 @@ auto LV2Instance::GetLatency(const EffectSettings &, double) const
 bool LV2Instance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, ChannelNames chanMap)
 {
-   MakeMaster(settings, sampleRate, false);
+   MakeMaster(settings, sampleRate);
    if (!mMaster)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
@@ -155,11 +157,15 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool LV2Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+bool LV2Instance::RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs *pOutputs, unsigned, float sampleRate)
 {
+   // Connect to outputs only if this is the first processor for the track.
+   // (What's right when a mono effect is on a stereo channel?  Unclear, but
+   // this definitely causes connection with the first channel.)
    auto pInstance = LV2Wrapper::Create(mFeatures,
-      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
+      mPorts, mPortStates, GetSettings(settings), sampleRate,
+      mSlaves.empty() ? static_cast<LV2EffectOutputs *>(pOutputs) : nullptr);
    if (!pInstance)
       return false;
    pInstance->Activate();
@@ -195,7 +201,7 @@ bool LV2Instance::RealtimeResume()
    return true;
 }
 
-bool LV2Instance::RealtimeProcessStart(EffectSettings &)
+bool LV2Instance::RealtimeProcessStart(MessagePackage &)
 {
    mNumSamples = 0;
    for (auto & state : mPortStates.mAtomPortStates)

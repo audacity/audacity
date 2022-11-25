@@ -307,19 +307,35 @@ bool AudioGraph::EffectStage::Process(EffectInstanceEx &instance,
 {
    size_t processed{};
    try {
+      const auto positions = mInBuffers.Positions();
+      const auto nPositions = mInBuffers.Channels();
+      // channel may be nonzero in the case of a plug-in that only reads
+      // one channel at a time, so multiple instances are made to mix stereo
+      assert(channel <= nPositions);
+      std::vector<float *> inPositions(
+         positions + channel, positions + nPositions - channel);
+      // When the plug-in expects many input channels, replicate the last
+      // buffer (assumed to be zero-filled) as dummy input
+      inPositions.resize(
+         instance.GetAudioInCount() - channel, inPositions.back());
+
+      std::vector<float *> advancedOutPositions;
+      const auto size = instance.GetAudioOutCount() - channel;
+      advancedOutPositions.reserve(size);
+
       auto outPositions = data.Positions();
-      std::vector<float *> advancedPositions;
-      if (outBufferOffset > 0) {
-         auto channels = data.Channels();
-         advancedPositions.reserve(channels - channel);
-         for (size_t ii = channel; ii < channels; ++ii)
-            advancedPositions.push_back(outPositions[ii] + outBufferOffset);
-         outPositions = advancedPositions.data();
-      }
-      else
-         outPositions += channel;
+      // It is assumed that data has at least one dummy buffer last
+      auto channels = data.Channels();
+      // channel may be nonzero in the case of a plug-in that only writes
+      // one channel at a time, so multiple instances are made to mix stereo
+      for (size_t ii = channel; ii < channels; ++ii)
+         advancedOutPositions.push_back(outPositions[ii] + outBufferOffset);
+      // When the plug-in expects many output channels, replicate the last
+      // as dummy output
+      advancedOutPositions.resize(size, advancedOutPositions.back());
+
       processed = instance.ProcessBlock(mSettings,
-         mInBuffers.Positions() + channel, outPositions, curBlockSize);
+         inPositions.data(), advancedOutPositions.data(), curBlockSize);
    }
    catch (const AudacityException &) {
       // PRL: Bug 437:

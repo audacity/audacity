@@ -170,13 +170,14 @@ EffectType EffectChangePitch::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectChangePitch::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage EffectChangePitch::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<EffectChangePitch&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
+OptionalMessage
+EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    DeduceFrequencies();
 
@@ -232,7 +233,8 @@ bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
 }
 
 std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 

@@ -97,7 +97,10 @@ public:
    void ProcessBlockStart(const EffectSettings& settings);
 
    //Used to send EffectSettings changes to the IAudioProcessor, while effect is inactive(!)
-   void FlushParameters(EffectSettings& settings);
+
+   //! \param hasChanges optional output variable, set to true if flushing has
+   //! changed the DSP model state
+   void FlushParameters(EffectSettings& settings, bool* hasChanges = nullptr);
 
    //Intialize first, before calling to Process. It's safe to it use from another thread
    size_t Process(const float* const* inBlock, float* const* outBlock, size_t blockLen);
@@ -110,16 +113,17 @@ public:
 
    Steinberg::int32 GetLatencySamples() const;
 
-   void AssignSettings(EffectSettings& dst, EffectSettings&& src) const;
-
    static EffectSettings MakeSettings();
 
    static void LoadSettings(const CommandParameters& parms, EffectSettings& settings);
    static void SaveSettings(const EffectSettings& settings, CommandParameters& parms);
-   static void LoadUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
+   static OptionalMessage LoadUserPreset(
+      const EffectDefinitionInterface& effect, const RegistryPath& name, EffectSettings& settings);
    static void SaveUserPreset(const EffectDefinitionInterface& effect, const RegistryPath& name, const EffectSettings& settings);
 
-   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection);
+   static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst);
+
+   std::function<void (Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue)> ParamChangedHandler;
 
 private:
 

@@ -32,9 +32,6 @@ class AudioUnitWrapper;
 //! This works as a cached copy of state stored in an AudioUnit, but can also
 //! outlive it
 struct AudioUnitEffectSettings {
-   //! Object from which settings were fetched
-   const AudioUnitWrapper *pSource{};
-
    //! The effect object and all Settings objects coming from it share this
    //! set of strings, which allows Pair below to copy without allocations.
    /*!
@@ -153,8 +150,13 @@ struct AudioUnitWrapper
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    //! May allocate memory, so should be called only in the main thread
-   bool FetchSettings(AudioUnitEffectSettings &settings) const;
+   bool FetchSettings(
+      AudioUnitEffectSettings &settings, bool fetchValues = true) const;
    bool StoreSettings(const AudioUnitEffectSettings &settings) const;
+
+   //! Copy, then clear the optionals in src
+   static bool MoveSettingsContents(
+      AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge);
 
    bool CreateAudioUnit();
 
@@ -187,7 +189,7 @@ public:
    static std::optional<AudioUnitParameterID> ParseKey(const wxString &key);
 
    std::optional<wxString> mName;
-   AudioUnitParameterInfo mInfo{};
+   AudioUnitUtils::ParameterInfo mInfo{};
 
 private:
    // constants

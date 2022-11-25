@@ -36,10 +36,11 @@ public:
       bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
          override;
       bool RealtimeAddProcessor(EffectSettings &settings,
+         EffectOutputs *pOutputs,
          unsigned numChannels, float sampleRate) override;
       bool RealtimeSuspend() override;
       bool RealtimeResume() override;
-      bool RealtimeProcessStart(EffectSettings &settings) override;
+      bool RealtimeProcessStart(MessagePackage &package) override;
       size_t RealtimeProcess(size_t group, EffectSettings &settings,
          const float *const *inBuf, float *const *outBuf, size_t numSamples)
       override;
@@ -75,8 +76,8 @@ public:
      @copydoc StatefulEffectBase::Instance::RealtimeAddProcessor()
      Default implementation does nothing, returns true
    */
-   virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+   virtual bool RealtimeAddProcessor(EffectSettings &settings,
+      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate);
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeSuspend()
@@ -90,11 +91,13 @@ public:
    */
    virtual bool RealtimeResume();
 
+   using MessagePackage = EffectInstance::MessagePackage;
+
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeProcessStart()
      Default implementation does nothing, returns true
    */
-   virtual bool RealtimeProcessStart(EffectSettings &settings);
+   virtual bool RealtimeProcessStart(MessagePackage &package);
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeProcess()

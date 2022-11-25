@@ -194,7 +194,8 @@ struct EffectEcho::Validator
 
 
 std::unique_ptr<EffectUIValidator> EffectEcho::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
@@ -235,6 +236,7 @@ bool EffectEcho::Validator::ValidateUI()
       // pass back the modified settings to the MessageBuffer
 
       EffectEcho::GetSettings(settings) = mSettings;
+      return nullptr;
    }
    );
 

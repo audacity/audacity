@@ -16,7 +16,9 @@ namespace Steinberg
 class NumericTextCtrl;
 class VST3ParametersWindow;
 
-class VST3UIValidator : public EffectUIValidator
+class VST3UIValidator
+   : public wxEvtHandler
+   , public EffectUIValidator
 {
    VST3Wrapper& mWrapper;
    //Used if provided by the plugin and enabled in the settings
@@ -37,6 +39,7 @@ public:
    void OnClose() override;
 
 private:
+   void OnIdle(wxIdleEvent&);
+
    bool TryLoadNativeUI(wxWindow* parent);
-   void OnEffectWindowResize(wxSizeEvent & evt);
 };

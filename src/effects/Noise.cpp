@@ -177,7 +177,8 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectNoise::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 

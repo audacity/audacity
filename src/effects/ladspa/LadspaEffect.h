@@ -50,6 +50,18 @@ struct LadspaEffectSettings {
    std::vector<float> controls;
 };
 
+//! Carry output control port information back to main thread
+struct LadspaEffectOutputs : EffectOutputs {
+   ~LadspaEffectOutputs() override;
+   std::unique_ptr<EffectOutputs> Clone() const override;
+
+   void Assign(EffectOutputs &&src) override;
+
+   // Allocate as many slots as there are ports, although some may correspond
+   // to input and audio ports and remain unused
+   std::vector<float> controls;
+};
+
 class LadspaEffect final
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
@@ -63,8 +75,9 @@ public:
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst,
-      SettingsCopyDirection copyDirection) const override;
+      const EffectSettings &src, EffectSettings &dst) const override;
+
+   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
 
    // ComponentInterface implementation
 
@@ -88,13 +101,14 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
@@ -108,12 +122,12 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    struct Validator;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -124,13 +138,14 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(
+   OptionalMessage LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
    LADSPA_Handle InitInstance(
-      float sampleRate, LadspaEffectSettings &settings) const;
+      float sampleRate, LadspaEffectSettings &settings,
+      LadspaEffectOutputs *pOutputs) const;
    void FreeInstance(LADSPA_Handle handle) const;
 
 private:

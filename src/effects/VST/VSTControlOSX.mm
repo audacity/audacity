@@ -129,11 +129,6 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
 
 void VSTControl::CreateCocoa()
 {
-   if ((mLink->callDispatcher(effCanDo, 0, 0, (void *) "hasCockosViewAsConfig", 0.0) & 0xffff0000) != 0xbeef0000)
-   {
-      return;
-   }
-
    VstRect *rect;
 
    // Some effects like to have us get their rect before opening them.

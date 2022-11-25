@@ -25,6 +25,11 @@ public:
    LV2EffectMeter(wxWindow *parent,
       const LV2ControlPortPtr ctrl, const float &value);
    virtual ~LV2EffectMeter();
+   void Disconnect()
+   {
+      // Stop using mValue, it may be dangling
+      mConnected = false;
+   }
 
 private:
    void OnErase(wxEraseEvent &evt);
@@ -33,6 +38,7 @@ private:
    void OnSize(wxSizeEvent &evt);
 
 private:
+   bool mConnected{ true };
    const LV2ControlPortPtr mControlPort;
    const float &mValue;
    float mLastValue;

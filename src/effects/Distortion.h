@@ -77,8 +77,9 @@ public:
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool DoLoadFactoryPreset(int id);
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
+   OptionalMessage DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -89,7 +90,7 @@ public:
       override;
    bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    size_t RealtimeProcess(size_t group,  EffectSettings &settings,
@@ -99,8 +100,8 @@ public:
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 

@@ -134,6 +134,22 @@ size_t LV2ControlPort::Discretize(float value) const
    return s;
 }
 
+LV2EffectOutputs::~LV2EffectOutputs() = default;
+
+auto LV2EffectOutputs::Clone() const -> std::unique_ptr<EffectOutputs>
+{
+   return std::make_unique<LV2EffectOutputs>(*this);
+}
+
+void LV2EffectOutputs::Assign(EffectOutputs &&src)
+{
+   // Don't really need to modify src
+   const auto &srcValues = static_cast<LV2EffectOutputs&>(src).values;
+   auto &dstValues = values;
+   assert(srcValues.size() == dstValues.size());
+   copy(srcValues.begin(), srcValues.end(), dstValues.data());
+}
+
 LV2Ports::LV2Ports(const LilvPlugin &plug)
 {
    using namespace LV2Symbols;

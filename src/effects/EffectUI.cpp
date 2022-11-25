@@ -165,7 +165,9 @@ public:
    EffectSettingsAccessTee(EffectSettingsAccess &main,
       const std::shared_ptr<EffectSettingsAccess> &pSide = {});
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage) override;
+   void Set(std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -187,12 +189,24 @@ const EffectSettings &EffectSettingsAccessTee::Get() {
    return mpMain->Get();
 }
 
-void EffectSettingsAccessTee::Set(EffectSettings &&settings) {
-   // Move a copy of the given settings into the side
+void EffectSettingsAccessTee::Set(EffectSettings &&settings,
+   std::unique_ptr<Message> pMessage)
+{
+   // Move copies of the given settings and message into the side
    if (auto pSide = mwSide.lock())
-      pSide->Set(EffectSettings{ settings });
-   // Move the given settings through
-   mpMain->Set(std::move(settings));
+      pSide->Set(EffectSettings{ settings },
+         pMessage ? pMessage->Clone() : nullptr);
+   // Move the given settings and message through
+   mpMain->Set(std::move(settings), std::move(pMessage));
+}
+
+void EffectSettingsAccessTee::Set(std::unique_ptr<Message> pMessage)
+{
+   // Move copies of the given message into the side
+   if (auto pSide = mwSide.lock())
+      pSide->Set(pMessage ? pMessage->Clone() : nullptr);
+   // Move the given message through
+   mpMain->Set(std::move(pMessage));
 }
 
 void EffectSettingsAccessTee::Flush()
@@ -228,6 +242,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
 , mHadPriorState{ (pPriorState != nullptr) }
 , mpInstance{ InitializeInstance() }
+, mpOutputs{ pPriorState ? pPriorState->GetOutputs() : nullptr }
 {
    // Assign the out parameter
    pInstance = mpInstance;
@@ -294,6 +309,7 @@ bool EffectUIHost::TransferDataFromWindow()
                seconds);
          }
       }
+      return nullptr;
    });
    mpAccess->Flush();
    return result;
@@ -421,7 +437,7 @@ bool EffectUIHost::Initialize()
 
       // Let the client add things to the panel
       ShuttleGui S1{ uw.get(), eIsCreating };
-      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess);
+      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess, mpOutputs);
       if (!mpValidator)
          return false;
 
@@ -591,8 +607,9 @@ void EffectUIHost::DoCancel()
          // For the destructive effect dialog only
          // Restore effect state from last updated preferences
          mpAccess->ModifySettings([&](EffectSettings &settings) {
-            mEffectUIHost.GetDefinition()
-              .LoadUserPreset(CurrentSettingsGroup(), settings);
+            // ignore failure
+            return mEffectUIHost.GetDefinition().LoadUserPreset(
+               CurrentSettingsGroup(), settings).value_or(nullptr);
          });
       }
       if (IsModal())
@@ -815,8 +832,9 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    int preset = evt.GetId() - kUserPresetsID;
    
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mEffectUIHost.GetDefinition()
-         .LoadUserPreset(UserPresetsGroup(mUserPresets[preset]), settings);
+      // ignore failure
+      return mEffectUIHost.GetDefinition().LoadUserPreset(
+         UserPresetsGroup(mUserPresets[preset]), settings).value_or(nullptr);
    });
    TransferDataToWindow();
    return;
@@ -825,8 +843,9 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mEffectUIHost.GetDefinition()
-         .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
+      //! ignore failure
+      return mEffectUIHost.GetDefinition().LoadFactoryPreset(
+         evt.GetId() - kFactoryPresetsID, settings).value_or(nullptr);
    });
    TransferDataToWindow();
    return;
@@ -934,7 +953,8 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mClient.ImportPresets(settings);
+      // ignore failure
+      return mClient.ImportPresets(settings).value_or(nullptr);
    });
    TransferDataToWindow();
    LoadUserPresets();
@@ -962,7 +982,9 @@ void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
-      mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
+      // ignore failure
+      return mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings)
+         .value_or(nullptr);
    });
    TransferDataToWindow();
    return;
@@ -1292,6 +1314,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
                   ? DialogFactory
                   : nullptr,
                pAccess);
+            return nullptr;
          });
       }
    }

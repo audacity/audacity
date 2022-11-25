@@ -54,7 +54,8 @@ class LV2Validator final : public EffectUIValidator
 public:
    LV2Validator(EffectBase &effect,
       const LilvPlugin &plug, LV2Instance &instance,
-      EffectSettingsAccess &access, double sampleRate,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs,
+      double sampleRate,
       const LV2FeaturesList &features,
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
@@ -84,6 +85,8 @@ public:
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
    uint32_t suil_port_index(const char *port_symbol) override;
 
+   void UpdateControlPortValue(LV2EffectSettings& settings, size_t controlPortIndex, float value);
+
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
    void OnChoice(wxCommandEvent & evt);
@@ -98,6 +101,7 @@ public:
    const LilvPlugin &mPlug;
    const EffectType mType;
    LV2Instance &mInstance;
+   const EffectOutputs *mpOutputs{};
    const double mSampleRate;
    const LV2Ports &mPorts;
    std::unique_ptr<LV2Wrapper> mpWrapper;

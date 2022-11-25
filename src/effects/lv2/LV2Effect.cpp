@@ -182,6 +182,7 @@ EffectSettings LV2Effect::MakeSettings() const
 {
    auto result = EffectSettings::Make<LV2EffectSettings>();
    auto &settings = GetSettings(result);
+   // This may waste a bit of space on output ports, but not likely much
    settings.values.reserve(mPorts.mControlPorts.size());
    for (auto &controlPort : mPorts.mControlPorts) {
       auto &value = settings.values.emplace_back();
@@ -191,8 +192,7 @@ EffectSettings LV2Effect::MakeSettings() const
 }
 
 bool LV2Effect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst,
-   SettingsCopyDirection copyDirection) const
+   const EffectSettings &src, EffectSettings &dst) const
 {
    auto &srcControls = GetSettings(src).values;
    auto &dstControls = GetSettings(dst).values;
@@ -214,13 +214,11 @@ bool LV2Effect::CopySettingsContents(
    if (portValuesCount != portsCount)
       return false;
 
-   const auto copyOutputs = copyDirection == SettingsCopyDirection::WorkerToMain;
-   
    size_t portIndex {};
 
    for (auto& port : controlPorts)
    {
-      if (port->mIsInput || copyOutputs)
+      if (port->mIsInput)
          dstControls[portIndex] = srcControls[portIndex];
 
       ++portIndex;
@@ -229,6 +227,15 @@ bool LV2Effect::CopySettingsContents(
    // Ignore mpState
 
    return true;
+}
+
+auto LV2Effect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
+{
+   auto result = std::make_unique<LV2EffectOutputs>();
+   auto &values = result->values;
+   // This may waste a bit of space on input ports, but not likely much
+   values.resize(mPorts.mControlPorts.size());
+   return result;
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
@@ -310,7 +317,8 @@ bool LV2Effect::LoadSettings(
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
@@ -318,7 +326,9 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    auto pWrapper =
-      myInstance.MakeWrapper(settings, mProjectRate, true);
+      // Output port connection isn't needed for fancy UI wrapper.  Its
+      // features are needed to make the suil_instance
+      myInstance.MakeWrapper(settings, mProjectRate, nullptr);
    if (!pWrapper) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -335,7 +345,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    auto result = std::make_unique<LV2Validator>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
-      access, mProjectRate, mFeatures, mPorts, parent, useGUI);
+      access, pOutputs, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
    if (result->mUseGUI)
       result->mUseGUI = result->BuildFancy(move(pWrapper), settings);
@@ -358,7 +368,7 @@ bool LV2Effect::CloseUI()
    return true;
 }
 
-bool LV2Effect::LoadUserPreset(
+OptionalMessage LV2Effect::LoadUserPreset(
    const RegistryPath &name, EffectSettings &settings) const
 {
    return LoadParameters(name, settings);
@@ -400,29 +410,30 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage
+LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
-      return false;
+      return {};
 
    LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
-      return false;
+      return {};
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
-   if (LilvStatePtr state{
+   LilvStatePtr state{
       lilv_state_new_from_world(gWorld,
          mFeatures.URIDMapFeature(), preset.get())
-   }){
-      auto &mySettings = GetSettings(settings);
-      mPorts.EmitPortValues(*state, mySettings);
-      // Save the state, for whatever might not be contained in port values
-      mySettings.mpState = move(state);
-      return true;
-   }
-   else
-      return false;
+   };
+   if (!state)
+      return {};
+
+   auto &mySettings = GetSettings(settings);
+   mPorts.EmitPortValues(*state, mySettings);
+   // Save the state, for whatever might not be contained in port values
+   mySettings.mpState = move(state);
+   return { nullptr };
 }
 
 bool LV2Effect::CanExportPresets()
@@ -434,8 +445,9 @@ void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LV2Effect::ImportPresets(EffectSettings &)
+OptionalMessage LV2Effect::ImportPresets(EffectSettings &)
 {
+   return { nullptr };
 }
 
 bool LV2Effect::HasOptions()
@@ -452,17 +464,19 @@ void LV2Effect::ShowOptions()
 // LV2Effect Implementation
 // ============================================================================
 
-bool LV2Effect::LoadParameters(
+OptionalMessage LV2Effect::LoadParameters(
    const RegistryPath &group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
-      return false;
+      return {};
    CommandParameters eap;
    if (!eap.SetParameters(parms))
-      return false;
-   return LoadSettings(eap, settings);
+      return {};
+   if (!LoadSettings(eap, settings))
+      return {};
+   return { nullptr };
 }
 
 bool LV2Effect::SaveParameters(

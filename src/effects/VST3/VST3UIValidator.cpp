@@ -14,7 +14,7 @@
 #endif
 
 VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
-   : EffectUIValidator(effect, access), mWrapper(wrapper)
+   : EffectUIValidator(effect, access), mWrapper(wrapper), mParent(parent)
 {
    if(effect.GetType() == EffectTypeGenerate)
    {
@@ -54,61 +54,55 @@ VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectB
          *mWrapper.mComponentHandler
       );
    }
+
+   mWrapper.ParamChangedHandler =
+      [this](Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue value) {
+         Publish({ static_cast<size_t>(id), static_cast<float>(value) });
+      };
+   
    mWrapper.BeginParameterEdit(mAccess);
+
+   Bind(wxEVT_IDLE, &VST3UIValidator::OnIdle, this);
+
+   mParent->PushEventHandler(this);
 }
 
-VST3UIValidator::~VST3UIValidator() = default;
+VST3UIValidator::~VST3UIValidator()
+{
+   mWrapper.ParamChangedHandler = {};
+}
+
+void VST3UIValidator::OnIdle(wxIdleEvent& evt)
+{
+   evt.Skip();
+   if(!mWrapper.IsActive())
+   {
+      mAccess.ModifySettings([this](EffectSettings& settings)
+      {
+         bool hasChanges{false};
+         mWrapper.FlushParameters(settings, &hasChanges);
+         if(hasChanges)
+            mWrapper.StoreSettings(settings);
+         return nullptr;
+      });
+   }
+}
+
 
 bool VST3UIValidator::TryLoadNativeUI(wxWindow* parent)
 {
    using namespace Steinberg;
 
    if(const auto view = owned (mWrapper.mEditController->createView (Vst::ViewType::kEditor))) 
-   {  
-      parent->Bind(wxEVT_SIZE, &VST3UIValidator::OnEffectWindowResize, this);
-
-      ViewRect defaultSize;
-      if(view->getSize(&defaultSize) == kResultOk)
-      {
-         if(view->canResize() == Steinberg::kResultTrue)
-         {
-            ViewRect minSize {0, 0, parent->GetMinWidth(), parent->GetMinHeight()};
-            ViewRect maxSize {0, 0, 10000, 10000};
-            if(view->checkSizeConstraint(&minSize) != kResultOk)
-               minSize = defaultSize;
-
-            if(view->checkSizeConstraint(&maxSize) != kResultOk)
-               maxSize = defaultSize;
-
-            //No need to accommodate the off-by-one error with Steinberg::ViewRect
-            //as we do it with wxRect
-
-            if(defaultSize.getWidth() < minSize.getWidth())
-               defaultSize.right = defaultSize.left + minSize.getWidth();
-            if(defaultSize.getWidth() > maxSize.getWidth())
-               defaultSize.right = defaultSize.left + maxSize.getWidth();
-
-            if(defaultSize.getHeight() < minSize.getHeight())
-               defaultSize.bottom = defaultSize.top + minSize.getHeight();
-            if(defaultSize.getHeight() > maxSize.getHeight())
-               defaultSize.bottom = defaultSize.top + maxSize.getHeight();
-
-            parent->SetMinSize({minSize.getWidth(), minSize.getHeight()});
-            parent->SetMaxSize({maxSize.getWidth(), maxSize.getHeight()});
-         }
-         else
-         {
-            parent->SetMinSize({defaultSize.getWidth(), defaultSize.getHeight()});
-            parent->SetMaxSize(parent->GetMinSize());
-         }
-
-         parent->SetSize({defaultSize.getWidth(), defaultSize.getHeight()});
-      }
+   {
+      //Workaround: override default min size set by EffectUIHost::Initialize()
+      parent->SetMinSize(wxDefaultSize);
+      //IPlugFrame::resizeView is supposed to call IPlugView::setSize
+      //in the same call stack, assign before frame is attached
+      mPlugView = view;
 
 #if __WXGTK__
-      mPlugView = view;
       safenew internal::x11::SocketWindow(parent, wxID_ANY, view);
-      return true;
 #else
 
       static const auto platformType =
@@ -123,12 +117,13 @@ bool VST3UIValidator::TryLoadNativeUI(wxWindow* parent)
       view->setFrame(plugFrame);
       if(view->attached(parent->GetHandle(), platformType) != kResultOk)
          return false;
-
-      mPlugView = view;
       mPlugFrame = plugFrame;
 
-      return true;
+      ViewRect initialSize;
+      if(view->getSize(&initialSize) == kResultOk)
+         plugFrame->init(view.get(), &initialSize);
 #endif
+      return true;
    }
    return false;
 }
@@ -145,6 +140,7 @@ bool VST3UIValidator::ValidateUI()
          settings.extra.SetDuration(mDuration->GetValue());
       mWrapper.FlushParameters(settings);
       mWrapper.StoreSettings(settings);
+      return nullptr;
    });
 
    return true;
@@ -153,6 +149,8 @@ bool VST3UIValidator::ValidateUI()
 void VST3UIValidator::OnClose()
 {
    using namespace Steinberg;
+
+   mParent->PopEventHandler();
 
    mPlainUI = nullptr;
    mParent = nullptr;
@@ -165,25 +163,29 @@ void VST3UIValidator::OnClose()
    }
 
    mWrapper.EndParameterEdit();
-
-   //Make sure all previous changes has been processed by the worker
-   mAccess.Flush();
+   
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mDuration != nullptr)
          settings.extra.SetDuration(mDuration->GetValue());
       //Flush changes if there is no processing performed at the moment
       mWrapper.FlushParameters(settings);
       mWrapper.StoreSettings(settings);
+      return nullptr;
    });
    //Make sure that new state has been written to the caches...
    mAccess.Flush();
+
+   mWrapper.ParamChangedHandler = {};
 
    EffectUIValidator::OnClose();
 }
 
 bool VST3UIValidator::UpdateUI()
 {
-   mAccess.ModifySettings([&](EffectSettings& settings) { mWrapper.FetchSettings(settings); });
+   mAccess.ModifySettings([&](EffectSettings& settings) {
+      mWrapper.FetchSettings(settings);
+      return nullptr;
+   });
    
    if (mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
@@ -192,33 +194,4 @@ bool VST3UIValidator::UpdateUI()
    mAccess.Flush();
 
    return true;
-}
-
-void VST3UIValidator::OnEffectWindowResize(wxSizeEvent& evt)
-{
-   using namespace Steinberg;
-
-   if(!mPlugView)
-      return;
-
-   const auto window = static_cast<wxWindow*>(evt.GetEventObject());
-   const auto windowSize = evt.GetSize();
-
-   {
-      //Workaround to prevent dialog window resize when
-      //plugin window reaches its maximum size
-      auto root = wxGetTopLevelParent(window);
-      wxSize maxRootSize = root->GetMaxSize();
-
-      //remember the current dialog size as its new maximum size
-      if(window->GetMaxWidth() != -1 && windowSize.GetWidth() >= window->GetMaxWidth())
-         maxRootSize.SetWidth(root->GetSize().GetWidth());
-      if(window->GetMaxHeight() != -1 && windowSize.GetHeight() >= window->GetMaxHeight())
-         maxRootSize.SetHeight(root->GetSize().GetHeight());
-      root->SetMaxSize(maxRootSize);
-   }
-   
-   ViewRect plugViewSize { 0, 0, windowSize.x, windowSize.y };
-   mPlugView->checkSizeConstraint(&plugViewSize);
-   mPlugView->onSize(&plugViewSize);
 }

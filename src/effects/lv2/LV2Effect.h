@@ -64,13 +64,14 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
@@ -81,13 +82,13 @@ public:
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -97,10 +98,11 @@ public:
 private:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst,
-      SettingsCopyDirection copyDirection) const override;
+      const EffectSettings &src, EffectSettings &dst) const override;
 
-   bool LoadParameters(
+   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
+
+   OptionalMessage LoadParameters(
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;

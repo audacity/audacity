@@ -176,6 +176,7 @@ bool EffectReverb::Validator::ValidateUI()
          // pass back the modified settings to the MessageBuffer
 
          EffectReverb::GetSettings(settings) = mSettings;
+         return nullptr;
       }
    );
 
@@ -208,7 +209,7 @@ struct EffectReverb::Instance
       return true;
    }
 
-   bool RealtimeAddProcessor(EffectSettings& settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *,
       unsigned numChannels, float sampleRate) override
    {
       EffectReverbState slave;
@@ -443,21 +444,23 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
 }
 
 
-bool EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage
+EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
-      return false;
+      return {};
    }
 
    EffectReverb::GetSettings(settings) = FactoryPresets[id].preset;
 
-   return true;
+   return { nullptr };
 }
 
 // Effect implementation
 std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
-   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
+   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

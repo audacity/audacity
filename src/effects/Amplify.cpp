@@ -150,13 +150,14 @@ size_t EffectAmplify::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectAmplify::LoadFactoryDefaults(EffectSettings &) const
+OptionalMessage
+EffectAmplify::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults();
+   return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectAmplify::DoLoadFactoryDefaults()
+OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    Init();
 
@@ -173,7 +174,7 @@ bool EffectAmplify::DoLoadFactoryDefaults()
    mCanClip = false;
 
    ClampRatio();
-   return true;
+   return { nullptr };
 }
 
 // Effect implementation
@@ -206,7 +207,8 @@ void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
 }
 
 std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 

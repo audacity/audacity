@@ -24,6 +24,7 @@
 #include <unordered_map>
 #include <optional>
 #include <mutex>
+#include <thread>
 
 class wxSizerItem;
 class wxSlider;
@@ -83,35 +84,56 @@ struct VSTEffectSettings
    // These are saved in the Config and checked against when loading a preset, to make sure
    // that we are loading a Config  which is compatible.
    //
-   int32_t mUniqueID;
-   int32_t mVersion;
-   int32_t mNumParams;
+   int32_t mUniqueID{};
+   int32_t mVersion{};
+   int32_t mNumParams{};
 
    // When loading a preset, the preferred way is to use the chunk; when not present in
    // the Config or failing to load, we fall back to loading single parameters (ID, value) pairs.
    //
    // It looks like a plugin might not support this (if their effFlagsProgramChunks bit is off)
-   // this is why it is made optional.
+   // If not, then hold an empty vector
    //
-   std::optional<wxString> mChunk;
+   std::vector<char> mChunk;
 
    // Fallback data used when the chunk is not available.
-   std::unordered_map<wxString, double> mParamsMap;
+   std::unordered_map<wxString, std::optional<double> > mParamsMap;
 };
 
 
-struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
+struct VSTEffectUIWrapper
 {
-   explicit VSTEffectWrapper(const PluginPath& path)
-      : mPath(path)
-   {}
+   virtual void NeedIdle();
+   virtual void SizeWindow(int w, int h);
+   virtual void Automate(int index, float value);
+};
 
-   ~VSTEffectWrapper()
+
+struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VSTEffectUIWrapper
+{
+   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
    {
-      ResetModuleAndHandle();
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
    }
 
+   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VSTEffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
+   explicit VSTEffectWrapper(const PluginPath& path)
+      : mPath(path)
+      , mMainThreadId{ std::this_thread::get_id() }
+   {}
+
+   ~VSTEffectWrapper();
+
    AEffect* mAEffect = nullptr;
+   std::thread::id mMainThreadId;
 
    intptr_t callDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) override;
@@ -142,7 +164,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    void ForEachParameter(ParameterVisitor visitor) const;
 
-   bool FetchSettings(VSTEffectSettings& vst3Settings) const;
+   bool FetchSettings(VSTEffectSettings& vst3Settings, bool doFetch=true) const;
 
    bool StoreSettings(const VSTEffectSettings& vst3settings) const;
 
@@ -213,7 +235,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    int      mMidiOuts{ 0 };
    bool     mAutomatable;
 
-   virtual void Unload() = 0;
+   void Unload();
 
    void ResetModuleAndHandle();
 
@@ -272,16 +294,18 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    // Some of the methods called by the callback make sense for the Effect:
    //
    // - All GUI-related stuff 
-   virtual void NeedIdle();
+   
    virtual void UpdateDisplay();
-   virtual void SizeWindow(int w, int h);
-
-   // - Automate is called by the callback whenever a control on the GUI is moved
-   virtual void Automate(int index, float value);
+   
 
    // Some other methods called by the callback make sense for Instances:
    void         SetBufferDelay(int samples);
 
+
+   // Make message carrying all the information in settings, including chunks
+   // This is called only on the main thread
+   std::unique_ptr<EffectInstance::Message>
+      MakeMessageFS(const VSTEffectSettings& settings) const;
 };
 
 class VSTEffectInstance;
@@ -294,7 +318,7 @@ using VSTInstanceArray = std::vector < std::unique_ptr<VSTEffectInstance> >;
 ///////////////////////////////////////////////////////////////////////////////
 
 
-DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
+wxDECLARE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
@@ -337,14 +361,15 @@ class VSTEffect final
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
    bool DoLoadFactoryPreset(int id);
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
@@ -352,22 +377,21 @@ class VSTEffect final
 
    bool InitializePlugin();
 
-   bool TransferDataToWindow(const EffectSettings& settings) override;
 
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
+   
    bool CloseUI() override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -375,64 +399,27 @@ class VSTEffect final
    // VSTEffect implementation
 
 
-   void OnTimer();
+   
 
    EffectSettings MakeSettings() const override;
 
-   void Automate(int index, float value) override;
-
-   VSTEffectSettings mSettings;  // temporary, until the effect is really stateless
-   std::mutex mSettingsMutex;    // to avoid read/write races on mSettings - this is needed temporarily
-                                 // and will be removed when the Validator will be implemented
-
-   //! This function will be rewritten when the effect is really stateless
-   VSTEffectSettings& GetSettings(EffectSettings&) const
-   {
-      return const_cast<VSTEffect*>(this)->mSettings;
-   }
-
-   //! This function will be rewritten when the effect is really stateless
-   const VSTEffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
-
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-   */
-
 protected:
-   void NeedIdle() override;
+   
    void UpdateDisplay() override;
-   void SizeWindow(int w, int h) override;
+   
 
 private:
 
-   VSTEffectValidator* mValidator{};
 
    // Plugin loading and unloading
    
-   void Unload() override;
    std::vector<int> GetEffectIDs();
 
-   // Parameter loading and saving
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings) const;
-   bool SaveParameters(
-       const RegistryPath & group, const EffectSettings &settings) const;
-
-
    // UI
-   void OnSlider(wxCommandEvent & evt);
-   void OnSizeWindow(wxCommandEvent & evt);
+   
+   
    void OnUpdateDisplay(wxCommandEvent & evt);
 
-   void RemoveHandler();
 
    void OnProgram(wxCommandEvent & evt);
    void OnProgramText(wxCommandEvent & evt);
@@ -440,47 +427,19 @@ private:
    void OnSave(wxCommandEvent & evt);
    void OnSettings(wxCommandEvent & evt);
 
-   void BuildPlain(EffectSettingsAccess &access);
-   void BuildFancy(EffectInstance& instance);
-   wxSizer *BuildProgramBar();
-   void RefreshParameters(int skip = -1) const;
-
-   // Utility methods
    
-   void NeedEditIdle(bool state);
- 
+   wxSizer *BuildProgramBar();
 
  private:
 
    PluginID mID;
-   
-   bool mWantsEditIdle{false};
-   bool mWantsIdle{ false };
-   
-   int mTimerGuard{0};
-   std::unique_ptr<VSTEffectTimer> mTimer;
-   
-
-   // UI
-   wxWeakRef<wxDialog> mDialog;
-   wxWindow* mParent;
+     
    wxSizerItem* mContainer{};
    bool mGui{false};
-
-   VSTControl *mControl;
-
-   NumericTextCtrl *mDuration;
-   ArrayOf<wxStaticText *> mNames;
-   ArrayOf<wxSlider *> mSliders;
-   ArrayOf<wxStaticText *> mDisplays;
-   ArrayOf<wxStaticText *> mLabels;
-
    
-   DECLARE_EVENT_TABLE()
-
    friend class VSTEffectsModule;
 
-   mutable bool mInitialFetchDone{ false };
+   //mutable bool mInitialFetchDone{ false };
 };
 
 class VSTEffectsModule final : public PluginProvider
@@ -546,12 +505,12 @@ public:
 
    bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
       override;
-   bool RealtimeAddProcessor(EffectSettings& settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings& settings) override;
+   bool RealtimeProcessStart(MessagePackage& package) override;
    size_t RealtimeProcess(size_t group, EffectSettings& settings,
       const float* const* inbuf, float* const* outbuf, size_t numSamples)
       override;
@@ -579,28 +538,24 @@ public:
 
    size_t mBlockSize{ 8192 };
 
+   std::unique_ptr<Message> MakeMessage() const override;
+
+   std::unique_ptr<Message> MakeMessage(int id, double value) const;
+
+   // VSTEffectUIWrapper overrides
+
+   void Automate(int index, float value) override;
+   void NeedIdle()                       override;
+   void SizeWindow(int w, int h)         override;
+
+   // The overrides above will forward calls to them to the corresponding
+   // overrides in the Validator which owns the instance - this sets it.
+   void SetOwningValidator(VSTEffectUIWrapper* vi);
+
 private:
 
    void callProcessReplacing(
       const float* const* inputs, float* const* outputs, int sampleframes);
-
-   VSTEffect& GetEffect() const
-   {
-      // Tolerate const_cast in this class while it sun-sets
-      return static_cast<VSTEffect&>(
-         const_cast<PerTrackEffect&>(mProcessor));
-   }
-
-   VSTEffectSettings& GetSettings(EffectSettings& settings) const
-   {
-      return GetEffect().GetSettings(settings);
-   }
-
-   const VSTEffectSettings& GetSettings(const EffectSettings& settings) const {
-      return GetEffect().GetSettings(settings);
-   }
-
-   void Unload() override;
 
    VSTInstanceArray mSlaves;
 
@@ -609,23 +564,92 @@ private:
    size_t mUserBlockSize{ mBlockSize };
 
    bool mReady{ false };
+
+   bool mRecruited{ false };
+
+   VSTEffectUIWrapper* mpOwningValidator{};
 };
 
 
-class VSTEffectValidator final : public DefaultEffectUIValidator
+class VSTEffectValidator final
+   : public wxEvtHandler
+   , public EffectUIValidator
+   , public VSTEffectUIWrapper
 {
 public:
+
     VSTEffectValidator(VSTEffectInstance&       instance,
                        EffectUIClientInterface& effect,
                        EffectSettingsAccess&    access,
-                       wxWindow*                pParent);
+                       wxWindow*                pParent,
+                       int                      numParams
+                      );
 
    ~VSTEffectValidator() override;
 
-   VSTEffectInstance& GetInstance();
+   VSTEffectInstance& GetInstance() const;
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+
+   void OnClose() override;
+
+   void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
+   void BuildFancy(EffectInstance& instance);
+
+   void OnTimer();
+
+   std::unique_ptr<VSTEffectTimer> mTimer;   
+
+   void RefreshParameters(int skip = -1) const;
+
+   void Automate(int index, float value) override;
+
+   void OnSlider(wxCommandEvent& evt);    
+
+   int ShowDialog(bool nonModal);
+
+   bool IsGraphicalUI() override;
+
+protected:
+   void SizeWindow(int w, int h) override;
 
 private:
+   void NotifyParameterChanged(int index, float value);
+   void OnIdle(wxIdleEvent &evt);
+
    VSTEffectInstance& mInstance;
+
+   bool FetchSettingsFromInstance(EffectSettings& settings);
+   bool StoreSettingsToInstance(const EffectSettings& settings);
+   void NeedEditIdle(bool state);
+   void NeedIdle() override;
+
+   void OnSizeWindow(wxCommandEvent& evt);
+
+   int  mTimerGuard{ 0 };
+
+   bool mWantsEditIdle{ false };
+   bool mWantsIdle{ false };
+
+   // Remembers last slider movements until idle time
+   std::vector<std::pair<int, double>> mLastMovements{};
+
+   ArrayOf<wxStaticText*> mNames;
+   ArrayOf<wxSlider*> mSliders;
+   ArrayOf<wxStaticText*> mDisplays;
+   ArrayOf<wxStaticText*> mLabels;
+   NumericTextCtrl* mDuration;
+
+   wxWindow* mParent;
+   wxWeakRef<wxDialog> mDialog;
+   
+   VSTControl* mControl;
+
+   // Mapping from parameter ID to string
+   std::vector<wxString> mParamNames;
+
+   int mNumParams{ 0 };
 };
 
 

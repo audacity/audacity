@@ -122,6 +122,7 @@ void AudioSetupToolBar::DeinitChildren()
 
 void AudioSetupToolBar::Populate()
 {
+   MakeButtonBackgroundsSmall();
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeAudioSetupButton();
 
@@ -152,42 +153,16 @@ void AudioSetupToolBar::Repaint(wxDC* dc)
 
 void AudioSetupToolBar::MakeAudioSetupButton()
 {
-   bool bUseAqua = false;
-
-#ifdef EXPERIMENTAL_THEME_PREFS
-   gPrefs->Read(wxT("/GUI/ShowMac"), &bUseAqua, false);
-#endif
-
-#ifdef USE_AQUA_THEME
-   bUseAqua = !bUseAqua;
-#endif
-
-   const auto size = theTheme.ImageSize(bmpRecoloredSetupUpSmall);
-
-   if (bUseAqua) {
-      MakeMacRecoloredImageSize(bmpRecoloredSetupUpSmall, bmpMacUpButtonSmall, size);
-      MakeMacRecoloredImageSize(bmpRecoloredSetupDownSmall, bmpMacDownButtonSmall, size);
-      MakeMacRecoloredImageSize(bmpRecoloredSetupUpHiliteSmall, bmpMacHiliteUpButtonSmall, size);
-      MakeMacRecoloredImageSize(bmpRecoloredSetupHiliteSmall, bmpMacHiliteButtonSmall, size);
-   }
-   else {
-      MakeRecoloredImageSize(bmpRecoloredSetupUpSmall, bmpUpButtonSmall, size);
-      MakeRecoloredImageSize(bmpRecoloredSetupDownSmall, bmpDownButtonSmall, size);
-      MakeRecoloredImageSize(bmpRecoloredSetupUpHiliteSmall, bmpHiliteUpButtonSmall, size);
-      MakeRecoloredImageSize(bmpRecoloredSetupHiliteSmall, bmpHiliteButtonSmall, size);
-   }
-
    mAudioSetup = safenew AButton(this, ID_AUDIO_SETUP_BUTTON);
    //i18n-hint: Audio setup button text, keep as short as possible
    mAudioSetup->SetLabel(XO("Audio Setup"));
    mAudioSetup->SetButtonType(AButton::FrameButton);
-   mAudioSetup->SetButtonToggles(true);
    mAudioSetup->SetImages(
-      theTheme.Image(bmpRecoloredSetupUpSmall),
-      theTheme.Image(bmpRecoloredSetupUpHiliteSmall),
-      theTheme.Image(bmpRecoloredSetupDownSmall),
-      theTheme.Image(bmpRecoloredSetupHiliteSmall),
-      theTheme.Image(bmpRecoloredSetupUpSmall));
+      theTheme.Image(bmpRecoloredUpSmall),
+      theTheme.Image(bmpRecoloredUpHiliteSmall),
+      theTheme.Image(bmpRecoloredDownSmall),
+      theTheme.Image(bmpRecoloredHiliteSmall),
+      theTheme.Image(bmpRecoloredUpSmall));
    mAudioSetup->SetIcon(theTheme.Image(bmpSetup));
    mAudioSetup->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
 }

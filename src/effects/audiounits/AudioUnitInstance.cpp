@@ -18,6 +18,43 @@
 #include "AudacityException.h"
 #include <wx/log.h>
 
+namespace {
+struct AudioUnitMessage : EffectInstance::Message {
+   explicit AudioUnitMessage(AudioUnitEffectSettings settings)
+      : settings{ std::move(settings) }
+   {}
+   ~AudioUnitMessage() override;
+   std::unique_ptr<Message> Clone() const override;
+   void Assign(Message &&src) override;
+   void Merge(Message &&src) override;
+
+   AudioUnitEffectSettings settings;
+};
+}
+
+AudioUnitMessage::~AudioUnitMessage() = default;
+
+auto AudioUnitMessage::Clone() const -> std::unique_ptr<Message>
+{
+   return std::make_unique<AudioUnitMessage>(*this);
+}
+
+void AudioUnitMessage::Assign(Message &&src)
+{
+   auto &dstSettings = this->settings;
+   auto &srcSettings = static_cast<AudioUnitMessage&>(src).settings;
+   AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, false);
+}
+
+void AudioUnitMessage::Merge(Message &&src)
+{
+   auto &dstSettings = this->settings;
+   auto &srcSettings = static_cast<AudioUnitMessage&>(src).settings;
+   AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, true);
+}
+
 AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    AudioComponent component, Parameters &parameters,
    const wxString &identifier,
@@ -190,7 +227,7 @@ bool AudioUnitInstance::RealtimeInitialize(
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
    if (!mRecruited) {
       // Assign self to the first processor
@@ -245,19 +282,51 @@ bool AudioUnitInstance::RealtimeResume()
    return true;
 }
 
-bool AudioUnitInstance::RealtimeProcessStart(EffectSettings &settings)
+auto AudioUnitInstance::MakeMessage() const -> std::unique_ptr<Message>
 {
-   auto &mySettings = GetSettings(settings);
-   // Store only into the AudioUnit that was not also the source of the fetch
-   // in the main thread.  Not only for efficiency, but also because controls
-   // of at least one effect (AUGraphicEQ) are known to misbehave otherwise.
+   // Like AudioUnitEffect::MakeSettings, except it only allocates map entries
+   // containing nullopt
+   AudioUnitEffectSettings settings;
+   FetchSettings(settings, false);
+   return std::make_unique<AudioUnitMessage>(std::move(settings));
+}
+
+auto AudioUnitInstance::
+MakeMessage(AudioUnitParameterID id, AudioUnitParameterValue value) const
+   -> std::unique_ptr<Message>
+{
+   AudioUnitEffectSettings settings;
+   settings.values[id].emplace(wxString{}, value);
+   return std::make_unique<AudioUnitMessage>(std::move(settings));
+}
+
+bool AudioUnitInstance::RealtimeProcessStart(MessagePackage &package)
+{
+   if (!package.pMessage)
+      return true;
+   auto &values = static_cast<AudioUnitMessage*>(package.pMessage)
+      ->settings.values;
    auto storeSettings = [&](AudioUnitInstance &instance){
-      if (&instance != mySettings.pSource)
-         instance.StoreSettings(mySettings);
+      for (auto &[ID, oPair] : values)
+         if (oPair.has_value()) {
+            auto value = oPair->second;
+            if (AudioUnitSetParameter(mUnit.get(), ID,
+               kAudioUnitScope_Global, 0, value, 0)) {
+               // Probably failed because of an invalid parameter when
+               // a plug-in is in a certain mode that doesn't contain
+               // the parameter.  Ignore the failure
+            }
+         }
    };
    storeSettings(*this);
    for (auto &pSlave : mSlaves)
       storeSettings(*pSlave);
+
+   // Consume the settings change so we don't repeat setting of parameters
+   // until more inter-thread messages arrive
+   for (auto &[_, oPair] : values)
+      oPair.reset();
+
    return true;
 }
 

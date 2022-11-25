@@ -16,6 +16,7 @@
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
 #include "AUControl.h"
+#include <wx/app.h>
 #include <wx/sizer.h>
 #include "../../ShuttleGui.h"
 #include "../../widgets/wxPanelWrapper.h"
@@ -33,6 +34,8 @@ AudioUnitValidator::AudioUnitValidator(CreateToken,
    // Make the settings of the instance up to date before using it to
    // build a UI
    StoreSettingsToInstance(mAccess.Get());
+
+   wxTheApp->Bind(wxEVT_IDLE, &AudioUnitValidator::OnIdle, this);
 }
 
 AudioUnitValidator::~AudioUnitValidator()
@@ -107,6 +110,7 @@ bool AudioUnitValidator::ValidateUI()
          settings.extra.SetDuration(mDuration->GetValue());
 #endif
       FetchSettingsFromInstance(settings);
+      return nullptr;
    });
    return true;
 }
@@ -199,10 +203,26 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
 {
    // Modify the instance and its workers
    mInstance.EventListener(inEvent, inParameterValue);
-   // Fetch changed settings and send them to the framework
-   // (Maybe we need a way to fetch just one changed setting, but this is
-   // the easy way to write it)
-   ValidateUI();
+
+   if (inEvent->mEventType == kAudioUnitEvent_ParameterValueChange) {
+      constexpr AudioUnitParameterValue epsilon = 1e-6;
+
+      auto it = mParameterValues.find(inEvent->mArgument.mParameter.mParameterID);
+
+      // When the UI is opened - EventListener is called for each parameter
+      // with the current value.
+      if (it == mParameterValues.end())
+         mParameterValues.insert(std::make_pair(inEvent->mArgument.mParameter.mParameterID, inParameterValue));
+      else if (std::abs(it->second - inParameterValue) > epsilon)
+      {
+        it->second = inParameterValue;
+        Publish({inEvent->mArgument.mParameter.mParameterID, inParameterValue});
+      }
+
+      const auto ID = inEvent->mArgument.mParameter.mParameterID;
+      mToUpdate.emplace_back(ID, inParameterValue);
+      mAccess.Set(mInstance.MakeMessage(ID, inParameterValue));
+   }
 }
 
 // static
@@ -212,5 +232,22 @@ void AudioUnitValidator::EventListenerCallback(void *inCallbackRefCon,
 {
    static_cast<AudioUnitValidator *>(inCallbackRefCon)
       ->EventListener(inEvent, inParameterValue);
+}
+
+void AudioUnitValidator::OnIdle(wxIdleEvent &evt)
+{
+   evt.Skip();
+   if (mToUpdate.size()) {
+      mAccess.ModifySettings([&](EffectSettings &settings){
+         // Reassign settings, so that there is "stickiness" when dialog is
+         // closed and opened again
+         auto &mySettings = AudioUnitInstance::GetSettings(settings);
+         for (auto [ID, value] : mToUpdate)
+            if (auto &pair = mySettings.values[ID]; pair.has_value())
+               pair->second = value;
+         return nullptr;
+      });
+      mToUpdate.clear();
+   }
 }
 #endif

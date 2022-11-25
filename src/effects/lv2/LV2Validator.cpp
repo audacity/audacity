@@ -89,13 +89,15 @@ void LV2Validator::UI::Destroy()
 
 LV2Validator::LV2Validator(EffectBase &effect,
    const LilvPlugin &plug, LV2Instance &instance,
-   EffectSettingsAccess &access, double sampleRate,
+   EffectSettingsAccess &access, const EffectOutputs *pOutputs,
+   double sampleRate,
    const LV2FeaturesList &features,
    const LV2Ports &ports, wxWindow *parent, bool useGUI
 )  : EffectUIValidator{ effect, access }
    , mPlug{ plug }
    , mType{ effect.GetType() }
    , mInstance{ instance }
+   , mpOutputs{ pOutputs }
    , mSampleRate{ sampleRate }
    , mPorts{ ports }
    , mPortUIStates{ instance.GetPortStates(), ports }
@@ -136,12 +138,27 @@ bool LV2Validator::ValidateUI()
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
+      return nullptr;
    });
    return true;
 }
 
 void LV2Validator::Disconnect()
 {
+   // Disconnect the plain UI output meters
+   if (!mPlainUIControls.empty()) {
+      size_t p = 0;
+      for (auto &port : mPorts.mControlPorts) {
+         if (!port->mIsInput)
+            if (auto &pMeter = mPlainUIControls[p].meter) {
+               pMeter->Disconnect();
+               pMeter = nullptr;
+            }
+         ++p;
+      }
+   }
+   // The idle event handler for the fancy UI output must disconnect too
+   mpOutputs = nullptr;
    if (mParent) {
       mParent->PopEventHandler();
       mParent = nullptr;
@@ -469,8 +486,13 @@ bool LV2Validator::BuildPlain(EffectSettingsAccess &access)
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
 
+               static float sink;
+               const auto pOutputValues =
+                  static_cast<const LV2EffectOutputs*>(mpOutputs);
+               const auto pValue =
+                  pOutputValues ? &pOutputValues->values[p] : &sink;
                //! Captures a const reference to value!
-               auto m = safenew LV2EffectMeter(w, port, value);
+               auto m = safenew LV2EffectMeter(w, port, *pValue);
                gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
                ctrl.meter = m;
 
@@ -683,12 +705,33 @@ void LV2Validator::SetSlider(
    ctrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
+void LV2Validator::UpdateControlPortValue(
+   LV2EffectSettings& settings, size_t controlPortIndex, float value)
+{
+   const auto currentValue = settings.values[controlPortIndex];
+
+   // LV2 implementation allows to edit the values
+   // using text boxes too. Provide sufficiently small epsilon
+   // to distinguish between the values.
+   // (for example, conversion from the text representation
+   // is always lossy, so direct comparison of the values
+   // is not possible, nor should it be used for float values)
+   const auto epsilon = 1e-5f;
+
+   if (std::abs(currentValue - value) < epsilon)
+      return;
+
+   settings.values[controlPortIndex] = value;
+   Publish({ mPorts.mControlPorts[controlPortIndex]->mIndex, value });
+}
+
 void LV2Validator::OnTrigger(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Triggers;
    auto & port = mPorts.mControlPorts[idx];
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] = port->mDef;
+      UpdateControlPortValue(GetSettings(settings), idx, port->mDef);
+      return nullptr;
    });
 }
 
@@ -696,7 +739,9 @@ void LV2Validator::OnToggle(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Toggles;
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] = evt.GetInt() ? 1.0 : 0.0;
+      UpdateControlPortValue(
+         GetSettings(settings), idx, evt.GetInt() ? 1.0 : 0.0);
+      return nullptr;
    });
 }
 
@@ -705,7 +750,9 @@ void LV2Validator::OnChoice(wxCommandEvent &evt)
    size_t idx = evt.GetId() - ID_Choices;
    auto & port = mPorts.mControlPorts[idx];
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] = port->mScaleValues[evt.GetInt()];
+      UpdateControlPortValue(
+         GetSettings(settings), idx, port->mScaleValues[evt.GetInt()]);
+      return nullptr;
    });
 }
 
@@ -717,8 +764,10 @@ void LV2Validator::OnText(wxCommandEvent &evt)
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       mAccess.ModifySettings([&](EffectSettings &settings) {
-         GetSettings(settings).values[idx] =
-            port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+         UpdateControlPortValue(
+            GetSettings(settings), idx,
+               port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp);
+         return nullptr;
       });
       SetSlider(state, ctrl);
    }
@@ -739,8 +788,10 @@ void LV2Validator::OnSlider(wxCommandEvent &evt)
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] =
-         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      UpdateControlPortValue(
+         GetSettings(settings), idx,
+            port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp);
+      return nullptr;
    });
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
@@ -791,17 +842,31 @@ void LV2Validator::OnIdle(wxIdleEvent &evt)
    // In case of output control port values though, it is needed for metering.
    mAccess.Flush();
    auto& values = GetSettings(mAccess.Get()).values;
+   auto pOutputValues = static_cast<const LV2EffectOutputs *>(mpOutputs);
 
    size_t index = 0; for (auto &state : portUIStates.mControlPortStates) {
       auto &port = state.mpPort;
-      const auto& value = values[index];
-      // Let UI know that a port's value has changed
-      if (value != state.mLst) {
-         suil_instance_port_event(mUI.mSuilInstance.get(),
-            port->mIndex, sizeof(value),
-            /* Means this event sends a float: */ 0,
-            &value);
-         state.mLst = value;
+      
+      const auto pValue = port->mIsInput
+         ? &values[index]
+         : pOutputValues ? &pOutputValues->values[index]
+         : nullptr;
+      if (pValue) {
+         auto &value = *pValue;
+         // Let UI know that a port's value has changed
+         if (value != state.mLst) {
+            suil_instance_port_event(mUI.mSuilInstance.get(),
+               port->mIndex, sizeof(value),
+               /* Means this event sends a float: */ 0,
+/*
+   Quoting what suil.h says about the next argument (which is good):
+
+   The `buffer` must be valid only for the duration of this call, the UI must
+   not keep a reference to it.
+ */
+               &value);
+            state.mLst = value;
+        }
       }
       ++index;
    }
@@ -892,13 +957,20 @@ void LV2Validator::suil_port_write(uint32_t port_index,
 {
    // Handle implicit floats
    if (protocol == 0 && buffer_size == sizeof(float)) {
-      if (auto it = mPorts.mControlPortMap.find(port_index)
-         ; it != mPorts.mControlPortMap.end()
-      )
-         mAccess.ModifySettings([&](EffectSettings &settings){
-            GetSettings(settings).values[it->second] =
-               *static_cast<const float *>(buffer);
-         });
+      if (auto it = mPorts.mControlPortMap.find(port_index);
+          it != mPorts.mControlPortMap.end())
+      {
+         const auto value = *static_cast<const float*>(buffer);
+         mAccess.ModifySettings(
+            [&](EffectSettings& settings)
+            {
+               GetSettings(settings).values[it->second] = value;
+               return nullptr;
+            });
+      
+         
+         Publish({ size_t(port_index), value });
+      }
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {

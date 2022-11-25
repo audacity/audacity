@@ -51,7 +51,8 @@ bool VST3Instance::Init()
    return Instance::Init();
 }
 
-bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings, unsigned, float sampleRate)
+bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings,
+   EffectOutputs *, unsigned, float sampleRate)
 {
    if (!mRecruited) {
       // Assign self to the first processor
@@ -108,8 +109,9 @@ bool VST3Instance::RealtimeProcessEnd(EffectSettings& settings) noexcept
    return true;
 }
 
-bool VST3Instance::RealtimeProcessStart(EffectSettings& settings)
+bool VST3Instance::RealtimeProcessStart(MessagePackage& package)
 {
+   auto &settings = package.settings;
    mWrapper->ProcessBlockStart(settings);
    for (auto &pProcessor : mProcessors)
       pProcessor->mWrapper->ProcessBlockStart(settings);
@@ -216,9 +218,3 @@ void VST3Instance::ReloadUserOptions()
 
    SetBlockSize(mUserBlockSize);
 }
-
-void VST3Instance::AssignSettings(EffectSettings& dst, EffectSettings&& src) const
-{
-   mWrapper->AssignSettings(dst, std::move(src));
-}
-

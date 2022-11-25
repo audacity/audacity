@@ -66,7 +66,8 @@ EffectType EffectSilence::GetType() const
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectSilence::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    S.StartVerticalLay();
    {

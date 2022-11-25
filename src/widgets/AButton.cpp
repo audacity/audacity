@@ -41,88 +41,13 @@
 #include "../ProjectWindowBase.h"
 #include <wx/tooltip.h>
 
-#if wxUSE_ACCESSIBILITY
-#include "WindowAccessible.h"
 
-class AButtonAx final : public WindowAccessible
-{
-public:
-   AButtonAx(wxWindow * window);
-
-   virtual ~ AButtonAx();
-
-   // Performs the default action. childId is 0 (the action for this object)
-   // or > 0 (the action for a child).
-   // Return wxACC_NOT_SUPPORTED if there is no default action for this
-   // window (e.g. an edit control).
-   wxAccStatus DoDefaultAction(int childId) override;
-
-   // Retrieves the address of an IDispatch interface for the specified child.
-   // All objects must support this property.
-   wxAccStatus GetChild(int childId, wxAccessible** child) override;
-
-   // Gets the number of children.
-   wxAccStatus GetChildCount(int* childCount) override;
-
-   // Gets the default action for this object (0) or > 0 (the action for a child).
-   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
-   // string if there is no action.
-   // The retrieved string describes the action that is performed on an object,
-   // not what the object does as a result. For example, a toolbar button that prints
-   // a document has a default action of "Press" rather than "Prints the current document."
-   wxAccStatus GetDefaultAction(int childId, wxString *actionName) override;
-
-   // Returns the description for this object or a child.
-   wxAccStatus GetDescription(int childId, wxString *description) override;
-
-   // Gets the window with the keyboard focus.
-   // If childId is 0 and child is NULL, no object in
-   // this subhierarchy has the focus.
-   // If this object has the focus, child should be 'this'.
-   wxAccStatus GetFocus(int *childId, wxAccessible **child) override;
-
-   // Returns help text for this object or a child, similar to tooltip text.
-   wxAccStatus GetHelpText(int childId, wxString *helpText) override;
-
-   // Returns the keyboard shortcut for this object or child.
-   // Return e.g. ALT+K
-   wxAccStatus GetKeyboardShortcut(int childId, wxString *shortcut) override;
-
-   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
-   // rect is in screen coordinates.
-   wxAccStatus GetLocation(wxRect& rect, int elementId) override;
-
-   // Gets the name of the specified object.
-   wxAccStatus GetName(int childId, wxString *name) override;
-
-   // Returns a role constant.
-   wxAccStatus GetRole(int childId, wxAccRole *role) override;
-
-   // Gets a variant representing the selected children
-   // of this object.
-   // Acceptable values:
-   // - a null variant (IsNull() returns TRUE)
-   // - a list variant (GetType() == wxT("list"))
-   // - an integer representing the selected child element,
-   //   or 0 if this object is selected (GetType() == wxT("long"))
-   // - a "void*" pointer to a wxAccessible child object
-   wxAccStatus GetSelections(wxVariant *selections) override;
-
-   // Returns a state constant.
-   wxAccStatus GetState(int childId, long* state) override;
-
-   // Returns a localized string representing the value for the object
-   // or child.
-   wxAccStatus GetValue(int childId, wxString* strValue) override;
-
-};
-
-#endif // wxUSE_ACCESSIBILITY
 
 BEGIN_EVENT_TABLE(AButton, wxWindow)
    EVT_MOUSE_EVENTS(AButton::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(AButton::OnCaptureLost)
    EVT_KEY_DOWN(AButton::OnKeyDown)
+   EVT_CHAR_HOOK(AButton::OnCharHook)
    EVT_SET_FOCUS(AButton::OnSetFocus)
    EVT_KILL_FOCUS(AButton::OnKillFocus)
    EVT_PAINT(AButton::OnPaint)
@@ -412,8 +337,8 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
          else if(mIcon.IsOk())
          {
             dc.DrawBitmap(mIcon,
-               buttonRect.x + (buttonRect.width - mIcon.GetWidth() / 2),
-                  buttonRect.y + (buttonRect.height - mIcon.GetHeight() / 2));
+               buttonRect.x + (buttonRect.width - mIcon.GetWidth()) / 2,
+                  buttonRect.y + (buttonRect.height - mIcon.GetHeight()) / 2);
          }
       }
       else
@@ -575,6 +500,15 @@ void AButton::OnKeyDown(wxKeyEvent & event)
                ? wxNavigationKeyEvent::IsBackward
                : wxNavigationKeyEvent::IsForward));
       break;
+   default:
+      event.Skip();
+   }
+}
+
+void AButton::OnCharHook(wxKeyEvent& event)
+{
+   switch(event.GetKeyCode())
+   {
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
       if( !mEnabled )
@@ -585,6 +519,10 @@ void AButton::OnKeyDown(wxKeyEvent & event)
       {
          mButtonIsDown = !mButtonIsDown;
          Refresh(false);
+#if wxUSE_ACCESSIBILITY
+         GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
+            this, wxOBJID_CLIENT, wxACC_SELF);
+#endif
       }
       Click();
       break;
@@ -687,26 +625,29 @@ wxSize AButton::DoGetBestClientSize() const
       {
       case FrameButton:
          {
-            const auto border = image.GetSize() / 4;
-            wxSize bestSize { -1 , -1 };
             if(!GetLabel().IsEmpty())
             {
+               const auto border = image.GetSize() / 4;
+               
                wxMemoryDC dc;
                dc.SetFont(GetFont());
-               bestSize = dc.GetTextExtent(GetLabel());
+               auto bestSize = dc.GetTextExtent(GetLabel());
+               if(mIcon.IsOk())
+               {
+                  bestSize.x = std::max(bestSize.x, mIcon.GetWidth());
+                  bestSize.y = bestSize.y > 0
+                     ? bestSize.y + border.y + mIcon.GetHeight()
+                     : mIcon.GetHeight();
+               }
+               if(bestSize.x > 0)
+                  bestSize.x += border.x * 2;
+               if(bestSize.y > 0)
+                  bestSize.y += border.y * 2;
+               return bestSize;
             }
-            if(mIcon.IsOk())
-            {
-               bestSize.x = std::max(bestSize.x, mIcon.GetWidth());
-               bestSize.y = bestSize.y > 0
-                  ? bestSize.y + border.y + mIcon.GetHeight()
-                  : mIcon.GetHeight();
-            }
-            if(bestSize.x > 0)
-               bestSize.x += border.x * 2;
-            if(bestSize.y > 0)
-               bestSize.y += border.y * 2;
-            return bestSize;
+            if(mIcon.Ok())
+               return mIcon.GetSize();
+            return image.GetSize();
          }
       case TextButton:
          return {-1, image.GetHeight() };
@@ -870,13 +811,28 @@ wxAccStatus AButtonAx::GetName(int WXUNUSED(childId), wxString* name)
       *name = _("Button");
    }
 
+   /* In the MSAA frame work, there isn't such a thing as a toggle button.
+   In particular, narrator does not read the wxACC_STATE_SYSTEM_PRESSED state at all.
+   So to imitate a toggle button, include the role and the state in the name, and
+   create a name change event when the state changes. */
+   if (ab->mToggle) {
+      *name += wxT(" ") +
+         _("Button")
+         + wxT(" ") +
+         /* i18n-hint: whether a button is pressed or not pressed */
+         (ab->IsDown() ? _("pressed") : _("not pressed"));
+   }
+
    return wxACC_OK;
 }
 
 // Returns a role constant.
 wxAccStatus AButtonAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
 {
-   *role = wxROLE_SYSTEM_PUSHBUTTON;
+   AButton* ab = wxDynamicCast(GetWindow(), AButton);
+
+   // For a toggle button, the role is included in the name, so read nothing
+   *role = ab->mToggle ? wxROLE_SYSTEM_STATICTEXT : wxROLE_SYSTEM_PUSHBUTTON;
 
    return wxACC_OK;
 }
@@ -903,7 +859,8 @@ wxAccStatus AButtonAx::GetState(int WXUNUSED(childId), long* state)
        *state = wxACC_STATE_SYSTEM_UNAVAILABLE;
    else
    {
-      if(ab->mButtonIsDown)
+      // For a toggle button, the state is included in the name
+      if(ab->mButtonIsDown && !ab->mToggle)
          *state |= wxACC_STATE_SYSTEM_PRESSED;
 
       if(ab->mCursorIsInWindow)

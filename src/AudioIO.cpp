@@ -156,8 +156,8 @@ struct AudioIoCallback::TransportState {
             }
             unsigned chanCnt = TrackList::Channels(vt).size();
             i += chanCnt; // Visit leaders only
-            mpRealtimeInitialization->AddTrack(*vt,
-               std::min(numPlaybackChannels, chanCnt), sampleRate);
+            mpRealtimeInitialization
+               ->AddTrack(*vt, numPlaybackChannels, sampleRate);
          }
       }
    }
@@ -1028,6 +1028,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
 
    commit = true;
+
+   WaitForAudioThreadStarted();
+
    return mStreamToken;
 }
 
@@ -1129,7 +1132,7 @@ bool AudioIO::AllocateBuffers(
                std::max<size_t>(1, mPlaybackTracks.size()));
             // Number of scratch buffers depends on device playback channels
             if (mNumPlaybackChannels > 0) {
-               mScratchBuffers.resize(mNumPlaybackChannels * 2);
+               mScratchBuffers.resize(mNumPlaybackChannels * 2 + 1);
                mScratchPointers.clear();
                for (auto &buffer : mScratchBuffers) {
                   buffer.Allocate(playbackBufferSize, floatSample);
@@ -1981,13 +1984,16 @@ void AudioIO::TransformPlayBuffers(
          // Then supply some non-null fake input buffers, because the
          // various ProcessBlock overrides of effects may crash without it.
          // But it would be good to find the fixes to make this unnecessary.
-         float **scratch = &mScratchPointers[mNumPlaybackChannels];
+         float **scratch = &mScratchPointers[mNumPlaybackChannels + 1];
          while (iChannel < mNumPlaybackChannels)
             memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
 
          if (len && pScope) {
             auto discardable = pScope->Process( *vt, &pointers[0],
-               mScratchPointers.data(), mNumPlaybackChannels, len);
+               mScratchPointers.data(),
+               // The single dummy output buffer:
+               mScratchPointers[mNumPlaybackChannels],
+               mNumPlaybackChannels, len);
             iChannel = 0;
             for (; iChannel < nChannels; ++iChannel) {
                auto &ringBuffer = *mPlaybackBuffers[t + iChannel];
@@ -3224,14 +3230,6 @@ void AudioIoCallback::WaitForAudioThreadStarted()
    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
 
-
-void AudioIoCallback::StartAudioThreadAndWait()
-{
-   StartAudioThread();
-   WaitForAudioThreadStarted();
-}
-
-
 void AudioIoCallback::StopAudioThread()
 {
    mAudioThreadTrackBufferExchangeLoopRunning.store(false, std::memory_order_release);
@@ -3246,13 +3244,6 @@ void AudioIoCallback::WaitForAudioThreadStopped()
    }
    mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
 }
-
-void AudioIoCallback::StopAudioThreadAndWait()
-{
-   StopAudioThread();
-   WaitForAudioThreadStopped();
-}
-
 
 void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
 {

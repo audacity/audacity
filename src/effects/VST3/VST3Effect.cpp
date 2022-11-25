@@ -191,11 +191,10 @@ bool VST3Effect::LoadSettings(
    return true;
 }
 
-bool VST3Effect::LoadUserPreset(
+OptionalMessage VST3Effect::LoadUserPreset(
    const RegistryPath& name, EffectSettings& settings) const
 {
-   VST3Wrapper::LoadUserPreset(*this, name, settings);
-   return true;
+   return VST3Wrapper::LoadUserPreset(*this, name, settings);
 }
 
 bool VST3Effect::SaveUserPreset(
@@ -225,25 +224,29 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      return LoadPreset(filename.GetFullPath(), settings);
+      if (!LoadPreset(filename.GetFullPath(), settings))
+         return {};
    }
-   return true;
+   return { nullptr };
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
-   EffectUIValidator *, bool forceModal)
+   EffectUIValidator *validator, bool forceModal)
 {
-   if(!IsGraphicalUI())
-   {
-      //Restrict resize of the "plain" dialog
-      dialog.SetMaxSize(dialog.GetSize());
-      dialog.SetMinSize(dialog.GetSize());
-   }
+#ifdef __WXMSW__
+   if(validator->IsGraphicalUI())
+      //Not all platforms support window style change.
+      //Plugins that support resizing provide their own handles,
+      //which may overlap with system handle. Not all plugins
+      //support free sizing (e.g. fixed steps or fixed ratio)
+      dialog.SetWindowStyle(dialog.GetWindowStyle() & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX));
+#endif
+
    if(forceModal)
       return dialog.ShowModal();
 
@@ -257,7 +260,8 @@ std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
-   EffectInstance& instance, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    bool useGUI { true };
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -330,7 +334,7 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings& settings)
+OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -346,9 +350,12 @@ void VST3Effect::ImportPresets(EffectSettings& settings)
       nullptr
    );
    if(path.empty())
-      return;
+      return {};
 
-   LoadPreset(path, settings);
+   if (!LoadPreset(path, settings))
+      return {};
+
+   return { nullptr };
 }
 
 bool VST3Effect::HasOptions()
@@ -403,8 +410,8 @@ EffectSettings VST3Effect::MakeSettings() const
    return VST3Wrapper::MakeSettings();
 }
 
-bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst, SettingsCopyDirection copyDirection) const
+bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
 {
-   VST3Wrapper::CopySettingsContents(src, dst, copyDirection);
+   VST3Wrapper::CopySettingsContents(src, dst);
    return true;
 }
