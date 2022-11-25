@@ -25,6 +25,7 @@
 #include <optional>
 #include <mutex>
 #include <thread>
+#include <atomic>
 
 class wxSizerItem;
 class wxSlider;
@@ -552,6 +553,8 @@ public:
    // overrides in the Validator which owns the instance - this sets it.
    void SetOwningValidator(VSTEffectUIWrapper* vi);
 
+   bool OnePresetWasLoadedWhilePlaying();
+
 private:
 
    void callProcessReplacing(
@@ -568,6 +571,8 @@ private:
    bool mRecruited{ false };
 
    VSTEffectUIWrapper* mpOwningValidator{};
+
+   std::atomic_bool mPresetLoadedWhilePlaying{ false };
 };
 
 
