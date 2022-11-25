@@ -797,10 +797,26 @@ public:
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
+#include <ApplicationServices/ApplicationServices.h>
+
+namespace
+{
+bool sOSXIsGUIApplication { true };
+}
+
 int main(int argc, char *argv[])
 {
    wxDISABLE_DEBUG_SUPPORT();
 
+   wxCmdLineArgsArray argsArray;
+   argsArray.Init(argc, argv);
+   if(PluginHost::IsHostProcess(argc, argsArray))
+   {
+      sOSXIsGUIApplication = false;
+      ProcessSerialNumber psn = { 0, kCurrentProcess };
+      TransformProcessType(&psn, kProcessTransformToUIElementApplication);
+   }
+   
    return wxEntry(argc, argv);
 }
 
@@ -1139,6 +1155,13 @@ bool AudacityApp::Initialize(int& argc, wxChar** argv)
    }
    return wxApp::Initialize(argc, argv);
 }
+
+#ifdef __WXMAC__
+bool AudacityApp::OSXIsGUIApplication()
+{
+   return sOSXIsGUIApplication;
+}
+#endif
 
 AudacityApp::~AudacityApp()
 {

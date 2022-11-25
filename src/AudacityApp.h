@@ -40,6 +40,9 @@ class AudacityApp final : public wxApp {
    ~AudacityApp();
    
    bool Initialize(int& argc, wxChar** argv) override;
+#ifdef __WXMAC__
+   bool OSXIsGUIApplication() override;
+#endif
    
    bool OnInit() override;
    bool InitPart2();
