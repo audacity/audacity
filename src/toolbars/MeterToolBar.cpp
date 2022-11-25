@@ -234,6 +234,7 @@ void MeterToolBar::Populate()
       mRecordSetupButton = safenew AButton(this);
       mRecordSetupButton->SetLabel({});
       mRecordSetupButton->SetName(_("Record Meter"));
+      mRecordSetupButton->SetToolTip(XO("Record Meter"));
       mRecordSetupButton->SetImages(
          theTheme.Image(bmpRecoloredUpSmall),
          theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -284,6 +285,7 @@ void MeterToolBar::Populate()
       mPlaySetupButton = safenew AButton(this);
       mPlaySetupButton->SetLabel({});
       mPlaySetupButton->SetName(_("Playback Meter"));
+      mPlaySetupButton->SetToolTip(XO("Playback Meter"));
       mPlaySetupButton->SetImages(
          theTheme.Image(bmpRecoloredUpSmall),
          theTheme.Image(bmpRecoloredUpHiliteSmall),
