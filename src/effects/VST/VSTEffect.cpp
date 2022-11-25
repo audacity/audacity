@@ -1234,6 +1234,12 @@ bool VSTEffectInstance::RealtimeResume()
    return true;
 }
 
+
+bool VSTEffectInstance::OnePresetWasLoadedWhilePlaying()
+{
+   return mPresetLoadedWhilePlaying.exchange(false);
+}
+
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
    if (!package.pMessage)
@@ -1258,6 +1264,16 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 
       // Don't return yet.  Maybe some slider movements also accumulated after
       // the change of the chunk.
+
+      const bool IsAudioThread = (mMainThreadId != std::this_thread::get_id());
+      if (IsAudioThread)
+      {
+         // At the moment, the only reason why this method would be called in the audio thread,
+         // is because a preset was loaded while playing
+
+         mPresetLoadedWhilePlaying.store(true);
+      }
+
    }
 
 
@@ -2277,6 +2293,12 @@ void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
          RefreshParameters(index);
       mLastMovements.clear();
    }
+
+   if ( GetInstance().OnePresetWasLoadedWhilePlaying() )
+   {
+      RefreshParameters();
+   }
+
 }
 
 void VSTEffectValidator::SizeWindow(int w, int h)
