@@ -20,9 +20,6 @@
 
 #include <wx/log.h>
 #include <wx/stdpaths.h>
-#include <wx/regex.h>
-
-#include <public.sdk/source/vst/hosting/hostclasses.h>
 
 #include "internal/PlugFrame.h"
 #include "internal/ConnectionProxy.h"
@@ -38,59 +35,10 @@
 #include "VST3OptionsDialog.h"
 #include "VST3Wrapper.h"
 
-#ifdef __WXMSW__
-#include <shlobj.h>
-#endif
-
 #include "ConfigInterface.h"
 #include "VST3Instance.h"
 #include "VST3UIValidator.h"
 
-namespace {
-
-
-wxString GetFactoryPresetsBasePath()
-{
-#ifdef __WXMSW__
-   PWSTR commonFolderPath { nullptr };
-   auto cleanup = finally([&](){ CoTaskMemFree(commonFolderPath); });
-   if(SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_DEFAULT , NULL, &commonFolderPath) == S_OK)
-      return wxString(commonFolderPath) + "\\VST3 Presets\\";
-   return {};
-#elif __WXMAC__
-   return wxString("Library/Audio/Presets/");
-#elif __WXGTK__
-   return wxString("/usr/local/share/vst3/presets/");
-#endif
-}
-
-wxString GetPresetsPath(const wxString& basePath, const VST3::Hosting::ClassInfo& effectClassInfo)
-{
-   wxRegEx fixName(R"([\\*?/:<>|])");
-   wxString companyName = wxString (effectClassInfo.vendor()).Trim();
-   wxString pluginName = wxString (effectClassInfo.name()).Trim();
-
-   fixName.ReplaceAll( &companyName, { "_" });
-   fixName.ReplaceAll( &pluginName, { "_" });
-
-   wxFileName result;
-   result.SetPath(basePath);
-   result.AppendDir(companyName);
-   result.AppendDir(pluginName);
-   auto path = result.GetPath();
-
-   return path;
-}
-
-wxString GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo)
-{
-   return GetPresetsPath(
-      GetFactoryPresetsBasePath(),
-      effectClassInfo
-   );
-}
-
-}
 
 EffectFamilySymbol VST3Effect::GetFamilySymbol()
 {
@@ -209,8 +157,10 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    if(!mRescanFactoryPresets)
       return mFactoryPresets;
 
+   VST3Wrapper wrapper(*mModule, mEffectClassInfo.ID());
+
    wxArrayString paths;
-   wxDir::GetAllFiles(GetFactoryPresetsPath(mEffectClassInfo), &paths);
+   wxDir::GetAllFiles(VST3Utils::GetFactoryPresetsPath(mEffectClassInfo), &paths);
 
    RegistryPaths result;
    for(auto& path : paths)
@@ -228,7 +178,7 @@ OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) 
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
-      auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
+      auto filename = wxFileName(VST3Utils::GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
       if (!LoadPreset(filename.GetFullPath(), settings))
          return {};
    }
