@@ -72,6 +72,9 @@ public:
    VST3Wrapper& operator=(const VST3Wrapper&) = delete;
    VST3Wrapper& operator=(VST3Wrapper&&) = delete;
 
+   //! Should be called once before almost any other method call
+   void InitializeComponents();
+
    VST3::Hosting::Module& GetModule() const { return mModule; }
 
    bool IsActive() const noexcept;

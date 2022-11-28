@@ -380,13 +380,6 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
 {
    using namespace Steinberg;
 
-   //Preinitialize with some default values in case if parameters
-   //flush happens before processing initialized
-   mSetup.maxSamplesPerBlock = 512;
-   mSetup.processMode = Vst::kOffline;
-   mSetup.symbolicSampleSize = Vst::kSample32;
-   mSetup.sampleRate = 44100.0;
-
    const auto& pluginFactory = module.getFactory();
 
    auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(mEffectUID);
@@ -406,9 +399,6 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
    mEffectComponent = effectComponent;
    mAudioProcessor = audioProcessor;
 
-   if(!SetupProcessing(*mEffectComponent, mSetup))
-      throw std::runtime_error("bus configuration not supported");
-
    auto editController = FUnknownPtr<Vst::IEditController>(mEffectComponent);
    if(editController.get() == nullptr)
    {
@@ -422,10 +412,44 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
       throw std::runtime_error("Failed to instantiate edit controller");
    
    mEditController = editController;
+
    mEditController->initialize(&AudacityVst3HostApplication::Get());
+}
+
+VST3Wrapper::~VST3Wrapper()
+{
+   using namespace Steinberg;
+
+   if(mComponentConnectionProxy)
+      mComponentConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEditController));
+   if(mControllerConnectionProxy)
+      mControllerConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEffectComponent));
+
+   if(mEditController)
+   {
+      mEditController->setComponentHandler(nullptr);
+      mEditController->terminate();
+   }
+   if(mEffectComponent)
+      mEffectComponent->terminate();
+}
+
+void VST3Wrapper::InitializeComponents()
+{
+   using namespace Steinberg;
+
+   //Preinitialize with some default values in case if parameters
+   //flush happens before processing initialized
+   mSetup.maxSamplesPerBlock = 512;
+   mSetup.processMode = Vst::kOffline;
+   mSetup.symbolicSampleSize = Vst::kSample32;
+   mSetup.sampleRate = 44100.0;
 
    mComponentHandler = owned(safenew ComponentHandler(*this));
    mEditController->setComponentHandler(mComponentHandler);
+
+   if(!SetupProcessing(*mEffectComponent, mSetup))
+      throw std::runtime_error("bus configuration not supported");
 
    const auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
    const auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
@@ -453,27 +477,8 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
    mDefaultSettings = MakeSettings();
    StoreSettings(mDefaultSettings);
 
-   
    static_cast<ComponentHandler*>(mComponentHandler.get())
       ->LoadCurrentParamValues();
-}
-
-VST3Wrapper::~VST3Wrapper()
-{
-   using namespace Steinberg;
-
-   if(mComponentConnectionProxy)
-      mComponentConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEditController));
-   if(mControllerConnectionProxy)
-      mControllerConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEffectComponent));
-
-   if(mEditController)
-   {
-      mEditController->setComponentHandler(nullptr);
-      mEditController->terminate();
-   }
-   if(mEffectComponent)
-      mEffectComponent->terminate();
 }
 
 bool VST3Wrapper::IsActive() const noexcept

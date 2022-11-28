@@ -320,6 +320,8 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 
    auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+   wrapper->InitializeComponents();
+
    auto dummy = EffectSettings { settings };
    wrapper->FetchSettings(dummy);
 
@@ -388,6 +390,7 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) cons
    }
 
    auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+   wrapper->InitializeComponents();
 
    if (!wrapper->LoadPreset(fileStream))
    {
