@@ -241,12 +241,9 @@ public:
          ParameterInfo info {};
          mWrapper.mEditController->getParameterInfo(i, info);
 
-         if (info.flags & (ParameterInfo::kIsHidden | ParameterInfo::kIsProgramChange))
+         if ((info.flags & ParameterInfo::kIsReadOnly) != 0)
             continue;
-
-         if ((info.flags & ParameterInfo::kCanAutomate)  == 0)
-            continue;
-
+         
          mCurrentParamValues[info.id] =
             mWrapper.mEditController->getParamNormalized(info.id);
       }
