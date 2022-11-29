@@ -9,9 +9,12 @@
 
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <wx/dir.h>
 #include <wx/tokenzr.h>
 
+#include "AudacityException.h"
 #include "ConfigInterface.h"
+#include "FileException.h"
 #include "memorystream.h"
 #include "MemoryX.h"
 #include "VST3Utils.h"
@@ -374,15 +377,15 @@ Steinberg::int32 SingleInputParameterValue::getPointCount()
 
 IMPLEMENT_FUNKNOWN_METHODS(SingleInputParameterValue, Steinberg::Vst::IParamValueQueue, Steinberg::Vst::IParamValueQueue::iid);
 
-VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID)
-   : mEffectUID(std::move(effectUID))
-   , mModule{ module }
+VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, const VST3::Hosting::ClassInfo& effectClassInfo)
+   : mModule{ module }
+   , mEffectClassInfo { effectClassInfo }
 {
    using namespace Steinberg;
 
    const auto& pluginFactory = module.getFactory();
 
-   auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(mEffectUID);
+   auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(effectClassInfo.ID());
    if(!effectComponent)
       throw std::runtime_error("Cannot create VST3 effect component");
    if(effectComponent->initialize(&AudacityVst3HostApplication::Get()) != kResultOk)
@@ -481,6 +484,11 @@ void VST3Wrapper::InitializeComponents()
       ->LoadCurrentParamValues();
 }
 
+const VST3::Hosting::ClassInfo& VST3Wrapper::GetEffectClassInfo() const
+{
+   return mEffectClassInfo;
+}
+
 bool VST3Wrapper::IsActive() const noexcept
 {
    return mActive;
@@ -545,28 +553,61 @@ void VST3Wrapper::StoreSettings(EffectSettings& settings) const
    std::swap(vst3settings, GetSettings(settings));
 }
 
-bool VST3Wrapper::LoadPreset(Steinberg::IBStream* fileStream)
+void VST3Wrapper::LoadPreset(const wxString& presetId)
+{
+   using namespace Steinberg;
+
+   auto fileStream = owned(Vst::FileStream::open(presetId.c_str(), "rb"));
+   if(!fileStream)
+      throw FileException(FileException::Cause::Open, presetId);
+
+   if(!LoadPresetFromStream(fileStream))
+   {
+      throw SimpleMessageBoxException(
+         ExceptionType::BadEnvironment,
+         XO("Unable to apply VST3 preset file %s").Format(presetId),
+         XO("Error"));
+   }
+}
+
+void VST3Wrapper::SavePresetToFile(const wxString& filepath) const
+{
+   using namespace Steinberg;
+
+   auto fileStream = owned(Vst::FileStream::open(filepath.c_str(), "wb"));
+   if(!fileStream)
+      throw FileException(FileException::Cause::Open, filepath);
+
+   if(!SavePresetToStream(fileStream))
+      throw SimpleMessageBoxException(
+         ExceptionType::BadEnvironment,
+         XO("Failed to save VST3 preset to file"),
+         XO("Error"));
+}
+
+
+bool VST3Wrapper::LoadPresetFromStream(Steinberg::IBStream* fileStream)
 {
    using namespace Steinberg;
 
    return Vst::PresetFile::loadPreset
    (
       fileStream,
-      FUID::fromTUID(mEffectUID.data()),
+      FUID::fromTUID(mEffectClassInfo.ID().data()),
       mEffectComponent.get(),
       mEditController.get()
    );
 }
 
 
-bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream) const
+bool VST3Wrapper::SavePresetToStream(Steinberg::IBStream* fileStream) const
 {
    using namespace Steinberg;
 
    return Vst::PresetFile::savePreset
    (
       fileStream,
-      FUID::fromTUID(mEffectUID.data()),
+      FUID::fromTUID(mEffectClassInfo.ID().data()),
       mEffectComponent.get(),
 
       mEditController.get()
@@ -799,6 +840,19 @@ void VST3Wrapper::EndParameterEdit()
    componentHandler->SetAccess(nullptr);
 }
 
+std::vector<VST3Wrapper::FactoryPresetDesc> VST3Wrapper::FindFactoryPresets() const
+{
+   wxArrayString paths;
+   wxDir::GetAllFiles(VST3Utils::GetFactoryPresetsPath(mEffectClassInfo), &paths);
+
+   std::vector<FactoryPresetDesc> result;
+   for(auto& path : paths)
+   {
+      wxFileName filename(path);
+      result.push_back({ filename.GetFullPath(), filename.GetName() });
+   }
+   return result;
+}
 
 
 Steinberg::int32 VST3Wrapper::GetLatencySamples() const

@@ -12,19 +12,10 @@
 
 #include "VST3Effect.h"
 
-#include "AudacityException.h"
-
-
-#include "BasicUI.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
-
 #include <wx/log.h>
-#include <wx/stdpaths.h>
 
 #include "internal/PlugFrame.h"
 #include "internal/ConnectionProxy.h"
-
-#include "widgets/NumericTextCtrl.h"
 
 #include "SelectFile.h"
 
@@ -155,34 +146,30 @@ bool VST3Effect::SaveUserPreset(
 RegistryPaths VST3Effect::GetFactoryPresets() const
 {
    if(!mRescanFactoryPresets)
-      return mFactoryPresets;
+      return mFactoryPresetNames;
 
-   VST3Wrapper wrapper(*mModule, mEffectClassInfo.ID());
-
-   wxArrayString paths;
-   wxDir::GetAllFiles(VST3Utils::GetFactoryPresetsPath(mEffectClassInfo), &paths);
-
-   RegistryPaths result;
-   for(auto& path : paths)
+   VST3Wrapper wrapper(*mModule, mEffectClassInfo);
+   for(auto& desc : wrapper.FindFactoryPresets())
    {
-      wxFileName filename(path);
-      result.push_back(filename.GetName());
+      mFactoryPresetNames.push_back(desc.displayName);
+      mFactoryPresetIDs.push_back(desc.id);
    }
-   mFactoryPresets = std::move(result);
    mRescanFactoryPresets = false;
 
-   return mFactoryPresets;
+   return mFactoryPresetNames;
 }
 
-OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage VST3Effect::LoadFactoryPreset(int index, EffectSettings& settings) const
 {
-   if(id >= 0 && id < mFactoryPresets.size())
+   if(index >= 0 && index < mFactoryPresetIDs.size())
    {
-      auto filename = wxFileName(VST3Utils::GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      if (!LoadPreset(filename.GetFullPath(), settings))
-         return {};
+      VST3Wrapper wrapper(*mModule, mEffectClassInfo);
+      wrapper.InitializeComponents();
+      wrapper.LoadPreset(mFactoryPresetIDs[index]);
+      wrapper.StoreSettings(settings);
+      return { nullptr };
    }
-   return { nullptr };
+   return { };
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
@@ -206,7 +193,7 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
 
 std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 {
-   return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
+   return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo);
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
@@ -240,7 +227,7 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
 {
    using namespace Steinberg;
 
-   auto path = SelectFile(FileNames::Operation::Presets,
+   const auto path = SelectFile(FileNames::Operation::Presets,
       XO("Save VST3 Preset As:"),
       wxEmptyString,
       wxEmptyString,
@@ -253,44 +240,20 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
 
    if (path.empty())
       return;
-
-   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
-
-   auto fileStream = owned(Vst::FileStream::open(path.c_str(), "wb"));
-   if(!fileStream)
-   {
-      BasicUI::ShowMessageBox(
-         //i18n-hint: VST3 preset export error
-         XO("Cannot open file"),
-         BasicUI::MessageBoxOptions()
-            .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
-      );
-      return;
-   }
-
-   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+   
+   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo);
    wrapper->InitializeComponents();
 
    auto dummy = EffectSettings { settings };
    wrapper->FetchSettings(dummy);
-
-   if (!wrapper->SavePreset(fileStream))
-   {
-      BasicUI::ShowMessageBox(
-         XO("Failed to save VST3 preset to file"),
-         BasicUI::MessageBoxOptions()
-            .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
-      );
-   }
+   wrapper->SavePresetToFile(path);
 }
 
 OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
-   auto path = SelectFile(FileNames::Operation::Presets,
+   const auto path = SelectFile(FileNames::Operation::Presets,
       XO("Load VST3 preset:"),
       wxEmptyString,
       wxEmptyString,
@@ -304,8 +267,7 @@ OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
    if(path.empty())
       return {};
 
-   if (!LoadPreset(path, settings))
-      return {};
+   LoadPreset(path, settings);
 
    return { nullptr };
 }
@@ -321,41 +283,12 @@ void VST3Effect::ShowOptions()
    dlg.ShowModal();
 }
 
-bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) const
+void VST3Effect::LoadPreset(const wxString& id, EffectSettings& settings) const
 {
-   using namespace Steinberg;
-
-   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
-
-   auto fileStream = owned(Vst::FileStream::open(path.c_str(), "rb"));
-   if(!fileStream)
-   {
-      BasicUI::ShowMessageBox(
-         XO("Cannot open VST3 preset file %s").Format(path),
-         BasicUI::MessageBoxOptions()
-            .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
-      );
-      return false;
-   }
-
-   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo);
    wrapper->InitializeComponents();
-
-   if (!wrapper->LoadPreset(fileStream))
-   {
-      BasicUI::ShowMessageBox(
-         XO("Unable to apply VST3 preset file %s").Format(path),
-         BasicUI::MessageBoxOptions()
-            .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
-      );
-      return false;
-   }
-
+   wrapper->LoadPreset(id);
    wrapper->StoreSettings(settings);
-
-   return true;
 }
 
 EffectSettings VST3Effect::MakeSettings() const

@@ -292,7 +292,7 @@ public:
       {
          VST3Wrapper wrapper (
             *vst3effect->mModule,
-            vst3effect->mEffectClassInfo.ID()
+            vst3effect->mEffectClassInfo
          );
          wrapper.InitializeComponents();
       }

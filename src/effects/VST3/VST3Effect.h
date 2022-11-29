@@ -48,7 +48,8 @@ class VST3Effect final : public PerTrackEffect
 
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };
-   mutable RegistryPaths mFactoryPresets;
+   mutable RegistryPaths mFactoryPresetNames;
+   mutable std::vector<wxString> mFactoryPresetIDs;
 
 public:
 
@@ -110,5 +111,5 @@ public:
 
 private:
    
-   bool LoadPreset(const wxString& path, EffectSettings& settings) const;
+   void LoadPreset(const wxString& id, EffectSettings& settings) const;
 };
