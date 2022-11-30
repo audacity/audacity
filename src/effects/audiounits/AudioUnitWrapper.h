@@ -22,9 +22,11 @@
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
+#include "Identifier.h"
 
 class wxCFStringRef;
 class wxMemoryBuffer;
+class EffectDefinitionInterface;
 class EffectSettings;
 class TranslatableString;
 class AudioUnitWrapper;
@@ -43,6 +45,9 @@ struct AudioUnitEffectSettings {
    using StringSet = std::set<wxString>;
    const std::shared_ptr<StringSet> mSharedNames{
       std::make_shared<StringSet>() };
+
+   //! Optionally store a preset
+   std::optional<SInt32> mPresetNumber;
    
    //! Map from numerical parameter IDs (not always a small initial segment
    //! of the integers) to optional pairs of names and floating point values
@@ -131,6 +136,11 @@ struct AudioUnitWrapper
       std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
    void ForEachParameter(ParameterVisitor visitor) const;
 
+   bool LoadPreset(const EffectDefinitionInterface &effect,
+      const RegistryPath & group, EffectSettings &settings) const;
+   bool LoadFactoryPreset(const EffectDefinitionInterface &effect,
+      int id, EffectSettings *pSettings) const;
+
    //! Obtain dump of the setting state of an AudioUnit instance
    /*!
     @param binary if false, then produce XML serialization instead; but
@@ -138,7 +148,8 @@ struct AudioUnitWrapper
     @return smart pointer to data, and an error message
     */
    std::pair<CF_ptr<CFDataRef>, TranslatableString>
-   MakeBlob(const AudioUnitEffectSettings &settings,
+   MakeBlob(const EffectDefinitionInterface &effect,
+      const AudioUnitEffectSettings &settings,
       const wxCFStringRef &cfname, bool binary) const;
 
    //! Interpret the dump made before by MakeBlob
@@ -150,9 +161,10 @@ struct AudioUnitWrapper
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    //! May allocate memory, so should be called only in the main thread
-   bool FetchSettings(
-      AudioUnitEffectSettings &settings, bool fetchValues = true) const;
-   bool StoreSettings(const AudioUnitEffectSettings &settings) const;
+   bool FetchSettings(AudioUnitEffectSettings &settings,
+      bool fetchValues, bool fetchPreset = false) const;
+   bool StoreSettings(const EffectDefinitionInterface &effect,
+      const AudioUnitEffectSettings &settings) const;
 
    //! Copy, then clear the optionals in src
    static bool MoveSettingsContents(

@@ -20,6 +20,8 @@ class AudioUnitInstance : public PerTrackEffect::Instance
    , public AudioUnitWrapper
 {
 public:
+   using Instance::mProcessor;
+
    AudioUnitInstance(const PerTrackEffect &effect,
       AudioComponent component, Parameters &parameters,
       const wxString &identifier,

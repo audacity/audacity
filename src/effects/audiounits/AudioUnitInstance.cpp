@@ -129,7 +129,7 @@ size_t AudioUnitInstance::GetTailSize() const
 bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
    double sampleRate, ChannelNames chanMap)
 {
-   if (!StoreSettings(GetSettings(settings)))
+   if (!StoreSettings(mProcessor, GetSettings(settings)))
       return false;
 
    mInputList =
