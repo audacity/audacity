@@ -205,9 +205,9 @@ bool PluginHost::Start(int connectPort)
    return false;
 }
 
-bool PluginHost::IsHostProcess()
+bool PluginHost::IsHostProcess(int argc, wxChar** argv)
 {
-   return wxTheApp && wxTheApp->argc >= 3 && wxStrcmp(wxTheApp->argv[1], HostArgument) == 0;
+   return argc >= 3 && wxStrcmp(argv[1], HostArgument) == 0;
 }
 
 class PluginHostModule final :
@@ -218,7 +218,7 @@ public:
 
    bool OnInit() override
    {
-      if(PluginHost::IsHostProcess())
+      if(PluginHost::IsHostProcess(wxTheApp->argc, wxTheApp->argv))
       {
          long connectPort;
          if(!wxTheApp->argv[2].ToLong(&connectPort))
