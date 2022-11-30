@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
+#include <pluginterfaces/vst/ivstunits.h>
 
 using namespace Steinberg;
 using namespace Steinberg::Vst;
@@ -334,10 +335,13 @@ Steinberg::tresult PLUGIN_API AudacityVst3HostApplication::createInstance(
 Steinberg::tresult AudacityVst3HostApplication::isPlugInterfaceSupported(
    const Steinberg::TUID _iid)
 {
-   static auto supportedInterfaces = { Steinberg::Vst::IComponent::iid,
-                                       Steinberg::Vst::IAudioProcessor::iid,
-                                       Steinberg::Vst::IEditController::iid,
-                                       Steinberg::Vst::IConnectionPoint::iid };
+   static auto supportedInterfaces = {
+      Steinberg::Vst::IComponent::iid,
+      Steinberg::Vst::IAudioProcessor::iid,
+      Steinberg::Vst::IEditController::iid,
+      Steinberg::Vst::IConnectionPoint::iid,
+      Steinberg::Vst::IUnitInfo::iid
+   };
 
    auto uid = Steinberg::FUID::fromTUID(_iid);
    if (

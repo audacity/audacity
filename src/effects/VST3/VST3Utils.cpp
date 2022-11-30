@@ -122,6 +122,27 @@ bool VST3Utils::ParseAutomationParameterKey(const wxString& key, Steinberg::Vst:
    return false;
 }
 
+wxString VST3Utils::MakeFactoryPresetID(Steinberg::Vst::UnitID unitId, Steinberg::int32 programIndex)
+{
+   return wxString::Format("%d:%d",
+      static_cast<int>(unitId),
+      static_cast<int>(programIndex));
+}
+
+bool VST3Utils::ParseFactoryPresetID(const wxString& presetId, Steinberg::Vst::UnitID& unitId, Steinberg::int32& programIndex)
+{
+   auto parts = wxSplit(presetId, ':');
+   long nums[2]{};
+   if(parts.size() == 2 && parts[0].ToLong(&nums[0]) && parts[1].ToLong(&nums[1]))
+   {
+      unitId = static_cast<Steinberg::Vst::UnitID>(nums[0]);
+      programIndex = static_cast<Steinberg::int32>(nums[1]);
+      return true;
+   }
+   return false;
+}
+
+
 wxString VST3Utils::GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo)
 {
    return GetPresetsPath(

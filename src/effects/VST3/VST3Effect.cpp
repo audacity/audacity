@@ -166,6 +166,7 @@ OptionalMessage VST3Effect::LoadFactoryPreset(int index, EffectSettings& setting
       VST3Wrapper wrapper(*mModule, mEffectClassInfo);
       wrapper.InitializeComponents();
       wrapper.LoadPreset(mFactoryPresetIDs[index]);
+      wrapper.FlushParameters(settings);
       wrapper.StoreSettings(settings);
       return { nullptr };
    }

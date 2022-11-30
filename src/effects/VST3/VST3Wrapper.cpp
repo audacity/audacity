@@ -28,6 +28,32 @@ constexpr auto processorStateKey  = wxT("ProcessorState");
 constexpr auto controllerStateKey = wxT("ControllerState");
 constexpr auto parametersKey = wxT("Parameters");
 
+struct VST3PluginCache
+{
+   Steinberg::Vst::ParamID rootUnitProgramChangeParameterID { Steinberg::Vst::kNoParamId };
+   Steinberg::Vst::ProgramListID rootUnitProgramListID { Steinberg::Vst::kNoProgramListId };
+   Steinberg::int32 rootUnitProgramCount { 0 };
+};
+
+std::map<std::string, VST3PluginCache> sVST3PluginCache;
+
+VST3PluginCache* GetCache(const VST3::UID& effectUid)
+{
+   const auto key = effectUid.toString();
+   auto it = sVST3PluginCache.find(key);
+   if(it != sVST3PluginCache.end())
+      return &it->second;
+   return nullptr;
+}
+
+VST3PluginCache& CreateCache(const VST3::UID& effectUid)
+{
+   const auto key = effectUid.toString();
+   assert(sVST3PluginCache.find(key) == sVST3PluginCache.end());
+   const auto result = sVST3PluginCache.insert(std::pair { key, VST3PluginCache {} });
+   return result.first->second;
+}
+
 Steinberg::Vst::SpeakerArrangement GetBusArragementForChannels(
    int32_t channelsCount, Steinberg::Vst::SpeakerArrangement defaultArragment)
 {
@@ -417,6 +443,84 @@ VST3Wrapper::VST3Wrapper(VST3::Hosting::Module& module, const VST3::Hosting::Cla
    mEditController = editController;
 
    mEditController->initialize(&AudacityVst3HostApplication::Get());
+
+   mComponentHandler = owned(safenew ComponentHandler(*this));
+   mEditController->setComponentHandler(mComponentHandler);
+
+   const auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
+   const auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
+
+   if (componentConnectionPoint && controllerConnectionPoint)
+   {
+      mComponentConnectionProxy = owned(safenew internal::ConnectionProxy(componentConnectionPoint));
+      mControllerConnectionProxy = owned(safenew internal::ConnectionProxy(controllerConnectionPoint));
+
+      mComponentConnectionProxy->connect(controllerConnectionPoint);
+      mControllerConnectionProxy->connect(componentConnectionPoint);
+   }
+   
+   if(GetCache(mEffectClassInfo.ID()) == nullptr)
+   {
+      //First time instantiation...
+      auto& cache = CreateCache(mEffectClassInfo.ID());
+
+      //Find root unit program change parameter ID (if any)
+      for(int32 parameterIndex = 0, parametersCount = mEditController->getParameterCount();
+         parameterIndex < parametersCount;
+         ++parameterIndex)
+      {
+         Vst::ParameterInfo parameterInfo {};
+         if(mEditController->getParameterInfo(parameterIndex, parameterInfo) != kResultOk)
+            continue;
+
+         if(parameterInfo.unitId != Vst::kRootUnitId)
+            continue;
+         if((parameterInfo.flags & Vst::ParameterInfo::kIsProgramChange) == 0)
+            continue;
+         
+         auto unitInfoProvider = FUnknownPtr<Vst::IUnitInfo>(mEditController);
+         if(!unitInfoProvider)
+            //Sanity check...
+            break;
+
+         for(int32 unitIndex = 0, unitCount = unitInfoProvider->getUnitCount();
+           unitIndex < unitCount;
+            ++unitIndex)
+         {
+            Vst::UnitInfo unitInfo{};
+            if(unitInfoProvider->getUnitInfo(unitIndex, unitInfo) != kResultOk)
+               continue;
+
+            if(unitInfo.id != Vst::kRootUnitId)
+               continue;
+
+            for(int32 programListIndex = 0, programListCount = unitInfoProvider->getProgramListCount();
+               programListIndex < programListCount;
+               ++programListIndex)
+            {
+               Vst::ProgramListInfo programListInfo{};
+               if(unitInfoProvider->getProgramListInfo(programListIndex, programListInfo) != kResultOk)
+                  continue;
+
+               if(programListInfo.id != unitInfo.programListId)//unitInfo.id == kRootUnitId
+                  continue;
+
+               cache.rootUnitProgramListID = programListInfo.id;
+               cache.rootUnitProgramCount = programListInfo.programCount;
+               break;
+            }
+            
+            if(cache.rootUnitProgramListID == Vst::kNoProgramListId)
+               cache.rootUnitProgramCount = parameterInfo.stepCount + 1;
+            
+            cache.rootUnitProgramChangeParameterID = parameterInfo.id;
+
+            break;
+         }
+
+         break;
+      }
+   }
 }
 
 VST3Wrapper::~VST3Wrapper()
@@ -448,23 +552,8 @@ void VST3Wrapper::InitializeComponents()
    mSetup.symbolicSampleSize = Vst::kSample32;
    mSetup.sampleRate = 44100.0;
 
-   mComponentHandler = owned(safenew ComponentHandler(*this));
-   mEditController->setComponentHandler(mComponentHandler);
-
    if(!SetupProcessing(*mEffectComponent, mSetup))
       throw std::runtime_error("bus configuration not supported");
-
-   const auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
-   const auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
-
-   if (componentConnectionPoint && controllerConnectionPoint)
-   {
-      mComponentConnectionProxy = owned(safenew internal::ConnectionProxy(componentConnectionPoint));
-      mControllerConnectionProxy = owned(safenew internal::ConnectionProxy(controllerConnectionPoint));
-
-      mComponentConnectionProxy->connect(controllerConnectionPoint);
-      mControllerConnectionProxy->connect(componentConnectionPoint);
-   }
 
    mParameterQueues = std::make_unique<SingleInputParameterValue[]>(mEditController->getParameterCount());
    mParameters.reserve(mEditController->getParameterCount());
@@ -556,6 +645,37 @@ void VST3Wrapper::StoreSettings(EffectSettings& settings) const
 void VST3Wrapper::LoadPreset(const wxString& presetId)
 {
    using namespace Steinberg;
+
+   auto cache = GetCache(mEffectClassInfo.ID());
+
+   if(cache->rootUnitProgramChangeParameterID != Vst::kNoParamId &&
+      cache->rootUnitProgramCount > 0)
+   {
+      Vst::UnitID unitId;
+      int32 programIndex; 
+      if(VST3Utils::ParseFactoryPresetID(presetId, unitId, programIndex) &&
+         programIndex >= 0 && programIndex < cache->rootUnitProgramCount)
+      {
+         auto paramValueNormalized = static_cast<Vst::ParamValue>(programIndex);
+         if(cache->rootUnitProgramCount > 1)
+            paramValueNormalized /= static_cast<Vst::ParamValue>(cache->rootUnitProgramCount - 1);
+
+         mEditController->setParamNormalized(
+            cache->rootUnitProgramChangeParameterID,
+            paramValueNormalized);
+
+         if(mComponentHandler)
+         {
+            mComponentHandler->beginEdit(cache->rootUnitProgramChangeParameterID);
+            auto commit = finally([&] { mComponentHandler->endEdit(cache->rootUnitProgramChangeParameterID); });
+            mComponentHandler->performEdit(
+               cache->rootUnitProgramChangeParameterID,
+               paramValueNormalized);
+         }
+
+         return;
+      }
+   }
 
    auto fileStream = owned(Vst::FileStream::open(presetId.c_str(), "rb"));
    if(!fileStream)
@@ -842,6 +962,8 @@ void VST3Wrapper::EndParameterEdit()
 
 std::vector<VST3Wrapper::FactoryPresetDesc> VST3Wrapper::FindFactoryPresets() const
 {
+   using namespace Steinberg;
+   
    wxArrayString paths;
    wxDir::GetAllFiles(VST3Utils::GetFactoryPresetsPath(mEffectClassInfo), &paths);
 
@@ -851,6 +973,48 @@ std::vector<VST3Wrapper::FactoryPresetDesc> VST3Wrapper::FindFactoryPresets() co
       wxFileName filename(path);
       result.push_back({ filename.GetFullPath(), filename.GetName() });
    }
+
+   auto cache = GetCache(mEffectClassInfo.ID());
+   if(cache->rootUnitProgramChangeParameterID != Vst::kNoParamId &&
+      cache->rootUnitProgramCount > 0)
+   {
+      Vst::String128 programName;
+      if(cache->rootUnitProgramListID != Vst::kNoProgramListId)
+      {
+         auto unitInfoProvider = FUnknownPtr<Vst::IUnitInfo>(mEditController);
+         
+         for(int32 programIndex = 0, programCount = cache->rootUnitProgramCount;
+             programIndex < programCount;
+             ++programIndex)
+         {
+            if(unitInfoProvider->getProgramName(cache->rootUnitProgramListID, programIndex, programName) != kResultOk)
+               programName[0] = 0;
+            auto presetDisplayName = VST3Utils::ToWxString(programName);
+            if(presetDisplayName.empty())
+               presetDisplayName = wxString::Format("Unit %03d - %04d", Vst::kRootUnitId, programIndex);
+            
+            result.push_back({
+               VST3Utils::MakeFactoryPresetID(Vst::kRootUnitId, programIndex),
+               presetDisplayName
+            });
+         }
+      }
+      else
+      {
+         for(int32_t programIndex = 0; programIndex < cache->rootUnitProgramCount; ++programIndex)
+         {
+            auto normalizedValue = mEditController->plainParamToNormalized(cache->rootUnitProgramChangeParameterID, programIndex);
+            if(mEditController->getParamStringByValue(cache->rootUnitProgramChangeParameterID, normalizedValue, programName) == kResultOk)
+            {
+               result.push_back({
+                  VST3Utils::MakeFactoryPresetID(Vst::kRootUnitId, programIndex),
+                  VST3Utils::ToWxString(programName)
+               });
+            }
+         }
+      }
+   }
+
    return result;
 }
 
