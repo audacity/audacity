@@ -41,7 +41,7 @@ struct RealtimeEffectListMessage final
    std::shared_ptr<RealtimeEffectState> affectedState;
 };
 
-class RealtimeEffectList final
+class AUDACITY_DLL_API RealtimeEffectList final
    // Inheritance from std::enable_shared_from_this must be public
    // but the per-track lists are managed by unique not shared pointers
    : public std::enable_shared_from_this<RealtimeEffectList>

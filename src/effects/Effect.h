@@ -349,7 +349,7 @@ public:
 
 //! Subclass of Effect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
-class StatefulEffect
+class AUDACITY_DLL_API StatefulEffect
    : public StatefulEffectBase
    , public Effect
 {

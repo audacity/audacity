@@ -30,7 +30,7 @@ enum eWindowFunctions : int;
  and -behind to nearby windows.  May also be used just to gather information
  without producing output.
 */
-class SpectrumTransformer /* not final */
+class AUDACITY_DLL_API SpectrumTransformer /* not final */
 {
 public:
    // Public interface
@@ -80,7 +80,7 @@ public:
    bool Finish(const WindowProcessor &processor);
 
    //! Derive this class to add information to the queue.  @see NewWindow()
-   struct Window
+   struct AUDACITY_DLL_API Window
    {
       explicit Window(size_t windowSize)
          : mRealFFTs( windowSize / 2 )
@@ -180,7 +180,8 @@ private:
 class WaveTrack;
 
 //! Subclass of SpectrumTransformer that rewrites a track
-class TrackSpectrumTransformer /* not final */ : public SpectrumTransformer {
+class AUDACITY_DLL_API
+TrackSpectrumTransformer /* not final */ : public SpectrumTransformer {
 public:
    using SpectrumTransformer::SpectrumTransformer;
    ~TrackSpectrumTransformer() override;
