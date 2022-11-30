@@ -30,7 +30,7 @@
    Also uses GetLatency() to determine how many leading output samples to
    discard and how many extra samples to produce.
  */
-class PerTrackEffect
+class AUDACITY_DLL_API PerTrackEffect
    : public Effect
 {
 public:
