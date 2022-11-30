@@ -30,6 +30,7 @@ constexpr auto parametersKey = wxT("Parameters");
 
 struct VST3PluginCache
 {
+   EffectSettings defaultSettings;
    Steinberg::Vst::ParamID rootUnitProgramChangeParameterID { Steinberg::Vst::kNoParamId };
    Steinberg::Vst::ProgramListID rootUnitProgramListID { Steinberg::Vst::kNoProgramListId };
    Steinberg::int32 rootUnitProgramCount { 0 };
@@ -566,8 +567,14 @@ void VST3Wrapper::InitializeComponents()
       mEditController->setComponentState(&stateStream);
    }
 
-   mDefaultSettings = MakeSettings();
-   StoreSettings(mDefaultSettings);
+   {
+      auto cache = GetCache(mEffectClassInfo.ID());
+      if(!cache->defaultSettings.has_value())
+      {
+         cache->defaultSettings = MakeSettings();
+         StoreSettings(cache->defaultSettings);
+      }
+   }
 
    static_cast<ComponentHandler*>(mComponentHandler.get())
       ->LoadCurrentParamValues();
@@ -595,7 +602,7 @@ void VST3Wrapper::FetchSettings(EffectSettings& settings)
       //Restore state
       const auto* vst3settings = &GetSettings(settings);
       if(!vst3settings->processorState.has_value())
-         vst3settings = &GetSettings(mDefaultSettings);
+         vst3settings = &GetSettings(GetCache(mEffectClassInfo.ID())->defaultSettings);
 
       if(vst3settings->processorState.has_value())
       {
