@@ -20,6 +20,8 @@ class AudioUnitInstance : public PerTrackEffect::Instance
    , public AudioUnitWrapper
 {
 public:
+   using Instance::mProcessor;
+
    AudioUnitInstance(const PerTrackEffect &effect,
       AudioComponent component, Parameters &parameters,
       const wxString &identifier,
@@ -27,6 +29,13 @@ public:
 
    void EventListener(const AudioUnitEvent *inEvent,
       AudioUnitParameterValue inParameterValue);
+
+   // Override the virtual function to allocate an empty message
+   std::unique_ptr<Message> MakeMessage() const override;
+
+   // A non-virtual overload makes a non-empty message
+   std::unique_ptr<Message>
+      MakeMessage(AudioUnitParameterID id, AudioUnitParameterValue value) const;
 
 private:
    size_t InitialBlockSize() const;
@@ -53,6 +62,7 @@ private:
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
+
    bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)

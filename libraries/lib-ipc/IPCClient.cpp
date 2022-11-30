@@ -31,6 +31,12 @@ public:
       if(!fd)
          throw std::runtime_error("cannot create socket");
 
+#if defined(__unix__) || defined(__APPLE__)
+      auto fdFlags = fcntl(*fd, F_GETFD, 0);
+      if(fdFlags != -1)
+         fcntl(*fd, F_SETFD, fdFlags | FD_CLOEXEC);
+#endif
+      
       sockaddr_in addrin {};
       addrin.sin_family = AF_INET;
       addrin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);

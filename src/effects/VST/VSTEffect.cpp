@@ -331,6 +331,12 @@ PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
                             WXSIZEOF(dpath));
    pathList.push_back(dpath);
 
+   dpath[0] = 0;
+   ExpandEnvironmentStrings(wxT("%COMMONPROGRAMFILES%\\VST2"),
+                            dpath,
+                            WXSIZEOF(dpath));
+   pathList.push_back(dpath);
+
    // Recursively scan for all DLLs
    pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
 
@@ -391,7 +397,8 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
    auto result = std::make_unique<VSTEffect>(path);
-   result->InitializePlugin();
+   if (!result->InitializePlugin())
+      result.reset();
    return result;
 }
 
@@ -912,95 +919,6 @@ bool VSTEffect::InitializePlugin()
 }
 
 
-bool VSTEffectWrapper::TransferSettingsContents
-(
-   VSTEffectSettings& src,
-   VSTEffectSettings& dst,
-   bool doMove,
-   bool doMerge
-)
-{
-   dst.mNumParams = src.mNumParams;
-   dst.mUniqueID  = src.mUniqueID;
-   dst.mVersion   = src.mVersion;
-
-   assert(dst.mParamsMap.size() == src.mParamsMap.size());
-
-   bool discard = false;
-
-   // Do the chunk first
-   if (!src.mChunk.empty())
-   {
-      dst.mChunk = src.mChunk;
-      if (doMove)
-      {
-         src.mChunk.resize(0);
-      }
-
-      // If a new chunk is merged, any unconsumed slider movements in the
-      // parameters map are discarded before the other thread sees them
-      discard = doMerge;
-   }
-   else if (!doMerge)
-   {
-      // Assignment means copy the emptiness of the chunk
-      dst.mChunk.resize(0);
-   }
-   
-
-   // Then do an in-place rewrite of dst, avoiding allocations
-   auto& dstMap = dst.mParamsMap;
-   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
-   auto& srcMap = src.mParamsMap;
-
-   for (auto& [key, srcValue] : srcMap)
-   {
-      assert(dstIter != dstEnd);
-      auto& [dstKey, dstValue] = *dstIter;
-      assert(dstKey == key);
-
-      if (discard || (!srcValue && !doMerge))
-      {
-         // Merging a chunk message, or else,
-         // source has no value, and we do not want to merge (i.e. keep any
-         // dest value that might be there) - delete the destination value
-         dstValue = std::nullopt;
-      }
-      else if (srcValue)
-      {
-         dstValue = srcValue;
-      }
-
-      if (doMove)
-      {
-         srcValue = std::nullopt;
-      }
-
-      dstIter++;
-   }
-
-   assert(dstIter == dstEnd);
-
-   return true;
-}
-
-
-bool VSTEffectWrapper::CopySettingsContents(const VSTEffectSettings& src,
-                                                  VSTEffectSettings& dst) const
-{
-   return TransferSettingsContents(
-      const_cast<VSTEffectSettings&>(src), dst, /*move =*/ false, /*merge =*/ false);
-}
-
-
-bool VSTEffectWrapper::MoveSettingsContents(VSTEffectSettings&& src,
-                                            VSTEffectSettings&  dst,
-                                            bool                merge)
-{
-   return TransferSettingsContents(src, dst, /*move =*/ true, merge);
-}
-
-
 namespace
 {
    struct VSTEffectMessage : EffectInstance::Message
@@ -1008,7 +926,7 @@ namespace
       using ParamVector = std::vector<std::optional<double> >;
 
       // Make a message from a chunk and ID-value pairs
-      explicit VSTEffectMessage(std::vector<char>&& chunk, ParamVector&& params)
+      explicit VSTEffectMessage(std::vector<char> chunk, ParamVector params)
          : mChunk(std::move(chunk)),
            mParamsVec(std::move(params))
       {
@@ -1152,6 +1070,17 @@ unsigned VSTEffectInstance::GetAudioOutCount() const
 
 size_t VSTEffectInstance::SetBlockSize(size_t maxBlockSize)
 {
+   // Issue 3935 for IEM plug-ins, VST 2 versions:
+   // It is mysterious why this further limitation of size works to
+   // prevent the crashes in destructive processing, or why this is not
+   // needed for non-destructive, but here it is
+   // Those plugins report many channels (like 64) but most others will not
+   // be affected by these lines with the default size of 8192
+   // Note it may make the Block Size option of the settings dialog misleading
+   auto numChannels = std::max({ 1u, GetAudioInCount(), GetAudioOutCount() });
+   maxBlockSize = std::max(size_t(1),
+      std::min(maxBlockSize, size_t(0x8000u / numChannels)));
+
    mBlockSize = std::min( maxBlockSize, mUserBlockSize );
    return mBlockSize;
 }
@@ -1177,7 +1106,13 @@ bool VSTEffectInstance::IsReady()
 bool VSTEffectInstance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames)
 {
-   StoreSettings(GetSettings(settings));
+   // Issue 3942: Copy the contents of settings first.
+   // settings may refer to what is in the RealtimeEffectState, but that might
+   // get reassigned by EffectSettingsAccess::Set, when the validator's
+   // Automate() is called-back by the plug-in during callSetParameter.
+   // So this avoids a dangling reference.
+   auto copiedSettings = GetSettings(settings);
+   StoreSettings(copiedSettings);
 
    return DoProcessInitialize(sampleRate);
 }
@@ -1300,6 +1235,12 @@ bool VSTEffectInstance::RealtimeResume()
    return true;
 }
 
+
+bool VSTEffectInstance::OnePresetWasLoadedWhilePlaying()
+{
+   return mPresetLoadedWhilePlaying.exchange(false);
+}
+
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
    if (!package.pMessage)
@@ -1324,6 +1265,16 @@ bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 
       // Don't return yet.  Maybe some slider movements also accumulated after
       // the change of the chunk.
+
+      const bool IsAudioThread = (mMainThreadId != std::this_thread::get_id());
+      if (IsAudioThread)
+      {
+         // At the moment, the only reason why this method would be called in the audio thread,
+         // is because a preset was loaded while playing
+
+         mPresetLoadedWhilePlaying.store(true);
+      }
+
    }
 
 
@@ -1414,14 +1365,6 @@ int VSTEffect::ShowClientInterface(
    //   mProcessLevel = 1;      // in GUI thread
 
    VSTEffectValidator* vstValidator = static_cast<VSTEffectValidator*>(validator);
-
-   if (! vstValidator->GetInstance().IsReady() )
-   {
-      // Set some defaults since some VSTs need them...these will be reset when
-      // normal or realtime processing begins
-      vstValidator->GetInstance().mBlockSize = 8192;
-      vstValidator->GetInstance().DoProcessInitialize(mProjectRate);
-   }
 
    return vstValidator->ShowDialog(/* nonModal = */ SupportsRealtime() && !forceModal);
 }
@@ -2304,24 +2247,59 @@ void VSTEffectInstance::SizeWindow(int w, int h)
    }
 }
 
+void VSTEffectValidator::NotifyParameterChanged(int index, float value)
+{
+   const auto& settings = VSTEffectWrapper::GetSettings(mAccess.Get());
+
+   GetInstance().ForEachParameter(
+      [index, value, &settings, this](const auto& pi)
+      {
+         if (pi.mID != index)
+            return true;
+
+         auto it = settings.mParamsMap.find(pi.mName);
+
+         // For consistency with other plugin families
+         constexpr float epsilon = 1.0e-5f; 
+
+         if (
+            it == settings.mParamsMap.end() || !it->second.has_value() ||
+            std::abs(*it->second - value) > epsilon)
+            Publish(EffectSettingChanged { size_t(index), value });
+
+         return false;
+      });
+}
+
 void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
-
-   // Be sure the instance has got any messages
-   if (mNeedFlush != -1) {
+   if (!mLastMovements.empty()) {
+      // Be sure the instance has got any messages
       mAccess.Flush();
-
-      // Update settings, for stickiness
-      mAccess.ModifySettings([this](EffectSettings& settings)
-      {
-         FetchSettingsFromInstance(settings);
+      mAccess.ModifySettings([&](EffectSettings& settings) {
+         // Update settings, for stickiness
+         // But don't do a complete FetchSettingsFromInstance
+         for (auto [index, value] : mLastMovements) {
+            if (index >= 0 && index < mParamNames.size()) {
+               const auto &string = mParamNames[index];
+               auto &mySettings = VSTEffectWrapper::GetSettings(settings);
+               mySettings.mParamsMap[string] = value;
+            }
+         }
+         // Succeed but with a null message
          return nullptr;
       });
-
-      RefreshParameters(mNeedFlush);
-      mNeedFlush = -1;
+      for (auto [index, _] : mLastMovements)
+         RefreshParameters(index);
+      mLastMovements.clear();
    }
+
+   if ( GetInstance().OnePresetWasLoadedWhilePlaying() )
+   {
+      RefreshParameters();
+   }
+
 }
 
 void VSTEffectValidator::SizeWindow(int w, int h)
@@ -2755,12 +2733,10 @@ void VSTEffectValidator::OnSlider(wxCommandEvent & evt)
    int i = s->GetId() - ID_Sliders;
    float value = s->GetValue() / 1000.0;
 
+   NotifyParameterChanged(i, value);
    // Send changed settings (only) to the worker thread
-   mAccess.ModifySettings([&](EffectSettings&) {
-      auto result = GetInstance().MakeMessage(i, value);
-      return result;
-   });
-   mNeedFlush = i;
+   mAccess.Set(GetInstance().MakeMessage(i, value));
+   mLastMovements.emplace_back(i, value);
 }
 
 bool VSTEffectWrapper::LoadFXB(const wxFileName & fn)
@@ -3704,6 +3680,15 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
       {
          name.Printf(wxT("parm_%d"), i);
       }
+      else
+         /* Easy fix for now for issue 3854, but this should be reconsidered
+          There is the possibility that two parameter names might collide
+          after normalizing.  A question is whether the normalizing was ever
+          really needed for saving in a wxConfigFile.  Maybe not.  But then
+          redefinition of the keys stored in the file may introduce versioning
+          difficulties if there is an attempt to fix this in future Audacity.
+          */
+         name = CommandParameters::NormalizeName(name);
 
       ParameterInfo pi{ i, name };
 
@@ -3780,11 +3765,12 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
    {
       VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
       callSetChunk(true, chunk.size(), const_cast<char *>(chunk.data()), &info);
-      return true;
    }
 
 
-   // Chunk unavailable / decoding it did not work? fall back to param ID-value pairs
+   // Settings (like the message) may store both a chunk, and also accumulated
+   // slider movements to reapply after the chunk change.  Or it might be
+   // no chunk and id-value pairs only
 
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
 
@@ -3839,21 +3825,26 @@ VSTEffectValidator::~VSTEffectValidator()
 
 
 std::unique_ptr<EffectInstance::Message>
-VSTEffectWrapper::MakeMessageFS(VSTEffectSettings &settings) const
+VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
 {
    VSTEffectMessage::ParamVector paramVector;
-   paramVector.resize(settings.mParamsMap.size(), std::nullopt);
-   
+   paramVector.resize(mAEffect->numParams, std::nullopt);
+
    ForEachParameter
    (
       [&](const VSTEffectWrapper::ParameterInfo& pi)
       {
-         paramVector[pi.mID] = settings.mParamsMap[pi.mName];
+         auto &slot = paramVector[pi.mID]; // operator [] may make a nullopt
+         const auto iter = settings.mParamsMap.find(pi.mName),
+            end = settings.mParamsMap.end();
+         if (iter != end)
+            slot = iter->second;
          return true;
       }
    );   
 
-   return std::make_unique<VSTEffectMessage>(std::move(settings.mChunk), std::move(paramVector));
+   return std::make_unique<VSTEffectMessage>(
+      settings.mChunk /* vector copy */, std::move(paramVector));
 }
 
 VSTEffectValidator::VSTEffectValidator
@@ -3875,8 +3866,15 @@ VSTEffectValidator::VSTEffectValidator
    mAccess.ModifySettings([&](EffectSettings &settings){
       return GetInstance().MakeMessageFS(VSTEffectInstance::GetSettings(settings));
    });
+
    auto settings = mAccess.Get();
    StoreSettingsToInstance(settings);
+
+   //! Note the parameter names for later use
+   mInstance.ForEachParameter([&](const VSTEffectWrapper::ParameterInfo &pi) {
+      mParamNames.push_back(pi.mName);
+      return true;
+   } );
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
 
@@ -3914,12 +3912,10 @@ void VSTEffectInstance::Automate(int index, float value)
 
 void VSTEffectValidator::Automate(int index, float value)
 {
+   NotifyParameterChanged(index, value);
    // Send changed settings (only) to the worker thread
-   mAccess.ModifySettings([&](EffectSettings&) {
-      auto result = GetInstance().MakeMessage(index, value);
-      return result;
-   });
-   mNeedFlush = index;
+   mAccess.Set(GetInstance().MakeMessage(index, value));
+   mLastMovements.emplace_back(index, value);
 }
 
 
@@ -3952,6 +3948,14 @@ VSTEffectInstance::VSTEffectInstance
    mUseLatency = useLatency;
 
    Load();
+
+   if (!IsReady() )
+   {
+      // Set some defaults since some VSTs need them...these will be reset when
+      // normal or realtime processing begins
+      mBlockSize = 8192;
+      DoProcessInitialize(44100.0);
+   }
 }
 
 

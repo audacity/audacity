@@ -36,7 +36,8 @@ namespace
          {
             TranslatableString errorMessage{};
             auto validator = provider->MakeValidator();
-            provider->DiscoverPluginsAtPath(pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
+            auto numPlugins = provider->DiscoverPluginsAtPath(
+               pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
             {
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
@@ -60,6 +61,8 @@ namespace
             });
             if(!errorMessage.empty())
                result.SetError(errorMessage.Debug());
+            else if(numPlugins == 0)
+               result.SetError("no plugins found");
          }
          else
             result.SetError("provider not found");
@@ -136,6 +139,9 @@ bool PluginHost::Serve()
 
    if(mRequest)
    {
+      if(mChannel)
+         detail::PutMessage(*mChannel, wxEmptyString);
+
       std::optional<wxString> request;
       mRequest.swap(request);
 
@@ -199,9 +205,9 @@ bool PluginHost::Start(int connectPort)
    return false;
 }
 
-bool PluginHost::IsHostProcess()
+bool PluginHost::IsHostProcess(int argc, wxChar** argv)
 {
-   return wxTheApp && wxTheApp->argc >= 3 && wxStrcmp(wxTheApp->argv[1], HostArgument) == 0;
+   return argc >= 3 && wxStrcmp(argv[1], HostArgument) == 0;
 }
 
 class PluginHostModule final :
@@ -212,7 +218,7 @@ public:
 
    bool OnInit() override
    {
-      if(PluginHost::IsHostProcess())
+      if(PluginHost::IsHostProcess(wxTheApp->argc, wxTheApp->argv))
       {
          long connectPort;
          if(!wxTheApp->argv[2].ToLong(&connectPort))

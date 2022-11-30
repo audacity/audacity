@@ -304,7 +304,7 @@ public:
       return true;
    }
 
-   wxString NormalizeName(const wxString & name) const
+   static wxString NormalizeName(const wxString & name)
    {
       wxString cleaned = name;
 

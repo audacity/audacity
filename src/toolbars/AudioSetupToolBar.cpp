@@ -157,7 +157,6 @@ void AudioSetupToolBar::MakeAudioSetupButton()
    //i18n-hint: Audio setup button text, keep as short as possible
    mAudioSetup->SetLabel(XO("Audio Setup"));
    mAudioSetup->SetButtonType(AButton::FrameButton);
-   mAudioSetup->SetButtonToggles(true);
    mAudioSetup->SetImages(
       theTheme.Image(bmpRecoloredUpSmall),
       theTheme.Image(bmpRecoloredUpHiliteSmall),

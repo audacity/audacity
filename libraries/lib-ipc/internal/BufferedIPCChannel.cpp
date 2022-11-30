@@ -46,6 +46,10 @@ BufferedIPCChannel::~BufferedIPCChannel()
 
 void BufferedIPCChannel::Send(const void* bytes, size_t length)
 {
+   assert(length > 0);
+   if(length == 0)
+      return;
+
    {
       std::lock_guard lck(mSocketSync);
 

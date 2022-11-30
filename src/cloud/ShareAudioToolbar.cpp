@@ -155,7 +155,6 @@ void ShareAudioToolbar::MakeShareAudioButton()
    //i18n-hint: Share audio button text, keep as short as possible
    mShareAudioButton->SetLabel(XO("Share Audio"));
    mShareAudioButton->SetButtonType(AButton::FrameButton);
-   mShareAudioButton->SetButtonToggles(true);
    mShareAudioButton->SetImages(
       theTheme.Image(bmpRecoloredUpSmall),
       theTheme.Image(bmpRecoloredUpHiliteSmall),

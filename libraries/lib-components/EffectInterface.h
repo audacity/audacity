@@ -52,6 +52,8 @@
 #include <type_traits>
 #include <wx/event.h>
 
+#include "Observer.h"
+
 class ShuttleGui;
 template<bool Const> class SettingsVisitorBase;
 using SettingsVisitor = SettingsVisitorBase<false>;
@@ -186,6 +188,8 @@ public:
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings,
       std::unique_ptr<Message> pMessage = nullptr) = 0;
+   //! Message-only overload of Set().  In future, this should be the only one.
+   virtual void Set(std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
    /*!
@@ -221,6 +225,7 @@ public:
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings,
       std::unique_ptr<Message> pMessage) override;
+   void Set(std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -627,6 +632,18 @@ public:
 
 };
 
+/*************************************************************************************/ /**
+
+ \class EffectSettingChanged
+
+ \brief Message sent by validator when a setting is changed by a user
+
+ *******************************************************************************************/
+struct COMPONENTS_API EffectSettingChanged final
+{
+   size_t index { size_t(-1) };
+   float newValue {};
+};
 /*************************************************************************************//**
 
 \class EffectUIValidator
@@ -635,6 +652,7 @@ public:
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIValidator /* not final */
+    : public Observer::Publisher<EffectSettingChanged>
 {
 public:
    EffectUIValidator(

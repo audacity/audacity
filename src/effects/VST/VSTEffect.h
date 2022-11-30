@@ -25,6 +25,7 @@
 #include <optional>
 #include <mutex>
 #include <thread>
+#include <atomic>
 
 class wxSizerItem;
 class wxSlider;
@@ -302,23 +303,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    void         SetBufferDelay(int samples);
 
 
-   static bool TransferSettingsContents(VSTEffectSettings& src,
-                                        VSTEffectSettings& dst,
-                                        bool doMove,
-                                        bool doMerge);
-
-   //! Copy from one map to another
-   bool CopySettingsContents(const VSTEffectSettings& src,
-                                   VSTEffectSettings& dst) const;
-
-   //! Copy, then clear the optionals in src
-   static bool MoveSettingsContents(VSTEffectSettings&& src,
-                                    VSTEffectSettings&  dst,
-                                    bool merge);
-
    // Make message carrying all the information in settings, including chunks
+   // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
-      MakeMessageFS(VSTEffectSettings& settings) const;
+      MakeMessageFS(const VSTEffectSettings& settings) const;
 };
 
 class VSTEffectInstance;
@@ -565,6 +553,8 @@ public:
    // overrides in the Validator which owns the instance - this sets it.
    void SetOwningValidator(VSTEffectUIWrapper* vi);
 
+   bool OnePresetWasLoadedWhilePlaying();
+
 private:
 
    void callProcessReplacing(
@@ -581,6 +571,8 @@ private:
    bool mRecruited{ false };
 
    VSTEffectUIWrapper* mpOwningValidator{};
+
+   std::atomic_bool mPresetLoadedWhilePlaying{ false };
 };
 
 
@@ -628,6 +620,7 @@ protected:
    void SizeWindow(int w, int h) override;
 
 private:
+   void NotifyParameterChanged(int index, float value);
    void OnIdle(wxIdleEvent &evt);
 
    VSTEffectInstance& mInstance;
@@ -643,7 +636,9 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
-   int mNeedFlush{ -1 };
+
+   // Remembers last slider movements until idle time
+   std::vector<std::pair<int, double>> mLastMovements{};
 
    ArrayOf<wxStaticText*> mNames;
    ArrayOf<wxSlider*> mSliders;
@@ -655,6 +650,9 @@ private:
    wxWeakRef<wxDialog> mDialog;
    
    VSTControl* mControl;
+
+   // Mapping from parameter ID to string
+   std::vector<wxString> mParamNames;
 
    int mNumParams{ 0 };
 };
