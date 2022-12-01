@@ -611,7 +611,6 @@ void LWSlider::Init(wxWindow * parent,
    mThumbBitmapHilited = nullptr;
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
-   mTipPanel = NULL;
 
    AdjustSize(size);
 
@@ -1408,8 +1407,22 @@ void LWSlider::OnKeyDown(wxKeyEvent & event)
 
 void LWSlider::SetParent(wxWindow* parent)
 {
+   if(mParent == parent)
+      return;
+   
    mParent = parent;
-   CreatePopWin();
+   if(mTipPanel)
+   {
+      if(parent != nullptr)
+         mTipPanel->SetParent(parent);
+      else
+      {
+         mTipPanel->Destroy();
+         mTipPanel = nullptr;
+      }
+   }
+   else if(parent != nullptr)
+      CreatePopWin();
 }
 
 
