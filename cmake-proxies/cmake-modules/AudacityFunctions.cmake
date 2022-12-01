@@ -469,11 +469,18 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
    target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
 
-   if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" AND NOT CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo" )
+   if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      # Generate-time boolean values must be "0" or "1",
+      # not "on", "off", etc. like configure-time booleans
+      if (CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
+         set(nostrip 1)
+      else()
+         set(nostrip 0)
+      endif()
       add_custom_command(
          TARGET "${TARGET}"
          POST_BUILD
-         COMMAND strip -x $<TARGET_FILE:${TARGET}>
+         COMMAND "$<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>,${nostrip}>,echo,strip>" -x $<TARGET_FILE:${TARGET}>
       )
    endif()
 
