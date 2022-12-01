@@ -4086,6 +4086,8 @@ void VSTEffectValidator::OnClose()
    mDialog = NULL;
 
    mAccess.Flush();
+
+   ValidateUI();
 }
 
 #endif // USE_VST
