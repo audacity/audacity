@@ -1175,6 +1175,11 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 
 bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
+   // Temporarily disconnect from any validator, so that setting the chunk
+   // does not cause Automate() callbacks (as some effects will do) that then
+   // would send slider movement messages that might destroy information in
+   // the settings.
+   auto vr = valueRestorer(mpOwningValidator, (VSTEffectUIWrapper*)nullptr);
    return ProcessInitialize(settings, sampleRate, {});
 }
 
