@@ -19,9 +19,9 @@
 
 #include "Effect.h"
 #include "EqualizationParameters.h"
+#include "EqualizationCurves.h"
 #include "RealFFTf.h"
 #include "../widgets/wxPanelWrapper.h"
-#include "XMLTagHandler.h"
 
 class wxBitmap;
 class wxBoxSizer;
@@ -41,89 +41,6 @@ class EqualizationPanel;
 class RulerPanel;
 
 using Floats = ArrayOf<float>;
-
-namespace EQUtils{
-int DoMessageBox(
-   const TranslatableString &name,
-   const TranslatableString &msg,
-   const TranslatableString &titleStr,
-   long style = wxOK | wxCENTRE);
-}
-
-//
-// One point in a curve
-//
-class EQPoint
-{
-public:
-   EQPoint( const double f, const double d ) { Freq = f; dB = d; }
-
-   bool operator < (const EQPoint &p1) const
-   {
-      return Freq < p1.Freq;
-   }
-
-   double Freq;
-   double dB;
-};
-
-//
-// One curve in a list
-//
-// LLL:  This "really" isn't needed as the array of points could be
-//       attached as wxClientData to the wxChoice entries.  I
-//       didn't realize this until after the fact and am too
-//       lazy to change it.  (But, hollar if you want me to.)
-//
-class EQCurve
-{
-public:
-   EQCurve( const wxString & name = {} ) { Name = name; }
-   EQCurve( const wxChar * name ) { Name = name; }
-
-   bool operator < (const EQCurve &that) const
-   {
-      return Name.CmpNoCase(that.Name) < 0;
-   }
-
-   wxString Name;
-   std::vector<EQPoint> points;
-};
-
-using EQCurveArray = std::vector<EQCurve>;
-
-class EQCurveWriter {
-public:
-   explicit EQCurveWriter(const EQCurveArray &curves) : mCurves{ curves } {}
-   void SaveCurves(const wxString &fileName = {});
-
-private:
-   void WriteXML(XMLWriter &xmlFile) const;
-   const EQCurveArray &mCurves;
-};
-
-class EQCurveReader : public XMLTagHandler {
-public:
-   EQCurveReader(
-      EQCurveArray &curves, const TranslatableString &name, int options)
-      : mCurves{ curves }, mName{ name }, mOptions{ options } {}
-
-   // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-
-   void LoadCurves(const wxString &fileName = {}, bool append = false);
-
-private:
-   bool GetDefaultFileName(wxFileName &fileName);
-   wxString GetPrefsPrefix();
-   // Merge NEW curves only or update all factory presets.
-   // Uses EQCurveWriter
-   void UpdateDefaultCurves(bool updateAll = false);
-   EQCurveArray &mCurves;
-   const TranslatableString mName;
-   const int mOptions;
-};
 
 class EffectEqualization : public StatefulEffect
 {

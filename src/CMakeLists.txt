@@ -438,6 +438,8 @@ list( APPEND SOURCES
       effects/Equalization.h
       effects/Equalization48x.cpp
       effects/Equalization48x.h
+      effects/EqualizationCurves.cpp
+      effects/EqualizationCurves.h
       effects/EqualizationParameters.cpp
       effects/EqualizationParameters.h
       effects/Fade.cpp
