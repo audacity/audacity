@@ -252,7 +252,7 @@ EffectEqualization::EffectEqualization(int Options)
    mDisallowCustom = false;
 
    // Load the EQ curves
-   LoadCurves();
+   EQCurveReader{ mCurves, mOptions }.LoadCurves();
 
    // Note: initial curve is set in TransferDataToWindow
 
@@ -498,7 +498,7 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
       }
       Select((int) mCurves.size() - 1);
    }
-   SaveCurves();
+   EQCurveWriter{ mCurves }.SaveCurves();
 
    mParameters.SaveConfig(GetDefinition());
 
@@ -507,7 +507,7 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
 
 // Effect implementation
 
-wxString EffectEqualization::GetPrefsPrefix()
+wxString EQCurveReader::GetPrefsPrefix()
 {
    wxString base = wxT("/Effects/Equalization/");
    if( mOptions == kEqOptionGraphic )
@@ -1358,7 +1358,7 @@ void EffectEqualization::Filter(size_t len, float *buffer)
 //
 // Load external curves with fallback to default, then message
 //
-void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
+void EQCurveReader::LoadCurves(const wxString &fileName, bool append)
 {
 // We've disabled the XML management of curves.
 // Just going via .cfg files now.
@@ -1456,7 +1456,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 //
 // Update presets to match Audacity version.
 //
-void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
+void EQCurveReader::UpdateDefaultCurves(bool updateAll /* false */)
 {
    if (mCurves.size() == 0)
       return;
@@ -1560,7 +1560,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
       mCurves.push_back( userUnnamed );   // we always need a default curve to use
    }
 
-   SaveCurves();
+   EQCurveWriter{ mCurves }.SaveCurves();
 
    // Write current EqCurve version number
    // TODO: Probably better if we used pluginregistry.cfg
@@ -1602,7 +1602,7 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
 //
 // Save curves to external file
 //
-void EffectEqualization::SaveCurves(const wxString &fileName)
+void EQCurveWriter::SaveCurves(const wxString &fileName)
 {
    wxFileName fn;
    if( fileName.empty() )
@@ -1952,7 +1952,8 @@ void EffectEqualization::Flatten()
 //
 // Process XML tags and handle the ones we recognize
 //
-bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
+bool EQCurveReader::HandleXMLTag(
+   const std::string_view& tag, const AttributesList &attrs)
 {
    // May want to add a version strings...
    if (tag == "equalizationeffect")
@@ -2046,7 +2047,7 @@ bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const Attribu
 //
 // Return handler for recognized tags
 //
-XMLTagHandler *EffectEqualization::HandleXMLChild(const std::string_view& tag)
+XMLTagHandler *EQCurveReader::HandleXMLChild(const std::string_view& tag)
 {
    if (tag == "equalizationeffect")
    {
@@ -2069,7 +2070,7 @@ XMLTagHandler *EffectEqualization::HandleXMLChild(const std::string_view& tag)
 //
 // Write all of the curves to the XML file
 //
-void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
+void EQCurveWriter::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    // Start our hierarchy
@@ -3540,14 +3541,8 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
       return;
    else
       fileName = filePicker.GetPath();
-   // Use EqualizationDialog::LoadCurves to read into (temporary) mEditCurves
-   // This may not be the best OOP way of doing it, but I don't know better (MJS)
-   EQCurveArray temp;
-   temp = mEffect->mCurves;   // temp copy of the main dialog curves
-   mEffect->mCurves = mEditCurves;  // copy EditCurvesDialog to main interface
-   mEffect->LoadCurves(fileName, true);   // use main interface to load imported curves
-   mEditCurves = mEffect->mCurves;  // copy back to this interface
-   mEffect->mCurves = temp;   // and reset the main interface how it was
+   EQCurveReader{ mEditCurves, mEffect->mOptions }
+      .LoadCurves(fileName, true);
    PopulateList(0);  // update the EditCurvesDialog dialog
    return;
 }
@@ -3564,8 +3559,6 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
    else
       fileName = filePicker.GetPath();
 
-   EQCurveArray temp;
-   temp = mEffect->mCurves;   // backup the parent's curves
    EQCurveArray exportCurves;   // Copy selected curves to export
    exportCurves.clear();
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
@@ -3588,9 +3581,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
    }
    if(i>0)
    {
-      mEffect->mCurves = exportCurves;
-      mEffect->SaveCurves(fileName);
-      mEffect->mCurves = temp;
+      EQCurveWriter{ exportCurves }.SaveCurves(fileName);
       auto message = XO("%d curves exported to %s").Format( i, fileName );
       mEffect->Effect::MessageBox(
          message,
@@ -3612,29 +3603,26 @@ void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
 {
-   EQCurveArray temp;
-   temp = mEffect->mCurves;
    // we expect this to fail in LoadCurves (due to a lack of path) and handle that there
-   mEffect->LoadCurves( wxT("EQDefaultCurves.xml") );
-   mEditCurves = mEffect->mCurves;
-   mEffect->mCurves = temp;
+   EQCurveReader{ mEditCurves, mEffect->mOptions }
+      .LoadCurves( wxT("EQDefaultCurves.xml") );
    PopulateList(0);  // update the EditCurvesDialog dialog
 }
 
 void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
-   // Make a backup of the current curves
-   wxString backupPlace = wxFileName( FileNames::DataDir(), wxT("EQBackup.xml") ).GetFullPath();
-   mEffect->SaveCurves(backupPlace);
-   // Load back into the main dialog
-   mEffect->mCurves.clear();
-   for (unsigned int i = 0; i < mEditCurves.size(); i++)
    {
-      mEffect->mCurves.push_back(mEditCurves[i].Name);
-      mEffect->mCurves[i].points = mEditCurves[i].points;
-   }
-   mEffect->SaveCurves();
-   mEffect->LoadCurves();
+      // Make a backup of the current curves
+      wxString backupPlace =
+         wxFileName( FileNames::DataDir(), wxT("EQBackup.xml") ).GetFullPath();
+      EQCurveWriter writer{ mEffect->mCurves };
+      writer.SaveCurves(backupPlace);
+      // Load back into the main dialog
+      mEffect->mCurves = mEditCurves;
+      // Save to default place
+      writer.SaveCurves();
+   } // scope of writer
+   EQCurveReader{ mEffect->mCurves, mEffect->mOptions }.LoadCurves();
 //   mEffect->CreateChoice();
    wxGetTopLevelParent(mEffect->mUIParent)->Layout();
 //   mEffect->mUIParent->Layout();

@@ -84,8 +84,37 @@ public:
 
 using EQCurveArray = std::vector<EQCurve>;
 
-class EffectEqualization : public StatefulEffect,
-                           public XMLTagHandler
+class EQCurveWriter {
+public:
+   explicit EQCurveWriter(const EQCurveArray &curves) : mCurves{ curves } {}
+   void SaveCurves(const wxString &fileName = {});
+
+private:
+   void WriteXML(XMLWriter &xmlFile) const;
+   const EQCurveArray &mCurves;
+};
+
+class EQCurveReader : public XMLTagHandler {
+public:
+   EQCurveReader(EQCurveArray &curves, int options)
+      : mCurves{ curves }, mOptions{ options } {}
+
+   // XMLTagHandler callback methods for loading and saving
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+
+   void LoadCurves(const wxString &fileName = {}, bool append = false);
+
+private:
+   wxString GetPrefsPrefix();
+   // Merge NEW curves only or update all factory presets.
+   // Uses EQCurveWriter
+   void UpdateDefaultCurves(bool updateAll = false);
+   EQCurveArray &mCurves;
+   const int mOptions;
+};
+
+class EffectEqualization : public StatefulEffect
 {
 public:
    static inline auto
@@ -136,7 +165,6 @@ public:
 
 private:
    // EffectEqualization implementation
-   wxString GetPrefsPrefix();
 
    // Number of samples in an FFT window
    static const size_t windowSize = 16384u; //MJS - work out the optimum for this at run time?  Have a dialog box for it?
@@ -155,20 +183,11 @@ private:
    void EnvelopeUpdated();
    void EnvelopeUpdated(Envelope *env, bool lin);
 
-   void LoadCurves(const wxString &fileName = {}, bool append = false);
-   void SaveCurves(const wxString &fileName = {});
-   // Merge NEW curves only or update all factory presets.
-   void UpdateDefaultCurves( bool updateAll = false);
    void Select(int sel);
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
    void setCurve(void);
    bool GetDefaultFileName(wxFileName &fileName);
-   
-   // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-   void WriteXML(XMLWriter &xmlFile) const;
 
    void UpdateCurves();
    void UpdateRuler();
