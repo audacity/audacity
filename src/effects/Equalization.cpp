@@ -2733,8 +2733,12 @@ void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 //
 void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 {
-   EditCurvesDialog d(mUIParent, this, mCurve->GetSelection());
-   d.ShowModal();
+   EditCurvesDialog d(mUIParent, GetName(), mOptions,
+      mCurves, mCurve->GetSelection());
+   if (d.ShowModal()) {
+      wxGetTopLevelParent(mUIParent)->Layout();
+      setCurve(d.GetItem());
+   }
 
    // Reload the curve names
    UpdateCurves();
@@ -3155,23 +3159,22 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialogWrapper)
                           EditCurvesDialog::OnListSelectionChange)
 END_EVENT_TABLE()
 
-EditCurvesDialog::EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position):
-wxDialogWrapper(parent, wxID_ANY, XO("Manage Curves List"),
-         wxDefaultPosition, wxDefaultSize,
-         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+EditCurvesDialog::EditCurvesDialog(wxWindow * parent,
+   const TranslatableString &name, int options,
+   EQCurveArray &curves, int position
+)  : wxDialogWrapper(parent, wxID_ANY, XO("Manage Curves List"),
+      wxDefaultPosition, wxDefaultSize,
+      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+   , mName{ name }
+   , mOptions{ options }
+   , mCurves{ curves }
 {
    SetLabel(XO("Manage Curves"));         // Provide visual label
    SetName(XO("Manage Curves List"));     // Provide audible label
    mParent = parent;
-   mEffect = effect;
    mPosition = position;
-   // make a copy of mEffect->mCurves here to muck about with.
-   mEditCurves.clear();
-   for (unsigned int i = 0; i < mEffect->mCurves.size(); i++)
-   {
-      mEditCurves.push_back(mEffect->mCurves[i].Name);
-      mEditCurves[i].points = mEffect->mCurves[i].points;
-   }
+   // make a copy of curves here to muck about with.
+   mEditCurves = curves;
 
    Populate();
    SetMinSize(GetSize());
@@ -3255,9 +3258,8 @@ void EditCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
    {
       if ( item == mList->GetItemCount()-1)
       {  // 'unnamed' always stays at the bottom
-         mEffect->Effect::MessageBox(
+         EQUtils::DoMessageBox(mName,
             XO("'unnamed' always stays at the bottom of the list"),
-            Effect::DefaultMessageBoxStyle,
             XO("'unnamed' is special") );   // these could get tedious!
          return;
       }
@@ -3378,16 +3380,16 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
                bad = true;
                if( curve == item )  // trying to rename a curve with the same name
                {
-                  mEffect->Effect::MessageBox(
+                  EQUtils::DoMessageBox(mName,
                      XO("Name is the same as the original one"),
-                     wxOK,
-                     XO("Same name") );
+                     XO("Same name"),
+                     wxOK );
                   break;
                }
-               int answer = mEffect->Effect::MessageBox(
+               int answer = EQUtils::DoMessageBox(mName,
                   XO("Overwrite existing curve '%s'?").Format( name ),
-                  wxYES_NO,
-                  XO("Curve exists") );
+                  XO("Curve exists"),
+                  wxYES_NO);
                if (answer == wxYES)
                {
                   bad = false;
@@ -3503,10 +3505,10 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
       else
          return;
    // Ask for confirmation before removal
-   int ans = mEffect->Effect::MessageBox(
+   int ans = EQUtils::DoMessageBox(mName,
       quest,
-      wxYES_NO | wxCENTRE,
-      XO("Confirm Deletion") );
+      XO("Confirm Deletion"),
+      wxYES_NO | wxCENTRE );
    if( ans == wxYES )
    {  // Remove the curve(s) from the array
       // Take care, mList and mEditCurves will get out of sync as curves are deleted
@@ -3516,10 +3518,9 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
          // TODO: Migrate to the standard "Manage" dialog.
          if(item == mList->GetItemCount()-1)   //unnamed
          {
-            mEffect->Effect::MessageBox(
+            EQUtils::DoMessageBox(mName,
                XO("You cannot delete the 'unnamed' curve, it is special."),
-               Effect::DefaultMessageBoxStyle,
-               XO("Can't delete 'unnamed'") );
+               XO("Can't delete 'unnamed'"));
          }
          else
          {
@@ -3552,7 +3553,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
       return;
    else
       fileName = filePicker.GetPath();
-   EQCurveReader{ mEditCurves, mEffect->GetName(), mEffect->mOptions }
+   EQCurveReader{ mEditCurves, mName, mOptions }
       .LoadCurves(fileName, true);
    PopulateList(0);  // update the EditCurvesDialog dialog
    return;
@@ -3583,9 +3584,8 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
          i++;
       }
       else
-         mEffect->Effect::MessageBox(
+         EQUtils::DoMessageBox(mName,
             XO("You cannot export 'unnamed' curve, it is special."),
-            Effect::DefaultMessageBoxStyle,
             XO("Cannot Export 'unnamed'") );
       // get next selected item
       item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
@@ -3594,15 +3594,13 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
    {
       EQCurveWriter{ exportCurves }.SaveCurves(fileName);
       auto message = XO("%d curves exported to %s").Format( i, fileName );
-      mEffect->Effect::MessageBox(
+      EQUtils::DoMessageBox(mName,
          message,
-         Effect::DefaultMessageBoxStyle,
          XO("Curves exported") );
    }
    else
-      mEffect->Effect::MessageBox(
+      EQUtils::DoMessageBox(mName,
          XO("No curves exported"),
-         Effect::DefaultMessageBoxStyle,
          XO("No curves exported") );
 }
 
@@ -3615,7 +3613,7 @@ void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
 void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
 {
    // we expect this to fail in LoadCurves (due to a lack of path) and handle that there
-   EQCurveReader{ mEditCurves, mEffect->GetName(), mEffect->mOptions }
+   EQCurveReader{ mEditCurves, mName, mOptions }
       .LoadCurves( wxT("EQDefaultCurves.xml") );
    PopulateList(0);  // update the EditCurvesDialog dialog
 }
@@ -3626,18 +3624,14 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       // Make a backup of the current curves
       wxString backupPlace =
          wxFileName( FileNames::DataDir(), wxT("EQBackup.xml") ).GetFullPath();
-      EQCurveWriter writer{ mEffect->mCurves };
+      EQCurveWriter writer{ mCurves };
       writer.SaveCurves(backupPlace);
       // Load back into the main dialog
-      mEffect->mCurves = mEditCurves;
+      mCurves = mEditCurves;
       // Save to default place
       writer.SaveCurves();
    } // scope of writer
-   EQCurveReader{ mEffect->mCurves, mEffect->GetName(), mEffect->mOptions }
-      .LoadCurves();
-//   mEffect->CreateChoice();
-   wxGetTopLevelParent(mEffect->mUIParent)->Layout();
-//   mEffect->mUIParent->Layout();
+   EQCurveReader{ mCurves, mName, mOptions }.LoadCurves();
 
    // Select something sensible
    long item = mList->GetNextItem(-1,
@@ -3645,7 +3639,7 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       wxLIST_STATE_SELECTED);
    if (item == -1)
       item = mList->GetItemCount()-1;   // nothing selected, default to 'unnamed'
-   mEffect->setCurve(item);
+   mItem = item;
    EndModal(true);
 }
 

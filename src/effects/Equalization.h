@@ -287,7 +287,6 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class EqualizationPanel;
-   friend class EditCurvesDialog;
 };
 
 class EffectEqualizationCurve final : public EffectEqualization
@@ -361,8 +360,10 @@ private:
 class EditCurvesDialog final : public wxDialogWrapper
 {
 public:
-   EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position);
+   EditCurvesDialog(wxWindow * parent, const TranslatableString &name,
+      int options, EQCurveArray &curves, int position);
    ~EditCurvesDialog();
+   int GetItem() const { return mItem; }
 
 private:
 
@@ -379,11 +380,14 @@ private:
       DefaultsButtonID
    };
 
+   const TranslatableString &mName;
+   const int mOptions;
+   EQCurveArray &mCurves;
    wxListCtrl *mList;   // List of curves.
    EQCurveArray mEditCurves;   // Copy of curves to muck about with
    wxWindow *mParent; // the parent EQ Dialog
-   EffectEqualization *mEffect;   // the parent EQ effect
    int mPosition; // position of current curve in list
+   int mItem{ -1 };
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
    void PopulateList(int position);
