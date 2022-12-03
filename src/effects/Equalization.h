@@ -42,6 +42,14 @@ class RulerPanel;
 
 using Floats = ArrayOf<float>;
 
+namespace EQUtils{
+int DoMessageBox(
+   const TranslatableString &name,
+   const TranslatableString &msg,
+   const TranslatableString &titleStr,
+   long style = wxOK | wxCENTRE);
+}
+
 //
 // One point in a curve
 //
@@ -96,8 +104,9 @@ private:
 
 class EQCurveReader : public XMLTagHandler {
 public:
-   EQCurveReader(EQCurveArray &curves, int options)
-      : mCurves{ curves }, mOptions{ options } {}
+   EQCurveReader(
+      EQCurveArray &curves, const TranslatableString &name, int options)
+      : mCurves{ curves }, mName{ name }, mOptions{ options } {}
 
    // XMLTagHandler callback methods for loading and saving
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
@@ -106,11 +115,13 @@ public:
    void LoadCurves(const wxString &fileName = {}, bool append = false);
 
 private:
+   bool GetDefaultFileName(wxFileName &fileName);
    wxString GetPrefsPrefix();
    // Merge NEW curves only or update all factory presets.
    // Uses EQCurveWriter
    void UpdateDefaultCurves(bool updateAll = false);
    EQCurveArray &mCurves;
+   const TranslatableString mName;
    const int mOptions;
 };
 
@@ -187,7 +198,6 @@ private:
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
    void setCurve(void);
-   bool GetDefaultFileName(wxFileName &fileName);
 
    void UpdateCurves();
    void UpdateRuler();

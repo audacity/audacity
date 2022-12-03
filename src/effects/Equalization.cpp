@@ -77,6 +77,7 @@
 #include <wx/utils.h>
 
 #include "AColor.h"
+#include "widgets/AudacityMessageBox.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
@@ -252,7 +253,7 @@ EffectEqualization::EffectEqualization(int Options)
    mDisallowCustom = false;
 
    // Load the EQ curves
-   EQCurveReader{ mCurves, mOptions }.LoadCurves();
+   EQCurveReader{ mCurves, GetName(), mOptions }.LoadCurves();
 
    // Note: initial curve is set in TransferDataToWindow
 
@@ -1355,6 +1356,19 @@ void EffectEqualization::Filter(size_t len, float *buffer)
    ReorderToTime(hFFT.get(), mFFTBuffer.get(), buffer);
 }
 
+int EQUtils::DoMessageBox(
+   const TranslatableString &name,
+   const TranslatableString &msg,
+   const TranslatableString &titleStr,
+   long style)
+{
+   // Compare with Effect::MessageBox
+   auto title = titleStr.empty()
+      ? name
+      : XO("%s: %s").Format( name, titleStr );
+   return AudacityMessageBox( msg, title, style, nullptr );
+}
+
 //
 // Load external curves with fallback to default, then message
 //
@@ -1362,7 +1376,7 @@ void EQCurveReader::LoadCurves(const wxString &fileName, bool append)
 {
 // We've disabled the XML management of curves.
 // Just going via .cfg files now.
-#if 1
+#if 0
    (void)fileName;
    (void)append;
    mCurves.clear();
@@ -1420,10 +1434,7 @@ void EQCurveReader::LoadCurves(const wxString &fileName, bool append)
       auto msg = XO("Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
          .Format( fullPath, reader.GetErrorStr() );
       // Inform user of load failure
-      Effect::MessageBox(
-         msg,
-         wxOK | wxCENTRE,
-         XO("Error Loading EQ Curves") );
+      EQUtils::DoMessageBox(mName, msg, XO("Error Loading EQ Curves"));
       mCurves.push_back( _("unnamed") );  // we always need a default curve to use
       return;
    }
@@ -1574,7 +1585,7 @@ void EQCurveReader::UpdateDefaultCurves(bool updateAll /* false */)
 //
 // Get fully qualified filename of EQDefaultCurves.xml
 //
-bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
+bool EQCurveReader::GetDefaultFileName(wxFileName &fileName)
 {
    // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
    fileName = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
@@ -3541,7 +3552,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
       return;
    else
       fileName = filePicker.GetPath();
-   EQCurveReader{ mEditCurves, mEffect->mOptions }
+   EQCurveReader{ mEditCurves, mEffect->GetName(), mEffect->mOptions }
       .LoadCurves(fileName, true);
    PopulateList(0);  // update the EditCurvesDialog dialog
    return;
@@ -3604,7 +3615,7 @@ void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
 void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
 {
    // we expect this to fail in LoadCurves (due to a lack of path) and handle that there
-   EQCurveReader{ mEditCurves, mEffect->mOptions }
+   EQCurveReader{ mEditCurves, mEffect->GetName(), mEffect->mOptions }
       .LoadCurves( wxT("EQDefaultCurves.xml") );
    PopulateList(0);  // update the EditCurvesDialog dialog
 }
@@ -3622,7 +3633,8 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       // Save to default place
       writer.SaveCurves();
    } // scope of writer
-   EQCurveReader{ mEffect->mCurves, mEffect->mOptions }.LoadCurves();
+   EQCurveReader{ mEffect->mCurves, mEffect->GetName(), mEffect->mOptions }
+      .LoadCurves();
 //   mEffect->CreateChoice();
    wxGetTopLevelParent(mEffect->mUIParent)->Layout();
 //   mEffect->mUIParent->Layout();
