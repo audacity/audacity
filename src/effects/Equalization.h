@@ -40,10 +40,33 @@ class RulerPanel;
 
 using Floats = ArrayOf<float>;
 
+struct EqualizationFilter : EqualizationParameters {
+   // Low frequency of the FFT.  20Hz is the
+   // low range of human hearing
+   static constexpr int loFreqI = 20;
+
+   // Number of samples in an FFT window
+   // MJS - work out the optimum for this at run time?
+   // Have a dialog box for it?
+   static constexpr size_t windowSize = 16384u;
+
+   explicit EqualizationFilter(const EffectSettingsManager &manager);
+   bool CalcFilter();
+   void Filter(size_t len, float *buffer) const;
+
+   std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
+   HFFT hFFT{ GetFFT(windowSize) };
+   Floats mFFTBuffer{ windowSize };
+   Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };
+   double mLoFreq{ loFreqI };
+   double mHiFreq{ mLoFreq };
+   size_t mWindowSize{ windowSize };
+};
+
 class EffectEqualization : public StatefulEffect
 {
 public:
-   static inline auto
+   static inline EqualizationParameters *
    FetchParameters(EffectEqualization &e, EffectSettings &)
    { return &e.mParameters; }
    static const ComponentInterfaceSymbol Symbol;
@@ -92,17 +115,8 @@ public:
 private:
    // EffectEqualization implementation
 
-   // Number of samples in an FFT window
-   static const size_t windowSize = 16384u; //MJS - work out the optimum for this at run time?  Have a dialog box for it?
-
-   // Low frequency of the FFT.  20Hz is the
-   // low range of human hearing
-   enum {loFreqI=20};
-
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
-   bool CalcFilter();
-   void Filter(size_t len, float *buffer);
    
    void Flatten();
    void ForceRecalc();
@@ -144,10 +158,8 @@ private:
    void OnLinFreq( wxCommandEvent & event );
 
    int mOptions;
-   HFFT hFFT;
-   Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;
 
-   EqualizationParameters mParameters;
+   EqualizationFilter mParameters;
 
    double mWhens[NUM_PTS];
    double mWhenSliders[NUMBER_OF_BANDS+1];
@@ -156,16 +168,12 @@ private:
    RulerPanel *mFreqRuler;
 
    bool mDisallowCustom;
-   double mLoFreq;
-   double mHiFreq;
-   size_t mWindowSize;
    bool mDirty;
    int mSlidersOld[NUMBER_OF_BANDS];
    double mEQVals[NUMBER_OF_BANDS+1];
 
    EQCurveArray mCurves;
 
-   std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
    Envelope *mEnvelope;
 
    wxSizer *szrC;

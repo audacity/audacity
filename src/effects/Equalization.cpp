@@ -143,9 +143,9 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
          if (updating) {
             if (params.mInterp >= nInterpolations)
                params.mInterp -= nInterpolations;
-            effect.mEnvelope = (effect.mParameters.mLin
-               ? effect.mLinEnvelope
-               : effect.mLogEnvelope
+            effect.mEnvelope = (params.mLin
+               ? effect.mParameters.mLinEnvelope
+               : effect.mParameters.mLogEnvelope
             ).get();
          }
          return true;
@@ -199,14 +199,28 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
 
 END_EVENT_TABLE()
 
-EffectEqualization::EffectEqualization(int Options)
-   : mFFTBuffer{ windowSize }
-   , mFilterFuncR{ windowSize }
-   , mFilterFuncI{ windowSize }
-   , mParameters{ GetDefinition() }
+EqualizationFilter::EqualizationFilter(const EffectSettingsManager &manager)
+   : EqualizationParameters{ manager }
 {
-   constexpr auto dBMin = EqualizationParameters::dBMin;
-   constexpr auto dBMax = EqualizationParameters::dBMax;
+   mLogEnvelope = std::make_unique<Envelope>
+      (false,
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
+       0.0);
+   mLogEnvelope->SetTrackLen(1.0);
+
+   mLinEnvelope = std::make_unique<Envelope>
+      (false,
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
+       0.0);
+   mLinEnvelope->SetTrackLen(1.0);
+}
+
+EffectEqualization::EffectEqualization(int Options)
+   : mParameters{ GetDefinition() }
+{
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   auto &mHiFreq = mParameters.mHiFreq;
 
    const auto &mLin = mParameters.mLin;
 
@@ -219,25 +233,9 @@ EffectEqualization::EffectEqualization(int Options)
    mPanel = NULL;
    mMSlider = NULL;
 
-   hFFT = GetFFT(windowSize);
-
    SetLinearEffectFlag(true);
 
-   mLogEnvelope = std::make_unique<Envelope>
-      (false,
-       dBMin.min, dBMax.max, // MB: this is the highest possible range
-       0.0);
-   mLogEnvelope->SetTrackLen(1.0);
-
-   mLinEnvelope = std::make_unique<Envelope>
-      (false,
-       dBMin.min, dBMax.max, // MB: this is the highest possible range
-       0.0);
-   mLinEnvelope->SetTrackLen(1.0);
-
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
-
-   mWindowSize = windowSize;
 
    mDirty = false;
    mDisallowCustom = false;
@@ -271,7 +269,6 @@ EffectEqualization::EffectEqualization(int Options)
       / 2.0;
 #endif
    mHiFreq = mProjectRate / 2.0;
-   mLoFreq = loFreqI;
 }
 
 
@@ -454,6 +451,7 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
 {
    const auto &mCurveName = mParameters.mCurveName;
    const auto &mDrawMode = mParameters.mDrawMode;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
 
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
@@ -500,8 +498,14 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
 
 bool EffectEqualization::Init()
 {
+   constexpr auto loFreqI = EqualizationFilter::loFreqI;
+
    const auto &mLin = mParameters.mLin;
    const auto &mCurveName = mParameters.mCurveName;
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   auto &mLoFreq = mParameters.mLoFreq;
+   auto &mHiFreq = mParameters.mHiFreq;
 
    int selcount = 0;
    double rate = 0.0;
@@ -550,7 +554,7 @@ bool EffectEqualization::Init()
 
    setCurve(mCurveName);
 
-   CalcFilter();
+   mParameters.CalcFilter();
 
    return(true);
 }
@@ -558,7 +562,7 @@ bool EffectEqualization::Init()
 bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
-   CalcFilter();
+   mParameters.CalcFilter();
    bool bGoodResult = true;
 
    int count = 0;
@@ -600,6 +604,8 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    const EffectOutputs *)
 {
    const auto &mM = mParameters.mM;
+   const auto &mLoFreq = mParameters.mLoFreq;
+   const auto &mHiFreq = mParameters.mHiFreq;
 
    auto &mDrawMode = mParameters.mDrawMode;
 
@@ -1048,6 +1054,8 @@ void EffectEqualization::UpdateRuler()
 bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
+   constexpr auto windowSize = EqualizationFilter::windowSize;
+
    const auto &mM = mParameters.mM;
 
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
@@ -1092,7 +1100,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          for(auto j = wcopy; j < windowSize; j++)
             thisWindow[j] = 0;   //this includes the padding
 
-         Filter(windowSize, thisWindow);
+         mParameters.Filter(windowSize, thisWindow);
 
          // Overlap - Add
          for(size_t j = 0; (j < mM - 1) && (j < wcopy); j++)
@@ -1196,9 +1204,11 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    return bLoopSuccess;
 }
 
-bool EffectEqualization::CalcFilter()
+bool EqualizationFilter::CalcFilter()
 {
-   const auto &mM = mParameters.mM;
+   // Inverse-transform the given curve from frequency domain to time;
+   // Apply a taper to define a finite impulse response;
+   // Transform that back to frequency domain to get the modified curve.
 
    double loLog = log10(mLoFreq);
    double hiLog = log10(mHiFreq);
@@ -1208,7 +1218,7 @@ bool EffectEqualization::CalcFilter()
    double val0;
    double val1;
 
-   if( mParameters.IsLinear() )
+   if ( IsLinear() )
    {
       val0 = mLinEnvelope->GetValue(0.0);   //no scaling required - saved as dB
       val1 = mLinEnvelope->GetValue(1.0);
@@ -1224,7 +1234,7 @@ bool EffectEqualization::CalcFilter()
    for(size_t i = 1; i <= mWindowSize / 2; i++)
    {
       double when;
-      if( mParameters.IsLinear() )
+      if ( IsLinear() )
          when = freq/mHiFreq;
       else
          when = (log10(freq) - loLog)/denom;
@@ -1238,7 +1248,7 @@ bool EffectEqualization::CalcFilter()
       }
       else
       {
-         if( mParameters.IsLinear() )
+         if ( IsLinear() )
             mFilterFuncR[i] = mLinEnvelope->GetValue(when);
          else
             mFilterFuncR[i] = mLogEnvelope->GetValue(when);
@@ -1311,8 +1321,12 @@ bool EffectEqualization::CalcFilter()
    return TRUE;
 }
 
-void EffectEqualization::Filter(size_t len, float *buffer)
+void EqualizationFilter::Filter(size_t len, float *buffer) const
 {
+   // Transform a window of the time-domain signal to frequency;
+   // Multiply by corresponding coefficients;
+   // Inverse transform back to time domain:  that's fast convolution.
+
    float re,im;
    // Apply FFT
    RealFFTf(buffer, hFFT.get());
@@ -1341,7 +1355,12 @@ void EffectEqualization::Filter(size_t len, float *buffer)
 //
 void EffectEqualization::setCurve(int currentCurve)
 {
+   constexpr auto loFreqI = EqualizationFilter::loFreqI;
+
    const auto &mLin = mParameters.mLin;
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mHiFreq = mParameters.mHiFreq;
 
    // Set current choice
    wxASSERT( currentCurve < (int) mCurves.size() );
@@ -1379,7 +1398,9 @@ void EffectEqualization::setCurve(int currentCurve)
          double loLog = log10((double)loFreqI);
          double hiLog = log10(mHiFreq);
          double denom = hiLog - loLog;
-         when = (log10(std::max((double) loFreqI, when)) - loLog)/denom;
+         when =
+            (log10(std::max<double>(loFreqI, when))
+             - loLog) / denom;
       }
       value = mCurves[currentCurve].points[0].dB;
       env->Insert(std::min(1.0, std::max(0.0, when)), value);
@@ -1558,16 +1579,18 @@ void EffectEqualization::EnvelopeUpdated()
 {
    if (mParameters.IsLinear())
    {
-      EnvelopeUpdated(mLinEnvelope.get(), true);
+      EnvelopeUpdated(mParameters.mLinEnvelope.get(), true);
    }
    else
    {
-      EnvelopeUpdated(mLogEnvelope.get(), false);
+      EnvelopeUpdated(mParameters.mLogEnvelope.get(), false);
    }
 }
 
 void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
 {
+   const auto &mHiFreq = mParameters.mHiFreq;
+
    // Allocate and populate point arrays
    size_t numPoints = env->GetNumberOfPoints();
    Doubles when{ numPoints };
@@ -1619,6 +1642,8 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
 void EffectEqualization::Flatten()
 {
    const auto &mDrawMode = mParameters.mDrawMode;
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
 
    mLogEnvelope->Flatten(0.);
    mLogEnvelope->SetTrackLen(1.0);
@@ -1683,6 +1708,9 @@ void EffectEqualization::UpdateCurves()
 void EffectEqualization::UpdateDraw()
 {
    const auto &mLin = mParameters.mLin;
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mHiFreq = mParameters.mHiFreq;
 
    size_t numPoints = mLogEnvelope->GetNumberOfPoints();
    Doubles when{ numPoints };
@@ -1738,6 +1766,10 @@ void EffectEqualization::UpdateDraw()
 void EffectEqualization::UpdateGraphic()
 {
    const auto &mLin = mParameters.mLin;
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mLoFreq = mParameters.mLoFreq;
+   const auto &mHiFreq = mParameters.mHiFreq;
 
    auto &mDrawMode = mParameters.mDrawMode;
 
@@ -1802,6 +1834,10 @@ void EffectEqualization::UpdateGraphic()
 
 void EffectEqualization::EnvLogToLin(void)
 {
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mHiFreq = mParameters.mHiFreq;
+
    size_t numPoints = mLogEnvelope->GetNumberOfPoints();
    if( numPoints == 0 )
    {
@@ -1826,6 +1862,10 @@ void EffectEqualization::EnvLogToLin(void)
 
 void EffectEqualization::EnvLinToLog(void)
 {
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mHiFreq = mParameters.mHiFreq;
+
    size_t numPoints = mLinEnvelope->GetNumberOfPoints();
    if( numPoints == 0 )
    {
@@ -1868,6 +1908,8 @@ void EffectEqualization::EnvLinToLog(void)
 
 void EffectEqualization::ErrMin(void)
 {
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+
    double vals[NUM_PTS];
    double error = 0.0;
    double oldError = 0.0;
@@ -2137,6 +2179,8 @@ void EffectEqualization::OnSize(wxSizeEvent & event)
 
 void EffectEqualization::OnSlider(wxCommandEvent & event)
 {
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+
    wxSlider *s = (wxSlider *)event.GetEventObject();
    for (size_t i = 0; i < mBandsInUse; i++)
    {
@@ -2178,7 +2222,7 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
    bool bIsGraphic = !mParameters.mDrawMode;
    if (bIsGraphic)
    {
-      GraphicEQ(mLogEnvelope.get());
+      GraphicEQ(mParameters.mLogEnvelope.get());
       EnvelopeUpdated();
    }
    mParameters.mInterp = mInterpChoice->GetSelection();
@@ -2282,6 +2326,9 @@ void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts any curve
 {
+   auto &mLinEnvelope = mParameters.mLinEnvelope;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
+
    if(!mParameters.mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
    {
       for (size_t i = 0; i < mBandsInUse; i++)
@@ -2357,13 +2404,16 @@ void EffectEqualization::OnGridOnOff(wxCommandEvent & WXUNUSED(event))
 void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
 {
    auto &mLin = mParameters.mLin;
+   const auto &mLoFreq = mParameters.mLoFreq;
+   const auto &mHiFreq = mParameters.mHiFreq;
+
    mLin = mLinFreq->IsChecked();
    if(mParameters.IsLinear())  //going from log to lin freq scale
    {
       mFreqRuler->ruler.SetLog(false);
       mFreqRuler->ruler.SetRange(0, mHiFreq);
       EnvLogToLin();
-      mEnvelope = mLinEnvelope.get();
+      mEnvelope = mParameters.mLinEnvelope.get();
       mLin = true;
    }
    else  //going from lin to log freq scale
@@ -2371,7 +2421,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
       mFreqRuler->ruler.SetLog(true);
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
       EnvLinToLog();
-      mEnvelope = mLogEnvelope.get();
+      mEnvelope = mParameters.mLogEnvelope.get();
       mLin = false;
    }
    mFreqRuler->Refresh(false);
@@ -2400,8 +2450,10 @@ EqualizationPanel::EqualizationPanel(
    mWidth = 0;
    mHeight = 0;
 
-   mLinEditor = std::make_unique<EnvelopeEditor>(*mEffect->mLinEnvelope, false);
-   mLogEditor = std::make_unique<EnvelopeEditor>(*mEffect->mLogEnvelope, false);
+   mLinEditor = std::make_unique<EnvelopeEditor>(
+      *mEffect->mParameters.mLinEnvelope, false);
+   mLogEditor = std::make_unique<EnvelopeEditor>(
+      *mEffect->mParameters.mLogEnvelope, false);
    mEffect->mEnvelope->Flatten(0.);
    mEffect->mEnvelope->SetTrackLen(1.0);
 
@@ -2422,11 +2474,15 @@ void EqualizationPanel::ForceRecalc()
 
 void EqualizationPanel::Recalc()
 {
-   mOutr = Floats{ mEffect->mWindowSize };
-   mOuti = Floats{ mEffect->mWindowSize };
+   const auto &mWindowSize = mEffect->mParameters.mWindowSize;
 
-   mEffect->CalcFilter();   //to calculate the actual response
-   InverseRealFFT(mEffect->mWindowSize, mEffect->mFilterFuncR.get(), mEffect->mFilterFuncI.get(), mOutr.get());
+   mOutr = Floats{ mWindowSize };
+   mOuti = Floats{ mWindowSize };
+
+   mEffect->mParameters.CalcFilter();   //to calculate the actual response
+   InverseRealFFT(mWindowSize,
+      mEffect->mParameters.mFilterFuncR.get(),
+      mEffect->mParameters.mFilterFuncI.get(), mOutr.get());
 }
 
 void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
@@ -2442,6 +2498,11 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    const auto &mM = mEffect->mParameters.mM;
    const auto &mDrawMode = mEffect->mParameters.mDrawMode;
    const auto &mDrawGrid = mEffect->mParameters.mDrawGrid;
+   const auto &mLoFreq = mEffect->mParameters.mLoFreq;
+   const auto &mHiFreq = mEffect->mParameters.mHiFreq;
+   const auto &mWindowSize = mEffect->mParameters.mWindowSize;
+   const auto &mFilterFuncR = mEffect->mParameters.mFilterFuncR;
+   const auto &mFilterFuncI = mEffect->mParameters.mFilterFuncI;
 
    wxPaintDC dc(this);
    if(mRecalcRequired) {
@@ -2541,12 +2602,12 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxPENSTYLE_SOLID));
    double scale = (double)mEnvRect.height/(mdBMax - mdBMin);   //pixels per dB
    double yF;   //gain at this freq
-   double delta = mEffect->mHiFreq / (((double)mEffect->mWindowSize / 2.));   //size of each freq bin
+   double delta = mHiFreq / (((double)mWindowSize / 2.));   //size of each freq bin
 
    bool lin = mEffect->mParameters.IsLinear();   // log or lin scale?
 
-   double loLog = log10(mEffect->mLoFreq);
-   double step = lin ? mEffect->mHiFreq : (log10(mEffect->mHiFreq) - loLog);
+   double loLog = log10(mLoFreq);
+   double step = lin ? mHiFreq : (log10(mHiFreq) - loLog);
    step /= ((double)mEnvRect.width-1.);
    double freq;   //actual freq corresponding to x position
    int halfM = (mM - 1) / 2;
@@ -2558,7 +2619,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       if( ( lin ? step : (pow(10., loLog + (i+1)*step)-freq) ) < delta)
       {   //not enough resolution in FFT
          // set up for calculating cos using recurrence - faster than calculating it directly each time
-         double theta = M_PI*freq/mEffect->mHiFreq;   //radians, normalized
+         double theta = M_PI*freq/mHiFreq;   //radians, normalized
          double wtemp = sin(0.5 * theta);
          double wpr = -2.0 * wtemp * wtemp;
          double wpi = -1.0 * sin(theta);
@@ -2583,8 +2644,8 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       else
       {   //use FFT, it has enough resolution
          n = (int)(freq/delta + .5);
-         if(pow(mEffect->mFilterFuncR[n],2)+pow(mEffect->mFilterFuncI[n],2)!=0.)
-            yF = 10.0*log10(pow(mEffect->mFilterFuncR[n],2)+pow(mEffect->mFilterFuncI[n],2));   //10 here, a power
+         if(pow(mFilterFuncR[n],2)+pow(mFilterFuncI[n],2)!=0.)
+            yF = 10.0*log10(pow(mFilterFuncR[n],2)+pow(mFilterFuncI[n],2));   //10 here, a power
          else
             yF = mdBMin;
       }
