@@ -128,7 +128,7 @@ enum
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-const EnumValueSymbol EffectEqualization::kInterpStrings[nInterpolations] =
+const EnumValueSymbol EqualizationParameters::kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -148,20 +148,25 @@ static const double kThirdOct[] =
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {
    static CapturedParameters<EffectEqualization,
-      FilterLength,
+      EqualizationParameters::FilterLength,
       // CurveName,
-      InterpLin,
+      EqualizationParameters::InterpLin,
       // Pretty sure the interpolation name shouldn't have been interpreted when
       // specified in chains, but must keep it that way for compatibility.
-      InterpMeth
+      EqualizationParameters::InterpMeth
    > parameters {
-      [](EffectEqualization &, EffectSettings &, EffectEqualization &effect,
-         bool updating){
+      [](EffectEqualization &effect, EffectSettings &,
+         EqualizationParameters &params, bool updating
+      ){
+         constexpr auto nInterpolations =
+            EqualizationParameters::nInterpolations;
          if (updating) {
-            if (effect.mInterp >= nInterpolations)
-               effect.mInterp -= nInterpolations;
-            effect.mEnvelope =
-               (effect.mLin ? effect.mLinEnvelope : effect.mLogEnvelope).get();
+            if (params.mInterp >= nInterpolations)
+               params.mInterp -= nInterpolations;
+            effect.mEnvelope = (effect.mParameters.mLin
+               ? effect.mLinEnvelope
+               : effect.mLogEnvelope
+            ).get();
          }
          return true;
       }
@@ -214,11 +219,34 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
 
 END_EVENT_TABLE()
 
+EqualizationParameters::
+EqualizationParameters(const EffectSettingsManager &manager)
+   : mCurveName{ CurveName.def }
+   , mM{ FilterLength.def }
+   , mInterp{ InterpMeth.def }
+   , mLin{ InterpLin.def }
+{
+   GetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, dBMin.def);
+   GetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, dBMax.def);
+   GetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DrawMode.def);
+   GetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DrawGrid.def);
+}
+
 EffectEqualization::EffectEqualization(int Options)
    : mFFTBuffer{ windowSize }
    , mFilterFuncR{ windowSize }
    , mFilterFuncI{ windowSize }
+   , mParameters{ GetDefinition() }
 {
+   constexpr auto dBMin = EqualizationParameters::dBMin;
+   constexpr auto dBMax = EqualizationParameters::dBMax;
+
+   const auto &mLin = mParameters.mLin;
+
    Parameters().Reset(*this);
 
    mOptions = Options;
@@ -231,17 +259,6 @@ EffectEqualization::EffectEqualization(int Options)
    hFFT = GetFFT(windowSize);
 
    SetLinearEffectFlag(true);
-
-   mCurveName = CurveName.def;
-
-   GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, dBMin.def);
-   GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, dBMax.def);
-   GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DrawMode.def);
-   GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DrawGrid.def);
 
    mLogEnvelope = std::make_unique<Envelope>
       (false,
@@ -389,19 +406,23 @@ EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
    return { nullptr };
 }
 
-OptionalMessage
-EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
+void EqualizationParameters::LoadDefaults(int options)
 {
    mdBMin = dBMin.def;
    mdBMax = dBMax.def;
    mDrawMode = DrawMode.def;
    mDrawGrid = DrawGrid.def;
 
-   if( mOptions == kEqOptionCurve)
+   if( options == kEqOptionCurve)
       mDrawMode = true;
-   if( mOptions == kEqOptionGraphic)
+   if( options == kEqOptionGraphic)
       mDrawMode = false;
+}
 
+OptionalMessage
+EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
+{
+   mParameters.LoadDefaults(mOptions);
    return Effect::LoadFactoryDefaults(settings);
 }
 
@@ -481,6 +502,9 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
 
 bool EffectEqualization::ValidateUI(EffectSettings &)
 {
+   const auto &mCurveName = mParameters.mCurveName;
+   const auto &mDrawMode = mParameters.mDrawMode;
+
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
 
@@ -517,17 +541,23 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    }
    SaveCurves();
 
-   // TODO: just visit these effect settings the default way
-   SetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
-   SetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMax"), mdBMax);
-   SetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
-   SetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
+   mParameters.SaveConfig(GetDefinition());
 
    return true;
+}
+
+void
+EqualizationParameters::SaveConfig(const EffectSettingsManager &manager) const
+{
+   // TODO: just visit these effect settings the default way
+   SetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
+   SetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax);
+   SetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
+   SetConfig(manager, PluginSettings::Private,
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 }
 
 // Effect implementation
@@ -544,6 +574,9 @@ wxString EffectEqualization::GetPrefsPrefix()
 
 bool EffectEqualization::Init()
 {
+   const auto &mLin = mParameters.mLin;
+   const auto &mCurveName = mParameters.mCurveName;
+
    int selcount = 0;
    double rate = 0.0;
 
@@ -640,6 +673,10 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   const auto &mM = mParameters.mM;
+
+   auto &mDrawMode = mParameters.mDrawMode;
+
    S.SetBorder(0);
 
    S.SetSizerProportion(1);
@@ -852,7 +889,9 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                mInterpChoice = S.Id(ID_Interp)
                   .Name(XO("Interpolation type"))
                   .AddChoice( {},
-                     Msgids(kInterpStrings, nInterpolations), 0 );
+                     Msgids(EqualizationParameters::kInterpStrings,
+                        EqualizationParameters::nInterpolations),
+                     0 );
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
@@ -1002,6 +1041,15 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 //
 bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 {
+   const auto &mLin = mParameters.mLin;
+   const auto &mDrawGrid = mParameters.mDrawGrid;
+   const auto &mM = mParameters.mM;
+   const auto &mdBMin = mParameters.mdBMin;
+   const auto &mdBMax = mParameters.mdBMax;
+   const auto &mInterp = mParameters.mInterp;
+
+   auto &mDrawMode = mParameters.mDrawMode;
+
    // Set log or lin freq scale (affects interpolation as well)
    mLinFreq->SetValue( mLin );
    wxCommandEvent dummyEvent;
@@ -1051,6 +1099,9 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 
 void EffectEqualization::UpdateRuler()
 {
+   const auto &mdBMin = mParameters.mdBMin;
+   const auto &mdBMax = mParameters.mdBMax;
+
    // Refresh ruler when values have changed
    int w1, w2, h;
    mdBRuler->ruler.GetMaxSize(&w1, &h);
@@ -1071,6 +1122,8 @@ void EffectEqualization::UpdateRuler()
 bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
+   const auto &mM = mParameters.mM;
+
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    auto output = t->EmptyCopy();
    t->ConvertToSampleFormat( floatSample );
@@ -1219,6 +1272,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
 bool EffectEqualization::CalcFilter()
 {
+   const auto &mM = mParameters.mM;
+
    double loLog = log10(mLoFreq);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
@@ -1227,7 +1282,7 @@ bool EffectEqualization::CalcFilter()
    double val0;
    double val1;
 
-   if( IsLinear() )
+   if( mParameters.IsLinear() )
    {
       val0 = mLinEnvelope->GetValue(0.0);   //no scaling required - saved as dB
       val1 = mLinEnvelope->GetValue(1.0);
@@ -1243,7 +1298,7 @@ bool EffectEqualization::CalcFilter()
    for(size_t i = 1; i <= mWindowSize / 2; i++)
    {
       double when;
-      if( IsLinear() )
+      if( mParameters.IsLinear() )
          when = freq/mHiFreq;
       else
          when = (log10(freq) - loLog)/denom;
@@ -1257,7 +1312,7 @@ bool EffectEqualization::CalcFilter()
       }
       else
       {
-         if( IsLinear() )
+         if( mParameters.IsLinear() )
             mFilterFuncR[i] = mLinEnvelope->GetValue(when);
          else
             mFilterFuncR[i] = mLogEnvelope->GetValue(when);
@@ -1646,6 +1701,8 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
 //
 void EffectEqualization::setCurve(int currentCurve)
 {
+   const auto &mLin = mParameters.mLin;
+
    // Set current choice
    wxASSERT( currentCurve < (int) mCurves.size() );
    Select(currentCurve);
@@ -1833,6 +1890,8 @@ void EffectEqualization::setCurve(const wxString &curveName)
 //
 void EffectEqualization::Select( int curve )
 {
+   auto &mCurveName = mParameters.mCurveName;
+
    // Set current choice
    if (mCurve)
    {
@@ -1857,7 +1916,7 @@ void EffectEqualization::ForceRecalc()
 //
 void EffectEqualization::EnvelopeUpdated()
 {
-   if (IsLinear())
+   if (mParameters.IsLinear())
    {
       EnvelopeUpdated(mLinEnvelope.get(), true);
    }
@@ -1917,7 +1976,7 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
 //
 //
 //
-bool EffectEqualization::IsLinear()
+bool EqualizationParameters::IsLinear() const
 {
    return mDrawMode && mLin;
 }
@@ -1927,6 +1986,8 @@ bool EffectEqualization::IsLinear()
 //
 void EffectEqualization::Flatten()
 {
+   const auto &mDrawMode = mParameters.mDrawMode;
+
    mLogEnvelope->Flatten(0.);
    mLogEnvelope->SetTrackLen(1.0);
    mLinEnvelope->Flatten(0.);
@@ -2115,6 +2176,7 @@ void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 
 void EffectEqualization::UpdateCurves()
 {
+   auto &mCurveName = mParameters.mCurveName;
 
    // Reload the curve names
    if( mCurve ) 
@@ -2143,6 +2205,8 @@ void EffectEqualization::UpdateCurves()
 
 void EffectEqualization::UpdateDraw()
 {
+   const auto &mLin = mParameters.mLin;
+
    size_t numPoints = mLogEnvelope->GetNumberOfPoints();
    Doubles when{ numPoints };
    Doubles value{ numPoints };
@@ -2196,6 +2260,10 @@ void EffectEqualization::UpdateDraw()
 
 void EffectEqualization::UpdateGraphic()
 {
+   const auto &mLin = mParameters.mLin;
+
+   auto &mDrawMode = mParameters.mDrawMode;
+
    double loLog = log10(mLoFreq);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
@@ -2399,6 +2467,8 @@ void EffectEqualization::ErrMin(void)
 
 void EffectEqualization::GraphicEQ(Envelope *env)
 {
+   const auto &mInterp = mParameters.mInterp;
+
    // JKC: 'value' is for height of curve.
    // The 0.0 initial value would only get used if NUM_PTS were 0.
    double value = 0.0;
@@ -2409,7 +2479,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
 
    switch( mInterp )
    {
-   case kBspline:  // B-spline
+   case EqualizationParameters::kBspline:  // B-spline
       {
          int minF = 0;
          for(size_t i = 0; i < NUM_PTS; i++)
@@ -2475,7 +2545,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          break;
       }
 
-   case kCosine:  // Cosine squared
+   case EqualizationParameters::kCosine:  // Cosine squared
       {
          int minF = 0;
          for(size_t i = 0; i < NUM_PTS; i++)
@@ -2519,7 +2589,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          break;
       }
 
-   case kCubic:  // Cubic Spline
+   case EqualizationParameters::kCubic:  // Cubic Spline
       {
          double y2[NUMBER_OF_BANDS+1];
          mEQVals[mBandsInUse] = mEQVals[mBandsInUse-1];
@@ -2628,29 +2698,31 @@ void EffectEqualization::OnSlider(wxCommandEvent & event)
 
 void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 {
-   bool bIsGraphic = !mDrawMode;
+   bool bIsGraphic = !mParameters.mDrawMode;
    if (bIsGraphic)
    {
       GraphicEQ(mLogEnvelope.get());
       EnvelopeUpdated();
    }
-   mInterp = mInterpChoice->GetSelection();
+   mParameters.mInterp = mInterpChoice->GetSelection();
 }
 
 void EffectEqualization::OnDrawMode(wxCommandEvent & WXUNUSED(event))
 {
-   mDrawMode = true;
+   mParameters.mDrawMode = true;
    UpdateDraw();
 }
 
 void EffectEqualization::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
 {
-   mDrawMode = false;
+   mParameters.mDrawMode = false;
    UpdateGraphic();
 }
 
 void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mM = mParameters.mM;
+
    size_t m = 2 * mMSlider->GetValue() + 1;
    // Must be odd
    wxASSERT( (m & 1) == 1 );
@@ -2669,6 +2741,8 @@ void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mdBMin = mParameters.mdBMin;
+
    float dB = mdBMinSlider->GetValue();
    if (dB != mdBMin) {
       mdBMin = dB;
@@ -2681,6 +2755,8 @@ void EffectEqualization::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mdBMax = mParameters.mdBMax;
+
    float dB = mdBMaxSlider->GetValue();
    if (dB != mdBMax) {
       mdBMax = dB;
@@ -2699,7 +2775,7 @@ void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
    // Select NEW curve
    wxASSERT( mCurve != NULL );
    setCurve( mCurve->GetCurrentSelection() );
-   if( !mDrawMode )
+   if( !mParameters.mDrawMode )
       UpdateGraphic();
 }
 
@@ -2725,7 +2801,7 @@ void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts any curve
 {
-   if(!mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
+   if(!mParameters.mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
    {
       for (size_t i = 0; i < mBandsInUse; i++)
       {
@@ -2745,7 +2821,7 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
    }
    else  // Draw mode.  Invert the points.
    {
-      bool lin = IsLinear(); // refers to the 'log' or 'lin' of the frequency scale, not the amplitude
+      bool lin = mParameters.IsLinear(); // refers to the 'log' or 'lin' of the frequency scale, not the amplitude
       size_t numPoints; // number of points in the curve/envelope
 
       // determine if log or lin curve is the current one
@@ -2793,14 +2869,15 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
 
 void EffectEqualization::OnGridOnOff(wxCommandEvent & WXUNUSED(event))
 {
-   mDrawGrid = mGridOnOff->IsChecked();
+   mParameters.mDrawGrid = mGridOnOff->IsChecked();
    mPanel->Refresh(false);
 }
 
 void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mLin = mParameters.mLin;
    mLin = mLinFreq->IsChecked();
-   if(IsLinear())  //going from log to lin freq scale
+   if(mParameters.IsLinear())  //going from log to lin freq scale
    {
       mFreqRuler->ruler.SetLog(false);
       mFreqRuler->ruler.SetRange(0, mHiFreq);
@@ -2879,6 +2956,12 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
 #include "../TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
+   const auto &mdBMax = mEffect->mParameters.mdBMax;
+   const auto &mdBMin = mEffect->mParameters.mdBMin;
+   const auto &mM = mEffect->mParameters.mM;
+   const auto &mDrawMode = mEffect->mParameters.mDrawMode;
+   const auto &mDrawGrid = mEffect->mParameters.mDrawGrid;
+
    wxPaintDC dc(this);
    if(mRecalcRequired) {
       Recalc();
@@ -2926,13 +3009,13 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
    // Pure blue x-axis line
    memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxPENSTYLE_SOLID));
-   int center = (int) (mEnvRect.height * mEffect->mdBMax/(mEffect->mdBMax-mEffect->mdBMin) + .5);
+   int center = (int) (mEnvRect.height * mdBMax/(mdBMax - mdBMin) + .5);
    AColor::Line(memDC,
       mEnvRect.GetLeft(), mEnvRect.y + center,
       mEnvRect.GetRight(), mEnvRect.y + center);
 
    // Draw the grid, if asked for.  Do it now so it's underneath the main plots.
-   if( mEffect->mDrawGrid )
+   if( mDrawGrid )
    {
       mEffect->mFreqRuler->ruler.DrawGrid(memDC, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
       mEffect->mdBRuler->ruler.DrawGrid(memDC, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
@@ -2950,7 +3033,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       for (int i = 0; i < mEnvRect.width; i++)
       {
          x = mEnvRect.x + i;
-         y = lrint(mEnvRect.height*((mEffect->mdBMax - values[i]) / (mEffect->mdBMax - mEffect->mdBMin)) + .25); //needs more optimising, along with'what you get'?
+         y = lrint(mEnvRect.height*((mdBMax - values[i]) / (mdBMax - mdBMin)) + .25); //needs more optimising, along with'what you get'?
          if (y >= mEnvRect.height)
          {
             y = mEnvRect.height - 1;
@@ -2975,17 +3058,17 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
    memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxPENSTYLE_SOLID));
-   double scale = (double)mEnvRect.height/(mEffect->mdBMax-mEffect->mdBMin);   //pixels per dB
+   double scale = (double)mEnvRect.height/(mdBMax - mdBMin);   //pixels per dB
    double yF;   //gain at this freq
    double delta = mEffect->mHiFreq / (((double)mEffect->mWindowSize / 2.));   //size of each freq bin
 
-   bool lin = mEffect->IsLinear();   // log or lin scale?
+   bool lin = mEffect->mParameters.IsLinear();   // log or lin scale?
 
    double loLog = log10(mEffect->mLoFreq);
    double step = lin ? mEffect->mHiFreq : (log10(mEffect->mHiFreq) - loLog);
    step /= ((double)mEnvRect.width-1.);
    double freq;   //actual freq corresponding to x position
-   int halfM = (mEffect->mM - 1) / 2;
+   int halfM = (mM - 1) / 2;
    int n;   //index to mFreqFunc
    for(int i=0; i<mEnvRect.width; i++)
    {
@@ -3014,7 +3097,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          if(yF!=0.)
             yF = LINEAR_TO_DB(yF);
          else
-            yF = mEffect->mdBMin;
+            yF = mdBMin;
       }
       else
       {   //use FFT, it has enough resolution
@@ -3022,10 +3105,10 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          if(pow(mEffect->mFilterFuncR[n],2)+pow(mEffect->mFilterFuncI[n],2)!=0.)
             yF = 10.0*log10(pow(mEffect->mFilterFuncR[n],2)+pow(mEffect->mFilterFuncI[n],2));   //10 here, a power
          else
-            yF = mEffect->mdBMin;
+            yF = mdBMin;
       }
-      if(yF < mEffect->mdBMin)
-         yF = mEffect->mdBMin;
+      if(yF < mdBMin)
+         yF = mdBMin;
       yF = center-scale*yF;
       if(yF>mEnvRect.height)
          yF = mEnvRect.height - 1;
@@ -3042,7 +3125,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    }
 
    memDC.SetPen(*wxBLACK_PEN);
-   if( mEffect->mDrawMode )
+   if( mDrawMode )
    {
       ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
 
@@ -3054,7 +3137,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
       EnvelopeEditor::DrawPoints( *mEffect->mEnvelope,
          context, mEnvRect, false, 0.0,
-      mEffect->mdBMin, mEffect->mdBMax, false);
+      mdBMin, mdBMax, false);
    }
 
    dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
@@ -3062,7 +3145,12 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
 void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
 {
-   if (!mEffect->mDrawMode)
+   const auto &mdBMax = mEffect->mParameters.mdBMax;
+   const auto &mdBMin = mEffect->mParameters.mdBMin;
+   const auto &mDrawMode = mEffect->mParameters.mDrawMode;
+   const auto &mLin = mEffect->mParameters.mLin;
+
+   if (!mDrawMode)
    {
       return;
    }
@@ -3072,10 +3160,10 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
       CaptureMouse();
    }
 
-   auto &pEditor = (mEffect->mLin ? mLinEditor : mLogEditor);
+   auto &pEditor = (mLin ? mLinEditor : mLogEditor);
    if (pEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
       false, 0.0,
-      mEffect->mdBMin, mEffect->mdBMax))
+      mdBMin, mdBMax))
    {
       mEffect->EnvelopeUpdated();
       ForceRecalc();

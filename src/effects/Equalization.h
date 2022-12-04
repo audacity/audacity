@@ -90,12 +90,55 @@ public:
 
 using EQCurveArray = std::vector<EQCurve>;
 
+struct EqualizationParameters {
+   enum kInterpolations {
+      kBspline,
+      kCosine,
+      kCubic,
+      nInterpolations
+   };
+   static const EnumValueSymbol kInterpStrings[nInterpolations];
+
+   explicit EqualizationParameters(const EffectSettingsManager &manager);
+   void LoadDefaults(int options);
+   void SaveConfig(const EffectSettingsManager &manager) const;
+   bool IsLinear() const;
+
+   wxString mCurveName;
+   float mdBMin;
+   float mdBMax;
+   size_t mM;
+   int mInterp;
+   bool mDrawMode;
+   bool mDrawGrid;
+   bool mLin;
+
+// Not all of these are visited now
+static constexpr EffectParameter FilterLength{ &EqualizationParameters::mM,
+   L"FilterLength",        8191,    21,      8191,    0      };
+static constexpr EffectParameter CurveName{ &EqualizationParameters::mCurveName,
+   L"CurveName",           L"unnamed", L"", L"", L""};
+static constexpr EffectParameter InterpLin{ &EqualizationParameters::mLin,
+   L"InterpolateLin",      false,   false,   true,    false  };
+static constexpr EnumParameter InterpMeth{ &EqualizationParameters::mInterp,
+   L"InterpolationMethod", 0,       0,       0,       0, kInterpStrings, nInterpolations      };
+static constexpr EffectParameter DrawMode{ &EqualizationParameters::mDrawMode,
+   L"",                   true,    false,   true,    false  };
+static constexpr EffectParameter DrawGrid{ &EqualizationParameters::mDrawGrid,
+   L"",                   true,    false,   true,    false  };
+static constexpr EffectParameter dBMin{ &EqualizationParameters::mdBMin,
+   L"",                   -30.0f,   -120.0,  -10.0,   0      };
+static constexpr EffectParameter dBMax{ &EqualizationParameters::mdBMax,
+   L"",                   30.0f,    0.0,     60.0,    0      };
+};
+
 class EffectEqualization : public StatefulEffect,
                            public XMLTagHandler
 {
 public:
-   static inline EffectEqualization *
-   FetchParameters(EffectEqualization &e, EffectSettings &) { return &e; }
+   static inline auto
+   FetchParameters(EffectEqualization &e, EffectSettings &)
+   { return &e.mParameters; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEqualization(int Options = kEqLegacy);
@@ -159,7 +202,6 @@ private:
    void ForceRecalc();
    void EnvelopeUpdated();
    void EnvelopeUpdated(Envelope *env, bool lin);
-   bool IsLinear();
 
    void LoadCurves(const wxString &fileName = {}, bool append = false);
    void SaveCurves(const wxString &fileName = {});
@@ -208,14 +250,8 @@ private:
    int mOptions;
    HFFT hFFT;
    Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;
-   size_t mM;
-   wxString mCurveName;
-   bool mLin;
-   float mdBMax;
-   float mdBMin;
-   bool mDrawMode;
-   int mInterp;
-   bool mDrawGrid;
+
+   EqualizationParameters mParameters;
 
    double mWhens[NUM_PTS];
    double mWhenSliders[NUMBER_OF_BANDS+1];
@@ -271,33 +307,6 @@ private:
 
    friend class EqualizationPanel;
    friend class EditCurvesDialog;
-
-   enum kInterpolations
-   {
-      kBspline,
-      kCosine,
-      kCubic,
-      nInterpolations
-   };
-   static const EnumValueSymbol kInterpStrings[nInterpolations];
-
-// Not all of these are visited now
-static constexpr EffectParameter FilterLength{ &EffectEqualization::mM,
-   L"FilterLength",        8191,    21,      8191,    0      };
-static constexpr EffectParameter CurveName{ &EffectEqualization::mCurveName,
-   L"CurveName",           L"unnamed", L"", L"", L""};
-static constexpr EffectParameter InterpLin{ &EffectEqualization::mLin,
-   L"InterpolateLin",      false,   false,   true,    false  };
-static constexpr EnumParameter InterpMeth{ &EffectEqualization::mInterp,
-   L"InterpolationMethod", 0,       0,       0,       0, kInterpStrings, nInterpolations      };
-static constexpr EffectParameter DrawMode{ &EffectEqualization::mDrawMode,
-   L"",                   true,    false,   true,    false  };
-static constexpr EffectParameter DrawGrid{ &EffectEqualization::mDrawGrid,
-   L"",                   true,    false,   true,    false  };
-static constexpr EffectParameter dBMin{ &EffectEqualization::mdBMin,
-   L"",                   -30.0f,   -120.0,  -10.0,   0      };
-static constexpr EffectParameter dBMax{ &EffectEqualization::mdBMax,
-   L"",                   30.0f,    0.0,     60.0,    0      };
 };
 
 class EffectEqualizationCurve final : public EffectEqualization
