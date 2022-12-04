@@ -2262,7 +2262,7 @@ void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 //
 void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 {
-   EditCurvesDialog d(mUIParent, GetName(), mOptions,
+   EqualizationCurvesDialog d(mUIParent, GetName(), mOptions,
       mCurves, mCurve->GetSelection());
    if (d.ShowModal()) {
       wxGetTopLevelParent(mUIParent)->Layout();
@@ -2666,29 +2666,29 @@ void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 }
 
 //----------------------------------------------------------------------------
-// EditCurvesDialog
+// EqualizationCurvesDialog
 //----------------------------------------------------------------------------
 // Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
 /// Constructor
 
-BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialogWrapper)
-   EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
-   EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
-   EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
-   EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
-   EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
-   EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
-   EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
-   EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
-   EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
+BEGIN_EVENT_TABLE(EqualizationCurvesDialog, wxDialogWrapper)
+   EVT_BUTTON(UpButtonID, EqualizationCurvesDialog::OnUp)
+   EVT_BUTTON(DownButtonID, EqualizationCurvesDialog::OnDown)
+   EVT_BUTTON(RenameButtonID, EqualizationCurvesDialog::OnRename)
+   EVT_BUTTON(DeleteButtonID, EqualizationCurvesDialog::OnDelete)
+   EVT_BUTTON(ImportButtonID, EqualizationCurvesDialog::OnImport)
+   EVT_BUTTON(ExportButtonID, EqualizationCurvesDialog::OnExport)
+   EVT_BUTTON(LibraryButtonID, EqualizationCurvesDialog::OnLibrary)
+   EVT_BUTTON(DefaultsButtonID, EqualizationCurvesDialog::OnDefaults)
+   EVT_BUTTON(wxID_OK, EqualizationCurvesDialog::OnOK)
    EVT_LIST_ITEM_SELECTED(CurvesListID,
-                          EditCurvesDialog::OnListSelectionChange)
+                          EqualizationCurvesDialog::OnListSelectionChange)
    EVT_LIST_ITEM_DESELECTED(CurvesListID,
-                          EditCurvesDialog::OnListSelectionChange)
+                          EqualizationCurvesDialog::OnListSelectionChange)
 END_EVENT_TABLE()
 
-EditCurvesDialog::EditCurvesDialog(wxWindow * parent,
+EqualizationCurvesDialog::EqualizationCurvesDialog(wxWindow * parent,
    const TranslatableString &name, int options,
    EQCurveArray &curves, int position
 )  : wxDialogWrapper(parent, wxID_ANY, XO("Manage Curves List"),
@@ -2709,12 +2709,12 @@ EditCurvesDialog::EditCurvesDialog(wxWindow * parent,
    SetMinSize(GetSize());
 }
 
-EditCurvesDialog::~EditCurvesDialog()
+EqualizationCurvesDialog::~EqualizationCurvesDialog()
 {
 }
 
 /// Creates the dialog and its contents.
-void EditCurvesDialog::Populate()
+void EqualizationCurvesDialog::Populate()
 {
    //------------------------- Main section --------------------
    ShuttleGui S(this, eIsCreating);
@@ -2723,7 +2723,7 @@ void EditCurvesDialog::Populate()
 }
 
 /// Defines the dialog and does data exchange with it.
-void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
+void EqualizationCurvesDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND);
    {
@@ -2760,7 +2760,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-void EditCurvesDialog::PopulateList(int position)
+void EqualizationCurvesDialog::PopulateList(int position)
 {
    mList->DeleteAllItems();
    for (unsigned int i = 0; i < mEditCurves.size(); i++)
@@ -2775,7 +2775,7 @@ void EditCurvesDialog::PopulateList(int position)
    mList->SetItemState(position, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
 }
 
-void EditCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    if ( item == -1 )
@@ -2812,7 +2812,7 @@ void EditCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void EditCurvesDialog::OnDown(wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnDown(wxCommandEvent & WXUNUSED(event))
 {  // looks harder than OnUp as we need to seek backwards up the list, hence GetPreviousItem
    long item = GetPreviousItem(mList->GetItemCount());
    if( item == -1 )
@@ -2843,7 +2843,7 @@ void EditCurvesDialog::OnDown(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-long EditCurvesDialog::GetPreviousItem(long item)  // wx doesn't have this
+long EqualizationCurvesDialog::GetPreviousItem(long item)  // wx doesn't have this
 {
    long lastItem = -1;
    long itemTemp = mList->GetNextItem(-1, wxLIST_NEXT_ALL,
@@ -2857,7 +2857,7 @@ long EditCurvesDialog::GetPreviousItem(long item)  // wx doesn't have this
 }
 
 // Rename curve/curves
-void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 {
    wxString name;
    int numCurves = mEditCurves.size();
@@ -2973,7 +2973,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 }
 
 // Delete curve/curves
-void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 {
    // We could count them here
    // And then put in a 'Delete N items?' prompt.
@@ -3071,7 +3071,7 @@ static const FileNames::FileTypes &XMLtypes()
    return results;
 }
 
-void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(
       this,
@@ -3084,11 +3084,11 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
       fileName = filePicker.GetPath();
    EQCurveReader{ mEditCurves, mName, mOptions }
       .LoadCurves(fileName, true);
-   PopulateList(0);  // update the EditCurvesDialog dialog
+   PopulateList(0);  // update the EqualizationCurvesDialog dialog
    return;
 }
 
-void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
    FileDialogWrapper filePicker(this, XO("Export EQ curves as..."),
       FileNames::DataDir(), wxT(""),
@@ -3133,21 +3133,21 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
          XO("No curves exported") );
 }
 
-void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
 {
    // full path to wiki.
    wxLaunchDefaultBrowser(wxT("https://wiki.audacityteam.org/wiki/EQCurvesDownload"));
 }
 
-void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
 {
    // we expect this to fail in LoadCurves (due to a lack of path) and handle that there
    EQCurveReader{ mEditCurves, mName, mOptions }
       .LoadCurves( wxT("EQDefaultCurves.xml") );
-   PopulateList(0);  // update the EditCurvesDialog dialog
+   PopulateList(0);  // update the EqualizationCurvesDialog dialog
 }
 
-void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
+void EqualizationCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    {
       // Make a backup of the current curves
@@ -3172,7 +3172,7 @@ void EditCurvesDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    EndModal(true);
 }
 
-void EditCurvesDialog::OnListSelectionChange( wxListEvent & )
+void EqualizationCurvesDialog::OnListSelectionChange( wxListEvent & )
 {
    const bool enable = mList->GetSelectedItemCount() > 0;
    static const int ids[] = {

@@ -272,14 +272,14 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-// EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
+// EqualizationCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
-class EditCurvesDialog final : public wxDialogWrapper
+class EqualizationCurvesDialog final : public wxDialogWrapper
 {
 public:
-   EditCurvesDialog(wxWindow * parent, const TranslatableString &name,
+   EqualizationCurvesDialog(wxWindow * parent, const TranslatableString &name,
       int options, EQCurveArray &curves, int position);
-   ~EditCurvesDialog();
+   ~EqualizationCurvesDialog();
    int GetItem() const { return mItem; }
 
 private:
