@@ -18,9 +18,8 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "Effect.h"
-#include "EqualizationParameters.h"
+#include "EqualizationFilter.h"
 #include "EqualizationCurves.h"
-#include "RealFFTf.h"
 #include "../widgets/wxPanelWrapper.h"
 
 class wxBitmap;
@@ -33,35 +32,9 @@ class wxSizer;
 class wxSizerItem;
 class wxSlider;
 class wxStaticText;
-class Envelope;
 class EnvelopeEditor;
 class EqualizationPanel;
 class RulerPanel;
-
-using Floats = ArrayOf<float>;
-
-struct EqualizationFilter : EqualizationParameters {
-   // Low frequency of the FFT.  20Hz is the
-   // low range of human hearing
-   static constexpr int loFreqI = 20;
-
-   // Number of samples in an FFT window
-   // MJS - work out the optimum for this at run time?
-   // Have a dialog box for it?
-   static constexpr size_t windowSize = 16384u;
-
-   explicit EqualizationFilter(const EffectSettingsManager &manager);
-   bool CalcFilter();
-   void Filter(size_t len, float *buffer) const;
-
-   std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
-   HFFT hFFT{ GetFFT(windowSize) };
-   Floats mFFTBuffer{ windowSize };
-   Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };
-   double mLoFreq{ loFreqI };
-   double mHiFreq{ mLoFreq };
-   size_t mWindowSize{ windowSize };
-};
 
 class EffectEqualization : public StatefulEffect
 {

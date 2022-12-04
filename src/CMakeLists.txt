@@ -442,6 +442,8 @@ list( APPEND SOURCES
       effects/EqualizationCurves.h
       effects/EqualizationCurvesDialog.cpp
       effects/EqualizationCurvesDialog.h
+      effects/EqualizationFilter.cpp
+      effects/EqualizationFilter.h
       effects/EqualizationParameters.cpp
       effects/EqualizationParameters.h
       effects/Fade.cpp
