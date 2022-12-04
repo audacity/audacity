@@ -77,7 +77,6 @@
 #include <wx/utils.h>
 
 #include "AColor.h"
-#include "ConfigInterface.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
@@ -127,16 +126,6 @@ enum
 #define EQCURVES_VERSION   1
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
-
-const EnumValueSymbol EqualizationParameters::kInterpStrings[nInterpolations] =
-{
-   // These are acceptable dual purpose internal/visible names
-
-   /* i18n-hint: Technical term for a kind of curve.*/
-   { XO("B-spline") },
-   { XO("Cosine") },
-   { XO("Cubic") }
-};
 
 static const double kThirdOct[] =
 {
@@ -218,23 +207,6 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_CHECKBOX(ID_Grid, EffectEqualization::OnGridOnOff)
 
 END_EVENT_TABLE()
-
-EqualizationParameters::
-EqualizationParameters(const EffectSettingsManager &manager)
-   : mCurveName{ CurveName.def }
-   , mM{ FilterLength.def }
-   , mInterp{ InterpMeth.def }
-   , mLin{ InterpLin.def }
-{
-   GetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, dBMin.def);
-   GetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, dBMax.def);
-   GetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DrawMode.def);
-   GetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DrawGrid.def);
-}
 
 EffectEqualization::EffectEqualization(int Options)
    : mFFTBuffer{ windowSize }
@@ -406,19 +378,6 @@ EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
    return { nullptr };
 }
 
-void EqualizationParameters::LoadDefaults(int options)
-{
-   mdBMin = dBMin.def;
-   mdBMax = dBMax.def;
-   mDrawMode = DrawMode.def;
-   mDrawGrid = DrawGrid.def;
-
-   if( options == kEqOptionCurve)
-      mDrawMode = true;
-   if( options == kEqOptionGraphic)
-      mDrawMode = false;
-}
-
 OptionalMessage
 EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
 {
@@ -544,20 +503,6 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    mParameters.SaveConfig(GetDefinition());
 
    return true;
-}
-
-void
-EqualizationParameters::SaveConfig(const EffectSettingsManager &manager) const
-{
-   // TODO: just visit these effect settings the default way
-   SetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
-   SetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMax"), mdBMax);
-   SetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
-   SetConfig(manager, PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 }
 
 // Effect implementation
@@ -1971,14 +1916,6 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
 
    // set 'unnamed' as the selected curve
    Select( (int) mCurves.size() - 1 );
-}
-
-//
-//
-//
-bool EqualizationParameters::IsLinear() const
-{
-   return mDrawMode && mLin;
 }
 
 //
