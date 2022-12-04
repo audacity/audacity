@@ -595,6 +595,21 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
          S.StartVerticalLay(wxEXPAND, 1);
          {
+            // Inserted into sizer later, but the EQ panel needs to point to it
+            mFreqRuler  = safenew RulerPanel(
+               S.GetParent(), wxID_ANY, wxHORIZONTAL,
+               wxSize{ 100, 100 }, // Ruler can't handle small sizes
+               RulerPanel::Range{ mLoFreq, mHiFreq },
+               Ruler::IntFormat,
+               XO("Hz"),
+               RulerPanel::Options{}
+                  .Log(true)
+                  .Flip(true)
+                  .LabelEdges(true)
+                  .TicksAtExtremes(true)
+                  .TickColour( { 0, 0, 0 } )
+            );
+
             mdBRuler = safenew RulerPanel(
                S.GetParent(), wxID_ANY, wxVERTICAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
@@ -617,8 +632,8 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
          mParameters.ChooseEnvelope().Flatten(0.);
          mParameters.ChooseEnvelope().SetTrackLen(1.0);
-         mPanel = safenew
-            EqualizationPanel(S.GetParent(), wxID_ANY, mCurvesList, this);
+         mPanel = safenew EqualizationPanel(S.GetParent(), wxID_ANY,
+            mCurvesList, *mFreqRuler, *mdBRuler);
          S.Prop(1)
             .Position(wxEXPAND)
             .MinSize( { wxDefaultCoord, wxDefaultCoord } )
@@ -654,20 +669,6 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
          // Column 1 is empty
          S.AddSpace(1, 1);
-
-         mFreqRuler  = safenew RulerPanel(
-            S.GetParent(), wxID_ANY, wxHORIZONTAL,
-            wxSize{ 100, 100 }, // Ruler can't handle small sizes
-            RulerPanel::Range{ mLoFreq, mHiFreq },
-            Ruler::IntFormat,
-            XO("Hz"),
-            RulerPanel::Options{}
-               .Log(true)
-               .Flip(true)
-               .LabelEdges(true)
-               .TicksAtExtremes(true)
-               .TickColour( { 0, 0, 0 } )
-         );
 
          S.SetBorder(1);
          S.Prop(1)
@@ -2267,21 +2268,23 @@ END_EVENT_TABLE()
 
 EqualizationPanel::EqualizationPanel(
    wxWindow *parent, wxWindowID winid, EqualizationCurvesList &curvesList,
-   EffectEqualization *effect
+   RulerPanel &freqRuler, RulerPanel &dbRuler
 )  : wxPanelWrapper(parent, winid)
    , mCurvesList{ curvesList }
+   , mFreqRuler{ freqRuler }
+   , mdBRuler{ dbRuler }
 {
+   auto &mParameters = mCurvesList.mParameters;
    mParent = parent;
-   mEffect = effect;
 
    mBitmap = NULL;
    mWidth = 0;
    mHeight = 0;
 
    mLinEditor = std::make_unique<EnvelopeEditor>(
-      mEffect->mParameters.mLinEnvelope, false);
+      mParameters.mLinEnvelope, false);
    mLogEditor = std::make_unique<EnvelopeEditor>(
-      mEffect->mParameters.mLogEnvelope, false);
+      mParameters.mLogEnvelope, false);
 
    ForceRecalc();
 }
@@ -2300,15 +2303,16 @@ void EqualizationPanel::ForceRecalc()
 
 void EqualizationPanel::Recalc()
 {
-   const auto &mWindowSize = mEffect->mParameters.mWindowSize;
+   auto &mParameters = mCurvesList.mParameters;
+   const auto &mWindowSize = mParameters.mWindowSize;
 
    mOutr = Floats{ mWindowSize };
    mOuti = Floats{ mWindowSize };
 
-   mEffect->mParameters.CalcFilter();   //to calculate the actual response
+   mParameters.CalcFilter();   //to calculate the actual response
    InverseRealFFT(mWindowSize,
-      mEffect->mParameters.mFilterFuncR.get(),
-      mEffect->mParameters.mFilterFuncI.get(), mOutr.get());
+      mParameters.mFilterFuncR.get(),
+      mParameters.mFilterFuncI.get(), mOutr.get());
 }
 
 void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
@@ -2319,16 +2323,17 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
 #include "../TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
-   const auto &mdBMax = mEffect->mParameters.mdBMax;
-   const auto &mdBMin = mEffect->mParameters.mdBMin;
-   const auto &mM = mEffect->mParameters.mM;
-   const auto &mDrawMode = mEffect->mParameters.mDrawMode;
-   const auto &mDrawGrid = mEffect->mParameters.mDrawGrid;
-   const auto &mLoFreq = mEffect->mParameters.mLoFreq;
-   const auto &mHiFreq = mEffect->mParameters.mHiFreq;
-   const auto &mWindowSize = mEffect->mParameters.mWindowSize;
-   const auto &mFilterFuncR = mEffect->mParameters.mFilterFuncR;
-   const auto &mFilterFuncI = mEffect->mParameters.mFilterFuncI;
+   const auto &mParameters = mCurvesList.mParameters;
+   const auto &mdBMax = mParameters.mdBMax;
+   const auto &mdBMin = mParameters.mdBMin;
+   const auto &mM = mParameters.mM;
+   const auto &mDrawMode = mParameters.mDrawMode;
+   const auto &mDrawGrid = mParameters.mDrawGrid;
+   const auto &mLoFreq = mParameters.mLoFreq;
+   const auto &mHiFreq = mParameters.mHiFreq;
+   const auto &mWindowSize = mParameters.mWindowSize;
+   const auto &mFilterFuncR = mParameters.mFilterFuncR;
+   const auto &mFilterFuncI = mParameters.mFilterFuncI;
 
    wxPaintDC dc(this);
    if(mRecalcRequired) {
@@ -2385,8 +2390,8 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    // Draw the grid, if asked for.  Do it now so it's underneath the main plots.
    if( mDrawGrid )
    {
-      mEffect->mFreqRuler->ruler.DrawGrid(memDC, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
-      mEffect->mdBRuler->ruler.DrawGrid(memDC, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
+      mFreqRuler.ruler.DrawGrid(memDC, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
+      mdBRuler.ruler.DrawGrid(memDC, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
    }
 
    // Med-blue envelope line
@@ -2396,7 +2401,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    int x, y, xlast = 0, ylast = 0;
    {
       Doubles values{ size_t(mEnvRect.width) };
-      mEffect->mParameters.ChooseEnvelopeToPaint()
+      mParameters.ChooseEnvelopeToPaint()
          .GetValues(values.get(), mEnvRect.width, 0.0, 1.0 / mEnvRect.width);
       bool off = false, off1 = false;
       for (int i = 0; i < mEnvRect.width; i++)
@@ -2431,7 +2436,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    double yF;   //gain at this freq
    double delta = mHiFreq / (((double)mWindowSize / 2.));   //size of each freq bin
 
-   bool lin = mEffect->mParameters.IsLinear();   // log or lin scale?
+   bool lin = mParameters.IsLinear();   // log or lin scale?
 
    double loLog = log10(mLoFreq);
    double step = lin ? mHiFreq : (log10(mHiFreq) - loLog);
@@ -2504,7 +2509,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
       artist.pZoomInfo = &zoomInfo;
       TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
-      EnvelopeEditor::DrawPoints( mEffect->mParameters.ChooseEnvelopeToPaint(),
+      EnvelopeEditor::DrawPoints( mParameters.ChooseEnvelopeToPaint(),
          context, mEnvRect, false, 0.0,
       mdBMin, mdBMax, false);
    }
@@ -2514,10 +2519,11 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
 void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
 {
-   const auto &mdBMax = mEffect->mParameters.mdBMax;
-   const auto &mdBMin = mEffect->mParameters.mdBMin;
-   const auto &mDrawMode = mEffect->mParameters.mDrawMode;
-   const auto &mLin = mEffect->mParameters.mLin;
+   const auto &mParameters = mCurvesList.mParameters;
+   const auto &mdBMax = mParameters.mdBMax;
+   const auto &mdBMin = mParameters.mdBMin;
+   const auto &mDrawMode = mParameters.mDrawMode;
+   const auto &mLin = mParameters.mLin;
 
    if (!mDrawMode)
    {

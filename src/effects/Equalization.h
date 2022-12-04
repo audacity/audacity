@@ -188,8 +188,6 @@ private:
    const EffectParameterMethods& Parameters() const override;
 
    DECLARE_EVENT_TABLE()
-
-   friend class EqualizationPanel;
 };
 
 class EffectEqualizationCurve final : public EffectEqualization
@@ -214,7 +212,7 @@ public:
    EqualizationPanel(
       wxWindow *parent, wxWindowID winid,
       EqualizationCurvesList &curvesList,
-      EffectEqualization *effect);
+      RulerPanel &freqRuler, RulerPanel &dbRuler);
    ~EqualizationPanel();
 
    // We don't need or want to accept focus.
@@ -241,7 +239,8 @@ public:
 private:
    wxWindow *mParent;
    EqualizationCurvesList &mCurvesList;
-   EffectEqualization *mEffect;
+   RulerPanel &mFreqRuler;
+   RulerPanel &mdBRuler;
    std::unique_ptr<EnvelopeEditor> mLinEditor, mLogEditor;
 
    bool mRecalcRequired;
