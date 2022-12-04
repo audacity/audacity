@@ -41,7 +41,18 @@ struct EqualizationFilter : EqualizationParameters {
    //! padded left and right for the tails
    void Filter(size_t len, float *buffer) const;
 
-   std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
+   Envelope &ChooseEnvelope() const
+   { return *(mLin ? mLinEnvelope : mLogEnvelope); }
+
+   // If sliders show, always use the log envelope
+   const Envelope &ChooseEnvelopeToPaint() const
+   { return *(IsLinear() ? mLinEnvelope : mLogEnvelope); }
+
+   //! @invariant not null
+   const std::unique_ptr<Envelope> mLinEnvelope;
+   //! @invariant not null
+   const std::unique_ptr<Envelope> mLogEnvelope;
+
    HFFT hFFT{ GetFFT(windowSize) };
    Floats mFFTBuffer{ windowSize };
    Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };

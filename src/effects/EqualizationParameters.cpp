@@ -68,5 +68,6 @@ void EqualizationParameters::SaveConfig(const EffectSettingsManager &manager)
 
 bool EqualizationParameters::IsLinear() const
 {
+   // If sliders show (!mDrawMode), always use the log envelope
    return mDrawMode && mLin;
 }

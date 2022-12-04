@@ -17,17 +17,14 @@
 
 EqualizationFilter::EqualizationFilter(const EffectSettingsManager &manager)
    : EqualizationParameters{ manager }
+   , mLogEnvelope{ std::make_unique<Envelope>(false,
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
+       0.0) }
+   , mLinEnvelope{ std::make_unique<Envelope>(false,
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
+       0.0) }
 {
-   mLogEnvelope = std::make_unique<Envelope>
-      (false,
-       dBMin.min, dBMax.max, // MB: this is the highest possible range
-       0.0);
    mLogEnvelope->SetTrackLen(1.0);
-
-   mLinEnvelope = std::make_unique<Envelope>
-      (false,
-       dBMin.min, dBMax.max, // MB: this is the highest possible range
-       0.0);
    mLinEnvelope->SetTrackLen(1.0);
 }
 

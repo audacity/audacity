@@ -147,8 +147,6 @@ private:
 
    EQCurveArray mCurves;
 
-   Envelope *mEnvelope;
-
    wxSizer *szrC;
    wxSizer *szrG;
    wxSizer *szrV;
