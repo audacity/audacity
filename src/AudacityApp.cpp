@@ -841,7 +841,8 @@ int main(int argc, char *argv[])
 }
 
 #else
-wxIMPLEMENT_APP(AudacityApp);
+wxIMPLEMENT_WX_THEME_SUPPORT
+wxIMPLEMENT_APP_NO_THEMES(AudacityApp);
 #endif
 
 #ifdef __WXMAC__
