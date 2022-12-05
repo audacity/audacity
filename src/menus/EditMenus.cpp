@@ -71,62 +71,52 @@ bool DoPasteText(AudacityProject &project)
    return false;
 }
 
-// Return true if nothing selected, regardless of paste result.
-// If nothing was selected, create and paste into NEW tracks.
+// Create and paste into NEW tracks.
+// Simplified version of DoPaste, used when there is no selection
+// on tracks
 // (This was formerly the second part of overly-long OnPaste.)
-bool DoPasteNothingSelected(AudacityProject &project)
+void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, double t0, double t1)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
+   
+   assert(!tracks.Selected());
 
-   // First check whether anything's selected.
-   if (tracks.Selected())
-      return false;
-   else
-   {
-      const auto &clipboard = Clipboard::Get();
-      auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
-      if (clipTrackRange.empty())
-         return true; // nothing to paste
+   Track* pFirstNewTrack = NULL;
+   for (auto pClip : src) {
+      auto pNewTrack = pClip->PasteInto( project );
+      bool newTrack = (pNewTrack.use_count() == 1);
+      wxASSERT(pClip);
 
-      Track* pFirstNewTrack = NULL;
-      for (auto pClip : clipTrackRange) {
-         auto pNewTrack = pClip->PasteInto( project );
-         bool newTrack = (pNewTrack.use_count() == 1);
-         wxASSERT(pClip);
+      if (!pFirstNewTrack)
+         pFirstNewTrack = pNewTrack.get();
 
-         if (!pFirstNewTrack)
-            pFirstNewTrack = pNewTrack.get();
+      pNewTrack->SetSelected(true);
+      if (newTrack)
+         FinishCopy(pClip, pNewTrack, tracks);
+      else
+         Track::FinishCopy(pClip, pNewTrack.get());
+   }
 
-         pNewTrack->SetSelected(true);
-         if (newTrack)
-            FinishCopy(pClip, pNewTrack, tracks);
-         else
-            Track::FinishCopy(pClip, pNewTrack.get());
-      }
+   // Select some pasted samples, which is probably impossible to get right
+   // with various project and track sample rates.
+   // So do it at the sample rate of the project
+   double projRate = ProjectRate::Get( project ).GetRate();
+   double quantT0 = QUANTIZED_TIME(t0, projRate);
+   double quantT1 = QUANTIZED_TIME(t1, projRate);
+   selectedRegion.setTimes(
+      0.0,   // anywhere else and this should be
+             // half a sample earlier
+      quantT1 - quantT0);
 
-      // Select some pasted samples, which is probably impossible to get right
-      // with various project and track sample rates.
-      // So do it at the sample rate of the project
-      double projRate = ProjectRate::Get( project ).GetRate();
-      double quantT0 = QUANTIZED_TIME(clipboard.T0(), projRate);
-      double quantT1 = QUANTIZED_TIME(clipboard.T1(), projRate);
-      selectedRegion.setTimes(
-         0.0,   // anywhere else and this should be
-                // half a sample earlier
-         quantT1 - quantT0);
+   ProjectHistory::Get( project )
+      .PushState(XO("Pasted from the clipboard"), XO("Paste"));
 
-      ProjectHistory::Get( project )
-         .PushState(XO("Pasted from the clipboard"), XO("Paste"));
-
-      if (pFirstNewTrack) {
-         TrackFocus::Get(project).Set(pFirstNewTrack);
-         pFirstNewTrack->EnsureVisible();
-      }
-
-      return true;
+   if (pFirstNewTrack) {
+      TrackFocus::Get(project).Set(pFirstNewTrack);
+      pFirstNewTrack->EnsureVisible();
    }
 }
 
@@ -415,15 +405,18 @@ void OnPaste(const CommandContext &context)
       }
    }
 
-   // If nothing's selected, we just insert NEW tracks.
-   if (DoPasteNothingSelected(project))
-      return;
-
    const auto &clipboard = Clipboard::Get();
    auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
    if (clipTrackRange.empty())
       return;
-
+   
+   // If nothing's selected, we just insert NEW tracks.
+   if(!tracks.Selected())
+   {
+      DoPasteNothingSelected(project, clipboard.GetTracks(), clipboard.T0(), clipboard.T1());
+      return;
+   }
+   
    // Otherwise, paste into the selected tracks.
    double t0, t1;
    std::tie(t0, t1) = FindSelection(context);
