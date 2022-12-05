@@ -936,7 +936,8 @@ namespace
       explicit VSTEffectMessage(int id, double value, size_t numParams)
       {
          mParamsVec.resize(numParams, std::nullopt);
-         mParamsVec[id] = value;
+         if (id < numParams)
+            mParamsVec[id] = value;
       }
 
       ~VSTEffectMessage() override;
