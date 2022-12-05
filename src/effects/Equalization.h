@@ -36,6 +36,19 @@ class EnvelopeEditor;
 class EqualizationPanel;
 class RulerPanel;
 
+struct EqualizationCurvesList {
+   explicit EqualizationCurvesList(EqualizationFilter &params)
+      : mParameters{ params }
+   {}
+
+   void EnvelopeUpdated();
+   void EnvelopeUpdated(const Envelope &env, bool lin);
+   void Select(int sel);
+
+   EQCurveArray mCurves;
+   EqualizationFilter &mParameters;
+};
+
 class EffectEqualization : public StatefulEffect
 {
 public:
@@ -93,10 +106,7 @@ private:
    
    void Flatten();
    void ForceRecalc();
-   void EnvelopeUpdated();
-   void EnvelopeUpdated(const Envelope &env, bool lin);
 
-   void Select(int sel);
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
    void setCurve(void);
@@ -134,6 +144,7 @@ private:
    int mOptions;
 
    EqualizationFilter mParameters;
+   EqualizationCurvesList mCurvesList{ mParameters };
 
    double mWhens[NUM_PTS];
    double mWhenSliders[NUMBER_OF_BANDS+1];
@@ -144,8 +155,6 @@ private:
    bool mDisallowCustom;
    int mSlidersOld[NUMBER_OF_BANDS];
    double mEQVals[NUMBER_OF_BANDS+1];
-
-   EQCurveArray mCurves;
 
    wxSizer *szrC;
    wxSizer *szrG;
@@ -203,7 +212,9 @@ class EqualizationPanel final : public wxPanelWrapper
 {
 public:
    EqualizationPanel(
-      wxWindow *parent, wxWindowID winid, EffectEqualization *effect);
+      wxWindow *parent, wxWindowID winid,
+      EqualizationCurvesList &curvesList,
+      EffectEqualization *effect);
    ~EqualizationPanel();
 
    // We don't need or want to accept focus.
@@ -229,6 +240,7 @@ public:
 
 private:
    wxWindow *mParent;
+   EqualizationCurvesList &mCurvesList;
    EffectEqualization *mEffect;
    std::unique_ptr<EnvelopeEditor> mLinEditor, mLogEditor;
 

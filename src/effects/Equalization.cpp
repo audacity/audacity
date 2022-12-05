@@ -203,6 +203,7 @@ EffectEqualization::EffectEqualization(int Options)
    : mParameters{ GetDefinition() }
 {
    auto &mHiFreq = mParameters.mHiFreq;
+   auto &mCurves = mCurvesList.mCurves;
 
    Parameters().Reset(*this);
 
@@ -289,6 +290,7 @@ EffectType EffectEqualization::GetType() const
 bool EffectEqualization::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
+   const auto &mCurves = mCurvesList.mCurves;
    Effect::VisitSettings(visitor, settings);
 
    // Curve point parameters -- how many isn't known statically
@@ -311,6 +313,7 @@ bool EffectEqualization::VisitSettings(
 bool EffectEqualization::VisitSettings(
    SettingsVisitor &visitor, EffectSettings &settings)
 {
+   auto &mCurves = mCurvesList.mCurves;
    Effect::VisitSettings(visitor, settings);
 
    // Curve point parameters -- how many isn't known statically
@@ -429,6 +432,7 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    const auto &mCurveName = mParameters.mCurveName;
    const auto &mDrawMode = mParameters.mDrawMode;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mCurves = mCurvesList.mCurves;
 
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
@@ -559,6 +563,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    const auto &mM = mParameters.mM;
    const auto &mLoFreq = mParameters.mLoFreq;
    const auto &mHiFreq = mParameters.mHiFreq;
+   const auto &mCurves = mCurvesList.mCurves;
 
    auto &mDrawMode = mParameters.mDrawMode;
 
@@ -612,7 +617,8 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
          mParameters.ChooseEnvelope().Flatten(0.);
          mParameters.ChooseEnvelope().SetTrackLen(1.0);
-         mPanel = safenew EqualizationPanel(S.GetParent(), wxID_ANY, this);
+         mPanel = safenew
+            EqualizationPanel(S.GetParent(), wxID_ANY, mCurvesList, this);
          S.Prop(1)
             .Position(wxEXPAND)
             .MinSize( { wxDefaultCoord, wxDefaultCoord } )
@@ -853,7 +859,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                   mCurve = S.Id(ID_Curve)
                      .Name(XO("Select Curve"))
                      .AddChoice( {},
-                        [this]{
+                        [&mCurves]{
                            TranslatableStrings curves;
                            for (const auto &curve : mCurves)
                               curves.push_back( Verbatim( curve.Name ) );
@@ -1168,10 +1174,11 @@ void EffectEqualization::setCurve(int currentCurve)
 
    const auto &mLin = mParameters.mLin;
    const auto &mHiFreq = mParameters.mHiFreq;
+   auto &mCurves = mCurvesList.mCurves;
 
    // Set current choice
    wxASSERT( currentCurve < (int) mCurves.size() );
-   Select(currentCurve);
+   mCurvesList.Select(currentCurve);
 
    int numPoints = (int) mCurves[currentCurve].points.size();
 
@@ -1326,11 +1333,13 @@ void EffectEqualization::setCurve(int currentCurve)
 
 void EffectEqualization::setCurve()
 {
+   const auto &mCurves = mCurvesList.mCurves;
    setCurve((int) mCurves.size() - 1);
 }
 
 void EffectEqualization::setCurve(const wxString &curveName)
 {
+   const auto &mCurves = mCurvesList.mCurves;
    unsigned i = 0;
    for( i = 0; i < mCurves.size(); i++ )
       if( curveName == mCurves[ i ].Name )
@@ -1350,7 +1359,7 @@ void EffectEqualization::setCurve(const wxString &curveName)
 //
 // Set NEW curve selection (safe to call outside of the UI)
 //
-void EffectEqualization::Select( int curve )
+void EqualizationCurvesList::Select( int curve )
 {
    mParameters.mCurveName = mCurves[ curve ].Name;
 }
@@ -1369,7 +1378,7 @@ void EffectEqualization::ForceRecalc()
 //
 // Capture updated envelope
 //
-void EffectEqualization::EnvelopeUpdated()
+void EqualizationCurvesList::EnvelopeUpdated()
 {
    if (mParameters.IsLinear())
       EnvelopeUpdated(mParameters.mLinEnvelope, true);
@@ -1377,7 +1386,7 @@ void EffectEqualization::EnvelopeUpdated()
       EnvelopeUpdated(mParameters.mLogEnvelope, false);
 }
 
-void EffectEqualization::EnvelopeUpdated(const Envelope &env, bool lin)
+void EqualizationCurvesList::EnvelopeUpdated(const Envelope &env, bool lin)
 {
    const auto &mHiFreq = mParameters.mHiFreq;
    const auto &mDrawMode = mParameters.mDrawMode;
@@ -1477,7 +1486,7 @@ void EffectEqualization::Flatten()
          mSliders[i]->SetToolTip(tip);
       }
    }
-   EnvelopeUpdated();
+   mCurvesList.EnvelopeUpdated();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1490,6 +1499,7 @@ void EffectEqualization::Flatten()
 void EffectEqualization::UpdateCurves()
 {
    auto &mCurveName = mParameters.mCurveName;
+   const auto &mCurves = mCurvesList.mCurves;
 
    // Reload the curve names
    if( mCurve ) 
@@ -1532,7 +1542,7 @@ void EffectEqualization::UpdateDraw()
    mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
 
    // set 'unnamed' as the selected curve
-   EnvelopeUpdated();
+   mCurvesList.EnvelopeUpdated();
 
    bool flag = true;
    while (flag)
@@ -1712,12 +1722,13 @@ void EffectEqualization::EnvLinToLog(void)
    mLogEnvelope.Reassign(1., value[numPoints - 1]);
 
    if(changed)
-      EnvelopeUpdated(mLogEnvelope, false);
+      mCurvesList.EnvelopeUpdated(mLogEnvelope, false);
 }
 
 void EffectEqualization::ErrMin(void)
 {
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &mCurves = mCurvesList.mCurves;
 
    double vals[NUM_PTS];
    double error = 0.0;
@@ -1788,8 +1799,8 @@ void EffectEqualization::ErrMin(void)
    }
    if( error > .0025 * mBandsInUse ) // not within 0.05dB on each slider, on average
    {
-      Select( (int) mCurves.size() - 1 );
-      EnvelopeUpdated(testEnvelope, false);
+      mCurvesList.Select( (int) mCurves.size() - 1 );
+      mCurvesList.EnvelopeUpdated(testEnvelope, false);
    }
 }
 
@@ -2023,7 +2034,7 @@ void EffectEqualization::OnSlider(wxCommandEvent & event)
       }
    }
    GraphicEQ(mLogEnvelope);
-   EnvelopeUpdated();
+   mCurvesList.EnvelopeUpdated();
 }
 
 void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
@@ -2032,7 +2043,7 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
    if (bIsGraphic)
    {
       GraphicEQ(mParameters.mLogEnvelope);
-      EnvelopeUpdated();
+      mCurvesList.EnvelopeUpdated();
    }
    mParameters.mInterp = mInterpChoice->GetSelection();
 }
@@ -2114,6 +2125,7 @@ void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 //
 void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mCurves = mCurvesList.mCurves;
    EqualizationCurvesDialog d(mUIParent, GetName(), mOptions,
       mCurves, mCurve->GetSelection());
    if (d.ShowModal()) {
@@ -2201,7 +2213,7 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
 
    // and update the display etc
    ForceRecalc();
-   EnvelopeUpdated();
+   mCurvesList.EnvelopeUpdated();
 }
 
 void EffectEqualization::OnGridOnOff(wxCommandEvent & WXUNUSED(event))
@@ -2254,8 +2266,10 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
 END_EVENT_TABLE()
 
 EqualizationPanel::EqualizationPanel(
-   wxWindow *parent, wxWindowID winid, EffectEqualization *effect)
-:  wxPanelWrapper(parent, winid)
+   wxWindow *parent, wxWindowID winid, EqualizationCurvesList &curvesList,
+   EffectEqualization *effect
+)  : wxPanelWrapper(parent, winid)
+   , mCurvesList{ curvesList }
 {
    mParent = parent;
    mEffect = effect;
@@ -2525,7 +2539,7 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.ButtonUp() && HasCapture())
    {
-      mEffect->EnvelopeUpdated();
+      mCurvesList.EnvelopeUpdated();
       ReleaseMouse();
    }
 }
