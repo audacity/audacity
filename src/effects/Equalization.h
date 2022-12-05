@@ -142,7 +142,6 @@ private:
    RulerPanel *mFreqRuler;
 
    bool mDisallowCustom;
-   bool mDirty;
    int mSlidersOld[NUMBER_OF_BANDS];
    double mEQVals[NUMBER_OF_BANDS+1];
 

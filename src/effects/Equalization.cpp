@@ -215,7 +215,6 @@ EffectEqualization::EffectEqualization(int Options)
 
    SetLinearEffectFlag(true);
 
-   mDirty = false;
    mDisallowCustom = false;
 
    // Load the EQ curves
@@ -445,26 +444,6 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
       return false;
    }
 
-   // Update unnamed curve (so it's there for next time)
-   //(done in a hurry, may not be the neatest -MJS)
-   if (mDirty && !mDrawMode)
-   {
-      size_t numPoints = mLogEnvelope.GetNumberOfPoints();
-      Doubles when{ numPoints };
-      Doubles value{ numPoints };
-      mLogEnvelope.GetPoints(when.get(), value.get(), numPoints);
-      for (size_t i = 0, j = 0; j + 2 < numPoints; i++, j++)
-      {
-         if ((value[i] < value[i + 1] + .05) && (value[i] > value[i + 1] - .05) &&
-            (value[i + 1] < value[i + 2] + .05) && (value[i + 1] > value[i + 2] - .05))
-         {   // within < 0.05 dB?
-            mLogEnvelope.Delete(j + 1);
-            numPoints--;
-            j--;
-         }
-      }
-      Select((int) mCurves.size() - 1);
-   }
    EQCurveWriter{ mCurves }.SaveCurves();
 
    mParameters.SaveConfig(GetDefinition());
@@ -1401,6 +1380,8 @@ void EffectEqualization::EnvelopeUpdated()
 void EffectEqualization::EnvelopeUpdated(const Envelope &env, bool lin)
 {
    const auto &mHiFreq = mParameters.mHiFreq;
+   const auto &mDrawMode = mParameters.mDrawMode;
+   auto &mLogEnvelope = mParameters.mLogEnvelope;
 
    // Allocate and populate point arrays
    size_t numPoints = env.GetNumberOfPoints();
@@ -1440,8 +1421,27 @@ void EffectEqualization::EnvelopeUpdated(const Envelope &env, bool lin)
          mCurves[ curve ].points.push_back( EQPoint( freq, db ) );
       }
    }
-   // Remember that we've updated the unnamed curve
-   mDirty = true;
+
+   // Update unnamed curve (so it's there for next time)
+   //(done in a hurry, may not be the neatest -MJS)
+   if (!mDrawMode)
+   {
+      size_t numPoints = mLogEnvelope.GetNumberOfPoints();
+      Doubles when{ numPoints };
+      Doubles value{ numPoints };
+      mLogEnvelope.GetPoints(when.get(), value.get(), numPoints);
+      for (size_t i = 0, j = 0; j + 2 < numPoints; i++, j++)
+      {
+         if ((value[i] < value[i + 1] + .05) && (value[i] > value[i + 1] - .05) &&
+            (value[i + 1] < value[i + 2] + .05) && (value[i + 1] > value[i + 2] - .05))
+         {   // within < 0.05 dB?
+            mLogEnvelope.Delete(j + 1);
+            numPoints--;
+            j--;
+         }
+      }
+      Select((int) mCurves.size() - 1);
+   }
 
    // set 'unnamed' as the selected curve
    Select( (int) mCurves.size() - 1 );
@@ -2520,12 +2520,12 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
       false, 0.0,
       mdBMin, mdBMax))
    {
-      mEffect->EnvelopeUpdated();
       ForceRecalc();
    }
 
    if (event.ButtonUp() && HasCapture())
    {
+      mEffect->EnvelopeUpdated();
       ReleaseMouse();
    }
 }
