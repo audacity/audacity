@@ -218,6 +218,7 @@ class PROJECT_HISTORY_API UndoManager final
    bool UndoAvailable();
    bool RedoAvailable();
 
+   void MarkUnsaved();
    bool UnsavedChanges() const;
    int GetSavedState() const;
    void StateSaved();

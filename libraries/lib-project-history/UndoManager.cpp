@@ -203,9 +203,6 @@ void UndoManager::ModifyState(const TrackList &l,
 //   SonifyEndModifyState();
 
    EnqueueMessage({ UndoRedoMessage::Modified });
-
-   if (saved == current)
-      saved = -1;
 }
 
 void UndoManager::RenameState( int state,
@@ -353,6 +350,11 @@ void UndoManager::VisitStates(
       for (auto ii = begin; ii > end; --ii)
          consumer(*stack[ii]);
    }
+}
+
+void UndoManager::MarkUnsaved()
+{
+   saved = -1;
 }
 
 bool UndoManager::UnsavedChanges() const
