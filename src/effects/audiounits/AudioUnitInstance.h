@@ -63,6 +63,7 @@ private:
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
 
+   bool UsesMessages() const noexcept override;
    bool RealtimeProcessStart(MessagePackage &package) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)

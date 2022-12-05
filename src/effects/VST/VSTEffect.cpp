@@ -1284,6 +1284,11 @@ bool VSTEffectInstance::ChunkMustBeAppliedInMainThread() const
 }
 
 
+bool VSTEffectInstance::UsesMessages() const noexcept
+{
+   return true;
+}
+
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
    const bool applyChunkInMainThread = ChunkMustBeAppliedInMainThread();
