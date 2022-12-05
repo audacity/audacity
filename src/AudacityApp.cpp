@@ -841,7 +841,7 @@ int main(int argc, char *argv[])
 }
 
 #else
-IMPLEMENT_APP(AudacityApp)
+wxIMPLEMENT_APP(AudacityApp);
 #endif
 
 #ifdef __WXMAC__
