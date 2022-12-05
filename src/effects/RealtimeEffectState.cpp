@@ -650,15 +650,17 @@ void RealtimeEffectState::SetActive(bool active)
 
 bool RealtimeEffectState::Finalize() noexcept
 {
-   // This is the main thread cleaning up a state not now used in processing
-   mMainSettings = mWorkerSettings;
-
    mGroups.clear();
    mCurrentProcessor = 0;
 
    auto pInstance = mwInstance.lock();
    if (!pInstance)
       return false;
+
+   if (!pInstance->UsesMessages()) {
+      // This is the main thread cleaning up a state not now used in processing
+      mMainSettings = mWorkerSettings;
+   }
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
    mLatency = {};
