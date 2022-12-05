@@ -157,7 +157,9 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
 const ComponentInterfaceSymbol EffectEqualization::Symbol
 { XO("Equalization") };
 
-// namespace{ BuiltinEffectsModule::Registration< EffectEqualization > reg; }
+#ifdef LEGACY_EQ
+namespace{ BuiltinEffectsModule::Registration< EffectEqualization > reg; }
+#endif
 
 // "Filter Curve EQ" in the user-facing string, but preserve the old
 // internal string
@@ -192,6 +194,8 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_RADIOBUTTON(ID_Graphic, EffectEqualization::OnGraphicMode)
    EVT_CHECKBOX(ID_Linear, EffectEqualization::OnLinFreq)
    EVT_CHECKBOX(ID_Grid, EffectEqualization::OnGridOnOff)
+
+   EVT_IDLE(EffectEqualization::OnIdle)
 
 END_EVENT_TABLE()
 
@@ -1369,14 +1373,7 @@ void EffectEqualization::setCurve(const wxString &curveName)
 //
 void EffectEqualization::Select( int curve )
 {
-   auto &mCurveName = mParameters.mCurveName;
-
-   // Set current choice
-   if (mCurve)
-   {
-      mCurve->SetSelection( curve );
-      mCurveName = mCurves[ curve ].Name;
-   }
+   mParameters.mCurveName = mCurves[ curve ].Name;
 }
 
 //
@@ -2236,6 +2233,13 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    }
    mFreqRuler->Refresh(false);
    ForceRecalc();
+}
+
+void EffectEqualization::OnIdle(wxIdleEvent &event)
+{
+   event.Skip();
+   if (mCurve)
+      mCurve->SetStringSelection(mParameters.mCurveName);
 }
 
 //----------------------------------------------------------------------------

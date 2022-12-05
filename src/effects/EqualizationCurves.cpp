@@ -55,7 +55,7 @@ void EQCurveReader::LoadCurves(const wxString &fileName, bool append)
 {
 // We've disabled the XML management of curves.
 // Just going via .cfg files now.
-#if 1
+#ifndef LEGACY_EQ
    (void)fileName;
    (void)append;
    mCurves.clear();

@@ -129,6 +129,7 @@ private:
    void OnInvert( wxCommandEvent & event );
    void OnGridOnOff( wxCommandEvent & event );
    void OnLinFreq( wxCommandEvent & event );
+   void OnIdle( wxIdleEvent &event );
 
    int mOptions;
 

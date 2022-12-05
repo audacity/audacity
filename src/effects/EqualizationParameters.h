@@ -21,6 +21,10 @@ const int kEqOptionCurve   = (1 << 1) ;
 // The legacy version offers both Graphic and curve on the same UI.
 const int kEqLegacy = kEqOptionGraphic | kEqOptionCurve;
 
+// Define to enable the old combined UI with both curves and sliders, and
+// management of a set of curves
+#undef LEGACY_EQ
+
 //! Parameters of the Equalization effects that persist in configuration files
 struct EqualizationParameters {
    enum kInterpolations {
