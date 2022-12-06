@@ -8,9 +8,6 @@ struct FFTParam {
    ArrayOf<int> BitReversed;
    ArrayOf<fft_type> SinTable;
    size_t Points;
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   int pow2Bits;
-#endif
 };
 
 struct MATH_API FFTDeleter{

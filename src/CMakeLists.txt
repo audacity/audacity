@@ -436,8 +436,6 @@ list( APPEND SOURCES
       effects/EffectUI.h
       effects/Equalization.cpp
       effects/Equalization.h
-      effects/Equalization48x.cpp
-      effects/Equalization48x.h
       effects/Fade.cpp
       effects/Fade.h
       effects/FindClipping.cpp

@@ -90,10 +90,6 @@ public:
 
 using EQCurveArray = std::vector<EQCurve>;
 
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-class EffectEqualization48x;
-#endif
-
 class EffectEqualization : public StatefulEffect,
                            public XMLTagHandler
 {
@@ -208,10 +204,6 @@ private:
    void OnInvert( wxCommandEvent & event );
    void OnGridOnOff( wxCommandEvent & event );
    void OnLinFreq( wxCommandEvent & event );
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   void OnProcessingRadio( wxCommandEvent & event );
-   void OnBench( wxCommandEvent & event );
-#endif
 
    int mOptions;
    HFFT hFFT;
@@ -244,12 +236,6 @@ private:
    std::unique_ptr<Envelope> mLogEnvelope, mLinEnvelope;
    Envelope *mEnvelope;
 
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   bool mBench;
-   std::unique_ptr<EffectEqualization48x> mEffectEqualization48x;
-   friend class EffectEqualization48x;
-#endif
-
    wxSizer *szrC;
    wxSizer *szrG;
    wxSizer *szrV;
@@ -278,11 +264,6 @@ private:
    wxSlider *mdBMinSlider;
    wxSlider *mdBMaxSlider;
    wxSlider *mSliders[NUMBER_OF_BANDS];
-
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
-   wxBoxSizer *szrM;
-#endif
 
    const EffectParameterMethods& Parameters() const override;
 

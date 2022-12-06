@@ -84,13 +84,6 @@ HFFT InitializeFFT(size_t fftlen)
       h->SinTable[h->BitReversed[i]+1]=(fft_type)-cos(2*M_PI*i/(2*h->Points));
    }
 
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   // NEW SSE FFT routines work on live data
-   for(size_t i = 0; i < 32; i++)
-      if((1 << i) & fftlen)
-         h->pow2Bits = i;
-#endif
-
    return h;
 }
 

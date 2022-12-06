@@ -28,10 +28,6 @@
 ]]#
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   # ACH 08 Jan 2014
-   # EQ accelerated code
-   #EQ_SSE_THREADED
-
    # LLL, 09 Nov 2013:
    # Allow all WASAPI devices, not just loopback
    FULL_WASAPI
