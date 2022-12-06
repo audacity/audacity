@@ -28,10 +28,6 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   # ACH 08 Jan 2014
-   # EQ accelerated code
-   #EQ_SSE_THREADED
-
    # JKC an experiment to work around bug 2709
    # disabled.
    #CEE_NUMBERS_OPTION

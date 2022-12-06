@@ -342,8 +342,6 @@ set( SOURCES
       effects/EffectUIServices.h
       effects/Equalization.cpp
       effects/Equalization.h
-      effects/Equalization48x.cpp
-      effects/Equalization48x.h
       effects/EqualizationBandSliders.cpp
       effects/EqualizationBandSliders.h
       effects/EqualizationCurves.cpp
