@@ -39,6 +39,7 @@ BlackList[] =
    { 'appl', 'aumx', 'mcmx' },   // Apple: AUMultiChannelMixer
    { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
    { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
+   { 'Ignt', 'aufx', 'PTQX' },   // Ignite Amps PTEq-X
 };
 
 // ============================================================================

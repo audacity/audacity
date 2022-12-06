@@ -163,6 +163,11 @@ auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
    return nullptr;
 }
 
+bool EffectInstance::UsesMessages() const noexcept
+{
+   return false;
+}
+
 bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;

@@ -936,7 +936,8 @@ namespace
       explicit VSTEffectMessage(int id, double value, size_t numParams)
       {
          mParamsVec.resize(numParams, std::nullopt);
-         mParamsVec[id] = value;
+         if (id < numParams)
+            mParamsVec[id] = value;
       }
 
       ~VSTEffectMessage() override;
@@ -1175,6 +1176,11 @@ size_t VSTEffectInstance::ProcessBlock(EffectSettings &,
 
 bool VSTEffectInstance::RealtimeInitialize(EffectSettings &settings, double sampleRate)
 {
+   // Temporarily disconnect from any validator, so that setting the chunk
+   // does not cause Automate() callbacks (as some effects will do) that then
+   // would send slider movement messages that might destroy information in
+   // the settings.
+   auto vr = valueRestorer(mpOwningValidator, (VSTEffectUIWrapper*)nullptr);
    return ProcessInitialize(settings, sampleRate, {});
 }
 
@@ -1205,6 +1211,10 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
 return GuardedCall<bool>([&]{
+
+   if (mpOwningValidator)
+      mpOwningValidator->Flush();
+
    mRecruited = false;
 
    for (const auto &slave : mSlaves)
@@ -1241,24 +1251,76 @@ bool VSTEffectInstance::OnePresetWasLoadedWhilePlaying()
    return mPresetLoadedWhilePlaying.exchange(false);
 }
 
+void VSTEffectInstance::DeferChunkApplication()
+{
+   std::lock_guard<std::mutex> guard(mDeferredChunkMutex);
+
+   if (! mChunkToSetAtIdleTime.empty() )
+   {    
+      ApplyChunk(mChunkToSetAtIdleTime);
+      mChunkToSetAtIdleTime.resize(0);
+   }
+}
+
+
+void VSTEffectInstance::ApplyChunk(std::vector<char>& chunk)
+{
+   VstPatchChunkInfo info = {
+      1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+
+   const auto len = chunk.size();
+   const auto data = chunk.data();
+
+   callSetChunk(true, len, data, &info);
+   for (auto& slave : mSlaves)
+      slave->callSetChunk(true, len, data, &info);
+}
+
+
+bool VSTEffectInstance::ChunkMustBeAppliedInMainThread() const
+{
+   // Some plugins (e.g. Melda) can not have their chunk set in the
+   // audio thread, resulting in making the whole app hang.
+   // This is why we defer the setting of the chunk in the main thread.
+
+   const bool IsAudioThread = (mMainThreadId != std::this_thread::get_id());
+   
+   return IsAudioThread && mIsMeldaPlugin;
+}
+
+
+bool VSTEffectInstance::UsesMessages() const noexcept
+{
+   return true;
+}
+
 bool VSTEffectInstance::RealtimeProcessStart(MessagePackage& package)
 {
+   const bool applyChunkInMainThread = ChunkMustBeAppliedInMainThread();
+
+   if (applyChunkInMainThread)
+      mDeferredChunkMutex.lock();
+
    if (!package.pMessage)
       return true;
 
    auto& message = static_cast<VSTEffectMessage&>(*package.pMessage);
 
    auto &chunk = message.mChunk;
-   if (!chunk.empty()) {
-      // Apply the chunk first
 
-      VstPatchChunkInfo info = {
-         1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
-      const auto len = chunk.size();
-      const auto data = chunk.data();
-      callSetChunk(true, len, data, &info);
-      for (auto& slave : mSlaves)
-         slave->callSetChunk(true, len, data, &info);
+   if (!chunk.empty())
+   {
+      if (applyChunkInMainThread)
+      {
+         // Apply the chunk later
+         //
+         mChunkToSetAtIdleTime = chunk;
+      }
+      else
+      {
+         // Apply the chunk now
+         ApplyChunk(chunk);
+      }
 
       // Don't apply the chunk again until another message supplies a chunk
       chunk.resize(0);
@@ -1330,6 +1392,9 @@ size_t VSTEffectInstance::RealtimeProcess(size_t group, EffectSettings &settings
 
 bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
+   if ( ChunkMustBeAppliedInMainThread() )
+      mDeferredChunkMutex.unlock();
+
    return true;
 }
 
@@ -2132,6 +2197,14 @@ bool VSTEffect::SaveUserPreset(
       group, wxT("Parameters"), parms);
 }
 
+void VSTEffectUIWrapper::Flush()
+{}
+
+void VSTEffectValidator::Flush()
+{
+   mAccess.Flush();
+}
+
 void VSTEffectValidator::OnTimer()
 {
    wxRecursionGuard guard(mTimerGuard);
@@ -2295,6 +2368,8 @@ void VSTEffectValidator::OnIdle(wxIdleEvent& evt)
       mLastMovements.clear();
    }
 
+   GetInstance().DeferChunkApplication();
+
    if ( GetInstance().OnePresetWasLoadedWhilePlaying() )
    {
       RefreshParameters();
@@ -2376,7 +2451,8 @@ intptr_t VSTEffectWrapper::callDispatcher(int opcode,
                                    int index, intptr_t value, void *ptr, float opt)
 {
    // Needed since we might be in the dispatcher when the timer pops
-   wxCRIT_SECT_LOCKER(locker, mDispatcherLock);
+   std::lock_guard guard(mDispatcherLock);
+
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
@@ -3956,6 +4032,8 @@ VSTEffectInstance::VSTEffectInstance
       mBlockSize = 8192;
       DoProcessInitialize(44100.0);
    }
+
+   mIsMeldaPlugin = (mVendor == "MeldaProduction");
 }
 
 
@@ -4011,7 +4089,8 @@ void VSTEffectValidator::OnClose()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
-   mControl->Close();
+   if (mControl)
+      mControl->Close();
 #endif
 
    // Tell the instance not to use me anymore - if we do not do this,
@@ -4031,6 +4110,8 @@ void VSTEffectValidator::OnClose()
    mDialog = NULL;
 
    mAccess.Flush();
+
+   ValidateUI();
 }
 
 #endif // USE_VST

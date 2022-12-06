@@ -300,6 +300,11 @@ MakeMessage(AudioUnitParameterID id, AudioUnitParameterValue value) const
    return std::make_unique<AudioUnitMessage>(std::move(settings));
 }
 
+bool AudioUnitInstance::UsesMessages() const noexcept
+{
+   return true;
+}
+
 bool AudioUnitInstance::RealtimeProcessStart(MessagePackage &package)
 {
    if (!package.pMessage)

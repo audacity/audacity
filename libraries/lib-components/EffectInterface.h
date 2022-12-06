@@ -527,6 +527,14 @@ public:
    // TODO make it just an alias for Message *
    struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
 
+   //! If true, the effect makes no use EffectSettings for inter-thread
+   //! comminication
+   /*!
+    Default implementation returns false.  In future, all effects should be
+    rewritten to use messages and this function will be removed.
+    */
+   virtual bool UsesMessages() const noexcept;
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
     @return success

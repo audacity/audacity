@@ -107,6 +107,7 @@ struct VSTEffectUIWrapper
    virtual void NeedIdle();
    virtual void SizeWindow(int w, int h);
    virtual void Automate(int index, float value);
+   virtual void Flush();
 };
 
 
@@ -142,7 +143,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    intptr_t constCallDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) const;
 
-   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+   std::recursive_mutex mDispatcherLock;
 
    float callGetParameter(int index) const;
 
@@ -511,6 +512,7 @@ public:
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
+   bool UsesMessages() const noexcept override;
    bool RealtimeProcessStart(MessagePackage& package) override;
    size_t RealtimeProcess(size_t group, EffectSettings& settings,
       const float* const* inbuf, float* const* outbuf, size_t numSamples)
@@ -555,6 +557,8 @@ public:
 
    bool OnePresetWasLoadedWhilePlaying();
 
+   void DeferChunkApplication();
+
 private:
 
    void callProcessReplacing(
@@ -573,6 +577,15 @@ private:
    VSTEffectUIWrapper* mpOwningValidator{};
 
    std::atomic_bool mPresetLoadedWhilePlaying{ false };
+
+   std::mutex mDeferredChunkMutex;
+   std::vector<char> mChunkToSetAtIdleTime{};
+
+   void ApplyChunk(std::vector<char>& chunk);
+
+   bool ChunkMustBeAppliedInMainThread() const;
+
+   bool mIsMeldaPlugin{ false };
 };
 
 
@@ -616,6 +629,8 @@ public:
 
    bool IsGraphicalUI() override;
 
+   void Flush() override;
+
 protected:
    void SizeWindow(int w, int h) override;
 
@@ -649,7 +664,7 @@ private:
    wxWindow* mParent;
    wxWeakRef<wxDialog> mDialog;
    
-   VSTControl* mControl;
+   VSTControl* mControl{};
 
    // Mapping from parameter ID to string
    std::vector<wxString> mParamNames;
