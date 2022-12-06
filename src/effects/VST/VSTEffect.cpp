@@ -4088,7 +4088,8 @@ void VSTEffectValidator::OnClose()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
-   mControl->Close();
+   if (mControl)
+      mControl->Close();
 #endif
 
    // Tell the instance not to use me anymore - if we do not do this,

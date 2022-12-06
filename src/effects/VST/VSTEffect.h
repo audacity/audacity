@@ -664,7 +664,7 @@ private:
    wxWindow* mParent;
    wxWeakRef<wxDialog> mDialog;
    
-   VSTControl* mControl;
+   VSTControl* mControl{};
 
    // Mapping from parameter ID to string
    std::vector<wxString> mParamNames;
