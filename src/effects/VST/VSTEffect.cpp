@@ -935,9 +935,10 @@ namespace
       // Make a message from a single parameter
       explicit VSTEffectMessage(int id, double value, size_t numParams)
       {
-         mParamsVec.resize(numParams, std::nullopt);
-         if (id < numParams)
-            mParamsVec[id] = value;
+         if (id >= numParams)
+            wxLogDebug(wxT("VST parameter id out of nominal bounds!"));
+         mParamsVec.resize(std::max<size_t>(id + 1, numParams), std::nullopt);
+         mParamsVec[id] = value;
       }
 
       ~VSTEffectMessage() override;
@@ -972,10 +973,13 @@ void VSTEffectMessage::Assign(Message && src)
    mChunk = vstSrc.mChunk;
    vstSrc.mChunk.resize(0);     // capacity will be preserved though
 
-   assert(mParamsVec.size() == vstSrc.mParamsVec.size());
+   // Maybe not, see constructor of VSTEffectMessage
+   // assert(mParamsVec.size() == vstSrc.mParamsVec.size());
+   auto size = vstSrc.mParamsVec.size();
+   if (mParamsVec.size() < size)
+      mParamsVec.resize(size, std::nullopt);
 
-   for (size_t i = 0; i < mParamsVec.size(); i++)
-   {
+   for (size_t i = 0; i < size; ++i) {
       mParamsVec[i] = vstSrc.mParamsVec[i];
 
       // consume the source value
@@ -997,10 +1001,13 @@ void VSTEffectMessage::Merge(Message && src)
 
    vstSrc.mChunk.resize(0);  // capacity will be preserved though
 
-   assert(mParamsVec.size() == vstSrc.mParamsVec.size());
+   // Maybe not, see constructor of VSTEffectMessage
+   // assert(mParamsVec.size() == vstSrc.mParamsVec.size());
+   auto size = vstSrc.mParamsVec.size();
+   if (mParamsVec.size() < size)
+      mParamsVec.resize(size, std::nullopt);
 
-   for (size_t i = 0; i < mParamsVec.size(); i++)
-   {
+   for (size_t i = 0; i < size; ++i) {
       if (chunkWasAssigned)
       {
          mParamsVec[i] = vstSrc.mParamsVec[i];
