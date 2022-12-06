@@ -107,6 +107,7 @@ struct VSTEffectUIWrapper
    virtual void NeedIdle();
    virtual void SizeWindow(int w, int h);
    virtual void Automate(int index, float value);
+   virtual void Flush();
 };
 
 
@@ -626,6 +627,8 @@ public:
    int ShowDialog(bool nonModal);
 
    bool IsGraphicalUI() override;
+
+   void Flush() override;
 
 protected:
    void SizeWindow(int w, int h) override;
