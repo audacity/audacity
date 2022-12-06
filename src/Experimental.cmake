@@ -28,9 +28,6 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   # ACH 08 Jan 2014
-   # EQ accelerated code
-   #EQ_SSE_THREADED
 )
 
 # Now define the flags
