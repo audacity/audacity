@@ -1210,6 +1210,10 @@ bool VSTEffectInstance::RealtimeAddProcessor(EffectSettings &settings,
 bool VSTEffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
 return GuardedCall<bool>([&]{
+
+   if (mpOwningValidator)
+      mpOwningValidator->Flush();
+
    mRecruited = false;
 
    for (const auto &slave : mSlaves)
@@ -2185,6 +2189,14 @@ bool VSTEffect::SaveUserPreset(
 
    return SetConfig(*this, PluginSettings::Private,
       group, wxT("Parameters"), parms);
+}
+
+void VSTEffectUIWrapper::Flush()
+{}
+
+void VSTEffectValidator::Flush()
+{
+   mAccess.Flush();
 }
 
 void VSTEffectValidator::OnTimer()
