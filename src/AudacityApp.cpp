@@ -858,7 +858,15 @@ wxIMPLEMENT_APP_NO_MAIN(AudacityApp);
 #else
 
 wxIMPLEMENT_WX_THEME_SUPPORT
-wxIMPLEMENT_WXWIN_MAIN
+extern "C" int WINAPI WinMain(HINSTANCE hInstance,
+                            HINSTANCE hPrevInstance,
+                            wxCmdLineArgType lpCmdLine,
+                            int nCmdShow)
+{
+   wxDISABLE_DEBUG_SUPPORT();
+
+   return wxEntry(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+}
 wxIMPLEMENT_APP_NO_MAIN(AudacityApp);
 
 #endif
