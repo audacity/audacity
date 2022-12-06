@@ -83,25 +83,6 @@
 
 #include "../widgets/FileDialog/FileDialog.h"
 
-enum
-{
-   ID_Length = 10000,
-   ID_dBMax,
-   ID_dBMin,
-   ID_Clear,
-   ID_Invert,
-   ID_Mode,
-   ID_Draw,
-   ID_Graphic,
-   ID_Interp,
-   ID_Linear,
-   ID_Grid,
-   ID_Curve,
-   ID_Manage,
-   ID_Delete,
-   ID_Slider,   // needs to come last
-};
-
 static const double kThirdOct[] =
 {
    20., 25., 31., 40., 50., 63., 80., 100., 125., 160., 200.,
@@ -159,26 +140,6 @@ namespace{ BuiltinEffectsModule::Registration< EffectEqualizationGraphic > reg3;
 
 BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_SIZE( EffectEqualization::OnSize )
-
-   EVT_SLIDER( ID_Length, EffectEqualization::OnSliderM )
-   EVT_SLIDER( ID_dBMax, EffectEqualization::OnSliderDBMAX )
-   EVT_SLIDER( ID_dBMin, EffectEqualization::OnSliderDBMIN )
-   EVT_COMMAND_RANGE(ID_Slider,
-                     ID_Slider + NUMBER_OF_BANDS - 1,
-                     wxEVT_COMMAND_SLIDER_UPDATED,
-                     EffectEqualization::OnSlider)
-   EVT_CHOICE( ID_Interp, EffectEqualization::OnInterp )
-
-   EVT_CHOICE( ID_Curve, EffectEqualization::OnCurve )
-   EVT_BUTTON( ID_Manage, EffectEqualization::OnManage )
-   EVT_BUTTON( ID_Clear, EffectEqualization::OnClear )
-   EVT_BUTTON( ID_Invert, EffectEqualization::OnInvert )
-
-   EVT_RADIOBUTTON(ID_Draw, EffectEqualization::OnDrawMode)
-   EVT_RADIOBUTTON(ID_Graphic, EffectEqualization::OnGraphicMode)
-   EVT_CHECKBOX(ID_Linear, EffectEqualization::OnLinFreq)
-   EVT_CHECKBOX(ID_Grid, EffectEqualization::OnGridOnOff)
-
    EVT_IDLE(EffectEqualization::OnIdle)
 
 END_EVENT_TABLE()
@@ -627,15 +588,17 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
          S.StartVerticalLay();
          {
             S.AddVariableText(XO("+ dB"), false, wxCENTER);
-            mdBMaxSlider = S.Id(ID_dBMax)
+            mdBMaxSlider = S
                .Name(XO("Max dB"))
                .Style(wxSL_VERTICAL | wxSL_INVERSE)
                .AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
             mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, XO("%d dB")));
 #endif
+            BindTo(*mdBMaxSlider, wxEVT_SLIDER,
+               &EffectEqualization::OnSliderDBMAX);
 
-            mdBMinSlider = S.Id(ID_dBMin)
+            mdBMinSlider = S
                .Name(XO("Min dB"))
                .Style(wxSL_VERTICAL | wxSL_INVERSE)
                .AddSlider( {}, -30, -10, -120);
@@ -643,6 +606,8 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 #if wxUSE_ACCESSIBILITY
             mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, XO("%d dB")));
 #endif
+            BindTo(*mdBMinSlider, wxEVT_SLIDER,
+               &EffectEqualization::OnSliderDBMIN);
          }
          S.EndVerticalLay();
          S.SetBorder(0);
@@ -696,12 +661,14 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             S.StartVerticalLay();
             {
                S.AddFixedText( fNum  );
-               mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
+               mSliders[i] = safenew wxSliderWrapper(pParent, wxID_ANY, 0, -20, +20,
                   wxDefaultPosition, wxSize(-1,50), wxSL_VERTICAL | wxSL_INVERSE);
 
 #if wxUSE_ACCESSIBILITY
                mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
 #endif
+               BindTo(*mSliders[i], wxEVT_SLIDER,
+                  &EffectEqualization::OnSlider);
 
                mSlidersOld[i] = 0;
                mEQVals[i] = 0.;
@@ -743,13 +710,17 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
-                  mDraw = S.Id(ID_Draw)
+                  mDraw = S
                      .Name(XO("Draw Curves"))
                      .AddRadioButton(XXO("&Draw"));
+                  BindTo(*mDraw, wxEVT_RADIOBUTTON,
+                     &EffectEqualization::OnDrawMode);
 
-                  mGraphic = S.Id(ID_Graphic)
+                  mGraphic = S
                      .Name(XO("Graphic EQ"))
                      .AddRadioButtonToGroup(XXO("&Graphic"));
+                  BindTo(*mGraphic, wxEVT_RADIOBUTTON,
+                     &EffectEqualization::OnGraphicMode);
                }
                S.EndHorizontalLay();
             }
@@ -764,7 +735,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             {
                szrI = S.GetSizer();
 
-               mInterpChoice = S.Id(ID_Interp)
+               mInterpChoice = S
                   .Name(XO("Interpolation type"))
                   .AddChoice( {},
                      Msgids(EqualizationParameters::kInterpStrings,
@@ -774,6 +745,8 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
 #endif
+               BindTo(*mInterpChoice, wxEVT_CHOICE,
+                  &EffectEqualization::OnInterp);
             }
             S.EndHorizontalLay();
 
@@ -781,9 +754,11 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             {
                szrL = S.GetSizer();
 
-               mLinFreq = S.Id(ID_Linear)
+               mLinFreq = S
                   .Name(XO("Linear Frequency Scale"))
                   .AddCheckBox(XXO("Li&near Frequency Scale"), false);
+               BindTo(*mLinFreq, wxEVT_CHECKBOX,
+                  &EffectEqualization::OnLinFreq);
             }
             S.EndHorizontalLay();
          }
@@ -804,10 +779,12 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
                S.StartHorizontalLay(wxEXPAND, 1);
                {
-                  mMSlider = S.Id(ID_Length)
+                  mMSlider = S
                      .Name(XO("Length of Filter"))
                      .Style(wxSL_HORIZONTAL)
                      .AddSlider( {}, (mM - 1) / 2, 4095, 10);
+                  BindTo(*mMSlider, wxEVT_SLIDER,
+                     &EffectEqualization::OnSliderM);
                }
                S.EndHorizontalLay();
 
@@ -841,7 +818,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
-                  mCurve = S.Id(ID_Curve)
+                  mCurve = S
                      .Name(XO("Select Curve"))
                      .AddChoice( {},
                         [&mCurves]{
@@ -851,22 +828,33 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                            return curves;
                         }()
                      );
+                  BindTo(*mCurve, wxEVT_CHOICE,
+                     &EffectEqualization::OnCurve);
                }
                S.EndHorizontalLay();
             }
             S.EndHorizontalLay();
 
-            S.Id(ID_Manage).AddButton(XXO("S&ave/Manage Curves..."));
+            const auto pButton = S
+               .AddButton(XXO("S&ave/Manage Curves..."));
+            BindTo(*pButton, wxEVT_BUTTON, &EffectEqualization::OnManage);
          }
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
-            S.Id(ID_Clear).AddButton(XXO("Fla&tten"));
-            S.Id(ID_Invert).AddButton(XXO("&Invert"));
+            auto pButton = S
+               .AddButton(XXO("Fla&tten"));
+            BindTo(*pButton, wxEVT_BUTTON, &EffectEqualization::OnClear);
 
-            mGridOnOff = S.Id(ID_Grid)
+            pButton = S
+               .AddButton(XXO("&Invert"));
+            BindTo(*pButton, wxEVT_BUTTON, &EffectEqualization::OnInvert);
+
+            mGridOnOff = S
                .Name(XO("Show grid lines"))
                .AddCheckBox(XXO("Show g&rid lines"), false);
+            BindTo(*mGridOnOff, wxEVT_CHECKBOX,
+               &EffectEqualization::OnGridOnOff);
          }
          S.EndHorizontalLay();
 

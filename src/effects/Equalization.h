@@ -83,6 +83,14 @@ public:
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
+   // Convenience function template for binding event handler functions
+   template<typename EventTag, typename Class, typename Event>
+   void BindTo(
+      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
+   {
+      src.Bind(eventType, pmf, static_cast<Class *>(this));
+   }
+
    // EffectEqualization implementation
 
    bool ProcessOne(int count, WaveTrack * t,
