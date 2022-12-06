@@ -137,7 +137,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Pietro Marcello"), developerFormat, roleTeamMember);
    AddCredit(wxT("Ryan Miller"), testerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
    AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
@@ -150,9 +149,7 @@ void AboutDialog::CreateCreditsList()
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
-   AddCredit(
-      wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]]"),
-      qualityAssuranceFormat, roleEmeritusTeam);
+   AddCredit(wxT("Gale Andrews"), qualityAssuranceFormat, roleEmeritusTeam);
    AddCredit(wxT("Richard Ash"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Christian Brochec"),
       documentationAndSupportFrenchFormat, roleEmeritusTeam);
@@ -211,6 +208,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Paul Livesey"), developerFormat, roleContributor);
    AddCredit(wxT("Harvey Lubin"), graphicArtistFormat, roleContributor);
    AddCredit(wxT("Max Maisel"), developerFormat, roleContributor);
+   AddCredit(wxT("Pietro Marcello"), developerFormat, roleContributor);
    AddCredit(wxT("Greg Mekkes"), developerFormat, roleContributor);
    AddCredit(wxT("Abe Milde"), developerFormat, roleContributor);
    AddCredit(wxT("Paul Nasca"), developerFormat, roleContributor);
