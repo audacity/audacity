@@ -18,8 +18,8 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "Effect.h"
+#include "EqualizationCurvesList.h"
 #include "EqualizationFilter.h"
-#include "EqualizationCurves.h"
 #include "../widgets/wxPanelWrapper.h"
 
 class wxBitmap;
@@ -35,19 +35,6 @@ class wxStaticText;
 class EnvelopeEditor;
 class EqualizationPanel;
 class RulerPanel;
-
-struct EqualizationCurvesList {
-   explicit EqualizationCurvesList(EqualizationFilter &params)
-      : mParameters{ params }
-   {}
-
-   void EnvelopeUpdated();
-   void EnvelopeUpdated(const Envelope &env, bool lin);
-   void Select(int sel);
-
-   EQCurveArray mCurves;
-   EqualizationFilter &mParameters;
-};
 
 class EffectEqualization : public StatefulEffect
 {
