@@ -31,19 +31,13 @@
 
    Clone of the FFT Filter effect, no longer part of Audacity.
 
-*//****************************************************************//**
-
-   \class EqualizationPanel
-   \brief EqualizationPanel is used with EqualizationDialog and controls
-   a graph for EffectEqualization.  We should look at amalgamating the
-   various graphing code, such as provided by FrequencyPlotDialog and FilterPanel.
-
 *//*******************************************************************/
 
 
 
 #include "Equalization.h"
 #include "EqualizationCurvesDialog.h"
+#include "EqualizationPanel.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -55,8 +49,6 @@
 #include <wx/button.h>
 #include <wx/brush.h>
 #include <wx/button.h>  // not really needed here
-#include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/intl.h>
@@ -69,28 +61,20 @@
 #include <wx/ffile.h>
 #include <wx/filefn.h>
 #include <wx/stdpaths.h>
-#include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/tooltip.h>
 #include <wx/utils.h>
 
-#include "AColor.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
 #include "Envelope.h"
-#include "../EnvelopeEditor.h"
-#include "FFT.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "Theme.h"
-#include "../TrackArtist.h"
 #include "../WaveClip.h"
-#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
-#include "AllThemeResources.h"
 #include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -2164,307 +2148,4 @@ void EffectEqualization::OnIdle(wxIdleEvent &event)
    event.Skip();
    if (mCurve)
       mCurve->SetStringSelection(mParameters.mCurveName);
-}
-
-//----------------------------------------------------------------------------
-// EqualizationPanel
-//----------------------------------------------------------------------------
-
-BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
-   EVT_PAINT(EqualizationPanel::OnPaint)
-   EVT_MOUSE_EVENTS(EqualizationPanel::OnMouseEvent)
-   EVT_MOUSE_CAPTURE_LOST(EqualizationPanel::OnCaptureLost)
-   EVT_SIZE(EqualizationPanel::OnSize)
-END_EVENT_TABLE()
-
-EqualizationPanel::EqualizationPanel(
-   wxWindow *parent, wxWindowID winid, EqualizationCurvesList &curvesList,
-   RulerPanel &freqRuler, RulerPanel &dbRuler
-)  : wxPanelWrapper(parent, winid)
-   , mCurvesList{ curvesList }
-   , mFreqRuler{ freqRuler }
-   , mdBRuler{ dbRuler }
-{
-   auto &mParameters = mCurvesList.mParameters;
-   mParent = parent;
-
-   mBitmap = NULL;
-   mWidth = 0;
-   mHeight = 0;
-
-   mLinEditor = std::make_unique<EnvelopeEditor>(
-      mParameters.mLinEnvelope, false);
-   mLogEditor = std::make_unique<EnvelopeEditor>(
-      mParameters.mLogEnvelope, false);
-
-   ForceRecalc();
-}
-
-EqualizationPanel::~EqualizationPanel()
-{
-   if(HasCapture())
-      ReleaseMouse();
-}
-
-void EqualizationPanel::ForceRecalc()
-{
-   mRecalcRequired = true;
-   Refresh(false);
-}
-
-void EqualizationPanel::Recalc()
-{
-   auto &mParameters = mCurvesList.mParameters;
-   const auto &mWindowSize = mParameters.mWindowSize;
-
-   mOutr = Floats{ mWindowSize };
-   mOuti = Floats{ mWindowSize };
-
-   mParameters.CalcFilter();   //to calculate the actual response
-   InverseRealFFT(mWindowSize,
-      mParameters.mFilterFuncR.get(),
-      mParameters.mFilterFuncI.get(), mOutr.get());
-}
-
-void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
-{
-   Refresh( false );
-}
-
-#include "../TrackPanelDrawingContext.h"
-void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
-{
-   const auto &mParameters = mCurvesList.mParameters;
-   const auto &mdBMax = mParameters.mdBMax;
-   const auto &mdBMin = mParameters.mdBMin;
-   const auto &mM = mParameters.mM;
-   const auto &mDrawMode = mParameters.mDrawMode;
-   const auto &mDrawGrid = mParameters.mDrawGrid;
-   const auto &mLoFreq = mParameters.mLoFreq;
-   const auto &mHiFreq = mParameters.mHiFreq;
-   const auto &mWindowSize = mParameters.mWindowSize;
-   const auto &mFilterFuncR = mParameters.mFilterFuncR;
-   const auto &mFilterFuncI = mParameters.mFilterFuncI;
-
-   wxPaintDC dc(this);
-   if(mRecalcRequired) {
-      Recalc();
-      mRecalcRequired = false;
-   }
-   int width, height;
-   GetSize(&width, &height);
-
-   if (!mBitmap || mWidth!=width || mHeight!=height)
-   {
-      mWidth = width;
-      mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight,24);
-   }
-
-   wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
-
-   wxRect bkgndRect;
-   bkgndRect.x = 0;
-   bkgndRect.y = 0;
-   bkgndRect.width = mWidth;
-   bkgndRect.height = mHeight;
-   memDC.SetBrush(bkgndBrush);
-   memDC.SetPen(*wxTRANSPARENT_PEN);
-   memDC.DrawRectangle(bkgndRect);
-
-   bkgndRect.y = mHeight;
-   memDC.DrawRectangle(bkgndRect);
-
-   wxRect border;
-   border.x = 0;
-   border.y = 0;
-   border.width = mWidth;
-   border.height = mHeight;
-
-   memDC.SetBrush(*wxWHITE_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
-
-   mEnvRect = border;
-   mEnvRect.Deflate(PANELBORDER, PANELBORDER);
-
-   // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxPENSTYLE_SOLID));
-   int center = (int) (mEnvRect.height * mdBMax/(mdBMax - mdBMin) + .5);
-   AColor::Line(memDC,
-      mEnvRect.GetLeft(), mEnvRect.y + center,
-      mEnvRect.GetRight(), mEnvRect.y + center);
-
-   // Draw the grid, if asked for.  Do it now so it's underneath the main plots.
-   if( mDrawGrid )
-   {
-      mFreqRuler.ruler.DrawGrid(memDC, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
-      mdBRuler.ruler.DrawGrid(memDC, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
-   }
-
-   // Med-blue envelope line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxPENSTYLE_SOLID));
-
-   // Draw envelope
-   int x, y, xlast = 0, ylast = 0;
-   {
-      Doubles values{ size_t(mEnvRect.width) };
-      mParameters.ChooseEnvelopeToPaint()
-         .GetValues(values.get(), mEnvRect.width, 0.0, 1.0 / mEnvRect.width);
-      bool off = false, off1 = false;
-      for (int i = 0; i < mEnvRect.width; i++)
-      {
-         x = mEnvRect.x + i;
-         y = lrint(mEnvRect.height*((mdBMax - values[i]) / (mdBMax - mdBMin)) + .25); //needs more optimising, along with'what you get'?
-         if (y >= mEnvRect.height)
-         {
-            y = mEnvRect.height - 1;
-            off = true;
-         }
-         else
-         {
-            off = false;
-            off1 = false;
-         }
-         if ((i != 0) & (!off1))
-         {
-            AColor::Line(memDC, xlast, ylast,
-               x, mEnvRect.y + y);
-         }
-         off1 = off;
-         xlast = x;
-         ylast = mEnvRect.y + y;
-      }
-   }
-
-   //Now draw the actual response that you will get.
-   //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxPENSTYLE_SOLID));
-   double scale = (double)mEnvRect.height/(mdBMax - mdBMin);   //pixels per dB
-   double yF;   //gain at this freq
-   double delta = mHiFreq / (((double)mWindowSize / 2.));   //size of each freq bin
-
-   bool lin = mParameters.IsLinear();   // log or lin scale?
-
-   double loLog = log10(mLoFreq);
-   double step = lin ? mHiFreq : (log10(mHiFreq) - loLog);
-   step /= ((double)mEnvRect.width-1.);
-   double freq;   //actual freq corresponding to x position
-   int halfM = (mM - 1) / 2;
-   int n;   //index to mFreqFunc
-   for(int i=0; i<mEnvRect.width; i++)
-   {
-      x = mEnvRect.x + i;
-      freq = lin ? step*i : pow(10., loLog + i*step);   //Hz
-      if( ( lin ? step : (pow(10., loLog + (i+1)*step)-freq) ) < delta)
-      {   //not enough resolution in FFT
-         // set up for calculating cos using recurrence - faster than calculating it directly each time
-         double theta = M_PI*freq/mHiFreq;   //radians, normalized
-         double wtemp = sin(0.5 * theta);
-         double wpr = -2.0 * wtemp * wtemp;
-         double wpi = -1.0 * sin(theta);
-         double wr = cos(theta*halfM);
-         double wi = sin(theta*halfM);
-
-         yF = 0.;
-         for(int j=0;j<halfM;j++)
-         {
-            yF += 2. * mOutr[j] * wr;  // This works for me, compared to the previous version.  Compare wr to cos(theta*(halfM-j)).  Works for me.  Keep everything as doubles though.
-            // do recurrence
-            wr = (wtemp = wr) * wpr - wi * wpi + wr;
-            wi = wi * wpr + wtemp * wpi + wi;
-         }
-         yF += mOutr[halfM];
-         yF = fabs(yF);
-         if(yF!=0.)
-            yF = LINEAR_TO_DB(yF);
-         else
-            yF = mdBMin;
-      }
-      else
-      {   //use FFT, it has enough resolution
-         n = (int)(freq/delta + .5);
-         if(pow(mFilterFuncR[n],2)+pow(mFilterFuncI[n],2)!=0.)
-            yF = 10.0*log10(pow(mFilterFuncR[n],2)+pow(mFilterFuncI[n],2));   //10 here, a power
-         else
-            yF = mdBMin;
-      }
-      if(yF < mdBMin)
-         yF = mdBMin;
-      yF = center-scale*yF;
-      if(yF>mEnvRect.height)
-         yF = mEnvRect.height - 1;
-      if(yF<0.)
-         yF=0.;
-      y = (int)(yF+.5);
-
-      if (i != 0)
-      {
-         AColor::Line(memDC, xlast, ylast, x, mEnvRect.y + y);
-      }
-      xlast = x;
-      ylast = mEnvRect.y + y;
-   }
-
-   memDC.SetPen(*wxBLACK_PEN);
-   if( mDrawMode )
-   {
-      ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
-
-      // Back pointer to TrackPanel won't be needed in the one drawing
-      // function we use here
-      TrackArtist artist( nullptr );
-
-      artist.pZoomInfo = &zoomInfo;
-      TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
-      EnvelopeEditor::DrawPoints( mParameters.ChooseEnvelopeToPaint(),
-         context, mEnvRect, false, 0.0,
-      mdBMin, mdBMax, false);
-   }
-
-   dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
-}
-
-void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
-{
-   const auto &mParameters = mCurvesList.mParameters;
-   const auto &mdBMax = mParameters.mdBMax;
-   const auto &mdBMin = mParameters.mdBMin;
-   const auto &mDrawMode = mParameters.mDrawMode;
-   const auto &mLin = mParameters.mLin;
-
-   if (!mDrawMode)
-   {
-      return;
-   }
-
-   if (event.ButtonDown() && !HasCapture())
-   {
-      CaptureMouse();
-   }
-
-   auto &pEditor = (mLin ? mLinEditor : mLogEditor);
-   if (pEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
-      false, 0.0,
-      mdBMin, mdBMax))
-   {
-      ForceRecalc();
-   }
-
-   if (event.ButtonUp() && HasCapture())
-   {
-      mCurvesList.EnvelopeUpdated();
-      ReleaseMouse();
-   }
-}
-
-void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
-{
-   if (HasCapture())
-   {
-      ReleaseMouse();
-   }
 }
