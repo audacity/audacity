@@ -822,6 +822,8 @@ int main(int argc, char *argv[])
 
 #elif defined(__WXGTK__) && defined(NDEBUG)
 
+// Specially define main() for Linux debug
+
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
@@ -840,10 +842,25 @@ int main(int argc, char *argv[])
    return wxEntry(argc, argv);
 }
 
+#elif defined(__WXGTK__)
+
+// Linux release build
+
+wxIMPLEMENT_WX_THEME_SUPPORT
+int main(int argc, char *argv[])
+{
+   wxDISABLE_DEBUG_SUPPORT();
+
+   return wxEntry(argc, argv);
+}
+wxIMPLEMENT_APP_NO_MAIN(AudacityApp);
+
 #else
+
 wxIMPLEMENT_WX_THEME_SUPPORT
 wxIMPLEMENT_WXWIN_MAIN
 wxIMPLEMENT_APP_NO_MAIN(AudacityApp);
+
 #endif
 
 #ifdef __WXMAC__
