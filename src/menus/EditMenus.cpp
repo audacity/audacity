@@ -18,15 +18,17 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveClip.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "TimeWarper.h"
 #include "../prefs/PrefsDialog.h"
+#include "../prefs/TracksBehaviorsPrefs.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/VetoDialogHook.h"
-
+#include "../AudioPasteDialog.h"
 // private helper classes and functions
 namespace {
 void FinishCopy
@@ -69,6 +71,115 @@ bool DoPasteText(AudacityProject &project)
       }
    }
    return false;
+}
+
+/*
+Track copy helper function. 
+When copying tracks we consider two cases when pasting:
+1. There is no selection
+2. Not empty region is selected
+In the first case we copy all tracks from src (used in simplified paste method
+DoPasteNothingSelected). When selection isn't empty `N = min(src.size(), dst.size())`
+tracks are copied from src, plus the last track from src could be duplicated
+`M = dst.size() - N` times more, if `M > 0` (corresponds to a paste logic after
+`!tracks.Selected()` condition in `OnPaste`). In both cases `ForEachCopiedWaveTrack`
+visits tracks that are to be copied according to behaviour described above.
+ */
+void ForEachCopiedWaveTrack(const TrackList& src,
+                            const TrackList& dst,
+                            const std::function<void(const WaveTrack& waveTrack)>& f)
+{
+   if(dst.Selected().empty())
+   {
+      for(auto waveTrack : src.Any<const WaveTrack>())
+         f(*waveTrack);
+   }
+   else
+   {
+      const auto srcTrackRange = src.Any<const WaveTrack>();
+      const auto dstTrackRange = dst.Any<const WaveTrack>();
+      auto srcTrack = srcTrackRange.begin();
+      auto dstTrack = dstTrackRange.begin();
+      auto lastCopiedTrack = srcTrack;
+      while(dstTrack != dstTrackRange.end() && srcTrack != srcTrackRange.end())
+      {
+         if(!(*dstTrack)->GetSelected())
+         {
+            ++dstTrack;
+            continue;
+         }
+         
+         auto srcChannelCount = TrackList::Channels(*srcTrack).size();
+         auto dstChannelCount = TrackList::Channels(*dstTrack).size();
+                  
+         while(srcChannelCount > 0 && dstChannelCount > 0)
+         {
+            f(**srcTrack);
+            
+            lastCopiedTrack = srcTrack;
+            ++srcTrack;
+            ++dstTrack;
+            --srcChannelCount;
+            --dstChannelCount;
+         }
+         
+         while(dstChannelCount > 0)
+         {
+            f(**lastCopiedTrack);
+            ++dstTrack;
+            --dstChannelCount;
+         }
+      }
+      while(dstTrack != dstTrackRange.end())
+      {
+         if((*dstTrack)->GetSelected())
+            f(**lastCopiedTrack);
+         ++dstTrack;
+      }
+   }
+}
+
+wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
+{
+   wxULongLong result{};
+   ForEachCopiedWaveTrack(src, dst, [&](const WaveTrack& waveTrack) {
+      sampleCount samplesCount = 0;
+      for(auto& clip : waveTrack.GetClips())
+         samplesCount += clip->GetSequenceSamplesCount();
+      result += samplesCount.as_long_long() * SAMPLE_SIZE(waveTrack.GetSampleFormat());
+   });
+   return result;
+}
+
+std::shared_ptr<TrackList> DuplicateDiscardTrimmed(const TrackList& src) {
+   auto result = TrackList::Create(nullptr);
+   for(auto track : src)
+   {
+      auto trackCopy = track->Copy(track->GetStartTime(), track->GetEndTime(), false);
+      trackCopy->Init(*track);
+      trackCopy->SetOffset(track->GetOffset());
+      
+      if(auto waveTrack = dynamic_cast<WaveTrack*>(trackCopy.get()))
+      {
+         for(auto clip : waveTrack->GetClips())
+         {
+            if(clip->GetTrimLeft() != 0)
+            {
+               auto t0 = clip->GetPlayStartTime();
+               clip->SetTrimLeft(0);
+               clip->ClearLeft(t0);
+            }
+            if(clip->GetTrimRight() != 0)
+            {
+               auto t1 = clip->GetPlayEndTime();
+               clip->SetTrimRight(0);
+               clip->ClearRight(t1);
+            }
+         }
+      }
+      result->Add(trackCopy);
+   }
+   return result;
 }
 
 // Create and paste into NEW tracks.
@@ -118,6 +229,19 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
       TrackFocus::Get(project).Set(pFirstNewTrack);
       pFirstNewTrack->EnsureVisible();
    }
+}
+
+bool HasHiddenData(const TrackList& trackList)
+{
+   for(auto waveTrack : trackList.Any<const WaveTrack>())
+   {
+      for(auto& clip : waveTrack->GetClips())
+      {
+         if(clip->GetTrimLeft() != 0 || clip->GetTrimRight() != 0)
+            return true;
+      }
+   }
+   return false;
 }
 
 }
@@ -406,14 +530,40 @@ void OnPaste(const CommandContext &context)
    }
 
    const auto &clipboard = Clipboard::Get();
-   auto clipTrackRange = clipboard.GetTracks().Any< const Track >();
-   if (clipTrackRange.empty())
+   if (clipboard.GetTracks().empty())
       return;
+   
+   auto discardTrimmed = false;
+   if(&context.project != &*clipboard.Project().lock())
+   {
+      const auto waveClipCopyPolicy = TracksBehaviorsAudioTrackPastePolicy.Read();
+      if(waveClipCopyPolicy == wxT("Ask") && HasHiddenData(clipboard.GetTracks())) {
+         AudioPasteDialog audioPasteDialog(
+            &window,
+            EstimateCopyBytesCount(clipboard.GetTracks(), tracks)
+         );
+         const auto result = audioPasteDialog.ShowModal();
+         if(result == wxID_CANCEL)
+            return;
+         discardTrimmed =
+            result == AudioPasteDialog::DISCARD;
+      }
+      else if(waveClipCopyPolicy == wxT("Discard"))
+         discardTrimmed = true;
+   }
+   
+   std::shared_ptr<const TrackList> srcTracks;
+   if(discardTrimmed)
+      srcTracks = DuplicateDiscardTrimmed(clipboard.GetTracks());
+   else
+      srcTracks = clipboard.GetTracks().shared_from_this();
+   
+   auto clipTrackRange = srcTracks->Any();
    
    // If nothing's selected, we just insert NEW tracks.
    if(!tracks.Selected())
    {
-      DoPasteNothingSelected(project, clipboard.GetTracks(), clipboard.T0(), clipboard.T1());
+      DoPasteNothingSelected(project, *srcTracks, clipboard.T0(), clipboard.T1());
       return;
    }
    
@@ -600,7 +750,7 @@ void OnPaste(const CommandContext &context)
    if ( *pN && ! *pC )
    {
       const auto wc =
-         *clipboard.GetTracks().Any< const WaveTrack >().rbegin();
+         *srcTracks->Any< const WaveTrack >().rbegin();
 
       tracks.Any().StartingWith(*pN).Visit(
          [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
