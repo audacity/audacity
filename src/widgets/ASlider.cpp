@@ -1407,24 +1407,12 @@ void LWSlider::OnKeyDown(wxKeyEvent & event)
 
 void LWSlider::SetParent(wxWindow* parent)
 {
-   if(mParent == parent)
-      return;
-   
    mParent = parent;
-   if(mTipPanel)
-   {
-      if(parent != nullptr)
-         mTipPanel->SetParent(parent);
-      else
-      {
-         mTipPanel->Destroy();
-         mTipPanel = nullptr;
-      }
-   }
-   else if(parent != nullptr)
-      CreatePopWin();
+   //VS: create pop win if there is no one, don't re-parent
+   //as it seem to be a workaround for DC drawing purposes
+   //(see `WaveTrackControls::GainSlider`)
+   CreatePopWin();
 }
-
 
 void LWSlider::SendUpdate( float newValue )
 {
