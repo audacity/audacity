@@ -30,6 +30,7 @@ SampleBlockPtr SampleBlockFactory::Create(constSamplePtr src,
    auto result = DoCreate(src, numsamples, srcformat);
    if (!result)
       THROW_INCONSISTENCY_EXCEPTION;
+   Publisher<SampleBlockCreateMessage>::Publish({});
    return result;
 }
 
@@ -40,6 +41,7 @@ SampleBlockPtr SampleBlockFactory::CreateSilent(
    auto result = DoCreateSilent(numsamples, srcformat);
    if (!result)
       THROW_INCONSISTENCY_EXCEPTION;
+   Publisher<SampleBlockCreateMessage>::Publish({});
    return result;
 }
 
@@ -50,6 +52,7 @@ SampleBlockPtr SampleBlockFactory::CreateFromXML(
    auto result = DoCreateFromXML(srcformat, attrs);
    if (!result)
       THROW_INCONSISTENCY_EXCEPTION;
+   Publisher<SampleBlockCreateMessage>::Publish({});
    return result;
 }
 
