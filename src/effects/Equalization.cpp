@@ -643,47 +643,10 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             //.Position(wxEXPAND)
             //.Size( { -1, 150 } )
             //.StartPanel();
-         wxWindow *pParent = S.GetParent();
          S.AddSpace(15,0);
          {
-
-         // for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
-         // May show more sliders than needed.  Fixes Bug 2269
-         for (int i = 0; i < NUMBER_OF_BANDS; ++i)
-         {
-            TranslatableString freq = kThirdOct[i] < 1000.
-               ? XO("%d Hz").Format((int)kThirdOct[i])
-               : XO("%g kHz").Format(kThirdOct[i] / 1000.);
-            TranslatableString fNum = kThirdOct[i] < 1000.
-               ? Verbatim("%d").Format((int)kThirdOct[i])
-               /* i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation. */
-               : XO("%gk").Format(kThirdOct[i] / 1000.);
-            S.StartVerticalLay();
-            {
-               S.AddFixedText( fNum  );
-               mSliders[i] = safenew wxSliderWrapper(pParent, wxID_ANY, 0, -20, +20,
-                  wxDefaultPosition, wxSize(-1,50), wxSL_VERTICAL | wxSL_INVERSE);
-
-#if wxUSE_ACCESSIBILITY
-               mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
-#endif
-               BindTo(*mSliders[i], wxEVT_SLIDER,
-                  &EffectEqualization::OnSlider);
-
-               mSlidersOld[i] = 0;
-               mEQVals[i] = 0.;
-               S.Prop(1)
-                  .Name(freq)
-                  .ConnectRoot(
-                     wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
-                  .Position(wxEXPAND)
-                  .Size({ -1, 50 })
-                  .AddWindow(mSliders[i]);
-            }
-            S.EndVerticalLay();
-         }
+         AddBandSliders(S);
          S.AddSpace(15,0);
-
          } //S.EndPanel();
       }
       S.EndHorizontalLay();
@@ -900,6 +863,46 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    mCurvesList.ForceRecalc();
 
    return nullptr;
+}
+
+void EffectEqualization::AddBandSliders(ShuttleGui &S)
+{
+   wxWindow *pParent = S.GetParent();
+
+   // for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
+   // May show more sliders than needed.  Fixes Bug 2269
+   for (int i = 0; i < NUMBER_OF_BANDS; ++i) {
+      TranslatableString freq = kThirdOct[i] < 1000.
+         ? XO("%d Hz").Format((int)kThirdOct[i])
+         : XO("%g kHz").Format(kThirdOct[i] / 1000.);
+      TranslatableString fNum = kThirdOct[i] < 1000.
+         ? Verbatim("%d").Format((int)kThirdOct[i])
+         /* i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation. */
+         : XO("%gk").Format(kThirdOct[i] / 1000.);
+      S.StartVerticalLay();
+      {
+         S.AddFixedText( fNum  );
+         mSliders[i] = safenew wxSliderWrapper(pParent, wxID_ANY, 0, -20, +20,
+            wxDefaultPosition, wxSize(-1,50), wxSL_VERTICAL | wxSL_INVERSE);
+
+   #if wxUSE_ACCESSIBILITY
+         mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
+   #endif
+         BindTo(*mSliders[i], wxEVT_SLIDER,
+            &EffectEqualization::OnSlider);
+
+         mSlidersOld[i] = 0;
+         mEQVals[i] = 0.;
+         S.Prop(1)
+            .Name(freq)
+            .ConnectRoot(
+               wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
+            .Position(wxEXPAND)
+            .Size({ -1, 50 })
+            .AddWindow(mSliders[i]);
+      }
+      S.EndVerticalLay();
+   }
 }
 
 //

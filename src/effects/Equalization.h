@@ -80,6 +80,7 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+   void AddBandSliders(ShuttleGui &S);
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
