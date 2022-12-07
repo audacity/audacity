@@ -19,6 +19,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
+#include "SampleBlock.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "TimeWarper.h"
@@ -29,6 +30,9 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/VetoDialogHook.h"
 #include "../AudioPasteDialog.h"
+#include "BasicUI.h"
+#include "Sequence.h"
+
 // private helper classes and functions
 namespace {
 void FinishCopy
@@ -147,6 +151,16 @@ wxULongLong EstimateCopyBytesCount(const TrackList& src, const TrackList& dst)
       for(auto& clip : waveTrack.GetClips())
          samplesCount += clip->GetSequenceSamplesCount();
       result += samplesCount.as_long_long() * SAMPLE_SIZE(waveTrack.GetSampleFormat());
+   });
+   return result;
+}
+
+BlockArray::size_type EstimateCopiedBlocks(const TrackList& src, const TrackList& dst)
+{
+   BlockArray::size_type result{};
+   ForEachCopiedWaveTrack(src, dst, [&](const WaveTrack& waveTrack) {
+      for(auto& clip : waveTrack.GetClips())
+         result += clip->GetSequenceBlockArray()->size();
    });
    return result;
 }
@@ -558,7 +572,23 @@ void OnPaste(const CommandContext &context)
    else
       srcTracks = clipboard.GetTracks().shared_from_this();
    
-   auto clipTrackRange = srcTracks->Any();
+   auto scopedSubscription = pSampleBlockFactory->Subscribe([
+      toCopy = EstimateCopiedBlocks(*srcTracks, tracks),
+      nCopied = 0,
+      copyStartTime = std::chrono::system_clock::now(),
+      progressDialog = std::shared_ptr<BasicUI::ProgressDialog>()]
+      (const SampleBlockCreateMessage&) mutable {
+         using namespace std::chrono;
+         constexpr auto ProgressDialogShowDelay = milliseconds { 100 };
+         ++nCopied;
+         if(!progressDialog) {
+            if(duration_cast<milliseconds>(system_clock::now() - copyStartTime) >= ProgressDialogShowDelay)
+               progressDialog = BasicUI::MakeProgress(XO("Paste clip"), XO("Pasting clip contents, please wait"), 0);
+         }
+         else {
+            progressDialog->Poll(nCopied, toCopy);
+         }
+   });
    
    // If nothing's selected, we just insert NEW tracks.
    if(!tracks.Selected())
@@ -588,6 +618,7 @@ void OnPaste(const CommandContext &context)
       dst->ClearAndPaste(t0, t1, src, true, true, &warper);
    };
 
+   auto clipTrackRange = srcTracks->Any();
    auto pC = clipTrackRange.begin();
    size_t nnChannels=0, ncChannels=0;
    while (*pN && *pC) {
