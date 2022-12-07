@@ -416,8 +416,6 @@ bool EffectEqualization::Init()
    auto &mLoFreq = mParameters.mLoFreq;
    auto &mHiFreq = mParameters.mHiFreq;
 
-   auto &mBandsInUse = mBands.mBandsInUse;
-
    int selcount = 0;
    double rate = 0.0;
 
@@ -454,18 +452,23 @@ bool EffectEqualization::Init()
 
    mLoFreq = loFreqI;
 
-   mBandsInUse = 0;
-   while (kThirdOct[mBandsInUse] <= mHiFreq) {
-      mBandsInUse++;
-      if (mBandsInUse == NUMBER_OF_BANDS)
-         break;
-   }
+   mBands.Init();
 
    setCurve(mCurveName);
 
    mParameters.CalcFilter();
 
    return(true);
+}
+
+void EqualizationBandSliders::Init()
+{
+   mBandsInUse = 0;
+   while (kThirdOct[mBandsInUse] <= mCurvesList.mParameters.mHiFreq) {
+      ++mBandsInUse;
+      if (mBandsInUse == NUMBER_OF_BANDS)
+         break;
+   }
 }
 
 bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
@@ -1477,16 +1480,6 @@ void EffectEqualization::UpdateGraphic()
 
    auto &mDrawMode = mParameters.mDrawMode;
 
-   const auto &mBandsInUse = mBands.mBandsInUse;
-   auto &mWhenSliders = mBands.mWhenSliders;
-   auto &mSlidersOld = mBands.mSlidersOld;
-   auto &mEQVals = mBands.mEQVals;
-   auto &mSliders = mBands.mSliders;
-
-   double loLog = log10(mLoFreq);
-   double hiLog = log10(mHiFreq);
-   double denom = hiLog - loLog;
-
    if(mLin)  //going from lin to log freq scale - do not use IsLinear() here
    {  // add some extra points to the linear envelope for the graphic to follow
       double step = pow(2., 1./12.);   // twelve steps per octave
@@ -1503,30 +1496,7 @@ void EffectEqualization::UpdateGraphic()
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
    }
 
-   for (size_t i = 0; i < mBandsInUse; i++)
-   {
-      if( kThirdOct[i] == mLoFreq )
-         mWhenSliders[i] = 0.;
-      else
-         mWhenSliders[i] = (log10(kThirdOct[i])-loLog)/denom;
-      mEQVals[i] = mLogEnvelope.GetValue(mWhenSliders[i]);    //set initial values of sliders
-      if( mEQVals[i] > 20.)
-         mEQVals[i] = 20.;
-      if( mEQVals[i] < -20.)
-         mEQVals[i] = -20.;
-   }
    mBands.ErrMin();                  //move sliders to minimise error
-   for (size_t i = 0; i < mBandsInUse; i++)
-   {
-      mSliders[i]->SetValue(lrint(mEQVals[i])); //actually set slider positions
-      mSlidersOld[i] = mSliders[i]->GetValue();
-      wxString tip;
-      if( kThirdOct[i] < 1000.)
-         tip.Printf( wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], mEQVals[i] );
-      else
-         tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., mEQVals[i] );
-      mSliders[i]->SetToolTip(tip);
-   }
 
    szrV->Show(szrG,true);  // eq sliders
    szrH->Show(szrI,mOptions == kEqLegacy );  // interpolation choice
@@ -1622,6 +1592,23 @@ void EqualizationBandSliders::ErrMin(void)
    const auto &mParameters = mCurvesList.mParameters;
    const auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mCurves = mCurvesList.mCurves;
+   const auto &mLoFreq = mParameters.mLoFreq;
+   const auto &mHiFreq = mParameters.mHiFreq;
+
+   const double loLog = log10(mLoFreq);
+   const double hiLog = log10(mHiFreq);
+   const double denom = hiLog - loLog;
+
+   for (size_t i = 0; i < mBandsInUse; ++i)
+   {
+      if( kThirdOct[i] == mLoFreq )
+         mWhenSliders[i] = 0.;
+      else
+         mWhenSliders[i] = (log10(kThirdOct[i]) - loLog) / denom;
+      // set initial values of sliders
+      mEQVals[i] =
+         std::clamp(mLogEnvelope.GetValue(mWhenSliders[i]), -20., 20.);
+   }
 
    double vals[NUM_PTS];
    double error = 0.0;
@@ -1694,6 +1681,19 @@ void EqualizationBandSliders::ErrMin(void)
    {
       mCurvesList.Select( (int) mCurves.size() - 1 );
       mCurvesList.EnvelopeUpdated(testEnvelope, false);
+   }
+
+   for (size_t i = 0; i < mBandsInUse; ++i)
+   {
+      // actually set slider positions
+      mSliders[i]->SetValue(lrint(mEQVals[i]));
+      mSlidersOld[i] = mSliders[i]->GetValue();
+      wxString tip;
+      if (kThirdOct[i] < 1000.)
+         tip.Printf( wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], mEQVals[i] );
+      else
+         tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., mEQVals[i] );
+      mSliders[i]->SetToolTip(tip);
    }
 }
 

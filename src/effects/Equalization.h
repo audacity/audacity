@@ -37,6 +37,7 @@ struct EqualizationBandSliders : public wxEvtHandler
 {
 public:
    EqualizationBandSliders(EqualizationCurvesList &curvesList);
+   void Init();
    void AddBandSliders(ShuttleGui &S);
    void Flatten();
    void GraphicEQ(Envelope &env);
@@ -45,6 +46,7 @@ public:
    void EnvLinToLog();
    void ErrMin();
 
+private:
    double mWhens[NUM_PTS]{};
    double mWhenSliders[NUMBER_OF_BANDS+1]{};
    size_t mBandsInUse{ NUMBER_OF_BANDS };
@@ -54,7 +56,6 @@ public:
 
    wxSlider *mSliders[NUMBER_OF_BANDS]{};
 
-private:
    EqualizationCurvesList &mCurvesList;
 
    static void spline(double x[], double y[], size_t n, double y2[]);
