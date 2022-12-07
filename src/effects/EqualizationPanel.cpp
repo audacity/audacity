@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
    EVT_MOUSE_EVENTS(EqualizationPanel::OnMouseEvent)
    EVT_MOUSE_CAPTURE_LOST(EqualizationPanel::OnCaptureLost)
    EVT_SIZE(EqualizationPanel::OnSize)
+   EVT_IDLE(EqualizationPanel::OnIdle)
 END_EVENT_TABLE()
 
 EqualizationPanel::EqualizationPanel(
@@ -66,7 +67,8 @@ EqualizationPanel::EqualizationPanel(
    mLogEditor = std::make_unique<EnvelopeEditor>(
       mParameters.mLogEnvelope, false);
 
-   ForceRecalc();
+   // Initial Recalc() needed to populate mOutr before the first paint event
+   Recalc();
 }
 
 EqualizationPanel::~EqualizationPanel()
@@ -75,19 +77,12 @@ EqualizationPanel::~EqualizationPanel()
       ReleaseMouse();
 }
 
-void EqualizationPanel::ForceRecalc()
-{
-   mRecalcRequired = true;
-   Refresh(false);
-}
-
 void EqualizationPanel::Recalc()
 {
    auto &mParameters = mCurvesList.mParameters;
    const auto &mWindowSize = mParameters.mWindowSize;
 
    mOutr = Floats{ mWindowSize };
-   mOuti = Floats{ mWindowSize };
 
    mParameters.CalcFilter();   //to calculate the actual response
    InverseRealFFT(mWindowSize,
@@ -116,10 +111,6 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    const auto &mFilterFuncI = mParameters.mFilterFuncI;
 
    wxPaintDC dc(this);
-   if(mRecalcRequired) {
-      Recalc();
-      mRecalcRequired = false;
-   }
    int width, height;
    GetSize(&width, &height);
 
@@ -318,10 +309,9 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
    auto &pEditor = (mLin ? mLinEditor : mLogEditor);
    if (pEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
       false, 0.0,
-      mdBMin, mdBMax))
-   {
-      ForceRecalc();
-   }
+      mdBMin, mdBMax)
+   )
+      mCurvesList.ForceRecalc();
 
    if (event.ButtonUp() && HasCapture())
    {
@@ -335,5 +325,14 @@ void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
    if (HasCapture())
    {
       ReleaseMouse();
+   }
+}
+
+void EqualizationPanel::OnIdle(wxIdleEvent &event)
+{
+   if (mCurvesList.mRecalcRequired) {
+      Recalc();
+      Refresh(false);
+      mCurvesList.mRecalcRequired = false;
    }
 }

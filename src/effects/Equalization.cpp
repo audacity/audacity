@@ -897,7 +897,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
       sz += wxSize( 400, 100);
       szrV->SetMinSize(sz);
    }
-   ForceRecalc();
+   mCurvesList.ForceRecalc();
 
    return nullptr;
 }
@@ -1161,7 +1161,7 @@ void EffectEqualization::setCurve(int currentCurve)
 
    // Handle special case of no points.
    if (numPoints == 0) {
-      ForceRecalc();
+      mCurvesList.ForceRecalc();
       return;
    }
 
@@ -1185,7 +1185,7 @@ void EffectEqualization::setCurve(int currentCurve)
       }
       value = mCurves[currentCurve].points[0].dB;
       env.Insert(std::min(1.0, std::max(0.0, when)), value);
-      ForceRecalc();
+      mCurvesList.ForceRecalc();
       return;
    }
 
@@ -1195,7 +1195,7 @@ void EffectEqualization::setCurve(int currentCurve)
 
    if (mCurves[currentCurve].points[0].Freq < 0) {
       // Corrupt or invalid curve, so bail.
-      ForceRecalc();
+      mCurvesList.ForceRecalc();
       return;
    }
 
@@ -1246,7 +1246,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = 0.0;
          value = mCurves[currentCurve].points[numPoints-1].dB;
          env.Insert(when, value);
-         ForceRecalc();
+         mCurvesList.ForceRecalc();
          return;
       }
 
@@ -1301,7 +1301,7 @@ void EffectEqualization::setCurve(int currentCurve)
          }
       }
    }
-   ForceRecalc();
+   mCurvesList.ForceRecalc();
 }
 
 void EffectEqualization::setCurve()
@@ -1330,17 +1330,6 @@ void EffectEqualization::setCurve(const wxString &curveName)
 }
 
 //
-// Tell panel to recalc (safe to call outside of UI)
-//
-void EffectEqualization::ForceRecalc()
-{
-   if (mPanel)
-   {
-      mPanel->ForceRecalc();
-   }
-}
-
-//
 // Flatten the curve
 //
 void EffectEqualization::Flatten()
@@ -1353,7 +1342,7 @@ void EffectEqualization::Flatten()
    mLogEnvelope.SetTrackLen(1.0);
    mLinEnvelope.Flatten(0.);
    mLinEnvelope.SetTrackLen(1.0);
-   ForceRecalc();
+   mCurvesList.ForceRecalc();
    if( !mDrawMode )
    {
       for( size_t i = 0; i < mBandsInUse; i++)
@@ -1464,7 +1453,7 @@ void EffectEqualization::UpdateDraw()
 
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
-   ForceRecalc();     // it may have changed slightly due to the deletion of points
+   mCurvesList.ForceRecalc();     // it may have changed slightly due to the deletion of points
 }
 
 void EffectEqualization::UpdateGraphic()
@@ -1825,7 +1814,7 @@ void EffectEqualization::GraphicEQ(Envelope &env)
       }
    }
 
-   ForceRecalc();
+   mCurvesList.ForceRecalc();
 }
 
 void EffectEqualization::spline(double x[], double y[], size_t n, double y2[])
@@ -1960,7 +1949,7 @@ void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
       mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mMSlider->SetToolTip(tip);
 
-      ForceRecalc();
+      mCurvesList.ForceRecalc();
    }
 }
 
@@ -2096,7 +2085,7 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
    }
 
    // and update the display etc
-   ForceRecalc();
+   mCurvesList.ForceRecalc();
    mCurvesList.EnvelopeUpdated();
 }
 
@@ -2128,7 +2117,7 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
       mLin = false;
    }
    mFreqRuler->Refresh(false);
-   ForceRecalc();
+   mCurvesList.ForceRecalc();
 }
 
 void EffectEqualization::OnIdle(wxIdleEvent &event)

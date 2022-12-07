@@ -97,7 +97,6 @@ private:
                    sampleCount start, sampleCount len);
    
    void Flatten();
-   void ForceRecalc();
 
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);

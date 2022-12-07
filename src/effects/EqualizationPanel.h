@@ -37,11 +37,10 @@ public:
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
    bool AcceptsFocusFromKeyboard() const { return false; }
 
-   void ForceRecalc();
-
-private:
    void Recalc();
 
+private:
+   void OnIdle( wxIdleEvent &event );
    void OnMouseEvent(wxMouseEvent & event);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
    void OnPaint(wxPaintEvent & event);
@@ -60,8 +59,6 @@ private:
    RulerPanel &mdBRuler;
    std::unique_ptr<EnvelopeEditor> mLinEditor, mLogEditor;
 
-   bool mRecalcRequired;
-
    std::unique_ptr<wxBitmap> mBitmap;
    wxRect mEnvRect;
    int mWidth;
@@ -69,7 +66,7 @@ private:
 //   size_t mWindowSize;
 //   float *mFilterFuncR;
 //   float *mFilterFuncI;
-   Floats mOutr, mOuti;
+   Floats mOutr;
 
 //   double mLoFreq;
 //   double mHiFreq;

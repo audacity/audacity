@@ -28,7 +28,10 @@ struct EqualizationCurvesList {
    void EnvelopeUpdated(const Envelope &env, bool lin);
    void Select(int sel);
 
+   void ForceRecalc() { mRecalcRequired = true; }
+
    EQCurveArray mCurves;
    EqualizationFilter &mParameters;
+   bool mRecalcRequired{ false };
 };
 #endif
