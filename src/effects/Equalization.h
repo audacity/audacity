@@ -33,6 +33,46 @@ class wxStaticText;
 class EqualizationPanel;
 class RulerPanel;
 
+struct EqualizationBandSliders : public wxEvtHandler
+{
+public:
+   EqualizationBandSliders(EqualizationCurvesList &curvesList);
+   void AddBandSliders(ShuttleGui &S);
+   void Flatten();
+   void GraphicEQ(Envelope &env);
+   void Invert();
+   void EnvLogToLin();
+   void EnvLinToLog();
+   void ErrMin();
+
+   double mWhens[NUM_PTS]{};
+   double mWhenSliders[NUMBER_OF_BANDS+1]{};
+   size_t mBandsInUse{ NUMBER_OF_BANDS };
+
+   int mSlidersOld[NUMBER_OF_BANDS]{};
+   double mEQVals[NUMBER_OF_BANDS+1]{};
+
+   wxSlider *mSliders[NUMBER_OF_BANDS]{};
+
+private:
+   EqualizationCurvesList &mCurvesList;
+
+   static void spline(double x[], double y[], size_t n, double y2[]);
+   static
+   double splint(double x[], double y[], size_t n, double y2[], double xr);
+
+   // Convenience function template for binding event handler functions
+   template<typename EventTag, typename Class, typename Event>
+   void BindTo(
+      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
+   {
+      src.Bind(eventType, pmf, static_cast<Class *>(this));
+   }
+
+   void OnErase( wxEvent &event );
+   void OnSlider( wxCommandEvent & event );
+};
+
 class EffectEqualization : public StatefulEffect
 {
 public:
@@ -80,7 +120,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   void AddBandSliders(ShuttleGui &S);
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
@@ -97,8 +136,6 @@ private:
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
    
-   void Flatten();
-
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
    void setCurve(void);
@@ -109,16 +146,8 @@ private:
 
    //void LayoutEQSliders();
    void UpdateGraphic(void);
-   void EnvLogToLin(void);
-   void EnvLinToLog(void);
-   void ErrMin(void);
-   void GraphicEQ(Envelope &env);
-   void spline(double x[], double y[], size_t n, double y2[]);
-   double splint(double x[], double y[], size_t n, double y2[], double xr);
 
-   void OnErase( wxEvent &event );
    void OnSize( wxSizeEvent & event );
-   void OnSlider( wxCommandEvent & event );
    void OnInterp( wxCommandEvent & event );
    void OnSliderM( wxCommandEvent & event );
    void OnSliderDBMAX( wxCommandEvent & event );
@@ -138,15 +167,10 @@ private:
    EqualizationFilter mParameters;
    EqualizationCurvesList mCurvesList{ mParameters };
 
-   double mWhens[NUM_PTS];
-   double mWhenSliders[NUMBER_OF_BANDS+1];
-   size_t mBandsInUse;
    RulerPanel *mdBRuler;
    RulerPanel *mFreqRuler;
 
    bool mDisallowCustom;
-   int mSlidersOld[NUMBER_OF_BANDS];
-   double mEQVals[NUMBER_OF_BANDS+1];
 
    wxSizer *szrC;
    wxSizer *szrG;
@@ -175,7 +199,7 @@ private:
    wxSlider *mMSlider;
    wxSlider *mdBMinSlider;
    wxSlider *mdBMaxSlider;
-   wxSlider *mSliders[NUMBER_OF_BANDS];
+   EqualizationBandSliders mBands{ mCurvesList };
 
    const EffectParameterMethods& Parameters() const override;
 

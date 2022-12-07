@@ -144,6 +144,17 @@ BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
 
 END_EVENT_TABLE()
 
+EqualizationBandSliders::
+EqualizationBandSliders(EqualizationCurvesList &curvesList)
+   : mCurvesList{ curvesList }
+{
+   for (size_t i = 0; i < NUM_PTS - 1; ++i)
+      mWhens[i] = (double)i / (NUM_PTS - 1.);
+   mWhens[NUM_PTS - 1] = 1.;
+   mWhenSliders[NUMBER_OF_BANDS] = 1.;
+   mEQVals[NUMBER_OF_BANDS] = 0.;
+}
+
 EffectEqualization::EffectEqualization(int Options)
    : mParameters{ GetDefinition() }
 {
@@ -168,14 +179,8 @@ EffectEqualization::EffectEqualization(int Options)
 
    // Note: initial curve is set in TransferDataToWindow
 
-   mBandsInUse = NUMBER_OF_BANDS;
    //double loLog = log10(mLoFreq);
    //double stepLog = (log10(mHiFreq) - loLog)/((double)NUM_PTS-1.);
-   for(int i=0; i<NUM_PTS-1; i++)
-      mWhens[i] = (double)i/(NUM_PTS-1.);
-   mWhens[NUM_PTS-1] = 1.;
-   mWhenSliders[NUMBER_OF_BANDS] = 1.;
-   mEQVals[NUMBER_OF_BANDS] = 0.;
 
    // We expect these Hi and Lo frequencies to be overridden by Init().
    // Don't use inputTracks().  See bug 2321.
@@ -411,6 +416,8 @@ bool EffectEqualization::Init()
    auto &mLoFreq = mParameters.mLoFreq;
    auto &mHiFreq = mParameters.mHiFreq;
 
+   auto &mBandsInUse = mBands.mBandsInUse;
+
    int selcount = 0;
    double rate = 0.0;
 
@@ -645,7 +652,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             //.StartPanel();
          S.AddSpace(15,0);
          {
-         AddBandSliders(S);
+         mBands.AddBandSliders(S);
          S.AddSpace(15,0);
          } //S.EndPanel();
       }
@@ -865,7 +872,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    return nullptr;
 }
 
-void EffectEqualization::AddBandSliders(ShuttleGui &S)
+void EqualizationBandSliders::AddBandSliders(ShuttleGui &S)
 {
    wxWindow *pParent = S.GetParent();
 
@@ -889,14 +896,14 @@ void EffectEqualization::AddBandSliders(ShuttleGui &S)
          mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
    #endif
          BindTo(*mSliders[i], wxEVT_SLIDER,
-            &EffectEqualization::OnSlider);
+            &EqualizationBandSliders::OnSlider);
 
          mSlidersOld[i] = 0;
          mEQVals[i] = 0.;
          S.Prop(1)
             .Name(freq)
             .ConnectRoot(
-               wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
+               wxEVT_ERASE_BACKGROUND, &EqualizationBandSliders::OnErase)
             .Position(wxEXPAND)
             .Size({ -1, 50 })
             .AddWindow(mSliders[i]);
@@ -1335,8 +1342,9 @@ void EffectEqualization::setCurve(const wxString &curveName)
 //
 // Flatten the curve
 //
-void EffectEqualization::Flatten()
+void EqualizationBandSliders::Flatten()
 {
+   auto &mParameters = mCurvesList.mParameters;
    const auto &mDrawMode = mParameters.mDrawMode;
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
@@ -1445,7 +1453,7 @@ void EffectEqualization::UpdateDraw()
 
    if(mLin) // do not use IsLinear() here
    {
-      EnvLogToLin();
+      mBands.EnvLogToLin();
       mFreqRuler->ruler.SetLog(false);
       mFreqRuler->ruler.SetRange(0, mHiFreq);
    }
@@ -1469,6 +1477,12 @@ void EffectEqualization::UpdateGraphic()
 
    auto &mDrawMode = mParameters.mDrawMode;
 
+   const auto &mBandsInUse = mBands.mBandsInUse;
+   auto &mWhenSliders = mBands.mWhenSliders;
+   auto &mSlidersOld = mBands.mSlidersOld;
+   auto &mEQVals = mBands.mEQVals;
+   auto &mSliders = mBands.mSliders;
+
    double loLog = log10(mLoFreq);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
@@ -1484,7 +1498,7 @@ void EffectEqualization::UpdateGraphic()
          mLinEnvelope.Insert(when, value);
       }
 
-      EnvLinToLog();
+      mBands.EnvLinToLog();
       mFreqRuler->ruler.SetLog(true);
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
    }
@@ -1501,7 +1515,7 @@ void EffectEqualization::UpdateGraphic()
       if( mEQVals[i] < -20.)
          mEQVals[i] = -20.;
    }
-   ErrMin();                  //move sliders to minimise error
+   mBands.ErrMin();                  //move sliders to minimise error
    for (size_t i = 0; i < mBandsInUse; i++)
    {
       mSliders[i]->SetValue(lrint(mEQVals[i])); //actually set slider positions
@@ -1523,12 +1537,13 @@ void EffectEqualization::UpdateGraphic()
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
 
-   GraphicEQ(mLogEnvelope);
+   mBands.GraphicEQ(mLogEnvelope);
    mDrawMode = false;
 }
 
-void EffectEqualization::EnvLogToLin(void)
+void EqualizationBandSliders::EnvLogToLin(void)
 {
+   auto &mParameters = mCurvesList.mParameters;
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mHiFreq = mParameters.mHiFreq;
@@ -1555,8 +1570,9 @@ void EffectEqualization::EnvLogToLin(void)
    mLinEnvelope.Reassign(1., value[numPoints-1]);
 }
 
-void EffectEqualization::EnvLinToLog(void)
+void EqualizationBandSliders::EnvLinToLog(void)
 {
+   auto &mParameters = mCurvesList.mParameters;
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mHiFreq = mParameters.mHiFreq;
@@ -1601,8 +1617,9 @@ void EffectEqualization::EnvLinToLog(void)
       mCurvesList.EnvelopeUpdated(mLogEnvelope, false);
 }
 
-void EffectEqualization::ErrMin(void)
+void EqualizationBandSliders::ErrMin(void)
 {
+   const auto &mParameters = mCurvesList.mParameters;
    const auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mCurves = mCurvesList.mCurves;
 
@@ -1627,7 +1644,7 @@ void EffectEqualization::ErrMin(void)
       error += err*err;
    }
    oldError = error;
-   while( j < mBandsInUse*12 )  //loop over the sliders a number of times
+   while( j < mBandsInUse * 12 )  //loop over the sliders a number of times
    {
       auto i = j % mBandsInUse;       //use this slider
       if( (j > 0) & (i == 0) )   // if we've come back to the first slider again...
@@ -1680,8 +1697,9 @@ void EffectEqualization::ErrMin(void)
    }
 }
 
-void EffectEqualization::GraphicEQ(Envelope &env)
+void EqualizationBandSliders::GraphicEQ(Envelope &env)
 {
+   const auto &mParameters = mCurvesList.mParameters;
    const auto &mInterp = mParameters.mInterp;
 
    // JKC: 'value' is for height of curve.
@@ -1820,7 +1838,8 @@ void EffectEqualization::GraphicEQ(Envelope &env)
    mCurvesList.ForceRecalc();
 }
 
-void EffectEqualization::spline(double x[], double y[], size_t n, double y2[])
+void EqualizationBandSliders::spline(
+   double x[], double y[], size_t n, double y2[])
 {
    wxASSERT( n > 0 );
 
@@ -1842,7 +1861,8 @@ void EffectEqualization::spline(double x[], double y[], size_t n, double y2[])
       y2[i] = y2[i]*y2[i+1] + u[i];
 }
 
-double EffectEqualization::splint(double x[], double y[], size_t n, double y2[], double xr)
+double EqualizationBandSliders::splint(
+   double x[], double y[], size_t n, double y2[], double xr)
 {
    wxASSERT( n > 1 );
 
@@ -1863,7 +1883,7 @@ double EffectEqualization::splint(double x[], double y[], size_t n, double y2[],
    return( a*y[k]+b*y[k+1]+((a*a*a-a)*y2[k]+(b*b*b-b)*y2[k+1])*h*h/6.);
 }
 
-void EffectEqualization::OnErase( wxEvent& )
+void EqualizationBandSliders::OnErase( wxEvent& )
 {
 }
 
@@ -1873,8 +1893,9 @@ void EffectEqualization::OnSize(wxSizeEvent & event)
    event.Skip();
 }
 
-void EffectEqualization::OnSlider(wxCommandEvent & event)
+void EqualizationBandSliders::OnSlider(wxCommandEvent & event)
 {
+   auto &mParameters = mCurvesList.mParameters;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
 
    wxSlider *s = (wxSlider *)event.GetEventObject();
@@ -1918,7 +1939,7 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
    bool bIsGraphic = !mParameters.mDrawMode;
    if (bIsGraphic)
    {
-      GraphicEQ(mParameters.mLogEnvelope);
+      mBands.GraphicEQ(mParameters.mLogEnvelope);
       mCurvesList.EnvelopeUpdated();
    }
    mParameters.mInterp = mInterpChoice->GetSelection();
@@ -2018,15 +2039,21 @@ void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
 {
-   Flatten();
+   mBands.Flatten();
 }
 
-void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts any curve
+void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event))
 {
+   mBands.Invert();
+}
+
+void EqualizationBandSliders::Invert() // Inverts any curve
+{
+   auto &mParameters = mCurvesList.mParameters;
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
 
-   if(!mParameters.mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
+   if (!mParameters.mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
    {
       for (size_t i = 0; i < mBandsInUse; i++)
       {
@@ -2109,14 +2136,14 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    {
       mFreqRuler->ruler.SetLog(false);
       mFreqRuler->ruler.SetRange(0, mHiFreq);
-      EnvLogToLin();
+      mBands.EnvLogToLin();
       mLin = true;
    }
    else  //going from lin to log freq scale
    {
       mFreqRuler->ruler.SetLog(true);
       mFreqRuler->ruler.SetRange(mLoFreq, mHiFreq);
-      EnvLinToLog();
+      mBands.EnvLinToLog();
       mLin = false;
    }
    mFreqRuler->Refresh(false);
