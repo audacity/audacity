@@ -56,6 +56,13 @@ namespace cloud::audiocom
 namespace
 {
 BoolSetting wasOpened { L"/cloud/audiocom/wasOpened", false };
+BoolSetting SharePublicly { L"/cloud/audiocom/sharePublicly", true };
+
+void UpdatePublicity(bool value)
+{
+   SharePublicly.Write(value);
+   gPrefs->Flush();
+}
 
 const wxSize avatarSize = { 32, 32 };
 
@@ -613,17 +620,28 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
             s.SetBorder(2);
             s.SetStretchyCol(1);
 
+            const auto selectedIndex = SharePublicly.Read() ? 0 : 1;
+
             isPublic = s.Name(Verbatim(
                                  publicLabelText.Translation() + ". " +
                                  publicDescriptionText.Translation()))
-                          .AddRadioButton({}, 0, 0);
+                          .AddRadioButton({}, 0, selectedIndex);
 #if wxUSE_ACCESSIBILITY
             // so that name can be set on a standard control
             isPublic->SetAccessible(safenew WindowAccessible(isPublic));
 #endif
+            isPublic->Bind(
+               wxEVT_RADIOBUTTON, [this](auto) { UpdatePublicity(true); });
+            
             s.AddVariableText(publicLabelText)
                ->Bind(
-                  wxEVT_LEFT_UP, [this](auto) { isPublic->SetValue(true); });
+                  wxEVT_LEFT_UP,
+                  [this](auto)
+                  {
+                     isPublic->SetValue(true);
+                     UpdatePublicity(true);
+                  });
+            
             s.AddFixedText({});
             s.AddVariableText(publicDescriptionText, false, 0, maxWidth);
 
@@ -634,17 +652,25 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
             auto rbUnlisted = s.Name(Verbatim(
                                         unlistedLabelText.Translation() + ". " +
                                         unlistedDescriptionText.Translation()))
-                                 .AddRadioButtonToGroup({}, 1, 0);
+                                 .AddRadioButtonToGroup({}, 1, selectedIndex);
 
 #if wxUSE_ACCESSIBILITY
             // so that name can be set on a standard control
             rbUnlisted->SetAccessible(safenew WindowAccessible(rbUnlisted));
 #endif
+
+            rbUnlisted->Bind(
+               wxEVT_RADIOBUTTON, [this](auto) { UpdatePublicity(false); });
             
             s.AddVariableText(unlistedLabelText)
                ->Bind(
                   wxEVT_LEFT_UP,
-                  [this, rbUnlisted](auto) { rbUnlisted->SetValue(true); });
+                  [this, rbUnlisted](auto)
+                  {
+                     rbUnlisted->SetValue(true);
+                     UpdatePublicity(false);
+                  });
+            
             s.AddFixedText({});
             s.AddVariableText(unlistedDescriptionText, false, 0, maxWidth);
          }
