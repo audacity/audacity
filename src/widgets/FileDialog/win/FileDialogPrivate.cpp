@@ -57,7 +57,7 @@
 // constants
 // ----------------------------------------------------------------------------
 
-#ifdef __WIN32__
+#ifdef _WIN32
 # define wxMAXPATH   65534
 #else
 # define wxMAXPATH   1024

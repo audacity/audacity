@@ -485,7 +485,7 @@ FilePath FileNames::PathFromAddr(void *addr)
 bool FileNames::IsPathAvailable( const FilePath & Path){
    if( Path.IsEmpty() )
       return false;
-#ifndef __WIN32__
+#ifndef _WIN32
    return true;
 #else
    wxFileNameWrapper filePath( Path );
@@ -497,7 +497,7 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference
 {
    wxFileNameWrapper result;
 
-#ifdef __WIN32__
+#ifdef _WIN32
    wxFileName defaultPath( wxStandardPaths::Get().GetDocumentsDir(), "" );
 
    defaultPath.AppendDir( AppName );

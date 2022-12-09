@@ -12,12 +12,12 @@
 
 #include "PluginHost.h"
 
-#include <wx/app.h>
 #include <wx/log.h>
 #include <wx/module.h>
 #include <wx/process.h>
 
 #include "BasicUI.h"
+#include "CommandLineArgs.h"
 #include "PathList.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
@@ -205,9 +205,10 @@ bool PluginHost::Start(int connectPort)
    return false;
 }
 
-bool PluginHost::IsHostProcess(int argc, wxChar** argv)
+bool PluginHost::IsHostProcess()
 {
-   return argc >= 3 && wxStrcmp(argv[1], HostArgument) == 0;
+   return CommandLineArgs::argc >= 3 &&
+      wxStrcmp(CommandLineArgs::argv[1], HostArgument) == 0;
 }
 
 class PluginHostModule final :
@@ -218,10 +219,10 @@ public:
 
    bool OnInit() override
    {
-      if(PluginHost::IsHostProcess(wxTheApp->argc, wxTheApp->argv))
+      if(PluginHost::IsHostProcess())
       {
          long connectPort;
-         if(!wxTheApp->argv[2].ToLong(&connectPort))
+         if(!wxString{ CommandLineArgs::argv[2] }.ToLong(&connectPort))
             return false;
 
          //log messages will appear in a separate window
@@ -234,7 +235,7 @@ public:
          //...and terminate app
          return false;
       }
-      //do noting if current process isn't a host process
+      //do nothing if current process isn't a host process
       return true;
    }
    

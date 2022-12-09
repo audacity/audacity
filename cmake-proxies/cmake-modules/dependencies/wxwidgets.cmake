@@ -1,3 +1,35 @@
+# Make the wxBase interface target which exposes a limited view of wxWidgets --
+# only the subset of wxBase consistent with "toolkit neutrality"
+function(make_wxBase old)
+   make_interface_library(wxBase ${old})
+
+   # wxBase exposes only the GUI-less subset of full wxWidgets
+   # Also prohibit use of some other headers by pre-defining their include guards
+   # wxUSE_GUI=0 doesn't exclude all of wxCore dependency, and the application
+   # object and event loops are in wxBase, but we want to exclude their use too
+   target_compile_definitions( wxBase INTERFACE
+      "wxUSE_GUI=0"
+ 
+      # Don't use app.h
+      _WX_APP_H_BASE_
+   
+      # Don't use evtloop.h
+      _WX_EVTLOOP_H_
+   
+      # Don't use image.h
+      _WX_IMAGE_H
+   
+      # Don't use colour.h
+      _WX_COLOUR_H_BASE_
+   
+      # Don't use brush.h
+      _WX_BRUSH_H_BASE_
+   
+      # Don't use pen.h
+      _WX_PEN_H_BASE_
+   )
+endfunction()
+   
 if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
     # DV: find_package will be scoped, as FindwxWidgets.cmake is rather outdated.
     # Still - let's perform the sanity check first.
@@ -42,7 +74,8 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
     endif()
 
     if( NOT TARGET wxBase )
-        add_library( wxBase ALIAS wxwidgets::wxwidgets )
+        # add_library( wxBase ALIAS wxwidgets::wxwidgets )
+        make_wxBase(wxwidgets::wxwidgets)
     endif()
 
     if( NOT TARGET wxwidgets::wxwidgets )
@@ -94,7 +127,8 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
     endif()
 else()
     set_target_properties(wxwidgets::base PROPERTIES IMPORTED_GLOBAL On)
-    add_library( wxBase ALIAS wxwidgets::base )
+    # add_library( wxBase ALIAS wxwidgets::base )
+    make_wxbase(wxwidgets::base)
 endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
