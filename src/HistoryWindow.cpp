@@ -503,22 +503,13 @@ AttachedWindows::RegisteredFactory sHistoryWindowKey{
 };
 
 // Define our extra menu item that invokes that factory
-struct Handler : CommandHandlerObject {
-   void OnHistory(const CommandContext &context)
-   {
-      auto &project = context.project;
+void OnHistory(const CommandContext &context)
+{
+   auto &project = context.project;
 
-      auto historyWindow = &GetAttachedWindows(project).Get(sHistoryWindowKey);
-      historyWindow->Show();
-      historyWindow->Raise();
-   }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
+   auto historyWindow = &GetAttachedWindows(project).Get(sHistoryWindowKey);
+   historyWindow->Show();
+   historyWindow->Raise();
 }
 
 // Register that menu item
@@ -561,11 +552,10 @@ AttachedItem sAttachment{ wxT("View/Windows"),
    // FOR REDESIGN,
    // clearly there are some limitations with the flags/mask bitmaps.
 
-   ( FinderScope{ findCommandHandler },
    /* i18n-hint: Clicking this menu item shows the various editing steps
       that have been taken.*/
-      Command( wxT("UndoHistory"), XXO("&History"), &Handler::OnHistory,
-         AudioIONotBusyFlag() ) )
+   Command( wxT("UndoHistory"), XXO("&History"), OnHistory,
+      AudioIONotBusyFlag() )
 };
 
 }

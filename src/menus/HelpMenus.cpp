@@ -249,13 +249,9 @@ void QuickFixDialog::OnFix(const PrefSetter &setter, wxWindowID id)
 
 }
 
-namespace HelpActions {
-
-// exported helper functions
+namespace {
 
 // Menu handler functions
-
-struct Handler : CommandHandlerObject {
 
 void OnQuickFix(const CommandContext &context)
 {
@@ -444,45 +440,30 @@ void OnHelpWelcome(const CommandContext &context)
 
 #endif
 
-}; // struct Handler
-
-} // namespace
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static HelpActions::Handler instance;
-   return instance;
-};
-
 // Menu definitions
 
-#define FN(X) (& HelpActions::Handler :: X)
-
-namespace {
 using namespace MenuTable;
 BaseItemSharedPtr HelpMenu()
 {
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
          // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
    #ifdef EXPERIMENTAL_DA
          // DA: Has QuickFix menu item.
-         Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
+         Command( wxT("QuickFix"), XXO("&Quick Fix..."), OnQuickFix,
             AlwaysEnabledFlag ),
          // DA: 'Getting Started' rather than 'Quick Help'.
-         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp),
+         Command( wxT("QuickHelp"), XXO("&Getting Started"), OnQuickHelp,
             AlwaysEnabledFlag ),
          // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
+         Command( wxT("Manual"), XXO("Audacity &Manual"), OnManual,
             AlwaysEnabledFlag )
 
    #else
-         Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
+         Command( wxT("QuickHelp"), XXO("&Quick Help..."), OnQuickHelp,
             AlwaysEnabledFlag ),
-         Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
+         Command( wxT("Manual"), XXO("&Manual..."), OnManual,
             AlwaysEnabledFlag )
    #endif
       ),
@@ -495,13 +476,13 @@ BaseItemSharedPtr HelpMenu()
       ( "Other",
          Menu( wxT("Diagnostics"), XXO("&Diagnostics"),
             Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
-               FN(OnAudioDeviceInfo),
+               OnAudioDeviceInfo,
                AudioIONotBusyFlag() ),
-            Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
+            Command( wxT("Log"), XXO("Show &Log..."), OnShowLog,
                AlwaysEnabledFlag ),
       #if defined(HAS_CRASH_REPORT)
             Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
-               FN(OnCrashReport), AlwaysEnabledFlag )
+               OnCrashReport, AlwaysEnabledFlag )
       #endif
 
       #ifdef IS_ALPHA
@@ -510,22 +491,22 @@ BaseItemSharedPtr HelpMenu()
             // Verbatim for labels
 
             Command( wxT("RaiseSegfault"), Verbatim("Test segfault report"),
-               FN(OnSegfault), AlwaysEnabledFlag ),
+               OnSegfault, AlwaysEnabledFlag ),
 
             Command( wxT("ThrowException"), Verbatim("Test exception report"),
-               FN(OnException), AlwaysEnabledFlag ),
+               OnException, AlwaysEnabledFlag ),
 
             Command( wxT("ViolateAssertion"), Verbatim("Test assertion report"),
-               FN(OnAssertion), AlwaysEnabledFlag ),
+               OnAssertion, AlwaysEnabledFlag ),
 
             // Menu explorer.  Perhaps this should become a macro command
             Command( wxT("MenuTree"), Verbatim("Menu Tree..."),
-               FN(OnMenuTree),
+               OnMenuTree,
                AlwaysEnabledFlag ),
               
             Command(
                  wxT("FrameStatistics"), Verbatim("Frame Statistics..."),
-                 FN(OnFrameStatistics),
+                 OnFrameStatistics,
                  AlwaysEnabledFlag)
       #endif
          )
@@ -539,18 +520,18 @@ BaseItemSharedPtr HelpMenu()
 #ifdef HAS_AUDIOCOM_UPLOAD
          Command(
             wxT("LinkAccount"), XXO("L&ink audio.com account..."),
-            FN(OnLinkAccount), AlwaysEnabledFlag),
+            OnLinkAccount, AlwaysEnabledFlag),
 #endif
          // DA: Does not fully support update checking.
    #if !defined(EXPERIMENTAL_DA) && defined(HAVE_UPDATES_CHECK)
          Command( wxT("Updates"), XXO("&Check for Updates..."),
-            FN(OnCheckForUpdates),
+            OnCheckForUpdates,
             AlwaysEnabledFlag ),
    #endif
-         Command( wxT("About"), XXO("&About Audacity"), FN(OnAbout),
+         Command( wxT("About"), XXO("&About Audacity"), OnAbout,
             AlwaysEnabledFlag )
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -560,5 +541,3 @@ AttachedItem sAttachment1{
 };
 
 }
-
-#undef FN

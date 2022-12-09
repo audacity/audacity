@@ -283,14 +283,10 @@ void SetTool(AudacityProject &project, int tool)
 }
 
 /// Namespace for functions for View Toolbar menu
-namespace ToolActions {
-
-// exported helper functions
-// none
+namespace {
 
 // Menu handler functions
 
-struct Handler : CommandHandlerObject {
 /// Handler to set the select tool active
 void OnSelectTool(const CommandContext &context)
 {
@@ -334,40 +330,26 @@ void OnNextTool(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-}; // struct Handler
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static ToolActions::Handler instance;
-   return instance;
-};
-
-#define FN(X) (& ToolActions::Handler :: X)
-
 using namespace MenuTable;
 BaseItemSharedPtr ExtraToolsMenu()
 {
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XXO("T&ools"),
-      Command( wxT("SelectTool"), XXO("&Selection Tool"), FN(OnSelectTool),
+      Command( wxT("SelectTool"), XXO("&Selection Tool"), OnSelectTool,
          AlwaysEnabledFlag, wxT("F1") ),
       Command( wxT("EnvelopeTool"), XXO("&Envelope Tool"),
-         FN(OnEnvelopeTool), AlwaysEnabledFlag, wxT("F2") ),
-      Command( wxT("DrawTool"), XXO("&Draw Tool"), FN(OnDrawTool),
+         OnEnvelopeTool, AlwaysEnabledFlag, wxT("F2") ),
+      Command( wxT("DrawTool"), XXO("&Draw Tool"), OnDrawTool,
          AlwaysEnabledFlag, wxT("F3") ),
-      Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
+      Command( wxT("MultiTool"), XXO("&Multi Tool"), OnMultiTool,
          AlwaysEnabledFlag, wxT("F6") ),
-      Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
+      Command( wxT("PrevTool"), XXO("&Previous Tool"), OnPrevTool,
          AlwaysEnabledFlag, wxT("A") ),
-      Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
+      Command( wxT("NextTool"), XXO("&Next Tool"), OnNextTool,
          AlwaysEnabledFlag, wxT("D") )
-   ) ) };
+   ) };
    return menu;
 }
-
-#undef FN
 
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),

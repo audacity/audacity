@@ -108,8 +108,7 @@ void RegisterMenuItems()
    static AttachedItem sAttachment{ wxT("Tools"),
       ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
          Command( wxT("NyqBench"), XXO("&Nyquist Workbench..."),
-            static_cast<CommandFunctorPointer>(&NyqBench::ShowNyqBench),
-            AudioIONotBusyFlag())
+            &NyqBench::ShowNyqBench, AudioIONotBusyFlag())
       ) )
    };
 }
