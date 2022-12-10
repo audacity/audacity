@@ -15,7 +15,6 @@
 #include <wx/splitter.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
-#include <wx/menu.h>
 #include <wx/wupdlock.h>
 #include <wx/hyperlink.h>
 
@@ -25,6 +24,7 @@
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "widgets/BasicMenu.h"
 #include "Observer.h"
 #include "PluginManager.h"
 #include "Project.h"
@@ -43,6 +43,7 @@
 #include "UndoManager.h"
 #include "Prefs.h"
 #include "BasicUI.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -868,12 +869,13 @@ namespace
 
    PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl)
    {
-      wxMenu menu;
+      BasicMenu::Handle menu{ BasicMenu::FreshMenu };
 
       if(currentEffectControl != nullptr)
       {
          //no need to handle language change since menu creates it's own event loop
-         menu.Append(wxID_REMOVE, _("No Effect"));
+         menu.Append(XO("No Effect"),
+            [=]{ currentEffectControl->RemoveFromList(); });
          menu.AppendSeparator();
       }
 
@@ -902,12 +904,7 @@ namespace
       std::sort(effects.begin(), effects.end(), compareEffects);
 
       wxString currentSubMenuName;
-      std::unique_ptr<wxMenu> currentSubMenu;
-
-      auto submenuEventHandler = [&](wxCommandEvent& event)
-      {
-         selectedEffectIndex = event.GetId() - wxID_HIGHEST;
-      };
+      BasicMenu::Handle currentSubMenu;
 
       for(int i = 0, count = effects.size(); i < count; ++i)
       {
@@ -918,34 +915,28 @@ namespace
          if(currentSubMenuName != vendor)
          {
             if(currentSubMenu)
-            {
-               currentSubMenu->Bind(wxEVT_MENU, submenuEventHandler);
-               menu.AppendSubMenu(currentSubMenu.release(), currentSubMenuName);
-            }
+               menu.AppendSubMenu(
+                  std::move(currentSubMenu), Verbatim(currentSubMenuName));
             currentSubMenuName = vendor;
-            currentSubMenu = std::make_unique<wxMenu>();
+            currentSubMenu = BasicMenu::FreshMenu;
          }
 
          const auto ID = wxID_HIGHEST + i;
-         currentSubMenu->Append(ID, effect.GetSymbol().Translation());
+         currentSubMenu.Append(effect.GetSymbol().Msgid(),
+            [&selectedEffectIndex, i]{ selectedEffectIndex = i; });
       }
       if(currentSubMenu)
       {
-         currentSubMenu->Bind(wxEVT_MENU, submenuEventHandler);
-         menu.AppendSubMenu(currentSubMenu.release(), currentSubMenuName);
+         menu.AppendSubMenu(
+            std::move(currentSubMenu), Verbatim(currentSubMenuName));
          menu.AppendSeparator();
       }
-      menu.Append(wxID_MORE, _("Get more effects..."));
+      menu.Append(XO("Get more effects..."),
+         []{ OpenInDefaultBrowser("https://plugins.audacityteam.org/"); });
 
-      menu.Bind(wxEVT_MENU, [&](wxCommandEvent& event)
-      {
-         if(event.GetId() == wxID_REMOVE)
-            currentEffectControl->RemoveFromList();
-         else if(event.GetId() == wxID_MORE)
-            OpenInDefaultBrowser("https://plugins.audacityteam.org/");
-      });
-
-      if(parent->PopupMenu(&menu, parent->GetClientRect().GetLeftBottom()) && selectedEffectIndex != -1)
+      const auto pos = parent->GetClientRect().GetLeftBottom();
+      menu.Popup( wxWidgetsWindowPlacement{ parent }, { pos.x, pos.y } );
+      if (selectedEffectIndex != -1)
          return effects[selectedEffectIndex]->GetID();
 
       return {};
