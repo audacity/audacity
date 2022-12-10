@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
 
-   EffectEqualization.cpp
+   Equalization.cpp
 
    Mitch Golden
    Vaughan Johnson (Preview)
@@ -11,8 +11,7 @@
 *******************************************************************//**
 
    \file Equalization.cpp
-   \brief Implements EffectEqualiztaion, EqualizationDialog,
-   EqualizationPanel, EQCurve and EQPoint.
+   \brief Implements EffectEqualization.
 
 *//****************************************************************//**
 
@@ -38,16 +37,6 @@
    \brief EqualizationPanel is used with EqualizationDialog and controls
    a graph for EffectEqualization.  We should look at amalgamating the
    various graphing code, such as provided by FrequencyPlotDialog and FilterPanel.
-
-*//****************************************************************//**
-
-   \class EQCurve
-   \brief EQCurve is used with EffectEqualization.
-
-*//****************************************************************//**
-
-   \class EQPoint
-   \brief EQPoint is used with EQCurve and hence EffectEqualization.
 
 *//*******************************************************************/
 
