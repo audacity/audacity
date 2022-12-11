@@ -245,7 +245,16 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
    menu.Bind(wxEVT_MENU_CLOSE, [this](auto&) { mAudioSetup->PopUp(); });
-   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnMenu, this);
+   // Bind four ID ranges and one single ID
+   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnHost, this,
+      kHost, kInput - 1);
+   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnInput, this,
+      kInput, kInputChannels - 1);
+   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnChannels, this,
+      kInputChannels, kOutput - 1);
+   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnOutput, this,
+      kOutput, kAudioSettings - 1);
+   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnSettings, this, kAudioSettings);
 
    wxWindow* btn = FindWindow(ID_AUDIO_SETUP_BUTTON);
    wxRect r = btn->GetRect();
@@ -563,7 +572,7 @@ void AudioSetupToolBar::FillHostDevices()
       }
    }
 
-   // The setting of the Device is left up to OnMenu
+   // The setting of the Device is left up to menu handlers
 }
 
 void AudioSetupToolBar::FillInputChannels()
@@ -731,7 +740,7 @@ void AudioSetupToolBar::ChangeDevice(int deviceId, bool isInput)
    }
 
    if (newIndex < 0) {
-      wxLogDebug(wxT("AudioSetupToolBar::OnMenu(): couldn't find device indices"));
+      wxLogDebug(wxT("AudioSetupToolBar::ChangeDevice(): couldn't find device indices"));
       return;
    }
 
@@ -739,32 +748,41 @@ void AudioSetupToolBar::ChangeDevice(int deviceId, bool isInput)
               isInput ? nullptr : &maps[newIndex]);
 }
 
-void AudioSetupToolBar::OnMenu(wxCommandEvent& event)
+void AudioSetupToolBar::OnHost(wxCommandEvent& event)
 {
    int id = event.GetId();
-   bool audioSettingsChosen = false;
+   ChangeHost(id);
+   CommonMenuItemSteps(false);
+}
 
-   if ((id >= kHost) && (id < kInput)) {
-      ChangeHost(id);
+void AudioSetupToolBar::OnChannels(wxCommandEvent& event)
+{
+   int id = event.GetId();
+   if (auto item = mInputChannels->FindChildItem(id)) {
+      // Update cache with selected number of input channels
+      item->Check();
+      AudioIORecordChannels.Write(id - kInputChannels + 1);
    }
-   else if ((id >= kInputChannels) && (id < kOutput)) {
-      if (auto item = mInputChannels->FindChildItem(id)) {
-         // Update cache with selected number of input channels
-         item->Check();
-         AudioIORecordChannels.Write(id - kInputChannels + 1);
-      }
-   }
-   else if ((id >= kInput) && (id < kInputChannels)) {
-      ChangeDevice(id, true);
-   }
-   else if ((id >= kOutput) && (id < kAudioSettings)) {
-      ChangeDevice(id, false);
-   }
-   else if (id == kAudioSettings) {
-      audioSettingsChosen = true;
-   }
+   CommonMenuItemSteps(false);
+}
 
-   CommonMenuItemSteps(audioSettingsChosen);
+void AudioSetupToolBar::OnInput(wxCommandEvent& event)
+{
+   int id = event.GetId();
+   ChangeDevice(id, true);
+   CommonMenuItemSteps(false);
+}
+
+void AudioSetupToolBar::OnOutput(wxCommandEvent& event)
+{
+   int id = event.GetId();
+   ChangeDevice(id, false);
+   CommonMenuItemSteps(false);
+}
+
+void AudioSetupToolBar::OnSettings(wxCommandEvent& event)
+{
+   CommonMenuItemSteps(true);
 }
 
 void AudioSetupToolBar::CommonMenuItemSteps(bool audioSettingsChosen)

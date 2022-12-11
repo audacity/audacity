@@ -47,7 +47,11 @@ class AudioSetupToolBar final : public ToolBar {
 
  private:
    void OnRescannedDevices(DeviceChangeMessage);
-   void OnMenu(wxCommandEvent& event);
+   void OnHost(wxCommandEvent& event);
+   void OnInput(wxCommandEvent& event);
+   void OnChannels(wxCommandEvent& event);
+   void OnOutput(wxCommandEvent& event);
+   void OnSettings(wxCommandEvent& event);
    void CommonMenuItemSteps(bool audioSettingsChosen);
 
    bool ChangeHost(int hostId);
