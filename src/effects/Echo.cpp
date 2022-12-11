@@ -51,6 +51,9 @@ struct EffectEcho::Instance
       : PerTrackEffect::Instance{ effect }
    {}
 
+   bool InstanceInit(EffectSettings& settings, double sampleRate,
+      ChannelNames chanMap);  
+
    bool ProcessInitialize(EffectSettings& settings, double sampleRate,
       ChannelNames chanMap) override;
 
@@ -58,6 +61,17 @@ struct EffectEcho::Instance
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
    bool ProcessFinalize() noexcept override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
 
    unsigned GetAudioOutCount() const override
    {
@@ -69,9 +83,11 @@ struct EffectEcho::Instance
       return 1;
    }
 
-   Floats history;
+   std::vector<float> history;
    size_t histPos;
    size_t histLen;
+
+   std::vector<EffectEcho::Instance> mSlaves;
 };
 
 
@@ -117,8 +133,22 @@ EffectType EffectEcho::GetType() const
    return EffectTypeProcess;
 }
 
+
+auto EffectEcho::RealtimeSupport() const -> RealtimeSince
+{
+   return RealtimeSince::Always;
+}
+
+
 bool EffectEcho::Instance::ProcessInitialize(
-   EffectSettings& settings, double sampleRate, ChannelNames)
+   EffectSettings& settings, double sampleRate, ChannelNames cn)
+{
+   return InstanceInit(settings, sampleRate, cn);
+}
+
+
+bool EffectEcho::Instance::InstanceInit(EffectSettings& settings, double sampleRate,
+   ChannelNames chanMap)
 {
    auto& echoSettings = GetSettings(settings);  
    if (echoSettings.delay == 0.0)
@@ -134,14 +164,14 @@ bool EffectEcho::Instance::ProcessInitialize(
       if (requestedHistLen !=
             (histLen = static_cast<size_t>(requestedHistLen.as_long_long())))
          throw std::bad_alloc{};
-      history.reinit(histLen, true);
+      history.resize(histLen, 0.0f);
    }
    catch ( const std::bad_alloc& ) {
       mProcessor.MessageBox( XO("Requested value exceeds memory capacity.") );
       return false;
    }
 
-   return history != NULL;
+   return history.size() > 0;
 }
 
 bool EffectEcho::Instance::ProcessFinalize() noexcept
@@ -167,6 +197,41 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
    }
 
    return blockLen;
+}
+
+
+bool EffectEcho::Instance::RealtimeInitialize(EffectSettings& settings, double)
+{
+   mSlaves.clear();
+   return true;
+}
+
+bool EffectEcho::Instance::RealtimeAddProcessor(EffectSettings& settings,
+   EffectOutputs* pOutputs, unsigned numChannels, float sampleRate)
+{
+   EffectEcho::Instance slave(mProcessor);
+
+   slave.InstanceInit(settings, sampleRate, ChannelNames());
+
+   mSlaves.push_back(slave);
+
+   return true;
+}
+
+
+bool EffectEcho::Instance::RealtimeFinalize(EffectSettings& settings) noexcept
+{
+   mSlaves.clear();
+   return true;
+}
+
+size_t EffectEcho::Instance::RealtimeProcess(size_t group, EffectSettings& settings,
+   const float* const* inbuf, float* const* outbuf, size_t numSamples)
+{
+   if (group >= mSlaves.size())
+      return 0;
+
+   return mSlaves[group].ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
 
