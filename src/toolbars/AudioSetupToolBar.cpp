@@ -764,6 +764,11 @@ void AudioSetupToolBar::OnMenu(wxCommandEvent& event)
       audioSettingsChosen = true;
    }
 
+   CommonMenuItemSteps(audioSettingsChosen);
+}
+
+void AudioSetupToolBar::CommonMenuItemSteps(bool audioSettingsChosen)
+{
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO) {
       // We cannot have gotten here if gAudioIO->IsAudioTokenActive(),
