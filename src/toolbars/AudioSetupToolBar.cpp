@@ -569,26 +569,7 @@ void AudioSetupToolBar::FillInputChannels()
       mInputChannels.Set(newChannels - 1);
 }
 
-void AudioSetupToolBar::AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title)
-{
-   auto clonedMenu = std::make_unique<wxMenu>();
-
-   for (const auto& item : submenu->GetMenuItems()) {
-      auto cloneMenuItem = clonedMenu->AppendRadioItem(item->GetId(), item->GetItemLabelText());
-
-      if (item->IsChecked())
-         cloneMenuItem->Check();
-   }
-
-   auto menuItem = menu.AppendSubMenu(clonedMenu.release(), title);
-
-   const auto selected = GetSelectedRadioItemLabel(*submenu);
-   if (!selected) {
-      menuItem->Enable(false);
-   }
-}
-
-void AudioSetupToolBar::AppendSubMenu( AudioSetupToolBar &toolbar,
+void AudioSetupToolBar::AppendSubMenu(AudioSetupToolBar &toolbar,
    wxMenu& menu, const wxArrayString &labels, int checkedItem,
    Callback callback, const wxString& title)
 {
@@ -609,30 +590,11 @@ void AudioSetupToolBar::AppendSubMenu( AudioSetupToolBar &toolbar,
       menuItem->Enable(false);
 }
 
-void AudioSetupToolBar::Choice::AppendSubMenu(
-   AudioSetupToolBar &toolBar, wxMenu &menu, const wxString &title)
-{
-   toolBar.AppendSubMenu(menu, mMenu, title);
-}
-
 void AudioSetupToolBar::Choices::AppendSubMenu(AudioSetupToolBar &toolBar,
    wxMenu &menu, Callback callback, const wxString &title)
 {
    AudioSetupToolBar::
    AppendSubMenu(toolBar, menu, mStrings, mIndex, callback, title);
-}
-
-std::optional<wxString>
-AudioSetupToolBar::GetSelectedRadioItemLabel(const wxMenu& menu)
-{
-   const auto& items = menu.GetMenuItems();
-
-   for (const auto& item : items) {
-      if (item->IsChecked())
-         return item->GetItemLabelText();
-   }
-
-   return std::nullopt;
 }
 
 void AudioSetupToolBar::OnRescannedDevices(DeviceChangeMessage m)

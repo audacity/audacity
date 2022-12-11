@@ -70,8 +70,6 @@ class AudioSetupToolBar final : public ToolBar {
    void MakeAudioSetupButton();
    void ArrangeButtons();
 
-   void AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title);
-
    using Callback = void (AudioSetupToolBar::*)(int id);
    // Append submenu with one radio item group
    // Bind menu items to lambdas that invoke callback,
@@ -81,8 +79,6 @@ class AudioSetupToolBar final : public ToolBar {
       const wxArrayString &labels, int checkedItem,
       Callback callback, const wxString& title);
 
-   static std::optional<wxString> GetSelectedRadioItemLabel(const wxMenu& menu);
-
    enum {
       ID_AUDIO_SETUP_BUTTON = 12000,
       BUTTON_COUNT,
@@ -90,59 +86,6 @@ class AudioSetupToolBar final : public ToolBar {
 
    AButton *mAudioSetup{};
    wxBoxSizer *mSizer{};
-
-   class Choice {
-   public:
-      // id0 is the first in the sequence assigned to submenu items
-      explicit Choice(int id0) : mId0{ id0 } {}
-      void Clear() { mMenu = std::make_unique<wxMenu>(); }
-      [[nodiscard]] bool Empty() const {
-         return mMenu->GetMenuItemCount() == 0;
-      }
-      std::optional<wxString> Get() const {
-         return GetSelectedRadioItemLabel(*mMenu);
-      }
-      wxString GetFirst() const {
-         if (!Empty())
-            return mMenu->FindItem(mId0)->GetItemLabelText();
-         return {};
-      }
-      int GetSmallIntegerId() const {
-         for (const auto & item : mMenu->GetMenuItems())
-            if (item->IsChecked())
-               return item->GetId() - mId0;
-         return -1;
-      }
-      int Find(const wxString &name) const {
-         return mMenu->FindItem(name);
-      }
-      bool Set(const wxString &name) {
-         const auto id = mMenu->FindItem(name);
-         if (id != wxNOT_FOUND) {
-            mMenu->FindChildItem(id)->Check();
-            return true;
-         }
-         return false;
-      }
-      void Set(wxArrayString &&names) {
-         Clear();
-         for (int i = 0; i < names.size(); ++i)
-            mMenu->AppendRadioItem(mId0 + i, names[i]);
-      }
-      bool Set(int id) {
-         auto item = mMenu->FindChildItem(id);
-         if (!item)
-            return false;
-         item->Check();
-         return true;
-      }
-      void AppendSubMenu(
-         AudioSetupToolBar &toolBar, wxMenu &menu, const wxString &title);
-
-   private:
-      std::unique_ptr<wxMenu> mMenu{ std::make_unique<wxMenu>() };
-      const int mId0;
-   };
 
    class Choices {
    public:
