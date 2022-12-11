@@ -253,7 +253,13 @@ struct EffectEcho::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
+   void OnDelayText(wxCommandEvent& evt);
+   void OnDecayText(wxCommandEvent& evt);
+
    EffectEchoSettings mSettings;
+
+   wxTextCtrl* mDelay;
+   wxTextCtrl* mDecay;
 };
 
 
@@ -278,15 +284,21 @@ void EffectEcho::Validator::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Validator<FloatingPointValidator<double>>(
+      mDelay =
+         S.Validator<FloatingPointValidator<double>>(
             3, &echoSettings.delay, NumValidatorStyle::NO_TRAILING_ZEROES,
             Delay.min, Delay.max )
          .AddTextBox(XXO("&Delay time (seconds):"), L"", 10);
 
+      BindTo(*mDelay, wxEVT_TEXT, &Validator::OnDelayText);
+
+      mDecay =
       S.Validator<FloatingPointValidator<double>>(
             3, &echoSettings.decay, NumValidatorStyle::NO_TRAILING_ZEROES,
             Decay.min, Decay.max)
          .AddTextBox(XXO("D&ecay factor:"), L"", 10);
+
+      BindTo(*mDecay, wxEVT_TEXT, &Validator::OnDecayText);
    }
    S.EndMultiColumn();   
 }
@@ -318,4 +330,26 @@ bool EffectEcho::Validator::UpdateUI()
 
    return true;
 }
+
+
+void EffectEcho::Validator::OnDelayText(wxCommandEvent& evt)
+{
+   if (mDelay->Validate())
+   {
+      mDelay->GetValue().ToDouble(&mSettings.delay);
+   }
+
+   ValidateUI();
+}
+
+void EffectEcho::Validator::OnDecayText(wxCommandEvent& evt)
+{
+   if (mDecay->Validate())
+   {
+      mDecay->GetValue().ToDouble(&mSettings.decay);
+   }
+
+   ValidateUI();
+}
+
 
