@@ -66,7 +66,6 @@ class AudioSetupToolBar final : public ToolBar {
    void MakeAudioSetupButton();
    void ArrangeButtons();
 
-   std::unique_ptr<wxMenu> CloneMenu(const wxMenu& menu) const;
    void AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title);
 
    std::optional<wxString> GetSelectedRadioItemLabel(const wxMenu& menu) const;

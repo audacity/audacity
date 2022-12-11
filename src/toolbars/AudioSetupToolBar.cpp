@@ -621,24 +621,18 @@ void AudioSetupToolBar::FillInputChannels()
    }
 }
 
-std::unique_ptr<wxMenu> AudioSetupToolBar::CloneMenu(const wxMenu& menu) const
+void AudioSetupToolBar::AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title)
 {
    auto clonedMenu = std::make_unique<wxMenu>();
 
-   for (const auto& item : menu.GetMenuItems()) {
+   for (const auto& item : submenu->GetMenuItems()) {
       auto cloneMenuItem = clonedMenu->AppendRadioItem(item->GetId(), item->GetItemLabelText());
 
       if (item->IsChecked())
          cloneMenuItem->Check();
    }
 
-   return clonedMenu;
-}
-
-void AudioSetupToolBar::AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title)
-{
-   auto clone = CloneMenu(*submenu);
-   auto menuItem = menu.AppendSubMenu(clone.release(), title);
+   auto menuItem = menu.AppendSubMenu(clonedMenu.release(), title);
 
    const auto selected = GetSelectedRadioItemLabel(*submenu);
    if (!selected) {
