@@ -225,11 +225,13 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
-   mOutput.AppendSubMenu(*this, menu, _("&Playback Device"));
+   mOutput.AppendSubMenu(*this, menu,
+      &AudioSetupToolBar::OnOutput, _("&Playback Device"));
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
-   mInput.AppendSubMenu(*this, menu, _("&Recording Device"));
+   mInput.AppendSubMenu(*this, menu,
+      &AudioSetupToolBar::OnInput, _("&Recording Device"));
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
@@ -239,11 +241,6 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
    menu.Bind(wxEVT_MENU_CLOSE, [this](auto&) { mAudioSetup->PopUp(); });
-   // Bind two ID ranges and one single ID
-   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnInput, this,
-      kInput, kOutput - 1);
-   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnOutput, this,
-      kOutput, kAudioSettings - 1);
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnSettings, this, kAudioSettings);
 
    wxWindow* btn = FindWindow(ID_AUDIO_SETUP_BUTTON);
@@ -268,7 +265,7 @@ void AudioSetupToolBar::UpdatePrefs()
    // if the prefs host name doesn't match the one displayed, it changed
    // in another project's AudioSetupToolBar, so we need to repopulate everything.
    if (oldHost != hostName)
-      // updates mHost
+      // updates mHost and mOutput
       FillHostDevices();
 
    auto devName = AudioIORecordingDevice.Read();
@@ -294,14 +291,14 @@ void AudioSetupToolBar::UpdatePrefs()
                }
                else {
                   //use the first item (0th index) if we have no familiar devices
-                  mInput.Set(kInput);
+                  mInput.Set(0);
                   SetDevices(&inMaps[i], nullptr);
                }
                break;
             }
          }
       }
-   } 
+   }
 
    devName = AudioIOPlaybackDevice.Read();
    sourceName = AudioIOPlaybackSource.Read();
@@ -323,7 +320,7 @@ void AudioSetupToolBar::UpdatePrefs()
                }
                else {
                   //use the first item (0th index) if we have no familiar devices
-                  mOutput.Set(kOutput);
+                  mOutput.Set(0);
                   SetDevices(nullptr, &outMaps[i]);
                }
                break;
@@ -697,7 +694,7 @@ void AudioSetupToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSource
 }
 
 void AudioSetupToolBar::ChangeDeviceLabel(
-   int deviceId, Choice &choices, bool isInput, int baseId)
+   int deviceId, Choices &choices, bool isInput)
 {
    int newIndex = -1;
 
@@ -705,7 +702,7 @@ void AudioSetupToolBar::ChangeDeviceLabel(
    const std::vector<DeviceSourceMap>& maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
       : DeviceManager::Instance()->GetOutputDeviceMaps();
 
-   if (choices.Set(baseId + deviceId)) {
+   if (choices.Set(deviceId)) {
       // Update cache with the chosen device
       wxString newDevice = *choices.Get();
       for (size_t i = 0; i < maps.size(); ++i) {
@@ -738,17 +735,15 @@ void AudioSetupToolBar::OnChannels(int id)
    CommonMenuItemSteps(false);
 }
 
-void AudioSetupToolBar::OnInput(wxCommandEvent& event)
+void AudioSetupToolBar::OnInput(int id)
 {
-   int id = event.GetId();
-   ChangeDeviceLabel(id, mInput, true, kInput);
+   ChangeDeviceLabel(id, mInput, true);
    CommonMenuItemSteps(false);
 }
 
-void AudioSetupToolBar::OnOutput(wxCommandEvent& event)
+void AudioSetupToolBar::OnOutput(int id)
 {
-   int id = event.GetId();
-   ChangeDeviceLabel(id, mOutput, false, kOutput);
+   ChangeDeviceLabel(id, mOutput, false);
    CommonMenuItemSteps(false);
 }
 

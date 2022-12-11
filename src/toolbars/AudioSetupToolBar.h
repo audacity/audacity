@@ -25,8 +25,6 @@ class wxString;
 struct DeviceSourceMap;
 
 class AudioSetupToolBar final : public ToolBar {
-   static constexpr int kInput = 15200;
-   static constexpr int kOutput = 15600;
    static constexpr int kAudioSettings = 15800;
 
  public:
@@ -53,16 +51,15 @@ class AudioSetupToolBar final : public ToolBar {
  private:
    void OnRescannedDevices(DeviceChangeMessage);
    void OnHost(int id);
-   void OnInput(wxCommandEvent& event);
+   void OnInput(int id);
    void OnChannels(int id);
-   void OnOutput(wxCommandEvent& event);
+   void OnOutput(int id);
    void OnSettings(wxCommandEvent& event);
    void CommonMenuItemSteps(bool audioSettingsChosen);
 
    bool ChangeHost(int hostId);
-   class Choice;
-   void ChangeDeviceLabel(
-      int deviceId, Choice &choices, bool isInput, int baseId);
+   class Choices;
+   void ChangeDeviceLabel(int deviceId, Choices &choices, bool isInput);
    void RepopulateMenus();
    void FillHosts();
    void FillHostDevices();
@@ -195,8 +192,8 @@ class AudioSetupToolBar final : public ToolBar {
       int mIndex{ -1 };
    };
 
-   Choice mInput{ kInput };
-   Choice mOutput{ kOutput };
+   Choices mInput;
+   Choices mOutput;
    Choices mInputChannels;
    Choices mHost;
 
