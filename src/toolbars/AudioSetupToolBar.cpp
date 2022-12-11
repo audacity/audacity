@@ -233,16 +233,15 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
-   mInputChannels.AppendSubMenu(*this, menu, _("Recording &Channels"));
+   mInputChannels.AppendSubMenu(*this,
+      menu, &AudioSetupToolBar::OnChannels, _("Recording &Channels"));
    menu.AppendSeparator();
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
    menu.Bind(wxEVT_MENU_CLOSE, [this](auto&) { mAudioSetup->PopUp(); });
-   // Bind three ID ranges and one single ID
+   // Bind two ID ranges and one single ID
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnInput, this,
-      kInput, kInputChannels - 1);
-   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnChannels, this,
-      kInputChannels, kOutput - 1);
+      kInput, kOutput - 1);
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnOutput, this,
       kOutput, kAudioSettings - 1);
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnSettings, this, kAudioSettings);
@@ -283,6 +282,7 @@ void AudioSetupToolBar::UpdatePrefs()
    if (selectedInput && *selectedInput != desc) {
       if (auto item = mInput->FindItem(desc); item != wxNOT_FOUND) {
          mInput->FindChildItem(item)->Check();
+         // updates mInputChannels
          FillInputChannels();
       }
       else if (mInput->GetMenuItemCount()) {
@@ -353,11 +353,13 @@ void AudioSetupToolBar::UpdatePrefs()
       }
    }
 
+   // 0 based choice id is one less than the number of channels
    long oldChannels = 1 + mInputChannels.GetSmallIntegerId();
 
+   // Preferences store the actual number of channels
    auto newChannels = AudioIORecordChannels.ReadWithDefault(0);
    if (newChannels > 0 && oldChannels != newChannels)
-      mInputChannels.Set(kInputChannels + newChannels - 1);
+      mInputChannels.Set(newChannels - 1);
 
    selectedHost = mHost.Get();
    if (!hostName.empty() && selectedHost && *selectedHost != hostName)
@@ -589,7 +591,8 @@ void AudioSetupToolBar::FillInputChannels()
    }
    mInputChannels.Set(std::move(names));
    if (newChannels >= 1)
-      mInputChannels.Set(kInputChannels + newChannels - 1);
+      // Correct to 0-based index in choice
+      mInputChannels.Set(newChannels - 1);
 }
 
 void AudioSetupToolBar::AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title)
@@ -701,6 +704,7 @@ void AudioSetupToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSource
          AudioIORecordingSource.Reset();
       gPrefs->Flush();
 
+      // updates mInputChannels
       FillInputChannels();
    }
 
@@ -753,11 +757,11 @@ void AudioSetupToolBar::OnHost(int id)
    CommonMenuItemSteps(false);
 }
 
-void AudioSetupToolBar::OnChannels(wxCommandEvent& event)
+void AudioSetupToolBar::OnChannels(int id)
 {
-   int id = event.GetId();
-   if (mInputChannels.Set(id))
-      AudioIORecordChannels.Write(id - kInputChannels + 1);
+   mInputChannels.Set(id);
+   // Remember 1-based value in preferences
+   AudioIORecordChannels.Write(id + 1);
    CommonMenuItemSteps(false);
 }
 
