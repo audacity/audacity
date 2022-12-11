@@ -25,7 +25,6 @@ class wxString;
 struct DeviceSourceMap;
 
 class AudioSetupToolBar final : public ToolBar {
-   static constexpr int kHost = 15000;
    static constexpr int kInput = 15200;
    static constexpr int kInputChannels = 15400;
    static constexpr int kOutput = 15600;
@@ -54,7 +53,7 @@ class AudioSetupToolBar final : public ToolBar {
 
  private:
    void OnRescannedDevices(DeviceChangeMessage);
-   void OnHost(wxCommandEvent& event);
+   void OnHost(int id);
    void OnInput(wxCommandEvent& event);
    void OnChannels(wxCommandEvent& event);
    void OnOutput(wxCommandEvent& event);
@@ -198,7 +197,7 @@ class AudioSetupToolBar final : public ToolBar {
    std::unique_ptr<wxMenu> mInput;
    std::unique_ptr<wxMenu> mOutput;
    std::unique_ptr<wxMenu> mInputChannels;
-   Choice mHost{ kHost };
+   Choices mHost;
 
    Observer::Subscription mSubscription;
 

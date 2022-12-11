@@ -221,7 +221,7 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    wxMenu menu;
 
    //i18n-hint: Audio setup menu
-   mHost.AppendSubMenu(*this, menu, _("&Host"));
+   mHost.AppendSubMenu(*this, menu, &AudioSetupToolBar::OnHost, _("&Host"));
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
@@ -238,9 +238,7 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
    menu.Bind(wxEVT_MENU_CLOSE, [this](auto&) { mAudioSetup->PopUp(); });
-   // Bind four ID ranges and one single ID
-   menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnHost, this,
-      kHost, kInput - 1);
+   // Bind three ID ranges and one single ID
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnInput, this,
       kInput, kInputChannels - 1);
    menu.Bind(wxEVT_MENU, &AudioSetupToolBar::OnChannels, this,
@@ -271,6 +269,7 @@ void AudioSetupToolBar::UpdatePrefs()
    // if the prefs host name doesn't match the one displayed, it changed
    // in another project's AudioSetupToolBar, so we need to repopulate everything.
    if (oldHost != hostName)
+      // updates mHost
       FillHostDevices();
 
    auto devName = AudioIORecordingDevice.Read();
@@ -482,6 +481,8 @@ void AudioSetupToolBar::FillHostDevices()
    if (mHost.Find(host) < 0)
       host = wxT("");
  
+   // Try to find a hostIndex, among either inputs or outputs, assumed to be
+   // unique among the union of the set of input and output devices
    for (auto & device : outMaps) {
       if (device.hostString == host) {
          foundHostIndex = device.hostIndex;
@@ -691,7 +692,7 @@ bool AudioSetupToolBar::ChangeHost(int hostId)
    AudioIOHost.Write(newHost);
    gPrefs->Flush();
 
-   // populate the devices
+   // populate the devices and reassign mHost
    FillHostDevices();
 
    return true;
@@ -754,9 +755,8 @@ void AudioSetupToolBar::ChangeDevice(int deviceId, bool isInput)
               isInput ? nullptr : &maps[newIndex]);
 }
 
-void AudioSetupToolBar::OnHost(wxCommandEvent& event)
+void AudioSetupToolBar::OnHost(int id)
 {
-   int id = event.GetId();
    ChangeHost(id);
    CommonMenuItemSteps(false);
 }
