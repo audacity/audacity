@@ -562,7 +562,6 @@ void AudioSetupToolBar::FillHostDevices()
          if (host.empty()) {
             host = device.hostString;
             AudioIOHost.Write(host);
-            gPrefs->Flush();
 
             const auto id = mHost->FindItem(host);
             if (id != wxNOT_FOUND) {
@@ -571,6 +570,8 @@ void AudioSetupToolBar::FillHostDevices()
          }
       }
    }
+
+   gPrefs->Flush();
 
    // The setting of the Device is left up to menu handlers
 }
