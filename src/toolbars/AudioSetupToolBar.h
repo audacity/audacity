@@ -68,6 +68,15 @@ class AudioSetupToolBar final : public ToolBar {
 
    void AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title);
 
+   using Callback = void (AudioSetupToolBar::*)(int id);
+   // Append submenu with one radio item group
+   // Bind menu items to lambdas that invoke callback,
+   // with successive ids from 0
+   // Check the item with given index, or disable the submenu when that is < 0
+   static void AppendSubMenu(AudioSetupToolBar &toolbar, wxMenu& menu,
+      const wxArrayString &labels, int checkedItem,
+      Callback callback, const wxString& title);
+
    std::optional<wxString> GetSelectedRadioItemLabel(const wxMenu& menu) const;
 
    enum {

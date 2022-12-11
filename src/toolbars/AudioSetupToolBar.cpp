@@ -640,6 +640,27 @@ void AudioSetupToolBar::AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu
    }
 }
 
+void AudioSetupToolBar::AppendSubMenu( AudioSetupToolBar &toolbar,
+   wxMenu& menu, const wxArrayString &labels, int checkedItem,
+   Callback callback, const wxString& title)
+{
+   auto subMenu = std::make_unique<wxMenu>();
+   int ii = 0;
+   for (const auto &label : labels) {
+      // Assign fresh ID with wxID_ANY
+      auto subMenuItem = subMenu->AppendRadioItem(wxID_ANY, label);
+      if (ii == checkedItem)
+         subMenuItem->Check();
+      subMenu->Bind(wxEVT_MENU,
+         [&toolbar, callback, ii](wxCommandEvent &){ (toolbar.*callback)(ii); },
+         subMenuItem->GetId());
+      ++ii;
+   }
+   auto menuItem = menu.AppendSubMenu(subMenu.release(), title);
+   if (checkedItem < 0)
+      menuItem->Enable(false);
+}
+
 std::optional<wxString> AudioSetupToolBar::GetSelectedRadioItemLabel(const wxMenu& menu) const
 {
    const auto& items = menu.GetMenuItems();
