@@ -268,3 +268,37 @@ static void reverb_delete(reverb_t * p)
    fifo_delete(&p->input_fifo);
 }
 
+static void reverb_clear(reverb_t* p)
+{
+   for (size_t c = 0; c < 2; c++)
+   {
+      auto& chn = p->chan[c];
+
+      chn.one_pole[0].i1 = 0.0;
+      chn.one_pole[0].o1 = 0.0;
+
+      chn.one_pole[1].i1 = 0.0;
+      chn.one_pole[1].o1 = 0.0;
+
+      for (size_t combIndex = 0; combIndex < array_length(comb_lengths); combIndex++)
+      {
+         auto& comb = chn.comb[combIndex];
+
+         memset(comb.buffer, 0, comb.size * sizeof(float));
+
+         comb.store = 0.0f;
+      }
+
+      for (size_t allpassIndex = 0; allpassIndex < array_length(allpass_lengths); allpassIndex++)
+      {
+         auto& allpass = chn.allpass[allpassIndex];
+
+         memset(allpass.buffer, 0, allpass.size * sizeof(float));
+
+         allpass.store = 0.0f;
+      }
+   } // loop on channels
+      
+   fifo_clear( &(p->input_fifo) );
+}
+

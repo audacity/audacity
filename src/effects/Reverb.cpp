@@ -238,6 +238,21 @@ struct EffectReverb::Instance
       return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
    }
 
+
+   bool RealtimeSuspend() override
+   {
+      for (auto& slave : mSlaves)
+      {
+         for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
+         {
+            reverb_clear( &(slave.mState.mP[i].reverb) );
+         }
+      }
+
+      return true;
+   }
+
+
    unsigned GetAudioOutCount() const override
    {
       return mChannels;
