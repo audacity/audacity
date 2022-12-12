@@ -30,9 +30,11 @@ MSWParser::MSWParser()
       narrowArgv.emplace_back(
          std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(
             begin, end));
-
-      argv.push_back(narrowArgv.back().data());
    }
+
+   for (const auto& arg : narrowArgv)
+      argv.push_back(arg.c_str());
+
    argv.push_back(nullptr);
 }
 
