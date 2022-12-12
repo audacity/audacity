@@ -236,9 +236,10 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
 
         TrackArt::DrawBackgroundWithSelection(context, rect, track.get(), artist->blankSelectedBrush, artist->blankBrush);
 
+        mLastVisibleClips.clear();
+       
         const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
         const auto& zoomInfo = *artist->pZoomInfo;
-
         {
             wxDCClipper dcClipper(context.dc, rect);
 
@@ -269,8 +270,9 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 }
                 else
                 {
-                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
-                    mClipNameVisible = !titleRect.IsEmpty();
+                    const auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
+                    if(!titleRect.IsEmpty())
+                        mLastVisibleClips.push_back(clip.get());
                 }
             }
         }
@@ -278,43 +280,44 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
     }
 }
 
-bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
+bool WaveTrackAffordanceControls::IsClipNameVisible(const WaveClip &clip) const noexcept
 {
-    if (auto lock = mFocusClip.lock())
+    return std::find(mLastVisibleClips.begin(),
+                     mLastVisibleClips.end(),
+                     &clip) != mLastVisibleClips.end();
+}
+
+bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject& project, const std::shared_ptr<WaveClip>& clip)
+{
+    bool useDialog{ false };
+    gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
+
+    if (useDialog)
     {
-        auto clip = lock.get();
-
-        bool useDialog{ false };
-        gPrefs->Read(wxT("/GUI/DialogForNameNewLabel"), &useDialog, false);
-
-        if (useDialog)
+        SetWaveClipNameCommand Command;
+        auto oldName = clip->GetName();
+        Command.mName = oldName;
+        auto result = Command.PromptUser(&GetProjectFrame(project));
+        if (result && Command.mName != oldName)
         {
-            SetWaveClipNameCommand Command;
-            auto oldName = clip->GetName();
-            Command.mName = oldName;
-            auto result = Command.PromptUser(&GetProjectFrame(*project));
-            if (result && Command.mName != oldName)
-            {
-                clip->SetName(Command.mName);
-                ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
-                    XO("Clip Name Edit"));
-            }
+            clip->SetName(Command.mName);
+            ProjectHistory::Get(project).PushState(XO("Modified Clip Name"),
+                XO("Clip Name Edit"));
         }
-        else
-        {
-            if (mTextEditHelper)
-                mTextEditHelper->Finish(project);
-
-            if(!mClipNameVisible)
-                //Clip name isn't visible, there is no point in showing editor then
-                return false;
-
-            mEditedClip = lock;
-            mTextEditHelper = MakeTextEditHelper(clip->GetName());
-        }
-        return true;
     }
-    return false;
+    else if(clip != mEditedClip.lock())
+    {
+        if(!IsClipNameVisible(*clip))
+           return false;
+       
+        if (mTextEditHelper)
+            mTextEditHelper->Finish(&project);
+
+        mEditedClip = clip;
+        mTextEditHelper = MakeTextEditHelper(clip->GetName());
+    }
+   
+    return true;
 }
 
 std::weak_ptr<WaveClip> WaveTrackAffordanceControls::GetSelectedClip() const
@@ -336,7 +339,7 @@ auto FindAffordance(WaveTrack &track)
       pAffordance );
 }
 
-std::pair<WaveTrack *, WaveClip *>
+std::pair<WaveTrack *, std::shared_ptr<WaveClip>>
 SelectedClipOfFocusedTrack(AudacityProject &project)
 {
    // Note that TrackFocus may change its state as a side effect, defining
@@ -350,7 +353,7 @@ SelectedClipOfFocusedTrack(AudacityProject &project)
             auto begin = clips.begin(), end = clips.end(),
                iter = WaveTrackUtils::SelectedClip(viewInfo, begin, end);
             if (iter != end)
-               return { pChannel, iter->get() };
+               return { pChannel, *iter };
          }
       }
    }
@@ -465,26 +468,6 @@ unsigned WaveTrackAffordanceControls::ExitTextEditing()
     return RefreshNone;
 }
 
-
-bool WaveTrackAffordanceControls::StartEditNameOfMatchingClip(
-    AudacityProject &project, std::function<bool(WaveClip&)> test )
-{
-    //Attempts to invoke name editing if there is a selected clip
-    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
-    if (!waveTrack)
-        return false;
-    auto clips = waveTrack->GetClips();
-
-    auto it = std::find_if(clips.begin(), clips.end(),
-      [&](auto pClip){ return pClip && test && test(*pClip); });
-    if (it != clips.end())
-    {
-        mFocusClip = *it;
-        return StartEditClipName(&project);
-    }
-    return false;
-}
-
 bool WaveTrackAffordanceControls::OnTextCopy(AudacityProject& project)
 {
    if (mTextEditHelper)
@@ -543,7 +526,7 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
         {
             auto affordanceRect = ClipParameters::GetClipRect(*lock.get(), viewInfo, event.rect);
             if (affordanceRect.Contains(event.event.GetPosition()) &&
-                StartEditClipName(project))
+                StartEditClipName(*project, lock))
             {
                 event.event.Skip(false);
                 return RefreshCode::RefreshCell;
@@ -551,6 +534,14 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
         }
     }
     return RefreshCode::RefreshNone;
+}
+
+void WaveTrackAffordanceControls::StartEditSelectedClipName(AudacityProject& project)
+{
+   const auto [track, clip] = SelectedClipOfFocusedTrack(project);
+   if(track == nullptr || track != FindTrack().get() || clip == nullptr)
+      return;
+   StartEditClipName(project, clip);
 }
 
 std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(const wxString& text)
@@ -570,13 +561,14 @@ namespace {
 void OnEditClipName(const CommandContext &context)
 {
    auto &project = context.project;
-   const auto [pTrack, pClip] = SelectedClipOfFocusedTrack(project);
-   if (pTrack && pClip) {
-      if (auto pAffordance = FindAffordance(*pTrack)) {
-         pAffordance->StartEditNameOfMatchingClip(project,
-            [pClip = pClip](auto &clip){ return &clip == pClip; });
+   
+   if(auto pWaveTrack = dynamic_cast<WaveTrack *>(TrackFocus::Get(project).Get()))
+   {
+      if(auto pAffordance = FindAffordance(*pWaveTrack))
+      {
+         pAffordance->StartEditSelectedClipName(project);
          // Refresh so the cursor appears
-         TrackPanel::Get(project).RefreshTrack(pTrack);
+         TrackPanel::Get(project).RefreshTrack(pWaveTrack);
       }
    }
 }
