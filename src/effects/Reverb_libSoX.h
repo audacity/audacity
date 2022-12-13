@@ -163,6 +163,47 @@ static void set_eq(filter_array_t* p, double rate,
    }
 }
 
+
+static void filter_array_allocate(filter_array_t* p, double rate,
+   double scale, double offset)
+{
+   size_t i;
+   double r = rate * (1 / 44100.); /* Compensate for actual sample-rate */
+
+   for (i = 0; i < array_length(comb_lengths); ++i, offset = -offset)
+   {
+      filter_t* pcomb = &p->comb[i];
+      pcomb->size = (size_t)(scale * r * (comb_lengths[i] + stereo_adjust * offset) + .5);
+      pcomb->ptr = lsx_zalloc(pcomb->buffer, pcomb->size);
+   }
+   for (i = 0; i < array_length(allpass_lengths); ++i, offset = -offset)
+   {
+      filter_t* pallpass = &p->allpass[i];
+      pallpass->size = (size_t)(r * (allpass_lengths[i] + stereo_adjust * offset) + .5);
+      pallpass->ptr = lsx_zalloc(pallpass->buffer, pallpass->size);
+   }
+}
+
+static void filter_array_init(filter_array_t* p, double rate,
+   double scale, double offset)
+{
+   size_t i;
+   double r = rate * (1 / 44100.); /* Compensate for actual sample-rate */
+
+   for (i = 0; i < array_length(comb_lengths); ++i, offset = -offset)
+   {
+      filter_t* pcomb = &p->comb[i];
+      pcomb->size = (size_t)(scale * r * (comb_lengths[i] + stereo_adjust * offset) + .5);
+   }
+   for (i = 0; i < array_length(allpass_lengths); ++i, offset = -offset)
+   {
+      filter_t* pallpass = &p->allpass[i];
+      pallpass->size = (size_t)(r * (allpass_lengths[i] + stereo_adjust * offset) + .5);
+   }
+}
+
+
+
 static void filter_array_create(filter_array_t * p, double rate,
       double scale, double offset)
 {
@@ -224,7 +265,7 @@ typedef struct {
 } reverb_t;
 
 
-static void reverb_allocate(reverb_t* p, size_t buffer_size, float** out)
+static void reverb_allocate(reverb_t* p, double sample_rate_Hz, size_t buffer_size, float** out)
 {
    memset(p, 0, sizeof(*p));
 
@@ -234,6 +275,10 @@ static void reverb_allocate(reverb_t* p, size_t buffer_size, float** out)
    // Outputs
    out[0] = lsx_zalloc(p->out[0], buffer_size);
    out[1] = lsx_zalloc(p->out[1], buffer_size);
+
+   // Allpass & Comb filters
+   filter_array_allocate(p->chan + 0, sample_rate_Hz, 1.0, 0.0);
+   filter_array_allocate(p->chan + 1, sample_rate_Hz, 1.0, 1.0);
 }
 
 static void reverb_init
@@ -241,9 +286,11 @@ static void reverb_init
    reverb_t* p,
    double sample_rate_Hz,
    double wet_gain_dB,
+   double room_scale,     /* % */
    double reverberance,
    double hf_damping,
    double pre_delay_ms,
+   double stereo_depth,
    double tone_low,       /* % */
    double tone_high       /* % */
 )
@@ -259,12 +306,19 @@ static void reverb_init
    p->hf_damping = hf_damping / 100 * .3 + .2;
    p->gain = dB_to_linear(wet_gain_dB) * .015;
 
-   // Filters
+   // LP-HP Filters
    double fc_highpass = midi_to_freq(72 - tone_low / 100 * 48);
    double fc_lowpass = midi_to_freq(72 + tone_high / 100 * 48);
    set_eq(&p->chan[0], sample_rate_Hz, fc_highpass, fc_lowpass);
    set_eq(&p->chan[1], sample_rate_Hz, fc_highpass, fc_lowpass);
 
+   // Allpass & Comb filters
+   double scale = room_scale / 100 * .9 + .1;
+   double depth = stereo_depth / 100;
+   for (size_t i = 0; i <= ceil(depth); ++i)
+   {
+      filter_array_init(p->chan + i, sample_rate_Hz, scale, i * depth);
+   }
 }
 
 static void reverb_create(reverb_t * p, double sample_rate_Hz,
@@ -279,18 +333,9 @@ static void reverb_create(reverb_t * p, double sample_rate_Hz,
       size_t buffer_size,
       float * * out)
 {
-   reverb_allocate(p, buffer_size, out);
+   reverb_allocate(p, sample_rate_Hz, buffer_size, out);
 
-   reverb_init(p, sample_rate_Hz, wet_gain_dB, reverberance, hf_damping, pre_delay_ms, tone_low, tone_high);
-
-   double scale = room_scale / 100 * .9 + .1;
-   double depth = stereo_depth / 100;
-      
-   for (size_t i = 0; i <= ceil(depth); ++i)
-   {
-      filter_array_create(p->chan + i, sample_rate_Hz, scale, i * depth);
-   }
-
+   reverb_init(p, sample_rate_Hz, wet_gain_dB, room_scale, reverberance, hf_damping, pre_delay_ms, stereo_depth, tone_low, tone_high);
 }
 
 static void reverb_process(reverb_t * p, size_t length)
