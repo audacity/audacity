@@ -148,8 +148,23 @@ typedef struct {
    one_pole_t one_pole[2];
 } filter_array_t;
 
+static void one_pole_init(filter_array_t* p, double rate,
+    double fc_highpass, double fc_lowpass)
+{
+   { /* EQ: highpass */
+      one_pole_t* q = &p->one_pole[0];
+      q->a1 = -exp(-2 * M_PI * fc_highpass / rate);
+      q->b0 = (1 - q->a1) / 2, q->b1 = -q->b0;
+   }
+   { /* EQ: lowpass */
+      one_pole_t* q = &p->one_pole[1];
+      q->a1 = -exp(-2 * M_PI * fc_lowpass / rate);
+      q->b0 = 1 + q->a1, q->b1 = 0;
+   }
+}
+
 static void filter_array_create(filter_array_t * p, double rate,
-      double scale, double offset, double fc_highpass, double fc_lowpass)
+      double scale, double offset)
 {
    size_t i;
    double r = rate * (1 / 44100.); /* Compensate for actual sample-rate */
@@ -165,16 +180,6 @@ static void filter_array_create(filter_array_t * p, double rate,
       filter_t * pallpass = &p->allpass[i];
       pallpass->size = (size_t)(r * (allpass_lengths[i] + stereo_adjust * offset) + .5);
       pallpass->ptr = lsx_zalloc(pallpass->buffer, pallpass->size);
-   }
-   { /* EQ: highpass */
-      one_pole_t * q = &p->one_pole[0];
-      q->a1 = -exp(-2 * M_PI * fc_highpass / rate);
-      q->b0 = (1 - q->a1)/2, q->b1 = -q->b0;
-   }
-   { /* EQ: lowpass */
-      one_pole_t * q = &p->one_pole[1];
-      q->a1 = -exp(-2 * M_PI * fc_lowpass / rate);
-      q->b0 = 1 + q->a1, q->b1 = 0;
    }
 }
 
@@ -238,7 +243,9 @@ static void reverb_init
    double wet_gain_dB,
    double reverberance,
    double hf_damping,
-   double pre_delay_ms
+   double pre_delay_ms,
+   double tone_low,       /* % */
+   double tone_high       /* % */
 )
 {
    // Input queue 
@@ -251,6 +258,12 @@ static void reverb_init
    p->feedback = 1 - exp((reverberance - b) / (a * b));
    p->hf_damping = hf_damping / 100 * .3 + .2;
    p->gain = dB_to_linear(wet_gain_dB) * .015;
+
+   // Filters
+   double fc_highpass = midi_to_freq(72 - tone_low / 100 * 48);
+   double fc_lowpass = midi_to_freq(72 + tone_high / 100 * 48);
+   one_pole_init(&p->chan[0], sample_rate_Hz, fc_highpass, fc_lowpass);
+   one_pole_init(&p->chan[1], sample_rate_Hz, fc_highpass, fc_lowpass);
 
 }
 
@@ -268,17 +281,16 @@ static void reverb_create(reverb_t * p, double sample_rate_Hz,
 {
    reverb_allocate(p, buffer_size, out);
 
-   reverb_init(p, sample_rate_Hz, wet_gain_dB, reverberance, hf_damping, pre_delay_ms);
+   reverb_init(p, sample_rate_Hz, wet_gain_dB, reverberance, hf_damping, pre_delay_ms, tone_low, tone_high);
 
    double scale = room_scale / 100 * .9 + .1;
    double depth = stereo_depth / 100;
-   double fc_highpass = midi_to_freq(72 - tone_low / 100 * 48);
-   double fc_lowpass  = midi_to_freq(72 + tone_high/ 100 * 48);
       
    for (size_t i = 0; i <= ceil(depth); ++i)
    {
-      filter_array_create(p->chan + i, sample_rate_Hz, scale, i * depth, fc_highpass, fc_lowpass);
-   }   
+      filter_array_create(p->chan + i, sample_rate_Hz, scale, i * depth);
+   }
+
 }
 
 static void reverb_process(reverb_t * p, size_t length)
