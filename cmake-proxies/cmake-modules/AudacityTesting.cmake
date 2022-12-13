@@ -2,21 +2,6 @@ if( ${_OPT}has_tests )
 
    set( TESTS_DIR "${CMAKE_BINARY_DIR}/tests" )
 
-   if( CMAKE_CONFIGURATION_TYPES )
-      set( TESTS_DEST_DIR "${CMAKE_BINARY_DIR}/tests/${CMAKE_CFG_INTDIR}" )
-   else()
-      set( TESTS_DEST_DIR "${CMAKE_BINARY_DIR}/tests/${CMAKE_BUILD_TYPE}" )
-   endif()
-
-   # Install Catch2 framework
-
-   add_conan_lib(
-      Catch2
-      catch2/2.13.8
-      REQUIRED
-      ALWAYS_ALLOW_CONAN_FALLBACK
-   )
-
    # Setup default CTest arguments when running from IDE
 
    set(CMAKE_CTEST_ARGUMENTS "--output-on-failure;--verbose;${CMAKE_CTEST_ARGUMENTS}")
@@ -59,10 +44,10 @@ if( ${_OPT}has_tests )
          ${test_executable_name}
          PROPERTIES
             FOLDER "tests" # for IDE organization
-            RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR}
-            BUILD_RPATH ${_SHARED_PROXY_PATH}
+            RUNTIME_OUTPUT_DIRECTORY "${TESTS_DIR}"
+            BUILD_RPATH "${_DESTDIR}/${_PKGLIB}"
             # Allow running tests from Visual Studio by setting up the proper PATH
-            VS_DEBUGGER_ENVIRONMENT "PATH=${_SHARED_PROXY_PATH};%PATH%"
+            VS_DEBUGGER_ENVIRONMENT "PATH=${_DESTDIR}/${_PKGLIB};%PATH%"
       )
 
       # Register unit test with CTest
@@ -82,7 +67,6 @@ if( ${_OPT}has_tests )
 
       if( WIN32 )
          # On Windows, set the PATH so it points to the DLL location
-         # This is required to avoid invoking CopyLibs.
 
          # CTest expects that ENVIRONMENT is a CMake list.
          # Escape ';' so PATH is handled correctly
@@ -91,7 +75,7 @@ if( ${_OPT}has_tests )
          set_tests_properties(
             ${ADD_UNIT_TEST_NAME}
             PROPERTIES
-               ENVIRONMENT "PATH=$<SHELL_PATH:${_SHARED_PROXY_BASE_PATH}/$<CONFIG>>\\;${escaped_path}"
+               ENVIRONMENT "PATH=$<SHELL_PATH:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>>\\;${escaped_path}"
          )
       elseif( APPLE )
          # We target an old version of macOS, disable std::uncaught_exceptions
@@ -100,7 +84,7 @@ if( ${_OPT}has_tests )
          set_tests_properties(
             ${ADD_UNIT_TEST_NAME}
             PROPERTIES
-               ENVIRONMENT "DYLD_FALLBACK_LIBRARY_PATH=$<SHELL_PATH:${_SHARED_PROXY_BASE_PATH}/$<CONFIG>>"
+               ENVIRONMENT "DYLD_FALLBACK_LIBRARY_PATH=$<SHELL_PATH:${CMAKE_BINARY_DIR}/$<CONFIG>/${_APPDIR}/Frameworks>"
          )
       endif()
    endfunction()

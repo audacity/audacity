@@ -28,7 +28,7 @@ set ( LIBRARIES
    lib-files-interface # FileNames
 
    PRIVATE
-      RapidJSON::RapidJSON # Protocol is JSON based
+      rapidjson::rapidjson # Protocol is JSON based
       wxwidgets::base # Required to retrieve the OS information
 )
 

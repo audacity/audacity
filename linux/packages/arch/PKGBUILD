@@ -65,37 +65,12 @@ md5sums=(
 )
 
 build() {
-    python3 -m venv .venv
-    source .venv/bin/activate
-
-    depsDir=$(readlink -f ./.offline)
-
-    pip3 install --no-index --find-links "$depsDir/pip" setuptools wheel
-    pip3 install --no-index --find-links "$depsDir/pip" Cython markupsafe
-    pip3 install --no-index --find-links "$depsDir/pip" conan
-
-    export CONAN_USER_HOME="$depsDir/conan"
-
-    export VST3_SDK_DIR="/usr/include/vst3sdk"
-
-    conan config home
-    conan config init
-    conan config set storage.download_cache="$CONAN_USER_HOME/download_cache"
-
     cmake_args=(
         -D CMAKE_BUILD_TYPE=Release
         -D CMAKE_INSTALL_PREFIX=/usr
-
-        -D audacity_conan_allow_prebuilt_binaries=no
-        -D audacity_conan_force_build_dependencies=yes
-
-        -D audacity_lib_preference=system # Change the libs default to 'system'
-        -D audacity_obey_system_dependencies=On # And force it!
-
+        -D audacity_conan_enabled=Off
         -D audacity_use_pch=no
-
         -D audacity_use_sbsms=local # sbsms is only available in AUR
-
         -D audacity_has_vst3=no
         #-D audacity_use_vst3sdk=system
     )

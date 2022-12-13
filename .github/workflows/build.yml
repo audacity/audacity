@@ -285,7 +285,7 @@ jobs:
         build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: arm64
-        image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
+        image_compiler: "${{ github.workspace }}/.build.x64/RelWithDebInfo/Audacity.app/Contents/image-compiler/image-compiler"
     - name: Build arm64
       uses: audacity/audacity-actions/build@v1
     - name: 'Tar files'

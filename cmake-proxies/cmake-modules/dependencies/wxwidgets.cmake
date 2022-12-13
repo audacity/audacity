@@ -17,27 +17,35 @@ function(make_wxBase old)
    # object and event loops are in wxBase, but we want to exclude their use too
    target_compile_definitions( wxBase INTERFACE
       "wxUSE_GUI=0"
- 
+
       # Don't use app.h
       _WX_APP_H_BASE_
-   
+
       # Don't use evtloop.h
       _WX_EVTLOOP_H_
-   
+
       # Don't use image.h
       _WX_IMAGE_H
-   
+
       # Don't use colour.h
       _WX_COLOUR_H_BASE_
-   
+
       # Don't use brush.h
       _WX_BRUSH_H_BASE_
-   
+
       # Don't use pen.h
       _WX_PEN_H_BASE_
    )
+
+   find_package( Threads QUIET )
+   if( Threads_FOUND )
+      target_link_libraries( wxBase INTERFACE Threads::Threads )
+   endif()
+
+   target_link_libraries( wxBase INTERFACE ${CMAKE_DL_LIBS} )
+
 endfunction()
-   
+
 if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
     # DV: find_package will be scoped, as FindwxWidgets.cmake is rather outdated.
     # Still - let's perform the sanity check first.
@@ -48,7 +56,7 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
     if( NOT TARGET wxwidgets::wxwidgets )
         add_library( wxwidgets::wxwidgets INTERFACE IMPORTED GLOBAL)
     endif()
-    
+
     if( NOT TARGET wxwidgets::base )
         add_library( wxwidgets::base ALIAS wxwidgets::wxwidgets )
     endif()
@@ -81,20 +89,11 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
         add_library( wxwidgets::adv ALIAS wxwidgets::wxwidgets )
     endif()
 
-    if( NOT TARGET wxBase )
-        # add_library( wxBase ALIAS wxwidgets::wxwidgets )
-        make_wxBase(wxwidgets::wxwidgets)
-    endif()
-
-    if( NOT TARGET wxwidgets::wxwidgets )
-        add_library( wxwidgets::wxwidgets ALIAS wxwidgets::wxwidgets )
-    endif()
-
     if( wxWidgets_INCLUDE_DIRS_NO_SYSTEM )
         target_include_directories( wxwidgets::wxwidgets INTERFACE ${wxWidgets_INCLUDE_DIRS_NO_SYSTEM} )
     else()
         target_include_directories( wxwidgets::wxwidgets INTERFACE ${wxWidgets_INCLUDE_DIRS} )
-    endif() 
+    endif()
 
     target_compile_definitions( wxwidgets::wxwidgets INTERFACE
         ${wxWidgets_DEFINITIONS_GENERAL}
@@ -133,9 +132,14 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
         set( gtk gtk+-4.0 )
         set( glib glib-2.0 )
     endif()
+
+
+    if( NOT TARGET wxBase )
+        # add_library( wxBase ALIAS wxwidgets::wxwidgets )
+        make_wxBase(wxwidgets::wxwidgets)
+    endif()
 else()
     set_target_properties(wxwidgets::base PROPERTIES IMPORTED_GLOBAL On)
-    # add_library( wxBase ALIAS wxwidgets::base )
     make_wxbase(wxwidgets::base)
 endif()
 
@@ -145,6 +149,8 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
         set( gtk gtk+-2.0 )
         set( glib glib-2.0 )
     endif()
+
+    find_package(PkgConfig)
 
     pkg_check_modules( GTK REQUIRED IMPORTED_TARGET GLOBAL ${gtk} )
     pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )

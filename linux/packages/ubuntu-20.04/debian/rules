@@ -5,7 +5,7 @@ include /usr/share/dpkg/architecture.mk
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 export CONAN_USER_HOME = $(shell pwd)/.offline/conan
-export PATH := $(shell pwd)/.venv/bin:$(PATH)
+export PATH := $(shell pwd)/squashfs-root/usr/bin:$(PATH)
 
 %:
 	dh $@
@@ -14,14 +14,16 @@ override_dh_auto_configure:
 	dh_auto_configure -- \
 	-DCMAKE_BUILD_TYPE=Release \
 	-Daudacity_conan_allow_prebuilt_binaries=no \
-   -D audacity_conan_force_build_dependencies=yes \
+	-Daudacity_conan_force_build_dependencies=yes \
+	-Daudacity_conan_download_cache=${CONAN_USER_HOME}/download_cache \
 	-Daudacity_lib_preference=system \
 	-Daudacity_obey_system_dependencies=On \
 	-Daudacity_use_pch=no \
 	-Daudacity_use_wxwidgets=local \
 	-Daudacity_use_vamp=local \
 	-Daudacity_use_sbsms=local \
-   -Daudacity_use_vst3sdk=local
+	-Daudacity_use_vst3sdk=local \
+	-Daudacity_has_tests=no
 
 # tests fails with system portaudio
 override_dh_auto_test:
@@ -34,15 +36,10 @@ execute_after_dh_auto_install:
 	rm debian/audacity/usr/share/doc/audacity/LICENSE.txt
 
 execute_before_dh_auto_configure:
-	python3 -m venv .venv
-
-	.venv/bin/pip3 install --no-index --find-links .offline/pip setuptools wheel
-	.venv/bin/pip3 install --no-index --find-links .offline/pip Cython markupsafe
-	.venv/bin/pip3 install --no-index --find-links .offline/pip conan
-
 	mkdir -p ${CONAN_USER_HOME}
+
+	$(shell pwd)/.offline/bin/conan --appimage-extract
 
 	conan config home
 	conan config init
-	conan config set storage.download_cache="${CONAN_USER_HOME}/download_cache"
 	conan profile update settings.compiler.libcxx=libstdc++11 default
