@@ -784,7 +784,7 @@ bool LadspaEffect::IsDefault() const
 auto LadspaEffect::RealtimeSupport() const -> RealtimeSince
 {
    return GetType() == EffectTypeProcess
-      ? RealtimeSince::Since_3_2
+      ? RealtimeSince::After_3_1
       : RealtimeSince::Never;
 }
 

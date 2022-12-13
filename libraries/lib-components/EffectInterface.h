@@ -268,7 +268,10 @@ public:
    //! In which versions of Audacity was an effect realtime capable?
    enum class RealtimeSince : unsigned {
       Never,
-      Since_3_2,
+      // For built-in effects that became realtime in 3.2.x or a later version
+      // but were non-realtime in an earlier version; must also increase
+      // REGVERCUR in any release with such a change
+      After_3_1,
       Always,
    };
 

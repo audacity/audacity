@@ -198,9 +198,7 @@ EffectType EffectBassTreble::GetType() const
 
 auto EffectBassTreble::RealtimeSupport() const -> RealtimeSince
 {
-   // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-   //return RealtimeSince::Always;
+   return RealtimeSince::After_3_1;
 }
 
 unsigned EffectBassTreble::Instance::GetAudioInCount() const

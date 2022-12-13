@@ -200,7 +200,7 @@ void PluginDescriptor::SetRealtimeSupport(
    mEffectRealtime = realtime;
 }
 
-static constexpr auto Since_3_2_string = "00";
+static constexpr auto After_3_1_string = "00";
 
 wxString PluginDescriptor::SerializeRealtimeSupport() const
 {
@@ -211,9 +211,9 @@ wxString PluginDescriptor::SerializeRealtimeSupport() const
    default:
       // A value that earlier Audacity interprets as false
       return "0";
-   case EffectDefinitionInterface::RealtimeSince::Since_3_2:
+   case EffectDefinitionInterface::RealtimeSince::After_3_1:
       // A different value that earlier Audacity interprets as false
-      return Since_3_2_string;
+      return After_3_1_string;
    case EffectDefinitionInterface::RealtimeSince::Always:
       // A value that earlier Audacity interprets as true
       return "1";
@@ -224,8 +224,8 @@ void PluginDescriptor::DeserializeRealtimeSupport(const wxString &value)
 {
    // Interpret the values stored by SerializeRealtimeSupport, or by previous
    // versions of Audacity
-   if (value == Since_3_2_string)
-      mEffectRealtime = EffectDefinitionInterface::RealtimeSince::Since_3_2;
+   if (value == After_3_1_string)
+      mEffectRealtime = EffectDefinitionInterface::RealtimeSince::After_3_1;
    else {
       // This leaves some open-endedness for future versions of Audacity to
       // define other string values they interpret one way, but we interpret
