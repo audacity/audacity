@@ -218,6 +218,42 @@ typedef struct {
    float * out[2];
 } reverb_t;
 
+
+static void reverb_allocate(reverb_t* p, size_t buffer_size, float** out)
+{
+   memset(p, 0, sizeof(*p));
+
+   // Input queue
+   fifo_create(&p->input_fifo, sizeof(float));
+
+   // Outputs
+   out[0] = lsx_zalloc(p->out[0], buffer_size);
+   out[1] = lsx_zalloc(p->out[1], buffer_size);
+}
+
+static void reverb_init
+(
+   reverb_t* p,
+   double sample_rate_Hz,
+   double wet_gain_dB,
+   double reverberance,
+   double hf_damping,
+   double pre_delay_ms
+)
+{
+   // Input queue 
+   size_t delay = pre_delay_ms / 1000 * sample_rate_Hz + .5;
+   memset(fifo_write(&p->input_fifo, delay, 0), 0, delay * sizeof(float));
+
+   // Feedback, Damping, Gain
+   double a = -1 / log(1 - /**/.3 /**/);           /* Set minimum feedback */
+   double b = 100 / (log(1 - /**/.98/**/) * a + 1);  /* Set maximum feedback */
+   p->feedback = 1 - exp((reverberance - b) / (a * b));
+   p->hf_damping = hf_damping / 100 * .3 + .2;
+   p->gain = dB_to_linear(wet_gain_dB) * .015;
+
+}
+
 static void reverb_create(reverb_t * p, double sample_rate_Hz,
       double wet_gain_dB,
       double room_scale,     /* % */
@@ -230,24 +266,19 @@ static void reverb_create(reverb_t * p, double sample_rate_Hz,
       size_t buffer_size,
       float * * out)
 {
-   size_t i, delay = pre_delay_ms / 1000 * sample_rate_Hz + .5;
+   reverb_allocate(p, buffer_size, out);
+
+   reverb_init(p, sample_rate_Hz, wet_gain_dB, reverberance, hf_damping, pre_delay_ms);
+
    double scale = room_scale / 100 * .9 + .1;
    double depth = stereo_depth / 100;
-   double a =  -1 /  log(1 - /**/.3 /**/);           /* Set minimum feedback */
-   double b = 100 / (log(1 - /**/.98/**/) * a + 1);  /* Set maximum feedback */
    double fc_highpass = midi_to_freq(72 - tone_low / 100 * 48);
    double fc_lowpass  = midi_to_freq(72 + tone_high/ 100 * 48);
-
-   memset(p, 0, sizeof(*p));
-   p->feedback = 1 - exp((reverberance - b) / (a * b));
-   p->hf_damping = hf_damping / 100 * .3 + .2;
-   p->gain = dB_to_linear(wet_gain_dB) * .015;
-   fifo_create(&p->input_fifo, sizeof(float));
-   memset(fifo_write(&p->input_fifo, delay, 0), 0, delay * sizeof(float));
-   for (i = 0; i <= ceil(depth); ++i) {
+      
+   for (size_t i = 0; i <= ceil(depth); ++i)
+   {
       filter_array_create(p->chan + i, sample_rate_Hz, scale, i * depth, fc_highpass, fc_lowpass);
-      out[i] = lsx_zalloc(p->out[i], buffer_size);
-   }
+   }   
 }
 
 static void reverb_process(reverb_t * p, size_t length)
