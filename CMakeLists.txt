@@ -58,6 +58,9 @@ if( "${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}" )
    )
 endif()
 
+# Define option() prefix
+set( _OPT "audacity_" )
+
 # Just a couple of convenience variables
 set( topdir "${CMAKE_SOURCE_DIR}" )
 set( libsrc "${topdir}/lib-src" )
@@ -104,6 +107,12 @@ if( APPLE )
    else()
       message( FATAL_ERROR "MACOS_ARCHITECTURE must be x86_64 or arm64")
    endif()
+
+   if( ${_OPT}enable_experimental_qt_support )
+      set( MIN_MACOS_VERSION 10.15 )
+      set( TARGET_MACOS_VERSION 10.15 )
+   endif()
+
    # Generate schema files
    set( CMAKE_XCODE_GENERATE_SCHEME ON )
 
@@ -147,9 +156,6 @@ mark_as_advanced( FORCE CCACHE_PROGRAM )
 if( CCACHE_PROGRAM )
    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
 endif()
-
-# Define option() prefix
-set( _OPT "audacity_" )
 
 # Our very own project
 project( Audacity )
