@@ -1,0 +1,169 @@
+name: Build Qt version of Audacity
+
+on:
+  push:
+    paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".gitignore", ".gitattributes"]
+    branches:
+      - 'qt6'
+      - 'qt6-*'
+      - 'qt6_*'
+      - 'qt6/*'
+      - 'qt6*'
+
+  pull_request:
+    paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".gitignore", ".gitattributes"]
+    branches:
+      - 'qt6'
+      - 'qt6-*'
+      - 'qt6_*'
+      - 'qt6/*'
+      - 'qt6*'
+
+  workflow_dispatch:
+    inputs:
+      build_level:
+        description: "Build level to be used. Valid values are: alpha, beta, release"
+        required: false
+        default: 'alpha'
+        type: string
+      build_type:
+        description: 'Build type. Valid values are: Debug, RelWithDebInfo'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configuration_types:
+        description: 'Build type. Valid values are: Debug, RelWithDebInfo, or any combination separated with a semicolon'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configure_cmake_options:
+        description: 'Additional CMake options for configuration'
+        required: false
+        default: ''
+        type: string
+
+  workflow_call:
+    inputs:
+      build_level:
+        description: "Build level to be used. Valid values are: alpha, beta, release"
+        required: false
+        default: 'alpha'
+        type: string
+      build_type:
+        description: 'Build type. Valid values are: Debug, RelWithDebInfo'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configuration_types:
+        description: 'Build type. Valid values are: Debug, RelWithDebInfo or any combination separated with a semicolon'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configure_cmake_options:
+        description: 'Additional CMake options for configuration'
+        required: false
+        default: ''
+        type: string
+    secrets:
+      APPLE_CERTIFICATE:
+        required: false
+      APPLE_CERTIFICATE_PASSWORD:
+        required: false
+      APPLE_CODESIGN_IDENTITY:
+        required: false
+      APPLE_NOTARIZATION_USER_NAME:
+        required: false
+      APPLE_NOTARIZATION_PASSWORD:
+        required: false
+      CRASH_REPORT_URL:
+        required: false
+      SENTRY_AUTH_TOKEN:
+        required: false
+      SENTRY_DSN_KEY:
+        required: false
+      SENTRY_HOST:
+        required: false
+      SENTRY_ORG_SLUG:
+        required: false
+      SENTRY_PROJECT:
+        required: false
+      SENTRY_PROJECT_SLUG:
+        required: false
+      WINDOWS_CERTIFICATE:
+        required: false
+      WINDOWS_CERTIFICATE_PASSWORD:
+        required: false
+
+env:
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+  SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
+  SENTRY_ORG_SLUG: ${{ secrets.SENTRY_ORG_SLUG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  SENTRY_PROJECT_SLUG: ${{ secrets.SENTRY_PROJECT_SLUG }}
+
+  ARTIFACTORY_SYMBOLS_URL: ${{ secrets.ARTIFACTORY_SYMBOLS_URL }}
+  ARTIFACTORY_SYMBOLS_KEY: ${{ secrets.ARTIFACTORY_SYMBOLS_KEY }}
+
+  CONAN_BINARIES_REMOTE: ${{ secrets.CONAN_BINARIES_REMOTE }}
+  CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+  CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+
+  BUILD_TYPE: ${{ (inputs && inputs.build_type) || (github.event.inputs && github.event.inputs.build_type) || 'RelWithDebInfo' }}
+  CONFIGURATION_TYPES: ${{ (inputs && inputs.configuration_types) || (github.event.inputs && github.event.inputs.configuration_types) || 'RelWithDebInfo' }}
+
+  CONFIGURE_CMAKE_OPTIONS: |
+    -Daudacity_has_url_schemes_support=On
+    -Daudacity_has_audiocom_upload=On
+    -Daudacity_enable_experimental_qt_support=On
+    ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
+
+  BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}
+
+  CRASH_REPORT_URL: ${{ secrets.CRASH_REPORT_URL }}
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: Ubuntu 20.04 AppImage (x86_64)
+          os: ubuntu-20.04
+          arch: x64
+          generator: Unix Makefiles
+        - name: Windows 2022 (x86_64)
+          os: windows-2022
+          arch: x64
+          generator: Visual Studio 17 2022
+        - name: macOS (x86_64)
+          os: macos-11.0
+          arch: x64
+          generator: Xcode
+        - name: macOS (arm64)
+          os: macos-11.0
+          arch: arm64
+          generator: Xcode
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup Dependencies
+      uses: audacity/audacity-actions/dependencies@v1
+    - name: Configure
+      uses: audacity/audacity-actions/configure@v1
+      with:
+        generator: ${{ matrix.config.generator }}
+        arch: ${{ matrix.config.arch }}
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: ${{ env.BUILD_LEVEL }}
+        cmake_options: |
+          ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+        windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+    - name: Build
+      uses: audacity/audacity-actions/build@v1
+    - name: Package
+      uses: audacity/audacity-actions/package@v1
