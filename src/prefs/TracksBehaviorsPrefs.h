@@ -38,5 +38,6 @@ class AUDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
 };
 
 extern AUDACITY_DLL_API ChoiceSetting TracksBehaviorsSolo;
+extern AUDACITY_DLL_API ChoiceSetting TracksBehaviorsAudioTrackPastePolicy;
 
 #endif
