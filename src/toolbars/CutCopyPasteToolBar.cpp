@@ -57,6 +57,9 @@
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
+constexpr int first_TB_ID = 21300;
+
+
 IMPLEMENT_CLASS(CutCopyPasteToolBar, ToolBar);
 
 ////////////////////////////////////////////////////////////
@@ -86,30 +89,21 @@ void CutCopyPasteToolBar::Create(wxWindow * parent)
    UpdatePrefs();
 }
 
-/// This is a convenience function that allows for button creation in
-/// MakeButtons() with fewer arguments
-/// Very similar to code in ControlToolBar...
-AButton *CutCopyPasteToolBar::AddButton(
-   CutCopyPasteToolBar *pBar,
+void CutCopyPasteToolBar::AddButton(
    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-   int id,
+   int firstToolBarId,
+   int thisButtonId,
    const TranslatableString &label,
    bool toggle)
 {
-   AButton *&r = pBar->mButtons[id];
+   AButton *&r = mButtons[thisButtonId];
 
-   r = ToolBar::MakeButton(pBar,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
+   r = ToolBarButtons::AddButton(this,
       eEnabledUp, eEnabledDown, eDisabled,
-      wxWindowID(id+first_TB_ID),
-      wxDefaultPosition,
-      toggle,
-      theTheme.ImageSize( bmpRecoloredUpSmall ));
+      firstToolBarId, thisButtonId,
+      label, toggle);
 
-   r->SetLabel(label);
-   pBar->mToolSizer->Add(r);
-
-   return r;
+   mToolSizer->Add(r);
 }
 
 void CutCopyPasteToolBar::Populate()
@@ -122,11 +116,11 @@ void CutCopyPasteToolBar::Populate()
    /* Buttons */
    // Tooltips match menu entries.
    // We previously had longer tooltips which were not more clear.
-   AddButton(this, bmpCut, bmpCut, bmpCutDisabled, TBCutID,
+   AddButton(bmpCut, bmpCut, bmpCutDisabled, first_TB_ID, TBCutID,
       XO("Cut"));
-   AddButton(this, bmpCopy, bmpCopy, bmpCopyDisabled, TBCopyID,
+   AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, first_TB_ID, TBCopyID,
       XO("Copy"));
-   AddButton(this, bmpPaste, bmpPaste, bmpPasteDisabled, TBPasteID,
+   AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, first_TB_ID, TBPasteID,
       XO("Paste"));
 
    mButtons[TBPasteID]->SetEnabled(false);
@@ -155,7 +149,6 @@ void CutCopyPasteToolBar::EnableDisableButtons()
    ForAllButtons( TBActEnableDisable );
 }
 
-
 static const struct Entry {
    int tool;
    CommandID commandName;
@@ -166,7 +159,6 @@ static const struct Entry {
    { TBPasteID, wxT("Paste"), XO("Paste") }
 };
 
-
 void CutCopyPasteToolBar::ForAllButtons(int Action)
 {
    AudacityProject *p;
@@ -176,7 +168,6 @@ void CutCopyPasteToolBar::ForAllButtons(int Action)
       p = &mProject;
       cm = &CommandManager::Get( *p );
    }
-
 
    for (const auto &entry : CutCopyPasteToolbarButtonList) {
 #if wxUSE_TOOLTIPS

@@ -15,6 +15,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
+#include "ToolBarButtons.h"
 
 class wxCommandEvent;
 class wxDC;
@@ -22,21 +23,11 @@ class wxGridSizer;
 class wxImage;
 class wxWindow;
 
-class AButton;
-
 enum {
    TBCutID,
    TBCopyID,
    TBPasteID,
    TBNumButtons
-};
-
-const int first_TB_ID = 21300;
-
-// flags so 1,2,4,8 etc.
-enum {
-   TBActTooltips = 1,
-   TBActEnableDisable = 2,
 };
 
 class CutCopyPasteToolBar final : public ToolBar {
@@ -57,10 +48,10 @@ class CutCopyPasteToolBar final : public ToolBar {
 
  private:
 
-   static AButton *AddButton(
-      CutCopyPasteToolBar *pBar,
+   void AddButton(
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int id, const TranslatableString &label, bool toggle = false);
+      int firstToolBarId, int thisButtonId,
+      const TranslatableString &label, bool toggle = false);
 
    void RegenerateTooltips() override;
    void ForAllButtons(int Action);

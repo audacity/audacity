@@ -59,6 +59,8 @@
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
+constexpr int first_ETB_ID = 11300;
+
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
 ////////////////////////////////////////////////////////////
@@ -93,30 +95,21 @@ void EditToolBar::AddSeparator()
    mToolSizer->AddSpacer(0);
 }
 
-/// This is a convenience function that allows for button creation in
-/// MakeButtons() with fewer arguments
-/// Very similar to code in ControlToolBar...
-AButton *EditToolBar::AddButton(
-   EditToolBar *pBar,
+void EditToolBar::AddButton(
    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-   int id,
+   int firstToolBarId,
+   int thisButtonId,
    const TranslatableString &label,
    bool toggle)
 {
-   AButton *&r = pBar->mButtons[id];
+   AButton *&r = mButtons[thisButtonId];
 
-   r = ToolBar::MakeButton(pBar,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
+   r = ToolBarButtons::AddButton(this,
       eEnabledUp, eEnabledDown, eDisabled,
-      wxWindowID(id+first_ETB_ID),
-      wxDefaultPosition,
-      toggle,
-      theTheme.ImageSize( bmpRecoloredUpSmall ));
+      firstToolBarId, thisButtonId,
+      label, toggle);
 
-   r->SetLabel(label);
-   pBar->mToolSizer->Add(r);
-
-   return r;
+   mToolSizer->Add(r);
 }
 
 void EditToolBar::Populate()
@@ -129,36 +122,36 @@ void EditToolBar::Populate()
    /* Buttons */
    // Tooltips match menu entries.
    // We previously had longer tooltips which were not more clear.
-   AddButton(this, bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
+   AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, first_ETB_ID, ETBZoomInID,
       XO("Zoom In"));
-   AddButton(this, bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
+   AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, first_ETB_ID, ETBZoomOutID,
       XO("Zoom Out"));
-   AddButton(this, bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
+   AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, first_ETB_ID, ETBZoomSelID,
       XO("Zoom to Selection"));
-   AddButton(this, bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
+   AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, first_ETB_ID, ETBZoomFitID,
       XO("Fit to Width"));
 
 #ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
-   AddButton(this, bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
+   AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, first_ETB_ID, ETBZoomToggleID,
       XO("Zoom Toggle"));
 #endif
 
    // Tooltips slightly more verbose than the menu entries are.
-   AddButton(this, bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
+   AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, first_ETB_ID, ETBTrimID,
       XO("Trim audio outside selection"));
-   AddButton(this, bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
+   AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, first_ETB_ID, ETBSilenceID,
       XO("Silence audio selection"));
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   AddButton(this, bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
+   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, first_ETB_ID, ETBSyncLockID,
       XO("Sync-Lock Tracks"), true);
 #else
    AddSeparator();
 #endif
 
-   AddButton(this, bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
+   AddButton(bmpUndo, bmpUndo, bmpUndoDisabled, first_ETB_ID, ETBUndoID,
       XO("Undo"));
-   AddButton(this, bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
+   AddButton(bmpRedo, bmpRedo, bmpRedoDisabled, first_ETB_ID, ETBRedoID,
       XO("Redo"));
 
    mButtons[ETBZoomInID]->SetEnabled(false);
@@ -190,14 +183,13 @@ void EditToolBar::UpdatePrefs()
 
 void EditToolBar::RegenerateTooltips()
 {
-   ForAllButtons( ETBActTooltips );
+   ForAllButtons( TBActTooltips );
 }
 
 void EditToolBar::EnableDisableButtons()
 {
-   ForAllButtons( ETBActEnableDisable );
+   ForAllButtons( TBActEnableDisable );
 }
-
 
 static const struct Entry {
    int tool;
@@ -221,13 +213,12 @@ static const struct Entry {
    { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 };
 
-
 void EditToolBar::ForAllButtons(int Action)
 {
    AudacityProject *p;
    CommandManager* cm = nullptr;
 
-   if( Action & ETBActEnableDisable ){
+   if( Action & TBActEnableDisable ){
       p = &mProject;
       cm = &CommandManager::Get( *p );
 #ifdef OPTION_SYNC_LOCK_BUTTON
@@ -244,7 +235,7 @@ void EditToolBar::ForAllButtons(int Action)
 
    for (const auto &entry : EditToolbarButtonList) {
 #if wxUSE_TOOLTIPS
-      if( Action & ETBActTooltips ){
+      if( Action & TBActTooltips ){
          ComponentInterfaceSymbol command{
             entry.commandName, entry.untranslatedLabel };
          ToolBar::SetButtonToolTip( mProject,

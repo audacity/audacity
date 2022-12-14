@@ -852,6 +852,8 @@ list( APPEND SOURCES
       toolbars/TimeToolBar.h
       toolbars/ToolBar.cpp
       toolbars/ToolBar.h
+      toolbars/ToolBarButtons.cpp
+      toolbars/ToolBarButtons.h
       toolbars/ToolDock.cpp
       toolbars/ToolDock.h
       toolbars/ToolManager.cpp

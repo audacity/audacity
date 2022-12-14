@@ -17,6 +17,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
+#include "ToolBarButtons.h"
 
 class wxCommandEvent;
 class wxDC;
@@ -54,14 +55,6 @@ enum {
    ETBNumButtons
 };
 
-const int first_ETB_ID = 11300;
-
-// flags so 1,2,4,8 etc.
-enum {
-   ETBActTooltips = 1,
-   ETBActEnableDisable = 2,
-};
-
 class EditToolBar final : public ToolBar {
 
  public:
@@ -80,14 +73,12 @@ class EditToolBar final : public ToolBar {
 
  private:
 
-   static AButton *AddButton(
-      EditToolBar *pBar,
+   void AddButton(
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int id, const TranslatableString &label, bool toggle = false);
+      int firstToolBarId, int thisButtonId,
+      const TranslatableString &label, bool toggle = false);
 
    void AddSeparator();
-
-   void MakeButtons();
 
    void RegenerateTooltips() override;
    void ForAllButtons(int Action);
@@ -95,10 +86,6 @@ class EditToolBar final : public ToolBar {
    AButton *mButtons[ETBNumButtons];
 
    wxGridSizer* mToolSizer;
-
-   wxImage *upImage;
-   wxImage *downImage;
-   wxImage *hiliteImage;
 
  public:
 
