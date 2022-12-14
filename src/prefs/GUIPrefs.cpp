@@ -21,6 +21,7 @@
 #include "GUIPrefs.h"
 
 #include <wx/defs.h>
+#include <mutex> // once_flag
 
 #include "FileNames.h"
 #include "Languages.h"
@@ -98,6 +99,37 @@ void GUIPrefs::GetRangeChoices(
       *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
 }
 
+void GUIPrefs::GetLTSChoices(
+   TranslatableStrings* pChoices,
+   wxArrayStringEx* pCodes,
+   int* pDefaultIndex
+)
+{
+   static wxArrayStringEx sCodes;
+   static TranslatableStrings sChoices;
+
+   static std::once_flag flag;
+   std::call_once(flag, [&]{
+      sCodes.Clear();
+      sChoices.clear();
+
+      for (int i = 1; i <= 64; i *= 2) {
+         auto lts = wxString::Format(wxT("%d"), i);
+         sCodes.Add(lts);
+         sChoices.push_back(Verbatim(lts));
+      }
+   });
+
+   if (pCodes)
+      *pCodes = sCodes;
+
+   if (pChoices)
+      *pChoices = sChoices;
+
+   if (pDefaultIndex)
+      *pDefaultIndex = 2; // 4 == LowerTimeSig
+}
+
 void GUIPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
@@ -105,6 +137,8 @@ void GUIPrefs::Populate()
       FileNames::AudacityPathList(), mLangCodes, mLangNames);
 
    GetRangeChoices(&mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
+
+   GetLTSChoices(&mLTSChoices, &mLTSCodes, &mDefaultLTSIndex);
 
 #if 0
    mLangCodes.insert( mLangCodes.end(), {
@@ -138,6 +172,11 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       mDefaultRangeIndex
    };
 
+   ChoiceSetting LowerTimeSigSettings{ LowerTimeSignature,
+      { ByColumns, mLTSChoices, mLTSCodes },
+      mDefaultLTSIndex
+   };
+
    S.SetBorder(2);
    S.StartScroller();
 
@@ -156,7 +195,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.TieNumericTextBox(XXO("Beats per &minute:"), BeatsPerMinute, 10);
          S.TieIntegerTextBox(XXO("Upper time &signature:"), UpperTimeSignature, 6);
-         S.TieIntegerTextBox(XXO("Lower time &signature:"), LowerTimeSignature, 6);
+         S.TieChoice(XXO("Lower time &signature:"), LowerTimeSigSettings);
       }
       S.EndMultiColumn();
 
