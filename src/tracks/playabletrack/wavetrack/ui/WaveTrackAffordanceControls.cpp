@@ -139,8 +139,16 @@ WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<T
 {
     if (auto trackList = pTrack->GetOwner())
     {
-        mSubscription = trackList->Subscribe(
-            *this, &WaveTrackAffordanceControls::OnTrackChanged);
+        mTrackListEventSubscription = trackList->Subscribe(
+            *this, &WaveTrackAffordanceControls::OnTrackListEvent);
+        if(auto project = trackList->GetOwner())
+        {
+            auto& viewInfo = ViewInfo::Get(*project);
+            mSelectionChangeSubscription =
+                viewInfo.selectedRegion.Subscribe(
+                    *this,
+                    &WaveTrackAffordanceControls::OnSelectionChange);
+        }
     }
 }
 
@@ -447,10 +455,15 @@ void WaveTrackAffordanceControls::ResetClipNameEdit()
     mEditedClip.reset();
 }
 
-void WaveTrackAffordanceControls::OnTrackChanged(const TrackListEvent& evt)
+void WaveTrackAffordanceControls::OnTrackListEvent(const TrackListEvent& evt)
 {
     if (evt.mType == TrackListEvent::SELECTION_CHANGE)
        ExitTextEditing();
+}
+
+void WaveTrackAffordanceControls::OnSelectionChange(NotifyingSelectedRegionMessage)
+{
+    ExitTextEditing();
 }
 
 unsigned WaveTrackAffordanceControls::ExitTextEditing()
