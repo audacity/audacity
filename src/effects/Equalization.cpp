@@ -1376,7 +1376,7 @@ void EQCurveReader::LoadCurves(const wxString &fileName, bool append)
 {
 // We've disabled the XML management of curves.
 // Just going via .cfg files now.
-#if 0
+#if 1
    (void)fileName;
    (void)append;
    mCurves.clear();
