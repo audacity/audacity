@@ -13,6 +13,7 @@
 #include <wx/font.h>
 
 #include "Observer.h"
+#include "ViewInfo.h"
 #include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../ui/TextEditHelper.h"
 
@@ -95,11 +96,14 @@ private:
    
     void ResetClipNameEdit();
 
-    void OnTrackChanged(const TrackListEvent& evt);
+    void OnTrackListEvent(const TrackListEvent& evt);
 
+    void OnSelectionChange(NotifyingSelectedRegionMessage);
+   
     unsigned ExitTextEditing();
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
 
-    Observer::Subscription mSubscription;
+    Observer::Subscription mTrackListEventSubscription;
+    Observer::Subscription mSelectionChangeSubscription;
 };
