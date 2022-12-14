@@ -59,6 +59,34 @@
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
+enum {
+   ETBZoomInID,
+   ETBZoomOutID,
+#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
+   ETBZoomToggleID,
+#endif
+
+   ETBZoomSelID,
+   ETBZoomFitID,
+
+   ETBTrimID,
+   ETBSilenceID,
+
+#ifdef EXPERIMENTAL_SYNC_LOCK
+   //Undefined, so no sync-lock on/off button.
+   //#define OPTION_SYNC_LOCK_BUTTON
+#endif
+
+#ifdef OPTION_SYNC_LOCK_BUTTON
+   ETBSyncLockID,
+#endif
+
+   ETBUndoID,
+   ETBRedoID,
+
+   ETBNumButtons
+};
+
 constexpr int first_ETB_ID = 11300;
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
@@ -78,6 +106,7 @@ END_EVENT_TABLE()
 EditToolBar::EditToolBar( AudacityProject &project )
 : ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
 {
+   mButtons.resize(ETBNumButtons);
 }
 
 EditToolBar::~EditToolBar()

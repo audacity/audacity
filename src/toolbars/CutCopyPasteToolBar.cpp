@@ -57,8 +57,14 @@
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
-constexpr int first_TB_ID = 21300;
+enum {
+   TBCutID,
+   TBCopyID,
+   TBPasteID,
+   TBNumButtons
+};
 
+constexpr int first_TB_ID = 21300;
 
 IMPLEMENT_CLASS(CutCopyPasteToolBar, ToolBar);
 
@@ -77,6 +83,7 @@ END_EVENT_TABLE()
 CutCopyPasteToolBar::CutCopyPasteToolBar( AudacityProject &project )
 : ToolBar(project, CutCopyPasteBarID, XO("Cut/Copy/Paste"), wxT("Cut/Copy/Paste"))
 {
+   mButtons.resize(TBNumButtons);
 }
 
 CutCopyPasteToolBar::~CutCopyPasteToolBar()

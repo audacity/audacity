@@ -14,6 +14,7 @@
 #ifndef __AUDACITY_EDIT_TOOLBAR__
 #define __AUDACITY_EDIT_TOOLBAR__
 
+#include <vector>
 #include <wx/defs.h>
 
 #include "ToolBar.h"
@@ -26,34 +27,6 @@ class wxImage;
 class wxWindow;
 
 class AButton;
-
-enum {
-   ETBZoomInID,
-   ETBZoomOutID,
-#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
-   ETBZoomToggleID,
-#endif
-
-   ETBZoomSelID,
-   ETBZoomFitID,
-
-   ETBTrimID,
-   ETBSilenceID,
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   //Undefined, so no sync-lock on/off button.
-   //#define OPTION_SYNC_LOCK_BUTTON
-#endif
-
-#ifdef OPTION_SYNC_LOCK_BUTTON
-   ETBSyncLockID,
-#endif
-
-   ETBUndoID,
-   ETBRedoID,
-
-   ETBNumButtons
-};
 
 class EditToolBar final : public ToolBar {
 
@@ -83,7 +56,7 @@ class EditToolBar final : public ToolBar {
    void RegenerateTooltips() override;
    void ForAllButtons(int Action);
 
-   AButton *mButtons[ETBNumButtons];
+   std::vector<AButton*> mButtons;
 
    wxGridSizer* mToolSizer;
 
