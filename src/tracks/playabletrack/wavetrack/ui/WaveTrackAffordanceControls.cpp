@@ -269,19 +269,19 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                    continue;
                 }
 
-                auto selected = GetSelectedClip().lock() == clip;
-                auto highlight = selected || affordanceRect.Contains(px, py);
+                const auto selected = GetSelectedClip().lock() == clip;
+                const auto highlight = selected || affordanceRect.Contains(px, py);
+                const auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, highlight, selected);
                 if (mTextEditHelper && mEditedClip.lock() == clip)
                 {
-                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
-                    mTextEditHelper->Draw(context.dc, titleRect);
+                    if(!mTextEditHelper->Draw(context.dc, titleRect))
+                    {
+                        mTextEditHelper->Cancel(nullptr);
+                        TrackArt::DrawClipTitle(context.dc, titleRect, clip->GetName());
+                    }
                 }
-                else
-                {
-                    const auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
-                    if(!titleRect.IsEmpty())
-                        mLastVisibleClips.push_back(clip.get());
-                }
+                else if(TrackArt::DrawClipTitle(context.dc, titleRect, clip->GetName()))
+                    mLastVisibleClips.push_back(clip.get());
             }
         }
 
