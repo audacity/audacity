@@ -127,7 +127,8 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             context.dc.SetTextBackground(wxTransparentColor);
             context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
             context.dc.SetFont(wxFont(wxFontInfo()));
-            TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
+            const auto titleRect = TrackArt::DrawClipAffordance(context.dc, clipRect, highlight, selected);
+            TrackArt::DrawClipTitle(context.dc, titleRect, nt->GetName());
         }
     }
 }
