@@ -46,6 +46,13 @@ static void fifo_clear(fifo_t * f)
    f->end = f->begin = 0;
 }
 
+static void fifo_clear_and_zero(fifo_t* f)
+{
+   f->end = f->begin = 0;
+   memset(f->data, 0, f->allocation);
+}
+
+
 static void * fifo_reserve(fifo_t * f, FIFO_SIZE_T n)
 {
    n *= f->item_size;
@@ -265,6 +272,114 @@ typedef struct {
 } reverb_t;
 
 
+// Resizes a filter, resetting its contents
+static void filter_t_resize_resetting(filter_t* p, size_t newSize)
+{
+   memset(p->buffer, 0, newSize * sizeof(float));
+   p->ptr = p->buffer;
+   p->store = 0;
+   p->size = newSize;
+}
+
+
+// Resizes a filter, trying to keep as much of its history as possible.
+static void filter_t_resize_preserving(filter_t* p, size_t newSize)
+{
+   // Imagine we have this filter_t as input:
+   //
+   //                  ptr goes from right to left and when falling off the left side, it wraps back to the right;
+   //    <--ptr--      it reads the most distant sample in the past, and after reading it will write a new sample.
+   //        |         Imagine someone just recorded "A B C D E", and now we are going to read "A", but a resize request comes.
+   //        v         
+   //  | C B A E D |
+   //
+   
+   // Depending on the new requested size and where ptr is, we can have these cases:
+   // 
+   //        v
+   //  | C B A 0 E D |  bigger size: right-shift what is right of ptr,
+   //                   and fill the resulting gap with zeros.
+   //
+   //                   (with variant: ptr is already at the old right edge - then shift nothing, just append zeros)
+   //        v
+   //  | C B A D |      smaller size, and ptr is within it (but not at the edge): left-shift what is to the right of ptr,
+   //                   discarding samples.
+   // 
+   //        V
+   //  | C B A |        smaller size, and ptr would be at the new right edge; do nothing.
+   // 
+   //      v
+   //  | B A |          smaller size, and ptr would be beyond the new right edge: left-shift what is ahead of ptr,
+   //                   AND move ptr to size-1
+
+   assert(newSize > 0);
+
+   const int    sizeDiff = ((ssize_t)newSize - (ssize_t)p->size);
+   const size_t ptrPos   = (p->ptr  - p->buffer);
+
+   const size_t numSamplesBehindPtr = (p->size - 1) - ptrPos;
+
+   if (sizeDiff > 0)
+   {
+      // case: bigger size
+
+      if (numSamplesBehindPtr > 0)
+      {
+         // right-shift what is right of ptr
+         memcpy(p->ptr + 1 + sizeDiff, p->ptr + 1, numSamplesBehindPtr * sizeof(float));
+      }      
+
+      // fill the created gap with zeros
+      memset(p->ptr + 1, 0, sizeDiff * sizeof(float));
+   }
+   else if (sizeDiff < 0)
+   {
+      // case: smaller size
+            
+      if (ptrPos < newSize-1)
+      {
+         size_t lenOfBlockToShift = newSize - 1 - ptrPos;
+         float* ptrToBlockToShift = p->buffer + p->size - lenOfBlockToShift;
+         memcpy(p->ptr + 1, ptrToBlockToShift, lenOfBlockToShift * sizeof(float));         
+      }
+      else if (ptrPos == newSize - 1)
+      {
+         // sub-case: ptr is at the new edge - no shifting to do, and ptr can stay where it is
+      }
+      else
+      {
+         // sub-case: ptr would be beyond the new edge
+         // left-shift what is ahead of ptr and make ptr point to the new edge
+         memcpy(p->buffer, p->ptr - newSize + 1, newSize * sizeof(float));
+         p->ptr = p->buffer + newSize - 1;
+      }
+   }
+
+   p->size = newSize;
+}
+
+
+static void filter_t_resize(filter_t* p, size_t newSize)
+{
+   // Choose your resize method.
+   //
+   // When moving the Room Size slider:
+   //
+   // - using resize_resetting, you will not hear previous reverberations,
+   //   but at the same time you will not hear sound artifacts
+   //
+   // - using resize_preserving, you will hear previous reverberations,
+   //   but sometimes you might hear sound artifacts
+
+#if 1
+   filter_t_resize_resetting(p, newSize);
+#else
+   filter_t_resize_preserving(p, newSize);
+#endif
+
+}
+
+
 static void reverb_allocate(reverb_t* p, double sample_rate_Hz, size_t buffer_size, float** out)
 {
    memset(p, 0, sizeof(*p));
@@ -298,7 +413,8 @@ static void reverb_init
    double tone_high       /* % */
 )
 {
-   // Input queue 
+   // Input queue
+   fifo_clear_and_zero(&p->input_fifo);
    size_t delay = pre_delay_ms / 1000 * sample_rate_Hz + .5;
    memset(fifo_write(&p->input_fifo, delay, 0), 0, delay * sizeof(float));
 
