@@ -1331,7 +1331,6 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
    auto header = safenew ThemedWindowWrapper<ListNavigationPanel>(this, wxID_ANY);
-   header->SetMinClientSize({254, -1});
 #if wxUSE_ACCESSIBILITY
    safenew WindowAccessible(header);
 #endif
