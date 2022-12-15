@@ -265,6 +265,83 @@ typedef struct {
 } reverb_t;
 
 
+static void filter_t_resize(filter_t* p, size_t newSize)
+{
+   // Imagine we have this filter_t as input:
+   //
+   //                  ptr goes from right to left and when falling off the left side, it warps back to the right;
+   //    <--ptr--      it reads the most distant sample in the past, and after reading it will write a new sample.
+   //        |         Imagine someone just recorded "A B C D E", and now we are going to read "A", but a resize request comes.
+   //        v         
+   //  | C B A E D |
+   //
+   
+   // Depending on the new requested size and where ptr is, we can have these cases:
+   // 
+   //        v
+   //  | C B A 0 E D |  bigger size: right-shift what is right of ptr,
+   //                   and fill the resulting gap with zeros.
+   //
+   //                   (with variant: ptr is already at the old right edge - then shift nothing, just append zeros)
+   //        v
+   //  | C B A D |      smaller size, and ptr is within it (but not at the edge): left-shift what is to the right of ptr,
+   //                   discarding samples.
+   // 
+   //        V
+   //  | C B A |        smaller size, and ptr would be at the new right edge; do nothing.
+   // 
+   //      v
+   //  | B A |          smaller size, and ptr would be beyond the new right edge: left-shift what is ahead of ptr,
+   //                   AND move ptr to size-1
+
+   assert(newSize > 0);
+
+   const int    sizeDiff = (newSize - p->size);
+   const size_t ptrPos   = (p->ptr  - p->buffer);
+
+   const size_t numSamplesBehindPtr = (p->size - 1) - ptrPos;
+
+   if (sizeDiff > 0)
+   {
+      // case: bigger size
+
+      if (numSamplesBehindPtr > 0)
+      {
+         // right-shift what is right of ptr
+         memcpy(p->ptr + 1 + sizeDiff, p->ptr + 1, numSamplesBehindPtr * sizeof(float));
+      }      
+
+      // fill the created gap with zeros
+      memset(p->ptr + 1, 0, sizeDiff * sizeof(float));
+   }
+   else if (sizeDiff < 0)
+   {
+      // case: smaller size
+            
+      if (ptrPos < newSize-1)
+      {
+         size_t lenOfBlockToShift = newSize - 1 - ptrPos;
+         float* ptrToBlockToShift = p->buffer + p->size - lenOfBlockToShift;
+         memcpy(p->ptr + 1, ptrToBlockToShift, lenOfBlockToShift * sizeof(float));         
+      }
+      else if (ptrPos == newSize - 1)
+      {
+         // sub-case: ptr is at the new edge - no shifting to do, and ptr can stay where it is
+      }
+      else
+      {
+         // sub-case: ptr would be beyond the new edge
+         // left-shift what is ahead of ptr and make ptr point to the new edge
+         size_t samplesBeyond = ptrPos - newSize + 1;
+         memcpy(p->buffer, p->ptr - newSize + 1, newSize * sizeof(float));
+         p->ptr = p->buffer + newSize - 1;
+      }
+   }
+
+   p->size = newSize;
+}
+
+
 static void reverb_allocate(reverb_t* p, double sample_rate_Hz, size_t buffer_size, float** out)
 {
    memset(p, 0, sizeof(*p));
