@@ -71,7 +71,7 @@ namespace
          if(mUnits.empty())
             SetLabel(VST3Utils::ToWxString(str));
          else
-            SetLabel(wxString::Format("%s %s", str, mUnits));
+            SetLabel(wxString::Format("%s %s", VST3Utils::ToWxString(str), mUnits));
       }
       
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -190,7 +190,7 @@ namespace
       {
          Steinberg::Vst::String128 str{ };
          editController.getParamStringByValue(GetParameterId(), value, str);
-         SetName(wxString::Format("%s %s %s", mTitle, str, mUnits));
+         SetName(wxString::Format("%s %s %s", mTitle, VST3Utils::ToWxString(str), mUnits));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
