@@ -184,6 +184,8 @@ static void filter_array_allocate(filter_array_t* p, double rate,
    }
 }
 
+void filter_t_resize(filter_t* p, size_t newSize);
+
 static void filter_array_init(filter_array_t* p, double rate,
    double scale, double offset)
 {
@@ -193,12 +195,14 @@ static void filter_array_init(filter_array_t* p, double rate,
    for (i = 0; i < array_length(comb_lengths); ++i, offset = -offset)
    {
       filter_t* pcomb = &p->comb[i];
-      pcomb->size = (size_t)(scale * r * (comb_lengths[i] + stereo_adjust * offset) + .5);
+      size_t newSize = (size_t)(scale * r * (comb_lengths[i] + stereo_adjust * offset) + .5);
+      filter_t_resize(pcomb, newSize);
    }
    for (i = 0; i < array_length(allpass_lengths); ++i, offset = -offset)
    {
       filter_t* pallpass = &p->allpass[i];
-      pallpass->size = (size_t)(r * (allpass_lengths[i] + stereo_adjust * offset) + .5);
+      size_t newSize = (size_t)(r * (allpass_lengths[i] + stereo_adjust * offset) + .5);
+      filter_t_resize(pallpass, newSize);
    }
 }
 
