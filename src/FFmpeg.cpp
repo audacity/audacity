@@ -183,7 +183,7 @@ public:
 #   if defined(__WXMSW__)
          { XO("Only avformat.dll"), { wxT("avformat-*.dll") } },
 #   elif defined(__WXMAC__)
-         { XO("Only ffmpeg.*.dylib"), { wxT("ffmpeg.*.dylib"), wxT("libavformat.*.dylib") } },
+         { XO("Only libavformat.dylib"), { wxT("ffmpeg.*.dylib"), wxT("libavformat.*.dylib") } },
 #   else
          { XO("Only libavformat.so"), { wxT("libavformat.so.*") } },
 #   endif
@@ -314,7 +314,7 @@ bool FindFFmpegLibs(wxWindow* parent)
 #if defined(__WXMSW__)
    const wxString name = wxT("avformat.dll");
 #elif defined(__WXMAC__)
-   const wxString name = wxT("ffmpeg.64bit.dylib");
+   const wxString name = wxT("libavformat.dylib");
 #else
    const wxString name = wxT("libavformat.so");
 #endif
