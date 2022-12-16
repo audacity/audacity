@@ -255,6 +255,15 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
       if((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
          continue;
 
+      {
+         // Hide proxy parameters with name that starts with "MIDI CC "
+         // That prevents Plain UI from creating many useless controls
+         static_assert(sizeof(Steinberg::tchar) == sizeof(char16_t));
+         static const std::basic_string_view<tchar> MIDI_CC { reinterpret_cast<const tchar*>(u"MIDI CC ") };
+         if(std::basic_string_view<tchar>(parameterInfo.title).rfind(MIDI_CC, 0) == 0)
+            continue;
+      }
+      
       if (parameterInfo.stepCount != 1)      // not a toggle
          sizer->Add(safenew wxStaticText(
             this,
