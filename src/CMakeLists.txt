@@ -452,6 +452,8 @@ list( APPEND SOURCES
       effects/EqualizationPanel.h
       effects/EqualizationParameters.cpp
       effects/EqualizationParameters.h
+      effects/EqualizationUI.cpp
+      effects/EqualizationUI.h
       effects/Fade.cpp
       effects/Fade.h
       effects/FindClipping.cpp

@@ -2,23 +2,20 @@
 
   Audacity: A Digital Audio Editor
 
-  Equalization.h
+  EqualizationUI.h
 
   Mitch Golden
   Vaughan Johnson (Preview)
 
+  Paul Licameli split from Equalization.h
+
 ***********************************************************************/
+#ifndef __AUDACITY_EFFECT_EQUALIZATION_UI__
+#define __AUDACITY_EFFECT_EQUALIZATION_UI__
 
-#ifndef __AUDACITY_EFFECT_EQUALIZATION__
-#define __AUDACITY_EFFECT_EQUALIZATION__
-
-#include <wx/setup.h> // for wxUSE_* macros
-
-#include "Effect.h"
+#include "EffectInterface.h"
 #include "EqualizationBandSliders.h"
 
-class wxBitmap;
-class wxBoxSizer;
 class wxButton;
 class wxCheckBox;
 class wxChoice;
@@ -28,6 +25,9 @@ class wxSizerItem;
 class wxStaticText;
 class EqualizationPanel;
 class RulerPanel;
+
+#include <wx/event.h>
+#include <wx/weakref.h>
 
 class EqualizationUI : public wxEvtHandler {
 public:
@@ -123,84 +123,4 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
-
-class EffectEqualization : public StatefulEffect
-{
-public:
-   static inline EqualizationParameters *
-   FetchParameters(EffectEqualization &e, EffectSettings &)
-   { return &e.mParameters; }
-   static const ComponentInterfaceSymbol Symbol;
-
-   EffectEqualization(int Options = kEqLegacy);
-   
-   virtual ~EffectEqualization();
-
-   // ComponentInterface implementation
-
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
-   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
-      override;
-   bool VisitSettings(
-      ConstSettingsVisitor &visitor, const EffectSettings &settings)
-      const override;
-
-   // EffectDefinitionInterface implementation
-
-   EffectType GetType() const override;
-   OptionalMessage LoadFactoryDefaults(EffectSettings &settings)
-      const override;
-   OptionalMessage DoLoadFactoryDefaults(EffectSettings &settings);
-
-   RegistryPaths GetFactoryPresets() const override;
-   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
-      const override;
-
-   // EffectUIClientInterface implementation
-
-   bool ValidateUI(EffectSettings &) override;
-
-   // Effect implementation
-
-   bool Init() override;
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
-
-   bool CloseUI() override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-
-private:
-   // EffectEqualization implementation
-
-   bool ProcessOne(int count, WaveTrack * t,
-                   sampleCount start, sampleCount len);
-   
-   EqualizationFilter mParameters;
-   EqualizationCurvesList mCurvesList{ mParameters };
-   const int mOptions;
-   EqualizationUI mUI{ *this, mUIParent, GetName(), mCurvesList, mOptions };
-
-   const EffectParameterMethods& Parameters() const override;
-};
-
-class EffectEqualizationCurve final : public EffectEqualization
-{
-public:
-   static const ComponentInterfaceSymbol Symbol;
-
-   EffectEqualizationCurve() : EffectEqualization( kEqOptionCurve ) {}
-};
-
-class EffectEqualizationGraphic final : public EffectEqualization
-{
-public:
-   static const ComponentInterfaceSymbol Symbol;
-
-   EffectEqualizationGraphic() : EffectEqualization( kEqOptionGraphic ) {}
-};
-
 #endif
