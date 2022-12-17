@@ -43,8 +43,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "widgets/AudacityMessageBox.h"
 
 
-wxDEFINE_EVENT(EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
-
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectAudioManagerKey {
    []( AudacityProject &project ) {
@@ -69,8 +67,8 @@ ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
 {
    static ProjectStatus::RegisteredStatusWidthFunction
       registerStatusWidthFunction{ StatusWidthFunction };
-   project.Bind( EVT_CHECKPOINT_FAILURE,
-      &ProjectAudioManager::OnCheckpointFailure, this );
+   mCheckpointFailureSubcription = ProjectFileIO::Get(project)
+      .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure);
 }
 
 ProjectAudioManager::~ProjectAudioManager() = default;
@@ -1070,10 +1068,8 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          // dropouts.  We allow failure of this.
          auto gAudioIO = AudioIO::Get();
          auto &intervals = gAudioIO->LostCaptureIntervals();
-         if (intervals.size()) {
-            RecordingDropoutEvent evt{ intervals };
-            mProject.ProcessEvent(evt);
-         }
+         if (intervals.size())
+            Publish( RecordingDropoutEvent{ intervals } );
       }
    }
 }
@@ -1111,10 +1107,10 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    }
 }
 
-void ProjectAudioManager::OnCheckpointFailure(wxCommandEvent &evt)
+void ProjectAudioManager::OnCheckpointFailure(ProjectFileIOMessage message)
 {
-   evt.Skip();
-   Stop();
+   if (message == ProjectFileIOMessage::CheckpointFailure)
+      Stop();
 }
 
 bool ProjectAudioManager::Playing() const

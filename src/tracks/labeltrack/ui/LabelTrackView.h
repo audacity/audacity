@@ -12,6 +12,7 @@ Paul Licameli split from class LabelTrack
 #define __AUDACITY_LABEL_TRACK_VIEW__
 
 #include "../../ui/CommonTrackView.h"
+#include "Observer.h"
 
 class LabelGlyphHandle;
 class LabelTextHandle;
@@ -69,7 +70,6 @@ public:
 
 private:
    void BindTo( LabelTrack *pParent );
-   void UnbindFrom( LabelTrack *pParent );
 
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
@@ -248,10 +248,12 @@ private:
 private:
    void RemoveSelectedText();
 
-   void OnLabelAdded( LabelTrackEvent& );
-   void OnLabelDeleted( LabelTrackEvent& );
-   void OnLabelPermuted( LabelTrackEvent& );
-   void OnSelectionChange( LabelTrackEvent& );
+   void OnLabelAdded( const LabelTrackEvent& );
+   void OnLabelDeleted( const LabelTrackEvent& );
+   void OnLabelPermuted( const LabelTrackEvent& );
+   void OnSelectionChange( const LabelTrackEvent& );
+
+   Observer::Subscription mSubscription;
 
    std::shared_ptr<LabelTrack> FindLabelTrack();
    std::shared_ptr<const LabelTrack> FindLabelTrack() const;

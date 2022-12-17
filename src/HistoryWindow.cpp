@@ -152,8 +152,8 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
 
    mAudioIOSubscription = AudioIO::Get()->Subscribe(*this, &HistoryDialog::OnAudioIO);
 
-   Clipboard::Get().Bind(
-      EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplayForClipboard, this);
+   mClipboardSubscription = Clipboard::Get()
+      .Subscribe(*this, &HistoryDialog::UpdateDisplayForClipboard);
 
    if (parent)
       mUndoSubscription = UndoManager::Get(*parent)
@@ -248,9 +248,8 @@ void HistoryDialog::OnAudioIO(AudioIOEvent evt)
 #endif
 }
 
-void HistoryDialog::UpdateDisplayForClipboard(wxEvent& e)
+void HistoryDialog::UpdateDisplayForClipboard(ClipboardChangeMessage)
 {
-   e.Skip();
    DoUpdateDisplay();
 }
 

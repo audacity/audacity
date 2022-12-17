@@ -97,7 +97,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
 
          explicit SpectralDataDialog(AudacityProject &parent);
 
-         void UpdateDisplayForClipboard(wxEvent &e);
+         void UpdateDisplayForClipboard(ClipboardChangeMessage);
          void UpdateDisplay(UndoRedoMessage);
          void DoUpdateDisplay();
          void UpdateControls( bool active );
@@ -122,6 +122,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
 
          Observer::Subscription mAudioIOSubscription
             , mUndoSubscription
+            , mClipboardSubscription
          ;
          AudacityProject   &mProject;
          wxToggleButton *mBrushButton = nullptr;
@@ -175,8 +176,8 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject &parent)
    mAudioIOSubscription = AudioIO::Get()
       ->Subscribe(*this, &SpectralDataDialog::OnAudioIO);
 
-   Clipboard::Get().Bind( EVT_CLIPBOARD_CHANGE,
-      &::SpectralDataDialog::UpdateDisplayForClipboard, this);
+   mClipboardSubscription = Clipboard::Get()
+      .Subscribe(*this, &::SpectralDataDialog::UpdateDisplayForClipboard);
 
    mUndoSubscription = UndoManager::Get(parent)
       .Subscribe(*this, &SpectralDataDialog::UpdateDisplay);
@@ -245,9 +246,8 @@ void SpectralDataDialog::OnAudioIO(AudioIOEvent ev)
       mAudioIOBusy = ev.on;
 }
 
-void SpectralDataDialog::UpdateDisplayForClipboard(wxEvent& e)
+void SpectralDataDialog::UpdateDisplayForClipboard(ClipboardChangeMessage)
 {
-   e.Skip();
    DoUpdateDisplay();
 }
 

@@ -71,12 +71,11 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
    mProject = pProject;
 
    SetWindowTitle();
-   auto titleChanged = [&](wxCommandEvent &evt)
-   {
-      SetWindowTitle();
-      evt.Skip();
-   };
-   wxTheApp->Bind( EVT_PROJECT_TITLE_CHANGE, titleChanged );
+   mTitleChangeSubscription = ProjectFileIO::Get(*parent)
+      .Subscribe([this](ProjectFileIOMessage message){
+         if (message == ProjectFileIOMessage::ProjectTitleChange)
+            SetWindowTitle();
+      });
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
@@ -141,7 +140,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
 
    // Events from the project don't propagate directly to this other frame, so...
    if (pProject)
-      mSubscription = ProjectWindow::Get( *pProject ).GetPlaybackScroller()
+      mTimerSubscription = ProjectWindow::Get( *pProject ).GetPlaybackScroller()
          .Subscribe(*this, &LyricsWindow::OnTimer);
    Center();
 }

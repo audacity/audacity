@@ -769,7 +769,6 @@ list( APPEND SOURCES
       menus/TrackMenus.cpp
       menus/TransportMenus.cpp
       menus/ViewMenus.cpp
-      menus/WindowMenus.cpp
 
       # Preferences
 
@@ -1365,7 +1364,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
       effects/audiounits/AUControl.mm
-      menus/WindowMenus.cpp
       widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
