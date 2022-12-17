@@ -14,9 +14,9 @@
 #ifndef __AUDACITY_EQUALIZATION_FILTER__
 #define __AUDACITY_EQUALIZATION_FILTER__
 
-#include "EqualizationParameters.h"
-#include "RealFFTf.h"
-class Envelope;
+#include "EqualizationParameters.h" // base class
+#include "Envelope.h" // member
+#include "RealFFTf.h" // member
 using Floats = ArrayOf<float>;
 
 //! Extend EqualizationParameters with frequency domain coefficients computed
@@ -41,18 +41,16 @@ struct EqualizationFilter : EqualizationParameters {
    //! padded left and right for the tails
    void Filter(size_t len, float *buffer) const;
 
-   Envelope &ChooseEnvelope() const
-   { return *(mLin ? mLinEnvelope : mLogEnvelope); }
+   const Envelope &ChooseEnvelope() const
+   { return mLin ? mLinEnvelope : mLogEnvelope; }
+   Envelope &ChooseEnvelope()
+   { return mLin ? mLinEnvelope : mLogEnvelope; }
 
    // If sliders show, always use the log envelope
    const Envelope &ChooseEnvelopeToPaint() const
-   { return *(IsLinear() ? mLinEnvelope : mLogEnvelope); }
+   { return IsLinear() ? mLinEnvelope : mLogEnvelope; }
 
-   //! @invariant not null
-   const std::unique_ptr<Envelope> mLinEnvelope;
-   //! @invariant not null
-   const std::unique_ptr<Envelope> mLogEnvelope;
-
+   Envelope mLinEnvelope, mLogEnvelope;
    HFFT hFFT{ GetFFT(windowSize) };
    Floats mFFTBuffer{ windowSize };
    Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };

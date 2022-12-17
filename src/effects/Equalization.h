@@ -94,7 +94,7 @@ private:
    void Flatten();
    void ForceRecalc();
    void EnvelopeUpdated();
-   void EnvelopeUpdated(Envelope *env, bool lin);
+   void EnvelopeUpdated(const Envelope &env, bool lin);
 
    void Select(int sel);
    void setCurve(int currentCurve);
@@ -110,7 +110,7 @@ private:
    void EnvLogToLin(void);
    void EnvLinToLog(void);
    void ErrMin(void);
-   void GraphicEQ(Envelope *env);
+   void GraphicEQ(Envelope &env);
    void spline(double x[], double y[], size_t n, double y2[]);
    double splint(double x[], double y[], size_t n, double y2[], double xr);
 

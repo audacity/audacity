@@ -445,16 +445,16 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    //(done in a hurry, may not be the neatest -MJS)
    if (mDirty && !mDrawMode)
    {
-      size_t numPoints = mLogEnvelope->GetNumberOfPoints();
+      size_t numPoints = mLogEnvelope.GetNumberOfPoints();
       Doubles when{ numPoints };
       Doubles value{ numPoints };
-      mLogEnvelope->GetPoints(when.get(), value.get(), numPoints);
+      mLogEnvelope.GetPoints(when.get(), value.get(), numPoints);
       for (size_t i = 0, j = 0; j + 2 < numPoints; i++, j++)
       {
          if ((value[i] < value[i + 1] + .05) && (value[i] > value[i + 1] - .05) &&
             (value[i + 1] < value[i + 2] + .05) && (value[i + 1] > value[i + 2] - .05))
          {   // within < 0.05 dB?
-            mLogEnvelope->Delete(j + 1);
+            mLogEnvelope.Delete(j + 1);
             numPoints--;
             j--;
          }
@@ -1318,8 +1318,8 @@ void EffectEqualization::setCurve(int currentCurve)
             /*
             // we have a point beyond fs/2.  Insert it so that env code can use it.
             // but just this one, we have no use for the rest
-            env->SetTrackLen(when); // can't Insert if the envelope isn't long enough
-            env->Insert(when, value);
+            env.SetTrackLen(when); // can't Insert if the envelope isn't long enough
+            env.Insert(when, value);
             break;
             */
 
@@ -1396,24 +1396,20 @@ void EffectEqualization::ForceRecalc()
 void EffectEqualization::EnvelopeUpdated()
 {
    if (mParameters.IsLinear())
-   {
-      EnvelopeUpdated(mParameters.mLinEnvelope.get(), true);
-   }
+      EnvelopeUpdated(mParameters.mLinEnvelope, true);
    else
-   {
-      EnvelopeUpdated(mParameters.mLogEnvelope.get(), false);
-   }
+      EnvelopeUpdated(mParameters.mLogEnvelope, false);
 }
 
-void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
+void EffectEqualization::EnvelopeUpdated(const Envelope &env, bool lin)
 {
    const auto &mHiFreq = mParameters.mHiFreq;
 
    // Allocate and populate point arrays
-   size_t numPoints = env->GetNumberOfPoints();
+   size_t numPoints = env.GetNumberOfPoints();
    Doubles when{ numPoints };
    Doubles value{ numPoints };
-   env->GetPoints( when.get(), value.get(), numPoints );
+   env.GetPoints( when.get(), value.get(), numPoints );
 
    // Clear the unnamed curve
    int curve = mCurves.size() - 1;
@@ -1463,10 +1459,10 @@ void EffectEqualization::Flatten()
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
 
-   mLogEnvelope->Flatten(0.);
-   mLogEnvelope->SetTrackLen(1.0);
-   mLinEnvelope->Flatten(0.);
-   mLinEnvelope->SetTrackLen(1.0);
+   mLogEnvelope.Flatten(0.);
+   mLogEnvelope.SetTrackLen(1.0);
+   mLinEnvelope.Flatten(0.);
+   mLinEnvelope.SetTrackLen(1.0);
    ForceRecalc();
    if( !mDrawMode )
    {
@@ -1530,13 +1526,13 @@ void EffectEqualization::UpdateDraw()
    auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mHiFreq = mParameters.mHiFreq;
 
-   size_t numPoints = mLogEnvelope->GetNumberOfPoints();
+   size_t numPoints = mLogEnvelope.GetNumberOfPoints();
    Doubles when{ numPoints };
    Doubles value{ numPoints };
    double deltadB = 0.1;
    double dx, dy, dx1, dy1, err;
 
-   mLogEnvelope->GetPoints( when.get(), value.get(), numPoints );
+   mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
 
    // set 'unnamed' as the selected curve
    EnvelopeUpdated();
@@ -1546,7 +1542,7 @@ void EffectEqualization::UpdateDraw()
    {
       flag = false;
       int numDeleted = 0;
-      mLogEnvelope->GetPoints( when.get(), value.get(), numPoints );
+      mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
       for (size_t j = 0; j + 2 < numPoints; j++)
       {
          dx = when[j+2+numDeleted] - when[j+numDeleted];
@@ -1556,7 +1552,7 @@ void EffectEqualization::UpdateDraw()
          err = fabs(value[j+numDeleted+1] - (value[j+numDeleted] + dy1));
          if( err < deltadB )
          {   // within < deltadB dB?
-            mLogEnvelope->Delete(j+1);
+            mLogEnvelope.Delete(j+1);
             numPoints--;
             numDeleted++;
             flag = true;
@@ -1601,8 +1597,8 @@ void EffectEqualization::UpdateGraphic()
       for(double freq=10.; freq<mHiFreq; freq*=step)
       {
          when = freq/mHiFreq;
-         value = mLinEnvelope->GetValue(when);
-         mLinEnvelope->Insert(when, value);
+         value = mLinEnvelope.GetValue(when);
+         mLinEnvelope.Insert(when, value);
       }
 
       EnvLinToLog();
@@ -1616,7 +1612,7 @@ void EffectEqualization::UpdateGraphic()
          mWhenSliders[i] = 0.;
       else
          mWhenSliders[i] = (log10(kThirdOct[i])-loLog)/denom;
-      mEQVals[i] = mLogEnvelope->GetValue(mWhenSliders[i]);    //set initial values of sliders
+      mEQVals[i] = mLogEnvelope.GetValue(mWhenSliders[i]);    //set initial values of sliders
       if( mEQVals[i] > 20.)
          mEQVals[i] = 20.;
       if( mEQVals[i] < -20.)
@@ -1644,7 +1640,7 @@ void EffectEqualization::UpdateGraphic()
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
 
-   GraphicEQ(mLogEnvelope.get());
+   GraphicEQ(mLogEnvelope);
    mDrawMode = false;
 }
 
@@ -1654,7 +1650,7 @@ void EffectEqualization::EnvLogToLin(void)
    auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mHiFreq = mParameters.mHiFreq;
 
-   size_t numPoints = mLogEnvelope->GetNumberOfPoints();
+   size_t numPoints = mLogEnvelope.GetNumberOfPoints();
    if( numPoints == 0 )
    {
       return;
@@ -1663,17 +1659,17 @@ void EffectEqualization::EnvLogToLin(void)
    Doubles when{ numPoints };
    Doubles value{ numPoints };
 
-   mLinEnvelope->Flatten(0.);
-   mLinEnvelope->SetTrackLen(1.0);
-   mLogEnvelope->GetPoints( when.get(), value.get(), numPoints );
-   mLinEnvelope->Reassign(0., value[0]);
+   mLinEnvelope.Flatten(0.);
+   mLinEnvelope.SetTrackLen(1.0);
+   mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
+   mLinEnvelope.Reassign(0., value[0]);
    double loLog = log10(20.);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
 
    for (size_t i = 0; i < numPoints; i++)
-      mLinEnvelope->Insert(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
-   mLinEnvelope->Reassign(1., value[numPoints-1]);
+      mLinEnvelope.Insert(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
+   mLinEnvelope.Reassign(1., value[numPoints-1]);
 }
 
 void EffectEqualization::EnvLinToLog(void)
@@ -1682,7 +1678,7 @@ void EffectEqualization::EnvLinToLog(void)
    auto &mLogEnvelope = mParameters.mLogEnvelope;
    const auto &mHiFreq = mParameters.mHiFreq;
 
-   size_t numPoints = mLinEnvelope->GetNumberOfPoints();
+   size_t numPoints = mLinEnvelope.GetNumberOfPoints();
    if( numPoints == 0 )
    {
       return;
@@ -1691,10 +1687,10 @@ void EffectEqualization::EnvLinToLog(void)
    Doubles when{ numPoints };
    Doubles value{ numPoints };
 
-   mLogEnvelope->Flatten(0.);
-   mLogEnvelope->SetTrackLen(1.0);
-   mLinEnvelope->GetPoints( when.get(), value.get(), numPoints );
-   mLogEnvelope->Reassign(0., value[0]);
+   mLogEnvelope.Flatten(0.);
+   mLogEnvelope.SetTrackLen(1.0);
+   mLinEnvelope.GetPoints( when.get(), value.get(), numPoints );
+   mLogEnvelope.Reassign(0., value[0]);
    double loLog = log10(20.);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
@@ -1707,19 +1703,19 @@ void EffectEqualization::EnvLinToLog(void)
          // Caution: on Linux, when when == 20, the log calculation rounds
          // to just under zero, which causes an assert error.
          double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
-         mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
+         mLogEnvelope.Insert(std::max(0.0, flog) , value[i]);
       }
       else
       {  //get the first point as close as we can to the last point requested
          changed = true;
          double v = value[i];
-         mLogEnvelope->Insert(0., v);
+         mLogEnvelope.Insert(0., v);
       }
    }
-   mLogEnvelope->Reassign(1., value[numPoints - 1]);
+   mLogEnvelope.Reassign(1., value[numPoints - 1]);
 
    if(changed)
-      EnvelopeUpdated(mLogEnvelope.get(), false);
+      EnvelopeUpdated(mLogEnvelope, false);
 }
 
 void EffectEqualization::ErrMin(void)
@@ -1733,14 +1729,14 @@ void EffectEqualization::ErrMin(void)
    double correction = 1.6;
    bool flag;
    size_t j=0;
-   Envelope testEnvelope{ *mLogEnvelope };
+   Envelope testEnvelope{ mLogEnvelope };
 
    for(size_t i = 0; i < NUM_PTS; i++)
       vals[i] = testEnvelope.GetValue(mWhens[i]);
 
    //   Do error minimisation
    error = 0.;
-   GraphicEQ(&testEnvelope);
+   GraphicEQ(testEnvelope);
    for(size_t i = 0; i < NUM_PTS; i++)   //calc initial error
    {
       double err = vals[i] - testEnvelope.GetValue(mWhens[i]);
@@ -1773,7 +1769,7 @@ void EffectEqualization::ErrMin(void)
             mEQVals[i] = -20.;
             flag = false;
          }
-         GraphicEQ(&testEnvelope);         //calculate envelope
+         GraphicEQ(testEnvelope);         //calculate envelope
          error = 0.;
          for(size_t k = 0; k < NUM_PTS; k++)  //calculate error
          {
@@ -1796,11 +1792,11 @@ void EffectEqualization::ErrMin(void)
    if( error > .0025 * mBandsInUse ) // not within 0.05dB on each slider, on average
    {
       Select( (int) mCurves.size() - 1 );
-      EnvelopeUpdated(&testEnvelope, false);
+      EnvelopeUpdated(testEnvelope, false);
    }
 }
 
-void EffectEqualization::GraphicEQ(Envelope *env)
+void EffectEqualization::GraphicEQ(Envelope &env)
 {
    const auto &mInterp = mParameters.mInterp;
 
@@ -1809,8 +1805,8 @@ void EffectEqualization::GraphicEQ(Envelope *env)
    double value = 0.0;
    double dist, span, s;
 
-   env->Flatten(0.);
-   env->SetTrackLen(1.0);
+   env.Flatten(0.);
+   env.SetTrackLen(1.0);
 
    switch( mInterp )
    {
@@ -1873,10 +1869,10 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                }
             }
             if(mWhens[i]<=0.)
-               env->Reassign(0., value);
-            env->Insert( mWhens[i], value );
+               env.Reassign(0., value);
+            env.Insert( mWhens[i], value );
          }
-         env->Reassign( 1., value );
+         env.Reassign( 1., value );
          break;
       }
 
@@ -1917,10 +1913,10 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                }
             }
             if(mWhens[i]<=0.)
-               env->Reassign(0., value);
-            env->Insert( mWhens[i], value );
+               env.Reassign(0., value);
+            env.Insert( mWhens[i], value );
          }
-         env->Reassign( 1., value );
+         env.Reassign( 1., value );
          break;
       }
 
@@ -1931,7 +1927,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          spline(mWhenSliders, mEQVals, mBandsInUse+1, y2);
          for(double xf=0; xf<1.; xf+=1./NUM_PTS)
          {
-            env->Insert(xf, splint(mWhenSliders, mEQVals, mBandsInUse+1, y2, xf));
+            env.Insert(xf, splint(mWhenSliders, mEQVals, mBandsInUse+1, y2, xf));
          }
          break;
       }
@@ -2029,7 +2025,7 @@ void EffectEqualization::OnSlider(wxCommandEvent & event)
          break;
       }
    }
-   GraphicEQ(mLogEnvelope.get());
+   GraphicEQ(mLogEnvelope);
    EnvelopeUpdated();
 }
 
@@ -2038,7 +2034,7 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
    bool bIsGraphic = !mParameters.mDrawMode;
    if (bIsGraphic)
    {
-      GraphicEQ(mParameters.mLogEnvelope.get());
+      GraphicEQ(mParameters.mLogEnvelope);
       EnvelopeUpdated();
    }
    mParameters.mInterp = mInterpChoice->GetSelection();
@@ -2161,7 +2157,7 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
             tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., mEQVals[i] );
          mSliders[i]->SetToolTip(tip);
       }
-      GraphicEQ(mLogEnvelope.get());
+      GraphicEQ(mLogEnvelope);
    }
    else  // Draw mode.  Invert the points.
    {
@@ -2172,11 +2168,11 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
       // and find out how many points are in the curve
       if(lin)  // lin freq scale and so envelope
       {
-         numPoints = mLinEnvelope->GetNumberOfPoints();
+         numPoints = mLinEnvelope.GetNumberOfPoints();
       }
       else
       {
-         numPoints = mLogEnvelope->GetNumberOfPoints();
+         numPoints = mLogEnvelope.GetNumberOfPoints();
       }
 
       if( numPoints == 0 )
@@ -2186,17 +2182,17 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
       Doubles value{ numPoints };
 
       if(lin)
-         mLinEnvelope->GetPoints( when.get(), value.get(), numPoints );
+         mLinEnvelope.GetPoints( when.get(), value.get(), numPoints );
       else
-         mLogEnvelope->GetPoints( when.get(), value.get(), numPoints );
+         mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
 
       // invert the curve
       for (size_t i = 0; i < numPoints; i++)
       {
          if(lin)
-            mLinEnvelope->Reassign(when[i] , -value[i]);
+            mLinEnvelope.Reassign(when[i] , -value[i]);
          else
-            mLogEnvelope->Reassign(when[i] , -value[i]);
+            mLogEnvelope.Reassign(when[i] , -value[i]);
       }
 
       // copy it back to the other one (just in case)
@@ -2265,9 +2261,9 @@ EqualizationPanel::EqualizationPanel(
    mHeight = 0;
 
    mLinEditor = std::make_unique<EnvelopeEditor>(
-      *mEffect->mParameters.mLinEnvelope, false);
+      mEffect->mParameters.mLinEnvelope, false);
    mLogEditor = std::make_unique<EnvelopeEditor>(
-      *mEffect->mParameters.mLogEnvelope, false);
+      mEffect->mParameters.mLogEnvelope, false);
 
    ForceRecalc();
 }

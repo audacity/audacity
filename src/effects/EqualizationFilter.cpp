@@ -17,15 +17,15 @@
 
 EqualizationFilter::EqualizationFilter(const EffectSettingsManager &manager)
    : EqualizationParameters{ manager }
-   , mLogEnvelope{ std::make_unique<Envelope>(false,
+   , mLogEnvelope{ false,
        dBMin.min, dBMax.max, // MB: this is the highest possible range
-       0.0) }
-   , mLinEnvelope{ std::make_unique<Envelope>(false,
+       0.0 }
+   , mLinEnvelope{ false,
        dBMin.min, dBMax.max, // MB: this is the highest possible range
-       0.0) }
+       0.0 }
 {
-   mLogEnvelope->SetTrackLen(1.0);
-   mLinEnvelope->SetTrackLen(1.0);
+   mLogEnvelope.SetTrackLen(1.0);
+   mLinEnvelope.SetTrackLen(1.0);
 }
 
 #include "RealFFTf.h"
@@ -45,13 +45,13 @@ bool EqualizationFilter::CalcFilter()
 
    if ( IsLinear() )
    {
-      val0 = mLinEnvelope->GetValue(0.0);   //no scaling required - saved as dB
-      val1 = mLinEnvelope->GetValue(1.0);
+      val0 = mLinEnvelope.GetValue(0.0);   //no scaling required - saved as dB
+      val1 = mLinEnvelope.GetValue(1.0);
    }
    else
    {
-      val0 = mLogEnvelope->GetValue(0.0);   //no scaling required - saved as dB
-      val1 = mLogEnvelope->GetValue(1.0);
+      val0 = mLogEnvelope.GetValue(0.0);   //no scaling required - saved as dB
+      val1 = mLogEnvelope.GetValue(1.0);
    }
    mFilterFuncR[0] = val0;
    double freq = delta;
@@ -74,9 +74,9 @@ bool EqualizationFilter::CalcFilter()
       else
       {
          if ( IsLinear() )
-            mFilterFuncR[i] = mLinEnvelope->GetValue(when);
+            mFilterFuncR[i] = mLinEnvelope.GetValue(when);
          else
-            mFilterFuncR[i] = mLogEnvelope->GetValue(when);
+            mFilterFuncR[i] = mLogEnvelope.GetValue(when);
       }
       freq += delta;
    }
