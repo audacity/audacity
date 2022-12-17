@@ -131,30 +131,22 @@ const ComponentInterfaceSymbol EffectEqualizationGraphic::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectEqualizationGraphic > reg3; }
 
-BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
-   EVT_SIZE( EffectEqualization::OnSize )
-   EVT_IDLE(EffectEqualization::OnIdle)
+BEGIN_EVENT_TABLE(EqualizationUI, wxEvtHandler)
+   EVT_SIZE( EqualizationUI::OnSize )
+   EVT_IDLE(EqualizationUI::OnIdle)
 
 END_EVENT_TABLE()
 
 EffectEqualization::EffectEqualization(int Options)
    : mParameters{ GetDefinition() }
+   , mOptions{ Options }
 {
    auto &mHiFreq = mParameters.mHiFreq;
    auto &mCurves = mCurvesList.mCurves;
 
    Parameters().Reset(*this);
 
-   mOptions = Options;
-   mGraphic = NULL;
-   mDraw = NULL;
-   mCurve = NULL;
-   mPanel = NULL;
-   mMSlider = NULL;
-
    SetLinearEffectFlag(true);
-
-   mDisallowCustom = false;
 
    // Load the EQ curves
    EQCurveReader{ mCurves, GetName(), mOptions }.LoadCurves();
@@ -264,7 +256,7 @@ bool EffectEqualization::VisitSettings(
             break;
          mCurves[0].points.push_back( EQPoint( f,d ));
       }
-      setCurve( 0 );
+      mUI.setCurve( 0 );
    }
    return true;
 }
@@ -359,8 +351,14 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
 
 // EffectUIClientInterface implementation
 
-bool EffectEqualization::ValidateUI(EffectSettings &)
+bool EffectEqualization::ValidateUI(EffectSettings &settings)
 {
+   return mUI.ValidateUI(settings);
+}
+
+bool EqualizationUI::ValidateUI(EffectSettings &)
+{
+   const auto &mParameters = mCurvesList.mParameters;
    const auto &mCurveName = mParameters.mCurveName;
    const auto &mDrawMode = mParameters.mDrawMode;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
@@ -373,16 +371,16 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    {
       // PRL:  This is unreachable.  mDisallowCustom is always false.
 
-      Effect::MessageBox(
+      EQUtils::DoMessageBox(
+         mName,
          XO("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
-         wxOK | wxCENTRE,
          XO("Filter Curve EQ needs a different name") );
       return false;
    }
 
    EQCurveWriter{ mCurves }.SaveCurves();
 
-   mParameters.SaveConfig(GetDefinition());
+   mParameters.SaveConfig(mManager);
 
    return true;
 }
@@ -434,9 +432,8 @@ bool EffectEqualization::Init()
 
    mLoFreq = loFreqI;
 
-   mBands.Init();
-
-   setCurve(mCurveName);
+   mUI.Init();
+   mUI.setCurve(mCurveName);
 
    mParameters.CalcFilter();
 
@@ -477,16 +474,21 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 
 bool EffectEqualization::CloseUI()
 {
-   mCurve = NULL;
-   mPanel = NULL;
-
    return Effect::CloseUI();
 }
 
 std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
+{
+   return mUI.PopulateOrExchange(S, instance, access, pOutputs);
+}
+
+std::unique_ptr<EffectUIValidator> EqualizationUI::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   auto &mParameters = mCurvesList.mParameters;
    const auto &mM = mParameters.mM;
    const auto &mLoFreq = mParameters.mLoFreq;
    const auto &mHiFreq = mParameters.mHiFreq;
@@ -578,7 +580,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, XO("%d dB")));
 #endif
             BindTo(*mdBMaxSlider, wxEVT_SLIDER,
-               &EffectEqualization::OnSliderDBMAX);
+               &EqualizationUI::OnSliderDBMAX);
 
             mdBMinSlider = S
                .Name(XO("Min dB"))
@@ -589,7 +591,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
             mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, XO("%d dB")));
 #endif
             BindTo(*mdBMinSlider, wxEVT_SLIDER,
-               &EffectEqualization::OnSliderDBMIN);
+               &EqualizationUI::OnSliderDBMIN);
          }
          S.EndVerticalLay();
          S.SetBorder(0);
@@ -659,13 +661,13 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                      .Name(XO("Draw Curves"))
                      .AddRadioButton(XXO("&Draw"));
                   BindTo(*mDraw, wxEVT_RADIOBUTTON,
-                     &EffectEqualization::OnDrawMode);
+                     &EqualizationUI::OnDrawMode);
 
                   mGraphic = S
                      .Name(XO("Graphic EQ"))
                      .AddRadioButtonToGroup(XXO("&Graphic"));
                   BindTo(*mGraphic, wxEVT_RADIOBUTTON,
-                     &EffectEqualization::OnGraphicMode);
+                     &EqualizationUI::OnGraphicMode);
                }
                S.EndHorizontalLay();
             }
@@ -691,7 +693,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
 #endif
                BindTo(*mInterpChoice, wxEVT_CHOICE,
-                  &EffectEqualization::OnInterp);
+                  &EqualizationUI::OnInterp);
             }
             S.EndHorizontalLay();
 
@@ -703,7 +705,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                   .Name(XO("Linear Frequency Scale"))
                   .AddCheckBox(XXO("Li&near Frequency Scale"), false);
                BindTo(*mLinFreq, wxEVT_CHECKBOX,
-                  &EffectEqualization::OnLinFreq);
+                  &EqualizationUI::OnLinFreq);
             }
             S.EndHorizontalLay();
          }
@@ -729,7 +731,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                      .Style(wxSL_HORIZONTAL)
                      .AddSlider( {}, (mM - 1) / 2, 4095, 10);
                   BindTo(*mMSlider, wxEVT_SLIDER,
-                     &EffectEqualization::OnSliderM);
+                     &EqualizationUI::OnSliderM);
                }
                S.EndHorizontalLay();
 
@@ -774,7 +776,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
                         }()
                      );
                   BindTo(*mCurve, wxEVT_CHOICE,
-                     &EffectEqualization::OnCurve);
+                     &EqualizationUI::OnCurve);
                }
                S.EndHorizontalLay();
             }
@@ -782,24 +784,24 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 
             const auto pButton = S
                .AddButton(XXO("S&ave/Manage Curves..."));
-            BindTo(*pButton, wxEVT_BUTTON, &EffectEqualization::OnManage);
+            BindTo(*pButton, wxEVT_BUTTON, &EqualizationUI::OnManage);
          }
 
          S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
          {
             auto pButton = S
                .AddButton(XXO("Fla&tten"));
-            BindTo(*pButton, wxEVT_BUTTON, &EffectEqualization::OnClear);
+            BindTo(*pButton, wxEVT_BUTTON, &EqualizationUI::OnClear);
 
             pButton = S
                .AddButton(XXO("&Invert"));
-            BindTo(*pButton, wxEVT_BUTTON, &EffectEqualization::OnInvert);
+            BindTo(*pButton, wxEVT_BUTTON, &EqualizationUI::OnInvert);
 
             mGridOnOff = S
                .Name(XO("Show grid lines"))
                .AddCheckBox(XXO("Show g&rid lines"), false);
             BindTo(*mGridOnOff, wxEVT_CHECKBOX,
-               &EffectEqualization::OnGridOnOff);
+               &EqualizationUI::OnGridOnOff);
          }
          S.EndHorizontalLay();
 
@@ -852,6 +854,12 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
 //
 bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 {
+   return mUI.TransferDataToWindow(settings);
+}
+
+bool EqualizationUI::TransferDataToWindow(const EffectSettings &settings)
+{
+   auto &mParameters = mCurvesList.mParameters;
    const auto &mLin = mParameters.mLin;
    const auto &mDrawGrid = mParameters.mDrawGrid;
    const auto &mM = mParameters.mM;
@@ -908,8 +916,9 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
    return true;
 }
 
-void EffectEqualization::UpdateRuler()
+void EqualizationUI::UpdateRuler()
 {
+   const auto &mParameters = mCurvesList.mParameters;
    const auto &mdBMin = mParameters.mdBMin;
    const auto &mdBMax = mParameters.mdBMax;
 
@@ -1086,8 +1095,9 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 //
 // Make the passed curve index the active one
 //
-void EffectEqualization::setCurve(int currentCurve)
+void EqualizationUI::setCurve(int currentCurve)
 {
+   auto &mParameters = mCurvesList.mParameters;
    constexpr auto loFreqI = EqualizationFilter::loFreqI;
 
    const auto &mLin = mParameters.mLin;
@@ -1249,13 +1259,13 @@ void EffectEqualization::setCurve(int currentCurve)
    mCurvesList.ForceRecalc();
 }
 
-void EffectEqualization::setCurve()
+void EqualizationUI::setCurve()
 {
    const auto &mCurves = mCurvesList.mCurves;
    setCurve((int) mCurves.size() - 1);
 }
 
-void EffectEqualization::setCurve(const wxString &curveName)
+void EqualizationUI::setCurve(const wxString &curveName)
 {
    const auto &mCurves = mCurvesList.mCurves;
    unsigned i = 0;
@@ -1264,10 +1274,10 @@ void EffectEqualization::setCurve(const wxString &curveName)
          break;
    if( i == mCurves.size())
    {
-      Effect::MessageBox(
+      EQUtils::DoMessageBox( mName,
          XO("Requested curve not found, using 'unnamed'"),
-         wxOK|wxICON_ERROR,
-         XO("Curve not found") );
+         XO("Curve not found"),
+         wxOK|wxICON_ERROR);
       setCurve();
    }
    else
@@ -1281,8 +1291,9 @@ void EffectEqualization::setCurve(const wxString &curveName)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void EffectEqualization::UpdateCurves()
+void EqualizationUI::UpdateCurves()
 {
+   auto &mParameters = mCurvesList.mParameters;
    auto &mCurveName = mParameters.mCurveName;
    const auto &mCurves = mCurvesList.mCurves;
 
@@ -1311,8 +1322,9 @@ void EffectEqualization::UpdateCurves()
    setCurve( mCurveName );
 }
 
-void EffectEqualization::UpdateDraw()
+void EqualizationUI::UpdateDraw()
 {
+   auto &mParameters = mCurvesList.mParameters;
    const auto &mLin = mParameters.mLin;
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
@@ -1368,8 +1380,9 @@ void EffectEqualization::UpdateDraw()
    mCurvesList.ForceRecalc();     // it may have changed slightly due to the deletion of points
 }
 
-void EffectEqualization::UpdateGraphic()
+void EqualizationUI::UpdateGraphic()
 {
+   auto &mParameters = mCurvesList.mParameters;
    const auto &mLin = mParameters.mLin;
    auto &mLinEnvelope = mParameters.mLinEnvelope;
    auto &mLogEnvelope = mParameters.mLogEnvelope;
@@ -1409,14 +1422,15 @@ void EffectEqualization::UpdateGraphic()
    mDrawMode = false;
 }
 
-void EffectEqualization::OnSize(wxSizeEvent & event)
+void EqualizationUI::OnSize(wxSizeEvent & event)
 {
    mUIParent->Layout();
    event.Skip();
 }
 
-void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnInterp(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mParameters = mCurvesList.mParameters;
    bool bIsGraphic = !mParameters.mDrawMode;
    if (bIsGraphic)
    {
@@ -1426,21 +1440,21 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
    mParameters.mInterp = mInterpChoice->GetSelection();
 }
 
-void EffectEqualization::OnDrawMode(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnDrawMode(wxCommandEvent & WXUNUSED(event))
 {
-   mParameters.mDrawMode = true;
+   mCurvesList.mParameters.mDrawMode = true;
    UpdateDraw();
 }
 
-void EffectEqualization::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
 {
-   mParameters.mDrawMode = false;
+   mCurvesList.mParameters.mDrawMode = false;
    UpdateGraphic();
 }
 
-void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnSliderM(wxCommandEvent & WXUNUSED(event))
 {
-   auto &mM = mParameters.mM;
+   auto &mM = mCurvesList.mParameters.mM;
 
    size_t m = 2 * mMSlider->GetValue() + 1;
    // Must be odd
@@ -1458,9 +1472,9 @@ void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void EffectEqualization::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
 {
-   auto &mdBMin = mParameters.mdBMin;
+   auto &mdBMin = mCurvesList.mParameters.mdBMin;
 
    float dB = mdBMinSlider->GetValue();
    if (dB != mdBMin) {
@@ -1472,9 +1486,9 @@ void EffectEqualization::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 {
-   auto &mdBMax = mParameters.mdBMax;
+   auto &mdBMax = mCurvesList.mParameters.mdBMax;
 
    float dB = mdBMaxSlider->GetValue();
    if (dB != mdBMax) {
@@ -1489,22 +1503,22 @@ void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 //
 // New curve was selected
 //
-void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
    // Select NEW curve
    wxASSERT( mCurve != NULL );
    setCurve( mCurve->GetCurrentSelection() );
-   if( !mParameters.mDrawMode )
+   if( !mCurvesList.mParameters.mDrawMode )
       UpdateGraphic();
 }
 
 //
 // User wants to modify the list in some way
 //
-void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnManage(wxCommandEvent & WXUNUSED(event))
 {
    auto &mCurves = mCurvesList.mCurves;
-   EqualizationCurvesDialog d(mUIParent, GetName(), mOptions,
+   EqualizationCurvesDialog d(mUIParent, mName, mOptions,
       mCurves, mCurve->GetSelection());
    if (d.ShowModal()) {
       wxGetTopLevelParent(mUIParent)->Layout();
@@ -1518,24 +1532,25 @@ void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
    mUIParent->Layout();
 }
 
-void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnClear(wxCommandEvent & WXUNUSED(event))
 {
    mBands.Flatten();
 }
 
-void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnInvert(wxCommandEvent & WXUNUSED(event))
 {
    mBands.Invert();
 }
 
-void EffectEqualization::OnGridOnOff(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnGridOnOff(wxCommandEvent & WXUNUSED(event))
 {
-   mParameters.mDrawGrid = mGridOnOff->IsChecked();
+   mCurvesList.mParameters.mDrawGrid = mGridOnOff->IsChecked();
    mPanel->Refresh(false);
 }
 
-void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
+void EqualizationUI::OnLinFreq(wxCommandEvent & WXUNUSED(event))
 {
+   auto &mParameters = mCurvesList.mParameters;
    auto &mLin = mParameters.mLin;
    const auto &mLoFreq = mParameters.mLoFreq;
    const auto &mHiFreq = mParameters.mHiFreq;
@@ -1559,9 +1574,9 @@ void EffectEqualization::OnLinFreq(wxCommandEvent & WXUNUSED(event))
    mCurvesList.ForceRecalc();
 }
 
-void EffectEqualization::OnIdle(wxIdleEvent &event)
+void EqualizationUI::OnIdle(wxIdleEvent &event)
 {
    event.Skip();
    if (mCurve)
-      mCurve->SetStringSelection(mParameters.mCurveName);
+      mCurve->SetStringSelection(mCurvesList.mParameters.mCurveName);
 }

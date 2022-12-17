@@ -54,6 +54,7 @@ void EqualizationParameters::LoadDefaults(int options)
 }
 
 void EqualizationParameters::SaveConfig(const EffectSettingsManager &manager)
+const
 {
    // TODO: just visit these effect settings the default way
    SetConfig(manager, PluginSettings::Private,

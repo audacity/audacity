@@ -37,7 +37,7 @@ struct EqualizationParameters {
 
    explicit EqualizationParameters(const EffectSettingsManager &manager);
    void LoadDefaults(int options);
-   void SaveConfig(const EffectSettingsManager &manager);
+   void SaveConfig(const EffectSettingsManager &manager) const;
    bool IsLinear() const;
 
    wxString mCurveName;
