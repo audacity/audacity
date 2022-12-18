@@ -514,6 +514,11 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    window.Publish(ProjectWindowDestroyedMessage {});
    ModuleManager::Get().Dispatch(ProjectClosing);
 
+   // Make sure no autosaves happen for the remaining duration of this function,
+   // while the project may be in a partially destroyed state.  Such saves
+   // would destroy user data!
+   ProjectHistory::AutoSave::Scope disallowAutoSave{ {} };
+
    // Stop the timer since there's no need to update anything anymore
    mTimer.reset();
 
