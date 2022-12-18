@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-13 07:25-0400\n"
-"PO-Revision-Date: 2022-10-25 08:08+0000\n"
+"PO-Revision-Date: 2022-12-18 13:04+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -9113,7 +9113,7 @@ msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr "db RMS"
+msgstr "RMS dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
@@ -9376,7 +9376,7 @@ msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
 msgid "S&teps per window:"
-msgstr "&Kroki na okna:"
+msgstr "&Kroki na okno:"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 #: src/export/ExportFLAC.cpp
