@@ -407,6 +407,11 @@ void ProjectManager::SetClosingAll(bool closing)
    sbClosingAll = closing;
 }
 
+bool ProjectManager::GetClosingAll()
+{
+   return sbClosingAll;
+}
+
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
@@ -418,6 +423,11 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    auto &window = ProjectWindow::Get( project );
    auto gAudioIO = AudioIO::Get();
 
+   const bool wasClosingAll = GetClosingAll();
+   bool didClose = false;
+   // Set the global properly so CloseAllProjects terminates
+   Finally Do([&]{ SetClosingAll(wasClosingAll && didClose); });
+
    // We are called for the wxEVT_CLOSE_WINDOW, wxEVT_END_SESSION, and
    // wxEVT_QUERY_END_SESSION, so we have to protect against multiple
    // entries.  This is a hack until the whole application termination
@@ -425,6 +435,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // to exercise the bug that instigated this hack.)
    if (window.IsBeingDeleted())
    {
+      // Early exit because of recursion guard, see SetIsBeingDeleted()
       event.Skip();
       return;
    }
@@ -487,6 +498,10 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          }
       }
    }
+
+   // No more vetoes or early exits
+   didClose = true;
+
 #ifdef __WXMAC__
    // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
    // closing a project that was made full-screen (as by clicking the green dot

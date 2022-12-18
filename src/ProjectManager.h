@@ -116,6 +116,7 @@ public:
    void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
    static void SetClosingAll(bool closing);
+   static bool GetClosingAll();
 
 private:
    void OnReconnectionFailure(ProjectFileIOMessage);

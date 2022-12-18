@@ -460,25 +460,32 @@ void InitBreakpad()
 static bool gInited = false;
 static bool gIsQuitting = false;
 
-static bool CloseAllProjects( bool force )
+static bool CloseAllProjects(const bool force)
 {
+   // See the gIsQuitting guards against recursion in this function
+   assert(!ProjectManager::GetClosingAll());
    ProjectManager::SetClosingAll(true);
    auto cleanup = finally([]{ ProjectManager::SetClosingAll(false); });
-   while (AllProjects{}.size())
-   {
-      // Closing the project has global side-effect
-      // of deletion from gAudacityProjects
+   
+   // Collect pointers to all projects before (maybe) destroying them
+   // (Or maybe destruction is deviously delayed by event interceptions)
+   std::vector<std::shared_ptr<AudacityProject>> projects{
+      AllProjects{}.begin(), AllProjects{}.end()
+   };
+   // Now iterate and send close events
+   // Note that `force` becomes accessible as event.CanVeto()
+   for (auto pProject : projects) {
       if ( force )
-      {
-         GetProjectFrame( **AllProjects{}.begin() ).Close(true);
-      }
-      else
-      {
-         if (! GetProjectFrame( **AllProjects{}.begin() ).Close())
+         GetProjectFrame(*pProject).Close(true);
+      else {
+         if (! GetProjectFrame(*pProject).Close())
             return false;
       }
    }
-   return true;
+   // Wait for all the closings to really happen
+   while (ProjectManager::GetClosingAll() && AllProjects{}.size())
+      BasicUI::Yield();
+   return AllProjects{}.empty();
 }
 
 static void QuitAudacity(bool bForce)
