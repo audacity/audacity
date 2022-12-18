@@ -69,12 +69,18 @@ private:
    wxWeakRef<EffectUIHost> mEffectUIHost;
    wxWeakRef<wxWindow> mpProjectWindow{};
 
+   // Whether to pass a close event to the main window after dialog closes
+   bool mDoClose{ false };
+   // Context for doing the closing of the main window correctly
+   bool mCanVeto{ false };
+
    TranslatableString mEffectName;
    wxString mTrackName;
    AudacityProject *mpProject{};
 
    Observer::Subscription mProjectWindowDestroyedSubscription;
    Observer::Subscription mParameterChangedSubscription;
+   Observer::Subscription mValidatorDestroyedSubscription;
 
    void OnCloseDialog(wxCloseEvent & evt);
    DECLARE_EVENT_TABLE()

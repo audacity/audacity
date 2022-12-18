@@ -12,12 +12,14 @@
 
 #include <cassert>
 
+#include "BasicUI.h"
 #include "EffectUI.h"
 #include "RealtimeEffectState.h"
 
 #include "EffectManager.h"
 #include "UndoManager.h"
 #include "ProjectHistory.h"
+#include "ProjectManager.h"
 #include "ProjectWindow.h"
 #include "Track.h"
 
@@ -46,6 +48,17 @@ RealtimeEffectStateUI::~RealtimeEffectStateUI()
 bool RealtimeEffectStateUI::IsShown() const noexcept
 {
    return mEffectUIHost != nullptr;
+}
+
+
+static void DelayedCloseEvent(wxWindow &window, bool canVeto)
+{
+   // See how wxWidgets/src/common/wincmn.cpp constructed the event that was
+   // intercepted; do similar
+   wxCloseEvent event(wxEVT_CLOSE_WINDOW, window.GetId());
+   event.SetEventObject(&window);
+   event.SetCanVeto(canVeto);
+   window.GetEventHandler()->AddPendingEvent(event);
 }
 
 void RealtimeEffectStateUI::Show(AudacityProject& project)
@@ -86,6 +99,22 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
    // Dialog is owned by its parent now!
    mEffectUIHost = dlg.release();
 
+   // Issue 4062, step 3:
+   // For reasons unknown, queueing an event to close the main window really
+   // must happen after the LV2 validator is destroyed, and that must be
+   // done in idle time, outside of any yield to the event loop
+   mValidatorDestroyedSubscription =
+      mEffectUIHost->Subscribe([this](auto){
+         if (mDoClose) {
+            mDoClose = false;
+            // Closing the project during the destructor of another dialog makes
+            // me nervous -- so defer this closing event, too
+            if (mpProjectWindow)
+               DelayedCloseEvent(*mpProjectWindow, mCanVeto);
+         }
+         mpProjectWindow = nullptr;
+      });
+
    UpdateTitle();
 
    client->ShowClientInterface(
@@ -105,9 +134,14 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
 
    mProjectWindowDestroyedSubscription = projectWindow.Subscribe(
       [this, &project](ProjectWindowDestroyedMessage) {
+         // The dialog has been completely destroyed first, and now we are
+         // closing the project window.
          // This achieves autosave on close of project before other important
          // project state is destroyed
-         Hide(&project);
+         // Is this redundant now with other AutoSaves in this file?  But keep
+         // the precaution
+         if (mpProject)
+            AutoSave(*mpProject);
       });
    mSubscriber.PushHandler(project);
 
@@ -190,13 +224,29 @@ void RealtimeEffectStateUI::OnCloseDialog(wxCloseEvent & evt)
    mEffectUIHost->RemoveEventHandler(this);
    mEffectUIHost = nullptr;
    auto pProject = mpProject;
-   mpProject = nullptr;
    if (pProject)
       AutoSave(*pProject);
 
-   // Pass the event through to the dialog
+   // Pass the event through to close the dialog
    if (next)
       next->ProcessEvent(evt);
+
+   // Issue 4062, step 2:
+   // We may need to pass the original closing event also back to the
+   // main project window.
+
+   // But we need a complete closing and destruction of the dialog first.
+
+   // So, why not just do this?
+   // EnqueueCloseEvent(*mpProjectWindow, mCanVeto);
+   // -- Because, that still does not fix the crash.
+
+   // So, why not just call wxApp->ProcessIdle() to do delayed destruction now?
+   // Because, for reasons unknown, the crash will still happen!
+
+   // It seems that we really must destroy the LV2 validator while there are
+   // not any other wxWidgets events in any queues.
+   // So see what mValidatorDestroyedSubscription does.
 }
 
 void RealtimeEffectStateUI::ProjectWindowSubscriber::
@@ -224,8 +274,19 @@ ProjectWindowSubscriber::InterceptCloseFrame(wxCloseEvent & evt)
    // Intercept the closing of the project window once only; remove handler
    auto next = GetNextHandler();
    mState.mpProjectWindow->RemoveEventHandler(this);
-   mState.mpProjectWindow = nullptr;
-   if (true) {
+   if (mState.mEffectUIHost) {
+      // mState.mpProjectWindow is still needed
+      mState.mCanVeto = evt.CanVeto();
+      // Tell the dialog to close
+      // The close event must be queued, not processed immediately, to fix
+      // Issue 4062 for the Command+Q case too
+      DelayedCloseEvent(*mState.mEffectUIHost, evt.CanVeto());
+      // And cause our interception of that closing to close the project
+      // window too, afterward
+      mState.mDoClose = true;
+   }
+   else {
+      mState.mpProjectWindow = nullptr;
       // Just pass the event through to the dialog
       if (next)
          next->ProcessEvent(evt);
