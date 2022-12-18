@@ -38,10 +38,14 @@ class RealtimeEffectState;
 
 class wxCheckBox;
 
+//! A message sent by EffectUIHost, while still in its destructor
+struct ValidatorWasDestroyed{};
+
 //
 class EffectUIHost final
    : public wxDialogWrapper
    , public TopLevelKeystrokeHandlingWindow
+   , public Observer::Publisher<ValidatorWasDestroyed>
 {
 public:
    // constructors and destructors
@@ -162,6 +166,7 @@ private:
    const std::shared_ptr<EffectInstance> mpInstance;
    const EffectOutputs *const mpOutputs;
 
+   // This must remain the last non-static member
    std::unique_ptr<EffectUIValidator> mpValidator;
 
    DECLARE_EVENT_TABLE()

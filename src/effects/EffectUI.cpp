@@ -265,6 +265,11 @@ EffectUIHost::~EffectUIHost()
       mpValidator->Disconnect();
    DestroyChildren();
    wxASSERT(mClosed);
+
+   // mpValidator is the last member, and would otherwise still be destroyed
+   // before any other member or base class
+   mpValidator.reset();
+   Publish({});
 }
 
 // ============================================================================
