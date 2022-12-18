@@ -194,8 +194,7 @@ void EffectSettingsAccessTee::Set(EffectSettings &&settings,
 {
    // Move copies of the given settings and message into the side
    if (auto pSide = mwSide.lock())
-      pSide->Set(EffectSettings{ settings },
-         pMessage ? pMessage->Clone() : nullptr);
+      pSide->Set(EffectSettings{ settings }, pMessage->Clone());
    // Move the given settings and message through
    mpMain->Set(std::move(settings), std::move(pMessage));
 }
