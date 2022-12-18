@@ -50,11 +50,24 @@ public:
    void AutoSave(AudacityProject &project);
 
 private:
+   // To push event handlers onto two windows requires distinct handler objects
+   struct ProjectWindowSubscriber : wxEvtHandler {
+      explicit ProjectWindowSubscriber(RealtimeEffectStateUI &state)
+         : mState{ state } {}
+      void InterceptCloseFrame(wxCloseEvent & evt);
+      void PushHandler(AudacityProject &project);
+
+      RealtimeEffectStateUI &mState;
+
+      DECLARE_EVENT_TABLE()
+   } mSubscriber{ *this };
+
    void UpdateTitle();
    
    RealtimeEffectState& mRealtimeEffectState;
 
    wxWeakRef<EffectUIHost> mEffectUIHost;
+   wxWeakRef<wxWindow> mpProjectWindow{};
 
    TranslatableString mEffectName;
    wxString mTrackName;
@@ -63,6 +76,6 @@ private:
    Observer::Subscription mProjectWindowDestroyedSubscription;
    Observer::Subscription mParameterChangedSubscription;
 
-   void OnClose(wxCloseEvent & evt);
+   void OnCloseDialog(wxCloseEvent & evt);
    DECLARE_EVENT_TABLE()
 }; // class RealtimeEffectStateUI

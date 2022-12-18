@@ -30,7 +30,7 @@ const RealtimeEffectState::RegisteredFactory realtimeEffectStateUIFactory { [](a
 
 
 BEGIN_EVENT_TABLE(RealtimeEffectStateUI, wxEvtHandler)
-   EVT_CLOSE(RealtimeEffectStateUI::OnClose)
+   EVT_CLOSE(RealtimeEffectStateUI::OnCloseDialog)
 END_EVENT_TABLE()
 
 RealtimeEffectStateUI::RealtimeEffectStateUI(RealtimeEffectState& state)
@@ -109,6 +109,7 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
          // project state is destroyed
          Hide(&project);
       });
+   mSubscriber.PushHandler(project);
 
    mParameterChangedSubscription = mEffectUIHost->GetValidator()->Subscribe(
       [this](auto) { UndoManager::Get(*mpProject).MarkUnsaved(); });
@@ -123,6 +124,9 @@ void RealtimeEffectStateUI::Hide(AudacityProject* project)
       mEffectUIHost->Close();
       mEffectUIHost = {};
    }
+   if (mpProjectWindow)
+      // Closing the dialog normally, did not intercept a main window closing
+      mpProjectWindow->RemoveEventHandler(&mSubscriber);
 }
 
 void RealtimeEffectStateUI::Toggle(AudacityProject& project)
@@ -180,10 +184,11 @@ void RealtimeEffectStateUI::AutoSave(AudacityProject &project)
    ProjectHistory::AutoSave::Call(project);
 }
 
-void RealtimeEffectStateUI::OnClose(wxCloseEvent & evt)
+void RealtimeEffectStateUI::OnCloseDialog(wxCloseEvent & evt)
 {
    auto next = GetNextHandler();
    mEffectUIHost->RemoveEventHandler(this);
+   mEffectUIHost = nullptr;
    auto pProject = mpProject;
    mpProject = nullptr;
    if (pProject)
@@ -192,4 +197,37 @@ void RealtimeEffectStateUI::OnClose(wxCloseEvent & evt)
    // Pass the event through to the dialog
    if (next)
       next->ProcessEvent(evt);
+}
+
+void RealtimeEffectStateUI::ProjectWindowSubscriber::
+PushHandler(AudacityProject &project)
+{
+   auto& projectWindow = ProjectWindow::Get(project);
+   if (mState.mpProjectWindow == &projectWindow)
+      ;
+   else {
+      if (mState.mpProjectWindow)
+         mState.mpProjectWindow->RemoveEventHandler(this);
+      mState.mpProjectWindow = &projectWindow;
+      projectWindow.PushEventHandler(this);
+   }
+}
+
+BEGIN_EVENT_TABLE(RealtimeEffectStateUI::ProjectWindowSubscriber, wxEvtHandler)
+   EVT_CLOSE(RealtimeEffectStateUI::ProjectWindowSubscriber::InterceptCloseFrame)
+END_EVENT_TABLE()
+
+void RealtimeEffectStateUI::
+ProjectWindowSubscriber::InterceptCloseFrame(wxCloseEvent & evt)
+{
+   // Issue 4062, step 1:
+   // Intercept the closing of the project window once only; remove handler
+   auto next = GetNextHandler();
+   mState.mpProjectWindow->RemoveEventHandler(this);
+   mState.mpProjectWindow = nullptr;
+   if (true) {
+      // Just pass the event through to the dialog
+      if (next)
+         next->ProcessEvent(evt);
+   }
 }
