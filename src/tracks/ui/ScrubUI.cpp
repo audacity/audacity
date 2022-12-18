@@ -218,21 +218,32 @@ struct ScrubForwarder
    ScrubForwarder( AudacityProject &project )
       : mProject{ project }
    {
-      mWindow = &ProjectWindow::Get( project );
-      if ( mWindow )
+      auto window = &ProjectWindow::Get( project );
+      mWindow = window;
+      if ( mWindow ) {
          mWindow->PushEventHandler( this );
+         mProjectWindowDestroyedSubscription = window->Subscribe(
+            [this](auto) { RemoveHandler(); });
+      }
       mRuler = &AdornedRulerPanel::Get( project );
       mScrubber = Scrubber::Get( project ).shared_from_this();
    }
 
    ~ScrubForwarder()
    {
+      RemoveHandler();
+   }
+
+   void RemoveHandler()
+   {
       if ( mWindow )
-         mWindow->PopEventHandler();
+         mWindow->RemoveEventHandler(this);
+      mWindow = nullptr;
    }
 
    AudacityProject &mProject;
-   wxWindowPtr<wxWindow> mWindow;
+   Observer::Subscription mProjectWindowDestroyedSubscription;
+   wxWeakRef<wxWindow> mWindow;
    wxWeakRef<AdornedRulerPanel> mRuler;
    std::weak_ptr<Scrubber> mScrubber;
 
