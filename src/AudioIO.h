@@ -356,6 +356,13 @@ protected:
    // the state used by the third, Audio thread.
    wxMutex mSuspendAudioThread;
 
+public:
+   // Whether an exception (as for exhaustion of resource space) was detected
+   // in recording, and not yet cleared at the end of the procedure to stop
+   // recording.
+   bool HasRecordingException() const
+      { return mRecordingException; }
+
 protected:
    // A flag tested and set in one thread, cleared in another.  Perhaps
    // this guarantee of atomicity is more cautious than necessary.
