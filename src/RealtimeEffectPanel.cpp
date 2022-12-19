@@ -25,6 +25,7 @@
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "Observer.h"
 #include "PluginManager.h"
 #include "Project.h"
@@ -1272,6 +1273,19 @@ public:
       const auto effectID = ShowSelectEffectMenu(dynamic_cast<wxWindow*>(event.GetEventObject()));
       if(effectID.empty())
          return;
+
+      auto plug = PluginManager::Get().GetPlugin(effectID);
+      if(!plug)
+         return;
+
+      if(!PluginManager::IsPluginAvailable(*plug)) {
+         BasicUI::ShowMessageBox(
+            XO("This plugin could not be loaded.\nIt may have been deleted."),
+            BasicUI::MessageBoxOptions()
+               .Caption(XO("Plugin Error")));
+
+         return;
+      }
 
       if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, effectID))
       {

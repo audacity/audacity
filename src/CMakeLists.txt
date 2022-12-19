@@ -1054,6 +1054,8 @@ list( APPEND SOURCES
       widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
       widgets/MeterPanelBase.h
+      widgets/MissingPluginsErrorDialog.cpp
+      widgets/MissingPluginsErrorDialog.h
       widgets/MultiDialog.cpp
       widgets/MultiDialog.h
       widgets/NumericTextCtrl.cpp
