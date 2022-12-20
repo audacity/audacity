@@ -16,11 +16,6 @@
 #include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
-class wxSlider;
-class wxStaticText;
-class wxCheckBox;
-class wxChoice;
-class wxTextCtrl;
 class ShuttleGui;
 
 #define STEPS 1024      // number of +ve or -ve steps in lookup tabe
@@ -42,6 +37,9 @@ public:
    // DC block filter variables
    std::queue<float> queuesamples;
    double queuetotal;
+
+   double mThreshold;
+   bool mbSavedFilterState;
 };
 
 
@@ -113,8 +111,9 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
+   //bool TransferDataToWindow(const EffectSettings &settings) override;
+
+   struct Validator;
 
 private:
 
@@ -134,24 +133,6 @@ private:
    size_t InstanceProcess(EffectSettings &settings,
       EffectDistortionState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
-
-   // Control Handlers
-
-   void OnTypeChoice(wxCommandEvent & evt);
-   void OnDCBlockCheckbox(wxCommandEvent & evt);
-   void OnThresholdText(wxCommandEvent & evt);
-   void OnThresholdSlider(wxCommandEvent & evt);
-   void OnNoiseFloorText(wxCommandEvent & evt);
-   void OnNoiseFloorSlider(wxCommandEvent & evt);
-   void OnParam1Text(wxCommandEvent & evt);
-   void OnParam1Slider(wxCommandEvent & evt);
-   void OnParam2Text(wxCommandEvent & evt);
-   void OnParam2Slider(wxCommandEvent & evt);
-   void OnRepeatsText(wxCommandEvent & evt);
-   void OnRepeatsSlider(wxCommandEvent & evt);
-   void UpdateUI();
-   void UpdateControl(control id, bool enable, TranslatableString name);
-   void UpdateControlText(wxTextCtrl *textCtrl, wxString &string, bool enabled);
 
    void MakeTable();
    float WaveShaper(float sample);
@@ -189,9 +170,7 @@ private:
    EffectDistortionState mMaster;
    std::vector<EffectDistortionState> mSlaves;
 
-   double mTable[TABLESIZE];
-   double mThreshold;
-   bool mbSavedFilterState;
+   double mTable[TABLESIZE];    
 
    // mMakeupGain is used by some distortion types to pass the
    // amount of gain required to bring overall effect gain to unity
@@ -199,37 +178,9 @@ private:
 
    int mTypChoiceIndex;
 
-   wxChoice *mTypeChoiceCtrl;
-   wxTextCtrl *mThresholdT;
-   wxTextCtrl *mNoiseFloorT;
-   wxTextCtrl *mParam1T;
-   wxTextCtrl *mParam2T;
-   wxTextCtrl *mRepeatsT;
-
-   wxSlider *mThresholdS;
-   wxSlider *mNoiseFloorS;
-   wxSlider *mParam1S;
-   wxSlider *mParam2S;
-   wxSlider *mRepeatsS;
-
-   wxCheckBox *mDCBlockCheckBox;
-
-   wxStaticText *mThresholdTxt;
-   wxStaticText *mNoiseFloorTxt;
-   wxStaticText *mParam1Txt;
-   wxStaticText *mParam2Txt;
-   wxStaticText *mRepeatsTxt;
-   
-   wxString mOldThresholdTxt;
-   wxString mOldmNoiseFloorTxt;
-   wxString mOldParam1Txt;
-   wxString mOldParam2Txt;
-   wxString mOldRepeatsTxt;
-
    EffectDistortionSettings mSettings;
 
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
    enum kTableType
    {

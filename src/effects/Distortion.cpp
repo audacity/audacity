@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <algorithm>
-#define _USE_MATH_DEFINES
+//#define _USE_MATH_DEFINES
 
 // Belt and braces
 #ifndef M_PI
@@ -67,7 +67,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
       [](EffectDistortion &e, EffectSettings &settings, EffectDistortionSettings &p,
          bool updating) {
          if (!updating)
-            e.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
+            e.mMaster.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
          return true;
       }
    };
@@ -133,27 +133,128 @@ const ComponentInterfaceSymbol EffectDistortion::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectDistortion > reg; }
 
-BEGIN_EVENT_TABLE(EffectDistortion, wxEvtHandler)
-   EVT_CHOICE(ID_Type, EffectDistortion::OnTypeChoice)
-   EVT_CHECKBOX(ID_DCBlock, EffectDistortion::OnDCBlockCheckbox)
-   EVT_TEXT(ID_Threshold, EffectDistortion::OnThresholdText)
-   EVT_SLIDER(ID_Threshold, EffectDistortion::OnThresholdSlider)
-   EVT_TEXT(ID_NoiseFloor, EffectDistortion::OnNoiseFloorText)
-   EVT_SLIDER(ID_NoiseFloor, EffectDistortion::OnNoiseFloorSlider)
-   EVT_TEXT(ID_Param1, EffectDistortion::OnParam1Text)
-   EVT_SLIDER(ID_Param1, EffectDistortion::OnParam1Slider)
-   EVT_TEXT(ID_Param2, EffectDistortion::OnParam2Text)
-   EVT_SLIDER(ID_Param2, EffectDistortion::OnParam2Slider)
-   EVT_TEXT(ID_Repeats, EffectDistortion::OnRepeatsText)
-   EVT_SLIDER(ID_Repeats, EffectDistortion::OnRepeatsSlider)
-END_EVENT_TABLE()
+
+struct EffectDistortion::Validator
+   : EffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+      EffectSettingsAccess& access, EffectDistortionSettings& settings)
+      : EffectUIValidator{ effect, access }
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
+
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+
+   void PopulateOrExchange(ShuttleGui& S);
+
+   // Control Handlers
+   void OnTypeChoice(wxCommandEvent& evt);
+   void OnDCBlockCheckbox(wxCommandEvent& evt);
+   void OnThresholdText(wxCommandEvent& evt);
+   void OnThresholdSlider(wxCommandEvent& evt);
+   void OnNoiseFloorText(wxCommandEvent& evt);
+   void OnNoiseFloorSlider(wxCommandEvent& evt);
+   void OnParam1Text(wxCommandEvent& evt);
+   void OnParam1Slider(wxCommandEvent& evt);
+   void OnParam2Text(wxCommandEvent& evt);
+   void OnParam2Slider(wxCommandEvent& evt);
+   void OnRepeatsText(wxCommandEvent& evt);
+   void OnRepeatsSlider(wxCommandEvent& evt);
+
+   wxChoice* mTypeChoiceCtrl;
+   wxTextCtrl* mThresholdT;
+   wxTextCtrl* mNoiseFloorT;
+   wxTextCtrl* mParam1T;
+   wxTextCtrl* mParam2T;
+   wxTextCtrl* mRepeatsT;
+
+   wxSlider* mThresholdS;
+   wxSlider* mNoiseFloorS;
+   wxSlider* mParam1S;
+   wxSlider* mParam2S;
+   wxSlider* mRepeatsS;
+
+   wxCheckBox* mDCBlockCheckBox;
+
+   wxStaticText* mThresholdTxt;
+   wxStaticText* mNoiseFloorTxt;
+   wxStaticText* mParam1Txt;
+   wxStaticText* mParam2Txt;
+   wxStaticText* mRepeatsTxt;
+
+   wxString mOldThresholdTxt;
+   wxString mOldmNoiseFloorTxt;
+   wxString mOldParam1Txt;
+   wxString mOldParam2Txt;
+   wxString mOldRepeatsTxt;
+
+   EffectDistortionSettings& mSettings;
+
+   EffectDistortionState& GetState()
+   {
+      // LATER: the state will be taken from the instance which is linked to the validator
+      EffectDistortion& effect = dynamic_cast<EffectDistortion&>(mEffect);
+      return effect.mMaster;
+   }
+
+   void UpdateControl(control id, bool enable, TranslatableString name);
+   void UpdateUIControls();
+   void UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled);
+
+
+   wxWindow* GetUIParent()
+   {
+      Effect& actualEffect = static_cast<Effect&>(mEffect);
+      return actualEffect.GetUIParent();
+   }
+
+};
+
+
+bool EffectDistortion::Validator::ValidateUI()
+{
+   {
+      // This section was copied from the original
+      // EffectDistortion::TransferDataFromWindow
+      //
+      // However, the call to ->Validate would bring up an error dialog
+      // saying "Empty value"
+
+      if ( /*!GetUIParent()->Validate() ||*/ !GetUIParent()->TransferDataFromWindow())
+      {
+         return false;
+      }
+
+      GetState().mThreshold = DB_TO_LINEAR(mSettings.mThreshold_dB);
+   }
+
+
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+   {
+      // pass back the modified settings to the MessageBuffer
+
+      // TODO uncomment at last step
+      //EffectEcho::GetSettings(settings) = mSettings;
+
+      return nullptr;
+   }
+   );
+
+   return true;
+}
 
 EffectDistortion::EffectDistortion()
 {
    Parameters().Reset(*this);
    wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
    mMakeupGain = 1.0;
-   mbSavedFilterState = DCBlock.def;
+   mMaster.mbSavedFilterState = DCBlock.def;
 
    SetLinearEffectFlag(false);
 }
@@ -189,8 +290,7 @@ EffectType EffectDistortion::GetType() const
 auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   //return RealtimeSince::Never;
-   return RealtimeSince::Always;
+   return RealtimeSince::Never;
 }
 
 unsigned EffectDistortion::GetAudioInCount() const
@@ -277,7 +377,7 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
    }
 
    mSettings = FactoryPresets[id].params;
-   mThreshold = DB_TO_LINEAR(mSettings.mThreshold_dB);
+   mMaster.mThreshold = DB_TO_LINEAR(mSettings.mThreshold_dB);
 
    return { nullptr };
 }
@@ -285,9 +385,21 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+std::unique_ptr<EffectUIValidator>
+EffectDistortion::PopulateOrExchange(ShuttleGui& S, EffectInstance& instance,
+   EffectSettingsAccess& access, const EffectOutputs* pOutputs)
+{
+   // TODO
+//   auto& settings = access.Get();
+//   auto& myEffSettings = GetSettings(settings);
+   auto& myEffSettings = mSettings;
+   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   result->PopulateOrExchange(S);
+   return result;
+}
+
+// STEP TODO: add all links to OnSomething handlers
+void EffectDistortion::Validator::PopulateOrExchange(ShuttleGui& S)
 {
    auto& ms = mSettings;
 
@@ -296,14 +408,18 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
    {
       S.StartMultiColumn(4, wxCENTER);
       {
-         mTypeChoiceCtrl = S.Id(ID_Type)
+         mTypeChoiceCtrl = S
             .MinSize( { -1, -1 } )
             .Validator<wxGenericValidator>(&ms.mTableChoiceIndx)
             .AddChoice(XXO("Distortion type:"),
                Msgids(kTableTypeStrings, nTableTypes));
 
-         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(XXO("DC blocking filter"),
+         BindTo(*mTypeChoiceCtrl, wxEVT_CHOICE, &Validator::OnTypeChoice);
+
+         mDCBlockCheckBox = S.AddCheckBox(XXO("DC blocking filter"),
                                        DCBlock.def);
+
+         BindTo(*mDCBlockCheckBox, wxEVT_CHECKBOX, &Validator::OnDCBlockCheckbox);
       }
       S.EndMultiColumn();
       S.AddSpace(0, 10);
@@ -320,14 +436,16 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             // Upper threshold control
             mThresholdTxt = S.AddVariableText(defaultLabel(0),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mThresholdT = S.Id(ID_Threshold)
+            mThresholdT = S
                .Name(defaultLabel(0))
                .Validator<FloatingPointValidator<double>>(
                   2, &ms.mThreshold_dB, NumValidatorStyle::DEFAULT,
                   Threshold_dB.min, Threshold_dB.max)
                .AddTextBox( {}, wxT(""), 10);
 
-            mThresholdS = S.Id(ID_Threshold)
+            BindTo(*mThresholdT, wxEVT_TEXT, &Validator::OnThresholdText);
+
+            mThresholdS = S
                .Name(defaultLabel(0))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0,
@@ -335,10 +453,12 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
                   DB_TO_LINEAR(Threshold_dB.min) * Threshold_dB.scale);
             S.AddSpace(20, 0);
 
+            BindTo(*mThresholdS, wxEVT_SLIDER, &Validator::OnThresholdSlider);
+            
             // Noise floor control
             mNoiseFloorTxt = S.AddVariableText(defaultLabel(1),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mNoiseFloorT = S.Id(ID_NoiseFloor)
+            mNoiseFloorT = S
                .Name(defaultLabel(1))
                .Validator<FloatingPointValidator<double>>(
                   2, &ms.mNoiseFloor, NumValidatorStyle::DEFAULT,
@@ -346,11 +466,15 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mNoiseFloorS = S.Id(ID_NoiseFloor)
+            BindTo(*mNoiseFloorT, wxEVT_TEXT, &Validator::OnNoiseFloorText);
+
+            mNoiseFloorS = S
                .Name(defaultLabel(1))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, NoiseFloor.max, NoiseFloor.min);
             S.AddSpace(20, 0);
+
+            BindTo(*mNoiseFloorS, wxEVT_SLIDER, &Validator::OnNoiseFloorSlider);
          }
          S.EndMultiColumn();
       }
@@ -367,7 +491,7 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             // Parameter1 control
             mParam1Txt = S.AddVariableText(defaultLabel(2),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mParam1T = S.Id(ID_Param1)
+            mParam1T = S
                .Name(defaultLabel(2))
                .Validator<FloatingPointValidator<double>>(
                   2, &ms.mParam1, NumValidatorStyle::DEFAULT,
@@ -375,16 +499,20 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mParam1S = S.Id(ID_Param1)
+            BindTo(*mParam1T, wxEVT_TEXT, &Validator::OnParam1Text);
+
+            mParam1S = S
                .Name(defaultLabel(2))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, Param1.max, Param1.min);
             S.AddSpace(20, 0);
 
+            BindTo(*mParam1S, wxEVT_SLIDER, &Validator::OnParam1Slider);
+            
             // Parameter2 control
             mParam2Txt = S.AddVariableText(defaultLabel(3),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mParam2T = S.Id(ID_Param2)
+            mParam2T = S
                .Name(defaultLabel(3))
                .Validator<FloatingPointValidator<double>>(
                   2, &ms.mParam2, NumValidatorStyle::DEFAULT,
@@ -392,16 +520,21 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mParam2S = S.Id(ID_Param2)
+            BindTo(*mParam2T, wxEVT_TEXT, &Validator::OnParam2Text);
+
+            mParam2S = S
                .Name(defaultLabel(3))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, Param2.max, Param2.min);
-            S.AddSpace(20, 0);
 
+            BindTo(*mParam2S, wxEVT_SLIDER, &Validator::OnParam2Slider);
+
+            S.AddSpace(20, 0);
+            
             // Repeats control
             mRepeatsTxt = S.AddVariableText(defaultLabel(4),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mRepeatsT = S.Id(ID_Repeats)
+            mRepeatsT = S
                .Name(defaultLabel(4))
                .Validator<IntegerValidator<int>>(
                   &ms.mRepeats, NumValidatorStyle::DEFAULT,
@@ -409,10 +542,15 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mRepeatsS = S.Id(ID_Repeats)
+            BindTo(*mRepeatsT, wxEVT_TEXT, &Validator::OnRepeatsText);
+
+            mRepeatsS = S
                .Name(defaultLabel(4))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, Repeats.def, Repeats.max, Repeats.min);
+
+            BindTo(*mRepeatsS, wxEVT_SLIDER, &Validator::OnRepeatsSlider);
+
             S.AddSpace(20, 0);
          }
          S.EndMultiColumn();
@@ -421,45 +559,32 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
    }
    S.EndVerticalLay();
 
-   return nullptr;
 }
 
-bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
+
+bool EffectDistortion::Validator::UpdateUI()
 {
    const auto& ms = mSettings;
 
-   if (!mUIParent->TransferDataToWindow())
+   if (! GetUIParent()->TransferDataToWindow())
    {
       return false;
    }
 
-   mThresholdS->     SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
+   mThresholdS->     SetValue((int) (GetState().mThreshold * Threshold_dB.scale + 0.5));
    mDCBlockCheckBox->SetValue(     ms.mDCBlock);
    mNoiseFloorS->    SetValue((int)ms.mNoiseFloor + 0.5);
    mParam1S->        SetValue((int)ms.mParam1 + 0.5);
    mParam2S->        SetValue((int)ms.mParam2 + 0.5);
    mRepeatsS->       SetValue(     ms.mRepeats);
 
-   mbSavedFilterState = ms.mDCBlock;
+   GetState().mbSavedFilterState = ms.mDCBlock;
 
-   UpdateUI();
-
-   return true;
-}
-
-bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
-{
-   const auto& ms = mSettings;
-
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
+   UpdateUIControls();
 
    return true;
 }
+
 
 void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRate)
 {
@@ -566,110 +691,135 @@ size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
    return blockLen;
 }
 
-void EffectDistortion::OnTypeChoice(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnTypeChoice(wxCommandEvent& /*evt*/)
 {
    mTypeChoiceCtrl->GetValidator()->TransferFromWindow();
 
-   UpdateUI();
+   UpdateUIControls();
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
 {
    auto& ms = mSettings;
 
    ms.mDCBlock = mDCBlockCheckBox->GetValue();
-   mbSavedFilterState = ms.mDCBlock;
+
+   GetState().mbSavedFilterState = ms.mDCBlock;
+
+   ValidateUI();
 }
 
 
-void EffectDistortion::OnThresholdText(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnThresholdText(wxCommandEvent& /*evt*/)
 {
    const auto& ms = mSettings;
 
+
    mThresholdT->GetValidator()->TransferFromWindow();
-   mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
-   mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
+   GetState().mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
+   mThresholdS->SetValue((int) (GetState().mThreshold * Threshold_dB.scale + 0.5));
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnThresholdSlider(wxCommandEvent& evt)
+void EffectDistortion::Validator::OnThresholdSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
    static const double MIN_Threshold_Linear = DB_TO_LINEAR(Threshold_dB.min);
 
-   mThreshold = (double) evt.GetInt() / Threshold_dB.scale;
-   ms.mThreshold_dB = wxMax(LINEAR_TO_DB(mThreshold), Threshold_dB.min);
-   mThreshold = std::max(MIN_Threshold_Linear, mThreshold);
+   GetState().mThreshold = (double)evt.GetInt() / Threshold_dB.scale;
+   ms.mThreshold_dB = wxMax(LINEAR_TO_DB(GetState().mThreshold), Threshold_dB.min);
+   GetState().mThreshold = std::max(MIN_Threshold_Linear, GetState().mThreshold);
    mThresholdT->GetValidator()->TransferToWindow();
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnNoiseFloorText(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnNoiseFloorText(wxCommandEvent& /*evt*/)
 {
    const auto& ms = mSettings;
 
    mNoiseFloorT->GetValidator()->TransferFromWindow();
    mNoiseFloorS->SetValue((int) floor(ms.mNoiseFloor + 0.5));
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnNoiseFloorSlider(wxCommandEvent& evt)
+void EffectDistortion::Validator::OnNoiseFloorSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
    ms.mNoiseFloor = (double) evt.GetInt();
    mNoiseFloorT->GetValidator()->TransferToWindow();
+
+   ValidateUI();
 }
 
 
-void EffectDistortion::OnParam1Text(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnParam1Text(wxCommandEvent& /*evt*/)
 {
    const auto& ms = mSettings;
 
    mParam1T->GetValidator()->TransferFromWindow();
    mParam1S->SetValue((int) floor(ms.mParam1 + 0.5));
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnParam1Slider(wxCommandEvent& evt)
+void EffectDistortion::Validator::OnParam1Slider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
    ms.mParam1 = (double) evt.GetInt();
    mParam1T->GetValidator()->TransferToWindow();
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnParam2Text(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnParam2Text(wxCommandEvent& /*evt*/)
 {
    const auto& ms = mSettings;
 
    mParam2T->GetValidator()->TransferFromWindow();
    mParam2S->SetValue((int) floor(ms.mParam2 + 0.5));
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnParam2Slider(wxCommandEvent& evt)
+void EffectDistortion::Validator::OnParam2Slider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
    ms.mParam2 = (double) evt.GetInt();
    mParam2T->GetValidator()->TransferToWindow();
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnRepeatsText(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnRepeatsText(wxCommandEvent& /*evt*/)
 {
    const auto& ms = mSettings;
 
    mRepeatsT->GetValidator()->TransferFromWindow();
    mRepeatsS->SetValue(ms.mRepeats);
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnRepeatsSlider(wxCommandEvent& evt)
+void EffectDistortion::Validator::OnRepeatsSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
    ms.mRepeats = evt.GetInt();
    mRepeatsT->GetValidator()->TransferToWindow();
-   
+
+   ValidateUI();
 }
 
-void EffectDistortion::UpdateUI()
+void EffectDistortion::Validator::UpdateUIControls()
 {
    const auto& ms = mSettings;
 
@@ -840,7 +990,8 @@ void EffectDistortion::UpdateUI()
    }
 }
 
-void EffectDistortion::UpdateControl(
+
+void EffectDistortion::Validator::UpdateControl(
    control id, bool enabled, TranslatableString name)
 {
    auto& ms = mSettings;
@@ -854,8 +1005,8 @@ void EffectDistortion::UpdateControl(
          name.Join( suffix, wxT(" ") );
 
          // Logarithmic slider is set indirectly
-         mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
-         mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
+         GetState().mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
+         mThresholdS->SetValue((int) (GetState().mThreshold * Threshold_dB.scale + 0.5));
 
          auto translated = name.Translation();
          mThresholdTxt->SetLabel(translated);
@@ -919,8 +1070,8 @@ void EffectDistortion::UpdateControl(
       }
       case ID_DCBlock: {
          if (enabled) {
-            mDCBlockCheckBox->SetValue(mbSavedFilterState);
-            ms.mDCBlock = mbSavedFilterState;
+            mDCBlockCheckBox->SetValue(GetState().mbSavedFilterState);
+            ms.mDCBlock = GetState().mbSavedFilterState;
          }
          else {
             mDCBlockCheckBox->SetValue(false);
@@ -935,7 +1086,7 @@ void EffectDistortion::UpdateControl(
    }
 }
 
-void EffectDistortion::UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled)
+void EffectDistortion::Validator::UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled)
 {
    if (enabled) {
       if (textCtrl->GetValue().empty())
@@ -999,18 +1150,18 @@ void EffectDistortion::MakeTable()
 
 void EffectDistortion::HardClip()
 {
-   double lowThresh = 1 - mThreshold;
-   double highThresh = 1 + mThreshold;
+   double lowThresh = 1 - mMaster.mThreshold;
+   double highThresh = 1 + mMaster.mThreshold;
 
    for (int n = 0; n < TABLESIZE; n++) {
       if (n < (STEPS * lowThresh))
-         mTable[n] = - mThreshold;
+         mTable[n] = - mMaster.mThreshold;
       else if (n > (STEPS * highThresh))
-         mTable[n] = mThreshold;
+         mTable[n] = mMaster.mThreshold;
       else
          mTable[n] = n/(double)STEPS - 1;
 
-      mMakeupGain = 1.0 / mThreshold;
+      mMakeupGain = 1.0 / mMaster.mThreshold;
    }
 }
 
@@ -1018,9 +1169,9 @@ void EffectDistortion::SoftClip()
 {
    const auto& ms = mSettings;
 
-   double threshold = 1 + mThreshold;
+   double threshold = 1 + mMaster.mThreshold;
    double amount = std::pow(2.0, 7.0 * ms.mParam1 / 100.0); // range 1 to 128
-   double peak = LogCurve(mThreshold, 1.0, amount);
+   double peak = LogCurve(mMaster.mThreshold, 1.0, amount);
    mMakeupGain = 1.0 / peak;
    mTable[STEPS] = 0.0;   // origin
 
@@ -1029,7 +1180,7 @@ void EffectDistortion::SoftClip()
       if (n < (STEPS * threshold)) // origin to threshold
          mTable[n] = n/(float)STEPS - 1;
       else
-         mTable[n] = LogCurve(mThreshold, n/(double)STEPS - 1, amount);
+         mTable[n] = LogCurve(mMaster.mThreshold, n/(double)STEPS - 1, amount);
    }
    CopyHalfTable();
 }
