@@ -4,21 +4,21 @@
 #
 # Translators:
 # Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2012-07-27 10:44+0000\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021\n"
+"PO-Revision-Date: 2022-12-20 18:29+0100\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (http://www.transifex.com/klyok/audacity/language/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #. i18n-hint C++ programming assertion
 #: crashreports/crashreporter/CrashReportApp.cpp
@@ -41,7 +41,7 @@ msgstr "Raportu di prublema per Audacity"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr "Cliccà nant’à « Mandà » per sottumette u raportu à Audacity. St’infurmazioni sò cullettate anunimamente."
+msgstr "Cliccu nant’à « Mandà » per sottumette u raportu à Audacity. St’infurmazioni sò cullettate anunimamente."
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -652,11 +652,11 @@ msgstr "&Iterazione attivata/disattivata"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Taglià/Cupià/Incullà"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "Barra d’attrezzi per taglià, cupià o &incullà"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -1634,7 +1634,7 @@ msgstr "A verificazione di i rinnovi è u signalamentu di i sbaglii richiedenu l
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
-msgstr "Cliccà è fà trascinà per definisce una regione iterativa."
+msgstr "Cliccu è fate trascinà per definisce una regione iterativa."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1642,7 +1642,7 @@ msgstr "L’azzioni in a linea tempurale sò disattivate durante l’arregistram
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Cliccà è trascinà per adattà, dopiu-cliccu per reinizià"
+msgstr "Cliccu è fate trascinà per adattà, dopiu-cliccu per reinizià"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -1660,7 +1660,7 @@ msgstr "Linea tempurale"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
-msgstr "Cliccà o trascinà per principià a ricerca"
+msgstr "Cliccu o fate trascinà per principià a ricerca"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -1668,7 +1668,7 @@ msgstr "Cliccà o trascinà per principià a ricerca"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
-msgstr "Cliccà o trascinà per principià a strufinera"
+msgstr "Cliccu o fate trascinà per principià a strufinera"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -1676,7 +1676,7 @@ msgstr "Cliccà o trascinà per principià a strufinera"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Cliccà è move per strufinà. Cliccà è trascinà per ricercà."
+msgstr "Cliccu è fate dispiazzà per strufinà. Cliccu è fate trascinà per ricercà."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -1684,7 +1684,7 @@ msgstr "Cliccà è move per strufinà. Cliccà è trascinà per ricercà."
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
-msgstr "Move per ricercà"
+msgstr "Dispiazzà per ricercà"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -1692,7 +1692,7 @@ msgstr "Move per ricercà"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
-msgstr "Move per strufinà"
+msgstr "Dispiazzà per strufinà"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
@@ -1704,7 +1704,7 @@ msgstr "Trascinà per ricercà. Rilascià per piantà a strufinera."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "Move per strufinà. Trascinà per ricercà."
+msgstr "Dispiazzà per strufinà. Trascinà per ricercà."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
@@ -2032,7 +2032,7 @@ msgstr ""
 "\n"
 "Ci hè parechje ragioni pussibule, ma a più prubabile hè chì u discu sia pienu o chì ùn abbia micca i diritti di scrive in u schedariu. Pudete ottene più d’infurmazione grazia à u buttone d’aiutu quaghjò.\n"
 "\n"
-"Pudete pruvà di currege u penseru è cliccà nant’à « Torna » per cuntinuà.\n"
+"Pudete pruvà di currege u penseru è cliccu nant’à « Torna » per cuntinuà.\n"
 "\n"
 "S’è vò sciglite d’« Esce da Audacity », u vostru prughjettu pò esse lasciatu in un statu micca arregistratu chì serà ricuperatu à a so prossima apertura."
 
@@ -2414,11 +2414,11 @@ msgstr "S&quassà"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "Move &Up"
-msgstr "Move in&sù"
+msgstr "Dispiazzà in&sù"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
 msgid "Move &Down"
-msgstr "Move in&ghjò"
+msgstr "Dispiazzà in&ghjò"
 
 #: src/BatchProcessDialog.cpp src/HelpUtilities.cpp
 #: src/effects/nyquist/Nyquist.cpp
@@ -2989,7 +2989,7 @@ msgstr "Lucalizazione di « %s » :"
 #: src/FFmpeg.cpp
 #, c-format
 msgid "To find '%s', click here -->"
-msgstr "Per truvà « %s », cliccà quì -->"
+msgstr "Per truvà « %s », fate un cliccu quì -->"
 
 #: src/FFmpeg.cpp src/export/ExportCL.cpp src/export/ExportMP3.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -2998,7 +2998,7 @@ msgstr "Navigà…"
 
 #: src/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
-msgstr "Per ottene una copia di rigalu di FFmpeg, cliccà quì -->"
+msgstr "Per ottene una copia di rigalu di FFmpeg, fate un cliccu quì -->"
 
 #. i18n-hint: (verb)
 #: src/FFmpeg.cpp src/export/ExportMP3.cpp
@@ -3010,9 +3010,8 @@ msgid "Only avformat.dll"
 msgstr "Solu avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "Solu libavformat.so"
+msgstr "Solu libavformat.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -3911,7 +3910,7 @@ msgstr "Là♯/Si♭"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Selezziunà effetti, cliccà u buttone Attivà o Disattivà, è dopu, cliccà Vai."
+msgstr "Selezziunà effetti, cliccu nant’à u buttone Attivà o Disattivà, eppò cliccu nant’à Vai."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginRegistrationDialog.cpp
@@ -5299,11 +5298,11 @@ msgstr "Avertimentu - Truncatura d’un schedariu di bloccu troppu longu"
 #. "Stop &Preview" and "Start &Preview"
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
-msgstr "&Pre-ascolta"
+msgstr "&Preascolta"
 
 #: src/ShuttleGui.cpp
 msgid "Dry Previe&w"
-msgstr "Pre-ascolta &cruda"
+msgstr "Preascolta &cruda"
 
 #: src/ShuttleGui.cpp
 msgid "&Settings"
@@ -5886,11 +5885,11 @@ msgstr " Selezzione attiva"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Cliccà è fà trascinà per adattà a dimensione relativa di e traccie stereo, dopiu-cliccu per apparinà l’altezze"
+msgstr "Cliccu è fate trascinà per adattà a dimensione relativa di e traccie stereo, dopiu-cliccu per apparinà l’altezze"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
-msgstr "Cliccà è fà trascinà per cambià a dimensione di a traccia."
+msgstr "Cliccu è fate trascinà per cambià a dimensione di a traccia."
 
 #: src/TrackUtilities.cpp
 msgid "Removed audio track(s)"
@@ -6040,7 +6039,7 @@ msgstr "Sparte l’audio"
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "Barra d’attrezzi per &sparte l’audio"
+msgstr "Barra d’attrezzi per sparte l’audi&o"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -6079,23 +6078,19 @@ msgstr "&Vai"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Publicu"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Ùn serà micca pussibule di sunà o d’arregistrà l’audio.\n"
-"\n"
+msgstr "N’importa quale puderà stà à sente st’audio."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Micca allistinatu"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Solu a ghjente à quella vo scumpartite stu liame ponu accede à u vostru audio"
+msgstr "Solu voi è a ghjente à quella vo scumpartite un liame puderanu stà à sente st’audio."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -6519,11 +6514,11 @@ msgstr "Arregistreghja una copia di u prughjettu currente."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Saves the log contents."
-msgstr "Arregistreghja u cuntenutu di u ghjurnale"
+msgstr "Arregistreghja u cuntenutu di u ghjurnale."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Clears the log contents."
-msgstr "Viota u cuntenutu di u ghjurnale"
+msgstr "Viota u cuntenutu di u ghjurnale."
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference"
@@ -9478,7 +9473,7 @@ msgstr "Dimensione di a &stanza (%) :"
 
 #: src/effects/Reverb.cpp
 msgid "&Pre-delay (ms):"
-msgstr "&Pre-cumportu (ms) :"
+msgstr "&Precumportu (ms) :"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
@@ -9639,7 +9634,7 @@ msgstr "Sogliu di silenziu"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
-msgstr "Durata di pre-allisciata :"
+msgstr "Durata di preallisciata :"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -9647,7 +9642,7 @@ msgstr "Durata di pre-allisciata :"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
-msgstr "Durata di pre-allisciata"
+msgstr "Durata di preallisciata"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -11759,12 +11754,12 @@ msgstr "Lucalizazione di %s :"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "To find %s, click here -->"
-msgstr "Per truvà %s, cliccà quì -->"
+msgstr "Per truvà %s, fate un cliccu quì -->"
 
 #. i18n-hint: There is a  button to the right of the arrow.
 #: src/export/ExportMP3.cpp
 msgid "To get a free copy of LAME, click here -->"
-msgstr "Per ottene una copia di rigalu di LAME, cliccà quì -->"
+msgstr "Per ottene una copia di rigalu di LAME, fate un cliccu quì -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
@@ -12170,7 +12165,7 @@ msgstr "Qualità alta alta (a più piana)"
 
 #: src/export/ExportWavPack.cpp
 msgid "32 bit float "
-msgstr "32 bit virgula mobile"
+msgstr "32 bit virgula mobile "
 
 #. i18n-hint bps abbreviates "bits per sample"
 #: src/export/ExportWavPack.cpp
@@ -12557,7 +12552,7 @@ msgstr "Attributu « len » di simpleblockfile assente o inaccettevule."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
-msgstr "Attributu « len » di simpleblockfile assente o inaccettevule"
+msgstr "Attributu « len » di silentblockfile assente o inaccettevule."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12945,7 +12940,7 @@ msgstr "Impussibule di principià l’estrazzione QuickTime"
 
 #: src/import/ImportQT.cpp
 msgid "Unable to set QuickTime render quality"
-msgstr "Impussibule di definisce a qualità di u resu QuickTime"
+msgstr "Impussibule di definisce a qualità di a restituzione QuickTime"
 
 #: src/import/ImportQT.cpp
 msgid "Unable to set QuickTime discrete channels property"
@@ -14475,23 +14470,23 @@ msgstr "Mischià"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
-msgstr "Tuttu l’audio rinfurzatu in a traccia « %s »"
+msgstr "Tuttu l’audio restituitu in a traccia « %s »"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
 #: src/menus/TrackMenus.cpp
 msgid "Render"
-msgstr "Rinfurzà"
+msgstr "Restituisce"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d traccie mischiate è rinfurzate in una nova traccia stereo"
+msgstr "%d traccie mischiate è restituite in una nova traccia stereo"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d traccie mischiate è rinfurzate in una nova traccia mono"
+msgstr "%d traccie mischiate è restituite in una nova traccia mono"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
@@ -14712,11 +14707,11 @@ msgstr "Mischju da stereo à &mono"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x and Render"
-msgstr "Mischju è &rinforzu"
+msgstr "Mischju è &restituzione"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Mischju è rinforzu ver di una no&va traccia"
+msgstr "Mischju è restituzione versu una no&va traccia"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
@@ -16588,7 +16583,7 @@ msgstr "Arregistramentu Appinzunà è Sfilà"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr "Pre-sfilatura :"
+msgstr "Presfilatura :"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
@@ -16853,10 +16848,10 @@ msgid ""
 msgstr ""
 "I temi sò una funzione esperimentale.\n"
 "\n"
-"Per pruvalli, cliccà nant’à « Arregistrà l’impiatta di tema » eppò truvate è mudificate\n"
+"Per pruvalli, cliccu nant’à « Arregistrà l’impiatta di tema » eppò truvate è mudificate\n"
 "e fiure è i culori in ImageCacheVxx.png impieghendu un editore di fiura cum’è Gimp.\n"
 "\n"
-"Cliccà nant’à « Caricà l’impiatta di tema » per caricà in Audacity e fiure è i culori mudificati."
+"Cliccu nant’à « Caricà l’impiatta di tema » per caricà in Audacity e fiure è i culori mudificati."
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -17181,7 +17176,7 @@ msgstr "Preferenze audio :"
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Setup Toolbar"
-msgstr "Barre d’attrezzi di cunfigurazione &audio"
+msgstr "Barre d’attrezzi di &cunfigurazione audio"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -17286,7 +17281,7 @@ msgstr "Infurmazione nant’à l’apparechju micca dispunibule."
 #. that manages devices
 #: src/toolbars/DeviceToolBar.cpp
 msgid "&Device Toolbar"
-msgstr "Barra d’attrezzi d’appar&echju"
+msgstr "Barra d’attrezzi d’appa&rechju"
 
 #: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
@@ -17543,7 +17538,7 @@ msgstr "Larghezza di striscia"
 #. for selecting a frequency range of audio
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Barra d’attrezzi di selezzione s&pettrale"
+msgstr "Barra d’attrezzi di selezzione sp&ettrale"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -17563,7 +17558,7 @@ msgstr "Barra d’attrezzi %s d’Audacity"
 
 #: src/toolbars/ToolBar.cpp
 msgid "Click and drag to resize toolbar"
-msgstr "Cliccà è trascinà per cambià a dimensione di a barra d’attrezzi"
+msgstr "Cliccu è fate trascinà per cambià a dimensione di a barra d’attrezzi"
 
 #: src/toolbars/ToolDock.cpp
 msgid "ToolDock"
@@ -17756,7 +17751,7 @@ msgstr "Cliccu à manca/trascinà à manca"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
-msgstr "Cliccà è fà trascinà per stinzà a regione selezziunata."
+msgstr "Cliccu è fate trascinà per stinzà a regione selezziunata."
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
@@ -17803,7 +17798,7 @@ msgstr "Linea di tagliata squassata"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
-msgstr "Cliccà è fà trascinà per mudificà i campioni"
+msgstr "Cliccu è fate trascinà per mudificà i campioni"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
@@ -17865,7 +17860,7 @@ msgstr "Ammuzzà u pezzu tramezu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Click and drag to move clip boundary in time"
-msgstr "Cliccà è fà trascinà per dispiazzà tempuralmente a cunfina di u pezzu"
+msgstr "Cliccu è fate trascinà per dispiazzà tempuralmente a cunfina di u pezzu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Set Wave Clip Name"
@@ -17873,7 +17868,7 @@ msgstr "Definisce u nome di u pezzu d’onda"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Click and drag to select text"
-msgstr "Cliccà è fà trascinà per selezziunà u testu"
+msgstr "Cliccu è fate trascinà per selezziunà u testu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Modified Clip Name"
@@ -18119,11 +18114,11 @@ msgstr "%.0f%% à diritta"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Cliccà è trascinà per adattà e dimensioni di e viste secundarie, dopiu-cliccu per sparte in parti uguali"
+msgstr "Cliccu è fate trascinà per adattà e dimensioni di e viste secundarie, dopiu-cliccu per sparte in parti uguali"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
-msgstr "Cliccà è trascinà per accuncià e viste secundarie"
+msgstr "Cliccu è fate trascinà per accuncià e viste secundarie"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rearrange sub-views"
@@ -18331,11 +18326,11 @@ msgstr "Cambiamentu di nome"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Click and drag to warp playback time"
-msgstr "Cliccà è fà trascinà per alterà a durata di lettura"
+msgstr "Cliccu è fate trascinà per alterà a durata di lettura"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Click and drag to edit the amplitude envelope"
-msgstr "Cliccà è fà trascinà per mudificà l’inviluppu d’ampiitutine"
+msgstr "Cliccu è fate trascinà per mudificà l’inviluppu d’ampiitutine"
 
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
 #: src/tracks/ui/EnvelopeHandle.cpp
@@ -18388,31 +18383,31 @@ msgstr "Strufinà in &avanti"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
-msgstr "Cliccà è fà trascinà per dispiazzà e cunfine manche di a selezzione."
+msgstr "Cliccu è fate trascinà per dispiazzà e cunfine manche di a selezzione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move right selection boundary."
-msgstr "Cliccà è fà trascinà per dispiazzà e cunfine diritte di a selezzione."
+msgstr "Cliccu è fate trascinà per dispiazzà e cunfine diritte di a selezzione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move bottom selection frequency."
-msgstr "Cliccà è fà trascinà per dispiazzà a frequenza bassa di a selezzione."
+msgstr "Cliccu è fate trascinà per dispiazzà a frequenza bassa di a selezzione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move top selection frequency."
-msgstr "Cliccà è fà trascinà per dispiazzà a frequenza alta di a selezzione."
+msgstr "Cliccu è fate trascinà per dispiazzà a frequenza alta di a selezzione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "Cliccà è fà trascinà per dispiazzà a frequenza centrale di a selezzione à un piccu spettrale."
+msgstr "Cliccu è fate trascinà per dispiazzà a frequenza centrale di a selezzione à un piccu spettrale."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
-msgstr "Cliccà è fà trascinà per dispiazzà a frequenza centrale di a selezzione."
+msgstr "Cliccu è fate trascinà per dispiazzà a frequenza centrale di a selezzione."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "Cliccà è trascinà per adattà a larghezza di striscia di frequenza."
+msgstr "Cliccu è fate trascinà per adattà a larghezza di striscia di frequenza."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -18427,11 +18422,11 @@ msgstr "Modu multi-attrezzi : %s per e preferenze di topu è tastera."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to set frequency bandwidth."
-msgstr "Cliccà è trascinà per definisce a larghezza di striscia di frequenza."
+msgstr "Cliccu è fate trascinà per definisce a larghezza di striscia di frequenza."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
-msgstr "Cliccà è fà trascinà per selezziunà l’audio"
+msgstr "Cliccu è fate trascinà per selezziunà l’audio"
 
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
@@ -18440,7 +18435,7 @@ msgstr "(magneticu)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
-msgstr "Cliccà è fà trascinà per dispiazzà tempuralmente una traccia"
+msgstr "Cliccu è fate trascinà per dispiazzà tempuralmente una traccia"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Could not shift between tracks"
@@ -18653,13 +18648,12 @@ msgstr "Buttone"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
-msgstr "Appughjà"
+msgstr "appughjatu"
 
 #: src/widgets/AButton.cpp
 msgid "not pressed"
-msgstr ""
+msgstr "micca appughjatu"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
