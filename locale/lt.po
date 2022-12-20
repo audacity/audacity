@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2018-03-29 22:12+0100\n"
 "Last-Translator: Zygimantus <zygimantus@gmail.com>\n"
 "Language-Team: Sharunas <Sharunas55387@hotmail.com>\n"
@@ -664,6 +664,14 @@ msgstr "Peršablonuoti Takeli"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2167,7 +2175,7 @@ msgstr "Pasirinkti"
 msgid "&Recover Selected"
 msgstr "Pasirinkti"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -3035,7 +3043,7 @@ msgid "Only avformat.dll"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
+msgid "Only libavformat.dylib"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -4073,6 +4081,11 @@ msgid ""
 msgstr ""
 "%s efektas nebuvo sėkmingai registruotas:\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr ""
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5186,23 +5199,16 @@ msgstr "Įrankiai"
 msgid "Transport"
 msgstr "Transportuoti"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Mikseris"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Matuoklis"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Grojimo Matuoklis"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6129,6 +6135,25 @@ msgid "&Ok"
 msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Jūs negalėsite groti ar įrašinėti garso.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Daugialypis Eksportavimas"
@@ -6209,19 +6234,11 @@ msgid "Preparing audio..."
 msgstr "Slepiami garsai"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr ""
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16084,10 +16101,6 @@ msgid "&Language:"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr ""
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr ""
 
@@ -17761,6 +17774,28 @@ msgid "&Edit Toolbar"
 msgstr "&Redaguoti Įrankių Juosta"
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr ""
 
@@ -17775,6 +17810,12 @@ msgid "Playback Meter"
 msgstr "Atkūrimas"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "Įrašymas"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17782,21 +17823,17 @@ msgid "Meter-Record"
 msgstr ""
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
-#. apparently is helpful to partially sighted people.
-#: src/toolbars/MeterToolBar.cpp
-msgid "Meter-Play"
-msgstr ""
-
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Playback Level"
 msgstr "Atkūrimas"
 
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#. This is the name used in screen reader software, where having 'Meter' first
+#. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "Įrašymas"
+msgid "Meter-Play"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19162,6 +19199,17 @@ msgstr ""
 msgid "Button"
 msgstr ""
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Kompresorius..."
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Kompresorius..."
+
 #  i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #  i18n-hint: One-letter abbreviation for Left, in VU Meter
 #  i18n-hint: One-letter abbreviation for Left, in the Pan slider
@@ -19325,28 +19373,6 @@ msgstr "Horizontalus Stereo"
 #, fuzzy
 msgid "Vertical"
 msgstr "Pritaikyti  &Vertikaliai"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21674,6 +21700,9 @@ msgstr "Takelį Pašalini"
 msgid "Spectral Tools"
 msgstr "S&pektras"
 
+#~ msgid "Mixer"
+#~ msgstr "Mikseris"
+
 #, fuzzy, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "Audacity yra nemokama programa sukurta pasaulinio masto komandos [[http://www.audacityteam.org/about/credits|volunteers]]. Audacity pritaikyta [[http://www.audacityteam.org/download|available]] Windows, Mac ir GNU/Linux (ir kitoms Unix sistemoms)."
@@ -22218,10 +22247,6 @@ msgstr "S&pektras"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Importavimas pabaigtas. Paleidžiamas pagal pageidavimą garso formos apskaičiavimas. %2.0f%% jau įvykdyta."
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "Kompresorius..."
 
 #, fuzzy
 #~ msgid ""

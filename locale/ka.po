@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2022-08-22 12:08+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: <en@li.org>\n"
@@ -656,6 +656,14 @@ msgstr "აუდიობილიკის რესემპლინგი"
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
 msgstr "მარყუჟის ჩართ/გამორთ"
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
+msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -2147,7 +2155,7 @@ msgstr "მონიშნულის გადაგდება"
 msgid "&Recover Selected"
 msgstr "მონიშნულის აღდგენა"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr "გამოტოვება"
 
@@ -2967,8 +2975,9 @@ msgid "Only avformat.dll"
 msgstr "მხოლოდ avformat.dll"
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
-msgstr "მხოლოდ ffmoeg.*.dylib"
+#, fuzzy
+msgid "Only libavformat.dylib"
+msgstr "მხოლოდ libavformat.so"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -3970,6 +3979,11 @@ msgid ""
 msgstr ""
 "ეფექტის ან ბრძანების ჩატვირთვის შეცდომა %s-dan:\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "გასული დრო:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5016,23 +5030,16 @@ msgstr "ხელსაწყოები"
 msgid "Transport"
 msgstr "გადატანა"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "მიქსერი"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "მთვლელი"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "დაკვრის მთვლელი"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -5926,6 +5933,25 @@ msgid "&Ok"
 msgstr "&დიახ"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"ვერ შეძლებთ აუდიოს დაკვრას ან ჩაწერას.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "ფაილში გატანა."
@@ -6006,19 +6032,11 @@ msgid "Preparing audio..."
 msgstr "აუდიოს ქეშირება"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "გასული დრო:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "დარჩენილი დრო:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -15485,10 +15503,6 @@ msgid "&Language:"
 msgstr "&ენა:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "სახელმძღვანელოს მდებარეობა:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "თე&მა:"
 
@@ -17076,6 +17090,28 @@ msgid "&Edit Toolbar"
 msgstr "ხელსაწყოთა ზოლის &რედაქტირება"
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr " მონიტორინგი "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " აქტიური "
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " პიკი %.2f დბ"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " პიკი %.2f "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr ""
 
@@ -17088,6 +17124,11 @@ msgid "Playback Meter"
 msgstr "დაკვრის მზომავი"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Recording Level"
+msgstr "ჩაწერის დონე"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17095,19 +17136,16 @@ msgid "Meter-Record"
 msgstr "მთვლელი-ჩაწერა"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "დაკვრის დონე"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "მთვლელი-დაკვრა"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "დაკვრის დონე"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Recording Level"
-msgstr "ჩაწერის დონე"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -18372,6 +18410,17 @@ msgstr "დააჭირე"
 msgid "Button"
 msgstr "ღილაკს"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "კომპრესორი"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "კომპრესორი"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -18525,28 +18574,6 @@ msgstr "ჰორიზონტალური"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "ვერტიკალური"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr " მონიტორინგი "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " აქტიური "
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " პიკი %.2f დბ"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " პიკი %.2f "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -20705,6 +20732,15 @@ msgstr "ხმის წაშლა"
 msgid "Spectral Tools"
 msgstr "სპექტრის ფუნჯი"
 
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "მხოლოდ ffmoeg.*.dylib"
+
+#~ msgid "Mixer"
+#~ msgstr "მიქსერი"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "სახელმძღვანელოს მდებარეობა:"
+
 #~ msgid "volunteers"
 #~ msgstr "მოხალისეები"
 
@@ -21170,10 +21206,6 @@ msgstr "სპექტრის ფუნჯი"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "მპორტირება დასრულებულია. გაშვებულია მოთხოვნადი ტალღოვანი გამოთვლები. დასრულებულია %2.0f%%."
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "კომპრესორი"
 
 #, fuzzy
 #~ msgid ""
