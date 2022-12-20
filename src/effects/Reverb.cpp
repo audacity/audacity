@@ -202,10 +202,14 @@ struct EffectReverb::Instance
 
    // Realtime section
 
-   bool RealtimeInitialize(EffectSettings& settings, double) override
+   bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override
    {
       SetBlockSize(512);
       mSlaves.clear();
+
+      mLastAppliedSettings = GetSettings(settings);
+      mLastSampleRate = sampleRate;
+
       return true;
    }
 
@@ -233,6 +237,26 @@ struct EffectReverb::Instance
    size_t RealtimeProcess(size_t group, EffectSettings& settings,
       const float* const* inbuf, float* const* outbuf, size_t numSamples) override
    {
+
+      const auto& incomingSettings = GetSettings(settings);
+      if ( !(incomingSettings == mLastAppliedSettings) )
+      {
+         for (auto& slave : mSlaves)
+         {
+            for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
+            {
+               auto& reverbCore = slave.mState.mP[i].reverb;
+               const auto& is = incomingSettings;
+               reverb_init(&reverbCore, mLastSampleRate,
+                           is.mWetGain, is.mRoomSize, is.mReverberance, is.mHfDamping,
+                           is.mPreDelay, is.mStereoWidth, is.mToneLow, is.mToneHigh   );
+            }
+         }         
+
+         mLastAppliedSettings = incomingSettings;
+      }
+
+
       if (group >= mSlaves.size())
          return 0;
       return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
@@ -273,6 +297,9 @@ struct EffectReverb::Instance
    std::vector<EffectReverb::Instance> mSlaves;
 
    unsigned mChannels{ 2 };
+
+   EffectReverbSettings mLastAppliedSettings;
+   double mLastSampleRate{ 0 };
 };
 
 
@@ -590,3 +617,19 @@ void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
 }
 
 #undef SpinSliderHandlers
+
+bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b)
+{
+   // With C++20, all of this can be replaced by =default
+   return      (a.mRoomSize     == b.mRoomSize)
+            && (a.mPreDelay     == b.mPreDelay)
+            && (a.mReverberance == b.mReverberance)
+            && (a.mHfDamping    == b.mHfDamping)
+            && (a.mToneLow      == b.mToneLow)
+            && (a.mToneHigh     == b.mToneHigh)
+            && (a.mWetGain      == b.mWetGain)
+            && (a.mDryGain      == b.mDryGain)
+            && (a.mStereoWidth  == b.mStereoWidth)
+            && (a.mWetOnly      == b.mWetOnly);           
+}
+
