@@ -56,7 +56,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
    }
 }
 
-double NearestZeroCrossing
+double NearestZeroCrossingStandard
 (AudacityProject &project, double t0)
 {
    auto rate = ProjectRate::Get(project).GetRate();
@@ -126,6 +126,101 @@ double NearestZeroCrossing
       return t0;
 
    return t0 + (argmin - (int)windowSize/2) / rate;
+}
+
+double NearestZeroCrossingBasic(AudacityProject &project, double t0)
+{
+   // Search window: 2 seconds
+   // Search 1 second before cursor and 1 second after the cursor.
+#define SEARCH_RANGE_SEC 2.0
+
+   auto rate = ProjectRate::Get(project).GetRate();
+   auto &tracks = TrackList::Get(project);
+
+   int nTracks = 0;
+   int argmin = -1;
+   for (auto one : tracks.Selected< const WaveTrack >()) {
+      long long s0 = one->TimeToLongSamples(t0).as_size_t();
+
+      // Get float samples around the cursor
+
+      // Search window start
+      double ts = t0 - SEARCH_RANGE_SEC*0.5;
+      if (ts < one->GetStartTime())
+         ts = one->GetStartTime();
+      long long ss = one->TimeToLongSamples(ts).as_long_long();
+
+      // Search window end
+      double te = t0 + SEARCH_RANGE_SEC*0.5;
+      if (te > one->GetEndTime())
+         te = one->GetEndTime();
+      long long se = one->TimeToLongSamples(te).as_long_long();
+
+      size_t trackSize = se - ss;
+
+      Floats samples{ trackSize };
+      one->GetFloats(samples.get(), ss, trackSize);
+
+      // Search for the first zero crossing point on the left, starting from s0
+      float prevL = samples[s0 - ss];
+      int argminL = -1;
+      for (size_t i=s0-1; i>=ss; i--) {
+         float curr = samples[i - ss];
+         if (curr*prevL <= 0.0) {
+            // Zero crossing point detected
+             argminL = i;
+             break;
+         }
+         prevL = curr;
+      }
+
+      // Search for the first zero crossing point on the right starting from s0
+      float prevR = samples[s0 - ss];
+      int argminR = -1;
+      for (size_t i=s0+1; i<se; i++) {
+         float curr = samples[i - ss];
+         if (curr*prevL <= 0.0) {
+            // Zero crossing point detected
+             argminR = i;
+             break;
+         }
+         prevR = curr;
+      }
+
+      // Choose the nearest zero crossing point (left or right)
+      int argmin0 = -1;
+      if ((argminL >= 0) && (argminR >= 0)) {
+         argmin0 = ((s0 - argminL) < (argminR - s0)) ?
+            argminL : argminR;
+      }
+      else
+      {
+         argmin0 = (argminL >= 0) ? argminL : argminR;
+      }
+
+      // Take the nearest zero crossing point, considering all the tracks
+      if ((argmin < 0) || (argmin0 < argmin))
+         argmin = argmin0;
+   }
+
+   if (argmin < 0)
+      // Zero crossing point not found
+      return t0;
+
+   return ((double)argmin) / rate;
+}
+
+double NearestZeroCrossing
+(AudacityProject &project, double t0)
+{
+   bool bBasisSelectZeroCrossings;
+   gPrefs->Read(wxT("/GUI/BasicSelectZeroCrossings"),
+                &bBasisSelectZeroCrossings, false);
+
+   if (bBasisSelectZeroCrossings)
+      return NearestZeroCrossingBasic(project, t0);
+   else
+      return NearestZeroCrossingStandard(project, t0);
 }
 
 // If this returns true, then there was a key up, and nothing more to do,

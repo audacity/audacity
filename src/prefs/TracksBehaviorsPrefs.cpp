@@ -103,6 +103,9 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Advanced &vertical zooming"),
                     {wxT("/GUI/VerticalZooming"),
                      false});
+      S.TieCheckBox(XXO("Basic select at zero crossings"),
+                    {wxT("/GUI/BasicSelectZeroCrossings"),
+                     false});
 
       S.AddSpace(10);
 
