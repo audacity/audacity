@@ -6085,9 +6085,7 @@ msgstr "Publiczne"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Każdy będzie mógł słuchać tego nagrania.\n"
-"\n"
+msgstr "Każdy będzie mógł słuchać tego nagrania."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
