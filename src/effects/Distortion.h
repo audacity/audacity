@@ -68,12 +68,11 @@ struct EffectDistortionSettings
 };
 
 
-class EffectDistortion final : public StatefulPerTrackEffect
+class EffectDistortion final : public EffectWithSettings<EffectDistortionSettings, PerTrackEffect>
 {
 public:
    struct Params;
-   static inline EffectDistortionSettings*
-   FetchParameters(EffectDistortion &e, EffectSettings &) { return &e.mSettings; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDistortion();
@@ -93,15 +92,7 @@ public:
    RegistryPaths GetFactoryPresets() const override;
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
-   OptionalMessage DoLoadFactoryPreset(int id);
-
-   // Need this dummy method, else it won't build
-   size_t ProcessBlock(EffectSettings& settings,
-      const float* const* inBlock, float* const* outBlock, size_t blockLen)
-      override
-   {
-      return blockLen;
-   }
+   OptionalMessage DoLoadFactoryPreset(int id, EffectSettings& settings);
 
 
    // Effect implementation
@@ -131,8 +122,6 @@ private:
 private:
 
    int mTypChoiceIndex;
-
-   EffectDistortionSettings mSettings;
 
    const EffectParameterMethods& Parameters() const override;
 

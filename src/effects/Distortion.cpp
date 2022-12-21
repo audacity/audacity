@@ -138,7 +138,7 @@ struct EffectDistortion::Validator
 {
    Validator(EffectUIClientInterface& effect,
              EffectDistortion::Instance& instance,
-      EffectSettingsAccess& access, EffectDistortionSettings& settings)
+      EffectSettingsAccess& access, const EffectDistortionSettings& settings)
       : EffectUIValidator{ effect, access }
        , mInstance(instance)
       , mSettings{ settings }
@@ -193,7 +193,7 @@ struct EffectDistortion::Validator
    wxString mOldParam2Txt;
    wxString mOldRepeatsTxt;
 
-   EffectDistortionSettings& mSettings;
+   EffectDistortionSettings mSettings;
 
    EffectDistortionState& GetState();
 
@@ -234,8 +234,7 @@ bool EffectDistortion::Validator::ValidateUI()
    {
       // pass back the modified settings to the MessageBuffer
 
-      // TODO uncomment at last step
-      //EffectEcho::GetSettings(settings) = mSettings;
+      GetSettings(settings) = mSettings;
 
       return nullptr;
    }
@@ -271,7 +270,7 @@ struct EffectDistortion::Instance
       override;
 
 
-   void InstanceInit(EffectDistortionState& data, float sampleRate);
+   void InstanceInit(EffectDistortionState& data, EffectSettings& settings, float sampleRate);
 
    size_t InstanceProcess(EffectSettings& settings, EffectDistortionState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
@@ -307,7 +306,7 @@ struct EffectDistortion::Instance
    // Cubic formula: y = x - (x^3 / 3.0)
    inline double Cubic(const EffectDistortionSettings&, double x);
 
-   float WaveShaper(float sample);
+   float WaveShaper(float sample, EffectDistortionSettings& ms);
    float DCFilter(EffectDistortionState& data, float sample);
 
    unsigned GetAudioInCount() const override;
@@ -334,7 +333,6 @@ EffectDistortionState& EffectDistortion::Validator::GetState()
 
 EffectDistortion::EffectDistortion()
 {
-   Parameters().Reset(*this);
    wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
 
    SetLinearEffectFlag(false);
@@ -385,9 +383,9 @@ unsigned EffectDistortion::Instance::GetAudioOutCount() const
 }
 
 bool EffectDistortion::Instance::ProcessInitialize(
-   EffectSettings &, double sampleRate, ChannelNames chanMap)
+   EffectSettings & settings, double sampleRate, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, sampleRate);
+   InstanceInit(mMaster, settings, sampleRate);
    return true;
 }
 
@@ -405,11 +403,11 @@ bool EffectDistortion::Instance::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectDistortion::Instance::RealtimeAddProcessor(
-   EffectSettings &, EffectOutputs *, unsigned, float sampleRate)
+   EffectSettings & settings, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
 
-   InstanceInit(slave, sampleRate);
+   InstanceInit(slave, settings, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -444,20 +442,20 @@ RegistryPaths EffectDistortion::GetFactoryPresets() const
 }
 
 OptionalMessage
-EffectDistortion::LoadFactoryPreset(int id, EffectSettings &) const
+EffectDistortion::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id);
+   return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id, settings);
 }
 
-OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
+OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id, EffectSettings& settings)
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
       return {};
    }
 
-   mSettings = FactoryPresets[id].params;   
+   GetSettings(settings) = FactoryPresets[id].params;   
 
    return { nullptr };
 }
@@ -468,11 +466,10 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
 std::unique_ptr<EffectUIValidator>
 EffectDistortion::PopulateOrExchange(ShuttleGui& S, EffectInstance& instance,
    EffectSettingsAccess& access, const EffectOutputs* pOutputs)
-{
-   // TODO
-//   auto& settings = access.Get();
-//   auto& myEffSettings = GetSettings(settings);
-   auto& myEffSettings = mSettings;
+{   
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
+   
    auto result = std::make_unique<Validator>(*this, dynamic_cast<EffectDistortion::Instance&>(instance), access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
@@ -668,13 +665,10 @@ bool EffectDistortion::Validator::UpdateUI()
 }
 
 
-void EffectDistortion::Instance::InstanceInit(EffectDistortionState& data, float sampleRate)
+void EffectDistortion::Instance::InstanceInit(EffectDistortionState& data, EffectSettings& settings, float sampleRate)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectDistortion&>(mProcessor).mSettings;
-
+   auto& ms = GetSettings(settings);
+  
    data.samplerate = sampleRate;
    data.skipcount = 0;
    data.tablechoiceindx = ms.mTableChoiceIndx;
@@ -701,12 +695,8 @@ size_t EffectDistortion::Instance::InstanceProcess(EffectSettings &settings,
    EffectDistortionState& data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectDistortion&>(mProcessor).mSettings;
-
-
+   auto& ms = GetSettings(settings);
+   
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
@@ -735,42 +725,42 @@ size_t EffectDistortion::Instance::InstanceProcess(EffectSettings &settings,
       {
       case kHardClip:
          // Param2 = make-up gain.
-         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (data.mMakeupGain * p2));
+         obuf[i] = WaveShaper(ibuf[i], ms) * ((1 - p2) + (data.mMakeupGain * p2));
          break;
       case kSoftClip:
          // Param2 = make-up gain.
-         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (data.mMakeupGain * p2));
+         obuf[i] = WaveShaper(ibuf[i], ms) * ((1 - p2) + (data.mMakeupGain * p2));
          break;
       case kHalfSinCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kExpCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kLogCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kCubic:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kEvenHarmonics:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
          break;
       case kSinCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kLeveller:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
          break;
       case kRectifier:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
          break;
       case kHardLimiter:
          // Mix equivalent to LADSPA effect's "Wet / Residual" mix
-         obuf[i] = (WaveShaper(ibuf[i]) * (p1 - p2)) + (ibuf[i] * p2);
+         obuf[i] = (WaveShaper(ibuf[i], ms) * (p1 - p2)) + (ibuf[i] * p2);
          break;
       default:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
       }
       if (ms.mDCBlock) {
          obuf[i] = DCFilter(data, obuf[i]);
@@ -804,7 +794,6 @@ void EffectDistortion::Validator::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
 void EffectDistortion::Validator::OnThresholdText(wxCommandEvent& /*evt*/)
 {
    const auto& ms = mSettings;
-
 
    mThresholdT->GetValidator()->TransferFromWindow();
    const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
@@ -1510,17 +1499,12 @@ void EffectDistortion::Instance::CopyHalfTable()
 }
 
 
-float EffectDistortion::Instance::WaveShaper(float sample)
+float EffectDistortion::Instance::WaveShaper(float sample, EffectDistortionSettings& ms)
 {
    float out;
    int index;
    double xOffset;
    double amount = 1;
-
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectDistortion&>(mProcessor).mSettings;
 
    switch (ms.mTableChoiceIndx)
    {
