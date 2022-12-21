@@ -6,13 +6,12 @@
 # Translators:
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2022
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2022-10-25 08:08+0000\n"
+"PO-Revision-Date: 2022-12-21 03:16+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -656,11 +655,11 @@ msgstr "&Pętla włącz/wyłącz"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Wytnij/kopiuj/wklej"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "Pasek narzędzi &wytnij/kopiuj/wklej"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -3013,9 +3012,8 @@ msgid "Only avformat.dll"
 msgstr "Tylko avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "Tylko libavformat.so"
+msgstr "Tylko libavformat.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -6038,13 +6036,13 @@ msgstr "Nie ma wystarczająco miejsca, aby rozszerzyć linię cięcia"
 #. i18n-hint: Share audio button text, keep as short as possible
 #: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Share Audio"
-msgstr "Udostępnij dźwięk"
+msgstr "Udostępnij nagranie"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "Pasek narzędzi &udostępniania dźwięku"
+msgstr "Pasek narzędzi &udostępniania nagrania"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -6083,23 +6081,21 @@ msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Publiczne"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
 msgstr ""
-"Nie będzie można odtwarzać/nagrywać dźwięku.\n"
+"Każdy będzie mógł słuchać tego nagrania.\n"
 "\n"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Niepubliczne"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Tylko osoby, którym udostępnisz ten link, mogą uzyskać dostęp do Twojego dźwięku"
+msgstr "Tylko Ty i osoby, którym udostępnisz ten link, będziecie mogli słuchać tego nagrania."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -6115,7 +6111,7 @@ msgstr "Anuluj przesyłanie na Audio.com"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Uploading audio..."
-msgstr "Przesyłanie dźwięku..."
+msgstr "Przesyłanie nagrania..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Upload complete!"
@@ -6160,7 +6156,7 @@ msgid ""
 "\n"
 "If you have problems uploading, try the Link Account button."
 msgstr ""
-"Twój dźwięk zostanie przesłany do naszego serwisu udostępniania: %s,%%który do użycia wymaga darmowego konta.\n"
+"Twoje nagranie zostanie przesłane do naszego serwisu udostępniania: %s,%%który do użycia wymaga darmowego konta.\n"
 "\n"
 "Jeśli masz problemy z przesyłaniem, wypróbuj przycisk Połącz konto."
 
@@ -6174,7 +6170,7 @@ msgstr "&Odłącz konto"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Preparing audio..."
-msgstr "Przygotowywanie dźwięku..."
+msgstr "Przygotowywanie nagrania..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
@@ -8860,7 +8856,7 @@ msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr "db RMS"
+msgstr "RMS dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
@@ -9114,7 +9110,7 @@ msgstr "16384"
 
 #: src/effects/NoiseReduction.cpp
 msgid "S&teps per window:"
-msgstr "&Kroki na okna:"
+msgstr "&Kroki na okno:"
 
 #: src/effects/NoiseReduction.cpp src/export/ExportFFmpegDialogs.cpp
 #: src/export/ExportFLAC.cpp
@@ -12172,7 +12168,7 @@ msgstr "Bardzo wysoka jakość (najwolniejsze)"
 
 #: src/export/ExportWavPack.cpp
 msgid "32 bit float "
-msgstr "32-bitowy float"
+msgstr "32-bitowy float "
 
 #. i18n-hint bps abbreviates "bits per sample"
 #: src/export/ExportWavPack.cpp
@@ -18663,13 +18659,12 @@ msgstr "Przycisk"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
-msgstr "Naciśnij"
+msgstr "wciśnięty"
 
 #: src/widgets/AButton.cpp
 msgid "not pressed"
-msgstr ""
+msgstr "niewciśnięty"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
