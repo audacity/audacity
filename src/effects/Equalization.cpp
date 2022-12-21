@@ -413,7 +413,8 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 namespace {
 struct EqualizationTask {
    EqualizationTask( size_t M, size_t idealBlockLen, WaveTrack &t )
-      : buffer{ idealBlockLen }
+      // Capacity for M - 1 additional right tail samples
+      : buffer{ idealBlockLen + (M - 1) }
       , output{ t.EmptyCopy() }
       , leftTailRemaining{ (M - 1) / 2 }
    {
@@ -479,13 +480,14 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    bool bLoopSuccess = true;
    size_t wcopy = 0;
 
-   while (len != 0)
+   while (len > 0)
    {
       auto block = limitSampleBufferSize( idealBlockLen, len );
 
       t->GetFloats(buffer.get(), s, block);
 
-      for(size_t i = 0; i < block; i += L)   //go through block in lumps of length L
+      size_t i = 0;
+      for(; i < block; i += L)   //go through block in lumps of length L
       {
          wcopy = std::min <size_t> (L, block - i);
          for(size_t j = 0; j < wcopy; j++)
@@ -504,10 +506,35 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          std::swap( thisWindow, lastWindow );
       }  //next i, lump of this block
 
+      if (len <= block) {
+         // Finish the last block.
+         i -= L;
+         i += wcopy;
+         // Must generate some extra to compensate the left tail latency of
+         // (M - 1) / 2 samples.  In fact, exceed that, generating (M - 1).
+         // The right tail of (M - 1) / 2 is later discarded.
+         // M-1 samples of 'tail' left in lastWindow, get them now
+         // (note that lastWindow and thisWindow have been exchanged at this point
+         //  so that 'thisWindow' is really the window prior to 'lastWindow')
+         if (wcopy < (M - 1)) {
+            // Still have some overlap left to process
+            size_t j = 0;
+            for(; j < M - 1 - wcopy; ++j)
+               buffer[i + j] = lastWindow[wcopy + j] + thisWindow[L + wcopy + j];
+            // And fill in the remainder after the overlap
+            for( ; j < M - 1; ++j)
+               buffer[i + j] = lastWindow[wcopy + j];
+         } else {
+            for(size_t j = 0; j < M - 1; ++j)
+               buffer[i + j] = lastWindow[wcopy + j];
+         }
+         block += M - 1;
+      }
+   
       task.AccumulateSamples((samplePtr)buffer.get(), block);
+
       len -= block;
       s += block;
-
       if (TrackProgress(count, ( s - start ).as_double() /
                         originalLen.as_double()))
       {
@@ -516,29 +543,10 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       }
    }
 
-   if(bLoopSuccess)
-   {
-      // M-1 samples of 'tail' left in lastWindow, get them now
-      if(wcopy < (M - 1)) {
-         // Still have some overlap left to process
-         // (note that lastWindow and thisWindow have been exchanged at this point
-         //  so that 'thisWindow' is really the window prior to 'lastWindow')
-         size_t j = 0;
-         for(; j < M - 1 - wcopy; j++)
-            buffer[j] = lastWindow[wcopy + j] + thisWindow[L + wcopy + j];
-         // And fill in the remainder after the overlap
-         for( ; j < M - 1; j++)
-            buffer[j] = lastWindow[wcopy + j];
-      } else {
-         for(size_t j = 0; j < M - 1; j++)
-            buffer[j] = lastWindow[wcopy + j];
-      }
-      task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
+   if (bLoopSuccess) {
       output->Flush();
-   }
-
-   if (bLoopSuccess)
       PasteOverPreservingClips(*t, start, originalLen, *output);
+   }
 
    return bLoopSuccess;
 }
