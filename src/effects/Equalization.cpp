@@ -459,7 +459,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    wxASSERT(M - 1 < windowSize);
    size_t L = windowSize - (M - 1);   //Process L samples at a go
-   auto s = start;
    auto idealBlockLen = t->GetMaxBlockSize() * 4;
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
@@ -480,8 +479,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    bool bLoopSuccess = true;
    size_t wcopy = 0;
 
-   while (len > 0)
-   {
+   // Number of loop passes is floor((len + idealBlockLen - 1) / idealBlockLen)
+   for (auto s = start; len > 0; s += idealBlockLen, len -= idealBlockLen) {
       auto block = limitSampleBufferSize( idealBlockLen, len );
 
       t->GetFloats(buffer.get(), s, block);
@@ -533,8 +532,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    
       task.AccumulateSamples((samplePtr)buffer.get(), block);
 
-      len -= block;
-      s += block;
       if (TrackProgress(count, ( s - start ).as_double() /
                         originalLen.as_double()))
       {
