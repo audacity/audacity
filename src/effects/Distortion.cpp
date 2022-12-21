@@ -66,8 +66,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
    > parameters{
       [](EffectDistortion &e, EffectSettings &settings, EffectDistortionSettings &p,
          bool updating) {
-         if (!updating)
-            e.mMaster.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
+
          return true;
       }
    };
@@ -138,8 +137,10 @@ struct EffectDistortion::Validator
    : EffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
+             EffectDistortion::Instance& instance,
       EffectSettingsAccess& access, EffectDistortionSettings& settings)
       : EffectUIValidator{ effect, access }
+       , mInstance(instance)
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
@@ -194,12 +195,7 @@ struct EffectDistortion::Validator
 
    EffectDistortionSettings& mSettings;
 
-   EffectDistortionState& GetState()
-   {
-      // LATER: the state will be taken from the instance which is linked to the validator
-      EffectDistortion& effect = dynamic_cast<EffectDistortion&>(mEffect);
-      return effect.mMaster;
-   }
+   EffectDistortionState& GetState();
 
    void UpdateControl(control id, bool enable, TranslatableString name);
    void UpdateUIControls();
@@ -212,6 +208,7 @@ struct EffectDistortion::Validator
       return actualEffect.GetUIParent();
    }
 
+   EffectDistortion::Instance& mInstance;
 };
 
 
@@ -228,8 +225,6 @@ bool EffectDistortion::Validator::ValidateUI()
       {
          return false;
       }
-
-      GetState().mThreshold = DB_TO_LINEAR(mSettings.mThreshold_dB);
    }
 
 
@@ -249,12 +244,98 @@ bool EffectDistortion::Validator::ValidateUI()
    return true;
 }
 
+
+struct EffectDistortion::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings, double sampleRate,
+      ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+
+
+   void InstanceInit(EffectDistortionState& data, float sampleRate);
+
+   size_t InstanceProcess(EffectSettings& settings, EffectDistortionState& data,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+   void MakeTable(EffectDistortionState& state, const EffectDistortionSettings& ms);
+
+   void HardClip(EffectDistortionState&,
+                 const EffectDistortionSettings&); // hard clipping
+
+   void SoftClip(      EffectDistortionState&,
+                 const EffectDistortionSettings&); // soft clipping
+
+   void ExponentialTable (const EffectDistortionSettings&);   // exponential mapping
+   void LogarithmicTable (const EffectDistortionSettings&);   // logarithmic mapping
+   void HalfSinTable     (const EffectDistortionSettings&);
+   void CubicTable       (const EffectDistortionSettings&);
+   void EvenHarmonicTable(const EffectDistortionSettings&);
+   void SineTable        (const EffectDistortionSettings&);
+   void Leveller         (const EffectDistortionSettings&);    // 'Leveller' wavetable is modeled on the legacy effect of the same name.
+   void Rectifier        (const EffectDistortionSettings&);    // 0% = Dry, 50% = half-wave rectified, 100% = full-wave rectified (abs value).
+   void HardLimiter      ( EffectDistortionState& state,
+                           const EffectDistortionSettings&
+                         ); // Same effect as the LADSPA "hardLimiter 1413"
+
+   void CopyHalfTable();   // for symmetric tables
+
+   // Used by Soft Clipping but could be used for other tables.
+   // Log curve formula: y = T + (((e^(RT - Rx)) - 1) / -R)
+   // where R is the ratio, T is the threshold, and x is from T to 1. 
+   inline float LogCurve(double threshold, float value, double ratio);
+
+   // Used by Cubic curve but could be used for other tables
+   // Cubic formula: y = x - (x^3 / 3.0)
+   inline double Cubic(const EffectDistortionSettings&, double x);
+
+   float WaveShaper(float sample);
+   float DCFilter(EffectDistortionState& data, float sample);
+
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
+   double mTable[TABLESIZE];
+
+   EffectDistortionState mMaster;
+   std::vector<EffectDistortionState> mSlaves;
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectDistortion::MakeInstance() const
+{
+   return std::make_shared<Instance>(*this);
+}
+
+
+EffectDistortionState& EffectDistortion::Validator::GetState()
+{
+   return mInstance.mMaster;
+}
+
 EffectDistortion::EffectDistortion()
 {
    Parameters().Reset(*this);
    wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
-   mMakeupGain = 1.0;
-   mMaster.mbSavedFilterState = DCBlock.def;
 
    SetLinearEffectFlag(false);
 }
@@ -293,37 +374,37 @@ auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
    return RealtimeSince::Never;
 }
 
-unsigned EffectDistortion::GetAudioInCount() const
+unsigned EffectDistortion::Instance::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectDistortion::GetAudioOutCount() const
+unsigned EffectDistortion::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectDistortion::ProcessInitialize(
+bool EffectDistortion::Instance::ProcessInitialize(
    EffectSettings &, double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(mMaster, sampleRate);
    return true;
 }
 
-size_t EffectDistortion::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+size_t EffectDistortion::Instance::ProcessBlock(EffectSettings& settings,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize(EffectSettings &, double)
+bool EffectDistortion::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectDistortion::RealtimeAddProcessor(
+bool EffectDistortion::Instance::RealtimeAddProcessor(
    EffectSettings &, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
@@ -335,15 +416,15 @@ bool EffectDistortion::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectDistortion::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectDistortion::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectDistortion::RealtimeProcess(size_t group, EffectSettings &settings,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
+size_t EffectDistortion::Instance::RealtimeProcess(size_t group, EffectSettings& settings,
+   const float* const* inbuf, float* const* outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
       return 0;
@@ -376,8 +457,7 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
       return {};
    }
 
-   mSettings = FactoryPresets[id].params;
-   mMaster.mThreshold = DB_TO_LINEAR(mSettings.mThreshold_dB);
+   mSettings = FactoryPresets[id].params;   
 
    return { nullptr };
 }
@@ -393,12 +473,12 @@ EffectDistortion::PopulateOrExchange(ShuttleGui& S, EffectInstance& instance,
 //   auto& settings = access.Get();
 //   auto& myEffSettings = GetSettings(settings);
    auto& myEffSettings = mSettings;
-   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   auto result = std::make_unique<Validator>(*this, dynamic_cast<EffectDistortion::Instance&>(instance), access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
 }
 
-// STEP TODO: add all links to OnSomething handlers
+
 void EffectDistortion::Validator::PopulateOrExchange(ShuttleGui& S)
 {
    auto& ms = mSettings;
@@ -571,7 +651,9 @@ bool EffectDistortion::Validator::UpdateUI()
       return false;
    }
 
-   mThresholdS->     SetValue((int) (GetState().mThreshold * Threshold_dB.scale + 0.5));
+   const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+
+   mThresholdS->     SetValue((int) (threshold * Threshold_dB.scale + 0.5));
    mDCBlockCheckBox->SetValue(     ms.mDCBlock);
    mNoiseFloorS->    SetValue((int)ms.mNoiseFloor + 0.5);
    mParam1S->        SetValue((int)ms.mParam1 + 0.5);
@@ -586,9 +668,12 @@ bool EffectDistortion::Validator::UpdateUI()
 }
 
 
-void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRate)
+void EffectDistortion::Instance::InstanceInit(EffectDistortionState& data, float sampleRate)
 {
-   const auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectDistortion&>(mProcessor).mSettings;
 
    data.samplerate = sampleRate;
    data.skipcount = 0;
@@ -607,16 +692,20 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
    while (!data.queuesamples.empty())
       data.queuesamples.pop();
 
-   MakeTable();
+   MakeTable(data, ms);
 
    return;
 }
 
-size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
+size_t EffectDistortion::Instance::InstanceProcess(EffectSettings &settings,
    EffectDistortionState& data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   const auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectDistortion&>(mProcessor).mSettings;
+
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
@@ -639,18 +728,18 @@ size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
 
    for (decltype(blockLen) i = 0; i < blockLen; i++) {
       if (update && ((data.skipcount++) % skipsamples == 0)) {
-         MakeTable();
+         MakeTable(data, ms);
       }
 
       switch (ms.mTableChoiceIndx)
       {
       case kHardClip:
          // Param2 = make-up gain.
-         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (mMakeupGain * p2));
+         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (data.mMakeupGain * p2));
          break;
       case kSoftClip:
          // Param2 = make-up gain.
-         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (mMakeupGain * p2));
+         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (data.mMakeupGain * p2));
          break;
       case kHalfSinCurve:
          obuf[i] = WaveShaper(ibuf[i]) * p2;
@@ -718,8 +807,8 @@ void EffectDistortion::Validator::OnThresholdText(wxCommandEvent& /*evt*/)
 
 
    mThresholdT->GetValidator()->TransferFromWindow();
-   GetState().mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
-   mThresholdS->SetValue((int) (GetState().mThreshold * Threshold_dB.scale + 0.5));
+   const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+   mThresholdS->SetValue((int) (threshold * Threshold_dB.scale + 0.5));
 
    ValidateUI();
 }
@@ -730,9 +819,9 @@ void EffectDistortion::Validator::OnThresholdSlider(wxCommandEvent& evt)
 
    static const double MIN_Threshold_Linear = DB_TO_LINEAR(Threshold_dB.min);
 
-   GetState().mThreshold = (double)evt.GetInt() / Threshold_dB.scale;
-   ms.mThreshold_dB = wxMax(LINEAR_TO_DB(GetState().mThreshold), Threshold_dB.min);
-   GetState().mThreshold = std::max(MIN_Threshold_Linear, GetState().mThreshold);
+   const double thresholdDB = (double)evt.GetInt() / Threshold_dB.scale;
+   ms.mThreshold_dB = wxMax(LINEAR_TO_DB(thresholdDB), Threshold_dB.min);
+   
    mThresholdT->GetValidator()->TransferToWindow();
 
    ValidateUI();
@@ -1005,8 +1094,8 @@ void EffectDistortion::Validator::UpdateControl(
          name.Join( suffix, wxT(" ") );
 
          // Logarithmic slider is set indirectly
-         GetState().mThreshold = DB_TO_LINEAR(ms.mThreshold_dB);
-         mThresholdS->SetValue((int) (GetState().mThreshold * Threshold_dB.scale + 0.5));
+         const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+         mThresholdS->SetValue((int) (threshold * Threshold_dB.scale + 0.5));
 
          auto translated = name.Translation();
          mThresholdTxt->SetLabel(translated);
@@ -1101,44 +1190,46 @@ void EffectDistortion::Validator::UpdateControlText(wxTextCtrl* textCtrl, wxStri
    }
 }
 
-void EffectDistortion::MakeTable()
+void EffectDistortion::Instance::MakeTable
+(
+   EffectDistortionState& state,
+   const EffectDistortionSettings& ms
+)
 {
-   const auto& ms = mSettings;
-
    switch (ms.mTableChoiceIndx)
    {
       case kHardClip:
-         HardClip();
+         HardClip(state, ms);
          break;
       case kSoftClip:
-         SoftClip();
+         SoftClip(state, ms);
          break;
       case kHalfSinCurve:
-         HalfSinTable();
+         HalfSinTable(ms);
          break;
       case kExpCurve:
-         ExponentialTable();
+         ExponentialTable(ms);
          break;
       case kLogCurve:
-         LogarithmicTable();
+         LogarithmicTable(ms);
          break;
       case kCubic:
-         CubicTable();
+         CubicTable(ms);
          break;
       case kEvenHarmonics:
-         EvenHarmonicTable();
+         EvenHarmonicTable(ms);
          break;
       case kSinCurve:
-         SineTable();
+         SineTable(ms);
          break;
       case kLeveller:
-         Leveller();
+         Leveller(ms);
          break;
       case kRectifier:
-         Rectifier();
+         Rectifier(ms);
          break;
       case kHardLimiter:
-         HardLimiter();
+         HardLimiter(state, ms);
          break;
    }
 }
@@ -1148,31 +1239,40 @@ void EffectDistortion::MakeTable()
 // Preset tables for gain lookup
 //
 
-void EffectDistortion::HardClip()
+void EffectDistortion::Instance::HardClip
+(
+   EffectDistortionState& state,
+   const EffectDistortionSettings& ms
+)
 {
-   double lowThresh = 1 - mMaster.mThreshold;
-   double highThresh = 1 + mMaster.mThreshold;
+   const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+
+   double lowThresh  = 1 - threshold;
+   double highThresh = 1 + threshold;
 
    for (int n = 0; n < TABLESIZE; n++) {
       if (n < (STEPS * lowThresh))
-         mTable[n] = - mMaster.mThreshold;
+         mTable[n] = - threshold;
       else if (n > (STEPS * highThresh))
-         mTable[n] = mMaster.mThreshold;
+         mTable[n] = threshold;
       else
          mTable[n] = n/(double)STEPS - 1;
 
-      mMakeupGain = 1.0 / mMaster.mThreshold;
+      state.mMakeupGain = 1.0 / threshold;
    }
 }
 
-void EffectDistortion::SoftClip()
+void EffectDistortion::Instance::SoftClip
+(        EffectDistortionState& state,
+   const EffectDistortionSettings& ms
+)
 {
-   const auto& ms = mSettings;
+   const double thresholdLinear = DB_TO_LINEAR(ms.mThreshold_dB);
 
-   double threshold = 1 + mMaster.mThreshold;
+   double threshold = 1 + thresholdLinear;
    double amount = std::pow(2.0, 7.0 * ms.mParam1 / 100.0); // range 1 to 128
-   double peak = LogCurve(mMaster.mThreshold, 1.0, amount);
-   mMakeupGain = 1.0 / peak;
+   double peak = LogCurve(thresholdLinear, 1.0, amount);
+   state.mMakeupGain = 1.0 / peak;
    mTable[STEPS] = 0.0;   // origin
 
    // positive half of table
@@ -1180,20 +1280,18 @@ void EffectDistortion::SoftClip()
       if (n < (STEPS * threshold)) // origin to threshold
          mTable[n] = n/(float)STEPS - 1;
       else
-         mTable[n] = LogCurve(mMaster.mThreshold, n/(double)STEPS - 1, amount);
+         mTable[n] = LogCurve(thresholdLinear, n/(double)STEPS - 1, amount);
    }
    CopyHalfTable();
 }
 
-float EffectDistortion::LogCurve(double threshold, float value, double ratio)
+float EffectDistortion::Instance::LogCurve(double threshold, float value, double ratio)
 {
    return threshold + ((std::exp(ratio * (threshold - value)) - 1) / -ratio);
 }
 
-void EffectDistortion::ExponentialTable()
+void EffectDistortion::Instance::ExponentialTable(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    double amount = std::min(0.999, DB_TO_LINEAR(-1 * ms.mParam1));   // avoid divide by zero
 
    for (int n = STEPS; n < TABLESIZE; n++) {
@@ -1205,10 +1303,8 @@ void EffectDistortion::ExponentialTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::LogarithmicTable()
+void EffectDistortion::Instance::LogarithmicTable(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    double amount = ms.mParam1;
    double stepsize = 1.0 / STEPS;
    double linVal = 0;
@@ -1228,10 +1324,8 @@ void EffectDistortion::LogarithmicTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::HalfSinTable()
+void EffectDistortion::Instance::HalfSinTable(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    int iter = std::floor(ms.mParam1 / 20.0);
    double fractionalpart = (ms.mParam1 / 20.0) - iter;
    double stepsize = 1.0 / STEPS;
@@ -1248,14 +1342,12 @@ void EffectDistortion::HalfSinTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::CubicTable()
+void EffectDistortion::Instance::CubicTable(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    double amount = ms.mParam1 * std::sqrt(3.0) / 100.0;
    double gain = 1.0;
    if (amount != 0.0)
-      gain = 1.0 / Cubic(std::min(amount, 1.0));
+      gain = 1.0 / Cubic(ms, std::min(amount, 1.0));
 
    double stepsize = amount / STEPS;
    double x = -amount;
@@ -1267,19 +1359,17 @@ void EffectDistortion::CubicTable()
    }
    else {
       for (int i = 0; i < TABLESIZE; i++) {
-         mTable[i] = gain * Cubic(x);
+         mTable[i] = gain * Cubic(ms, x);
          for (int j = 0; j < ms.mRepeats; j++) {
-            mTable[i] = gain * Cubic(mTable[i] * amount);
+            mTable[i] = gain * Cubic(ms, mTable[i] * amount);
          }
          x += stepsize;
       }
    }
 }
 
-double EffectDistortion::Cubic(double x)
+double EffectDistortion::Instance::Cubic(const EffectDistortionSettings& ms, double x)
 {
-   const auto& ms = mSettings;
-
    if (ms.mParam1 == 0.0)
       return x;
 
@@ -1287,10 +1377,8 @@ double EffectDistortion::Cubic(double x)
 }
 
 
-void EffectDistortion::EvenHarmonicTable()
+void EffectDistortion::Instance::EvenHarmonicTable(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    double amount = ms.mParam1 / -100.0;
    // double C = std::sin(std::max(0.001, mParams.mParam2) / 100.0) * 10.0;
    double C = std::max(0.001, ms.mParam2) / 10.0;
@@ -1305,10 +1393,8 @@ void EffectDistortion::EvenHarmonicTable()
    }
 }
 
-void EffectDistortion::SineTable()
+void EffectDistortion::Instance::SineTable(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    int iter = std::floor(ms.mParam1 / 20.0);
    double fractionalpart = (ms.mParam1 / 20.0) - iter;
    double stepsize = 1.0 / STEPS;
@@ -1325,10 +1411,8 @@ void EffectDistortion::SineTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::Leveller()
+void EffectDistortion::Instance::Leveller(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    double noiseFloor = DB_TO_LINEAR(ms.mNoiseFloor);
    int numPasses = ms.mRepeats;
    double fractionalPass = ms.mParam1 / 100.0;
@@ -1384,10 +1468,8 @@ void EffectDistortion::Leveller()
    CopyHalfTable();
 }
 
-void EffectDistortion::Rectifier()
+void EffectDistortion::Instance::Rectifier(const EffectDistortionSettings& ms)
 {
-   const auto& ms = mSettings;
-
    double amount = (ms.mParam1 / 50.0) - 1;
    double stepsize = 1.0 / STEPS;
    int index = STEPS;
@@ -1406,18 +1488,18 @@ void EffectDistortion::Rectifier()
    }
 }
 
-void EffectDistortion::HardLimiter()
+void EffectDistortion::Instance::HardLimiter(EffectDistortionState& state, const EffectDistortionSettings& settings)
 {
    // The LADSPA "hardLimiter 1413" is basically hard clipping,
    // but with a 'kind of' wet/dry mix:
    // out = ((wet-residual)*clipped) + (residual*in)
-   HardClip();
+   HardClip(state, settings);
 }
 
 
 // Helper functions for lookup tables
 
-void EffectDistortion::CopyHalfTable()
+void EffectDistortion::Instance::CopyHalfTable()
 {
    // Copy negative half of table from positive half
    int count = TABLESIZE - 1;
@@ -1428,14 +1510,17 @@ void EffectDistortion::CopyHalfTable()
 }
 
 
-float EffectDistortion::WaveShaper(float sample)
+float EffectDistortion::Instance::WaveShaper(float sample)
 {
    float out;
    int index;
    double xOffset;
    double amount = 1;
 
-   const auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectDistortion&>(mProcessor).mSettings;
 
    switch (ms.mTableChoiceIndx)
    {
@@ -1460,7 +1545,7 @@ float EffectDistortion::WaveShaper(float sample)
 }
 
 
-float EffectDistortion::DCFilter(EffectDistortionState& data, float sample)
+float EffectDistortion::Instance::DCFilter(EffectDistortionState& data, float sample)
 {
    // Rolling average gives less offset at the start than an IIR filter.
    const unsigned int queueLength = std::floor(data.samplerate / 20.0);

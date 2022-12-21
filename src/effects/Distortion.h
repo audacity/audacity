@@ -21,6 +21,8 @@ class ShuttleGui;
 #define STEPS 1024      // number of +ve or -ve steps in lookup tabe
 #define TABLESIZE 2049  // size of lookup table (steps * 2 + 1)
 
+const bool defaultDCBlock = false;
+
 class EffectDistortionState
 {
 public:
@@ -38,15 +40,18 @@ public:
    std::queue<float> queuesamples;
    double queuetotal;
 
-   double mThreshold;
-   bool mbSavedFilterState;
+   bool mbSavedFilterState{ defaultDCBlock };
+
+   // mMakeupGain is used by some distortion types to pass the
+   // amount of gain required to bring overall effect gain to unity
+   double mMakeupGain{ 1.0 };
 };
 
 
 struct EffectDistortionSettings
 {
    static constexpr int    mDefaultTableChoiceIndx = 0;
-   static constexpr bool   mDefaultDCBlock         = false;
+   static constexpr bool   mDefaultDCBlock         = defaultDCBlock;
    static constexpr double mDefaultThreshold_dB    = -6.0;
    static constexpr double mDefaultNoiseFloor      = -70.0;
    static constexpr double mDefaultParam1          =  50.0;
@@ -90,30 +95,24 @@ public:
       const override;
    OptionalMessage DoLoadFactoryPreset(int id);
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
+   // Need this dummy method, else it won't build
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)
+      override
+   {
+      return blockLen;
+   }
+
 
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   //bool TransferDataToWindow(const EffectSettings &settings) override;
 
    struct Validator;
+   struct Instance;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 private:
 
@@ -127,54 +126,9 @@ private:
       ID_Param2,
       ID_Repeats,
    };
-   // EffectDistortion implementation
-
-   void InstanceInit(EffectDistortionState & data, float sampleRate);
-   size_t InstanceProcess(EffectSettings &settings,
-      EffectDistortionState & data,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
-
-   void MakeTable();
-   float WaveShaper(float sample);
-   float DCFilter(EffectDistortionState & data, float sample);
-
-   // Preset tables for gain lookup
-
-   void HardClip();           // hard clipping
-   void SoftClip();           // soft clipping
-   void ExponentialTable();   // exponential mapping
-   void LogarithmicTable();   // logarithmic mapping
-   void HalfSinTable();
-   void CubicTable();
-   void EvenHarmonicTable();
-   void SineTable();
-   void Leveller();           // 'Leveller' wavetable is modeled on the legacy effect of the same name.
-   void Rectifier();          // 0% = Dry, 50% = half-wave rectified, 100% = full-wave rectified (abs value).
-   void HardLimiter();        // Same effect as the LADSPA "hardLimiter 1413"
-
-   // Wavetable helper functions
-
-   void CopyHalfTable();   // for symmetric tables
-
-   // Used by Soft Clipping but could be used for other tables.
-   // Log curve formula: y = T + (((e^(RT - Rx)) - 1) / -R)
-   // where R is the ratio, T is the threshold, and x is from T to 1. 
-   inline float LogCurve(double threshold, float value, double ratio);
-
-   // Used by Cubic curve but could be used for other tables
-   // Cubic formula: y = x - (x^3 / 3.0)
-   inline double Cubic(double x);
 
 
 private:
-   EffectDistortionState mMaster;
-   std::vector<EffectDistortionState> mSlaves;
-
-   double mTable[TABLESIZE];    
-
-   // mMakeupGain is used by some distortion types to pass the
-   // amount of gain required to bring overall effect gain to unity
-   double mMakeupGain;
 
    int mTypChoiceIndex;
 
