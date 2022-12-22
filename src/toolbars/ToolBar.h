@@ -87,6 +87,7 @@ enum ToolBarID
    ShareAudioBarID,
 #endif
    TimeBarID,
+   CutCopyPasteBarID,
    ToolBarCount
 };
 

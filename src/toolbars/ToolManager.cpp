@@ -518,7 +518,8 @@ static struct DefaultConfigEntry {
    { TransportBarID,         NoBarID,                NoBarID                },
    { ToolsBarID,             TransportBarID,         NoBarID                },
    { EditBarID,              ToolsBarID,             NoBarID                },
-   { AudioSetupBarID,        EditBarID,              NoBarID                },
+   { CutCopyPasteBarID,      EditBarID,              NoBarID                },
+   { AudioSetupBarID,        CutCopyPasteBarID,      NoBarID                },
 #ifdef HAS_AUDIOCOM_UPLOAD
    { ShareAudioBarID,        AudioSetupBarID,        NoBarID                },
    { RecordMeterBarID,       ShareAudioBarID,        NoBarID                },

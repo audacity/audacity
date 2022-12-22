@@ -830,6 +830,8 @@ list( APPEND SOURCES
 
       toolbars/AudioSetupToolBar.cpp
       toolbars/AudioSetupToolBar.h
+      toolbars/CutCopyPasteToolBar.cpp
+      toolbars/CutCopyPasteToolBar.h
       toolbars/ControlToolBar.cpp
       toolbars/ControlToolBar.h
       toolbars/DeviceToolBar.cpp
