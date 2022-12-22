@@ -57,6 +57,8 @@
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 
+#include "ToolManager.h"
+
 enum {
    TBCutID,
    TBCopyID,
@@ -163,12 +165,13 @@ static RegisteredToolbarFactory factory{ CutCopyPasteBarID,
       return ToolBar::Holder{ safenew CutCopyPasteToolBar{ project } }; }
 };
 
-#include "ToolManager.h"
-
 namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar for editing */
-   CutCopyPasteBarID, wxT("ShowCutCopyPasteTB"), XXO("&Cut/Copy/Paste Toolbar")
+   CutCopyPasteBarID,
+   wxT("ShowCutCopyPasteTB"),
+   XXO("&Cut/Copy/Paste Toolbar"),
+   { Registry::OrderingHint::After, "ShowEditTB" }
 };
 }
 

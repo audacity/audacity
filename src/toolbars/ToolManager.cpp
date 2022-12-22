@@ -550,6 +550,8 @@ static struct DefaultConfigEntry {
    { SpectralSelectionBarID, NoBarID,                NoBarID                },
 };
 
+constexpr ToolBarID HideAfterReset[] = { CutCopyPasteBarID };
+
 // Static member function.
 void ToolManager::OnResetToolBars(const CommandContext &context)
 {
@@ -568,11 +570,12 @@ void ToolManager::Reset()
    {
       int ndx = entry.barID;
       ToolBar *bar = mBars[ ndx ].get();
-
+      
       ToolBarConfiguration::Position position {
          (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ].get(),
          (entry.below == NoBarID) ? nullptr : mBars[ entry.below ].get()
       };
+      
       bar->SetSize( 20,20 );
 
       wxWindow *floater;
@@ -670,6 +673,9 @@ void ToolManager::Reset()
       }
 
    }
+
+   for (auto ndx : HideAfterReset)
+      Expose(ndx, false);
    // TODO:??
    // If audio was playing, we stopped the VU meters,
    // It would be nice to show them again, but hardly essential as
@@ -951,6 +957,19 @@ void ToolManager::ReadConfig()
    // Reinstate original transition
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
 #endif
+
+   // Setup the neighbors according to the
+   // default config
+
+   for (const auto& entry : DefaultConfigTable)
+   {
+      int ndx = entry.barID;
+      ToolBar* bar = mBars[ndx].get();
+
+      bar->SetPreferredNeighbors(
+         static_cast<ToolBarID>(entry.rightOf),
+         static_cast<ToolBarID>(entry.below));
+   }
 
    if (!someFound)
       Reset();
