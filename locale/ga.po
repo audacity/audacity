@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2020-06-18 18:43+0200\n"
 "Last-Translator: Seanán Ó Coistín <seananoc@gmail.com>\n"
 "Language-Team: Seanán Ó Coistín <seananoc@gmail.com>\n"
@@ -634,6 +634,14 @@ msgstr "Cuir Lipéad ar an Rian"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2096,7 +2104,7 @@ msgstr " Roghnaithe"
 msgid "&Recover Selected"
 msgstr "Faic Roghnaithe"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -2912,8 +2920,8 @@ msgstr "avformat.dll amháin"
 
 #: src/FFmpeg.cpp
 #, fuzzy
-msgid "Only ffmpeg.*.dylib"
-msgstr "libmp3lame.dylib amháin"
+msgid "Only libavformat.dylib"
+msgstr "libavformat.so amháin"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -3916,6 +3924,11 @@ msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Am Caite:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -4952,23 +4965,16 @@ msgstr "Uirlisí"
 msgid "Transport"
 msgstr "Iompar"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Meascthóir"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Méadar"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr ""
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -5870,6 +5876,25 @@ msgid "&Ok"
 msgstr "&Tá go maith"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Ní bheidh tú i gcumas fuaim a sheinnt nó a chur ar thaifead.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Easpórtáil Iomadúil"
@@ -5950,19 +5975,11 @@ msgid "Preparing audio..."
 msgstr "Ag seinm Fuaime"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Am Caite:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Am Fágtha:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -15606,10 +15623,6 @@ msgid "&Language:"
 msgstr "&Teanga:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "Mar a bhfuil an Lámhleabhar:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "Téama:"
 
@@ -17238,6 +17251,28 @@ msgid "&Edit Toolbar"
 msgstr ""
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr " Ag faire "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " Gníomhach "
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " Buaic %2.f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " Buaic %.2f "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr " Gearrtha "
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr ""
 
@@ -17252,6 +17287,12 @@ msgid "Playback Meter"
 msgstr "Seinnt"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "Taifeadadh á dhéanamh"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17259,21 +17300,17 @@ msgid "Meter-Record"
 msgstr ""
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
-#. apparently is helpful to partially sighted people.
-#: src/toolbars/MeterToolBar.cpp
-msgid "Meter-Play"
-msgstr ""
-
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Playback Level"
 msgstr "Seinnt"
 
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#. This is the name used in screen reader software, where having 'Meter' first
+#. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "Taifeadadh á dhéanamh"
+msgid "Meter-Play"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -18627,6 +18664,17 @@ msgstr "Brúigh"
 msgid "Button"
 msgstr "Cnaipe"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Comhbhrúigh"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Comhbhrúigh"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -18783,28 +18831,6 @@ msgstr "Cothrománach"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "Ingearach"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr " Ag faire "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " Gníomhach "
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " Buaic %2.f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " Buaic %.2f "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr " Gearrtha "
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21048,6 +21074,16 @@ msgstr "Asbhaint Riain"
 msgid "Spectral Tools"
 msgstr "S&peictreach"
 
+#, fuzzy
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "libmp3lame.dylib amháin"
+
+#~ msgid "Mixer"
+#~ msgstr "Meascthóir"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "Mar a bhfuil an Lámhleabhar:"
+
 #~ msgid "volunteers"
 #~ msgstr "oibrithe deonacha"
 
@@ -21447,9 +21483,6 @@ msgstr "S&peictreach"
 
 #~ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 #~ msgstr "Theip ar Audacity tionscadal Audacity 1.0 a aistriú go dtí an fhormáid nua tionscadail."
-
-#~ msgid "Compress"
-#~ msgstr "Comhbhrúigh"
 
 #, fuzzy
 #~ msgid ""

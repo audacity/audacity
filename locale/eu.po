@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2020-06-10 07:42+0200\n"
 "Last-Translator: EUS_Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi)\n"
@@ -653,6 +653,14 @@ msgstr "Birlagindu Bidea"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2140,7 +2148,7 @@ msgstr " Hautatuta"
 msgid "&Recover Selected"
 msgstr "Ezer ez Hautatuta"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -2997,8 +3005,8 @@ msgstr "Bakarrik avformat.dll"
 
 #: src/FFmpeg.cpp
 #, fuzzy
-msgid "Only ffmpeg.*.dylib"
-msgstr "Bakarrik libmp3lame.dylib"
+msgid "Only libavformat.dylib"
+msgstr "Bakarrik libavformat.so"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -4014,6 +4022,11 @@ msgid ""
 msgstr ""
 "%s Eraginak edo Aginduak huts egin du erregistratzerakoan:\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Igarotako Denbora:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5125,23 +5138,16 @@ msgstr "Tresnak"
 msgid "Transport"
 msgstr "Garraioa"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Nahastzailea"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Neurgailua"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Irakur Neurgailua"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6060,6 +6066,25 @@ msgid "&Ok"
 msgstr "&Ongi"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Ezingo duzu audioa irakurri edo grabatu.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Agiri batera esportatzen du."
@@ -6140,19 +6165,11 @@ msgid "Preparing audio..."
 msgstr "Ateratzen audioa..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Igarotako Denbora:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Gelditzen den Denbora:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -15753,10 +15770,6 @@ msgid "&Language:"
 msgstr "&Hizkuntza:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "Eskuliburuaren &kokalekua:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "A&zalgaia:"
 
@@ -17383,6 +17396,28 @@ msgid "&Edit Toolbar"
 msgstr "&Editatu Tresnabarra"
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr " Monitorizazioa "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " Jardunean "
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " Gailurra %2.f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " Gailurra %.2f "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr " Ebakita "
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr "Neurgailu Nahastua"
 
@@ -17395,6 +17430,11 @@ msgid "Playback Meter"
 msgstr "Irakurketa Neurgailua"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Recording Level"
+msgstr "Grabaketa Maila"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17402,19 +17442,16 @@ msgid "Meter-Record"
 msgstr "Neurgailu-Grabaketa"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "Irakurketa Maila"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "Neurgailu-Irakurketa"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "Irakurketa Maila"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Recording Level"
-msgstr "Grabaketa Maila"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -18711,6 +18748,17 @@ msgstr "Sakatu"
 msgid "Button"
 msgstr "Botoia"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Konpresioa"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Konpresioa"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -18867,28 +18915,6 @@ msgstr "Etzana"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "Zutika"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr " Monitorizazioa "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " Jardunean "
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " Gailurra %2.f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " Gailurra %.2f "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr " Ebakita "
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21139,6 +21165,16 @@ msgstr "Ahots Kentzailea"
 msgid "Spectral Tools"
 msgstr "A&rgilitza"
 
+#, fuzzy
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "Bakarrik libmp3lame.dylib"
+
+#~ msgid "Mixer"
+#~ msgstr "Nahastzailea"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "Eskuliburuaren &kokalekua:"
+
 #, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "%s programa aske bat da mundu zabaleko boluntarioek idatzia %s. %s - %s Windows, Mac, eta GNU/Linux-rako (eta beste Unix-bezalako sistemetarako)."
@@ -21823,9 +21859,6 @@ msgstr "A&rgilitza"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Inportazioa osatuta. Eskaerapeko uhinera kalkuloa egiten. %2.0f%% osatuta."
-
-#~ msgid "Compress"
-#~ msgstr "Konpresioa"
 
 #~ msgid "Waiting for waveform to finish computing..."
 #~ msgstr "Uhinerak konputazioa amaitzearen zain..."

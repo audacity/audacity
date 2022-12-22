@@ -134,6 +134,9 @@ public:
       ~UI() { Destroy(); }
       SuilInstancePtr mSuilInstance;
       wxWindowPtr<NativeWindow> mNativeWin{};
+#ifdef __WXMAC__
+      bool mJustLeakMemory{ false };
+#endif
    } mUI;
 
    wxSize mNativeWinInitialSize{ wxDefaultSize };

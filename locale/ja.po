@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2021-10-19 21:01+0900\n"
 "Last-Translator: Phroneris <phroneris@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA, Phroneris\n"
@@ -659,6 +659,14 @@ msgstr "トラックの再サンプリング"
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
 msgstr "ループ (オン/オフ) (&L)"
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
+msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -2176,7 +2184,7 @@ msgstr "選んだものを破棄(&D)"
 msgid "&Recover Selected"
 msgstr "選んだものを回復(&R)"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr "スキップ(&S)"
 
@@ -3046,8 +3054,8 @@ msgstr "avformat.dll のみ"
 
 #: src/FFmpeg.cpp
 #, fuzzy
-msgid "Only ffmpeg.*.dylib"
-msgstr "libmp3lame.dylib のみ"
+msgid "Only libavformat.dylib"
+msgstr "libavformat.so のみ"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -4061,6 +4069,11 @@ msgid ""
 msgstr ""
 "%s のエフェクトまたはコマンドを登録できませんでした:\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "処理時間:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5210,23 +5223,16 @@ msgstr "ツール"
 msgid "Transport"
 msgstr "録音/再生"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "ミキサー"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "メーター"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "再生メーター"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6140,6 +6146,25 @@ msgid "&Ok"
 msgstr "OK(&O)"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"音声の再生・録音はできません。\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "ファイルに書き出します。"
@@ -6220,19 +6245,11 @@ msgid "Preparing audio..."
 msgstr "音声をキャッシュしています"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "処理時間:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "残り時間:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -15990,10 +16007,6 @@ msgid "&Language:"
 msgstr "言語(&L):"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "マニュアルの場所(&M):"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "テーマ(&E):"
 
@@ -17619,6 +17632,28 @@ msgid "&Edit Toolbar"
 msgstr "編集ツールバー(&E)"
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr " モニター "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " アクティブ "
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " ピーク %2.f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " ピーク %.2f "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr " クリッピング "
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr "統合メーター"
 
@@ -17631,6 +17666,11 @@ msgid "Playback Meter"
 msgstr "再生メーター"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Recording Level"
+msgstr "録音レベル"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17638,19 +17678,16 @@ msgid "Meter-Record"
 msgstr "録音メーター"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "再生レベル"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "再生メーター"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "再生レベル"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Recording Level"
-msgstr "録音レベル"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -18920,6 +18957,17 @@ msgstr "押す"
 msgid "Button"
 msgstr "ボタン"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "圧縮:"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "圧縮:"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19076,28 +19124,6 @@ msgstr "水平"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "垂直"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr " モニター "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " アクティブ "
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " ピーク %2.f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " ピーク %.2f "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr " クリッピング "
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21381,6 +21407,16 @@ msgstr "ボーカルの除去(&O)"
 msgid "Spectral Tools"
 msgstr "スペクトル選択(&P)"
 
+#, fuzzy
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "libmp3lame.dylib のみ"
+
+#~ msgid "Mixer"
+#~ msgstr "ミキサー"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "マニュアルの場所(&M):"
+
 #, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "%s は世界中の%sチームによって開発された無料のプログラムです。%s は Windows、Mac、および GNU/Linux(その他 Unix 系システム含む) といった%sしています。"
@@ -22090,10 +22126,6 @@ msgstr "スペクトル選択(&P)"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "取り込み完了。1 件のオンデマンド波形計算が実行中。全体の %2.0f%% 完了。"
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "圧縮:"
 
 #~ msgid "Waiting for waveform to finish computing..."
 #~ msgstr "波形計算の終了を待機中..."

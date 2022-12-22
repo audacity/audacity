@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2021-06-09 22:01+0300\n"
 "Last-Translator: Sampo Hippeläinen\n"
 "Language-Team: fi\n"
@@ -647,6 +647,14 @@ msgstr "Muuta raidan näytetaajuutta"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2158,7 +2166,7 @@ msgstr "&Hylkää valitut"
 msgid "&Recover Selected"
 msgstr "&Palauta valitut"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr "&Ohita"
 
@@ -3015,8 +3023,8 @@ msgstr "Vain avformat.dll"
 
 #: src/FFmpeg.cpp
 #, fuzzy
-msgid "Only ffmpeg.*.dylib"
-msgstr "Vain libmp3lame.dylib"
+msgid "Only libavformat.dylib"
+msgstr "Vain libavformat.so"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -4026,6 +4034,11 @@ msgid ""
 msgstr ""
 "Tehoste tai komento kohteessa %s ei rekisteröitynyt:\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Kulunut aika:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5173,23 +5186,16 @@ msgstr "Työkalut"
 msgid "Transport"
 msgstr "Siirto"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Mikseri"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Mittari"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Tasomittari"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6107,6 +6113,25 @@ msgid "&Ok"
 msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Et voi toistaa tai äänittää ääntä.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Vie tiedostoon."
@@ -6187,19 +6212,11 @@ msgid "Preparing audio..."
 msgstr "Suoritetaan porttia äänelle..."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Kulunut aika:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Jäljellä oleva aika:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -15796,10 +15813,6 @@ msgid "&Language:"
 msgstr "&Kieli:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "&Käyttöohjeen sijainti:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "T&eema:"
 
@@ -17419,6 +17432,28 @@ msgid "&Edit Toolbar"
 msgstr "&Muokkaustyökalut"
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr " Tarkkailu "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " Aktiivinen "
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " Huippu: %2.f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " Huippu: %.2f "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr " Leikkaantui "
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr "Yhdistetty mittari"
 
@@ -17431,6 +17466,11 @@ msgid "Playback Meter"
 msgstr "Toiston tasomittari"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Recording Level"
+msgstr "Äänitystaso"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17438,19 +17478,16 @@ msgid "Meter-Record"
 msgstr "Äänitysmittari"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "Toistotaso"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "Toistomittari"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "Toistotaso"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Recording Level"
-msgstr "Äänitystaso"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -18742,6 +18779,17 @@ msgstr "Paina"
 msgid "Button"
 msgstr "Painike"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Pakkaa"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Pakkaa"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -18898,28 +18946,6 @@ msgstr "Vaakasuora"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "Pystysuunta"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr " Tarkkailu "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " Aktiivinen "
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " Huippu: %2.f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " Huippu: %.2f "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr " Leikkaantui "
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21159,6 +21185,16 @@ msgstr "Raidan poisto"
 msgid "Spectral Tools"
 msgstr "S&pektri"
 
+#, fuzzy
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "Vain libmp3lame.dylib"
+
+#~ msgid "Mixer"
+#~ msgstr "Mikseri"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "&Käyttöohjeen sijainti:"
+
 #, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "%s on ilmainen ohjelma, jonka on kirjoittanut maailmanlaajuinen tiimi [[https://www.audacityteam.org/about/credits|%s]]. %s on %s [[https://www.audacityteam.org/download|available]] Windowsille, Macille ja GNU/Linuxille (ja muille Unixin kaltaisille järjestelmille)."
@@ -21850,9 +21886,6 @@ msgstr "S&pektri"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Tuonti valmis. Suoritetaan reaaliaikaista aaltomuodon laskentaa. %2.0f%% valmiina."
-
-#~ msgid "Compress"
-#~ msgstr "Pakkaa"
 
 #~ msgid "Waiting for waveform to finish computing..."
 #~ msgstr "Odotetaan aaltomuodon loppuunlaskua..."

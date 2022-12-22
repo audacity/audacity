@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2010-01-27 06:35-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team: Burmese <my@li.org>\n"
@@ -650,6 +650,14 @@ msgstr "အသံလမ်းကြောကို နမူနာပြန်�
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2193,7 +2201,7 @@ msgstr "ရွေးချယ်ပါ"
 msgid "&Recover Selected"
 msgstr "ရွေးချယ်ပါ"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -3054,7 +3062,7 @@ msgid "Only avformat.dll"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
+msgid "Only libavformat.dylib"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -4095,6 +4103,11 @@ msgid ""
 msgstr ""
 "FLAC စာဝှက်ရေးကိရိယာက အနေအထားကို အစပြုဖို့\n"
 " မအောင်မြင်ဘူး - %d"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "ကုန်လွန်သွားတဲ့ အချိန် -"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5158,23 +5171,16 @@ msgstr "ကိရိယာများ"
 msgid "Transport"
 msgstr ""
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "ပေါင်းစပ်ကိရိယာ"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "မီတာ"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "မီတာကို ဖွင့်ပြပါ"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6115,6 +6121,25 @@ msgid "&Ok"
 msgstr "ကောင်းပြီ"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"သင်ဟာ အသံကို ဖွင့်နိုင် (သို့) အသံသွင်းနိုင်မှာ မဟုတ်ဘူး။\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "အမျိုးစုံကို တင်ပို့ပါ"
@@ -6194,19 +6219,11 @@ msgid "Preparing audio..."
 msgstr "အသံကို ယာယီသိမ်းဆည်းနေတယ်"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "ကုန်လွန်သွားတဲ့ အချိန် -"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "ကျန်ရှိနေတဲ့ အချိန် -"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16480,10 +16497,6 @@ msgid "&Language:"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr ""
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr ""
 
@@ -18212,6 +18225,29 @@ msgstr "တည်းဖြတ် ခလုတ်တန်း"
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
+msgid " Monitoring "
+msgstr "စောင့်ကြည့်မှုကို ရပ်နားပါ"
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy, c-format
+msgid " Peak %2.f dB"
+msgstr "%.1f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
 msgid "Combined Meter"
 msgstr "အသံသွင်းမှု မီတာ"
 
@@ -18226,6 +18262,12 @@ msgid "Playback Meter"
 msgstr "မီတာကို ဖွင့်ပြပါ"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -18233,21 +18275,17 @@ msgid "Meter-Record"
 msgstr "မီတာ-အသံသွင်းချက်"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
-#. apparently is helpful to partially sighted people.
-#: src/toolbars/MeterToolBar.cpp
-msgid "Meter-Play"
-msgstr "မီတာ-ဖွင့်ပြပါ"
-
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Playback Level"
 msgstr "အမြန်နှုန်းကို ပြန်ဖွင့်ပါ"
 
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#. This is the name used in screen reader software, where having 'Meter' first
+#. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "အသံသွင်းခြင်း ပြီးဆုံးမှု"
+msgid "Meter-Play"
+msgstr "မီတာ-ဖွင့်ပြပါ"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19648,6 +19686,17 @@ msgstr "ဖိနှိုပ်ပါ"
 msgid "Button"
 msgstr "ခလုတ်"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "ဖိသိပ်ကိရိယာ"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "ဖိသိပ်ကိရိယာ"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19812,29 +19861,6 @@ msgstr "ပြင်ညီ စတီရီယို"
 #, fuzzy
 msgid "Vertical"
 msgstr "ဒေါင်လိုက် ပေတံ"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid " Monitoring "
-msgstr "စောင့်ကြည့်မှုကို ရပ်နားပါ"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy, c-format
-msgid " Peak %2.f dB"
-msgstr "%.1f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -22179,6 +22205,9 @@ msgstr "အသံလမ်းကြော ဖယ်ရှားမှု"
 msgid "Spectral Tools"
 msgstr "ရောင်စဉ်"
 
+#~ msgid "Mixer"
+#~ msgstr "ပေါင်းစပ်ကိရိယာ"
+
 #, fuzzy
 #~ msgid "available"
 #~ msgstr "ကိန်းရှင်"
@@ -22670,10 +22699,6 @@ msgstr "ရောင်စဉ်"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "တင်သွင်းချက် ပြီးသွားပြီ။ တောင်းဆိုချက်အရ လှိုင်းသဏ္ဍာန် တွက်ချက်မှု တခုအတွက် လည်ပတ်မှု။ %2.0f%% ပြီးသွားပြီ။"
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "ဖိသိပ်ကိရိယာ"
 
 #, fuzzy
 #~ msgid ""

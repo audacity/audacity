@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -664,6 +664,14 @@ msgstr "Ponovo uzorkuj numeru"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2221,7 +2229,7 @@ msgstr "Biranje"
 msgid "&Recover Selected"
 msgstr "Biranje"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -3092,7 +3100,7 @@ msgid "Only avformat.dll"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
+msgid "Only libavformat.dylib"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -4144,6 +4152,11 @@ msgid ""
 msgstr ""
 "FLAC šifrer nije uspeo da započne\n"
 "Stanje: %d"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Proteklo vreme:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5260,23 +5273,16 @@ msgstr "Alati"
 msgid "Transport"
 msgstr "Prenos"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Mešač"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Merač"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Merač puštanja"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6218,6 +6224,25 @@ msgid "&Ok"
 msgstr "&U redu"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Nećete biti u mogućnosti da puštate ili snimate zvuk.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Izvezi nekoliko"
@@ -6297,19 +6322,11 @@ msgid "Preparing audio..."
 msgstr "Smeštam zvuk"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Proteklo vreme:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Preostalo vreme:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16554,10 +16571,6 @@ msgid "&Language:"
 msgstr "&Jezik:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "&Uputstvo se nalazi:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr ""
 
@@ -18286,6 +18299,29 @@ msgstr "U&ređivanje"
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
+msgid " Monitoring "
+msgstr "Zaustavi praćenje"
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy, c-format
+msgid " Peak %2.f dB"
+msgstr "%.1f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
 msgid "Combined Meter"
 msgstr "Merač snimanja"
 
@@ -18300,6 +18336,12 @@ msgid "Playback Meter"
 msgstr "Merač puštanja"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "Uređaj snimanja"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -18307,20 +18349,16 @@ msgid "Meter-Record"
 msgstr "Merač snimanja"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "Nivo puštanja"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "Merač puštanja"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "Nivo puštanja"
-
-#: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "Uređaj snimanja"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19703,6 +19741,17 @@ msgstr "Pritisni"
 msgid "Button"
 msgstr "Dugme"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Sažimatelj"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Sažimatelj"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19871,29 +19920,6 @@ msgstr "Vodoravni stereo"
 #, fuzzy
 msgid "Vertical"
 msgstr "Uspravni lenjir"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid " Monitoring "
-msgstr "Zaustavi praćenje"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy, c-format
-msgid " Peak %2.f dB"
-msgstr "%.1f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -22241,6 +22267,12 @@ msgstr "Uklonjena je numera"
 msgid "Spectral Tools"
 msgstr "Spektar"
 
+#~ msgid "Mixer"
+#~ msgstr "Mešač"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "&Uputstvo se nalazi:"
+
 #, fuzzy, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "Odvažnost je slobodan program koji je napisala ekipa <a href=\"http://audacity.sourceforge.net/community/developers\">programera</a> dobrovoljaca širom sveta. Zahvaljujemo se <a href=\"http://code.google.com\">Google Code</a>-u i <a href=\"http://sourceforge.net\">SourceForge.net</a>-u za udomljavanje našeg projekta. Odvažnost je <a href=\"http://audacity.sourceforge.net/download/\">dostupna</a> za Vindouz, Mek i GNU/Linuks (i ostale Uniksolike sisteme)."
@@ -22885,10 +22917,6 @@ msgstr "Spektar"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Uvoz je obavljen. Pokrećem proračun talasnog oblika na zahtev. %2.0f%% je obavljeno."
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "Sažimatelj"
 
 #, fuzzy
 #~ msgid ""

@@ -1061,8 +1061,10 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          // We want this to have No-fail-guarantee if we get here from exception
          // handling of recording, and that means we rely on the last autosave
          // successfully committed to the database, not risking a failure
-         history.PushState(XO("Recorded Audio"), XO("Record"),
-            UndoPush::NOAUTOSAVE);
+         auto flags = AudioIO::Get()->HasRecordingException()
+            ? UndoPush::NOAUTOSAVE
+            : UndoPush::NONE;
+         history.PushState(XO("Recorded Audio"), XO("Record"), flags);
 
          // Now, we may add a label track to give information about
          // dropouts.  We allow failure of this.

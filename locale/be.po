@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2010-04-19 16:57+0300\n"
 "Last-Translator: FatCow <zhr@tut.by>\n"
 "Language-Team: Patricia Clausnitzer <by.marcis@gmail.com>\n"
@@ -652,6 +652,14 @@ msgstr "Памяняць чашчыню сэмпліравання дарожк�
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2201,7 +2209,7 @@ msgstr "Вылучэнне"
 msgid "&Recover Selected"
 msgstr "Вылучэнне"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -3053,7 +3061,7 @@ msgid "Only avformat.dll"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
+msgid "Only libavformat.dylib"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -4099,6 +4107,11 @@ msgid ""
 msgstr ""
 "Не атрымалася ініцыялізаваць кадавальнік FLAC\n"
 "Статут: %d"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Выдаткавана часу:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5162,23 +5175,16 @@ msgstr "Прылады"
 msgid "Transport"
 msgstr ""
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Мікшары"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Індыкатар"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Індыкатар воспр."
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6120,6 +6126,25 @@ msgid "&Ok"
 msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Вы не зможаце прайграваць ці запісваць гук.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Экспарт у некалькі файлаў"
@@ -6199,19 +6224,11 @@ msgid "Preparing audio..."
 msgstr "Кэшуюцца гукавыя дадзеныя"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Выдаткавана часу:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Засталося:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16406,10 +16423,6 @@ msgid "&Language:"
 msgstr "&Мова інтэрфейсу:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "&Размяшчэнне кіраўніцтва:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr ""
 
@@ -18135,6 +18148,29 @@ msgstr "Панэль &рэдагавання"
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
+msgid " Monitoring "
+msgstr "Адключыць маніторынг"
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy, c-format
+msgid " Peak %2.f dB"
+msgstr "%.1f Дб"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
 msgid "Combined Meter"
 msgstr "Індыкатар зап."
 
@@ -18149,6 +18185,12 @@ msgid "Playback Meter"
 msgstr "Індыкатар воспр."
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "Канец запісу"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -18156,21 +18198,17 @@ msgid "Meter-Record"
 msgstr "Індыкатар запісу"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
-#. apparently is helpful to partially sighted people.
-#: src/toolbars/MeterToolBar.cpp
-msgid "Meter-Play"
-msgstr "Індыкатар прайгравання"
-
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Playback Level"
 msgstr "Хуткасць прайгравання"
 
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#. This is the name used in screen reader software, where having 'Meter' first
+#. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "Канец запісу"
+msgid "Meter-Play"
+msgstr "Індыкатар прайгравання"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19574,6 +19612,17 @@ msgstr "Націсніце"
 msgid "Button"
 msgstr "Кнопка"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Кампрэсары"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Кампрэсары"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19738,29 +19787,6 @@ msgstr "Гарызантальная арыентацыя"
 #, fuzzy
 msgid "Vertical"
 msgstr "Вертыкальная лінейка"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid " Monitoring "
-msgstr "Адключыць маніторынг"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy, c-format
-msgid " Peak %2.f dB"
-msgstr "%.1f Дб"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -22109,6 +22135,12 @@ msgstr "Выдаліць дарожку"
 msgid "Spectral Tools"
 msgstr "Спектр"
 
+#~ msgid "Mixer"
+#~ msgstr "Мікшары"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "&Размяшчэнне кіраўніцтва:"
+
 #, fuzzy
 #~ msgid "available"
 #~ msgstr "Зменная"
@@ -22610,10 +22642,6 @@ msgstr "Спектр"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Імпарт завершаны. Выконваецца разлік хвалевай формы на лёце. Гатовасць: %2.0f%%."
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "Кампрэсары"
 
 #, fuzzy
 #~ msgid ""

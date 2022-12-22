@@ -95,3 +95,6 @@ Some example strings are also given first, to document the syntax.
 
 // //////////////////////////////////////////////// End examples
 #endif
+
+XO("Cut/Copy/Paste"),
+XXO("&Cut/Copy/Paste Toolbar"),
