@@ -225,7 +225,6 @@ enum
    IdCaptureTimer,
    IdCaptureTools,
    IdCaptureTransport,
-   IdCaptureMixer,
    IdCaptureMeter,
    IdCapturePlayMeter,
    IdCaptureRecordMeter,
@@ -426,13 +425,12 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
             S.Id(IdCaptureSpectralSelection).AddButton(XXO("Spectral Selection"));
             S.Id(IdCaptureTimer).AddButton(XXO("Timer"));
             S.Id(IdCaptureTools).AddButton(XXO("Tools"));
-            S.Id(IdCaptureTransport).AddButton(XXO("Transport"));
          }
          S.EndHorizontalLay();
 
          S.StartHorizontalLay();
          {
-            S.Id(IdCaptureMixer).AddButton(XXO("Mixer"));
+            S.Id(IdCaptureTransport).AddButton(XXO("Transport"));
             S.Id(IdCaptureMeter).AddButton(XXO("Meter"));
             S.Id(IdCapturePlayMeter).AddButton(XXO("Play Meter"));
             S.Id(IdCaptureRecordMeter).AddButton(XXO("Record Meter"));

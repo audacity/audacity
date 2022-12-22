@@ -13,6 +13,8 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
+#include <algorithm>
+
 #if wxUSE_TOOLTIPS
 #include <wx/tooltip.h>
 #endif
@@ -190,7 +192,7 @@ void ShareAudioToolbar::ArrangeButtons()
    Layout();
 
    const auto height = 2 * toolbarSingle;
-   const wxSize size(GetSizer()->GetMinSize().GetWidth(), height);
+   const wxSize size(std::max(76, GetSizer()->GetMinSize().GetWidth()), height);
    SetMinSize(size);
    SetMaxSize(size);
 }

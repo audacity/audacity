@@ -16,6 +16,7 @@
 #include "RealtimeEffectState.h"
 
 #include "EffectManager.h"
+#include "UndoManager.h"
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
 #include "Track.h"
@@ -110,7 +111,7 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
       });
 
    mParameterChangedSubscription = mEffectUIHost->GetValidator()->Subscribe(
-      [this](auto) { ProjectHistory::Get(*mpProject).ModifyState(false); });
+      [this](auto) { UndoManager::Get(*mpProject).MarkUnsaved(); });
 }
 
 void RealtimeEffectStateUI::Hide(AudacityProject* project)

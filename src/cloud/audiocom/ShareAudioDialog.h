@@ -26,6 +26,7 @@ class wxButton;
 class wxGauge;
 class wxStaticText;
 class wxTextCtrl;
+class wxRadioButton;
 
 namespace BasicUI
 {
@@ -71,6 +72,8 @@ private:
       UserImage* avatar { nullptr };
       wxStaticText* name { nullptr };
       wxButton* oauthButton { nullptr };
+
+      wxRadioButton* isPublic { nullptr };
 
       Observer::Subscription mUserDataChangedSubscription;
 

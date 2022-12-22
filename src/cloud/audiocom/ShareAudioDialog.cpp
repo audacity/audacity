@@ -17,6 +17,7 @@
 #include <wx/stattext.h>
 #include <wx/statline.h>
 #include <wx/textctrl.h>
+#include <wx/radiobut.h>
 
 #include "AllThemeResources.h"
 #include "BasicUI.h"
@@ -43,6 +44,7 @@
 #include "export/Export.h"
 #include "ui/AccessibleLinksFormatter.h"
 
+#include "widgets/WindowAccessible.h"
 #include "widgets/HelpSystem.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
@@ -54,6 +56,13 @@ namespace cloud::audiocom
 namespace
 {
 BoolSetting wasOpened { L"/cloud/audiocom/wasOpened", false };
+BoolSetting SharePublicly { L"/cloud/audiocom/sharePublicly", true };
+
+void UpdatePublicity(bool value)
+{
+   SharePublicly.Write(value);
+   gPrefs->Flush();
+}
 
 const wxSize avatarSize = { 32, 32 };
 
@@ -77,6 +86,14 @@ wxString GenerateTempPath(FileExtension extension)
 
    return fileName.GetFullPath();
 }
+
+const auto publicLabelText = XO("Public");
+const auto publicDescriptionText =
+   XO("Anyone will be able to listen to this audio.");
+
+const auto unlistedLabelText = XO("Unlisted");
+const auto unlistedDescriptionText = XO(
+   "Only you and people you share a link with will be able to listen to this audio.");
 
 }
 
@@ -174,8 +191,10 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
    Fit();
    Centre();
 
-   SetMinSize(GetSize());
-   SetMaxSize({ GetSize().x, -1 });
+   const auto size = GetSize();
+
+   SetMinSize({ size.x, std::min(250, size.y) });
+   SetMaxSize({ size.x, -1 });
 
    mContinueAction = [this]()
    {
@@ -370,6 +389,7 @@ void ShareAudioDialog::StartUploadProcess()
    mServices->uploadPromise = mServices->uploadService.Upload(
       mFilePath,
       mProject.GetProjectName(),
+      mInitialStatePanel.isPublic->GetValue(),
       [this](const auto& result)
       {
          CallAfter(
@@ -399,7 +419,10 @@ void ShareAudioDialog::HandleUploadSucceeded(
    mProgressPanel.timePanel->Hide();
    mProgressPanel.title->SetLabel(XO("Upload complete!").Translation());
    mProgressPanel.info->Show();
-
+   mProgressPanel.info->SetLabel(
+      mInitialStatePanel.isPublic->GetValue() ? publicDescriptionText.Translation() :
+         unlistedDescriptionText.Translation());
+   
    if (!GetOAuthService().HasAccessToken())
    {
       mProgressPanel.info->SetLabel(
@@ -586,6 +609,75 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
 
       s.AddWindow(safenew wxStaticLine { s.GetParent() }, wxEXPAND);
 
+      s.AddSpace(16);
+
+      s.StartHorizontalLay(wxEXPAND, 0);
+      {
+         constexpr auto maxWidth = 380;
+         s.AddSpace(30, 0, 0);
+         s.StartMultiColumn(2, wxEXPAND);
+         {
+            s.SetBorder(2);
+            s.SetStretchyCol(1);
+
+            const auto selectedIndex = SharePublicly.Read() ? 0 : 1;
+
+            isPublic = s.Name(Verbatim(
+                                 publicLabelText.Translation() + ". " +
+                                 publicDescriptionText.Translation()))
+                          .AddRadioButton({}, 0, selectedIndex);
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            isPublic->SetAccessible(safenew WindowAccessible(isPublic));
+#endif
+            isPublic->Bind(
+               wxEVT_RADIOBUTTON, [this](auto) { UpdatePublicity(true); });
+            
+            s.AddVariableText(publicLabelText)
+               ->Bind(
+                  wxEVT_LEFT_UP,
+                  [this](auto)
+                  {
+                     isPublic->SetValue(true);
+                     UpdatePublicity(true);
+                  });
+            
+            s.AddFixedText({});
+            s.AddVariableText(publicDescriptionText, false, 0, maxWidth);
+
+            // Margin between options
+            s.AddFixedText({});
+            s.AddFixedText({});
+
+            auto rbUnlisted = s.Name(Verbatim(
+                                        unlistedLabelText.Translation() + ". " +
+                                        unlistedDescriptionText.Translation()))
+                                 .AddRadioButtonToGroup({}, 1, selectedIndex);
+
+#if wxUSE_ACCESSIBILITY
+            // so that name can be set on a standard control
+            rbUnlisted->SetAccessible(safenew WindowAccessible(rbUnlisted));
+#endif
+
+            rbUnlisted->Bind(
+               wxEVT_RADIOBUTTON, [this](auto) { UpdatePublicity(false); });
+            
+            s.AddVariableText(unlistedLabelText)
+               ->Bind(
+                  wxEVT_LEFT_UP,
+                  [this, rbUnlisted](auto)
+                  {
+                     rbUnlisted->SetValue(true);
+                     UpdatePublicity(false);
+                  });
+            
+            s.AddFixedText({});
+            s.AddVariableText(unlistedDescriptionText, false, 0, maxWidth);
+         }
+         s.EndMultiColumn();
+      }
+      s.EndHorizontalLay();
+
       if (!wasOpened.Read())
          PopulateFirstTimeNotice(s);
       else
@@ -764,8 +856,10 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
       s.EndInvisiblePanel();
 
       s.AddSpace(0, 16, 0);
-      info = s.AddVariableText(XO("Only people you share this link with can access your audio"));
+      
+      info = s.AddVariableText(publicDescriptionText);
    }
+   
    s.EndVerticalLay();
    s.EndInvisiblePanel();
 
