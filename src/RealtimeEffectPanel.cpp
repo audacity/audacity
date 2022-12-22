@@ -1340,9 +1340,12 @@ struct RealtimeEffectPanel::PrefsListenerHelper : PrefsListener
 namespace {
 AttachedWindows::RegisteredFactory sKey{
 [](AudacityProject &project) -> wxWeakRef<wxWindow> {
+   constexpr auto EffectsPanelMinWidth { 255 };
+
    const auto pProjectWindow = &ProjectWindow::Get(project);
    auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(
       project, pProjectWindow->GetContainerWindow(), wxID_ANY);
+   effectsPanel->SetMinSize({EffectsPanelMinWidth, -1});
    effectsPanel->SetName(_("Realtime effects"));
    effectsPanel->SetBackgroundColorIndex(clrMedium);
    effectsPanel->Hide();//initially hidden
@@ -1373,7 +1376,6 @@ RealtimeEffectPanel::RealtimeEffectPanel(
    auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
    auto header = safenew ThemedWindowWrapper<ListNavigationPanel>(this, wxID_ANY);
-   header->SetMinClientSize({254, -1});
 #if wxUSE_ACCESSIBILITY
    safenew WindowAccessible(header);
 #endif
