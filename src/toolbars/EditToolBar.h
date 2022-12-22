@@ -14,7 +14,6 @@
 #ifndef __AUDACITY_EDIT_TOOLBAR__
 #define __AUDACITY_EDIT_TOOLBAR__
 
-#include <vector>
 #include <wx/defs.h>
 
 #include "ToolBar.h"
@@ -48,16 +47,13 @@ class EditToolBar final : public ToolBar {
 
    void AddButton(
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int firstToolBarId, int thisButtonId,
-      const TranslatableString &label, bool toggle = false);
+      int id, const TranslatableString &label, bool toggle = false);
 
    void AddSeparator();
 
    void RegenerateTooltips() override;
-   void ForAllButtons(int Action);
 
-   std::vector<AButton*> mButtons;
-
+   ToolBarButtons mButtons;
    wxGridSizer* mToolSizer;
 
  public:

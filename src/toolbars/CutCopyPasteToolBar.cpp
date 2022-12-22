@@ -66,6 +66,12 @@ enum {
 
 constexpr int first_TB_ID = 21300;
 
+static const ToolBarButtons::ButtonList CutCopyPasteToolbarButtonList = {
+   { TBCutID,   wxT("Cut"),   XO("Cut")   },
+   { TBCopyID,  wxT("Copy"),  XO("Copy")  },
+   { TBPasteID, wxT("Paste"), XO("Paste") }
+};
+
 IMPLEMENT_CLASS(CutCopyPasteToolBar, ToolBar);
 
 ////////////////////////////////////////////////////////////
@@ -81,9 +87,9 @@ END_EVENT_TABLE()
 
 //Standard constructor
 CutCopyPasteToolBar::CutCopyPasteToolBar( AudacityProject &project )
-: ToolBar(project, CutCopyPasteBarID, XO("Cut/Copy/Paste"), wxT("Cut/Copy/Paste"))
+: ToolBar(project, CutCopyPasteBarID, XO("Cut/Copy/Paste"), wxT("CutCopyPaste"))
+, mButtons{ this, project, CutCopyPasteToolbarButtonList, TBNumButtons, first_TB_ID }
 {
-   mButtons.resize(TBNumButtons);
 }
 
 CutCopyPasteToolBar::~CutCopyPasteToolBar()
@@ -98,18 +104,9 @@ void CutCopyPasteToolBar::Create(wxWindow * parent)
 
 void CutCopyPasteToolBar::AddButton(
    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-   int firstToolBarId,
-   int thisButtonId,
-   const TranslatableString &label,
-   bool toggle)
+   int id, const TranslatableString &label, bool toggle)
 {
-   AButton *&r = mButtons[thisButtonId];
-
-   r = ToolBarButtons::AddButton(this,
-      eEnabledUp, eEnabledDown, eDisabled,
-      firstToolBarId, thisButtonId,
-      label, toggle);
-
+   auto r = mButtons.CreateButton(eEnabledUp, eEnabledDown, eDisabled, id, label, toggle);
    mToolSizer->Add(r);
 }
 
@@ -123,14 +120,14 @@ void CutCopyPasteToolBar::Populate()
    /* Buttons */
    // Tooltips match menu entries.
    // We previously had longer tooltips which were not more clear.
-   AddButton(bmpCut, bmpCut, bmpCutDisabled, first_TB_ID, TBCutID,
+   AddButton(bmpCut, bmpCut, bmpCutDisabled, TBCutID,
       XO("Cut"));
-   AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, first_TB_ID, TBCopyID,
+   AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, TBCopyID,
       XO("Copy"));
-   AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, first_TB_ID, TBPasteID,
+   AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, TBPasteID,
       XO("Paste"));
 
-   mButtons[TBPasteID]->SetEnabled(false);
+   mButtons.SetEnabled(TBPasteID, false);
 
    RegenerateTooltips();
 }
@@ -148,72 +145,17 @@ void CutCopyPasteToolBar::UpdatePrefs()
 
 void CutCopyPasteToolBar::RegenerateTooltips()
 {
-   ForAllButtons( TBActTooltips );
+   mButtons.RegenerateTooltips();
 }
 
 void CutCopyPasteToolBar::EnableDisableButtons()
 {
-   ForAllButtons( TBActEnableDisable );
+   mButtons.EnableDisableButtons();
 }
 
-static const struct Entry {
-   int tool;
-   CommandID commandName;
-   TranslatableString untranslatedLabel;
-} CutCopyPasteToolbarButtonList[] = {
-   { TBCutID,   wxT("Cut"),   XO("Cut")   },
-   { TBCopyID,  wxT("Copy"),  XO("Copy")  },
-   { TBPasteID, wxT("Paste"), XO("Paste") }
-};
-
-void CutCopyPasteToolBar::ForAllButtons(int Action)
+void CutCopyPasteToolBar::OnButton(wxCommandEvent & event)
 {
-   AudacityProject *p;
-   CommandManager* cm = nullptr;
-
-   if( Action & TBActEnableDisable ){
-      p = &mProject;
-      cm = &CommandManager::Get( *p );
-   }
-
-   for (const auto &entry : CutCopyPasteToolbarButtonList) {
-#if wxUSE_TOOLTIPS
-      if( Action & TBActTooltips ){
-         ComponentInterfaceSymbol command{
-            entry.commandName, entry.untranslatedLabel };
-         ToolBar::SetButtonToolTip( mProject,
-            *mButtons[entry.tool], &command, 1u );
-      }
-#endif
-      if (cm) {
-         mButtons[entry.tool]->SetEnabled(cm->GetEnabled(entry.commandName));
-      }
-   }
-}
-
-void CutCopyPasteToolBar::OnButton(wxCommandEvent &event)
-{
-   int id = event.GetId()-first_TB_ID;
-   // Be sure the pop-up happens even if there are exceptions, except for buttons which toggle.
-   auto cleanup = finally( [&] { mButtons[id]->InteractionOver();});
-
-   AudacityProject *p = &mProject;
-   auto &cm = CommandManager::Get( *p );
-
-   auto flags = MenuManager::Get(*p).GetUpdateFlags();
-   const CommandContext context( *p );
-   ::HandleTextualCommand( cm,
-      CutCopyPasteToolbarButtonList[id].commandName, context, flags, false);
-
-#if defined(__WXMAC__)
-   // Bug 2402
-   // LLL: It seems that on the Mac the IDLE events are processed
-   //      differently than on Windows/GTK and the AdornedRulerPanel's
-   //      OnPaint() method gets called sooner that expected. This is
-   //      evident when zooming from this toolbar only. When zooming from
-   //      the Menu or from keyboard ommand, the zooming works correctly.
-   wxTheApp->ProcessIdle();
-#endif
+   mButtons.OnButton(event);
 }
 
 static RegisteredToolbarFactory factory{ CutCopyPasteBarID,

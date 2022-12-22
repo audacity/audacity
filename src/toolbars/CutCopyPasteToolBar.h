@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_CUT_COPY_PASTE_TOOLBAR__
 #define __AUDACITY_CUT_COPY_PASTE_TOOLBAR__
 
-#include <vector>
 #include <wx/defs.h>
 
 #include "ToolBar.h"
@@ -44,14 +43,11 @@ class CutCopyPasteToolBar final : public ToolBar {
 
    void AddButton(
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int firstToolBarId, int thisButtonId,
-      const TranslatableString &label, bool toggle = false);
+      int id, const TranslatableString &label, bool toggle = false);
 
    void RegenerateTooltips() override;
-   void ForAllButtons(int Action);
 
-   std::vector<AButton*> mButtons;
-
+   ToolBarButtons mButtons;
    wxGridSizer* mToolSizer;
 
  public:
