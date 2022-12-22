@@ -347,12 +347,6 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
       dynamic_cast<LV2Instance&>(instance),
       access, pOutputs, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
-#ifdef __WXMAC__
-   const auto vendor = GetVendor().Msgid().Translation();
-   const bool doX42Hack = vendor == "Robin Gareus";
-   result->mUI.mJustLeakMemory = doX42Hack;
-#endif
-
    if (result->mUseGUI)
       result->mUseGUI = result->BuildFancy(move(pWrapper), settings);
    if (!result->mUseGUI && !result->BuildPlain(access))

@@ -60,19 +60,9 @@ void LV2Validator::UI::Destroy()
       ? static_cast<WXWidget>(suil_instance_get_widget(mSuilInstance.get()))
       : nullptr;
    if (widget) {
-      if (!mJustLeakMemory) {
-         // Bump reference count twice
-         wxCFRetain(widget);
-         wxCFRetain(widget);
-      }
-      else {
-         // Compensates for either an unbalanced release, or (when closing the
-         // project while the dialog is open) dangling pointers remaining after
-         // the last release, by adding one release.  In the second case, it
-         // leaks resources.
-         // (We can't detect here, which of the two cases applies.)
-         wxCFRetain(widget);
-      }
+      // Bump reference count twice
+      wxCFRetain(widget);
+      wxCFRetain(widget);
 
       // Do destruction of mNativeWin, which points to widget, and the suil
       // instance in the scope of an autorelease pool
@@ -86,13 +76,11 @@ void LV2Validator::UI::Destroy()
 
       // Two increases of the reference count means there can be one unbalanced
       // release and yet we can still query the use-count safely
-      if (!mJustLeakMemory) {
-         int count = CFGetRetainCount(widget);
+      int count = CFGetRetainCount(widget);
+      wxCFRelease(widget);
+      if (count > 1)
+         // Most plug-ins should come here, but x42-limiter will not!
          wxCFRelease(widget);
-         if (count > 1)
-            // Most plug-ins should come here, but x42-limiter will not!
-            wxCFRelease(widget);
-      }
    }
 #else
    mNativeWin = nullptr;
