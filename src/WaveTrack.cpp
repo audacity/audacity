@@ -1389,8 +1389,12 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       {
          // Check if clips can move
          if (EditClipsCanMove.Read()) {
-            auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
-            Paste(newT1, tmp.get());
+            const auto offset = newT1 - oldT1;
+            for(const auto& clip : mClips)
+            {
+               if (clip->GetPlayStartTime() > oldT1 - (1.0 / mRate))
+                  clip->Offset(offset);
+            }
          }
          return;
       }
@@ -1457,21 +1461,16 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
     // Make room for the pasted data
     if (editClipCanMove) {
         if (!singleClipMode) {
-            // We need to insert multiple clips, so split the current clip and
-            // move everything to the right, then try to paste again
-            if (!IsEmpty(t0, GetEndTime())) {
-                auto tmp = Cut(t0, GetEndTime() + 1.0 / mRate);
-                Paste(t0 + insertDuration, tmp.get());
-            }
+            // We need to insert multiple clips, so split the current clip and ...
+            SplitAt(t0);
         }
-        else {
-            // We only need to insert one single clip, so just move all clips
-            // to the right of the paste point out of the way
-            for (const auto& clip : mClips)
-            {
-                if (clip->GetPlayStartTime() > t0 - (1.0 / mRate))
-                    clip->Offset(insertDuration);
-            }
+        //else if there is a clip at t0 insert new clip inside it and ...
+       
+        // ... move everything to the right
+        for (const auto& clip : mClips)
+        {
+            if (clip->GetPlayStartTime() > t0 - (1.0 / mRate))
+                clip->Offset(insertDuration);
         }
     }
 
