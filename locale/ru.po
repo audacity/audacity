@@ -1658,7 +1658,7 @@ msgstr "Проверка обновлений приложения и отчёт
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
-msgstr "НЩёлкните и перетащите, для определения участка цикла."
+msgstr "Щёлкните и перетащите, для определения участка цикла."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
