@@ -273,6 +273,7 @@ typedef struct {
    fifo_t input_fifo;
    filter_array_t chan[2];
    float * out[2];
+   bool initializedWithZeroDepth;
 } reverb_t;
 
 
@@ -442,6 +443,10 @@ static void reverb_init
    {
       filter_array_init(p->chan + i, sample_rate_Hz, scale, i * depth);
    }
+
+   // Remember if stereo depth was set to 0, so we do not have to process twice
+   p->initializedWithZeroDepth = (stereo_depth == 0.0);
+
 }
 
 static void reverb_create(reverb_t * p, double sample_rate_Hz,
@@ -463,9 +468,11 @@ static void reverb_create(reverb_t * p, double sample_rate_Hz,
 
 static void reverb_process(reverb_t * p, size_t length)
 {
-   size_t i;
-   for (i = 0; i < 2 && p->out[i]; ++i)
-      filter_array_process(p->chan + i, length, (float *) fifo_read_ptr(&p->input_fifo), p->out[i], &p->feedback, &p->hf_damping, &p->gain);
+   filter_array_process(p->chan, length, (float *) fifo_read_ptr(&p->input_fifo), p->out[0], &p->feedback, &p->hf_damping, &p->gain);
+
+   if (!p->initializedWithZeroDepth)
+      filter_array_process(p->chan + 1, length, (float*)fifo_read_ptr(&p->input_fifo), p->out[1], &p->feedback, &p->hf_damping, &p->gain);
+
    fifo_read(&p->input_fifo, length, NULL);
 }
 
