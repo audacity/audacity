@@ -10,10 +10,10 @@
 # Márton Balázs <documan@mailbox.hu>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2022-09-29 14:10+0200\n"
+"PO-Revision-Date: 2022-12-23 13:02+0100\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -656,11 +656,11 @@ msgstr "&Hurok Be/Ki"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Kivágás/Másolás/Beillesztés"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "Kivágás/Másolás/Beillesztés &Eszköztár"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -3026,9 +3026,8 @@ msgid "Only avformat.dll"
 msgstr "Csak avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "Csak libavformat.so"
+msgstr "Csak libavformat.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -6096,23 +6095,19 @@ msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Nyilvános"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Nem lesz képes hang lejátszására vagy felvételére.\n"
-"\n"
+msgstr "Bárki meghallgathatja ezt a hangot."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Fel nem sorolt"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Csak azok érhetik el a hangot, akikkel megosztottad"
+msgstr "Csak te és akikkel megosztottad hallgathatják meg ezt hangot."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -18671,14 +18666,12 @@ msgstr "Gomb"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
-msgstr "Tömörítés"
+msgstr "tömörített"
 
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "not pressed"
-msgstr "Tömörítés"
+msgstr "nem tömörített"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
