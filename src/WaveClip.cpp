@@ -731,7 +731,11 @@ void WaveClip::CloseLock()
 
 void WaveClip::SetRate(int rate)
 {
+   const auto trimLeftSampleNum = TimeToSamples(mTrimLeft);
+   const auto trimRightSampleNum = TimeToSamples(mTrimRight);
    mRate = rate;
+   mTrimLeft = SamplesToTime(trimLeftSampleNum);
+   mTrimRight = SamplesToTime(trimRightSampleNum);
    auto newLength = mSequence->GetNumSamples().as_double() / mRate;
    mEnvelope->RescaleTimes( newLength );
    MarkChanged();
