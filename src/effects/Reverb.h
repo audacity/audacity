@@ -42,7 +42,9 @@ struct EffectReverbSettings
    double mStereoWidth { stereoWidthDefault };
    bool   mWetOnly     { wetOnlyDefault };
 
-   friend bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b);   
+   friend bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b);
+
+   friend bool OnlySimpleParametersChanged(const EffectReverbSettings& a, const EffectReverbSettings& b);
 };
 
 
