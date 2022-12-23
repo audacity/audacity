@@ -87,6 +87,7 @@ enum ToolBarID
    ShareAudioBarID,
 #endif
    TimeBarID,
+   CutCopyPasteBarID,
    ToolBarCount
 };
 
@@ -126,11 +127,16 @@ class AUDACITY_DLL_API ToolBar /* not final */
    wxString GetSection();
    ToolDock *GetDock();
 
+   void SetPreferredNeighbors(ToolBarID left, ToolBarID top = NoBarID);
+
 private:
    void SetLabel(const wxString & label) override;
 public:
    void SetLabel(const TranslatableString & label);
    virtual void SetDocked(ToolDock *dock, bool pushed);
+
+   //! Defaults to (NoBarID, NoBarId)
+   std::pair<ToolBarID, ToolBarID> PreferredNeighbors() const noexcept;
 
    // NEW virtual:
    virtual bool Expose(bool show = true);
@@ -261,6 +267,9 @@ public:
    ToolBarResizer *mResizer;
 
    wxBoxSizer *mHSizer;
+
+   ToolBarID mPreferredLeftNeighbor { NoBarID };
+   ToolBarID mPreferredTopNeighbor { NoBarID };
 
    bool mVisible;
    bool mResizable;

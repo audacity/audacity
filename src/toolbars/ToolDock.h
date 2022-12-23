@@ -229,6 +229,7 @@ public:
    Iterator end() const { return Iterator {}; }
 
    Position Find(const ToolBar *bar) const;
+   ToolBar* FindToolBar(ToolBarID id) const;
 
    bool Contains(const ToolBar *bar) const
    {
