@@ -63,13 +63,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
 {
    static CapturedParameters<EffectDistortion,
       TableTypeIndx, DCBlock, Threshold_dB, NoiseFloor, Param1, Param2, Repeats
-   > parameters{
-      [](EffectDistortion &e, EffectSettings &settings, EffectDistortionSettings &p,
-         bool updating) {
-
-         return true;
-      }
-   };
+   > parameters;
    return parameters;
 }
 
@@ -140,7 +134,7 @@ struct EffectDistortion::Validator
              EffectDistortion::Instance& instance,
       EffectSettingsAccess& access, const EffectDistortionSettings& settings)
       : EffectUIValidator{ effect, access }
-       , mInstance(instance)
+      , mInstance(instance)
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
@@ -368,7 +362,6 @@ EffectType EffectDistortion::GetType() const
 
 auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
-   // TODO reenable after achieving statelessness
    return RealtimeSince::Never;
 }
 

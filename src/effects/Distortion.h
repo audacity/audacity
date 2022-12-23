@@ -109,8 +109,7 @@ private:
 
    enum control
    {
-      ID_Type = 10000,
-      ID_DCBlock,
+      ID_DCBlock = 10001,
       ID_Threshold,
       ID_NoiseFloor,
       ID_Param1,
@@ -165,7 +164,8 @@ static constexpr EffectParameter Param1
    EffectDistortionSettings::mDefaultParam1,    0.0,   100.0,                1    };
 
 static constexpr EffectParameter Param2
-{ &EffectDistortionSettings::mParam2, L"Parameter 2",    50.0,    0.0,   100.0,                1    };
+{ &EffectDistortionSettings::mParam2, L"Parameter 2",
+   EffectDistortionSettings::mDefaultParam2,    0.0,   100.0,                1    };
 
 static constexpr EffectParameter Repeats{
    &EffectDistortionSettings::mRepeats,  L"Repeats",
