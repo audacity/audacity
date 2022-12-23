@@ -177,13 +177,13 @@ static void filter_array_allocate(filter_array_t* p, double rate,
    size_t i;
    double r = rate * (1 / 44100.); /* Compensate for actual sample-rate */
 
-   for (i = 0; i < array_length(comb_lengths); ++i, offset = -offset)
+   for (i = 0; i < array_length(comb_lengths); ++i)
    {
       filter_t* pcomb = &p->comb[i];
       pcomb->size = (size_t)(scale * r * (comb_lengths[i] + stereo_adjust * offset) + .5);
       pcomb->ptr = lsx_zalloc(pcomb->buffer, pcomb->size);
    }
-   for (i = 0; i < array_length(allpass_lengths); ++i, offset = -offset)
+   for (i = 0; i < array_length(allpass_lengths); ++i)
    {
       filter_t* pallpass = &p->allpass[i];
       pallpass->size = (size_t)(r * (allpass_lengths[i] + stereo_adjust * offset) + .5);
