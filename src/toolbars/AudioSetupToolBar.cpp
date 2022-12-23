@@ -17,7 +17,6 @@
 #include <thread>
 
 #include <wx/log.h>
-#include <wx/menu.h>
 #include <wx/sizer.h>
 #include <wx/tooltip.h>
 
@@ -662,7 +661,14 @@ void AudioSetupToolBar::AppendSubMenu( AudioSetupToolBar &toolbar,
       menuItem->Enable(false);
 }
 
-std::optional<wxString> AudioSetupToolBar::GetSelectedRadioItemLabel(const wxMenu& menu) const
+void AudioSetupToolBar::Choice::AppendSubMenu(
+   AudioSetupToolBar &toolBar, wxMenu &menu, const wxString &title)
+{
+   toolBar.AppendSubMenu(menu, mMenu, title);
+}
+
+std::optional<wxString>
+AudioSetupToolBar::GetSelectedRadioItemLabel(const wxMenu& menu)
 {
    const auto& items = menu.GetMenuItems();
 
