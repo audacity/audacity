@@ -241,15 +241,27 @@ struct EffectReverb::Instance
       const auto& incomingSettings = GetSettings(settings);
       if ( !(incomingSettings == mLastAppliedSettings) )
       {
+         const bool onlySimpleOnes = OnlySimpleParametersChanged(incomingSettings, mLastAppliedSettings);
+
          for (auto& slave : mSlaves)
          {
             for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
             {
                auto& reverbCore = slave.mState.mP[i].reverb;
                const auto& is = incomingSettings;
-               reverb_init(&reverbCore, mLastSampleRate,
-                           is.mWetGain, is.mRoomSize, is.mReverberance, is.mHfDamping,
-                           is.mPreDelay, is.mStereoWidth, is.mToneLow, is.mToneHigh   );
+
+               if (onlySimpleOnes)
+               {
+                  reverb_set_simple_params(&reverbCore, mLastSampleRate,
+                                           is.mWetGain, is.mReverberance, is.mHfDamping, is.mToneLow, is.mToneHigh);
+               }
+               else
+               {
+                  // One of the non-simple parameters changed, so we need to do a full reinit
+                  reverb_init(&reverbCore, mLastSampleRate,
+                              is.mWetGain, is.mRoomSize, is.mReverberance, is.mHfDamping,
+                              is.mPreDelay, is.mStereoWidth, is.mToneLow, is.mToneHigh   );
+               }
             }
          }         
 
@@ -633,3 +645,27 @@ bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b)
             && (a.mWetOnly      == b.mWetOnly);           
 }
 
+bool OnlySimpleParametersChanged(const EffectReverbSettings& a, const EffectReverbSettings& b)
+{
+   // A "simple" reverb parameter is one that when changed, does not require the
+   // reverb allpass/comb filters to be reset. This distinction enables us to
+   // code things so that the user can keep hearing the processed sound while
+   // they tweak one of the simple parameters.
+
+   const bool oneSimpleParameterChanged =
+
+               (a.mReverberance != b.mReverberance)
+            || (a.mHfDamping    != b.mHfDamping)
+            || (a.mToneLow      != b.mToneLow)
+            || (a.mToneHigh     != b.mToneHigh)
+            || (a.mWetGain      != b.mWetGain);
+
+
+   const bool allNonSimpleParametersStayedTheSame =
+
+               (a.mRoomSize     == b.mRoomSize)
+            && (a.mPreDelay     == b.mPreDelay)
+            && (a.mStereoWidth  == b.mStereoWidth);           
+
+   return oneSimpleParameterChanged && allNonSimpleParametersStayedTheSame;
+}
