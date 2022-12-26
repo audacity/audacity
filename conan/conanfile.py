@@ -10,10 +10,16 @@ import subprocess
 # correct location in the build tree
 def global_copy_files(conanfile, dependency_info):
     if conanfile.settings.os == "Windows":
+        if len(dependency_info.cpp_info.bindirs) == 0:
+            return
         copy(conanfile, "*.dll", dependency_info.cpp_info.bindirs[0], f"{conanfile.build_folder}/{conanfile.settings.build_type}")
     elif conanfile.settings.os == "Macos":
+        if len(dependency_info.cpp_info.libdirs) == 0:
+            return
         copied_files = copy(conanfile, "*.dylib*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/Audacity.app/Contents/Frameworks")
     elif conanfile.settings.os:
+        if len(dependency_info.cpp_info.libdirs) == 0:
+            return
         # On Linux we also set the correct rpath for the copied libraries
         patchelf_path = os.path.join(conanfile.dependencies.build["patchelf"].cpp_info.bindirs[0], "patchelf")
 
