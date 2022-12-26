@@ -775,6 +775,8 @@ void ToolManager::ReadConfig()
          bShownByDefault = false;
       if( ndx == DeviceBarID )
          bShownByDefault = false;
+      if( ndx == CutCopyPasteBarID )
+         bShownByDefault = false;
       if( ndx == TimeBarID )
          defaultDock = BotDockID;
 
