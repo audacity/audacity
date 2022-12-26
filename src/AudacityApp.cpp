@@ -419,6 +419,13 @@ void PopulatePreferences()
          gPrefs->DeleteEntry("/GUI/Help");
    }
 
+   if(std::tuple{ vMajor, vMinor, vMicro } < std::tuple{ 3, 2, 3 })
+   {
+      // Reset Share Audio width if it was populated before 3.2.3
+      if(gPrefs->Exists("/GUI/ToolBars/Share Audio/W"))
+         gPrefs->DeleteEntry("/GUI/ToolBars/Share Audio/W");
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
