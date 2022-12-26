@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2022-09-15 21:04+0900\n"
+"PO-Revision-Date: 2022-12-22 18:58+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://www.transifex.com/klyok/teams/690/ko/)\n"
 "Language: ko\n"
@@ -656,11 +656,11 @@ msgstr "반복 켜기/끄기 (&L)"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "자르기/복사/붙여넣기"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "자르기/복사/붙여넣기 툴바 (&C)"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -3011,9 +3011,8 @@ msgid "Only avformat.dll"
 msgstr "오직 avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "오직 libavformat.so"
+msgstr "오직 libavformat.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -6074,23 +6073,19 @@ msgstr "확인 (&O)"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "공개"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"오디오를 재생하거나 녹음할 수 없게 됩니다.\n"
-"\n"
+msgstr "누구든지 이 오디오를 들을 수 있게 됩니다."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "미등록"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "당신이 이 링크를 공유한 사람들만 오디오에 접근할 수 있습니다. "
+msgstr "당신과 이 링크를 공유한 사람들만 오디오를 들을 수 있습니다."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -7135,7 +7130,6 @@ msgstr "from"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&from"
 msgstr "from (&F)"
@@ -18640,13 +18634,12 @@ msgstr "버튼"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
-msgstr "누르기"
+msgstr "눌림"
 
 #: src/widgets/AButton.cpp
 msgid "not pressed"
-msgstr ""
+msgstr "눌리지 않음"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
