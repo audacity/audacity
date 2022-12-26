@@ -3,6 +3,14 @@
 function(make_wxBase old)
    make_interface_library(wxBase ${old})
 
+   get_target_property(defs wxBase INTERFACE_COMPILE_DEFINITIONS)
+
+   string(REPLACE "wxUSE_GUI=1;" "" defs "${defs}")
+   string(REPLACE ";wxUSE_GUI=1" "" defs "${defs}")
+   string(REPLACE "wxUSE_GUI=1" "" defs "${defs}")
+
+   set_property(TARGET wxBase PROPERTY INTERFACE_COMPILE_DEFINITIONS ${defs})
+
    # wxBase exposes only the GUI-less subset of full wxWidgets
    # Also prohibit use of some other headers by pre-defining their include guards
    # wxUSE_GUI=0 doesn't exclude all of wxCore dependency, and the application
