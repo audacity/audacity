@@ -124,7 +124,7 @@ void ShareAudioToolbar::EnableDisableButtons()
       gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
 
    bool hasAudio = false;
-   
+
    for (const auto& track : TrackList::Get(mProject).Leaders<PlayableTrack>())
    {
       if (track->GetStartTime() != track->GetEndTime())
@@ -192,9 +192,8 @@ void ShareAudioToolbar::ArrangeButtons()
    Layout();
 
    const auto height = 2 * toolbarSingle;
-   const wxSize size(std::max(76, GetSizer()->GetMinSize().GetWidth()), height);
-   SetMinSize(size);
-   SetMaxSize(size);
+   SetMinSize({ std::max(76, GetSizer()->GetMinSize().GetWidth()), height });
+   SetMaxSize({ -1, height });
 }
 
 void ShareAudioToolbar::DestroySizer()
