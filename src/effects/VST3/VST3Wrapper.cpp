@@ -592,6 +592,9 @@ bool VST3Wrapper::Initialize(EffectSettings& settings, Steinberg::Vst::SampleRat
    {
       if(mAudioProcessor->setProcessing(true) != kResultFalse)
       {
+         mProcessContext.state = Vst::ProcessContext::kPlaying;
+         mProcessContext.sampleRate = sampleRate;
+
          mActive = true;
          ConsumeChanges(settings);
          //make zero-flush, to make sure parameters are delivered to the processor...
@@ -607,6 +610,7 @@ void VST3Wrapper::Finalize(EffectSettings* settings)
 {
    //Could be FlushParameters but processor is already configured
    //If no calls to process were performed deliver changes here
+   mProcessContext.state = 0;
    if(settings != nullptr)
    {
       ConsumeChanges(*settings);
@@ -669,6 +673,8 @@ void VST3Wrapper::FlushParameters(EffectSettings& settings, bool* hasChanges)
          ConsumeChanges(settings);
          if(mAudioProcessor->setProcessing(true) != Steinberg::kResultFalse)
          {
+            mProcessContext.sampleRate = mSetup.sampleRate;
+            mProcessContext.state = 0;
             Process(nullptr, nullptr, 0);
             mAudioProcessor->setProcessing(false);
          }
@@ -691,6 +697,7 @@ size_t VST3Wrapper::Process(const float* const* inBlock, float* const* outBlock,
    data.processMode = mSetup.processMode;
    data.symbolicSampleSize = mSetup.symbolicSampleSize;
    data.inputParameterChanges = &inputParameterChanges;
+   data.processContext = &mProcessContext;
 
    static_assert(std::numeric_limits<decltype(blockLen)>::max()
       >= std::numeric_limits<decltype(data.numSamples)>::max());

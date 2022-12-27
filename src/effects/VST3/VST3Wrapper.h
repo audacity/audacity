@@ -3,6 +3,7 @@
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
 #include "EffectInterface.h"
@@ -139,4 +140,6 @@ private:
    //in VST3EffectSettings structure, dynamically assigned during
    //processing
    std::unique_ptr<SingleInputParameterValue[]> mParameterQueues;
+
+   Steinberg::Vst::ProcessContext mProcessContext { };
 };
