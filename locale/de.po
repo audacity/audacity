@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2012-07-27 10:44+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2020-2022\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1854,7 +1854,7 @@ msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Audacity konnte keinen Platz zum Speichern der temporären Dateien finden.\n"
+"Audacity konnte keinen Ort zum Speichern der temporären Dateien finden.\n"
 "Bitte geben Sie ein geeignetes Verzeichnis im Einstellungsdialog ein."
 
 #: src/AudacityApp.cpp
@@ -6110,7 +6110,7 @@ msgstr "Öffentlich"
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr "Jeder kann sich diese Audiodatei anhören"
+msgstr "Jeder wird sich diese Audiodatei anhören können."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
@@ -6119,7 +6119,7 @@ msgstr "Nicht gelistet"
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Nur du und Leute, mit denen du den Link geteilt hast, können sich diese Audiodatei anhören"
+msgstr "Nur Sie und Leute, mit denen Sie einen Link geteilt haben, werden sich diese Audiodatei anhören können."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -13079,7 +13079,7 @@ msgstr "WavPack-Dateien"
 #: src/import/ImportWavPack.cpp
 #, c-format
 msgid "Encountered %d errors decoding WavPack file!"
-msgstr "%d Fehlern bei dekodieren der WavPack-Datei begegnet!"
+msgstr "Beim Dekodieren der WavPack-Datei sind %d Fehler aufgetreten!"
 
 #: src/import/ImportWavPack.cpp
 msgid "WavPack Importer"
@@ -13175,7 +13175,7 @@ msgstr "Clip nicht verschoben"
 
 #: src/menus/ClipMenus.cpp src/menus/EditMenus.cpp
 msgid "Audi&o Clips"
-msgstr "Audi%oclips"
+msgstr "Audi&oclips"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
