@@ -2,26 +2,26 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Yaşar Çiv <yasarciv@protonmail.com>, 2022
-# Paval Shalamitski <yehekim@gmail.com>, 2022
 # Serkan ÖNDER <serkanonder0@gmail.com>, 2022
+# Paval Shalamitski <yehekim@gmail.com>, 2022
 # Kaya Zeren <kayazeren@gmail.com>, 2022
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2022-09-14 17:54+0000\n"
+"PO-Revision-Date: 2022-12-22 07:39+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/klyok/teams/690/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. i18n-hint C++ programming assertion
@@ -44,8 +44,12 @@ msgid "Problem Report for Audacity"
 msgstr "Audacity için sorun bildirimi"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
-msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr "Bildirimi Audacity ekibine göndermek için \"Gönder\" üzerine tıklayın. Toplanan bilgiler anonim tutulur."
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+"Bildirimi Audacity ekibine göndermek için \"Gönder\" üzerine tıklayın. "
+"Toplanan bilgiler anonim tutulur."
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -66,7 +70,8 @@ msgstr "Ayrıntılı bilgi almak için %s bölümüne bakabilirsiniz."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
+#. "See".
 #: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -221,14 +226,14 @@ msgid "Recording volume is native\n"
 msgstr "Kayıt ses düzeyi doğal\n"
 
 #: libraries/lib-basic-ui/BasicUI.cpp
-#: libraries/lib-exceptions/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.h
+#: libraries/lib-exceptions/AudacityException.h
+#: src/commands/MessageCommand.cpp src/widgets/AudacityMessageBox.h
 msgid "Message"
 msgstr "İleti"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
-msgstr ""
+msgstr "Yüklenemedi."
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -264,8 +269,11 @@ msgstr "Audacity %s içindeki bir dosyayı okuyamadı."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity %s içindeki bir dosyayı yazdı ancak %s olarak yeniden adlandıramadı."
+msgid ""
+"Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
+"Audacity %s içindeki bir dosyayı yazdı ancak %s olarak yeniden "
+"adlandıramadı."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -540,7 +548,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Yalnız güvenilir kaynaklardan sağlanan modülleri kullanın"
+"Yalnızca güvenilir kaynaklardan sağlanan modülleri kullanın"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
 #: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
@@ -600,8 +608,8 @@ msgstr ""
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bu uygulama eki etkinleştirilsin mi?\n"
+msgstr[1] "Bu uygulama ekleri etkinleştirilsin mi?\n"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -631,12 +639,17 @@ msgstr "24-bit"
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "%s üzerindeki uygulama eki grubu önceden tanımlanmış grup ile birleştirildi"
+msgstr ""
+"%s üzerindeki uygulama eki grubu önceden tanımlanmış grup ile birleştirildi"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "%s üzerindeki uygulama eki ögesi önceden tanımlanmış bir öge ile çakıştığından yok sayıldı"
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was "
+"discarded"
+msgstr ""
+"%s üzerindeki uygulama eki ögesi önceden tanımlanmış bir öge ile "
+"çakıştığından yok sayıldı"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -657,11 +670,11 @@ msgstr "Yinelemeyi &aç/kapat"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Kes/Kopyala/Yapıştır"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "&Kes/Kopyala/Yapıştır araç çubuğu"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -720,7 +733,8 @@ msgid "Light"
 msgstr "Hafif"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: libraries/lib-theme/Theme.cpp
@@ -1041,7 +1055,8 @@ msgstr "Nyquist betiği yükle"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr "Nyquist betikleri (*.ny)|*.ny|Lisp betikleri (*.lsp)|*.lsp|Tüm dosyalar|*"
+msgstr ""
+"Nyquist betikleri (*.ny)|*.ny|Lisp betikleri (*.lsp)|*.lsp|Tüm dosyalar|*"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
@@ -1072,7 +1087,8 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 by Leland Lucius"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
+msgid ""
+"External Audacity module which provides a simple IDE for writing effects."
 msgstr "Yazma etkileri için basit bir IDE oluşturan dış Audacity modülü."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -1262,97 +1278,113 @@ msgstr "Betiği durdur"
 msgid "No revision identifier was provided"
 msgstr "Herhangi bir değişiklik belirteci belirtilmemiş"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, sistem yöneticisi"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, kurucu ortak ve yazılım geliştirici"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, designer"
 msgstr "%s, tasarımcı"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, yazılım geliştirici"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer and support"
 msgstr "%s, geliştirme ve destek"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s, belge hazırlama ve destek"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
 msgstr "%s, kalite güvencesi, belgelendirme ve destek"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s, belge hazırlama ve destek, Fransızca"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, kalite güvencesi"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, erişilebilirlik danışmanı"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, görsel sanatçı"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, besteci"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, deneme kullanıcısı"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, Nyquist uygulama ekleri"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, web geliştirici"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
@@ -1369,7 +1401,8 @@ msgstr "%s (%s, %s, %s, %s ve %s ile birlikte)"
 msgid "About %s"
 msgstr "%s hakkında"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
+#. button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
@@ -1391,8 +1424,12 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s the free, open source, cross-platform software for recording and editing sounds."
-msgstr "%s özgür, açık kaynaklı ve farklı platformlarda çalışabilen bir ses düzenleme ve kaydetme uygulamasıdır."
+msgid ""
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
+msgstr ""
+"%s özgür, açık kaynaklı ve farklı platformlarda çalışabilen bir ses "
+"düzenleme ve kaydetme uygulamasıdır."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -1634,8 +1671,12 @@ msgid "PRIVACY POLICY"
 msgstr "GİZLİLİK İLKESİ"
 
 #: src/AboutDialog.cpp
-msgid "App update checking and error reporting require network access. These features are optional."
-msgstr "Uygulama güncelleme denetimi ve hata bildirimi özellikleri için ağ erişimi gereklidir. Bu özelliklerin kullanılması isteğe bağlıdır."
+msgid ""
+"App update checking and error reporting require network access. These "
+"features are optional."
+msgstr ""
+"Uygulama güncelleme denetimi ve hata bildirimi özellikleri için ağ erişimi "
+"gereklidir. Bu özelliklerin kullanılması isteğe bağlıdır."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
@@ -1662,7 +1703,6 @@ msgstr "Zaman akışı"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
 msgstr "Taramayı başlatmak için tıklayın ya da sürükleyin"
@@ -1670,7 +1710,6 @@ msgstr "Taramayı başlatmak için tıklayın ya da sürükleyin"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
 msgstr "Sarmayı başlatmak için tıklayın ya da sürükleyin"
@@ -1678,7 +1717,6 @@ msgstr "Sarmayı başlatmak için tıklayın ya da sürükleyin"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
 msgstr "Sarmak için tıklayıp taşıyın. Taramak için tıklayıp sürükleyin."
@@ -1686,7 +1724,6 @@ msgstr "Sarmak için tıklayıp taşıyın. Taramak için tıklayıp sürükleyi
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
 msgstr "Taramaya taşı"
@@ -1694,7 +1731,6 @@ msgstr "Taramaya taşı"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
 msgstr "Sarmaya taşı"
@@ -1835,8 +1871,12 @@ msgstr ""
 "Lütfen ayarlar bölümünden uygun bir klasör seçin."
 
 #: src/AudacityApp.cpp
-msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Audacity şimdi kapanacak. Yeni geçici klasörü kullanmak için yeniden başlatmalısınız."
+msgid ""
+"Audacity is now going to exit. Please launch Audacity again to use the new "
+"temporary directory."
+msgstr ""
+"Audacity şimdi kapanacak. Yeni geçici klasörü kullanmak için yeniden "
+"başlatmalısınız."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -2094,35 +2134,57 @@ msgid "Out of memory!"
 msgstr "Bellek doldu!"
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr "Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Daha fazla iyileştirme yapmak olanaksız. Hala çok yüksek."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to "
+"optimize it more. Still too high."
+msgstr ""
+"Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Daha fazla "
+"iyileştirme yapmak olanaksız. Hala çok yüksek."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Kayıt düzeyi otomatik olarak ayarlanarak ses düzeyi %f olarak azaltıldı."
+msgstr ""
+"Kayıt düzeyi otomatik olarak ayarlanarak ses düzeyi %f olarak azaltıldı."
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
-msgstr "Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Daha fazla iyileştirme yapmak olanaksız. Hala çok düşük."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to "
+"optimize it more. Still too low."
+msgstr ""
+"Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Daha fazla "
+"iyileştirme yapmak olanaksız. Hala çok düşük."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Kayıt düzeyi otomatik olarak ayarlanarak ses düzeyi %.2f. olarak arttırıldı."
+msgstr ""
+"Kayıt düzeyi otomatik olarak ayarlanarak ses düzeyi %.2f. olarak arttırıldı."
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr "Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Kabul edilebilir bir ses düzeyi bulunamadan toplam inceleme sayısı aşıldı. Hala çok yüksek."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses "
+"has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
+"Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Kabul edilebilir bir"
+" ses düzeyi bulunamadan toplam inceleme sayısı aşıldı. Hala çok yüksek."
 
 #: src/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr "Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Kabul edilebilir bir ses düzeyi bulunamadan toplam inceleme sayısı aşıldı. Hala çok düşük."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses "
+"has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
+"Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. Kabul edilebilir bir"
+" ses düzeyi bulunamadan toplam inceleme sayısı aşıldı. Hala çok düşük."
 
 #: src/AudioIO.cpp
 #, c-format
-msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr "Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. %.2f. kabul edilebilir bir ses düzeyi olarak görünüyor."
+msgid ""
+"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
+"volume."
+msgstr ""
+"Kayıt düzeyinin otomatik olarak ayarlanması durduruldu. %.2f. kabul "
+"edilebilir bir ses düzeyi olarak görünüyor."
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -2241,7 +2303,8 @@ msgstr "Menü komutu (Parametreler ile)"
 msgid "Menu Command (No Parameters)"
 msgstr "Menü komutu (parametre olmadan)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
+#. Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -2461,7 +2524,8 @@ msgstr "Yeni makronun adı"
 msgid "Name must not be blank"
 msgstr "Ad boş bırakılamaz"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
+#. and '\'.
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -2651,7 +2715,8 @@ msgstr "DENEME BAŞARISIZ!!!\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "Hız sınırı değerlendirmesi tamamlandı.\n"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -2663,23 +2728,34 @@ msgstr ""
 "\n"
 "Ctrl + A tüm sesleri seçer."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "%s için kullanılacak sesi seçin (örneğin Tümünü Seçmek için Cmd + A) ve yeniden deneyin."
+msgid ""
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
+" again."
+msgstr ""
+"%s için kullanılacak sesi seçin (örneğin Tümünü Seçmek için Cmd + A) ve "
+"yeniden deneyin."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "%s için kullanılacak sesi seçin (örneğin Tümünü Seçmek için Ctrl + A) ve yeniden deneyin."
+msgid ""
+"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
+"try again."
+msgstr ""
+"%s için kullanılacak sesi seçin (örneğin Tümünü Seçmek için Ctrl + A) ve "
+"yeniden deneyin."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
 msgstr "Herhangi bir ses seçilmemiş"
 
-#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise
+#. Reduction'.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -2702,7 +2778,7 @@ msgid ""
 "You can only do this when playing and recording are\n"
 "stopped. (Pausing is not sufficient.)"
 msgstr ""
-"Bu işlem yalnız oynatma ya da kayıt durdurulmuş ise\n"
+"Bu işlem yalnızca oynatma ya da kayıt durdurulmuş ise\n"
 "yapılabilir. (Beklemede bırakmak yeterli değildir.)"
 
 #: src/CommonCommandFlags.cpp
@@ -2751,7 +2827,8 @@ msgstr "%s üzerine yapılan birincil bağlantı için güvenli kip ayarlanamad�
 #: src/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "%s üzerine yapılan denetim noktası bağlantısı için güvenli kip ayarlanamadı"
+msgstr ""
+"%s üzerine yapılan denetim noktası bağlantısı için güvenli kip ayarlanamadı"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2905,8 +2982,12 @@ msgid "Missing"
 msgstr "Eksik"
 
 #: src/Dependencies.cpp
-msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
-msgstr "İşleme devam ederseniz, projeniz diske kaydedilmeyecek. Ne yapmak istersiniz?"
+msgid ""
+"If you proceed, your project will not be saved to disk. Is this what you "
+"want?"
+msgstr ""
+"İşleme devam ederseniz, projeniz diske kaydedilmeyecek. Ne yapmak "
+"istersiniz?"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2984,7 +3065,9 @@ msgstr "FFmpeg konumu"
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr "Audacity, sesleri FFmpeg aracılığıyla içe ve dışa aktarmak için '%s' dosyasına gerek duyuyor."
+msgstr ""
+"Audacity, sesleri FFmpeg aracılığıyla içe ve dışa aktarmak için '%s' "
+"dosyasına gerek duyuyor."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -3012,16 +3095,15 @@ msgstr "İndir"
 
 #: src/FFmpeg.cpp
 msgid "Only avformat.dll"
-msgstr "Yalnız avformat.dll"
+msgstr "Yalnızca avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "Yalnız libavformat.so"
+msgstr "Yalnızca libavformat.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
-msgstr "Yalnız libavformat.so"
+msgstr "Yalnızca libavformat.so"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
@@ -3053,7 +3135,8 @@ msgstr ""
 msgid "Do not show this warning again"
 msgstr "Bu uyarı bir daha görüntülenmesin"
 
-#. i18n-hint: %s will be the error message from the libsndfile software library
+#. i18n-hint: %s will be the error message from the libsndfile software
+#. library
 #: src/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
@@ -3187,12 +3270,16 @@ msgid "&Replot..."
 msgstr "&Yeniden çiz..."
 
 #: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must be the same sample rate."
-msgstr "Spektrum çizdirmek için, seçilmiş tüm izler aynı örnek hızında olmalıdır."
+msgid ""
+"To plot the spectrum, all selected tracks must be the same sample rate."
+msgstr ""
+"Spektrum çizdirmek için, seçilmiş tüm izler aynı örnek hızında olmalıdır."
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgid ""
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
+"analyzed."
 msgstr "Çok fazla ses seçilmiş. Sesin sadece ilk %.1f saniyesi çözümlenecek."
 
 #: src/FreqWindow.cpp
@@ -3204,26 +3291,30 @@ msgstr "Yeterli veri seçilmemiş."
 msgid "s"
 msgstr "s"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%d Hz (%s) = %d dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%d Hz (%s) = %.1f dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4f saniye (%d Hz) (%s) = %f"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
@@ -3309,11 +3400,15 @@ msgid "No Local Help"
 msgstr "Yerel yardım yok"
 
 #: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr "<br><br>Kullandığınız Audacity uygulaması <b>Alpha deneme sürümüdür</b>."
+msgid ""
+"<br><br>The version of Audacity you are using is an <b>Alpha test "
+"version</b>."
+msgstr ""
+"<br><br>Kullandığınız Audacity uygulaması <b>Alpha deneme sürümüdür</b>."
 
 #: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgid ""
+"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
 msgstr "<br><br>Kullandığınız Audacity uygulaması Beta deneme sürümüdür</b>."
 
 #: src/HelpText.cpp
@@ -3321,12 +3416,21 @@ msgid "Get the Official Released Version of Audacity"
 msgstr "Resmi Audacity sürümünü edinin"
 
 #: src/HelpText.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
-msgstr "Tam belgeleri ve desteği olan kararlı son sürümü kullanmanızı önemle öneririz.<br><br>"
+msgid ""
+"We strongly recommend that you use our latest stable released version, which"
+" has full documentation and support.<br><br>"
+msgstr ""
+"Tam belgeleri ve desteği olan kararlı son sürümü kullanmanızı önemle "
+"öneririz.<br><br>"
 
 #: src/HelpText.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
-msgstr "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|Topluluğumuza]] katılarak Audacity sürümlerinin hazırlanmasına katkıda bulunabilirsiniz .<hr><br><br>"
+msgid ""
+"You can help us get Audacity ready for release by joining our "
+"[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr ""
+"You can help us get Audacity ready for release by joining our "
+"[[https://www.audacityteam.org/community/|Topluluğumuza]] katılarak Audacity"
+" sürümlerinin hazırlanmasına katkıda bulunabilirsiniz .<hr><br><br>"
 
 #. i18n-hint: %s is replaced with Audacity version
 #: src/HelpText.cpp
@@ -3344,37 +3448,90 @@ msgstr "Şu şekilde destek alabilirsiniz:"
 
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
-msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
-msgstr "[[help:Quick_Help|Quick Help]] - Yerel olarak kurulmamış ise, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+msgid ""
+"[[help:Quick_Help|Quick Help]] - if not installed locally, "
+"[[https://manual.audacityteam.org/quick_help.html|view online]]"
+msgstr ""
+"[[help:Quick_Help|Quick Help]] - Yerel olarak kurulmamış ise, "
+"[[https://manual.audacityteam.org/quick_help.html|view online]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
-msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
-msgstr " [[help:Main_Page|Manual]] - yerel olarak kurulmamış ise, [[https://manual.audacityteam.org/|view online]]"
+msgid ""
+" [[help:Main_Page|Manual]] - if not installed locally, "
+"[[https://manual.audacityteam.org/|view online]]"
+msgstr ""
+" [[help:Main_Page|Manual]] - yerel olarak kurulmamış ise, "
+"[[https://manual.audacityteam.org/|view online]]"
 
 #: src/HelpText.cpp
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " [[https://forum.audacityteam.org/|Forum]] - sorularınızı doğrudan çevrimiçi olarak sorun."
+msgid ""
+" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
+"online."
+msgstr ""
+" [[https://forum.audacityteam.org/|Forum]] - sorularınızı doğrudan çevrimiçi"
+" olarak sorun."
 
 #: src/HelpText.cpp
-msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
-msgstr "Ek olarak:</b> İpuçları, kolaylıklar, eğitimler ve etki uygulama ekleri için [[https://wiki.audacityteam.org/index.php|Wiki]] sayfamıza bakabilirsiniz."
+msgid ""
+"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
+"tips, tricks, extra tutorials and effects plug-ins."
+msgstr ""
+"Ek olarak:</b> İpuçları, kolaylıklar, eğitimler ve etki uygulama ekleri için"
+" [[https://wiki.audacityteam.org/index.php|Wiki]] sayfamıza bakabilirsiniz."
 
 #: src/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
-msgstr "İsteğe bağlı olarak bilgisayarınıza indirip kurabileceğiniz [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg kitaplığı]] ile, Audacity, korunmamış pek çok biçimdeki dosyayı alabilir (M4A, WMA, taşınabilir oynatıcılarda sıkıştırılmış WAV ve görüntü dosyalarındaki sesler gibi)."
+msgid ""
+"Audacity can import unprotected files in many other formats (such as M4A and"
+" WMA, compressed WAV files from portable recorders and audio from video "
+"files) if you download and install the optional "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|"
+" FFmpeg library]] to your computer."
+msgstr ""
+"İsteğe bağlı olarak bilgisayarınıza indirip kurabileceğiniz "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|"
+" FFmpeg kitaplığı]] ile, Audacity, korunmamış pek çok biçimdeki dosyayı "
+"alabilir (M4A, WMA, taşınabilir oynatıcılarda sıkıştırılmış WAV ve görüntü "
+"dosyalarındaki sesler gibi)."
 
 #: src/HelpText.cpp
-msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr "Ayrıca [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI dosyaları]] ve [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ses CD]] izlerini almak için yardım bölümlerini okuyabilirsiniz."
+msgid ""
+"You can also read our help on importing "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"files]] and tracks from "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
+" audio CDs]]."
+msgstr ""
+"Ayrıca "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"dosyaları]] ve "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
+" ses CD]] izlerini almak için yardım bölümlerini okuyabilirsiniz."
 
 #: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Kullanım kitabı kurulmamış gibi görünüyor. Lütfen [[*URL*|çevrimiçi kitaba bakın]]. <br><br>Kitabı her zaman çevrimiçi görüntülemek için Arayüz ayarlarında \"Kitap Konumu\" seçeneğini \"İnternet Üzerinden\" olarak ayarlayın."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
+"online]].<br><br>To always view the Manual online, change \"Location of "
+"Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Kullanım kitabı kurulmamış gibi görünüyor. Lütfen [[*URL*|çevrimiçi kitaba "
+"bakın]]. <br><br>Kitabı her zaman çevrimiçi görüntülemek için Arayüz "
+"ayarlarında \"Kitap Konumu\" seçeneğini \"İnternet Üzerinden\" olarak "
+"ayarlayın."
 
 #: src/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Kullanım kitabı kurulmamış gibi görünüyor. Lütfen [[*URL*|çevrimiçi kitaba bakın]] ya da [[https://manual.audacityteam.org/man/unzipping_the_manual.html| kitabı indirin]]. <br><br>Kitabı her zaman çevrimiçi görüntülemek için Arayüz ayarlarında \"Kitap Konumu\" seçeneğini \"İnternet Üzerinden\" olarak ayarlayın."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
+" download the Manual]].<br><br>To always view the Manual online, change "
+"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Kullanım kitabı kurulmamış gibi görünüyor. Lütfen [[*URL*|çevrimiçi kitaba "
+"bakın]] ya da "
+"[[https://manual.audacityteam.org/man/unzipping_the_manual.html| kitabı "
+"indirin]]. <br><br>Kitabı her zaman çevrimiçi görüntülemek için Arayüz "
+"ayarlarında \"Kitap Konumu\" seçeneğini \"İnternet Üzerinden\" olarak "
+"ayarlayın."
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -3464,8 +3621,17 @@ msgstr "İlerle"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity, yüklenemeyen %d uyumsuz eklenti buldu. Herhangi bir duraklama veya çökmeyi önlemek için bu eklentiler devre dışı bırakıldı. Bu eklentileri yine de kullanmayı denemek istiyorsanız, \"Eklenti yönetimi\" bölümünden bu eklentileri etkinleştirebilirsiniz. Bunu istemiyorsanız \"Devam\" üzerine tıklayın."
+msgid ""
+"Audacity has found %d incompatible plugins which could not be loaded. We "
+"have disabled these plugins to avoid any stalling or crashes. If you would "
+"still like to attempt to use these plugins, you can enable them using "
+"\"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
+"Audacity, yüklenemeyen %d uyumsuz uygulama eki buldu. Herhangi bir duraklama"
+" veya çökmeyi önlemek için bu uygulama ekleri devre dışı bırakıldı. Yine de "
+"bu uygulama eklerini kullanmayı denemek istiyorsanız, \"Uygulama eki "
+"yönetimi\" bölümünden bu uygulama eklerini etkinleştirebilirsiniz. Bunu "
+"istemiyorsanız \"Devam\" üzerine tıklayın."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -3571,7 +3737,9 @@ msgstr "Audacity içinde kullanacağınız dili seçin:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
+msgid ""
+"The language you have chosen, %s (%s), is not the same as the system "
+"language, %s (%s)."
 msgstr "Seçtiğiniz %s (%s) dili, %s (%s) sistem diliniz, ile aynı değil."
 
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
@@ -3609,8 +3777,9 @@ msgstr "&Kaydet..."
 msgid "Cl&ear"
 msgstr "T&emizle"
 
-#: src/LogWindow.cpp src/ShuttleGui.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/LogWindow.cpp src/ShuttleGui.cpp
+#: src/cloud/audiocom/ShareAudioDialog.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "Kapa&t"
 
@@ -3704,7 +3873,8 @@ msgid "Gain"
 msgstr "Kazanç"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
+#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note
+#. tracks
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -3887,34 +4057,41 @@ msgstr "A♭"
 msgid "B♭"
 msgstr "B♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "C♯/D♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "D♯/E♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "F♯/G♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "G♯/A♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Etkileri seçin, etkinleştirme ya da devre dışı bırakma düğmelerine tıklayın, ardından Tamam üzerine tıklayın."
+msgstr ""
+"Etkileri seçin, etkinleştirme ya da devre dışı bırakma düğmelerine tıklayın,"
+" ardından Tamam üzerine tıklayın."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginRegistrationDialog.cpp
@@ -4072,7 +4249,8 @@ msgstr ""
 msgid "Too Few Compatible Tracks Selected"
 msgstr "Seçilmiş uyumlu iz sayısı çok az"
 
-#. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+#. i18n-hint a numerical suffix added to distinguish otherwise like-named
+#. clips when new record started
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
@@ -4101,8 +4279,14 @@ msgid "Close project immediately with no changes"
 msgstr "Projeyi bir değişiklik yapmadan hemen kapat"
 
 #: src/ProjectFSCK.cpp
-msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "Günlüğe kaydedilen onarımlarla devam ediliyor ve başka sorun var mı bakılıyor. Bu işlem, daha sonraki sorun iletilerinde \"Projeyi hemen kapat\" komutunu seçmedikçe projenizi geçerli haliyle kaydedecek."
+msgid ""
+"Continue with repairs noted in log, and check for more errors. This will "
+"save the project in its current state, unless you \"Close project "
+"immediately\" on further error alerts."
+msgstr ""
+"Günlüğe kaydedilen onarımlarla devam ediliyor ve başka sorun var mı "
+"bakılıyor. Bu işlem, daha sonraki sorun iletilerinde \"Projeyi hemen kapat\""
+" komutunu seçmedikçe projenizi geçerli haliyle kaydedecek."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -4148,7 +4332,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Treat missing audio as silence (this session only)"
-msgstr "Kayıp veriyi sessizlik olarak kabul et (yalnız bu oturum için)"
+msgstr "Kayıp veriyi sessizlik olarak kabul et (yalnızca bu oturum için)"
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)."
@@ -4177,7 +4361,7 @@ msgstr "Takma adlı özet dosyalarını yeniden oluştur (güvenli ve önerilen)
 
 #: src/ProjectFSCK.cpp
 msgid "Fill in silence for missing display data (this session only)"
-msgstr "Kayıp görünüm verisini sessizlikle doldur (yalnız bu oturum için)"
+msgstr "Kayıp görünüm verisini sessizlikle doldur (yalnızca bu oturum için)"
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no further changes"
@@ -4540,8 +4724,12 @@ msgid "Unable to parse project information."
 msgstr "Proje bilgileri işlenemedi."
 
 #: src/ProjectFileIO.cpp
-msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr "Projenin veritabanı yeniden açılamadı. Büyük olasılıkla depolama aygıtı üzerindeki boş alan çok az."
+msgid ""
+"The project's database failed to reopen, possibly because of limited space "
+"on the storage device."
+msgstr ""
+"Projenin veritabanı yeniden açılamadı. Büyük olasılıkla depolama aygıtı "
+"üzerindeki boş alan çok az."
 
 #: src/ProjectFileIO.cpp
 msgid "Saving project"
@@ -4655,8 +4843,12 @@ msgstr ""
 "Lütfen daha fazla boş alanı olan başka bir disk seçin."
 
 #: src/ProjectFileManager.cpp
-msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
-msgstr "Proje FAT32 olarak biçimlendirilmiş dosya sisteminin izin verdiği en büyük 4GB boyutundan büyük."
+msgid ""
+"The project exceeds the maximum size of 4GB when writing to a FAT32 "
+"formatted filesystem."
+msgstr ""
+"Proje FAT32 olarak biçimlendirilmiş dosya sisteminin izin verdiği en büyük "
+"4GB boyutundan büyük."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4863,7 +5055,8 @@ msgstr "Sıkıştır"
 msgid "Welcome to Audacity version %s"
 msgstr "Audacity %s sürümüne hoş geldiniz"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project name.
+#. i18n-hint: The first %s numbers the project, the second %s is the project
+#. name.
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
@@ -4902,15 +5095,15 @@ msgstr "1 dakikadan az"
 #, c-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d saat"
+msgstr[1] "%d saat"
 
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d dakika"
+msgstr[1] "%d dakika"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
@@ -4960,7 +5153,6 @@ msgstr "%s (eksik)"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Removed %s from %s"
@@ -4975,7 +5167,6 @@ msgstr "%s sil"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Replaced %s with %s"
@@ -5012,7 +5203,6 @@ msgstr "Görüntüyü izle"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Moved %s up in %s"
@@ -5021,7 +5211,6 @@ msgstr "%s, %s içinde yukarı taşındı"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Moved %s down in %s"
@@ -5033,12 +5222,12 @@ msgstr "Etki sıralamasını değiştir"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr "Gerçek zamanlı etkiler yapıyı bozmaz ve istenildiği an değiştirilebilir."
+msgstr ""
+"Gerçek zamanlı etkiler yapıyı bozmaz ve istenildiği an değiştirilebilir."
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Added %s to %s"
@@ -5102,7 +5291,7 @@ msgstr "Beyaz arka plan"
 
 #: src/Screenshot.cpp
 msgid "Capture Window Only"
-msgstr "Yalnız pencereyi yakala"
+msgstr "Yalnızca pencereyi yakala"
 
 #: src/Screenshot.cpp
 msgid "Capture Full Window"
@@ -5207,7 +5396,8 @@ msgid "Ruler"
 msgstr "Cetvel"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
+#. * data associated with a time line, such as sequences of labels, and
+#. musical
 #. * notes
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
@@ -5273,8 +5463,10 @@ msgid "Long Message"
 msgstr "Uzun ileti"
 
 #: src/SelectFile.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr "Unicode karakter kullandığından, belirttiğiniz dosya adı kullanılamadı."
+msgid ""
+"The specified filename could not be converted due to Unicode character use."
+msgstr ""
+"Unicode karakter kullandığından, belirttiğiniz dosya adı kullanılamadı."
 
 #: src/SelectFile.cpp
 msgid "Specify New Filename:"
@@ -5421,7 +5613,9 @@ msgstr "Tür"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr "Alanlarda gezinmek için ok (ya da düzenlemeden sonra ENTER) tuşlarını kullanın."
+msgstr ""
+"Alanlarda gezinmek için ok (ya da düzenlemeden sonra ENTER) tuşlarını "
+"kullanın."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -5481,7 +5675,8 @@ msgstr "Türleri sıfırla"
 
 #: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
-msgstr "Tür listesini varsayılan değerlere sıfırlamak istediğinize emin misiniz?"
+msgstr ""
+"Tür listesini varsayılan değerlere sıfırlamak istediğinize emin misiniz?"
 
 #: src/TagsEditor.cpp
 msgid "Unable to open genre file."
@@ -5503,14 +5698,18 @@ msgstr "Üst veriyi farklı kaydet:"
 msgid "Error Saving Tags File"
 msgstr "Etiket dosyası kaydedilirken sorun çıktı"
 
-#. i18n-hint: This string is used to configure the controls which shows the recording
-#. * duration. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls which shows the
+#. recording
+#. * duration. As such it is important that only the alphabetic parts of the
+#. string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+#. * The string 'days' indicates that the first number in the control will be
+#. the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm'
+#. indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number
+#. displayed is
 #. * seconds.
-#.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3UIValidator.cpp
@@ -5712,12 +5911,15 @@ msgstr "099 sa 060 dk 060 sn"
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 gün 024 sa 060 dk 060 sn"
 
-#. i18n-hint: This string is used to configure the controls for times when the recording is
-#. * started and stopped. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the
+#. recording is
+#. * started and stopped. As such it is important that only the alphabetic
+#. parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-#.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
+#. the second number
+#. * displayed is minutes, and the 's' indicates that the third number
+#. displayed is seconds.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
 msgstr "Başlangıç tarihi ve zamanı"
@@ -5762,8 +5964,8 @@ msgstr "&Otomatik dışa aktarma kullanılsın mı?"
 msgid "Export Project As:"
 msgstr "Projeyi şu şekilde dışa aktar:"
 
-#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Seçenekler"
 
@@ -5887,8 +6089,12 @@ msgid " Select On"
 msgstr " Seçimi aç"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Çift kanallı izlerin bağıl boyutunu ayarlamak için tıklayıp sürükleyin. Yükseklikleri eşit kılmak için çift tıklayın"
+msgid ""
+"Click and drag to adjust relative size of stereo tracks, double-click to "
+"make heights equal"
+msgstr ""
+"Çift kanallı izlerin bağıl boyutunu ayarlamak için tıklayıp sürükleyin. "
+"Yükseklikleri eşit kılmak için çift tıklayın"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -5951,14 +6157,16 @@ msgstr "İzi yukarı taşı"
 msgid "Move Track Down"
 msgstr "İzi aşağı taşı"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Oynatılıyor"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
@@ -5979,7 +6187,8 @@ msgstr "Ses tuşunu kullanmak için seçim çok küçük."
 msgid "Calibration Results\n"
 msgstr "Ayar sonuçları\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
+#. Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -6065,39 +6274,39 @@ msgstr "İ&lerle"
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
-msgstr ""
+msgstr "Hesabınızla bağlantı kuramadık. Lütfen yeniden deneyin."
 
 #: src/cloud/audiocom/LinkFailedDialog.cpp
 msgid "&Try again"
-msgstr ""
+msgstr "&Yeniden dene"
 
 #: src/cloud/audiocom/LinkSucceededDialog.cpp
 msgid "Account linked successfully!"
-msgstr ""
+msgstr "Hesap bağlantısı kuruldu!"
 
 #: src/cloud/audiocom/LinkSucceededDialog.cpp
 msgid "&Ok"
-msgstr ""
+msgstr "&Tamam"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Herkese açık"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Ses oynatıp kaydedemeyeceksiniz.\n"
-"\n"
+msgstr "Bu ses kaydını herkes dinleyebilir."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Listelenmemiş"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Ses dosyanıza yalnızca bu bağlantıyı paylaştığınız kişiler erişebilir"
+msgid ""
+"Only you and people you share a link with will be able to listen to this "
+"audio."
+msgstr ""
+"Bu ses kaydını yalnızca siz ve bağlantıyı paylaştığınız kişiler "
+"dinleyebilir."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -6105,11 +6314,11 @@ msgstr "&Dosyama git"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
-msgstr ""
+msgstr "İptal etmek istediğinize emin misiniz?"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Cancel upload to Audio.com"
-msgstr ""
+msgstr "Audio.com üzerine yüklemeyi iptal et"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Uploading audio..."
@@ -6124,8 +6333,12 @@ msgid "Upload error"
 msgstr "Yüklenirken sorun çıktı"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Bu dosya yüklenemedi. Lütfen audio.com hesabınızı bağladığınızdan emin olun ve yeniden deneyin."
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to"
+" your audio.com account before uploading."
+msgstr ""
+"Bu dosya yüklenemedi. Lütfen audio.com hesabınızı bağladığınızdan emin olun "
+"ve yeniden deneyin."
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Export error"
@@ -6203,7 +6416,8 @@ msgstr ""
 msgid "Applying %s..."
 msgstr "%s uygulanıyor..."
 
-#. i18n-hint: An item name followed by a value, with appropriate separating punctuation
+#. i18n-hint: An item name followed by a value, with appropriate separating
+#. punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/import/ImportRaw.cpp
 #: src/menus/PluginMenus.cpp
@@ -6255,8 +6469,13 @@ msgstr ""
 "* %s, %s kısayolunu %s için atamış olduğunuzdan"
 
 #: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "Varsayılan kısayolları yeni ya da değiştirilmiş ve sizin tarafınızdan başka bir komuta atanmış olduğundan şu komutların kısayolları kaldırıldı."
+msgid ""
+"The following commands have had their shortcuts removed, because their "
+"default shortcut is new or changed, and is the same shortcut that you have "
+"assigned to another command."
+msgstr ""
+"Varsayılan kısayolları yeni ya da değiştirilmiş ve sizin tarafınızdan başka "
+"bir komuta atanmış olduğundan şu komutların kısayolları kaldırıldı."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -7003,22 +7222,36 @@ msgid "Auto Duck"
 msgstr "Otomatik Kısma"
 
 #: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Belirtilen \"denetim\" izi belirli bir düzeye geldiğinde bir ya da bir kaç izin düzeyini kısar"
+msgid ""
+"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
+"specified \"control\" track reaches a particular level"
+msgstr ""
+"Belirtilen \"denetim\" izi belirli bir düzeye geldiğinde bir ya da bir kaç "
+"izin düzeyini kısar"
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Ses içermeyen bir iz seçtiniz. Otomatik kısma yalnız ses izleri üzerinde çalışabilir."
+msgid ""
+"You selected a track which does not contain audio. AutoDuck can only process"
+" audio tracks."
+msgstr ""
+"Ses içermeyen bir iz seçtiniz. Otomatik kısma yalnızca ses izleri üzerinde "
+"çalışabilir."
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Otomatik kısma, seçilmiş izlerin altına yerleştirilecek bir denetim izine gerek duyar."
+msgid ""
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
+msgstr ""
+"Otomatik kısma, seçilmiş izlerin altına yerleştirilecek bir denetim izine "
+"gerek duyar."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -7244,7 +7477,8 @@ msgstr "Tempo ve perdeyi etkileyerek hızı değiştir"
 msgid "&Speed Multiplier:"
 msgstr "&Hız çarpanı:"
 
-#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
+#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per
+#. minute".
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
@@ -7252,7 +7486,6 @@ msgstr "Standart plak devri:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Başlangıç devri"
@@ -7265,7 +7498,6 @@ msgstr "ş&undan"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "Bitiş devri"
@@ -7373,7 +7605,8 @@ msgstr "Tıkırtı kaldırma"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Tıkırtı kaldırma ses izlerindeki tıklamaları kaldırmak için tasarlanmıştır"
+msgstr ""
+"Tıkırtı kaldırma ses izlerindeki tıklamaları kaldırmak için tasarlanmıştır"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -7479,20 +7712,23 @@ msgid "Attack Time"
 msgstr "Kalkma süresi"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "R&elease Time:"
 msgstr "&Bırakma süresi:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "Release Time"
 msgstr "Bırakma süresi"
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
+#. it.
 #: src/effects/Compressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
 msgstr "&Sıkıştırdıktan sonra 0 dB düzeltme kazancı"
@@ -7525,7 +7761,7 @@ msgstr "Bırakma süresi %.1f saniye"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
-msgstr "Aynı anda yalnız bir izi ölçebilirsiniz."
+msgstr "Aynı anda yalnızca bir izi ölçebilirsiniz."
 
 #: src/effects/Contrast.cpp
 msgid "Please select an audio track."
@@ -7549,8 +7785,12 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
-msgstr "Karşıtlık çözümleyici, seçilmiş iki sesin, ortalama ses düzeyleri arasındaki farkları ölçmek içindir."
+msgid ""
+"Contrast Analyzer, for measuring RMS volume differences between two "
+"selections of audio."
+msgstr ""
+"Karşıtlık çözümleyici, seçilmiş iki sesin, ortalama ses düzeyleri arasındaki"
+" farkları ölçmek içindir."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -7675,7 +7915,8 @@ msgstr "Arka plan düzeyi çok yüksek"
 msgid "Background higher than foreground"
 msgstr "Arka plan ön plandan yüksek"
 
-#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/
+#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0',
+#. see http://www.w3.org/TR/WCAG20/
 #: src/effects/Contrast.cpp
 msgid "WCAG2 Pass"
 msgstr "WCAG2 geçti"
@@ -8033,8 +8274,11 @@ msgid "DTMF Tones"
 msgstr "DTMF sesleri"
 
 #: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Telefon tuşlarındaki gibi çift tonlu çoklu frekans (DTMF) seslerini üretir"
+msgid ""
+"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
+"keypad on telephones"
+msgstr ""
+"Telefon tuşlarındaki gibi çift tonlu çoklu frekans (DTMF) seslerini üretir"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -8158,7 +8402,8 @@ msgid "Previewing"
 msgstr "Ön izleniyor"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/effects/EffectBase.h
@@ -8251,7 +8496,7 @@ msgstr "Hazır ayarları ve seçeneklerini yönetin"
 
 #: src/effects/EffectUI.cpp
 msgid "Presets && settings"
-msgstr "Hazır ayar ve ayarlar"
+msgstr "Hazır ayarlar ve ayarlar"
 
 #: src/effects/EffectUI.cpp
 msgid "Start and stop preview"
@@ -8431,8 +8676,11 @@ msgid "Filter Curve EQ needs a different name"
 msgstr "Süzgeç eğrisi dengeleyicinin adı farklı olmalı"
 
 #: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Dengeleme uygulayabilmek için, tüm seçilmiş izler aynı örnek hızında olmalıdır."
+msgid ""
+"To apply Equalization, all selected tracks must have the same sample rate."
+msgstr ""
+"Dengeleme uygulayabilmek için, tüm seçilmiş izler aynı örnek hızında "
+"olmalıdır."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -8473,7 +8721,8 @@ msgstr "%d Hz"
 msgid "%g kHz"
 msgstr "%g kHz"
 
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in
+#. translation.
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%gk"
@@ -8922,7 +9171,8 @@ msgstr "Gürültü azaltma"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Havalandırma, bant gürültüsü, uğultu gibi arka plan gürültülerini kaldırır"
+msgstr ""
+"Havalandırma, bant gürültüsü, uğultu gibi arka plan gürültülerini kaldırır"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block are too few for the window types."
@@ -8949,7 +9199,9 @@ msgid "All noise profile data must have the same sample rate."
 msgstr "Tüm gürültü profili verisi aynı örnekleme hızında olmalıdır."
 
 #: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgid ""
+"The sample rate of the noise profile must match that of the sound to be "
+"processed."
 msgstr "Gürültü profilinin örnekleme hızı işlenecek ses ile aynı olmalıdır."
 
 #: src/effects/NoiseReduction.cpp
@@ -9045,7 +9297,8 @@ msgstr "A&zalt"
 msgid "&Isolate"
 msgstr "Ya&lıt"
 
-#. i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !
+#. i18n-hint: Means the difference between effect and original sound.
+#. Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
 msgstr "&Kalıntı"
@@ -9133,7 +9386,9 @@ msgstr "Gürültü kaldır"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr "Havalandırma, bant gürültüsü, uğultu gibi sabit arka plan gürültülerini kaldırır"
+msgstr ""
+"Havalandırma, bant gürültüsü, uğultu gibi sabit arka plan gürültülerini "
+"kaldırır"
 
 #: src/effects/NoiseRemoval.cpp
 msgid ""
@@ -9238,12 +9493,11 @@ msgstr "Paulstretch"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch yalnız zaman germe ya da \"statis\" etkisinde kullanılır"
+msgstr "Paulstretch yalnızca zaman germe ya da \"statis\" etkisinde kullanılır"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
-#.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
 msgstr "&Gerilme çarpanı:"
@@ -9252,7 +9506,8 @@ msgstr "&Gerilme çarpanı:"
 msgid "&Time Resolution (seconds):"
 msgstr "&Zaman çözünürlüğü (saniye):"
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9266,7 +9521,8 @@ msgstr ""
 "Ses seçimini en az %.1f saniye olacak şekilde arttırmayı ya da\n"
 "'Zaman çözünürlüğü' değerini %.1f saniyeden küçük olarak ayarlamayı deneyin."
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9280,7 +9536,8 @@ msgstr ""
 "Geçerli ses seçimi için en büyük 'Zaman çözünürlüğü'\n"
 "değeri %.1f saniyedir."
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9526,17 +9783,20 @@ msgstr "Seçilmiş sesi tersine çevirir"
 msgid "SBSMS Time / Pitch Stretch"
 msgstr "SBSMS süresi / perde gerdirme"
 
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
 msgstr "Butterworth"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type I"
 msgstr "Chebyshev I. tür"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type II"
 msgstr "Chebyshev II. tür"
@@ -9560,13 +9820,16 @@ msgstr "Analog süzgeçleri taklit eden IIR süzme yapar"
 
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Bir süzgeç uygulayabilmek için, tüm seçilmiş izler aynı örnek hızında olmalıdır."
+msgstr ""
+"Bir süzgeç uygulayabilmek için, tüm seçilmiş izler aynı örnek hızında "
+"olmalıdır."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
 msgstr "&Süzgeç türü:"
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number
+#. between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
 msgstr "Sı&ralama:"
@@ -9635,32 +9898,40 @@ msgstr "Sessizlik eşiği:"
 msgid "Silence Threshold"
 msgstr "Sessizlik eşiği"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
 msgstr "Ön düzleme zamanı:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
 msgstr "Ön düzleme zamanı"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
 msgstr "Çizgi zamanı:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -9671,8 +9942,10 @@ msgstr "Çizgi zamanı"
 msgid "Smooth Time:"
 msgstr "Düzeltme zamanı:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -9840,12 +10113,20 @@ msgid "Truncate Silence"
 msgstr "Sessizliği buda"
 
 #: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Ses düzeyinin belirtilen değerin altına düştüğü geçişleri otomatik olarak azaltır"
+msgid ""
+"Automatically reduces the length of passages where the volume is below a "
+"specified level"
+msgstr ""
+"Ses düzeyinin belirtilen değerin altına düştüğü geçişleri otomatik olarak "
+"azaltır"
 
 #: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Bağımsız olarak budanırken, her bir eş kilitlenmiş iz grubunda yalnız bir seçilmiş ses izi olabilir."
+msgid ""
+"When truncating independently, there may only be one selected audio track in"
+" each Sync-Locked Track Group."
+msgstr ""
+"Bağımsız olarak budanırken, her bir eş kilitlenmiş iz grubunda yalnızca bir "
+"seçilmiş ses izi olabilir."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -9891,8 +10172,17 @@ msgstr "Ara bellek boyutu"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
-msgstr "Ara bellek boyutu, her yinelemede etkiye gönderilen örneklerin sayısını denetler. Daha küçük değerler işlemin daha yavaş olmasına neden olur ve bazı etkilerin düzgün çalışması için 8192 ya da daha az örnek gerekir. Ancak etkilerin çoğu daha büyük ara bellekleri kabul edebilir ve bunları kullanmak işlem süresini önemli ölçüde kısaltır."
+msgid ""
+"The buffer size controls the number of samples sent to the effect on each "
+"iteration. Smaller values will cause slower processing and some effects "
+"require 8192 samples or less to work properly. However most effects can "
+"accept large buffers and using them will greatly reduce processing time."
+msgstr ""
+"Ara bellek boyutu, her yinelemede etkiye gönderilen örneklerin sayısını "
+"denetler. Daha küçük değerler işlemin daha yavaş olmasına neden olur ve bazı"
+" etkilerin düzgün çalışması için 8192 ya da daha az örnek gerekir. Ancak "
+"etkilerin çoğu daha büyük ara bellekleri kabul edebilir ve bunları kullanmak"
+" işlem süresini önemli ölçüde kısaltır."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9905,8 +10195,17 @@ msgid "Latency Compensation"
 msgstr "Gecikme dengelemesi"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
-msgstr "İşlemlerinin bir parçası olarak, bazı VST etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm VST etkileri için çalışmayabilir."
+msgid ""
+"As part of their processing, some VST effects must delay returning audio to "
+"Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all VST effects."
+msgstr ""
+"İşlemlerinin bir parçası olarak, bazı VST etkilerinin Audacity üzerine geri "
+"döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese "
+"küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek "
+"etkinleştirildiğinde bu dengeleme yapılır, ancak tüm VST etkileri için "
+"çalışmayabilir."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -9920,8 +10219,14 @@ msgid "Graphical Mode"
 msgstr "Görsel kipi"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Çoğu VST etkisinin, parametre değerlerini ayarlamak için bir görsel arayüzü bulunur. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin olması için etkiyi yeniden açın."
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values. A "
+"basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"Çoğu VST etkisinin, parametre değerlerini ayarlamak için bir görsel arayüzü "
+"bulunur. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin "
+"olması için etkiyi yeniden açın."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2Preferences.cpp
@@ -9991,7 +10296,8 @@ msgstr "Hazır ayarlar dosyası okunamadı."
 msgid "This parameter file was saved from %s. Continue?"
 msgstr "Bu parametre dosyası %s ile kaydedilmiş. Devam edilsin mi?"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
@@ -10052,20 +10358,39 @@ msgid "VST3 module error: %s"
 msgstr "VST3 modülü hatası: %s"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
-msgstr "İşlemlerinin bir parçası olarak, bazı VST3 etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm VST3 etkileri için çalışmayabilir."
+msgid ""
+"As part of their processing, some VST3 effects must delay returning audio to"
+" Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+"İşlemlerinin bir parçası olarak, bazı VST3 etkilerinin Audacity üzerine geri"
+" döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese "
+"küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek "
+"etkinleştirildiğinde bu dengeleme yapılır, ancak tüm VST3 etkileri için "
+"çalışmayabilir."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Çoğu VST3 etkisinin, parametre değerlerini ayarlamak için bir görsel arayüzü bulunur. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin olması için etkiyi yeniden açın."
+msgid ""
+"Most VST3 effects have a graphical interface for setting parameter values. A"
+" basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"Çoğu VST3 etkisinin, parametre değerlerini ayarlamak için bir görsel arayüzü"
+" bulunur. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin"
+" olması için etkiyi yeniden açın."
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "Wahwah"
 
 #: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Hızlı ton kalitesi değişiklikleri, 1970'li yıllarda popüler olan gitar sesleri gibi"
+msgid ""
+"Rapid tone quality variations, like that guitar sound so popular in the "
+"1970's"
+msgstr ""
+"Hızlı ton kalitesi değişiklikleri, 1970'li yıllarda popüler olan gitar "
+"sesleri gibi"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -10166,16 +10491,34 @@ msgid "Audio Unit Effect Options"
 msgstr "Audio Unit etkileri ayarları"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr "İşlemlerinin bir parçası olarak, bazı Ses Birimi etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm Audio Unit etkileri için çalışmayabilir."
+msgid ""
+"As part of their processing, some Audio Unit effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will notice "
+"that small silences have been inserted into the audio. Enabling this option "
+"will provide that compensation, but it may not work for all Audio Unit "
+"effects."
+msgstr ""
+"İşlemlerinin bir parçası olarak, bazı Ses Birimi etkilerinin Audacity "
+"üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi "
+"dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu "
+"seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm Audio Unit "
+"etkileri için çalışmayabilir."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
 msgstr "Kullanıcı arayüzü"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr "Audio Unit tarafından sağlanmışsa, görsel arayüzü kullanmak için \"Tam\" olarak seçin. Sistem tarafından sağlanan genel arayüzü kullanmak için \"Genel\" olarak seçin. Yalnız metin içeren temel arayüzü kullanmak için \"Temel\" olarak seçin. Bu seçeneğin etkin olması için etkiyi yeniden açın."
+msgid ""
+"Select \"Full\" to use the graphical interface if supplied by the Audio "
+"Unit. Select \"Generic\" to use the system supplied generic interface. "
+"Select \"Basic\" for a basic text-only interface. Reopen the effect for this"
+" to take effect."
+msgstr ""
+"Audio Unit tarafından sağlanmışsa, görsel arayüzü kullanmak için \"Tam\" "
+"olarak seçin. Sistem tarafından sağlanan genel arayüzü kullanmak için "
+"\"Genel\" olarak seçin. Yalnızca metin içeren temel arayüzü kullanmak için "
+"\"Temel\" olarak seçin. Bu seçeneğin etkin olması için etkiyi yeniden açın."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -10249,7 +10592,6 @@ msgstr "Dönüştürmeden sonra XML verileri boş"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "LADSPA etkileri"
@@ -10267,11 +10609,22 @@ msgid "LADSPA Effect Options"
 msgstr "LADSPA etkisi ayarları"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
-msgstr "İşlemlerinin bir parçası olarak, bazı LADSPA etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm LADSPA etkileri için çalışmayabilir."
+msgid ""
+"As part of their processing, some LADSPA effects must delay returning audio "
+"to Audacity. When not compensating for this delay, you will notice that "
+"small silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all LADSPA effects."
+msgstr ""
+"İşlemlerinin bir parçası olarak, bazı LADSPA etkilerinin Audacity üzerine "
+"geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, "
+"sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek "
+"etkinleştirildiğinde bu dengeleme yapılır, ancak tüm LADSPA etkileri için "
+"çalışmayabilir."
 
-#. i18n-hint: An item name introducing a value, which is not part of the string but
-#. appears in a following text box window; translate with appropriate punctuation
+#. i18n-hint: An item name introducing a value, which is not part of the
+#. string but
+#. appears in a following text box window; translate with appropriate
+#. punctuation
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -10285,7 +10638,6 @@ msgstr "Etki çıkışı"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr "LADSPA"
@@ -10310,12 +10662,27 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Ara bellek boyutu (8 - %d) örnekleri:"
 
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr "İşlemlerinin bir parçası olarak, bazı LV2 etkilerinin Audacity üzerine geri döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek etkinleştirildiğinde bu dengeleme yapılır, ancak tüm LV2 etkileri için çalışmayabilir."
+msgid ""
+"As part of their processing, some LV2 effects must delay returning audio to "
+"Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this setting will "
+"provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+"İşlemlerinin bir parçası olarak, bazı LV2 etkilerinin Audacity üzerine geri "
+"döndürülen sesi geciktirmesi gerekir. Bu gecikmeyi dengelemezseniz, sese "
+"küçük sessizliklerin eklendiğini fark edersiniz. Bu seçenek "
+"etkinleştirildiğinde bu dengeleme yapılır, ancak tüm LV2 etkileri için "
+"çalışmayabilir."
 
 #: src/effects/lv2/LV2Preferences.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "LV2 etkilerinin, parametre değerlerini ayarlamak için bir görsel arayüzü bulunabilir. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin etkin olması için etkiyi yeniden açın."
+msgid ""
+"LV2 effects can have a graphical interface for setting parameter values. A "
+"basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"LV2 etkilerinin, parametre değerlerini ayarlamak için bir görsel arayüzü "
+"bulunabilir. Basit bir salt metin yöntemi de kullanılabilir. Bu seçeneğin "
+"etkin olması için etkiyi yeniden açın."
 
 #: src/effects/lv2/LV2Validator.cpp
 msgid "Generator"
@@ -10341,7 +10708,8 @@ msgstr "Audacity için Nyquist etkileri desteği sağlar"
 msgid "Applying Nyquist Effect..."
 msgstr "Nyquist etkisi uygulanıyor..."
 
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
 msgstr "Nyquist çalışanı"
@@ -10371,7 +10739,9 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "sorun: Üst bilgide belirtilen \"%s\" dosyası uygulama eki yolunda bulunamadı.\n"
+msgstr ""
+"sorun: Üst bilgide belirtilen \"%s\" dosyası uygulama eki yolunda "
+"bulunamadı.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Audio selection required."
@@ -10382,8 +10752,10 @@ msgid "Nyquist Error"
 msgstr "Nyquist sorunu"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr "İzlerin eşleşmediği yerlerde, çift kanallı izler üzerine etki uygulanamadı."
+msgid ""
+"Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+msgstr ""
+"İzlerin eşleşmediği yerlerde, çift kanallı izler üzerine etki uygulanamadı."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10455,13 +10827,17 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist sonucu boş bir ses döndürdü.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Dikkat: Nyquist geçersiz UTF-8 dizgesi döndürdü, burada Latin-1 olarak dönüştürüldü]"
+msgid ""
+"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+"[Dikkat: Nyquist geçersiz UTF-8 dizgesi döndürdü, burada Latin-1 olarak "
+"dönüştürüldü]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Bu Audacity sürümünde %ld sürümündeki Nyquist uygulama eki desteklenmiyor"
+msgstr ""
+"Bu Audacity sürümünde %ld sürümündeki Nyquist uygulama eki desteklenmiyor"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -10576,8 +10952,12 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr "Audacity için Vamp etkileri desteği sağlar"
 
 #: src/effects/vamp/VampEffect.cpp
-msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
-msgstr "Vamp uygulama ekleri, çift kanallı izlerde, izin her kanalı birbiriyle eşleşmediği sürece çalıştırılamaz."
+msgid ""
+"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
+"channels of the track do not match."
+msgstr ""
+"Vamp uygulama ekleri, çift kanallı izlerde, izin her kanalı birbiriyle "
+"eşleşmediği sürece çalıştırılamaz."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -10589,13 +10969,14 @@ msgstr "Maalesef Vamp uygulama eki hazırlanamadı."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Plugin Settings"
-msgstr "Eklenti ayarları"
+msgstr "Uygulama eki ayarları"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Program"
 msgstr "Program"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
@@ -10656,15 +11037,21 @@ msgstr "\"%s\" adlı dosya zaten var. Üzerine yazılmasını ister misiniz?"
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one mono file."
-msgstr "İzleriniz, indirgenecek ve tek kanallı bir dosya olarak dışa aktarılacak."
+msgstr ""
+"İzleriniz, indirgenecek ve tek kanallı bir dosya olarak dışa aktarılacak."
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one stereo file."
-msgstr "İzleriniz, indirgenecek ve çift kanallı bir dosya olarak dışa aktarılacak."
+msgstr ""
+"İzleriniz, indirgenecek ve çift kanallı bir dosya olarak dışa aktarılacak."
 
 #: src/export/Export.cpp
-msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
-msgstr "İzleriniz, kodlayıcı ayarlarınıza göre dışa aktarılacak dosya içinde bire indirgenecek."
+msgid ""
+"Your tracks will be mixed down to one exported file according to the encoder"
+" settings."
+msgstr ""
+"İzleriniz, kodlayıcı ayarlarınıza göre dışa aktarılacak dosya içinde bire "
+"indirgenecek."
 
 #: src/export/Export.cpp
 msgid "Advanced Mixing Options"
@@ -10716,12 +11103,17 @@ msgstr "Çıkışı görüntüle"
 #. i18n-hint: Some programmer-oriented terminology here:
 #. "Data" refers to the sound to be exported, "piped" means sent,
 #. and "standard in" means the default input stream that the external program,
-#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
+#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually
+#. used
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
-msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
-msgstr "Veri standart girişe yönlendirilecek. \"%f\" dışa aktarma penceresindeki dosya adını kullanır."
+msgid ""
+"Data will be piped to standard in. \"%f\" uses the file name in the export "
+"window."
+msgstr ""
+"Veri standart girişe yönlendirilecek. \"%f\" dışa aktarma penceresindeki "
+"dosya adını kullanır."
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
@@ -10808,12 +11200,18 @@ msgstr "FFmpeg : SORUN - Ses akışı \"%s\" çıkış dosyasına eklenemedi."
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr "FFmpeg : SORUN - \"%s\" çıkış dosyası yazılmak üzere açılamadı. Sorun kodu: %d."
+msgstr ""
+"FFmpeg : SORUN - \"%s\" çıkış dosyası yazılmak üzere açılamadı. Sorun kodu: "
+"%d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr "FFmpeg : SORUN - Üst bilgiler \"%s\" çıkış dosyasına yazılamadı. Sorun kodu: %d."
+msgid ""
+"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
+"%d."
+msgstr ""
+"FFmpeg : SORUN - Üst bilgiler \"%s\" çıkış dosyasına yazılamadı. Sorun kodu:"
+" %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -10847,7 +11245,8 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg : SORUN - Ses FIFO üzerinden veri okumak için ara bellek ayrılamadı."
+msgstr ""
+"FFmpeg : SORUN - Ses FIFO üzerinden veri okumak için ara bellek ayrılamadı."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -10883,8 +11282,12 @@ msgstr "FFmpeg : SORUN - Ses karesi kodlanamadı."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
-msgstr "%d kanal dışa aktarılmak isteniyor, ancak seçilmiş çıkış biçimi için olabilecek en fazla kanal sayısı %d"
+msgid ""
+"Attempted to export %d channels, but maximum number of channels for selected"
+" output format is %d"
+msgstr ""
+"%d kanal dışa aktarılmak isteniyor, ancak seçilmiş çıkış biçimi için "
+"olabilecek en fazla kanal sayısı %d"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11200,8 +11603,12 @@ msgid "Codec:"
 msgstr "Kodlayıcı-çözücü:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
-msgstr "Tüm biçim ve kodlayıcı-çözücüler uyumlu olmadığı gibi, tüm ayar kombinasyonları da tüm kodlayıcı-çözücüler ile uyumlu olmayabilir."
+msgid ""
+"Not all formats and codecs are compatible. Nor are all option combinations "
+"compatible with all codecs."
+msgstr ""
+"Tüm biçim ve kodlayıcı-çözücüler uyumlu olmadığı gibi, tüm ayar "
+"kombinasyonları da tüm kodlayıcı-çözücüler ile uyumlu olmayabilir."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -11260,7 +11667,7 @@ msgid ""
 "Recommended - 192000"
 msgstr ""
 "Bit hızı (bit/saniye) - sonuç dosyasının boyutu ve kalitesini etkiler\n"
-"Bazı kodlayıcı-çözücüler yalnız belirli değerleri kabul eder (128k, 192k, 256k gibi)\n"
+"Bazı kodlayıcı-çözücüler yalnızca belirli değerleri kabul eder (128k, 192k, 256k gibi)\n"
 "0 - otomatik\n"
 "Önerilen - 192000"
 
@@ -11482,15 +11889,19 @@ msgstr ""
 "İsteğe göre\n"
 "0 - varsayılan"
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
+#. several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
+#. MPEG
 #. it has a hard to predict effect on the degree of compression
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Mux Rate:"
 msgstr "Çoklayıcı hızı:"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "Packet size\n"
@@ -11501,8 +11912,10 @@ msgstr ""
 "İsteğe göre\n"
 "0 - varsayılan"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Packet Size:"
 msgstr "Paket boyutu:"
@@ -11742,7 +12155,8 @@ msgstr "Kanal kipi:"
 msgid "Force export to mono"
 msgstr "Dışa aktarma tek kanala zorlansın"
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be
+#. translated
 #: src/export/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "LAME konumu"
@@ -11787,19 +12201,19 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
-msgstr "Yalnız lame_enc.dll"
+msgstr "Yalnızca lame_enc.dll"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
-msgstr "Yalnız libmp3lame64bit.dylib"
+msgstr "Yalnızca libmp3lame64bit.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
-msgstr "Yalnız libmp3lame.dylib"
+msgstr "Yalnızca libmp3lame.dylib"
 
 #: src/export/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
-msgstr "Yalnız libmp3lame.so.0"
+msgstr "Yalnızca libmp3lame.so.0"
 
 #: src/export/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -11997,7 +12411,8 @@ msgstr "Şu %lld dosya dışa aktarıldıktan sonra işlem durduruldu."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
-msgid "Something went really wrong after exporting the following %lld file(s)."
+msgid ""
+"Something went really wrong after exporting the following %lld file(s)."
 msgstr "Şu %lld dosya dışa aktarıldıktan sonra bir şeyler çok ters gitti."
 
 #: src/export/ExportMultiple.cpp
@@ -12516,16 +12931,24 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "\"%s\" proje veri klasörü bulunamadı"
 
 #: src/import/ImportAUP.cpp
-msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
-msgstr "Proje dosyasında MIDI izleri bulundu ancak bu Audacity sürümünde MIDI desteği olmadığından iz atlanıyor."
+msgid ""
+"MIDI tracks found in project file, but this build of Audacity does not "
+"include MIDI support, bypassing track."
+msgstr ""
+"Proje dosyasında MIDI izleri bulundu ancak bu Audacity sürümünde MIDI "
+"desteği olmadığından iz atlanıyor."
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
 msgstr "Proje içe aktarma"
 
 #: src/import/ImportAUP.cpp
-msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
-msgstr "Etkin projenin zaten bir zaman izi var olduğundan içe aktarılmakta olan projede karşılaşılan zaman izi atlandı."
+msgid ""
+"The active project already has a time track and one was encountered in the "
+"project being imported, bypassing imported time track."
+msgstr ""
+"Etkin projenin zaten bir zaman izi var olduğundan içe aktarılmakta olan "
+"projede karşılaşılan zaman izi atlandı."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -12614,8 +13037,11 @@ msgstr "FFmpeg uyumlu dosyalar"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
-msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr "Belirteç[%02x] Kodlayıcı-çözücü[%s], Dil[%s], Bithızı[%s], Kanallar[%d], Süre[%d]"
+msgid ""
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr ""
+"Belirteç[%02x] Kodlayıcı-çözücü[%s], Dil[%s], Bithızı[%s], Kanallar[%d], "
+"Süre[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -12676,7 +13102,8 @@ msgstr "LOF dosyasındaki süre geçersiz."
 
 #: src/import/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr "MIDI izleri tek tek kaydırılamaz, yalnız ses dosyaları kaydırılabilir."
+msgstr ""
+"MIDI izleri tek tek kaydırılamaz, yalnızca ses dosyaları kaydırılabilir."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
@@ -13085,13 +13512,12 @@ msgstr "%s sağ"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s %s, %d / %d parça %s"
+msgstr[1] "%s %s, %d / %d parça %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -13110,13 +13536,12 @@ msgstr "bitiş"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s %s ve %s %s, %d ve %d / %d parça %s"
+msgstr[1] "%s %s ve %s %s, %d ve %d / %d parça %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -13128,8 +13553,8 @@ msgstr[1] ""
 #, c-format
 msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s, %d / %d parça %s"
+msgstr[1] "%s, %d / %d parça %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -13385,7 +13810,7 @@ msgstr "Sessi&zliklerde çıkar"
 
 #: src/menus/EditMenus.cpp
 msgid "&Metadata"
-msgstr "Üst &veri"
+msgstr "Üst &veriler"
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences"
@@ -13483,7 +13908,7 @@ msgstr "Dışa aktarılacak bir etiket izi bulunamadı."
 
 #: src/menus/FileMenus.cpp
 msgid "Please select only one Note Track at a time."
-msgstr "Lütfen aynı anda yalnız bir nota izi seçin."
+msgstr "Lütfen aynı anda yalnızca bir nota izi seçin."
 
 #: src/menus/FileMenus.cpp
 msgid "Please select a Note Track."
@@ -14441,7 +14866,6 @@ msgstr "İ&mleci sağa doğru uzun atlat"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "A&ra"
@@ -14665,8 +15089,12 @@ msgstr "Lütfen en az bir ses izi ve bir MIDI izi seçin."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Hizalama tamamlandı: MIDI %.2f yerine %.2f saniyeye, Ses %.2f yerine %.2f saniyeye."
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Hizalama tamamlandı: MIDI %.2f yerine %.2f saniyeye, Ses %.2f yerine %.2f "
+"saniyeye."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -14674,8 +15102,12 @@ msgstr "MIDI ile sesi eşleştir"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Hizalama sorunu: giriş çok kısa: MIDI %.2f yerine %.2f saniyeye, Ses %.2f yerine %.2f saniyeye."
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Hizalama sorunu: giriş çok kısa: MIDI %.2f yerine %.2f saniyeye, Ses %.2f "
+"yerine %.2f saniyeye."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -14886,7 +15318,6 @@ msgstr "odaklanılan izde ve altında herhangi bir etiket izi yok"
 #. first number gives the position of that label in a sequence
 #. of labels,
 #. and the last number is the total number of labels in the sequence.
-#.
 #: src/menus/TransportMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, c-format
 msgid "%s %d of %d"
@@ -15230,7 +15661,8 @@ msgstr "Tüm projeleri küçült"
 msgid "Preferences for Application"
 msgstr "Uygulama ayarları"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the update notifications panel in the preferences
+#. dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
 msgstr "Güncelleme bildirimleri"
@@ -15242,8 +15674,12 @@ msgid "&Check for updates"
 msgstr "&Güncelleme denetimi"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Uygulama güncelleme denetimi özelliği için ağ erişimi gereklidir. Audacity, kişisel gizliliğinizi korumak için herhangi bir kişisel bilgiyi kaydetmez."
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr ""
+"Uygulama güncelleme denetimi özelliği için ağ erişimi gereklidir. Audacity, "
+"kişisel gizliliğinizi korumak için herhangi bir kişisel bilgiyi kaydetmez."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15409,7 +15845,9 @@ msgstr "&Konum:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Geçici dosyalar klasörü, FAT olarak biçimlendirilmiş bir bölüm üzerinde bulunamaz."
+msgstr ""
+"Geçici dosyalar klasörü, FAT olarak biçimlendirilmiş bir bölüm üzerinde "
+"bulunamaz."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Brow&se..."
@@ -15476,8 +15914,12 @@ msgid "Directory %s is not writable"
 msgstr "%s klasörü yazılabilir değil"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Geçici klasör değişikliğinin geçerli olması için Audacity programını yeniden başlatmalısınız"
+msgid ""
+"Changes to temporary directory will not take effect until Audacity is "
+"restarted"
+msgstr ""
+"Geçici klasör değişikliğinin geçerli olması için Audacity programını yeniden"
+" başlatmalısınız"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -15533,7 +15975,6 @@ msgstr "Varsayılan"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/prefs/EffectsPrefs.cpp
 msgid "&LADSPA"
 msgstr "&LADSPA"
@@ -15545,20 +15986,23 @@ msgid "LV&2"
 msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/prefs/EffectsPrefs.cpp
 msgid "N&yquist"
 msgstr "N&yquist"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Vamp"
 msgstr "&Vamp"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: src/prefs/EffectsPrefs.cpp
 msgid "V&ST"
@@ -15647,8 +16091,15 @@ msgid "Unused filters:"
 msgstr "Kullanılmayan süzgeçler:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr "Ögelerden birinde boşluk karakterleri (boşluk, yeni satır, sekme ya da satır sonu) var. Bunlar düzen uydurmayı engelleyecek gibi. Ne yaptığınızdan emin değilseniz boşlukları budamanız önerilir. Audacity boşlukları budasın mı?"
+msgid ""
+"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
+"the items. They are likely to break the pattern matching. Unless you know "
+"what you are doing, it is recommended to trim spaces. Do you want Audacity "
+"to trim spaces for you?"
+msgstr ""
+"Ögelerden birinde boşluk karakterleri (boşluk, yeni satır, sekme ya da satır"
+" sonu) var. Bunlar düzen uydurmayı engelleyecek gibi. Ne yaptığınızdan emin "
+"değilseniz boşlukları budamanız önerilir. Audacity boşlukları budasın mı?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15716,7 +16167,8 @@ msgstr "Yerel"
 msgid "From Internet"
 msgstr "İnternet üzerinden"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Görünüm"
 
@@ -15759,7 +16211,8 @@ msgstr "Sistem ve Audacity teması karıştırı&lsın"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr "Sağdan sola yazılan dillerde genellikle soldan sağa görünümler kullanılsın"
+msgstr ""
+"Sağdan sola yazılan dillerde genellikle soldan sağa görünümler kullanılsın"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
@@ -15911,7 +16364,8 @@ msgstr "A&yarla"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Not: Cmd+Q basarsanız uygulamadan çıkılır. Tüm diğer tuşlar geçerlidir."
+msgstr ""
+"Not: Cmd+Q basarsanız uygulamadan çıkılır. Tüm diğer tuşlar geçerlidir."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -16114,7 +16568,8 @@ msgstr "MIDI sentezleyici gecikmesi bir tamsayı olmalıdır"
 msgid "Midi IO"
 msgstr "Midi giriş çıkış"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
+#. i18n-hint: Modules are optional extensions to Audacity that add NEW
+#. features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Modüller"
@@ -16128,18 +16583,25 @@ msgid ""
 "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
 "and know what you are doing."
 msgstr ""
-"Bu modüller deneysel olduğundan, yalnız Audacity kullanım kitabını okuduysanız ve\n"
+"Bu modüller deneysel olduğundan, yalnızca Audacity kullanım kitabını okuduysanız ve\n"
 "ne yaptığınızı biliyorsanız etkinleştirin."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr " 'Sor': Audacity her başlatıldığında modülün yüklenip yüklenmeyeceğinin sorulacağı anlamına gelir."
+msgid ""
+"  'Ask' means Audacity will ask if you want to load the module each time it "
+"starts."
+msgstr ""
+" 'Sor': Audacity her başlatıldığında modülün yüklenip yüklenmeyeceğinin "
+"sorulacağı anlamına gelir."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr " 'Başarısız': Audacity modülün bozuk olduğunu düşündüğünden çalıştırmayacağı anlamına gelir."
+msgid ""
+"  'Failed' means Audacity thinks the module is broken and won't run it."
+msgstr ""
+" 'Başarısız': Audacity modülün bozuk olduğunu düşündüğünden çalıştırmayacağı"
+" anlamına gelir."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -16148,7 +16610,9 @@ msgstr " 'Yeni': Henüz bir seçim yapılmamış olduğu anlamına gelir."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
-msgstr "Bu ayarlarda yapılan değişiklikler yalnız Audacity başlatılırken geçerli olur."
+msgstr ""
+"Bu ayarlarda yapılan değişiklikler yalnızca Audacity başlatılırken geçerli "
+"olur."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Ask"
@@ -16328,7 +16792,7 @@ msgstr "Birkaç örneği değiştir"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change ONE Sample only"
-msgstr "Yalnız BİR örneği değiştir"
+msgstr "Yalnızca BİR örneği değiştir"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Multi"
@@ -16468,7 +16932,8 @@ msgstr "Gerçek zamanlı dönüştürme"
 msgid "Sample Rate Con&verter:"
 msgstr "Örnekleme &hızı dönüştürücü:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
 msgstr "&Titreme:"
@@ -16481,7 +16946,8 @@ msgstr "Yüksek kaliteli dönüştürme"
 msgid "Sample Rate Conver&ter:"
 msgstr "Örnek hızı dönüş&türücü:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Titr&eme:"
@@ -16506,7 +16972,8 @@ msgstr "&Yazılımsal giriş oynatma"
 msgid "Record on a new track"
 msgstr "Yeni bir ize kaydedilsin"
 
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the
+#. recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
 msgstr "Kesintiler algılansın"
@@ -16603,12 +17070,14 @@ msgstr "Çapraz &geçiş:"
 msgid "Mel"
 msgstr "Mel"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for
+#. Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Bark"
 msgstr "Bark"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates
+#. Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp
 msgid "ERB"
 msgstr "ERB (eşdeğer dikdörtgen bant genişliği)"
@@ -16769,7 +17238,8 @@ msgstr "S&pektral seçim kullanılsın"
 msgid "Show a grid along the &Y-axis"
 msgstr "&Y ekseni boyunca ızgara görüntülensin"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
+#. translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
 msgstr "FFT nota bulma"
@@ -16831,7 +17301,8 @@ msgid "The maximum number of notes must be in the range 1..128"
 msgstr "En fazla nota sayısı 1 ile 128 aralığında olmalı"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
@@ -17189,7 +17660,8 @@ msgstr "Ses ayarları:"
 msgid "&Audio Setup Toolbar"
 msgstr "&Ses kurulumu araç çubuğu"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
@@ -17232,7 +17704,8 @@ msgstr "Bitişe kadar seç"
 msgid "Select to Start"
 msgstr "Başlangıca Kadar seç"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -17367,12 +17840,14 @@ msgstr "Kayıt ölçeri"
 msgid "Playback Meter"
 msgstr "Oynatma ölçeri"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Recording Level"
 msgstr "Kayıt düzeyi"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17418,7 +17893,6 @@ msgstr "Sarma"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Scrubbing"
 msgstr "Sarmayı durdur"
@@ -17426,7 +17900,6 @@ msgstr "Sarmayı durdur"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
 msgstr "Sarmayı başlat"
@@ -17434,7 +17907,6 @@ msgstr "Sarmayı başlat"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Seeking"
 msgstr "Taramayı durdur"
@@ -17442,7 +17914,6 @@ msgstr "Taramayı durdur"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Seeking"
 msgstr "Taramayı başlat"
@@ -17642,7 +18113,9 @@ msgstr "Seçilmiş hızda &oynatma çubuğu"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr "Etiketlerin konumunu değiştirmek için sürükleyin. Aynı iz üzerindeki tüm etiketleri taşımak için Shift tuşuna basılı tutarak sürükleyin."
+msgstr ""
+"Etiketlerin konumunu değiştirmek için sürükleyin. Aynı iz üzerindeki tüm "
+"etiketleri taşımak için Shift tuşuna basılı tutarak sürükleyin."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17733,8 +18206,12 @@ msgstr "&MIDI aygıtı bilgileri..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
-msgstr "Dikey olarak yakınlaştırmak için tıklayın, uzaklaştırmak için Shift ile Tıklayın, Yakınlaştırma aralığını seçmek için sürükleyin."
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
+" region."
+msgstr ""
+"Dikey olarak yakınlaştırmak için tıklayın, uzaklaştırmak için Shift ile "
+"Tıklayın, Yakınlaştırma aralığını seçmek için sürükleyin."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -17912,7 +18389,8 @@ msgid "Processing...   %i%%"
 msgstr "İşleniyor...   %i%%"
 
 #. i18n-hint: The strings name a track and a format
-#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or
+#. right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 #, c-format
@@ -18124,8 +18602,11 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% sağa"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Alt görünümlerin boyutlarını ayarlamak için tıklayıp sürükleyin, eşit olarak bölmek için çift tıklayın"
+msgid ""
+"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr ""
+"Alt görünümlerin boyutlarını ayarlamak için tıklayıp sürükleyin, eşit olarak"
+" bölmek için çift tıklayın"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18159,8 +18640,8 @@ msgstr "Parçayı yeniden adlandır..."
 #, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s, %d / %d parça"
+msgstr[1] "%s, %d / %d parça"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -18258,8 +18739,11 @@ msgid "Logarithmic &Interpolation"
 msgstr "Logaritmik a&ra değerleme"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Bu Audacity sürümünde her proje penceresinde yalnız bir zaman izi kullanılabilir."
+msgid ""
+"This version of Audacity only allows one time track for each project window."
+msgstr ""
+"Bu Audacity sürümünde her proje penceresinde yalnızca bir zaman izi "
+"kullanılabilir."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -18271,8 +18755,12 @@ msgstr "&Zaman izi"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
-msgstr "Parçaların konumunu değiştirmek için sürükleyin. Aynı iz üzerindeki tüm parçaları taşımak için Shift tuşuna basılı tutarak sürükleyin."
+msgid ""
+"Drag clips to reposition them. Hold Shift and drag to move all clips on the "
+"same track."
+msgstr ""
+"Parçaların konumunu değiştirmek için sürükleyin. Aynı iz üzerindeki tüm "
+"parçaları taşımak için Shift tuşuna basılı tutarak sürükleyin."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -18351,7 +18839,6 @@ msgstr "Ayarlanmış kılıf."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "&Sar"
@@ -18363,7 +18850,6 @@ msgstr "Taranıyor"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
 msgstr "Sarma &cetveli"
@@ -18410,7 +18896,8 @@ msgstr "Üst seçim frekansını taşımak için tıklayıp sürükleyin."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "Orta seçim frekansını spektral tepeye taşımak için tıklayıp sürükleyin."
+msgstr ""
+"Orta seçim frekansını spektral tepeye taşımak için tıklayıp sürükleyin."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -18425,7 +18912,8 @@ msgstr "Frekans bant genişliğini değiştirmek için tıklayıp sürükleyin."
 msgid "Edit, Preferences..."
 msgstr "Ayarları düzenle..."
 
-#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
+#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux,
+#. "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
@@ -18439,7 +18927,8 @@ msgstr "Frekans bant genişliğini ayarlamak için tıklayıp sürükleyin."
 msgid "Click and drag to select audio"
 msgstr "Sesi seçmek için tıklayıp sürükleyin"
 
-#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any
+#. nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
 msgstr "(hizalanıyor)"
@@ -18496,13 +18985,17 @@ msgstr "Command ile tıklama"
 msgid "Ctrl+Click"
 msgstr "Ctrl ile tıklama"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr "İzi seçmek ya da bırakmak için %s. İz sıralamasını değiştirmek için aşağı ya da yukarı sürükleyin."
+msgstr ""
+"İzi seçmek ya da bırakmak için %s. İz sıralamasını değiştirmek için aşağı ya"
+" da yukarı sürükleyin."
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
@@ -18529,7 +19022,8 @@ msgstr "Yakınlaştırmak için tıklayın, uzaklaştırmak için Shift ile tık
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Aralığı yakınlaştırmak için sürükleyin, uzaklaştırmak için sağ tıklayın"
+msgstr ""
+"Aralığı yakınlaştırmak için sürükleyin, uzaklaştırmak için sağ tıklayın"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -18547,10 +19041,14 @@ msgstr "Güncelleme denetimi"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "Otomatik güncelleme denetimi ayarını %s bölümünden değiştirebilirsiniz."
+msgid ""
+"If you want to change your preference for automatic updates checking, you "
+"can find it in %s."
+msgstr ""
+"Otomatik güncelleme denetimi ayarını %s bölümünden değiştirebilirsiniz."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Application
+#. page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
@@ -18596,12 +19094,21 @@ msgid "App update checking"
 msgstr "Uygulama güncelleme denetimi"
 
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Güncel kalmanız amacıyla yeni bir Audacity sürümü yayınlandığında uygulama içinde bir bildirim görüntülenecek."
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there "
+"is a new version of Audacity available to download."
+msgstr ""
+"Güncel kalmanız amacıyla yeni bir Audacity sürümü yayınlandığında uygulama "
+"içinde bir bildirim görüntülenecek."
 
 #: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Audacity, kişisel gizliliğinizi korumak için herhangi bir kişisel bilgi toplamaz. Bununla birlikte, uygulama güncelleme denetimi özelliği için ağ erişimi gereklidir."
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal "
+"information. However, app update checking does require network access."
+msgstr ""
+"Audacity, kişisel gizliliğinizi korumak için herhangi bir kişisel bilgi "
+"toplamaz. Bununla birlikte, uygulama güncelleme denetimi özelliği için ağ "
+"erişimi gereklidir."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
@@ -18659,13 +19166,12 @@ msgstr "Düğme"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
-msgstr "Basın"
+msgstr "basıldı"
 
 #: src/widgets/AButton.cpp
 msgid "not pressed"
-msgstr ""
+msgstr "basılmadı"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
@@ -18688,20 +19194,24 @@ msgstr "%.2fx"
 #: src/widgets/ErrorReportDialog.cpp
 #, c-format
 msgid "More information about this error may be available %s."
-msgstr "%s bu sorun hakkında ayrıntılı bilgi bulunabilir."
+msgstr "Bu sorun hakkında ayrıntılı bilgi almak için %s bakabilirsiniz."
 
 #: src/widgets/ErrorReportDialog.cpp
 msgid "here"
-msgstr "Burada"
+msgstr "buraya"
 
 #: src/widgets/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
-msgstr "Bu sorunu düzeltmemize yardımcı olmak için bir bir bildirim göndermek ister misiniz?"
+msgstr ""
+"Bu sorunu düzeltmemize yardımcı olmak için bir bir bildirim göndermek ister "
+"misiniz?"
 
 #: src/widgets/ErrorReportDialog.cpp
 #, c-format
 msgid "All reports are anonymous. See %s for more info."
-msgstr "Tüm bildirimler anonim olarak gönderilir. %s ayrıntılı bilgi alabilirsiniz."
+msgstr ""
+"Tüm bildirimler anonim olarak gönderilir. Ayrıntılı bilgi almak için %s "
+"bakabilirsiniz."
 
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -18873,10 +19383,12 @@ msgstr "sa:dd:ss + yüzdelik"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
+#. seconds
 #. * (the hundredths are shown as decimal seconds). Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>0100 s"
@@ -18889,11 +19401,13 @@ msgid "hh:mm:ss + milliseconds"
 msgstr "sa:dd:ss + milisaniye"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
+#. the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>01000 s"
@@ -18910,7 +19424,8 @@ msgstr "sa:dd:ss + örnekler"
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
@@ -18919,7 +19434,6 @@ msgstr "0100 sa 060 da 060 sn+>örnek sayısı"
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
-#.
 #: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "örnekler"
@@ -18943,7 +19457,8 @@ msgstr "sa:dd:ss + film kareleri (24 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
@@ -18974,7 +19489,8 @@ msgstr "sa:dd:ss + NTSC düşük kareleri"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
@@ -18992,7 +19508,8 @@ msgstr "sa:dd:ss + NTSC düşük dışı kareler"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
@@ -19023,7 +19540,8 @@ msgstr "sa:dd:ss + PAL kareleri (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
@@ -19053,7 +19571,8 @@ msgstr "sa:dd:ss + CDDA kareleri (75 fps)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
@@ -19075,7 +19594,8 @@ msgstr "01000,01000 kare|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "010,01000>0100 Hz"
@@ -19092,7 +19612,8 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000>01000 kHz|0.001"
@@ -19110,7 +19631,8 @@ msgstr "oktav"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100>01000 octaves|1.442695041"
@@ -19130,7 +19652,8 @@ msgstr "yarım ton + koma"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
@@ -19207,8 +19730,12 @@ msgstr "Dosyalar klasöre yazılamadı: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr "Lütfen klasörün var ve gerekli izinlere sahip olduğunu ve sürücüde boş alan olduğunu denetleyin."
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr ""
+"Lütfen klasörün var ve gerekli izinlere sahip olduğunu ve sürücüde boş alan "
+"olduğunu denetleyin."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -19216,7 +19743,8 @@ msgstr "Lütfen klasörün var ve gerekli izinlere sahip olduğunu ve sürücüd
 msgid "You can change the directory in %s."
 msgstr "%s içindeki klasörü değiştirebilirsiniz."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
+#. page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Preferences > Directories"
 msgstr "Ayarlar > Klasörler"
@@ -19586,13 +20114,14 @@ msgstr "Sorun.~%Seçim geçersiz.~%2 taneden fazla ses parçası seçilmiş."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgid ""
+"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr "Hata.~%Seçim geçersiz.~%Seçimin başında ya da sonunda boş alan var."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr "Sorun.~%Çapraz Parça geçişi yalnız bir ize uygulanabilir."
+msgstr "Sorun.~%Çapraz Parça geçişi yalnızca bir ize uygulanabilir."
 
 #: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Tracks"
@@ -19783,7 +20312,7 @@ msgstr "Etiketteki en fazla hane sayısı"
 
 #: plug-ins/equalabel.ny
 msgid "None - Text Only"
-msgstr "Yok - Yalnız metin"
+msgstr "Yok - Yalnızca metin"
 
 #: plug-ins/equalabel.ny
 msgid "1 (Before Label)"
@@ -19823,7 +20352,7 @@ msgstr "Ayrıntılar"
 
 #: plug-ins/equalabel.ny
 msgid "Warnings only"
-msgstr "Yalnız uyarılar"
+msgstr "Yalnızca uyarılar"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
@@ -19981,7 +20510,7 @@ msgstr "~as ~ad ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Çok fazla sessizlik algılandı. ~%Yalnız ilk 10000 etiket eklendi."
+msgstr "Çok fazla sessizlik algılandı. ~%Yalnızca ilk 10000 etiket eklendi."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -19991,13 +20520,21 @@ msgstr "Hata.~%Seçim ~a değerinden küçük olmalıdır."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
-msgstr "Herhangi bir ses bulunamadı.~%'Eşik' değerini ya da 'En az ses süresi' değerini azaltmayı deneyin."
+msgid ""
+"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
+"duration'."
+msgstr ""
+"Herhangi bir ses bulunamadı.~%'Eşik' değerini ya da 'En az ses süresi' "
+"değerini azaltmayı deneyin."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
-msgstr "Sesler arasındaki bölgeyi etiketlemek için ~%en az iki ses~% gereklidir. Yalnız bir ses seçilmiş."
+msgid ""
+"Labelling regions between sounds requires~%at least two sounds.~%Only one "
+"sound detected."
+msgstr ""
+"Sesler arasındaki bölgeyi etiketlemek için ~%en az iki ses~% gereklidir. "
+"Yalnız bir ses seçilmiş."
 
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -20015,7 +20552,8 @@ msgstr "Yumuşak sınır"
 msgid "Hard Limit"
 msgstr "Sert sınır"
 
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into
+#. clips
 #: plug-ins/limiter.ny
 msgid "Soft Clip"
 msgstr "Yumuşak kırpma"
@@ -20232,7 +20770,9 @@ msgstr "Uyarı.~%Bazı dosyalar kopyalanamadı:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr "Uygulama ekleri kuruldu.~%(Etkileri etkinleştirmek için Uygulama Eki Yönetimi bölümüne bakın):"
+msgstr ""
+"Uygulama ekleri kuruldu.~%(Etkileri etkinleştirmek için Uygulama Eki "
+"Yönetimi bölümüne bakın):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20325,7 +20865,9 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "'Ritim izi süresi' seçeneğini etkinleştirmek için 'Çubuk sayısı' seçeneğini sıfır yapın."
+msgstr ""
+"'Ritim izi süresi' seçeneğini etkinleştirmek için 'Çubuk sayısı' seçeneğini "
+"sıfır yapın."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -20461,7 +21003,7 @@ msgstr "HTML dosyaları"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
-msgstr "Dizin (yalnız metin dosyaları)"
+msgstr "Dizin (yalnızca metin dosyaları)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Count"
@@ -20511,7 +21053,7 @@ msgstr "İletileri görüntüle"
 
 #: plug-ins/sample-data-export.ny
 msgid "Errors Only"
-msgstr "Yalnız sorunlar"
+msgstr "Yalnızca sorunlar"
 
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
@@ -20540,8 +21082,10 @@ msgstr "Örnekleme Hızı: ~a Hz.  Örnek değerleri ~a ölçeğinde.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr "~a   ~a~%~aÖrnekleme Hızı: ~a Hz.~%İşlenen uzunluk: ~a örnek ~a saniye.~a"
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+"~a   ~a~%~aÖrnekleme Hızı: ~a Hz.~%İşlenen uzunluk: ~a örnek ~a saniye.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20598,13 +21142,15 @@ msgstr "<b>Örnekleme hızı:</b>   ~a Hz."
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>Tepe genliği:</b>   ~a (doğrusal)   ~a dB."
 
-#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a
+#. signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (ağırlıksız):   ~a dB."
 
-#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#. i18n-hint: DC derives from "direct current" in electronics, really means
+#. the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
@@ -20752,7 +21298,7 @@ msgid ""
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
 "Hata:~%~\n"
-"                Dosya içeriği yalnız düz ASCII metni biçiminde olmalıdır.~%~\n"
+"                Dosya içeriği yalnızca düz ASCII metni biçiminde olmalıdır.~%~\n"
 "                ('~a' baytı geçersiz. Bayt numarası: ~a)"
 
 #: plug-ins/sample-data-import.ny
@@ -20879,8 +21425,12 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr "Kanala çekme konumu: ~a~%Sol ve sağ kanallar ~a civarında ilişkili %. Bunun anlamı:~%~a~%"
+msgid ""
+"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
+"This means:~%~a~%"
+msgstr ""
+"Kanala çekme konumu: ~a~%Sol ve sağ kanallar ~a civarında ilişkili %. Bunun "
+"anlamı:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20901,8 +21451,11 @@ msgstr ""
 "                Genellikle ayıklanan merkez kötü olur."
 
 #: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr " - Değer oldukça iyi, en azından ortalama olarak çift kanal ve çok yayılma çok geniş değil."
+msgid ""
+" - A fairly good value, at least stereo in average and not too wide spread."
+msgstr ""
+" - Değer oldukça iyi, en azından ortalama olarak çift kanal ve çok yayılma "
+"çok geniş değil."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20930,7 +21483,7 @@ msgid ""
 msgstr ""
 " - İz çift kanallı olmasına rağmen belli ki alanın genişliği çok fazla.\n"
 "                Bu durum tuhaf etkilere yol açabilir.\n"
-"                Özellikle yalnız tek hoparlörden oynatıldığında."
+"                Özellikle yalnızca tek hoparlörden oynatıldığında."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20946,7 +21499,7 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
-msgstr "Bu uygulama eki yalnız çift kanallı izlerde çalışır."
+msgstr "Bu uygulama eki yalnızca çift kanallı izlerde çalışır."
 
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
@@ -20970,7 +21523,7 @@ msgstr "İki kanal"
 
 #: plug-ins/vocoder.ny
 msgid "Right Only"
-msgstr "Yalnız sağ"
+msgstr "Yalnızca sağ"
 
 #: plug-ins/vocoder.ny
 msgid "Number of vocoder bands"
@@ -21039,12 +21592,3 @@ msgstr "Vokal kaldırıcı"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Spektral araçlar"
-
-#~ msgid "Only ffmpeg.*.dylib"
-#~ msgstr "Yalnız ffmpeg.*.dylib"
-
-#~ msgid "Mixer"
-#~ msgstr "Karıştırıcı"
-
-#~ msgid "Location of &Manual:"
-#~ msgstr "Kullanım kitabı &konumu:"
