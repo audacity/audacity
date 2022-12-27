@@ -3038,7 +3038,6 @@ msgid "Only avformat.dll"
 msgstr "Nur avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
 msgstr "Nur libavformat.dylib"
 
@@ -6108,7 +6107,6 @@ msgid "Public"
 msgstr "Öffentlich"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
 msgstr "Jeder wird sich diese Audiodatei anhören können."
 
@@ -6117,7 +6115,6 @@ msgid "Unlisted"
 msgstr "Nicht gelistet"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
 msgstr "Nur Sie und Leute, mit denen Sie einen Link geteilt haben, werden sich diese Audiodatei anhören können."
 
@@ -18682,7 +18679,6 @@ msgstr "Knopf"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
 msgstr "gedrückt"
 
