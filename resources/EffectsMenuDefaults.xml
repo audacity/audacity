@@ -43,6 +43,7 @@
             <Effect>High-Pass Filter</Effect>
             <Effect>Low-Pass Filter</Effect>
             <Effect>Notch Filter</Effect>
+            <Effect>Classic Filters</Effect>
         </Effects>
     </Group>
     <Group>
