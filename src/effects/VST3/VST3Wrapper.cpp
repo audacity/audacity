@@ -115,10 +115,11 @@ bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
       processor->getBusArrangement(Vst::kInput, i, defaultArragement);
 
       arrangement =
-         GetBusArragementForChannels(busInfo.channelCount, defaultArragement);
+         busInfo.busType == Vst::kMain
+            ? GetBusArragementForChannels(busInfo.channelCount, defaultArragement)
+            : Vst::SpeakerArr::kEmpty;
       
       component.activateBus(Vst::kAudio, Vst::kInput, i, busInfo.busType == Vst::kMain);
-
       defaultInputSpeakerArrangements.push_back(arrangement);
    }
    for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
@@ -132,9 +133,9 @@ bool ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
       processor->getBusArrangement(Vst::kOutput, i, defaultArragement);
 
       arrangement =
-         busInfo.busType == Vst::kMain ?
-            GetBusArragementForChannels(busInfo.channelCount, defaultArragement) :
-            Vst::SpeakerArr::kEmpty;
+         busInfo.busType == Vst::kMain
+            ? GetBusArragementForChannels(busInfo.channelCount, defaultArragement)
+            : Vst::SpeakerArr::kEmpty;
 
       component.activateBus(Vst::kAudio, Vst::kOutput, i, busInfo.busType == Vst::kMain);
       defaultOutputSpeakerArrangements.push_back(arrangement);
