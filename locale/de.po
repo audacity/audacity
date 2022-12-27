@@ -11,6 +11,7 @@
 # 39185eb5873c356f8ca1bdf1533d87ba, 2016
 # Friederike Schertel, 2018
 # Friederike Schertel, 2018
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2022
 # Heiko Abler <dj@audacity.de>, 2003
 # jhuffer <joachim.huffer@gmail.com>, 2020-2022
 # Martin H <pilino@posteo.de>, 2016
@@ -28,11 +29,11 @@
 # valsu <valsu@hylia.de>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2012-07-27 10:44+0000\n"
-"Last-Translator: jhuffer <joachim.huffer@gmail.com>, 2020-2022\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2020-2022\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -679,11 +680,11 @@ msgstr "Sch&leife an/aus"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Ausschneiden/Kopieren/Einfügen"
 
 #: libraries/lib-strings/FutureStrings.h
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "&Ausschneiden/Kopieren/Einfügen-Werkzeugleiste"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -1846,7 +1847,7 @@ msgid ""
 msgstr ""
 "Audacity konnte keinen sicheren Ort zum Speichern temporärer Dateien finden.\n"
 "Audacity benötigt einen Ort an dem automatische Aufräum-Programme die temporären Dateien nicht löschen.\n"
-"Bitte geben sie ein geeignetes Verzeichnis im Einstellungsdialog ein."
+"Bitte geben Sie ein geeignetes Verzeichnis im Einstellungsdialog ein."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1854,7 +1855,7 @@ msgid ""
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity konnte keinen Platz zum Speichern der temporären Dateien finden.\n"
-"Bitte geben sie ein geeignetes Verzeichnis im Einstellungsdialog ein."
+"Bitte geben Sie ein geeignetes Verzeichnis im Einstellungsdialog ein."
 
 #: src/AudacityApp.cpp
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
@@ -3039,7 +3040,7 @@ msgstr "Nur avformat.dll"
 #: src/FFmpeg.cpp
 #, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "Nur libavformat.so"
+msgstr "Nur libavformat.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -3434,7 +3435,7 @@ msgstr "&Verwendeter Speicherplatz gesamt"
 
 #: src/HistoryWindow.cpp
 msgid "&Undo levels available"
-msgstr "&Verfügbare Ebenen rückgängig machen"
+msgstr "&Verfügbare Ebenen rückgängig"
 
 #: src/HistoryWindow.cpp
 msgid "&Levels to discard"
@@ -3487,7 +3488,7 @@ msgstr "Fortsetzen"
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity hat %d inkompatible Erweiterungen gefunden, die nicht geladen werden konnten. Wir haben diese Erweiterungen deaktiviert, um Abstürze und Hänger zu vermeiden. Wenn Sie trotzdem versuchen wollen, diese Erweiterungen zu verwenden, gehen Sie zu \"Erweiterungen verwalten\". Ansonsten wählen Sie \"Fortsetzen\". "
+msgstr "Audacity hat %d inkompatible Erweiterungen gefunden, die nicht geladen werden konnten. Wir haben diese Erweiterungen deaktiviert, um Hänger oder Abstürze zu vermeiden. Wenn Sie trotzdem versuchen wollen, diese Erweiterungen zu verwenden, gehen Sie zu \"Erweiterungen verwalten\". Ansonsten wählen Sie \"Fortsetzen\"."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -3686,7 +3687,7 @@ msgstr "&Rückgängig"
 #: src/Menus.cpp
 #, c-format
 msgid "&Redo %s"
-msgstr "&Wiederholen %s"
+msgstr "&Wiederherstellen %s"
 
 #: src/Menus.cpp src/menus/EditMenus.cpp
 msgid "&Redo"
@@ -4690,7 +4691,7 @@ msgid ""
 "Please try again and select an original name."
 msgstr ""
 "Das Projekt wurde nicht gespeichert, weil der angegebene Name ein anderes Projekt überschreiben würde.\n"
-"Bitte wählen sie einen anderen Namen."
+"Bitte wählen Sie einen anderen Namen."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -5563,7 +5564,7 @@ msgstr ""
 "Der ausgewählte Dateiname kann nicht\n"
 "für zeitgesteuerte Aufnahmen verwendet werden,\n"
 "weil er ein anderes Projekt überschreiben würde.\n"
-"Bitte verwenden sie einen anderen Namen."
+"Bitte verwenden Sie einen anderen Namen."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error Saving Timer Recording Project"
@@ -6065,7 +6066,7 @@ msgstr "Audio teilen"
 #. that opens Share Audio dialog
 #: src/cloud/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "&Audio-Werkzeugleiste teilen"
+msgstr "&Audio-teilen-Werkzeugleiste"
 
 #: src/cloud/audiocom/LinkAccountDialog.cpp
 #: src/cloud/audiocom/LinkFailedDialog.cpp
@@ -6104,23 +6105,21 @@ msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Öffentlich"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Audio kann nicht abgespielt oder aufgenommen werden.\n"
-"\n"
+msgstr "Jeder kann sich diese Audiodatei anhören"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Nicht gelistet"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Nur Leute, mit denen Sie diese Verknüpfung teilen, können auf Ihr Audio zugreifen"
+msgstr "Nur du und Leute, mit denen du den Link geteilt hast, können sich diese Audiodatei anhören"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "&Go to my file"
@@ -9053,7 +9052,7 @@ msgid ""
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
 "Wählen Sie sämtliches zu filterndes Audio aus. Wählen Sie dann, wieviel Rauschen heraus\n"
-"gefiltert werden soll und klicken sie auf „OK“, um die Rausch-Verminderung zu starten.\n"
+"gefiltert werden soll und klicken Sie auf „OK“, um die Rausch-Verminderung zu starten.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -9164,7 +9163,7 @@ msgid ""
 "filtered out, and then click 'OK' to remove noise.\n"
 msgstr ""
 "Wählen Sie sämtliches zu filterndes Audio aus. Wählen Sie dann, wieviel Rauschen heraus\n"
-"gefiltert werden soll und klicken sie auf „OK“, um die Rausch-Entfernung zu starten.\n"
+"gefiltert werden soll und klicken Sie auf „OK“, um die Rausch-Entfernung zu starten.\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -12195,7 +12194,7 @@ msgstr "Sehr hohe Qualität (am langsamsten)"
 
 #: src/export/ExportWavPack.cpp
 msgid "32 bit float "
-msgstr "32-Bit-Fließkomma"
+msgstr "32-Bit-Fließkomma "
 
 #. i18n-hint bps abbreviates "bits per sample"
 #: src/export/ExportWavPack.cpp
@@ -12293,7 +12292,7 @@ msgstr ""
 "„%s“ ist eine Wiedergabeliste.\n"
 "Audacity kann diese Datei nicht öffnen, weil sie nur Verweise auf andere Dateien enthält.\n"
 "\n"
-"Diese Dateien können sie eventuell ausfindig machen,\n"
+"Diese Dateien können Sie eventuell ausfindig machen,\n"
 "indem Sie die Wiedergabeliste mit einem Texteditor öffnen."
 
 #. i18n-hint: %s will be the filename
@@ -13236,11 +13235,11 @@ msgstr "Aus der Zwischenablage eingefügt"
 
 #: src/menus/EditMenus.cpp
 msgid "Nothing to undo"
-msgstr "Nichts zum Rückgängig machen"
+msgstr "Nichts zum Rückgängig"
 
 #: src/menus/EditMenus.cpp
 msgid "Nothing to redo"
-msgstr "Nichts zum Wiederholen"
+msgstr "Nichts zum Wiederherstellen"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to the clipboard"
@@ -14040,7 +14039,7 @@ msgstr "&Wiederhole %s"
 #: src/menus/PluginMenus.cpp
 #, c-format
 msgid "Plugin %d to %d"
-msgstr "Erweiterungen %d bis %d"
+msgstr "Erweiterung %d bis %d"
 
 #: src/menus/PluginMenus.cpp
 msgid "Plugin Manager"
@@ -14963,7 +14962,7 @@ msgstr "Bitte wählen Sie eine Stereospur oder zwei Monospuren aus."
 #: src/menus/TransportMenus.cpp
 #, c-format
 msgid "Please select at least %d channels."
-msgstr "Bitte wählen Sie mindestens % d-Kanäle aus."
+msgstr "Bitte wählen Sie mindestens %d-Kanäle aus."
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select a time within a clip."
@@ -18524,7 +18523,7 @@ msgstr "Strg+Klick"
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr "%s um Spur auszuwählen oder abzuwählen. Hoch oder runter ziehen, um Reihenfolgeder Spuren zu ändern."
+msgstr "%s um Spur auszuwählen oder abzuwählen. Hoch oder runter ziehen, um Reihenfolge der Spuren zu ändern."
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -18685,11 +18684,11 @@ msgstr "Knopf"
 #: src/widgets/AButton.cpp
 #, fuzzy
 msgid "pressed"
-msgstr "Drücke"
+msgstr "gedrückt"
 
 #: src/widgets/AButton.cpp
 msgid "not pressed"
-msgstr ""
+msgstr "nicht gedrückt"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
