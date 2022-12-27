@@ -50,9 +50,9 @@ Paul Licameli split from AudacityProject.cpp
 namespace
 {
 #ifdef HAS_AUDIOCOM_UPLOAD
-   constexpr int DEFAULT_WINDOW_WIDTH = 1120;
+   constexpr int DEFAULT_WINDOW_WIDTH = 1180;
 #else
-   constexpr int DEFAULT_WINDOW_WIDTH = 1060;
+   constexpr int DEFAULT_WINDOW_WIDTH = 1120;
 #endif
    constexpr int DEFAULT_WINDOW_HEIGHT = 674;
 }

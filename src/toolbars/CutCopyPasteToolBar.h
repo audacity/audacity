@@ -3,16 +3,14 @@
   Audacity: A Digital Audio Editor
 
 
-  EditToolbar.h
+  CutCopyPaste.h
 
-  Dominic Mazzoni
-  Shane T. Mueller
-  Leland Lucius
+  ksoze95
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EDIT_TOOLBAR__
-#define __AUDACITY_EDIT_TOOLBAR__
+#ifndef __AUDACITY_CUT_COPY_PASTE_TOOLBAR__
+#define __AUDACITY_CUT_COPY_PASTE_TOOLBAR__
 
 #include <wx/defs.h>
 
@@ -25,14 +23,12 @@ class wxGridSizer;
 class wxImage;
 class wxWindow;
 
-class AButton;
-
-class EditToolBar final : public ToolBar {
+class CutCopyPasteToolBar final : public ToolBar {
 
  public:
 
-   EditToolBar( AudacityProject &project );
-   virtual ~EditToolBar();
+   CutCopyPasteToolBar( AudacityProject &project );
+   virtual ~CutCopyPasteToolBar();
 
    void Create(wxWindow *parent) override;
 
@@ -49,8 +45,6 @@ class EditToolBar final : public ToolBar {
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id, const TranslatableString &label, bool toggle = false);
 
-   void AddSeparator();
-
    void RegenerateTooltips() override;
 
    ToolBarButtons mButtons;
@@ -58,7 +52,7 @@ class EditToolBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(EditToolBar)
+   DECLARE_CLASS(CutCopyPaste)
    DECLARE_EVENT_TABLE()
 };
 

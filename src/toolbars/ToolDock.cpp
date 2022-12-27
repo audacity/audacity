@@ -95,6 +95,20 @@ auto ToolBarConfiguration::Find(const ToolBar *bar) const -> Position
       return iter->position;
 }
 
+ToolBar* ToolBarConfiguration::FindToolBar(ToolBarID toolBarID) const
+{
+   if (toolBarID == NoBarID)
+      return nullptr;
+   
+   auto This = const_cast<ToolBarConfiguration*>(this);
+   auto it = std::find_if(
+      This->begin(), This->end(),
+      [=](const Place& place)
+      { return place.pTree->pBar->GetType() == toolBarID; });
+
+   return it != end() ? it->pTree->pBar : nullptr;
+}
+
 void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
 {
    if (position == UnspecifiedPosition) {
@@ -224,8 +238,21 @@ void ToolBarConfiguration::Remove(const ToolBar *bar)
 void ToolBarConfiguration::Show(ToolBar *bar)
 {
    // Do not assume the bar is absent, though in practice that is always so
-   if (!Contains(bar))
-      Insert(bar);
+   if (!Contains(bar)) {
+      auto position = UnspecifiedPosition;
+      const auto preferredNeighbors = bar->PreferredNeighbors();
+      if (preferredNeighbors.first != NoBarID || preferredNeighbors.second != NoBarID)
+      {
+         auto leftNeighbor = FindToolBar(preferredNeighbors.first);
+         auto topNeighbor = FindToolBar(preferredNeighbors.second);
+
+         // Perform a sanity check to verify that neighbors are
+         // really inside this configuration
+         if (leftNeighbor != nullptr || topNeighbor != nullptr)
+            position = Position { leftNeighbor, topNeighbor };
+      }
+      Insert(bar, position);
+   }
 }
 
 void ToolBarConfiguration::Hide(ToolBar *bar)
