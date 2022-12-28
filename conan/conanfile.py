@@ -24,21 +24,22 @@ def append_rpath(conanfile, file, rpath):
 # A helper function that correctly copies the files from the Conan package to the
 # correct location in the build tree
 def global_copy_files(conanfile, dependency_info):
-    if len(dependency_info.cpp_info.libdirs) == 0:
+    copy_from = dependency_info.cpp_info.libdirs[0] if conanfile.settings.os != "Windows" else dependency_info.cpp_info.bindirs[0]
+    if len(copy_from) == 0:
         return
 
     if conanfile.settings.os == "Windows":
-        copy(conanfile, "*.dll", dependency_info.cpp_info.bindirs[0], f"{conanfile.build_folder}/{conanfile.settings.build_type}")
+        copy(conanfile, "*.dll", copy_from, f"{conanfile.build_folder}/{conanfile.settings.build_type}")
     elif conanfile.settings.os == "Macos":
-        copied_files = copy(conanfile, "*.dylib*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/Audacity.app/Contents/Frameworks")
-    elif conanfile.settings.os:
+        copied_files = copy(conanfile, "*.dylib*", copy_from, f"{conanfile.build_folder}/Audacity.app/Contents/Frameworks")
+    else:
         # On Linux we also set the correct rpath for the copied libraries
 
         lib_dir = conanfile.options.lib_dir if conanfile.options.lib_dir else "lib/audacity"
 
-        print(f"Copying files from {dependency_info.cpp_info.libdirs[0]} to {conanfile.build_folder}/{lib_dir}", flush=True)
+        print(f"Copying files from {copy_from} to {conanfile.build_folder}/{lib_dir}", flush=True)
 
-        copied_files = copy(conanfile, "*.so*", dependency_info.cpp_info.libdirs[0], f"{conanfile.build_folder}/{lib_dir}")
+        copied_files = copy(conanfile, "*.so*", copy_from, f"{conanfile.build_folder}/{lib_dir}")
         for file in copied_files:
             if not os.path.islink(file):
                 run_patchelf(conanfile, ["--add-rpath", "$ORIGIN", file])
