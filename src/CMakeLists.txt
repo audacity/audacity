@@ -183,6 +183,8 @@ list( APPEND SOURCES
       MIDIPlay.h
       MixerBoard.cpp
       MixerBoard.h
+      MovableControl.cpp
+      MovableControl.h
       NoteTrack.cpp
       NoteTrack.h
       PitchName.cpp
