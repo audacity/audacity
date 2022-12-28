@@ -119,8 +119,8 @@ jobs:
           dir: arch
         - name: fedora-34
           dir: fedora34
-        - name: ubuntu-20.04
-          dir: ubuntu-20.04
+        #- name: ubuntu-20.04
+        #  dir: ubuntu-20.04
     runs-on: ubuntu-20.04
     permissions:
       contents: read
@@ -159,7 +159,7 @@ jobs:
         config:
         - name: arch-linux
         - name: fedora-34
-        - name: ubuntu-20.04
+        #- name: ubuntu-20.04
     needs: [generate_offline_dependencies, generate_source_tarball, generate_docker_images]
     runs-on: ubuntu-20.04
     steps:

@@ -15,13 +15,13 @@ if( NOT PortAudio_FOUND )
          message( STATUS "Found PortAudio: \n\tPortAudio_INCLUDE_DIR: ${PortAudio_INCLUDE_DIR}\n\tPortAudio_LIBRARIES: ${PortAudio_LIBRARIES}" )
       endif()
 
-      if( NOT TARGET PortAudio::PortAudio )
-         add_library( PortAudio::PortAudio INTERFACE IMPORTED GLOBAL)
+      if( NOT TARGET portaudio::portaudio )
+         add_library( portaudio::portaudio INTERFACE IMPORTED GLOBAL)
 
-         target_include_directories( PortAudio::PortAudio INTERFACE ${PortAudio_INCLUDE_DIR} )
-         target_link_libraries( PortAudio::PortAudio INTERFACE ${PortAudio_LIBRARIES} )
+         target_include_directories( portaudio::portaudio INTERFACE ${PortAudio_INCLUDE_DIR} )
+         target_link_libraries( portaudio::portaudio INTERFACE ${PortAudio_LIBRARIES} )
 
-         add_library(portaudio ALIAS PortAudio::PortAudio)
+         add_library(portaudio ALIAS portaudio::portaudio)
       endif()
    else()
       if( PortAudio_FIND_REQUIRED )
