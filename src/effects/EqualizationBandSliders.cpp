@@ -51,7 +51,7 @@ void EqualizationBandSliders::AddBandSliders(ShuttleGui &S)
 {
    wxWindow *pParent = S.GetParent();
 
-   // for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
+   // for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= hiFreq ); ++i)
    // May show more sliders than needed.  Fixes Bug 2269
    for (int i = 0; i < NUMBER_OF_BANDS; ++i) {
       TranslatableString freq = kThirdOct[i] < 1000.
@@ -92,17 +92,17 @@ void EqualizationBandSliders::AddBandSliders(ShuttleGui &S)
 //
 void EqualizationBandSliders::Flatten()
 {
-   auto &mParameters = mCurvesList.mParameters;
-   const auto &mDrawMode = mParameters.mDrawMode;
-   auto &mLinEnvelope = mParameters.mLinEnvelope;
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   auto &parameters = mCurvesList.mParameters;
+   const auto &drawMode = parameters.mDrawMode;
+   auto &linEnvelope = parameters.mLinEnvelope;
+   auto &logEnvelope = parameters.mLogEnvelope;
 
-   mLogEnvelope.Flatten(0.);
-   mLogEnvelope.SetTrackLen(1.0);
-   mLinEnvelope.Flatten(0.);
-   mLinEnvelope.SetTrackLen(1.0);
+   logEnvelope.Flatten(0.);
+   logEnvelope.SetTrackLen(1.0);
+   linEnvelope.Flatten(0.);
+   linEnvelope.SetTrackLen(1.0);
    mCurvesList.ForceRecalc();
-   if( !mDrawMode )
+   if( !drawMode )
    {
       for( size_t i = 0; i < mBandsInUse; i++)
       {
@@ -123,12 +123,12 @@ void EqualizationBandSliders::Flatten()
 
 void EqualizationBandSliders::EnvLogToLin(void)
 {
-   auto &mParameters = mCurvesList.mParameters;
-   auto &mLinEnvelope = mParameters.mLinEnvelope;
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
-   const auto &mHiFreq = mParameters.mHiFreq;
+   auto &parameters = mCurvesList.mParameters;
+   auto &linEnvelope = parameters.mLinEnvelope;
+   auto &logEnvelope = parameters.mLogEnvelope;
+   const auto &hiFreq = parameters.mHiFreq;
 
-   size_t numPoints = mLogEnvelope.GetNumberOfPoints();
+   size_t numPoints = logEnvelope.GetNumberOfPoints();
    if( numPoints == 0 )
    {
       return;
@@ -137,27 +137,27 @@ void EqualizationBandSliders::EnvLogToLin(void)
    Doubles when{ numPoints };
    Doubles value{ numPoints };
 
-   mLinEnvelope.Flatten(0.);
-   mLinEnvelope.SetTrackLen(1.0);
-   mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
-   mLinEnvelope.Reassign(0., value[0]);
+   linEnvelope.Flatten(0.);
+   linEnvelope.SetTrackLen(1.0);
+   logEnvelope.GetPoints( when.get(), value.get(), numPoints );
+   linEnvelope.Reassign(0., value[0]);
    double loLog = log10(20.);
-   double hiLog = log10(mHiFreq);
+   double hiLog = log10(hiFreq);
    double denom = hiLog - loLog;
 
    for (size_t i = 0; i < numPoints; i++)
-      mLinEnvelope.Insert(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
-   mLinEnvelope.Reassign(1., value[numPoints-1]);
+      linEnvelope.Insert(pow( 10., ((when[i] * denom) + loLog))/hiFreq  , value[i]);
+   linEnvelope.Reassign(1., value[numPoints-1]);
 }
 
 void EqualizationBandSliders::EnvLinToLog(void)
 {
-   auto &mParameters = mCurvesList.mParameters;
-   auto &mLinEnvelope = mParameters.mLinEnvelope;
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
-   const auto &mHiFreq = mParameters.mHiFreq;
+   auto &parameters = mCurvesList.mParameters;
+   auto &linEnvelope = parameters.mLinEnvelope;
+   auto &logEnvelope = parameters.mLogEnvelope;
+   const auto &hiFreq = parameters.mHiFreq;
 
-   size_t numPoints = mLinEnvelope.GetNumberOfPoints();
+   size_t numPoints = linEnvelope.GetNumberOfPoints();
    if( numPoints == 0 )
    {
       return;
@@ -166,58 +166,58 @@ void EqualizationBandSliders::EnvLinToLog(void)
    Doubles when{ numPoints };
    Doubles value{ numPoints };
 
-   mLogEnvelope.Flatten(0.);
-   mLogEnvelope.SetTrackLen(1.0);
-   mLinEnvelope.GetPoints( when.get(), value.get(), numPoints );
-   mLogEnvelope.Reassign(0., value[0]);
+   logEnvelope.Flatten(0.);
+   logEnvelope.SetTrackLen(1.0);
+   linEnvelope.GetPoints( when.get(), value.get(), numPoints );
+   logEnvelope.Reassign(0., value[0]);
    double loLog = log10(20.);
-   double hiLog = log10(mHiFreq);
+   double hiLog = log10(hiFreq );
    double denom = hiLog - loLog;
    bool changed = false;
 
    for (size_t i = 0; i < numPoints; i++)
    {
-      if( when[i]*mHiFreq >= 20 )
+      if( when[i]*hiFreq  >= 20 )
       {
          // Caution: on Linux, when when == 20, the log calculation rounds
          // to just under zero, which causes an assert error.
-         double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
-         mLogEnvelope.Insert(std::max(0.0, flog) , value[i]);
+         double flog = (log10(when[i]*hiFreq )-loLog)/denom;
+         logEnvelope.Insert(std::max(0.0, flog) , value[i]);
       }
       else
       {  //get the first point as close as we can to the last point requested
          changed = true;
          double v = value[i];
-         mLogEnvelope.Insert(0., v);
+         logEnvelope.Insert(0., v);
       }
    }
-   mLogEnvelope.Reassign(1., value[numPoints - 1]);
+   logEnvelope.Reassign(1., value[numPoints - 1]);
 
    if(changed)
-      mCurvesList.EnvelopeUpdated(mLogEnvelope, false);
+      mCurvesList.EnvelopeUpdated(logEnvelope, false);
 }
 
 void EqualizationBandSliders::ErrMin(void)
 {
-   const auto &mParameters = mCurvesList.mParameters;
-   const auto &mLogEnvelope = mParameters.mLogEnvelope;
-   const auto &mCurves = mCurvesList.mCurves;
-   const auto &mLoFreq = mParameters.mLoFreq;
-   const auto &mHiFreq = mParameters.mHiFreq;
+   const auto &parameters = mCurvesList.mParameters;
+   const auto &logEnvelope = parameters.mLogEnvelope;
+   const auto &curves = mCurvesList.mCurves;
+   const auto &loFreq = parameters.mLoFreq;
+   const auto &hiFreq = parameters.mHiFreq;
 
-   const double loLog = log10(mLoFreq);
-   const double hiLog = log10(mHiFreq);
+   const double loLog = log10(loFreq);
+   const double hiLog = log10(hiFreq );
    const double denom = hiLog - loLog;
 
    for (size_t i = 0; i < mBandsInUse; ++i)
    {
-      if( kThirdOct[i] == mLoFreq )
+      if( kThirdOct[i] == loFreq )
          mWhenSliders[i] = 0.;
       else
          mWhenSliders[i] = (log10(kThirdOct[i]) - loLog) / denom;
       // set initial values of sliders
       mEQVals[i] =
-         std::clamp(mLogEnvelope.GetValue(mWhenSliders[i]), -20., 20.);
+         std::clamp(logEnvelope.GetValue(mWhenSliders[i]), -20., 20.);
    }
 
    double vals[NUM_PTS];
@@ -227,7 +227,7 @@ void EqualizationBandSliders::ErrMin(void)
    double correction = 1.6;
    bool flag;
    size_t j=0;
-   Envelope testEnvelope{ mLogEnvelope };
+   Envelope testEnvelope{ logEnvelope };
 
    for(size_t i = 0; i < NUM_PTS; i++)
       vals[i] = testEnvelope.GetValue(mWhens[i]);
@@ -289,7 +289,7 @@ void EqualizationBandSliders::ErrMin(void)
    }
    if( error > .0025 * mBandsInUse ) // not within 0.05dB on each slider, on average
    {
-      mCurvesList.Select( (int) mCurves.size() - 1 );
+      mCurvesList.Select( (int) curves.size() - 1 );
       mCurvesList.EnvelopeUpdated(testEnvelope, false);
    }
 
@@ -309,8 +309,8 @@ void EqualizationBandSliders::ErrMin(void)
 
 void EqualizationBandSliders::GraphicEQ(Envelope &env)
 {
-   const auto &mParameters = mCurvesList.mParameters;
-   const auto &mInterp = mParameters.mInterp;
+   const auto &parameters = mCurvesList.mParameters;
+   const auto &interp = parameters.mInterp;
 
    // JKC: 'value' is for height of curve.
    // The 0.0 initial value would only get used if NUM_PTS were 0.
@@ -320,7 +320,7 @@ void EqualizationBandSliders::GraphicEQ(Envelope &env)
    env.Flatten(0.);
    env.SetTrackLen(1.0);
 
-   switch( mInterp )
+   switch( interp )
    {
    case EqualizationParameters::kBspline:  // B-spline
       {
@@ -499,8 +499,8 @@ void EqualizationBandSliders::OnErase( wxEvent& )
 
 void EqualizationBandSliders::OnSlider(wxCommandEvent & event)
 {
-   auto &mParameters = mCurvesList.mParameters;
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   auto &parameters = mCurvesList.mParameters;
+   auto &logEnvelope = parameters.mLogEnvelope;
 
    wxSlider *s = (wxSlider *)event.GetEventObject();
    for (size_t i = 0; i < mBandsInUse; i++)
@@ -534,17 +534,17 @@ void EqualizationBandSliders::OnSlider(wxCommandEvent & event)
          break;
       }
    }
-   GraphicEQ(mLogEnvelope);
+   GraphicEQ(logEnvelope);
    mCurvesList.EnvelopeUpdated();
 }
 
 void EqualizationBandSliders::Invert() // Inverts any curve
 {
-   auto &mParameters = mCurvesList.mParameters;
-   auto &mLinEnvelope = mParameters.mLinEnvelope;
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   auto &parameters = mCurvesList.mParameters;
+   auto &linEnvelope = parameters.mLinEnvelope;
+   auto &logEnvelope = parameters.mLogEnvelope;
 
-   if (!mParameters.mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
+   if (!parameters.mDrawMode)   // Graphic (Slider) mode. Invert the sliders.
    {
       for (size_t i = 0; i < mBandsInUse; i++)
       {
@@ -560,22 +560,22 @@ void EqualizationBandSliders::Invert() // Inverts any curve
             tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., mEQVals[i] );
          mSliders[i]->SetToolTip(tip);
       }
-      GraphicEQ(mLogEnvelope);
+      GraphicEQ(logEnvelope);
    }
    else  // Draw mode.  Invert the points.
    {
-      bool lin = mParameters.IsLinear(); // refers to the 'log' or 'lin' of the frequency scale, not the amplitude
+      bool lin = parameters.IsLinear(); // refers to the 'log' or 'lin' of the frequency scale, not the amplitude
       size_t numPoints; // number of points in the curve/envelope
 
       // determine if log or lin curve is the current one
       // and find out how many points are in the curve
       if(lin)  // lin freq scale and so envelope
       {
-         numPoints = mLinEnvelope.GetNumberOfPoints();
+         numPoints = linEnvelope.GetNumberOfPoints();
       }
       else
       {
-         numPoints = mLogEnvelope.GetNumberOfPoints();
+         numPoints = logEnvelope.GetNumberOfPoints();
       }
 
       if( numPoints == 0 )
@@ -585,17 +585,17 @@ void EqualizationBandSliders::Invert() // Inverts any curve
       Doubles value{ numPoints };
 
       if(lin)
-         mLinEnvelope.GetPoints( when.get(), value.get(), numPoints );
+         linEnvelope.GetPoints( when.get(), value.get(), numPoints );
       else
-         mLogEnvelope.GetPoints( when.get(), value.get(), numPoints );
+         logEnvelope.GetPoints( when.get(), value.get(), numPoints );
 
       // invert the curve
       for (size_t i = 0; i < numPoints; i++)
       {
          if(lin)
-            mLinEnvelope.Reassign(when[i] , -value[i]);
+            linEnvelope.Reassign(when[i] , -value[i]);
          else
-            mLogEnvelope.Reassign(when[i] , -value[i]);
+            logEnvelope.Reassign(when[i] , -value[i]);
       }
 
       // copy it back to the other one (just in case)

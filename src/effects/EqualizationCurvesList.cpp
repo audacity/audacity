@@ -37,9 +37,9 @@ void EqualizationCurvesList::EnvelopeUpdated()
 
 void EqualizationCurvesList::EnvelopeUpdated(const Envelope &env, bool lin)
 {
-   const auto &mHiFreq = mParameters.mHiFreq;
-   const auto &mDrawMode = mParameters.mDrawMode;
-   auto &mLogEnvelope = mParameters.mLogEnvelope;
+   const auto &hiFreq = mParameters.mHiFreq;
+   const auto &drawMode = mParameters.mDrawMode;
+   auto &logEnvelope = mParameters.mLogEnvelope;
 
    // Allocate and populate point arrays
    size_t numPoints = env.GetNumberOfPoints();
@@ -56,7 +56,7 @@ void EqualizationCurvesList::EnvelopeUpdated(const Envelope &env, bool lin)
       // Copy and convert points
       for (size_t point = 0; point < numPoints; point++)
       {
-         double freq = when[ point ] * mHiFreq;
+         double freq = when[ point ] * hiFreq;
          double db = value[ point ];
 
          // Add it to the curve
@@ -66,7 +66,7 @@ void EqualizationCurvesList::EnvelopeUpdated(const Envelope &env, bool lin)
    else
    {
       double loLog = log10( 20. );
-      double hiLog = log10( mHiFreq );
+      double hiLog = log10( hiFreq );
       double denom = hiLog - loLog;
 
       // Copy and convert points
@@ -82,18 +82,18 @@ void EqualizationCurvesList::EnvelopeUpdated(const Envelope &env, bool lin)
 
    // Update unnamed curve (so it's there for next time)
    //(done in a hurry, may not be the neatest -MJS)
-   if (!mDrawMode)
+   if (!drawMode)
    {
-      size_t numPoints = mLogEnvelope.GetNumberOfPoints();
+      size_t numPoints = logEnvelope.GetNumberOfPoints();
       Doubles when{ numPoints };
       Doubles value{ numPoints };
-      mLogEnvelope.GetPoints(when.get(), value.get(), numPoints);
+      logEnvelope.GetPoints(when.get(), value.get(), numPoints);
       for (size_t i = 0, j = 0; j + 2 < numPoints; i++, j++)
       {
          if ((value[i] < value[i + 1] + .05) && (value[i] > value[i + 1] - .05) &&
             (value[i + 1] < value[i + 2] + .05) && (value[i + 1] > value[i + 2] - .05))
          {   // within < 0.05 dB?
-            mLogEnvelope.Delete(j + 1);
+            logEnvelope.Delete(j + 1);
             numPoints--;
             j--;
          }

@@ -92,20 +92,20 @@ EffectEqualization::EffectEqualization(int Options)
    : mParameters{ GetDefinition() }
    , mOptions{ Options }
 {
-   auto &mHiFreq = mParameters.mHiFreq;
-   auto &mCurves = mCurvesList.mCurves;
+   auto &hiFreq = mParameters.mHiFreq;
+   auto &curves = mCurvesList.mCurves;
 
    Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 
    // Load the EQ curves
-   EQCurveReader{ mCurves, GetName(), mOptions }.LoadCurves();
+   EQCurveReader{ curves, GetName(), mOptions }.LoadCurves();
 
    // Note: initial curve is set in TransferDataToWindow
 
    //double loLog = log10(mLoFreq);
-   //double stepLog = (log10(mHiFreq) - loLog)/((double)NUM_PTS-1.);
+   //double stepLog = (log10(hiFreq) - loLog)/((double)NUM_PTS-1.);
 
    // We expect these Hi and Lo frequencies to be overridden by Init().
    // Don't use inputTracks().  See bug 2321.
@@ -115,13 +115,13 @@ EffectEqualization::EffectEqualization(int Options)
       ? *trackList->Any< const WaveTrack >().first
       : nullptr
    ;
-   mHiFreq =
+   hiFreq =
       (t
          ? t->GetRate()
          : mProjectRate)
       / 2.0;
 #endif
-   mHiFreq = mProjectRate / 2.0;
+   hiFreq = mProjectRate / 2.0;
 }
 
 
@@ -165,20 +165,20 @@ EffectType EffectEqualization::GetType() const
 bool EffectEqualization::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
-   const auto &mCurves = mCurvesList.mCurves;
+   const auto &curves = mCurvesList.mCurves;
    Effect::VisitSettings(visitor, settings);
 
    // Curve point parameters -- how many isn't known statically
    if( dynamic_cast<ShuttleGetAutomation*>(&visitor)) {
-      int numPoints = mCurves[ 0 ].points.size();
+      int numPoints = curves[ 0 ].points.size();
       int point;
       for( point = 0; point < numPoints; point++ )
       {
          const wxString nameFreq = wxString::Format("f%i",point);
          const wxString nameVal = wxString::Format("v%i",point);
-         visitor.Define( mCurves[ 0 ].points[ point ].Freq, nameFreq,
+         visitor.Define( curves[ 0 ].points[ point ].Freq, nameFreq,
             0.0, 0.0, 0.0, 0.0 );
-         visitor.Define( mCurves[ 0 ].points[ point ].dB, nameVal,
+         visitor.Define( curves[ 0 ].points[ point ].dB, nameVal,
             0.0, 0.0, 0.0, 0.0 );
       }
    }
@@ -188,12 +188,12 @@ bool EffectEqualization::VisitSettings(
 bool EffectEqualization::VisitSettings(
    SettingsVisitor &visitor, EffectSettings &settings)
 {
-   auto &mCurves = mCurvesList.mCurves;
+   auto &curves = mCurvesList.mCurves;
    Effect::VisitSettings(visitor, settings);
 
    // Curve point parameters -- how many isn't known statically
    {
-      mCurves[0].points.clear();
+      curves[0].points.clear();
    
       for (int i = 0; i < 200; i++)
       {
@@ -205,7 +205,7 @@ bool EffectEqualization::VisitSettings(
          visitor.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
          if( f <= 0.0 )
             break;
-         mCurves[0].points.push_back( EQPoint( f,d ));
+         curves[0].points.push_back( EQPoint( f,d ));
       }
       mUI.setCurve( 0 );
    }
@@ -313,10 +313,10 @@ bool EffectEqualization::Init()
 {
    constexpr auto loFreqI = EqualizationFilter::loFreqI;
 
-   const auto &mLin = mParameters.mLin;
-   const auto &mCurveName = mParameters.mCurveName;
-   auto &mLoFreq = mParameters.mLoFreq;
-   auto &mHiFreq = mParameters.mHiFreq;
+   const auto &lin = mParameters.mLin;
+   const auto &curveName = mParameters.mCurveName;
+   auto &loFreq = mParameters.mLoFreq;
+   auto &hiFreq = mParameters.mHiFreq;
 
    int selcount = 0;
    double rate = 0.0;
@@ -342,9 +342,9 @@ bool EffectEqualization::Init()
       // Editing macro parameters, use this default
       rate = 44100.0;
 
-   mHiFreq = rate / 2.0;
+   hiFreq = rate / 2.0;
    // Unlikely, but better than crashing.
-   if (mHiFreq <= loFreqI) {
+   if (hiFreq <= loFreqI) {
       Effect::MessageBox(
          XO("Track sample rate is too low for this effect."),
          wxOK | wxCENTRE,
@@ -352,10 +352,10 @@ bool EffectEqualization::Init()
       return(false);
    }
 
-   mLoFreq = loFreqI;
+   loFreq = loFreqI;
 
    mUI.Init();
-   mUI.setCurve(mCurveName);
+   mUI.setCurve(curveName);
 
    mParameters.CalcFilter();
 
@@ -421,14 +421,14 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
 
-   const auto &mM = mParameters.mM;
+   const auto &M = mParameters.mM;
 
    // create a NEW WaveTrack to hold all of the output, including 'tails' each end
    auto output = t->EmptyCopy();
    t->ConvertToSampleFormat( floatSample );
 
-   wxASSERT(mM - 1 < windowSize);
-   size_t L = windowSize - (mM - 1);   //Process L samples at a go
+   wxASSERT(M - 1 < windowSize);
+   size_t L = windowSize - (M - 1);   //Process L samples at a go
    auto s = start;
    auto idealBlockLen = t->GetMaxBlockSize() * 4;
    if (idealBlockLen % L != 0)
@@ -449,7 +449,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;
    size_t wcopy = 0;
-   int offset = (mM - 1) / 2;
+   int offset = (M - 1) / 2;
 
    while (len != 0)
    {
@@ -468,9 +468,9 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          mParameters.Filter(windowSize, thisWindow);
 
          // Overlap - Add
-         for(size_t j = 0; (j < mM - 1) && (j < wcopy); j++)
+         for(size_t j = 0; (j < M - 1) && (j < wcopy); j++)
             buffer[i+j] = thisWindow[j] + lastWindow[L + j];
-         for(size_t j = mM - 1; j < wcopy; j++)
+         for(size_t j = M - 1; j < wcopy; j++)
             buffer[i+j] = thisWindow[j];
 
          std::swap( thisWindow, lastWindow );
@@ -490,22 +490,22 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    if(bLoopSuccess)
    {
-      // mM-1 samples of 'tail' left in lastWindow, get them now
-      if(wcopy < (mM - 1)) {
+      // M-1 samples of 'tail' left in lastWindow, get them now
+      if(wcopy < (M - 1)) {
          // Still have some overlap left to process
          // (note that lastWindow and thisWindow have been exchanged at this point
          //  so that 'thisWindow' is really the window prior to 'lastWindow')
          size_t j = 0;
-         for(; j < mM - 1 - wcopy; j++)
+         for(; j < M - 1 - wcopy; j++)
             buffer[j] = lastWindow[wcopy + j] + thisWindow[L + wcopy + j];
          // And fill in the remainder after the overlap
-         for( ; j < mM - 1; j++)
+         for( ; j < M - 1; j++)
             buffer[j] = lastWindow[wcopy + j];
       } else {
-         for(size_t j = 0; j < mM - 1; j++)
+         for(size_t j = 0; j < M - 1; j++)
             buffer[j] = lastWindow[wcopy + j];
       }
-      output->Append((samplePtr)buffer.get(), floatSample, mM - 1);
+      output->Append((samplePtr)buffer.get(), floatSample, M - 1);
       output->Flush();
 
       // now move the appropriate bit of the output back to the track
