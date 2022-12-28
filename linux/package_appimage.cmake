@@ -16,7 +16,10 @@ configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/AppImage/AppRun.sh" "${appdir
 configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/AppImage/apprun-hooks/00-preserve-environment.sh" "${appdir}/apprun-hooks/00-preserve-environment.sh" ESCAPE_QUOTES @ONLY)
 configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/check_dependencies.sh" "${appdir}/bin/check_dependencies" ESCAPE_QUOTES @ONLY)
 configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/ldd_recursive.pl" "${appdir}/bin/ldd_recursive" COPYONLY)
-file(COPY "${CPACK_AUDACITY_FINDLIB_LOCATION}/findlib" DESTINATION "${appdir}/bin/")
+
+if( EXISTS "${CPACK_AUDACITY_FINDLIB_LOCATION}/findlib" )
+   file(COPY "${CPACK_AUDACITY_FINDLIB_LOCATION}/findlib" DESTINATION "${appdir}/bin/")
+endif()
 
 execute_process(
    COMMAND "${CPACK_AUDACITY_SOURCE_DIR}/linux/create_appimage.sh" "${appdir}" "${appimage}"
