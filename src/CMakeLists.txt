@@ -169,6 +169,8 @@ list( APPEND SOURCES
       Legacy.h
       ListNavigationEnabled.cpp
       ListNavigationEnabled.h
+      ListNavigationPanel.cpp
+      ListNavigationPanel.h
       LogWindow.cpp
       LogWindow.h
       Lyrics.cpp

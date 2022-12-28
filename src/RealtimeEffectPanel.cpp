@@ -45,6 +45,7 @@
 #include "Prefs.h"
 #include "BasicUI.h"
 #include "ListNavigationEnabled.h"
+#include "ListNavigationPanel.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -135,52 +136,6 @@ namespace
       wxEvent* Clone() const override
       {
          return new MovableControlEvent(*this);
-      }
-   };
-
-   //Alias for ListNavigationEnabled<wxWindow> which provides wxWidgets-style ctor
-   class ListNavigationPanel : public ListNavigationEnabled<wxWindow>
-   {
-   public:
-      ListNavigationPanel() = default;
-
-      ListNavigationPanel(wxWindow* parent,
-                   wxWindowID id,
-                   const wxPoint& pos = wxDefaultPosition,
-                   const wxSize& size = wxDefaultSize,
-                   const wxString& name = wxPanelNameStr)
-      {
-         Create(parent, id, pos, size, name);
-      }
-
-      void Create(wxWindow* parent,
-                   wxWindowID id,
-                   const wxPoint& pos = wxDefaultPosition,
-                   const wxSize& size = wxDefaultSize,
-                   const wxString& name = wxPanelNameStr)
-      {
-         SetBackgroundStyle(wxBG_STYLE_PAINT);
-         ListNavigationEnabled<wxWindow>::Create(parent, id, pos, size, wxNO_BORDER | wxWANTS_CHARS, name);
-         Bind(wxEVT_PAINT, &ListNavigationPanel::OnPaint, this);
-         Bind(wxEVT_SET_FOCUS, &ListNavigationPanel::OnChangeFocus, this);
-         Bind(wxEVT_KILL_FOCUS, &ListNavigationPanel::OnChangeFocus, this);
-      }
-
-      void OnChangeFocus(wxFocusEvent& evt)
-      {
-         Refresh(false);
-      }
-      
-      void OnPaint(wxPaintEvent& evt)
-      {
-         wxBufferedPaintDC dc(this);
-
-         dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(GetBackgroundColour());
-         dc.Clear();
-
-         if(HasFocus())
-            AColor::DrawFocus(dc, GetClientRect().Deflate(3, 3));
       }
    };
 
