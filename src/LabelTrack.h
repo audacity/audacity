@@ -16,8 +16,6 @@
 #include "SelectedRegion.h"
 #include "Track.h"
 
-#include <wx/event.h> // to inherit
-
 class wxTextFile;
 
 class AudacityProject;
@@ -85,7 +83,7 @@ using LabelArray = std::vector<LabelStruct>;
 
 class AUDACITY_DLL_API LabelTrack final
    : public Track
-   , public wxEvtHandler
+   , public Observer::Publisher<struct LabelTrackEvent>
 {
  public:
    static wxString GetDefaultName();
@@ -201,26 +199,14 @@ public:
 
 ENUMERATE_TRACK_TYPE(LabelTrack);
 
-struct LabelTrackEvent : public wxEvent
+struct LabelTrackEvent
 {
-   explicit
-   LabelTrackEvent(
-      wxEventType commandType, const std::shared_ptr<LabelTrack> &pTrack,
-      const wxString &title,
-      int formerPosition,
-      int presentPosition
-   )
-   : wxEvent{ 0, commandType }
-   , mpTrack{ pTrack }
-   , mTitle{ title }
-   , mFormerPosition{ formerPosition }
-   , mPresentPosition{ presentPosition }
-   {}
-
-   LabelTrackEvent( const LabelTrackEvent& ) = default;
-   wxEvent *Clone() const override {
-      // wxWidgets will own the event object
-      return safenew LabelTrackEvent(*this); }
+   enum Type {
+      Addition,
+      Deletion,
+      Permutation,
+      Selection,
+   } type;
 
    const std::weak_ptr<Track> mpTrack;
 
@@ -228,25 +214,21 @@ struct LabelTrackEvent : public wxEvent
    wxString mTitle;
 
    // invalid for addition and selection events
-   int mFormerPosition{ -1 };
+   int mFormerPosition;
 
    // invalid for deletion and selection events
-   int mPresentPosition{ -1 };
+   int mPresentPosition;
+
+   LabelTrackEvent( Type type, const std::shared_ptr<LabelTrack> &pTrack,
+      const wxString &title,
+      int formerPosition,
+      int presentPosition)
+   : type{ type }
+   , mpTrack{ pTrack }
+   , mTitle{ title }
+   , mFormerPosition{ formerPosition }
+   , mPresentPosition{ presentPosition }
+   {}
 };
 
-// Posted when a label is added.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_LABELTRACK_ADDITION, LabelTrackEvent);
-
-// Posted when a label is deleted.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_LABELTRACK_DELETION, LabelTrackEvent);
-
-// Posted when a label is repositioned in the sequence of labels.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
-
-// Posted when the track is selected or unselected.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 #endif

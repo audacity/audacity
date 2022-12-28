@@ -154,11 +154,14 @@ void BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       if (rediscoverAll ||
          !pm.IsPluginRegistered(path, &pair.second->name.Msgid())
       ){
-         if ( pair.second->excluded )
-            continue;
-         // No checking of error ?
-         DiscoverPluginsAtPath(path, ignoredErrMsg,
-            PluginManagerInterface::DefaultRegistrationCallback);
+         DiscoverPluginsAtPath(path, ignoredErrMsg, [&](PluginProvider *provider, ComponentInterface *ident)
+         {
+            const auto pluginId = PluginManagerInterface::DefaultRegistrationCallback(provider, ident);
+            if(pair.second->excluded)
+               PluginManager::Get().EnablePlugin(pluginId, false);
+            return pluginId;
+         });
+         
       }
    }
 }

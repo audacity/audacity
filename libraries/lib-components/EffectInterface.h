@@ -52,6 +52,8 @@
 #include <type_traits>
 #include <wx/event.h>
 
+#include "Observer.h"
+
 class ShuttleGui;
 template<bool Const> class SettingsVisitorBase;
 using SettingsVisitor = SettingsVisitorBase<false>;
@@ -186,6 +188,8 @@ public:
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings,
       std::unique_ptr<Message> pMessage = nullptr) = 0;
+   //! Message-only overload of Set().  In future, this should be the only one.
+   virtual void Set(std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
    /*!
@@ -221,6 +225,7 @@ public:
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings,
       std::unique_ptr<Message> pMessage) override;
+   void Set(std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -263,7 +268,10 @@ public:
    //! In which versions of Audacity was an effect realtime capable?
    enum class RealtimeSince : unsigned {
       Never,
-      Since_3_2,
+      // For built-in effects that became realtime in 3.2.x or a later version
+      // but were non-realtime in an earlier version; must also increase
+      // REGVERCUR in any release with such a change
+      After_3_1,
       Always,
    };
 
@@ -522,6 +530,14 @@ public:
    // TODO make it just an alias for Message *
    struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
 
+   //! If true, the effect makes no use EffectSettings for inter-thread
+   //! comminication
+   /*!
+    Default implementation returns false.  In future, all effects should be
+    rewritten to use messages and this function will be removed.
+    */
+   virtual bool UsesMessages() const noexcept;
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
     @return success
@@ -627,6 +643,18 @@ public:
 
 };
 
+/*************************************************************************************/ /**
+
+ \class EffectSettingChanged
+
+ \brief Message sent by validator when a setting is changed by a user
+
+ *******************************************************************************************/
+struct COMPONENTS_API EffectSettingChanged final
+{
+   size_t index { size_t(-1) };
+   float newValue {};
+};
 /*************************************************************************************//**
 
 \class EffectUIValidator
@@ -635,6 +663,7 @@ public:
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIValidator /* not final */
+    : public Observer::Publisher<EffectSettingChanged>
 {
 public:
    EffectUIValidator(

@@ -85,6 +85,8 @@ public:
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
    uint32_t suil_port_index(const char *port_symbol) override;
 
+   void UpdateControlPortValue(LV2EffectSettings& settings, size_t controlPortIndex, float value);
+
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
    void OnChoice(wxCommandEvent & evt);
@@ -132,6 +134,9 @@ public:
       ~UI() { Destroy(); }
       SuilInstancePtr mSuilInstance;
       wxWindowPtr<NativeWindow> mNativeWin{};
+#ifdef __WXMAC__
+      bool mJustLeakMemory{ false };
+#endif
    } mUI;
 
    wxSize mNativeWinInitialSize{ wxDefaultSize };

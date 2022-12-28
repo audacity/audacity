@@ -50,9 +50,9 @@ Paul Licameli split from AudacityProject.cpp
 namespace
 {
 #ifdef HAS_AUDIOCOM_UPLOAD
-   constexpr int DEFAULT_WINDOW_WIDTH = 1120;
+   constexpr int DEFAULT_WINDOW_WIDTH = 1180;
 #else
-   constexpr int DEFAULT_WINDOW_WIDTH = 1060;
+   constexpr int DEFAULT_WINDOW_WIDTH = 1120;
 #endif
    constexpr int DEFAULT_WINDOW_HEIGHT = 674;
 }
@@ -602,6 +602,9 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    : ProjectWindowBase{ parent, id, pos, size, project }
 {
    mNextWindowID = NextID;
+   
+   constexpr auto EffectsPanelMaxWidth { 500 };
+   constexpr auto TrackPanelMinWidth { 250 };
 
    // Two sub-windows need to be made before Init(),
    // so that this constructor can complete, and then TrackPanel and
@@ -632,12 +635,18 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
       //"The default behaviour is to unsplit the window"
       event.Veto();//do noting instead
    });
+   container->Bind(wxEVT_SPLITTER_SASH_POS_CHANGING, [=](wxSplitterEvent& event){
+      if(event.GetSashPosition() > EffectsPanelMaxWidth)
+         //Prevents left panel from expanding further
+         event.SetSashPosition(-1);
+   });
    mContainerWindow = container;
 
    mTrackListWindow = safenew wxPanelWrapper(mContainerWindow, wxID_ANY,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);
+   mTrackListWindow->SetMinSize({TrackPanelMinWidth, -1});
    mTrackListWindow->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
    mTrackListWindow->SetLabel("Main Panel");// Not localized.
    mTrackListWindow->SetLayoutDirection(wxLayout_LeftToRight);

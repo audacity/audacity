@@ -487,12 +487,14 @@ namespace MenuTable {
       static CommandHandlerFinder sFinder;
 
    public:
+      //! @post result: `result != nullptr`
       static CommandHandlerFinder DefaultFinder() { return sFinder; }
 
+      //! @pre `finder != nullptr`
       explicit
       FinderScope( CommandHandlerFinder finder )
          : ValueRestorer( sFinder, finder )
-      {}
+      { assert(finder); }
    };
 
    // Describes one command in a menu
@@ -506,6 +508,9 @@ namespace MenuTable {
 
       // Takes a pointer to member function directly, and delegates to the
       // previous constructor; useful within the lifetime of a FinderScope
+      /*!
+       @pre `finder != nullptr`
+       */
       template< typename Handler >
       CommandItem(const CommandID &name_,
                const TranslatableString &label_in_,
@@ -514,10 +519,23 @@ namespace MenuTable {
                const CommandManager::Options &options_,
                CommandHandlerFinder finder = FinderScope::DefaultFinder())
          : CommandItem(name_, label_in_,
-            static_cast<CommandFunctorPointer>(pmf),
+            CommandFunctorPointer{
+               static_cast<CommandFunctorPointer::MemberFn>(pmf) },
             flags_, options_, finder)
-      {}
+      { assert(finder); }
 
+      // Takes a pointer to nonmember function and delegates to the first
+      // constructor
+      CommandItem(const CommandID &name_,
+               const TranslatableString &label_in_,
+               CommandFunctorPointer::NonMemberFn callback_,
+               CommandFlag flags_,
+               const CommandManager::Options &options_)
+         : CommandItem(name_, label_in_,
+            CommandFunctorPointer{ callback_ },
+            flags_, options_, nullptr)
+      {}
+   
       ~CommandItem() override;
 
       const TranslatableString label_in;
@@ -540,6 +558,9 @@ namespace MenuTable {
 
       // Takes a pointer to member function directly, and delegates to the
       // previous constructor; useful within the lifetime of a FinderScope
+      /*!
+       @pre `finder != nullptr`
+       */
       template< typename Handler >
       CommandGroupItem(const Identifier &name_,
                std::vector< ComponentInterfaceSymbol > items_,
@@ -547,9 +568,22 @@ namespace MenuTable {
                CommandFlag flags_,
                bool isEffect_,
                CommandHandlerFinder finder = FinderScope::DefaultFinder())
-         : CommandGroupItem(name_, std::move(items_),
-            static_cast<CommandFunctorPointer>(pmf),
+         : CommandGroupItem(name_, move(items_),
+            CommandFunctorPointer{
+               static_cast<CommandFunctorPointer::MemberFn>(pmf) },
             flags_, isEffect_, finder)
+      { assert(finder); }
+
+      // Takes a pointer to nonmember function and delegates to the first
+      // constructor
+      CommandGroupItem(const CommandID &name_,
+               std::vector< ComponentInterfaceSymbol > items_,
+               CommandFunctorPointer::NonMemberFn fn_,
+               CommandFlag flags_,
+               bool isEffect_)
+         : CommandGroupItem(name_, move(items_),
+            CommandFunctorPointer{ fn_ },
+            flags_, isEffect_, nullptr)
       {}
 
       ~CommandGroupItem() override;
@@ -672,6 +706,9 @@ namespace MenuTable {
                return std::make_unique<MenuItem>(
                   internalName, title, std::move( items ) ); }
 
+   /*!
+    @pre `finder != nullptr`
+    */
    template< typename Handler >
    inline std::unique_ptr<CommandItem> Command(
       const CommandID &name,
@@ -680,11 +717,26 @@ namespace MenuTable {
       CommandFlag flags, const CommandManager::Options &options = {},
       CommandHandlerFinder finder = FinderScope::DefaultFinder())
    {
+      assert(finder);
       return std::make_unique<CommandItem>(
          name, label_in, pmf, flags, options, finder
       );
    }
 
+   inline std::unique_ptr<CommandItem> Command(
+      const CommandID &name,
+      const TranslatableString &label_in,
+      void (*fn)(const CommandContext&),
+      CommandFlag flags, const CommandManager::Options &options = {})
+   {
+      return std::make_unique<CommandItem>(
+         name, label_in, fn, flags, options
+      );
+   }
+
+   /*!
+    @pre `finder != nullptr`
+    */
    template< typename Handler >
    inline std::unique_ptr<CommandGroupItem> CommandGroup(
       const Identifier &name,
@@ -693,8 +745,20 @@ namespace MenuTable {
       CommandFlag flags, bool isEffect = false,
       CommandHandlerFinder finder = FinderScope::DefaultFinder())
    {
+      assert(finder);
       return std::make_unique<CommandGroupItem>(
-         name, std::move(items), pmf, flags, isEffect, finder
+         name, move(items), pmf, flags, isEffect, finder
+      );
+   }
+
+   inline std::unique_ptr<CommandGroupItem> CommandGroup(
+      const Identifier &name,
+      std::vector< ComponentInterfaceSymbol > items,
+      void (*fn)(const CommandContext&),
+      CommandFlag flags, bool isEffect = false)
+   {
+      return std::make_unique<CommandGroupItem>(
+         name, move(items), fn, flags, isEffect
       );
    }
 

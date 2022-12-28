@@ -171,6 +171,10 @@ if( ${_OPT}conan_enabled )
       set( _libdir "--lib-dir" ${_PKGLIB} )
    endif()
 
+   if( MIN_MACOS_VERSION )
+      set( _min_macos_version "--min-os-version" ${MIN_MACOS_VERSION} )
+   endif()
+
    execute_process(
       COMMAND ${PYTHON} "${CMAKE_SOURCE_DIR}/conan/conan_runner.py"
          --build-dir ${CMAKE_BINARY_DIR}
@@ -182,6 +186,7 @@ if( ${_OPT}conan_enabled )
          ${_libdir}
          ${_force_build}
          ${_download_cache}
+         ${_min_macos_version}
          -o ${conan_package_options}
 
       RESULT_VARIABLE conan_result
@@ -195,10 +200,18 @@ if( ${_OPT}conan_enabled )
    set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 endif()
 
+if( ${_OPT}conan_enabled )
+   set( _file_name "${CMAKE_BINARY_DIR}/generators/pre-find-package.cmake" )
+
+   if( EXISTS "${_file_name}" )
+      message(STATUS "Including ${_file_name}")
+      include( ${_file_name} )
+   endif()
+endif()
 # Resolve the dependencies
 include(${find_package_file})
 
-# Mokey-patch some targets to make the names consistent
+# Monkey-patch some targets to make the names consistent
 file(GLOB dependency_helpers "${AUDACITY_MODULE_PATH}/dependencies/*.cmake")
 
 foreach(f ${dependency_helpers})
@@ -206,9 +219,9 @@ foreach(f ${dependency_helpers})
 endforeach()
 
 if( ${_OPT}conan_enabled )
-   file(GLOB conan_helpers "${CMAKE_BINARY_DIR}/generators/modules/*.cmake")
-
-   foreach(f ${conan_helpers})
-      include(${f})
-   endforeach()
+   set( _file_name "${CMAKE_BINARY_DIR}/generators/post-find-package.cmake" )
+   if( EXISTS "${_file_name}" )
+      message(STATUS "Including ${_file_name}")
+      include( ${_file_name} )
+   endif()
 endif()

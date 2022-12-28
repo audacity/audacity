@@ -54,6 +54,12 @@ VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectB
          *mWrapper.mComponentHandler
       );
    }
+
+   mWrapper.ParamChangedHandler =
+      [this](Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue value) {
+         Publish({ static_cast<size_t>(id), static_cast<float>(value) });
+      };
+   
    mWrapper.BeginParameterEdit(mAccess);
 
    Bind(wxEVT_IDLE, &VST3UIValidator::OnIdle, this);
@@ -61,7 +67,10 @@ VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectB
    mParent->PushEventHandler(this);
 }
 
-VST3UIValidator::~VST3UIValidator() = default;
+VST3UIValidator::~VST3UIValidator()
+{
+   mWrapper.ParamChangedHandler = {};
+}
 
 void VST3UIValidator::OnIdle(wxIdleEvent& evt)
 {
@@ -70,7 +79,10 @@ void VST3UIValidator::OnIdle(wxIdleEvent& evt)
    {
       mAccess.ModifySettings([this](EffectSettings& settings)
       {
-         mWrapper.FlushParameters(settings);
+         bool hasChanges{false};
+         mWrapper.FlushParameters(settings, &hasChanges);
+         if(hasChanges)
+            mWrapper.StoreSettings(settings);
          return nullptr;
       });
    }
@@ -162,6 +174,8 @@ void VST3UIValidator::OnClose()
    });
    //Make sure that new state has been written to the caches...
    mAccess.Flush();
+
+   mWrapper.ParamChangedHandler = {};
 
    EffectUIValidator::OnClose();
 }

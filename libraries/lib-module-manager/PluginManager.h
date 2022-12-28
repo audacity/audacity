@@ -110,6 +110,8 @@ public:
    // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString(PluginType type);
 
+   static bool IsPluginAvailable(const PluginDescriptor& plug);
+
    int GetPluginCount(PluginType type);
    const PluginDescriptor *GetPlugin(const PluginID & ID) const;
 
@@ -236,6 +238,6 @@ private:
 #define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
 // Latest version of the plugin registry config
-constexpr auto REGVERCUR = "1.2";
+constexpr auto REGVERCUR = "1.3";
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */

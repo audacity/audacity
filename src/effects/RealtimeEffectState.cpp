@@ -55,10 +55,14 @@ public:
    }
    void MainWrite(SettingsAndCounter &&settings,
       std::unique_ptr<EffectInstance::Message> pMessage) {
-
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(FromMainSlot::Message{
          std::move(settings.settings), settings.counter, std::move(pMessage) });
+   }
+   void MainWrite(SettingsAndCounter::Counter counter,
+      std::unique_ptr<EffectInstance::Message> pMessage) {
+      mChannelFromMain.Write(FromMainSlot::ShortMessage{
+         counter, std::move(pMessage) });
    }
 
    struct CounterAndOutputs{
@@ -117,6 +121,10 @@ public:
       struct Message : SettingsAndCounter {
          std::unique_ptr<EffectInstance::Message> pMessage;
       };
+      struct ShortMessage {
+         SettingsAndCounter::Counter counter;
+         std::unique_ptr<EffectInstance::Message> pMessage;
+      };
 
       // For initialization of the channel
       FromMainSlot() = default;
@@ -130,6 +138,15 @@ public:
       // Main thread writes the slot
       FromMainSlot& operator=(Message &&message) {
          mMessage.SettingsAndCounter::swap(message);
+         if (message.pMessage && mMessage.pMessage)
+            // Merge the incoming message with any still unconsumed message
+            mMessage.pMessage->Merge(std::move(*message.pMessage));
+         return *this;
+      }
+
+      // Main thread writes the slot
+      FromMainSlot& operator=(ShortMessage &&message) {
+         mMessage.counter = message.counter;
          if (message.pMessage && mMessage.pMessage)
             // Merge the incoming message with any still unconsumed message
             mMessage.pMessage->Merge(std::move(*message.pMessage));
@@ -217,6 +234,8 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
                      stateSettings, pMessage.get()
                   };
                   pInstance->RealtimeProcessStart(package);
+                  pInstance->RealtimeProcessEnd(stateSettings);
+                  pAccessState->mLastSettings.settings = stateSettings;
                   return;
                }
             }
@@ -227,6 +246,32 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             // move a copy to there
             pAccessState->MainWrite(
                SettingsAndCounter{ lastSettings }, std::move(pMessage));
+         }
+      }
+   }
+   void Set(std::unique_ptr<Message> pMessage)
+   override {
+      if (auto pState = mwState.lock()) {
+         if (auto pAccessState = pState->GetAccessState()) {
+            if (pMessage && !pAccessState->mState.mInitialized) {
+               // Other thread isn't processing.
+               // Let the instance consume the message directly.
+               if (auto pInstance = pState->mwInstance.lock()) {
+                  auto &stateSettings = pState->mMainSettings.settings;
+                  EffectInstance::MessagePackage package{
+                     stateSettings, pMessage.get()
+                  };
+                  pInstance->RealtimeProcessStart(package);
+                  pInstance->RealtimeProcessEnd(stateSettings);
+                  // Don't need to update pAccessState->mLastSettings
+                  return;
+               }
+            }
+            auto &lastSettings = pAccessState->mLastSettings;
+            // Don't update settings, but do count
+            ++lastSettings.counter;
+            pAccessState->MainWrite(
+               lastSettings.counter, std::move(pMessage));
          }
       }
    }
@@ -563,9 +608,10 @@ size_t RealtimeEffectState::Process(Track &track, unsigned chans,
 bool RealtimeEffectState::ProcessEnd()
 {
    auto pInstance = mwInstance.lock();
-   bool result = pInstance && IsActive() && mLastActive &&
+   bool result = pInstance &&
       // Assuming we are in a processing scope, use the worker settings
-      pInstance->RealtimeProcessEnd(mWorkerSettings.settings);
+      pInstance->RealtimeProcessEnd(mWorkerSettings.settings) &&
+      IsActive() && mLastActive;
 
    if (auto pAccessState = TestAccessState())
       // Always done, regardless of activity
@@ -604,15 +650,17 @@ void RealtimeEffectState::SetActive(bool active)
 
 bool RealtimeEffectState::Finalize() noexcept
 {
-   // This is the main thread cleaning up a state not now used in processing
-   mMainSettings = mWorkerSettings;
-
    mGroups.clear();
    mCurrentProcessor = 0;
 
    auto pInstance = mwInstance.lock();
    if (!pInstance)
       return false;
+
+   if (!pInstance->UsesMessages()) {
+      // This is the main thread cleaning up a state not now used in processing
+      mMainSettings = mWorkerSettings;
+   }
 
    auto result = pInstance->RealtimeFinalize(mMainSettings.settings);
    mLatency = {};

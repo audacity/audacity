@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
@@ -650,6 +650,14 @@ msgstr "Menyempel Ulang Trek"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2204,7 +2212,7 @@ msgstr "Pilih"
 msgid "&Recover Selected"
 msgstr "Pilih"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -3079,7 +3087,7 @@ msgid "Only avformat.dll"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
+msgid "Only libavformat.dylib"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -4133,6 +4141,11 @@ msgid ""
 msgstr ""
 "Encoder FLAC gagal menginisialisasi\n"
 "Status: %d"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Waktu Berjalan:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5237,23 +5250,16 @@ msgstr "Alat"
 msgid "Transport"
 msgstr "T&ransportasi"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Mixer"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Meter"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Pengukur Permainan"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6199,6 +6205,25 @@ msgid "&Ok"
 msgstr "&OK"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Anda tidak akan bisa memainkan ataupun merekam audio.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Ekspor Banyak"
@@ -6278,19 +6303,11 @@ msgid "Preparing audio..."
 msgstr "Membuat cache audio"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Waktu Berjalan:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Waktu Tersisa:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16644,10 +16661,6 @@ msgid "&Language:"
 msgstr "Ba&hasa:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "Lokasi &Manual:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr ""
 
@@ -18387,6 +18400,29 @@ msgstr "Toolbar &Edit"
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
+msgid " Monitoring "
+msgstr "Hentikan Pemantauan"
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy, c-format
+msgid " Peak %2.f dB"
+msgstr "%.1f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
 msgid "Combined Meter"
 msgstr "Pengukur Rekaman"
 
@@ -18401,6 +18437,12 @@ msgid "Playback Meter"
 msgstr "Pengukur Permainan"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "Selesai merekam"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -18408,21 +18450,17 @@ msgid "Meter-Record"
 msgstr "Meter Rekaman"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
-#. apparently is helpful to partially sighted people.
-#: src/toolbars/MeterToolBar.cpp
-msgid "Meter-Play"
-msgstr "Meter Memainkan"
-
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Playback Level"
 msgstr "Memainkan Berdasarkan Kecepatan"
 
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#. This is the name used in screen reader software, where having 'Meter' first
+#. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "Selesai merekam"
+msgid "Meter-Play"
+msgstr "Meter Memainkan"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19825,6 +19863,17 @@ msgstr "Tekan"
 msgid "Button"
 msgstr "Tombol"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Kompresor"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Kompresor"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19992,29 +20041,6 @@ msgstr "Stereo Horizontal"
 #, fuzzy
 msgid "Vertical"
 msgstr "Penunjuk Vertikal"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid " Monitoring "
-msgstr "Hentikan Pemantauan"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy, c-format
-msgid " Peak %2.f dB"
-msgstr "%.1f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -22364,6 +22390,12 @@ msgstr "Pembuangan Trek"
 msgid "Spectral Tools"
 msgstr "Spektrum"
 
+#~ msgid "Mixer"
+#~ msgstr "Mixer"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "Lokasi &Manual:"
+
 #, fuzzy, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "Audacity adalah program bebas dan gratis yang dicanangkan oleh para<a href=\"http://audacity.sourceforge.net/community/developers\">pengembang</a> di seluruh dunia. Kami berterima kasih kepada <a href=\"http://sourceforge.net\">Sourceforge.net</a> dan <a href=\"http://code.google.com\">Google Code</a> untuk penempatan proyek kami. Audacity tersedia untuk Windows 98 atau yang lebih baru, Mac OS X, Linux, atau sistem operasi lainnya yang mirip dengan sistem operasi Unix. Untuk Mac OS 9, gunakan versi 1.0.0."
@@ -22922,10 +22954,6 @@ msgstr "Spektrum"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Mengimpor selesai. Menjalankan perhitungan waveform di tempat. %2.0f%% selesai."
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "Kompresor"
 
 #, fuzzy
 #~ msgid ""

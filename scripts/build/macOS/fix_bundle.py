@@ -40,12 +40,15 @@ def macos_collect_dependencies(file):
         lines = [line.decode('utf-8').strip() for line in p.stdout.readlines()]
         for line in lines:
             match = re.match(r'(.*)\s+\(', line)
-            if match:
-                lib_line = match.group(1)
-                if not lib_line.startswith('@loader_path') and not is_system_lib(lib_line):
-                    name = lib_line.split('/')[-1]
-                    if name != dylib_id:
-                        result.append((name, lib_line))
+
+            if not match:
+                continue
+
+            lib_line = match.group(1)
+            if not lib_line.startswith('@loader_path') and not is_system_lib(lib_line):
+                name = lib_line.split('/')[-1]
+                if name != dylib_id:
+                    result.append((name, lib_line))
 
     return result
 
@@ -75,15 +78,15 @@ def run_install_name_tool(file, dep_path_prefix):
         subprocess.check_call(install_name_tool)
     except subprocess.CalledProcessError as err:
         print(f'=========\ninstall_name_tool failed with code {err.returncode}\n\tstdout: {err.stdout}\n\tstderr: {err.stderr}\n=========')
-        if err.returncode == -9:
-            print("install_name_tool was killed. Retrying with x86_64 architecture...")
-            install_name_tool = ["arch", "-arch", "x86_64"] + install_name_tool
-            try:
-                subprocess.run(install_name_tool, capture_output=True, check=True, text=True)
-            except subprocess.CalledProcessError as inner_err:
-                print(f'=========\ninstall_name_tool failed with code {inner_err.returncode}\n\tstdout: {inner_err.stdout}\n\tstderr: {inner_err.stderr}\n=========')
-                raise
-        else:
+        if err.returncode != -9:
+            raise
+
+        print("install_name_tool was killed. Retrying with x86_64 architecture...")
+        install_name_tool = ["arch", "-arch", "x86_64"] + install_name_tool
+        try:
+            subprocess.run(install_name_tool, capture_output=True, check=True, text=True)
+        except subprocess.CalledProcessError as inner_err:
+            print(f'=========\ninstall_name_tool failed with code {inner_err.returncode}\n\tstdout: {inner_err.stdout}\n\tstderr: {inner_err.stderr}\n=========')
             raise
 
 

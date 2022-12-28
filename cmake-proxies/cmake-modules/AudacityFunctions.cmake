@@ -386,7 +386,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
       if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
          set_target_property_all(${TARGET} INSTALL_RPATH "$ORIGIN:$ORIGIN/..")
-         install(TARGETS ${TARGET} DESTINATION ${_MODDIR} OPTIONAL )
+         install( TARGETS ${TARGET} OPTIONAL DESTINATION ${_MODDIR} )
       endif()
 
       fix_bundle( ${TARGET} )
@@ -447,11 +447,18 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
    target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
 
-   if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" AND NOT CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo" )
+   if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      # Generate-time boolean values must be "0" or "1",
+      # not "on", "off", etc. like configure-time booleans
+      if (CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
+         set(nostrip 1)
+      else()
+         set(nostrip 0)
+      endif()
       add_custom_command(
          TARGET "${TARGET}"
          POST_BUILD
-         COMMAND strip -x $<TARGET_FILE:${TARGET}>
+         COMMAND "$<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>,${nostrip}>,echo,strip>" -x $<TARGET_FILE:${TARGET}>
       )
    endif()
 
@@ -685,6 +692,33 @@ function( addlib dir name symbol required check )
          endif()
       endforeach()
    endif()
+endfunction()
+
+# Copy named properties from one target to another
+function(copy_target_properties
+  src  # target
+  dest # target
+  # prop1 prop2...
+)
+   foreach(property ${ARGN})
+      get_target_property(value ${src} ${property})
+      if(value)
+         set_target_properties(${dest} PROPERTIES ${property} "${value}")
+      endif()
+   endforeach()
+endfunction()
+
+function(make_interface_library
+   new  # name for new target
+   old   # existing library target
+)
+   add_library(${new} INTERFACE)
+   copy_target_properties(${old} ${new}
+      INTERFACE_COMPILE_DEFINITIONS
+      INTERFACE_COMPILE_OPTIONS
+      INTERFACE_INCLUDE_DIRECTORIES
+      INTERFACE_LINK_DIRECTORIES
+      INTERFACE_LINK_LIBRARIES)
 endfunction()
 
 function(fix_bundle target_name)

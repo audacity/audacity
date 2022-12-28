@@ -6,6 +6,7 @@ import re
 import sys
 import hashlib
 from contextlib import contextmanager
+import configparser
 
 required_conan_version = (1, 52, 0)
 
@@ -73,6 +74,7 @@ def init_args():
     parser.add_argument('--download-cache', help='Conan download cache', default=None)
     parser.add_argument('--build-types', help='Build types', default=['Release'], nargs="*")
     parser.add_argument('--lib-dir', help='Directory to copy the shared libraries to', default=None)
+    parser.add_argument('--min-os-version', help='Minimum OS version', default=None)
 
     return parser.parse_args()
 
@@ -211,47 +213,60 @@ def get_conan_arch(arch: str):
     else:
         return lower_arch
 
-def generate_profile(args, host_profile: bool, build_type: str):
-    os.environ['CONAN_REVISIONS_ENABLED']='1'
 
-    profile = f'''[settings]
-os={get_profile_os(args)}
-arch={get_conan_arch(args.target_arch if host_profile else args.build_arch)}
-compiler={get_conan_compiler(args)}
-compiler.version={get_conan_compiler_version(args)}
-cppstd=17
-build_type={build_type}
-'''
+def generate_profile(args, host_profile: bool, build_type: str):
+    profile = configparser.ConfigParser(allow_no_value=True, delimiters='=')
+    profile.optionxform = str
+
+    profile['settings'] = {
+        'os': get_profile_os(args),
+        'arch': get_conan_arch(args.target_arch if host_profile else args.build_arch),
+        'compiler': get_conan_compiler(args),
+        'compiler.version': get_conan_compiler_version(args),
+        'cppstd': '17',
+        '&:build_type': build_type,
+        'build_type': 'Debug' if build_type == 'Debug' else 'RelWithDebInfo'
+    }
+
+    profile['options'] = {}
+    profile['env'] = {}
+    profile['conf'] = {}
+    profile['tool_requires'] = {}
 
     if args.compiler == 'MSVC':
-        profile += f'compiler.runtime={"MDd" if build_type == "Debug" else "MD"}\n'
+        profile['settings']['compiler.runtime'] = "MDd" if build_type == "Debug" else "MD"
     elif args.compiler == 'GNU':
-        profile += f'compiler.libcxx=libstdc++11\n'
+        profile['settings']['compiler.libcxx'] = 'libstdc++11'
     elif args.compiler == 'Clang' or args.compiler == 'AppleClang':
-        profile += f'compiler.libcxx=libc++\n'
+        profile['settings']['compiler.libcxx'] = 'libc++'
+
+    if args.min_os_version is not None:
+        profile['settings']['os.version'] = args.min_os_version
 
     if host_profile:
-        profile_overrides_path = os.path.join(get_root_dir(), f'package_settings_{build_type.lower()}.txt')
-        if os.path.isfile(profile_overrides_path):
-            with open(profile_overrides_path, 'r') as f:
-                profile += f.read()
-        if len(args.options) > 0 or args.lib_dir is not None:
-            profile += '[options]\n'
-            for option in args.options:
-                profile += '&:' + option + '\n'
-            if args.lib_dir is not None:
-                profile += '&:lib_dir=' + args.lib_dir + '\n'
+        profile_overrides_path = os.path.join(get_root_dir(), f'profile_overrides_{build_type.lower()}.txt')
 
-        if sys.platform == 'darwin' and args.target_arch != args.build_arch:
-            profile += f'[env]\nCONAN_CMAKE_SYSTEM_NAME=Darwin\nCONAN_CMAKE_SYSTEM_PROCESSOR={"x86_64" if args.target_arch == "x86_64" else "arm64"}\n'
+        if os.path.isfile(profile_overrides_path):
+            profile.read(profile_overrides_path)
+        for option in args.options:
+            option_name, option_value = option.split('=', 1)
+            profile['options'][f'&:{option_name}'] = option_value
+        if args.lib_dir is not None:
+            profile['options']['&:lib_dir'] = args.lib_dir
+        if args.target_arch != args.build_arch:
+            if sys.platform == 'darwin':
+                profile['env']['CONAN_CMAKE_SYSTEM_NAME'] ='Darwin'
+                profile['env']['CONAN_CMAKE_SYSTEM_PROCESSOR'] = "x86_64" if args.target_arch == "x86_64" else "arm64"
+                profile['conf']['tools.apple:sdk_path'] = subprocess.check_output(['xcrun', '--sdk', 'macosx', '--show-sdk-path']).decode('utf-8').strip()
+
+
+    if args.download_cache:
+        profile['conf']['tools.files.download:download_cache']= args.download_cache
 
     profile_name = f'profile-host-{build_type.lower()}.profile' if host_profile else f'profile-build.profile'
 
-    if args.download_cache:
-        profile += f'[conf]\ntools.files.download:download_cache={args.download_cache}\n'
-
     with open(os.path.join(args.build_dir, profile_name), 'w') as f:
-        f.write(profile)
+        profile.write(f)
 
     return os.path.join(args.build_dir, profile_name)
 
@@ -281,18 +296,16 @@ def update_global_config(args):
             subprocess.check_call([get_conan(), 'config', 'rm', 'storage.download_cache'])
 
 
-def sorted_build_types(build_types):
-    return sorted(build_types, key=lambda x: 0 if x == 'RelWithDebInfo' else 1)
-
-
 if __name__ == '__main__':
     args = init_args()
 
     args_file_path = os.path.join(args.build_dir, 'conan_args.txt')
     args_string = generate_args_string(args)
 
+    os.environ['CONAN_REVISIONS_ENABLED']='1'
+
     build_profile = generate_profile(args, False, 'Release')
-    host_profiles = [(build_type, generate_profile(args, True, build_type)) for build_type in sorted_build_types(args.build_types)]
+    host_profiles = [(build_type, generate_profile(args, True, build_type)) for build_type in args.build_types]
 
     if os.path.isfile(args_file_path):
         with open(args_file_path, 'r') as args_file:

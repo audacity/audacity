@@ -50,7 +50,8 @@ std::string_view DeduceMimeType(const wxString& ext)
       return "audio/x-wav";
 }
 
-std::string GetUploadRequestPayload(const wxString& filePath, const wxString& projectName)
+std::string GetUploadRequestPayload(
+   const wxString& filePath, const wxString& projectName, bool isPublic)
 {
    rapidjson::Document document;
    document.SetObject();
@@ -88,6 +89,9 @@ std::string GetUploadRequestPayload(const wxString& filePath, const wxString& pr
       rapidjson::Value(static_cast<int64_t>(fileName.GetSize().GetValue())),
       document.GetAllocator());
 
+   document.AddMember(
+      "public", rapidjson::Value(isPublic), document.GetAllocator());
+
    rapidjson::StringBuffer buffer;
    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
    document.Accept(writer);
@@ -121,12 +125,13 @@ struct AudiocomUploadOperation final :
 {
    AudiocomUploadOperation(
       const ServiceConfig& serviceConfig, wxString fileName,
-      wxString projectName,
+      wxString projectName, bool isPublic,
       UploadService::CompletedCallback completedCallback,
       UploadService::ProgressCallback progressCallback)
        : mServiceConfig(serviceConfig)
        , mFileName(std::move(fileName))
        , mProjectName(std::move(projectName))
+       , mIsPublic(isPublic)
        , mCompletedCallback(std::move(completedCallback))
        , mProgressCallback(std::move(progressCallback))
    {
@@ -136,6 +141,8 @@ struct AudiocomUploadOperation final :
    
    const wxString mFileName;
    const wxString mProjectName;
+
+   const bool mIsPublic;
 
    UploadService::CompletedCallback mCompletedCallback;
    UploadService::ProgressCallback mProgressCallback;
@@ -226,7 +233,7 @@ struct AudiocomUploadOperation final :
       mAuthToken = std::string(authToken);
       SetAuthHeader(request);
 
-      const auto payload = GetUploadRequestPayload(mFileName, mProjectName);
+      const auto payload = GetUploadRequestPayload(mFileName, mProjectName, mIsPublic);
 
       std::lock_guard<std::mutex> lock(mStatusMutex);
 
@@ -500,7 +507,7 @@ UploadService::UploadService(const ServiceConfig& config, OAuthService& service)
 }
 
 UploadOperationHandle UploadService::Upload(
-   const wxString& fileName, const wxString& projectName,
+   const wxString& fileName, const wxString& projectName, bool isPublic,
    CompletedCallback completedCallback, ProgressCallback progressCallback)
 {
    if (!wxFileExists(fileName))
@@ -513,8 +520,8 @@ UploadOperationHandle UploadService::Upload(
    }
 
    auto operation = std::make_shared<AudiocomUploadOperation>(
-      mServiceConfig, fileName, projectName, std::move(completedCallback),
-      std::move(progressCallback));
+      mServiceConfig, fileName, projectName, isPublic,
+      std::move(completedCallback), std::move(progressCallback));
 
    mOAuthService.ValidateAuth([operation](std::string_view authToken)
                               { operation->InitiateUpload(authToken); });

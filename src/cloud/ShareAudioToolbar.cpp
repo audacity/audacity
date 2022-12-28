@@ -13,6 +13,8 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
+#include <algorithm>
+
 #if wxUSE_TOOLTIPS
 #include <wx/tooltip.h>
 #endif
@@ -122,7 +124,7 @@ void ShareAudioToolbar::EnableDisableButtons()
       gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
 
    bool hasAudio = false;
-   
+
    for (const auto& track : TrackList::Get(mProject).Leaders<PlayableTrack>())
    {
       if (track->GetStartTime() != track->GetEndTime())
@@ -155,7 +157,6 @@ void ShareAudioToolbar::MakeShareAudioButton()
    //i18n-hint: Share audio button text, keep as short as possible
    mShareAudioButton->SetLabel(XO("Share Audio"));
    mShareAudioButton->SetButtonType(AButton::FrameButton);
-   mShareAudioButton->SetButtonToggles(true);
    mShareAudioButton->SetImages(
       theTheme.Image(bmpRecoloredUpSmall),
       theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -191,9 +192,8 @@ void ShareAudioToolbar::ArrangeButtons()
    Layout();
 
    const auto height = 2 * toolbarSingle;
-   const wxSize size(GetSizer()->GetMinSize().GetWidth(), height);
-   SetMinSize(size);
-   SetMaxSize(size);
+   SetMinSize({ std::max(76, GetSizer()->GetMinSize().GetWidth()), height });
+   SetMaxSize({ -1, height });
 }
 
 void ShareAudioToolbar::DestroySizer()

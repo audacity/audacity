@@ -7,7 +7,6 @@
 **********************************************************************/
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
-#include <wx/window.h>
 
 const RegistryPath &EffectSettingsExtra::DurationKey()
 {
@@ -32,6 +31,10 @@ void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
    std::unique_ptr<Message>)
 {
    mSettings = std::move(settings);
+}
+
+void SimpleEffectSettingsAccess::Set(std::unique_ptr<Message>)
+{
 }
 
 void SimpleEffectSettingsAccess::Flush()
@@ -157,6 +160,11 @@ bool EffectInstance::RealtimeResume()
 auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
 {
    return nullptr;
+}
+
+bool EffectInstance::UsesMessages() const noexcept
+{
+   return false;
 }
 
 bool EffectInstance::RealtimeProcessStart(MessagePackage &)

@@ -243,29 +243,6 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>")
 #endif
 
-// DA: Support methods text.
-#ifdef EXPERIMENTAL_DA
-         // Deliberately not translated.
-         << wxT("<center><h3>DarkAudacity ")
-         << AUDACITY_VERSION_STRING
-         << wxT("</h3></center>")
-         << wxT("<br><br>DarkAudacity is based on Audacity:")
-         << wxT("<ul><li>")
-         << wxT(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.")
-         << wxT("</li><li>")
-         << wxT(
-" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.")
-         << wxT("</li><li>")
-         << wxT(
-" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.")
-         << wxT("</li></ul>")
-         << wxT("<br><br>Audacity has these support methods:")
-         << wxT("<ul><li>")
-         << wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation")
-         << wxT("</li><li>")
-         << wxT(" [[https://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.")
-         << wxT("</li></ul>")
-#else
          << wxT("<center><h3>")
 #ifndef HAS_WHATS_NEW
          << wxT("Audacity ") << AUDACITY_VERSION_STRING
@@ -281,26 +258,20 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << XO("These are our support methods:")
          << wxT("<p><ul><li>")
          /* i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.*/
-         << XO("[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]")
+         << XO("[[help:Quick_Help|Quick Help]]")
          << wxT("</li><li>")
          << XO(
 /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
-" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]")
+" [[help:Main_Page|Manual]]")
+         << wxT("</li><li>")
+         << XO("[[https://support.audacityteam.org/|Tutorials & How-tos]]")
          << wxT("</li><li>")
          << XO(
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
-         << wxT("</li></ul></p><p>")
-         << wxT("<b>")
-         << XO("More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.")
-         << wxT("</p>")
-#endif
+         << wxT("</li></ul></p>")
    ;
 
       auto result = o.GetString();
-#ifdef USE_ALPHA_MANUAL
-      result.Replace( "//manual.audacityteam.org/quick_help.html","//alphamanual.audacityteam.org/man/Quick_Help" );
-      result.Replace( "//manual.audacityteam.org/","//alphamanual.audacityteam.org/man/" );
-#endif
 
       return WrapText( result );
    }

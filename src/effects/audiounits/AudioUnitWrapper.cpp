@@ -14,6 +14,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitWrapper.h"
+#include "ConfigInterface.h"
 #include "EffectInterface.h"
 #include "Internat.h"
 #include "ModuleManager.h"
@@ -145,36 +146,47 @@ AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
    return {};
 }
 
-bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
+bool AudioUnitWrapper::FetchSettings(
+   AudioUnitEffectSettings &settings, bool fetchValues, bool fetchPreset) const
 {
-   settings.pSource = this;
+   settings.mPresetNumber = {};
+   if (fetchPreset) {
+      AUPreset preset{};
+      if (!GetFixedSizeProperty(kAudioUnitProperty_PresentPreset, preset))
+         // Only want factory preset number, not a user preset (<0)
+         if (preset.presetNumber >= 0)
+            settings.mPresetNumber = { preset.presetNumber };
+   }
 
    // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
    ForEachParameter(
-   [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID) {
+   [this, &settings, fetchValues]
+   (const ParameterInfo &pi, AudioUnitParameterID ID) {
       // Always make a slot, even for parameter IDs that are known but
       // not gettable from the instance now.  Example:  AUGraphicEQ when
       // you choose 10 bands; the values for bands 10 ... 30 are undefined
       // but the parameter IDs are known
       auto &slot = settings.values[ID];
       slot.reset();
-      AudioUnitParameterValue value;
-      if (!pi.mName ||
-         AudioUnitGetParameter(
-            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
-            // Probably failed because of invalid parameter which can happen
-            // if a plug-in is in a certain mode that doesn't contain the
-            // parameter.  In any case, just ignore it.
-         }
-      else
-         slot.emplace(settings.Intern(*pi.mName), value);
+      if (fetchValues) {
+         AudioUnitParameterValue value;
+         if (!pi.mName ||
+            AudioUnitGetParameter(
+               mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
+               // Probably failed because of invalid parameter which can happen
+               // if a plug-in is in a certain mode that doesn't contain the
+               // parameter.  In any case, just ignore it.
+            }
+         else
+            slot.emplace(settings.Intern(*pi.mName), value);
+      }
       return true;
    });
    return true;
 }
 
-bool AudioUnitWrapper::StoreSettings(
+bool AudioUnitWrapper::StoreSettings(const EffectDefinitionInterface &effect,
    const AudioUnitEffectSettings &settings) const
 {
    // This is a const member function inherited by AudioUnitEffect, though it
@@ -184,6 +196,14 @@ bool AudioUnitWrapper::StoreSettings(
    // reinterprets.
    // So consider mUnit a mutable scratch pad object.  This doesn't really make
    // the AudioUnitEffect stateful.
+
+   // First restore factory preset if it applies
+   if (settings.mPresetNumber) {
+      // Mutate the scratch AudioUnit, don't pass settings
+      LoadFactoryPreset(effect, *settings.mPresetNumber, nullptr);
+      // Then go on to reapply some slider changes that might have been done
+      // after a change of preset
+   }
 
    // Update parameter values in the AudioUnit from const
    // AudioUnitEffectSettings
@@ -213,6 +233,31 @@ bool AudioUnitWrapper::StoreSettings(
          }
          return true;
       });
+   }
+   return true;
+}
+
+bool AudioUnitWrapper::MoveSettingsContents(
+   AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge)
+{
+   // Do an in-place rewrite of dst, avoiding allocations
+   auto &dstMap = dst.values;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   auto &srcMap = src.values;
+   for (auto &[key, oValue] : srcMap) {
+      while (dstIter != dstEnd && dstIter->first != key)
+         ++dstIter;
+      if (dstIter == dstEnd)
+         break;
+      auto &[dstKey, dstOValue] = *dstIter;
+      assert(dstKey == key);
+      if (oValue) {
+         dstOValue.emplace(*oValue);
+         oValue.reset();
+      }
+      else if (!merge)
+         // Don't accumulate non-nulls only, but copy the nulls
+         dstOValue.reset();
    }
    return true;
 }
@@ -264,8 +309,8 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
       return XO("Failed to set class info for \"%s\" preset").Format(group);
 
    // Repopulate the AudioUnitEffectSettings from the change of state in
-   // the AudioUnit
-   FetchSettings(settings);
+   // the AudioUnit, and include the preset
+   FetchSettings(settings, true, true);
    return {};
 }
 
@@ -279,8 +324,66 @@ void AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
          break;
 }
 
+bool AudioUnitWrapper::LoadPreset(const EffectDefinitionInterface &effect,
+   const RegistryPath & group, EffectSettings &settings) const
+{
+   // Retrieve the preset
+   wxString parms;
+   if (!GetConfig(effect, PluginSettings::Private, group, PRESET_KEY, parms,
+      wxEmptyString)) {
+      // Commented "CurrentSettings" gets tried a lot and useless messages appear
+      // in the log
+      //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
+      return false;
+   }
+
+   // Decode it, complementary to what SaveBlobToConfig did
+   auto error =
+      InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
+   if (!error.empty()) {
+      wxLogError(error.Debug());
+      return false;
+   }
+
+   return true;
+}
+
+bool AudioUnitWrapper::LoadFactoryPreset(
+   const EffectDefinitionInterface &effect, int id, EffectSettings *pSettings)
+const
+{
+   if (pSettings) {
+      // Issue 3441: Some factory presets of some effects do not reassign all
+      // controls.  So first put controls into a default state, not contaminated
+      // by previous importing or other loading of settings into this wrapper.
+      if (!LoadPreset(effect, FactoryDefaultsGroup(), *pSettings))
+         return false;
+   }
+
+   // Retrieve the list of factory presets
+   CF_ptr<CFArrayRef> array;
+   if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
+       id < 0 || id >= CFArrayGetCount(array.get()))
+      return false;
+
+   // Mutate the scratch pad AudioUnit in this wrapper
+   if (SetProperty(kAudioUnitProperty_PresentPreset,
+      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id))))
+      return false;
+
+   if (pSettings) {
+      // Repopulate the AudioUnitEffectSettings from the change of state in
+      // the AudioUnit
+      if (!FetchSettings(GetSettings(*pSettings), true, true))
+         return false;
+   }
+
+   return true;
+}
+
 std::pair<CF_ptr<CFDataRef>, TranslatableString>
-AudioUnitWrapper::MakeBlob(const AudioUnitEffectSettings &settings,
+AudioUnitWrapper::MakeBlob(const EffectDefinitionInterface &effect,
+   const AudioUnitEffectSettings &settings,
    const wxCFStringRef &cfname, bool binary) const
 {
    // This is a const function of AudioUnitEffect, but it mutates
@@ -288,7 +391,7 @@ AudioUnitWrapper::MakeBlob(const AudioUnitEffectSettings &settings,
    // should be the "scratchpad" unit only, not real instance state.
 
    // Update state of the unit from settings
-   StoreSettings(settings);
+   StoreSettings(effect, settings);
 
    CF_ptr<CFDataRef> data;
    TranslatableString message;

@@ -234,6 +234,7 @@ void MeterToolBar::Populate()
       mRecordSetupButton = safenew AButton(this);
       mRecordSetupButton->SetLabel({});
       mRecordSetupButton->SetName(_("Record Meter"));
+      mRecordSetupButton->SetToolTip(XO("Record Meter"));
       mRecordSetupButton->SetImages(
          theTheme.Image(bmpRecoloredUpSmall),
          theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -284,6 +285,7 @@ void MeterToolBar::Populate()
       mPlaySetupButton = safenew AButton(this);
       mPlaySetupButton->SetLabel({});
       mPlaySetupButton->SetName(_("Playback Meter"));
+      mPlaySetupButton->SetToolTip(XO("Playback Meter"));
       mPlaySetupButton->SetImages(
          theTheme.Image(bmpRecoloredUpSmall),
          theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -338,8 +340,15 @@ void MeterToolBar::UpdatePrefs()
 {
    RegenerateTooltips();
 
+   // Since the same widget is provides both the Recording Meter as
+   // well as the Playback Meter, we choose an appropriate label
+   // based on which it is
+   auto label = (mWhichMeters & kWithRecordMeter)
+      ? XO("Recording Meter")
+      : XO("Playback Meter");
+
    // Set label to pull in language change
-   SetLabel(XO("Meter"));
+   SetLabel(label);
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

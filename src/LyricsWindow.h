@@ -44,7 +44,8 @@ class LyricsWindow final : public wxFrame,
 
    std::weak_ptr<AudacityProject> mProject;
    LyricsPanel *mLyricsPanel;
-   Observer::Subscription mSubscription;
+   Observer::Subscription mTimerSubscription,
+      mTitleChangeSubscription;
 
  public:
    DECLARE_EVENT_TABLE()

@@ -43,8 +43,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "widgets/AudacityMessageBox.h"
 
 
-wxDEFINE_EVENT(EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
-
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectAudioManagerKey {
    []( AudacityProject &project ) {
@@ -69,8 +67,8 @@ ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
 {
    static ProjectStatus::RegisteredStatusWidthFunction
       registerStatusWidthFunction{ StatusWidthFunction };
-   project.Bind( EVT_CHECKPOINT_FAILURE,
-      &ProjectAudioManager::OnCheckpointFailure, this );
+   mCheckpointFailureSubcription = ProjectFileIO::Get(project)
+      .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure);
 }
 
 ProjectAudioManager::~ProjectAudioManager() = default;
@@ -1063,17 +1061,17 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          // We want this to have No-fail-guarantee if we get here from exception
          // handling of recording, and that means we rely on the last autosave
          // successfully committed to the database, not risking a failure
-         history.PushState(XO("Recorded Audio"), XO("Record"),
-            UndoPush::NOAUTOSAVE);
+         auto flags = AudioIO::Get()->HasRecordingException()
+            ? UndoPush::NOAUTOSAVE
+            : UndoPush::NONE;
+         history.PushState(XO("Recorded Audio"), XO("Record"), flags);
 
          // Now, we may add a label track to give information about
          // dropouts.  We allow failure of this.
          auto gAudioIO = AudioIO::Get();
          auto &intervals = gAudioIO->LostCaptureIntervals();
-         if (intervals.size()) {
-            RecordingDropoutEvent evt{ intervals };
-            mProject.ProcessEvent(evt);
-         }
+         if (intervals.size())
+            Publish( RecordingDropoutEvent{ intervals } );
       }
    }
 }
@@ -1111,10 +1109,10 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    }
 }
 
-void ProjectAudioManager::OnCheckpointFailure(wxCommandEvent &evt)
+void ProjectAudioManager::OnCheckpointFailure(ProjectFileIOMessage message)
 {
-   evt.Skip();
-   Stop();
+   if (message == ProjectFileIOMessage::CheckpointFailure)
+      Stop();
 }
 
 bool ProjectAudioManager::Playing() const

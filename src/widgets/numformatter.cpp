@@ -27,7 +27,7 @@
     #pragma hdrstop
 #endif
 
-#ifdef __WIN32__
+#ifdef _WIN32
     #include <wx/msw/private.h>
 
 #endif

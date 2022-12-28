@@ -469,7 +469,7 @@ OutContainer transform_container( InContainer &inContainer, Function &&fn )
  macOS builds under current limitations of the C++17 standard implementation.
  */
 struct UTILITY_API alignas(
-#ifdef __WIN32__
+#ifdef _WIN32
    std::hardware_destructive_interference_size
 #else
    // That constant isn't defined for the other builds yet

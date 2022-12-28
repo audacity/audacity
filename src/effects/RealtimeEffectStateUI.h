@@ -61,6 +61,7 @@ private:
    AudacityProject *mpProject{};
 
    Observer::Subscription mProjectWindowDestroyedSubscription;
+   Observer::Subscription mParameterChangedSubscription;
 
    void OnClose(wxCloseEvent & evt);
    DECLARE_EVENT_TABLE()

@@ -12,22 +12,21 @@ Paul Licameli split from AudacityProject.h
 #define __PROJECT_AUDIO_IO__
 
 #include "ClientData.h" // to inherit
+#include "Observer.h" // to inherit
 #include <wx/weakref.h>
-#include <wx/event.h> // to declare custom event type
 
 #include <atomic>
 #include <memory>
 class AudacityProject;
 class Meter;
 
-// Sent to the project when the play speed changes
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-   EVT_PLAY_SPEED_CHANGE, wxCommandEvent);
+struct SpeedChangeMessage {};
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
 class AUDACITY_DLL_API ProjectAudioIO final
    : public ClientData::Base
+   , public Observer::Publisher<SpeedChangeMessage>
 {
 public:
    static ProjectAudioIO &Get( AudacityProject &project );

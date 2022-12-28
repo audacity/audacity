@@ -769,7 +769,6 @@ list( APPEND SOURCES
       menus/TrackMenus.cpp
       menus/TransportMenus.cpp
       menus/ViewMenus.cpp
-      menus/WindowMenus.cpp
 
       # Preferences
 
@@ -830,6 +829,8 @@ list( APPEND SOURCES
 
       toolbars/AudioSetupToolBar.cpp
       toolbars/AudioSetupToolBar.h
+      toolbars/CutCopyPasteToolBar.cpp
+      toolbars/CutCopyPasteToolBar.h
       toolbars/ControlToolBar.cpp
       toolbars/ControlToolBar.h
       toolbars/DeviceToolBar.cpp
@@ -850,6 +851,8 @@ list( APPEND SOURCES
       toolbars/TimeToolBar.h
       toolbars/ToolBar.cpp
       toolbars/ToolBar.h
+      toolbars/ToolBarButtons.cpp
+      toolbars/ToolBarButtons.h
       toolbars/ToolDock.cpp
       toolbars/ToolDock.h
       toolbars/ToolManager.cpp
@@ -1055,6 +1058,8 @@ list( APPEND SOURCES
       widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
       widgets/MeterPanelBase.h
+      widgets/MissingPluginsErrorDialog.cpp
+      widgets/MissingPluginsErrorDialog.h
       widgets/MultiDialog.cpp
       widgets/MultiDialog.h
       widgets/NumericTextCtrl.cpp
@@ -1351,7 +1356,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
       effects/audiounits/AUControl.mm
-      menus/WindowMenus.cpp
       widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
@@ -1617,7 +1621,7 @@ else()
 
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
-      install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"
+      install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.md"
                DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )
       install( FILES "${_SRCDIR}/audacity.xml"
                DESTINATION "${_DATADIR}/mime/packages" )

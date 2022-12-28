@@ -16,7 +16,8 @@ Paul Licameli split from ProjectManager.h
 
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
-#include <wx/event.h> // to declare custom event type
+#include "Observer.h"
+#include "Observer.h"
 
 #include <atomic>
 
@@ -40,28 +41,17 @@ enum class PlayMode : int {
 struct TransportTracks;
 
 enum StatusBarField : int;
+enum class ProjectFileIOMessage : int;
 
-struct RecordingDropoutEvent;
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
-
-//! Notification, posted on the project, after recording has stopped, when dropouts have been detected
-struct RecordingDropoutEvent : public wxCommandEvent
-{
+//! Notification, after recording has stopped, when dropouts have been detected
+struct RecordingDropoutEvent {
    //! Start time and duration
    using Interval = std::pair<double, double>;
    using Intervals = std::vector<Interval>;
 
    explicit RecordingDropoutEvent(const Intervals &intervals)
-      : wxCommandEvent{ EVT_RECORDING_DROPOUT }
-      , intervals{ intervals }
+      : intervals{ intervals }
    {}
-
-   RecordingDropoutEvent( const RecordingDropoutEvent& ) = default;
-
-   wxEvent *Clone() const override {
-      // wxWidgets will own the event object
-      return safenew RecordingDropoutEvent(*this); }
 
    //! Disjoint and sorted increasingly
    const Intervals &intervals;
@@ -71,6 +61,7 @@ class AUDACITY_DLL_API ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
    , public std::enable_shared_from_this< ProjectAudioManager >
+   , public Observer::Publisher<RecordingDropoutEvent>
 {
 public:
    static ProjectAudioManager &Get( AudacityProject &project );
@@ -169,8 +160,9 @@ private:
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
-   void OnCheckpointFailure(wxCommandEvent &evt);
+   void OnCheckpointFailure(ProjectFileIOMessage);
 
+   Observer::Subscription mCheckpointFailureSubcription;
    AudacityProject &mProject;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };

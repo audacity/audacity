@@ -12,8 +12,10 @@
 
 #pragma once
 
-#include <wx/string.h>
+#include <chrono>
 #include <memory>
+
+#include <wx/string.h>
 
 class PluginDescriptor;
 
@@ -41,6 +43,7 @@ public:
 
       ///Called for each plugin instance found inside module
       virtual void OnPluginFound(const PluginDescriptor& plugin) = 0;
+      virtual void OnPluginValidationFailed(const wxString& providerId, const wxString& path) = 0;
       ///Called when module processing finished
       virtual void OnValidationFinished() = 0;
       ///Called on error, further processing is not possible.
@@ -54,6 +57,10 @@ public:
 
    explicit AsyncPluginValidator(Delegate& delegate);
    ~AsyncPluginValidator();
+
+   void SetDelegate(Delegate* delegate);
+
+   std::chrono::system_clock::time_point InactiveSince() const noexcept;
 
    /**
     * \brief Each call to Validate should result in appropriate call

@@ -126,7 +126,6 @@ private:
    std::weak_ptr<RealtimeEffectState> mwState{};
    // Temporary state used for destructive processing
    std::shared_ptr<RealtimeEffectState> mpTempProjectState {};
-   std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;
    bool mInitialized{ false };
@@ -162,6 +161,8 @@ private:
 
    const std::shared_ptr<EffectInstance> mpInstance;
    const EffectOutputs *const mpOutputs;
+
+   std::unique_ptr<EffectUIValidator> mpValidator;
 
    DECLARE_EVENT_TABLE()
 };
