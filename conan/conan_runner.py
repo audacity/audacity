@@ -198,6 +198,11 @@ def get_conan_compiler_version(args):
         else:
             return ver[1] // 10 - 2 + 16
     else:
+        compiler_version = version_tuple(args.compiler_version)
+
+        if args.compiler == 'AppleClang' and compiler_version[0] < 13:
+            return f'{compiler_version[0]}.{compiler_version[1]}'
+
         return version_tuple(args.compiler_version)[0]
 
 def get_conan_arch(arch: str):
