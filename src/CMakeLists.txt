@@ -199,7 +199,6 @@ list( APPEND SOURCES
       PluginStartupRegistration.cpp
       PluginStartupRegistration.h
       Printing.cpp
-      Printing.h
       Profiler.cpp
       Profiler.h
       ProjectAudioIO.cpp
