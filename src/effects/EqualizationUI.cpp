@@ -19,6 +19,7 @@
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
+#include <wx/stattext.h>
 #include "../ShuttleGui.h"
 #include "../widgets/Ruler.h"
 
