@@ -1,1 +1,0 @@
-vst3sdk:build_type=Release

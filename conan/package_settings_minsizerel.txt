@@ -1,2 +1,0 @@
-vst3sdk:build_type=Release
-qt:build_type=RelWithDebInfo
