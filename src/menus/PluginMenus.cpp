@@ -206,7 +206,8 @@ void AddEffectMenuItemGroup(
    const TranslatableStrings & names,
    const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
-   bool useSubgroups);
+   bool useSubgroups,
+   void (*onMenuCommand)(const CommandContext&));
 
    
 void AddGroupedEffectMenuItems(
@@ -215,7 +216,8 @@ void AddGroupedEffectMenuItems(
    CommandFlag batchflags,
    CommandFlag realflags,
    GroupBy groupBy,
-   bool useSubgroups)
+   bool useSubgroups,
+   void (*onMenuCommand)(const CommandContext&))
 {
    TranslatableString last;
    TranslatableString current;
@@ -260,7 +262,8 @@ void AddGroupedEffectMenuItems(
 
          AddEffectMenuItemGroup(temp,
             groupNames,
-            groupPlugs, groupFlags, useSubgroups);
+            groupPlugs, groupFlags, useSubgroups,
+            onMenuCommand);
 
          table.push_back( MenuOrItems( wxEmptyString,
             ( bInSubmenu ? last : TranslatableString{} ), std::move( temp )
@@ -284,7 +287,8 @@ void AddGroupedEffectMenuItems(
       bool bInSubmenu = groupNames.size() > 1;
 
       AddEffectMenuItemGroup(temp,
-         groupNames, groupPlugs, groupFlags, useSubgroups);
+         groupNames, groupPlugs, groupFlags, useSubgroups,
+         onMenuCommand);
 
       table.push_back( MenuOrItems( wxEmptyString,
          ( bInSubmenu ? current : TranslatableString{} ), std::move( temp )
@@ -298,7 +302,8 @@ void AddSortedEffectMenuItems(
    CommandFlag batchflags,
    CommandFlag realflags,
    SortBy sortBy,
-   bool useSubgroups)
+   bool useSubgroups,
+   void (*onMenuCommand)(const CommandContext&))
 {
    size_t pluginCnt = plugs.size();
 
@@ -343,11 +348,16 @@ void AddSortedEffectMenuItems(
    if (groupNames.size() > 0)
    {
       AddEffectMenuItemGroup(
-         table, groupNames, groupPlugs, groupFlags, useSubgroups);
+         table, groupNames, groupPlugs, groupFlags, useSubgroups,
+         onMenuCommand);
    }
 }
 
-auto MakeAddGroupItems(const EffectsMenuGroups& list, CommandFlag batchflags, CommandFlag realflags) -> auto
+auto MakeAddGroupItems(
+   const EffectsMenuGroups& list,
+   CommandFlag batchflags,
+   CommandFlag realflags,
+   void (*onMenuCommand)(const CommandContext&)) -> auto
 {
    return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugs)
    {
@@ -385,7 +395,8 @@ auto MakeAddGroupItems(const EffectsMenuGroups& list, CommandFlag batchflags, Co
             BaseItemPtrs temp;
 
             AddEffectMenuItemGroup(temp,
-               groupNames, groupPlugs, groupFlags, false);
+               groupNames, groupPlugs, groupFlags, false,
+               onMenuCommand);
 
             items.push_back( MenuOrItems( wxEmptyString,
                p.first, std::move( temp )
@@ -523,7 +534,8 @@ bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
 MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
-   CommandFlag realflags)
+   CommandFlag realflags,
+   void (*onMenuCommand)(const CommandContext&))
 {
    MenuTable::BaseItemPtrs result;
    PluginManager & pm = PluginManager::Get();
@@ -536,7 +548,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    {
       return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
       {
-         return AddSortedEffectMenuItems(items, plugins, batchflags, realflags, sortby, useSubgroups);
+         return AddSortedEffectMenuItems(items, plugins, batchflags, realflags, sortby, useSubgroups, onMenuCommand);
       };
    };
 
@@ -544,7 +556,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    {
       return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
       {
-         return AddGroupedEffectMenuItems(items, plugins, batchflags, realflags, groupBy, useSubgroups);
+         return AddGroupedEffectMenuItems(items, plugins, batchflags, realflags, groupBy, useSubgroups, onMenuCommand);
       };
    };
 
@@ -564,7 +576,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
                {},
                [=](auto plug) { return IsEnabledPlugin(plug) && groupsFilter(plug); },
                nullptr,
-               MakeAddGroupItems(effectMenuDefaults, batchflags, realflags)
+               MakeAddGroupItems(effectMenuDefaults, batchflags, realflags, onMenuCommand)
             });
          sections.emplace_back(
             MenuSectionBuilder {
@@ -909,7 +921,8 @@ void AddEffectMenuItemGroup(
    const TranslatableStrings & names,
    const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
-   bool useSubgroups)
+   bool useSubgroups,
+   void (*onMenuCommand)(const CommandContext&))
 {
    const int namesCnt = (int) names.size();
    int perGroup;
@@ -973,7 +986,7 @@ void AddEffectMenuItemGroup(
             if( plug->GetPluginType() == PluginTypeEffect )
                temp2.push_back( Command( plug->GetID(),
                   Verbatim( plug->GetPath() ),
-                  OnEffect,
+                  onMenuCommand,
                   flags[i],
                   CommandManager::Options{}
                      .IsEffect()
@@ -994,7 +1007,7 @@ void AddEffectMenuItemGroup(
             pTable->push_back( Command(
                plug->GetID(),
                names[i],
-               OnEffect,
+               onMenuCommand,
                flags[i],
                CommandManager::Options{}
                   .IsEffect()
@@ -1080,7 +1093,8 @@ BaseItemSharedPtr GenerateMenu()
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeGenerate,
             AudioIONotBusyFlag(),
-            AudioIONotBusyFlag())
+            AudioIONotBusyFlag(),
+            &OnEffect)
          ); }
       )
    ) };
@@ -1160,7 +1174,8 @@ BaseItemSharedPtr EffectMenu()
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeProcess,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            IsRealtimeNotActiveFlag() )
+            IsRealtimeNotActiveFlag(),
+            &OnEffect)
          ); }
       )
    ) };
@@ -1223,7 +1238,8 @@ BaseItemSharedPtr AnalyzeMenu()
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeAnalyze,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            IsRealtimeNotActiveFlag() )
+            IsRealtimeNotActiveFlag(),
+            &OnEffect)
          ); }
       )
    ) };
@@ -1269,7 +1285,8 @@ BaseItemSharedPtr ToolsMenu()
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeTool,
             AudioIONotBusyFlag(),
-            AudioIONotBusyFlag() )
+            AudioIONotBusyFlag(),
+            OnEffect)
          ); }
       )
 
