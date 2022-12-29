@@ -754,6 +754,8 @@ list( APPEND SOURCES
       menus/FileMenus.cpp
       menus/HelpMenus.cpp
       menus/LabelMenus.cpp
+      menus/MenuHelper.cpp
+      menus/MenuHelper.h
       menus/NavigationMenus.cpp
       menus/PluginMenus.cpp
       menus/SelectMenus.cpp
