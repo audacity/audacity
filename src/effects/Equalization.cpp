@@ -416,11 +416,21 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 
 namespace {
 struct EqualizationTask {
-   EqualizationTask( size_t idealBlockLen, WaveTrack &t )
+   EqualizationTask( size_t M, size_t idealBlockLen, WaveTrack &t )
       : buffer{ idealBlockLen }
       , output{ t.EmptyCopy() }
+      , leftTailRemaining{ (M - 1) / 2 }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
+   }
+
+   void AccumulateSamples(constSamplePtr buffer, size_t len)
+   {
+      auto leftTail = std::min(len, leftTailRemaining);
+      leftTailRemaining -= leftTail;
+      len -= leftTail;
+      buffer += leftTail * sizeof(float);
+      output->Append(buffer, floatSample, len);
    }
 
    static constexpr auto windowSize = EqualizationFilter::windowSize;
@@ -436,6 +446,8 @@ struct EqualizationTask {
    // create a NEW WaveTrack to hold all of the output,
    // including 'tails' each end
    std::shared_ptr<WaveTrack> output;
+
+   size_t leftTailRemaining;
 };
 }
 
@@ -455,7 +467,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
 
-   EqualizationTask task{ idealBlockLen, *t };
+   EqualizationTask task{ M, idealBlockLen, *t };
    auto &buffer = task.buffer;
    auto &window1 = task.window1;
    auto &window2 = task.window2;
@@ -470,7 +482,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;
    size_t wcopy = 0;
-   int offset = (M - 1) / 2;
 
    while (len != 0)
    {
@@ -497,7 +508,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          std::swap( thisWindow, lastWindow );
       }  //next i, lump of this block
 
-      output->Append((samplePtr)buffer.get(), floatSample, block);
+      task.AccumulateSamples((samplePtr)buffer.get(), block);
       len -= block;
       s += block;
 
@@ -526,12 +537,11 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          for(size_t j = 0; j < M - 1; j++)
             buffer[j] = lastWindow[wcopy + j];
       }
-      output->Append((samplePtr)buffer.get(), floatSample, M - 1);
+      task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
       output->Flush();
 
       // now move the appropriate bit of the output back to the track
       // (this could be enhanced in the future to use the tails)
-      double offsetT0 = t->LongSamplesToTime(offset);
       double lenT = t->LongSamplesToTime(originalLen);
       // 'start' is the sample offset in 't', the passed in track
       // 'startT' is the equivalent time value
@@ -574,7 +584,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       {
          //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-         auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0);
+         auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT,
+            clipStartEndTimes[i].second-startT);
          //put the processed audio in
          t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
          //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
