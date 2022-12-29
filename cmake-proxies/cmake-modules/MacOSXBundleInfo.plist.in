@@ -205,7 +205,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>Wrapper</string>
+	<string>${AUDACITY_MACOS_EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
 	<key>CFBundleIconFile</key>

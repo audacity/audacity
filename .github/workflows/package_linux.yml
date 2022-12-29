@@ -2,6 +2,12 @@ name: Build Audacity Linux Packages
 
 on:
   push:
+    branches-ignore:
+      - 'qt6'
+      - 'qt6-*'
+      - 'qt6_*'
+      - 'qt6/*'
+      - 'qt6*'
   workflow_dispatch:
     inputs:
       build_level:

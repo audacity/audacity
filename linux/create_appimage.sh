@@ -105,13 +105,23 @@ fi
 # Prevent linuxdeploy setting RUNPATH in binaries that shouldn't have it
 mv "${appdir}/bin/findlib" "${appdir}/../findlib"
 
-linuxdeploy --appdir "${appdir}" --plugin gtk # add all shared library dependencies
+if [ -f "${appdir}/bin/qt.conf" ]; then
+    export NO_STRIP=1
+    linuxdeploy --appdir "${appdir}"
+else
+    linuxdeploy --appdir "${appdir}" --plugin gtk # add all shared library dependencies
+fi
 
 echo "###########################################"
 echo "Cleaning up package"
 echo "###########################################"
 
 find "${appdir}/lib/audacity" -maxdepth 1 ! \( -type d \) -exec rm -v {} \;
+
+if [ -d "${appdir}/lib/audacity/qt6" ]; then
+    mv "${appdir}/lib/audacity/qt6" "${appdir}/lib/qt6"
+    sed -i 's|/lib/audacity/|/lib/|' "${appdir}/bin/qt.conf"
+fi
 
 if [ -f "/etc/debian_version" ]; then
    archDir=$(dpkg-architecture -qDEB_HOST_MULTIARCH)

@@ -1327,6 +1327,8 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       )
    endif()
 
+   set(AUDACITY_MACOS_EXECUTABLE_NAME "Wrapper")
+
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
       ../mac/Resources/Audacity.icns
