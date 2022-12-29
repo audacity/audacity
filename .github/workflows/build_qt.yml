@@ -4,20 +4,26 @@ on:
   push:
     paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".gitignore", ".gitattributes"]
     branches:
+      - 'qt'
       - 'qt6'
+      - 'qt-*'
       - 'qt6-*'
+      - 'qt_*'
       - 'qt6_*'
+      - 'qt/*'
       - 'qt6/*'
-      - 'qt6*'
 
   pull_request:
     paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".gitignore", ".gitattributes"]
     branches:
+      - 'qt'
       - 'qt6'
+      - 'qt-*'
       - 'qt6-*'
+      - 'qt_*'
       - 'qt6_*'
+      - 'qt/*'
       - 'qt6/*'
-      - 'qt6*'
 
   workflow_dispatch:
     inputs:
