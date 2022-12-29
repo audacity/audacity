@@ -414,6 +414,31 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
    return mUI.TransferDataToWindow(settings);
 }
 
+namespace {
+struct EqualizationTask {
+   EqualizationTask( size_t idealBlockLen, WaveTrack &t )
+      : buffer{ idealBlockLen }
+      , output{ t.EmptyCopy() }
+   {
+      memset(lastWindow, 0, windowSize * sizeof(float));
+   }
+
+   static constexpr auto windowSize = EqualizationFilter::windowSize;
+   Floats window1{ windowSize };
+   Floats window2{ windowSize };
+
+   Floats buffer;
+
+   // These pointers are swapped after each FFT window
+   float *thisWindow{ window1.get() };
+   float *lastWindow{ window2.get() };
+
+   // create a NEW WaveTrack to hold all of the output,
+   // including 'tails' each end
+   std::shared_ptr<WaveTrack> output;
+};
+}
+
 // EffectEqualization implementation
 
 bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
@@ -423,10 +448,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    const auto &M = mParameters.mM;
 
-   // create a NEW WaveTrack to hold all of the output, including 'tails' each end
-   auto output = t->EmptyCopy();
-   t->ConvertToSampleFormat( floatSample );
-
    wxASSERT(M - 1 < windowSize);
    size_t L = windowSize - (M - 1);   //Process L samples at a go
    auto s = start;
@@ -434,17 +455,17 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
 
-   Floats buffer{ idealBlockLen };
-
-   Floats window1{ windowSize };
-   Floats window2{ windowSize };
-   float *thisWindow = window1.get();
-   float *lastWindow = window2.get();
+   EqualizationTask task{ idealBlockLen, *t };
+   auto &buffer = task.buffer;
+   auto &window1 = task.window1;
+   auto &window2 = task.window2;
+   auto &thisWindow = task.thisWindow;
+   auto &lastWindow = task.lastWindow;
 
    auto originalLen = len;
 
-   for(size_t i = 0; i < windowSize; i++)
-      lastWindow[i] = 0;
+   auto &output = task.output;
+   t->ConvertToSampleFormat( floatSample );
 
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;
