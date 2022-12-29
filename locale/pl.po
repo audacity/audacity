@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2022-12-21 03:16+0000\n"
+"PO-Revision-Date: 2022-12-28 01:24+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -7820,7 +7820,7 @@ msgstr "Zniekształcenie rektyfikatora"
 
 #: src/effects/Distortion.cpp
 msgid "Hard Limiter 1413"
-msgstr "Twardy ogranicznik 1413"
+msgstr "Twardy limiter 1413"
 
 #: src/effects/Distortion.cpp
 #, no-c-format
@@ -7902,7 +7902,7 @@ msgstr "Rektyfikator pełnofalowy (DC zablokowane)"
 
 #: src/effects/Distortion.cpp
 msgid "Percussion Limiter"
-msgstr "Ogranicznik perkusji"
+msgstr "Limiter perkusji"
 
 #: src/effects/Distortion.cpp
 msgid "Upper Threshold"
