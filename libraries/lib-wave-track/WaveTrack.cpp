@@ -1564,6 +1564,16 @@ void WaveTrack::Join(double t0, double t1)
    }
 }
 
+void WaveTrack::SetRetainCount(size_t count)
+{
+   RightmostOrNewClip()->SetRetainCount(count);
+}
+
+size_t WaveTrack::GetRetainCount()
+{
+   return RightmostOrNewClip()->GetRetainCount();
+}
+
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */

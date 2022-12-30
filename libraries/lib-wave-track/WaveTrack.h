@@ -220,6 +220,12 @@ private:
     */
    bool IsEmpty(double t0, double t1) const;
 
+   //! Set a minimum number of samples to retain in memory between Append()s
+   //! (when at least so many are appended), until Flush()
+   void SetRetainCount(size_t count);
+   //! Non-const because it may need to create a clip on demand
+   size_t GetRetainCount();
+
    /*
     * If there is an existing WaveClip in the WaveTrack then the data is
     * appended to that clip. If there are no WaveClips in the track, then a NEW

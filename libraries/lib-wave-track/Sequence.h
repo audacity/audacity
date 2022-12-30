@@ -65,6 +65,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Static methods
    //
 
+   /*!
+    @pre `bytes >= 256`
+    */
    static void SetMaxDiskBlockSize(size_t bytes);
    static size_t GetMaxDiskBlockSize();
 
@@ -115,6 +118,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    /*! @excsafety{Strong} */
    void Paste(sampleCount s0, const Sequence *src);
 
+   //! @post result: `0 < result && result <= GetMaxBlockSize()`
    size_t GetIdealAppendLen() const;
 
    /*!
@@ -206,7 +210,13 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // These return a nonnegative number of samples meant to size a memory buffer
    size_t GetBestBlockSize(sampleCount start) const;
+   /*!
+    @post result: `result > 0`
+    */
    size_t GetMaxBlockSize() const;
+   /*!
+    @post result: `result > 0`
+    */
    size_t GetIdealBlockSize() const;
 
    //
@@ -216,6 +226,14 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    BlockArray &GetBlockArray() { return mBlock; }
    const BlockArray &GetBlockArray() const { return mBlock; }
+
+   //! Set a minimum number of samples to retain in memory between Append()s
+   //! (when at least so many are appended), until Flush()
+   /*!
+    @post `GetAppendBuffer() != nullptr`
+    */
+   void SetRetainCount(size_t count);
+   size_t GetRetainCount() const { return mRetainCount; }
 
    size_t GetAppendBufferLen() const { return mAppendBufferLen; }
    constSamplePtr GetAppendBuffer() const { return mAppendBuffer.ptr(); }
@@ -244,8 +262,11 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    size_t   mMaxSamples; // max samples per block
 
    SampleBuffer  mAppendBuffer {};
+   //! @invariant `mAppendBufferLen <= mAppendBufferSize`
+   size_t        mAppendBufferSize{ 0 };
    size_t        mAppendBufferLen { 0 };
    sampleFormat  mAppendEffectiveFormat{ narrowestSampleFormat };
+   size_t        mRetainCount{ 0 };
 
    bool          mErrorOpening{ false };
 

@@ -223,6 +223,16 @@ void WaveClip::UpdateEnvelopeTrackLen()
       mEnvelope->SetTrackLen(len, 1.0 / GetRate());
 }
 
+void WaveClip::SetRetainCount(size_t count)
+{
+   mSequence->SetRetainCount(count);
+}
+
+size_t WaveClip::GetRetainCount() const
+{
+   return mSequence->GetRetainCount();
+}
+
 /*! @excsafety{Strong} */
 std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
    samplePtr buffer, sampleFormat format, size_t len)

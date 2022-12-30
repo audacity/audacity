@@ -244,7 +244,13 @@ public:
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
+   //! Set a minimum number of samples to retain in memory between Append()s
+   //! (when at least so many are appended), until Flush()
+   void SetRetainCount(size_t count);
+   size_t GetRetainCount() const;
+
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks;
+   //! no dithering applied
    std::shared_ptr<SampleBlock> AppendNewBlock(
       samplePtr buffer, sampleFormat format, size_t len);
 

@@ -55,6 +55,7 @@ Sequence::Sequence(
    mMinSamples(sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormats.Stored()) / 2),
    mMaxSamples(mMinSamples * 2)
 {
+   assert(mMaxSamples > 0);
 }
 
 // essentially a copy constructor - but you must pass in the
@@ -76,11 +77,13 @@ Sequence::~Sequence()
 
 size_t Sequence::GetMaxBlockSize() const
 {
+   assert(mMaxSamples > 0);
    return mMaxSamples;
 }
 
 size_t Sequence::GetIdealBlockSize() const
 {
+   assert(mMaxSamples > 0);
    return mMaxSamples;
 }
 
@@ -159,6 +162,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
    // These are the same calculations as in the constructor.
    mMinSamples = sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormats.Stored()) / 2;
    mMaxSamples = mMinSamples * 2;
+   assert(mMaxSamples > 0);
 
    bool bSuccess = false;
    auto cleanup = finally( [&] {
@@ -882,6 +886,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
 
             // nValue is now safe for size_t
             mMaxSamples = nValue;
+            assert(mMaxSamples > 0);
          }
          else if (attr == "sampleformat")
          {
@@ -1271,6 +1276,7 @@ size_t Sequence::GetIdealAppendLen() const
 {
    int numBlocks = mBlock.size();
    const auto max = GetMaxBlockSize();
+   assert(max > 0);
 
    if (numBlocks == 0)
       return max;
@@ -1279,6 +1285,7 @@ size_t Sequence::GetIdealAppendLen() const
    if (lastBlockLen >= max)
       return max;
    else
+      // This is nonzero, satisfying post
       return max - lastBlockLen;
 }
 
@@ -1324,39 +1331,56 @@ bool Sequence::Append(
 {
    effectiveFormat = std::min(effectiveFormat, format);
    const auto seqFormat = mSampleFormats.Stored();
-   if (!mAppendBuffer.ptr())
-      mAppendBuffer.Allocate(mMaxSamples, seqFormat);
+   if (!GetAppendBuffer()) {
+      // This causes allocation
+      SetRetainCount(mRetainCount);
+      // postcondition
+      assert(GetAppendBuffer());
+   }
+   auto dest = const_cast<samplePtr>(GetAppendBuffer());
 
    bool result = false;
    auto blockSize = GetIdealAppendLen();
    for(;;) {
-      if (mAppendBufferLen >= blockSize) {
+      assert(mAppendBufferLen <= mAppendBufferSize); // invariant
+      if (mAppendBufferLen == mAppendBufferSize) {
+         // See in SetRetainCount()
+         assert(mAppendBufferLen >= blockSize + mRetainCount);
+         // Then the following if will be taken, reducing mAppendBufferLen
+      }
+      if (mAppendBufferLen >= blockSize + mRetainCount) {
          // flush some previously appended contents
          // use Strong-guarantee
          // Already dithered if needed when accumulated into mAppendBuffer
-         DoAppend(mAppendBuffer.ptr(), seqFormat, blockSize, true);
+         DoAppend(dest, seqFormat, blockSize, true);
          // Change our effective format now that DoAppend didn't throw
          mSampleFormats.UpdateEffective(mAppendEffectiveFormat);
          result = true;
 
          // use No-fail-guarantee for rest of this "if"
-         memmove(mAppendBuffer.ptr(),
-                 mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
+         memmove(dest, dest + blockSize * SAMPLE_SIZE(seqFormat),
                  (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
+         // Post of previous GetIdealAppendLen() guarantees
+         // that mAppendBufferLen decreases
+         assert(blockSize > 0);
          mAppendBufferLen -= blockSize;
          blockSize = GetIdealAppendLen();
       }
+      assert(mAppendBufferLen < mAppendBufferSize); // exceed the invariant
 
       if (len == 0)
          break;
 
       // use No-fail-guarantee for rest of this "for"
-      wxASSERT(mAppendBufferLen <= mMaxSamples);
-      auto toCopy = std::min(len, mMaxSamples - mAppendBufferLen);
+      auto toCopy = std::min(len, mAppendBufferSize - mAppendBufferLen);
+
+      // This guarantees loop progress
+      assert(toCopy > 0);
+      len -= toCopy;
 
       // If dithering of appended material is done at all, it happens here
       CopySamples(buffer, format,
-         mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
+         dest + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
          seqFormat,
          toCopy,
          (seqFormat < effectiveFormat ? gHighQualityDither : DitherType::none),
@@ -1364,9 +1388,8 @@ bool Sequence::Append(
       mAppendEffectiveFormat =
          std::max(mAppendEffectiveFormat, effectiveFormat);
 
-      mAppendBufferLen += toCopy;
+      mAppendBufferLen += toCopy; // preserves the invariant
       buffer += toCopy * SAMPLE_SIZE(format) * stride;
-      len -= toCopy;
    }
 
    return result;
@@ -1482,9 +1505,10 @@ void Sequence::Flush()
          // data but don't leave the sequence in an un-flushed state.
 
          // Use No-fail-guarantee of these steps.
-         mAppendBufferLen = 0;
+         mAppendBufferLen = mAppendBufferSize = 0;
          mAppendBuffer.Free();
          mAppendEffectiveFormat = narrowestSampleFormat; // defaulted again
+         // Retain count stays the same; any Append() will reallocate the buffer
       } );
 
       // Already dithered if needed when accumulated into mAppendBuffer:
@@ -1493,6 +1517,37 @@ void Sequence::Flush()
       // Change our effective format now that DoAppend didn't throw
       mSampleFormats.UpdateEffective(mAppendEffectiveFormat);
    }
+}
+
+void Sequence::SetRetainCount(size_t count)
+{
+   const auto block = GetMaxBlockSize();
+   assert(block > 0); // post
+
+   // Make the buffer at least this large, so that Append() is guaranteed to
+   // make progress
+   // see @post of GetIdealAppendLen()
+   const auto minimum = block + count;
+   assert(minimum > 0);
+
+   if (mAppendBufferSize < minimum) {
+      // Grow the buffer as needed
+      const auto seqFormat = mSampleFormats.Stored();
+      SampleBuffer newBuffer{ minimum, seqFormat };
+      if (mAppendBufferLen > 0) {
+         // mAppendBufferLen is increased only while the buffer is allocated
+         assert(mAppendBuffer.ptr());
+         memcpy(newBuffer.ptr(), mAppendBuffer.ptr(),
+            mAppendBufferLen * SAMPLE_SIZE(seqFormat));
+      }
+      mAppendBuffer = std::move(newBuffer);
+      mAppendBufferSize = minimum;
+   }
+   else
+      // nonzero mAppendBufferSize means the buffer was already allocated
+      // so the postcondition is satisfied on this branch too
+      assert(GetAppendBuffer());
+   mRetainCount = count;
 }
 
 void Sequence::Blockify(SampleBlockFactory &factory,
@@ -1839,6 +1894,7 @@ void Sequence::DebugPrintf
 // static
 void Sequence::SetMaxDiskBlockSize(size_t bytes)
 {
+   assert(bytes >= 256);
    sMaxDiskBlockSize = bytes;
 }
 
