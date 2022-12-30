@@ -188,6 +188,8 @@ list( APPEND SOURCES
       MixerBoard.h
       NoteTrack.cpp
       NoteTrack.h
+      PasteOverPreservingClips.cpp
+      PasteOverPreservingClips.h
       PitchName.cpp
       PitchName.h
       PlaybackSchedule.cpp
