@@ -41,6 +41,7 @@
 
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include <thread>
 
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {
@@ -571,17 +572,45 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       return bLoopSuccess.load(order);
    });
 
+   // Divide among available processors, with a little oversubscription
+   // (If there is blocking on database operations, let some other thread resume
+   // calculations)
+   const auto nProcessors = std::thread::hardware_concurrency();
+   auto nTasks = nProcessors + 2;
+   const auto nBlocks = ((len + idealBlockLen - 1) / idealBlockLen);
+   if (nTasks > nBlocks)
+      nTasks = std::max<unsigned>(1, nBlocks.as_size_t());
    std::vector<EqualizationTask> tasks;
-   tasks.reserve(1);
-   tasks.emplace_back(mParameters, M, idealBlockLen, *t, poller, true, true);
+   tasks.reserve(nTasks);
+
+   // First task
+   tasks.emplace_back(
+      mParameters, M, idealBlockLen, *t, poller, true, nTasks-- == 1);
+   // More tasks
+   while (nTasks)
+      tasks.emplace_back(
+         mParameters, M, idealBlockLen, *t, poller, false, nTasks-- == 1);
+   nTasks = tasks.size();
+
    t->ConvertToSampleFormat( floatSample );
 
    std::vector<TaskRunner> runners;
-   runners.reserve(tasks.size());
+   runners.reserve(nTasks);
+
+   size_t ii = 0;
+   auto taskStart = start,
+      nextStart =
+         start + std::min(len, idealBlockLen * (nBlocks * ++ii / nTasks));
    for (auto &task : tasks) {
       auto &runner = runners.emplace_back(task, bLoopSuccess);
-      runner(start, len);
+      // If nBlocks/nProcessors has a fraction, this length calculation rounds
+      // sometimes up and sometimes down
+      runner(taskStart, nextStart - taskStart);
+      taskStart = nextStart;
+      nextStart =
+         start + std::min(len, idealBlockLen * (nBlocks * ++ii / nTasks));
    }
+   assert(nextStart == start + len);
    for (auto &runner : runners) {
       if (runner.pExc)
          std::rethrow_exception(runner.pExc);
