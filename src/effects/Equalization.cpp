@@ -411,6 +411,9 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 }
 
 namespace {
+//! Function takes an increment of samples processed, returns true to continue
+using Poller = std::function<bool(sampleCount)>;
+
 struct EqualizationTask {
    EqualizationTask( size_t M, size_t idealBlockLen, WaveTrack &t )
       // Capacity for M - 1 additional right tail samples
@@ -454,6 +457,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
                                     sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
+   const auto originalLen = len;
 
    const auto &M = mParameters.mM;
 
@@ -463,20 +467,29 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
 
+   TrackProgress(count, 0.);
+   bool bLoopSuccess = true;
+   auto position = start - (M - 1) / 2;
+   Poller poller([
+      this, &bLoopSuccess, &position,
+      start, count, originalLen
+   ](sampleCount block) {
+      position += block;
+      if (TrackProgress(count, (std::max(position, start)).as_double() /
+                        originalLen.as_double()))
+         bLoopSuccess = false;
+      return bLoopSuccess;
+   });
+
    EqualizationTask task{ M, idealBlockLen, *t };
    auto &buffer = task.buffer;
    auto &window1 = task.window1;
    auto &window2 = task.window2;
    auto &thisWindow = task.thisWindow;
    auto &lastWindow = task.lastWindow;
-
-   auto originalLen = len;
-
    auto &output = task.output;
    t->ConvertToSampleFormat( floatSample );
 
-   TrackProgress(count, 0.);
-   bool bLoopSuccess = true;
    size_t wcopy = 0;
 
    // Number of loop passes is floor((len + idealBlockLen - 1) / idealBlockLen)
@@ -532,12 +545,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    
       task.AccumulateSamples((samplePtr)buffer.get(), block);
 
-      if (TrackProgress(count, ( s - start ).as_double() /
-                        originalLen.as_double()))
-      {
-         bLoopSuccess = false;
+      if (!poller(block))
          break;
-      }
    }
 
    if (bLoopSuccess) {
