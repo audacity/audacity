@@ -414,7 +414,15 @@ namespace {
 //! Function takes an increment of samples processed, returns true to continue
 using Poller = std::function<bool(sampleCount)>;
 
-struct EqualizationTask {
+class EffectTask {
+public:
+   virtual ~EffectTask();
+   virtual void Run(sampleCount start, sampleCount len) = 0;
+};
+
+EffectTask::~EffectTask() = default;
+
+struct EqualizationTask : EffectTask {
    EqualizationTask(const EqualizationFilter &parameters,
       size_t M, size_t idealBlockLen, const WaveTrack &t, Poller &poller
    )  : mParameters{ parameters }
@@ -430,6 +438,8 @@ struct EqualizationTask {
       memset(lastWindow, 0, windowSize * sizeof(float));
    }
 
+   ~EqualizationTask() override;
+
    void AccumulateSamples(constSamplePtr buffer, size_t len)
    {
       auto leftTail = std::min(len, leftTailRemaining);
@@ -439,7 +449,7 @@ struct EqualizationTask {
       output->Append(buffer, floatSample, len);
    }
 
-   void Run(sampleCount start, sampleCount len);
+   void Run(sampleCount start, sampleCount len) override;
 
    const EqualizationFilter &mParameters;
 
@@ -465,6 +475,33 @@ struct EqualizationTask {
    size_t leftTailRemaining;
    size_t idealBlockLen;
 };
+
+EqualizationTask::~EqualizationTask() = default;
+
+//! Wrap a task with deferral of exception propagation
+struct TaskRunner {
+   TaskRunner(EffectTask &task, bool &bLoopSuccess)
+      : task{ task }, bLoopSuccess{ bLoopSuccess }
+   {}
+
+   // Suitable as a thread function
+   void operator ()(sampleCount start, sampleCount len) noexcept;
+
+   EffectTask &task;
+   bool &bLoopSuccess;
+   std::exception_ptr pExc;
+};
+
+void TaskRunner::operator ()(sampleCount start, sampleCount len) noexcept
+{
+   try {
+      task.Run(start, len);
+   }
+   catch(...) {
+      bLoopSuccess = false;
+      pExc = std::current_exception();
+   }
+}
 }
 
 // EffectEqualization implementation
@@ -501,8 +538,12 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    auto &output = task.output;
    t->ConvertToSampleFormat( floatSample );
 
-   task.Run(start, len);
+   TaskRunner runner{ task, bLoopSuccess };
+   runner(start, len);
+   if (runner.pExc)
+      std::rethrow_exception(runner.pExc);
 
+   // Any exceptions in the remining serial post-processing can propagate simply
    if (bLoopSuccess) {
       output->Flush();
       PasteOverPreservingClips(*t, start, originalLen, *output);
