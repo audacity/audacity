@@ -415,11 +415,17 @@ namespace {
 using Poller = std::function<bool(sampleCount)>;
 
 struct EqualizationTask {
-   EqualizationTask( size_t M, size_t idealBlockLen, WaveTrack &t )
+   EqualizationTask(const EqualizationFilter &parameters,
+      size_t M, size_t idealBlockLen, const WaveTrack &t, Poller &poller
+   )  : mParameters{ parameters }
       // Capacity for M - 1 additional right tail samples
-      : buffer{ idealBlockLen + (M - 1) }
+      , buffer{ idealBlockLen + (M - 1) }
+      , input{ t }
+      , poller{ poller }
       , output{ t.EmptyCopy() }
+      , M{ M }
       , leftTailRemaining{ (M - 1) / 2 }
+      , idealBlockLen{ idealBlockLen }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
    }
@@ -433,6 +439,10 @@ struct EqualizationTask {
       output->Append(buffer, floatSample, len);
    }
 
+   void Run(sampleCount start, sampleCount len);
+
+   const EqualizationFilter &mParameters;
+
    static constexpr auto windowSize = EqualizationFilter::windowSize;
    Floats window1{ windowSize };
    Floats window2{ windowSize };
@@ -444,11 +454,16 @@ struct EqualizationTask {
    float *thisWindow{ window1.get() };
    float *lastWindow{ window2.get() };
 
+   const WaveTrack &input;
+   Poller &poller;
+
    // create a NEW WaveTrack to hold all of the output,
    // including 'tails' each end
    std::shared_ptr<WaveTrack> output;
 
+   size_t M;
    size_t leftTailRemaining;
+   size_t idealBlockLen;
 };
 }
 
@@ -482,23 +497,29 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       return bLoopSuccess;
    });
 
-   EqualizationTask task{ M, idealBlockLen, *t };
-   auto &buffer = task.buffer;
-   auto &window1 = task.window1;
-   auto &window2 = task.window2;
-   auto &thisWindow = task.thisWindow;
-   auto &lastWindow = task.lastWindow;
-   auto &scratch = task.scratch;
+   EqualizationTask task{ mParameters, M, idealBlockLen, *t, poller };
    auto &output = task.output;
    t->ConvertToSampleFormat( floatSample );
 
-   size_t wcopy = 0;
+   task.Run(start, len);
 
+   if (bLoopSuccess) {
+      output->Flush();
+      PasteOverPreservingClips(*t, start, originalLen, *output);
+   }
+
+   return bLoopSuccess;
+}
+
+void EqualizationTask::Run(sampleCount start, sampleCount len)
+{
+   size_t L = windowSize - (M - 1);   //Process L samples at a go
+   size_t wcopy = 0;
    // Number of loop passes is floor((len + idealBlockLen - 1) / idealBlockLen)
    for (auto s = start; len > 0; s += idealBlockLen, len -= idealBlockLen) {
       auto block = limitSampleBufferSize( idealBlockLen, len );
 
-      t->GetFloats(buffer.get(), s, block);
+      input.GetFloats(buffer.get(), s, block);
 
       size_t i = 0;
       for(; i < block; i += L)   //go through block in lumps of length L
@@ -545,16 +566,9 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          block += M - 1;
       }
    
-      task.AccumulateSamples((samplePtr)buffer.get(), block);
+      AccumulateSamples((samplePtr)buffer.get(), block);
 
       if (!poller(block))
          break;
    }
-
-   if (bLoopSuccess) {
-      output->Flush();
-      PasteOverPreservingClips(*t, start, originalLen, *output);
-   }
-
-   return bLoopSuccess;
 }
