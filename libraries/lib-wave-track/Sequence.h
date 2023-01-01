@@ -236,6 +236,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    size_t GetRetainCount() const { return mRetainCount; }
 
    size_t GetAppendBufferLen() const { return mAppendBufferLen; }
+   samplePtr GetAppendBuffer() { return mAppendBuffer.ptr(); }
    constSamplePtr GetAppendBuffer() const { return mAppendBuffer.ptr(); }
 
  private:

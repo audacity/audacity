@@ -1337,7 +1337,7 @@ bool Sequence::Append(
       // postcondition
       assert(GetAppendBuffer());
    }
-   auto dest = const_cast<samplePtr>(GetAppendBuffer());
+   auto dest = GetAppendBuffer();
 
    bool result = false;
    auto blockSize = GetIdealAppendLen();

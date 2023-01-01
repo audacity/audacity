@@ -154,6 +154,11 @@ size_t WaveClip::GetAppendBufferLen() const
    return GetSequence()->GetAppendBufferLen();
 }
 
+samplePtr WaveClip::GetAppendBuffer()
+{
+   return GetSequence()->GetAppendBuffer();
+}
+
 constSamplePtr WaveClip::GetAppendBuffer() const
 {
    return GetSequence()->GetAppendBuffer();

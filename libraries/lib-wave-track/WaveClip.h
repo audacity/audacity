@@ -352,6 +352,7 @@ public:
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
 
+   samplePtr GetAppendBuffer();
    constSamplePtr GetAppendBuffer() const;
    size_t GetAppendBufferLen() const;
 
