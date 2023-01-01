@@ -63,15 +63,17 @@ enum {
    TBCutID,
    TBCopyID,
    TBPasteID,
+   TBDeleteID,
    TBNumButtons
 };
 
 constexpr int first_TB_ID = 21300;
 
 static const ToolBarButtons::ButtonList CutCopyPasteToolbarButtonList = {
-   { TBCutID,   wxT("Cut"),   XO("Cut")   },
-   { TBCopyID,  wxT("Copy"),  XO("Copy")  },
-   { TBPasteID, wxT("Paste"), XO("Paste") }
+   { TBCutID,    wxT("Cut"),    XO("Cut")   },
+   { TBCopyID,   wxT("Copy"),   XO("Copy")  },
+   { TBPasteID,  wxT("Paste"),  XO("Paste") },
+   { TBDeleteID, wxT("Delete"), XO("Delete")}
 };
 
 IMPLEMENT_CLASS(CutCopyPasteToolBar, ToolBar);
@@ -128,6 +130,8 @@ void CutCopyPasteToolBar::Populate()
       XO("Copy"));
    AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, TBPasteID,
       XO("Paste"));
+   AddButton(bmpDelete, bmpDelete, bmpDeleteDisabled, TBDeleteID,
+      XO("Delete"));
 
    mButtons.SetEnabled(TBPasteID, false);
 
