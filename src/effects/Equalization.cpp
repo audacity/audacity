@@ -418,31 +418,47 @@ class EffectTask {
 public:
    virtual ~EffectTask();
    virtual void Run(sampleCount start, sampleCount len) = 0;
+   //! Called only after successful Run() of both tasks; `other` has been
+   //! Combine()d or Flush()ed
+   virtual void Combine(EffectTask &&other) = 0;
+   //! Called only after successful Run(); Combine() will not be called
+   virtual void Flush() = 0;
 };
 
 EffectTask::~EffectTask() = default;
 
 struct EqualizationTask : EffectTask {
    EqualizationTask(const EqualizationFilter &parameters,
-      size_t M, size_t idealBlockLen, const WaveTrack &t, Poller &poller
+      size_t M, size_t idealBlockLen, const WaveTrack &t, Poller &poller,
+      bool first
    )  : mParameters{ parameters }
       // Capacity for M - 1 additional right tail samples
       , buffer{ idealBlockLen + (M - 1) }
+      , retained{ first ? 0 : (M - 1) }
       , input{ t }
       , poller{ poller }
       , output{ t.EmptyCopy() }
       , M{ M }
-      , leftTailRemaining{ (M - 1) / 2 }
+      , leftTailRemaining{ first ? (M - 1) / 2 : (M - 1) }
       , idealBlockLen{ idealBlockLen }
+      , first{ first }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
+      output->SetRetainCount(M - 1);
    }
+
+   EqualizationTask(EqualizationTask&&) = default;
 
    ~EqualizationTask() override;
 
    void AccumulateSamples(constSamplePtr buffer, size_t len)
    {
       auto leftTail = std::min(len, leftTailRemaining);
+      if (leftTail > 0 && !first)
+         // Keep these samples for overlap-add onto the end of the left
+         // neighboring track
+         memcpy(retained.get() + (M - 1) - leftTailRemaining,
+            buffer, leftTail * sizeof(float));
       leftTailRemaining -= leftTail;
       len -= leftTail;
       buffer += leftTail * sizeof(float);
@@ -450,6 +466,8 @@ struct EqualizationTask : EffectTask {
    }
 
    void Run(sampleCount start, sampleCount len) override;
+   void Combine(EffectTask &&other) override;
+   void Flush() override;
 
    const EqualizationFilter &mParameters;
 
@@ -459,6 +477,7 @@ struct EqualizationTask : EffectTask {
    Floats scratch{ windowSize };
 
    Floats buffer;
+   Floats retained;
 
    // These pointers are swapped after each FFT window
    float *thisWindow{ window1.get() };
@@ -474,6 +493,8 @@ struct EqualizationTask : EffectTask {
    size_t M;
    size_t leftTailRemaining;
    size_t idealBlockLen;
+
+   const bool first;
 };
 
 EqualizationTask::~EqualizationTask() = default;
@@ -548,19 +569,33 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       return bLoopSuccess.load(order);
    });
 
-   EqualizationTask task{ mParameters, M, idealBlockLen, *t, poller };
-   auto &output = task.output;
+   std::vector<EqualizationTask> tasks;
+   tasks.reserve(1);
+   tasks.emplace_back(mParameters, M, idealBlockLen, *t, poller, true);
    t->ConvertToSampleFormat( floatSample );
 
-   TaskRunner runner{ task, bLoopSuccess };
-   runner(start, len);
-   if (runner.pExc)
-      std::rethrow_exception(runner.pExc);
+   std::vector<TaskRunner> runners;
+   runners.reserve(tasks.size());
+   for (auto &task : tasks) {
+      auto &runner = runners.emplace_back(task, bLoopSuccess);
+      runner(start, len);
+   }
+   for (auto &runner : runners) {
+      if (runner.pExc)
+         std::rethrow_exception(runner.pExc);
+   }
 
    // Any exceptions in the remining serial post-processing can propagate simply
+   // Task combination might be parallelized too with some more ingenuity, but
+   // it might not make significant extra savings of time
    if (bLoopSuccess) {
-      output->Flush();
-      PasteOverPreservingClips(*t, start, originalLen, *output);
+      // Combine tasks right to left
+      auto first = begin(tasks), iter = end(tasks);
+      assert(iter != first);
+      (--iter)->Flush();
+      for (; iter != first; --iter)
+         (iter - 1)->Combine(std::move(*iter));
+      PasteOverPreservingClips(*t, start, originalLen, *first->output);
    }
 
    return bLoopSuccess;
@@ -602,7 +637,8 @@ void EqualizationTask::Run(sampleCount start, sampleCount len)
          i += wcopy;
          // Must generate some extra to compensate the left tail latency of
          // (M - 1) / 2 samples.  In fact, exceed that, generating (M - 1).
-         // The right tail of (M - 1) / 2 is later discarded.
+         // The right tail of (M - 1) / 2 is later discarded if this task is
+         // rightmost.
          // M-1 samples of 'tail' left in lastWindow, get them now
          // (note that lastWindow and thisWindow have been exchanged at this point
          //  so that 'thisWindow' is really the window prior to 'lastWindow')
@@ -626,4 +662,37 @@ void EqualizationTask::Run(sampleCount start, sampleCount len)
       if (!poller(block))
          break;
    }
+}
+
+void EqualizationTask::Combine(EffectTask &&other)
+{
+   auto lastClip = this->output->RightmostOrNewClip();
+   auto len = lastClip->GetAppendBufferLen();
+   // Successful Run() always accumulates at least M - 1 samples in the last
+   // pass, and that was set as the retain count of the track
+   assert(len >= M - 1);
+   auto ptr =
+      reinterpret_cast<float*>(lastClip->GetAppendBuffer()) + len - (M - 1);
+
+   auto &otherTask = static_cast<EqualizationTask&>(other);
+   assert(!otherTask.first);
+   auto src = move(otherTask.retained);
+
+   std::transform( // std::par_unseq,
+      ptr, ptr + (M - 1), src.get(), ptr, std::plus{});
+   // Left track must flush (making a block) before pasting into it, which is
+   // why right to left reduction is more convenient:  the right track is
+   // already done and can be discarded.  Repeated pastings will
+   // only reconstruct a block sequence without making any other blocks.
+   this->output->Flush();
+   auto pTrack = move(otherTask.output);
+   this->output->Paste(this->output->GetEndTime(), pTrack.get(),
+      // Join touching clips!
+      true);
+}
+
+void EqualizationTask::Flush()
+{
+   // Not expecting overlap-add from a right neighbor
+   output->Flush();
 }
