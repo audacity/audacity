@@ -430,7 +430,7 @@ EffectTask::~EffectTask() = default;
 struct EqualizationTask : EffectTask {
    EqualizationTask(const EqualizationFilter &parameters,
       size_t M, size_t idealBlockLen, const WaveTrack &t, Poller &poller,
-      bool first
+      bool first, bool last
    )  : mParameters{ parameters }
       // Capacity for M - 1 additional right tail samples
       , buffer{ idealBlockLen + (M - 1) }
@@ -442,6 +442,7 @@ struct EqualizationTask : EffectTask {
       , leftTailRemaining{ first ? (M - 1) / 2 : (M - 1) }
       , idealBlockLen{ idealBlockLen }
       , first{ first }
+      , last{ last }
    {
       memset(lastWindow, 0, windowSize * sizeof(float));
       output->SetRetainCount(M - 1);
@@ -495,6 +496,7 @@ struct EqualizationTask : EffectTask {
    size_t idealBlockLen;
 
    const bool first;
+   const bool last;
 };
 
 EqualizationTask::~EqualizationTask() = default;
@@ -571,7 +573,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    std::vector<EqualizationTask> tasks;
    tasks.reserve(1);
-   tasks.emplace_back(mParameters, M, idealBlockLen, *t, poller, true);
+   tasks.emplace_back(mParameters, M, idealBlockLen, *t, poller, true, true);
    t->ConvertToSampleFormat( floatSample );
 
    std::vector<TaskRunner> runners;
@@ -636,25 +638,24 @@ void EqualizationTask::Run(sampleCount start, sampleCount len)
          i -= L;
          i += wcopy;
          // Must generate some extra to compensate the left tail latency of
-         // (M - 1) / 2 samples.  In fact, exceed that, generating (M - 1).
-         // The right tail of (M - 1) / 2 is later discarded if this task is
-         // rightmost.
-         // M-1 samples of 'tail' left in lastWindow, get them now
+         // (M - 1) / 2 samples.  In fact, exceed that, generating (M - 1),
+         // unless this task is rightmost.
          // (note that lastWindow and thisWindow have been exchanged at this point
          //  so that 'thisWindow' is really the window prior to 'lastWindow')
-         if (wcopy < (M - 1)) {
+         const auto required = last ? ((M - 1) / 2) : (M - 1);
+         if (wcopy < required) {
             // Still have some overlap left to process
             size_t j = 0;
-            for(; j < M - 1 - wcopy; ++j)
+            for(; j < required - wcopy; ++j)
                buffer[i + j] = lastWindow[wcopy + j] + thisWindow[L + wcopy + j];
             // And fill in the remainder after the overlap
-            for( ; j < M - 1; ++j)
+            for( ; j < required; ++j)
                buffer[i + j] = lastWindow[wcopy + j];
          } else {
-            for(size_t j = 0; j < M - 1; ++j)
+            for(size_t j = 0; j < required; ++j)
                buffer[i + j] = lastWindow[wcopy + j];
          }
-         block += M - 1;
+         block += required;
       }
    
       AccumulateSamples((samplePtr)buffer.get(), block);
