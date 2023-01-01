@@ -480,7 +480,7 @@ EqualizationTask::~EqualizationTask() = default;
 
 //! Wrap a task with deferral of exception propagation
 struct TaskRunner {
-   TaskRunner(EffectTask &task, bool &bLoopSuccess)
+   TaskRunner(EffectTask &task, std::atomic<bool> &bLoopSuccess)
       : task{ task }, bLoopSuccess{ bLoopSuccess }
    {}
 
@@ -488,7 +488,7 @@ struct TaskRunner {
    void operator ()(sampleCount start, sampleCount len) noexcept;
 
    EffectTask &task;
-   bool &bLoopSuccess;
+   std::atomic<bool> &bLoopSuccess;
    std::exception_ptr pExc;
 };
 
@@ -498,7 +498,8 @@ void TaskRunner::operator ()(sampleCount start, sampleCount len) noexcept
       task.Run(start, len);
    }
    catch(...) {
-      bLoopSuccess = false;
+      // Other tasks can poll for the shut-down message
+      bLoopSuccess.store(false, std::memory_order_relaxed);
       pExc = std::current_exception();
    }
 }
@@ -521,17 +522,30 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       idealBlockLen += (L - (idealBlockLen % L));
 
    TrackProgress(count, 0.);
-   bool bLoopSuccess = true;
-   auto position = start - (M - 1) / 2;
+
+   std::atomic<bool> bLoopSuccess = true;
+   using Position = std::atomic<sampleCount::type>;
+   auto position = Position{ (start - (M - 1) / 2).as_long_long() };
+   assert(position.is_lock_free());
+
    Poller poller([
       this, &bLoopSuccess, &position,
       start, count, originalLen
+      // Construct one shared poller while in the main thread
+      , threadId = std::this_thread::get_id()
    ](sampleCount block) {
-      position += block;
-      if (TrackProgress(count, (std::max(position, start)).as_double() /
+      // The two atomics don't synchronize any other data transfers so
+      // only need relaxed updates
+      constexpr auto order = std::memory_order_relaxed;
+      // Update counter atomically; note, fetch_add returns old value
+      sampleCount value =
+         block + (position.fetch_add(block.as_long_long(), order));
+      // Poll the progress dialog only on the main thread
+      if (threadId == std::this_thread::get_id() &&
+         TrackProgress(count, (std::max(value, start)).as_double() /
                         originalLen.as_double()))
-         bLoopSuccess = false;
-      return bLoopSuccess;
+         bLoopSuccess.store(false, order);
+      return bLoopSuccess.load(order);
    });
 
    EqualizationTask task{ mParameters, M, idealBlockLen, *t, poller };
