@@ -60,7 +60,6 @@ class AudioSetupToolBar final : public ToolBar {
    void CommonMenuItemSteps(bool audioSettingsChosen);
 
    bool ChangeHost(int hostId);
-   void ChangeDevice(int deviceId, bool isInput);
    class Choice;
    void ChangeDeviceLabel(
       int deviceId, Choice &choices, bool isInput, int baseId);
@@ -196,7 +195,7 @@ class AudioSetupToolBar final : public ToolBar {
       int mIndex{ -1 };
    };
 
-   std::unique_ptr<wxMenu> mInput;
+   Choice mInput{ kInput };
    Choice mOutput{ kOutput };
    Choices mInputChannels;
    Choices mHost;
