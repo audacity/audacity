@@ -751,6 +751,34 @@ void AudioSetupToolBar::ChangeDevice(int deviceId, bool isInput)
               isInput ? nullptr : &maps[newIndex]);
 }
 
+void AudioSetupToolBar::ChangeDeviceLabel(
+   int deviceId, Choice &choices, bool isInput, int baseId)
+{
+   int newIndex = -1;
+
+   auto host = AudioIOHost.Read();
+   const std::vector<DeviceSourceMap>& maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
+      : DeviceManager::Instance()->GetOutputDeviceMaps();
+
+   if (choices.Set(baseId + deviceId)) {
+      // Update cache with the chosen device
+      wxString newDevice = *choices.Get();
+      for (size_t i = 0; i < maps.size(); ++i) {
+         const auto name = MakeDeviceSourceString(&maps[i]);
+         if (name == newDevice && maps[i].hostString == host)
+            newIndex = i;
+      }
+   }
+
+   if (newIndex < 0) {
+      wxLogDebug(wxT("AudioSetupToolBar::ChangeDeviceLabel(): couldn't find device indices"));
+      return;
+   }
+
+   SetDevices(isInput ? &maps[newIndex] : nullptr,
+              isInput ? nullptr : &maps[newIndex]);
+}
+
 void AudioSetupToolBar::OnHost(int id)
 {
    ChangeHost(id);

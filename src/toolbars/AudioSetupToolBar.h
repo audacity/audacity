@@ -61,6 +61,9 @@ class AudioSetupToolBar final : public ToolBar {
 
    bool ChangeHost(int hostId);
    void ChangeDevice(int deviceId, bool isInput);
+   class Choice;
+   void ChangeDeviceLabel(
+      int deviceId, Choice &choices, bool isInput, int baseId);
    void RepopulateMenus();
    void FillHosts();
    void FillHostDevices();
