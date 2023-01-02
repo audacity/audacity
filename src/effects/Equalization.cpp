@@ -605,23 +605,45 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    t->ConvertToSampleFormat( floatSample );
 
+   // Allocate the runners, to examine their exceptions after
    std::vector<TaskRunner> runners;
    runners.reserve(nTasks);
 
-   size_t ii = 0;
-   auto taskStart = start,
-      nextStart =
-         start + std::min(len, idealBlockLen * (nBlocks * ++ii / nTasks));
-   for (auto &task : tasks) {
-      auto &runner = runners.emplace_back(task, bLoopSuccess);
-      // If nBlocks/nProcessors has a fraction, this length calculation rounds
-      // sometimes up and sometimes down
-      runner(taskStart, nextStart - taskStart);
-      taskStart = nextStart;
-      nextStart =
-         start + std::min(len, idealBlockLen * (nBlocks * ++ii / nTasks));
+   {
+      // Scope for threads that execute the runners
+      std::vector<std::thread> threads;
+      threads.reserve(nTasks - 1);
+
+      size_t ii = 0;
+      auto taskStart = start,
+         nextStart =
+            start + std::min(len, idealBlockLen * (nBlocks * ++ii / nTasks)),
+         len0 = nextStart - start;
+      for (auto &task : tasks) {
+         auto &runner = runners.emplace_back(task, bLoopSuccess);
+         if (ii > 1)
+            threads.emplace_back(
+               std::ref(runner), taskStart, nextStart - taskStart);
+         taskStart = nextStart;
+         // If nBlocks/nProcessors has a fraction, this length calculation
+         // rounds sometimes up and sometimes down
+         nextStart =
+            start + std::min(len, idealBlockLen * (nBlocks * ++ii / nTasks));
+      }
+      assert(nextStart == start + len);
+
+      // Main thread executes the first task
+      runners[0](start, len0);
+
+      // Finish the others
+      for (auto &thread : threads) {
+         thread.join();
+         // Main-thread reinvocation of poller makes the progress indicator fill
+         // to 100%
+         poller(0);
+      }
    }
-   assert(nextStart == start + len);
+
    for (auto &runner : runners) {
       if (runner.pExc)
          std::rethrow_exception(runner.pExc);
