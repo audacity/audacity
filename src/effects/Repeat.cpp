@@ -220,7 +220,7 @@ void EffectRepeat::DisplayNewTime()
    mCurrentTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    if (l > 0) {
-      EnableApply(true);
+      EnableApply(mUIParent, true);
       repeatCount = l;
 
       nc.SetValue((mT1 - mT0) * (repeatCount + 1));
@@ -228,7 +228,7 @@ void EffectRepeat::DisplayNewTime()
    }
    else {
       str = _("Warning: No repeats.");
-      EnableApply(false);
+      EnableApply(mUIParent, false);
    }
    mTotalTime->SetLabel(str);
    mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)

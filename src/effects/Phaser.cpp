@@ -117,14 +117,13 @@ struct EffectPhaser::Validator
    
    void EnableApplyFromValidate()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      actualEffect.EnableApply(mUIParent->Validate());
+      Effect::EnableApply(mUIParent, mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataFromWindow()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      return actualEffect.EnableApply(mUIParent->TransferDataFromWindow());
+      return Effect::EnableApply(
+         mUIParent, mUIParent->TransferDataFromWindow());
    }
    
 };

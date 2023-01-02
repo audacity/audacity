@@ -517,9 +517,9 @@ void EffectLoudness::UpdateUI()
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
       // TODO: recalculate layout here
-      EnableApply(false);
+      EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
-   EnableApply(true);
+   EnableApply(mUIParent, true);
 }

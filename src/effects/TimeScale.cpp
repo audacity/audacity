@@ -336,7 +336,7 @@ void EffectTimeScale::Update_Text_PitchPercentChangeEnd()
 
 void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -346,7 +346,7 @@ void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(ev
 
 void EffectTimeScale::OnText_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -370,7 +370,7 @@ void EffectTimeScale::OnSlider_RatePercentChangeEnd(wxCommandEvent & evt)
 
 void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -381,7 +381,7 @@ void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
 
 void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -392,7 +392,7 @@ void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 
 void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -403,7 +403,8 @@ void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(e
 
 void EffectTimeScale::OnText_PitchPercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent,
+mUIParent->TransferDataFromWindow()))
    {
       return;
    }

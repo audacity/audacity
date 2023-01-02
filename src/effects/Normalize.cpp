@@ -473,7 +473,7 @@ void EffectNormalize::UpdateUI()
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
-      EnableApply(false);
+      EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
@@ -484,5 +484,5 @@ void EffectNormalize::UpdateUI()
    mStereoIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
-   EnableApply(mGain || mDC);
+   EnableApply(mUIParent, mGain || mDC);
 }

@@ -615,17 +615,10 @@ bool Effect::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-bool Effect::EnableApply(bool enable)
+bool Effect::EnableApply(wxWindow *parent, bool enable)
 {
    // May be called during initialization, so try to find the dialog
-   wxWindow *dlg = mUIDialog;
-   if (!dlg && mUIParent)
-   {
-      dlg = wxGetTopLevelParent(mUIParent);
-   }
-
-   if (dlg)
-   {
+   if (auto dlg = wxGetTopLevelParent(parent)) {
       wxWindow *apply = dlg->FindWindow(wxID_APPLY);
 
       // Don't allow focus to get trapped
@@ -642,22 +635,15 @@ bool Effect::EnableApply(bool enable)
          apply->Enable(enable);
    }
 
-   EnablePreview(enable);
+   EnablePreview(parent, enable);
 
    return enable;
 }
 
-bool Effect::EnablePreview(bool enable)
+bool Effect::EnablePreview(wxWindow *parent, bool enable)
 {
    // May be called during initialization, so try to find the dialog
-   wxWindow *dlg = mUIDialog;
-   if (!dlg && mUIParent)
-   {
-      dlg = wxGetTopLevelParent(mUIParent);
-   }
-
-   if (dlg)
-   {
+   if (auto dlg = wxGetTopLevelParent(parent)) {
       wxWindow *play = dlg->FindWindow(kPlayID);
       if (play)
       {

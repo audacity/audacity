@@ -941,7 +941,7 @@ void EffectTruncSilence::OnControlChange(wxCommandEvent & WXUNUSED(evt))
 
    UpdateUI();
 
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

@@ -218,7 +218,7 @@ bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
 {
-   EnableApply(mUIParent->TransferDataFromWindow());
+   EnableApply(mUIParent, mUIParent->TransferDataFromWindow());
 }
 
 size_t EffectPaulstretch::GetBufferSize(double rate) const
