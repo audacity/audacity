@@ -16,6 +16,7 @@
 #include <wx/menu.h>
 #include "ToolBar.h"
 #include "Observer.h"
+#include "MemoryX.h"
 
 enum class DeviceChangeMessage : char;
 
@@ -90,6 +91,7 @@ class AudioSetupToolBar final : public ToolBar {
 
    class Choice {
    public:
+      // id0 is the first in the sequence assigned to submenu items
       explicit Choice(int id0) : mId0{ id0 } {}
       void Clear() { mMenu = std::make_unique<wxMenu>(); }
       [[nodiscard]] bool Empty() const {
@@ -138,6 +140,54 @@ class AudioSetupToolBar final : public ToolBar {
    private:
       std::unique_ptr<wxMenu> mMenu{ std::make_unique<wxMenu>() };
       const int mId0;
+   };
+
+   class Choices {
+   public:
+      void Clear() { mStrings.Clear(); mIndex = -1; }
+      [[nodiscard]] bool Empty() const { return mStrings.empty(); }
+      std::optional<wxString> Get() const {
+         if (mIndex < 0 || mIndex >= mStrings.size())
+            return {};
+         return { mStrings[mIndex] };
+      }
+      wxString GetFirst() const {
+         if (!Empty())
+            return mStrings[0];
+         return {};
+      }
+      int GetSmallIntegerId() const {
+         return mIndex;
+      }
+      int Find(const wxString &name) const {
+         return make_iterator_range(mStrings).index(name);
+      }
+      bool Set(const wxString &name) {
+         auto index = make_iterator_range(mStrings).index(name);
+         if (index != -1) {
+            mIndex = index;
+            return true;
+         }
+         // else no state change
+         return false;
+      }
+      void Set(wxArrayString &&names) {
+         mStrings.swap(names);
+         mIndex = mStrings.empty() ? -1 : 0;
+      }
+      // id is just a small-integer index into the string array
+      bool Set(int id) {
+         if (id < 0 || id >= mStrings.size())
+            return false; // no change of state then
+         mIndex = id;
+         return true;
+      }
+      void AppendSubMenu(AudioSetupToolBar &toolBar,
+         wxMenu &menu, Callback callback, const wxString &title);
+
+   private:
+      wxArrayStringEx mStrings;
+      int mIndex{ -1 };
    };
 
    std::unique_ptr<wxMenu> mInput;

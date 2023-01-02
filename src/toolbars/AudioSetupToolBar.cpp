@@ -667,6 +667,13 @@ void AudioSetupToolBar::Choice::AppendSubMenu(
    toolBar.AppendSubMenu(menu, mMenu, title);
 }
 
+void AudioSetupToolBar::Choices::AppendSubMenu(AudioSetupToolBar &toolBar,
+   wxMenu &menu, Callback callback, const wxString &title)
+{
+   AudioSetupToolBar::
+   AppendSubMenu(toolBar, menu, mStrings, mIndex, callback, title);
+}
+
 std::optional<wxString>
 AudioSetupToolBar::GetSelectedRadioItemLabel(const wxMenu& menu)
 {
