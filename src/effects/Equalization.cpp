@@ -32,6 +32,7 @@
    Clone of the FFT Filter effect, no longer part of Audacity.
 
 *//*******************************************************************/
+
 #include "Equalization.h"
 #include "EqualizationUI.h"
 #include "EffectEditor.h"
@@ -42,6 +43,9 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include <thread>
+
+// Define this to try parallelized EQ
+#define EQ_THREADS
 
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {
@@ -585,6 +589,11 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    const auto nBlocks = ((len + idealBlockLen - 1) / idealBlockLen);
    if (nTasks > nBlocks)
       nTasks = std::max<unsigned>(1, nBlocks.as_size_t());
+
+   #ifndef EQ_THREADS
+   nTasks = 1;
+   #endif
+
    std::vector<EqualizationTask> tasks;
    tasks.reserve(nTasks);
 
