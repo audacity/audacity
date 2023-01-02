@@ -108,7 +108,7 @@ void AudioSetupToolBar::Create(wxWindow *parent)
 void AudioSetupToolBar::DeinitChildren()
 {
    mInput.reset();
-   mOutput.reset();
+   mOutput.Clear();
    mInputChannels.Clear();
    mHost.Clear();
 }
@@ -225,7 +225,7 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
-   AppendSubMenu(menu, mOutput, _("&Playback Device"));
+   mOutput.AppendSubMenu(*this, menu, _("&Playback Device"));
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
@@ -320,31 +320,20 @@ void AudioSetupToolBar::UpdatePrefs()
    else
       desc = devName + wxT(": ") + sourceName;
 
-   auto selectedOutput = GetSelectedRadioItemLabel(*mOutput);
-   if (selectedOutput && *selectedOutput != desc) {
-      if (auto item = mOutput->FindItem(desc); item != wxNOT_FOUND) {
-         mOutput->FindChildItem(item)->Check();
-      }
-      else if (mOutput->GetMenuItemCount()) {
+   if (mOutput.Get() && *mOutput.Get() != desc) {
+      if (!mOutput.Set(desc) && !mOutput.Empty()) {
          for (size_t i = 0; i < outMaps.size(); i++) {
             if (outMaps[i].hostString == hostName &&
-               MakeDeviceSourceString(&outMaps[i]) == mOutput->FindItem(kOutput)->GetItemLabelText()) {
+               MakeDeviceSourceString(&outMaps[i]) == mOutput.GetFirst()) {
                // use the default.  It should exist but check just in case, falling back on the 0 index.
                DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(outMaps[i].hostIndex);
                if (defaultMap) {
-                  const auto menuId = mOutput->FindItem(MakeDeviceSourceString(defaultMap));
-                  auto item = mOutput->FindChildItem(menuId);
-                  if (item)
-                     item->Check();
-
+                  mOutput.Set(MakeDeviceSourceString(defaultMap));
                   SetDevices(nullptr, defaultMap);
                }
                else {
                   //use the first item (0th index) if we have no familiar devices
-                  auto item = mOutput->FindChildItem(kOutput);
-                  if (item)
-                     item->Check();
-
+                  mOutput.Set(kOutput);
                   SetDevices(nullptr, &outMaps[i]);
                }
                break;
@@ -506,7 +495,7 @@ void AudioSetupToolBar::FillHostDevices()
 
    // Make sure in/out are clear in case no host was found
    mInput = std::make_unique<wxMenu>();
-   mOutput = std::make_unique<wxMenu>();
+   mOutput.Clear();
 
    // If we still have no host it means no devices, in which case do nothing.
    if (foundHostIndex == -1) {
@@ -529,13 +518,11 @@ void AudioSetupToolBar::FillHostDevices()
       }
    }
 
-   for (int nextMenuId = kOutput, i = 0; i < outMaps.size(); ++i) {
+   wxArrayStringEx mOutputDeviceNames;
+   for (size_t i = 0; i < outMaps.size(); ++i) {
       auto& device = outMaps[i];
-
       if (foundHostIndex == device.hostIndex) {
-         mOutput->AppendRadioItem(nextMenuId, MakeDeviceSourceString(&device));
-         nextMenuId++;
-
+         mOutputDeviceNames.push_back(MakeDeviceSourceString(&device));
          if (host.empty()) {
             host = device.hostString;
             AudioIOHost.Write(host);
@@ -543,6 +530,7 @@ void AudioSetupToolBar::FillHostDevices()
          }
       }
    }
+   mOutput.Set(std::move(mOutputDeviceNames));
 
    gPrefs->Flush();
 
@@ -722,7 +710,8 @@ void AudioSetupToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSource
 void AudioSetupToolBar::ChangeDevice(int deviceId, bool isInput)
 {
    int newIndex = -1;
-   auto& device = isInput ? mInput : mOutput;
+   assert(isInput);
+   auto& device = mInput;
 
    auto host = AudioIOHost.Read();
    const std::vector<DeviceSourceMap>& maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
@@ -803,7 +792,7 @@ void AudioSetupToolBar::OnInput(wxCommandEvent& event)
 void AudioSetupToolBar::OnOutput(wxCommandEvent& event)
 {
    int id = event.GetId();
-   ChangeDevice(id, false);
+   ChangeDeviceLabel(id, mOutput, false, kOutput);
    CommonMenuItemSteps(false);
 }
 
