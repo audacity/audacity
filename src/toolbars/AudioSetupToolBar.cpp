@@ -37,12 +37,6 @@
 #include "../widgets/wxWidgetsWindowPlacement.h"
 
 namespace {
-   static constexpr int kHost = 15000;
-   static constexpr int kInput = 15200;
-   static constexpr int kInputChannels = 15400;
-   static constexpr int kOutput = 15600;
-   static constexpr int kAudioSettings = 15800;
-
    class ViewDeviceSettingsDialog final : public PrefsDialog
    {
    public:
@@ -116,7 +110,7 @@ void AudioSetupToolBar::DeinitChildren()
    mInput.reset();
    mOutput.reset();
    mInputChannels.reset();
-   mHost.reset();
+   mHost.Clear();
 }
 
 void AudioSetupToolBar::Populate()
@@ -227,7 +221,7 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    wxMenu menu;
 
    //i18n-hint: Audio setup menu
-   AppendSubMenu(menu, mHost, _("&Host"));
+   mHost.AppendSubMenu(*this, menu, _("&Host"));
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
@@ -269,7 +263,7 @@ void AudioSetupToolBar::UpdatePrefs()
    const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
    const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
 
-   auto selectedHost = GetSelectedRadioItemLabel(*mHost);
+   auto selectedHost = mHost.Get();
    wxString oldHost = selectedHost ? *selectedHost : wxString{};
 
    auto hostName = AudioIOHost.Read();
@@ -373,13 +367,9 @@ void AudioSetupToolBar::UpdatePrefs()
          item->Check();
    }
 
-   selectedHost = GetSelectedRadioItemLabel(*mHost);
-   if (!hostName.empty() && selectedHost && selectedHost != hostName) {
-      const auto id = mHost->FindItem(hostName);
-      if (id != wxNOT_FOUND) {
-         mHost->FindChildItem(id)->Check();
-      }
-   }
+   selectedHost = mHost.Get();
+   if (!hostName.empty() && selectedHost && *selectedHost != hostName)
+      mHost.Set(hostName);
 
    RegenerateTooltips();
 
@@ -475,10 +465,7 @@ void AudioSetupToolBar::FillHosts()
       }
    }
 
-   mHost = std::make_unique<wxMenu>();
-
-   for (int i = 0; i < hosts.size(); ++i)
-      mHost->AppendRadioItem(kHost + i, hosts[i]);
+   mHost.Set(std::move(hosts));
 }
 
 void AudioSetupToolBar::FillHostDevices()
@@ -492,10 +479,9 @@ void AudioSetupToolBar::FillHostDevices()
 
    // if the host is not in the hosts combo then we rescanned.
    // set it to blank so we search for another host.
-   if (mHost->FindItem(host) == wxNOT_FOUND) {
+   if (mHost.Find(host) < 0)
       host = wxT("");
-   }
-
+ 
    for (auto & device : outMaps) {
       if (device.hostString == host) {
          foundHostIndex = device.hostIndex;
@@ -542,11 +528,7 @@ void AudioSetupToolBar::FillHostDevices()
          if (host.empty()) {
             host = device.hostString;
             AudioIOHost.Write(host);
-
-            const auto id = mHost->FindItem(host);
-            if (id != wxNOT_FOUND) {
-               mHost->FindChildItem(id)->Check();
-            }
+            mHost.Set(host);
          }
       }
    }
@@ -561,11 +543,7 @@ void AudioSetupToolBar::FillHostDevices()
          if (host.empty()) {
             host = device.hostString;
             AudioIOHost.Write(host);
-
-            const auto id = mHost->FindItem(host);
-            if (id != wxNOT_FOUND) {
-               mHost->FindChildItem(id)->Check();
-            }
+            mHost.Set(host);
          }
       }
    }
@@ -697,15 +675,14 @@ void AudioSetupToolBar::OnRescannedDevices(DeviceChangeMessage m)
 //return true if host changed, false otherwise.
 bool AudioSetupToolBar::ChangeHost(int hostId)
 {
-   auto item = mHost->FindChildItem(hostId);
-   if (!item)
-      return false;
-
    // Update cache with selected host
-   item->Check();
+   if (!mHost.Set(hostId))
+      return false;
+   auto name = mHost.Get();
+   assert(name); // should not be nullopt if Set succeeded
 
    auto oldHost = AudioIOHost.Read();
-   wxString newHost = item->GetItemLabelText();
+   const auto newHost = *name;
 
    if (oldHost == newHost)
       return false;

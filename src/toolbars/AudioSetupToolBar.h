@@ -25,6 +25,11 @@ class wxString;
 struct DeviceSourceMap;
 
 class AudioSetupToolBar final : public ToolBar {
+   static constexpr int kHost = 15000;
+   static constexpr int kInput = 15200;
+   static constexpr int kInputChannels = 15400;
+   static constexpr int kOutput = 15600;
+   static constexpr int kAudioSettings = 15800;
 
  public:
 
@@ -193,7 +198,7 @@ class AudioSetupToolBar final : public ToolBar {
    std::unique_ptr<wxMenu> mInput;
    std::unique_ptr<wxMenu> mOutput;
    std::unique_ptr<wxMenu> mInputChannels;
-   std::unique_ptr<wxMenu> mHost;
+   Choice mHost{ kHost };
 
    Observer::Subscription mSubscription;
 
