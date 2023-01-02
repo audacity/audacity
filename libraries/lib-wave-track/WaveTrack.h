@@ -181,6 +181,9 @@ private:
    Track::Holder CopyNonconst(double t0, double t1) /* not override */;
 
    void Clear(double t0, double t1) override;
+   //! @param join if true, a clip pasted at the exact end of another clip
+   //! will join with it
+   void Paste(double t0, const Track *src, bool join);
    void Paste(double t0, const Track *src) override;
    // May assume precondition: t0 <= t1
    void ClearAndPaste(double t0, double t1,
@@ -534,7 +537,7 @@ private:
    void DoSetPan(float value);
    void DoSetGain(float value);
 
-   void PasteWaveTrack(double t0, const WaveTrack* other);
+   void PasteWaveTrack(double t0, const WaveTrack* other, bool join);
 
    SampleBlockFactoryPtr mpFactory;
 

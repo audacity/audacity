@@ -1209,7 +1209,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
    }
 }
 
-void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
+void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other, bool join)
 {
     //
     // Pasting is a bit complicated, because with the existence of multiclip mode,
@@ -1280,7 +1280,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
         {
             if (editClipCanMove)
             {
-                if (clip->WithinPlayRegion(t0))
+                if (clip->WithinPlayRegion(t0, join))
                 {
                     //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                     //       t0, clip->GetStartTime(), clip->GetEndTime());
@@ -1291,7 +1291,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
             else
             {
                 // If clips are immovable we also allow prepending to clips
-                if (clip->WithinPlayRegion(t0) ||
+                if (clip->WithinPlayRegion(t0, join) ||
                     TimeToLongSamples(t0) == clip->GetPlayStartSample())
                 {
                     insideClip = clip.get();
@@ -1366,8 +1366,14 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
 /*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track *src)
 {
+   Paste(t0, src, false);
+}
+
+/*! @excsafety{Weak} */
+void WaveTrack::Paste(double t0, const Track *src, bool join)
+{
    if (auto other = dynamic_cast<const WaveTrack*>(src))
-      PasteWaveTrack(t0, other);
+      PasteWaveTrack(t0, other, join);
    else
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       (void)0;// Empty if intentional.   

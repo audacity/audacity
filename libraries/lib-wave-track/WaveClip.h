@@ -193,8 +193,9 @@ public:
 
    // One and only one of the following is true for a given t (unless the clip
    // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).
+   // (Or unless inclusiveEnd == true)
    // WithinPlayRegion() is true if the time is substantially within the clip
-   bool WithinPlayRegion(double t) const;
+   bool WithinPlayRegion(double t, bool inclusiveEnd = false) const;
    bool BeforePlayStartTime(double t) const;
    bool AfterPlayEndTime(double t) const;
 

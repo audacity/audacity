@@ -1011,10 +1011,11 @@ void WaveClip::Offset(double delta) noexcept
 // We are within the clip if start < t <= end.
 // Note that BeforeClip and AfterClip must be consistent 
 // with this definition.
-bool WaveClip::WithinPlayRegion(double t) const
+bool WaveClip::WithinPlayRegion(double t, bool inclusiveEnd) const
 {
     auto ts = TimeToSamples(t);
-    return ts > GetPlayStartSample() && ts < GetPlayEndSample() + GetAppendBufferLen();
+    return ts > GetPlayStartSample() &&
+       ts < GetPlayEndSample() + (inclusiveEnd ? 1 : 0) + GetAppendBufferLen();
 }
 
 bool WaveClip::BeforePlayStartTime(double t) const
