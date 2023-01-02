@@ -109,7 +109,7 @@ void AudioSetupToolBar::DeinitChildren()
 {
    mInput.reset();
    mOutput.reset();
-   mInputChannels.reset();
+   mInputChannels.Clear();
    mHost.Clear();
 }
 
@@ -233,7 +233,7 @@ void AudioSetupToolBar::OnAudioSetup(wxCommandEvent& WXUNUSED(evt))
    menu.AppendSeparator();
 
    //i18n-hint: Audio setup menu
-   AppendSubMenu(menu, mInputChannels, _("Recording &Channels"));
+   mInputChannels.AppendSubMenu(*this, menu, _("Recording &Channels"));
    menu.AppendSeparator();
    menu.Append(kAudioSettings, _("&Audio Settings..."));
 
@@ -353,18 +353,11 @@ void AudioSetupToolBar::UpdatePrefs()
       }
    }
 
-   long oldChannels = 0;
-   for (const auto & item : mInputChannels->GetMenuItems()) {
-      if (item->IsChecked())
-         oldChannels = item->GetId() - kInputChannels + 1;
-   }
+   long oldChannels = 1 + mInputChannels.GetSmallIntegerId();
 
    auto newChannels = AudioIORecordChannels.ReadWithDefault(0);
-   if (newChannels > 0 && oldChannels != newChannels) {
-      auto item = mInputChannels->FindChildItem(kInputChannels + newChannels - 1);
-      if (item != nullptr)
-         item->Check();
-   }
+   if (newChannels > 0 && oldChannels != newChannels)
+      mInputChannels.Set(kInputChannels + newChannels - 1);
 
    selectedHost = mHost.Get();
    if (!hostName.empty() && selectedHost && *selectedHost != hostName)
@@ -560,11 +553,12 @@ void AudioSetupToolBar::FillInputChannels()
    auto host = AudioIOHost.Read();
    auto device = AudioIORecordingDevice.Read();
    auto source = AudioIORecordingSource.Read();
-   long newChannels;
+   long newChannels = 0;
 
    auto oldChannels = AudioIORecordChannels.Read();
-   mInputChannels = std::make_unique<wxMenu>();
+   mInputChannels.Clear();
 
+   wxArrayStringEx names;
    for (auto & dev: inMaps) {
       if (source == dev.sourceString &&
           device == dev.deviceString &&
@@ -583,21 +577,19 @@ void AudioSetupToolBar::FillInputChannels()
             else {
                name = wxString::Format(wxT("%d"), (int)j + 1);
             }
-            mInputChannels->AppendRadioItem(kInputChannels + j, name);
+            names.push_back(name);
          }
          newChannels = dev.numChannels;
          if (oldChannels <= newChannels && oldChannels >= 1) {
             newChannels = oldChannels;
          }
-         if (newChannels >= 1) {
-            auto item = mInputChannels->FindItem(kInputChannels + newChannels - 1);
-            if (item != nullptr)
-               item->Check();
-         }
          AudioIORecordChannels.Write(newChannels);
          break;
       }
    }
+   mInputChannels.Set(std::move(names));
+   if (newChannels >= 1)
+      mInputChannels.Set(kInputChannels + newChannels - 1);
 }
 
 void AudioSetupToolBar::AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title)
@@ -764,11 +756,8 @@ void AudioSetupToolBar::OnHost(int id)
 void AudioSetupToolBar::OnChannels(wxCommandEvent& event)
 {
    int id = event.GetId();
-   if (auto item = mInputChannels->FindChildItem(id)) {
-      // Update cache with selected number of input channels
-      item->Check();
+   if (mInputChannels.Set(id))
       AudioIORecordChannels.Write(id - kInputChannels + 1);
-   }
    CommonMenuItemSteps(false);
 }
 

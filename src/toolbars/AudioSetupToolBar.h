@@ -196,7 +196,7 @@ class AudioSetupToolBar final : public ToolBar {
 
    std::unique_ptr<wxMenu> mInput;
    std::unique_ptr<wxMenu> mOutput;
-   std::unique_ptr<wxMenu> mInputChannels;
+   Choice mInputChannels{ kInputChannels };
    Choices mHost;
 
    Observer::Subscription mSubscription;
