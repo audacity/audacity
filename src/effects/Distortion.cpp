@@ -362,7 +362,7 @@ EffectType EffectDistortion::GetType() const
 
 auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Never;
+   return RealtimeSince::After_3_1;
 }
 
 unsigned EffectDistortion::Instance::GetAudioInCount() const
