@@ -188,6 +188,8 @@ list( APPEND SOURCES
       MixerBoard.h
       NoteTrack.cpp
       NoteTrack.h
+      PasteOverPreservingClips.cpp
+      PasteOverPreservingClips.h
       PitchName.cpp
       PitchName.h
       PlaybackSchedule.cpp
@@ -438,6 +440,22 @@ list( APPEND SOURCES
       effects/Equalization.h
       effects/Equalization48x.cpp
       effects/Equalization48x.h
+      effects/EqualizationBandSliders.cpp
+      effects/EqualizationBandSliders.h
+      effects/EqualizationCurves.cpp
+      effects/EqualizationCurves.h
+      effects/EqualizationCurvesDialog.cpp
+      effects/EqualizationCurvesDialog.h
+      effects/EqualizationCurvesList.cpp
+      effects/EqualizationCurvesList.h
+      effects/EqualizationFilter.cpp
+      effects/EqualizationFilter.h
+      effects/EqualizationPanel.cpp
+      effects/EqualizationPanel.h
+      effects/EqualizationParameters.cpp
+      effects/EqualizationParameters.h
+      effects/EqualizationUI.cpp
+      effects/EqualizationUI.h
       effects/Fade.cpp
       effects/Fade.h
       effects/FindClipping.cpp
