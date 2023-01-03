@@ -392,6 +392,7 @@ struct EffectEqualization::Task {
    // These pointers are swapped after each FFT window
    float *thisWindow{ window1.get() };
    float *lastWindow{ window2.get() };
+   Floats scratch{ windowSize };
 
    // a new WaveChannel to hold all of the output,
    // including 'tails' each end
@@ -489,6 +490,7 @@ bool EffectEqualization::ProcessOne(Task &task,
    auto &window2 = task.window2;
    auto &thisWindow = task.thisWindow;
    auto &lastWindow = task.lastWindow;
+   auto &scratch = task.scratch;
 
    auto originalLen = len;
 
@@ -512,7 +514,7 @@ bool EffectEqualization::ProcessOne(Task &task,
          for(auto j = wcopy; j < windowSize; j++)
             thisWindow[j] = 0;   //this includes the padding
 
-         mParameters.Filter(windowSize, thisWindow);
+         mParameters.Filter(windowSize, thisWindow, scratch.get());
 
          // Overlap - Add
          for(size_t j = 0; (j < M - 1) && (j < wcopy); j++)

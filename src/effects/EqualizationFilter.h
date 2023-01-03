@@ -39,7 +39,8 @@ struct EqualizationFilter : EqualizationParameters {
 
    //! Transform a given buffer of time domain signal, which should be zero
    //! padded left and right for the tails
-   void Filter(size_t len, float *buffer) const;
+   //! @param scratch temporary of same length as buffer
+   void Filter(size_t len, float *buffer, float *scratch) const;
 
    const Envelope &ChooseEnvelope() const
    { return mLin ? mLinEnvelope : mLogEnvelope; }
@@ -52,7 +53,6 @@ struct EqualizationFilter : EqualizationParameters {
 
    Envelope mLinEnvelope, mLogEnvelope;
    HFFT hFFT{ GetFFT(windowSize) };
-   Floats mFFTBuffer{ windowSize };
    Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };
    double mLoFreq{ loFreqI };
    double mHiFreq{ mLoFreq };
