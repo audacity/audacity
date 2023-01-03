@@ -436,6 +436,7 @@ struct EqualizationTask {
    static constexpr auto windowSize = EqualizationFilter::windowSize;
    Floats window1{ windowSize };
    Floats window2{ windowSize };
+   Floats scratch{ windowSize };
 
    Floats buffer;
 
@@ -487,6 +488,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    auto &window2 = task.window2;
    auto &thisWindow = task.thisWindow;
    auto &lastWindow = task.lastWindow;
+   auto &scratch = task.scratch;
    auto &output = task.output;
    t->ConvertToSampleFormat( floatSample );
 
@@ -507,7 +509,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          for(auto j = wcopy; j < windowSize; j++)
             thisWindow[j] = 0;   //this includes the padding
 
-         mParameters.Filter(windowSize, thisWindow);
+         mParameters.Filter(windowSize, thisWindow, scratch.get());
 
          // Overlap - Add
          for(size_t j = 0; (j < M - 1) && (j < wcopy); j++)

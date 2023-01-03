@@ -146,7 +146,7 @@ bool EqualizationFilter::CalcFilter()
    return TRUE;
 }
 
-void EqualizationFilter::Filter(size_t len, float *buffer) const
+void EqualizationFilter::Filter(size_t len, float *buffer, float *scratch) const
 {
    // Transform a window of the time-domain signal to frequency;
    // Multiply by corresponding coefficients;
@@ -159,18 +159,18 @@ void EqualizationFilter::Filter(size_t len, float *buffer) const
 
    // Apply filter
    // DC component is purely real
-   mFFTBuffer[0] = buffer[0] * mFilterFuncR[0];
+   scratch[0] = buffer[0] * mFilterFuncR[0];
    for(size_t i = 1; i < (len / 2); i++)
    {
       re=buffer[hFFT->BitReversed[i]  ];
       im=buffer[hFFT->BitReversed[i]+1];
-      mFFTBuffer[2*i  ] = re*mFilterFuncR[i] - im*mFilterFuncI[i];
-      mFFTBuffer[2*i+1] = re*mFilterFuncI[i] + im*mFilterFuncR[i];
+      scratch[2*i  ] = re*mFilterFuncR[i] - im*mFilterFuncI[i];
+      scratch[2*i+1] = re*mFilterFuncI[i] + im*mFilterFuncR[i];
    }
    // Fs/2 component is purely real
-   mFFTBuffer[1] = buffer[1] * mFilterFuncR[len/2];
+   scratch[1] = buffer[1] * mFilterFuncR[len/2];
 
    // Inverse FFT and normalization
-   InverseRealFFTf(mFFTBuffer.get(), hFFT.get());
-   ReorderToTime(hFFT.get(), mFFTBuffer.get(), buffer);
+   InverseRealFFTf(scratch, hFFT.get());
+   ReorderToTime(hFFT.get(), scratch, buffer);
 }
