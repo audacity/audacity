@@ -22,6 +22,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "WaveTrack.h"
 
 #include "SentryHelper.h"
+#include "spinlock.h"
 #include <wx/log.h>
 
 class SqliteSampleBlockFactory;
@@ -130,6 +131,8 @@ private:
 // used length values
 static std::map< SampleBlockID, std::shared_ptr<SqliteSampleBlock> >
    sSilentBlocks;
+// Guard accesses to the global map
+spinlock sLock;
 
 ///\brief Implementation of @ref SampleBlockFactory using Sqlite database
 class SqliteSampleBlockFactory final
@@ -173,6 +176,9 @@ private:
    using AllBlocksMap =
       std::map< SampleBlockID, std::weak_ptr< SqliteSampleBlock > >;
    AllBlocksMap mAllBlocks;
+
+   // Guard accesses to the per-factory maps
+   spinlock mLock;
 };
 
 SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
@@ -200,20 +206,26 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
    auto sb = std::make_shared<SqliteSampleBlock>(shared_from_this());
    sb->SetSamples(src, numsamples, srcformat);
    // block id has now been assigned
-   mAllBlocks[ sb->GetBlockID() ] = sb;
+   {
+      std::lock_guard g{ mLock };
+      mAllBlocks[ sb->GetBlockID() ] = sb;
+   }
    return sb;
 }
 
 auto SqliteSampleBlockFactory::GetActiveBlockIDs() -> SampleBlockIDs
 {
    SampleBlockIDs result;
-   for (auto end = mAllBlocks.end(), it = mAllBlocks.begin(); it != end;) {
-      if (it->second.expired())
-         // Tighten up the map
-         it = mAllBlocks.erase(it);
-      else {
-         result.insert( it->first );
-         ++it;
+   {
+      std::lock_guard g{ mLock };
+      for (auto end = mAllBlocks.end(), it = mAllBlocks.begin(); it != end;) {
+         if (it->second.expired())
+            // Tighten up the map
+            it = mAllBlocks.erase(it);
+         else {
+            result.insert( it->first );
+            ++it;
+         }
       }
    }
    return result;
@@ -223,6 +235,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
    size_t numsamples, sampleFormat )
 {
    auto id = -static_cast< SampleBlockID >(numsamples);
+   std::lock_guard g{ sLock };
    auto &result = sSilentBlocks[ id ];
    if ( !result ) {
       result = std::make_shared<SqliteSampleBlock>(nullptr);
@@ -259,6 +272,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
          }
          else {
             // First see if this block id was previously loaded
+            std::lock_guard g{ mLock };
             auto &wb = mAllBlocks[ nValue ];
             auto pb = wb.lock();
             if (pb)

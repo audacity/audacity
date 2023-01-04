@@ -435,7 +435,6 @@ EffectTask::~EffectTask() = default;
 struct EqualizationTask : EffectTask {
    EqualizationTask(const EqualizationFilter &parameters,
       size_t M, size_t idealBlockLen, const WaveTrack &t, Poller &poller,
-      std::mutex &mutex,
       bool first, bool last
    )  : mParameters{ parameters }
       // Capacity for M - 1 additional right tail samples
@@ -443,7 +442,6 @@ struct EqualizationTask : EffectTask {
       , retained{ first ? 0 : (M - 1) }
       , input{ t }
       , poller{ poller }
-      , mutex{ mutex }
       , output{ t.EmptyCopy() }
       , M{ M }
       , leftTailRemaining{ first ? (M - 1) / 2 : (M - 1) }
@@ -470,7 +468,7 @@ struct EqualizationTask : EffectTask {
       leftTailRemaining -= leftTail;
       len -= leftTail;
       buffer += leftTail * sizeof(float);
-      (std::lock_guard{ mutex }, output->Append(buffer, floatSample, len));
+      output->Append(buffer, floatSample, len);
    }
 
    void Run(sampleCount start, sampleCount len) override;
@@ -493,9 +491,6 @@ struct EqualizationTask : EffectTask {
 
    const WaveTrack &input;
    Poller &poller;
-
-   // Guards calls on *output that may make new sample blocks
-   std::mutex &mutex;
 
    // create a NEW WaveTrack to hold all of the output,
    // including 'tails' each end
@@ -597,19 +592,13 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    std::vector<EqualizationTask> tasks;
    tasks.reserve(nTasks);
 
-   // Needed only to prevent contention on the SQLiteSampleBlockFactory shared
-   // among WaveTracks.  (Not needed to prevent races in sqlite itself.)
-   // But maybe a finer-grained locking could be implemented
-   // at lower levels.  Not every Append() to the output track makes a block.
-   std::mutex mutex;
-
    // First task
-   tasks.emplace_back(mParameters, M,
-      idealBlockLen, *t, poller, mutex, true, nTasks-- == 1);
+   tasks.emplace_back(
+      mParameters, M, idealBlockLen, *t, poller, true, nTasks-- == 1);
    // More tasks
    while (nTasks)
-      tasks.emplace_back(mParameters, M,
-         idealBlockLen, *t, poller, mutex, false, nTasks-- == 1);
+      tasks.emplace_back(
+         mParameters, M, idealBlockLen, *t, poller, false, nTasks-- == 1);
    nTasks = tasks.size();
 
    t->ConvertToSampleFormat( floatSample );
@@ -756,7 +745,6 @@ void EqualizationTask::Combine(EffectTask &&other)
    // why right to left reduction is more convenient:  the right track is
    // already done and can be discarded.  Repeated pastings will
    // only reconstruct a block sequence without making any other blocks.
-   // Happens during serial pass after parallel portion; no mutex lock needed
    this->output->Flush();
    auto pTrack = move(otherTask.output);
    this->output->Paste(this->output->GetEndTime(), pTrack.get(),
@@ -767,6 +755,5 @@ void EqualizationTask::Combine(EffectTask &&other)
 void EqualizationTask::Flush()
 {
    // Not expecting overlap-add from a right neighbor
-   // Happens during serial pass after parallel portion; no mutex lock needed
    output->Flush();
 }
