@@ -1000,14 +1000,6 @@ void ToolManager::WriteConfig()
 //
 // Return a pointer to the specified toolbar
 //
-ToolBar *ToolManager::GetToolBar( int type ) const
-{
-   return mBars[ type ].get();
-}
-
-//
-// Return a pointer to the specified toolbar
-//
 ToolBar *ToolManager::GetToolBar(const Identifier &type) const
 {
    auto end = std::end(mBars), iter = std::find_if(std::begin(mBars), end,
