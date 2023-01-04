@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <algorithm>
-#define _USE_MATH_DEFINES
+//#define _USE_MATH_DEFINES
 
 // Belt and braces
 #ifndef M_PI
@@ -63,14 +63,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
 {
    static CapturedParameters<EffectDistortion,
       TableTypeIndx, DCBlock, Threshold_dB, NoiseFloor, Param1, Param2, Repeats
-   > parameters{
-      [](EffectDistortion &e, EffectSettings &settings, Params &p,
-         bool updating) {
-         if (!updating)
-            e.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
-         return true;
-      }
-   };
+   > parameters;
    return parameters;
 }
 
@@ -80,7 +73,7 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
 static const struct
 {
    const TranslatableString name;
-   EffectDistortion::Params params;
+   EffectDistortionSettings params;
 }
 FactoryPresets[] =
 {
@@ -133,27 +126,208 @@ const ComponentInterfaceSymbol EffectDistortion::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectDistortion > reg; }
 
-BEGIN_EVENT_TABLE(EffectDistortion, wxEvtHandler)
-   EVT_CHOICE(ID_Type, EffectDistortion::OnTypeChoice)
-   EVT_CHECKBOX(ID_DCBlock, EffectDistortion::OnDCBlockCheckbox)
-   EVT_TEXT(ID_Threshold, EffectDistortion::OnThresholdText)
-   EVT_SLIDER(ID_Threshold, EffectDistortion::OnThresholdSlider)
-   EVT_TEXT(ID_NoiseFloor, EffectDistortion::OnNoiseFloorText)
-   EVT_SLIDER(ID_NoiseFloor, EffectDistortion::OnNoiseFloorSlider)
-   EVT_TEXT(ID_Param1, EffectDistortion::OnParam1Text)
-   EVT_SLIDER(ID_Param1, EffectDistortion::OnParam1Slider)
-   EVT_TEXT(ID_Param2, EffectDistortion::OnParam2Text)
-   EVT_SLIDER(ID_Param2, EffectDistortion::OnParam2Slider)
-   EVT_TEXT(ID_Repeats, EffectDistortion::OnRepeatsText)
-   EVT_SLIDER(ID_Repeats, EffectDistortion::OnRepeatsSlider)
-END_EVENT_TABLE()
+
+struct EffectDistortion::Validator
+   : EffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+             EffectDistortion::Instance& instance,
+      EffectSettingsAccess& access, const EffectDistortionSettings& settings)
+      : EffectUIValidator{ effect, access }
+      , mInstance(instance)
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
+
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+
+   void PopulateOrExchange(ShuttleGui& S);
+
+   // Control Handlers
+   void OnTypeChoice(wxCommandEvent& evt);
+   void OnDCBlockCheckbox(wxCommandEvent& evt);
+   void OnThresholdText(wxCommandEvent& evt);
+   void OnThresholdSlider(wxCommandEvent& evt);
+   void OnNoiseFloorText(wxCommandEvent& evt);
+   void OnNoiseFloorSlider(wxCommandEvent& evt);
+   void OnParam1Text(wxCommandEvent& evt);
+   void OnParam1Slider(wxCommandEvent& evt);
+   void OnParam2Text(wxCommandEvent& evt);
+   void OnParam2Slider(wxCommandEvent& evt);
+   void OnRepeatsText(wxCommandEvent& evt);
+   void OnRepeatsSlider(wxCommandEvent& evt);
+
+   wxChoice* mTypeChoiceCtrl;
+   wxTextCtrl* mThresholdT;
+   wxTextCtrl* mNoiseFloorT;
+   wxTextCtrl* mParam1T;
+   wxTextCtrl* mParam2T;
+   wxTextCtrl* mRepeatsT;
+
+   wxSlider* mThresholdS;
+   wxSlider* mNoiseFloorS;
+   wxSlider* mParam1S;
+   wxSlider* mParam2S;
+   wxSlider* mRepeatsS;
+
+   wxCheckBox* mDCBlockCheckBox;
+
+   wxStaticText* mThresholdTxt;
+   wxStaticText* mNoiseFloorTxt;
+   wxStaticText* mParam1Txt;
+   wxStaticText* mParam2Txt;
+   wxStaticText* mRepeatsTxt;
+
+   wxString mOldThresholdTxt;
+   wxString mOldmNoiseFloorTxt;
+   wxString mOldParam1Txt;
+   wxString mOldParam2Txt;
+   wxString mOldRepeatsTxt;
+
+   EffectDistortionSettings mSettings;
+
+   EffectDistortionState& GetState();
+
+   void UpdateControl(control id, bool enable, TranslatableString name);
+   void UpdateUIControls();
+   void UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled);
+
+
+   wxWindow* GetUIParent()
+   {
+      Effect& actualEffect = static_cast<Effect&>(mEffect);
+      return actualEffect.GetUIParent();
+   }
+
+   EffectDistortion::Instance& mInstance;
+};
+
+
+bool EffectDistortion::Validator::ValidateUI()
+{
+   {
+      // This section was copied from the original
+      // EffectDistortion::TransferDataFromWindow
+      //
+      // However, the call to ->Validate would bring up an error dialog
+      // saying "Empty value"
+
+      if ( /*!GetUIParent()->Validate() ||*/ !GetUIParent()->TransferDataFromWindow())
+      {
+         return false;
+      }
+   }
+
+
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+   {
+      // pass back the modified settings to the MessageBuffer
+
+      GetSettings(settings) = mSettings;
+
+      return nullptr;
+   }
+   );
+
+   return true;
+}
+
+
+struct EffectDistortion::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings, double sampleRate,
+      ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool RealtimeInitialize(EffectSettings& settings, double) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(size_t group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+
+
+   void InstanceInit(EffectDistortionState& data, EffectSettings& settings, float sampleRate);
+
+   size_t InstanceProcess(EffectSettings& settings, EffectDistortionState& data,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+   void MakeTable(EffectDistortionState& state, const EffectDistortionSettings& ms);
+
+   void HardClip(EffectDistortionState&,
+                 const EffectDistortionSettings&); // hard clipping
+
+   void SoftClip(      EffectDistortionState&,
+                 const EffectDistortionSettings&); // soft clipping
+
+   void ExponentialTable (const EffectDistortionSettings&);   // exponential mapping
+   void LogarithmicTable (const EffectDistortionSettings&);   // logarithmic mapping
+   void HalfSinTable     (const EffectDistortionSettings&);
+   void CubicTable       (const EffectDistortionSettings&);
+   void EvenHarmonicTable(const EffectDistortionSettings&);
+   void SineTable        (const EffectDistortionSettings&);
+   void Leveller         (const EffectDistortionSettings&);    // 'Leveller' wavetable is modeled on the legacy effect of the same name.
+   void Rectifier        (const EffectDistortionSettings&);    // 0% = Dry, 50% = half-wave rectified, 100% = full-wave rectified (abs value).
+   void HardLimiter      ( EffectDistortionState& state,
+                           const EffectDistortionSettings&
+                         ); // Same effect as the LADSPA "hardLimiter 1413"
+
+   void CopyHalfTable();   // for symmetric tables
+
+   // Used by Soft Clipping but could be used for other tables.
+   // Log curve formula: y = T + (((e^(RT - Rx)) - 1) / -R)
+   // where R is the ratio, T is the threshold, and x is from T to 1. 
+   inline float LogCurve(double threshold, float value, double ratio);
+
+   // Used by Cubic curve but could be used for other tables
+   // Cubic formula: y = x - (x^3 / 3.0)
+   inline double Cubic(const EffectDistortionSettings&, double x);
+
+   float WaveShaper(float sample, EffectDistortionSettings& ms);
+   float DCFilter(EffectDistortionState& data, float sample);
+
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
+   double mTable[TABLESIZE];
+
+   EffectDistortionState mMaster;
+   std::vector<EffectDistortionState> mSlaves;
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectDistortion::MakeInstance() const
+{
+   return std::make_shared<Instance>(*this);
+}
+
+
+EffectDistortionState& EffectDistortion::Validator::GetState()
+{
+   return mInstance.mMaster;
+}
 
 EffectDistortion::EffectDistortion()
 {
-   Parameters().Reset(*this);
    wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
-   mMakeupGain = 1.0;
-   mbSavedFilterState = DCBlock.def;
 
    SetLinearEffectFlag(false);
 }
@@ -188,62 +362,60 @@ EffectType EffectDistortion::GetType() const
 
 auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
 {
-   // TODO reenable after achieving statelessness
-   return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   return RealtimeSince::After_3_1;
 }
 
-unsigned EffectDistortion::GetAudioInCount() const
+unsigned EffectDistortion::Instance::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectDistortion::GetAudioOutCount() const
+unsigned EffectDistortion::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectDistortion::ProcessInitialize(
-   EffectSettings &, double sampleRate, ChannelNames chanMap)
+bool EffectDistortion::Instance::ProcessInitialize(
+   EffectSettings & settings, double sampleRate, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, sampleRate);
+   InstanceInit(mMaster, settings, sampleRate);
    return true;
 }
 
-size_t EffectDistortion::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+size_t EffectDistortion::Instance::ProcessBlock(EffectSettings& settings,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize(EffectSettings &, double)
+bool EffectDistortion::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectDistortion::RealtimeAddProcessor(
-   EffectSettings &, EffectOutputs *, unsigned, float sampleRate)
+bool EffectDistortion::Instance::RealtimeAddProcessor(
+   EffectSettings & settings, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
 
-   InstanceInit(slave, sampleRate);
+   InstanceInit(slave, settings, sampleRate);
 
    mSlaves.push_back(slave);
 
    return true;
 }
 
-bool EffectDistortion::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectDistortion::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectDistortion::RealtimeProcess(size_t group, EffectSettings &settings,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
+size_t EffectDistortion::Instance::RealtimeProcess(size_t group, EffectSettings& settings,
+   const float* const* inbuf, float* const* outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
       return 0;
@@ -263,21 +435,20 @@ RegistryPaths EffectDistortion::GetFactoryPresets() const
 }
 
 OptionalMessage
-EffectDistortion::LoadFactoryPreset(int id, EffectSettings &) const
+EffectDistortion::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id);
+   return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id, settings);
 }
 
-OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
+OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id, EffectSettings& settings)
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
       return {};
    }
 
-   mParams = FactoryPresets[id].params;
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
+   GetSettings(settings) = FactoryPresets[id].params;   
 
    return { nullptr };
 }
@@ -285,23 +456,40 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id)
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+std::unique_ptr<EffectUIValidator>
+EffectDistortion::PopulateOrExchange(ShuttleGui& S, EffectInstance& instance,
+   EffectSettingsAccess& access, const EffectOutputs* pOutputs)
+{   
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
+   
+   auto result = std::make_unique<Validator>(*this, dynamic_cast<EffectDistortion::Instance&>(instance), access, myEffSettings);
+   result->PopulateOrExchange(S);
+   return result;
+}
+
+
+void EffectDistortion::Validator::PopulateOrExchange(ShuttleGui& S)
 {
+   auto& ms = mSettings;
+
    S.AddSpace(0, 5);
    S.StartVerticalLay();
    {
       S.StartMultiColumn(4, wxCENTER);
       {
-         mTypeChoiceCtrl = S.Id(ID_Type)
+         mTypeChoiceCtrl = S
             .MinSize( { -1, -1 } )
-            .Validator<wxGenericValidator>(&mParams.mTableChoiceIndx)
+            .Validator<wxGenericValidator>(&ms.mTableChoiceIndx)
             .AddChoice(XXO("Distortion type:"),
                Msgids(kTableTypeStrings, nTableTypes));
 
-         mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(XXO("DC blocking filter"),
+         BindTo(*mTypeChoiceCtrl, wxEVT_CHOICE, &Validator::OnTypeChoice);
+
+         mDCBlockCheckBox = S.AddCheckBox(XXO("DC blocking filter"),
                                        DCBlock.def);
+
+         BindTo(*mDCBlockCheckBox, wxEVT_CHECKBOX, &Validator::OnDCBlockCheckbox);
       }
       S.EndMultiColumn();
       S.AddSpace(0, 10);
@@ -318,14 +506,16 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             // Upper threshold control
             mThresholdTxt = S.AddVariableText(defaultLabel(0),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mThresholdT = S.Id(ID_Threshold)
+            mThresholdT = S
                .Name(defaultLabel(0))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mThreshold_dB, NumValidatorStyle::DEFAULT,
+                  2, &ms.mThreshold_dB, NumValidatorStyle::DEFAULT,
                   Threshold_dB.min, Threshold_dB.max)
                .AddTextBox( {}, wxT(""), 10);
 
-            mThresholdS = S.Id(ID_Threshold)
+            BindTo(*mThresholdT, wxEVT_TEXT, &Validator::OnThresholdText);
+
+            mThresholdS = S
                .Name(defaultLabel(0))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0,
@@ -333,22 +523,28 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
                   DB_TO_LINEAR(Threshold_dB.min) * Threshold_dB.scale);
             S.AddSpace(20, 0);
 
+            BindTo(*mThresholdS, wxEVT_SLIDER, &Validator::OnThresholdSlider);
+            
             // Noise floor control
             mNoiseFloorTxt = S.AddVariableText(defaultLabel(1),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mNoiseFloorT = S.Id(ID_NoiseFloor)
+            mNoiseFloorT = S
                .Name(defaultLabel(1))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mNoiseFloor, NumValidatorStyle::DEFAULT,
+                  2, &ms.mNoiseFloor, NumValidatorStyle::DEFAULT,
                   NoiseFloor.min, NoiseFloor.max
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mNoiseFloorS = S.Id(ID_NoiseFloor)
+            BindTo(*mNoiseFloorT, wxEVT_TEXT, &Validator::OnNoiseFloorText);
+
+            mNoiseFloorS = S
                .Name(defaultLabel(1))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, NoiseFloor.max, NoiseFloor.min);
             S.AddSpace(20, 0);
+
+            BindTo(*mNoiseFloorS, wxEVT_SLIDER, &Validator::OnNoiseFloorSlider);
          }
          S.EndMultiColumn();
       }
@@ -365,52 +561,66 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
             // Parameter1 control
             mParam1Txt = S.AddVariableText(defaultLabel(2),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mParam1T = S.Id(ID_Param1)
+            mParam1T = S
                .Name(defaultLabel(2))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mParam1, NumValidatorStyle::DEFAULT,
+                  2, &ms.mParam1, NumValidatorStyle::DEFAULT,
                   Param1.min, Param1.max
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mParam1S = S.Id(ID_Param1)
+            BindTo(*mParam1T, wxEVT_TEXT, &Validator::OnParam1Text);
+
+            mParam1S = S
                .Name(defaultLabel(2))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, Param1.max, Param1.min);
             S.AddSpace(20, 0);
 
+            BindTo(*mParam1S, wxEVT_SLIDER, &Validator::OnParam1Slider);
+            
             // Parameter2 control
             mParam2Txt = S.AddVariableText(defaultLabel(3),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mParam2T = S.Id(ID_Param2)
+            mParam2T = S
                .Name(defaultLabel(3))
                .Validator<FloatingPointValidator<double>>(
-                  2, &mParams.mParam2, NumValidatorStyle::DEFAULT,
+                  2, &ms.mParam2, NumValidatorStyle::DEFAULT,
                   Param2.min, Param2.max
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mParam2S = S.Id(ID_Param2)
+            BindTo(*mParam2T, wxEVT_TEXT, &Validator::OnParam2Text);
+
+            mParam2S = S
                .Name(defaultLabel(3))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, Param2.max, Param2.min);
-            S.AddSpace(20, 0);
 
+            BindTo(*mParam2S, wxEVT_SLIDER, &Validator::OnParam2Slider);
+
+            S.AddSpace(20, 0);
+            
             // Repeats control
             mRepeatsTxt = S.AddVariableText(defaultLabel(4),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mRepeatsT = S.Id(ID_Repeats)
+            mRepeatsT = S
                .Name(defaultLabel(4))
                .Validator<IntegerValidator<int>>(
-                  &mParams.mRepeats, NumValidatorStyle::DEFAULT,
+                  &ms.mRepeats, NumValidatorStyle::DEFAULT,
                   Repeats.min, Repeats.max
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            mRepeatsS = S.Id(ID_Repeats)
+            BindTo(*mRepeatsT, wxEVT_TEXT, &Validator::OnRepeatsText);
+
+            mRepeatsS = S
                .Name(defaultLabel(4))
                .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, Repeats.def, Repeats.max, Repeats.min);
+
+            BindTo(*mRepeatsS, wxEVT_SLIDER, &Validator::OnRepeatsSlider);
+
             S.AddSpace(20, 0);
          }
          S.EndMultiColumn();
@@ -419,53 +629,48 @@ std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
    }
    S.EndVerticalLay();
 
-   return nullptr;
 }
 
-bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
+
+bool EffectDistortion::Validator::UpdateUI()
 {
-   if (!mUIParent->TransferDataToWindow())
+   const auto& ms = mSettings;
+
+   if (! GetUIParent()->TransferDataToWindow())
    {
       return false;
    }
 
-   mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
-   mDCBlockCheckBox->SetValue(mParams.mDCBlock);
-   mNoiseFloorS->SetValue((int) mParams.mNoiseFloor + 0.5);
-   mParam1S->SetValue((int) mParams.mParam1 + 0.5);
-   mParam2S->SetValue((int) mParams.mParam2 + 0.5);
-   mRepeatsS->SetValue(mParams.mRepeats);
+   const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
 
-   mbSavedFilterState = mParams.mDCBlock;
+   mThresholdS->     SetValue((int) (threshold * Threshold_dB.scale + 0.5));
+   mDCBlockCheckBox->SetValue(     ms.mDCBlock);
+   mNoiseFloorS->    SetValue((int)ms.mNoiseFloor + 0.5);
+   mParam1S->        SetValue((int)ms.mParam1 + 0.5);
+   mParam2S->        SetValue((int)ms.mParam2 + 0.5);
+   mRepeatsS->       SetValue(     ms.mRepeats);
 
-   UpdateUI();
+   GetState().mbSavedFilterState = ms.mDCBlock;
 
-   return true;
-}
-
-bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
+   UpdateUIControls();
 
    return true;
 }
 
-void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRate)
+
+void EffectDistortion::Instance::InstanceInit(EffectDistortionState& data, EffectSettings& settings, float sampleRate)
 {
+   auto& ms = GetSettings(settings);
+  
    data.samplerate = sampleRate;
    data.skipcount = 0;
-   data.tablechoiceindx = mParams.mTableChoiceIndx;
-   data.dcblock = mParams.mDCBlock;
-   data.threshold = mParams.mThreshold_dB;
-   data.noisefloor = mParams.mNoiseFloor;
-   data.param1 = mParams.mParam1;
-   data.param2 = mParams.mParam2;
-   data.repeats = mParams.mRepeats;
+   data.tablechoiceindx = ms.mTableChoiceIndx;
+   data.dcblock         = ms.mDCBlock;
+   data.threshold       = ms.mThreshold_dB;
+   data.noisefloor      = ms.mNoiseFloor;
+   data.param1          = ms.mParam1;
+   data.param2          = ms.mParam2;
+   data.repeats         = ms.mRepeats;
 
    // DC block filter variables
    data.queuetotal = 0.0;
@@ -474,81 +679,83 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
    while (!data.queuesamples.empty())
       data.queuesamples.pop();
 
-   MakeTable();
+   MakeTable(data, ms);
 
    return;
 }
 
-size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
+size_t EffectDistortion::Instance::InstanceProcess(EffectSettings &settings,
    EffectDistortionState& data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   auto& ms = GetSettings(settings);
+   
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
-   bool update = (mParams.mTableChoiceIndx == data.tablechoiceindx &&
-                  mParams.mNoiseFloor == data.noisefloor &&
-                  mParams.mThreshold_dB == data.threshold &&
-                  mParams.mParam1 == data.param1 &&
-                  mParams.mParam2 == data.param2 &&
-                  mParams.mRepeats == data.repeats)? false : true;
+   bool update = (ms.mTableChoiceIndx == data.tablechoiceindx &&
+                  ms.mNoiseFloor == data.noisefloor &&
+                  ms.mThreshold_dB == data.threshold &&
+                  ms.mParam1 == data.param1 &&
+                  ms.mParam2 == data.param2 &&
+                  ms.mRepeats == data.repeats)? false : true;
 
-   double p1 = mParams.mParam1 / 100.0;
-   double p2 = mParams.mParam2 / 100.0;
+   double p1 = ms.mParam1 / 100.0;
+   double p2 = ms.mParam2 / 100.0;
 
-   data.tablechoiceindx = mParams.mTableChoiceIndx;
-   data.threshold = mParams.mThreshold_dB;
-   data.noisefloor = mParams.mNoiseFloor;
-   data.param1 = mParams.mParam1;
-   data.repeats = mParams.mRepeats;
+   data.tablechoiceindx = ms.mTableChoiceIndx;
+   data.threshold = ms.mThreshold_dB;
+   data.noisefloor = ms.mNoiseFloor;
+   data.param1 = ms.mParam1;
+   data.repeats = ms.mRepeats;
 
    for (decltype(blockLen) i = 0; i < blockLen; i++) {
       if (update && ((data.skipcount++) % skipsamples == 0)) {
-         MakeTable();
+         MakeTable(data, ms);
       }
 
-      switch (mParams.mTableChoiceIndx)
+      switch (ms.mTableChoiceIndx)
       {
       case kHardClip:
          // Param2 = make-up gain.
-         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (mMakeupGain * p2));
+         obuf[i] = WaveShaper(ibuf[i], ms) * ((1 - p2) + (data.mMakeupGain * p2));
          break;
       case kSoftClip:
          // Param2 = make-up gain.
-         obuf[i] = WaveShaper(ibuf[i]) * ((1 - p2) + (mMakeupGain * p2));
+         obuf[i] = WaveShaper(ibuf[i], ms) * ((1 - p2) + (data.mMakeupGain * p2));
          break;
       case kHalfSinCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kExpCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kLogCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kCubic:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kEvenHarmonics:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
          break;
       case kSinCurve:
-         obuf[i] = WaveShaper(ibuf[i]) * p2;
+         obuf[i] = WaveShaper(ibuf[i], ms) * p2;
          break;
       case kLeveller:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
          break;
       case kRectifier:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
          break;
       case kHardLimiter:
          // Mix equivalent to LADSPA effect's "Wet / Residual" mix
-         obuf[i] = (WaveShaper(ibuf[i]) * (p1 - p2)) + (ibuf[i] * p2);
+         obuf[i] = (WaveShaper(ibuf[i], ms) * (p1 - p2)) + (ibuf[i] * p2);
          break;
       default:
-         obuf[i] = WaveShaper(ibuf[i]);
+         obuf[i] = WaveShaper(ibuf[i], ms);
       }
-      if (mParams.mDCBlock) {
+      if (ms.mDCBlock) {
          obuf[i] = DCFilter(data, obuf[i]);
       }
    }
@@ -556,91 +763,139 @@ size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
    return blockLen;
 }
 
-void EffectDistortion::OnTypeChoice(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnTypeChoice(wxCommandEvent& /*evt*/)
 {
    mTypeChoiceCtrl->GetValidator()->TransferFromWindow();
 
-   UpdateUI();
+   UpdateUIControls();
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
 {
-   mParams.mDCBlock = mDCBlockCheckBox->GetValue();
-   mbSavedFilterState = mParams.mDCBlock;
+   auto& ms = mSettings;
+
+   ms.mDCBlock = mDCBlockCheckBox->GetValue();
+
+   GetState().mbSavedFilterState = ms.mDCBlock;
+
+   ValidateUI();
 }
 
 
-void EffectDistortion::OnThresholdText(wxCommandEvent& /*evt*/)
+void EffectDistortion::Validator::OnThresholdText(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
    mThresholdT->GetValidator()->TransferFromWindow();
-   mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
-   mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
+   const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+   mThresholdS->SetValue((int) (threshold * Threshold_dB.scale + 0.5));
+
+   ValidateUI();
 }
 
-void EffectDistortion::OnThresholdSlider(wxCommandEvent& evt)
+void EffectDistortion::Validator::OnThresholdSlider(wxCommandEvent& evt)
 {
+   auto& ms = mSettings;
+
    static const double MIN_Threshold_Linear = DB_TO_LINEAR(Threshold_dB.min);
 
-   mThreshold = (double) evt.GetInt() / Threshold_dB.scale;
-   mParams.mThreshold_dB = wxMax(LINEAR_TO_DB(mThreshold), Threshold_dB.min);
-   mThreshold = std::max(MIN_Threshold_Linear, mThreshold);
-   mThresholdT->GetValidator()->TransferToWindow();
-}
-
-void EffectDistortion::OnNoiseFloorText(wxCommandEvent& /*evt*/)
-{
-   mNoiseFloorT->GetValidator()->TransferFromWindow();
-   mNoiseFloorS->SetValue((int) floor(mParams.mNoiseFloor + 0.5));
-}
-
-void EffectDistortion::OnNoiseFloorSlider(wxCommandEvent& evt)
-{
-   mParams.mNoiseFloor = (double) evt.GetInt();
-   mNoiseFloorT->GetValidator()->TransferToWindow();
-}
-
-
-void EffectDistortion::OnParam1Text(wxCommandEvent& /*evt*/)
-{
-   mParam1T->GetValidator()->TransferFromWindow();
-   mParam1S->SetValue((int) floor(mParams.mParam1 + 0.5));
-}
-
-void EffectDistortion::OnParam1Slider(wxCommandEvent& evt)
-{
-   mParams.mParam1 = (double) evt.GetInt();
-   mParam1T->GetValidator()->TransferToWindow();
-}
-
-void EffectDistortion::OnParam2Text(wxCommandEvent& /*evt*/)
-{
-   mParam2T->GetValidator()->TransferFromWindow();
-   mParam2S->SetValue((int) floor(mParams.mParam2 + 0.5));
-}
-
-void EffectDistortion::OnParam2Slider(wxCommandEvent& evt)
-{
-   mParams.mParam2 = (double) evt.GetInt();
-   mParam2T->GetValidator()->TransferToWindow();
-}
-
-void EffectDistortion::OnRepeatsText(wxCommandEvent& /*evt*/)
-{
-   mRepeatsT->GetValidator()->TransferFromWindow();
-   mRepeatsS->SetValue(mParams.mRepeats);
-}
-
-void EffectDistortion::OnRepeatsSlider(wxCommandEvent& evt)
-{
-   mParams.mRepeats = evt.GetInt();
-   mRepeatsT->GetValidator()->TransferToWindow();
+   const double thresholdDB = (double)evt.GetInt() / Threshold_dB.scale;
+   ms.mThreshold_dB = wxMax(LINEAR_TO_DB(thresholdDB), Threshold_dB.min);
    
+   mThresholdT->GetValidator()->TransferToWindow();
+
+   ValidateUI();
 }
 
-void EffectDistortion::UpdateUI()
+void EffectDistortion::Validator::OnNoiseFloorText(wxCommandEvent& /*evt*/)
 {
+   const auto& ms = mSettings;
+
+   mNoiseFloorT->GetValidator()->TransferFromWindow();
+   mNoiseFloorS->SetValue((int) floor(ms.mNoiseFloor + 0.5));
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::OnNoiseFloorSlider(wxCommandEvent& evt)
+{
+   auto& ms = mSettings;
+
+   ms.mNoiseFloor = (double) evt.GetInt();
+   mNoiseFloorT->GetValidator()->TransferToWindow();
+
+   ValidateUI();
+}
+
+
+void EffectDistortion::Validator::OnParam1Text(wxCommandEvent& /*evt*/)
+{
+   const auto& ms = mSettings;
+
+   mParam1T->GetValidator()->TransferFromWindow();
+   mParam1S->SetValue((int) floor(ms.mParam1 + 0.5));
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::OnParam1Slider(wxCommandEvent& evt)
+{
+   auto& ms = mSettings;
+
+   ms.mParam1 = (double) evt.GetInt();
+   mParam1T->GetValidator()->TransferToWindow();
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::OnParam2Text(wxCommandEvent& /*evt*/)
+{
+   const auto& ms = mSettings;
+
+   mParam2T->GetValidator()->TransferFromWindow();
+   mParam2S->SetValue((int) floor(ms.mParam2 + 0.5));
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::OnParam2Slider(wxCommandEvent& evt)
+{
+   auto& ms = mSettings;
+
+   ms.mParam2 = (double) evt.GetInt();
+   mParam2T->GetValidator()->TransferToWindow();
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::OnRepeatsText(wxCommandEvent& /*evt*/)
+{
+   const auto& ms = mSettings;
+
+   mRepeatsT->GetValidator()->TransferFromWindow();
+   mRepeatsS->SetValue(ms.mRepeats);
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::OnRepeatsSlider(wxCommandEvent& evt)
+{
+   auto& ms = mSettings;
+
+   ms.mRepeats = evt.GetInt();
+   mRepeatsT->GetValidator()->TransferToWindow();
+
+   ValidateUI();
+}
+
+void EffectDistortion::Validator::UpdateUIControls()
+{
+   const auto& ms = mSettings;
+
    // set control text and names to match distortion type
-   switch (mParams.mTableChoiceIndx)
+   switch (ms.mTableChoiceIndx)
       {
       case kHardClip:
          UpdateControlText(mThresholdT, mOldThresholdTxt, true);
@@ -806,9 +1061,12 @@ void EffectDistortion::UpdateUI()
    }
 }
 
-void EffectDistortion::UpdateControl(
+
+void EffectDistortion::Validator::UpdateControl(
    control id, bool enabled, TranslatableString name)
 {
+   auto& ms = mSettings;
+
    auto suffix = XO("(Not Used):");
    switch (id)
    {
@@ -818,8 +1076,8 @@ void EffectDistortion::UpdateControl(
          name.Join( suffix, wxT(" ") );
 
          // Logarithmic slider is set indirectly
-         mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
-         mThresholdS->SetValue((int) (mThreshold * Threshold_dB.scale + 0.5));
+         const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+         mThresholdS->SetValue((int) (threshold * Threshold_dB.scale + 0.5));
 
          auto translated = name.Translation();
          mThresholdTxt->SetLabel(translated);
@@ -883,12 +1141,12 @@ void EffectDistortion::UpdateControl(
       }
       case ID_DCBlock: {
          if (enabled) {
-            mDCBlockCheckBox->SetValue(mbSavedFilterState);
-            mParams.mDCBlock = mbSavedFilterState;
+            mDCBlockCheckBox->SetValue(GetState().mbSavedFilterState);
+            ms.mDCBlock = GetState().mbSavedFilterState;
          }
          else {
             mDCBlockCheckBox->SetValue(false);
-            mParams.mDCBlock = false;
+            ms.mDCBlock = false;
          }
 
          mDCBlockCheckBox->Enable(enabled);
@@ -899,7 +1157,7 @@ void EffectDistortion::UpdateControl(
    }
 }
 
-void EffectDistortion::UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled)
+void EffectDistortion::Validator::UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled)
 {
    if (enabled) {
       if (textCtrl->GetValue().empty())
@@ -914,42 +1172,46 @@ void EffectDistortion::UpdateControlText(wxTextCtrl* textCtrl, wxString& string,
    }
 }
 
-void EffectDistortion::MakeTable()
+void EffectDistortion::Instance::MakeTable
+(
+   EffectDistortionState& state,
+   const EffectDistortionSettings& ms
+)
 {
-   switch (mParams.mTableChoiceIndx)
+   switch (ms.mTableChoiceIndx)
    {
       case kHardClip:
-         HardClip();
+         HardClip(state, ms);
          break;
       case kSoftClip:
-         SoftClip();
+         SoftClip(state, ms);
          break;
       case kHalfSinCurve:
-         HalfSinTable();
+         HalfSinTable(ms);
          break;
       case kExpCurve:
-         ExponentialTable();
+         ExponentialTable(ms);
          break;
       case kLogCurve:
-         LogarithmicTable();
+         LogarithmicTable(ms);
          break;
       case kCubic:
-         CubicTable();
+         CubicTable(ms);
          break;
       case kEvenHarmonics:
-         EvenHarmonicTable();
+         EvenHarmonicTable(ms);
          break;
       case kSinCurve:
-         SineTable();
+         SineTable(ms);
          break;
       case kLeveller:
-         Leveller();
+         Leveller(ms);
          break;
       case kRectifier:
-         Rectifier();
+         Rectifier(ms);
          break;
       case kHardLimiter:
-         HardLimiter();
+         HardLimiter(state, ms);
          break;
    }
 }
@@ -959,29 +1221,40 @@ void EffectDistortion::MakeTable()
 // Preset tables for gain lookup
 //
 
-void EffectDistortion::HardClip()
+void EffectDistortion::Instance::HardClip
+(
+   EffectDistortionState& state,
+   const EffectDistortionSettings& ms
+)
 {
-   double lowThresh = 1 - mThreshold;
-   double highThresh = 1 + mThreshold;
+   const double threshold = DB_TO_LINEAR(ms.mThreshold_dB);
+
+   double lowThresh  = 1 - threshold;
+   double highThresh = 1 + threshold;
 
    for (int n = 0; n < TABLESIZE; n++) {
       if (n < (STEPS * lowThresh))
-         mTable[n] = - mThreshold;
+         mTable[n] = - threshold;
       else if (n > (STEPS * highThresh))
-         mTable[n] = mThreshold;
+         mTable[n] = threshold;
       else
          mTable[n] = n/(double)STEPS - 1;
 
-      mMakeupGain = 1.0 / mThreshold;
+      state.mMakeupGain = 1.0 / threshold;
    }
 }
 
-void EffectDistortion::SoftClip()
+void EffectDistortion::Instance::SoftClip
+(        EffectDistortionState& state,
+   const EffectDistortionSettings& ms
+)
 {
-   double threshold = 1 + mThreshold;
-   double amount = std::pow(2.0, 7.0 * mParams.mParam1 / 100.0); // range 1 to 128
-   double peak = LogCurve(mThreshold, 1.0, amount);
-   mMakeupGain = 1.0 / peak;
+   const double thresholdLinear = DB_TO_LINEAR(ms.mThreshold_dB);
+
+   double threshold = 1 + thresholdLinear;
+   double amount = std::pow(2.0, 7.0 * ms.mParam1 / 100.0); // range 1 to 128
+   double peak = LogCurve(thresholdLinear, 1.0, amount);
+   state.mMakeupGain = 1.0 / peak;
    mTable[STEPS] = 0.0;   // origin
 
    // positive half of table
@@ -989,19 +1262,19 @@ void EffectDistortion::SoftClip()
       if (n < (STEPS * threshold)) // origin to threshold
          mTable[n] = n/(float)STEPS - 1;
       else
-         mTable[n] = LogCurve(mThreshold, n/(double)STEPS - 1, amount);
+         mTable[n] = LogCurve(thresholdLinear, n/(double)STEPS - 1, amount);
    }
    CopyHalfTable();
 }
 
-float EffectDistortion::LogCurve(double threshold, float value, double ratio)
+float EffectDistortion::Instance::LogCurve(double threshold, float value, double ratio)
 {
    return threshold + ((std::exp(ratio * (threshold - value)) - 1) / -ratio);
 }
 
-void EffectDistortion::ExponentialTable()
+void EffectDistortion::Instance::ExponentialTable(const EffectDistortionSettings& ms)
 {
-   double amount = std::min(0.999, DB_TO_LINEAR(-1 * mParams.mParam1));   // avoid divide by zero
+   double amount = std::min(0.999, DB_TO_LINEAR(-1 * ms.mParam1));   // avoid divide by zero
 
    for (int n = STEPS; n < TABLESIZE; n++) {
       double linVal = n/(float)STEPS;
@@ -1012,9 +1285,9 @@ void EffectDistortion::ExponentialTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::LogarithmicTable()
+void EffectDistortion::Instance::LogarithmicTable(const EffectDistortionSettings& ms)
 {
-   double amount = mParams.mParam1;
+   double amount = ms.mParam1;
    double stepsize = 1.0 / STEPS;
    double linVal = 0;
 
@@ -1033,10 +1306,10 @@ void EffectDistortion::LogarithmicTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::HalfSinTable()
+void EffectDistortion::Instance::HalfSinTable(const EffectDistortionSettings& ms)
 {
-   int iter = std::floor(mParams.mParam1 / 20.0);
-   double fractionalpart = (mParams.mParam1 / 20.0) - iter;
+   int iter = std::floor(ms.mParam1 / 20.0);
+   double fractionalpart = (ms.mParam1 / 20.0) - iter;
    double stepsize = 1.0 / STEPS;
    double linVal = 0;
 
@@ -1051,12 +1324,12 @@ void EffectDistortion::HalfSinTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::CubicTable()
+void EffectDistortion::Instance::CubicTable(const EffectDistortionSettings& ms)
 {
-   double amount = mParams.mParam1 * std::sqrt(3.0) / 100.0;
+   double amount = ms.mParam1 * std::sqrt(3.0) / 100.0;
    double gain = 1.0;
    if (amount != 0.0)
-      gain = 1.0 / Cubic(std::min(amount, 1.0));
+      gain = 1.0 / Cubic(ms, std::min(amount, 1.0));
 
    double stepsize = amount / STEPS;
    double x = -amount;
@@ -1068,29 +1341,29 @@ void EffectDistortion::CubicTable()
    }
    else {
       for (int i = 0; i < TABLESIZE; i++) {
-         mTable[i] = gain * Cubic(x);
-         for (int j = 0; j < mParams.mRepeats; j++) {
-            mTable[i] = gain * Cubic(mTable[i] * amount);
+         mTable[i] = gain * Cubic(ms, x);
+         for (int j = 0; j < ms.mRepeats; j++) {
+            mTable[i] = gain * Cubic(ms, mTable[i] * amount);
          }
          x += stepsize;
       }
    }
 }
 
-double EffectDistortion::Cubic(double x)
+double EffectDistortion::Instance::Cubic(const EffectDistortionSettings& ms, double x)
 {
-   if (mParams.mParam1 == 0.0)
+   if (ms.mParam1 == 0.0)
       return x;
 
    return x - (std::pow(x, 3.0) / 3.0);
 }
 
 
-void EffectDistortion::EvenHarmonicTable()
+void EffectDistortion::Instance::EvenHarmonicTable(const EffectDistortionSettings& ms)
 {
-   double amount = mParams.mParam1 / -100.0;
+   double amount = ms.mParam1 / -100.0;
    // double C = std::sin(std::max(0.001, mParams.mParam2) / 100.0) * 10.0;
-   double C = std::max(0.001, mParams.mParam2) / 10.0;
+   double C = std::max(0.001, ms.mParam2) / 10.0;
 
    double step = 1.0 / STEPS;
    double xval = -1.0;
@@ -1102,10 +1375,10 @@ void EffectDistortion::EvenHarmonicTable()
    }
 }
 
-void EffectDistortion::SineTable()
+void EffectDistortion::Instance::SineTable(const EffectDistortionSettings& ms)
 {
-   int iter = std::floor(mParams.mParam1 / 20.0);
-   double fractionalpart = (mParams.mParam1 / 20.0) - iter;
+   int iter = std::floor(ms.mParam1 / 20.0);
+   double fractionalpart = (ms.mParam1 / 20.0) - iter;
    double stepsize = 1.0 / STEPS;
    double linVal = 0.0;
 
@@ -1120,11 +1393,11 @@ void EffectDistortion::SineTable()
    CopyHalfTable();
 }
 
-void EffectDistortion::Leveller()
+void EffectDistortion::Instance::Leveller(const EffectDistortionSettings& ms)
 {
-   double noiseFloor = DB_TO_LINEAR(mParams.mNoiseFloor);
-   int numPasses = mParams.mRepeats;
-   double fractionalPass = mParams.mParam1 / 100.0;
+   double noiseFloor = DB_TO_LINEAR(ms.mNoiseFloor);
+   int numPasses = ms.mRepeats;
+   double fractionalPass = ms.mParam1 / 100.0;
 
    const int numPoints = 6;
    const double gainFactors[numPoints] = { 0.80, 1.00, 1.20, 1.20, 1.00, 0.80 };
@@ -1177,9 +1450,9 @@ void EffectDistortion::Leveller()
    CopyHalfTable();
 }
 
-void EffectDistortion::Rectifier()
+void EffectDistortion::Instance::Rectifier(const EffectDistortionSettings& ms)
 {
-   double amount = (mParams.mParam1 / 50.0) - 1;
+   double amount = (ms.mParam1 / 50.0) - 1;
    double stepsize = 1.0 / STEPS;
    int index = STEPS;
 
@@ -1197,18 +1470,18 @@ void EffectDistortion::Rectifier()
    }
 }
 
-void EffectDistortion::HardLimiter()
+void EffectDistortion::Instance::HardLimiter(EffectDistortionState& state, const EffectDistortionSettings& settings)
 {
    // The LADSPA "hardLimiter 1413" is basically hard clipping,
    // but with a 'kind of' wet/dry mix:
    // out = ((wet-residual)*clipped) + (residual*in)
-   HardClip();
+   HardClip(state, settings);
 }
 
 
 // Helper functions for lookup tables
 
-void EffectDistortion::CopyHalfTable()
+void EffectDistortion::Instance::CopyHalfTable()
 {
    // Copy negative half of table from positive half
    int count = TABLESIZE - 1;
@@ -1219,19 +1492,19 @@ void EffectDistortion::CopyHalfTable()
 }
 
 
-float EffectDistortion::WaveShaper(float sample)
+float EffectDistortion::Instance::WaveShaper(float sample, EffectDistortionSettings& ms)
 {
    float out;
    int index;
    double xOffset;
    double amount = 1;
 
-   switch (mParams.mTableChoiceIndx)
+   switch (ms.mTableChoiceIndx)
    {
       // Do any pre-processing here
       case kHardClip:
          // Pre-gain
-         amount = mParams.mParam1 / 100.0;
+         amount = ms.mParam1 / 100.0;
          sample *= 1+amount;
          break;
       default: break;
@@ -1249,7 +1522,7 @@ float EffectDistortion::WaveShaper(float sample)
 }
 
 
-float EffectDistortion::DCFilter(EffectDistortionState& data, float sample)
+float EffectDistortion::Instance::DCFilter(EffectDistortionState& data, float sample)
 {
    // Rolling average gives less offset at the start than an IIR filter.
    const unsigned int queueLength = std::floor(data.samplerate / 20.0);
