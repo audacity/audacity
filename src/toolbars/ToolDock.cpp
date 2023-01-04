@@ -95,16 +95,16 @@ auto ToolBarConfiguration::Find(const ToolBar *bar) const -> Position
       return iter->position;
 }
 
-ToolBar* ToolBarConfiguration::FindToolBar(ToolBarID toolBarID) const
+ToolBar* ToolBarConfiguration::FindToolBar(Identifier toolBarID) const
 {
-   if (toolBarID == NoBarID)
+   if (toolBarID.empty())
       return nullptr;
    
    auto This = const_cast<ToolBarConfiguration*>(this);
    auto it = std::find_if(
       This->begin(), This->end(),
       [=](const Place& place)
-      { return place.pTree->pBar->GetType() == toolBarID; });
+      { return place.pTree->pBar->GetSection() == toolBarID; });
 
    return it != end() ? it->pTree->pBar : nullptr;
 }
@@ -241,7 +241,8 @@ void ToolBarConfiguration::Show(ToolBar *bar)
    if (!Contains(bar)) {
       auto position = UnspecifiedPosition;
       const auto preferredNeighbors = bar->PreferredNeighbors();
-      if (preferredNeighbors.first != NoBarID || preferredNeighbors.second != NoBarID)
+      if (!preferredNeighbors.first.empty() ||
+          !preferredNeighbors.second.empty())
       {
          auto leftNeighbor = FindToolBar(preferredNeighbors.first);
          auto topNeighbor = FindToolBar(preferredNeighbors.second);

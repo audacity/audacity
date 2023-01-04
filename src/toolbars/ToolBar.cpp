@@ -461,7 +461,7 @@ void ToolBar::SetVisible( bool bVisible )
    mVisible = bVisible;
 }
 
-std::pair<ToolBarID, ToolBarID> ToolBar::PreferredNeighbors() const noexcept
+std::pair<Identifier, Identifier> ToolBar::PreferredNeighbors() const noexcept
 {
    return { mPreferredLeftNeighbor, mPreferredTopNeighbor };
 }
@@ -660,7 +660,7 @@ ToolDock *ToolBar::GetDock()
    return dynamic_cast<ToolDock*>(GetParent());
 }
 
-void ToolBar::SetPreferredNeighbors(ToolBarID left, ToolBarID top)
+void ToolBar::SetPreferredNeighbors(Identifier left, Identifier top)
 {
    mPreferredLeftNeighbor = left;
    mPreferredTopNeighbor = top;

@@ -927,11 +927,15 @@ void ToolManager::ReadConfig()
    for (const auto& entry : DefaultConfigTable)
    {
       int ndx = entry.barID;
-      ToolBar* bar = mBars[ndx].get();
+      const auto bar = mBars[ndx].get();
+      const auto rightCode = entry.rightOf;
+      const auto rightId =
+         rightCode >= 0 ? mBars[rightCode]->GetSection() : "";
+      const auto belowCode = entry.below;
+      const auto belowId =
+         belowCode >= 0 ? mBars[belowCode]->GetSection() : "";
 
-      bar->SetPreferredNeighbors(
-         static_cast<ToolBarID>(entry.rightOf),
-         static_cast<ToolBarID>(entry.below));
+      bar->SetPreferredNeighbors(rightId, belowId);
    }
 
    if (!someFound)

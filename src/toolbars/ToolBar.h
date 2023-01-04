@@ -142,7 +142,7 @@ class AUDACITY_DLL_API ToolBar /* not final */
    Identifier GetSection();
    ToolDock *GetDock();
 
-   void SetPreferredNeighbors(ToolBarID left, ToolBarID top = NoBarID);
+   void SetPreferredNeighbors(Identifier left, Identifier top = {});
 
 private:
    void SetLabel(const wxString & label) override;
@@ -151,7 +151,7 @@ public:
    virtual void SetDocked(ToolDock *dock, bool pushed);
 
    //! Defaults to (NoBarID, NoBarId)
-   std::pair<ToolBarID, ToolBarID> PreferredNeighbors() const noexcept;
+   std::pair<Identifier, Identifier> PreferredNeighbors() const noexcept;
 
    // NEW virtual:
    virtual bool Expose(bool show = true);
@@ -283,8 +283,8 @@ public:
 
    wxBoxSizer *mHSizer;
 
-   ToolBarID mPreferredLeftNeighbor { NoBarID };
-   ToolBarID mPreferredTopNeighbor { NoBarID };
+   Identifier mPreferredLeftNeighbor;
+   Identifier mPreferredTopNeighbor;
 
    bool mVisible;
    bool mResizable;
