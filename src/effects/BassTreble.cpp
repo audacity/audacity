@@ -533,6 +533,7 @@ void EffectBassTreble::Validator::OnBassText(wxCommandEvent & WXUNUSED(evt))
    mBassS->SetValue((int) (ms.mBass * Bass.scale));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::OnTrebleText(wxCommandEvent & WXUNUSED(evt))
@@ -552,6 +553,7 @@ void EffectBassTreble::Validator::OnTrebleText(wxCommandEvent & WXUNUSED(evt))
    mTrebleS->SetValue((int) (ms.mTreble * Treble.scale));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::OnGainText(wxCommandEvent & WXUNUSED(evt))
@@ -566,6 +568,7 @@ void EffectBassTreble::Validator::OnGainText(wxCommandEvent & WXUNUSED(evt))
    mGainS->SetValue((int) (ms.mGain * Gain.scale));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::OnBassSlider(wxCommandEvent & evt)
@@ -582,6 +585,7 @@ void EffectBassTreble::Validator::OnBassSlider(wxCommandEvent & evt)
    EnableApplyFromValidate();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::OnTrebleSlider(wxCommandEvent & evt)
@@ -598,6 +602,7 @@ void EffectBassTreble::Validator::OnTrebleSlider(wxCommandEvent & evt)
    EnableApplyFromValidate();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::OnGainSlider(wxCommandEvent & evt)
@@ -610,6 +615,7 @@ void EffectBassTreble::Validator::OnGainSlider(wxCommandEvent & evt)
    EnableApplyFromValidate();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::OnLinkCheckbox(wxCommandEvent& /*evt*/)
@@ -619,6 +625,7 @@ void EffectBassTreble::Validator::OnLinkCheckbox(wxCommandEvent& /*evt*/)
    ms.mLink = mLinkCheckBox->GetValue();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectBassTreble::Validator::UpdateGain(double oldVal, int control)

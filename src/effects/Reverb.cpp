@@ -591,6 +591,7 @@ bool EffectReverb::Validator::UpdateUI()
       m ## n ## T->SetValue(wxString::Format(wxT("%d"), evt.GetInt())); \
       mProcessingEvent = false; \
       ValidateUI(); \
+      Publish(EffectSettingChanged{}); \
    } \
    void EffectReverb::Validator::On ## n ## Text(wxCommandEvent & evt) \
    { \
@@ -599,6 +600,7 @@ bool EffectReverb::Validator::UpdateUI()
       m ## n ## S->SetValue(std::clamp<long>(evt.GetInt(), n.min, n.max)); \
       mProcessingEvent = false; \
       ValidateUI(); \
+      Publish(EffectSettingChanged{}); \
    }
 
 SpinSliderHandlers(RoomSize)
@@ -614,6 +616,7 @@ SpinSliderHandlers(StereoWidth)
 void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
 {
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 #undef SpinSliderHandlers

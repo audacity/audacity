@@ -770,6 +770,7 @@ void EffectDistortion::Validator::OnTypeChoice(wxCommandEvent& /*evt*/)
    UpdateUIControls();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
@@ -781,6 +782,7 @@ void EffectDistortion::Validator::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
    GetState().mbSavedFilterState = ms.mDCBlock;
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 
@@ -793,6 +795,7 @@ void EffectDistortion::Validator::OnThresholdText(wxCommandEvent& /*evt*/)
    mThresholdS->SetValue((int) (threshold * Threshold_dB.scale + 0.5));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnThresholdSlider(wxCommandEvent& evt)
@@ -807,6 +810,7 @@ void EffectDistortion::Validator::OnThresholdSlider(wxCommandEvent& evt)
    mThresholdT->GetValidator()->TransferToWindow();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnNoiseFloorText(wxCommandEvent& /*evt*/)
@@ -817,6 +821,7 @@ void EffectDistortion::Validator::OnNoiseFloorText(wxCommandEvent& /*evt*/)
    mNoiseFloorS->SetValue((int) floor(ms.mNoiseFloor + 0.5));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnNoiseFloorSlider(wxCommandEvent& evt)
@@ -827,6 +832,7 @@ void EffectDistortion::Validator::OnNoiseFloorSlider(wxCommandEvent& evt)
    mNoiseFloorT->GetValidator()->TransferToWindow();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 
@@ -838,6 +844,7 @@ void EffectDistortion::Validator::OnParam1Text(wxCommandEvent& /*evt*/)
    mParam1S->SetValue((int) floor(ms.mParam1 + 0.5));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnParam1Slider(wxCommandEvent& evt)
@@ -848,6 +855,7 @@ void EffectDistortion::Validator::OnParam1Slider(wxCommandEvent& evt)
    mParam1T->GetValidator()->TransferToWindow();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnParam2Text(wxCommandEvent& /*evt*/)
@@ -858,6 +866,7 @@ void EffectDistortion::Validator::OnParam2Text(wxCommandEvent& /*evt*/)
    mParam2S->SetValue((int) floor(ms.mParam2 + 0.5));
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnParam2Slider(wxCommandEvent& evt)
@@ -868,6 +877,7 @@ void EffectDistortion::Validator::OnParam2Slider(wxCommandEvent& evt)
    mParam2T->GetValidator()->TransferToWindow();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnRepeatsText(wxCommandEvent& /*evt*/)
@@ -878,6 +888,7 @@ void EffectDistortion::Validator::OnRepeatsText(wxCommandEvent& /*evt*/)
    mRepeatsS->SetValue(ms.mRepeats);
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::OnRepeatsSlider(wxCommandEvent& evt)
@@ -888,6 +899,7 @@ void EffectDistortion::Validator::OnRepeatsSlider(wxCommandEvent& evt)
    mRepeatsT->GetValidator()->TransferToWindow();
 
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectDistortion::Validator::UpdateUIControls()
