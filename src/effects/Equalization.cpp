@@ -545,7 +545,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    wxASSERT(M - 1 < windowSize);
    size_t L = windowSize - (M - 1);   //Process L samples at a go
-   auto idealBlockLen = t->GetMaxBlockSize() * 4;
+   auto idealBlockLen = t->GetMaxBlockSize();
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
 
