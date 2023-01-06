@@ -358,6 +358,8 @@ namespace
          enableButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
 
             mEffectState->SetActive(mEnableButton->IsDown());
+            if (mProject)
+               UndoManager::Get(*mProject).MarkUnsaved();
          });
 
          //Central button with effect name, show settings
@@ -1107,6 +1109,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
             mEffectList->EnableEffects(mToggleEffects->IsDown());
          
             ProjectHistory::Get(mProject).ModifyState(false);
+            UndoManager::Get(mProject).MarkUnsaved();
          }
       });
 
