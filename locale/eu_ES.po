@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2021-06-11 23:23+0200\n"
 "Last-Translator: Osoitz Elkorobarrutia <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
@@ -663,6 +663,14 @@ msgstr "Lagindu berriro pista"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2182,7 +2190,7 @@ msgstr "&Baztertu hautatutakoak"
 msgid "&Recover Selected"
 msgstr "Be&rreskuratu hautatutakoak"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr "&Saltatu"
 
@@ -3039,8 +3047,8 @@ msgstr "Avformat.dll soilik"
 
 #: src/FFmpeg.cpp
 #, fuzzy
-msgid "Only ffmpeg.*.dylib"
-msgstr "Soilik libmp3lame.dylib"
+msgid "Only libavformat.dylib"
+msgstr "Libavformat.so soilik"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -4052,6 +4060,11 @@ msgid ""
 msgstr ""
 "Efektuak edo aginduak %s-n huts egin du erregistratzen:\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Igarotako denbora:"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5196,23 +5209,16 @@ msgstr "Tresnak"
 msgid "Transport"
 msgstr "Garraioa"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Nahasgailua"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Neurgailua"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "Erreprodukzio neurgailua"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6130,6 +6136,25 @@ msgid "&Ok"
 msgstr "&Ados"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Ezin izango duzu audiorik erreproduzitu edo grabatu.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Fitxategi batera esportatzen du."
@@ -6210,19 +6235,11 @@ msgid "Preparing audio..."
 msgstr "Audioa cachean gordetzen"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Igarotako denbora:"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Geratzen den denbora:"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -15826,10 +15843,6 @@ msgid "&Language:"
 msgstr "&Hizkuntza:"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "&Eskuliburuaren kokalekua:"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "It&xura:"
 
@@ -17447,6 +17460,28 @@ msgid "&Edit Toolbar"
 msgstr "&Edizio tresna-barra"
 
 #: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr " Monitorizazioa "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " Aktiboa "
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " Gailurra %2.f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " Gailurra %.2f "
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr " Asetasun-distortsioa "
+
+#: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr "Konbinatutako neurgailua"
 
@@ -17459,6 +17494,11 @@ msgid "Playback Meter"
 msgstr "Erreprodukzio neurgailua"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Recording Level"
+msgstr "Grabazio maila"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17466,19 +17506,16 @@ msgid "Meter-Record"
 msgstr "Grabazio-neurgailua"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "Erreprodukzio maila"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "Erreprodukzio-neurgailua"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "Erreprodukzio maila"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Recording Level"
-msgstr "Grabazio maila"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -18770,6 +18807,17 @@ msgstr "Sakatu"
 msgid "Button"
 msgstr "Botoia"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Konprimitu"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "Konprimitu"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -18926,28 +18974,6 @@ msgstr "Horizontala"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "Bertikala"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr " Monitorizazioa "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " Aktiboa "
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " Gailurra %2.f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " Gailurra %.2f "
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr " Asetasun-distortsioa "
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21188,6 +21214,16 @@ msgstr "Kendu pista"
 msgid "Spectral Tools"
 msgstr "Es&pektrala"
 
+#, fuzzy
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "Soilik libmp3lame.dylib"
+
+#~ msgid "Mixer"
+#~ msgstr "Nahasgailua"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "&Eskuliburuaren kokalekua:"
+
 #, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "%s software librea da, mundu osoko %s  talde batek idatzia. %s da %s Windows, Mac, eta GNU/Linux eta bestelako UNIX motako sistemetarako."
@@ -21893,10 +21929,6 @@ msgstr "Es&pektrala"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "Inportazioa osatu egin da. Eskatutako uhin-formaren kalkulua exekutatzen. %%-tik %2.0f -a osatu egin da."
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "Konprimitu"
 
 #~ msgid "&Use legacy (version 3) syntax."
 #~ msgstr "&Erabili legatu-sintaxia (3. bertsioa)"

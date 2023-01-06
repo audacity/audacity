@@ -52,9 +52,14 @@ EVT_COMMAND_RANGE( STBFirstButton,
 EVT_IDLE( ScrubbingToolBar::OnIdle )
 END_EVENT_TABLE()
 
+Identifier ScrubbingToolBar::ID()
+{
+   return wxT("Scrub");
+}
+
 //Standard constructor
 ScrubbingToolBar::ScrubbingToolBar( AudacityProject &project )
-: ToolBar(project, ScrubbingBarID, XO("Scrub"), wxT("Scrub"))
+: ToolBar(project, XO("Scrub"), ID())
 {
 }
 
@@ -62,10 +67,15 @@ ScrubbingToolBar::~ScrubbingToolBar()
 {
 }
 
+bool ScrubbingToolBar::ShownByDefault() const
+{
+   return false;
+}
+
 ScrubbingToolBar &ScrubbingToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ScrubbingToolBar*>( toolManager.GetToolBar(ScrubbingBarID) );
+   return *static_cast<ScrubbingToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const ScrubbingToolBar &ScrubbingToolBar::Get( const AudacityProject &project )
@@ -288,7 +298,7 @@ void ScrubbingToolBar::OnIdle( wxIdleEvent &evt )
    EnableDisableButtons();
 }
 
-static RegisteredToolbarFactory factory{ ScrubbingBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ScrubbingToolBar{ project } }; }
 };
@@ -297,7 +307,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       that enables Scrub or Seek playback and Scrub Ruler */
-   ScrubbingBarID, wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar")
+   ScrubbingToolBar::ID(), wxT("ShowScrubbingTB"), XXO("Scru&b Toolbar")
 };
 }
 

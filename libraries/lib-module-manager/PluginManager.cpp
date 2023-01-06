@@ -1306,6 +1306,26 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
    return str;
 }
 
+bool PluginManager::IsPluginAvailable(const PluginDescriptor& plug)
+{
+   const auto& providerID = plug.GetProviderID();
+   auto provider = ModuleManager::Get().CreateProviderInstance(providerID, wxEmptyString);
+
+   if (provider == nullptr)
+   {
+      wxLogWarning("Unable to find a provider for '%s'", providerID);
+      return false;
+   }
+
+   if (provider->CheckPluginExist(plug.GetPath()) == false)
+   {
+      wxLogWarning("Plugin '%s' does not exist", plug.GetID());
+      return false;
+   }
+
+   return true;
+}
+
 PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
                                                ComponentInterface *ident,
                                                PluginType type)

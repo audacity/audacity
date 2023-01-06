@@ -233,8 +233,8 @@ WholeMenu::~WholeMenu() {}
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {
       // If this default finder function is reached, then FinderScope should
-      // have been used somewhere, or an explicit CommandHandlerFinder passed
-      // to menu item constructors
+      // have been used somewhere but was not, or an explicit
+      // CommandHandlerFinder was not passed to menu item constructors
       wxASSERT( false );
       return project;
    };
@@ -606,11 +606,10 @@ void MenuManager::ModifyToolbarMenus(AudacityProject &project)
    auto &settings = ProjectSettings::Get( project );
 
    // Now, go through each toolbar, and call EnableDisableButtons()
-   for (int i = 0; i < ToolBarCount; i++) {
-      auto bar = toolManager.GetToolBar(i);
+   toolManager.ForEach([](auto bar){
       if (bar)
          bar->EnableDisableButtons();
-   }
+   });
 
    // These don't really belong here, but it's easier and especially so for
    // the Edit toolbar and the sync-lock menu item.

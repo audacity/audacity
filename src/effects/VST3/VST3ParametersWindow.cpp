@@ -71,7 +71,7 @@ namespace
          if(mUnits.empty())
             SetLabel(VST3Utils::ToWxString(str));
          else
-            SetLabel(wxString::Format("%s %s", str, mUnits));
+            SetLabel(wxString::Format("%s %s", VST3Utils::ToWxString(str), mUnits));
       }
       
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -190,7 +190,7 @@ namespace
       {
          Steinberg::Vst::String128 str{ };
          editController.getParamStringByValue(GetParameterId(), value, str);
-         SetName(wxString::Format("%s %s %s", mTitle, str, mUnits));
+         SetName(wxString::Format("%s %s %s", mTitle, VST3Utils::ToWxString(str), mUnits));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -255,6 +255,15 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
       if((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
          continue;
 
+      {
+         // Hide proxy parameters with name that starts with "MIDI CC "
+         // That prevents Plain UI from creating many useless controls
+         static_assert(sizeof(Steinberg::tchar) == sizeof(char16_t));
+         static const std::basic_string_view<tchar> MIDI_CC { reinterpret_cast<const tchar*>(u"MIDI CC ") };
+         if(std::basic_string_view<tchar>(parameterInfo.title).rfind(MIDI_CC, 0) == 0)
+            continue;
+      }
+      
       if (parameterInfo.stepCount != 1)      // not a toggle
          sizer->Add(safenew wxStaticText(
             this,

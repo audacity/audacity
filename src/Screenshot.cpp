@@ -45,6 +45,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "Prefs.h"
+#include "toolbars/ToolManager.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/HelpSystem.h"
 
@@ -119,6 +120,8 @@ class ScreenshotBigDialog final : public wxFrame,
 
    std::unique_ptr<ScreenshotCommand> mCommand;
    const CommandContext mContext;
+
+   int mFirstUnusedId = 0;
 
    DECLARE_EVENT_TABLE()
 };
@@ -206,11 +209,16 @@ enum
 
    IdDelayCheckBox,
 
+   IdToggleBackgroundBlue,
+   IdToggleBackgroundWhite,
+
    IdCaptureFirst,
+
    // No point delaying the capture of sets of things.
    IdCaptureEffects= IdCaptureFirst,
    IdCaptureScriptables,
    IdCapturePreferences,
+
    IdCaptureToolbars,
 
    // Put all events that need delay between AllDelayed and LastDelayed.
@@ -220,20 +228,6 @@ enum
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
 
-   IdCaptureSelectionBar,
-   IdCaptureSpectralSelection,
-   IdCaptureTimer,
-   IdCaptureTools,
-   IdCaptureTransport,
-   IdCaptureMixer,
-   IdCaptureMeter,
-   IdCapturePlayMeter,
-   IdCaptureRecordMeter,
-   IdCaptureEdit,
-   IdCaptureDevice,
-   IdCaptureTranscription,
-   IdCaptureScrub,
-
    IdCaptureTrackPanel,
    IdCaptureRuler,
    IdCaptureTracks,
@@ -241,11 +235,8 @@ enum
    IdCaptureSecondTrack,
    IdCaptureLast = IdCaptureSecondTrack,
 
-   IdLastDelayedEvent,
-
-   IdToggleBackgroundBlue,
-   IdToggleBackgroundWhite,
-
+   // Reserved values for an unspecified number of toolbars
+   IdFirstToolbar,
 };
 
 BEGIN_EVENT_TABLE(ScreenshotBigDialog, wxFrame)
@@ -420,33 +411,36 @@ void ScreenshotBigDialog::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.StartHorizontalLay();
          {
-            S.Id(IdCaptureSelectionBar).AddButton(XXO("SelectionBar"));
-            S.Id(IdCaptureSpectralSelection).AddButton(XXO("Spectral Selection"));
-            S.Id(IdCaptureTimer).AddButton(XXO("Timer"));
-            S.Id(IdCaptureTools).AddButton(XXO("Tools"));
-            S.Id(IdCaptureTransport).AddButton(XXO("Transport"));
+            // Discover the available toolbars and make rows of buttons
+            int id = IdFirstToolbar;
+            size_t ii = 0;
+            S.StartHorizontalLay();
+            std::vector<ToolBar *> bars;
+            ToolManager::Get(mProject).ForEach([&](ToolBar *pBar){
+               bars.emplace_back(pBar);
+            });
+            // Sort by translation, for determinacy (per language) of the
+            // sequence
+            static const auto comp = [](ToolBar *a, ToolBar *b){
+               return a->GetLabel().Translation() < b->GetLabel().Translation();
+            };
+            sort(bars.begin(), bars.end(), comp);
+            for_each(bars.begin(), bars.end(), [&](ToolBar *pBar){
+               S.Id(id).AddButton(pBar->GetLabel());
+               Bind(wxEVT_BUTTON,
+                  &ScreenshotBigDialog::OnCaptureSomething, this, id);
+               ++id;
+               // Start a new row at every fourth one
+               if (++ii == 4) {
+                  ii = 0;
+                  S.EndHorizontalLay();
+                  S.StartHorizontalLay();
+               }
+            });
+            mFirstUnusedId = id;
+            S.EndHorizontalLay();
          }
-         S.EndHorizontalLay();
-
-         S.StartHorizontalLay();
-         {
-            S.Id(IdCaptureMixer).AddButton(XXO("Mixer"));
-            S.Id(IdCaptureMeter).AddButton(XXO("Meter"));
-            S.Id(IdCapturePlayMeter).AddButton(XXO("Play Meter"));
-            S.Id(IdCaptureRecordMeter).AddButton(XXO("Record Meter"));
-         }
-         S.EndHorizontalLay();
-
-         S.StartHorizontalLay();
-         {
-            S.Id(IdCaptureEdit).AddButton(XXO("Edit"));
-            S.Id(IdCaptureDevice).AddButton(XXO("Device"));
-            S.Id(IdCaptureTranscription).AddButton(XXO("Play-at-Speed"));
-            S.Id(IdCaptureScrub).AddButton(XXO("Scrub"));
-         }
-         S.EndHorizontalLay();
 
          S.StartHorizontalLay();
          {
@@ -523,7 +517,7 @@ bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
           e.IsCommandEvent() &&
           e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED)
       {
-         if( id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
+         if( id >= IdAllDelayedEvents &&
           e.GetEventObject() != NULL) {
             mTimer = std::make_unique<ScreenFrameTimer>(this, e);
             mTimer->Start(5000, true);
@@ -581,7 +575,9 @@ void ScreenshotBigDialog::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
    }
 
    if (needupdate) {
-      for (int i = IdMainWindowSmall; i < IdLastDelayedEvent; i++) {
+      for (int i = IdMainWindowSmall; i < mFirstUnusedId; i++) {
+         if (i == IdToggleBackgroundBlue || i == IdToggleBackgroundWhite)
+            continue;
          wxWindow *w = wxWindow::FindWindowById(i, this);
          if (w) {
             w->Enable(enable);
@@ -675,7 +671,7 @@ void ScreenshotBigDialog::DoCapture(int captureMode)
 
 void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
 {
-   int i = event.GetId() - IdCaptureFirst;
+   int i = event.GetId();
 
    /*
    IdCaptureEffects= IdCaptureFirst,
@@ -721,18 +717,6 @@ void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
       ScreenshotCommand::kfullwindow,
       ScreenshotCommand::kwindowplus,
       ScreenshotCommand::kfullscreen,
-      ScreenshotCommand::kselectionbar,
-      ScreenshotCommand::kspectralselection,
-      ScreenshotCommand::ktimer,
-      ScreenshotCommand::ktools,
-      ScreenshotCommand::ktransport,
-      ScreenshotCommand::kmeter,
-      ScreenshotCommand::kplaymeter,
-      ScreenshotCommand::krecordmeter,
-      ScreenshotCommand::kedit,
-      ScreenshotCommand::kdevice,
-      ScreenshotCommand::ktranscription,
-      ScreenshotCommand::kscrub,
       ScreenshotCommand::ktrackpanel,
       ScreenshotCommand::kruler,
       ScreenshotCommand::ktracks,
@@ -740,7 +724,12 @@ void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
       ScreenshotCommand::ksecondtrack,
    };
 
-   DoCapture(codes[i]);
+   int code;
+   if (i >= IdFirstToolbar)
+      code = ScreenshotCommand::nCaptureWhats + (i - IdFirstToolbar);
+   else
+      code = codes[i - IdCaptureFirst];
+   DoCapture(code);
 }
 
 void ScreenshotBigDialog::TimeZoom(double seconds)

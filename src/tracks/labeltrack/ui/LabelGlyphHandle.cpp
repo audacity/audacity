@@ -25,26 +25,24 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../tracks/ui/TimeShiftHandle.h"
 
 #include <wx/cursor.h>
+#include <wx/event.h>
 #include <wx/translation.h>
 
 LabelTrackHit::LabelTrackHit( const std::shared_ptr<LabelTrack> &pLT )
    : mpLT{ pLT }
 {
-   pLT->Bind(
-      EVT_LABELTRACK_PERMUTED, &LabelTrackHit::OnLabelPermuted, this );
+   mSubscription = pLT->Subscribe( *this, &LabelTrackHit::OnLabelPermuted );
 }
 
 LabelTrackHit::~LabelTrackHit()
 {
-   // Must do this because this sink isn't wxEvtHandler
-   mpLT->Unbind(
-      EVT_LABELTRACK_PERMUTED, &LabelTrackHit::OnLabelPermuted, this );
 }
 
-void LabelTrackHit::OnLabelPermuted( LabelTrackEvent &e )
+void LabelTrackHit::OnLabelPermuted( const LabelTrackEvent &e )
 {
-   e.Skip();
    if ( e.mpTrack.lock() != mpLT )
+      return;
+   if ( e.type != LabelTrackEvent::Permutation )
       return;
 
    auto former = e.mFormerPosition;

@@ -244,7 +244,7 @@ class AUDACITY_DLL_API LWSlider
 
    wxWindowID mID;
 
-   TipWindow* mTipPanel{nullptr};
+   wxWeakRef<TipWindow> mTipPanel;
    TranslatableString mTipTemplate;
 
    bool mIsDragging;

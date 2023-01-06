@@ -1,5 +1,32 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.2.3
+
+ This is a patch release for Audacity 3.2. It adds ability to share audio publicly and fixes some bugs.
+
+   * #3884 Audio can now be shared publicly on audio.com
+   * #4040 Fixed the screenshot tool
+   * #4019 Selecting audio no longer marks the project as changed
+   * #3693 A new toolbar with cut/copy/paste buttons has been added
+   * #3216 Plain UI for VST3 plugins no longer show MIDI CC parameters
+   * #2620 The effects sidebar no longer can fill the entire screen
+
+Changes in version 3.2.2
+
+ This is a patch release for Audacity 3.2. It enables use of VST2 as realtime effects and fixes some bugs.
+
+   * #2850 VST2 effects are now realtime capable. 
+     Additional plugins have been added to plugins.audacityteam.org
+   * #3696 Improved accessibility of the meters
+   * #3769 Fixed a crash when editing some macro parameters
+   * #3792 Fixed some play commands getting stuck in play mode
+   * #3670 Audacity no longer quietly discards changes in realtime effects but instead asks if you want to save before quitting
+   * #3838 Plugin scanning now lets you skip individual plugins if scanning gets stuck on them
+   * #3980 Plugin scanning no longer produces "Audacity crashed" windows when a plugin fails validation, 
+     and no longer shows the plugins in the macOS dock during validation
+   * #3883 Fixed an issue with labels losing focus on macOS Ventura
+   * Fixed various plugin-specific issues
+
 Changes in version 3.2.1
 
  This is a patch release. It fixes some bugs and has minor improvements. 

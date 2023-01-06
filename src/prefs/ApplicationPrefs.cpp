@@ -107,6 +107,7 @@ bool ApplicationPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+   DefaultUpdatesCheckingFlag.Invalidate();
 
    return true;
 }

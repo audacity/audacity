@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2021-06-14 22:34+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
@@ -667,6 +667,14 @@ msgstr "Rééchantillonner la piste"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2208,7 +2216,7 @@ msgstr "Aban&donner les sélectionnés"
 msgid "&Recover Selected"
 msgstr "&Récupérer les sélectionnés"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr "&Sauter"
 
@@ -3094,8 +3102,8 @@ msgstr "Seulement avformat.dll"
 
 #: src/FFmpeg.cpp
 #, fuzzy
-msgid "Only ffmpeg.*.dylib"
-msgstr "Seulement libmp3lame.dylib"
+msgid "Only libavformat.dylib"
+msgstr "Seulement libavformat.so"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -4125,6 +4133,11 @@ msgid ""
 msgstr ""
 "Échec de l’initialisation de l’effet ou de la commande à %s :\n"
 "%s"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "Temps écoulé :"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5270,23 +5283,16 @@ msgstr "Outils"
 msgid "Transport"
 msgstr "Transport"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "Mixage"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "VU-mètre"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "VU-mètre de lecture"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6213,6 +6219,25 @@ msgid "&Ok"
 msgstr "Valider (&o)"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Vous ne pourrez pas lire ou enregistrer de l’audio.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "Exporte dans un fichier"
@@ -6294,19 +6319,11 @@ msgid "Preparing audio..."
 msgstr "Préparation…\n"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "Temps écoulé :"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "Temps restant :"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16124,10 +16141,6 @@ msgid "&Language:"
 msgstr "&Langue :"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "Location of &Manual:"
-msgstr "Localisation du &manuel :"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr "Thèm&e :"
 
@@ -17790,6 +17803,30 @@ msgstr "Ajuster le projet à la largeur"
 msgid "&Edit Toolbar"
 msgstr "Barr&e d’édition"
 
+# trebmuh to check (on laisse "monitoring" ou on met "surveillance" ?)
+#: src/toolbars/MeterToolBar.cpp
+msgid " Monitoring "
+msgstr "Monitoring"
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr " Actif"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %2.f dB"
+msgstr " Crête %2.f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr " Crête %.2f "
+
+# trebmuh to check (clip comme ’partie audio’ ou ’saturation’ ?)
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr "Saturé "
+
 #: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
 msgstr "Mesureur combiné"
@@ -17803,6 +17840,11 @@ msgid "Playback Meter"
 msgstr "Mesureur de lecture"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Recording Level"
+msgstr "Niveau d’enregistrement"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -17810,19 +17852,16 @@ msgid "Meter-Record"
 msgstr "VU-mètre d’enregistrement"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#: src/toolbars/MeterToolBar.cpp
+msgid "Playback Level"
+msgstr "Niveau de lecture"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Meter-Play"
 msgstr "VU-mètre de lecture"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Playback Level"
-msgstr "Niveau de lecture"
-
-#: src/toolbars/MeterToolBar.cpp
-msgid "Recording Level"
-msgstr "Niveau d’enregistrement"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19150,6 +19189,16 @@ msgstr "Presser"
 msgid "Button"
 msgstr "Bouton"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "Presser"
+
+#: src/widgets/AButton.cpp
+msgid "not pressed"
+msgstr ""
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19307,30 +19356,6 @@ msgstr "Horizontal"
 #: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "Vertical"
-
-# trebmuh to check (on laisse "monitoring" ou on met "surveillance" ?)
-#: src/widgets/MeterPanel.cpp
-msgid " Monitoring "
-msgstr "Monitoring"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr " Actif"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %2.f dB"
-msgstr " Crête %2.f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr " Crête %.2f "
-
-# trebmuh to check (clip comme ’partie audio’ ou ’saturation’ ?)
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr "Saturé "
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -21590,6 +21615,16 @@ msgstr "Supprimer la piste"
 #, fuzzy
 msgid "Spectral Tools"
 msgstr "S&pectral"
+
+#, fuzzy
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "Seulement libmp3lame.dylib"
+
+#~ msgid "Mixer"
+#~ msgstr "Mixage"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "Localisation du &manuel :"
 
 #, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."

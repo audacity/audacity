@@ -202,10 +202,14 @@ struct EffectReverb::Instance
 
    // Realtime section
 
-   bool RealtimeInitialize(EffectSettings& settings, double) override
+   bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override
    {
       SetBlockSize(512);
       mSlaves.clear();
+
+      mLastAppliedSettings = GetSettings(settings);
+      mLastSampleRate = sampleRate;
+
       return true;
    }
 
@@ -233,10 +237,57 @@ struct EffectReverb::Instance
    size_t RealtimeProcess(size_t group, EffectSettings& settings,
       const float* const* inbuf, float* const* outbuf, size_t numSamples) override
    {
+
+      const auto& incomingSettings = GetSettings(settings);
+      if ( !(incomingSettings == mLastAppliedSettings) )
+      {
+         const bool onlySimpleOnes = OnlySimpleParametersChanged(incomingSettings, mLastAppliedSettings);
+
+         for (auto& slave : mSlaves)
+         {
+            for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
+            {
+               auto& reverbCore = slave.mState.mP[i].reverb;
+               const auto& is = incomingSettings;
+
+               if (onlySimpleOnes)
+               {
+                  reverb_set_simple_params(&reverbCore, mLastSampleRate,
+                                           is.mWetGain, is.mReverberance, is.mHfDamping, is.mToneLow, is.mToneHigh);
+               }
+               else
+               {
+                  // One of the non-simple parameters changed, so we need to do a full reinit
+                  reverb_init(&reverbCore, mLastSampleRate,
+                              is.mWetGain, is.mRoomSize, is.mReverberance, is.mHfDamping,
+                              is.mPreDelay, is.mStereoWidth, is.mToneLow, is.mToneHigh   );
+               }
+            }
+         }         
+
+         mLastAppliedSettings = incomingSettings;
+      }
+
+
       if (group >= mSlaves.size())
          return 0;
       return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
    }
+
+
+   bool RealtimeSuspend() override
+   {
+      for (auto& slave : mSlaves)
+      {
+         for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
+         {
+            reverb_clear( &(slave.mState.mP[i].reverb) );
+         }
+      }
+
+      return true;
+   }
+
 
    unsigned GetAudioOutCount() const override
    {
@@ -258,6 +309,9 @@ struct EffectReverb::Instance
    std::vector<EffectReverb::Instance> mSlaves;
 
    unsigned mChannels{ 2 };
+
+   EffectReverbSettings mLastAppliedSettings;
+   double mLastSampleRate{ 0 };
 };
 
 
@@ -304,7 +358,7 @@ EffectType EffectReverb::GetType() const
 
 auto EffectReverb::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Never;
+   return RealtimeSince::After_3_1;
 }
 
 static size_t BLOCK = 16384;
@@ -549,6 +603,7 @@ bool EffectReverb::Validator::UpdateUI()
       m ## n ## T->SetValue(wxString::Format(wxT("%d"), evt.GetInt())); \
       mProcessingEvent = false; \
       ValidateUI(); \
+      Publish(EffectSettingChanged{}); \
    } \
    void EffectReverb::Validator::On ## n ## Text(wxCommandEvent & evt) \
    { \
@@ -557,6 +612,7 @@ bool EffectReverb::Validator::UpdateUI()
       m ## n ## S->SetValue(std::clamp<long>(evt.GetInt(), n.min, n.max)); \
       mProcessingEvent = false; \
       ValidateUI(); \
+      Publish(EffectSettingChanged{}); \
    }
 
 SpinSliderHandlers(RoomSize)
@@ -572,6 +628,47 @@ SpinSliderHandlers(StereoWidth)
 void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
 {
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 #undef SpinSliderHandlers
+
+bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b)
+{
+   // With C++20, all of this can be replaced by =default
+   return      (a.mRoomSize     == b.mRoomSize)
+            && (a.mPreDelay     == b.mPreDelay)
+            && (a.mReverberance == b.mReverberance)
+            && (a.mHfDamping    == b.mHfDamping)
+            && (a.mToneLow      == b.mToneLow)
+            && (a.mToneHigh     == b.mToneHigh)
+            && (a.mWetGain      == b.mWetGain)
+            && (a.mDryGain      == b.mDryGain)
+            && (a.mStereoWidth  == b.mStereoWidth)
+            && (a.mWetOnly      == b.mWetOnly);           
+}
+
+bool OnlySimpleParametersChanged(const EffectReverbSettings& a, const EffectReverbSettings& b)
+{
+   // A "simple" reverb parameter is one that when changed, does not require the
+   // reverb allpass/comb filters to be reset. This distinction enables us to
+   // code things so that the user can keep hearing the processed sound while
+   // they tweak one of the simple parameters.
+
+   const bool oneSimpleParameterChanged =
+
+               (a.mReverberance != b.mReverberance)
+            || (a.mHfDamping    != b.mHfDamping)
+            || (a.mToneLow      != b.mToneLow)
+            || (a.mToneHigh     != b.mToneHigh)
+            || (a.mWetGain      != b.mWetGain);
+
+
+   const bool allNonSimpleParametersStayedTheSame =
+
+               (a.mRoomSize     == b.mRoomSize)
+            && (a.mPreDelay     == b.mPreDelay)
+            && (a.mStereoWidth  == b.mStereoWidth);           
+
+   return oneSimpleParameterChanged && allNonSimpleParametersStayedTheSame;
+}

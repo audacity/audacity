@@ -19,9 +19,8 @@
 #include <condition_variable>
 #include <wx/string.h>
 
+#include "IPCClient.h"
 #include "PluginIPCUtils.h"
-
-class IPCClient;
 
 /**
  * \brief Internal class, processes plugin validation requests
@@ -33,7 +32,7 @@ class IPCClient;
  * send another request until host hasn't finish processing
  * previous request.
  */
-class PluginHost final : public IPCChannelStatusCallback
+class MODULE_MANAGER_API PluginHost final : public IPCChannelStatusCallback
 {
    static constexpr auto HostArgument =  "--host";
 

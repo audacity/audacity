@@ -567,8 +567,6 @@ namespace {
 
 // Menu handler functions
 
-struct Handler : CommandHandlerObject {
-
 void OnEditClipName(const CommandContext &context)
 {
    auto &project = context.project;
@@ -583,28 +581,13 @@ void OnEditClipName(const CommandContext &context)
    }
 }
 
-};
-
-#define FN(X) (& Handler :: X)
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
-};
-
 using namespace MenuTable;
 
 // Register menu items
 
 AttachedItem sAttachment{ wxT("Edit/Other"),
-   ( FinderScope{ findCommandHandler },
-      Command( L"RenameClip", XXO("Rename Clip..."),
-         &Handler::OnEditClipName, SomeClipIsSelectedFlag(),
-         wxT("Ctrl+F2") ) )
+   Command( L"RenameClip", XXO("Rename Clip..."),
+      OnEditClipName, SomeClipIsSelectedFlag(), wxT("Ctrl+F2") )
 };
 
 }
-
-#undef FN

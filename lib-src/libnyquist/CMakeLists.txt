@@ -295,7 +295,7 @@ list( APPEND OPTIONS
 
 list( APPEND LIBRARIES
    PRIVATE
-      PortAudio::PortAudio
+      portaudio::portaudio
       SndFile::sndfile
 )
 

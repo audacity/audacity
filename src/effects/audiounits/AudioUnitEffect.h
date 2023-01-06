@@ -110,6 +110,9 @@ public:
    // AudioUnitEffect implementation
 
 private:
+   static RegistryPath ChoosePresetKey(const EffectSettings &settings);
+   static RegistryPath FindPresetKey(const CommandParameters & parms);
+
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(

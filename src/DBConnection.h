@@ -39,14 +39,16 @@ struct DBConnectionErrors
 class DBConnection
 {
 public:
-   // Type of function invoked in the main thread after detection of
-   // checkpoint failure, which might have been in a worker thread
    using CheckpointFailureCallback = std::function<void()>;
 
    DBConnection(
       const std::weak_ptr<AudacityProject> &pProject,
       const std::shared_ptr<DBConnectionErrors> &pErrors,
-      CheckpointFailureCallback callback);
+      CheckpointFailureCallback callback /*!<
+         Invoked in the main thread in idle time after detection of
+         checkpoint failure, which might have been in a worker thread
+      */
+   );
    ~DBConnection();
 
    int Open(const FilePath fileName);

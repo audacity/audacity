@@ -186,11 +186,11 @@ void NewDefaultPlaybackPolicy::Initialize(
    mMessageChannel.Write( { mLastPlaySpeed,
       schedule.mT0, mLoopEndTime, mLoopEnabled } );
 
-   mSubscription = ViewInfo::Get( mProject ).playRegion.Subscribe(
-      *this, &NewDefaultPlaybackPolicy::OnPlayRegionChange);
+   auto callback = [this](auto&){ WriteMessage(); };
+   mRegionSubscription =
+       ViewInfo::Get(mProject).playRegion.Subscribe(callback);
    if (mVariableSpeed)
-      mProject.Bind( EVT_PLAY_SPEED_CHANGE,
-         &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
+      mSpeedSubscription = ProjectAudioIO::Get(mProject).Subscribe(callback);
 }
 
 Mixer::WarpOptions NewDefaultPlaybackPolicy::MixerWarpOptions(
@@ -400,18 +400,6 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
 bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
 {
    return mLoopEnabled;
-}
-
-void NewDefaultPlaybackPolicy::OnPlayRegionChange(Observer::Message)
-{
-   // This executes in the main thread
-   WriteMessage();
-}
-
-void NewDefaultPlaybackPolicy::OnPlaySpeedChange(wxCommandEvent &evt)
-{
-   evt.Skip(); // Let other listeners hear the event too
-   WriteMessage();
 }
 
 void NewDefaultPlaybackPolicy::WriteMessage()

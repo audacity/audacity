@@ -27,11 +27,11 @@ if(${_OPT}has_sentry_reporting)
         lib-network-manager # Required for the networking
         lib-string-utils # ToUtf8
         lib-uuid # UUIDs are required as an event identifier.
-        RapidJSON::RapidJSON # Protocol is JSON based
+        rapidjson::rapidjson # Protocol is JSON based
         wxwidgets::base # Required to retrieve the OS information
     )
 
-    set ( DEFINES 
+    set ( DEFINES
         INTERFACE
             HAS_SENTRY_REPORTING=1
         PRIVATE

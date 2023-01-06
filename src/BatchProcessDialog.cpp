@@ -443,8 +443,6 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    mMacroCommands.ReadMacro(name); 
    {
-      // Move global clipboard contents aside temporarily
-      Clipboard tempClipboard;
       auto &globalClipboard = Clipboard::Get();
 
       // DV: Macro invocation on file will reset the project to the
@@ -453,10 +451,8 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       if (globalClipboard.Project().lock().get() == project)
          globalClipboard.Clear();
 
-      globalClipboard.Swap(tempClipboard);
-      auto cleanup = finally([&]{
-         globalClipboard.Swap(tempClipboard);
-      });
+      // Move global clipboard contents aside temporarily
+      Clipboard::Scope scope;
 
       wxWindowDisabler wd(&activityWin);
       for (i = 0; i < (int)files.size(); i++) {

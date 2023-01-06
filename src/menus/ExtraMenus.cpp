@@ -12,17 +12,8 @@
 
 // helper functions and classes
 namespace {
-}
-
-/// Namespace for helper functions for Extra menu
-namespace ExtraActions {
-
-// exported helper functions
-// none
 
 // Menu handler functions
-
-struct Handler : CommandHandlerObject {
 
 void OnOutputGain(const CommandContext &context)
 {
@@ -105,22 +96,8 @@ void OnFullScreen(const CommandContext &context)
    MenuManager::Get(project).ModifyToolbarMenus(project);
 }
 
-}; // struct Handler
-
-} // namespace
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static ExtraActions::Handler instance;
-   return instance;
-};
-
 // Menu definitions
 
-#define FN(X) (& ExtraActions::Handler :: X)
-
-namespace {
 using namespace MenuTable;
 
 BaseItemSharedPtr ExtraMixerMenu();
@@ -157,21 +134,20 @@ AttachedItem sAttachment1{
 BaseItemSharedPtr ExtraMixerMenu()
 {
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Mixer"), XXO("Mi&xer"),
       Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
-         FN(OnOutputGain), AlwaysEnabledFlag ),
+         OnOutputGain, AlwaysEnabledFlag ),
       Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
-         FN(OnOutputGainInc), AlwaysEnabledFlag ),
+         OnOutputGainInc, AlwaysEnabledFlag ),
       Command( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
-         FN(OnOutputGainDec), AlwaysEnabledFlag ),
+         OnOutputGainDec, AlwaysEnabledFlag ),
       Command( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
-         FN(OnInputGain), AlwaysEnabledFlag ),
+         OnInputGain, AlwaysEnabledFlag ),
       Command( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
-         FN(OnInputGainInc), AlwaysEnabledFlag ),
+         OnInputGainInc, AlwaysEnabledFlag ),
       Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
-         FN(OnInputGainDec), AlwaysEnabledFlag )
-   ) ) };
+         OnInputGainDec, AlwaysEnabledFlag )
+   ) };
    return menu;
 }
 
@@ -179,20 +155,19 @@ BaseItemSharedPtr ExtraMixerMenu()
 BaseItemSharedPtr ExtraDeviceMenu()
 {
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Device"), XXO("De&vice"),
       Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
-         FN(OnInputDevice),
+         OnInputDevice,
          AudioIONotBusyFlag(), wxT("Shift+I") ),
       Command( wxT("OutputDevice"), XXO("Change &Playback Device..."),
-         FN(OnOutputDevice),
+         OnOutputDevice,
          AudioIONotBusyFlag(), wxT("Shift+O") ),
-      Command( wxT("AudioHost"), XXO("Change Audio &Host..."), FN(OnAudioHost),
+      Command( wxT("AudioHost"), XXO("Change Audio &Host..."), OnAudioHost,
          AudioIONotBusyFlag(), wxT("Shift+H") ),
       Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
-         FN(OnInputChannels),
+         OnInputChannels,
          AudioIONotBusyFlag(), wxT("Shift+N") )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -216,10 +191,9 @@ BaseItemSharedPtr ExtraMiscItems()
    ;
 
          return (
-         FinderScope{ findCommandHandler },
          // Accel key is not bindable.
          Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
-            FN(OnFullScreen),
+            OnFullScreen,
             AlwaysEnabledFlag,
             Options{ key }.CheckTest( []( const AudacityProject &project ) {
                return GetProjectFrame( project )
@@ -236,5 +210,3 @@ AttachedItem sAttachment2{
 };
 
 }
-
-#undef FN

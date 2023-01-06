@@ -209,7 +209,7 @@ EffectType EffectWahwah::GetType() const
 
 auto EffectWahwah::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Never;
+   return RealtimeSince::After_3_1;
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
@@ -482,6 +482,7 @@ void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
@@ -496,6 +497,7 @@ void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
@@ -507,6 +509,7 @@ void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
@@ -518,6 +521,7 @@ void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
@@ -529,6 +533,7 @@ void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
@@ -540,6 +545,7 @@ void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
@@ -553,6 +559,7 @@ void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
 
    mFreqS->SetValue((int)(ms.mFreq * Freq.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
@@ -566,6 +573,7 @@ void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
 
    mPhaseS->SetValue((int)(ms.mPhase * Phase.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
@@ -579,6 +587,7 @@ void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
 
    mDepthS->SetValue((int)(ms.mDepth * Depth.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
@@ -592,6 +601,7 @@ void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
 
    mResS->SetValue((int)(ms.mRes * Res.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
@@ -605,6 +615,7 @@ void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
 
    mFreqOfsS->SetValue((int)(ms.mFreqOfs * FreqOfs.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnGainText(wxCommandEvent& WXUNUSED(evt))
@@ -618,4 +629,5 @@ void EffectWahwah::Validator::OnGainText(wxCommandEvent& WXUNUSED(evt))
 
    mOutGainS->SetValue((int)(ms.mOutGain * OutGain.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }

@@ -120,6 +120,8 @@ bool TracksBehaviorsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+   EditClipsCanMove.Invalidate();
+   ScrollingPreference.Invalidate();
 
    return true;
 }

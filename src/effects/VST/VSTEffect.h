@@ -25,6 +25,7 @@
 #include <optional>
 #include <mutex>
 #include <thread>
+#include <atomic>
 
 class wxSizerItem;
 class wxSlider;
@@ -106,6 +107,7 @@ struct VSTEffectUIWrapper
    virtual void NeedIdle();
    virtual void SizeWindow(int w, int h);
    virtual void Automate(int index, float value);
+   virtual void Flush();
 };
 
 
@@ -141,7 +143,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    intptr_t constCallDispatcher(int opcode, int index,
       intptr_t value, void* ptr, float opt) const;
 
-   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+   std::recursive_mutex mDispatcherLock;
 
    float callGetParameter(int index) const;
 
@@ -302,23 +304,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    void         SetBufferDelay(int samples);
 
 
-   static bool TransferSettingsContents(VSTEffectSettings& src,
-                                        VSTEffectSettings& dst,
-                                        bool doMove,
-                                        bool doMerge);
-
-   //! Copy from one map to another
-   bool CopySettingsContents(const VSTEffectSettings& src,
-                                   VSTEffectSettings& dst) const;
-
-   //! Copy, then clear the optionals in src
-   static bool MoveSettingsContents(VSTEffectSettings&& src,
-                                    VSTEffectSettings&  dst,
-                                    bool merge);
-
    // Make message carrying all the information in settings, including chunks
+   // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
-      MakeMessageFS(VSTEffectSettings& settings) const;
+      MakeMessageFS(const VSTEffectSettings& settings) const;
 };
 
 class VSTEffectInstance;
@@ -523,6 +512,7 @@ public:
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
+   bool UsesMessages() const noexcept override;
    bool RealtimeProcessStart(MessagePackage& package) override;
    size_t RealtimeProcess(size_t group, EffectSettings& settings,
       const float* const* inbuf, float* const* outbuf, size_t numSamples)
@@ -565,6 +555,10 @@ public:
    // overrides in the Validator which owns the instance - this sets it.
    void SetOwningValidator(VSTEffectUIWrapper* vi);
 
+   bool OnePresetWasLoadedWhilePlaying();
+
+   void DeferChunkApplication();
+
 private:
 
    void callProcessReplacing(
@@ -581,6 +575,17 @@ private:
    bool mRecruited{ false };
 
    VSTEffectUIWrapper* mpOwningValidator{};
+
+   std::atomic_bool mPresetLoadedWhilePlaying{ false };
+
+   std::mutex mDeferredChunkMutex;
+   std::vector<char> mChunkToSetAtIdleTime{};
+
+   void ApplyChunk(std::vector<char>& chunk);
+
+   bool ChunkMustBeAppliedInMainThread() const;
+
+   bool mIsMeldaPlugin{ false };
 };
 
 
@@ -624,10 +629,13 @@ public:
 
    bool IsGraphicalUI() override;
 
+   void Flush() override;
+
 protected:
    void SizeWindow(int w, int h) override;
 
 private:
+   void NotifyParameterChanged(int index, float value);
    void OnIdle(wxIdleEvent &evt);
 
    VSTEffectInstance& mInstance;
@@ -643,7 +651,9 @@ private:
 
    bool mWantsEditIdle{ false };
    bool mWantsIdle{ false };
-   int mNeedFlush{ -1 };
+
+   // Remembers last slider movements until idle time
+   std::vector<std::pair<int, double>> mLastMovements{};
 
    ArrayOf<wxStaticText*> mNames;
    ArrayOf<wxSlider*> mSliders;
@@ -654,7 +664,10 @@ private:
    wxWindow* mParent;
    wxWeakRef<wxDialog> mDialog;
    
-   VSTControl* mControl;
+   VSTControl* mControl{};
+
+   // Mapping from parameter ID to string
+   std::vector<wxString> mParamNames;
 
    int mNumParams{ 0 };
 };

@@ -39,7 +39,13 @@ class MeterToolBar final : public ToolBar {
 
  public:
 
-   MeterToolBar(AudacityProject &project, int type);
+   static Identifier ID();
+   static Identifier PlayID();
+   static Identifier RecordID();
+
+   MeterToolBar(AudacityProject &project,
+      unsigned whichMeters,
+      const TranslatableString &label, Identifier ID);
    virtual ~MeterToolBar();
 
    static MeterToolBars GetToolBars(AudacityProject &project);
@@ -47,6 +53,8 @@ class MeterToolBar final : public ToolBar {
 
    static MeterToolBar & Get(AudacityProject &project, bool forPlayMeterToolBar);
    static const MeterToolBar & Get(const AudacityProject &project, bool forPlayMeterToolBar);
+
+   bool ShownByDefault() const override;
 
    void Create(wxWindow *parent) override;
 
@@ -77,7 +85,7 @@ class MeterToolBar final : public ToolBar {
    void RegenerateTooltips() override {}
    void RebuildLayout(bool force);
 
-   int mWhichMeters;
+   unsigned mWhichMeters;
    wxBoxSizer *mRootSizer{nullptr};
    AButton* mPlaySetupButton{nullptr};
    MeterPanel *mPlayMeter{nullptr};

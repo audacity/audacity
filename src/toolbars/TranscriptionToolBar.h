@@ -62,8 +62,14 @@ class TranscriptionToolBar final : public ToolBar {
 
  public:
 
+   static Identifier ID();
+
    TranscriptionToolBar( AudacityProject &project );
    virtual ~TranscriptionToolBar();
+
+   bool ShownByDefault() const override;
+
+   DockID DefaultDockID() const override;
 
    static TranscriptionToolBar &Get( AudacityProject &project );
    static const TranscriptionToolBar &Get( const AudacityProject &project );

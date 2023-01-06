@@ -21,9 +21,4 @@ AUDACITY_DLL_API std::weak_ptr<AudacityProject> GetActiveProject();
 // For use by ProjectManager only:
 AUDACITY_DLL_API void SetActiveProject(AudacityProject * project);
 
-// This event is emitted by the application object when there is a change
-// in the activated project
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_PROJECT_ACTIVATION, wxCommandEvent);
-
 #endif

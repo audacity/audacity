@@ -12,12 +12,12 @@
 
 #include "PluginHost.h"
 
-#include <wx/app.h>
 #include <wx/log.h>
 #include <wx/module.h>
 #include <wx/process.h>
 
 #include "BasicUI.h"
+#include "CommandLineArgs.h"
 #include "PathList.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
@@ -36,7 +36,8 @@ namespace
          {
             TranslatableString errorMessage{};
             auto validator = provider->MakeValidator();
-            provider->DiscoverPluginsAtPath(pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
+            auto numPlugins = provider->DiscoverPluginsAtPath(
+               pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
             {
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
@@ -60,6 +61,8 @@ namespace
             });
             if(!errorMessage.empty())
                result.SetError(errorMessage.Debug());
+            else if(numPlugins == 0)
+               result.SetError("no plugins found");
          }
          else
             result.SetError("provider not found");
@@ -136,6 +139,9 @@ bool PluginHost::Serve()
 
    if(mRequest)
    {
+      if(mChannel)
+         detail::PutMessage(*mChannel, wxEmptyString);
+
       std::optional<wxString> request;
       mRequest.swap(request);
 
@@ -201,7 +207,8 @@ bool PluginHost::Start(int connectPort)
 
 bool PluginHost::IsHostProcess()
 {
-   return wxTheApp && wxTheApp->argc >= 3 && wxStrcmp(wxTheApp->argv[1], HostArgument) == 0;
+   return CommandLineArgs::argc >= 3 &&
+      wxStrcmp(CommandLineArgs::argv[1], HostArgument) == 0;
 }
 
 class PluginHostModule final :
@@ -215,7 +222,7 @@ public:
       if(PluginHost::IsHostProcess())
       {
          long connectPort;
-         if(!wxTheApp->argv[2].ToLong(&connectPort))
+         if(!wxString{ CommandLineArgs::argv[2] }.ToLong(&connectPort))
             return false;
 
          //log messages will appear in a separate window
@@ -228,7 +235,7 @@ public:
          //...and terminate app
          return false;
       }
-      //do noting if current process isn't a host process
+      //do nothing if current process isn't a host process
       return true;
    }
    

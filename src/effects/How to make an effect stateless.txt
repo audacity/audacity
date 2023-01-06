@@ -3,10 +3,12 @@
 Let use use EffectEcho as an example.
 
 
-1) "Define Settings"
+1) "Define Settings" (reference commit: 2d02c26)
 
    In header file:
        before the effect definition, define a struct EffectEchoSettings containing the settings.
+       Cut the class members which qualify for settings and paste them in this new struct; 
+       give them defaults that are equal to the defaults found 
 
        Base class remains as original, i.e. either StatefulPerTrackEffect or StatefulEffect
        
@@ -31,7 +33,7 @@ Let use use EffectEcho as an example.
        As the initializations it did, now happen in the constructor of EffectEchoSettings because we use in-struct initializers with the same default values as in the EffectParmeters.
         
     
-2) "Define validator"
+2) "Define validator"  (reference commit: 2592061)
 
 
     In header file:
@@ -104,6 +106,12 @@ Let use use EffectEcho as an example.
 
            return true;
         }
+        
+        If the effect has an override of ::TransferDataToWindow():
+        copy its steps into the ValidateUI() function above
+        (actually, transform in-place ::TransferDataToWindow like it was done in 2592061)
+        
+        
 
 
     - modify PopulateOrExchange to make it belong to the Validator
@@ -151,7 +159,7 @@ Let use use EffectEcho as an example.
          
          where: 
          1st arg is the just created widget
-         2nd arg is either wxEVT_TEXT or wxEVT_SLIDER according to the widget type
+         2nd arg is either wxEVT_TEXT or wxEVT_SLIDER or wxEVT_CHECKBOX according to the widget type
          3rd arg is the handler which is meant to handle events coming from the widget
 
     - change
@@ -176,7 +184,11 @@ Let use use EffectEcho as an example.
 
 
 
-3) "Define the instance"
+3) "Define the instance"  
+   (reference commit: 5961be1 - however since then, the following has changed:
+     - some methods of Instance have a different signature
+     - MakeInstance now takes no args
+     - the instance does not inherit EffectInstanceWithSampleRate anymore (?))
 
     In header file, 
     
@@ -184,7 +196,7 @@ Let use use EffectEcho as an example.
     
             struct Instance;
 
-            std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const override;
+            std::shared_ptr<EffectInstance> MakeInstance() const override;
 
         Identify members that represent state - comment them out 
         
@@ -198,9 +210,7 @@ Let use use EffectEcho as an example.
     
         struct EffectEcho::Instance
            : public PerTrackEffect::Instance
-           , public EffectInstanceWithBlockSize
-           , public EffectInstanceWithSampleRate
-
+           , public EffectInstanceWithBlockSize           
         {
            explicit Instance(const PerTrackEffect& effect)
               : PerTrackEffect::Instance{ effect }
@@ -234,7 +244,7 @@ Let use use EffectEcho as an example.
 
 
         std::shared_ptr<EffectInstance>
-        EffectEcho::MakeInstance(EffectSettings&) const
+        EffectEcho::MakeInstance() const
         {
            return std::make_shared<Instance>(*this);
         }
@@ -258,7 +268,7 @@ Let use use EffectEcho as an example.
     
 
 
-4) "Real Statelessness"
+4) "Real Statelessness" (reference commit: 231bf76)
 
     In header file:
     
@@ -274,15 +284,15 @@ Let use use EffectEcho as an example.
 
     In cpp file:
     
+    - add const to arg EffectEchoSettings& in the Validator constructor
+    
+    - turn Validator::mSettings from a reference to a non-reference
+    
     - go to ProcessInitialize, ProcessBlock, ProcessFinalize, RealtimeInitialize etc.; remove the downcast and enable the commented out GetSettings
     
     - go to Validator::ValidateUI, uncomment the line //EffectEcho::GetSettings(settings) = mSettings;
 
     - go to Validator::UpdateUI, uncomment the line //mSettings = GetSettings(settings);
-    
-    - add const to arg EffectEchoSettings& in the Validator constructor
-    
-    - turn Validator::mSettings from a reference to a non-reference
 
     - in the effect's ::PopulateOrExchange, uncomment/comment lines as prescribed
     

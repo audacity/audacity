@@ -60,9 +60,19 @@ void LV2Validator::UI::Destroy()
       ? static_cast<WXWidget>(suil_instance_get_widget(mSuilInstance.get()))
       : nullptr;
    if (widget) {
-      // Bump reference count twice
-      wxCFRetain(widget);
-      wxCFRetain(widget);
+      if (!mJustLeakMemory) {
+         // Bump reference count twice
+         wxCFRetain(widget);
+         wxCFRetain(widget);
+      }
+      else {
+         // Compensates for either an unbalanced release, or (when closing the
+         // project while the dialog is open) dangling pointers remaining after
+         // the last release, by adding one release.  In the second case, it
+         // leaks resources.
+         // (We can't detect here, which of the two cases applies.)
+         wxCFRetain(widget);
+      }
 
       // Do destruction of mNativeWin, which points to widget, and the suil
       // instance in the scope of an autorelease pool
@@ -76,11 +86,13 @@ void LV2Validator::UI::Destroy()
 
       // Two increases of the reference count means there can be one unbalanced
       // release and yet we can still query the use-count safely
-      int count = CFGetRetainCount(widget);
-      wxCFRelease(widget);
-      if (count > 1)
-         // Most plug-ins should come here, but x42-limiter will not!
+      if (!mJustLeakMemory) {
+         int count = CFGetRetainCount(widget);
          wxCFRelease(widget);
+         if (count > 1)
+            // Most plug-ins should come here, but x42-limiter will not!
+            wxCFRelease(widget);
+      }
    }
 #else
    mNativeWin = nullptr;
@@ -705,12 +717,32 @@ void LV2Validator::SetSlider(
    ctrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
+void LV2Validator::UpdateControlPortValue(
+   LV2EffectSettings& settings, size_t controlPortIndex, float value)
+{
+   const auto currentValue = settings.values[controlPortIndex];
+
+   // LV2 implementation allows to edit the values
+   // using text boxes too. Provide sufficiently small epsilon
+   // to distinguish between the values.
+   // (for example, conversion from the text representation
+   // is always lossy, so direct comparison of the values
+   // is not possible, nor should it be used for float values)
+   const auto epsilon = 1e-5f;
+
+   if (std::abs(currentValue - value) < epsilon)
+      return;
+
+   settings.values[controlPortIndex] = value;
+   Publish({ mPorts.mControlPorts[controlPortIndex]->mIndex, value });
+}
+
 void LV2Validator::OnTrigger(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Triggers;
    auto & port = mPorts.mControlPorts[idx];
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] = port->mDef;
+      UpdateControlPortValue(GetSettings(settings), idx, port->mDef);
       return nullptr;
    });
 }
@@ -719,7 +751,8 @@ void LV2Validator::OnToggle(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Toggles;
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] = evt.GetInt() ? 1.0 : 0.0;
+      UpdateControlPortValue(
+         GetSettings(settings), idx, evt.GetInt() ? 1.0 : 0.0);
       return nullptr;
    });
 }
@@ -729,7 +762,8 @@ void LV2Validator::OnChoice(wxCommandEvent &evt)
    size_t idx = evt.GetId() - ID_Choices;
    auto & port = mPorts.mControlPorts[idx];
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] = port->mScaleValues[evt.GetInt()];
+      UpdateControlPortValue(
+         GetSettings(settings), idx, port->mScaleValues[evt.GetInt()]);
       return nullptr;
    });
 }
@@ -742,8 +776,9 @@ void LV2Validator::OnText(wxCommandEvent &evt)
    auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       mAccess.ModifySettings([&](EffectSettings &settings) {
-         GetSettings(settings).values[idx] =
-            port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+         UpdateControlPortValue(
+            GetSettings(settings), idx,
+               port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp);
          return nullptr;
       });
       SetSlider(state, ctrl);
@@ -765,8 +800,9 @@ void LV2Validator::OnSlider(wxCommandEvent &evt)
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
    mAccess.ModifySettings([&](EffectSettings &settings) {
-      GetSettings(settings).values[idx] =
-         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      UpdateControlPortValue(
+         GetSettings(settings), idx,
+            port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp);
       return nullptr;
    });
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
@@ -842,7 +878,7 @@ void LV2Validator::OnIdle(wxIdleEvent &evt)
  */
                &value);
             state.mLst = value;
-         }
+        }
       }
       ++index;
    }
@@ -933,14 +969,20 @@ void LV2Validator::suil_port_write(uint32_t port_index,
 {
    // Handle implicit floats
    if (protocol == 0 && buffer_size == sizeof(float)) {
-      if (auto it = mPorts.mControlPortMap.find(port_index)
-         ; it != mPorts.mControlPortMap.end()
-      )
-         mAccess.ModifySettings([&](EffectSettings &settings){
-            GetSettings(settings).values[it->second] =
-               *static_cast<const float *>(buffer);
-            return nullptr;
-         });
+      if (auto it = mPorts.mControlPortMap.find(port_index);
+          it != mPorts.mControlPortMap.end())
+      {
+         const auto value = *static_cast<const float*>(buffer);
+         mAccess.ModifySettings(
+            [&](EffectSettings& settings)
+            {
+               GetSettings(settings).values[it->second] = value;
+               return nullptr;
+            });
+      
+         
+         Publish({ size_t(port_index), value });
+      }
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {

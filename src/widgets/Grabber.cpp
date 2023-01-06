@@ -53,12 +53,13 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-Grabber::Grabber(wxWindow * parent, wxWindowID id)
+Grabber::Grabber(wxWindow * parent, Identifier id)
 : wxWindow(parent,
-           id,
+           wxID_ANY,
            wxDefaultPosition,
            wxSize(grabberWidth, 27),
            wxFULL_REPAINT_ON_RESIZE)
+, mIdentifier{ id }
 {
    mOver = false;
    mPressed = false;
@@ -88,7 +89,7 @@ void Grabber::SendEvent(wxEventType type, const wxPoint & pos, bool escaping)
    wxWindow *parent = GetParent();
 
    // Initialize event and convert mouse coordinates to screen space
-   GrabberEvent e(type, GetId(), parent->ClientToScreen(pos), escaping);
+   GrabberEvent e(type, mIdentifier, parent->ClientToScreen(pos), escaping);
 
    // Set the object of our desire
    e.SetEventObject(parent);

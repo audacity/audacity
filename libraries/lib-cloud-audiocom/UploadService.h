@@ -110,8 +110,8 @@ public:
       If projectName is empty, the name for the uploaded file is deduced from the fileName.
    */
    UploadOperationHandle Upload(
-      const wxString& fileName, const wxString& projectName, CompletedCallback completedCallback,
-      ProgressCallback progressCallback);
+      const wxString& fileName, const wxString& projectName, bool isPublic,
+      CompletedCallback completedCallback, ProgressCallback progressCallback);
 
 private:
    const ServiceConfig& mServiceConfig;

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-13 07:25-0400\n"
+"POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -653,6 +653,14 @@ msgstr "தடத்தை மீள்மாதிரி செய்"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Cut/Copy/Paste"
+msgstr ""
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "&Cut/Copy/Paste Toolbar"
 msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
@@ -2189,7 +2197,7 @@ msgstr "தெரிக"
 msgid "&Recover Selected"
 msgstr "தெரிக"
 
-#: src/AutoRecoveryDialog.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
 msgstr ""
 
@@ -3050,7 +3058,7 @@ msgid "Only avformat.dll"
 msgstr ""
 
 #: src/FFmpeg.cpp
-msgid "Only ffmpeg.*.dylib"
+msgid "Only libavformat.dylib"
 msgstr ""
 
 #: src/FFmpeg.cpp
@@ -4093,6 +4101,11 @@ msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr "மன்னிக்கவும், Vamp சொருகியை ஆரம்பிப்பதில் தோல்வி"
+
+#: src/PluginStartupRegistration.cpp src/cloud/audiocom/ShareAudioDialog.cpp
+#: src/widgets/ProgressDialog.cpp
+msgid "Elapsed Time:"
+msgstr "கடந்துவிட்ட நேரம்"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -5190,23 +5203,16 @@ msgstr "கருவிகள்"
 msgid "Transport"
 msgstr "போக்குவரத்து"
 
-#: src/Screenshot.cpp
-msgid "Mixer"
-msgstr "கலப்பான்"
-
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "அளவைக்கருவி"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp
 msgid "Play Meter"
 msgstr "மீட்டரை ஓடச்செய்"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -6148,6 +6154,25 @@ msgid "&Ok"
 msgstr "&சரி"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"ஒலியினை பதிவு செய்யவோ கேட்கவோ முடியாதுள்ளது.\n"
+"\n"
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: src/cloud/audiocom/ShareAudioDialog.cpp
 #, fuzzy
 msgid "&Go to my file"
 msgstr "பல ஏற்றுமதி..."
@@ -6227,19 +6252,11 @@ msgid "Preparing audio..."
 msgstr "ஒலி காஷிங் செய்யப்படுகிறது"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
-msgid "Elapsed Time:"
-msgstr "கடந்துவிட்ட நேரம்"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
 msgstr "மீதமுள்ள நேரம்"
 
 #: src/cloud/audiocom/ShareAudioDialog.cpp
 msgid "Shareable link"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only people you share this link with can access your audio"
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -16315,11 +16332,6 @@ msgid "&Language:"
 msgstr "மொழி:"
 
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
-msgid "Location of &Manual:"
-msgstr "கைந்நூல் இன் &amp;கோப்பகம்"
-
-#: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
 msgstr ""
 
@@ -18063,6 +18075,29 @@ msgstr "கருவி ப&ட்டியலை தொகு"
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
+msgid " Monitoring "
+msgstr "மேற்பார்வையை நிறுத்தவும்"
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Active "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy, c-format
+msgid " Peak %2.f dB"
+msgstr "%.1f dB"
+
+#: src/toolbars/MeterToolBar.cpp
+#, c-format
+msgid " Peak %.2f "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+msgid " Clipped "
+msgstr ""
+
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
 msgid "Combined Meter"
 msgstr "மீட்டரை பதிவு செய்"
 
@@ -18077,6 +18112,12 @@ msgid "Playback Meter"
 msgstr "மீட்டரை ஓடச்செய்"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#: src/toolbars/MeterToolBar.cpp
+#, fuzzy
+msgid "Recording Level"
+msgstr "பதிதல் முடிவு"
+
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -18084,21 +18125,17 @@ msgid "Meter-Record"
 msgstr "மீட்டர்-பதிவு"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
-#. apparently is helpful to partially sighted people.
-#: src/toolbars/MeterToolBar.cpp
-msgid "Meter-Play"
-msgstr "மீட்டர்-ஓடு"
-
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Playback Level"
 msgstr "பின்னணி வேகம்"
 
+#. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+#. This is the name used in screen reader software, where having 'Meter' first
+#. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
-#, fuzzy
-msgid "Recording Level"
-msgstr "பதிதல் முடிவு"
+msgid "Meter-Play"
+msgstr "மீட்டர்-ஓடு"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the recording level meters
@@ -19484,6 +19521,17 @@ msgstr "அழுத்து"
 msgid "Button"
 msgstr "பட்டன்"
 
+#. i18n-hint: whether a button is pressed or not pressed
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "pressed"
+msgstr "அழுத்தி"
+
+#: src/widgets/AButton.cpp
+#, fuzzy
+msgid "not pressed"
+msgstr "அழுத்தி"
+
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
 #: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
@@ -19650,29 +19698,6 @@ msgstr "கிடையான ஸ்டீரியோ"
 #, fuzzy
 msgid "Vertical"
 msgstr "செங்குத்து அடிமட்டம்"
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy
-msgid " Monitoring "
-msgstr "மேற்பார்வையை நிறுத்தவும்"
-
-#: src/widgets/MeterPanel.cpp
-msgid " Active "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-#, fuzzy, c-format
-msgid " Peak %2.f dB"
-msgstr "%.1f dB"
-
-#: src/widgets/MeterPanel.cpp
-#, c-format
-msgid " Peak %.2f "
-msgstr ""
-
-#: src/widgets/MeterPanel.cpp
-msgid " Clipped "
-msgstr ""
 
 #: src/widgets/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -22011,6 +22036,13 @@ msgstr "ஒலித்துண்டு நீக்கி"
 msgid "Spectral Tools"
 msgstr "வர்ணப்பட்டை"
 
+#~ msgid "Mixer"
+#~ msgstr "கலப்பான்"
+
+#, fuzzy
+#~ msgid "Location of &Manual:"
+#~ msgstr "கைந்நூல் இன் &amp;கோப்பகம்"
+
 #, fuzzy, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "Audacity ஆனது உலகளாவிய ஒரு <a href=\"http://audacity.sourceforge.net/community/developers\">அணியினால்</a> உருவாக்கப்பட்ட இலவச  மென்பொருள் ஆகும். நாங்கள் எமது செயத்திட்டதை செய்தற்காக <a href=\"http://code.google.com\">Google Code</a> மற்றும் <a href=\"http://sourceforge.net\">SourceForge</a> இற்கும் நன்றி செலுத்துகிறோம். Audacity ஆனது Windows, Mac, மற்றும் GNU/Linux (ஏனைய Unix சார்ந்த கணினிகளுக்கும்) <a href=\"http://audacity.sourceforge.net/download/\">இங்கே  கிடைக்கும்</a>."
@@ -22607,10 +22639,6 @@ msgstr "வர்ணப்பட்டை"
 
 #~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "மொத்தமாக கணிப்பு பூர்த்தியில் %2.0f%% பூர்த்தியாகியுள்ளது"
-
-#, fuzzy
-#~ msgid "Compress"
-#~ msgstr "அழுத்தி"
 
 #, fuzzy
 #~ msgid ""

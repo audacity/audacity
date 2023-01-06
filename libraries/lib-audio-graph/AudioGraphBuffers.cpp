@@ -36,7 +36,8 @@ void AudioGraph::Buffers::Reinit(
    mPositions.resize(nChannels);
    const auto bufferSize = blockSize * nBlocks;
    for (auto &buffer : mBuffers)
-      buffer.resize(bufferSize + padding);
+      // Guarantee initial zeroes (needed at least in last buffer sometimes)
+      buffer.resize(bufferSize + padding, 0.0f);
    mBufferSize = bufferSize;
    mBlockSize = blockSize;
    Rewind();
