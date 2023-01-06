@@ -71,9 +71,14 @@ BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
 
+Identifier ToolsToolBar::ID()
+{
+   return wxT("Tools");
+}
+
 //Standard constructor
 ToolsToolBar::ToolsToolBar( AudacityProject &project )
-: ToolBar(project, ToolsBarID, XO("Tools"), wxT("Tools"))
+: ToolBar(project, XO("Tools"), ID())
 {
    using namespace ToolCodes;
 
@@ -104,7 +109,7 @@ ToolsToolBar::~ToolsToolBar()
 ToolsToolBar &ToolsToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ToolsToolBar*>( toolManager.GetToolBar(ToolsBarID) );
+   return *static_cast<ToolsToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const ToolsToolBar &ToolsToolBar::Get( const AudacityProject &project )
@@ -250,7 +255,7 @@ void ToolsToolBar::Create(wxWindow * parent)
    UpdatePrefs();
 }
 
-static RegisteredToolbarFactory factory{ ToolsBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ToolsToolBar{ project } }; }
 };
@@ -259,7 +264,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows a toolbar
       that has some tools in it */
-   ToolsBarID, wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
+   ToolsToolBar::ID(), wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
 };
 }
 

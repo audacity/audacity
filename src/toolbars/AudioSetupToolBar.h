@@ -28,6 +28,7 @@ class AudioSetupToolBar final : public ToolBar {
    static constexpr int kAudioSettings = 15800;
 
  public:
+   static Identifier ID();
 
    explicit AudioSetupToolBar( AudacityProject &project );
    virtual ~AudioSetupToolBar();

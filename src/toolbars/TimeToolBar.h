@@ -23,9 +23,13 @@ class TimeToolBarListener;
 class TimeToolBar final : public ToolBar
 {
 public:
+   static Identifier ID();
+
    TimeToolBar(AudacityProject &project);
    virtual ~TimeToolBar();
    
+   DockID DefaultDockID() const override;
+
    static TimeToolBar &Get(AudacityProject &project);
    static const TimeToolBar &Get(const AudacityProject &project);
    

@@ -72,9 +72,14 @@ BEGIN_EVENT_TABLE(AudioSetupToolBar, ToolBar)
    EVT_BUTTON(ID_AUDIO_SETUP_BUTTON, AudioSetupToolBar::OnAudioSetup)
 END_EVENT_TABLE()
 
+Identifier AudioSetupToolBar::ID()
+{
+   return wxT("Audio Setup");
+}
+
 //Standard constructor
 AudioSetupToolBar::AudioSetupToolBar( AudacityProject &project )
-: ToolBar( project, AudioSetupBarID, XO("Audio Setup"), wxT("Audio Setup") )
+: ToolBar( project, XO("Audio Setup"), ID() )
 {
    mSubscription = DeviceManager::Instance()->Subscribe(
       *this, &AudioSetupToolBar::OnRescannedDevices );
@@ -87,7 +92,7 @@ AudioSetupToolBar::~AudioSetupToolBar()
 AudioSetupToolBar &AudioSetupToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<AudioSetupToolBar*>( toolManager.GetToolBar(AudioSetupBarID) );
+   return *static_cast<AudioSetupToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const AudioSetupToolBar &AudioSetupToolBar::Get( const AudacityProject &project )
@@ -759,7 +764,7 @@ void AudioSetupToolBar::CommonMenuItemSteps(bool audioSettingsChosen)
    }
 }
 
-static RegisteredToolbarFactory factory{ AudioSetupBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew AudioSetupToolBar{ project } };
    }
@@ -769,7 +774,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       that manages the audio devices */
-   AudioSetupBarID, wxT("ShowAudioSetupTB"), XXO("&Audio Setup Toolbar")
+   AudioSetupToolBar::ID(), wxT("ShowAudioSetupTB"), XXO("&Audio Setup Toolbar")
 };
 }
 

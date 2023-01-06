@@ -93,10 +93,14 @@ BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
 END_EVENT_TABLE()
    ;   //semicolon enforces  proper automatic indenting in emacs.
 
+Identifier TranscriptionToolBar::ID()
+{
+   return wxT("Transcription");
+}
+
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
-: ToolBar( project,
-   TranscriptionBarID, XO("Play-at-Speed"), wxT("Transcription"), true )
+: ToolBar( project, XO("Play-at-Speed"), ID(), true )
 {
    SetPlaySpeed( 1.0 * 100.0 );
 #ifdef EXPERIMENTAL_VOICE_DETECTION
@@ -108,10 +112,26 @@ TranscriptionToolBar::~TranscriptionToolBar()
 {
 }
 
+bool TranscriptionToolBar::ShownByDefault() const
+{
+   return
+#ifdef EXPERIMENTAL_DA
+      false
+#else
+      true
+#endif
+   ;
+}
+
+ToolBar::DockID TranscriptionToolBar::DefaultDockID() const
+{
+   return BotDockID;
+}
+
 TranscriptionToolBar &TranscriptionToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<TranscriptionToolBar*>( toolManager.GetToolBar(TranscriptionBarID) );
+   return *static_cast<TranscriptionToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const TranscriptionToolBar &TranscriptionToolBar::Get( const AudacityProject &project )
@@ -1052,7 +1072,7 @@ void TranscriptionToolBar::AdjustPlaySpeed(float adj)
    OnSpeedSlider(e);
 }
 
-static RegisteredToolbarFactory factory{ TranscriptionBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew TranscriptionToolBar{ project } }; }
 };
@@ -1061,7 +1081,8 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for transcription (currently just vary play speed) */
-   TranscriptionBarID, wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar")
+   TranscriptionToolBar::ID(),
+   wxT("ShowTranscriptionTB"), XXO("Pla&y-at-Speed Toolbar")
 };
 }
 

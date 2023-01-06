@@ -49,18 +49,6 @@ public:
       keffects,
       kscriptables,
       kpreferences,
-      kselectionbar,
-      kspectralselection,
-      ktimer,
-      ktools,
-      ktransport,
-      kmeter,
-      kplaymeter,
-      krecordmeter,
-      kedit,
-      kdevice,
-      kscrub,
-      ktranscription,
       ktrackpanel,
       kruler,
       ktracks,
@@ -75,6 +63,8 @@ public:
       kalltracksplus,
       nCaptureWhats
    };
+
+   EnumValueSymbols kCaptureWhatStrings();
 
    static const ComponentInterfaceSymbol Symbol;
 
@@ -104,6 +94,8 @@ public:
    void GetDerivedParams();
 
 private:
+   EnumValueSymbols mSymbols;
+
    // May need to ignore the screenshot dialog
    // Appears not to be used anymore.
    wxWindow *mIgnore;
@@ -120,7 +112,7 @@ private:
 
    wxRect GetBackgroundRect();
 
-   bool CaptureToolbar(const CommandContext & Context, ToolManager *man, int type, const wxString &name);
+   bool CaptureToolbar(const CommandContext & Context, ToolManager *man, Identifier type, const wxString &name);
    bool CaptureDock(const CommandContext & Context, wxWindow *win, const wxString &fileName);
    void CaptureCommands(const CommandContext & Context, const wxArrayStringEx &Commands  );
    void CaptureEffects(const CommandContext & Context, AudacityProject * pProject, const wxString &fileName );

@@ -108,8 +108,13 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, SelectionBar::OnCaptureKey)
 END_EVENT_TABLE()
 
+Identifier SelectionBar::ID()
+{
+   return wxT("Selection");
+}
+
 SelectionBar::SelectionBar( AudacityProject &project )
-: ToolBar(project, SelectionBarID, XO("Selection"), wxT("Selection")),
+: ToolBar(project, XO("Selection"), ID()),
   mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
@@ -135,10 +140,26 @@ SelectionBar::~SelectionBar()
 {
 }
 
+bool SelectionBar::ShownByDefault() const
+{
+   return
+#ifdef EXPERIMENTAL_DA
+      false
+#else
+      true
+#endif
+   ;
+}
+
+ToolBar::DockID SelectionBar::DefaultDockID() const
+{
+   return BotDockID;
+}
+
 SelectionBar &SelectionBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<SelectionBar*>( toolManager.GetToolBar(SelectionBarID) );
+   return *static_cast<SelectionBar*>(toolManager.GetToolBar(ID()));
 }
 
 const SelectionBar &SelectionBar::Get( const AudacityProject &project )
@@ -810,7 +831,7 @@ void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
    mListener->AS_SetSnapTo(mSnapTo->GetSelection());
 }
 
-static RegisteredToolbarFactory factory{ SelectionBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew SelectionBar{ project } }; }
 };
@@ -819,7 +840,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a time range of audio */
-   SelectionBarID, wxT("ShowSelectionTB"), XXO("&Selection Toolbar")
+   SelectionBar::ID(), wxT("ShowSelectionTB"), XXO("&Selection Toolbar")
 };
 }
 

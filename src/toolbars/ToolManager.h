@@ -72,15 +72,15 @@ class AUDACITY_DLL_API ToolManager final
 
    void LayoutToolBars();
 
-   bool IsDocked( int type );
+   bool IsDocked( Identifier type ) const;
 
-   bool IsVisible( int type );
+   bool IsVisible( Identifier type ) const;
 
-   void ShowHide( int type );
+   void ShowHide( Identifier type );
 
-   void Expose( int type, bool show );
+   void Expose( Identifier type, bool show );
 
-   ToolBar *GetToolBar( int type ) const;
+   ToolBar *GetToolBar(const Identifier &type) const;
 
    ToolDock *GetTopDock();
    const ToolDock *GetTopDock() const;
@@ -96,6 +96,20 @@ class AUDACITY_DLL_API ToolManager final
    int FilterEvent(wxEvent &event) override;
 
    bool RestoreFocus();
+
+   //! Visit bars, lexicographically by their textual ids
+   template< typename F >
+   void ForEach(F &&fun)
+   {
+      std::for_each(std::begin(mBars), std::end(mBars), [&fun](auto &pair){
+         fun(pair.second.get());
+      });
+   }
+
+   size_t CountBars() const
+   {
+      return mBars.size();
+   }
 
  private:
 
@@ -143,7 +157,8 @@ class AUDACITY_DLL_API ToolManager final
    ToolDock *mTopDock{};
    ToolDock *mBotDock{};
 
-   ToolBar::Holder mBars[ ToolBarCount ];
+   //! map not unordered_map, for the promise made by ForEach
+   std::map<Identifier, ToolBar::Holder> mBars;
 
    wxPoint mPrevPosition {};
    ToolDock *mPrevDock {};
@@ -225,16 +240,16 @@ public:
 // hides a toolbar
 struct AUDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
    AttachedToolBarMenuItem(
-      ToolBarID id, const CommandID &name, const TranslatableString &label_in,
+      Identifier id, const CommandID &name, const TranslatableString &label_in,
       const Registry::OrderingHint &hint = {},
       // IDs of other toolbars not to be shown simultaneously with this one:
-      std::vector< ToolBarID > excludeIds = {} );
+      std::vector< Identifier > excludeIds = {} );
 
    void OnShowToolBar(const CommandContext &context);
 
-   const ToolBarID mId;
+   const Identifier mId;
    const MenuTable::AttachedItem mAttachedItem;
-   const std::vector< ToolBarID > mExcludeIds;
+   const std::vector< Identifier > mExcludeIds;
 };
 
 #endif
