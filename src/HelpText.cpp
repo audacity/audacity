@@ -262,12 +262,12 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << wxT("</li><li>")
          << XO(
 /* i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.*/
-" [[help:Main_Page|Manual]]")
+"[[help:Main_Page|Manual]]")
          << wxT("</li><li>")
          << XO("[[https://support.audacityteam.org/|Tutorials & How-tos]]")
          << wxT("</li><li>")
          << XO(
-" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
+"[[https://forum.audacityteam.org/|Forum]] - ask your question directly, online.")
          << wxT("</li></ul></p>")
    ;
 
