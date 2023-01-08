@@ -297,7 +297,7 @@ namespace Registry {
    // So neither given tree is modified.
    // But there may be a side effect on preferences to remember the ordering
    // imposed on each node of the unordered tree of registered items; each item
-   // seen in the registry for the first time is placed somehere, and that
+   // seen in the registry for the first time is placed somewhere, and that
    // ordering should be kept the same thereafter in later runs (which may add
    // yet other previously unknown items).
    // Computed registry items' lifetimes last until visitor is destroyed or
@@ -307,10 +307,10 @@ namespace Registry {
       GroupItem *pTopItem,
       const GroupItem *pRegistry = nullptr );
 
-   // Typically a static object.  Constructor initializes certain preferences
-   // if they are not present.  These preferences determine an extrinsic
-   // visitation ordering for registered items.  This is needed in some
-   // places that have migrated from a system of exhaustive listings, to a
+   // Typically a static object.  Constructor or operator initializes certain
+   // preferences if they are not present.  These preferences determine an
+   // extrinsic visitation ordering for registered items.  This is needed in
+   // some places that have migrated from a system of exhaustive listings, to a
    // registry of plug-ins, and something must be done to preserve old
    // behavior.  It can be done in the central place using string literal
    // identifiers only, not requiring static compilation or linkage dependency.
