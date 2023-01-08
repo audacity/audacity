@@ -62,7 +62,7 @@ struct CollectedItems
    auto SubordinateMultipleItems( Item &found, GroupItem *pItems ) -> void;
 
    auto MergeWithExistingItem(
-      Visitor &visitor, ItemOrdering &itemOrdering,
+      ItemOrdering &itemOrdering,
       BaseItem *pItem, OrderingHint::ConflictResolutionPolicy policy) -> bool;
 
    using NewItem = std::pair< BaseItem*, OrderingHint >;
@@ -407,7 +407,7 @@ auto CollectedItems::SubordinateMultipleItems( Item &found, GroupItem *pItems )
 }
 
 auto CollectedItems::MergeWithExistingItem(
-   Visitor &visitor, ItemOrdering &itemOrdering,
+   ItemOrdering &itemOrdering,
    BaseItem *pItem, OrderingHint::ConflictResolutionPolicy policy) -> bool
 {
    // Assume no null pointers remain after CollectItems:
@@ -529,7 +529,7 @@ auto CollectedItems::MergeLikeNamedItems(
       // Re-invoke MergeWithExistingItem for this item, which is known
       // to have a name collision, so ignore the return value.
       MergeWithExistingItem(
-         visitor, itemOrdering, iter->first, iter->second.policy );
+         itemOrdering, iter->first, iter->second.policy );
       ++iter;
    }
 }
@@ -628,8 +628,8 @@ auto CollectedItems::MergeItems(
    NewItems newItems;
    for ( const auto &item : newCollection.items )
       if ( !MergeWithExistingItem(
-         visitor, itemOrdering, item.visitNow, item.hint.policy ) )
-          newItems.push_back( { item.visitNow, item.hint } );
+         itemOrdering, item.visitNow, item.hint.policy ) )
+         newItems.push_back( { item.visitNow, item.hint } );
 
    // Choose placements for items with NEW names.
    auto begin = newItems.begin(), end = newItems.end();
