@@ -214,6 +214,8 @@ XO("Plug-in items at %s specify conflicting placements"),
       key, name);
 }
 
+// This structure caches left-to-right ordering of an internal node of a
+// registry, as determined by config file, and does linear lookup of names
 struct ItemOrdering {
    wxString key;
 
@@ -221,11 +223,12 @@ struct ItemOrdering {
    {
       // The set of path names determines only an unordered tree.
       // We want an ordering of the tree that is stable across runs.
-      // The last used ordering for this node can be found in preferences at this
-      // key:
+      // The last used ordering for this node can be found in preferences at
+      // this key:
       wxArrayString strings;
       for (const auto &id : path)
          strings.push_back( id.GET() );
+      // Components of the path are assumed not to contain '/'
       key = '/' + ::wxJoin( strings, '/', '\0' );
    }
 
@@ -234,7 +237,7 @@ struct ItemOrdering {
    wxString strValue;
    wxArrayString ordering;
 
-   auto Get() -> wxArrayString & {
+   auto Get() -> const wxArrayString & {
       if ( !gotOrdering ) {
          gPrefs->Read(key, &strValue);
          ordering = ::wxSplit( strValue, ',' );
