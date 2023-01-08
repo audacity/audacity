@@ -287,7 +287,7 @@ namespace Registry {
       std::vector< BaseItemSharedPtr > computedItems;
       friend REGISTRIES_API void Visit(
          Visitor &visitor,
-         BaseItem *pTopItem,
+         GroupItem *pTopItem,
          const GroupItem *pRegistry );
    };
 
@@ -304,7 +304,7 @@ namespace Registry {
    // passed again to Visit().
    REGISTRIES_API void Visit(
       Visitor &visitor,
-      BaseItem *pTopItem,
+      GroupItem *pTopItem,
       const GroupItem *pRegistry = nullptr );
 
    // Typically a static object.  Constructor initializes certain preferences

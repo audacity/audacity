@@ -790,6 +790,8 @@ void VisitItem(
       visitor.EndGroup( *pGroup, path );
    }
    else
+      // Topmost entry passes a GroupItem; recursve invocations have
+      // eliminated ComputedItem and SharedItem
       assert(false);
 }
 
@@ -812,7 +814,7 @@ void Visitor::BeginGroup(GroupItem &, const Path &) {}
 void Visitor::EndGroup(GroupItem &, const Path &) {}
 void Visitor::Visit(SingleItem &, const Path &) {}
 
-void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
+void Visit( Visitor &visitor, GroupItem *pTopItem, const GroupItem *pRegistry )
 {
    visitor.computedItems.clear();
    bool doFlush = false;
