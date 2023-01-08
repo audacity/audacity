@@ -168,7 +168,7 @@ void CollectItem( Registry::Visitor &visitor,
          collection.items.push_back( {pItem, nullptr, hint} );
    }
    else {
-      wxASSERT( dynamic_cast<SingleItem*>(pItem) );
+      assert(dynamic_cast<SingleItem*>(pItem));
       // common to all single items
       collection.items.push_back( {pItem, nullptr, hint} );
    }
@@ -499,7 +499,7 @@ auto CollectedItems::InsertFirstNamedItem( ItemOrdering &itemOrdering,
    // other name that has not yet been placed.
    bool success = InsertNewItemUsingHint( itemOrdering,
       item.first, item.second, endItemsCount, force );
-   wxASSERT( !force || success );
+   assert(!force || success);
 
    return success;
 }
@@ -648,7 +648,7 @@ auto CollectedItems::MergeItems(
       auto pItem = iter ->first;
       auto &name = pItem->name;
       bool success = InsertNewItemUsingPreferences( itemOrdering, pItem );
-      wxASSERT( success );
+      assert(success);
 
       auto right = iter + 1;
       while ( right != end && right->first->name == name )
@@ -692,7 +692,7 @@ auto CollectedItems::MergeItems(
          // Remember how many were placed; so that default placement is
          // before all explicit End items, but after other items
          endItemsCount = prevSize - newSize;
-      wxASSERT(endItemsCount >= 0);
+      assert(endItemsCount >= 0);
 
       ++iPass;
       if ( iPass == OrderingHint::Unspecified ) {
@@ -777,7 +777,7 @@ void VisitItem(
 
    if (const auto pSingle =
        dynamic_cast<SingleItem*>( pItem )) {
-      wxASSERT( !pToMerge );
+      assert(!pToMerge);
       visitor.Visit( *pSingle, path );
    }
    else
@@ -790,7 +790,7 @@ void VisitItem(
       visitor.EndGroup( *pGroup, path );
    }
    else
-      wxASSERT( false );
+      assert(false);
 }
 
 }
