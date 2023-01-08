@@ -95,6 +95,7 @@ namespace Registry {
 namespace detail { using namespace TypeList;
    struct GroupItemBase;
 
+   // Application code MUST NOT define any new direct subclasses of BaseItem
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit

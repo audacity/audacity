@@ -223,7 +223,8 @@ void CollectItem(CollectedItems &collection,
          collection.items.push_back({ item, hint });
    }
    else {
-      wxASSERT( dynamic_cast<SingleItem*>(&item) );
+      // Exhaustive type switch
+      assert(dynamic_cast<SingleItem*>(&item));
       // common to all single items
       collection.items.push_back({ item, hint });
    }
@@ -896,7 +897,9 @@ void VisitItem(VisitBase &state,
       visitor.EndGroup(*pGroup, state.path);
    }
    else
-      wxASSERT( false );
+      // Topmost entry passes a GroupItem; recursive invocations have
+      // eliminated ComputedItem and SharedItem
+      assert(false);
 }
 
 }
