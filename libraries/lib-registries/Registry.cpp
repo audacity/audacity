@@ -375,6 +375,7 @@ auto CollectedItems::InsertNewItemUsingHint( ItemOrdering &itemOrdering,
    return true;
 }
 
+//! Create, on demand, a temporary transparent group item
 auto CollectedItems::MergeLater( Item &found, const Identifier &name )
    -> GroupItem *
 {
