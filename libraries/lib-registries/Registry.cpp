@@ -168,6 +168,7 @@ void CollectItem( Registry::Visitor &visitor,
          collection.items.push_back( {pItem, nullptr, hint} );
    }
    else {
+      // Exhaustive type switch
       assert(dynamic_cast<SingleItem*>(pItem));
       // common to all single items
       collection.items.push_back( {pItem, nullptr, hint} );

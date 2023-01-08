@@ -76,6 +76,7 @@ namespace Registry {
    // Most items in the table will be the large ones describing commands, so
    // the waste of space in unions for separators and sub-menus should not be
    // large.
+   // Application code MUST NOT define any new direct subclasses of BaseItem
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
