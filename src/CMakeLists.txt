@@ -1439,7 +1439,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          COMMAND
             ${CMAKE_COMMAND} -E echo "Fixing Xcode 14 code signing issues"
          COMMAND
-            codesign --force --deep --sign - "${_DESTDIR}/Audacity.app"
+            codesign --force --timestamp --deep --sign - "${_DESTDIR}/Audacity.app"
          POST_BUILD
       )
    endif()
