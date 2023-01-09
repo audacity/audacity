@@ -304,7 +304,7 @@ auto CollectedItems::InsertNewItemUsingPreferences(
 }
 
 // For each group node, this may be called in the second and later passes
-// of merging of items
+// of merging of items.  It will succeed if force is true.
 auto CollectedItems::InsertNewItemUsingHint( ItemOrdering &itemOrdering,
    BaseItem *pItem, const OrderingHint &hint, size_t endItemsCount,
    bool force ) -> bool
@@ -504,6 +504,7 @@ auto CollectedItems::InsertFirstNamedItem( ItemOrdering &itemOrdering,
    // other name that has not yet been placed.
    bool success = InsertNewItemUsingHint( itemOrdering,
       item.first, item.second, endItemsCount, force );
+   // The function promises to succeed when force is true.
    assert(!force || success);
 
    return success;
