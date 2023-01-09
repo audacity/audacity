@@ -556,7 +556,7 @@ inline bool Comp(
 };
 
 auto CollectedItems::MergeItemsAscendingNamesPass(
-  Visitor &visitor, ItemOrdering &itemOrdering, NewItems &newItems,
+  ItemOrdering &itemOrdering, NewItems &newItems,
   const int iPass, size_t endItemsCount, bool force ) -> void
 {
    // Inner loop over ranges of like-named items.
@@ -588,7 +588,7 @@ auto CollectedItems::MergeItemsAscendingNamesPass(
 }
 
 auto CollectedItems::MergeItemsDescendingNamesPass(
-  Visitor &visitor, ItemOrdering &itemOrdering, NewItems &newItems,
+  ItemOrdering &itemOrdering, NewItems &newItems,
   const int iPass, size_t endItemsCount, bool force ) -> void
 {
    // Inner loop over ranges of like-named items.
@@ -685,10 +685,10 @@ auto CollectedItems::MergeItems(
 
       if ( descending )
          MergeItemsDescendingNamesPass(
-            visitor, itemOrdering, newItems, iPass, endItemsCount, force );
+            itemOrdering, newItems, iPass, endItemsCount, force );
       else
          MergeItemsAscendingNamesPass(
-            visitor, itemOrdering, newItems, iPass, endItemsCount, force );
+            itemOrdering, newItems, iPass, endItemsCount, force );
 
       auto newSize = newItems.size();
 
