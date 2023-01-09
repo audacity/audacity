@@ -40,13 +40,13 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
 
    // Effect implementation
    bool ProcessOne(WaveTrack * track, double tStart, double tEnd) override;

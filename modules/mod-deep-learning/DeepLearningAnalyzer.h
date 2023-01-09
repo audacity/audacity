@@ -15,6 +15,12 @@ To do this, labeler models should output class indexes and timestamp data to wri
 
 #include "DeepModel.h"
 #include "DeepLearningEffectBase.h"
+#include "effects/Effect.h"
+
+class wxStaticText;
+class ShuttleGui;
+class wxButton;
+class WaveTrack;
 
 using Stamp = std::pair<double, double>;
 
@@ -30,13 +36,13 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
 
    // Effect implementation
    bool ProcessOne(WaveTrack *track, double tStart, double tEnd) override;

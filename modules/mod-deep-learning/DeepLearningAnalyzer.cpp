@@ -48,22 +48,28 @@ DeepLearningAnalyzer::~DeepLearningAnalyzer()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol DeepLearningAnalyzer::GetSymbol() { return Symbol; }
+ComponentInterfaceSymbol DeepLearningAnalyzer::GetSymbol() const 
+{ 
+   return Symbol;
+}
 
-TranslatableString DeepLearningAnalyzer::GetDescription() 
+TranslatableString DeepLearningAnalyzer::GetDescription() const
 {
   return XO("The auto labeler uses deep learning models to "
          "annotate audio tracks based on their contents automatically."); 
 }
 
-ManualPageID DeepLearningAnalyzer::ManualPage() 
+ManualPageID DeepLearningAnalyzer::ManualPage() const
 {
   return L"Deep_Learning_Analyzer"; 
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType DeepLearningAnalyzer::GetType() { return EffectTypeAnalyze; }
+EffectType DeepLearningAnalyzer::GetType() const
+{ 
+   return EffectTypeAnalyze; 
+}
 
 // Effect implementation
 

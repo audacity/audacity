@@ -47,24 +47,24 @@ DeepLearningEffect::~DeepLearningEffect()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol DeepLearningEffect::GetSymbol()
+ComponentInterfaceSymbol DeepLearningEffect::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString DeepLearningEffect::GetDescription()
+TranslatableString DeepLearningEffect::GetDescription() const
 {
    return XO("A generic audio-to-audio processor for hosting deep learning models.");
 }
 
-ManualPageID DeepLearningEffect::ManualPage()
+ManualPageID DeepLearningEffect::ManualPage() const
 {
    return L"Deep_Learning_Effect"; 
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType DeepLearningEffect::GetType()
+EffectType DeepLearningEffect::GetType() const
 {
    return EffectTypeProcess;
 }

@@ -51,24 +51,24 @@ bool DeepLearningEffectBase::Init()
    }
 }
 
-void DeepLearningEffectBase::End()
-{
-   GuardedCall<void>([&]{
-      DeepModelManager &manager = DeepModelManager::Get();
+// void DeepLearningEffectBase::End()
+// {
+//    GuardedCall<void>([&]{
+//       DeepModelManager &manager = DeepModelManager::Get();
 
-      // clean up in-progress installs
-      for (auto card : manager.GetCards(GetDeepEffectID()))
-      {
-         if (manager.IsInstalling(card))
-            manager.CancelInstall(card);
-      }
+//       // clean up in-progress installs
+//       for (auto card : manager.GetCards(GetDeepEffectID()))
+//       {
+//          if (manager.IsInstalling(card))
+//             manager.CancelInstall(card);
+//       }
 
-      // release model (may still be active in thread)
-      mActiveModel->GetModel()->Offload();
-   });
-}
+//       // release model (may still be active in thread)
+//       mActiveModel->GetModel()->Offload();
+//    });
+// }
 
-bool DeepLearningEffectBase::Process()
+bool DeepLearningEffectBase::Process(EffectInstance &, EffectSettings &)
 {
    DeepModelManager &manager = DeepModelManager::Get();
 
@@ -331,7 +331,8 @@ void DeepLearningEffectBase::TensorToTrack(torch::Tensor waveform, WaveTrack::Ho
 }
 
 // UI stuff
-void DeepLearningEffectBase::PopulateOrExchange(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator> DeepLearningEffectBase::PopulateOrExchange(ShuttleGui & S, EffectInstance &,
+                  EffectSettingsAccess &, const EffectOutputs *)
 {
    DeepModelManager &manager = DeepModelManager::Get();
 
@@ -345,4 +346,5 @@ void DeepLearningEffectBase::PopulateOrExchange(ShuttleGui &S)
    S.EndVerticalLay();
 
    mActiveModel->SetModel(*this);
+   return nullptr;
 }

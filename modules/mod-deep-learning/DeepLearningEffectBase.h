@@ -27,7 +27,7 @@
 using BlockIndex = std::pair<sampleCount, size_t>;
 using ClipTimestamps = std::pair<double, double>;
 
-class DeepLearningEffectBase /* not final */ : public Effect
+class DeepLearningEffectBase /* not final */ : public StatefulEffect
 {
 public:
    DeepLearningEffectBase();
@@ -35,9 +35,14 @@ public:
    // Effect implementation
 
    bool Init() override;
-   void End() override;
-   bool Process() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   // void End() override;
+   // bool Process() override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
+
+   // void PopulateOrExchange(ShuttleGui & S) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
    // DeepLearningEffect implementation
 
