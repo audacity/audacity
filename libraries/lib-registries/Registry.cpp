@@ -73,7 +73,7 @@ struct CollectedItems
          -> bool;
 
    auto MergeLikeNamedItems(
-      Visitor &visitor, ItemOrdering &itemOrdering,
+      ItemOrdering &itemOrdering,
       NewItems::const_iterator left, NewItems::const_iterator right,
       int iPass )
          -> void;
@@ -510,7 +510,7 @@ auto CollectedItems::InsertFirstNamedItem( ItemOrdering &itemOrdering,
 }
 
 auto CollectedItems::MergeLikeNamedItems(
-   Visitor &visitor, ItemOrdering &itemOrdering,
+   ItemOrdering &itemOrdering,
    NewItems::const_iterator left, NewItems::const_iterator right,
    const int iPass )
    -> void
@@ -575,8 +575,7 @@ auto CollectedItems::MergeItemsAscendingNamesPass(
             *left, endItemsCount, force );
 
       if (success)
-         MergeLikeNamedItems(
-            visitor, itemOrdering, left, right, iPass );
+         MergeLikeNamedItems(itemOrdering, left, right, iPass);
 
       if ( success ) {
          auto diff = rend - rleft;
@@ -605,8 +604,7 @@ auto CollectedItems::MergeItemsDescendingNamesPass(
             *left, endItemsCount, force );
 
       if (success)
-         MergeLikeNamedItems(
-            visitor, itemOrdering, left, right, iPass );
+         MergeLikeNamedItems(itemOrdering, left, right, iPass);
 
       if ( success )
          left = newItems.erase( left, right );
@@ -658,7 +656,7 @@ auto CollectedItems::MergeItems(
       auto right = iter + 1;
       while ( right != end && right->first->name == name )
          ++right;
-      MergeLikeNamedItems( visitor, itemOrdering, iter, right, -1 );
+      MergeLikeNamedItems(itemOrdering, iter, right, -1);
       iter = right;
    }
 
