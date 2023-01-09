@@ -72,19 +72,16 @@ struct CollectedItems
       NewItem &item, size_t endItemsCount, bool force )
          -> bool;
 
-   auto MergeLikeNamedItems(
-      ItemOrdering &itemOrdering,
+   auto MergeLikeNamedItems(ItemOrdering &itemOrdering,
       NewItems::const_iterator left, NewItems::const_iterator right,
       int iPass )
          -> void;
 
-   auto MergeItemsAscendingNamesPass(
-      Visitor &visitor, ItemOrdering &itemOrdering,
+   auto MergeItemsAscendingNamesPass(ItemOrdering &itemOrdering,
       NewItems &newItems, int iPass, size_t endItemsCount, bool force )
          -> void;
 
-   auto MergeItemsDescendingNamesPass(
-      Visitor &visitor, ItemOrdering &itemOrdering,
+   auto MergeItemsDescendingNamesPass(ItemOrdering &itemOrdering,
       NewItems &newItems, int iPass, size_t endItemsCount, bool force )
          -> void;
 
@@ -263,6 +260,7 @@ struct ItemOrdering {
 // registry, but then succeed in later visitations in the same or later
 // runs of the program, because of persistent side-effects on the
 // preferences done at the very end of the visitation.
+// This function will succeed whenever the item's name is in the ordering.
 auto CollectedItems::InsertNewItemUsingPreferences(
    ItemOrdering &itemOrdering, BaseItem *pItem )
    -> bool
@@ -283,6 +281,8 @@ auto CollectedItems::InsertNewItemUsingPreferences(
       auto begin2 = ordering.begin(), end2 = ordering.end(),
          found2 = std::find( begin2, end2, name );
       if ( found2 != end2 ) {
+         // Insert the item.  This procedure depends on the items later in the
+         // ordering (when present in the program run) being inserted already.
          auto insertPoint = items.end();
          // Find the next name in the saved ordering that is known already
          // in the collection.
@@ -651,6 +651,7 @@ auto CollectedItems::MergeItems(
       auto pItem = iter ->first;
       auto &name = pItem->name;
       bool success = InsertNewItemUsingPreferences( itemOrdering, pItem );
+      // Will succeed because the name is in the ordering
       assert(success);
 
       auto right = iter + 1;
