@@ -595,7 +595,8 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
    CommandFlag realflags,
-   void (*onMenuCommand)(const CommandContext&))
+   void (*onMenuCommand)(const CommandContext&),
+   std::function<bool(const PluginDescriptor&)> pred)
 {
    MenuTable::BaseItemPtrs result;
    PluginManager & pm = PluginManager::Get();
@@ -751,6 +752,9 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
    }
    for(auto& plugin : pm.EffectsOfType(type))
    {
+      if(pred && !pred(plugin))
+         continue;
+      
       for(auto& section : sections)
       {
          if(section.filter(&plugin))

@@ -1,7 +1,10 @@
 #pragma once
 
+#include <functional>
 #include "commands/CommandManager.h"
 #include "EffectInterface.h"
+
+class PluginDescriptor;
 
 namespace MenuHelper
 {
@@ -13,6 +16,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
    CommandFlag realflags,
-   void (*onMenuCommand)(const CommandContext&));
+   void (*onMenuCommand)(const CommandContext&),
+   std::function<bool(const PluginDescriptor&)> pred = {});
 
 }
