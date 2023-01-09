@@ -50,7 +50,6 @@
 #include "../widgets/Grabber.h"
 #include "DeviceManager.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/Grabber.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -73,9 +72,14 @@ int DeviceToolbarPrefsID()
    return value;
 }
 
+Identifier DeviceToolBar::ID()
+{
+   return wxT("Device");
+}
+
 //Standard constructor
 DeviceToolBar::DeviceToolBar( AudacityProject &project )
-: ToolBar( project, DeviceBarID, XO("Device"), wxT("Device"), true )
+: ToolBar( project, XO("Device"), ID(), true )
 {
    mSubscription = DeviceManager::Instance()->Subscribe(
       *this, &DeviceToolBar::OnRescannedDevices );
@@ -85,10 +89,15 @@ DeviceToolBar::~DeviceToolBar()
 {
 }
 
+bool DeviceToolBar::ShownByDefault() const
+{
+   return false;
+}
+
 DeviceToolBar &DeviceToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<DeviceToolBar*>( toolManager.GetToolBar(DeviceBarID) );
+   return *static_cast<DeviceToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const DeviceToolBar &DeviceToolBar::Get( const AudacityProject &project )
@@ -748,7 +757,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const TranslatableString &t
 #endif
 }
 
-static RegisteredToolbarFactory factory{ DeviceBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew DeviceToolBar{ project } }; }
 };
@@ -757,7 +766,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       that manages devices */
-   DeviceBarID, wxT("ShowDeviceTB"), XXO("&Device Toolbar")
+   DeviceToolBar::ID(), wxT("ShowDeviceTB"), XXO("&Device Toolbar")
 };
 }
 

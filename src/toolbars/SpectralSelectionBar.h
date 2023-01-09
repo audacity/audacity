@@ -29,8 +29,13 @@ class SpectralSelectionBar final : public ToolBar {
 
 public:
 
+   static Identifier ID();
+
    SpectralSelectionBar( AudacityProject &project );
    virtual ~SpectralSelectionBar();
+
+   bool ShownByDefault() const override;
+   DockID DefaultDockID() const override;
 
    static SpectralSelectionBar &Get( AudacityProject &project );
    static const SpectralSelectionBar &Get( const AudacityProject &project );

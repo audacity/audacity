@@ -404,6 +404,36 @@ static void reverb_allocate(reverb_t* p, double sample_rate_Hz, size_t buffer_si
    filter_array_allocate(p->chan + 1, sample_rate_Hz, 1.0, 1.0);
 }
 
+// Some of the params can be set without having to re-init the input fifo
+// or the comb/allpass filters.
+static void reverb_set_simple_params
+(
+   reverb_t* p,
+   double sample_rate_Hz,
+   double wet_gain_dB,
+   double reverberance,
+   double hf_damping,
+   double tone_low,       /* % */
+   double tone_high       /* % */
+)
+{
+   // Feedback, Damping, Gain
+   double a = -1 / log(1 - /**/.3 /**/);           /* Set minimum feedback */
+   double b = 100 / (log(1 - /**/.98/**/) * a + 1);  /* Set maximum feedback */
+
+   p->feedback = 1 - exp((reverberance - b) / (a * b));
+   p->hf_damping = hf_damping / 100 * .3 + .2;
+   p->gain = dB_to_linear(wet_gain_dB) * .015;
+
+
+   // LP-HP Filters
+   double fc_highpass = midi_to_freq(72 - tone_low / 100 * 48);
+   double fc_lowpass = midi_to_freq(72 + tone_high / 100 * 48);
+   one_pole_init(&p->chan[0], sample_rate_Hz, fc_highpass, fc_lowpass);
+   one_pole_init(&p->chan[1], sample_rate_Hz, fc_highpass, fc_lowpass);
+}
+
+
 static void reverb_init
 (
    reverb_t* p,
@@ -423,18 +453,7 @@ static void reverb_init
    size_t delay = pre_delay_ms / 1000 * sample_rate_Hz + .5;
    memset(fifo_write(&p->input_fifo, delay, 0), 0, delay * sizeof(float));
 
-   // Feedback, Damping, Gain
-   double a = -1 / log(1 - /**/.3 /**/);           /* Set minimum feedback */
-   double b = 100 / (log(1 - /**/.98/**/) * a + 1);  /* Set maximum feedback */
-   p->feedback = 1 - exp((reverberance - b) / (a * b));
-   p->hf_damping = hf_damping / 100 * .3 + .2;
-   p->gain = dB_to_linear(wet_gain_dB) * .015;
-
-   // LP-HP Filters
-   double fc_highpass = midi_to_freq(72 - tone_low / 100 * 48);
-   double fc_lowpass = midi_to_freq(72 + tone_high / 100 * 48);
-   one_pole_init(&p->chan[0], sample_rate_Hz, fc_highpass, fc_lowpass);
-   one_pole_init(&p->chan[1], sample_rate_Hz, fc_highpass, fc_lowpass);
+   reverb_set_simple_params(p, sample_rate_Hz, wet_gain_dB, reverberance, hf_damping, tone_low, tone_high);
 
    // Allpass & Comb filters
    double scale = room_scale / 100 * .9 + .1;
@@ -448,6 +467,7 @@ static void reverb_init
    p->initializedWithZeroDepth = (stereo_depth == 0.0);
 
 }
+
 
 static void reverb_create(reverb_t * p, double sample_rate_Hz,
       double wet_gain_dB,

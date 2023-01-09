@@ -970,8 +970,8 @@ void Scrubber::OnToggleScrubRuler(const CommandContext&)
    mShowScrubbing = !mShowScrubbing;
    WriteScrubEnabledPref(mShowScrubbing);
    gPrefs->Flush();
-   const auto toolbar =
-      ToolManager::Get( *mProject ).GetToolBar( ScrubbingBarID );
+   // To do: move this, or eliminate it, use an event instead
+   const auto toolbar = ToolManager::Get(*mProject).GetToolBar(wxT("Scrub"));
    toolbar->EnableDisableButtons();
    CheckMenuItems();
 }

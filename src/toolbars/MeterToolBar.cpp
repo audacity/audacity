@@ -131,21 +131,28 @@ BEGIN_EVENT_TABLE( MeterToolBar, ToolBar )
    EVT_SIZE( MeterToolBar::OnSize )
 END_EVENT_TABLE()
 
-//Standard constructor
-MeterToolBar::MeterToolBar(AudacityProject &project, int type)
-: ToolBar(project, type, XO("Combined Meter"), wxT("CombinedMeter"), true)
+Identifier MeterToolBar::ID()
 {
-   if( mType == RecordMeterBarID ){
-      mWhichMeters = kWithRecordMeter;
-      mLabel = XO("Recording Meter");
-      mSection = wxT("RecordMeter");
-   } else if( mType == PlayMeterBarID ){
-      mWhichMeters = kWithPlayMeter;
-      mLabel = XO("Playback Meter");
-      mSection = wxT("PlayMeter");
-   } else {
-      mWhichMeters = kWithPlayMeter | kWithRecordMeter;
-   }
+   return wxT("CombinedMeter");
+}
+
+Identifier MeterToolBar::PlayID()
+{
+   return wxT("PlayMeter");
+}
+
+Identifier MeterToolBar::RecordID()
+{
+   return wxT("RecordMeter");
+}
+
+//Standard constructor
+MeterToolBar::MeterToolBar(AudacityProject &project,
+   unsigned whichMeters,
+   const TranslatableString &label, Identifier ID)
+: ToolBar(project, label, ID, true)
+, mWhichMeters{ whichMeters }
+{
 }
 
 MeterToolBar::~MeterToolBar()
@@ -171,14 +178,19 @@ ConstMeterToolBars MeterToolBar::GetToolBars(const AudacityProject &project)
 MeterToolBar & MeterToolBar::Get(AudacityProject &project, bool forPlayMeterToolBar)
 {
    auto& toolManager = ToolManager::Get(project);
-   auto  toolBarID = forPlayMeterToolBar ? PlayMeterBarID : RecordMeterBarID;
-
+   const auto &toolBarID = forPlayMeterToolBar ? PlayID() : RecordID();
    return *static_cast<MeterToolBar*>(toolManager.GetToolBar(toolBarID));
 }
 
 const MeterToolBar & MeterToolBar::Get(const AudacityProject &project, bool forPlayMeterToolBar)
 {
-   return Get( const_cast<AudacityProject&>( project ), forPlayMeterToolBar );
+   return Get(const_cast<AudacityProject&>(project), forPlayMeterToolBar);
+}
+
+bool MeterToolBar::ShownByDefault() const
+{
+   // The combined meter hides by default
+   return mWhichMeters != (kWithPlayMeter|kWithRecordMeter);
 }
 
 void MeterToolBar::Create(wxWindow * parent)
@@ -497,20 +509,24 @@ void MeterToolBar::AdjustInputGain(int adj)
    mRecordMeter->UpdateSliderControl();
 }
 
-static RegisteredToolbarFactory factory1{ RecordMeterBarID,
+static RegisteredToolbarFactory factory1{
    []( AudacityProject &project ){
       return ToolBar::Holder{
-         safenew MeterToolBar{ project, RecordMeterBarID } }; }
+         safenew MeterToolBar{ project, kWithRecordMeter,
+            XO("Recording Meter"), MeterToolBar::RecordID() } }; }
 };
-static RegisteredToolbarFactory factory2{ PlayMeterBarID,
+static RegisteredToolbarFactory factory2{
    []( AudacityProject &project ){
       return ToolBar::Holder{
-         safenew MeterToolBar{ project, PlayMeterBarID } }; }
+         safenew MeterToolBar{ project, kWithPlayMeter,
+            XO("Playback Meter"), MeterToolBar::PlayID() } }; }
 };
-static RegisteredToolbarFactory factory3{ MeterBarID,
+static RegisteredToolbarFactory factory3{
    []( AudacityProject &project ){
       return ToolBar::Holder{
-         safenew MeterToolBar{ project, MeterBarID } }; }
+         safenew MeterToolBar{ project,
+            (kWithPlayMeter|kWithRecordMeter),
+            XO("Combined Meter"), MeterToolBar::ID() } }; }
 };
 
 #include "ToolManager.h"
@@ -519,19 +535,21 @@ namespace {
 AttachedToolBarMenuItem sAttachment1{
    /* i18n-hint: Clicking this menu item shows the toolbar
       with the recording level meters */
-   RecordMeterBarID, wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
-   {}, { MeterBarID }
+   MeterToolBar::RecordID(),
+   wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
+   {}, { MeterToolBar::ID() }
 };
 AttachedToolBarMenuItem sAttachment2{
    /* i18n-hint: Clicking this menu item shows the toolbar
       with the playback level meter */
-   PlayMeterBarID, wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
-   {}, { MeterBarID }
+   MeterToolBar::PlayID(),
+   wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
+   {}, { MeterToolBar::ID() }
 };
 //AttachedToolBarMenuItem sAttachment3{
 //   /* --i18nhint: Clicking this menu item shows the toolbar
 //      which has sound level meters */
-//   MeterBarID, wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+//   MeterToolBar::ID(), wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
 //   { Registry::OrderingHint::After, "ShowPlayMeterTB" },
 //   { PlayMeterBarID, RecordMeterBarID }
 //};

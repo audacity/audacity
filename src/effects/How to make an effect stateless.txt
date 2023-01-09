@@ -186,6 +186,7 @@ Let use use EffectEcho as an example.
 
 3) "Define the instance"  
    (reference commit: 5961be1 - however since then, the following has changed:
+     - some methods of Instance have a different signature
      - MakeInstance now takes no args
      - the instance does not inherit EffectInstanceWithSampleRate anymore (?))
 

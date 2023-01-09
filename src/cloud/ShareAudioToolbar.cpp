@@ -35,8 +35,13 @@ IMPLEMENT_CLASS(cloud::ShareAudioToolbar, ToolBar);
 
 namespace cloud
 {
+Identifier ShareAudioToolbar::ID()
+{
+   return wxT("Share Audio");
+}
+
 ShareAudioToolbar::ShareAudioToolbar(AudacityProject& project)
-    : ToolBar(project, ShareAudioBarID, XO("Share Audio"), wxT("Share Audio"))
+    : ToolBar(project, XO("Share Audio"), ID())
 {
 }
 
@@ -48,7 +53,7 @@ ShareAudioToolbar& ShareAudioToolbar::Get(AudacityProject& project)
 {
    auto& toolManager = ToolManager::Get(project);
    return *static_cast<ShareAudioToolbar*>(
-      toolManager.GetToolBar(ShareAudioBarID));
+      toolManager.GetToolBar(ID()));
 }
 
 const ShareAudioToolbar& ShareAudioToolbar::Get(const AudacityProject& project)
@@ -76,7 +81,7 @@ void ShareAudioToolbar::RegenerateTooltips()
       switch (iWinID)
       {
       case ID_SHARE_AUDIO_BUTTON:
-         name = wxT("Share Audio");
+         name = ID();
          break;
       }
 
@@ -208,7 +213,7 @@ void ShareAudioToolbar::DestroySizer()
 }
 
 static RegisteredToolbarFactory factory {
-   ShareAudioBarID, [](AudacityProject& project)
+   [](AudacityProject& project)
    { return ToolBar::Holder { safenew ShareAudioToolbar { project } }; }
 };
 
@@ -217,7 +222,7 @@ namespace
 AttachedToolBarMenuItem sAttachment {
    /* i18n-hint: Clicking this menu item shows the toolbar
       that opens Share Audio dialog */
-   ShareAudioBarID, wxT("ShareAudioTB"), XXO("&Share Audio Toolbar")
+   ShareAudioToolbar::ID(), wxT("ShareAudioTB"), XXO("&Share Audio Toolbar")
 };
 }
 

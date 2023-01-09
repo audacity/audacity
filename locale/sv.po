@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2022-12-21 13:03+0100\n"
+"PO-Revision-Date: 2022-12-28 15:22+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
 "Language: sv\n"
@@ -3200,7 +3200,7 @@ msgstr "Linjär frekvens"
 
 #: src/FreqWindow.cpp
 msgid "Log frequency"
-msgstr "Logga frekvens"
+msgstr "Log frekvens"
 
 #. i18n-hint: abbreviates decibels
 #. i18n-hint: short form of 'decibels'.

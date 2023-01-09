@@ -120,9 +120,14 @@ BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
                       EditToolBar::OnButton )
 END_EVENT_TABLE()
 
+Identifier EditToolBar::ID()
+{
+   return wxT("Edit");
+}
+
 //Standard constructor
 EditToolBar::EditToolBar( AudacityProject &project )
-: ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
+: ToolBar(project, XO("Edit"), ID())
 , mButtons{ this, project, EditToolbarButtonList, ETBNumButtons, first_ETB_ID }
 {
 #ifdef OPTION_SYNC_LOCK_BUTTON
@@ -247,7 +252,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    mButtons.OnButton(event);
 }
 
-static RegisteredToolbarFactory factory{ EditBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew EditToolBar{ project } }; }
 };
@@ -257,7 +262,7 @@ static RegisteredToolbarFactory factory{ EditBarID,
 namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar for editing */
-   EditBarID, wxT("ShowEditTB"), XXO("&Edit Toolbar")
+   EditToolBar::ID(), wxT("ShowEditTB"), XXO("&Edit Toolbar")
 };
 }
 
