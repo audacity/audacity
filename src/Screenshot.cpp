@@ -135,7 +135,7 @@ ScreenshotBigDialogPtr mFrame;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void OpenScreenshotTools( AudacityProject &project )
+static void OpenScreenshotTools( AudacityProject &project )
 {
    if (!mFrame) {
       auto parent = wxTheApp->GetTopWindow();
@@ -148,11 +148,6 @@ void OpenScreenshotTools( AudacityProject &project )
    }
    mFrame->Show();
    mFrame->Raise();
-}
-
-void CloseScreenshotTools()
-{
-   mFrame = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -818,4 +813,26 @@ void ScreenshotBigDialog::UpdatePrefs()
    Populate();
 
    Thaw();
+}
+
+#include "CommonCommandFlags.h"
+#include "commands/CommandManager.h"
+
+namespace {
+void OnScreenshot(const CommandContext &context )
+{
+   // Register Screenshot as Last Tool
+   CommandManager::Get(context.project).RegisterLastTool(context);
+   OpenScreenshotTools( context.project );
+}
+
+// Menu definitions
+
+using namespace MenuTable;
+AttachedItem sAttachment{
+   { wxT("Tools/Other"), { OrderingHint::After, wxT("ConfigReset") } },
+   Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
+      OnScreenshot, AudioIONotBusyFlag() )
+};
+
 }

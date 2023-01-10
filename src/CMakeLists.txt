@@ -199,7 +199,6 @@ list( APPEND SOURCES
       PluginStartupRegistration.cpp
       PluginStartupRegistration.h
       Printing.cpp
-      Printing.h
       Profiler.cpp
       Profiler.h
       ProjectAudioIO.cpp
@@ -752,6 +751,7 @@ list( APPEND SOURCES
       >
 
       $<$<BOOL:${USE_MIDI}>:
+         export/ExportMIDI.cpp
          import/ImportMIDI.cpp
          import/ImportMIDI.h
       >

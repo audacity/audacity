@@ -187,10 +187,6 @@ public:
          const Registry::Placement &placement = { wxEmptyString, {} } );
    };
 
-   static bool DoEditMetadata(AudacityProject &project,
-      const TranslatableString &title,
-      const TranslatableString &shortUndoDescription, bool force);
-
    Exporter( AudacityProject &project );
    virtual ~Exporter();
 

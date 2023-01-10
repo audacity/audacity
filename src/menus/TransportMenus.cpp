@@ -1,6 +1,3 @@
-
-
-#include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "DeviceManager.h"
@@ -12,14 +9,11 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "ProjectHistory.h"
-#include "../ProjectManager.h"
-#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../SoundActivatedRecord.h"
-#include "../TimerRecordDialog.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../TransportUtilities.h"
@@ -32,7 +26,6 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
-#include "../toolbars/TranscriptionToolBar.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 #include "../widgets/ProgressDialog.h"
@@ -205,145 +198,6 @@ void OnRecord(const CommandContext &context)
 void OnRecord2ndChoice(const CommandContext &context)
 {
    TransportUtilities::RecordAndWait(context, true);
-}
-
-void OnTimerRecord(const CommandContext &context)
-{
-   auto &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
-   auto &undoManager = UndoManager::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   // MY: Due to improvements in how Timer Recording saves and/or exports
-   // it is now safer to disable Timer Recording when there is more than
-   // one open project.
-   if (AllProjects{}.size() > 1) {
-      AudacityMessageBox(
-         XO(
-"Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
-         XO("Timer Recording"),
-         wxICON_INFORMATION | wxOK);
-      return;
-   }
-
-   // MY: If the project has unsaved changes then we no longer allow access
-   // to Timer Recording.  This decision has been taken as the safest approach
-   // preventing issues surrounding "dirty" projects when Automatic Save/Export
-   // is used in Timer Recording.
-   if ((undoManager.UnsavedChanges()) &&
-       (TrackList::Get( project ).Any() || settings.EmptyCanBeDirty())) {
-      AudacityMessageBox(
-         XO(
-"Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
-         XO("Timer Recording"),
-         wxICON_INFORMATION | wxOK);
-      return;
-   }
-
-   // We check the selected tracks to see if there is enough of them to accommodate
-   // all input channels and all of them have the same sampling rate.
-   // Those checks will be later performed by recording function anyway,
-   // but we want to warn the user about potential problems from the very start.
-   const auto selectedTracks{ GetPropertiesOfSelected(project) };
-   const int rateOfSelected{ selectedTracks.rateOfSelected };
-   const int numberOfSelected{ selectedTracks.numberOfSelected };
-   const bool allSameRate{ selectedTracks.allSameRate };
-
-   if (!allSameRate) {
-      AudacityMessageBox(XO("The tracks selected "
-         "for recording must all have the same sampling rate"),
-         XO("Mismatched Sampling Rates"),
-         wxICON_ERROR | wxCENTRE);
-
-      return;
-   }
-
-   const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
-   if (existingTracks.empty()) {
-      if (numberOfSelected > 0 && rateOfSelected !=
-          ProjectRate::Get(project).GetRate()) {
-         AudacityMessageBox(XO(
-            "Too few tracks are selected for recording at this sample rate.\n"
-            "(Audacity requires two channels at the same sample rate for\n"
-            "each stereo track)"),
-            XO("Too Few Compatible Tracks Selected"),
-            wxICON_ERROR | wxCENTRE);
-
-         return;
-      }
-   }
-   
-   // We use this variable to display "Current Project" in the Timer Recording
-   // save project field
-   bool bProjectSaved = !ProjectFileIO::Get( project ).IsModified();
-
-   //we break the prompting and waiting dialogs into two sections
-   //because they both give the user a chance to click cancel
-   //and therefore remove the newly inserted track.
-
-   TimerRecordDialog dialog(
-      &window, project, bProjectSaved); /* parent, project, project saved? */
-   int modalResult = dialog.ShowModal();
-   if (modalResult == wxID_CANCEL)
-   {
-      // Cancelled before recording - don't need to do anything.
-   }
-   else
-   {
-      // Bug #2382
-      // Allow recording to start at current cursor position.
-      #if 0
-      // Timer Record should not record into a selection.
-      bool bPreferNewTrack;
-      gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
-      if (bPreferNewTrack) {
-         window.Rewind(false);
-      } else {
-         window.SkipEnd(false);
-      }
-      #endif
-
-      int iTimerRecordingOutcome = dialog.RunWaitDialog();
-      switch (iTimerRecordingOutcome) {
-      case POST_TIMER_RECORD_CANCEL_WAIT:
-         // Canceled on the wait dialog
-         ProjectHistory::Get( project ).RollbackState();
-         break;
-      case POST_TIMER_RECORD_CANCEL:
-         // RunWaitDialog() shows the "wait for start" as well as "recording"
-         // dialog if it returned POST_TIMER_RECORD_CANCEL it means the user
-         // cancelled while the recording, so throw out the fresh track.
-         // However, we can't undo it here because the PushState() is called in TrackPanel::OnTimer(),
-         // which is blocked by this function.
-         // so instead we mark a flag to undo it there.
-         ProjectAudioManager::Get( project ).SetTimerRecordCancelled();
-         break;
-      case POST_TIMER_RECORD_NOTHING:
-         // No action required
-         break;
-      case POST_TIMER_RECORD_CLOSE:
-         wxTheApp->CallAfter( []{
-            // Simulate the application Exit menu item
-            wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
-            wxTheApp->AddPendingEvent( evt );
-         } );
-         ProjectManager::Get(project).SetSkipSavePrompt(true);
-         break;
-
-#ifdef __WINDOWS__
-      case POST_TIMER_RECORD_RESTART:
-         // Restart System
-         ProjectManager::Get(project).SetSkipSavePrompt(true);
-         system("shutdown /r /f /t 30");
-         break;
-      case POST_TIMER_RECORD_SHUTDOWN:
-         // Shutdown System
-         ProjectManager::Get(project).SetSkipSavePrompt(true);
-         system("shutdown /s /f /t 30");
-         break;
-#endif
-      }
-   }
 }
 
 #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
@@ -551,11 +405,6 @@ void OnToggleSoundActivated(const CommandContext &WXUNUSED(context) )
    gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
    gPrefs->Flush();
    MenuManager::ModifyAllProjectToolbarMenus();
-}
-
-void OnTogglePinnedHead(const CommandContext &context)
-{
-   AdornedRulerPanel::Get( context.project ).TogglePinnedHead();
 }
 
 void OnTogglePlayRecording(const CommandContext &WXUNUSED(context) )
@@ -834,66 +683,6 @@ void OnPlayCutPreview(const CommandContext &context)
    TransportUtilities::PlayCurrentRegionAndWait(context, false, true);
 }
 
-void OnPlayAtSpeed(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->PlayAtSpeed(false, false);
-   }
-}
-
-void OnPlayAtSpeedLooped(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->PlayAtSpeed(true, false);
-   }
-}
-
-void OnPlayAtSpeedCutPreview(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->PlayAtSpeed(false, true);
-   }
-}
-
-void OnSetPlaySpeed(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->ShowPlaySpeedDialog();
-   }
-}
-
-void OnPlaySpeedInc(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->AdjustPlaySpeed(0.1f);
-   }
-}
-
-void OnPlaySpeedDec(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->AdjustPlaySpeed(-0.1f);
-   }
-}
-
 void OnMoveToPrevLabel(const CommandContext &context)
 {
    auto &project = context.project;
@@ -972,9 +761,6 @@ BaseItemSharedPtr TransportMenu()
                wxT("Shift+R")
             ); },
 
-            Command( wxT("TimerRecord"), XXO("&Timer Record..."),
-               OnTimerRecord, CanStopFlags, wxT("Shift+T") ),
-
    #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
             Command( wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"),
                OnPunchAndRoll,
@@ -1017,7 +803,7 @@ BaseItemSharedPtr TransportMenu()
             OnRescanDevices, AudioIONotBusyFlag() | CanStopAudioStreamFlag() ),
 
          Menu( wxT("Options"), XXO("Transport &Options"),
-            Section( "",
+            Section( "Part1",
                // Sound Activated recording options
                Command( wxT("SoundActivationLevel"),
                   XXO("Sound Activation Le&vel..."), OnSoundActivated,
@@ -1029,15 +815,7 @@ BaseItemSharedPtr TransportMenu()
                   Options{}.CheckTest(wxT("/AudioIO/SoundActivatedRecord"), false) )
             ),
 
-            Section( "",
-               Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
-                  OnTogglePinnedHead,
-                  // Switching of scrolling on and off is permitted
-                  // even during transport
-                  AlwaysEnabledFlag,
-                  Options{}.CheckTest([](const AudacityProject&){
-                     return TracksPrefs::GetPinnedHeadPreference(); } ) ),
-
+            Section( "Part2",
                Command( wxT("Overdub"), XXO("&Overdub (on/off)"),
                   OnTogglePlayRecording,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
@@ -1121,32 +899,6 @@ BaseItemSharedPtr ExtraTransportMenu()
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
    Shared( ExtraTransportMenu() )
-};
-
-BaseItemSharedPtr ExtraPlayAtSpeedMenu()
-{
-   static BaseItemSharedPtr menu{
-   Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed"),
-      /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
-      Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
-         OnPlayAtSpeedLooped, CaptureNotBusyFlag() ),
-      Command( wxT("PlayAtSpeed"), XXO("Play-at-Speed &Once"),
-         OnPlayAtSpeed, CaptureNotBusyFlag() ),
-      Command( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
-         OnPlayAtSpeedCutPreview, CaptureNotBusyFlag() ),
-      Command( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
-         OnSetPlaySpeed, CaptureNotBusyFlag() ),
-      Command( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"),
-         OnPlaySpeedInc, CaptureNotBusyFlag() ),
-      Command( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"),
-         OnPlaySpeedDec, CaptureNotBusyFlag() )
-   ) };
-   return menu;
-}
-
-AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part1"),
-   Shared( ExtraPlayAtSpeedMenu() )
 };
 
 BaseItemSharedPtr ExtraSelectionItems()
