@@ -47,6 +47,8 @@
 #include "ListNavigationEnabled.h"
 #include "ListNavigationPanel.h"
 #include "MovableControl.h"
+#include "menus/MenuHelper.h"
+#include "Menus.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -54,6 +56,70 @@
 
 namespace
 {
+   
+   class RealtimeEffectsMenuVisitor final : public MenuVisitor
+   {
+      wxMenu& mMenu;
+      wxMenu* mMenuPtr { nullptr };
+      int mMenuItemIdCounter { wxID_HIGHEST };
+      std::vector<Identifier> mIndexedPluginList;
+      int mMenuLevelCounter { 0 };
+   public:
+      
+      RealtimeEffectsMenuVisitor(wxMenu& menu)
+         : mMenu(menu), mMenuPtr(&mMenu) { }
+      
+      void DoBeginGroup( MenuTable::GroupItem &item, const Path& ) override
+      {
+         if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
+         {
+            //Don't create a group item for root
+            if(mMenuLevelCounter != 0 && !menuItem->Transparent())
+            {
+               auto submenu = std::make_unique<wxMenu>();
+               mMenuPtr->AppendSubMenu(submenu.get(), menuItem->title.Translation());
+               mMenuPtr = submenu.release();
+            }
+            ++mMenuLevelCounter;
+         }
+      }
+
+      void DoEndGroup( MenuTable::GroupItem &item, const Path& ) override
+      {
+         if(auto menuItem = dynamic_cast<MenuTable::MenuItem*>(&item))
+         {
+            --mMenuLevelCounter;
+            if(mMenuLevelCounter != 0 && !menuItem->Transparent())
+            {
+               assert(mMenuPtr->GetParent() != nullptr);
+               mMenuPtr = mMenuPtr->GetParent();
+            }
+         }
+      }
+
+      void DoVisit( MenuTable::SingleItem &item, const Path& ) override
+      {
+         if(auto commandItem = dynamic_cast<MenuTable::CommandItem*>(&item))
+         {
+            mMenuPtr->Append(mMenuItemIdCounter, commandItem->label_in.Translation());
+            mIndexedPluginList.push_back(commandItem->name);
+            ++mMenuItemIdCounter;
+         }
+      }
+
+      void DoSeparator() override
+      {
+         mMenuPtr->AppendSeparator();
+      }
+      
+      Identifier GetPluginID(int menuIndex) const
+      {
+         assert(menuIndex >= wxID_HIGHEST && menuIndex < (wxID_HIGHEST + mIndexedPluginList.size()));
+         return mIndexedPluginList[menuIndex - wxID_HIGHEST];
+      }
+      
+   };
+
    template <typename Visitor>
    void VisitRealtimeEffectStateUIs(Track& track, Visitor&& visitor)
    {
@@ -87,7 +153,6 @@ namespace
    }
    //fwd
    class RealtimeEffectControl;
-   PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl = nullptr);
 
    class DropHintLine : public wxWindow
    {
@@ -228,6 +293,12 @@ namespace
    };
 #endif
 
+   class RealtimeEffectPicker
+   {
+   public:
+      virtual std::optional<wxString> PickEffect(wxWindow* parent, const wxString& selectedEffectID) = 0;
+   };
+
    //UI control that represents individual effect from the effect list
    class RealtimeEffectControl : public ListNavigationEnabled<MovableControl>
    {
@@ -235,6 +306,8 @@ namespace
       std::shared_ptr<Track> mTrack;
       std::shared_ptr<RealtimeEffectState> mEffectState;
       std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
+      
+      RealtimeEffectPicker* mEffectPicker { nullptr };
 
       ThemedAButtonWrapper<AButton>* mChangeButton{nullptr};
       AButton* mEnableButton{nullptr};
@@ -246,18 +319,22 @@ namespace
       RealtimeEffectControl() = default;
 
       RealtimeEffectControl(wxWindow* parent,
+                   RealtimeEffectPicker* effectPicker,
                    wxWindowID winid,
                    const wxPoint& pos = wxDefaultPosition,
                    const wxSize& size = wxDefaultSize)
       {
-         Create(parent, winid, pos, size);
+         Create(parent, effectPicker, winid, pos, size);
       }
 
       void Create(wxWindow* parent,
+                   RealtimeEffectPicker* effectPicker,
                    wxWindowID winid,
                    const wxPoint& pos = wxDefaultPosition,
                    const wxSize& size = wxDefaultSize)
       {
+         mEffectPicker = effectPicker;
+         
          //Prevents flickering and paint order issues
          MovableControl::SetBackgroundStyle(wxBG_STYLE_PAINT);
          MovableControl::Create(parent, winid, pos, size, wxNO_BORDER | wxWANTS_CHARS);
@@ -425,10 +502,16 @@ namespace
          if(mEffectState == nullptr)
             return;//not initialized
 
-         const auto effectID = ShowSelectEffectMenu(mChangeButton, this);
-         if(effectID.empty())
+         const auto effectID = mEffectPicker->PickEffect(mChangeButton, mEffectState->GetID());
+         if(!effectID)
+            return;//nothing
+         
+         if(effectID->empty())
+         {
+            RemoveFromList();
             return;
-
+         }
+         
          auto &em = RealtimeEffectManager::Get(*mProject);
          auto oIndex = em.FindState(&*mTrack, mEffectState);
          if (!oIndex)
@@ -438,7 +521,7 @@ namespace
          auto &project = *mProject;
          auto trackName = mTrack->GetName();
          if (auto state = AudioIO::Get()
-            ->ReplaceState(project, &*mTrack, *oIndex, effectID)
+            ->ReplaceState(project, &*mTrack, *oIndex, *effectID)
          ){
             // Message subscription took care of updating the button text
             // and destroyed `this`!
@@ -487,94 +570,12 @@ namespace
 
       return descriptor.GetVendor();
    }
-
-   PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl)
-   {
-      wxMenu menu;
-
-      if(currentEffectControl != nullptr)
-      {
-         //no need to handle language change since menu creates it's own event loop
-         menu.Append(wxID_REMOVE, _("No Effect"));
-         menu.AppendSeparator();
-      }
-
-      auto& pluginManager = PluginManager::Get();
-
-      std::vector<const PluginDescriptor*> effects;
-      int selectedEffectIndex = -1;
-
-      auto compareEffects = [](const PluginDescriptor* a, const PluginDescriptor* b)
-      {
-         const auto vendorA = GetSafeVendor(*a);
-         const auto vendorB = GetSafeVendor(*b);
-
-         return vendorA < vendorB ||
-                (vendorA == vendorB &&
-                 a->GetSymbol().Translation() < b->GetSymbol().Translation());
-      };
-
-      for(auto& effect : pluginManager.EffectsOfType(EffectTypeProcess))
-      {
-         if(!effect.IsEffectRealtime() || !effect.IsEnabled())
-            continue;
-         effects.push_back(&effect);
-      }
-
-      std::sort(effects.begin(), effects.end(), compareEffects);
-
-      wxString currentSubMenuName;
-      std::unique_ptr<wxMenu> currentSubMenu;
-
-      auto submenuEventHandler = [&](wxCommandEvent& event)
-      {
-         selectedEffectIndex = event.GetId() - wxID_HIGHEST;
-      };
-
-      for(int i = 0, count = effects.size(); i < count; ++i)
-      {
-         auto& effect = *effects[i];
-
-         const wxString vendor = GetSafeVendor(effect);
-
-         if(currentSubMenuName != vendor)
-         {
-            if(currentSubMenu)
-            {
-               currentSubMenu->Bind(wxEVT_MENU, submenuEventHandler);
-               menu.AppendSubMenu(currentSubMenu.release(), currentSubMenuName);
-            }
-            currentSubMenuName = vendor;
-            currentSubMenu = std::make_unique<wxMenu>();
-         }
-
-         const auto ID = wxID_HIGHEST + i;
-         currentSubMenu->Append(ID, effect.GetSymbol().Translation());
-      }
-      if(currentSubMenu)
-      {
-         currentSubMenu->Bind(wxEVT_MENU, submenuEventHandler);
-         menu.AppendSubMenu(currentSubMenu.release(), currentSubMenuName);
-         menu.AppendSeparator();
-      }
-      menu.Append(wxID_MORE, _("Get more effects..."));
-
-      menu.Bind(wxEVT_MENU, [&](wxCommandEvent& event)
-      {
-         if(event.GetId() == wxID_REMOVE)
-            currentEffectControl->RemoveFromList();
-         else if(event.GetId() == wxID_MORE)
-            OpenInDefaultBrowser("https://plugins.audacityteam.org/");
-      });
-
-      if(parent->PopupMenu(&menu, parent->GetClientRect().GetLeftBottom()) && selectedEffectIndex != -1)
-         return effects[selectedEffectIndex]->GetID();
-
-      return {};
-   }
 }
 
-class RealtimeEffectListWindow : public wxScrolledWindow
+class RealtimeEffectListWindow
+   : public wxScrolledWindow
+   , public RealtimeEffectPicker
+   , public PrefsListener
 {
    wxWeakRef<AudacityProject> mProject;
    std::shared_ptr<Track> mTrack;
@@ -583,7 +584,10 @@ class RealtimeEffectListWindow : public wxScrolledWindow
    wxWindow* mAddEffectTutorialLink{nullptr};
    wxWindow* mEffectListContainer{nullptr};
 
+   std::unique_ptr<MenuTable::MenuItem> mEffectMenuRoot;
+   
    Observer::Subscription mEffectListItemMovedSubscription;
+   Observer::Subscription mPluginsChangedSubscription;
 
 public:
    RealtimeEffectListWindow(wxWindow *parent,
@@ -730,8 +734,95 @@ public:
          }
       });
       SetScrollRate(0, 20);
+      
+      mPluginsChangedSubscription = PluginManager::Get().Subscribe(
+         [this](PluginsChangedMessage)
+         {
+            UpdateEffectMenuItems();
+         });
+      UpdateEffectMenuItems();
    }
 
+   void UpdatePrefs() override
+   {
+      UpdateEffectMenuItems();
+   }
+   
+   std::optional<wxString> PickEffect(wxWindow* parent, const wxString& selectedEffectID) override
+   {
+      wxMenu menu;
+      if(!selectedEffectID.empty())
+      {
+         //no need to handle language change since menu creates its own event loop
+         menu.Append(wxID_REMOVE, _("No Effect"));
+         menu.AppendSeparator();
+      }
+      
+      RealtimeEffectsMenuVisitor visitor { menu };
+      
+      Registry::Visit(visitor, mEffectMenuRoot.get());
+      
+      int commandId = wxID_NONE;
+      
+      menu.AppendSeparator();
+      menu.Append(wxID_MORE, _("Get more effects..."));
+      
+      menu.Bind(wxEVT_MENU, [&](wxCommandEvent evt) { commandId = evt.GetId(); });
+      
+      if(parent->PopupMenu(&menu, parent->GetClientRect().GetLeftBottom()) && commandId != wxID_NONE)
+      {
+         if(commandId == wxID_REMOVE)
+            return wxString {};
+         else if(commandId == wxID_MORE)
+            OpenInDefaultBrowser("https://plugins.audacityteam.org/");
+         else
+            return visitor.GetPluginID(commandId).GET();
+      }
+      
+      return {};
+   }
+   
+   void UpdateEffectMenuItems()
+   {
+      auto root = std::make_unique<MenuTable::MenuItem>(Identifier {}, TranslatableString {});
+
+      static auto realtimeEffectPredicate = [](const PluginDescriptor& desc)
+      {
+         return desc.IsEffectRealtime();
+      };
+
+      auto analyzeItems = MenuHelper::PopulateEffectsMenu(
+         EffectTypeAnalyze,
+         {}, {},
+         nullptr,
+         realtimeEffectPredicate
+      );
+      
+      if(!analyzeItems.empty())
+      {
+         auto analyzeSection = MenuTable::Section(
+            wxEmptyString,
+            std::make_unique<MenuTable::MenuItem>(
+               wxEmptyString,
+               XO("Analyze"),
+               std::move(analyzeItems)
+            )
+         );
+         root->items.push_back(std::move(analyzeSection));
+      }
+   
+      auto processItems = MenuHelper::PopulateEffectsMenu(
+         EffectTypeProcess,
+         {}, {},
+         nullptr,
+         realtimeEffectPredicate
+      );
+      
+      std::move(processItems.begin(), processItems.end(), std::back_inserter(root->items));
+      
+      mEffectMenuRoot.swap(root);
+   }
+   
    void OnSizeChanged(wxSizeEvent& event)
    {
       if(auto sizerItem = GetSizer()->GetItem(mAddEffectHint))
@@ -891,11 +982,12 @@ public:
       if(!mTrack || mProject == nullptr)
          return;
 
-      const auto effectID = ShowSelectEffectMenu(dynamic_cast<wxWindow*>(event.GetEventObject()));
-      if(effectID.empty())
+      const auto effectID = PickEffect(dynamic_cast<wxWindow*>(event.GetEventObject()), {});
+      
+      if(!effectID || effectID->empty())
          return;
 
-      auto plug = PluginManager::Get().GetPlugin(effectID);
+      auto plug = PluginManager::Get().GetPlugin(*effectID);
       if(!plug)
          return;
 
@@ -908,7 +1000,7 @@ public:
          return;
       }
 
-      if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, effectID))
+      if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, *effectID))
       {
          auto effect = state->GetEffect();
          assert(effect); // postcondition of AddState
@@ -934,7 +1026,7 @@ public:
       if(!mEffectListContainer->IsShown())
          mEffectListContainer->Show();
 
-      auto row = safenew ThemedWindowWrapper<RealtimeEffectControl>(mEffectListContainer, wxID_ANY);
+      auto row = safenew ThemedWindowWrapper<RealtimeEffectControl>(mEffectListContainer, this, wxID_ANY);
       row->SetBackgroundColorIndex(clrEffectListItemBackground);
       row->SetEffect(*mProject, mTrack, pState);
       mEffectListContainer->GetSizer()->Insert(index, row, 0, wxEXPAND);
