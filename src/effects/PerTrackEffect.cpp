@@ -255,7 +255,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          assert(source.AcceptsBuffers(inBuffers));
          assert(source.AcceptsBlockSize(inBuffers.BlockSize()));
 
-         WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor };
+         WaveTrackSink sink{ left, pRight, start, isGenerator, isProcessor,
+            instance.NeedsDither() ? widestSampleFormat : narrowestSampleFormat
+         };
          assert(sink.AcceptsBuffers(outBuffers));
 
          // Go process the track(s)

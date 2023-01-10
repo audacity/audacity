@@ -45,7 +45,8 @@ WaveClip::WaveClip(const SampleBlockFactoryPtr &factory,
 {
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequence = std::make_unique<Sequence>(factory, format);
+   mSequence = std::make_unique<Sequence>( factory,
+      SampleFormats{narrowestSampleFormat, format});
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
 }
@@ -127,10 +128,11 @@ bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
 
 /*! @excsafety{Strong} */
 void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len)
+   sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
    // use Strong-guarantee
-   mSequence->SetSamples(buffer, format, start + TimeToSamples(mTrimLeft), len);
+   mSequence->SetSamples(buffer, format,
+      start + TimeToSamples(mTrimLeft), len, effectiveFormat);
 
    // use No-fail-guarantee
    MarkChanged();
@@ -144,6 +146,16 @@ BlockArray* WaveClip::GetSequenceBlockArray()
 const BlockArray* WaveClip::GetSequenceBlockArray() const
 {
    return &mSequence->GetBlockArray();
+}
+
+size_t WaveClip::GetAppendBufferLen() const
+{
+   return GetSequence()->GetAppendBufferLen();
+}
+
+constSamplePtr WaveClip::GetAppendBuffer() const
+{
+   return GetSequence()->GetAppendBuffer();
 }
 
 void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
@@ -227,59 +239,16 @@ void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
  -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
 bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
-                      size_t len, unsigned int stride)
+   size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
-   bool result = false;
-
-   auto maxBlockSize = mSequence->GetMaxBlockSize();
-   auto blockSize = mSequence->GetIdealAppendLen();
-   sampleFormat seqFormat = mSequence->GetSampleFormat();
-
-   if (!mAppendBuffer.ptr())
-      mAppendBuffer.Allocate(maxBlockSize, seqFormat);
-
    auto cleanup = finally( [&] {
       // use No-fail-guarantee
       UpdateEnvelopeTrackLen();
       MarkChanged();
    } );
 
-   for(;;) {
-      if (mAppendBufferLen >= blockSize) {
-         // flush some previously appended contents
-         // use Strong-guarantee
-         mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize);
-         result = true;
-
-         // use No-fail-guarantee for rest of this "if"
-         memmove(mAppendBuffer.ptr(),
-                 mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
-                 (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
-         mAppendBufferLen -= blockSize;
-         blockSize = mSequence->GetIdealAppendLen();
-      }
-
-      if (len == 0)
-         break;
-
-      // use No-fail-guarantee for rest of this "for"
-      wxASSERT(mAppendBufferLen <= maxBlockSize);
-      auto toCopy = std::min(len, maxBlockSize - mAppendBufferLen);
-
-      CopySamples(buffer, format,
-                  mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
-                  seqFormat,
-                  toCopy,
-                  gHighQualityDither,
-                  stride);
-
-      mAppendBufferLen += toCopy;
-      buffer += toCopy * SAMPLE_SIZE(format) * stride;
-      len -= toCopy;
-   }
-
-   return result;
+   return mSequence->Append(buffer, format, len, stride, effectiveFormat);
 }
 
 /*! @excsafety{Mixed} */
@@ -293,20 +262,14 @@ void WaveClip::Flush()
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
-   if (mAppendBufferLen > 0) {
+   if (GetAppendBufferLen() > 0) {
 
       auto cleanup = finally( [&] {
-         // Blow away the append buffer even in case of failure.  May lose some
-         // data but don't leave the track in an un-flushed state.
-
-         // Use No-fail-guarantee of these steps.
-         mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();
          MarkChanged();
       } );
 
-      mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(),
-         mAppendBufferLen);
+      mSequence->Flush();
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
@@ -374,9 +337,13 @@ XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
    else if (tag == "waveclip")
    {
       // Nested wave clips are cut lines
+      auto format = mSequence->GetSampleFormats().Stored();
+      // The format is not stored in WaveClip itself but passed to
+      // Sequence::Sequence; but then the Sequence will deserialize format
+      // again
       mCutLines.push_back(
          std::make_unique<WaveClip>(mSequence->GetFactory(),
-            mSequence->GetSampleFormat(), mRate, 0 /*colourindex*/));
+            format, mRate, 0 /*colourindex*/));
       return mCutLines.back().get();
    }
    else
@@ -407,7 +374,8 @@ void WaveClip::Paste(double t0, const WaveClip* other)
 {
    const bool clipNeedsResampling = other->mRate != mRate;
    const bool clipNeedsNewFormat =
-      other->mSequence->GetSampleFormat() != mSequence->GetSampleFormat();
+      other->mSequence->GetSampleFormats().Stored()
+         != mSequence->GetSampleFormats().Stored();
    std::unique_ptr<WaveClip> newClip;
 
    t0 = std::clamp(t0, GetPlayStartTime(), GetPlayEndTime());
@@ -446,7 +414,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
           copy->Resample(mRate);
       if (clipNeedsNewFormat)
          // Force sample formats to match.
-          copy->ConvertToSampleFormat(mSequence->GetSampleFormat());
+          copy->ConvertToSampleFormat(mSequence->GetSampleFormats().Stored());
       newClip = std::move(copy);
    }
 
@@ -789,8 +757,9 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    int outGenerated = 0;
    auto numSamples = mSequence->GetNumSamples();
 
-   auto newSequence =
-      std::make_unique<Sequence>(mSequence->GetFactory(), mSequence->GetSampleFormat());
+   // This sequence is appended to below
+   auto newSequence = std::make_unique<Sequence>(
+      mSequence->GetFactory(), mSequence->GetSampleFormats());
 
    /**
     * We want to keep going as long as we have something to feed the resampler
@@ -822,7 +791,9 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       }
 
       newSequence->Append((samplePtr)outBuffer.get(), floatSample,
-                          outGenerated);
+         outGenerated, 1,
+         widestSampleFormat /* computed samples need dither */
+      );
 
       if (progress)
       {
@@ -911,7 +882,7 @@ double WaveClip::GetPlayEndTime() const
 {
     auto numSamples = mSequence->GetNumSamples();
 
-    double maxLen = GetSequenceStartTime() + ((numSamples + mAppendBufferLen).as_double()) / mRate 
+    double maxLen = GetSequenceStartTime() + ((numSamples + GetAppendBufferLen()).as_double()) / mRate
        - SamplesToTime(TimeToSamples(mTrimRight));
     // JS: calculated value is not the length;
     // it is a maximum value and can be negative; no clipping to 0
@@ -991,7 +962,7 @@ double WaveClip::GetSequenceEndTime() const
 {
     auto numSamples = mSequence->GetNumSamples();
 
-    double maxLen = GetSequenceStartTime() + (numSamples + mAppendBufferLen).as_double() / mRate;
+    double maxLen = GetSequenceStartTime() + (numSamples + GetAppendBufferLen()).as_double() / mRate;
     // JS: calculated value is not the length;
     // it is a maximum value and can be negative; no clipping to 0
 
@@ -1021,7 +992,7 @@ void WaveClip::Offset(double delta) noexcept
 bool WaveClip::WithinPlayRegion(double t) const
 {
     auto ts = TimeToSamples(t);
-    return ts > GetPlayStartSample() && ts < GetPlayEndSample() + mAppendBufferLen;
+    return ts > GetPlayStartSample() && ts < GetPlayEndSample() + GetAppendBufferLen();
 }
 
 bool WaveClip::BeforePlayStartTime(double t) const
@@ -1033,7 +1004,7 @@ bool WaveClip::BeforePlayStartTime(double t) const
 bool WaveClip::AfterPlayEndTime(double t) const
 {
     auto ts = TimeToSamples(t);
-    return ts >= GetPlayEndSample() + mAppendBufferLen;
+    return ts >= GetPlayEndSample() + GetAppendBufferLen();
 }
 
 sampleCount WaveClip::TimeToSequenceSamples(double t) const

@@ -58,6 +58,8 @@ public:
    bool Terminates() const override;
    void Reposition(double time, bool skipping);
 
+   bool VariableRates() const { return mResampleParameters.mVariableRates; }
+
 private:
    void MakeResamplers();
 

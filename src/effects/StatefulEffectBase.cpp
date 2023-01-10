@@ -123,6 +123,11 @@ unsigned StatefulEffectBase::Instance::GetAudioOutCount() const
    return GetEffect().GetAudioOutCount();
 }
 
+bool StatefulEffectBase::Instance::NeedsDither() const
+{
+   return GetEffect().NeedsDither();
+}
+
 size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 {
    mEffectBlockSize = maxBlockSize;
@@ -195,4 +200,9 @@ bool StatefulEffectBase::Init()
 sampleCount StatefulEffectBase::GetLatency() const
 {
    return 0;
+}
+
+bool StatefulEffectBase::NeedsDither() const
+{
+   return true;
 }

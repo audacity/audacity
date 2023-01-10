@@ -503,7 +503,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // July 2016 (Carsten and Uwe)
    // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using 
    // userData.
-   int captureFormat_saved = captureFormat;
+   auto captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
    // since we need float values anyway to apply the gain.
@@ -2065,7 +2065,9 @@ void AudioIO::DrainRecordBuffers()
                   size_t size = floor( correction * mRate * mFactor);
                   SampleBuffer temp(size, trackFormat);
                   ClearSamples(temp.ptr(), trackFormat, 0, size);
-                  mCaptureTracks[i]->Append(temp.ptr(), trackFormat, size, 1);
+                  mCaptureTracks[i]->Append(temp.ptr(), trackFormat, size, 1,
+                     // Do not dither recordings
+                     narrowestSampleFormat);
                }
                else {
                   // Leftward shift
@@ -2167,8 +2169,11 @@ void AudioIO::DrainRecordBuffers()
 
             // Now append
             // see comment in second handler about guarantee
-            newBlocks = mCaptureTracks[i]->Append(temp.ptr(), format, size, 1)
-               || newBlocks;
+            newBlocks = mCaptureTracks[i]->Append(
+               temp.ptr(), format, size, 1,
+               // Do not dither recordings
+               narrowestSampleFormat
+            ) || newBlocks;
          } // end loop over capture channels
 
          // Now update the recording schedule position

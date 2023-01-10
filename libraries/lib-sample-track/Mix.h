@@ -73,13 +73,13 @@ class SAMPLE_TRACK_API Mixer {
    // Processing
    //
 
-   /// Process a maximum of 'maxSamples' samples and put them into
-   /// a buffer which can be retrieved by calling GetBuffer().
-   /// Returns number of output samples, or 0, if there are no
-   /// more samples that must be processed.
+   //! Process a maximum of 'maxSamples' samples and put them into the buffer,
+   //! at GetBuffer().
    /*!
     @pre `maxSamples <= BufferSize()`
     @post result: `result <= maxSamples`
+    @return number of output samples, or 0, if there are no more samples that
+    must be processed.
     */
    size_t Process(size_t maxSamples);
 
@@ -88,28 +88,29 @@ class SAMPLE_TRACK_API Mixer {
     */
    size_t Process() { return Process(BufferSize()); }
 
-   /// Restart processing at beginning of buffer next time
-   /// Process() is called.
+   //! Restart processing at beginning of buffer next time Process() is called.
    void Restart();
 
-   /// Reposition processing to absolute time next time
-   /// Process() is called.
+   //! Reposition processing to absolute time next time Process() is called.
    void Reposition(double t, bool bSkipping = false);
 
-   // Used in scrubbing and other nonuniform playback policies.
+   //! Used in scrubbing and other nonuniform playback policies.
    void SetTimesAndSpeed(
       double t0, double t1, double speed, bool bSkipping = false);
    void SetSpeedForKeyboardScrubbing(double speed, double startTime);
 
-   /// Current time in seconds (unwarped, i.e. always between startTime and stopTime)
-   /// This value is not accurate, it's useful for progress bars and indicators, but nothing else.
+   //! Current time in seconds (unwarped, i.e. always between startTime and stopTime)
+   /*! This value is not accurate, it's useful for progress bars and indicators, but nothing else. */
    double MixGetCurrentTime();
 
-   /// Retrieve the main buffer or the interleaved buffer
+   //! Retrieve the main buffer or the interleaved buffer
    constSamplePtr GetBuffer();
 
-   /// Retrieve one of the non-interleaved buffers
+   //! Retrieve one of the non-interleaved buffers
    constSamplePtr GetBuffer(int channel);
+
+   //! Deduce the effective width of the output, which may be narrower than the stored format
+   sampleFormat EffectiveFormat() const;
 
  private:
 
@@ -124,6 +125,11 @@ class SAMPLE_TRACK_API Mixer {
    // Transformations
    const size_t     mBufferSize;
 
+   std::pair<bool, sampleFormat>
+   NeedsDither(bool needsDither, double rate) const;
+
+ private:
+
    // Output
    const bool       mApplyTrackGains;
    const bool       mHighQuality; // dithering
@@ -131,6 +137,8 @@ class SAMPLE_TRACK_API Mixer {
    const bool       mInterleaved;
 
    // INPUT
+   sampleFormat     mEffectiveFormat;
+   bool             mNeedsDither;
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 

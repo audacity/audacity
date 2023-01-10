@@ -576,6 +576,10 @@ public:
     */
    virtual SampleCount GetLatency(
       const EffectSettings &settings, double sampleRate) const;
+
+   /*! If true (default result), then results require dither if later rendered
+    to a narrower sample format */
+   virtual bool NeedsDither() const;
 };
 
 /***************************************************************************//**

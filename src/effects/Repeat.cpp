@@ -238,3 +238,8 @@ void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))
 {
    DisplayNewTime();
 }
+
+bool EffectRepeat::NeedsDither() const
+{
+   return false;
+}

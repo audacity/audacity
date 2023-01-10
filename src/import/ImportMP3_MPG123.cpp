@@ -323,7 +323,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       {
          mChannels[channel]->Append(
             samples + sizeof(float) * channel, floatSample, samplesCount,
-            mNumChannels);
+            mNumChannels, floatSample);
       }
    }
 

@@ -213,6 +213,9 @@ size_t MixerSource::MixVariableRates(
 size_t MixerSource::MixSameRate(unsigned iChannel, const size_t maxOut,
    float &floatBuffer)
 {
+   // This function fetches samples from the input tracks, whatever their
+   // formats, as floats; it may also apply envelope values.
+
    auto &cache = mInputTrack[iChannel];
    const auto pos = &mSamplePos[iChannel];
 

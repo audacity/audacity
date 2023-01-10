@@ -199,6 +199,11 @@ auto EffectInstance::GetLatency(const EffectSettings &, double) const
    return 0;
 }
 
+bool EffectInstance::NeedsDither() const
+{
+   return true;
+}
+
 EffectInstanceEx::~EffectInstanceEx() = default;
 
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
