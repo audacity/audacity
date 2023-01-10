@@ -848,3 +848,15 @@ function(fix_bundle target_name)
 	 -config=$<CONFIG>
    )
 endfunction()
+
+
+# The list of modules is ordered so that each module occurs after any others
+# that it depends on
+macro( audacity_module_subdirectory modules )
+   foreach( MODULE ${MODULES} )
+      add_subdirectory("${MODULE}")
+   endforeach()
+
+   #propagate collected edges up to root CMakeLists.txt
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+endmacro()
