@@ -35,7 +35,7 @@ namespace Registry {
       //! predefined SingleItem
       // The default None policy is like Error, but is overridden if the
       // item is delegated to (by a SharedItem, ComputedItem, or nameless
-      // transparent group).  The delegating item's hint will be used instead
+      // transparent group).  The delegating item's policy will be used instead
       enum ConflictResolutionPolicy : int {
          Error,   /*!<
             By default, ignore the registered item and display an error */
