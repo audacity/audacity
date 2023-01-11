@@ -916,6 +916,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
       }
 
       pm.Save();
+      pm.NotifyPluginsChanged();
 
       if (!failedPlugins.empty())
       {
@@ -1058,6 +1059,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       }
 
       pm.Save();
+      pm.NotifyPluginsChanged();
    }
 
    EndModal(wxID_OK);
