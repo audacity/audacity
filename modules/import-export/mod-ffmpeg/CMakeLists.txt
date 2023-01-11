@@ -21,6 +21,8 @@ set( LIBRARIES
       Audacity
 )
 
+set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
+
 if( "${${_OPT}use_ffmpeg}" STREQUAL "linked" )
       set( DISABLE_DYNAMIC_LOADING_FFMPEG YES )
 endif()

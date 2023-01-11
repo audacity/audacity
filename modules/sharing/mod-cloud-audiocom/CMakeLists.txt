@@ -79,6 +79,11 @@ endif()
 set( LIBRARIES
    PRIVATE
       lib-cloud-audiocom-interface
+)
+
+set (EXTRA_CLUSTER_NODES "${LIBRARIES};lib-crypto" PARENT_SCOPE)
+
+list(APPEND LIBRARIES
       lib-menus-interface
       lib-shuttlegui-interface
       lib-wx-wrappers-interface

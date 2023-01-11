@@ -8,8 +8,13 @@ set( SOURCES
 
 set( LIBRARIES
    PRIVATE
-      lib-import-export-interface
       wavpack::wavpack
+)
+
+set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)
+
+list(APPEND LIBRARIES
+   lib-import-export-interface
 )
 
 audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

@@ -15,5 +15,6 @@ foreach( FOLDER ${FOLDERS} )
    add_subdirectory("${FOLDER}")
 endforeach()
 
-#propagate collected edges up to root CMakeLists.txt
+#propagate collected edges and subgraphs up to root CMakeLists.txt
 set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+set( GRAPH_SUBGRAPHS "${GRAPH_SUBGRAPHS}" PARENT_SCOPE )
