@@ -27,6 +27,8 @@
 #include "../commands/CommandContext.h"
 #include "../commands/Command.h"
 
+#include <wx/app.h>
+
 CommandHandler::CommandHandler()
 {
 }

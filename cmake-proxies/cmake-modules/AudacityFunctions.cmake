@@ -338,6 +338,10 @@ function( canonicalize_node_name var node )
    set( "${var}" "${node}" PARENT_SCOPE )
 endfunction()
 
+# This is unnecessary for a clean build, but is useful for development
+function( clean_modules_folder )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 

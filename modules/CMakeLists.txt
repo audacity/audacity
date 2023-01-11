@@ -3,6 +3,19 @@
 # The list of modules is ordered so that each module occurs after any others
 # that it depends on
 set( MODULES
+   mod-macros
+   mod-keyboard-preferences
+   mod-play-indicator-overlay
+   mod-edit-cursor-overlay
+   mod-command-classes
+   mod-printing
+   mod-screenshot
+   mod-timer-record
+   mod-frequency-plot
+   mod-contrast
+   mod-undo-history
+   mod-lyrics
+   mod-mixer-board
    mod-script-pipe
 )
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )

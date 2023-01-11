@@ -64,7 +64,7 @@ public:
     One indicates there that the file opening succeeded by calling Commit().  But if that is never
     called, creation of projects, or changes to a preexisting project, are undone.
     */
-   class ProjectChooser {
+   class AUDACITY_DLL_API ProjectChooser {
    public:
        /*!
        @param pProject if not null, an existing project to reuse if possible

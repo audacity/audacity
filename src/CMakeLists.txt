@@ -109,12 +109,6 @@ list( APPEND SOURCES
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
-      BatchCommandDialog.cpp
-      BatchCommandDialog.h
-      BatchCommands.cpp
-      BatchCommands.h
-      BatchProcessDialog.cpp
-      BatchProcessDialog.h
       Benchmark.cpp
       Benchmark.h
       CellularPanel.cpp
@@ -141,14 +135,10 @@ list( APPEND SOURCES
       FileFormats.h
       FrameStatisticsDialog.cpp
       FrameStatisticsDialog.h
-      FreqWindow.cpp
-      FreqWindow.h
       HelpText.cpp
       HelpText.h
       HelpUtilities.cpp
       HelpUtilities.h
-      HistoryWindow.cpp
-      HistoryWindow.h
       HitTestResult.h
       IncompatiblePluginsDialog.cpp
       IncompatiblePluginsDialog.h
@@ -174,18 +164,12 @@ list( APPEND SOURCES
       Legacy.h
       LogWindow.cpp
       LogWindow.h
-      Lyrics.cpp
-      Lyrics.h
-      LyricsWindow.cpp
-      LyricsWindow.h
       Menus.cpp
       Menus.h
       MIDIPlay.cpp
       MIDIPlay.h
       MixAndRender.cpp
       MixAndRender.h
-      MixerBoard.cpp
-      MixerBoard.h
       NoteTrack.cpp
       NoteTrack.h
       PasteOverPreservingClips.cpp
@@ -198,7 +182,6 @@ list( APPEND SOURCES
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp
       PluginStartupRegistration.h
-      Printing.cpp
       Profiler.cpp
       Profiler.h
       ProjectAudioIO.cpp
@@ -230,8 +213,6 @@ list( APPEND SOURCES
       RingBuffer.h
       SampleBlock.cpp
       SampleBlock.h
-      Screenshot.cpp
-      Screenshot.h
       ScrubState.cpp
       ScrubState.h
       SelectUtilities.cpp
@@ -279,8 +260,6 @@ list( APPEND SOURCES
       TimeDialog.h
       TimeTrack.cpp
       TimeTrack.h
-      TimerRecordDialog.cpp
-      TimerRecordDialog.h
       TrackArt.cpp
       TrackArt.h
       TrackArtist.cpp
@@ -327,8 +306,6 @@ list( APPEND SOURCES
       commands/AppCommandEvent.h
       commands/AudacityCommand.cpp
       commands/AudacityCommand.h
-      commands/BatchEvalCommand.cpp
-      commands/BatchEvalCommand.h
       commands/Command.cpp
       commands/Command.h
       commands/CommandBuilder.cpp
@@ -353,48 +330,14 @@ list( APPEND SOURCES
       commands/CommandTargets.h
       commands/CommandType.cpp
       commands/CommandType.h
-      commands/CompareAudioCommand.cpp
-      commands/CompareAudioCommand.h
-      commands/Demo.cpp
-      commands/Demo.h
-      commands/DragCommand.cpp
-      commands/DragCommand.h
-      commands/GetInfoCommand.cpp
-      commands/GetInfoCommand.h
-      commands/GetTrackInfoCommand.cpp
-      commands/GetTrackInfoCommand.h
-      commands/HelpCommand.cpp
-      commands/HelpCommand.h
-      commands/ImportExportCommands.cpp
-      commands/ImportExportCommands.h
       commands/Keyboard.cpp
       commands/Keyboard.h
       commands/LoadCommands.cpp
       commands/LoadCommands.h
-      commands/MessageCommand.cpp
-      commands/MessageCommand.h
-      commands/OpenSaveCommands.cpp
-      commands/OpenSaveCommands.h
-      commands/PreferenceCommands.cpp
-      commands/PreferenceCommands.h
       commands/ResponseQueue.cpp
       commands/ResponseQueue.h
-      commands/ScreenshotCommand.cpp
-      commands/ScreenshotCommand.h
       commands/ScriptCommandRelay.cpp
       commands/ScriptCommandRelay.h
-      commands/SelectCommand.cpp
-      commands/SelectCommand.h
-      commands/SetClipCommand.cpp
-      commands/SetClipCommand.h
-      commands/SetEnvelopeCommand.cpp
-      commands/SetEnvelopeCommand.h
-      commands/SetLabelCommand.cpp
-      commands/SetLabelCommand.h
-      commands/SetProjectCommand.cpp
-      commands/SetProjectCommand.h
-      commands/SetTrackInfoCommand.cpp
-      commands/SetTrackInfoCommand.h
       commands/Validators.h
 
       # Built-in Effects
@@ -417,8 +360,6 @@ list( APPEND SOURCES
       effects/ClickRemoval.h
       effects/Compressor.cpp
       effects/Compressor.h
-      effects/Contrast.cpp
-      effects/Contrast.h
       effects/Distortion.cpp
       effects/Distortion.h
       effects/DtmfGen.cpp
@@ -790,8 +731,6 @@ list( APPEND SOURCES
 
       # Preferences
 
-      prefs/BatchPrefs.cpp
-      prefs/BatchPrefs.h
       prefs/DevicePrefs.cpp
       prefs/DevicePrefs.h
       prefs/DirectoriesPrefs.cpp
@@ -806,8 +745,6 @@ list( APPEND SOURCES
       prefs/GUISettings.h
       prefs/ImportExportPrefs.cpp
       prefs/ImportExportPrefs.h
-      prefs/KeyConfigPrefs.cpp
-      prefs/KeyConfigPrefs.h
       prefs/LibraryPrefs.cpp
       prefs/LibraryPrefs.h
       prefs/MidiIOPrefs.cpp
@@ -989,12 +926,8 @@ list( APPEND SOURCES
       tracks/ui/CommonTrackPanelCell.h
       tracks/ui/CommonTrackView.cpp
       tracks/ui/CommonTrackView.h
-      tracks/ui/EditCursorOverlay.cpp
-      tracks/ui/EditCursorOverlay.h
       tracks/ui/EnvelopeHandle.cpp
       tracks/ui/EnvelopeHandle.h
-      tracks/ui/PlayIndicatorOverlay.cpp
-      tracks/ui/PlayIndicatorOverlay.h
       tracks/ui/ScrubUI.cpp
       tracks/ui/ScrubUI.h
       tracks/ui/Scrubbing.cpp
@@ -1070,8 +1003,6 @@ list( APPEND SOURCES
       widgets/HtmlWindow.h
       widgets/ImageRoll.cpp
       widgets/ImageRoll.h
-      widgets/KeyView.cpp
-      widgets/KeyView.h
       widgets/MeterPanel.cpp
       widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
