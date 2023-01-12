@@ -48,6 +48,8 @@
 
 #include "Prefs.h"
 
+#include "MemoryX.h"
+
 // This really should be a Preferences setting
 static const unsigned char beep[] =
 {
