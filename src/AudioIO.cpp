@@ -135,7 +135,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const WritableSampleTrackArray &playbackTracks,
+      const SampleTrackConstArray &playbackTracks,
       unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -1152,11 +1152,12 @@ bool AudioIO::AllocateBuffers(
                mPlaybackBuffers[0] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
+            mOldChannelGains.resize(mPlaybackTracks.size());
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++) {
                const auto &pTrack = mPlaybackTracks[i];
                // Bug 1763 - We must fade in from zero to avoid a click on starting.
-               pTrack->SetOldChannelGain(0, 0.0);
-               pTrack->SetOldChannelGain(1, 0.0);
+               mOldChannelGains[i][0] = 0.0;
+               mOldChannelGains[i][1] = 0.0;
 
                mPlaybackBuffers[i] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
@@ -2453,7 +2454,8 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    const float * tempBuf,
    bool drop,
    unsigned long len,
-   WritableSampleTrack *vt
+   const SampleTrack *vt,
+   OldChannelGains &gains
    )
 {
    const auto numPlaybackChannels = mNumPlaybackChannels;
@@ -2473,9 +2475,9 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    // Let's keep the old behavior for panning.
    gain *= ExpGain(GetMixerOutputVol());
 
-   float oldGain = vt->GetOldChannelGain(chan);
+   float oldGain = gains[chan];
    if( gain != oldGain )
-      vt->SetOldChannelGain(chan, gain);
+      gains[chan] = gain;
    // if no microfades, jump in volume.
    if( !mbMicroFades )
       oldGain =gain;
@@ -2533,8 +2535,10 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // ------ MEMORY ALLOCATION ----------------------
    // These are small structures.
-   WritableSampleTrack **chans = (WritableSampleTrack **) alloca(
-      numPlaybackChannels * sizeof(WritableSampleTrack *));
+   const auto chans = (const SampleTrack **) alloca(
+      numPlaybackChannels * sizeof(const SampleTrack *));
+   const auto oldgains = (OldChannelGains **) alloca(
+      numPlaybackChannels * sizeof(OldChannelGains *));
    float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
 
    // And these are larger structures....
@@ -2567,6 +2571,7 @@ bool AudioIoCallback::FillOutputBuffers(
    {
       auto vt = mPlaybackTracks[t].get();
       chans[chanCnt] = vt;
+      oldgains[chanCnt] = &mOldChannelGains[t];
 
       // TODO: more-than-two-channels
       auto nextTrack =
@@ -2591,7 +2596,8 @@ bool AudioIoCallback::FillOutputBuffers(
       }
 
       if( mbMicroFades )
-         dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
+         dropQuickly = dropQuickly &&
+            TrackHasBeenFadedOut( *vt, mOldChannelGains[t] );
          
       decltype(framesPerBuffer) len = 0;
 
@@ -2658,12 +2664,12 @@ bool AudioIoCallback::FillOutputBuffers(
          if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel )
             AddToOutputChannel( 0, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt);
+               tempBufs[c], drop, len, vt, *oldgains[c % 2]);
 
          if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel  )
             AddToOutputChannel( 1, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt);
+               tempBufs[c], drop, len, vt, *oldgains[c % 2]);
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
@@ -2979,27 +2985,28 @@ bool AudioIoCallback::TrackShouldBeSilent( const SampleTrack &wt )
 }
 
 // This is about micro-fades.
-bool AudioIoCallback::TrackHasBeenFadedOut( const SampleTrack &wt )
+bool AudioIoCallback::TrackHasBeenFadedOut(
+   const SampleTrack &wt, const OldChannelGains &gains)
 {
    const auto channel = wt.GetChannelIgnoringPan();
    if ((channel == Track::LeftChannel  || channel == Track::MonoChannel) &&
-      wt.GetOldChannelGain(0) != 0.0)
+      gains[0] != 0.0)
       return false;
    if ((channel == Track::RightChannel || channel == Track::MonoChannel) &&
-      wt.GetOldChannelGain(1) != 0.0)
+      gains[1] != 0.0)
       return false;
    return true;
 }
 
 bool AudioIoCallback::AllTracksAlreadySilent()
 {
-   const bool dropAllQuickly = std::all_of(
-      mPlaybackTracks.begin(), mPlaybackTracks.end(),
-      [&]( const auto &vt ) { return
-         TrackShouldBeSilent( *vt ) && 
-         TrackHasBeenFadedOut( *vt ); }
-   );
-   return dropAllQuickly;
+   for (size_t ii = 0, nn = mPlaybackTracks.size(); ii < nn; ++ii) {
+      auto vt = mPlaybackTracks[ii];
+      const auto &oldGains = mOldChannelGains[ii];
+      if (!(TrackShouldBeSilent(*vt) && TrackHasBeenFadedOut(*vt, oldGains)))
+         return false;
+   }
+   return true;
 }
 
 AudioIoCallback::AudioIoCallback()

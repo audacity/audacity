@@ -149,9 +149,6 @@ private:
 
    float GetChannelGain(int channel) const override;
 
-   float GetOldChannelGain(int channel) const override;
-   void SetOldChannelGain(int channel, float gain) override;
-
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 
@@ -564,8 +561,6 @@ private:
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mPan{ 0.0f };
    int           mWaveColorIndex;
-   //! A memo used by PortAudio thread, doesn't need atomics:
-   float         mOldGain[2];
 
 
    //

@@ -80,7 +80,7 @@ struct AudioIOEvent {
 };
 
 struct TransportTracks {
-   WritableSampleTrackArray playbackTracks;
+   SampleTrackConstArray playbackTracks;
    WritableSampleTrackArray captureTracks;
    PlayableTrackConstArray otherPlayableTracks;
 
@@ -193,22 +193,27 @@ public:
    int mCallbackReturn;
    // Helpers to determine if tracks have already been faded out.
    unsigned  CountSoloingTracks();
+
+   using OldChannelGains = std::array<float, 2>;
    bool TrackShouldBeSilent( const SampleTrack &wt );
-   bool TrackHasBeenFadedOut( const SampleTrack &wt );
+   bool TrackHasBeenFadedOut(
+      const SampleTrack &wt, const OldChannelGains &gains);
    bool AllTracksAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
       unsigned long framesPerBuffer
    );
-   void AddToOutputChannel( unsigned int chan,
+
+   void AddToOutputChannel( unsigned int chan, // index into gains
       float * outputMeterFloats,
       float * outputFloats,
       const float * tempBuf,
       bool drop,
       unsigned long len,
-      WritableSampleTrack *vt
-      );
+      const SampleTrack *vt,
+      OldChannelGains &gains
+   );
    bool FillOutputBuffers(
       float *outputBuffer,
       unsigned long framesPerBuffer,
@@ -275,7 +280,10 @@ public:
    WritableSampleTrackArray      mCaptureTracks;
    /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
-   WritableSampleTrackArray      mPlaybackTracks;
+   SampleTrackConstArray      mPlaybackTracks;
+   // Old gain is used in playback in linearly interpolating
+   // the gain.
+   std::vector<OldChannelGains> mOldChannelGains;
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
