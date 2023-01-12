@@ -261,6 +261,7 @@ std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.AddSpace(5);
    S.SetSizerProportion(1);
    S.StartMultiColumn(3, wxEXPAND);

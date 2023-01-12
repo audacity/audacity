@@ -152,6 +152,7 @@ std::unique_ptr<EffectUIValidator> EffectTimeScale::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.SetBorder(5);
    S.AddSpace(0, 5);
 

@@ -273,6 +273,7 @@ std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    wxTextCtrl *t;
 
    S.StartMultiColumn(2, wxCENTER);

@@ -173,6 +173,7 @@ std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S

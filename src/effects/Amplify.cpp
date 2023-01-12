@@ -209,6 +209,8 @@ std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 
    bool batch = IsBatchProcessing();

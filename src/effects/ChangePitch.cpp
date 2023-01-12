@@ -235,6 +235,7 @@ std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
    TranslatableStrings pitch;

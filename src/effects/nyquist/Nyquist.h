@@ -139,6 +139,8 @@ public:
    void Stop();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    static int mReentryCount;
    // NyquistEffect implementation
 

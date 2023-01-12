@@ -77,6 +77,8 @@ private:
    void UpdateUI();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    double    mRMSSum;
    size_t    mCircleSize;
    size_t    mCirclePos;

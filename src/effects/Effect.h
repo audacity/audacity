@@ -304,12 +304,9 @@ protected:
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   wxWindow       *mUIParent{};
-
-public:
-   wxWindow* GetUIParent() { return mUIParent; }
 
 private:
+   wxWindow       *mUIParent{};
    wxString GetSavedStateGroup();
 
    bool mIsBatch{ false };

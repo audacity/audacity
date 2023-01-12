@@ -179,6 +179,8 @@ std::unique_ptr<EffectUIValidator> EffectNoise::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
    S.StartMultiColumn(2, wxCENTER);

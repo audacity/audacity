@@ -61,6 +61,8 @@ private:
    void OnValueChanged(wxCommandEvent & evt);
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mDuckAmountDb;
    double mInnerFadeDownLen;
    double mInnerFadeUpLen;

@@ -80,6 +80,8 @@ private:
    void Update_Slider_RatePercentChangeStart();
    void Update_Slider_RatePercentChangeEnd();
 
+   wxWeakRef<wxWindow> mUIParent{};
+
    bool bPreview;
    double previewSelectedDuration;
    SlideType slideTypeRate;

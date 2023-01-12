@@ -215,6 +215,7 @@ std::unique_ptr<EffectUIValidator> EffectLoudness::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartVerticalLay(0);
    {
       S.StartMultiColumn(2, wxALIGN_CENTER);

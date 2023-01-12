@@ -58,6 +58,8 @@ private:
 
    void OnControlUpdate(wxCommandEvent & evt);
 
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mSampleRate{};
    const bool mChirp;
 

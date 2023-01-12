@@ -95,18 +95,19 @@ struct EffectWahwah::Validator
    wxSlider* mOutGainS;
 
 
+   wxWeakRef<wxWindow> mUIParent;
    EffectWahwahSettings mSettings;
 
    void EnableApplyFromValidate()
    {
       Effect& actualEffect = static_cast<Effect&>(mEffect);
-      actualEffect.EnableApply(actualEffect.GetUIParent()->Validate());
+      actualEffect.EnableApply(mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataToWindow()
    {
       Effect& actualEffect = static_cast<Effect&>(mEffect);
-      return actualEffect.EnableApply(actualEffect.GetUIParent()->TransferDataFromWindow());
+      return actualEffect.EnableApply(mUIParent->TransferDataFromWindow());
    }
 };
 
@@ -275,6 +276,7 @@ std::unique_ptr<EffectUIValidator> EffectWahwah::PopulateOrExchange(
 
 void EffectWahwah::Validator::PopulateOrExchange(ShuttleGui & S)
 {
+   mUIParent = S.GetParent();
    auto& ms = mSettings;
 
    S.SetBorder(5);

@@ -79,6 +79,8 @@ private:
    void UpdateUI();                    // Enable / disable OK / preview.
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    // track related
    int    mCurTrackNum;
    double mMaxNewLength;

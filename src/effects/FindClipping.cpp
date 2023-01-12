@@ -217,6 +217,7 @@ std::unique_ptr<EffectUIValidator> EffectFindClipping::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    DoPopulateOrExchange(S, access);
    return nullptr;
 }

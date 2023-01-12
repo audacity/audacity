@@ -214,6 +214,7 @@ std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    mCreating = true;
 
    S.StartVerticalLay(0);

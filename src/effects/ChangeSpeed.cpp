@@ -241,6 +241,8 @@ std::unique_ptr<EffectUIValidator> EffectChangeSpeed::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    {
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,

@@ -526,6 +526,7 @@ std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    Vamp::Plugin::ProgramList programs = mPlugin->getPrograms();
 
    mParameters = mPlugin->getParameterDescriptors();

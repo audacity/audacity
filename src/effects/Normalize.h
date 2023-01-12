@@ -67,6 +67,8 @@ private:
    void UpdateUI();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mPeakLevel;
    bool   mGain;
    bool   mDC;

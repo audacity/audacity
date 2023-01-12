@@ -158,6 +158,7 @@ std::unique_ptr<EffectUIValidator> EffectRepeat::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartHorizontalLay(wxCENTER, false);
    {
       mRepeatCount = S.Validator<IntegerValidator<int>>(

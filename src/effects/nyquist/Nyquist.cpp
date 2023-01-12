@@ -1136,6 +1136,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    if (mIsPrompt)
       BuildPromptWindow(S);
    else
