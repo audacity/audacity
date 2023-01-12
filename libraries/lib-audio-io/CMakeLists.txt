@@ -17,19 +17,12 @@ set( SOURCES
    PlaybackSchedule.h
    ProjectAudioIO.cpp
    ProjectAudioIO.h
-   RealtimeEffectList.cpp
-   RealtimeEffectList.h
-   RealtimeEffectManager.cpp
-   RealtimeEffectManager.h
-   RealtimeEffectState.cpp
-   RealtimeEffectState.h
    RingBuffer.cpp
    RingBuffer.h
 )
 set( LIBRARIES
-   lib-module-manager-interface
-   lib-project-history-interface
    lib-project-rate-interface
+   lib-realtime-effects
    lib-sample-track-interface
    PRIVATE
    wxBase

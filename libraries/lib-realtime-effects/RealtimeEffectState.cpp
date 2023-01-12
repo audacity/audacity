@@ -10,7 +10,6 @@
 
 #include "RealtimeEffectState.h"
 
-#include "AudioIOBase.h"
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"

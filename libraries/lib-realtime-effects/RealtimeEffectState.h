@@ -29,7 +29,7 @@ class Track;
 
 enum class RealtimeEffectStateChange { EffectOff, EffectOn };
 
-class AUDIO_IO_API RealtimeEffectState
+class REALTIME_EFFECTS_API RealtimeEffectState
    : public XMLTagHandler
    , public std::enable_shared_from_this<RealtimeEffectState>
    , public SharedNonInterfering<RealtimeEffectState>
@@ -37,7 +37,7 @@ class AUDIO_IO_API RealtimeEffectState
    , public Observer::Publisher<RealtimeEffectStateChange>
 {
 public:
-   struct AUDIO_IO_API EffectFactory : GlobalHook<EffectFactory,
+   struct REALTIME_EFFECTS_API EffectFactory : GlobalHook<EffectFactory,
       const EffectInstanceFactory *(const PluginID &)
    >{};
 
