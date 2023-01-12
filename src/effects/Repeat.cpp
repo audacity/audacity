@@ -26,7 +26,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/stattext.h>
 
 #include "../LabelTrack.h"

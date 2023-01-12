@@ -37,7 +37,6 @@
 #include <wx/window.h>
 #endif
 
-#include <wx/intl.h>
 #include "Import.h"
 #include "Prefs.h"
 #include "Tags.h"
@@ -62,9 +61,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #else /* USE_LIBVORBIS */
 
 #include <wx/log.h>
-#include <wx/string.h>
-#include <wx/utils.h>
-#include <wx/intl.h>
+#include <wx/setup.h> // see next comment
 /* ffile.h must be included AFTER at least one other wx header that includes
  * wx/setup.h, otherwise #ifdefs erroneously collapse it to nothing. This is
  * a bug in wxWidgets (ffile.h should itself include wx/setup.h), and it

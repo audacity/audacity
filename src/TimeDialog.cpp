@@ -17,9 +17,6 @@
 #include "TimeDialog.h"
 
 #include <wx/defs.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
-#include <wx/string.h>
 
 #include "ShuttleGui.h"
 #include "widgets/NumericTextCtrl.h"

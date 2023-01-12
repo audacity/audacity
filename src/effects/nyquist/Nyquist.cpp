@@ -33,11 +33,9 @@ effects from this one class.
 
 #include <locale.h>
 
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/datetime.h>
-#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>

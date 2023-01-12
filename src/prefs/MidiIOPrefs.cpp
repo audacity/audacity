@@ -31,7 +31,6 @@ other settings.
 #include <wx/defs.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/textctrl.h>
 
 #include <portmidi.h>

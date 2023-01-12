@@ -41,9 +41,7 @@
 #include <wx/slider.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
-#include <wx/timer.h>
 #include <wx/dcmemory.h>
 #include <wx/window.h>
 

@@ -20,8 +20,6 @@ Also acts as a factory.
 
 #include "CommandType.h"
 
-#include <wx/string.h>
-
 OldStyleCommandType::OldStyleCommandType()
    : mSignature{}
 {

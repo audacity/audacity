@@ -15,7 +15,6 @@
 
 #include "XMLTagHandler.h"
 
-#include <wx/string.h>
 #include <vector>
 class TranslatableString;
 

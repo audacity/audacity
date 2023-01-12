@@ -20,7 +20,6 @@ Paul Licameli split from Menus.cpp
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
-#include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindows.h"
@@ -225,17 +224,6 @@ const ReservedCommandFlag&
    LabelTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const LabelTrack>().empty();
-      }
-   }; return flag; }
-const ReservedCommandFlag&
-   UnsavedChangesFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
-         auto &undoManager = UndoManager::Get( project );
-         return
-            undoManager.UnsavedChanges()
-         ||
-            ProjectFileIO::Get( project ).IsModified()
-         ;
       }
    }; return flag; }
 const ReservedCommandFlag&

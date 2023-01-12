@@ -34,7 +34,6 @@
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/valgen.h>
 #include <wx/log.h>
 #include <wx/slider.h>

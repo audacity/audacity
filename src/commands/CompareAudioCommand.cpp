@@ -30,7 +30,6 @@ threshold of difference in two selected tracks
 
 
 #include <float.h>
-#include <wx/intl.h>
 
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

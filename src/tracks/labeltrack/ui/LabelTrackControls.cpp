@@ -19,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../ShuttleGui.h"
 #include "../../../widgets/wxPanelWrapper.h"
-#include <wx/dialog.h>
 #include <wx/fontenum.h>
 #include <wx/listbox.h>
 #include <wx/spinctrl.h>

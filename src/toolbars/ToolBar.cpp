@@ -36,8 +36,6 @@ in which buttons can be placed.
 #include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
-#include <wx/image.h>
-#include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/sysopt.h>

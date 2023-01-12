@@ -16,16 +16,12 @@
 
 #include "LabelDialog.h"
 
-#include <wx/button.h>
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/dc.h>
-#include <wx/dialog.h>
 #include <wx/grid.h>
-#include <wx/intl.h>
 #include <wx/scrolbar.h>
 #include <wx/settings.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
 

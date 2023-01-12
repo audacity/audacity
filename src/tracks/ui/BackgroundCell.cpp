@@ -26,7 +26,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 
 #include <wx/cursor.h>
-#include <wx/event.h>
 
 // Define this, just so the click to deselect can dispatch here
 // This handle class, unlike most, doesn't associate with any particular cell.

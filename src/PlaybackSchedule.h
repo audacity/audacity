@@ -23,7 +23,6 @@ class AudacityProject;
 struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
-class PlayRegionEvent;
 
 constexpr size_t TimeQueueGrainSize = 2000;
 

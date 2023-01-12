@@ -33,18 +33,14 @@
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-#include <wx/app.h>
 #include <wx/dcclient.h>
 #include <wx/defs.h>
-#include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/gdicmn.h>
-#include <wx/intl.h>
 #include <wx/region.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/sysopt.h>
-#include <wx/timer.h>
 #include <wx/utils.h>
 #include <wx/window.h>
 #endif  /*  */

@@ -16,9 +16,6 @@
 #include <wx/choice.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
-#include <wx/intl.h>
-#include <wx/timer.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/window.h>
 

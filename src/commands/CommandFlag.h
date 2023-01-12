@@ -14,7 +14,6 @@
 #include <bitset>
 #include <functional>
 #include <utility>
-#include <wx/string.h>
 
 #include "audacity/Types.h"
 

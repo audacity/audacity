@@ -25,13 +25,8 @@
 #include "Tags.h"
 
 #include <wx/wx.h>
-#include <wx/string.h>
-#include <wx/utils.h>
-#include <wx/intl.h>
 #include <wx/ffile.h>
-#include <wx/sizer.h>
 #include <wx/checkbox.h>
-#include <wx/button.h>
 #include <wx/stattext.h>
 
 #include "sndfile.h"

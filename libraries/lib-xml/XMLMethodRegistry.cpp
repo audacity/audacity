@@ -11,7 +11,6 @@
 #include "XMLMethodRegistry.h"
 
 #include "Identifier.h"
-#include <wx/string.h>
 
 XMLMethodRegistryBase::XMLMethodRegistryBase() = default;
 XMLMethodRegistryBase::~XMLMethodRegistryBase() = default;

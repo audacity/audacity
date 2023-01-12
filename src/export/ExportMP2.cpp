@@ -39,11 +39,8 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 #include <wx/dynlib.h>
-#include <wx/utils.h>
-#include <wx/timer.h>
 #include <wx/window.h>
 #include <wx/log.h>
-#include <wx/intl.h>
 #include <wx/stream.h>
 
 #include "Export.h"

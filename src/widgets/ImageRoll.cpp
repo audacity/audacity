@@ -100,7 +100,6 @@
 #include <wx/bitmap.h>
 #include <wx/dcmemory.h>
 #include <wx/dcclient.h>
-#include <wx/image.h>
 
 ImageRoll::ImageRoll(const ImageRoll&) = default;
 ImageRoll &ImageRoll::operator =(const ImageRoll&) = default;

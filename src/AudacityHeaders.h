@@ -19,7 +19,6 @@
 
 
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -32,7 +31,6 @@
 #include <wx/wx.h>
 #include <wx/bitmap.h>
 #include <wx/filefn.h>
-#include <wx/image.h>
 #include <wx/ffile.h>
 #include <wx/filename.h>
 #include <wx/textfile.h>
@@ -42,20 +40,13 @@
 #include "Identifier.h"
 
 #include "AColor.h"
-#include "AudioIO.h"
 #include "Diags.h"
 #include "Envelope.h"
 #include "FFT.h"
-#include "FileFormats.h"
 #include "ImageManipulation.h"
-#include "LabelTrack.h"
 #include "Mix.h"
-#include "NoteTrack.h"
 #include "Prefs.h"
-#include "Sequence.h"
-#include "TimeTrack.h"
 #include "UndoManager.h"
-#include "WaveTrack.h"
 #include "widgets/ASlider.h"
 #include "widgets/Ruler.h"
 

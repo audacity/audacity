@@ -30,18 +30,13 @@ It \TODO: description
 
 #ifndef WX_PRECOMP
 #include <wx/brush.h>
-#include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/image.h>
 #include <wx/file.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
 #endif
 
 #include <fstream>
-#include <wx/dialog.h>
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../lib-src/header-substitutes/allegro.h"

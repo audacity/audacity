@@ -41,8 +41,6 @@
 
 #ifndef WX_PRECOMP
 #include <wx/defs.h>
-#include <wx/event.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #endif
 #include <wx/tooltip.h>

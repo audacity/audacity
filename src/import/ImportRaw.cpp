@@ -37,7 +37,6 @@ and sample size to help you importing data of an unknown format.
 #include "../widgets/ProgressDialog.h"
 
 #include <cmath>
-#include <cstdio>
 #include <stdint.h>
 #include <vector>
 
@@ -46,13 +45,9 @@ and sample size to help you importing data of an unknown format.
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/combobox.h>
-#include <wx/filename.h>
-#include <wx/intl.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/timer.h>
 
 // #include "RawAudioGuess.h"
 #include "FormatClassifier.h"

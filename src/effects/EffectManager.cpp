@@ -24,7 +24,6 @@ effects.
 #include "Effect.h"
 
 #include <algorithm>
-#include <wx/tokenzr.h>
 
 #include "../widgets/AudacityMessageBox.h"
 

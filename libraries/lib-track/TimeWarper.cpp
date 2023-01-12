@@ -17,7 +17,7 @@ Geometric TimeWarper classes
 
 #include "TimeWarper.h"
 
-#include <wx/string.h>
+#include <algorithm>
 #include <math.h>
 #include <wx/debug.h>
 

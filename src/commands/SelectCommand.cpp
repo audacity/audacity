@@ -32,7 +32,6 @@ explicitly code all three.
 
 #include "SelectCommand.h"
 
-#include <wx/string.h>
 #include <float.h>
 
 #include "CommandDispatch.h"

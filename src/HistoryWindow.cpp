@@ -21,11 +21,8 @@ undo memory so as to free up space.
 
 #include <wx/defs.h>
 #include <wx/button.h>
-#include <wx/dialog.h>
-#include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/imaglist.h>
-#include <wx/intl.h>
 #include <wx/listctrl.h>
 #include <wx/settings.h>
 #include <wx/spinctrl.h>

@@ -29,15 +29,12 @@ On failure the old version is put back in place.
 
 #include "Legacy.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/filefn.h>
-#include <wx/intl.h>
-#include <wx/string.h>
 #include <wx/textfile.h>
 
 #include "widgets/AudacityMessageBox.h"

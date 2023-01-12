@@ -26,7 +26,6 @@ class wxStaticText;
 class EqualizationPanel;
 class RulerPanel;
 
-#include <wx/event.h>
 #include <wx/weakref.h>
 
 class EqualizationUI : public wxEvtHandler {

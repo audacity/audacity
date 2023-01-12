@@ -60,7 +60,6 @@ static Importer::RegisteredUnusableImportPlugin registered
 #endif
 
 #include <wx/file.h>
-#include <wx/string.h>
 
 #include "Prefs.h"
 #include "../Tags.h"

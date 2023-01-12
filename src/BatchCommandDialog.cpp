@@ -29,16 +29,11 @@ selected command.
 #include <wx/defs.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/listctrl.h>
-#include <wx/radiobut.h>
 #include <wx/button.h>
-#include <wx/string.h>
-#include <wx/dialog.h>
 
 
 #include "Project.h"

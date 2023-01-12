@@ -50,9 +50,6 @@
 #include <wx/app.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/intl.h>
-#include <wx/timer.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/listbox.h>
 #include <wx/window.h>

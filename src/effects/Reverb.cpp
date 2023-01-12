@@ -20,7 +20,6 @@
 
 #include <wx/arrstr.h>
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 

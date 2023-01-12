@@ -29,11 +29,8 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/app.h>
 #include <wx/dcbuffer.h>
 #include <wx/eventfilter.h>
-#include <wx/image.h>
-#include <wx/timer.h>
 
 //This is needed for tooltips
 #include "Project.h"

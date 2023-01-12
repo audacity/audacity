@@ -15,7 +15,6 @@
 #define __AUDACITY_THEME_PREFS__
 
 #include <wx/defs.h>
-#include <wx/event.h> // to declare a custom event type
 
 #include "PrefsPanel.h"
 
