@@ -89,6 +89,14 @@ public:
          func(*state, IsActive());
    }
 
+   //! Apply the function to all states sequentially.
+   template<typename StateVisitor>
+   void Visit(const StateVisitor &func) const
+   {
+      for (const auto &state : mStates)
+         func(*state, IsActive());
+   }
+
    //! Use only in the main thread
    //! Returns true for success.
    //! Sends Insert message on success.

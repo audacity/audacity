@@ -130,7 +130,7 @@ private:
    //! Main thread adds one track (passing the first of one or more
    //! channels), still before playback
    void AddTrack(RealtimeEffects::InitializationScope &scope,
-      Track &track, unsigned chans, float rate);
+      const Track &track, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
@@ -146,7 +146,7 @@ private:
 
    void ProcessStart(bool suspended);
    /*! @copydoc ProcessScope::Process */
-   size_t Process(bool suspended, Track &track,
+   size_t Process(bool suspended, const Track &track,
       float *const *buffers, float *const *scratch, float *dummy,
       unsigned nBuffers, size_t numSamples);
    void ProcessEnd(bool suspended) noexcept;
@@ -162,6 +162,16 @@ private:
    //! Visit the per-project states first, then states for leader if not null
    template<typename StateVisitor>
    void VisitGroup(Track &leader, const StateVisitor &func)
+   {
+      // Call the function for each effect on the master list
+      RealtimeEffectList::Get(mProject).Visit(func);
+
+      // Call the function for each effect on the track list
+      RealtimeEffectList::Get(leader).Visit(func);
+   }
+
+   template<typename StateVisitor>
+   void VisitGroup(const Track &leader, const StateVisitor &func)
    {
       // Call the function for each effect on the master list
       RealtimeEffectList::Get(mProject).Visit(func);
@@ -192,9 +202,9 @@ private:
 
    // This member is mutated only by Initialize(), AddTrack(), Finalize()
    // which are to be called only while there is no playback
-   std::vector<Track *> mGroupLeaders; //!< all are non-null
+   std::vector<const Track *> mGroupLeaders; //!< all are non-null
 
-   std::unordered_map<Track *, double> mRates;
+   std::unordered_map<const Track *, double> mRates;
 };
 
 namespace RealtimeEffects {
@@ -220,7 +230,7 @@ public:
          RealtimeEffectManager::Get(*pProject).Finalize();
    }
 
-   void AddTrack(Track &track, unsigned chans, float rate)
+   void AddTrack(const Track &track, unsigned chans, float rate)
    {
       if (auto pProject = mwProject.lock())
          RealtimeEffectManager::Get(*pProject)
@@ -263,7 +273,7 @@ public:
    }
 
    //! @return how many samples to discard for latency
-   size_t Process(Track &track,
+   size_t Process(const Track &track,
       float *const *buffers,
       float *const *scratch,
       float *dummy,

@@ -455,7 +455,8 @@ void AllocateChannelsToProcessors(
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::AddTrack(Track &track, unsigned chans, float sampleRate)
+RealtimeEffectState::AddTrack(
+   const Track &track, unsigned chans, float sampleRate)
 {
    auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
@@ -530,7 +531,7 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
-size_t RealtimeEffectState::Process(Track &track, unsigned chans,
+size_t RealtimeEffectState::Process(const Track &track, unsigned chans,
    const float *const *inbuf, float *const *outbuf, float *const dummybuf,
    size_t numSamples)
 {
