@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_WIDGETS_PROGRESSDIALOG__
 #define __AUDACITY_WIDGETS_PROGRESSDIALOG__
 
-
+#include <chrono>
 
 #include <vector>
 #include <wx/defs.h>
@@ -117,6 +117,7 @@ protected:
    wxLongLong_t mStartTime;
    wxLongLong_t mLastUpdate;
    wxLongLong_t mYieldTimer;
+   wxLongLong_t mElapsedTime {};
    int mLastValue; // gauge value, range = [0,1000]
 
    bool mCancel;
@@ -152,6 +153,10 @@ private:
    wxStaticText *mMessage{} ;
    int mLastW{ 0 };
    int mLastH{ 0 };
+
+   std::chrono::nanoseconds mPollTime {};
+   unsigned mPollsCount { 0 };
+   unsigned mYieldsCount { 0 };
 
    DECLARE_EVENT_TABLE()
 };
