@@ -16,6 +16,7 @@
 
 #include "AllThemeResources.h"
 #include "../widgets/AButton.h"
+#include "../Menus.h"
 #include "Project.h"
 
 #include "../commands/CommandContext.h"

@@ -34,11 +34,9 @@
 
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "ProjectSettings.h"
 #include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
-#include "toolbars/ToolManager.h"
 #include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 
@@ -532,31 +530,6 @@ void MenuManager::OnUndoRedo(UndoRedoMessage message)
    UpdateMenus();
 }
 
-namespace{
-   using Predicates = std::vector< ReservedCommandFlag::Predicate >;
-   Predicates &RegisteredPredicates()
-   {
-      static Predicates thePredicates;
-      return thePredicates;
-   }
-   std::vector< CommandFlagOptions > &Options()
-   {
-      static std::vector< CommandFlagOptions > options;
-      return options;
-   }
-}
-
-ReservedCommandFlag::ReservedCommandFlag(
-   const Predicate &predicate, const CommandFlagOptions &options )
-{
-   static size_t sNextReservedFlag = 0;
-   // This will throw std::out_of_range if the constant NCommandFlags is too
-   // small
-   set( sNextReservedFlag++ );
-   RegisteredPredicates().emplace_back( predicate );
-   Options().emplace_back( options );
-}
-
 CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
 {
    // This method determines all of the flags that determine whether
@@ -569,9 +542,9 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
 
    CommandFlag flags, quickFlags;
 
-   const auto &options = Options();
+   const auto &options = ReservedCommandFlag::Options();
    size_t ii = 0;
-   for ( const auto &predicate : RegisteredPredicates() ) {
+   for ( const auto &predicate : ReservedCommandFlag::RegisteredPredicates() ) {
       if ( options[ii].quickTest ) {
          quickFlags[ii] = true;
          if( predicate( mProject ) )
@@ -585,7 +558,8 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
       flags = (lastFlags & ~quickFlags) | flags;
    else {
       ii = 0;
-      for ( const auto &predicate : RegisteredPredicates() ) {
+      for ( const auto &predicate
+           : ReservedCommandFlag::RegisteredPredicates() ) {
          if ( !options[ii].quickTest && predicate( mProject ) )
             flags[ii] = true;
          ++ii;
@@ -594,54 +568,6 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
 
    lastFlags = flags;
    return flags;
-}
-
-void MenuManager::ModifyAllProjectToolbarMenus()
-{
-   for (auto pProject : AllProjects{}) {
-      auto &project = *pProject;
-      MenuManager::Get(project).ModifyToolbarMenus(project);
-   }
-}
-
-void MenuManager::ModifyToolbarMenus(AudacityProject &project)
-{
-   // Refreshes can occur during shutdown and the toolmanager may already
-   // be deleted, so protect against it.
-   auto &toolManager = ToolManager::Get( project );
-
-   auto &settings = ProjectSettings::Get( project );
-
-   // Now, go through each toolbar, and call EnableDisableButtons()
-   toolManager.ForEach([](auto bar){
-      if (bar)
-         bar->EnableDisableButtons();
-   });
-
-   // These don't really belong here, but it's easier and especially so for
-   // the Edit toolbar and the sync-lock menu item.
-   bool active;
-
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
-   settings.SetSyncLock(active);
-
-   CommandManager::Get( project ).UpdateCheckmarks( project );
-}
-
-namespace
-{
-   using MenuItemEnablers = std::vector<MenuItemEnabler>;
-   MenuItemEnablers &Enablers()
-   {
-      static MenuItemEnablers enablers;
-      return enablers;
-   }
-}
-
-RegisteredMenuItemEnabler::RegisteredMenuItemEnabler(
-   const MenuItemEnabler &enabler )
-{
-   Enablers().emplace_back( enabler );
 }
 
 // checkActive is a temporary hack that should be removed as soon as we
@@ -665,7 +591,7 @@ void MenuManager::UpdateMenus( bool checkActive )
    //The effect still needs flags to determine whether it will need
    //to actually do the 'select all' to make the command valid.
 
-   for ( const auto &enabler : Enablers() ) {
+   for ( const auto &enabler : RegisteredMenuItemEnabler::Enablers() ) {
       auto actual = enabler.actualFlags();
       if (
          enabler.applicable( project ) && (flags & actual) == actual
@@ -683,7 +609,7 @@ void MenuManager::UpdateMenus( bool checkActive )
       (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
    );
 
-   MenuManager::ModifyToolbarMenus(project);
+   Publish({});
 }
 
 /// The following method moves to the previous track
@@ -732,7 +658,7 @@ bool MenuManager::TryToMakeActionAllowed(
       flags = GetUpdateFlags();
 
    // Visit the table of recovery actions
-   auto &enablers = Enablers();
+   auto &enablers = RegisteredMenuItemEnabler::Enablers();
    auto iter = enablers.begin(), end = enablers.end();
    while ((flags & flagsRqd) != flagsRqd && iter != end) {
       const auto &enabler = *iter;
@@ -783,7 +709,7 @@ void MenuManager::TellUserWhyDisallowed(
       }
    };
 
-   const auto &alloptions = Options();
+   const auto &alloptions = ReservedCommandFlag::Options();
    auto missingFlags = flagsRequired & ~flagsGot;
 
    // Find greatest priority

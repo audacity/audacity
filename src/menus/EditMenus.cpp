@@ -5,7 +5,6 @@
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
-#include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
