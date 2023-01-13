@@ -11,7 +11,7 @@
 #include "AffordanceHandle.h"
 
 #include "../../HitTestResult.h"
-#include "../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../../RefreshCode.h"
 #include "ViewInfo.h"
 #include "../../SelectionState.h"

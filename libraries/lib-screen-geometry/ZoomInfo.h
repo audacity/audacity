@@ -12,7 +12,6 @@
 #define __AUDACITY_ZOOM_INFO__
 
 #include "ClientData.h" // to inherit
-#include "Prefs.h" // to inherit
 
 #ifdef __GNUC__
 #define CONST
@@ -43,7 +42,6 @@ class SCREEN_GEOMETRY_API ZoomInfo /* not final */
    // Note that ViewInfo inherits from ZoomInfo but there are no virtual functions.
    // That's okay if we pass always by reference and never copy, suffering "slicing."
    : public ClientData::Base
-   , protected PrefsListener
 {
 public:
    ZoomInfo(double start, double pixelsPerSecond);
@@ -53,8 +51,6 @@ public:
    ZoomInfo(const ZoomInfo&) PROHIBITED;
    ZoomInfo& operator= (const ZoomInfo&) PROHIBITED;
 
-   void UpdatePrefs() override;
-
    int vpos;                    // vertical scroll pos
 
    double h;                    // h pos in secs
@@ -63,8 +59,6 @@ protected:
    double zoom;                 // pixels per second
 
 public:
-   float dBr;                   // decibel scale range
-
    // do NOT use this once to convert a pixel width to a duration!
    // Instead, call twice to convert start and end times,
    // and take the difference.

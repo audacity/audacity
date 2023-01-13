@@ -34,10 +34,6 @@ public:
    /*! May be called from a worker thread */
    virtual ChannelType GetChannelIgnoringPan() const = 0;
 
-   // Old gain is used in playback in linearly interpolating
-   // the gain.
-   virtual float GetOldChannelGain(int channel) const = 0;
-
    virtual double GetRate() const = 0;
 
    //! @return widest effective SampleFormat in any part of the track
@@ -130,8 +126,6 @@ public:
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
-
-   virtual void SetOldChannelGain(int channel, float gain) = 0;
 
    /** @brief Append the sample data to the track. You must call Flush()
     * after the last Append.

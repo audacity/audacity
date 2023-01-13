@@ -8,7 +8,6 @@
  
  **********************************************************************/
 
-
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 
@@ -73,7 +72,7 @@ void RealtimeEffectManager::Initialize(
 
 void RealtimeEffectManager::AddTrack(
    RealtimeEffects::InitializationScope &scope,
-   Track &track, unsigned chans, float rate)
+   const Track &track, unsigned chans, float rate)
 {
    auto leader = *track.GetOwner()->FindLeader(&track);
    // This should never return a null
@@ -122,7 +121,7 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 
 // This will be called in a thread other than the main GUI thread.
 //
-size_t RealtimeEffectManager::Process(bool suspended, Track &track,
+size_t RealtimeEffectManager::Process(bool suspended, const Track &track,
    float *const *buffers, float *const *scratch, float *const dummy,
    unsigned nBuffers, size_t numSamples)
 {

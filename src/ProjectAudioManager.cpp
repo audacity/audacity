@@ -19,6 +19,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "AudioIO.h"
 #include "BasicUI.h"
 #include "CommonCommandFlags.h"
+#include "DefaultPlaybackPolicy.h"
 #include "Menus.h"
 #include "Meter.h"
 #include "Mix.h"
@@ -558,7 +559,7 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
 }
 
 
-WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
+WritableSampleTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
 {
    auto p = &proj;
@@ -587,7 +588,7 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
 
    auto &trackList = TrackList::Get( *p );
    std::vector<unsigned> channelCounts;
-   WaveTrackArray candidates;
+   WritableSampleTrackArray candidates;
    const auto range = trackList.Leaders<WaveTrack>();
    for ( auto candidate : selectedOnly ? range + &Track::IsSelected : range ) {
       if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate)
@@ -652,7 +653,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          t1 = DBL_MAX;
 
       auto options = DefaultPlayOptions(*p);
-      WaveTrackArray existingTracks;
+      WritableSampleTrackArray existingTracks;
 
       // Checking the selected tracks: counting them and
       // making sure they all have the same rate
@@ -1076,7 +1077,8 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    }
 }
 
-void ProjectAudioManager::OnAudioIONewBlocks(const WaveTrackArray *tracks)
+void ProjectAudioManager::OnAudioIONewBlocks(
+   const WritableSampleTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -1174,7 +1176,7 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
          const AudioIOStartStreamOptions &options)
             -> std::unique_ptr<PlaybackPolicy>
       {
-         return std::make_unique<NewDefaultPlaybackPolicy>( project,
+         return std::make_unique<DefaultPlaybackPolicy>( project,
             trackEndTime, loopEndTime,
             options.loopEnabled, options.variableSpeed);
       };

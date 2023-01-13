@@ -12,7 +12,7 @@ Paul Licameli split from Mix.cpp
 
 #include "BasicUI.h"
 #include "Mix.h"
-#include "effects/RealtimeEffectList.h"
+#include "RealtimeEffectList.h"
 #include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -200,8 +200,8 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 }
 
-#include "effects/RealtimeEffectList.h"
-#include "effects/RealtimeEffectState.h"
+#include "RealtimeEffectList.h"
+#include "RealtimeEffectState.h"
 
 std::vector<MixerOptions::StageSpecification>
 GetEffectStages(const WaveTrack &track)

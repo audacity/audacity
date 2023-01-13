@@ -186,6 +186,7 @@ extern SCREEN_GEOMETRY_API const TranslatableString LoopToggleText;
 
 class SCREEN_GEOMETRY_API ViewInfo final
    : public ZoomInfo
+   , public PrefsListener
 {
 public:
    static ViewInfo &Get( AudacityProject &project );

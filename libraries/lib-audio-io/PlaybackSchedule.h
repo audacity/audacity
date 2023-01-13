@@ -2,7 +2,7 @@
  
  Audacity: A Digital Audio Editor
  
- PlaybackSchedule.h
+ @file PlaybackSchedule.h
  
  Paul Licameli split from AudioIOBase.h
  
@@ -68,7 +68,7 @@ struct PlaybackSlice {
 
  Methods of the object are passed a PlaybackSchedule as context.
  */
-class PlaybackPolicy {
+class AUDIO_IO_API PlaybackPolicy {
 public:
    using Duration = std::chrono::duration<double>;
 
@@ -156,8 +156,8 @@ protected:
    double mRate = 0;
 };
 
-struct AUDACITY_DLL_API PlaybackSchedule {
 
+struct AUDIO_IO_API PlaybackSchedule {
    /// Playback starts at offset of mT0, which is measured in seconds.
    double              mT0;
    /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
@@ -206,7 +206,7 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     thread, what the last consumed track time is.  The main thread can use that
     for other purposes such as refreshing the display of the play head position.
     */
-   class TimeQueue {
+   class AUDIO_IO_API TimeQueue {
    public:
 
       //! @section called by main thread
@@ -324,65 +324,5 @@ struct AUDACITY_DLL_API PlaybackSchedule {
 private:
    std::unique_ptr<PlaybackPolicy> mpPlaybackPolicy;
    std::atomic<bool> mPolicyValid{ false };
-};
-
-class NewDefaultPlaybackPolicy final
-   : public PlaybackPolicy
-   , public NonInterferingBase
-{
-public:
-   NewDefaultPlaybackPolicy( AudacityProject &project,
-      double trackEndTime, double loopEndTime,
-      bool loopEnabled, bool variableSpeed);
-   ~NewDefaultPlaybackPolicy() override;
-
-   void Initialize( PlaybackSchedule &schedule, double rate ) override;
-
-   Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule) override;
-
-   BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
-
-   bool Done( PlaybackSchedule &schedule, unsigned long ) override;
-
-   PlaybackSlice GetPlaybackSlice(
-      PlaybackSchedule &schedule, size_t available ) override;
-
-   std::pair<double, double>
-      AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, size_t nSamples ) override;
-
-   bool RepositionPlayback(
-      PlaybackSchedule &schedule, const Mixers &playbackMixers,
-      size_t frames, size_t available ) override;
-
-   bool Looping( const PlaybackSchedule & ) const override;
-
-private:
-   bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
-   void WriteMessage();
-   double GetPlaySpeed();
-
-   AudacityProject &mProject;
-
-   // The main thread writes changes in response to user events, and
-   // the audio thread later reads, and changes the playback.
-   struct SlotData {
-      double mPlaySpeed;
-      double mT0;
-      double mT1;
-      bool mLoopEnabled;
-   };
-   MessageBuffer<SlotData> mMessageChannel;
-
-   Observer::Subscription mRegionSubscription,
-      mSpeedSubscription;
-
-   double mLastPlaySpeed{ 1.0 };
-   const double mTrackEndTime;
-   double mLoopEndTime;
-   size_t mRemaining{ 0 };
-   bool mProgress{ true };
-   bool mLoopEnabled{ true };
-   bool mVariableSpeed{ false };
 };
 #endif

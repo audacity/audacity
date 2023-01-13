@@ -102,11 +102,6 @@ list( APPEND SOURCES
       AudacityFileConfig.h
       AudacityHeaders.cpp
       AudacityHeaders.h
-      AudioIO.cpp
-      AudioIO.h
-      AudioIOExt.cpp
-      AudioIOExt.h
-      AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
       BatchCommandDialog.cpp
@@ -127,6 +122,8 @@ list( APPEND SOURCES
       CrashReport.h
       DBConnection.cpp
       DBConnection.h
+      DefaultPlaybackPolicy.cpp
+      DefaultPlaybackPolicy.h
       Diags.cpp
       Diags.h
       DropTarget.cpp
@@ -192,8 +189,6 @@ list( APPEND SOURCES
       PasteOverPreservingClips.h
       PitchName.cpp
       PitchName.h
-      PlaybackSchedule.cpp
-      PlaybackSchedule.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp
@@ -201,8 +196,6 @@ list( APPEND SOURCES
       Printing.cpp
       Profiler.cpp
       Profiler.h
-      ProjectAudioIO.cpp
-      ProjectAudioIO.h
       ProjectAudioManager.cpp
       ProjectAudioManager.h
       ProjectFileIO.cpp
@@ -226,8 +219,6 @@ list( APPEND SOURCES
       ProjectWindows.h
       RealtimeEffectPanel.cpp
       RealtimeEffectPanel.h
-      RingBuffer.cpp
-      RingBuffer.h
       SampleBlock.cpp
       SampleBlock.h
       Screenshot.cpp
@@ -479,12 +470,6 @@ list( APPEND SOURCES
       effects/PerTrackEffect.h
       effects/Phaser.cpp
       effects/Phaser.h
-      effects/RealtimeEffectList.cpp
-      effects/RealtimeEffectList.h
-      effects/RealtimeEffectManager.cpp
-      effects/RealtimeEffectManager.h
-      effects/RealtimeEffectState.cpp
-      effects/RealtimeEffectState.h
       effects/RealtimeEffectStateUI.h
       effects/RealtimeEffectStateUI.cpp
       effects/Repair.cpp
@@ -1242,7 +1227,6 @@ list( APPEND LIBRARIES
       wxwidgets::wxwidgets
       libmp3lame::libmp3lame
       SndFile::sndfile
-      portaudio::portaudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
@@ -1545,13 +1529,11 @@ set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
    lib-string-utils-interface
    lib-uuid-interface
-   lib-project-rate-interface
    lib-theme-resources-interface
-   lib-sample-track-interface
-   lib-module-manager-interface
    lib-graphics-interface
    lib-audio-graph
    lib-tags-interface
+   lib-audio-io-interface
 )
 
 if (${_OPT}use_ffmpeg)

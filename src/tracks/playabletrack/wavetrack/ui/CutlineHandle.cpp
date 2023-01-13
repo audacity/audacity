@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "CutlineHandle.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Snap.h" // for kPixelTolerance

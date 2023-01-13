@@ -143,8 +143,6 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
 
    mFormat = format;
    mRate = (int) rate;
-   mOldGain[0] = 0.0;
-   mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
@@ -184,8 +182,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    mRate = orig.mRate;
    DoSetGain(orig.GetGain());
    DoSetPan(orig.GetPan());
-   mOldGain[0] = 0.0;
-   mOldGain[1] = 0.0;
    mDisplayMin = orig.mDisplayMin;
    mDisplayMax = orig.mDisplayMax;
    mSpectrumMin = orig.mSpectrumMin;
@@ -551,18 +547,6 @@ float WaveTrack::GetChannelGain(int channel) const
    else
       return right * gain;
 }
-
-float WaveTrack::GetOldChannelGain(int channel) const
-{
-   return mOldGain[channel%2];
-}
-
-void WaveTrack::SetOldChannelGain(int channel, float gain)
-{
-   mOldGain[channel % 2] = gain;
-}
-
-
 
 /*! @excsafety{Strong} */
 void WaveTrack::SetWaveColorIndex(int colorIndex)
@@ -2326,20 +2310,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
-}
-
-WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
-{
-   for (const auto &clip: mClips)
-   {
-      auto start = clip->GetPlayStartSample();
-      auto len   = clip->GetPlaySamplesCount();
-
-      if (sample >= start && sample < start + len)
-         return clip.get();
-   }
-
-   return NULL;
 }
 
 // When the time is both the end of a clip and the start of the next clip, the

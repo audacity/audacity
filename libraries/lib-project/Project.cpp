@@ -122,3 +122,16 @@ void AudacityProject::SetInitialImportPath(const FilePath &path)
 
 // Generate the needed, linkable registry functions
 DEFINE_XML_METHOD_REGISTRY( ProjectFileIORegistry );
+
+#include "BasicUI.h"
+
+std::unique_ptr<const BasicUI::WindowPlacement>
+ProjectFramePlacement( AudacityProject *project )
+{
+   auto &factory = WindowPlacementFactory::Get();
+   std::unique_ptr<const BasicUI::WindowPlacement> result;
+   if (project && factory && (result = factory(*project)).get())
+      return result;
+   else
+      return std::make_unique<BasicUI::WindowPlacement>();
+}

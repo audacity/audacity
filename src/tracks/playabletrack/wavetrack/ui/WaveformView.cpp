@@ -1079,7 +1079,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include <mutex> // for std::call_once
 #include "WaveTrackControls.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "../../../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 

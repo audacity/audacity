@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-
-
 #include "AudioIOBase.h" // to inherit
 #include "PlaybackSchedule.h" // member variable
 
@@ -45,9 +43,13 @@ using PlayableTrackConstArray =
    std::vector < std::shared_ptr < const PlayableTrack > >;
 
 class Track;
-class WaveTrack;
-using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
-using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
+class SampleTrack;
+using SampleTrackArray = std::vector < std::shared_ptr < SampleTrack > >;
+using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
+
+class WritableSampleTrack;
+using WritableSampleTrackArray =
+   std::vector < std::shared_ptr < WritableSampleTrack > >;
 
 struct PaStreamCallbackTimeInfo;
 typedef unsigned long PaStreamCallbackFlags;
@@ -76,12 +78,12 @@ struct AudioIOEvent {
 };
 
 struct TransportTracks {
-   WaveTrackArray playbackTracks;
-   WaveTrackArray captureTracks;
+   SampleTrackConstArray playbackTracks;
+   WritableSampleTrackArray captureTracks;
    PlayableTrackConstArray otherPlayableTracks;
 
    // This is a subset of playbackTracks
-   WaveTrackConstArray prerollTracks;
+   SampleTrackConstArray prerollTracks;
 };
 
 /** brief The function which is called from PortAudio's callback thread
@@ -114,7 +116,7 @@ int audacityAudioCallback(
 
 class AudioIOExt;
 
-class AUDACITY_DLL_API AudioIoCallback /* not final */
+class AUDIO_IO_API AudioIoCallback /* not final */
    : public AudioIOBase
 {
 public:
@@ -131,7 +133,7 @@ public:
 
    //! @name iteration over extensions, supporting range-for syntax
    //! @{
-   class AUDACITY_DLL_API AudioIOExtIterator {
+   class AUDIO_IO_API AudioIOExtIterator {
    public:
       using difference_type = ptrdiff_t;
       using value_type = AudioIOExt &;
@@ -189,22 +191,27 @@ public:
    int mCallbackReturn;
    // Helpers to determine if tracks have already been faded out.
    unsigned  CountSoloingTracks();
-   bool TrackShouldBeSilent( const WaveTrack &wt );
-   bool TrackHasBeenFadedOut( const WaveTrack &wt );
+
+   using OldChannelGains = std::array<float, 2>;
+   bool TrackShouldBeSilent( const SampleTrack &wt );
+   bool TrackHasBeenFadedOut(
+      const SampleTrack &wt, const OldChannelGains &gains);
    bool AllTracksAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
       unsigned long framesPerBuffer
    );
-   void AddToOutputChannel( unsigned int chan,
+
+   void AddToOutputChannel( unsigned int chan, // index into gains
       float * outputMeterFloats,
       float * outputFloats,
       const float * tempBuf,
       bool drop,
       unsigned long len,
-      WaveTrack *vt
-      );
+      const SampleTrack *vt,
+      OldChannelGains &gains
+   );
    bool FillOutputBuffers(
       float *outputBuffer,
       unsigned long framesPerBuffer,
@@ -268,10 +275,13 @@ public:
 
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
-   WaveTrackArray      mCaptureTracks;
+   WritableSampleTrackArray      mCaptureTracks;
    /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
-   WaveTrackArray      mPlaybackTracks;
+   SampleTrackConstArray      mPlaybackTracks;
+   // Old gain is used in playback in linearly interpolating
+   // the gain.
+   std::vector<OldChannelGains> mOldChannelGains;
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
@@ -407,7 +417,7 @@ private:
 
 struct PaStreamInfo;
 
-class AUDACITY_DLL_API AudioIO final
+class AUDIO_IO_API AudioIO final
    : public AudioIoCallback
    , public Observer::Publisher<AudioIOEvent>
 {

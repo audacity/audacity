@@ -117,6 +117,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "FrameStatisticsDialog.h"
 #include "PluginStartupRegistration.h"
 #include "IncompatiblePluginsDialog.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if defined(HAVE_UPDATES_CHECK)
 #  include "update/UpdateManager.h"
@@ -1209,10 +1210,17 @@ AudacityApp::~AudacityApp()
 // Some of the many initialization steps
 void AudacityApp::OnInit0()
 {
-   // Inject basic GUI services behind the facade
+   // Inject basic GUI services behind the facades
    {
       static wxWidgetsBasicUI uiServices;
       (void)BasicUI::Install(&uiServices);
+
+      static WindowPlacementFactory::Scope scope {
+      [](AudacityProject &project)
+         -> std::unique_ptr<BasicUI::WindowPlacement> {
+         return std::make_unique<wxWidgetsWindowPlacement>(
+            &GetProjectFrame(project));
+      } };
    }
 
    // Fire up SQLite

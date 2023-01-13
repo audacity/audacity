@@ -10,7 +10,6 @@
 
 #include "ProjectWindows.h"
 #include "Project.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/frame.h>
 
@@ -95,15 +94,6 @@ const wxFrame *FindProjectFrame( const AudacityProject *project ) {
    if (!project)
       return nullptr;
    return ProjectWindows::Get(*project).mFrame;
-}
-
-std::unique_ptr<const BasicUI::WindowPlacement>
-ProjectFramePlacement( AudacityProject *project )
-{
-   if (!project)
-      return std::make_unique<BasicUI::WindowPlacement>();
-   return std::make_unique<wxWidgetsWindowPlacement>(
-      &GetProjectFrame(*project));
 }
 
 void SetProjectFrame(AudacityProject &project, wxFrame &frame )

@@ -59,7 +59,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 *//*******************************************************************/
 
-
 #include "AudioIO.h"
 
 
@@ -91,8 +90,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "portmixer.h"
 #endif
 
-#include <wx/app.h>
-#include <wx/frame.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/time.h>
@@ -109,13 +106,11 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Decibels.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindows.h"
-#include "WaveTrack.h"
 #include "TransactionScope.h"
 
-#include "effects/RealtimeEffectManager.h"
+#include "RealtimeEffectManager.h"
 #include "QualitySettings.h"
-#include "widgets/AudacityMessageBox.h"
+#include "SampleTrack.h"
 #include "BasicUI.h"
 
 #include "Gain.h"
@@ -135,7 +130,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const WaveTrackArray &playbackTracks,
+      const SampleTrackConstArray &playbackTracks,
       unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -285,10 +280,13 @@ AudioIO::AudioIO()
          errStr += XO("Error: %s").Format( paErrStr );
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          errStr,
-         XO("Error Initializing Audio"),
-         wxICON_ERROR|wxOK);
+         MessageBoxOptions{}
+            .Caption(XO("Error Initializing Audio"))
+            .IconStyle(Icon::Error)
+            .ButtonStyle(Button::Ok));
 
       // Since PortAudio is not initialized, all calls to PortAudio
       // functions will fail.  This will give reasonable behavior, since
@@ -1007,7 +1005,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
             pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
          // PRL: PortAudio error messages are sadly not internationalized
-         AudacityMessageBox(
+         BasicUI::ShowMessageBox(
             Verbatim( LAT1CTOWX(Pa_GetErrorText(err)) ) );
          return 0;
       }
@@ -1067,7 +1065,7 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
    // Don't delay it except until idle time.
    // (Recording might start between now and then, but won't go far before
    // the action is done.  So the system isn't bulletproof yet.)
-   wxTheApp->CallAfter(std::move(action));
+   BasicUI::CallAfter(move(action));
 }
 
 bool AudioIO::AllocateBuffers(
@@ -1152,11 +1150,12 @@ bool AudioIO::AllocateBuffers(
                mPlaybackBuffers[0] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
+            mOldChannelGains.resize(mPlaybackTracks.size());
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++) {
                const auto &pTrack = mPlaybackTracks[i];
                // Bug 1763 - We must fade in from zero to avoid a click on starting.
-               pTrack->SetOldChannelGain(0, 0.0);
-               pTrack->SetOldChannelGain(1, 0.0);
+               mOldChannelGains[i][0] = 0.0;
+               mOldChannelGains[i][1] = 0.0;
 
                mPlaybackBuffers[i] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
@@ -1218,7 +1217,7 @@ bool AudioIO::AllocateBuffers(
             // 100 samples, just give up.
             if(captureBufferSize < 100)
             {
-               AudacityMessageBox( XO("Out of memory!") );
+               BasicUI::ShowMessageBox( XO("Out of memory!") );
                return false;
             }
 
@@ -1253,7 +1252,7 @@ bool AudioIO::AllocateBuffers(
             (size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
          if(playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100)
          {
-            AudacityMessageBox( XO("Out of memory!") );
+            BasicUI::ShowMessageBox( XO("Out of memory!") );
             return false;
          }
       }
@@ -1469,7 +1468,7 @@ void AudioIO::StopStream()
             // state, though the append buffer may be lost.
 
             GuardedCall( [&] {
-               WaveTrack* track = mCaptureTracks[i].get();
+               auto track = mCaptureTracks[i].get();
 
                // use No-fail-guarantee that track is flushed,
                // Partial-guarantee that some initial length of the recording
@@ -1520,7 +1519,7 @@ void AudioIO::StopStream()
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
 
-   wxTheApp->CallAfter([this]{
+   BasicUI::CallAfter([this]{
       if (mPortStreamV19 && mNumCaptureChannels > 0)
          // Recording was restarted between StopStream and idle time
          // So the actions can keep waiting
@@ -2453,7 +2452,8 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    const float * tempBuf,
    bool drop,
    unsigned long len,
-   WaveTrack *vt
+   const SampleTrack *vt,
+   OldChannelGains &gains
    )
 {
    const auto numPlaybackChannels = mNumPlaybackChannels;
@@ -2473,9 +2473,9 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    // Let's keep the old behavior for panning.
    gain *= ExpGain(GetMixerOutputVol());
 
-   float oldGain = vt->GetOldChannelGain(chan);
+   float oldGain = gains[chan];
    if( gain != oldGain )
-      vt->SetOldChannelGain(chan, gain);
+      gains[chan] = gain;
    // if no microfades, jump in volume.
    if( !mbMicroFades )
       oldGain =gain;
@@ -2490,7 +2490,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
 // Limit values to -1.0..+1.0
 void ClampBuffer(float * pBuffer, unsigned long len){
    for(unsigned i = 0; i < len; i++)
-      pBuffer[i] = wxClip( pBuffer[i], -1.0f, 1.0f);
+      pBuffer[i] = std::clamp(pBuffer[i], -1.0f, 1.0f);
 };
 
 
@@ -2533,7 +2533,10 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // ------ MEMORY ALLOCATION ----------------------
    // These are small structures.
-   WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
+   const auto chans = (const SampleTrack **) alloca(
+      numPlaybackChannels * sizeof(const SampleTrack *));
+   const auto oldgains = (OldChannelGains **) alloca(
+      numPlaybackChannels * sizeof(OldChannelGains *));
    float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
 
    // And these are larger structures....
@@ -2564,8 +2567,9 @@ bool AudioIoCallback::FillOutputBuffers(
    bool dropQuickly = false; // Track has already been faded to silence.
    for (unsigned t = 0; t < numPlaybackTracks; t++)
    {
-      WaveTrack *vt = mPlaybackTracks[t].get();
+      auto vt = mPlaybackTracks[t].get();
       chans[chanCnt] = vt;
+      oldgains[chanCnt] = &mOldChannelGains[t];
 
       // TODO: more-than-two-channels
       auto nextTrack =
@@ -2590,7 +2594,8 @@ bool AudioIoCallback::FillOutputBuffers(
       }
 
       if( mbMicroFades )
-         dropQuickly = dropQuickly && TrackHasBeenFadedOut( *vt );
+         dropQuickly = dropQuickly &&
+            TrackHasBeenFadedOut( *vt, mOldChannelGains[t] );
          
       decltype(framesPerBuffer) len = 0;
 
@@ -2657,12 +2662,12 @@ bool AudioIoCallback::FillOutputBuffers(
          if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel )
             AddToOutputChannel( 0, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt);
+               tempBufs[c], drop, len, vt, *oldgains[c % 2]);
 
          if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel  )
             AddToOutputChannel( 1, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt);
+               tempBufs[c], drop, len, vt, *oldgains[c % 2]);
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
@@ -2813,7 +2818,7 @@ void AudioIoCallback::DrainInputBuffers(
             short *tempShorts = (short *)tempFloats;
             for( unsigned i = 0; i < len; i++) {
                float tmp = inputShorts[numCaptureChannels*i+t];
-               tmp = wxClip( -32768, tmp, 32767 );
+               tmp = std::clamp(tmp, -32768.0f, 32767.0f);
                tempShorts[i] = (short)(tmp);
             }
          } break;
@@ -2967,7 +2972,7 @@ unsigned AudioIoCallback::CountSoloingTracks(){
 // true IFF the track should be silent. 
 // The track may not yet be silent, since it may still be
 // fading out.
-bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
+bool AudioIoCallback::TrackShouldBeSilent( const SampleTrack &wt )
 {
    return IsPaused() || (!wt.GetSolo() && (
       // Cut if somebody else is soloing
@@ -2978,28 +2983,28 @@ bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
 }
 
 // This is about micro-fades.
-bool AudioIoCallback::TrackHasBeenFadedOut( const WaveTrack &wt )
+bool AudioIoCallback::TrackHasBeenFadedOut(
+   const SampleTrack &wt, const OldChannelGains &gains)
 {
    const auto channel = wt.GetChannelIgnoringPan();
    if ((channel == Track::LeftChannel  || channel == Track::MonoChannel) &&
-      wt.GetOldChannelGain(0) != 0.0)
+      gains[0] != 0.0)
       return false;
    if ((channel == Track::RightChannel || channel == Track::MonoChannel) &&
-      wt.GetOldChannelGain(1) != 0.0)
+      gains[1] != 0.0)
       return false;
    return true;
 }
 
 bool AudioIoCallback::AllTracksAlreadySilent()
 {
-   const bool dropAllQuickly = std::all_of(
-      mPlaybackTracks.begin(), mPlaybackTracks.end(),
-      [&]( const std::shared_ptr< WaveTrack > &vt )
-         { return 
-      TrackShouldBeSilent( *vt ) && 
-      TrackHasBeenFadedOut( *vt ); }
-   );
-   return dropAllQuickly;
+   for (size_t ii = 0, nn = mPlaybackTracks.size(); ii < nn; ++ii) {
+      auto vt = mPlaybackTracks[ii];
+      const auto &oldGains = mOldChannelGains[ii];
+      if (!(TrackShouldBeSilent(*vt) && TrackHasBeenFadedOut(*vt, oldGains)))
+         return false;
+   }
+   return true;
 }
 
 AudioIoCallback::AudioIoCallback()
