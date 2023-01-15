@@ -60,7 +60,8 @@ public:
 private:
    // EffectChangeSpeed implementation
 
-   bool ProcessOne(WaveTrack *t, sampleCount start, sampleCount end);
+   bool ProcessOne(EffectContext &context, WaveTrack *t,
+      sampleCount start, sampleCount end);
    bool ProcessLabelTrack(LabelTrack *t);
 
    // handlers

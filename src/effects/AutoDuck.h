@@ -57,7 +57,8 @@ public:
 private:
    // EffectAutoDuck implementation
 
-   bool ApplyDuckFade(int trackNum, WaveTrack *t, double t0, double t1);
+   bool ApplyDuckFade(EffectContext &context,
+      int trackNum, WaveTrack *t, double t0, double t1);
 
    void OnValueChanged(wxCommandEvent & evt);
 

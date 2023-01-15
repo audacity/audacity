@@ -68,7 +68,7 @@ bool EffectReverse::IsInteractive() const
 
 // Effect implementation
 
-bool EffectReverse::Process(EffectContext &,
+bool EffectReverse::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    //all needed because Reverse should move the labels too
@@ -85,7 +85,7 @@ bool EffectReverse::Process(EffectContext &,
             auto end = track->TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!ProcessOneWave(count, track, start, len))
+            if (!ProcessOneWave(context, count, track, start, len))
                bGoodResult = false;
          }
          count++;
@@ -100,7 +100,8 @@ bool EffectReverse::Process(EffectContext &,
    return bGoodResult;
 }
 
-bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount start, sampleCount len)
+bool EffectReverse::ProcessOneWave(EffectContext &context, int count,
+   WaveTrack * track, sampleCount start, sampleCount len)
 {
    bool rValue = true; // return value
 
@@ -172,7 +173,8 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
          auto revEnd = (clipEnd >= end)? end: clipEnd;
          auto revLen = revEnd - revStart;
          if (revEnd >= revStart) {
-            if(!ProcessOneClip(count, track, revStart, revLen, start, end)) // reverse the clip
+            if(!ProcessOneClip(context,
+               count, track, revStart, revLen, start, end)) // reverse the clip
             {
                rValue = false;
                break;
@@ -212,9 +214,9 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    return rValue;
 }
 
-bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
-                               sampleCount start, sampleCount len,
-                               sampleCount originalStart, sampleCount originalEnd)
+bool EffectReverse::ProcessOneClip(EffectContext &,
+   int count, WaveTrack *track, sampleCount start, sampleCount len,
+   sampleCount originalStart, sampleCount originalEnd)
 {
    bool rc = true;
    // keep track of two blocks whose data we will swap

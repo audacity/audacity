@@ -43,11 +43,10 @@ public:
 private:
    // EffectRepair implementation
 
-   bool ProcessOne(int count, WaveTrack * track,
-                   sampleCount start,
-                   size_t len,
-                   size_t repairStart, // offset relative to start
-                   size_t repairLen);
+   bool ProcessOne(EffectContext &context, int count, WaveTrack * track,
+      sampleCount start, size_t len,
+      size_t repairStart, // offset relative to start
+      size_t repairLen);
 };
 
 #endif // __AUDACITY_EFFECT_REPAIT__

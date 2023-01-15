@@ -46,7 +46,7 @@ public:
 protected:
    // Generator implementation
 
-   bool GenerateTrack(EffectSettings &settings,
+   bool GenerateTrack(EffectContext &context, EffectSettings &settings,
       WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
 
 private:

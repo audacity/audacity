@@ -282,13 +282,14 @@ public:
       FloatVector mGains;
    };
 
-   bool Process(TrackList &tracks, double mT0, double mT1);
+   bool Process(
+      EffectContext &context, TrackList &tracks, double mT0, double mT1);
 
 protected:
    MyWindow &NthWindow(int nn) { return static_cast<MyWindow&>(Nth(nn)); }
    std::unique_ptr<Window> NewWindow(size_t windowSize) override;
    bool DoStart() override;
-   static bool Processor(SpectrumTransformer &transformer);
+   static auto Processor(EffectContext &context) -> WindowProcessor;
    bool DoFinish() override;
 
 private:
@@ -623,7 +624,7 @@ EffectNoiseReduction::Worker::MyWindow::~MyWindow()
 {
 }
 
-bool EffectNoiseReduction::Process(EffectContext &,
+bool EffectNoiseReduction::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
@@ -688,7 +689,7 @@ bool EffectNoiseReduction::Process(EffectContext &,
       , mF0, mF1
 #endif
    };
-   bool bGoodResult = worker.Process(*mOutputTracks, mT0, mT1);
+   bool bGoodResult = worker.Process(context, *mOutputTracks, mT0, mT1);
    if (mSettings->mDoProfile) {
       if (bGoodResult)
          mSettings->mDoProfile = false; // So that "repeat last effect" will reduce noise
@@ -703,7 +704,7 @@ EffectNoiseReduction::Worker::~Worker()
 {
 }
 
-bool EffectNoiseReduction::Worker::Process(
+bool EffectNoiseReduction::Worker::Process(EffectContext &context,
    TrackList &tracks, double inT0, double inT1)
 {
    mProgressTrackCount = 0;
@@ -740,7 +741,7 @@ bool EffectNoiseReduction::Worker::Process(
             mLen += extra;
 
          if (!TrackSpectrumTransformer::Process(
-            Processor, track, mHistoryLen, start, len ))
+            Processor(context), track, mHistoryLen, start, len ))
             return false;
       }
       ++mProgressTrackCount;
@@ -872,7 +873,10 @@ bool EffectNoiseReduction::Worker::DoStart()
    return TrackSpectrumTransformer::DoStart();
 }
 
-bool EffectNoiseReduction::Worker::Processor(SpectrumTransformer &transformer)
+auto EffectNoiseReduction::Worker::Processor(EffectContext &)
+   -> WindowProcessor
+{
+   return [&](SpectrumTransformer &transformer)
 {
    auto &worker = static_cast<Worker &>(transformer);
    // Compute power spectrum in the newest window
@@ -900,6 +904,7 @@ bool EffectNoiseReduction::Worker::Processor(SpectrumTransformer &transformer)
       std::min(1.0,
          ((++worker.mProgressWindowCount).as_double() * worker.mStepSize)
             / worker.mLen.as_double()));
+};
 }
 
 void EffectNoiseReduction::Worker::FinishTrackStatistics()

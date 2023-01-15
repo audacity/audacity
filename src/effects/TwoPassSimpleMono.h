@@ -81,9 +81,10 @@ protected:
    std::shared_ptr<TrackList> *mTrackLists[2];
 
 private:
-   bool ProcessOne(WaveTrack * t, WaveTrack * outTrack,
-                   sampleCount start, sampleCount end);
-   bool ProcessPass(EffectSettings &settings);
+   bool ProcessOne(EffectContext &context,
+      WaveTrack * t, WaveTrack * outTrack,
+      sampleCount start, sampleCount end);
+   bool ProcessPass(EffectContext &context, EffectSettings &settings);
 };
 
 #endif

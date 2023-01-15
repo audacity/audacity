@@ -74,7 +74,7 @@ unsigned EffectStereoToMono::GetAudioOutCount() const
 
 // Effect implementation
 
-bool EffectStereoToMono::Process(EffectContext &,
+bool EffectStereoToMono::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
@@ -139,7 +139,7 @@ bool EffectStereoToMono::Process(EffectContext &,
       {
          auto right = *channels.rbegin();
 
-         bGoodResult = ProcessOne(curTime, totalTime, left, right);
+         bGoodResult = ProcessOne(context, curTime, totalTime, left, right);
          if (!bGoodResult)
          {
             break;
@@ -164,7 +164,9 @@ bool EffectStereoToMono::Process(EffectContext &,
    return bGoodResult;
 }
 
-bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime, WaveTrack *left, WaveTrack *right)
+bool EffectStereoToMono::ProcessOne(EffectContext &,
+   sampleCount & curTime, sampleCount totalTime,
+   WaveTrack *left, WaveTrack *right)
 {
    auto idealBlockLen = left->GetMaxBlockSize() * 2;
    bool bResult = true;

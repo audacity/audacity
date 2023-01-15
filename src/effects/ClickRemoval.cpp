@@ -110,7 +110,7 @@ bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }
 
-bool EffectClickRemoval::Process(EffectContext &,
+bool EffectClickRemoval::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
@@ -129,7 +129,7 @@ bool EffectClickRemoval::Process(EffectContext &,
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
 
-         if (!ProcessOne(count, track, start, len))
+         if (!ProcessOne(context, count, track, start, len))
          {
             bGoodResult = false;
             break;
@@ -147,7 +147,8 @@ bool EffectClickRemoval::Process(EffectContext &,
    return bGoodResult && mbDidSomething;
 }
 
-bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount start, sampleCount len)
+bool EffectClickRemoval::ProcessOne(EffectContext &,
+   int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
    if (len <= windowSize / 2)
    {

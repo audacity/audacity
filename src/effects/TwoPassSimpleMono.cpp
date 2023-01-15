@@ -23,7 +23,7 @@ doing the second pass over all selected tracks.
 
 #include "../WaveTrack.h"
 
-bool EffectTwoPassSimpleMono::Process(EffectContext &,
+bool EffectTwoPassSimpleMono::Process(EffectContext &context,
    EffectInstance &, EffectSettings &settings)
 {
    mPass = 0;
@@ -43,13 +43,13 @@ bool EffectTwoPassSimpleMono::Process(EffectContext &,
    mTrackLists[0] = &mOutputTracks;
    mTrackLists[1] = mSecondPassDisabled ? &mOutputTracks : &mWorkTracks;
 
-   bool bGoodResult = ProcessPass(settings);
+   bool bGoodResult = ProcessPass(context, settings);
 
    if (bGoodResult && !mSecondPassDisabled)
    {
       mPass = 1;
       if (InitPass2())
-         bGoodResult = ProcessPass(settings);
+         bGoodResult = ProcessPass(context, settings);
    }
 
    mWorkTracks->Clear();
@@ -59,7 +59,8 @@ bool EffectTwoPassSimpleMono::Process(EffectContext &,
    return bGoodResult;
 }
 
-bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
+bool EffectTwoPassSimpleMono::ProcessPass(EffectContext &context,
+   EffectSettings &settings)
 {
    //Iterate over each track
    mCurTrackNum = 0;
@@ -98,7 +99,7 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
             return false;
 
          //ProcessOne() (implemented below) processes a single track
-         if (!ProcessOne(track, outTrack, start, end))
+         if (!ProcessOne(context, track, outTrack, start, end))
             return false;
       }
 
@@ -112,8 +113,9 @@ bool EffectTwoPassSimpleMono::ProcessPass(EffectSettings &settings)
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes TwoBufferProcessPass1 or TwoBufferProcessPass2 on these blocks
-bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack,
-                                         sampleCount start, sampleCount end)
+bool EffectTwoPassSimpleMono::ProcessOne(EffectContext &,
+   WaveTrack * track, WaveTrack * outTrack,
+   sampleCount start, sampleCount end)
 {
    bool ret;
 

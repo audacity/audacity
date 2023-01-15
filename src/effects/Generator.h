@@ -31,7 +31,7 @@ protected:
    // [ GenerateTrack() must be overridden by the actual generator class ]
    // Precondition:  mDuration > 0.0
    // Postcondition: <tmp> is filled with the data intended for <track>
-   virtual bool GenerateTrack(EffectSettings &settings,
+   virtual bool GenerateTrack(EffectContext &context, EffectSettings &settings,
       WaveTrack *tmp, const WaveTrack &track, int ntrack) = 0;
 
    // Actions to perform at the respective points in the generation process
@@ -69,7 +69,7 @@ protected:
                               size_t block) = 0;
 
    // Generate the track, one block at a time, & adding the results to tmp
-   bool GenerateTrack(EffectSettings &settings,
+   bool GenerateTrack(EffectContext &context, EffectSettings &settings,
       WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
 };
 

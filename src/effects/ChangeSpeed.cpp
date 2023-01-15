@@ -175,7 +175,7 @@ bool EffectChangeSpeed::Init()
    return true;
 }
 
-bool EffectChangeSpeed::Process(EffectContext &,
+bool EffectChangeSpeed::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    // Similar to EffectSoundTouch::Process()
@@ -219,7 +219,7 @@ bool EffectChangeSpeed::Process(EffectContext &,
             auto end = pOutWaveTrack->TimeToLongSamples(mCurT1);
 
             //ProcessOne() (implemented below) processes a single track
-            if (!ProcessOne(pOutWaveTrack, start, end))
+            if (!ProcessOne(context, pOutWaveTrack, start, end))
                bGoodResult = false;
          }
          mCurTrackNum++;
@@ -436,8 +436,8 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
-                           sampleCount start, sampleCount end)
+bool EffectChangeSpeed::ProcessOne(EffectContext &,
+   WaveTrack * track, sampleCount start, sampleCount end)
 {
    if (track == NULL)
       return false;

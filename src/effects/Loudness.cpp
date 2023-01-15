@@ -91,7 +91,7 @@ EffectType EffectLoudness::GetType() const
 
 // Effect implementation
 
-bool EffectLoudness::Process(EffectContext &,
+bool EffectLoudness::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    if(mNormalizeTo == kLoudness)
@@ -142,7 +142,7 @@ bool EffectLoudness::Process(EffectContext &,
       {
          mLoudnessProcessor.reset(safenew EBUR128(mCurRate, range.size()));
          mLoudnessProcessor->Initialize();
-         if(!ProcessOne(range, true))
+         if(!ProcessOne(context, range, true))
          {
             // Processing failed -> abort
             bGoodResult = false;
@@ -196,7 +196,7 @@ bool EffectLoudness::Process(EffectContext &,
       }
 
       mProgressMsg = topMsg + XO("Processing: %s").Format( trackName );
-      if(!ProcessOne(range, false))
+      if(!ProcessOne(context, range, false))
       {
          // Processing failed -> abort
          bGoodResult = false;
@@ -381,7 +381,8 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
+bool EffectLoudness::ProcessOne(EffectContext &context,
+   TrackIterRange<WaveTrack> range, bool analyse)
 {
    WaveTrack* track = *range.begin();
 
@@ -416,12 +417,12 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
       // Process the buffer.
       if(analyse)
       {
-         if(!AnalyseBufferBlock())
+         if(!AnalyseBufferBlock(context))
             return false;
       }
       else
       {
-         if(!ProcessBufferBlock())
+         if(!ProcessBufferBlock(context))
             return false;
          StoreBufferBlock(range, s, blockLen);
       }
@@ -449,7 +450,7 @@ void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
 /// (for loudness).
-bool EffectLoudness::AnalyseBufferBlock()
+bool EffectLoudness::AnalyseBufferBlock(EffectContext &context)
 {
    for(size_t i = 0; i < mTrackBufferLen; i++)
    {
@@ -459,12 +460,12 @@ bool EffectLoudness::AnalyseBufferBlock()
       mLoudnessProcessor->NextSample();
    }
 
-   if(!UpdateProgress())
+   if(!UpdateProgress(context))
       return false;
    return true;
 }
 
-bool EffectLoudness::ProcessBufferBlock()
+bool EffectLoudness::ProcessBufferBlock(EffectContext &context)
 {
    for(size_t i = 0; i < mTrackBufferLen; i++)
    {
@@ -473,7 +474,7 @@ bool EffectLoudness::ProcessBufferBlock()
          mTrackBuffer[1][i] = mTrackBuffer[1][i] * mMult;
    }
 
-   if(!UpdateProgress())
+   if(!UpdateProgress(context))
       return false;
    return true;
 }
@@ -490,7 +491,7 @@ void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack> range,
    }
 }
 
-bool EffectLoudness::UpdateProgress()
+bool EffectLoudness::UpdateProgress(EffectContext &)
 {
    mProgressVal += (double(1+mProcStereo) * double(mTrackBufferLen)
                  / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));

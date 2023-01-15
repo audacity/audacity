@@ -57,14 +57,14 @@ public:
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
    // amount of input for previewing.
-   bool Analyze(RegionList &silenceList,
-                        RegionList &trackSilences,
-                        const WaveTrack *wt,
-                        sampleCount* silentFrame,
-                        sampleCount* index,
-                        int whichTrack,
-                        double* inputLength = NULL,
-                        double* minInputLength = NULL) const;
+   bool Analyze(const EffectContext &context, RegionList &silenceList,
+      RegionList &trackSilences,
+      const WaveTrack *wt,
+      sampleCount* silentFrame,
+      sampleCount* index,
+      int whichTrack,
+      double* inputLength = NULL,
+      double* minInputLength = NULL) const;
 
    bool Process(EffectContext &context,
       EffectInstance &instance, EffectSettings &settings) override;
@@ -86,14 +86,14 @@ private:
    void OnControlChange(wxCommandEvent & evt);
    void UpdateUI();
 
-   bool ProcessIndependently();
-   bool ProcessAll();
-   bool FindSilences
-      (RegionList &silences, const TrackList *list,
-       const Track *firstTrack, const Track *lastTrack);
-   bool DoRemoval
-      (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
-       double &totalCutLen);
+   bool ProcessIndependently(EffectContext &context);
+   bool ProcessAll(EffectContext &context);
+   bool FindSilences(EffectContext &context,
+      RegionList &silences, const TrackList *list,
+      const Track *firstTrack, const Track *lastTrack);
+   bool DoRemoval(EffectContext &context,
+      const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
+      double &totalCutLen);
 
    wxWeakRef<wxWindow> mUIParent{};
 

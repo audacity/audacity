@@ -105,7 +105,8 @@ bool EffectSilence::TransferDataFromWindow(EffectSettings &settings)
    return true;
 }
 
-bool EffectSilence::GenerateTrack(EffectSettings &settings,
+bool EffectSilence::GenerateTrack(
+   EffectContext &, EffectSettings &settings,
    WaveTrack *tmp, const WaveTrack &, int)
 {
    tmp->InsertSilence(0.0, settings.extra.GetDuration());

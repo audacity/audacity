@@ -362,7 +362,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process(EffectContext &,
+bool EffectEqualization::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
@@ -381,7 +381,7 @@ bool EffectEqualization::Process(EffectContext &,
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
 
-         if (!ProcessOne(count, track, start, len))
+         if (!ProcessOne(context, count, track, start, len))
          {
             bGoodResult = false;
             break;
@@ -450,8 +450,8 @@ struct EqualizationTask {
 
 // EffectEqualization implementation
 
-bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
-                                    sampleCount start, sampleCount len)
+bool EffectEqualization::ProcessOne(EffectContext &, int count,
+   WaveTrack * t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
 

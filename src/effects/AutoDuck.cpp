@@ -173,7 +173,7 @@ bool EffectAutoDuck::Init()
    return true;
 }
 
-bool EffectAutoDuck::Process(EffectContext &,
+bool EffectAutoDuck::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    if (GetNumWaveTracks() == 0 || !mControlTrack)
@@ -311,7 +311,8 @@ bool EffectAutoDuck::Process(EffectContext &,
          for (size_t i = 0; i < regions.size(); i++)
          {
             const AutoDuckRegion& region = regions[i];
-            if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1))
+            if (ApplyDuckFade(context,
+               trackNum, iterTrack, region.t0, region.t1))
             {
                cancel = true;
                break;
@@ -436,8 +437,8 @@ bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
 // EffectAutoDuck implementation
 
 // this currently does an exponential fade
-bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
-                                   double t0, double t1)
+bool EffectAutoDuck::ApplyDuckFade(EffectContext &,
+   int trackNum, WaveTrack* t, double t0, double t1)
 {
    bool cancel = false;
 

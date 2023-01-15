@@ -71,7 +71,7 @@ bool EffectRepair::IsInteractive() const
 
 // Effect implementation
 
-bool EffectRepair::Process(EffectContext &,
+bool EffectRepair::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    //v This may be too much copying for EffectRepair. To support Cancel, may be able to copy much less.
@@ -121,7 +121,7 @@ bool EffectRepair::Process(EffectContext &,
             break;
          }
 
-         if (!ProcessOne(count, track, s0,
+         if (!ProcessOne(context, count, track, s0,
                          // len is at most 5 * 128.
                          len.as_size_t(),
                          repairStart,
@@ -139,10 +139,9 @@ bool EffectRepair::Process(EffectContext &,
    return bGoodResult;
 }
 
-bool EffectRepair::ProcessOne(int count, WaveTrack * track,
-                              sampleCount start,
-                              size_t len,
-                              size_t repairStart, size_t repairLen)
+bool EffectRepair::ProcessOne(EffectContext &, int count,
+   WaveTrack * track, sampleCount start, size_t len,
+   size_t repairStart, size_t repairLen)
 {
    Floats buffer{ len };
    track->GetFloats(buffer.get(), start, len);

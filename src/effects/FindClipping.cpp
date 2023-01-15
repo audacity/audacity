@@ -79,7 +79,7 @@ EffectType EffectFindClipping::GetType() const
 
 // Effect implementation
 
-bool EffectFindClipping::Process(EffectContext &,
+bool EffectFindClipping::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
@@ -110,7 +110,7 @@ bool EffectFindClipping::Process(EffectContext &,
          auto end = t->TimeToLongSamples(t1);
          auto len = end - start;
 
-         if (!ProcessOne(lt, count, t, start, len)) {
+         if (!ProcessOne(context, lt, count, t, start, len)) {
             return false;
          }
       }
@@ -126,11 +126,9 @@ bool EffectFindClipping::Process(EffectContext &,
    return true;
 }
 
-bool EffectFindClipping::ProcessOne(LabelTrack * lt,
-                                    int count,
-                                    const WaveTrack * wt,
-                                    sampleCount start,
-                                    sampleCount len)
+bool EffectFindClipping::ProcessOne(EffectContext &,
+   LabelTrack * lt, int count, const WaveTrack * wt,
+   sampleCount start, sampleCount len)
 {
    bool bGoodResult = true;
    size_t blockSize = (mStart * 1000);

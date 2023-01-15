@@ -69,9 +69,8 @@ bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper)
 }
 #endif
 
-bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
-                                             const TimeWarper &warper,
-                                             bool preserveLength)
+bool EffectSoundTouch::ProcessWithTimeWarper(EffectContext &context,
+   InitFunction initer, const TimeWarper &warper, bool preserveLength)
 {
    // Assumes that mSoundTouch has already been initialized
    // by the subclass for subclass-specific parameters. The
@@ -151,7 +150,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                pSoundTouch->setChannels(2);
 
                //ProcessStereo() (implemented below) processes a stereo track
-               if (!ProcessStereo(pSoundTouch.get(),
+               if (!ProcessStereo(context, pSoundTouch.get(),
                   leftTrack, rightTrack, start, end, warper))
                   bGoodResult = false;
                mCurTrackNum++; // Increment for rightTrack, too.
@@ -164,7 +163,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                pSoundTouch->setChannels(1);
 
                //ProcessOne() (implemented below) processes a single track
-               if (!ProcessOne(pSoundTouch.get(), leftTrack, start, end, warper))
+               if (!ProcessOne(context,
+                  pSoundTouch.get(), leftTrack, start, end, warper))
                   bGoodResult = false;
             }
             // pSoundTouch is destroyed here
@@ -187,7 +187,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
-bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
+bool EffectSoundTouch::ProcessOne(EffectContext &,
+   soundtouch::SoundTouch *pSoundTouch,
    WaveTrack *track,
    sampleCount start, sampleCount end,
    const TimeWarper &warper)
@@ -260,7 +261,8 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
+bool EffectSoundTouch::ProcessStereo(EffectContext &,
+   soundtouch::SoundTouch *pSoundTouch,
    WaveTrack* leftTrack, WaveTrack* rightTrack,
    sampleCount start, sampleCount end, const TimeWarper &warper)
 {

@@ -54,8 +54,8 @@ public:
 private:
    // EffectFindCliping implementation
 
-   bool ProcessOne(LabelTrack *lt, int count, const WaveTrack * wt,
-                   sampleCount start, sampleCount len);
+   bool ProcessOne(EffectContext &context, LabelTrack *lt,
+      int count, const WaveTrack * wt, sampleCount start, sampleCount len);
 
    wxWeakRef<wxWindow> mUIParent{};
 

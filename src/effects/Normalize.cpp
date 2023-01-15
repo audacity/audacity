@@ -89,7 +89,7 @@ bool EffectNormalize::CheckWhetherSkipEffect(const EffectSettings &) const
    return ((mGain == false) && (mDC == false));
 }
 
-bool EffectNormalize::Process(EffectContext &,
+bool EffectNormalize::Process(EffectContext &context,
    EffectInstance &, EffectSettings &)
 {
    if (mGain == false && mDC == false)
@@ -157,7 +157,7 @@ bool EffectNormalize::Process(EffectContext &,
             float offset = 0;
             float extent2 = 0;
             bGoodResult =
-               AnalyseTrack( channel, msg, progress, offset, extent2 );
+               AnalyseTrack(context, channel, msg, progress, offset, extent2);
             if ( ! bGoodResult )
                goto break2;
             extent = std::max( extent, extent2 );
@@ -194,7 +194,8 @@ bool EffectNormalize::Process(EffectContext &,
          auto pOffset = offsets.begin();
          for (auto channel : range) {
             if (false ==
-                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++)) )
+                (bGoodResult =
+                    ProcessOne(context, channel, msg, progress, *pOffset++)))
                goto break2;
             // TODO: more-than-two-channels-message
             msg = topMsg +
@@ -288,8 +289,9 @@ bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
 
 // EffectNormalize implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
-                                   double &progress, float &offset, float &extent)
+bool EffectNormalize::AnalyseTrack(EffectContext &context,
+   const WaveTrack * track, const TranslatableString &msg,
+   double &progress, float &offset, float &extent)
 {
    bool result = true;
    float min, max;
@@ -302,7 +304,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 
       if(mDC)
       {
-         result = AnalyseTrackData(track, msg, progress, offset);
+         result = AnalyseTrackData(context, track, msg, progress, offset);
          min += offset;
          max += offset;
       }
@@ -310,7 +312,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
    else if(mDC)
    {
       min = -1.0, max = 1.0;   // sensible defaults?
-      result = AnalyseTrackData(track, msg, progress, offset);
+      result = AnalyseTrackData(context, track, msg, progress, offset);
       min += offset;
       max += offset;
    }
@@ -327,8 +329,9 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableSt
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg,
-                                double &progress, float &offset)
+bool EffectNormalize::AnalyseTrackData(EffectContext &,
+   const WaveTrack * track, const TranslatableString &msg,
+   double &progress, float &offset)
 {
    bool rc = true;
 
@@ -392,8 +395,9 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
 //and executes ProcessData, on it...
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
-bool EffectNormalize::ProcessOne(
-   WaveTrack * track, const TranslatableString &msg, double &progress, float offset)
+bool EffectNormalize::ProcessOne(EffectContext &,
+   WaveTrack * track, const TranslatableString &msg,
+   double &progress, float offset)
 {
    bool rc = true;
 
