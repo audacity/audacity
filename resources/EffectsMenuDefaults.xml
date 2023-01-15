@@ -31,7 +31,6 @@
             <Effect>Change Tempo</Effect>
             <Effect>Paulstretch</Effect>
             <Effect>Sliding Stretch</Effect>
-            <Effect>Reverse</Effect>
         </Effects>
     </Group>
     <Group>
@@ -79,6 +78,7 @@
         <Name>Special</Name>
         <Effects>
             <Effect>Repeat</Effect>
+            <Effect>Reverse</Effect>
             <Effect>Invert</Effect>
             <Effect>Truncate Silence</Effect>
             <Effect>Vocal Reduction and Isolation</Effect>
