@@ -1048,10 +1048,10 @@ ProgressDialog::~ProgressDialog()
 
    using namespace std::chrono;
    wxLogInfo(
-      "Operation '%s' took in %f seconds. Poll was called %d times and took %f seconds. Yield was called %d times.",
-      GetTitle(), mElapsedTime / 1000.0, mPollsCount,
-      duration_cast<duration<double>>(mPollTime).count(),
-      mYieldsCount);
+      "Operation '%s' took %f seconds. Poll was called %d times and took %f seconds. Yield was called %d times and took %f seconds.",
+      GetTitle(), mElapsedTime / 1000.0,
+      mPollsCount, duration_cast<duration<double>>(mTotalPollTime).count(),
+      mYieldsCount, duration_cast<duration<double>>(mTotalYieldTime).count());
 }
 
 void ProgressDialog::Init()
@@ -1103,8 +1103,9 @@ void ProgressDialog::Reinit()
 
    wxDialogWrapper::Show(true);
 
-   mPollTime = {};
+   mTotalPollTime = {};
    mPollsCount = {};
+   mTotalYieldTime = {};
    mYieldsCount = {};
 }
 
@@ -1344,7 +1345,7 @@ ProgressResult ProgressDialog::Update(
 {
    using namespace std::chrono;
    auto updatePollTime = finally([this, pollStart = high_resolution_clock::now()] {
-         mPollTime += high_resolution_clock::now() - pollStart;
+         mTotalPollTime += high_resolution_clock::now() - pollStart;
    });
 
    mPollsCount++;
@@ -1430,8 +1431,10 @@ ProgressResult ProgressDialog::Update(
    // Nyquist effects call Update on every callback, but YieldFor is
    // quite slow on Linux / Mac, so don't call too frequently. (bug 1575)
    if ((now - mYieldTimer > 50) || (value == 1000)) {
+      const auto yieldStart = high_resolution_clock::now();
       mYieldsCount++;
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
+      mTotalYieldTime += high_resolution_clock::now() - yieldStart;
       mYieldTimer = now;
    }
 

@@ -154,8 +154,9 @@ private:
    int mLastW{ 0 };
    int mLastH{ 0 };
 
-   std::chrono::nanoseconds mPollTime {};
+   std::chrono::nanoseconds mTotalPollTime {};
    unsigned mPollsCount { 0 };
+   std::chrono::nanoseconds mTotalYieldTime {};
    unsigned mYieldsCount { 0 };
 
    DECLARE_EVENT_TABLE()
