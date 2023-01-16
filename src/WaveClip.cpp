@@ -404,6 +404,8 @@ void WaveClip::Paste(double t0, const WaveClip* other)
       newClip = std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true);
       newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime());
       newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime());
+      newClip->SetTrimLeft(0);
+      newClip->SetTrimRight(0);
    }
 
    if (clipNeedsResampling || clipNeedsNewFormat)
