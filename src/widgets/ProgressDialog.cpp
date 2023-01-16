@@ -38,6 +38,8 @@
 #include <wx/evtloop.h>
 #include <wx/gauge.h>
 #include <wx/frame.h>
+#include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
