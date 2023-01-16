@@ -338,6 +338,43 @@ function( canonicalize_node_name var node )
    set( "${var}" "${node}" PARENT_SCOPE )
 endfunction()
 
+function( append_node_attributes var target )
+   get_target_property( dependencies ${target} AUDACITY_GRAPH_DEPENDENCIES )
+   set( color "orangered" )
+   if( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
+      # Toolkit neutral targets
+      set( color "lightgreen" )
+   endif()
+   string( APPEND "${var}" " style=filled fillcolor=${color}" )
+   set( "${var}" "${${var}}" PARENT_SCOPE)
+endfunction()
+
+function (propagate_interesting_dependencies target direct_dependencies )
+   # use a custom target attribute to propagate information up the graph about
+   # some interesting transitive dependencies
+   set( interesting_dependencies )
+   foreach( direct_dependency ${direct_dependencies} )
+      if ( NOT TARGET "${direct_dependency}" )
+         continue()
+      endif ()
+      get_target_property( more_dependencies
+         ${direct_dependency} AUDACITY_GRAPH_DEPENDENCIES )
+      if ( more_dependencies )
+         list( APPEND interesting_dependencies ${more_dependencies} )
+      endif ()
+      foreach( special_dependency
+         "wxwidgets::wxwidgets"
+      )
+         if( special_dependency STREQUAL direct_dependency )
+            list( APPEND interesting_dependencies "${special_dependency}" )
+         endif()
+      endforeach()
+   endforeach()
+   list( REMOVE_DUPLICATES interesting_dependencies )
+   set_target_properties( ${target} PROPERTIES
+      AUDACITY_GRAPH_DEPENDENCIES "${interesting_dependencies}" )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
@@ -405,9 +442,9 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       endif()
    endif()
 
-   if( "wxBase" IN_LIST IMPORT_TARGETS OR "wxwidgets::base" IN_LIST IMPORT_TARGETS )
-      string( APPEND ATTRIBUTES " style=filled" )
-   endif()
+   propagate_interesting_dependencies( ${TARGET} "${IMPORT_TARGETS}" )
+
+   append_node_attributes( ATTRIBUTES ${TARGET} )
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
@@ -472,6 +509,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
          INTERFACE_INCLUDE_DIRECTORIES
          INTERFACE_COMPILE_DEFINITIONS
          INTERFACE_LINK_LIBRARIES
+	 AUDACITY_GRAPH_DEPENDENCIES
       )
          get_target_property( PROPS "${TARGET}" "${PROP}" )
          if (PROPS)
