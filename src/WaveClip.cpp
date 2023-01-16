@@ -83,20 +83,34 @@ WaveClip::WaveClip(const WaveClip& orig,
                    bool copyCutlines,
                    double t0, double t1)
 {
+   assert(orig.CountSamples(t0, t1) > 0);
+   
    mSequenceOffset = orig.mSequenceOffset;
-   mTrimLeft = orig.mTrimLeft + (t0 > orig.GetPlayStartTime()? t0 - orig.GetPlayStartTime() : 0);
-   mTrimRight = orig.mTrimRight + (t1 < orig.GetPlayEndTime()? orig.GetPlayEndTime() - t1 : 0);
+   
+   //Adjust trim values to sample-boundary
+   if(t0 > orig.GetPlayStartTime())
+   {
+      const auto s0 = orig.TimeToSamples(t0 - orig.GetSequenceStartTime());
+      mTrimLeft = orig.SamplesToTime(s0);
+      
+   }else
+      mTrimLeft = orig.mTrimLeft;
+   
+   if(t1 < orig.GetPlayEndTime())
+   {
+      const auto s1 = orig.TimeToSamples(orig.GetSequenceEndTime() - t1);
+      mTrimRight = orig.SamplesToTime(s1);
+   }
+   else
+      mTrimRight = orig.mTrimRight;
    
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 
-   auto s0 = orig.TimeToSequenceSamples(t0);
-   auto s1 = orig.TimeToSequenceSamples(t1);
-
    mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
-
+   
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    if ( copyCutlines )
@@ -588,8 +602,8 @@ void WaveClip::ClearSequence(double t0, double t1)
 But some cutlines may be deleted */
 void WaveClip::ClearAndAddCutLine(double t0, double t1)
 {
-   if (t0 > GetPlayEndTime() || t1 < GetPlayStartTime())
-      return; // time out of bounds
+   if (t0 > GetPlayEndTime() || t1 < GetPlayStartTime() || CountSamples(t0, t1) == 0)
+      return; // no samples to remove
 
    const double clip_t0 = std::max( t0, GetPlayStartTime() );
    const double clip_t1 = std::min( t1, GetPlayEndTime() );
@@ -1000,6 +1014,19 @@ bool WaveClip::AfterPlayEndTime(double t) const
 {
     auto ts = TimeToSamples(t);
     return ts >= GetPlayEndSample() + GetAppendBufferLen();
+}
+
+sampleCount WaveClip::CountSamples(double t0, double t1) const
+{
+   if(t0 < t1)
+   {
+      t0 = std::max(t0, GetPlayStartTime());
+      t1 = std::min(t1, GetPlayEndTime());
+      const auto s0 = TimeToSamples(t0 - GetPlayStartTime());
+      const auto s1 = TimeToSamples(t1 - GetPlayStartTime());
+      return s1 - s0;
+   }
+   return { 0 };
 }
 
 sampleCount WaveClip::TimeToSequenceSamples(double t) const

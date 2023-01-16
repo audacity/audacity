@@ -120,7 +120,8 @@ public:
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines);
 
-   // Copy only a range from the given WaveClip
+   //! @brief Copy only a range from the given WaveClip
+   //! @pre CountSamples(t1, t0) > 0
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines,
@@ -197,6 +198,12 @@ public:
    bool BeforePlayStartTime(double t) const;
    bool AfterPlayEndTime(double t) const;
 
+   //! Counts number of samples within t0 and t1 region. t0 and t1 are
+   //! rounded to the nearest clip sample boundary, i.e. relative to clips
+   //! start time offset.
+   //! @returns Number of samples within t0 and t1 if t1 > t0, 0 otherwise
+   sampleCount CountSamples(double t0, double t1) const;
+
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
    void SetSamples(constSamplePtr buffer, sampleFormat format,
@@ -272,7 +279,8 @@ public:
    /// data, if present. Destructive operation.
    void ClearRight(double t);
 
-   /// Clear, and add cut line that starts at t0 and contains everything until t1.
+   /// Clear, and add cut line that starts at t0 and contains everything until t1
+   /// if there is at least one clip sample between t0 and t1, noop otherwise.
    void ClearAndAddCutLine(double t0, double t1);
 
    /// Paste data from other clip, resampling it if not equal rate
