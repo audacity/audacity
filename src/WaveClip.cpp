@@ -100,19 +100,8 @@ WaveClip::WaveClip(const WaveClip& orig,
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    if ( copyCutlines )
-      // Copy cutline clips that fall in the range
-      for (const auto &ppClip : orig.mCutLines)
-      {
-         const WaveClip* clip = ppClip.get();
-         double cutlinePosition = orig.GetSequenceStartTime() + clip->GetSequenceStartTime();
-         if (cutlinePosition >= t0 && cutlinePosition <= t1)
-         {
-            auto newCutLine =
-               std::make_unique< WaveClip >( *clip, factory, true );
-            newCutLine->SetSequenceStartTime( cutlinePosition - t0 );
-            mCutLines.push_back(std::move(newCutLine));
-         }
-      }
+      for (const auto &cutline : orig.mCutLines)
+         mCutLines.push_back(std::make_unique<WaveClip>(*cutline, factory, true));
 }
 
 
