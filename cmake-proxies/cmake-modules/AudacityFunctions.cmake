@@ -344,6 +344,8 @@ function( append_node_attributes var target )
    if( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
       # Toolkit neutral targets
       set( color "lightgreen" )
+      # Enforce usage of only a subset of wxBase that excludes the event loop
+      apply_wxbase_restrictions( ${target} )
    endif()
    string( APPEND "${var}" " style=filled fillcolor=${color}" )
    set( "${var}" "${${var}}" PARENT_SCOPE)
