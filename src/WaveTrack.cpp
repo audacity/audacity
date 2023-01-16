@@ -721,19 +721,14 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          WaveClip *const newClip = newTrack->mClips.back().get();
          newClip->Offset(-t0);
       }
-      else if (t1 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
+      else if (clip->CountSamples(t0, t1) >= 1)
       {
          // Clip is affected by command
          //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
-         const double clip_t0 = std::max(t0, clip->GetPlayStartTime());
-         const double clip_t1 = std::min(t1, clip->GetPlayEndTime());
-
          auto newClip = std::make_unique<WaveClip>
-            (*clip, mpFactory, ! forClipboard, clip_t0, clip_t1);
+            (*clip, mpFactory, ! forClipboard, t0, t1);
          newClip->SetName(clip->GetName());
-
-         //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
          newClip->Offset(-t0);
          if (newClip->GetPlayStartTime() < 0)
