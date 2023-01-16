@@ -20,8 +20,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-strings-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-basic-ui "${SOURCES}" "${LIBRARIES}"
    "" ""

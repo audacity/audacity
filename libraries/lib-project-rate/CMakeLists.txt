@@ -20,8 +20,6 @@ set( LIBRARIES
    lib-audio-devices-interface
    lib-xml-interface
    lib-math-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-project-rate "${SOURCES}" "${LIBRARIES}"
    "" ""

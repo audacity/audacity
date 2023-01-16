@@ -18,8 +18,6 @@ set( LIBRARIES
    lib-exceptions
    lib-math-interface
    lib-track
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-audio-graph "${SOURCES}" "${LIBRARIES}"
    "" ""

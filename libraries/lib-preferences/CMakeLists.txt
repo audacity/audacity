@@ -21,11 +21,8 @@ set( SOURCES
    Prefs.h
 )
 set( LIBRARIES 
-   lib-utility-interface
    lib-basic-ui-interface
    lib-components-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-preferences "${SOURCES}" "${LIBRARIES}"
    "" ""

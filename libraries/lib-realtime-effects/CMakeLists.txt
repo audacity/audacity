@@ -15,8 +15,6 @@ set( LIBRARIES
    lib-math-interface
    lib-module-manager-interface
    lib-project-history-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-realtime-effects "${SOURCES}" "${LIBRARIES}"
    "" ""

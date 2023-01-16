@@ -22,8 +22,6 @@ set( LIBRARIES
    lib-files-interface
    lib-string-utils-interface
    expat::expat
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-xml "${SOURCES}" "${LIBRARIES}"
    "" ""

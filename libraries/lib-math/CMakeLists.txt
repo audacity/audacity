@@ -29,8 +29,6 @@ set( SOURCES
 set( LIBRARIES
    libsoxr
    lib-preferences-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-math "${SOURCES}" "${LIBRARIES}"
    "" ""

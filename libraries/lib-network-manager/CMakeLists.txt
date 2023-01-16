@@ -39,7 +39,6 @@ set ( LIBRARIES PRIVATE
     lib-string-utils-interface
     lib-exceptions-interface
     lib-utility-interface
-    wxwidgets::base
 )
 
 set ( DEFINES INTERFACE "HAS_NETWORKING" )

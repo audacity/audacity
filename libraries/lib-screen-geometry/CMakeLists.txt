@@ -16,8 +16,6 @@ set( LIBRARIES
    lib-preferences-interface
    lib-project-interface
    lib-xml-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-screen-geometry "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -30,8 +30,6 @@ set( LIBRARIES
    lib-files-interface
    lib-xml-interface
    lib-ipc-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-module-manager "${SOURCES}" "${LIBRARIES}"
    "" ""

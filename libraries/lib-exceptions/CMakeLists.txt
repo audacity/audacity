@@ -26,8 +26,6 @@ list( APPEND SOURCES
 set( LIBRARIES
    lib-utility-interface
    lib-basic-ui-interface
-   PRIVATE
-   wxBase
 )
 
 if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")

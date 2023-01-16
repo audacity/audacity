@@ -29,7 +29,6 @@ set( SOURCES
    wxArrayStringEx.cpp
 )
 set( LIBRARIES
-   PRIVATE
    wxBase
 )
 audacity_library( lib-strings "${SOURCES}" "${LIBRARIES}"

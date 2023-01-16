@@ -34,8 +34,6 @@ set( LIBRARIES
    lib-audio-graph-interface
    lib-components-interface
    lib-track-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-sample-track "${SOURCES}" "${LIBRARIES}"
    "" ""
