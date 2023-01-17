@@ -215,7 +215,6 @@ class Qt6Dependency(AudacityDependency):
         "with_pq": False,
         "with_odbc": False,
         "with_brotli": False,
-        "with_openal": False,
         "with_md4c": False,
     }
 
@@ -405,7 +404,8 @@ class AudacityConan(ConanFile):
 
         AudacityDependency("catch2", "2.13.8"),
 
-        Qt6Dependency()
+        Qt6Dependency(),
+        AudacityDependency("kddockwidgets", "1.6.0", "audacity/testing")
     ]
 
     options.update({f"use_{dependency.name}": [True, False] for dependency in _dependencies})
