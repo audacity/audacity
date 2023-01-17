@@ -13,11 +13,7 @@ set( SOURCES
 set ( OUTPUTS )
 foreach( source ${SOURCES} )
    set( src "${_SRCDIR}/${source}" )
-   if( CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows" )
-      set( dst "${_DEST}/${TARGET}/${source}" )
-   else()
-      set( dst "${CMAKE_BINARY_DIR}/lib/${TARGET}/${source}" )
-   endif()
+   set( dst "${_DEST}/${TARGET}/${source}" )
 
    add_custom_command(
       DEPENDS

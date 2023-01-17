@@ -28,7 +28,11 @@ FilePath DeepModel::DLModelsDir()
 
 FilePath DeepModel::BuiltInModulesDir()
 {
-   return FileNames::MkDir( wxFileName( FileNames::BaseDir(), wxT("deeplearning-models") ).GetFullPath() );
+   #if defined(__WXOSX__) || defined(__WXMSW__)
+      return FileNames::MkDir( wxFileName( FileNames::BaseDir(), wxT("deeplearning-models") ).GetFullPath() );
+   #else
+      return FileNames::MkDir( wxFileName( FileNames::ResourcesDir(), wxT("deeplearning-models") ).GetFullPath() );
+   #endif
 }
 
 void DeepModel::LoadResampler()

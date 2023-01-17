@@ -43,8 +43,7 @@ DeepModelManager::DeepModelManager() :
       wxFileName(DeepModel::BuiltInModulesDir(), wxT("modelcard-schema.json"))
                   .GetFullPath()
    );
-   wxLogDebug(wxString(schemaPath));
-   wxLogDebug(wxT("test"));
+
    mModelCardSchema = parsers::ParseFile(schemaPath);
 }
 
