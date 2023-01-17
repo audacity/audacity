@@ -13,9 +13,7 @@ set( SOURCES
    ZoomInfo.h
 )
 set( LIBRARIES
-   lib-preferences-interface
    lib-project-interface
-   lib-xml-interface
 )
 audacity_library( lib-screen-geometry "${SOURCES}" "${LIBRARIES}"
    "" ""

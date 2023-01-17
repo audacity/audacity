@@ -18,7 +18,6 @@ set( SOURCES
 set( LIBRARIES
    lib-project-interface
    lib-audio-devices-interface
-   lib-xml-interface
    lib-math-interface
 )
 audacity_library( lib-project-rate "${SOURCES}" "${LIBRARIES}"

@@ -26,8 +26,6 @@ set( SOURCES
    PluginManager.h
 )
 set( LIBRARIES
-   lib-components-interface
-   lib-files-interface
    lib-xml-interface
    lib-ipc-interface
 )

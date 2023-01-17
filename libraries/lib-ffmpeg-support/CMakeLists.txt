@@ -94,7 +94,6 @@ if (${_OPT}use_ffmpeg)
 
    set( LIBRARIES
       PRIVATE
-      lib-preferences
       lib-files
       lib-math
    )

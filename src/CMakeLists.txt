@@ -1528,11 +1528,9 @@ endif()
 
 set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
-   lib-string-utils-interface
    lib-uuid-interface
    lib-theme-resources-interface
    lib-graphics-interface
-   lib-audio-graph
    lib-tags-interface
    lib-audio-io-interface
 )

@@ -15,7 +15,6 @@ set( SOURCES
    EffectStage.h
 )
 set( LIBRARIES
-   lib-exceptions
    lib-math-interface
    lib-track
 )

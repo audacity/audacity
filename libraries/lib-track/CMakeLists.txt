@@ -33,7 +33,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-project-interface
-   lib-xml-interface
 )
 audacity_library( lib-track "${SOURCES}" "${LIBRARIES}"
    "" ""
