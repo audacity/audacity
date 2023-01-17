@@ -84,4 +84,5 @@ endif()
 
 if( ${_OPT}enable_experimental_qt_support )
    audacity_find_package(Qt6 REQUIRED CONAN_PACKAGE_NAME qt FIND_PACKAGE_OPTIONS COMPONENTS Core Gui Quick)
+   audacity_find_package(KDDockWidgets REQUIRED CONAN_PACKAGE_NAME kddockwidgets)
 endif()
