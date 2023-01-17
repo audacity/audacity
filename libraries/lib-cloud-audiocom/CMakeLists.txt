@@ -22,9 +22,6 @@ set( SOURCES
 set ( LIBRARIES
    lib-cloud-upload-interface
    lib-network-manager-interface # Required for the networking
-   lib-string-utils-interface # ToUtf8
-   lib-preferences-interface
-   lib-basic-ui-interface # CallAfter
    lib-files-interface # FileNames
 
    PRIVATE

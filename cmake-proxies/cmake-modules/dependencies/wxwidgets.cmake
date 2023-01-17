@@ -1,3 +1,34 @@
+# Expose only the GUI-less subset of full wxWidgets
+# Also prohibit use of some other headers by pre-defining their include guards
+# wxUSE_GUI=0 doesn't exclude all of wxCore dependency, and the application
+# object and event loops are in wxBase, but we want to exclude their use too
+set ( WXBASE_RESTRICTIONS
+   "wxUSE_GUI=0"
+
+   # Don't use app.h
+   _WX_APP_H_BASE_
+
+   # Don't use evtloop.h
+   _WX_EVTLOOP_H_
+
+   # Don't use image.h
+   _WX_IMAGE_H
+
+   # Don't use colour.h
+   _WX_COLOUR_H_BASE_
+
+   # Don't use brush.h
+   _WX_BRUSH_H_BASE_
+
+   # Don't use pen.h
+   _WX_PEN_H_BASE_
+)
+
+function( apply_wxbase_restrictions target )
+   target_compile_definitions( ${target} PRIVATE ${WXBASE_RESTRICTIONS} )
+endfunction()
+
+
 # Make the wxBase interface target which exposes a limited view of wxWidgets --
 # only the subset of wxBase consistent with "toolkit neutrality"
 function(make_wxBase old)
@@ -10,32 +41,6 @@ function(make_wxBase old)
    string(REPLACE "wxUSE_GUI=1" "" defs "${defs}")
 
    set_property(TARGET wxBase PROPERTY INTERFACE_COMPILE_DEFINITIONS ${defs})
-
-   # wxBase exposes only the GUI-less subset of full wxWidgets
-   # Also prohibit use of some other headers by pre-defining their include guards
-   # wxUSE_GUI=0 doesn't exclude all of wxCore dependency, and the application
-   # object and event loops are in wxBase, but we want to exclude their use too
-   target_compile_definitions( wxBase INTERFACE
-      "wxUSE_GUI=0"
-
-      # Don't use app.h
-      _WX_APP_H_BASE_
-
-      # Don't use evtloop.h
-      _WX_EVTLOOP_H_
-
-      # Don't use image.h
-      _WX_IMAGE_H
-
-      # Don't use colour.h
-      _WX_COLOUR_H_BASE_
-
-      # Don't use brush.h
-      _WX_BRUSH_H_BASE_
-
-      # Don't use pen.h
-      _WX_PEN_H_BASE_
-   )
 
    find_package( Threads QUIET )
    if( Threads_FOUND )

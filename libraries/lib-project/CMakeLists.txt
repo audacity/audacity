@@ -22,8 +22,6 @@ set( SOURCES
 set( LIBRARIES
    lib-registries-interface
    lib-xml-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-project "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -1528,11 +1528,9 @@ endif()
 
 set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
-   lib-string-utils-interface
    lib-uuid-interface
    lib-theme-resources-interface
    lib-graphics-interface
-   lib-audio-graph
    lib-tags-interface
    lib-audio-io-interface
 )
@@ -1568,6 +1566,8 @@ list( APPEND AUDACITY_LIBRARIES
    # will be defined
    lib-sentry-reporting
 )
+
+propagate_interesting_dependencies( ${TARGET} "${AUDACITY_LIBRARIES}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
@@ -1628,7 +1628,9 @@ else()
 endif()
 
 # collect dependency information for third party libraries
-list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
+set( AUDACITY_NODE_ATTRIBUTES "shape=house" )
+append_node_attributes( AUDACITY_NODE_ATTRIBUTES ${TARGET} )
+list( APPEND GRAPH_EDGES "Audacity [${AUDACITY_NODE_ATTRIBUTES}]" )
 foreach( LIBRARY ${LIBRARIES} ${AUDACITY_LIBRARIES} )
    if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
       canonicalize_node_name(LIBRARY "${LIBRARY}")
