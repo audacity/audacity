@@ -348,7 +348,12 @@ define_property(TARGET PROPERTY AUDACITY_GRAPH_DEPENDENCIES
 function( append_node_attributes var target )
    get_target_property( dependencies ${target} AUDACITY_GRAPH_DEPENDENCIES )
    set( color "lightpink" )
-   if( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
+   if( "lib-shuttlegui-interface" IN_LIST dependencies
+       AND NOT "wxwidgets::wxwidgets" IN_LIST dependencies
+   )
+      # paths of dependency on wxwidgets::wxwidgets are only through that one
+      set( color "yellow" )
+   elseif( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
       # Toolkit neutral targets
       set( color "lightgreen" )
       # Enforce usage of only a subset of wxBase that excludes the event loop
@@ -382,6 +387,7 @@ function (propagate_interesting_dependencies target direct_dependencies )
       endif ()
       foreach( special_dependency
          "wxwidgets::wxwidgets"
+         "lib-shuttlegui-interface"
       )
          if( special_dependency STREQUAL direct_dependency )
             list( APPEND interesting_dependencies "${special_dependency}" )
@@ -389,6 +395,12 @@ function (propagate_interesting_dependencies target direct_dependencies )
       endforeach()
    endforeach()
    list( REMOVE_DUPLICATES interesting_dependencies )
+   if ( target STREQUAL "lib-shuttlegui" )
+      # To give it, and what depends on it but not otherwise on wxWidgets,
+      # a different color
+      list( REMOVE_ITEM interesting_dependencies "wxwidgets::wxwidgets" )
+      list( APPEND interesting_dependencies "lib-shuttlegui-interface" )
+   endif ()
    set_target_properties( ${target} PROPERTIES
       AUDACITY_GRAPH_DEPENDENCIES "${interesting_dependencies}" )
 endfunction()
