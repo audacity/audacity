@@ -14,8 +14,6 @@
 #ifndef __AUDACITY_EFFECTUI_H__
 #define __AUDACITY_EFFECTUI_H__
 
-#include <wx/bitmap.h> // member variables
-
 #include <optional>
 
 #include "Identifier.h"
@@ -38,6 +36,7 @@ class AudacityProject;
 class RealtimeEffectState;
 
 class wxCheckBox;
+class AButton;
 
 //
 class EffectUIHost final
@@ -136,12 +135,9 @@ private:
 
    wxButton *mApplyBtn{};
    wxButton *mMenuBtn{};
-   wxButton *mEnableBtn{};
+   AButton *mEnableBtn{};
    wxButton *mDebugBtn{};
    wxButton *mPlayToggleBtn{};
-
-   wxBitmap mRealtimeEnabledBM;
-   wxBitmap mRealtimeDisabledBM;
 
    bool mEnabled{ true };
 

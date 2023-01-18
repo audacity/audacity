@@ -105,8 +105,9 @@ private:
 #include "../commands/CommandContext.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/AButton.h"
 
-#include <wx/bmpbuttn.h>
+#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
@@ -359,8 +360,8 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
          {
             mEnableBtn = S.Id(kEnableID)
                .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
-               .Name(XO("Enable"))
-               .AddBitmapButton(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+               .Name(XO("Power"))
+               .AddBitmapToggleButton(theTheme.Image(bmpEffectOn), theTheme.Image(bmpEffectOff));
          }
 
          mMenuBtn = S.Id( kMenuID )
@@ -425,9 +426,6 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 bool EffectUIHost::Initialize()
 {
    mEnabled = mpAccess->Get().extra.GetActive();
-
-   mRealtimeEnabledBM = theTheme.Bitmap(bmpEffectOn);
-   mRealtimeDisabledBM = theTheme.Bitmap(bmpEffectOff);
 
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
@@ -748,7 +746,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   mEnabled = !mEnabled;
+   mEnabled = mEnableBtn->IsDown();
 
    auto mpState = mwState.lock();
    if (mpState)
@@ -1077,7 +1075,7 @@ void EffectUIHost::UpdateControls()
 
    if (IsOpenedFromEffectPanel())
    {
-      mEnableBtn->SetBitmapLabel(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
+      mEnabled ? mEnableBtn->PushDown() : mEnableBtn->PopUp();
       return;
    }
 
@@ -1148,8 +1146,6 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
 
          mEffectStateSubscription = mpState->Subscribe([this](RealtimeEffectStateChange state) {
             mEnabled = (state == RealtimeEffectStateChange::EffectOn);
-            mEnableBtn->SetBitmapLabel(mEnabled ? mRealtimeEnabledBM : mRealtimeDisabledBM);
-
             UpdateControls();
          });
       }
