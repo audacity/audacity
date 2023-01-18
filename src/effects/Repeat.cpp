@@ -32,6 +32,7 @@
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../WaveTrack.h"
+#include "../WaveClip.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
 
@@ -116,13 +117,20 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          auto start = track->TimeToLongSamples(mT0);
          auto end = track->TimeToLongSamples(mT1);
          auto len = end - start;
-         double tLen = track->LongSamplesToTime(len);
-         double tc = mT0 + tLen;
+         const double tLen = track->LongSamplesToTime(len);
+         const double tc = mT0 + tLen;
 
          if (len <= 0)
             return;
 
-         auto dest = track->Copy(mT0, mT1);
+         auto dest = std::dynamic_pointer_cast<WaveTrack>(track->Copy(mT0, mT1));
+         std::vector<wxString> clipNames;
+         for(auto clip : dest->SortedClipArray())
+         {
+            if(!clip->GetIsPlaceholder())
+               clipNames.push_back(clip->GetName());
+         }
+         auto t0 = tc;
          for(int j=0; j<repeatCount; j++)
          {
             if (TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
@@ -130,11 +138,30 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
                return;
             }
-            track->Paste(tc, dest.get());
-            tc += tLen;
+            track->Paste(t0, dest.get());
+            t0 += tLen;
          }
-         if (tc > maxDestLen)
-            maxDestLen = tc;
+         if (t0 > maxDestLen)
+            maxDestLen = t0; 
+
+         auto clips = track->SortedClipArray();
+         for(size_t i = 0; i < clips.size(); ++i)
+         {
+            const auto eps = 0.5 / track->GetRate();
+            //Find first pasted clip
+            if(std::abs(clips[i]->GetPlayStartTime() - tc) > eps)
+               continue;
+
+            //Fix pasted clips names
+            for(int j = 0; j < repeatCount; ++j)
+            {
+               for(size_t k = 0; k < clipNames.size(); ++k)
+                  clips[i + k]->SetName(clipNames[k]);
+               i += clipNames.size();
+            }
+            break;
+         }
+
          nTrack++;
       },
       [&](Track *t)
