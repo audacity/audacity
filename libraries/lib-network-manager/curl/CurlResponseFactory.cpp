@@ -66,7 +66,7 @@ ResponsePtr CurlResponseFactory::performRequest (RequestVerb verb, const Request
             response->setPayload (dataBuffer.data (), dataBuffer.size ());
         
         response->perform ();
-    });
+    };
 
     if (request.getBlocking ())
       fPerform();
