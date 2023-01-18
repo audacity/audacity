@@ -74,6 +74,7 @@ class wxListBox;
 class wxGrid;
 class Shuttle;
 class ReadOnlyText;
+class AButton;
 
 class WrappedType;
 
@@ -284,6 +285,9 @@ public:
    wxBitmapButton * AddBitmapButton(
       const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE,
       bool setDefault = false );
+   // Always ORs the flags with wxALL (which affects borders):
+   AButton* AddBitmapToggleButton(
+      const wxImage& ImageOn, const wxImage& ImageOff, int PositionFlags = wxALIGN_CENTRE);
    // When PositionFlags is 0, applies wxALL (which affects borders),
    // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
    wxStaticText * AddVariableText(
