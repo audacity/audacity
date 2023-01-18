@@ -36,6 +36,8 @@ void PasteOverPreservingClips(
    std::vector<std::pair<double, double> > clipStartEndTimes;
    //may be truncated due to a clip being partially selected
    std::vector<std::pair<double, double> > clipRealStartEndTimes;
+   //Used to restore clip names after pasting
+   std::vector<wxString> clipNames;
    for (const auto &clip : oldTrack.GetClips()) {
       auto clipStartT = clip->GetPlayStartTime();
       auto clipEndT = clip->GetPlayEndTime();
@@ -54,6 +56,7 @@ void PasteOverPreservingClips(
 
       //save them
       clipStartEndTimes.emplace_back(clipStartT, clipEndT);
+      clipNames.push_back(clip->GetName());
    }
    //now go through and replace the old clips with NEW
    for (unsigned int i = 0; i < clipStartEndTimes.size(); ++i) {
@@ -63,6 +66,11 @@ void PasteOverPreservingClips(
       auto toClipOutput = newContents.Copy(start - startT, end - startT);
       //put the processed audio in
       oldTrack.Paste(start, toClipOutput.get());
+
+      //Restore original clip's name
+      auto newClip = oldTrack.GetClipAtTime(start + 0.5 / oldTrack.GetRate());
+      newClip->SetName(clipNames[i]);
+
       //if the clip was only partially selected, the Paste will have created a
       // split line.  Join is needed to take care of this
       //This is not true when the selection is fully contained within one clip
