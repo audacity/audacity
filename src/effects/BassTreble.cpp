@@ -95,12 +95,12 @@ struct EffectBassTreble::Validator
 
    void EnableApplyFromValidate()
    {
-      Effect::EnableApply(mUIParent, mUIParent->Validate());
+      EnableApply(mUIParent, mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataFromWindow()
    {
-      return Effect::EnableApply(
+      return EnableApply(
          mUIParent, mUIParent->TransferDataFromWindow());
    }
 };

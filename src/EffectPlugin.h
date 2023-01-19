@@ -274,7 +274,17 @@ public:
    */
    virtual void OnClose();
 
-protected:
+   //! Enable or disable the Apply button of the dialog that contains parent
+   static bool EnableApply(wxWindow *parent, bool enable = true);
+
+   // id that should be used by preview play button of effect dialog
+   static constexpr int kPlayID = 20102;
+
+   //! Enable or disable the preview play button of the dialog that contains
+   //! parent
+   static bool EnablePreview(wxWindow *parent, bool enable = true);
+
+ protected:
    // Convenience function template for binding event handler functions
    template<typename EventTag, typename Class, typename Event>
    void BindTo(

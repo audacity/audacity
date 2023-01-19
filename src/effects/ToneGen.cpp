@@ -425,7 +425,8 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 
 void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

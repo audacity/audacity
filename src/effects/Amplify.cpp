@@ -341,7 +341,7 @@ bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 
 void EffectAmplify::CheckClip()
 {
-   EnableApply(mUIParent,
+   EffectUIValidator::EnableApply(mUIParent,
       mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
 }
 
@@ -349,7 +349,7 @@ void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mAmpT->GetValidator()->TransferFromWindow())
    {
-      EnableApply(mUIParent, false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -367,7 +367,7 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mNewPeakT->GetValidator()->TransferFromWindow())
    {
-      EnableApply(mUIParent, false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 

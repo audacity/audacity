@@ -180,13 +180,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    static void IncEffectCounter(){ nEffectsDone++;}
 
-   static
-   bool EnableApply(wxWindow *parent, bool enable = true);
-
- protected:
-
-   static
-   bool EnablePreview(wxWindow *parent, bool enable = true);
+protected:
 
    //! Default implementation returns false
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;

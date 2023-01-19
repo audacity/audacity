@@ -1164,7 +1164,7 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
    if (success)
    {
-      EnablePreview(mUIParent, mEnablePreview);
+      EffectUIValidator::EnablePreview(mUIParent, mEnablePreview);
    }
 
    return success;

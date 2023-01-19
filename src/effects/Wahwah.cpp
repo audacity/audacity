@@ -100,13 +100,12 @@ struct EffectWahwah::Validator
 
    void EnableApplyFromValidate()
    {
-      Effect::EnableApply(mUIParent, mUIParent->Validate());
+      EnableApply(mUIParent, mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataToWindow()
    {
-      return Effect::EnableApply(
-         mUIParent, mUIParent->TransferDataFromWindow());
+      return EnableApply(mUIParent, mUIParent->TransferDataFromWindow());
    }
 };
 

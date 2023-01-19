@@ -41,6 +41,7 @@
 #include <unordered_map>
 
 static const int kPlayID = 20102;
+static_assert(kPlayID == EffectUIValidator::kPlayID);
 
 using t2bHash = std::unordered_map< void*, bool >;
 
@@ -613,55 +614,6 @@ bool Effect::TransferDataToWindow(const EffectSettings &)
 bool Effect::TransferDataFromWindow(EffectSettings &)
 {
    return true;
-}
-
-bool Effect::EnableApply(wxWindow *parent, bool enable)
-{
-   // May be called during initialization, so try to find the dialog
-   if (auto dlg = wxGetTopLevelParent(parent)) {
-      wxWindow *apply = dlg->FindWindow(wxID_APPLY);
-
-      // Don't allow focus to get trapped
-      if (!enable)
-      {
-         wxWindow *focus = dlg->FindFocus();
-         if (focus == apply)
-         {
-            dlg->FindWindow(wxID_CLOSE)->SetFocus();
-         }
-      }
-
-      if (apply)
-         apply->Enable(enable);
-   }
-
-   EnablePreview(parent, enable);
-
-   return enable;
-}
-
-bool Effect::EnablePreview(wxWindow *parent, bool enable)
-{
-   // May be called during initialization, so try to find the dialog
-   if (auto dlg = wxGetTopLevelParent(parent)) {
-      wxWindow *play = dlg->FindWindow(kPlayID);
-      if (play)
-      {
-         // Don't allow focus to get trapped
-         if (!enable)
-         {
-            wxWindow *focus = dlg->FindFocus();
-            if (focus == play)
-            {
-               dlg->FindWindow(wxID_CLOSE)->SetFocus();
-            }
-         }
-
-         play->Enable(enable);
-      }
-   }
-
-   return enable;
 }
 
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const

@@ -626,7 +626,8 @@ void EffectScienFilter::OnFilterSubtype(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -636,7 +637,8 @@ void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -646,7 +648,8 @@ void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnStopbandRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent, mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
