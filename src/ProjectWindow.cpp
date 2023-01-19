@@ -481,7 +481,7 @@ mutable -> unsigned {
 #endif
 
       wxCoord xTrackEnd = viewInfo.TimeToPosition( audioEndTime );
-      viewInfo.ZoomBy(pow(2.0, steps));
+      viewInfo.ZoomBy(pow(1.25, steps));
 
       double new_center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
       viewInfo.h += (center_h - new_center_h);
