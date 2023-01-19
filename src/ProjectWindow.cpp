@@ -466,8 +466,6 @@ mutable -> unsigned {
       // Time corresponding to last (most far right) audio.
       double audioEndTime = TrackList::Get( *pProject ).GetEndTime();
 
-// Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
-#if 0
       // When zooming in empty space, it's easy to 'lose' the waveform.
       // This prevents it.
       // IF zooming in
@@ -478,7 +476,6 @@ mutable -> unsigned {
             // Zooming brings far right of audio to mouse.
             center_h = audioEndTime;
       }
-#endif
 
       wxCoord xTrackEnd = viewInfo.TimeToPosition( audioEndTime );
       viewInfo.ZoomBy(pow(1.25, steps));
