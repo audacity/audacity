@@ -218,7 +218,7 @@ bool PerTrackEffect::ProcessPass(
             double genDur = 0;
             if (isGenerator) {
                const auto duration = settings.extra.GetDuration();
-               if (IsPreviewing()) {
+               if (context.isPreviewing) {
                   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
                   genDur = std::min(duration,
                      CalcPreviewInputLength(context, settings, genDur));

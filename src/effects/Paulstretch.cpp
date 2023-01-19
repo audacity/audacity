@@ -270,7 +270,7 @@ bool EffectPaulstretch::ProcessOne(EffectContext &context,
       maxTimeRes = pow(2.0, floor(maxTimeRes) + 0.5);
       maxTimeRes = maxTimeRes / track->GetRate();
 
-      if (this->IsPreviewing()) {
+      if (context.isPreviewing) {
          double defaultPreviewLen;
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &defaultPreviewLen, 6.0);
 

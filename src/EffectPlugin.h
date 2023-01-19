@@ -50,6 +50,8 @@ struct EffectContext {
    BasicUI::ProgressDialog *pProgress{};
    /* const */ unsigned numTracks{}; //!< This is really mNumWaveTracks
    /* const */ unsigned numGroups{};
+
+   bool isPreviewing{ false };
 };
 
 class TrackList;

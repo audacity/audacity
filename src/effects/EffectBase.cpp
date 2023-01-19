@@ -455,7 +455,7 @@ void EffectBase::Preview(EffectContext &context,
       ); // Have only "Stop" button.
       auto vr = valueRestorer(context.pProgress, progress.get());
 
-      auto vr2 = valueRestorer( mIsPreview, true );
+      auto vr2 = valueRestorer(context.isPreviewing, true);
 
       access.ModifySettings([&](EffectSettings &settings){
          // Preview of non-realtime effect

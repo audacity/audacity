@@ -88,9 +88,6 @@ protected:
    // (such as fade effects) need to know the full selection length.
    void SetPreviewFullSelectionFlag(bool previewDurationFlag);
 
-   // Use this if the effect needs to know if it is previewing
-   bool IsPreviewing() const { return mIsPreview; }
-
    // A global counter of all the successful Effect invocations.
    static int nEffectsDone;
 
@@ -130,8 +127,6 @@ private:
     */
    bool mIsLinearEffect{ false };
    bool mPreviewFullSelection{ false };
-
-   bool mIsPreview{ false };
 
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;

@@ -845,7 +845,7 @@ bool NyquistEffect::Process(EffectContext &context,
                                  Internat::ToString(previewLen));
 
       // *PREVIEWP* is true when previewing (better than relying on track view).
-      wxString isPreviewing = (this->IsPreviewing())? wxT("T") : wxT("NIL");
+      wxString isPreviewing = (context.isPreviewing)? wxT("T") : wxT("NIL");
       mProps += wxString::Format(wxT("(setf *PREVIEWP* %s)\n"), isPreviewing);
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
