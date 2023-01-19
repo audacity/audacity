@@ -61,6 +61,11 @@ struct EffectContext {
 
    bool isPreviewing{ false };
 
+   /*!
+    Effects can assign true if we want to skip pushing state after processing
+    */
+   bool skipState{ false };
+
    unsigned       uiFlags{ 0 };
 };
 

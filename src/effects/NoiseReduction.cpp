@@ -1454,8 +1454,8 @@ void EffectNoiseReduction::Dialog::EnableDisableSensitivityControls()
 
 void EffectNoiseReduction::Dialog::OnGetProfile(wxCommandEvent & WXUNUSED(event))
 {
-   // Project has not be changed so skip pushing state
-   EffectManager::Get().SetSkipStateFlag(true);
+   // Project has not been changed so skip pushing state
+   mpContext->skipState = true;
 
    if (!TransferDataFromWindow())
       return;

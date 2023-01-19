@@ -1324,7 +1324,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
    EffectManager & em = EffectManager::Get();
 
-   em.SetSkipStateFlag( false );
+   pContext->skipState = false;
    success = false;
    if (auto effect = dynamic_cast<Effect*>(em.GetEffect(ID))) {
       if (const auto pSettings = em.GetDefaultSettings(ID)) {
@@ -1371,9 +1371,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
    if (!success)
       return false;
 
-   if (!em.GetSkipStateFlag() &&
-       !(flags & EffectManager::kSkipState))
-   {
+   if (!(pContext->skipState || (flags & EffectManager::kSkipState))) {
       auto shortDesc = em.GetCommandName(ID);
       auto longDesc = em.GetCommandDescription(ID);
       ProjectHistory::Get( project ).PushState(longDesc, shortDesc);

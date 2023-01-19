@@ -47,7 +47,6 @@ EffectManager & EffectManager::Get()
 
 EffectManager::EffectManager()
 {
-   mSkipStateFlag = false;
 }
 
 EffectManager::~EffectManager()
@@ -81,7 +80,6 @@ bool EffectManager::DoAudacityCommand(const PluginID & ID,
                              bool shouldPrompt /* = true */)
 
 {
-   this->SetSkipStateFlag(false);
    AudacityCommand *command = GetAudacityCommand(ID);
    
    if (!command)
@@ -221,16 +219,6 @@ bool EffectManager::IsHidden(const PluginID & ID)
    if(auto effect = GetEffect(ID))
       return effect->GetDefinition().IsHiddenFromMenus();
    return false;
-}
-
-void EffectManager::SetSkipStateFlag(bool flag)
-{
-   mSkipStateFlag = flag;
-}
-
-bool EffectManager::GetSkipStateFlag()
-{
-   return mSkipStateFlag;
 }
 
 bool EffectManager::SupportsAutomation(const PluginID & ID)

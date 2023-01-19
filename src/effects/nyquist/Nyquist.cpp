@@ -698,7 +698,7 @@ bool NyquistEffect::Process(EffectContext &context,
    int nEffectsSoFar = nEffectsDone;
    mProjectChanged = false;
    EffectManager & em = EffectManager::Get();
-   em.SetSkipStateFlag(false);
+   context.skipState = false;
 
    // This code was added in a fix for bug 2392 (no preview for Nyquist)
    // It was commented out in a fix for bug 2428 (no progress dialog from a macro)
@@ -926,7 +926,7 @@ bool NyquistEffect::Process(EffectContext &context,
                   wxOK | wxCENTRE,
                   XO("Nyquist Error") );
                if (!mProjectChanged)
-                  em.SetSkipStateFlag(true);
+                  context.skipState = true;
                return false;
             }
 
@@ -1048,7 +1048,7 @@ finish:
    }
 
    if (!mProjectChanged)
-      em.SetSkipStateFlag(true);
+      context.skipState = true;
 
    return success;
 }
