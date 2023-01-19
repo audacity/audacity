@@ -463,14 +463,6 @@ int MeterToolBar::GetInitialWidth()
       (kWithRecordMeter + kWithPlayMeter)) ? 338 : 290;
 }
 
-// The meter's sizing code does not take account of the resizer
-// Hence after docking we need to enlarge the bar (using fit)
-// so that the resizer can be reached.
-void MeterToolBar::SetDocked(ToolDock *dock, bool pushed) {
-   ToolBar::SetDocked(dock, pushed);
-   Fit();
-}
-
 void MeterToolBar::ShowOutputGainDialog()
 {
    mPlayMeter->ShowDialog();
