@@ -338,8 +338,7 @@ void EffectBase::Preview(EffectContext &context,
    bool isGenerator = GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
-   double previewLen;
-   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
+   auto previewLen = EffectPreviewLength.Read();
 
    const double rate = mProjectRate;
 
@@ -511,3 +510,5 @@ void EffectBase::Preview(EffectContext &context,
       }
    }
 }
+
+DoubleSetting EffectPreviewLength{ "/AudioIO/EffectsPreviewLen", 6.0 };

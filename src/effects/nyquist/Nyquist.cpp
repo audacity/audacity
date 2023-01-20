@@ -839,8 +839,7 @@ bool NyquistEffect::Process(EffectContext &context,
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'MIDITRACKS)\n"), numMidi);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TIMETRACKS)\n"), numTime);
 
-      double previewLen = 6.0;
-      gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+      auto previewLen = EffectPreviewLength.Read();
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
                                  Internat::ToString(previewLen));
 

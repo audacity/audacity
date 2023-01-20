@@ -25,6 +25,7 @@
 namespace BasicUI { class ProgressDialog; }
 
 class AudacityProject;
+class DoubleSetting;
 class Track;
 
 class AUDACITY_DLL_API EffectBase /* not final */
@@ -137,5 +138,7 @@ private:
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
 #define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
+
+extern AUDACITY_DLL_API DoubleSetting EffectPreviewLength;
 
 #endif

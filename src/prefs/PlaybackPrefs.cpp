@@ -26,6 +26,7 @@
 
 #include "../ShuttleGui.h"
 #include "Prefs.h"
+#include "../effects/EffectBase.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Playback"))
@@ -87,9 +88,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartThreeColumn();
       {
          S.NameSuffix(suffix)
-            .TieNumericTextBox(XXO("&Length:"),
-                                 {wxT("/AudioIO/EffectsPreviewLen"),
-                                  6.0},
+            .TieNumericTextBox(XXO("&Length:"), EffectPreviewLength,
                                  9);
          S.AddUnits(XO("seconds"));
       }
@@ -179,6 +178,8 @@ bool PlaybackPrefs::Commit()
 
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   EffectPreviewLength.Invalidate();
 
    return true;
 }

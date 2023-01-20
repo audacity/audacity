@@ -27,7 +27,6 @@
 #include "FFT.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "Prefs.h"
 
 #include "../WaveTrack.h"
 
@@ -271,8 +270,7 @@ bool EffectPaulstretch::ProcessOne(EffectContext &context,
       maxTimeRes = maxTimeRes / track->GetRate();
 
       if (context.isPreviewing) {
-         double defaultPreviewLen;
-         gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &defaultPreviewLen, 6.0);
+         auto defaultPreviewLen = EffectPreviewLength.Read();
 
          if ((minDuration / mProjectRate) < defaultPreviewLen) {
             ::Effect::MessageBox(

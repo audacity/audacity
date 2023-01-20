@@ -27,7 +27,6 @@
 #include <wx/choice.h>
 #include <wx/valgen.h>
 
-#include "Prefs.h"
 #include "Project.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
@@ -532,8 +531,7 @@ bool EffectTruncSilence::Analyze(const EffectContext &context,
    auto end = wt->TimeToLongSamples(mT1);
    sampleCount outLength = 0;
 
-   double previewLength;
-   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLength, 6.0);
+   auto previewLength = EffectPreviewLength.Read();
    // Minimum required length in samples.
    const sampleCount previewLen( previewLength * wt->GetRate() );
 
