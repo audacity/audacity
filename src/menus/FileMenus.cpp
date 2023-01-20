@@ -4,7 +4,6 @@
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
@@ -37,7 +36,6 @@ namespace {
 void DoExport(AudacityProject &project, const FileExtension &format)
 {
    auto &tracks = TrackList::Get( project );
-   auto &projectFileIO = ProjectFileIO::Get( project );
    
    Exporter e{ project };
 
