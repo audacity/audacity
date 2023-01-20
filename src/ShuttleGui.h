@@ -585,7 +585,6 @@ extern void SetIfCreated( wxChoice *&Var, wxChoice * Val );
 extern void SetIfCreated( wxTextCtrl *&Var, wxTextCtrl * Val );
 extern void SetIfCreated( wxStaticText *&Var, wxStaticText * Val );
 
-class GuiWaveTrack;
 class AttachableScrollBar;
 class ViewInfo;
 
