@@ -185,6 +185,7 @@ class AudacityConan(ConanFile):
 
     def layout(self):
         cmake_layout(self, build_folder="")
+        self.folders.generators = "generators"
 
     def generate(self):
         deps_lookup = { dependency.name: dependency for dependency in self._dependencies }
