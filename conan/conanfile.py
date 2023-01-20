@@ -438,6 +438,7 @@ class AudacityConan(ConanFile):
 
     def layout(self):
         cmake_layout(self, build_folder="")
+        self.folders.generators = "generators"
 
     def append_to_pre_file(self, text):
         if self._pre_find_package_file is None:
