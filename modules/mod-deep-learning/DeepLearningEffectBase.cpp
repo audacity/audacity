@@ -265,8 +265,8 @@ torch::jit::IValue DeepLearningEffectBase::ForwardPassInThread(torch::Tensor inp
          }
          catch (const ModelException &e)
          {
-            wxLogError(e.what());
-            wxLogDebug(e.what());
+            wxLogError(wxString(e.what()));
+            wxLogDebug(wxString(e.what()));
             status->success = false;
             status->output = torch::jit::IValue(
                               torch::zeros_like(status->input));

@@ -234,7 +234,7 @@ RepoIDList DeepModelManager::FetchRepos() const
    {
       auto msg = XO("Error parsing JSON reponse for fetching a list of deep model repositories.");
       wxLogError(msg.Translation());
-      wxLogError("ModelCard error: %s", e.what());
+      wxLogError("ModelCard error: %s", wxString(e.what()));
       throw ModelManagerException{ msg };
    }
 
@@ -284,7 +284,7 @@ void DeepModelManager::FetchLocalCards(CardFetchedCallback onCardFetched)
             }
             catch (const InvalidModelCardDocument &e)
             { 
-               wxLogError(e.what()); 
+               wxLogError(wxString(e.what())); 
             }
          }
       }
@@ -338,11 +338,11 @@ void DeepModelManager::AddHuggingFaceCard(const std::string &repoID, CardFetched
       }
       catch (const ModelManagerException &e)
       { 
-         wxLogError(e.what()); 
+         wxLogError(wxString(e.what())); 
          }
       catch (const InvalidModelCardDocument &e)
       { 
-         wxLogError(e.what()); 
+         wxLogError(wxString(e.what())); 
       }
    };
 
