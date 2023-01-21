@@ -34,7 +34,7 @@ using LinearDBValues = std::vector<double>;
 
 static LinearDBValues majorValues{}, minorValues{}, minorMinorValues{};
 
-void RegenerateLinearDBValues(int dBRange, float min, float max)
+void RegenerateLinearDBValues(int dBRange, float min, float max, int height)
 {
    majorValues.clear();
    minorValues.clear();
@@ -44,24 +44,39 @@ void RegenerateLinearDBValues(int dBRange, float min, float max)
    majorValues.push_back(-dBRange);
    majorValues.push_back(2 * -dBRange);
 
-   const double EPSILON = .01;
-   const double CHECK = 3 *(max - min) / 10;
+   const double EPSILON = .1e-5;
 
-   for (double major = 0.1; major <= 2 + EPSILON; major += .1) {
-      if (fabs(1 - major) + EPSILON >= CHECK) {
-         double val = std::round(major * 10) / 10;
+   // No marks allowed within CENTER_SPACING pixels from the center
+   // Calculate the closest allowed major / minor and remove everything around those
+   const double CENTER = height / 2;
+   const int CENTER_SPACING = 30;
+   const double SIZE_SCALE = (max - min) / 2;
+
+   double centerSpacingMark = 0;
+
+   for (double major = 0.1; major < 2; major += .1) {
+      double val = std::round(major * 10) / 10;
+      double mappedVal = std::trunc(-dBRange * val);
+      double pixVal = mappedVal < -dBRange ? - 2 * dBRange - mappedVal : mappedVal;
+      double pixDist = fabs(CENTER - ((1 - DB_TO_LINEAR(pixVal)) * CENTER)) / SIZE_SCALE;
+      if (pixDist > CENTER_SPACING) {
+         if (major - EPSILON <= 1)
+            centerSpacingMark = major;
          if (fabs(major - 1) > EPSILON)
-            majorValues.push_back(std::trunc(-dBRange * val));
+            majorValues.push_back(mappedVal);
       }
    }
    for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
-      if (fabs(1 - minor) + EPSILON >= CHECK) {
-         double val = std::round(minor * 100) / 100;
-         minorValues.push_back(std::trunc(-dBRange * val));
+      double val = std::round(minor * 100) / 100;
+      double mappedVal = std::trunc(-dBRange * val);
+      double spacing = fabs(fabs(1 - minor) - 1);
+      if (spacing < centerSpacingMark) {
+         minorValues.push_back(mappedVal);
       }
    }
-   for (int minorMinor = 0; minorMinor <= 2 * dBRange; minorMinor++) {
-      if (fabs(dBRange - minorMinor) + EPSILON >= dBRange * CHECK) {
+   for (int minorMinor = 1; minorMinor < 2 * dBRange; minorMinor++) {
+      double absDist = fabs(fabs(dBRange - minorMinor) - dBRange) / dBRange;
+      if (absDist < centerSpacingMark) {
          if ((minorMinor % (int)std::round(dBRange / 20)) != 0) {
             minorMinorValues.push_back(-minorMinor);
          }
@@ -295,7 +310,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          vruler->SetUpdater(std::make_unique<LinearUpdater>());
       }
       else {
-         RegenerateLinearDBValues(dBRange, min, max);
+         RegenerateLinearDBValues(dBRange, min, max, rect.GetHeight());
          vruler->SetLabelEdges(true);
          vruler->SetUnits(XO("dB"));
          vruler->SetUpdater(std::make_unique<CustomUpdaterValue>());
