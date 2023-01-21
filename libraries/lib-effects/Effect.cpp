@@ -15,6 +15,7 @@
 
 *//*******************************************************************/
 #include "Effect.h"
+#include "EffectOutputTracks.h"
 
 #include <algorithm>
 
@@ -29,8 +30,6 @@
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "NumericConverterFormats.h"
-
-#include <unordered_map>
 
 Effect::Effect()
 {
@@ -390,42 +389,39 @@ void Effect::GetBounds(
    }
 }
 
-//
-// private methods
-//
-// Use this method to copy the input tracks to mOutputTracks, if
-// doing the processing on them, and replacing the originals only on success (and not cancel).
-// Copy the group tracks that have tracks selected
-// If not all sync-locked selected, then only selected wave tracks.
-void Effect::CopyInputTracks(bool allSyncLockSelected)
+EffectOutputTracks::EffectOutputTracks(
+   TrackList &tracks, bool allSyncLockSelected
+)  : mTracks{ tracks }
 {
    // Reset map
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = TrackList::Create(
-      const_cast<AudacityProject*>( FindProject() ) // how to remove this const_cast?
-  );
+   mOutputTracks = TrackList::Create(mTracks.GetOwner());
 
-   auto trackRange = mTracks->Any() +
+   auto trackRange = mTracks.Any() +
       [&] (const Track *pTrack) {
          return allSyncLockSelected
          ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
-         : track_cast<const WaveTrack*>( pTrack ) && pTrack->GetSelected();
+         : dynamic_cast<const WaveTrack*>(pTrack) && pTrack->GetSelected();
       };
 
-   for (auto aTrack : trackRange)
-   {
+   for (auto aTrack : trackRange) {
       Track *o = mOutputTracks->Add(aTrack->Duplicate());
       mIMap.push_back(aTrack);
       mOMap.push_back(o);
    }
+   // Invariant is established
+   assert(mIMap.size() == mOMap.size());
 }
 
-Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
+EffectOutputTracks::~EffectOutputTracks() = default;
+
+Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
-   mIMap.push_back(NULL);
+   mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
+   assert(mIMap.size() == mOMap.size());
    return mOutputTracks->Add(t);
 }
 

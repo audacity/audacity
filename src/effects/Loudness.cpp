@@ -14,6 +14,7 @@
 *//*******************************************************************/
 #include "Loudness.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 
 #include <math.h>
 
@@ -101,14 +102,14 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       mRatio = DB_TO_LINEAR(std::clamp<double>(mRMSLevel, RMSLevel.min, RMSLevel.max));
 
    // Iterate over each track
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
    auto topMsg = XO("Normalizing Loudness...\n");
 
-   AllocBuffers();
+   AllocBuffers(outputs.Get());
    mProgressVal = 0;
 
-   for(auto track : mOutputTracks->Selected<WaveTrack>()
+   for (auto track : outputs.Get().Selected<WaveTrack>()
        + (mStereoInd ? &Track::Any : &Track::IsLeader))
    {
       // Get start and end times from track
@@ -204,7 +205,9 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
       }
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    mLoudnessProcessor.reset();
    FreeBuffers();
    return bGoodResult;
@@ -336,15 +339,14 @@ bool EffectLoudness::TransferDataFromWindow(EffectSettings &)
 
 /// Get required buffer size for the largest whole track and allocate buffers.
 /// This reduces the amount of allocations required.
-void EffectLoudness::AllocBuffers()
+void EffectLoudness::AllocBuffers(TrackList &outputs)
 {
    mTrackBufferCapacity = 0;
    bool stereoTrackFound = false;
    double maxSampleRate = 0;
    mProcStereo = false;
 
-   for(auto track : mOutputTracks->Selected<WaveTrack>() + &Track::Any)
-   {
+   for (auto track : outputs.Selected<WaveTrack>() + &Track::Any) {
       mTrackBufferCapacity = std::max(mTrackBufferCapacity, track->GetMaxBlockSize());
       maxSampleRate = std::max(maxSampleRate, track->GetRate());
 

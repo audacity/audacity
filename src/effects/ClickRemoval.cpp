@@ -25,6 +25,7 @@
 *//*******************************************************************/
 #include "ClickRemoval.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -112,12 +113,12 @@ bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
 
 bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
 {
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
    mbDidSomething = false;
 
    int count = 0;
-   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()) {
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
@@ -142,7 +143,9 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
          XO("Algorithm not effective on this audio. Nothing changed."),
          wxOK | wxICON_ERROR );
 
-   this->ReplaceProcessedTracks(bGoodResult && mbDidSomething);
+   if (bGoodResult && mbDidSomething)
+      outputs.Commit();
+
    return bGoodResult && mbDidSomething;
 }
 

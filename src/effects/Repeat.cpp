@@ -20,6 +20,7 @@
 *//*******************************************************************/
 #include "Repeat.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 
 #include <math.h>
 
@@ -92,15 +93,14 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
-   CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
 
    int nTrack = 0;
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
 
-   mOutputTracks->Any().VisitWhile( bGoodResult,
-      [&](LabelTrack &track)
-      {
+   outputs.Get().Any().VisitWhile(bGoodResult,
+      [&](LabelTrack &track) {
          if (SyncLock::IsSelectedOrSyncLockSelected(&track))
          {
             if (!track.Repeat(mT0, mT1, repeatCount))
@@ -173,7 +173,8 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
       mT1 = maxDestLen;
    }
 
-   ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
    return bGoodResult;
 }
 

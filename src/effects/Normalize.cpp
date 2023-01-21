@@ -15,6 +15,7 @@
 *//*******************************************************************/
 #include "Normalize.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -105,7 +106,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    }
 
    //Iterate over each track
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
    double progress = 0;
    TranslatableString topMsg;
@@ -118,8 +119,8 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    else if(!mDC && !mGain)
       topMsg = XO("Not doing anything...\n");   // shouldn't get here
 
-   for ( auto track : mOutputTracks->Selected< WaveTrack >()
-            + ( mStereoInd ? &Track::Any : &Track::IsLeader ) ) {
+   for (auto track : outputs.Get().Selected<WaveTrack>()
+            + (mStereoInd ? &Track::Any : &Track::IsLeader )) {
       //Get start and end times from track
       // PRL:  No accounting for multiple channels?
       double trackStart = track->GetStartTime();
@@ -204,7 +205,9 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
 
    break2:
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 

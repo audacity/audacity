@@ -23,6 +23,8 @@ class wxFileName;
 class wxCheckBox;
 class wxTextCtrl;
 
+class EffectOutputTracks;
+
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 
 enum NyqControlType
@@ -144,7 +146,7 @@ private:
    static int mReentryCount;
    // NyquistEffect implementation
 
-   bool ProcessOne();
+   bool ProcessOne(EffectOutputTracks *pOutputs);
 
    void BuildPromptWindow(ShuttleGui & S);
    void BuildEffectWindow(ShuttleGui & S);

@@ -15,6 +15,7 @@
 
 
 #include "StereoToMono.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include "Mix.h"
@@ -78,13 +79,13 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
-   this->CopyInputTracks(); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks };
    bool bGoodResult = true;
 
    // Determine the total time (in samples) used by all of the target tracks
    sampleCount totalTime = 0;
    
-   auto trackRange = mOutputTracks->SelectedLeaders< WaveTrack >();
+   auto trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
    while (trackRange.first != trackRange.second)
    {
       auto left = *trackRange.first;
@@ -129,7 +130,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
    mProgress->SetMessage(XO("Mixing down to mono"));
 
-   trackRange = mOutputTracks->SelectedLeaders< WaveTrack >();
+   trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
    while (trackRange.first != trackRange.second)
    {
       auto left = *trackRange.first;
@@ -138,7 +139,8 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
       {
          auto right = *channels.rbegin();
 
-         bGoodResult = ProcessOne(curTime, totalTime, left, right);
+         bGoodResult =
+            ProcessOne(outputs.Get(), curTime, totalTime, left, right);
          if (!bGoodResult)
          {
             break;
@@ -150,7 +152,7 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
       if (refreshIter)
       {
-         trackRange = mOutputTracks->SelectedLeaders< WaveTrack >();
+         trackRange = outputs.Get().SelectedLeaders<WaveTrack>();
          refreshIter = false;
       }
       else
@@ -159,11 +161,15 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
       }
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
+
    return bGoodResult;
 }
 
-bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime, WaveTrack *left, WaveTrack *right)
+bool EffectStereoToMono::ProcessOne(TrackList &outputs,
+   sampleCount & curTime, sampleCount totalTime,
+   WaveTrack *left, WaveTrack *right)
 {
    auto idealBlockLen = left->GetMaxBlockSize() * 2;
    bool bResult = true;
@@ -215,8 +221,8 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    double minStart = wxMin(left->GetStartTime(), right->GetStartTime());
    left->Clear(left->GetStartTime(), left->GetEndTime());
    left->Paste(minStart, outTrack.get());
-   mOutputTracks->UnlinkChannels(*left);
-   mOutputTracks->Remove(right);
+   outputs.UnlinkChannels(*left);
+   outputs.Remove(right);
    RealtimeEffectList::Get(*left).Clear();
 
    return bResult;

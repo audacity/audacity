@@ -19,6 +19,7 @@
 
 
 #include "PerTrackEffect.h"
+#include "EffectOutputTracks.h"
 
 #include "AudioGraphBuffers.h"
 #include "AudioGraphTask.h"
@@ -65,21 +66,23 @@ bool PerTrackEffect::Process(
    EffectInstance &instance, EffectSettings &settings) const
 {
    auto pThis = const_cast<PerTrackEffect *>(this);
-   pThis->CopyInputTracks(true);
+   EffectOutputTracks outputs{ *mTracks, true };
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
       auto &myInstance = dynamic_cast<Instance&>(instance);
-      bGoodResult = pThis->ProcessPass(myInstance, settings);
+      bGoodResult = pThis->ProcessPass(outputs.Get(), myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = pThis->ProcessPass(myInstance, settings);
+         bGoodResult = pThis->ProcessPass(outputs.Get(), myInstance, settings);
    }
-   pThis->ReplaceProcessedTracks(bGoodResult);
+   if (bGoodResult)
+      outputs.Commit();
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
+bool PerTrackEffect::ProcessPass(TrackList &outputs,
+   Instance &instance, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
@@ -109,8 +112,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    const bool multichannel = numAudioIn > 1;
    int iChannel = 0;
    auto range = multichannel
-      ? mOutputTracks->Leaders()
-      : mOutputTracks->Any();
+      ? outputs.Leaders()
+      : outputs.Any();
    range.VisitWhile( bGoodResult,
       [&](auto &&fallthrough){ return [&](WaveTrack &left) {
          // Track range visitor functions receive a pointer that is never null
@@ -122,7 +125,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             iChannel = 0;
          else
             leader =
-               static_cast<WaveTrack *>(*mOutputTracks->FindLeader(&left));
+               static_cast<WaveTrack *>(*outputs.FindLeader(&left));
 
          sampleCount len = 0;
          sampleCount start = 0;

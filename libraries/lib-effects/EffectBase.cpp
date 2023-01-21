@@ -21,6 +21,7 @@
 #include <thread>
 #include "BasicUI.h"
 #include "ConfigInterface.h"
+#include "EffectOutputTracks.h"
 #include "PluginManager.h"
 #include "QualitySettings.h"
 #include "TransactionScope.h"
@@ -29,7 +30,7 @@
 #include "NumericConverterFormats.h"
 
 // Effect application counter
-int EffectBase::nEffectsDone = 0;
+int EffectOutputTracks::nEffectsDone = 0;
 
 EffectBase::EffectBase()
 {
@@ -62,8 +63,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
 {
    auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
-
-   mOutputTracks.reset();
 
    mFactory = factory;
    mProjectRate = projectRate;
@@ -102,7 +101,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
       else
          trans.Commit();
 
-      ReplaceProcessedTracks( false );
       mPresetNames.clear();
    } );
 
@@ -221,25 +219,14 @@ void EffectBase::SetPreviewFullSelectionFlag(bool previewDurationFlag)
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
 // Else clear and DELETE mOutputTracks copies.
-void EffectBase::ReplaceProcessedTracks(const bool bGoodResult)
+void EffectOutputTracks::Commit()
 {
-   if (!bGoodResult) {
-      // Free resources, unless already freed.
-
-      // Processing failed or was cancelled so throw away the processed tracks.
-      if ( mOutputTracks )
-         mOutputTracks->Clear();
-
-      // Reset map
-      mIMap.clear();
-      mOMap.clear();
-
-      //TODO:undo the non-gui ODTask transfer
+   if (!mOutputTracks) {
+      // Already committed, violating precondition.  Maybe wrong intent...
+      assert(false);
+      // ... but harmless
       return;
    }
-
-   // Assume resources need to be freed.
-   wxASSERT(mOutputTracks); // Make sure we at least did the CopyInputTracks().
 
    auto iterOut = mOutputTracks->ListOfTracks::begin(),
       iterEnd = mOutputTracks->ListOfTracks::end();
@@ -253,39 +240,36 @@ void EffectBase::ReplaceProcessedTracks(const bool bGoodResult)
       // tracks in the map that must be removed from mTracks.
       while (i < cnt && mOMap[i] != o.get()) {
          const auto t = mIMap[i];
-         if (t) {
-            mTracks->Remove(t);
-         }
-         i++;
+         if (t)
+            mTracks.Remove(t);
+         ++i;
       }
 
-      // This should never happen
-      wxASSERT(i < cnt);
+      // The output track, still in the list, must also have been placed in
+      // the map
+      assert(i < cnt);
 
-      // Remove the track from the output list...don't DELETE it
+      // Remove the track from the output list...don't delete it
+      // `o` saves the track itself from deletion
       iterOut = mOutputTracks->erase(iterOut);
 
-      const auto  t = mIMap[i];
-      if (t == NULL)
-      {
-         // This track is a NEW addition to output tracks; add it to mTracks
-         mTracks->Add( o );
-      }
+      // Find the input track it corresponds to
+      const auto t = mIMap[i];
+      if (!t)
+         // This track was an addition to output tracks; add it to mTracks
+         mTracks.Add(o);
       else
-      {
-         // Replace mTracks entry with the NEW track
-         mTracks->Replace(t, o);
-      }
+         // Replace mTracks entry with the new track
+         mTracks.Replace(t, o);
    }
 
    // If tracks were removed from mOutputTracks, then there may be tracks
    // left at the end of the map that must be removed from mTracks.
    while (i < cnt) {
       const auto t = mIMap[i];
-      if (t) {
-         mTracks->Remove(t);
-      }
-      i++;
+      if (t)
+         mTracks.Remove(t);
+      ++i;
    }
 
    // Reset map
@@ -293,11 +277,11 @@ void EffectBase::ReplaceProcessedTracks(const bool bGoodResult)
    mOMap.clear();
 
    // Make sure we processed everything
-   wxASSERT(mOutputTracks->empty());
+   assert(mOutputTracks->empty());
 
    // The output list is no longer needed
    mOutputTracks.reset();
-   nEffectsDone++;
+   ++nEffectsDone;
 }
 
 const AudacityProject *EffectBase::FindProject() const

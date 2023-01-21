@@ -37,6 +37,7 @@ explicitly code all three.
 #include "CommandDispatch.h"
 #include "CommandManager.h"
 #include "../CommonCommandFlags.h"
+#include "EffectOutputTracks.h"
 #include "LoadCommands.h"
 #include "../ProjectSelectionManager.h"
 #include "../TrackPanel.h"
@@ -253,7 +254,7 @@ bool SelectTracksCommand::Apply(const CommandContext &context)
 
    // Count selection as a do-nothing effect.
    // Used to invalidate cached selection and tracks.
-   Effect::IncEffectCounter();
+   EffectOutputTracks::IncEffectCounter();
    int index = 0;
    auto &tracks = TrackList::Get( context.project );
 

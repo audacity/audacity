@@ -42,7 +42,9 @@ public:
 private:
    // EffectStereoToMono implementation
 
-   bool ProcessOne(sampleCount & curTime, sampleCount totalTime, WaveTrack *left, WaveTrack *right);
+   bool ProcessOne(TrackList &outputs,
+      sampleCount & curTime, sampleCount totalTime,
+      WaveTrack *left, WaveTrack *right);
 
 };
 

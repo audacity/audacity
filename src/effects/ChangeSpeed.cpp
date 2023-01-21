@@ -16,6 +16,7 @@
 
 #include "ChangeSpeed.h"
 #include "EffectEditor.h"
+#include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -184,7 +185,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    // Iterate over each track.
    // All needed because this effect needs to introduce
    // silence in the sync-lock group tracks to keep sync
-   CopyInputTracks(true); // Set up mOutputTracks.
+   EffectOutputTracks outputs{ *mTracks, true };
    bool bGoodResult = true;
 
    mCurTrackNum = 0;
@@ -192,10 +193,9 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
-   mOutputTracks->Any().VisitWhile( bGoodResult,
+   outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &lt) {
-         if (SyncLock::IsSelectedOrSyncLockSelected(&lt))
-         {
+         if (SyncLock::IsSelectedOrSyncLockSelected(&lt)) {
             if (!ProcessLabelTrack(&lt))
                bGoodResult = false;
          }
@@ -232,7 +232,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    );
 
    if (bGoodResult)
-      ReplaceProcessedTracks(bGoodResult);
+      outputs.Commit();
 
    // Update selection.
    mT1 = mT0 + (((mT1 - mT0) * 100.0) / (100.0 + m_PercentChange));
