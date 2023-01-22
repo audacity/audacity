@@ -483,7 +483,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    if (success)
    {
-      auto tracks = ProjectAudioManager::GetAllPlaybackTracks(*mTracks, true);
+      auto tracks = TransportTracks{ *mTracks, true };
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.

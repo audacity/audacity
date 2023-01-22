@@ -327,9 +327,8 @@ void OnPunchAndRoll(const CommandContext &context)
    const auto duplex = ProjectAudioManager::UseDuplex();
    if (duplex)
       // play all
-      transportTracks =
-         ProjectAudioManager::GetAllPlaybackTracks(
-            TrackList::Get( project ), false, true);
+      transportTracks = TransportTracks{
+         TrackList::Get( project ), false, true };
    else
       // play recording tracks only
       std::copy(tracks.begin(), tracks.end(),

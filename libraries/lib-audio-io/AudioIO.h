@@ -77,7 +77,13 @@ struct AudioIOEvent {
    bool on;
 };
 
-struct TransportTracks {
+struct AUDIO_IO_API TransportTracks final {
+   TransportTracks() = default;
+   TransportTracks(
+      TrackList &trackList, bool selectedOnly,
+      bool nonWaveToo = false //!< if true, collect all PlayableTracks
+   );
+
    SampleTrackConstArray playbackTracks;
    WritableSampleTrackArray captureTracks;
    PlayableTrackConstArray otherPlayableTracks;

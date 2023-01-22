@@ -123,6 +123,27 @@ time warp info and AudioIOListener and whether the playback is looped.
 using std::max;
 using std::min;
 
+TransportTracks::TransportTracks(
+   TrackList &trackList, bool selectedOnly, bool nonWaveToo)
+{
+   {
+      const auto range = trackList.Any<SampleTrack>()
+         + (selectedOnly ? &Track::IsSelected : &Track::Any);
+      for (auto pTrack : range)
+         playbackTracks.push_back(pTrack->SharedPointer<SampleTrack>());
+   }
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (nonWaveToo) {
+      const auto range = trackList.Any<const PlayableTrack>() +
+         (selectedOnly ? &Track::IsSelected : &Track::Any);
+      for (auto pTrack : range)
+         if (!track_cast<const SampleTrack *>(pTrack))
+            otherPlayableTracks.push_back(
+               pTrack->SharedPointer<const PlayableTrack>() );
+   }
+#endif
+}
+
 AudioIO *AudioIO::Get()
 {
    return static_cast< AudioIO* >( AudioIOBase::Get() );
