@@ -406,7 +406,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mSpeedPlaying = false;
             mKeyboardScrubbing = false;
             auto options =
-               DefaultPlayOptions( *mProject );
+               ProjectAudioIO::GetDefaultOptions(*mProject);
 
 #ifndef USE_SCRUB_THREAD
             // Yuck, we either have to poll "by hand" when scrub polling doesn't

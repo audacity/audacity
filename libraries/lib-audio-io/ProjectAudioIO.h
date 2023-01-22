@@ -12,12 +12,14 @@ Paul Licameli split from AudacityProject.h
 #define __PROJECT_AUDIO_IO__
 
 #include "ClientData.h" // to inherit
+#include "GlobalVariable.h"
 #include "Observer.h" // to inherit
 #include <wx/weakref.h>
 
 #include <atomic>
 #include <memory>
 class AudacityProject;
+struct AudioIOStartStreamOptions;
 class Meter;
 
 struct SpeedChangeMessage {};
@@ -29,6 +31,30 @@ class AUDIO_IO_API ProjectAudioIO final
    , public Observer::Publisher<SpeedChangeMessage>
 {
 public:
+   //! Type of function constructing AudioIOStartStreamOptions
+   using OptionsFactory =
+      AudioIOStartStreamOptions(
+         AudacityProject &project, bool newDefaults);
+
+   //! Function returning a default factory function, which ignores the
+   //! second argument
+   static const std::function<OptionsFactory> DefaultOptionsFactory();
+
+   //! Global hook making AudioIOStartStreamOptions for a project, which
+   //! has a non-trivial default implementation
+   struct AUDIO_IO_API DefaultOptions : GlobalHook< DefaultOptions,
+      OptionsFactory,
+      DefaultOptionsFactory // default installed implementation
+   >{};
+
+   //! Invoke the global hook, supplying a default argument
+   static AudioIOStartStreamOptions GetDefaultOptions(
+      AudacityProject &project,
+      bool newDefaults = false /*!< if true, policy is meant to respond to
+         looping region; but specifying that is outside this library's scope
+      */
+   );
+
    static ProjectAudioIO &Get( AudacityProject &project );
    static const ProjectAudioIO &Get( const AudacityProject &project );
 

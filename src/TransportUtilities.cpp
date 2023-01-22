@@ -191,7 +191,6 @@ void TransportUtilities::DoStartPlaying(
    const CommandContext &context, bool newDefault)
 {
    auto &project = context.project;
-   auto &projectAudioManager = ProjectAudioManager::Get(project);
    auto gAudioIO = AudioIOBase::Get();
    //play the front project
    if (!gAudioIO->IsBusy()) {

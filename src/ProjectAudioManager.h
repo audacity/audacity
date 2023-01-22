@@ -118,7 +118,7 @@ public:
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
    void PlayCurrentRegion(
-      bool newDefault = false, //!< See DefaultPlayOptions
+      bool newDefault = false, //!< See ProjectAudioIO::GetDefaultOptions
       bool cutpreview = false);
 
    void OnPause();
@@ -180,12 +180,6 @@ private:
          const AudacityProject &project, StatusBarField field);
 };
 
-AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultPlayOptions(
-   AudacityProject &project,
-   bool newDefault = false /*!< "new" default playback policy adjusts to
-      changes of the looping region, "old" default plays once straight */
-);
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected

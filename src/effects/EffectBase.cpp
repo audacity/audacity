@@ -26,7 +26,7 @@
 #include "widgets/wxWidgetsWindowPlacement.h"
 #include "../MixAndRender.h"
 #include "PluginManager.h"
-#include "../ProjectAudioManager.h"
+#include "ProjectAudioIO.h"
 #include "QualitySettings.h"
 #include "TransactionScope.h"
 #include "ViewInfo.h"
@@ -490,7 +490,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      auto options = DefaultPlayOptions(*pProject);
+      auto options = ProjectAudioIO::GetDefaultOptions(*pProject);
       int token = gAudioIO->StartStream(tracks, mT0, t1, t1, options);
 
       if (token) {

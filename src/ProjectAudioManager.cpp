@@ -481,7 +481,7 @@ void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
 
       if (newDefault)
          cutpreview = false;
-      auto options = DefaultPlayOptions( *p, newDefault );
+      auto options = ProjectAudioIO::GetDefaultOptions(*p, newDefault);
       if (cutpreview)
          options.envelope = nullptr;
       auto mode =
@@ -652,7 +652,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
       if (t1 == t0)
          t1 = DBL_MAX;
 
-      auto options = DefaultPlayOptions(*p);
+      auto options = ProjectAudioIO::GetDefaultOptions(*p);
       WritableSampleTrackArray existingTracks;
 
       // Checking the selected tracks: counting them and
@@ -1155,16 +1155,14 @@ const ReservedCommandFlag&
       }
    }; return flag; }
 
-AudioIOStartStreamOptions
-DefaultPlayOptions( AudacityProject &project, bool newDefault )
-{
-   auto &projectAudioIO = ProjectAudioIO::Get( project );
-   AudioIOStartStreamOptions options { project.shared_from_this(),
-      ProjectRate::Get( project ).GetRate() };
-   options.captureMeter = projectAudioIO.GetCaptureMeter();
-   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   options.envelope = Mixer::WarpOptions::DefaultWarp::Call(TrackList::Get(project));
-   options.listener = ProjectAudioManager::Get( project ).shared_from_this();
+//! Install an implementation in a library hook
+static ProjectAudioIO::DefaultOptions::Scope sScope {
+[](AudacityProject &project, bool newDefault) -> AudioIOStartStreamOptions {
+   //! Invoke the library default implemantation directly bypassing the hook
+   auto options = ProjectAudioIO::DefaultOptionsFactory()(project, newDefault);
+
+   //! Decorate with more info
+   options.listener = ProjectAudioManager::Get(project).shared_from_this();
    
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
    options.loopEnabled = loopEnabled;
@@ -1186,12 +1184,12 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    }
 
    return options;
-}
+} };
 
 AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
-   auto result = DefaultPlayOptions( project );
+   auto result = ProjectAudioIO::GetDefaultOptions( project );
    auto gAudioIO = AudioIO::Get();
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing

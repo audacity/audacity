@@ -20,6 +20,7 @@
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
@@ -787,9 +788,9 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       
       auto &projectAudioManager = ProjectAudioManager::Get( mProject );
       projectAudioManager.PlayPlayRegion(
-                                         SelectedRegion(mPlayPos, mRegion.t1()),
-                                         DefaultPlayOptions( mProject ),
-                                         PlayMode::normalPlay );
+         SelectedRegion{ mPlayPos, mRegion.t1() },
+         ProjectAudioIO::GetDefaultOptions(mProject),
+         PlayMode::normalPlay);
    }
 }
 

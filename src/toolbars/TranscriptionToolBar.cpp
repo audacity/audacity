@@ -547,7 +547,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
       return;
 
    {
-      auto options = DefaultPlayOptions( *p, newDefault );
+      auto options = ProjectAudioIO::GetDefaultOptions(*p, newDefault);
       // No need to set cutPreview options.
       options.envelope = bFixedSpeedPlay ? mEnvelope.get() : nullptr;
       options.variableSpeed = !bFixedSpeedPlay;
