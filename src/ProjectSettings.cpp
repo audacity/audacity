@@ -179,11 +179,7 @@ void ProjectSettings::SetTool(int tool) {
 
 bool ProjectSettings::IsSyncLocked() const
 {
-#ifdef EXPERIMENTAL_SYNC_LOCK
    return mIsSyncLocked;
-#else
-   return false;
-#endif
 }
 
 void ProjectSettings::SetSyncLock(bool flag)

@@ -1323,18 +1323,13 @@ BaseItemSharedPtr TracksMenu()
          )
 
          //////////////////////////////////////////////////////////////////////////
-      )
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-      ,
+      ),
 
       Section( "",
          Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
             OnSyncLock, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/SyncLockTracks"), false ) )
       )
-
-#endif
 
    ) };
    return menu;

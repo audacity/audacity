@@ -821,7 +821,6 @@ void ToolManager::ReadConfig()
             bar->ResizingDone();
          }
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
          // Set the width
          if( width[ ndx ] >= bar->GetSize().x )
          {
@@ -829,24 +828,7 @@ void ToolManager::ReadConfig()
             bar->SetSize( sz );
             bar->Layout();
          }
-#else
-         // note that this section is here because if you had been using sync-lock and now you aren't,
-         // the space for the extra button is stored in audacity.cfg, and so you get an extra space
-         // in the EditToolbar.
-         // It is needed so that the meterToolbar size gets preserved.
-         // Longer-term we should find a better fix for this.
-         wxString thisBar = bar->GetSection();
-         if( thisBar != wxT("Edit"))
-         {
-            // Set the width
-            if( width[ ndx ] >= bar->GetSize().x )
-            {
-               wxSize sz( width[ ndx ], bar->GetSize().y );
-               bar->SetSize( sz );
-               bar->Layout();
-            }
-         }
-#endif
+
          // make a note of docked and hidden toolbars
          if (!show[ndx])
             dockedAndHidden.push_back(bar);

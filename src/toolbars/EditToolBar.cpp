@@ -69,10 +69,8 @@ enum {
    ETBTrimID,
    ETBSilenceID,
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   //Undefined, so no sync-lock on/off button.
-   //#define OPTION_SYNC_LOCK_BUTTON
-#endif
+   // no sync-lock on/off button.
+   // #define OPTION_SYNC_LOCK_BUTTON
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
    ETBSyncLockID,
