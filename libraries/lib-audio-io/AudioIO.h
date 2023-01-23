@@ -663,4 +663,6 @@ private:
    bool mDelayingActions{ false };
 };
 
+AUDIO_IO_API extern BoolSetting SoundActivatedRecord;
+
 #endif

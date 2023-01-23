@@ -1552,7 +1552,6 @@ set( AUDACITY_LIBRARIES
    lib-tags-interface
    lib-audio-io-interface
    lib-wave-track-interface
-   lib-track-selection-interface
 )
 
 if (${_OPT}use_ffmpeg)

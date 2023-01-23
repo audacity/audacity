@@ -11,6 +11,7 @@ Paul Licameli split from Track.cpp
 #ifndef __AUDACITY_SYNC_LOCK__
 #define __AUDACITY_SYNC_LOCK__
 
+#include "Prefs.h"
 #include "Track.h" // for TrackIterRange
 #include "AttachedVirtualFunction.h"
 #include "Observer.h"
@@ -72,5 +73,7 @@ AttachedVirtualFunction<
    const Track
 >;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(TRACK_SELECTION_API, GetSyncLockPolicy);
+
+extern TRACK_SELECTION_API BoolSetting SyncLockTracks;
 
 #endif

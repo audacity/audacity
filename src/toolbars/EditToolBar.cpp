@@ -82,6 +82,10 @@ enum {
    ETBNumButtons
 };
 
+#ifdef OPTION_SYNC_LOCK_BUTTON
+#include "SyncLock.h"
+#endif
+
 constexpr int first_ETB_ID = 11300;
 
 static const ToolBarButtons::ButtonList EditToolbarButtonList = {
@@ -127,8 +131,7 @@ EditToolBar::EditToolBar( AudacityProject &project )
 {
 #ifdef OPTION_SYNC_LOCK_BUTTON
    auto action = [this]() {
-      bool bSyncLockTracks;
-      gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
+      bool bSyncLockTracks = SyncLockTracks.Read();
 
       if (bSyncLockTracks)
          mButtons.PushDown(ETBSyncLockID);

@@ -983,9 +983,7 @@ void OnSyncLock(const CommandContext &context)
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
 
-   bool bSyncLockTracks;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
-   gPrefs->Write(wxT("/GUI/SyncLockTracks"), !bSyncLockTracks);
+   SyncLockTracks.Toggle();
    gPrefs->Flush();
 
    // Toolbar, project sync-lock handled within
@@ -1328,7 +1326,7 @@ BaseItemSharedPtr TracksMenu()
       Section( "",
          Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
             OnSyncLock, AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/SyncLockTracks"), false ) )
+            Options{}.CheckTest(SyncLockTracks) )
       )
 
    ) };

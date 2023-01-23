@@ -410,9 +410,7 @@ void OnSoundActivated(const CommandContext &context)
 
 void OnToggleSoundActivated(const CommandContext &WXUNUSED(context) )
 {
-   bool pause;
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &pause, false);
-   gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
+   SoundActivatedRecord.Toggle();
    gPrefs->Flush();
    ToolManager::ModifyAllProjectToolbarMenus();
 }
@@ -822,7 +820,7 @@ BaseItemSharedPtr TransportMenu()
                   XXO("Sound A&ctivated Recording (on/off)"),
                   OnToggleSoundActivated,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
-                  Options{}.CheckTest(wxT("/AudioIO/SoundActivatedRecord"), false) )
+                  Options{}.CheckTest(SoundActivatedRecord) )
             ),
 
             Section( "Part2",

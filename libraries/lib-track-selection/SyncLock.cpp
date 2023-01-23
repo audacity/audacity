@@ -36,8 +36,8 @@ const SyncLockState &SyncLockState::Get( const AudacityProject &project )
 
 SyncLockState::SyncLockState(AudacityProject &project)
    : mProject{project}
+   , mIsSyncLocked(SyncLockTracks.Read())
 {
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 }
 
 bool SyncLockState::IsSyncLocked() const
@@ -168,3 +168,5 @@ TrackIterRange< Track > SyncLock::Group( Track *pTrack )
 DEFINE_ATTACHED_VIRTUAL(GetSyncLockPolicy) {
    return [](auto&){ return SyncLockPolicy::Isolated; };
 }
+
+BoolSetting SyncLockTracks{ "/GUI/SyncLockTracks", false };

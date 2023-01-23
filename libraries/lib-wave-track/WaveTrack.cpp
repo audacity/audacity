@@ -51,7 +51,7 @@ from the project that will own the track.
 #include "ProjectRate.h"
 
 #include "Prefs.h"
-
+#include "SyncLock.h"
 #include "TimeWarper.h"
 #include "QualitySettings.h"
 
@@ -2585,8 +2585,7 @@ StringSetting AudioTrackNameSetting{
 // SyncLock.
 bool GetEditClipsCanMove()
 {
-   bool mIsSyncLocked;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
+   bool mIsSyncLocked = SyncLockTracks.Read();
    if( mIsSyncLocked )
       return true;
    bool editClipsCanMove;
