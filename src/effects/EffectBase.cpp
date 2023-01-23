@@ -334,7 +334,8 @@ std::any EffectBase::BeginPreview(const EffectSettings &)
    return {};
 }
 
-void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
+void EffectBase::Preview(
+   EffectSettingsAccess &access, std::function<void()> updateUI, bool dryOnly)
 {
    auto cleanup0 = BeginPreview(access.Get());
 
@@ -390,10 +391,6 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
             std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance())
          )
             pInstance->Init();
-
-      // In case any dialog control depends on mT1 or mDuration:
-      if ( mUIDialog )
-         mUIDialog->TransferDataToWindow();
    } );
 
    auto vr0 = valueRestorer( mT0 );
@@ -403,9 +400,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       mT1 = t1;
 
    // In case any dialog control depends on mT1 or mDuration:
-   if ( mUIDialog ) {
-      mUIDialog->TransferDataToWindow();
-   }
+   if (updateUI)
+      updateUI();
 
    // Save the original track list
    TrackList *saveTracks = mTracks;

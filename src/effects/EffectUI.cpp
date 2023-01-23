@@ -755,8 +755,12 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       if (!TransferDataFromWindow())
          return;
       
-      mEffectUIHost.Preview(*mpAccess, false);
-      
+      auto updater = [this]{ TransferDataToWindow(); };
+      mEffectUIHost.Preview(*mpAccess, updater, false);
+      // After restoration of settings and effect state:
+      // In case any dialog control depends on mT1 or mDuration:
+      updater();
+
       return;
    }
    
