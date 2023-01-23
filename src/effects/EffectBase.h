@@ -48,7 +48,9 @@ public:
 protected:
    // The EffectBase class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   void Preview(EffectSettingsAccess &access, bool dryOnly) final;
+   void Preview(
+      EffectSettingsAccess &access, std::function<void()> updateUI,
+      bool dryOnly) final;
 
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
       double projectRate, TrackList *list,
@@ -125,15 +127,11 @@ protected:
 private:
    friend class Effect;
 
-   //! This weak pointer may be the same as mUIParent, or null
-   wxWeakRef<wxDialog> mUIDialog;
-
    double GetDefaultDuration();
 
    void CountWaveTracks();
 
    TrackList *mTracks{}; // the complete list of all tracks
-   //! This weak pointer may be the same as mHostUIDialog, or null
    bool mIsLinearEffect{ false };
    bool mPreviewWithNotSelected{ false };
    bool mPreviewFullSelection{ false };

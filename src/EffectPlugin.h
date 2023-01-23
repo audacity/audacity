@@ -93,7 +93,13 @@ public:
     */
    virtual EffectUIClientInterface* GetEffectUIClientInterface() = 0;
 
-   virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
+   //! Calculate temporary tracks of limited length with effect applied and play
+   /*!
+    @param updateUI called after adjusting temporary settings and before play
+    */
+   virtual void Preview(
+      EffectSettingsAccess &access, std::function<void()> updateUI,
+      bool dryOnly) = 0;
    virtual bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const = 0;
    // @return nullptr for failure

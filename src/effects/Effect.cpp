@@ -155,18 +155,17 @@ int Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
    EffectUIValidator *, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
-   mUIDialog = &dialog;
-   mUIDialog->Layout();
-   mUIDialog->Fit();
-   mUIDialog->SetMinSize(mUIDialog->GetSize());
-   if (VetoDialogHook::Call(mUIDialog))
+   dialog.Layout();
+   dialog.Fit();
+   dialog.SetMinSize(dialog.GetSize());
+   if (VetoDialogHook::Call(&dialog))
       return 0;
    if (SupportsRealtime() && !forceModal) {
-      mUIDialog->Show();
+      dialog.Show();
       // Return false to bypass effect processing
       return 0;
    }
-   return mUIDialog->ShowModal();
+   return dialog.ShowModal();
 }
 
 int Effect::ShowHostInterface(wxWindow &parent,
@@ -320,7 +319,6 @@ bool Effect::ValidateUI(EffectSettings &)
 bool Effect::CloseUI()
 {
    mUIParent = nullptr;
-   mUIDialog = nullptr;
    return true;
 }
 
