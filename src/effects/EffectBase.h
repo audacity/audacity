@@ -21,6 +21,7 @@
 #include "EffectPlugin.h" // to inherit
 #include "EffectInterface.h" // to inherit
 
+#include <any>
 
 namespace BasicUI { class ProgressDialog; }
 
@@ -37,10 +38,17 @@ public:
 
    void SetTracks(TrackList *pTracks) { mTracks = pTracks; }
 
+   //! Called when Preview() starts, to allow temporary effect state changes
+   /*!
+    default returns a null
+    @return will undo its effects in its destructor before Preview() finishes
+    */
+   virtual std::any BeginPreview(const EffectSettings &settings);
+
 protected:
    // The EffectBase class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
+   void Preview(EffectSettingsAccess &access, bool dryOnly) final;
 
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
       double projectRate, TrackList *list,

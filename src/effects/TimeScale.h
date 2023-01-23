@@ -44,7 +44,7 @@ public:
 
    // Effect implementation
 
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
+   std::any BeginPreview(const EffectSettings &settings) override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,

@@ -229,6 +229,23 @@ public:
    }
 };
 
+/*!
+ Like ValueRestorer but copy-constructible
+ */
+template< typename T >
+struct CopyableValueRestorer {
+   explicit CopyableValueRestorer(T& var)
+      : pointer{ &var, RestoreValue<T>{ var } }
+   {}
+   CopyableValueRestorer(T& var, const T& newValue)
+      : pointer{ &var, RestoreValue<T>{ var } }
+   {
+      var = newValue;
+   }
+
+   std::shared_ptr<T> pointer;
+};
+
 /// inline functions provide convenient parameter type deduction
 template< typename T >
 ValueRestorer< T > valueRestorer( T& var )

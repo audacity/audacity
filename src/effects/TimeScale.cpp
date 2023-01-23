@@ -123,11 +123,10 @@ double EffectTimeScale::CalcPreviewInputLength(
    }
 }
 
-void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
+std::any EffectTimeScale::BeginPreview(const EffectSettings &settings)
 {
-   previewSelectedDuration = access.Get().extra.GetDuration();
-   auto cleanup = valueRestorer( bPreview, true );
-   Effect::Preview(access, dryOnly);
+   previewSelectedDuration = settings.extra.GetDuration();
+   return { CopyableValueRestorer{ bPreview, true } };
 }
 
 bool EffectTimeScale::Process(

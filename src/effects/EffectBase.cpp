@@ -330,8 +330,15 @@ void EffectBase::CountWaveTracks()
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
+std::any EffectBase::BeginPreview(const EffectSettings &)
+{
+   return {};
+}
+
 void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
+   auto cleanup0 = BeginPreview(access.Get());
+
    if (mNumTracks == 0) { // nothing to preview
       return;
    }
