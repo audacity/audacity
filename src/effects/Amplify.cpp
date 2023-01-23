@@ -197,12 +197,11 @@ bool EffectAmplify::Init()
    return true;
 }
 
-void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
+std::any EffectAmplify::BeginPreview(const EffectSettings &settings)
 {
-   auto cleanup1 = valueRestorer( mRatio );
-   auto cleanup2 = valueRestorer( mPeak );
-
-   Effect::Preview(access, dryOnly);
+   return { std::pair{
+      CopyableValueRestorer(mRatio), CopyableValueRestorer(mPeak)
+   } };
 }
 
 std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(

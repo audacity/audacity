@@ -56,7 +56,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
+   std::any BeginPreview(const EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
