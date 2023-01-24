@@ -351,6 +351,15 @@ function( append_node_attributes var target )
    set( "${var}" "${${var}}" PARENT_SCOPE)
 endfunction()
 
+function( set_edge_attributes var access )
+   if( access STREQUAL "PRIVATE" )
+      set( value " [style=dashed]" )
+   else()
+      set( value )
+   endif()
+   set( "${var}" "${value}" PARENT_SCOPE)
+endfunction()
+
 function (propagate_interesting_dependencies target direct_dependencies )
    # use a custom target attribute to propagate information up the graph about
    # some interesting transitive dependencies
@@ -524,13 +533,16 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # collect dependency information
    list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
-   set(ACCESS PUBLIC PRIVATE INTERFACE)
+   set(accesses PUBLIC PRIVATE INTERFACE)
+   set(access PUBLIC)
    foreach( IMPORT ${IMPORT_TARGETS} )
-      if(IMPORT IN_LIST ACCESS)
+      if( IMPORT IN_LIST accesses )
+         set( access "${IMPORT}" )
          continue()
       endif()
-      canonicalize_node_name(IMPORT "${IMPORT}")
-      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
+      canonicalize_node_name( IMPORT "${IMPORT}" )
+      set_edge_attributes( attributes "${access}" )
+      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\" ${attributes}" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 
