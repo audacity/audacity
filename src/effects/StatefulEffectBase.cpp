@@ -55,6 +55,11 @@ bool StatefulEffectBase::Instance::Init()
    return GetEffect().Init();
 }
 
+void StatefulEffectBase::Instance::End()
+{
+   return GetEffect().End();
+}
+
 bool StatefulEffectBase::Instance::RealtimeInitialize(
    EffectSettings &settings, double sampleRate)
 {
@@ -191,6 +196,8 @@ bool StatefulEffectBase::Init()
 {
    return true;
 }
+
+void StatefulEffectBase::End(){}
 
 sampleCount StatefulEffectBase::GetLatency() const
 {

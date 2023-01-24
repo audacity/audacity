@@ -137,6 +137,8 @@ bool EffectInstance::Init()
    return true;
 }
 
+void EffectInstance::End(){}
+
 bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;

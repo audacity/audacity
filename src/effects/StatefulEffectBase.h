@@ -29,6 +29,9 @@ public:
       ~Instance() override;
 
       bool Init() override;
+      // TODO : End() is only used by DeepLearningEffectBase
+      // to be removed.
+      void End() override;
 
       size_t GetBlockSize() const override;
       size_t SetBlockSize(size_t maxBlockSize) override;
@@ -60,6 +63,12 @@ public:
      Default implementation does nothing, returns true
    */
    virtual bool Init();
+
+   /*!
+     @copydoc EffectInstance::End()
+     TODO : only used in DeepLearningEffectBase
+   */
+   virtual void End();
 
    /*!
     @copydoc EffectInstance::Process

@@ -35,8 +35,11 @@ public:
    // Effect implementation
 
    bool Init() override;
-   // void End() override;
-   // bool Process() override;
+
+   // To be removed once we figure out a better
+   // way to do the 'cleanup'
+   void End() override;
+
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
    // void PopulateOrExchange(ShuttleGui & S) override;

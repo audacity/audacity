@@ -461,6 +461,9 @@ public:
     */
    virtual bool Init();
 
+   // TODO: To be removed. Only used by DeepLearningEffectBase
+   // to release the models
+   virtual void End();
    //! Actually do the effect here.
    /*!
     @return success

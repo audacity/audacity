@@ -108,6 +108,16 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
       else
          trans.Commit();
 
+      // This block of code is to call End() for 
+      // DeepLearningEffectBase
+      // To do that I added virtual End() methods 
+      // on EffectInterface and StatefulEffectBase
+      std::shared_ptr<EffectInstance> pInstance;
+      if (!pInstance) {
+         pInstance = MakeInstance();
+         pInstance->End();
+      }
+    
       ReplaceProcessedTracks( false );
       mPresetNames.clear();
    } );
