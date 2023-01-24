@@ -25,7 +25,6 @@
 
 #include "ConfigInterface.h"
 #include "../LabelTrack.h"
-#include "Prefs.h"
 #include "Resample.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"

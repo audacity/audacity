@@ -17,7 +17,6 @@
 #include "Generator.h"
 
 #include "Project.h"
-#include "Prefs.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"

@@ -14,8 +14,6 @@
 
 #include "LoadEffects.h"
 
-#include "Prefs.h"
-
 #include "Effect.h"
 #include "ModuleManager.h"
 #include "PluginManager.h"
