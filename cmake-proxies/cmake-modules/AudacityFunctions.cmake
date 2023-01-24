@@ -340,7 +340,7 @@ endfunction()
 
 function( append_node_attributes var target )
    get_target_property( dependencies ${target} AUDACITY_GRAPH_DEPENDENCIES )
-   set( color "orangered" )
+   set( color "lightpink" )
    if( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
       # Toolkit neutral targets
       set( color "lightgreen" )
