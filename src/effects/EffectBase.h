@@ -121,6 +121,13 @@ private:
    double GetDefaultDuration();
 
    TrackList *mTracks{}; // the complete list of all tracks
+
+   /* Consider these boolean members to be immutable properties of the effect,
+    not state variables.  Usually set only during construction of the effect
+    object.  (Exception possibly only for Nyquist effects that might detect
+    in-session editing of the script file and reassign them; but that is
+    interactive development by power users only)
+    */
    bool mIsLinearEffect{ false };
    bool mPreviewFullSelection{ false };
 
