@@ -34,6 +34,8 @@ public:
    WindowPlacement( const WindowPlacement& ) PROHIBITED;
    //! Don't slice
    WindowPlacement &operator=( const WindowPlacement& ) PROHIBITED;
+   //! Whether null; default in the base class returns false
+   virtual explicit operator bool() const;
    virtual ~WindowPlacement();
 };
 

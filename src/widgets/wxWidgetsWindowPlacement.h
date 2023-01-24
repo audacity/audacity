@@ -31,6 +31,9 @@ struct AUDACITY_DLL_API wxWidgetsWindowPlacement final
    {}
 
    ~wxWidgetsWindowPlacement() override;
+
+   explicit operator bool() const override;
+
    wxWindow *pWindow{};
 };
 
