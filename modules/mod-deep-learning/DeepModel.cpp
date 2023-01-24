@@ -14,6 +14,7 @@
 #include <torch/torch.h>
 
 #include "FileNames.h"
+#include "PlatformCompatibility.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
 
@@ -31,7 +32,8 @@ FilePath DeepModel::BuiltInModulesDir()
    #if defined(__WXOSX__) || defined(__WXMSW__)
       return FileNames::MkDir( wxFileName( FileNames::BaseDir(), wxT("deeplearning-models") ).GetFullPath() );
    #else
-      return FileNames::MkDir( wxFileName( FileNames::ResourcesDir(), wxT("deeplearning-models") ).GetFullPath() );
+      wxFileName baseDir = PlatformCompatibility::GetExecutablePath();
+      return FileNames::MkDir( wxFileName( baseDir.GetPath(), wxT("deeplearning-models") ).GetFullPath() );
    #endif
 }
 
