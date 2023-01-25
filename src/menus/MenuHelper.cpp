@@ -255,7 +255,6 @@ void AddSortedEffectMenuItems(
    MenuTable::BaseItemPtrs &table,
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
-   CommandFlag realflags,
    SortBy sortBy,
    bool useSubgroups,
    void (*onMenuCommand)(const CommandContext&))
@@ -311,7 +310,6 @@ void AddSortedEffectMenuItems(
 auto MakeAddGroupItems(
    const EffectsMenuGroups& list,
    CommandFlag batchflags,
-   CommandFlag realflags,
    void (*onMenuCommand)(const CommandContext&)) -> auto
 {
    return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugs)
@@ -365,7 +363,6 @@ void AddGroupedEffectMenuItems(
    MenuTable::BaseItemPtrs &table,
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
-   CommandFlag realflags,
    GroupBy groupBy,
    bool useSubgroups,
    void (*onMenuCommand)(const CommandContext&))
@@ -594,7 +591,6 @@ auto MakeGroupsFilter(const EffectsMenuGroups& list) -> auto
 MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
-   CommandFlag realflags,
    void (*onMenuCommand)(const CommandContext&),
    std::function<bool(const PluginDescriptor&)> pred)
 {
@@ -609,7 +605,7 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
    {
       return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
       {
-         return AddSortedEffectMenuItems(items, plugins, batchflags, realflags, sortby, useSubgroups, onMenuCommand);
+         return AddSortedEffectMenuItems(items, plugins, batchflags, sortby, useSubgroups, onMenuCommand);
       };
    };
 
@@ -617,7 +613,7 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
    {
       return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
       {
-         return AddGroupedEffectMenuItems(items, plugins, batchflags, realflags, groupBy, useSubgroups, onMenuCommand);
+         return AddGroupedEffectMenuItems(items, plugins, batchflags, groupBy, useSubgroups, onMenuCommand);
       };
    };
 
@@ -637,7 +633,7 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
                {},
                [=](auto plug) { return IsEnabledPlugin(plug) && groupsFilter(plug); },
                nullptr,
-               MakeAddGroupItems(effectMenuDefaults, batchflags, realflags, onMenuCommand)
+               MakeAddGroupItems(effectMenuDefaults, batchflags, onMenuCommand)
             });
          sections.emplace_back(
             MenuSectionBuilder {

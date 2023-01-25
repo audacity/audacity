@@ -305,7 +305,6 @@ BaseItemSharedPtr GenerateMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeGenerate,
             AudioIONotBusyFlag(),
-            AudioIONotBusyFlag(),
             &OnEffect)
          ); }
       )
@@ -386,7 +385,6 @@ BaseItemSharedPtr EffectMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeProcess,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            IsRealtimeNotActiveFlag(),
             &OnEffect)
          ); }
       )
@@ -450,7 +448,6 @@ BaseItemSharedPtr AnalyzeMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeAnalyze,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-            IsRealtimeNotActiveFlag(),
             &OnEffect)
          ); }
       )
@@ -496,7 +493,6 @@ BaseItemSharedPtr ToolsMenu()
          [](AudacityProject&)
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeTool,
-            AudioIONotBusyFlag(),
             AudioIONotBusyFlag(),
             OnEffect)
          ); }

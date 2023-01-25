@@ -793,8 +793,7 @@ public:
 
       auto analyzeItems = MenuHelper::PopulateEffectsMenu(
          EffectTypeAnalyze,
-         {}, {},
-         nullptr,
+         {}, nullptr,
          realtimeEffectPredicate
       );
       
@@ -813,8 +812,7 @@ public:
    
       auto processItems = MenuHelper::PopulateEffectsMenu(
          EffectTypeProcess,
-         {}, {},
-         nullptr,
+         {}, nullptr,
          realtimeEffectPredicate
       );
       
