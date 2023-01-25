@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <wx/window.h>
+#include <wx/event.h>
 #include <wx/containr.h>
 
 /**
@@ -21,6 +23,11 @@
 template<class WindowBase>
 class ListNavigationEnabled : public wxNavigationEnabled<WindowBase>
 {
+   friend void ListNavigationEnabled_HandleCharHook(wxWindow* self, wxKeyEvent& evt);
+   friend void ListNavigationEnabled_HandleKeyDown(wxWindow* self, wxKeyEvent& evt);
+   friend void ListNavigationEnabled_HandleNavigationKeyEvent(wxWindow* self, wxNavigationKeyEvent& evt);
+   friend void ListNavigationEnabled_HandleDestroy(wxWindow* self);
+
 public:
    ListNavigationEnabled()
    {
@@ -38,78 +45,22 @@ private:
 
    void OnCharHook(wxKeyEvent& evt)
    {
-      //We want to restore focus to list item once arrow navigation is used
-      //on the child item, for this we need a char hook since key/navigation
-      //events are sent directly to the focused item
-      const auto keyCode = evt.GetKeyCode();
-      if((keyCode == WXK_DOWN || keyCode == WXK_UP) &&
-         !WindowBase::HasFocus() &&
-         WindowBase::IsDescendant(WindowBase::FindFocus()))
-      {
-         wxWindow::SetFocusFromKbd();
-      }
-      else
-         evt.Skip();
+      ListNavigationEnabled_HandleCharHook(this, evt);
    }
    
    void OnKeyDown(wxKeyEvent& evt)
    {
-      const auto keyCode = evt.GetKeyCode();
-      if(keyCode == WXK_TAB)
-         WindowBase::NavigateIn(wxNavigationKeyEvent::FromTab | (evt.ShiftDown() ? wxNavigationKeyEvent::IsBackward : wxNavigationKeyEvent::IsForward));
-      else if(keyCode == WXK_DOWN)
-         WindowBase::Navigate(wxNavigationKeyEvent::IsForward);
-      else if(keyCode == WXK_UP)
-         WindowBase::Navigate(wxNavigationKeyEvent::IsBackward);
-      else
-         evt.Skip();
+      ListNavigationEnabled_HandleKeyDown(this, evt);
    }
 
    void OnNavigationKeyEvent(wxNavigationKeyEvent& evt)
    {
-      if(evt.GetEventObject() == WindowBase::GetParent() && !evt.IsFromTab())
-         WindowBase::SetFocusFromKbd();
-      else if(evt.GetEventObject() == this && evt.GetCurrentFocus() == this && evt.IsFromTab())
-      {
-         //NavigateIn
-         wxPropagationDisabler disableProp(evt);
-         const auto isForward = evt.GetDirection();
-         const auto& children = WindowBase::GetChildren();
-         auto node = isForward ? children.GetFirst() : children.GetLast();
-         while(node)
-         {
-            auto child = node->GetData();
-            if(child->CanAcceptFocusFromKeyboard())
-            {
-               if(!child->GetEventHandler()->ProcessEvent(evt))
-               {
-                  child->SetFocusFromKbd();
-               }
-               evt.Skip(false);
-               return;
-            }
-            node = isForward ? node->GetNext() : node->GetPrevious();
-         }
-      }
-      else
-         evt.Skip();
+      ListNavigationEnabled_HandleNavigationKeyEvent(this, evt);
    }
    
    bool Destroy() override
    {
-      if(WindowBase::IsDescendant(wxWindow::FindFocus()))
-      {
-         auto next = WindowBase::GetNextSibling();
-         if(next != nullptr && next->AcceptsFocus())
-            next->SetFocus();
-         else
-         {
-            auto prev = WindowBase::GetPrevSibling();
-            if(prev != nullptr && prev->AcceptsFocus())
-               prev->SetFocus();
-         }
-      }
+      ListNavigationEnabled_HandleDestroy(this);
       return wxNavigationEnabled<WindowBase>::Destroy();
    }
-
 };

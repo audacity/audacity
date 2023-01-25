@@ -167,6 +167,7 @@ list( APPEND SOURCES
       LangChoice.h
       Legacy.cpp
       Legacy.h
+      ListNavigationEnabled.cpp
       ListNavigationEnabled.h
       LogWindow.cpp
       LogWindow.h
