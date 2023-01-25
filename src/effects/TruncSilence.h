@@ -94,6 +94,8 @@ private:
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);
 
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mThresholdDB {} ;
    int mActionIndex;
    double mInitialAllowedSilence;

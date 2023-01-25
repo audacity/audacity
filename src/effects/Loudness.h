@@ -82,6 +82,8 @@ private:
    void UpdateUI();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    bool   mStereoInd;
    double mLUFSLevel;
    double mRMSLevel;

@@ -55,6 +55,8 @@ private:
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
+   wxWeakRef<wxWindow> mUIParent;
+
    float mAmount;
    float mTime_resolution;  //seconds
    double m_t1;

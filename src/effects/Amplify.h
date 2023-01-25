@@ -75,6 +75,8 @@ private:
    void CheckClip();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mPeak      = 1.0;
 
    double mRatio     = 1.0;

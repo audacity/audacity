@@ -57,6 +57,8 @@ public:
 private:
    // EffectNoise implementation
 
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mSampleRate{};
    int mType;
    double mAmp;

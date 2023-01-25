@@ -197,6 +197,8 @@ std::unique_ptr<EffectUIValidator> EffectChangeTempo::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    enum { precision = 2 };
 
    S.StartVerticalLay(0);

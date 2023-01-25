@@ -139,11 +139,11 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
 END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
+   : mIsPrompt{ fName == NYQUIST_PROMPT_ID }
 {
    mOutputTrack[0] = mOutputTrack[1] = nullptr;
 
    mAction = XO("Applying Nyquist Effect...");
-   mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
    mTrace = false;
@@ -169,14 +169,13 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist
-   if (fName == NYQUIST_PROMPT_ID) {
+   if (mIsPrompt) {
       mName = NYQUIST_PROMPT_NAME;
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
       mPromptType = mType;
       mOK = true;
-      mIsPrompt = true;
       return;
    }
 
@@ -1136,6 +1135,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    if (mIsPrompt)
       BuildPromptWindow(S);
    else
@@ -1164,7 +1164,7 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
    if (success)
    {
-      EnablePreview(mEnablePreview);
+      EffectUIValidator::EnablePreview(mUIParent, mEnablePreview);
    }
 
    return success;

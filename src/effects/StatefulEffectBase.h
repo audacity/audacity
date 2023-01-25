@@ -23,7 +23,7 @@ class sampleCount;
 class AUDACITY_DLL_API StatefulEffectBase {
 public:
    //! Calls through to members of StatefulEffectBase
-   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
+   class AUDACITY_DLL_API Instance : public virtual EffectInstanceEx {
    public:
       explicit Instance(StatefulEffectBase &effect);
       ~Instance() override;
@@ -52,6 +52,11 @@ public:
 
       bool NeedsDither() const override;
       
+      bool ProcessInitialize(EffectSettings &settings,
+         double sampleRate, ChannelNames chanMap) override;
+
+      bool ProcessFinalize() noexcept override;
+
    protected:
       StatefulEffectBase &mEffect;
       StatefulEffectBase &GetEffect() const { return mEffect; }
@@ -145,7 +150,7 @@ public:
    virtual unsigned GetAudioOutCount() const;
 
    /*!
-    @copydoc StateEffectBase::Instance::GetLatency()
+    @copydoc StatefulEffectBase::Instance::GetLatency()
     */
    virtual sampleCount GetLatency() const;
 
@@ -153,6 +158,17 @@ public:
     @copydoc StateEffectBase::Instance::NeedsDither()
     */
    virtual bool NeedsDither() const;
+
+   /*!
+    @copydoc StatefulEffectBase::Instance::ProcessInitialize()
+    */
+   virtual bool ProcessInitialize(EffectSettings &settings, double sampleRate,
+      ChannelNames chanMap = nullptr);
+
+   /*!
+    @copydoc StatefulEffectBase::Instance::ProcessFinalize()
+    */
+   virtual bool ProcessFinalize() noexcept;
 
 private:
 

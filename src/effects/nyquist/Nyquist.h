@@ -139,6 +139,8 @@ public:
    void Stop();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    static int mReentryCount;
    // NyquistEffect implementation
 
@@ -242,7 +244,7 @@ private:
     * the "Nyquist Effect Prompt", or "Nyquist Prompt", false for all other effects (lisp code read from
     * files)
     */
-   bool              mIsPrompt;
+   const bool        mIsPrompt;
    bool              mOK;
    TranslatableString mInitError;
    wxString          mInputCmd; // history: exactly what the user typed

@@ -56,6 +56,8 @@ private:
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
 
+   wxWeakRef<wxWindow> mUIParent{};
+
    int repeatCount;
 
    wxTextCtrl   *mRepeatCount;

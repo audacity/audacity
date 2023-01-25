@@ -235,6 +235,7 @@ std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
    TranslatableStrings pitch;
@@ -625,7 +626,7 @@ void EffectChangePitch::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(evt))
 
    if (!m_pTextCtrl_SemitonesChange->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -648,7 +649,7 @@ void EffectChangePitch::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(evt))
    // If m_dSemitonesChange is a big enough positive, we can go to 1.#INF (Windows) or inf (Linux).
    // But practically, these are best limits for Soundtouch.
    bool bIsGoodValue = (m_dSemitonesChange > -80.0) && (m_dSemitonesChange <= 60.0);
-   EnableApply(bIsGoodValue);
+   EffectUIValidator::EnableApply(mUIParent, bIsGoodValue);
 }
 
 void EffectChangePitch::OnText_FromFrequency(wxCommandEvent & WXUNUSED(evt))
@@ -661,7 +662,7 @@ void EffectChangePitch::OnText_FromFrequency(wxCommandEvent & WXUNUSED(evt))
    // so it's not an error, but we do not want to update the values/controls.
    if (!m_pTextCtrl_FromFrequency->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -683,7 +684,7 @@ void EffectChangePitch::OnText_FromFrequency(wxCommandEvent & WXUNUSED(evt))
    m_bLoopDetect = false;
 
    // Success. Make sure OK and Preview are enabled, in case we disabled above during editing.
-   EnableApply(true);
+   EffectUIValidator::EnableApply(mUIParent, true);
 }
 
 void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
@@ -696,7 +697,7 @@ void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
    // so it's not an error, but we do not want to update the values/controls.
    if (!m_pTextCtrl_ToFrequency->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -720,7 +721,7 @@ void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
    // Can happen while editing.
    // If the value is good, might also need to re-enable because of above clause.
    bool bIsGoodValue = (m_dPercentChange > Percentage.min) && (m_dPercentChange <= Percentage.max);
-   EnableApply(bIsGoodValue);
+   EffectUIValidator::EnableApply(mUIParent, bIsGoodValue);
 }
 
 void EffectChangePitch::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
@@ -730,7 +731,7 @@ void EffectChangePitch::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
 
    if (!m_pTextCtrl_PercentChange->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -750,7 +751,7 @@ void EffectChangePitch::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
    m_bLoopDetect = false;
 
    // Success. Make sure OK and Preview are enabled, in case we disabled above during editing.
-   EnableApply(true);
+   EffectUIValidator::EnableApply(mUIParent, true);
 }
 
 void EffectChangePitch::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(evt))

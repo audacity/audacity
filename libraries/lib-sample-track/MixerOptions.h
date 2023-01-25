@@ -100,12 +100,12 @@ struct TimesAndSpeed final {
 };
 
 struct StageSpecification final {
-   using Factory = std::function<std::shared_ptr<EffectInstanceEx>()>;
+   using Factory = std::function<std::shared_ptr<EffectInstance>()>;
 
    const Factory factory;
    EffectSettings settings;
 
-   mutable std::shared_ptr<EffectInstanceEx> mpFirstInstance;
+   mutable std::shared_ptr<EffectInstance> mpFirstInstance;
 };
 
 }

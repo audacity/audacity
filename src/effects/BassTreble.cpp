@@ -69,6 +69,7 @@ struct EffectBassTreble::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
+   wxWeakRef<wxWindow> mUIParent{};
    EffectBassTrebleSettings mSettings;
 
    wxSlider* mBassS;
@@ -94,14 +95,13 @@ struct EffectBassTreble::Validator
 
    void EnableApplyFromValidate()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      actualEffect.EnableApply(actualEffect.GetUIParent()->Validate());
+      EnableApply(mUIParent, mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataFromWindow()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      return actualEffect.EnableApply(actualEffect.GetUIParent()->TransferDataFromWindow());
+      return EnableApply(
+         mUIParent, mUIParent->TransferDataFromWindow());
    }
 };
 
@@ -281,6 +281,7 @@ std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
 
 void EffectBassTreble::Validator::PopulateOrExchange(ShuttleGui & S)
 {
+   mUIParent = S.GetParent();
    auto& ms = mSettings;
 
    S.SetBorder(5);
@@ -367,7 +368,7 @@ bool EffectBassTreble::Validator::UpdateUI()
 
    Effect& actualEffect = static_cast<Effect&>(mEffect);
 
-   if (! actualEffect.GetUIParent()->TransferDataToWindow())
+   if (! mUIParent->TransferDataToWindow())
    {
       return false;
    }
@@ -652,7 +653,7 @@ bool EffectBassTreble::Validator::ValidateUI()
 {
    // This bit was copied from the original override of the effect's TransferDataFromWindow
    Effect& actualEffect = static_cast<Effect&>(mEffect);   
-   if (! actualEffect.GetUIParent()->Validate() || !actualEffect.GetUIParent()->TransferDataFromWindow())
+   if (! mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;
    }

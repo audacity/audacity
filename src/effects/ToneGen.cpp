@@ -273,6 +273,7 @@ std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    wxTextCtrl *t;
 
    S.StartMultiColumn(2, wxCENTER);
@@ -424,7 +425,8 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 
 void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_EQUALIZATION_UI__
 #define __AUDACITY_EFFECT_EQUALIZATION_UI__
 
-#include "EffectInterface.h"
+#include "EffectPlugin.h"
 #include "EqualizationBandSliders.h"
 
 class wxButton;
@@ -30,7 +30,8 @@ class RulerPanel;
 
 class EqualizationUI : public wxEvtHandler {
 public:
-   EqualizationUI(EffectSettingsManager &manager, wxWindow *& uiParent,
+   EqualizationUI(EffectSettingsManager &manager,
+      const wxWeakRef<wxWindow> &uiParent,
       const TranslatableString &name, EqualizationCurvesList &curvesList,
       int options
    )  : mManager{ manager }
@@ -81,7 +82,7 @@ private:
    void setCurve();
 
    EffectSettingsManager &mManager;
-   wxWindow *& mUIParent;
+   const wxWeakRef<wxWindow> &mUIParent;
    EqualizationCurvesList &mCurvesList;
    TranslatableString mName;
    const int mOptions;

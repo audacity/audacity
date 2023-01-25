@@ -37,6 +37,7 @@
 #include "EqualizationUI.h"
 #include "LoadEffects.h"
 #include "PasteOverPreservingClips.h"
+#include "ShuttleGui.h"
 
 #include "../WaveClip.h"
 #include "../WaveTrack.h"
@@ -404,6 +405,7 @@ std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
+   mUIParent = S.GetParent();
    return mUI.PopulateOrExchange(S, instance, access, pOutputs);
 }
 

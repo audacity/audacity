@@ -2,7 +2,7 @@
 
 #include <pluginterfaces/base/smartpointer.h>
 
-#include "EffectInterface.h"
+#include "EffectPlugin.h"
 
 class EffectBase;
 class VST3Wrapper;

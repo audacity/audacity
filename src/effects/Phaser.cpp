@@ -79,6 +79,7 @@ struct EffectPhaser::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
+   wxWeakRef<wxWindow> mUIParent;
    EffectPhaserSettings mSettings;
 
    wxTextCtrl* mStagesT;
@@ -116,14 +117,12 @@ struct EffectPhaser::Validator
    
    void EnableApplyFromValidate()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      actualEffect.EnableApply(actualEffect.GetUIParent()->Validate());
+      EnableApply(mUIParent, mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataFromWindow()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      return actualEffect.EnableApply(actualEffect.GetUIParent()->TransferDataFromWindow());
+      return EnableApply(mUIParent, mUIParent->TransferDataFromWindow());
    }
    
 };
@@ -296,6 +295,7 @@ std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
 
 void EffectPhaser::Validator::PopulateOrExchange(ShuttleGui& S)
 {
+   mUIParent = S.GetParent();
    auto& ms = mSettings;
 
    S.SetBorder(5);
@@ -412,7 +412,7 @@ bool EffectPhaser::Validator::UpdateUI()
 
    Effect& actualEffect = static_cast<Effect&>(mEffect);
 
-   if (!actualEffect.GetUIParent()->TransferDataToWindow())
+   if (!mUIParent->TransferDataToWindow())
    {
       return false;
    }
@@ -433,7 +433,7 @@ bool EffectPhaser::Validator::ValidateUI()
 {
    // This bit was copied from the original override of TransferDataFromWindow
    Effect& actualEffect = static_cast<Effect&>(mEffect);
-   if (!actualEffect.GetUIParent()->Validate() || !actualEffect.GetUIParent()->TransferDataFromWindow())
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;
    }

@@ -194,13 +194,7 @@ struct EffectDistortion::Validator
    void UpdateUIControls();
    void UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled);
 
-
-   wxWindow* GetUIParent()
-   {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      return actualEffect.GetUIParent();
-   }
-
+   wxWeakRef<wxWindow> mUIParent{};
    EffectDistortion::Instance& mInstance;
 };
 
@@ -214,7 +208,7 @@ bool EffectDistortion::Validator::ValidateUI()
       // However, the call to ->Validate would bring up an error dialog
       // saying "Empty value"
 
-      if ( /*!GetUIParent()->Validate() ||*/ !GetUIParent()->TransferDataFromWindow())
+      if ( /*!mUIParent()->Validate() ||*/ !mUIParent->TransferDataFromWindow())
       {
          return false;
       }
@@ -470,6 +464,7 @@ EffectDistortion::PopulateOrExchange(ShuttleGui& S, EffectInstance& instance,
 
 void EffectDistortion::Validator::PopulateOrExchange(ShuttleGui& S)
 {
+   mUIParent = S.GetParent();
    auto& ms = mSettings;
 
    S.AddSpace(0, 5);
@@ -635,7 +630,7 @@ bool EffectDistortion::Validator::UpdateUI()
 {
    const auto& ms = mSettings;
 
-   if (! GetUIParent()->TransferDataToWindow())
+   if (!mUIParent->TransferDataToWindow())
    {
       return false;
    }

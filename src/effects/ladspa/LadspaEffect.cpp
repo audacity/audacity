@@ -1517,6 +1517,7 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
+   mUIParent = S.GetParent();
    auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
    auto result = std::make_unique<Validator>(*this, access, mProjectRate,
       GetType(), pValues);
