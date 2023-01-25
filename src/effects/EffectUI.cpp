@@ -1315,21 +1315,40 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
    em.SetSkipStateFlag( false );
    success = false;
-   if (auto effect = em.GetEffect(ID)) {
+   if (auto effect = dynamic_cast<Effect*>(em.GetEffect(ID))) {
       if (const auto pSettings = em.GetDefaultSettings(ID)) {
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
+         const auto finder =
+         [effect, &window, pAccess, flags] (EffectSettings &settings)
+            -> std::optional<std::shared_ptr<EffectInstanceEx>>
+         {
+            // Prompting will be bypassed when applying an effect that has
+            // already been configured, e.g. repeating the last effect on a
+            // different selection.  Prompting may call EffectBase::Preview
+            std::shared_ptr<EffectInstance> pInstance;
+            std::shared_ptr<EffectInstanceEx> pInstanceEx;
+            if ((flags & EffectManager::kConfigured) == 0 && pAccess) {
+               if (!effect->ShowHostInterface(
+                  window, DialogFactory, pInstance, *pAccess, true ) )
+                  return {};
+               else if (!(pInstanceEx =
+                  std::dynamic_pointer_cast<EffectInstanceEx>(pInstance)
+               ))
+                  return {};
+               else
+                  // Retrieve again after the dialog modified settings
+                  settings = pAccess->Get();
+            }
+            return { pInstanceEx };
+         };
          pAccess->ModifySettings([&](EffectSettings &settings){
-            success = effect->DoEffect(settings,
+            success = effect->DoEffect(settings, finder,
                rate,
                &tracks,
                &trackFactory,
                selectedRegion,
                flags,
-               &window,
-               (flags & EffectManager::kConfigured) == 0
-                  ? DialogFactory
-                  : nullptr,
                pAccess);
             return nullptr;
          });

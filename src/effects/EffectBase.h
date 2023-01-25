@@ -19,7 +19,6 @@
 #include <wx/dialog.h>
 
 #include "EffectPlugin.h" // to inherit
-#include "EffectUIServices.h"  // to inherit
 
 #include <any>
 
@@ -51,16 +50,16 @@ protected:
       EffectSettingsAccess &access, std::function<void()> updateUI,
       bool dryOnly) final;
 
+ public:
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
+      const InstanceFinder &finder,
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       unsigned flags,
-      // Prompt the user for input only if the next arguments are not all null.
-      wxWindow *pParent,
-      const EffectDialogFactory &dialogFactory,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
 
+protected:
    //! After Init(), tell whether Process() should be skipped
    /*
      Typically this is only useful in automation, for example

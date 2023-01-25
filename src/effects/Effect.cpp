@@ -516,8 +516,8 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect(settings, mProjectRate, mTracks, mFactory,
-      region, mUIFlags, nullptr, nullptr, nullptr);
+   return delegate.DoEffect(settings, {}, mProjectRate, mTracks, mFactory,
+      region, mUIFlags, nullptr);
 }
 
 bool Effect::TransferDataToWindow(const EffectSettings &)

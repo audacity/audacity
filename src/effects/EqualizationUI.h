@@ -23,6 +23,7 @@ class wxRadioButton;
 class wxSizer;
 class wxSizerItem;
 class wxStaticText;
+class EffectEditor;
 class EqualizationPanel;
 class RulerPanel;
 
