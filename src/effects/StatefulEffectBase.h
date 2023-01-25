@@ -16,6 +16,7 @@
 
 #include "EffectPlugin.h"
 
+class EffectEditor;
 class sampleCount;
 
 //! A mix-in class for effects that are not yet migrated to statelessness.

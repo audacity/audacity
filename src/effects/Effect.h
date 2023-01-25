@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT__
 
 #include "EffectBase.h"
+#include "EffectUIServices.h"
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
@@ -41,6 +42,19 @@ public:
       const override;
    bool CloseUI() const override;
 };
+
+struct DialogFactoryResults {
+   wxDialog *pDialog{};
+   //! constructed and successfully Init()-ed; or null for failure
+   std::shared_ptr<EffectInstance> pInstance{};
+   EffectEditor *pEditor{};
+};
+
+//! Type of function that creates a dialog for an effect
+/*! The dialog may be modal or non-modal */
+using EffectDialogFactory = std::function< DialogFactoryResults(
+   wxWindow &parent, EffectPlugin &, EffectUIServices &,
+   EffectSettingsAccess &) >;
 
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
@@ -116,10 +130,25 @@ class AUDACITY_DLL_API Effect /* not final */
 
    // EffectPlugin implementation
 
-   int ShowHostInterface( wxWindow &parent,
-      const EffectDialogFactory &factory,
+   //! Usually applies factory to self and given access
+   /*!
+    But there are a few unusual overrides for historical reasons
+
+    @param pInstance may be passed to factory, and is only guaranteed to have
+    lifetime suitable for a modal dialog, unless the dialog stores a copy of
+    pInstance
+
+    @param access is only guaranteed to have lifetime suitable for a modal
+    dialog, unless the dialog stores access.shared_from_this()
+
+    @return 0 if destructive effect processing should not proceed (and there
+    may be a non-modal dialog still opened); otherwise, modal dialog return code
+    */
+   virtual int ShowHostInterface(
+      wxWindow &parent, const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
-      bool forceModal = false) override;
+      bool forceModal = false);
+
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
    [[nodiscard]] OptionalMessage LoadSettingsFromString(

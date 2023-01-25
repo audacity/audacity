@@ -21,8 +21,6 @@ effects.
 
 #include "EffectManager.h"
 
-#include "Effect.h"
-
 #include <algorithm>
 
 #include "../widgets/AudacityMessageBox.h"
@@ -332,7 +330,7 @@ bool EffectManager::PromptUser(
    const PluginID & ID, const EffectDialogFactory &factory, wxWindow &parent)
 {
    bool result = false;
-   if (auto effect = GetEffect(ID)) {
+   if (auto effect = dynamic_cast<Effect*>(GetEffect(ID))) {
 
       auto empty = TrackList::Create(nullptr);
       auto pEffectBase = dynamic_cast<EffectBase*>(effect);

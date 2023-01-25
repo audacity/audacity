@@ -19,7 +19,7 @@
 #include <optional>
 
 #include "Identifier.h"
-#include "EffectPlugin.h"
+#include "Effect.h" // for DialogFactoryResults
 #include "Observer.h"
 #include "PluginInterface.h"
 #include "commands/CommandManagerWindowClasses.h"
