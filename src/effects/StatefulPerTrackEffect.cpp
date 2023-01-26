@@ -55,7 +55,7 @@ std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
 }
 
 std::unique_ptr<EffectUIValidator>
-StatefulPerTrackEffect::PopulateUI(ShuttleGui &S,
+StatefulPerTrackEffect::PopulateUI(const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
@@ -68,7 +68,7 @@ StatefulPerTrackEffect::PopulateUI(ShuttleGui &S,
 
    if (!result) {
       // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(
+      result = std::make_unique<DefaultEffectUIValidator>(*this,
          *this, access, S.GetParent());
       parent->PushEventHandler(this);
    }

@@ -42,7 +42,7 @@ public:
     @param pParent if not null, caller will push an event handler onto this
     window; then this object is responsible to pop it
     */
-   DefaultEffectUIValidator(
+   DefaultEffectUIValidator(const EffectPlugin &plugin,
       EffectUIServices &services, EffectSettingsAccess &access,
       wxWindow *pParent = nullptr);
    //! Calls Disconnect
@@ -51,6 +51,7 @@ public:
    bool ValidateUI() override;
    void Disconnect() override;
 protected:
+   const EffectPlugin &mPlugin;
    wxWindow *mpParent{};
 };
 
@@ -118,24 +119,28 @@ class AUDACITY_DLL_API Effect /* not final */
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+   const override;
 
    EffectUIServices* GetEffectUIServices() override;
 
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
    //! @return false
-   bool ValidateUI(EffectSettings &) override;
-   bool CloseUI() override;
+   bool ValidateUI(const EffectPlugin &context, EffectSettings &) override;
+   bool CloseUI() const override;
 
    bool CanExportPresets() const override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
    bool HasOptions() const override;
-   void ShowOptions() override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // EffectPlugin implementation
 
@@ -289,7 +294,7 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    //! Allows PopulateOrExchange to return null
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
 

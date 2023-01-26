@@ -188,8 +188,9 @@ public:
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal = false) = 0;
+   virtual int ShowClientInterface(const EffectPlugin &plugin,
+      wxWindow &parent, wxDialog &dialog,
+      EffectUIValidator *pValidator, bool forceModal = false) const = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`
    /*!
@@ -205,19 +206,22 @@ public:
     controls; it might also hold some state needed to implement event handlers
     of the controls; it will exist only while the dialog continues to exist
     */
-   virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
+   virtual std::unique_ptr<EffectUIValidator> PopulateUI(
+      const EffectPlugin &plugin, ShuttleGui &S,
       EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) = 0;
 
-   virtual void ExportPresets(const EffectSettings &settings) const = 0;
+   virtual void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings) const = 0;
    //! @return nullopt for failure
-   [[nodiscard]] virtual OptionalMessage
-      ImportPresets(EffectSettings &settings) const = 0;
+   [[nodiscard]] virtual OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const = 0;
 
-   virtual void ShowOptions() = 0;
+   virtual void ShowOptions(const EffectPlugin &plugin) const = 0;
 
-   virtual bool ValidateUI(EffectSettings &settings) = 0;
-   virtual bool CloseUI() = 0;
+   virtual bool ValidateUI(
+      const EffectPlugin &context, EffectSettings &settings) = 0;
+   virtual bool CloseUI() const = 0;
 };
 
 /*************************************************************************************/ /**

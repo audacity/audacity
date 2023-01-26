@@ -246,8 +246,8 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
    return nullptr;
 }
 
-int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *pValidator, bool forceModal)
+int LV2Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
+   wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal) const
 {
    if (pValidator)
       // Remember the dialog with a weak pointer, but don't control its lifetime
@@ -312,8 +312,8 @@ bool LV2Effect::LoadSettings(
 
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
-std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access,
+std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(const EffectPlugin &,
+   ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
    auto &settings = access.Get();
@@ -366,7 +366,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::MakeEditor(
    return nullptr;
 }
 
-bool LV2Effect::CloseUI()
+bool LV2Effect::CloseUI() const
 {
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -450,11 +450,13 @@ bool LV2Effect::CanExportPresets() const
    return false;
 }
 
-void LV2Effect::ExportPresets(const EffectSettings &) const
+void LV2Effect::ExportPresets(
+   const EffectPlugin &, const EffectSettings &) const
 {
 }
 
-OptionalMessage LV2Effect::ImportPresets(EffectSettings &) const
+OptionalMessage LV2Effect::ImportPresets(
+   const EffectPlugin &, EffectSettings &) const
 {
    return { nullptr };
 }
@@ -464,7 +466,7 @@ bool LV2Effect::HasOptions() const
    return true;
 }
 
-void LV2Effect::ShowOptions()
+void LV2Effect::ShowOptions(const EffectPlugin &) const
 {
    LV2Preferences::Dialog{ *this }.ShowModal();
 }

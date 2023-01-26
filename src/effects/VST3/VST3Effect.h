@@ -88,21 +88,24 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+   const override;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
 
-   bool CloseUI() override;
    bool CanExportPresets() const override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
    bool HasOptions() const override;
-   void ShowOptions() override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;

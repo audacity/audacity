@@ -300,7 +300,8 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-bool EffectEqualization::ValidateUI(EffectSettings &settings)
+bool EffectEqualization::ValidateUI(
+   const EffectPlugin &, EffectSettings &settings)
 {
    return mUI.ValidateUI(settings);
 }
@@ -390,11 +391,6 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
-}
-
-bool EffectEqualization::CloseUI()
-{
-   return Effect::CloseUI();
 }
 
 std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
