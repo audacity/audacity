@@ -103,13 +103,14 @@ void TimeFormat::SetTickSizes(
 }
 
 void TimeFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, bool useMajor
+   wxString& s, double d, double mMinor, int mDigits, TickType tickType
 ) const
 {
    // Replace -0 with 0
    if (d < 0.0 && (d + mMinor > 0.0))
       d = 0.0;
-   if (useMajor) {
+
+   if (tickType == RulerFormat::t_major) {
       if (d < 0) {
          s = wxT("-");
          d = -d;

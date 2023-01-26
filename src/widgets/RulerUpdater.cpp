@@ -73,7 +73,7 @@ TranslatableString RulerUpdater::TickSizes::LabelString(
       // hour-minute-second, etc.?)
 
       if (format)
-         format->SetLabelString(s, d, mMinor, mDigits, useMajor);
+         format->SetLabelString(s, d, mMinor, mDigits, tickType);
 
       auto result = Verbatim(s);
 

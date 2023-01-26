@@ -80,7 +80,7 @@ void LinearDBFormat::SetTickSizes(
 }
 
 void LinearDBFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, bool useMajor
+   wxString& s, double d, double mMinor, int mDigits, TickType
 ) const
 {
    // Replace -0 with 0

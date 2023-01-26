@@ -81,7 +81,7 @@ void LogarithmicUpdater::Update(
       start = 9; end = 1; mstep = -1;
    }
    steps++;
-   tickSizes.useMajor = false;
+   tickSizes.tickType = RulerFormat::t_minor;
    TickOutputs minorOutputs{
       allOutputs.minorLabels, allOutputs.bits, allOutputs.box };
    for (int i = 0; i <= steps; i++) {
@@ -106,6 +106,7 @@ void LogarithmicUpdater::Update(
       start = 100; end = 10; mstep = -1;
    }
    steps++;
+   tickSizes.tickType = RulerFormat::t_minorMinor;
    TickOutputs minorMinorOutputs{
       allOutputs.minorMinorLabels, allOutputs.bits, allOutputs.box };
    for (int i = 0; i <= steps; i++) {

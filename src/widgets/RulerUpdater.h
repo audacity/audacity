@@ -91,7 +91,7 @@ protected:
 
    struct TickSizes
    {
-      bool useMajor = true;
+      RulerFormat:: TickType tickType = RulerFormat::t_major;
 
       double       mMajor = 0;
       double       mMinor = 0;
