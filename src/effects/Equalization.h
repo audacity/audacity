@@ -51,14 +51,13 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   bool ValidateUI(EffectSettings &) override;
+   bool ValidateUI(const EffectPlugin &plugin, EffectSettings &) override;
 
    // Effect implementation
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
-   bool CloseUI() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;

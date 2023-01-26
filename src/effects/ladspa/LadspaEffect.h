@@ -106,8 +106,9 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+   const override;
    bool InitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
@@ -119,11 +120,14 @@ public:
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
    bool CanExportPresets() const override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
    bool HasOptions() const override;
-   void ShowOptions() override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // LadspaEffect implementation
 

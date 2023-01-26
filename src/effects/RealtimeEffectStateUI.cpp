@@ -88,7 +88,7 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
 
    UpdateTitle();
 
-   client->ShowClientInterface(
+   client->ShowClientInterface(*effectPlugin,
       projectWindow, *mEffectUIHost, mEffectUIHost->GetValidator(), false);
 
    // The dialog was modal? That shouldn't have happened

@@ -235,8 +235,9 @@ OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) 
    return { nullptr };
 }
 
-int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
-   EffectUIValidator *validator, bool forceModal)
+int VST3Effect::ShowClientInterface(const EffectPlugin &,
+   wxWindow& parent, wxDialog& dialog,
+   EffectUIValidator *validator, bool forceModal) const
 {
 #ifdef __WXMSW__
    if(validator->IsGraphicalUI())
@@ -259,8 +260,8 @@ std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
    return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
 }
 
-std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
-   EffectInstance& instance, EffectSettingsAccess &access,
+std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(const EffectPlugin &,
+   ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
    bool useGUI { true };
@@ -284,17 +285,13 @@ std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
    return nullptr;
 }
 
-bool VST3Effect::CloseUI()
-{
-   return true;
-}
-
 bool VST3Effect::CanExportPresets() const
 {
    return true;
 }
 
-void VST3Effect::ExportPresets(const EffectSettings& settings) const
+void VST3Effect::ExportPresets(
+   const EffectPlugin &, const EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -338,7 +335,8 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    }
 }
 
-OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings) const
+OptionalMessage VST3Effect::ImportPresets(
+   const EffectPlugin &, EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -367,7 +365,7 @@ bool VST3Effect::HasOptions() const
    return true;
 }
 
-void VST3Effect::ShowOptions()
+void VST3Effect::ShowOptions(const EffectPlugin &) const
 {
    VST3OptionsDialog{ *this }.ShowModal();
 }

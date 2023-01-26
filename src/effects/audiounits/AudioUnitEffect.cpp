@@ -263,8 +263,9 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal)
+int AudioUnitEffect::ShowClientInterface(const EffectPlugin &,
+   wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal) const
 {
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       dialog.Show();
@@ -406,7 +407,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
    return presets;
 }
 
-std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
+std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(
+   const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
@@ -434,7 +436,7 @@ bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 }
 #endif
 
-bool AudioUnitEffect::CloseUI()
+bool AudioUnitEffect::CloseUI() const
 {
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -449,7 +451,8 @@ bool AudioUnitEffect::CanExportPresets() const
    return true;
 }
 
-void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
+void AudioUnitEffect::ExportPresets(
+   const EffectPlugin &, const EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -491,7 +494,8 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
          wxOK | wxCENTRE);
 }
 
-OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings) const
+OptionalMessage AudioUnitEffect::ImportPresets(
+   const EffectPlugin &, EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -535,7 +539,7 @@ bool AudioUnitEffect::HasOptions() const
    return true;
 }
 
-void AudioUnitEffect::ShowOptions()
+void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
 {
    AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }

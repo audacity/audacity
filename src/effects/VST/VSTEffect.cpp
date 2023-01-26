@@ -1423,8 +1423,9 @@ bool VSTEffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 /// provided by the effect, so it will not work with all effects since they don't
 /// all provide the information (kn0ck0ut is one).
 ///
-int VSTEffect::ShowClientInterface(
-   wxWindow &parent, wxDialog &dialog, EffectUIValidator* validator, bool forceModal)
+int VSTEffect::ShowClientInterface(const EffectPlugin &,
+   wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator* validator, bool forceModal) const
 {
    //   mProcessLevel = 1;      // in GUI thread
 
@@ -1548,8 +1549,8 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance& instance, EffectSettingsAccess &access,
+std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(const EffectPlugin &,
+   ShuttleGui &S, EffectInstance& instance, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
    auto parent = S.GetParent();
@@ -1595,18 +1596,14 @@ std::unique_ptr<EffectUIValidator> VSTEffect::MakeEditor(
    return nullptr;
 }
 
-bool VSTEffect::CloseUI()
-{
-   return true;
-}
-
 bool VSTEffect::CanExportPresets() const
 {
    return true;
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets(const EffectSettings& settings) const
+void VSTEffect::ExportPresets(
+   const EffectPlugin &, const EffectSettings& settings) const
 {
    wxString path;
 
@@ -1669,7 +1666,8 @@ void VSTEffect::ExportPresets(const EffectSettings& settings) const
 //
 // Based on work by Sven Giermann
 //
-OptionalMessage VSTEffect::ImportPresets(EffectSettings& settings) const
+OptionalMessage VSTEffect::ImportPresets(const EffectPlugin&,
+   EffectSettings& settings) const
 {
    auto temp = std::make_unique<VSTEffect>(this->mPath);
    if (!temp->InitializePlugin())
@@ -1751,7 +1749,7 @@ bool VSTEffect::HasOptions() const
    return true;
 }
 
-void VSTEffect::ShowOptions()
+void VSTEffect::ShowOptions(const EffectPlugin &) const
 {
    VSTEffectOptionsDialog{ *this }.ShowModal();
 }

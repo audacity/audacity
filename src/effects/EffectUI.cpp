@@ -439,7 +439,8 @@ bool EffectUIHost::Initialize()
 
       // Let the client add things to the panel
       ShuttleGui S1{ uw.get(), eIsCreating };
-      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess, mpOutputs);
+      mpValidator = mClient.PopulateUI(mEffectUIHost,
+         S1, *mpInstance, *mpAccess, mpOutputs);
       if (!mpValidator)
          return false;
 
@@ -963,7 +964,7 @@ void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
       // ignore failure
-      return mClient.ImportPresets(settings).value_or(nullptr);
+      return mClient.ImportPresets(mEffectUIHost, settings).value_or(nullptr);
    });
    TransferDataToWindow();
    LoadUserPresets();
@@ -976,14 +977,14 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
    // may throw
    // exceptions are handled in AudacityApp::OnExceptionInMainLoop
    if (TransferDataFromWindow())
-     mClient.ExportPresets(mpAccess->Get());
+     mClient.ExportPresets(mEffectUIHost, mpAccess->Get());
    
    return;
 }
 
 void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 {
-   mClient.ShowOptions();
+   mClient.ShowOptions(mEffectUIHost);
    
    return;
 }

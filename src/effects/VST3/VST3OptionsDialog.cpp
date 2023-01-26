@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(VST3OptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VST3OptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-VST3OptionsDialog::VST3OptionsDialog(EffectDefinitionInterface &effect)
+VST3OptionsDialog::VST3OptionsDialog(const EffectDefinitionInterface &effect)
    : wxDialogWrapper{ nullptr, wxID_ANY, XO("VST Effect Options") }
    , mEffect{ effect }
 {

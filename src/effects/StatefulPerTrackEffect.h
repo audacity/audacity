@@ -57,7 +57,7 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    //! Allows PopulateOrExchange to return null
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
 

@@ -1114,8 +1114,9 @@ bool LadspaEffect::Instance::RealtimeProcessEnd(EffectSettings &) noexcept
    return true;
 }
 
-int LadspaEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal)
+int LadspaEffect::ShowClientInterface(const EffectPlugin &,
+   wxWindow &parent, wxDialog &dialog,
+   EffectUIValidator *, bool forceModal) const
 {
    dialog.Layout();
    dialog.Fit();
@@ -1544,11 +1545,13 @@ bool LadspaEffect::CanExportPresets() const
    return false;
 }
 
-void LadspaEffect::ExportPresets(const EffectSettings &) const
+void LadspaEffect::ExportPresets(
+   const EffectPlugin &, const EffectSettings &) const
 {
 }
 
-OptionalMessage LadspaEffect::ImportPresets(EffectSettings &) const
+OptionalMessage LadspaEffect::ImportPresets(
+   const EffectPlugin &, EffectSettings &) const
 {
    return { nullptr };
 }
@@ -1558,7 +1561,7 @@ bool LadspaEffect::HasOptions() const
    return true;
 }
 
-void LadspaEffect::ShowOptions()
+void LadspaEffect::ShowOptions(const EffectPlugin &) const
 {
    LadspaEffectOptionsDialog{ *this }.ShowModal();
 }

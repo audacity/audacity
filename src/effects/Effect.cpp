@@ -142,7 +142,8 @@ std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
    return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
 }
 
-std::unique_ptr<EffectUIValidator> StatefulEffect::PopulateUI(ShuttleGui &S,
+std::unique_ptr<EffectUIValidator> StatefulEffect::PopulateUI(
+   const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
@@ -155,7 +156,7 @@ std::unique_ptr<EffectUIValidator> StatefulEffect::PopulateUI(ShuttleGui &S,
 
    if (!result) {
       // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(
+      result = std::make_unique<DefaultEffectUIValidator>(*this,
          *this, access, S.GetParent());
       parent->PushEventHandler(this);
    }
@@ -176,8 +177,8 @@ const EffectParameterMethods &Effect::Parameters() const
    return empty;
 }
 
-int Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal)
+int Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
+   wxDialog &dialog, EffectUIValidator *, bool forceModal) const
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    dialog.Layout();
@@ -216,7 +217,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
       return 0;
 
    // Let the client show the dialog and decide whether to keep it open
-   auto result = client->ShowClientInterface(parent, *pDialog,
+   auto result = client->ShowClientInterface(*this, parent, *pDialog,
       results.pValidator, forceModal);
    if (pDialog && !pDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
@@ -294,8 +295,8 @@ OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
-std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access,
+std::unique_ptr<EffectUIValidator> Effect::PopulateUI(const EffectPlugin &,
+   ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
    auto parent = S.GetParent();
@@ -309,12 +310,12 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
    return result;
 }
 
-bool Effect::ValidateUI(EffectSettings &)
+bool Effect::ValidateUI(const EffectPlugin &context, EffectSettings &)
 {
    return true;
 }
 
-bool Effect::CloseUI()
+bool Effect::CloseUI() const
 {
    return true;
 }
@@ -333,7 +334,8 @@ static const FileNames::FileTypes &PresetTypes()
    return result;
 };
 
-void Effect::ExportPresets(const EffectSettings &settings) const
+void Effect::ExportPresets(
+   const EffectPlugin &, const EffectSettings &settings) const
 {
    wxString params;
    SaveSettingsAsString(settings, params);
@@ -381,7 +383,8 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-OptionalMessage Effect::ImportPresets(EffectSettings &settings) const
+OptionalMessage Effect::ImportPresets(
+   const EffectPlugin &, EffectSettings &settings) const
 {
    wxString params;
 
@@ -441,7 +444,7 @@ bool Effect::HasOptions() const
    return false;
 }
 
-void Effect::ShowOptions()
+void Effect::ShowOptions(const EffectPlugin &) const
 {
 }
 
@@ -806,10 +809,12 @@ EffectUIServices* Effect::GetEffectUIServices()
    return this;
 }
 
-DefaultEffectUIValidator::DefaultEffectUIValidator(
+DefaultEffectUIValidator::DefaultEffectUIValidator(const EffectPlugin &plugin,
    EffectUIServices &services, EffectSettingsAccess &access,
    wxWindow *pParent)
-   : EffectUIValidator{ services, access }, mpParent{ pParent }
+   : EffectUIValidator{ services, access }
+   , mPlugin{ plugin }
+   , mpParent{ pParent }
 {
 }
 
@@ -822,7 +827,7 @@ bool DefaultEffectUIValidator::ValidateUI()
 {
    bool result {};
    mAccess.ModifySettings([&](EffectSettings &settings){
-      result = mServices.ValidateUI(settings);
+      result = mServices.ValidateUI(mPlugin, settings);
       return nullptr;
    });
    return result;
