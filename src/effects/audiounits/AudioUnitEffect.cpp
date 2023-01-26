@@ -203,13 +203,13 @@ bool AudioUnitEffect::SupportsAutomation() const
 
 std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
 {
-   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters,
-      GetSymbol().Internal(), mAudioIns, mAudioOuts, mUseLatency);
-}
+   bool useLatency;
+   GetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
+      useLatency, true);
 
-constexpr auto OptionsKey = L"Options";
-constexpr auto UseLatencyKey = L"UseLatency";
-constexpr auto UITypeKey = L"UIType";
+   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters,
+      GetSymbol().Internal(), mAudioIns, mAudioOuts, useLatency);
+}
 
 bool AudioUnitEffect::InitializePlugin()
 {
@@ -248,26 +248,6 @@ bool AudioUnitEffect::InitializePlugin()
             kAudioUnitProperty_GetUIComponentList, compDesc);
       }
    }
-
-   return true;
-}
-
-bool AudioUnitEffect::FullyInitializePlugin()
-{
-   if (!InitializePlugin())
-      return false;
-
-   // Reading these values from the config file can't be done in the PluginHost
-   // process but isn't needed only for plugin discovery.
-
-   // Consult preferences
-   // Decide mUseLatency, which affects GetLatency(), which is actually used
-   // so far only in destructive effect processing
-   GetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
-      mUseLatency, true);
-   // Decide whether to build plain or fancy user interfaces
-   GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
-      mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
 
    return true;
 }
@@ -430,7 +410,11 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
-   return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
+   wxString uiType;
+   // Decide whether to build plain or fancy user interfaces
+   GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
+      uiType, FullValue.MSGID().GET() /* Config stores un-localized string */);
+   return AudioUnitValidator::Create(*this, S, uiType, instance, access);
 }
 
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::MakeEditor(
@@ -553,13 +537,7 @@ bool AudioUnitEffect::HasOptions() const
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg{ mUseLatency, mUIType };
-   if (dlg.ShowModal()) {
-      // Save changed values to the config file
-      SetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
-         mUseLatency);
-      SetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey, mUIType);
-   }
+   AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }
 
 // ============================================================================

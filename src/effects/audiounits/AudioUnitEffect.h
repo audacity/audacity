@@ -90,7 +90,6 @@ public:
       EffectUIValidator *pValidator, bool forceModal) override;
 
    bool InitializePlugin();
-   bool FullyInitializePlugin();
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
@@ -147,9 +146,6 @@ private:
    const wxString mVendor;
 
    bool mInteractive{ false };
-   bool mUseLatency{ true };
-
-   wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
 };
 
 #endif

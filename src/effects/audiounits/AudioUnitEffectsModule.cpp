@@ -237,7 +237,7 @@ AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
    // Acquires a resource for the application.
    if (wxString name; auto component = FindAudioUnit(path, name)) {
       auto result = std::make_unique<AudioUnitEffect>(path, name, component);
-      result->FullyInitializePlugin();
+      result->InitializePlugin();
       return result;
    }
    return nullptr;

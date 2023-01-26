@@ -422,7 +422,7 @@ bool VSTEffectsModule::CheckPluginExist(const PluginPath& path) const
 class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   VSTEffectOptionsDialog(wxWindow * parent, EffectDefinitionInterface &effect);
+   explicit VSTEffectOptionsDialog(const EffectDefinitionInterface &effect);
    virtual ~VSTEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -430,7 +430,7 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectDefinitionInterface &mEffect;
+   const EffectDefinitionInterface &mEffect;
    int mBufferSize;
    bool mUseLatency;
    bool mUseGUI;
@@ -443,9 +443,9 @@ BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 VSTEffectOptionsDialog::VSTEffectOptionsDialog(
-   wxWindow * parent, EffectDefinitionInterface &effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
-, mEffect{ effect }
+   const EffectDefinitionInterface &effect
+)  : wxDialogWrapper{ nullptr, wxID_ANY, XO("VST Effect Options") }
+   , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), mBufferSize, 8192);
@@ -1049,11 +1049,13 @@ std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), userBlockSize, 8192);
    size_t userBlockSizeC = std::max( 1, userBlockSize );
+   bool useLatency;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
+      wxT("UseLatency"), useLatency, true);
   
  
-   return std::make_shared<VSTEffectInstance>(*this, mPath, userBlockSizeC, userBlockSizeC, mUseLatency);
+   return std::make_shared<VSTEffectInstance>(
+      *this, mPath, userBlockSizeC, userBlockSizeC, useLatency);
 }
 
 unsigned VSTEffectInstance::GetAudioInCount() const
@@ -1751,14 +1753,7 @@ bool VSTEffect::HasOptions() const
 
 void VSTEffect::ShowOptions()
 {
-   VSTEffectOptionsDialog dlg(nullptr, *this);
-   if (dlg.ShowModal())
-   {
-      // Reinitialize configuration settings
-      
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-   }
+   VSTEffectOptionsDialog{ *this }.ShowModal();
 }
 
 // ============================================================================
@@ -2409,7 +2404,12 @@ void VSTEffect::UpdateDisplay()
 }
 
 
-void VSTEffectWrapper::SetBufferDelay(int samples)
+void VSTEffectWrapper::SetBufferDelay(int)
+{
+}
+
+
+void VSTEffectInstance::SetBufferDelay(int samples)
 {
    // We do not support negative delay
    if (samples >= 0 && mUseLatency)
@@ -4009,6 +4009,7 @@ VSTEffectInstance::VSTEffectInstance
 
    : PerTrackEffect::Instance(effect)
    , VSTEffectWrapper(path)
+   , mUseLatency{ useLatency }
 {
    // what also happens in the effect ctor
    //
@@ -4023,7 +4024,6 @@ VSTEffectInstance::VSTEffectInstance
 
    mBlockSize = blockSize;
    mUserBlockSize = userBlockSize;
-   mUseLatency = useLatency;
 
    Load();
 
