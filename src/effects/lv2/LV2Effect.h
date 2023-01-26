@@ -126,8 +126,6 @@ private:
 
    double mLength{};
 
-   wxWindow *mParent{};
-
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };
    mutable RegistryPaths mFactoryPresetNames;

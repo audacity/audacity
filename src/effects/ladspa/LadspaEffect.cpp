@@ -456,8 +456,7 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(
-      wxWindow * parent, EffectDefinitionInterface &effect, bool &var);
+   LadspaEffectOptionsDialog(EffectDefinitionInterface &effect, bool &var);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -476,10 +475,10 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
-   wxWindow * parent, EffectDefinitionInterface &effect, bool &var)
-: wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
-, mEffect{ effect }
-, mUseLatency{ var }
+   EffectDefinitionInterface &effect, bool &var
+)  : wxDialogWrapper{ nullptr, wxID_ANY, XO("LADSPA Effect Options") }
+   , mEffect{ effect }
+   , mUseLatency{ var }
 {
    mUseLatency = LadspaEffect::LoadUseLatency(effect);
 
@@ -1513,7 +1512,6 @@ LadspaEffect::MakeEditor(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
-   mUIParent = S.GetParent();
    auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
    auto result = std::make_unique<Validator>(*this, access, mProjectRate,
       GetType(), pValues);
@@ -1562,8 +1560,7 @@ bool LadspaEffect::HasOptions() const
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mUIParent, *this, mUseLatency);
-   dlg.ShowModal();
+   LadspaEffectOptionsDialog{ *this, mUseLatency }.ShowModal();
 }
 
 // ============================================================================

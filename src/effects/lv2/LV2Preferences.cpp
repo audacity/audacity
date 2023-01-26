@@ -89,10 +89,9 @@ BEGIN_EVENT_TABLE(LV2Preferences::Dialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2Preferences::Dialog::OnOk)
 END_EVENT_TABLE()
 
-LV2Preferences::Dialog::Dialog(
-   wxWindow *parent, EffectDefinitionInterface &effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
-, mEffect{ effect }
+LV2Preferences::Dialog::Dialog(EffectDefinitionInterface &effect)
+   : wxDialogWrapper{ nullptr, wxID_ANY, XO("LV2 Effect Settings") }
+   , mEffect{ effect }
 {
    using namespace LV2Preferences;
    GetBufferSize(mEffect, mBufferSize);

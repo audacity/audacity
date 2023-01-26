@@ -270,9 +270,9 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
             useGUI);
 
    const auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
-   mParent = S.GetParent();
 
-   return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
+   return std::make_unique<VST3UIValidator>(S.GetParent(),
+      vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
@@ -286,7 +286,6 @@ std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
 
 bool VST3Effect::CloseUI()
 {
-   mParent = nullptr;
    return true;
 }
 
@@ -313,8 +312,6 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    if (path.empty())
       return;
 
-   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
-
    auto fileStream = owned(Vst::FileStream::open(path.c_str(), "wb"));
    if(!fileStream)
    {
@@ -323,7 +320,6 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
          XO("Cannot open file"),
          BasicUI::MessageBoxOptions()
             .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
       );
       return;
    }
@@ -338,7 +334,6 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
          XO("Failed to save VST3 preset to file"),
          BasicUI::MessageBoxOptions()
             .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
       );
    }
 }
@@ -374,15 +369,12 @@ bool VST3Effect::HasOptions() const
 
 void VST3Effect::ShowOptions()
 {
-   VST3OptionsDialog dlg(mParent, *this);
-   dlg.ShowModal();
+   VST3OptionsDialog{ *this }.ShowModal();
 }
 
 bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) const
 {
    using namespace Steinberg;
-
-   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
 
    auto fileStream = owned(Vst::FileStream::open(path.c_str(), "rb"));
    if(!fileStream)
@@ -391,7 +383,6 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) cons
          XO("Cannot open VST3 preset file %s").Format(path),
          BasicUI::MessageBoxOptions()
             .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
       );
       return false;
    }
@@ -404,7 +395,6 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) cons
          XO("Unable to apply VST3 preset file %s").Format(path),
          BasicUI::MessageBoxOptions()
             .Caption(XO("Error"))
-            .Parent(&dialogPlacement)
       );
       return false;
    }

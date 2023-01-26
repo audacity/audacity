@@ -148,8 +148,6 @@ private:
 
 private:
 
-   wxWeakRef<wxWindow> mUIParent{};
-
    const wxString mPath;
    const int mIndex;
 

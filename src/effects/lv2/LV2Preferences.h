@@ -53,7 +53,7 @@ bool SetUseGUI(EffectDefinitionInterface &effect, bool useGUI);
 class Dialog final : public wxDialogWrapper
 {
 public:
-   Dialog(wxWindow *parent, EffectDefinitionInterface &effect);
+   explicit Dialog(EffectDefinitionInterface &effect);
    virtual ~Dialog();
 
    void PopulateOrExchange(ShuttleGui &S);
