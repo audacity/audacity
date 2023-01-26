@@ -18,7 +18,7 @@ class ShuttleGui;
 class VST3OptionsDialog final : public wxDialogWrapper
 {
 public:
-   VST3OptionsDialog(wxWindow * parent, EffectDefinitionInterface &effect);
+   explicit VST3OptionsDialog(EffectDefinitionInterface &effect);
    virtual ~VST3OptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);

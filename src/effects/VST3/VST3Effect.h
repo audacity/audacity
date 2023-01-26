@@ -44,8 +44,6 @@ class VST3Effect final : public PerTrackEffect
    std::shared_ptr<VST3::Hosting::Module> mModule;
    const VST3::Hosting::ClassInfo mEffectClassInfo;
 
-   wxWindow* mParent { nullptr };
-
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };
    mutable RegistryPaths mFactoryPresetNames;

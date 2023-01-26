@@ -27,8 +27,7 @@ class ShuttleGui;
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   AudioUnitEffectOptionsDialog(
-      wxWindow * parent, bool &useLatencey, wxString &uiType);
+   AudioUnitEffectOptionsDialog(bool &useLatency, wxString &uiType);
    virtual ~AudioUnitEffectOptionsDialog();
    void PopulateOrExchange(ShuttleGui & S);
    void OnOk(wxCommandEvent & evt);

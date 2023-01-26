@@ -26,10 +26,10 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
-   wxWindow * parent, bool &useLatency, wxString &uiType)
-: wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mUseLatency{ useLatency }
-, mUIType{ uiType }
+   bool &useLatency, wxString &uiType
+)  : wxDialogWrapper{ nullptr, wxID_ANY, XO("Audio Unit Effect Options") }
+   , mUseLatency{ useLatency }
+   , mUIType{ uiType }
 // Get the localization of the string for display to the user
 , mUITypeString{ mUIType, {} }
 {

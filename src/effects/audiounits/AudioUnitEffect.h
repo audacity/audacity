@@ -149,7 +149,6 @@ private:
    bool mInteractive{ false };
    bool mUseLatency{ true };
 
-   wxWindow *mParent{};
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
 };
 

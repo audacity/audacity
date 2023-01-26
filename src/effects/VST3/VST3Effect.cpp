@@ -208,9 +208,9 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
             useGUI);
 
    const auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
-   mParent = S.GetParent();
 
-   return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
+   return std::make_unique<VST3UIValidator>(S.GetParent(),
+      vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
@@ -224,7 +224,6 @@ std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
 
 bool VST3Effect::CloseUI()
 {
-   mParent = nullptr;
    return true;
 }
 
@@ -289,8 +288,7 @@ bool VST3Effect::HasOptions() const
 
 void VST3Effect::ShowOptions()
 {
-   VST3OptionsDialog dlg(mParent, *this);
-   dlg.ShowModal();
+   VST3OptionsDialog{ *this }.ShowModal();
 }
 
 void VST3Effect::LoadPreset(const wxString& id, EffectSettings& settings) const

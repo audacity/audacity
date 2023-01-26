@@ -318,7 +318,6 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
-   mParent = parent;
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    auto pWrapper =
@@ -375,7 +374,6 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mParent = nullptr;
    return true;
 }
 
@@ -468,7 +466,7 @@ bool LV2Effect::HasOptions() const
 
 void LV2Effect::ShowOptions()
 {
-   LV2Preferences::Dialog{ mParent, *this }.ShowModal();
+   LV2Preferences::Dialog{ *this }.ShowModal();
 }
 
 // ============================================================================

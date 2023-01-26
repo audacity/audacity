@@ -430,7 +430,6 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
-   mParent = S.GetParent();
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
 }
 
@@ -458,7 +457,6 @@ bool AudioUnitEffect::CloseUI()
    wxEventLoop::SetBusyWaiting(false);
 #endif
 #endif
-   mParent = nullptr;
    return true;
 }
 
@@ -506,8 +504,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
       AudacityMessageBox(
          XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
          XO("Export Audio Unit Presets"),
-         wxOK | wxCENTRE,
-         mParent);
+         wxOK | wxCENTRE);
 }
 
 OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
@@ -542,8 +539,7 @@ OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
-         wxOK | wxCENTRE,
-         mParent);
+         wxOK | wxCENTRE);
       return {};
    }
 
@@ -557,7 +553,7 @@ bool AudioUnitEffect::HasOptions() const
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, mUseLatency, mUIType);
+   AudioUnitEffectOptionsDialog dlg{ mUseLatency, mUIType };
    if (dlg.ShowModal()) {
       // Save changed values to the config file
       SetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
