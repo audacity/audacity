@@ -338,6 +338,13 @@ function( canonicalize_node_name var node )
    set( "${var}" "${node}" PARENT_SCOPE )
 endfunction()
 
+define_property(TARGET PROPERTY AUDACITY_GRAPH_DEPENDENCIES
+   BRIEF_DOCS
+      "Propagates information used in generating a target dependency diagram"
+   FULL_DOCS
+      "Audacity uses this at configuration time only, not generation time."
+)
+
 function( append_node_attributes var target )
    get_target_property( dependencies ${target} AUDACITY_GRAPH_DEPENDENCIES )
    set( color "lightpink" )
