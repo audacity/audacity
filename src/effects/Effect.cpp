@@ -381,7 +381,7 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-OptionalMessage Effect::ImportPresets(EffectSettings &settings)
+OptionalMessage Effect::ImportPresets(EffectSettings &settings) const
 {
    wxString params;
 
