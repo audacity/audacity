@@ -34,7 +34,7 @@ struct RulerStruct {
    double mHiddenMax{ 100.0 };
 
    int mOrientation{ wxHORIZONTAL };
-   int mSpacing{ 6 };
+   int mSpacing{ 2 };
    bool mFlip{ false };
    bool mLabelEdges{ false };
 
@@ -94,7 +94,7 @@ protected:
 
    struct TickSizes
    {
-      bool useMajor = true;
+      RulerFormat:: TickType tickType = RulerFormat::t_major;
 
       double       mMajor = 0;
       double       mMinor = 0;

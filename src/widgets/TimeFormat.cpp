@@ -115,11 +115,11 @@ void TimeFormat::SetTickSizes(
 }
 
 void TimeFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, bool useMajor,
+   wxString& s, double d, double mMinor, int mDigits, TickType tickType,
    const std::any& data
 ) const
 {
-   if (useMajor) {
+   if (tickType == RulerFormat::t_major) {
       if (d < 0) {
          s = wxT("-");
          d = -d;

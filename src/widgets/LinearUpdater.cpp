@@ -111,6 +111,8 @@ void LinearUpdater::Update(
    for (int jj = 0; jj < 3; ++jj) {
       const double denom = jj == 0 ? tickSizes.mMajor :
          jj == 1 ? tickSizes.mMinor : tickSizes.mMinorMinor;
+      tickSizes.tickType = jj == 0 ? RulerFormat::t_major :
+         jj == 1 ? RulerFormat::t_minor : RulerFormat::t_minorMinor;
       if (denom == 0) continue;
       auto font = jj == 0 ? mFonts.major :
          jj == 1 ? mFonts.minor : mFonts.minorMinor;
@@ -158,7 +160,6 @@ void LinearUpdater::Update(
          if (floor(sign * warpedD / denom) > step) {
             step = floor(sign * warpedD / denom);
             bool major = jj == 0;
-            tickSizes.useMajor = major;
             bool ticked = Tick(dc, ii, sign * step * denom, tickSizes,
                font, outputs, context);
             if (!major && !ticked) {
@@ -168,7 +169,7 @@ void LinearUpdater::Update(
       }
    }
 
-   tickSizes.useMajor = true;
+   tickSizes.tickType = RulerFormat::t_major;
 
    // If we've dropped minor labels through overcrowding, then don't show
    // any of them.  We're allowed though to drop ones which correspond to the

@@ -77,7 +77,7 @@ TranslatableString RulerUpdater::TickSizes::LabelString(
       if (d < 0.0 && (d + mMinor > 0.0) && (format->Identify() != "RealLogFormat"))
          d = 0.0;
 
-      format->SetLabelString(s, d, mMinor, mDigits, useMajor, data);
+      format->SetLabelString(s, d, mMinor, mDigits, tickType, data);
 
       auto result = Verbatim(s);
 

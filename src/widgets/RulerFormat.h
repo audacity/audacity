@@ -17,6 +17,9 @@
 
 class RulerFormat {
 public:
+   enum TickType {
+      t_major, t_minor, t_minorMinor
+   };
    explicit RulerFormat() {}
    virtual ~RulerFormat() = 0;
 
@@ -26,7 +29,7 @@ public:
    ) const = 0;
 
    virtual void SetLabelString(
-      wxString& s, double d, double mMinor, int mDigits, bool useMajor,
+      wxString& s, double d, double mMinor, int mDigits, TickType tickType,
       const std::any& data
    ) const = 0;
 
