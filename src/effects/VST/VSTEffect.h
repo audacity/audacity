@@ -282,8 +282,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    int GetProcessLevel();
    int mProcessLevel{ 1 };  // in GUI thread
 
-   bool   mUseLatency{ true };
-
    // The vst callback is currently called both for the effect and for instances.
    //
    static intptr_t AudioMaster(AEffect *effect,
@@ -301,7 +299,7 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    
 
    // Some other methods called by the callback make sense for Instances:
-   void         SetBufferDelay(int samples);
+   virtual void SetBufferDelay(int samples);
 
 
    // Make message carrying all the information in settings, including chunks
@@ -545,6 +543,8 @@ public:
    void PowerOn();
    void PowerOff();
 
+   const bool mUseLatency;
+
    size_t mBlockSize{ 8192 };
 
    std::unique_ptr<Message> MakeMessage() const override;
@@ -556,6 +556,7 @@ public:
    void Automate(int index, float value) override;
    void NeedIdle()                       override;
    void SizeWindow(int w, int h)         override;
+   void SetBufferDelay(int samples)      override;
 
    // The overrides above will forward calls to them to the corresponding
    // overrides in the Validator which owns the instance - this sets it.

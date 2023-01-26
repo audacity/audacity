@@ -69,10 +69,6 @@ public:
    LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
 
-   static bool LoadUseLatency(const EffectDefinitionInterface &effect);
-   static bool SaveUseLatency(
-      const EffectDefinitionInterface &effect, bool value);
-
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
@@ -113,7 +109,6 @@ public:
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
    bool InitializePlugin();
-   bool FullyInitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
    struct Instance;
@@ -171,7 +166,6 @@ private:
    int mNumInputControls{ 0 };
    int mNumOutputControls{ 0 };
 
-   bool mUseLatency{ true };
    int mLatencyPort{ -1 };
 
    friend class LadspaEffectsModule;

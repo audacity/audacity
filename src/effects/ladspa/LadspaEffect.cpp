@@ -394,7 +394,7 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
    auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
-   result->FullyInitializePlugin();
+   result->InitializePlugin();
    return result;
 }
 
@@ -447,6 +447,11 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
    return pathList;
 }
 
+namespace {
+bool LoadUseLatency(const EffectDefinitionInterface &effect);
+bool SaveUseLatency(const EffectDefinitionInterface &effect, bool value);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LadspaEffectOptionsDialog
@@ -456,7 +461,7 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(EffectDefinitionInterface &effect, bool &var);
+   explicit LadspaEffectOptionsDialog(const EffectDefinitionInterface &effect);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -464,8 +469,8 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectDefinitionInterface &mEffect;
-   bool &mUseLatency;
+   const EffectDefinitionInterface &mEffect;
+   bool mUseLatency{};
 
    DECLARE_EVENT_TABLE()
 };
@@ -475,13 +480,11 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
-   EffectDefinitionInterface &effect, bool &var
+   const EffectDefinitionInterface &effect
 )  : wxDialogWrapper{ nullptr, wxID_ANY, XO("LADSPA Effect Options") }
    , mEffect{ effect }
-   , mUseLatency{ var }
+   , mUseLatency{ LoadUseLatency(mEffect) }
 {
-   mUseLatency = LadspaEffect::LoadUseLatency(effect);
-
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
@@ -493,7 +496,8 @@ LadspaEffectOptionsDialog::~LadspaEffectOptionsDialog()
 static const wchar_t *OptionsKey = L"Options";
 static const wchar_t *UseLatencyKey = L"UseLatency";
 
-bool LadspaEffect::LoadUseLatency(const EffectDefinitionInterface &effect)
+namespace {
+bool LoadUseLatency(const EffectDefinitionInterface &effect)
 {
    bool result{};
    GetConfig(effect, PluginSettings::Shared,
@@ -501,11 +505,11 @@ bool LadspaEffect::LoadUseLatency(const EffectDefinitionInterface &effect)
    return result;
 }
 
-bool LadspaEffect::SaveUseLatency(
-   const EffectDefinitionInterface &effect, bool value)
+bool SaveUseLatency(const EffectDefinitionInterface &effect, bool value)
 {
    return SetConfig(
       effect, PluginSettings::Shared, OptionsKey, UseLatencyKey, value);
+}
 }
 
 void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
@@ -557,7 +561,7 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // the values, in this case mUseLatency
    PopulateOrExchange(S);
 
-   LadspaEffect::SaveUseLatency(mEffect, mUseLatency);
+   SaveUseLatency(mEffect, mUseLatency);
 
    EndModal(wxID_OK);
 }
@@ -893,18 +897,6 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::FullyInitializePlugin()
-{
-   if (!InitializePlugin())
-      return false;
-
-   // Reading these values from the config file can't be done in the PluginHost
-   // process but isn't needed only for plugin discovery.
-
-   mUseLatency = LadspaEffect::LoadUseLatency(*this);
-   return true;
-}
-
 bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
 {
    auto &controls = settings.controls;
@@ -927,7 +919,7 @@ struct LadspaEffect::Instance
    : PerTrackEffect::Instance
    , EffectInstanceWithBlockSize
 {
-   using PerTrackEffect::Instance::Instance;
+   explicit Instance(const PerTrackEffect &processor);
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       ChannelNames chanMap) override;
    bool ProcessFinalize() noexcept override;
@@ -963,7 +955,15 @@ struct LadspaEffect::Instance
 
    // Realtime processing
    std::vector<LADSPA_Handle> mSlaves;
+
+   const bool mUseLatency;
 };
+
+LadspaEffect::Instance::Instance(const PerTrackEffect &processor)
+   : PerTrackEffect::Instance{ processor }
+   , mUseLatency{ LoadUseLatency(processor) }
+{
+}
 
 std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
 {
@@ -975,7 +975,7 @@ auto LadspaEffect::Instance::GetLatency(
 {
    auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
-   if (effect.mUseLatency && effect.mLatencyPort >= 0)
+   if (mUseLatency && effect.mLatencyPort >= 0)
       return controls[effect.mLatencyPort];
    return 0;
 }
@@ -1560,7 +1560,7 @@ bool LadspaEffect::HasOptions() const
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog{ *this, mUseLatency }.ShowModal();
+   LadspaEffectOptionsDialog{ *this }.ShowModal();
 }
 
 // ============================================================================
