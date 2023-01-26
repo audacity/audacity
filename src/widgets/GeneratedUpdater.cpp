@@ -29,7 +29,7 @@ bool GeneratedUpdater::Tick(wxDC& dc,
 
    const RulerStruct::Fonts& mFonts = *context.mpFonts;
    const TranslatableString mUnits = context.mUnits;
-   const int mSpacing = context.mSpacing;
+   const int spacing = (mOrientation == wxHORIZONTAL) ? 6 : 2;
    const bool mFlip = context.mFlip;
 
    // Bug 521.  dB view for waveforms needs a 2-sided scale.
@@ -51,7 +51,7 @@ bool GeneratedUpdater::Tick(wxDC& dc,
       lab,
       dc, font,
       outputs.bits,
-      mLeft, mTop, mSpacing, mFonts.lead,
+      mLeft, mTop, spacing, mFonts.lead,
       mFlip,
       mOrientation);
 

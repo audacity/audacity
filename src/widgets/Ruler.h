@@ -82,9 +82,6 @@ class AUDACITY_DLL_API Ruler {
    void SetUnits(const TranslatableString &units);
    void SetDbMirrorValue( const double d );
 
-   // Minimum number of pixels between labels
-   void SetSpacing(int spacing);
-
    // If this is true, the edges of the ruler will always
    // receive a label.  If not, the nearest round number is
    // labeled (which may or may not be the edge).
@@ -168,7 +165,6 @@ private:
 
    int GetZeroPosition() const;
 
-   bool         mHasSetSpacing;
    bool         mbMinor;
    bool         mTwoTone;
 };

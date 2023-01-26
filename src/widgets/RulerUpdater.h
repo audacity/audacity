@@ -35,7 +35,6 @@ struct RulerStruct {
    double mHiddenMax{ 100.0 };
 
    int mOrientation{ wxHORIZONTAL };
-   int mSpacing{ 6 };
    bool mFlip{ false };
    bool mLabelEdges{ false };
 
