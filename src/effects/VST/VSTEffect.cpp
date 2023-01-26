@@ -1671,7 +1671,15 @@ void VSTEffect::ExportPresets(const EffectSettings& settings) const
 //
 // Based on work by Sven Giermann
 //
-OptionalMessage VSTEffect::ImportPresets(EffectSettings& settings)
+OptionalMessage VSTEffect::ImportPresets(EffectSettings& settings) const
+{
+   auto temp = std::make_unique<VSTEffect>(this->mPath);
+   if (!temp->InitializePlugin())
+      return {};
+   return temp->ImportPresetsNC(settings);
+}
+
+OptionalMessage VSTEffect::ImportPresetsNC(EffectSettings& settings)
 {
    wxString path;
 

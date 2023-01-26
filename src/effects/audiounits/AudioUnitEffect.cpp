@@ -507,7 +507,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
          wxOK | wxCENTRE);
 }
 
-OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
+OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;

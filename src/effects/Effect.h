@@ -132,7 +132,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    bool CanExportPresets() const override;
    void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) const override;
 
    bool HasOptions() const override;
    void ShowOptions() override;

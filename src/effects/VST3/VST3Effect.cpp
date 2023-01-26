@@ -258,7 +258,7 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
    wrapper->SavePresetToFile(path);
 }
 
-OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
+OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings) const
 {
    using namespace Steinberg;
 

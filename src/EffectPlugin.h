@@ -212,7 +212,7 @@ public:
    virtual void ExportPresets(const EffectSettings &settings) const = 0;
    //! @return nullopt for failure
    [[nodiscard]] virtual OptionalMessage
-      ImportPresets(EffectSettings &settings) = 0;
+      ImportPresets(EffectSettings &settings) const = 0;
 
    virtual void ShowOptions() = 0;
 

@@ -100,7 +100,7 @@ public:
    bool CloseUI() override;
    bool CanExportPresets() const override;
    void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) const override;
    bool HasOptions() const override;
    void ShowOptions() override;
 
