@@ -75,8 +75,8 @@ public:
    static const TranslatableStrings &GetAlgorithmNames();
 
    // Return either the track's independent settings or global defaults
-   static SpectrogramSettings &Get(WaveTrack &track);
-   static const SpectrogramSettings &Get(const WaveTrack &track);
+   //! Mutative access to attachment even if the track argument is const
+   static SpectrogramSettings &Get(const WaveTrack &track);
 
    // Force creation of track's independent settings
    static SpectrogramSettings &Own(WaveTrack &track);
@@ -105,7 +105,7 @@ public:
 
    void InvalidateCaches();
    void DestroyWindows();
-   void CacheWindows() const;
+   void CacheWindows();
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
 
@@ -190,12 +190,12 @@ public:
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum
-   mutable HFFT           hFFT;
-   mutable Floats         window;
+   HFFT           hFFT;
+   Floats         window;
 
    // Two other windows for computing reassigned spectrogram
-   mutable Floats         tWindow; // Window times time parameter
-   mutable Floats         dWindow; // Derivative of window
+   Floats         tWindow; // Window times time parameter
+   Floats         dWindow; // Derivative of window
 };
 
 extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
@@ -219,6 +219,7 @@ public:
    void SetBounds(float min, float max)
    { mSpectrumMin = min, mSpectrumMax = max; }
 
+private:
    float mSpectrumMin = -1, mSpectrumMax = -1;
 };
 

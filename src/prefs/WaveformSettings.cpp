@@ -52,14 +52,11 @@ static WaveTrack::Attachments::RegisteredFactory key1{
    }
 };
 
-WaveformSettings &WaveformSettings::Get( WaveTrack &track )
+WaveformSettings &WaveformSettings::Get(const WaveTrack &track)
 {
-   return static_cast<WaveformSettings&>(track.WaveTrack::Attachments::Get(key1));
-}
-
-const WaveformSettings &WaveformSettings::Get( const WaveTrack &track )
-{
-   return Get(const_cast<WaveTrack&>(track));
+   auto &mutTrack = const_cast<WaveTrack&>(track);
+   return static_cast<WaveformSettings&>(
+      mutTrack.WaveTrack::Attachments::Get(key1));
 }
 
 void WaveformSettings::Set(
@@ -206,15 +203,11 @@ static WaveTrack::Attachments::RegisteredFactory key2{
    }
 };
 
-WaveformScale &WaveformScale::Get( WaveTrack &track )
+WaveformScale &WaveformScale::Get(const WaveTrack &track)
 {
+   auto &mutTrack = const_cast<WaveTrack&>(track);
    return static_cast<WaveformScale&>(
-      track.WaveTrack::Attachments::Get(key2));
-}
-
-const WaveformScale &WaveformScale::Get( const WaveTrack &track )
-{
-   return Get(const_cast<WaveTrack&>(track));
+      mutTrack.WaveTrack::Attachments::Get(key2));
 }
 
 WaveformScale::~WaveformScale() = default;

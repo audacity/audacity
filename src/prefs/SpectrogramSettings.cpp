@@ -110,19 +110,15 @@ static WaveTrack::Attachments::RegisteredFactory key1{
    }
 };
 
-SpectrogramSettings &SpectrogramSettings::Get(WaveTrack &track)
+SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
 {
+   auto &mutTrack = const_cast<WaveTrack&>(track);
    auto pSettings = static_cast<SpectrogramSettings*>(
-      track.WaveTrack::Attachments::Find(key1));
+      mutTrack.WaveTrack::Attachments::Find(key1));
    if (pSettings)
       return *pSettings;
    else
       return SpectrogramSettings::defaults();
-}
-
-const SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
-{
-   return Get(const_cast<WaveTrack&>(track));
 }
 
 SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
@@ -593,7 +589,7 @@ namespace
    }
 }
 
-void SpectrogramSettings::CacheWindows() const
+void SpectrogramSettings::CacheWindows()
 {
    if (hFFT == NULL || window == NULL) {
 

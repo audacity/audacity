@@ -350,7 +350,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       // attachments; then this downcast from SampleTrack will not be needed.
       return;
 
-   const auto &settings = SpectrogramSettings::Get(*track);
+   auto &settings = SpectrogramSettings::Get(*track);
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };

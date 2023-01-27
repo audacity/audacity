@@ -26,10 +26,8 @@ class AUDACITY_DLL_API WaveformSettings
 public:
 
    //! Create waveform settings for the track on demand
-   static WaveformSettings &Get( WaveTrack &track );
-
-   //! @copydoc Get
-   static const WaveformSettings &Get( const WaveTrack &track );
+   //! Mutative access to attachment even if the track argument is const
+   static WaveformSettings &Get(const WaveTrack &track);
 
    //! Guarantee independence of settings, then assign
    static void Set(
@@ -94,11 +92,8 @@ class AUDACITY_DLL_API WaveformScale
    : public ClientData::Cloneable< ClientData::UniquePtr >
 {
 public:
-
-   static WaveformScale &Get( WaveTrack &track );
-
-   //! @copydoc Get
-   static const WaveformScale &Get( const WaveTrack &track );
+   //! Mutative access to attachment even if the track argument is const
+   static WaveformScale &Get(const WaveTrack &track);
 
    ~WaveformScale() override;
    PointerType Clone() const override;
@@ -108,14 +103,19 @@ public:
    void GetDisplayBounds(float &min, float &max) const
    { min = mDisplayMin; max = mDisplayMax; }
 
-   void SetDisplayBounds(float min, float max) const
+   void SetDisplayBounds(float min, float max)
    { mDisplayMin = min; mDisplayMax = max; }
 
    float GetLastScaleType() const { return mLastScaleType; }
+   void SetLastScaleType(int type) { mLastScaleType = type; }
 
-   mutable float mDisplayMin = -1.0f, mDisplayMax = 1.0f;
-   mutable int mLastScaleType = -1;
-   mutable int mLastdBRange = -1;
+   int GetLastDBRange() const { return mLastdBRange; }
+   void SetLastDBRange(int range) { mLastdBRange = range; }
+
+private:
+   float mDisplayMin = -1.0f, mDisplayMax = 1.0f;
+   int mLastScaleType = -1;
+   int mLastdBRange = -1;
 };
 
 #endif

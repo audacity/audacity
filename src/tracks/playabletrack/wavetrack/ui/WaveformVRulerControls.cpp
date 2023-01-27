@@ -59,15 +59,15 @@ unsigned WaveformVRulerControls::HandleWheelRotation(
 
 namespace {
 void SetLastdBRange(
-   const WaveformScale &cache, const WaveTrack &track)
+   WaveformScale &cache, const WaveTrack &track)
 {
-   cache.mLastdBRange = WaveformSettings::Get(track).dBRange;
+   cache.SetLastDBRange(WaveformSettings::Get(track).dBRange);
 }
 
 void SetLastScaleType(
-   const WaveformScale &cache, const WaveTrack &track)
+   WaveformScale &cache, const WaveTrack &track)
 {
-   cache.mLastScaleType = WaveformSettings::Get(track).scaleType;
+   cache.SetLastScaleType(WaveformSettings::Get(track).scaleType);
 }
 }
 
@@ -274,7 +274,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          }
          cache.SetDisplayBounds(min, max);
       }
-      else if (dBRange != (lastdBRange = cache.mLastdBRange)) {
+      else if (dBRange != (lastdBRange = cache.GetLastDBRange())) {
          SetLastdBRange(cache, *wt);
          // Remap the max of the scale
          float newMax = max;
