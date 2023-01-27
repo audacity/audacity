@@ -28,7 +28,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include <wx/time.h>
 
 #include "Project.h"
-#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"

@@ -44,20 +44,19 @@ struct AudioIOStartStreamOptions
 {
    explicit
    AudioIOStartStreamOptions(
-      const std::shared_ptr<AudacityProject> &pProject, double rate_)
-      : pProject{ pProject }
-      , envelope(nullptr)
+      const std::shared_ptr<AudacityProject> &pProject = {},
+      double rate_ = 44100.0
+   )  : pProject{ pProject }
       , rate(rate_)
-      , preRoll(0.0)
    {}
 
    std::shared_ptr<AudacityProject> pProject;
    std::weak_ptr<Meter> captureMeter, playbackMeter;
-   const BoundedEnvelope *envelope; // for time warping
+   const BoundedEnvelope *envelope{}; // for time warping
    std::shared_ptr< AudioIOListener > listener;
    double rate;
    mutable std::optional<double> pStartTime;
-   double preRoll;
+   double preRoll{ 0.0 };
 
    bool playNonWaveTracks{ true };
 

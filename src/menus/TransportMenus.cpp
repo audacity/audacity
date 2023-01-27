@@ -327,9 +327,8 @@ void OnPunchAndRoll(const CommandContext &context)
    const auto duplex = ProjectAudioManager::UseDuplex();
    if (duplex)
       // play all
-      transportTracks =
-         ProjectAudioManager::GetAllPlaybackTracks(
-            TrackList::Get( project ), false, true);
+      transportTracks = TransportTracks{
+         TrackList::Get( project ), false, true };
    else
       // play recording tracks only
       std::copy(tracks.begin(), tracks.end(),
@@ -340,7 +339,7 @@ void OnPunchAndRoll(const CommandContext &context)
    transportTracks.captureTracks = std::move(tracks);
 
    // Try to start recording
-   auto options = DefaultPlayOptions( project );
+   auto options = ProjectAudioIO::GetDefaultOptions(project);
    options.rate = rateOfSelected;
    options.preRoll = std::max(0L,
       gPrefs->Read(AUDIO_PRE_ROLL_KEY, DEFAULT_PRE_ROLL_SECONDS));
@@ -465,7 +464,7 @@ void OnPlayOneSecond(const CommandContext &context)
       return;
 
    auto &trackPanel = TrackPanel::Get( project );
-   auto options = DefaultPlayOptions( project );
+   auto options = ProjectAudioIO::GetDefaultOptions(project);
 
    double pos = trackPanel.GetMostRecentXPos();
    TransportUtilities::PlayPlayRegionAndWait(
@@ -517,7 +516,7 @@ void OnPlayToSelection(const CommandContext &context)
    // only when playing a short region, less than or equal to a second.
 //   mLastPlayMode = ((t1-t0) > 1.0) ? normalPlay : oneSecondPlay;
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    TransportUtilities::PlayPlayRegionAndWait(
       context, SelectedRegion(t0, t1),
@@ -541,7 +540,7 @@ void OnPlayBeforeSelectionStart(const CommandContext &context)
    double beforeLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    TransportUtilities::PlayPlayRegionAndWait(
       context, SelectedRegion(t0 - beforeLen, t0),
@@ -563,7 +562,7 @@ void OnPlayAfterSelectionStart(const CommandContext &context)
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
       TransportUtilities::PlayPlayRegionAndWait(
@@ -590,7 +589,7 @@ void OnPlayBeforeSelectionEnd(const CommandContext &context)
    double beforeLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
       TransportUtilities::PlayPlayRegionAndWait(
@@ -616,7 +615,7 @@ void OnPlayAfterSelectionEnd(const CommandContext &context)
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    TransportUtilities::PlayPlayRegionAndWait(
       context, SelectedRegion(t1, t1 + afterLen),
@@ -641,7 +640,7 @@ void OnPlayBeforeAndAfterSelectionStart
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
       TransportUtilities::PlayPlayRegionAndWait(
@@ -671,7 +670,7 @@ void OnPlayBeforeAndAfterSelectionEnd
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto playOptions = DefaultPlayOptions( project );
+   auto playOptions = ProjectAudioIO::GetDefaultOptions(project);
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
       TransportUtilities::PlayPlayRegionAndWait(

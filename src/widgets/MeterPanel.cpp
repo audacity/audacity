@@ -61,7 +61,7 @@
 #include "ImageManipulation.h"
 #include "Decibels.h"
 #include "Project.h"
-#include "../ProjectAudioManager.h"
+#include "ProjectAudioIO.h"
 #include "ProjectStatus.h"
 #include "../ProjectWindows.h"
 #include "Prefs.h"
@@ -1866,9 +1866,8 @@ void MeterPanel::StartMonitoring()
 
    if (start && !gAudioIO->IsBusy()){
       AudacityProject *p = mProject;
-      if (p){
-         gAudioIO->StartMonitoring( DefaultPlayOptions( *p ) );
-      }
+      if (p)
+         gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(*p));
 
       mLayoutValid = false;
 

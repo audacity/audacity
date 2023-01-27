@@ -2093,7 +2093,7 @@ void AdornedRulerPanel::StartQPPlay(
       newDefault = (loopEnabled && newDefault);
       if (newDefault)
          cutPreview = false;
-      auto options = DefaultPlayOptions( *mProject, newDefault );
+      auto options = ProjectAudioIO::GetDefaultOptions(*mProject, newDefault);
 
       if (!cutPreview) {
          if (pStartTime)
