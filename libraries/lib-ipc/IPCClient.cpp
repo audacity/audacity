@@ -13,6 +13,7 @@
 #include "IPCClient.h"
 #include "IPCChannel.h"
 
+#include <cstdint>
 #include <thread>
 #include <stdexcept>
 
@@ -40,7 +41,7 @@ public:
       sockaddr_in addrin {};
       addrin.sin_family = AF_INET;
       addrin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-      addrin.sin_port = htons(static_cast<u_short>(port));
+      addrin.sin_port = htons(static_cast<uint16_t>(port));
 
       if(connect(*fd, reinterpret_cast<const sockaddr*>(&addrin), sizeof(addrin)) == SOCKET_ERROR)
       {
