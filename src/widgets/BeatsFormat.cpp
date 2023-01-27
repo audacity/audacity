@@ -41,19 +41,23 @@ void BeatsFormat::SetLabelString(
    const std::any& data
 ) const
 {
+   if (d < 0) {
+      return;
+   }
+   const BeatsFormatData* beatsData = std::any_cast<BeatsFormatData>(&data);
+
+   const double bpm = beatsData ? beatsData->bpm : 0;
+   const int timeSigUpper = beatsData ? beatsData->timeSigUpper : 0;
+   const int timeSigLower = beatsData ? beatsData->timeSigLower : 0;
+
+   double val = (bpm * ((double)timeSigLower / 4) * d) / (60 * timeSigUpper);
+   int beat = round((val - floor(val)) * timeSigUpper);
+
    if (tickType == RulerFormat::t_major) {
-      if (d < 0) {
-         return;
-      }
-      const BeatsFormatData* beatsData = std::any_cast<BeatsFormatData>(&data);
-
-      const double bpm = beatsData ? beatsData->bpm : 0;
-      const int timeSigUpper = beatsData ? beatsData->timeSigUpper : 0;
-      const int timeSigLower = beatsData ? beatsData->timeSigLower : 0;
-
-      double val = (bpm * ((double)timeSigLower / 4) * d) / (60 * timeSigUpper);
-
       s.Printf(wxT("%d"), (int)round(val + 1));
+   }
+   else if (tickType == RulerFormat::t_minor) {
+      s.Printf(wxT("%d.%d"), (int)floor(val + 1), (int)beat);
    }
 }
 
