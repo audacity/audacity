@@ -67,11 +67,6 @@ Effect::Effect()
 
 Effect::~Effect()
 {
-   // Destroying what is usually the unique Effect object of its subclass,
-   // which lasts until the end of the session.
-   // Maybe there is a non-modal realtime dialog still open.
-   if (mHostUIDialog)
-      mHostUIDialog->Close();
 }
 
 // ComponentInterface implementation
@@ -175,15 +170,6 @@ int Effect::ShowHostInterface(wxWindow &parent,
       // Effect without UI just proceeds quietly to apply it destructively.
       return wxID_APPLY;
 
-   if (mHostUIDialog)
-   {
-      // Realtime effect has shown its nonmodal dialog, now hides it, and does
-      // nothing else.
-      if ( mHostUIDialog->Close(true) )
-         mHostUIDialog = nullptr;
-      return 0;
-   }
-
    // Create the dialog
    // Host, not client, is responsible for invoking the factory and managing
    // the lifetime of the dialog.
@@ -192,21 +178,18 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // std::function to avoid source code dependency cycles.
    EffectUIClientInterface *const client = this;
    auto results = factory(parent, *this, *client, access);
-   mHostUIDialog = results.pDialog;
+   auto pDialog = results.pDialog;
    pInstance = results.pInstance;
-   if (!mHostUIDialog)
+   if (!pDialog)
       return 0;
 
    // Let the client show the dialog and decide whether to keep it open
-   auto result = client->ShowClientInterface(parent, *mHostUIDialog,
+   auto result = client->ShowClientInterface(parent, *pDialog,
       results.pValidator, forceModal);
-   if (mHostUIDialog && !mHostUIDialog->IsShown())
+   if (pDialog && !pDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
       // So destroy it.
-      // (I think mHostUIDialog only needs to be a local variable in this
-      // function -- that it is always null when the function begins -- but
-      // that may change. PRL)
-      mHostUIDialog->Destroy();
+      pDialog->Destroy();
 
    return result;
 }

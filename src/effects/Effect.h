@@ -232,11 +232,6 @@ protected:
    // Use this to append a NEW output track.
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
-protected:
-   // UI
-   //! This smart pointer tracks the lifetime of the dialog
-   wxWeakRef<wxDialog> mHostUIDialog;
-
 private:
    wxWindow       *mUIParent{};
    wxString GetSavedStateGroup();
