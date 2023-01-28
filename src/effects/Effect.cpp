@@ -269,20 +269,19 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
    const EffectOutputs *pOutputs)
 {
    auto parent = S.GetParent();
-   mUIParent = parent;
 
 //   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
    auto result = PopulateOrExchange(S, instance, access, pOutputs);
 
-   mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
+   parent->SetMinSize(parent->GetSizer()->GetMinSize());
 
    if (!result) {
       // No custom validator object?  Then use the default
       result = std::make_unique<DefaultEffectUIValidator>(
          *this, access, S.GetParent());
-      mUIParent->PushEventHandler(this);
+      parent->PushEventHandler(this);
    }
    return result;
 }
@@ -299,7 +298,6 @@ bool Effect::ValidateUI(EffectSettings &)
 
 bool Effect::CloseUI()
 {
-   mUIParent = nullptr;
    return true;
 }
 
@@ -704,7 +702,7 @@ int Effect::MessageBox( const TranslatableString& message,
    auto title = titleStr.empty()
       ? GetName()
       : XO("%s: %s").Format( GetName(), titleStr );
-   return AudacityMessageBox( message, title, style, mUIParent );
+   return AudacityMessageBox(message, title, style);
 }
 EffectUIClientInterface* Effect::GetEffectUIClientInterface()
 {

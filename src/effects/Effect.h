@@ -233,7 +233,6 @@ protected:
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
 private:
-   wxWindow       *mUIParent{};
    wxString GetSavedStateGroup();
 
    bool mIsBatch{ false };
