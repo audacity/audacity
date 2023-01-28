@@ -12,8 +12,8 @@
 
 *********************************************************************/
 
-#ifndef __AUDACITY_LV2_VALIDATOR__
-#define __AUDACITY_LV2_VALIDATOR__
+#ifndef __AUDACITY_LV2_EDITOR__
+#define __AUDACITY_LV2_EDITOR__
 
 #if USE_LV2
 
@@ -70,7 +70,7 @@ public:
 
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition,
-      LV2Editor *pValidator);
+      LV2Editor *pEditor);
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 

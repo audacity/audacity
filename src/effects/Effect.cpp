@@ -41,7 +41,7 @@
 #include <unordered_map>
 
 static const int kPlayID = 20102;
-static_assert(kPlayID == EffectUIValidator::kPlayID);
+static_assert(kPlayID == EffectEditor::kPlayID);
 
 using t2bHash = std::unordered_map< void*, bool >;
 
@@ -142,28 +142,28 @@ std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
    return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
 }
 
-std::unique_ptr<EffectUIValidator> StatefulEffect::PopulateUI(
+std::unique_ptr<EffectEditor> StatefulEffect::PopulateUI(
    const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
    auto parent = S.GetParent();
 
-   // Let the effect subclass provide its own validator if it wants
+   // Let the effect subclass provide its own editor if it wants
    auto result = PopulateOrExchange(S, instance, access, pOutputs);
 
    parent->SetMinSize(parent->GetSizer()->GetMinSize());
 
    if (!result) {
-      // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(*this,
+      // No custom editor object?  Then use the default
+      result = std::make_unique<DefaultEffectEditor>(*this,
          *this, access, S.GetParent());
       parent->PushEventHandler(this);
    }
    return result;
 }
 
-std::unique_ptr<EffectUIValidator> StatefulEffect::MakeEditor(
+std::unique_ptr<EffectEditor> StatefulEffect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -178,7 +178,7 @@ const EffectParameterMethods &Effect::Parameters() const
 }
 
 int Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
-   wxDialog &dialog, EffectUIValidator *, bool forceModal) const
+   wxDialog &dialog, EffectEditor *, bool forceModal) const
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    dialog.Layout();
@@ -218,7 +218,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
 
    // Let the client show the dialog and decide whether to keep it open
    auto result = client->ShowClientInterface(*this, parent, *pDialog,
-      results.pValidator, forceModal);
+      results.pEditor, forceModal);
    if (pDialog && !pDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
       // So destroy it.
@@ -295,7 +295,7 @@ OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
-std::unique_ptr<EffectUIValidator> Effect::PopulateUI(const EffectPlugin &,
+std::unique_ptr<EffectEditor> Effect::PopulateUI(const EffectPlugin &,
    ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
@@ -809,21 +809,21 @@ EffectUIServices* Effect::GetEffectUIServices()
    return this;
 }
 
-DefaultEffectUIValidator::DefaultEffectUIValidator(const EffectPlugin &plugin,
+DefaultEffectEditor::DefaultEffectEditor(const EffectPlugin &plugin,
    EffectUIServices &services, EffectSettingsAccess &access,
-   wxWindow *pParent)
-   : EffectUIValidator{ services, access }
+   wxWindow *pParent
+)  : EffectEditor{ services, access }
    , mPlugin{ plugin }
    , mpParent{ pParent }
 {
 }
 
-DefaultEffectUIValidator::~DefaultEffectUIValidator()
+DefaultEffectEditor::~DefaultEffectEditor()
 {
    Disconnect();
 }
 
-bool DefaultEffectUIValidator::ValidateUI()
+bool DefaultEffectEditor::ValidateUI()
 {
    bool result {};
    mAccess.ModifySettings([&](EffectSettings &settings){
@@ -833,7 +833,7 @@ bool DefaultEffectUIValidator::ValidateUI()
    return result;
 }
 
-void DefaultEffectUIValidator::Disconnect()
+void DefaultEffectEditor::Disconnect()
 {
    if (mpParent) {
       mpParent->PopEventHandler();

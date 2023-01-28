@@ -329,7 +329,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    return !cancel;
 }
 
-std::unique_ptr<EffectUIValidator> EffectAutoDuck::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectAutoDuck::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

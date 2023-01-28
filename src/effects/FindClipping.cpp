@@ -213,7 +213,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectFindClipping::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectFindClipping::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

@@ -69,13 +69,13 @@ public:
 
    // Effect Implementation
 
-   std::unique_ptr<EffectUIValidator> MakeEditor(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
-   struct Validator;
+   struct Editor;
 
    struct Instance;
 

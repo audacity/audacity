@@ -89,7 +89,7 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
    UpdateTitle();
 
    client->ShowClientInterface(*effectPlugin,
-      projectWindow, *mEffectUIHost, mEffectUIHost->GetValidator(), false);
+      projectWindow, *mEffectUIHost, mEffectUIHost->GetEditor(), false);
 
    // The dialog was modal? That shouldn't have happened
    if (mEffectUIHost == nullptr || !mEffectUIHost->IsShown())
@@ -110,7 +110,7 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
          Hide(&project);
       });
 
-   mParameterChangedSubscription = mEffectUIHost->GetValidator()->Subscribe(
+   mParameterChangedSubscription = mEffectUIHost->GetEditor()->Subscribe(
       [this](auto) { UndoManager::Get(*mpProject).MarkUnsaved(); });
 }
 

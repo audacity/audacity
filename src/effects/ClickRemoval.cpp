@@ -272,7 +272,7 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    return bResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectClickRemoval::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

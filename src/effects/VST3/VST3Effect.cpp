@@ -44,7 +44,7 @@
 
 #include "ConfigInterface.h"
 #include "VST3Instance.h"
-#include "VST3UIValidator.h"
+#include "VST3Editor.h"
 
 namespace {
 
@@ -237,10 +237,10 @@ OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) 
 
 int VST3Effect::ShowClientInterface(const EffectPlugin &,
    wxWindow& parent, wxDialog& dialog,
-   EffectUIValidator *validator, bool forceModal) const
+   EffectEditor *pEditor, bool forceModal) const
 {
 #ifdef __WXMSW__
-   if(validator->IsGraphicalUI())
+   if(pEditor->IsGraphicalUI())
       //Not all platforms support window style change.
       //Plugins that support resizing provide their own handles,
       //which may overlap with system handle. Not all plugins
@@ -260,7 +260,7 @@ std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
    return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
 }
 
-std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(const EffectPlugin &,
+std::unique_ptr<EffectEditor> VST3Effect::PopulateUI(const EffectPlugin &,
    ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
@@ -272,11 +272,11 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(const EffectPlugin &,
 
    const auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
 
-   return std::make_unique<VST3UIValidator>(S.GetParent(),
+   return std::make_unique<VST3Editor>(S.GetParent(),
       vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
-std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
+std::unique_ptr<EffectEditor> VST3Effect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

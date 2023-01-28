@@ -45,7 +45,7 @@ public:
    void Init() { mBands.Init(); }
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs);
    bool TransferDataToWindow(const EffectSettings &settings);

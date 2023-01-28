@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  @file AudioUnitValidator.h
+  @file AudioUnitEditor.h
 
   Dominic Mazzoni
   Leland Lucius
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_AUDIO_UNIT_VALIDATOR__
-#define __AUDACITY_AUDIO_UNIT_VALIDATOR__
+#ifndef __AUDACITY_AUDIO_UNIT_EDITOR__
+#define __AUDACITY_AUDIO_UNIT_EDITOR__
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <unordered_map>
@@ -23,19 +23,19 @@ class AUControl;
 
 class AudioUnitInstance;
 
-class AudioUnitValidator : public wxEvtHandler, public EffectUIValidator {
+class AudioUnitEditor : public wxEvtHandler, public EffectEditor {
    struct CreateToken{};
 public:
-   static std::unique_ptr<EffectUIValidator> Create(
+   static std::unique_ptr<EffectEditor> Create(
       EffectUIServices &effect, ShuttleGui &S,
       const wxString &uiType,
       EffectInstance &instance, EffectSettingsAccess &access);
 
-   AudioUnitValidator(CreateToken,
+   AudioUnitEditor(CreateToken,
       EffectUIServices &effect, EffectSettingsAccess &access,
       AudioUnitInstance &instance, AUControl *pControl, bool isGraphical);
 
-   ~AudioUnitValidator() override;
+   ~AudioUnitEditor() override;
 
    bool UpdateUI() override;
    bool ValidateUI() override;

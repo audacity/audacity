@@ -92,15 +92,15 @@ const ComponentInterfaceSymbol EffectReverb::Symbol
 namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
 
 
-struct EffectReverb::Validator
-   : EffectUIValidator
+struct EffectReverb::Editor
+   : EffectEditor
 {
-   Validator(EffectUIServices& services,
+   Editor(EffectUIServices& services,
       EffectSettingsAccess& access, const EffectReverbSettings& settings
-   )  : EffectUIValidator{ services, access }
+   )  : EffectEditor{ services, access }
       , mSettings{ settings }
    {}
-   virtual ~Validator() = default;
+   virtual ~Editor() = default;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -151,7 +151,7 @@ struct EffectReverb::Validator
 };
 
 
-bool EffectReverb::Validator::ValidateUI()
+bool EffectReverb::Editor::ValidateUI()
 {
    auto& rs = mSettings;
 
@@ -510,20 +510,20 @@ EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 }
 
 // Effect implementation
-std::unique_ptr<EffectUIValidator> EffectReverb::MakeEditor(
+std::unique_ptr<EffectEditor> EffectReverb::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
    const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
 
-   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   auto result = std::make_unique<Editor>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
 }
 
 
-void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
+void EffectReverb::Editor::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
@@ -533,10 +533,10 @@ void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
 
 #define SpinSlider(n, p) \
       m ## n ## T = S.AddSpinCtrl( p, n.def, n.max, n.min); \
-      BindTo(*m ## n ## T, wxEVT_SPINCTRL, &Validator::On ## n ## Text);\
+      BindTo(*m ## n ## T, wxEVT_SPINCTRL, &Editor::On ## n ## Text);\
       \
       m ## n ## S = S.Style(wxSL_HORIZONTAL).AddSlider( {}, n.def, n.max, n.min); \
-      BindTo(*m ## n ## S, wxEVT_SLIDER, &Validator::On ## n ## Slider);
+      BindTo(*m ## n ## S, wxEVT_SLIDER, &Editor::On ## n ## Slider);
 
       SpinSlider(RoomSize,       XXO("&Room Size (%):"))
       SpinSlider(PreDelay,       XXO("&Pre-delay (ms):"))
@@ -557,13 +557,13 @@ void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
    {
       mWetOnlyC =
       S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);
-      BindTo(*mWetOnlyC, wxEVT_CHECKBOX, &Validator::OnCheckbox);
+      BindTo(*mWetOnlyC, wxEVT_CHECKBOX, &Editor::OnCheckbox);
    }
    S.EndHorizontalLay();
 
 }
 
-bool EffectReverb::Validator::UpdateUI()
+bool EffectReverb::Editor::UpdateUI()
 {
    // get the settings from the MessageBuffer and write them to our local copy
    mSettings = GetSettings(mAccess.Get());
@@ -593,7 +593,7 @@ bool EffectReverb::Validator::UpdateUI()
 
 
 #define SpinSliderHandlers(n) \
-   void EffectReverb::Validator::On ## n ## Slider(wxCommandEvent & evt) \
+   void EffectReverb::Editor::On ## n ## Slider(wxCommandEvent & evt) \
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
@@ -602,7 +602,7 @@ bool EffectReverb::Validator::UpdateUI()
       ValidateUI(); \
       Publish(EffectSettingChanged{}); \
    } \
-   void EffectReverb::Validator::On ## n ## Text(wxCommandEvent & evt) \
+   void EffectReverb::Editor::On ## n ## Text(wxCommandEvent & evt) \
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
@@ -622,7 +622,7 @@ SpinSliderHandlers(WetGain)
 SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
-void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
+void EffectReverb::Editor::OnCheckbox(wxCommandEvent &evt)
 {
    ValidateUI();
    Publish(EffectSettingChanged{});

@@ -540,6 +540,8 @@ list( APPEND SOURCES
          effects/VST3/AudacityVst3HostApplication.cpp
          effects/VST3/memorystream.h
          effects/VST3/memorystream.cpp
+         effects/VST3/VST3Editor.cpp
+         effects/VST3/VST3Editor.h
          effects/VST3/VST3Effect.h
          effects/VST3/VST3Effect.cpp
          effects/VST3/VST3EffectsModule.h
@@ -554,8 +556,6 @@ list( APPEND SOURCES
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h
          effects/VST3/VST3ParametersWindow.cpp
-         effects/VST3/VST3UIValidator.cpp
-         effects/VST3/VST3UIValidator.h
          effects/VST3/internal/ConnectionProxy.h
          effects/VST3/internal/ConnectionProxy.cpp
          effects/VST3/internal/PlugFrame.h
@@ -583,6 +583,8 @@ list( APPEND SOURCES
       $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
          effects/audiounits/AUControl.h
          effects/audiounits/AUControl.mm
+         effects/audiounits/AudioUnitEditor.cpp
+         effects/audiounits/AudioUnitEditor.h
          effects/audiounits/AudioUnitEffect.cpp
          effects/audiounits/AudioUnitEffect.h
          effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -593,8 +595,6 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitInstance.h
          effects/audiounits/AudioUnitUtils.cpp
          effects/audiounits/AudioUnitUtils.h
-         effects/audiounits/AudioUnitValidator.cpp
-         effects/audiounits/AudioUnitValidator.h
          effects/audiounits/AudioUnitWrapper.cpp
          effects/audiounits/AudioUnitWrapper.h
       >
@@ -610,6 +610,8 @@ list( APPEND SOURCES
       # LV2 Effects
 
       $<$<BOOL:${USE_LV2}>:
+         effects/lv2/LV2Editor.cpp
+         effects/lv2/LV2Editor.h
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
          effects/lv2/LV2EffectMeter.cpp
@@ -629,8 +631,6 @@ list( APPEND SOURCES
          effects/lv2/LV2UIFeaturesList.cpp
          effects/lv2/LV2UIFeaturesList.h
          effects/lv2/LV2Utils.h
-         effects/lv2/LV2Validator.cpp
-         effects/lv2/LV2Validator.h
          effects/lv2/LV2Wrapper.cpp
          effects/lv2/LV2Wrapper.h
          effects/lv2/LoadLV2.cpp

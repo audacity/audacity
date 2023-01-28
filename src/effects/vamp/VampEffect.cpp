@@ -522,7 +522,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
+std::unique_ptr<EffectEditor> VampEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

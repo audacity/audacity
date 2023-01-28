@@ -262,8 +262,8 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
 EffectUIHost::~EffectUIHost()
 {
-   if (mpValidator)
-      mpValidator->Disconnect();
+   if (mpEditor)
+      mpEditor->Disconnect();
    DestroyChildren();
    wxASSERT(mClosed);
 }
@@ -277,7 +277,7 @@ bool EffectUIHost::TransferDataToWindow()
    // Transfer-to takes const reference to settings
    return mEffectUIHost.TransferDataToWindow(mpAccess->Get()) &&
       //! Do other appearance updates
-      mpValidator->UpdateUI() &&
+      mpEditor->UpdateUI() &&
       //! Do validators
       wxDialogWrapper::TransferDataToWindow();
 }
@@ -293,7 +293,7 @@ bool EffectUIHost::TransferDataFromWindow()
       return false;
 
    //! Do other custom validation and transfer actions
-   if (!mpValidator->ValidateUI())
+   if (!mpEditor->ValidateUI())
       return false;
    
    // Transfer-from takes non-const reference to settings
@@ -439,12 +439,12 @@ bool EffectUIHost::Initialize()
 
       // Let the client add things to the panel
       ShuttleGui S1{ uw.get(), eIsCreating };
-      mpValidator = mClient.PopulateUI(mEffectUIHost,
+      mpEditor = mClient.PopulateUI(mEffectUIHost,
          S1, *mpInstance, *mpAccess, mpOutputs);
-      if (!mpValidator)
+      if (!mpEditor)
          return false;
 
-      BuildButtonBar(S, mpValidator->IsGraphicalUI());
+      BuildButtonBar(S, mpEditor->IsGraphicalUI());
 
       S.StartHorizontalLay( wxEXPAND );
       {
@@ -527,8 +527,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    DoCancel();
    CleanupRealtime();
 
-   if (mpValidator)
-      mpValidator->OnClose();
+   if (mpEditor)
+      mpEditor->OnClose();
    
    Hide();
    Destroy();
@@ -1225,9 +1225,9 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       return {};
    }
    if (dlg->Initialize()) {
-      auto pValidator = dlg->GetValidator();
+      auto pEditor = dlg->GetEditor();
       // release() is safe because parent will own it
-      return { dlg.release(), pInstance, pValidator };
+      return { dlg.release(), pInstance, pEditor };
    }
    return {};
 }

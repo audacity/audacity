@@ -31,7 +31,7 @@ LV2_DISABLE_DEPRECATION_WARNINGS
    "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
 #define LV2EFFECTS_FAMILY XO("LV2")
 
-class LV2Validator;
+class LV2Editor;
 
 class LV2Effect final : public PerTrackEffect
 {
@@ -74,13 +74,13 @@ public:
       const override;
 
    int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
    const override;
 
    bool InitializePlugin();
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
    bool CloseUI() const override;
@@ -99,7 +99,7 @@ public:
 
 private:
    //! Will never be called
-   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) final;
 

@@ -1011,9 +1011,9 @@ uint32_t LV2Editor::suil_port_index(const char *port_symbol)
 // WX control.  Many of the x42 LV2 plugins can resize themselves when changing
 // the scale factor. (e.g., open "x42-dpl" effect and right click to change scaling)
 void LV2Editor::size_request(GtkWidget *widget, GtkRequisition *requisition,
-   LV2Editor *pValidator)
+   LV2Editor *pEditor)
 {
-   pValidator->SizeRequest(widget, requisition);
+   pEditor->SizeRequest(widget, requisition);
 }
 
 void LV2Editor::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
