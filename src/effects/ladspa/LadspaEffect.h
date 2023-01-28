@@ -107,15 +107,15 @@ public:
       const override;
 
    int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
    const override;
    bool InitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   struct Validator;
-   std::unique_ptr<EffectUIValidator> MakeEditor(
+   struct Editor;
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 

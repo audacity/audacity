@@ -62,7 +62,7 @@ public:
    int ShowModal() override;
 
    bool Initialize();
-   EffectUIValidator *GetValidator() const { return mpValidator.get(); }
+   EffectEditor *GetEditor() const { return mpEditor.get(); }
 
    bool HandleCommandKeystrokes() override;
 
@@ -162,7 +162,7 @@ private:
    const std::shared_ptr<EffectInstance> mpInstance;
    const EffectOutputs *const mpOutputs;
 
-   std::unique_ptr<EffectUIValidator> mpValidator;
+   std::unique_ptr<EffectEditor> mpEditor;
 
    DECLARE_EVENT_TABLE()
 };

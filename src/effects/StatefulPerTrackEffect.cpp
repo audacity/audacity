@@ -54,21 +54,21 @@ std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
       const_cast<StatefulPerTrackEffect&>(*this));
 }
 
-std::unique_ptr<EffectUIValidator>
+std::unique_ptr<EffectEditor>
 StatefulPerTrackEffect::PopulateUI(const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
    auto parent = S.GetParent();
 
-   // Let the effect subclass provide its own validator if it wants
+   // Let the effect subclass provide its own editor if it wants
    auto result = PopulateOrExchange(S, instance, access, pOutputs);
 
    parent->SetMinSize(parent->GetSizer()->GetMinSize());
 
    if (!result) {
-      // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(*this,
+      // No custom editor object?  Then use the default
+      result = std::make_unique<DefaultEffectEditor>(*this,
          *this, access, S.GetParent());
       parent->PushEventHandler(this);
    }
@@ -104,7 +104,7 @@ bool StatefulPerTrackEffect::ProcessFinalize() noexcept
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> StatefulPerTrackEffect::MakeEditor(
+std::unique_ptr<EffectEditor> StatefulPerTrackEffect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

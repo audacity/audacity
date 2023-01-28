@@ -59,7 +59,7 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> MakeEditor(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
@@ -74,7 +74,7 @@ private:
                      sampleCount total, float amplitude);
 
 public:
-   struct Validator;
+   struct Editor;
 
 private:
    const EffectParameterMethods& Parameters() const override;

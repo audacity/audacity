@@ -204,7 +204,7 @@ bool StatefulEffectBase::RealtimeFinalize(EffectSettings &settings) noexcept
    return false;
 }
 
-std::unique_ptr<EffectUIValidator> StatefulEffectBase::PopulateOrExchange(
+std::unique_ptr<EffectEditor> StatefulEffectBase::PopulateOrExchange(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

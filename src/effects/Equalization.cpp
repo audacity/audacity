@@ -393,7 +393,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectEqualization::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {

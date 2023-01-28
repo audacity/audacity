@@ -75,11 +75,11 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> MakeEditor(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
-   struct Validator;
+   struct Editor;
 
    struct Instance;
 

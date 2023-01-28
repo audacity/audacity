@@ -257,7 +257,7 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectScienFilter::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -626,7 +626,7 @@ void EffectScienFilter::OnFilterSubtype(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -637,7 +637,7 @@ void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -648,7 +648,7 @@ void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnStopbandRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;

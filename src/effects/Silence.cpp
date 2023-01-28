@@ -63,7 +63,7 @@ EffectType EffectSilence::GetType() const
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectSilence::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectSilence::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

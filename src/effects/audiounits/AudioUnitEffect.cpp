@@ -18,7 +18,7 @@
 #include "AudioUnitEffect.h"
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
-#include "AudioUnitValidator.h"
+#include "AudioUnitEditor.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
@@ -265,7 +265,7 @@ size_t AudioUnitInstance::GetTailSize() const
 
 int AudioUnitEffect::ShowClientInterface(const EffectPlugin &,
    wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal) const
+   EffectEditor *, bool forceModal) const
 {
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       dialog.Show();
@@ -407,7 +407,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
    return presets;
 }
 
-std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(
+std::unique_ptr<EffectEditor> AudioUnitEffect::PopulateUI(
    const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *)
@@ -416,10 +416,10 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(
    // Decide whether to build plain or fancy user interfaces
    GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
       uiType, FullValue.MSGID().GET() /* Config stores un-localized string */);
-   return AudioUnitValidator::Create(*this, S, uiType, instance, access);
+   return AudioUnitEditor::Create(*this, S, uiType, instance, access);
 }
 
-std::unique_ptr<EffectUIValidator> AudioUnitEffect::MakeEditor(
+std::unique_ptr<EffectEditor> AudioUnitEffect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

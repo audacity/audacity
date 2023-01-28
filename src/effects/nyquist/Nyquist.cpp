@@ -1131,7 +1131,7 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
+std::unique_ptr<EffectEditor> NyquistEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -1164,7 +1164,7 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
    if (success)
    {
-      EffectUIValidator::EnablePreview(mUIParent, mEnablePreview);
+      EffectEditor::EnablePreview(mUIParent, mEnablePreview);
    }
 
    return success;

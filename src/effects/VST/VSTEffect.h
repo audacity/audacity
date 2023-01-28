@@ -326,7 +326,7 @@ wxDECLARE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
-class VSTEffectValidator;
+class VSTEffectEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -377,7 +377,7 @@ class VSTEffect final
    bool DoLoadFactoryPreset(int id);
 
    int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
    const override;
 
    bool InitializePlugin();
@@ -385,7 +385,7 @@ class VSTEffect final
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();
-   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
    bool CanExportPresets() const override;
@@ -409,7 +409,7 @@ class VSTEffect final
 
 protected:
    //! Will never be called
-   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) final;
    
@@ -599,21 +599,21 @@ private:
 };
 
 
-class VSTEffectValidator final
+class VSTEffectEditor final
    : public wxEvtHandler
-   , public EffectUIValidator
+   , public EffectEditor
    , public VSTEffectUIWrapper
 {
 public:
 
-   VSTEffectValidator(VSTEffectInstance&       instance, bool gui,
+   VSTEffectEditor(VSTEffectInstance&       instance, bool bui,
       EffectUIServices&        services,
       EffectSettingsAccess&    access,
       wxWindow*                pParent,
       int                      numParams
    );
 
-   ~VSTEffectValidator() override;
+   ~VSTEffectEditor() override;
 
    VSTEffectInstance& GetInstance() const;
 

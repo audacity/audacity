@@ -667,7 +667,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 }
 
 
-std::unique_ptr<EffectUIValidator> EffectTruncSilence::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectTruncSilence::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -941,7 +941,7 @@ void EffectTruncSilence::OnControlChange(wxCommandEvent & WXUNUSED(evt))
 
    UpdateUI();
 
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;

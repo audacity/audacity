@@ -269,7 +269,7 @@ void EffectToneGen::PostSet()
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectToneGen::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
@@ -425,7 +425,7 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 
 void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;

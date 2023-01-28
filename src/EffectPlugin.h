@@ -26,13 +26,13 @@ class EffectInstance;
 class EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
-class EffectUIValidator;
+class EffectEditor;
 
 struct DialogFactoryResults {
    wxDialog *pDialog{};
    //! constructed and successfully Init()-ed; or null for failure
    std::shared_ptr<EffectInstance> pInstance{};
-   EffectUIValidator *pValidator{};
+   EffectEditor *pEditor{};
 };
 
 //! Type of function that creates a dialog for an effect
@@ -190,7 +190,7 @@ public:
     */
    virtual int ShowClientInterface(const EffectPlugin &plugin,
       wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal = false) const = 0;
+      EffectEditor *pEditor, bool forceModal = false) const = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`
    /*!
@@ -206,7 +206,7 @@ public:
     controls; it might also hold some state needed to implement event handlers
     of the controls; it will exist only while the dialog continues to exist
     */
-   virtual std::unique_ptr<EffectUIValidator> PopulateUI(
+   virtual std::unique_ptr<EffectEditor> PopulateUI(
       const EffectPlugin &plugin, ShuttleGui &S,
       EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) = 0;
@@ -228,7 +228,7 @@ public:
 
  \class EffectSettingChanged
 
- \brief Message sent by validator when a setting is changed by a user
+ \brief Message sent by EffectEditor when a setting is changed by the user
 
  *******************************************************************************************/
 struct EffectSettingChanged final
@@ -239,19 +239,19 @@ struct EffectSettingChanged final
 
 /*************************************************************************************//**
 
-\class EffectUIValidator
+\class EffectEditor
 
 \brief Interface for transferring values from a panel of effect controls
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIValidator /* not final */
+class AUDACITY_DLL_API EffectEditor /* not final */
     : public Observer::Publisher<EffectSettingChanged>
 {
 public:
-   EffectUIValidator(
+   EffectEditor(
       EffectUIServices &services, EffectSettingsAccess &access);
 
-   virtual ~EffectUIValidator();
+   virtual ~EffectEditor();
 
    //! Get settings data from the panel; may make error dialogs and return false
    /*!

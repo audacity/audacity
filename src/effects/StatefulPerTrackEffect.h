@@ -57,7 +57,7 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    //! Allows PopulateOrExchange to return null
-   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
 
@@ -83,7 +83,7 @@ public:
 
 private:
    //! Needed to make subclasses concrete, but should never be called
-   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) final;
 

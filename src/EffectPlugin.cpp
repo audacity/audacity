@@ -24,29 +24,29 @@ bool EffectInstanceEx::Init()
    return true;
 }
 
-EffectUIValidator::EffectUIValidator(
+EffectEditor::EffectEditor(
    EffectUIServices &services, EffectSettingsAccess &access)
    : mUIServices{ services }
    , mAccess{ access }
 {}
 
-EffectUIValidator::~EffectUIValidator() = default;
+EffectEditor::~EffectEditor() = default;
 
-bool EffectUIValidator::UpdateUI()
+bool EffectEditor::UpdateUI()
 {
    return true;
 }
 
-bool EffectUIValidator::IsGraphicalUI()
+bool EffectEditor::IsGraphicalUI()
 {
    return false;
 }
 
-void EffectUIValidator::Disconnect()
+void EffectEditor::Disconnect()
 {
 }
 
-void EffectUIValidator::OnClose()
+void EffectEditor::OnClose()
 {
    if (!mUIClosed)
    {
@@ -55,7 +55,7 @@ void EffectUIValidator::OnClose()
    }
 }
 
-bool EffectUIValidator::EnableApply(wxWindow *parent, bool enable)
+bool EffectEditor::EnableApply(wxWindow *parent, bool enable)
 {
    // May be called during initialization, so try to find the dialog
    if (auto dlg = wxGetTopLevelParent(parent)) {
@@ -80,7 +80,7 @@ bool EffectUIValidator::EnableApply(wxWindow *parent, bool enable)
    return enable;
 }
 
-bool EffectUIValidator::EnablePreview(wxWindow *parent, bool enable)
+bool EffectEditor::EnablePreview(wxWindow *parent, bool enable)
 {
    // May be called during initialization, so try to find the dialog
    if (auto dlg = wxGetTopLevelParent(parent)) {

@@ -169,15 +169,15 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
 
 
 
-struct EffectEcho::Validator
-   : EffectUIValidator
+struct EffectEcho::Editor
+   : EffectEditor
 {
-   Validator(EffectUIServices& services,
+   Editor(EffectUIServices& services,
       EffectSettingsAccess& access, const EffectEchoSettings& settings
-   )  : EffectUIValidator{ services, access }
+   )  : EffectEditor{ services, access }
       , mSettings{ settings }
    {}
-   virtual ~Validator() = default;
+   virtual ~Editor() = default;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -189,19 +189,19 @@ struct EffectEcho::Validator
 
 
 
-std::unique_ptr<EffectUIValidator> EffectEcho::MakeEditor(
+std::unique_ptr<EffectEditor> EffectEcho::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
-   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   auto result = std::make_unique<Editor>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
 }
 
 
-void EffectEcho::Validator::PopulateOrExchange(ShuttleGui & S)
+void EffectEcho::Editor::PopulateOrExchange(ShuttleGui & S)
 {
    auto& echoSettings = mSettings;
 
@@ -223,7 +223,7 @@ void EffectEcho::Validator::PopulateOrExchange(ShuttleGui & S)
 }
 
 
-bool EffectEcho::Validator::ValidateUI()
+bool EffectEcho::Editor::ValidateUI()
 {
    mAccess.ModifySettings
    (
@@ -240,7 +240,7 @@ bool EffectEcho::Validator::ValidateUI()
 }
 
 
-bool EffectEcho::Validator::UpdateUI()
+bool EffectEcho::Editor::UpdateUI()
 {
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();

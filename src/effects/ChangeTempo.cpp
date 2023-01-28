@@ -193,7 +193,7 @@ bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
    return success;
 }
 
-std::unique_ptr<EffectUIValidator> EffectChangeTempo::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectChangeTempo::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

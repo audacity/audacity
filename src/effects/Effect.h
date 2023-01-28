@@ -23,17 +23,17 @@ class WaveTrack;
 
 class sampleCount;
 
-//! Default implementation of EffectUIValidator invokes ValidateUI
+//! Default implementation of EffectEditor invokes ValidateUI
 //! method of an EffectUIServices
 /*
  Also pops the even handler stack of a window, if given to the contructor
 
  This is a transitional class; it should be eliminated when all effect classes
- define their own associated subclasses of EffectUIValidator, which can hold
+ define their own associated subclasses of EffectEditor, which can hold
  state only for the lifetime of a dialog, so the effect object need not hold it
 */
-class DefaultEffectUIValidator
-   : public EffectUIValidator
+class DefaultEffectEditor
+   : public EffectEditor
    // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
    , protected wxEvtHandler
 {
@@ -42,11 +42,11 @@ public:
     @param pParent if not null, caller will push an event handler onto this
     window; then this object is responsible to pop it
     */
-   DefaultEffectUIValidator(const EffectPlugin &plugin,
+   DefaultEffectEditor(const EffectPlugin &plugin,
       EffectUIServices &services, EffectSettingsAccess &access,
       wxWindow *pParent = nullptr);
    //! Calls Disconnect
-   ~DefaultEffectUIValidator() override;
+   ~DefaultEffectEditor() override;
    //! Calls mUIServices.ValidateUI()
    bool ValidateUI() override;
    void Disconnect() override;
@@ -120,12 +120,12 @@ class AUDACITY_DLL_API Effect /* not final */
    virtual const EffectParameterMethods &Parameters() const;
 
    int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectUIValidator *pValidator, bool forceModal)
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
    const override;
 
    EffectUIServices* GetEffectUIServices() override;
 
-   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
    //! @return false
@@ -193,7 +193,7 @@ protected:
     @return also returned from PopulateUI
     @post `result: result != nullptr`
     */
-   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) = 0;
 
@@ -294,13 +294,13 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    //! Allows PopulateOrExchange to return null
-   std::unique_ptr<EffectUIValidator> PopulateUI(const EffectPlugin &plugin,
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
 
 private:
    //! Needed to make subclasses concrete, but should never be called
-   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) final;
 };

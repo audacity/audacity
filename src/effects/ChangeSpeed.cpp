@@ -237,7 +237,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectChangeSpeed::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -784,6 +784,6 @@ void EffectChangeSpeed::Update_TimeCtrl_ToLength()
 void EffectChangeSpeed::UpdateUI()
 // Disable OK and Preview if not in sensible range.
 {
-   EffectUIValidator::EnableApply(mUIParent,
+   EffectEditor::EnableApply(mUIParent,
       m_PercentChange >= Percentage.min && m_PercentChange <= Percentage.max);
 }
