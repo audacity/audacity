@@ -125,8 +125,6 @@ class AUDACITY_DLL_API Effect /* not final */
 
    EffectUIServices* GetEffectUIServices() override;
 
-   // EffectUIClientInterface implementation
-
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
@@ -288,7 +286,15 @@ public:
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
    };
+
+   ~StatefulEffect() override;
+
    std::shared_ptr<EffectInstance> MakeInstance() const override;
+
+   //! Allows PopulateOrExchange to return null
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
 };
 
 // FIXME:

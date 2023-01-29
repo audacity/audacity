@@ -19,6 +19,8 @@
 
 
 #include "StatefulPerTrackEffect.h"
+#include "ShuttleGui.h"
+#include <wx/sizer.h>
 
 StatefulPerTrackEffect::Instance::~Instance() = default;
 
@@ -40,6 +42,8 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
    return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
+StatefulPerTrackEffect::~StatefulPerTrackEffect() = default;
+
 std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
 {
    // Cheat with const_cast to return an object that calls through to
@@ -48,6 +52,27 @@ std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
    // correct.
    return std::make_shared<Instance>(
       const_cast<StatefulPerTrackEffect&>(*this));
+}
+
+std::unique_ptr<EffectUIValidator>
+StatefulPerTrackEffect::PopulateUI(ShuttleGui &S,
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
+{
+   auto parent = S.GetParent();
+
+   // Let the effect subclass provide its own validator if it wants
+   auto result = PopulateOrExchange(S, instance, access, pOutputs);
+
+   parent->SetMinSize(parent->GetSizer()->GetMinSize());
+
+   if (!result) {
+      // No custom validator object?  Then use the default
+      result = std::make_unique<DefaultEffectUIValidator>(
+         *this, access, S.GetParent());
+      parent->PushEventHandler(this);
+   }
+   return result;
 }
 
 bool StatefulPerTrackEffect::Process(
