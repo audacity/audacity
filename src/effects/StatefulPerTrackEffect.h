@@ -52,7 +52,14 @@ public:
       }
    };
 
+   ~StatefulPerTrackEffect() override;
+
    std::shared_ptr<EffectInstance> MakeInstance() const override;
+
+   //! Allows PopulateOrExchange to return null
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
@@ -60,13 +67,13 @@ public:
    /*!
     @copydoc PerTrackEffect::Instance::ProcessInitialize()
     */
-   virtual bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap = nullptr);
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
+      ChannelNames chanMap = nullptr) override;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessFinalize()
     */
-   virtual bool ProcessFinalize() noexcept;
+   bool ProcessFinalize() noexcept override;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessBlock()

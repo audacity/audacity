@@ -131,6 +131,8 @@ bool Effect::SupportsAutomation() const
    return true;
 }
 
+StatefulEffect::~StatefulEffect() = default;
+
 std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
 {
    // Cheat with const-cast to return an object that calls through to
@@ -138,6 +140,26 @@ std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
    // Stateless effects should override this function and be really const
    // correct.
    return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
+}
+
+std::unique_ptr<EffectUIValidator> StatefulEffect::PopulateUI(ShuttleGui &S,
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
+{
+   auto parent = S.GetParent();
+
+   // Let the effect subclass provide its own validator if it wants
+   auto result = PopulateOrExchange(S, instance, access, pOutputs);
+
+   parent->SetMinSize(parent->GetSizer()->GetMinSize());
+
+   if (!result) {
+      // No custom validator object?  Then use the default
+      result = std::make_unique<DefaultEffectUIValidator>(
+         *this, access, S.GetParent());
+      parent->PushEventHandler(this);
+   }
+   return result;
 }
 
 const EffectParameterMethods &Effect::Parameters() const
@@ -270,19 +292,12 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
 {
    auto parent = S.GetParent();
 
-//   LoadUserPreset(CurrentSettingsGroup());
-
-   // Let the effect subclass provide its own validator if it wants
+   // Subclass must provide something
    auto result = PopulateOrExchange(S, instance, access, pOutputs);
+   assert(result);
 
    parent->SetMinSize(parent->GetSizer()->GetMinSize());
 
-   if (!result) {
-      // No custom validator object?  Then use the default
-      result = std::make_unique<DefaultEffectUIValidator>(
-         *this, access, S.GetParent());
-      parent->PushEventHandler(this);
-   }
    return result;
 }
 
