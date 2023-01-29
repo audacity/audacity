@@ -25,9 +25,9 @@ bool EffectInstanceEx::Init()
 }
 
 EffectUIValidator::EffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access)
-   : mEffect{effect}
-   , mAccess{access}
+   EffectUIServices &services, EffectSettingsAccess &access)
+   : mServices{ services }
+   , mAccess{ access }
 {}
 
 EffectUIValidator::~EffectUIValidator() = default;
@@ -50,7 +50,7 @@ void EffectUIValidator::OnClose()
 {
    if (!mUIClosed)
    {
-      mEffect.CloseUI();
+      mServices.CloseUI();
       mUIClosed = true;
    }
 }
@@ -104,4 +104,4 @@ bool EffectUIValidator::EnablePreview(wxWindow *parent, bool enable)
    return enable;
 }
 
-EffectUIClientInterface::~EffectUIClientInterface() = default;
+EffectUIServices::~EffectUIServices() = default;

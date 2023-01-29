@@ -65,14 +65,12 @@ namespace{ BuiltinEffectsModule::Registration< EffectPhaser > reg; }
 struct EffectPhaser::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectPhaserSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Validator(EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectPhaserSettings& settings
+   )  : EffectUIValidator{ services, access }
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -410,8 +408,6 @@ bool EffectPhaser::Validator::UpdateUI()
 
    mSettings = GetSettings(settings);
 
-   Effect& actualEffect = static_cast<Effect&>(mEffect);
-
    if (!mUIParent->TransferDataToWindow())
    {
       return false;
@@ -432,7 +428,6 @@ bool EffectPhaser::Validator::UpdateUI()
 bool EffectPhaser::Validator::ValidateUI()
 {
    // This bit was copied from the original override of TransferDataFromWindow
-   Effect& actualEffect = static_cast<Effect&>(mEffect);
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;

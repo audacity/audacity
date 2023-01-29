@@ -22,7 +22,7 @@
 #include "../../widgets/wxPanelWrapper.h"
 
 AudioUnitValidator::AudioUnitValidator(CreateToken,
-   EffectUIClientInterface &effect,
+   EffectUIServices &effect,
    EffectSettingsAccess &access, AudioUnitInstance &instance,
    AUControl *pControl, bool isGraphical
 )  : EffectUIValidator{ effect, access }
@@ -139,7 +139,7 @@ bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
 }
 
 std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
-   EffectUIClientInterface &effect, ShuttleGui &S,
+   EffectUIServices &effect, ShuttleGui &S,
    const wxString &uiType,
    EffectInstance &instance, EffectSettingsAccess &access)
 {

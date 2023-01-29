@@ -78,8 +78,6 @@ public:
 
    bool InitializePlugin();
 
-   // EffectUIClientInterface implementation
-
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,

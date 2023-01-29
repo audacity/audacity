@@ -27,12 +27,12 @@ class AudioUnitValidator : public wxEvtHandler, public EffectUIValidator {
    struct CreateToken{};
 public:
    static std::unique_ptr<EffectUIValidator> Create(
-      EffectUIClientInterface &effect, ShuttleGui &S,
+      EffectUIServices &effect, ShuttleGui &S,
       const wxString &uiType,
       EffectInstance &instance, EffectSettingsAccess &access);
 
    AudioUnitValidator(CreateToken,
-      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      EffectUIServices &effect, EffectSettingsAccess &access,
       AudioUnitInstance &instance, AUControl *pControl, bool isGraphical);
 
    ~AudioUnitValidator() override;

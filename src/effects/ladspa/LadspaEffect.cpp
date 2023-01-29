@@ -1185,12 +1185,8 @@ OptionalMessage LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
    return { nullptr };
 }
 
-// ============================================================================
-// EffectUIClientInterface Implementation
-// ============================================================================
-
 struct LadspaEffect::Validator : EffectUIValidator {
-   Validator(EffectUIClientInterface &effect,
+   Validator(EffectUIServices &effect,
       EffectSettingsAccess &access, double sampleRate, EffectType type,
       const LadspaEffectOutputs *pOutputs)
       : EffectUIValidator{ effect, access }
@@ -1216,7 +1212,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
    void UpdateControls(const LadspaEffectSettings& src);
 
    const LadspaEffect &GetEffect()
-      { return static_cast<const LadspaEffect &>(mEffect); }
+      { return static_cast<const LadspaEffect &>(mServices); }
 
    const double mSampleRate;
    const EffectType mType;

@@ -310,10 +310,6 @@ bool LV2Effect::LoadSettings(
    return true;
 }
 
-// ============================================================================
-// EffectUIClientInterface Implementation
-// ============================================================================
-
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,

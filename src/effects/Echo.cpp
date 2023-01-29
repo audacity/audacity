@@ -172,14 +172,12 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
 struct EffectEcho::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectEchoSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Validator(EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectEchoSettings& settings
+   )  : EffectUIValidator{ services, access }
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;

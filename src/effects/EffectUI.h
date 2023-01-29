@@ -50,7 +50,7 @@ public:
     (and then must call Init() with success), or leave null for failure
     */
    EffectUIHost(wxWindow *parent, AudacityProject &project,
-      EffectPlugin &effect, EffectUIClientInterface &client,
+      EffectPlugin &effect, EffectUIServices &client,
       std::shared_ptr<EffectInstance> &pInstance,
       EffectSettingsAccess &access,
       const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
@@ -118,7 +118,7 @@ private:
    AudacityProject &mProject;
    wxWindow *const mParent;
    EffectPlugin &mEffectUIHost;
-   EffectUIClientInterface &mClient;
+   EffectUIServices &mClient;
    //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
@@ -173,7 +173,7 @@ namespace  EffectUI {
 
    AUDACITY_DLL_API
    DialogFactoryResults DialogFactory(wxWindow &parent, EffectPlugin &host,
-      EffectUIClientInterface &client, EffectSettingsAccess &access);
+      EffectUIServices &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

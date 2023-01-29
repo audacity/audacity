@@ -116,8 +116,6 @@ public:
    bool FullyInitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
-   // EffectUIClientInterface implementation
-
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    struct Validator;
