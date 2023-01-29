@@ -854,12 +854,6 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
 
       if (auto effect = dynamic_cast<EffectPlugin *>(component))
          return (mEffects[ID] = { effect, std::move(settings) });
-      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component)) {
-         // Nothing inherits EffectUIClientInterface now that does not also
-         // inherit EffectPlugin
-         wxASSERT(false);
-         return empty;
-      }
       else {
          if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
