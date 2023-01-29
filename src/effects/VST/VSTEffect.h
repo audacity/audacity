@@ -384,8 +384,6 @@ class VSTEffect final
    bool InitializePlugin();
 
 
-   // EffectUIClientInterface implementation
-
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
@@ -600,7 +598,7 @@ class VSTEffectValidator final
 public:
 
    VSTEffectValidator(VSTEffectInstance&       instance, bool gui,
-      EffectUIClientInterface& effect,
+      EffectUIServices&        services,
       EffectSettingsAccess&    access,
       wxWindow*                pParent,
       int                      numParams

@@ -226,7 +226,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project, EffectPlugin &effect,
-   EffectUIClientInterface &client, std::shared_ptr<EffectInstance> &pInstance,
+   EffectUIServices &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
@@ -1204,7 +1204,7 @@ void EffectUIHost::StopPlayback()
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
-   EffectPlugin &host, EffectUIClientInterface &client,
+   EffectPlugin &host, EffectUIServices &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will

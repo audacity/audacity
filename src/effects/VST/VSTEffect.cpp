@@ -1546,10 +1546,6 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
    return true;
 }
 
-// ============================================================================
-// EffectUIClientInterface implementation
-// ============================================================================
-
 std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    EffectInstance& instance, EffectSettingsAccess &access,
    const EffectOutputs *)
@@ -3925,16 +3921,15 @@ VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
       settings.mChunk /* vector copy */, std::move(paramVector));
 }
 
-VSTEffectValidator::VSTEffectValidator
-(
+VSTEffectValidator::VSTEffectValidator(
    VSTEffectInstance&       instance,
    bool                     gui,
-   EffectUIClientInterface& effect,
+   EffectUIServices&        services,
    EffectSettingsAccess&    access,
    wxWindow*                pParent,
    int                      numParams
 )
-   : EffectUIValidator(effect, access),
+   : EffectUIValidator(services, access),
      mInstance(instance),
      mGui{ gui },
      mParent(pParent),
@@ -4057,7 +4052,7 @@ bool VSTEffectValidator::FetchSettingsFromInstance(EffectSettings& settings)
 {
    return mInstance.FetchSettings(
       // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+      static_cast<const VSTEffect&>(mUIServices).GetSettings(settings));
 }
 
 
@@ -4065,7 +4060,7 @@ bool VSTEffectValidator::StoreSettingsToInstance(const EffectSettings& settings)
 {
    return mInstance.StoreSettings(
       // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mEffect).GetSettings(settings));
+      static_cast<const VSTEffect&>(mUIServices).GetSettings(settings));
 }
 
 
@@ -4073,7 +4068,8 @@ bool VSTEffectValidator::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      const auto& eff = static_cast<VSTEffect&>(VSTEffectValidator::mEffect);
+      const auto& eff =
+         static_cast<VSTEffect&>(VSTEffectValidator::mUIServices);
       if (eff.GetType() == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
 

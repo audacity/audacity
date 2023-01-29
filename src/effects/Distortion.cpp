@@ -129,16 +129,14 @@ namespace{ BuiltinEffectsModule::Registration< EffectDistortion > reg; }
 struct EffectDistortion::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface& effect,
-             EffectDistortion::Instance& instance,
-      EffectSettingsAccess& access, const EffectDistortionSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Validator(EffectUIServices& services,
+      EffectDistortion::Instance& instance,
+      EffectSettingsAccess& access, const EffectDistortionSettings& settings
+   )  : EffectUIValidator{ services, access }
       , mInstance(instance)
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;

@@ -55,14 +55,12 @@ namespace{ BuiltinEffectsModule::Registration< EffectBassTreble > reg; }
 struct EffectBassTreble::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectBassTrebleSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Validator(EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectBassTrebleSettings& settings
+   )  : EffectUIValidator{ services, access }
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -366,8 +364,6 @@ bool EffectBassTreble::Validator::UpdateUI()
 
    mSettings = GetSettings(settings);
 
-   Effect& actualEffect = static_cast<Effect&>(mEffect);
-
    if (! mUIParent->TransferDataToWindow())
    {
       return false;
@@ -652,7 +648,6 @@ void EffectBassTreble::Validator::UpdateGain(double oldVal, int control)
 bool EffectBassTreble::Validator::ValidateUI()
 {
    // This bit was copied from the original override of the effect's TransferDataFromWindow
-   Effect& actualEffect = static_cast<Effect&>(mEffect);   
    if (! mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
       return false;

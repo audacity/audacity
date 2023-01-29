@@ -426,10 +426,6 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
    return presets;
 }
 
-// ============================================================================
-// EffectUIClientInterface Implementation
-// ============================================================================
-
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *)

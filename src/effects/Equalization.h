@@ -51,8 +51,6 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   // EffectUIClientInterface implementation
-
    bool ValidateUI(EffectSettings &) override;
 
    // Effect implementation

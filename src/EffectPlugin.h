@@ -21,7 +21,7 @@ class EffectSettingsManager;
 
 class wxDialog;
 class wxWindow;
-class EffectUIClientInterface;
+class EffectUIServices;
 class EffectInstance;
 class EffectSettings;
 class EffectSettingsAccess;
@@ -38,7 +38,7 @@ struct DialogFactoryResults {
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
 using EffectDialogFactory = std::function< DialogFactoryResults(
-   wxWindow &parent, EffectPlugin &, EffectUIClientInterface &,
+   wxWindow &parent, EffectPlugin &, EffectUIServices &,
    EffectSettingsAccess &) >;
 
 class TrackList;
@@ -85,13 +85,13 @@ public:
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) = 0;
 
-   //! Returns the EffectUIClientInterface instance for this effect
+   //! Returns the EffectUIServices instance for this effect
    /*!
     * Usually returns self. May return nullptr. EffectPlugin is responsible for the lifetime of the
     * returned instance.
-    * @return EffectUIClientInterface object or nullptr, if the effect does not implement the interface.
+    * @return EffectUIServices object or nullptr, if the effect does not implement the interface.
     */
-   virtual EffectUIClientInterface* GetEffectUIClientInterface() = 0;
+   virtual EffectUIServices* GetEffectUIServices() = 0;
 
    //! Calculate temporary tracks of limited length with effect applied and play
    /*!
@@ -166,16 +166,16 @@ public:
 
 /*************************************************************************************//**
 
-\class EffectUIClientInterface
+\class EffectUIServices
 
-\brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
+\brief EffectUIServices is an abstract base class to populate a UI and validate UI
 values.  It can import and export presets.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIClientInterface /* not final */
+class AUDACITY_DLL_API EffectUIServices /* not final */
 {
 public:
-   virtual ~EffectUIClientInterface();
+   virtual ~EffectUIServices();
 
    /*!
     @return 0 if destructive effect processing should not proceed (and there
@@ -245,7 +245,7 @@ class AUDACITY_DLL_API EffectUIValidator /* not final */
 {
 public:
    EffectUIValidator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access);
+      EffectUIServices &services, EffectSettingsAccess &access);
 
    virtual ~EffectUIValidator();
 
@@ -276,7 +276,8 @@ public:
    virtual void Disconnect();
 
    /*!
-    Handle the UI OnClose event. Default implementation calls mEffect.CloseUI()
+    Handle the UI OnClose event.
+    Default implementation calls mUIServices.CloseUI()
    */
    virtual void OnClose();
 
@@ -299,7 +300,7 @@ public:
       src.Bind(eventType, pmf, static_cast<Class *>(this));
    }
 
-   EffectUIClientInterface &mEffect;
+   EffectUIServices &mUIServices;
    EffectSettingsAccess &mAccess;
 
    bool mUIClosed { false };

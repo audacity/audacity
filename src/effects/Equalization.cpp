@@ -300,10 +300,6 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-
-
-// EffectUIClientInterface implementation
-
 bool EffectEqualization::ValidateUI(EffectSettings &settings)
 {
    return mUI.ValidateUI(settings);

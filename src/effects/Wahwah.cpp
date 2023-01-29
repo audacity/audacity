@@ -52,14 +52,12 @@ namespace{ BuiltinEffectsModule::Registration< EffectWahwah > reg; }
 struct EffectWahwah::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectWahwahSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Validator(EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectWahwahSettings& settings
+   )  : EffectUIValidator{ services, access }
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;

@@ -176,7 +176,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // The usual factory lets the client (which is this, when self-hosting)
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
-   EffectUIClientInterface *const client = this;
+   EffectUIServices *const client = this;
    auto results = factory(parent, *this, *client, access);
    auto pDialog = results.pDialog;
    pInstance = results.pInstance;
@@ -261,8 +261,6 @@ OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
-
-// EffectUIClientInterface implementation
 
 std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
@@ -704,15 +702,16 @@ int Effect::MessageBox( const TranslatableString& message,
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox(message, title, style);
 }
-EffectUIClientInterface* Effect::GetEffectUIClientInterface()
+
+EffectUIServices* Effect::GetEffectUIServices()
 {
    return this;
 }
 
 DefaultEffectUIValidator::DefaultEffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   EffectUIServices &services, EffectSettingsAccess &access,
    wxWindow *pParent)
-   : EffectUIValidator{ effect, access }, mpParent{ pParent }
+   : EffectUIValidator{ services, access }, mpParent{ pParent }
 {
 }
 
@@ -725,7 +724,7 @@ bool DefaultEffectUIValidator::ValidateUI()
 {
    bool result {};
    mAccess.ModifySettings([&](EffectSettings &settings){
-      result = mEffect.ValidateUI(settings);
+      result = mUIServices.ValidateUI(settings);
       return nullptr;
    });
    return result;
@@ -733,7 +732,7 @@ bool DefaultEffectUIValidator::ValidateUI()
 
 bool DefaultEffectUIValidator::IsGraphicalUI()
 {
-   return mEffect.IsGraphicalUI();
+   return mUIServices.IsGraphicalUI();
 }
 
 void DefaultEffectUIValidator::Disconnect()

@@ -95,14 +95,12 @@ namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
 struct EffectReverb::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectReverbSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Validator(EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectReverbSettings& settings
+   )  : EffectUIValidator{ services, access }
       , mSettings{ settings }
    {}
    virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;

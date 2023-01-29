@@ -291,15 +291,13 @@ size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
 struct EffectDtmf::Validator
    : EffectUIValidator
 {
-   Validator(EffectUIClientInterface &effect,
+   Validator(EffectUIServices &effect,
       EffectSettingsAccess &access, const DtmfSettings &settings)
       : EffectUIValidator{effect, access}
       // Copy settings
       , mSettings{settings}
    {}
    virtual ~Validator() = default;
-
-   Effect &GetEffect() const { return static_cast<Effect&>(mEffect); }
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -675,7 +673,6 @@ void EffectDtmf::Validator::OnDuration(wxCommandEvent & WXUNUSED(evt))
 {
    mAccess.ModifySettings([this](EffectSettings &settings){
       auto &dtmfSettings = mSettings;
-      auto &effect = GetEffect();
       settings.extra.SetDuration(mDtmfDurationT->GetValue());
       dtmfSettings.Recalculate(settings);
       return nullptr;
