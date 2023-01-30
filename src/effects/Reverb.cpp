@@ -13,9 +13,8 @@
 \brief A reverberation effect
 
 *//*******************************************************************/
-
-
 #include "Reverb.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <wx/arrstr.h>

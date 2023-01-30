@@ -17,9 +17,8 @@ An extended mode of EffectToneGen supports 'chirps' where the
 frequency changes smoothly during the tone.
 
 *//*******************************************************************/
-
-
 #include "ToneGen.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

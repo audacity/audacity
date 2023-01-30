@@ -13,8 +13,9 @@
 #ifndef __AUDACITY_STATEFUL_EFFECT_UI_SERVICES__
 #define __AUDACITY_STATEFUL_EFFECT_UI_SERVICES__
 
-#include "EffectPlugin.h"
+#include "EffectEditor.h"
 
+class EffectPlugin;
 class StatefulEffectBase;
 
 //! Default implementation of EffectEditor invokes ValidateUI

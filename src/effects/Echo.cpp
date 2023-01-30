@@ -21,6 +21,7 @@
 
 
 #include "Echo.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include "../ShuttleGui.h"

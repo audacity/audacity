@@ -7,12 +7,10 @@
   Dominic Mazzoni
 
 **********************************************************************/
-
-
-
 #if USE_VST
 
 #include "../PerTrackEffect.h"
+#include "../EffectEditor.h"
 #include "CFResources.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"

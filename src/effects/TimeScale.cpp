@@ -12,11 +12,9 @@
 \brief An EffectTimeScale does high quality sliding time scaling/pitch shifting
 
 *//*******************************************************************/
-
-
-
 #if USE_SBSMS
 #include "TimeScale.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

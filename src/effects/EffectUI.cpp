@@ -10,9 +10,8 @@
   License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
-
-
 #include "EffectUI.h"
+#include "EffectEditor.h"
 
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
@@ -128,7 +127,7 @@ static const int kUserPresetsDummyID = 20006;
 static const int kDeletePresetDummyID = 20007;
 static const int kMenuID = 20100;
 static const int kEnableID = 20101;
-static const int kPlayID = 20102;
+static const int kPlayID = EffectEditor::kPlayID;
 static const int kPlaybackID = 20105;
 static const int kCaptureID = 20106;
 static const int kUserPresetsID = 21000;

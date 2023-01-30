@@ -14,6 +14,7 @@
 #include "EqualizationUI.h"
 #include "EqualizationCurvesDialog.h"
 #include "EqualizationPanel.h"
+#include "EffectEditor.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>

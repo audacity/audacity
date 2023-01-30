@@ -13,10 +13,8 @@
 \brief An Effect to bring the peak level up to a chosen level.
 
 *//*******************************************************************/
-
-
-
 #include "Normalize.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

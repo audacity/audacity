@@ -18,6 +18,7 @@
 
 
 #include "Distortion.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <cmath>

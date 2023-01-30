@@ -17,11 +17,14 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <unordered_map>
 #include "AudioUnitUtils.h"
-#include "EffectPlugin.h"
+#include "../EffectEditor.h"
 
 class AUControl;
 
 class AudioUnitInstance;
+class EffectSettings;
+class EffectInstance;
+class ShuttleGui;
 
 class AudioUnitEditor : public wxEvtHandler, public EffectEditor {
    struct CreateToken{};

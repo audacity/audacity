@@ -20,6 +20,7 @@
 
 
 #include "Wahwah.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

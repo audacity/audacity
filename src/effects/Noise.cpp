@@ -12,9 +12,8 @@
 \brief An effect to add white noise.
 
 *//*******************************************************************/
-
-
 #include "Noise.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

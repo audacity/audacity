@@ -18,11 +18,8 @@
 \brief Dialog used with EffectRepeat
 
 *//*******************************************************************/
-
-
-
 #include "Repeat.h"
-
+#include "EffectEditor.h"
 
 #include <math.h>
 

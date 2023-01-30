@@ -13,9 +13,8 @@
 \brief An Extreme Time Stretch and Time Smear effect
 
 *//*******************************************************************/
-
-
 #include "Paulstretch.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <algorithm>

@@ -12,6 +12,7 @@
 
 #include <cassert>
 
+#include "EffectEditor.h"
 #include "EffectUI.h"
 #include "RealtimeEffectState.h"
 
