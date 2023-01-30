@@ -13,9 +13,8 @@
 \brief A high shelf and low shelf filter.
 
 *//*******************************************************************/
-
-
 #include "BassTreble.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

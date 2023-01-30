@@ -14,9 +14,8 @@
        where the volume is below a set threshold level.
 
 *//*******************************************************************/
-
-
 #include "TruncSilence.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <algorithm>

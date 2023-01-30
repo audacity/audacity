@@ -31,9 +31,8 @@
 a graph for EffectScienFilter.
 
 *//*******************************************************************/
-
-
 #include "ScienFilter.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

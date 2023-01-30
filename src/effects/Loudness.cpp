@@ -12,10 +12,8 @@
 \brief An Effect to bring the loudness level up to a chosen level.
 
 *//*******************************************************************/
-
-
-
 #include "Loudness.h"
+#include "EffectEditor.h"
 
 #include <math.h>
 

@@ -32,9 +32,9 @@
    Clone of the FFT Filter effect, no longer part of Audacity.
 
 *//*******************************************************************/
-
 #include "Equalization.h"
 #include "EqualizationUI.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 #include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"

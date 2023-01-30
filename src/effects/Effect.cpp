@@ -15,6 +15,7 @@
 
 *//*******************************************************************/
 #include "Effect.h"
+#include "EffectEditor.h"
 
 #include <algorithm>
 
@@ -38,11 +39,6 @@
 #include "../widgets/VetoDialogHook.h"
 
 #include <unordered_map>
-
-static const int kPlayID = 20102;
-static_assert(kPlayID == EffectEditor::kPlayID);
-
-using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
 {
@@ -623,8 +619,6 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
          ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
          : track_cast<const WaveTrack*>( pTrack ) && pTrack->GetSelected();
       };
-
-   t2bHash added;
 
    for (auto aTrack : trackRange)
    {

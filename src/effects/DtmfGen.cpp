@@ -15,6 +15,7 @@
 
 
 #include "DtmfGen.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <wx/slider.h>

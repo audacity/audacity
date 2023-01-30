@@ -17,10 +17,8 @@
 \brief An Effect that changes frequencies in a time varying manner.
 
 *//*******************************************************************/
-
-
-
 #include "Phaser.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

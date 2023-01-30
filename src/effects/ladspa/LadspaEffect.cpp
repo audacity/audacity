@@ -24,6 +24,7 @@ effects from this one class.
 
 
 #include "LadspaEffect.h"       // This class's header file
+#include "../EffectEditor.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
