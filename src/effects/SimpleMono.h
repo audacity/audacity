@@ -17,7 +17,7 @@
 #ifndef __AUDACITY_EFFECT_SIMPLE_MONO__
 #define __AUDACITY_EFFECT_SIMPLE_MONO__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 
 class WaveTrack;
 
