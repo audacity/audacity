@@ -16,9 +16,8 @@
 \brief Base class for many of the effects in Audacity.
 
 *//*******************************************************************/
-
-
 #include "StatefulPerTrackEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "ShuttleGui.h"
 #include <wx/sizer.h>
 
