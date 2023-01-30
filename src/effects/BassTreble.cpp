@@ -265,7 +265,7 @@ bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings& settings) co
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectBassTreble::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator> EffectBassTreble::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access, 
    const EffectOutputs *)
 {

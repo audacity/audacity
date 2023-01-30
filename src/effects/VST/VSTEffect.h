@@ -408,6 +408,10 @@ class VSTEffect final
    EffectSettings MakeSettings() const override;
 
 protected:
+   //! Will never be called
+   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) final;
    
    void UpdateDisplay() override;
    

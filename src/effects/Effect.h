@@ -186,14 +186,14 @@ protected:
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
 
-   //! Add controls to effect panel; always succeeds
+   //! Called only from PopulateUI, to add controls to effect panel
    /*!
-    @return if not null, then return it from Effect::PopulateUI instead of a
-    DefaultEffectUIValidator; default implementation returns null
+    @return also returned from PopulateUI
+    @post `result: result != nullptr`
     */
-   virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs);
+      const EffectOutputs *pOutputs) = 0;
 
    // No more virtuals!
 
@@ -295,6 +295,12 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
+
+private:
+   //! Needed to make subclasses concrete, but should never be called
+   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) final;
 };
 
 // FIXME:

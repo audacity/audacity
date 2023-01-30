@@ -279,7 +279,7 @@ size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &set
 }
 
 // Effect implementation
-std::unique_ptr<EffectUIValidator> EffectPhaser::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator> EffectPhaser::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
    const EffectOutputs *)
 {

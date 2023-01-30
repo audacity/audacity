@@ -510,7 +510,7 @@ EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 }
 
 // Effect implementation
-std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator> EffectReverb::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
    const EffectOutputs *)
 {

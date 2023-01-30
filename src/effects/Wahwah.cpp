@@ -259,7 +259,7 @@ size_t EffectWahwah::Instance::RealtimeProcess(size_t group, EffectSettings &set
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectWahwah::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator> EffectWahwah::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

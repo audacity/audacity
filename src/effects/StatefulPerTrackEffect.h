@@ -82,6 +82,11 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
 private:
+   //! Needed to make subclasses concrete, but should never be called
+   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) final;
+
    bool Process(EffectInstance &instance, EffectSettings &settings) final;
 
    size_t mBlockSize{};

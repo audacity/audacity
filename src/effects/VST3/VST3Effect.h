@@ -110,6 +110,10 @@ public:
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
 private:
+   //! Will never be called
+   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) final;
    
    void LoadPreset(const wxString& id, EffectSettings& settings) const;
 };
