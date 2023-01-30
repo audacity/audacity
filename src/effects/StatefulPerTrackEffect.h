@@ -15,6 +15,7 @@
 #define __AUDACITY_STATEFUL_PER_TRACK_EFFECT__
 
 #include "PerTrackEffect.h" // to inherit
+#include "StatefulEffectBase.h" // to inherit
 
 //! Subclass of PerTrackEffect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless

@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_NOISE_REDUCTION__
 #define __AUDACITY_EFFECT_NOISE_REDUCTION__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 
 class EffectNoiseReduction final : public StatefulEffect {
 public:

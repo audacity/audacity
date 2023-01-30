@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_NORMALIZE__
 #define __AUDACITY_EFFECT_NORMALIZE__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include "Biquad.h"
 #include "../ShuttleAutomation.h"
 

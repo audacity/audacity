@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_REPAIR__
 #define __AUDACITY_EFFECT_REPAIR__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 
 class WaveTrack;
 

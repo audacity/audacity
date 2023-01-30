@@ -14,7 +14,7 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include "EqualizationUI.h"
 
 class EffectEqualization : public StatefulEffect

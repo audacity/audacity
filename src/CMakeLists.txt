@@ -485,6 +485,8 @@ list( APPEND SOURCES
       effects/SimpleMono.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
+      effects/StatefulEffect.cpp
+      effects/StatefulEffect.h
       effects/StatefulEffectBase.cpp
       effects/StatefulEffectBase.h
       effects/StatefulEffectUIServices.cpp
