@@ -17170,7 +17170,7 @@ msgstr "Audio-Einrichtung"
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Host"
-msgstr "&Rechner"
+msgstr "Audio&host"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -17189,7 +17189,7 @@ msgstr "Aufnahme&kanäle"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Settings..."
-msgstr "&Audio-Einstellungen ..."
+msgstr "Audio-&Einstellungen ..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"

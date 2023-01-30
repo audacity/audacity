@@ -33,14 +33,12 @@
 #endif
 
 #include <wx/defs.h>
-#include <wx/intl.h>    // needed for _("translated strings") even if we
-                        // don't have libflac available
 
 #include "Import.h"
 #include "ImportPlugin.h"
 
 #include "../SelectFile.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "../widgets/ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
@@ -61,8 +59,6 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #else /* USE_LIBFLAC */
 
-#include <wx/string.h>
-#include <wx/utils.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
 
@@ -259,12 +255,14 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 
             iter->get()->Append((samplePtr)tmp.get(),
                      int16Sample,
-                     frame->header.blocksize);
+                     frame->header.blocksize, 1,
+                     int16Sample);
          }
          else {
             iter->get()->Append((samplePtr)buffer[chn],
                      int24Sample,
-                     frame->header.blocksize);
+                     frame->header.blocksize, 1,
+                     int24Sample);
          }
       }
 

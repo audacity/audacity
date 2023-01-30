@@ -25,7 +25,6 @@ frequency changes smoothly during the tone.
 #include <math.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/valgen.h>
 
 #include "Project.h"
@@ -274,6 +273,7 @@ std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    wxTextCtrl *t;
 
    S.StartMultiColumn(2, wxCENTER);
@@ -425,7 +425,8 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 
 void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

@@ -338,6 +338,61 @@ function( canonicalize_node_name var node )
    set( "${var}" "${node}" PARENT_SCOPE )
 endfunction()
 
+define_property(TARGET PROPERTY AUDACITY_GRAPH_DEPENDENCIES
+   BRIEF_DOCS
+      "Propagates information used in generating a target dependency diagram"
+   FULL_DOCS
+      "Audacity uses this at configuration time only, not generation time."
+)
+
+function( append_node_attributes var target )
+   get_target_property( dependencies ${target} AUDACITY_GRAPH_DEPENDENCIES )
+   set( color "lightpink" )
+   if( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
+      # Toolkit neutral targets
+      set( color "lightgreen" )
+      # Enforce usage of only a subset of wxBase that excludes the event loop
+      apply_wxbase_restrictions( ${target} )
+   endif()
+   string( APPEND "${var}" " style=filled fillcolor=${color}" )
+   set( "${var}" "${${var}}" PARENT_SCOPE)
+endfunction()
+
+function( set_edge_attributes var access )
+   if( access STREQUAL "PRIVATE" )
+      set( value " [style=dashed]" )
+   else()
+      set( value )
+   endif()
+   set( "${var}" "${value}" PARENT_SCOPE)
+endfunction()
+
+function (propagate_interesting_dependencies target direct_dependencies )
+   # use a custom target attribute to propagate information up the graph about
+   # some interesting transitive dependencies
+   set( interesting_dependencies )
+   foreach( direct_dependency ${direct_dependencies} )
+      if ( NOT TARGET "${direct_dependency}" )
+         continue()
+      endif ()
+      get_target_property( more_dependencies
+         ${direct_dependency} AUDACITY_GRAPH_DEPENDENCIES )
+      if ( more_dependencies )
+         list( APPEND interesting_dependencies ${more_dependencies} )
+      endif ()
+      foreach( special_dependency
+         "wxwidgets::wxwidgets"
+      )
+         if( special_dependency STREQUAL direct_dependency )
+            list( APPEND interesting_dependencies "${special_dependency}" )
+         endif()
+      endforeach()
+   endforeach()
+   list( REMOVE_DUPLICATES interesting_dependencies )
+   set_target_properties( ${target} PROPERTIES
+      AUDACITY_GRAPH_DEPENDENCIES "${interesting_dependencies}" )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
@@ -405,9 +460,9 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       endif()
    endif()
 
-   if( "wxBase" IN_LIST IMPORT_TARGETS OR "wxwidgets::base" IN_LIST IMPORT_TARGETS )
-      string( APPEND ATTRIBUTES " style=filled" )
-   endif()
+   propagate_interesting_dependencies( ${TARGET} "${IMPORT_TARGETS}" )
+
+   append_node_attributes( ATTRIBUTES ${TARGET} )
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
@@ -472,6 +527,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
          INTERFACE_INCLUDE_DIRECTORIES
          INTERFACE_COMPILE_DEFINITIONS
          INTERFACE_LINK_LIBRARIES
+	 AUDACITY_GRAPH_DEPENDENCIES
       )
          get_target_property( PROPS "${TARGET}" "${PROP}" )
          if (PROPS)
@@ -484,13 +540,16 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # collect dependency information
    list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
-   set(ACCESS PUBLIC PRIVATE INTERFACE)
+   set(accesses PUBLIC PRIVATE INTERFACE)
+   set(access PUBLIC)
    foreach( IMPORT ${IMPORT_TARGETS} )
-      if(IMPORT IN_LIST ACCESS)
+      if( IMPORT IN_LIST accesses )
+         set( access "${IMPORT}" )
          continue()
       endif()
-      canonicalize_node_name(IMPORT "${IMPORT}")
-      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
+      canonicalize_node_name( IMPORT "${IMPORT}" )
+      set_edge_attributes( attributes "${access}" )
+      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\" ${attributes}" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 

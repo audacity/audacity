@@ -18,8 +18,6 @@ set( SOURCES
 
 set ( LIBRARIES
    lib-strings-interface
-   PRIVATE
-      wxBase
 )
 
 set ( DEFINES

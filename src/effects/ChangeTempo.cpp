@@ -26,7 +26,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
@@ -198,6 +197,8 @@ std::unique_ptr<EffectUIValidator> EffectChangeTempo::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    enum { precision = 2 };
 
    S.StartVerticalLay(0);

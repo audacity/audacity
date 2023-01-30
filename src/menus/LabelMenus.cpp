@@ -1,11 +1,10 @@
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -18,6 +17,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
+#include "toolbars/ToolManager.h"
 
 using Region = WaveTrack::Region;
 using Regions = WaveTrack::Regions;
@@ -381,7 +381,7 @@ void OnToggleTypeToCreateLabel(const CommandContext &WXUNUSED(context) )
    gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, false);
    gPrefs->Write(wxT("/GUI/TypeToCreateLabel"), !typeToCreateLabel);
    gPrefs->Flush();
-   MenuManager::ModifyAllProjectToolbarMenus();
+   ToolManager::ModifyAllProjectToolbarMenus();
 }
 
 void OnCutLabels(const CommandContext &context)

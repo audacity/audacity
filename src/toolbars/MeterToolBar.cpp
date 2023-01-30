@@ -27,8 +27,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
-#include <wx/event.h>
-#include <wx/intl.h>
 #include <wx/tooltip.h>
 #endif
 
@@ -37,7 +35,7 @@
 #include "AllThemeResources.h"
 #include "Decibels.h"
 #include "ToolManager.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../widgets/MeterPanel.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -465,14 +463,6 @@ int MeterToolBar::GetInitialWidth()
       (kWithRecordMeter + kWithPlayMeter)) ? 338 : 290;
 }
 
-// The meter's sizing code does not take account of the resizer
-// Hence after docking we need to enlarge the bar (using fit)
-// so that the resizer can be reached.
-void MeterToolBar::SetDocked(ToolDock *dock, bool pushed) {
-   ToolBar::SetDocked(dock, pushed);
-   Fit();
-}
-
 void MeterToolBar::ShowOutputGainDialog()
 {
    mPlayMeter->ShowDialog();
@@ -553,4 +543,78 @@ AttachedToolBarMenuItem sAttachment2{
 //   { Registry::OrderingHint::After, "ShowPlayMeterTB" },
 //   { PlayMeterBarID, RecordMeterBarID }
 //};
+}
+
+// Now define other related menu items
+#include "../commands/CommandContext.h"
+
+namespace {
+void OnOutputGain(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = MeterToolBar::Get( project, true );
+   tb.ShowOutputGainDialog();
+}
+
+void OnOutputGainInc(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = MeterToolBar::Get( project, true );
+   tb.AdjustOutputGain(1);
+}
+
+void OnOutputGainDec(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = MeterToolBar::Get( project, true );
+   tb.AdjustOutputGain(-1);
+}
+
+void OnInputGain(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = MeterToolBar::Get( project, false );
+   tb.ShowInputGainDialog();
+}
+
+void OnInputGainInc(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = MeterToolBar::Get( project, false );
+   tb.AdjustInputGain(1);
+}
+
+void OnInputGainDec(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = MeterToolBar::Get( project, false );
+   tb.AdjustInputGain(-1);
+}
+   
+using namespace MenuTable;
+BaseItemSharedPtr ExtraMixerMenu()
+{
+   static BaseItemSharedPtr menu{
+   Menu( wxT("Mixer"), XXO("Mi&xer"),
+      Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
+         OnOutputGain, AlwaysEnabledFlag ),
+      Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
+         OnOutputGainInc, AlwaysEnabledFlag ),
+      Command( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
+         OnOutputGainDec, AlwaysEnabledFlag ),
+      Command( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
+         OnInputGain, AlwaysEnabledFlag ),
+      Command( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
+         OnInputGainInc, AlwaysEnabledFlag ),
+      Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
+         OnInputGainDec, AlwaysEnabledFlag )
+   ) };
+   return menu;
+}
+
+AttachedItem sAttachment4{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraMixerMenu() )
+};
+
 }

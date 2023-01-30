@@ -21,7 +21,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/slider.h>
 
 #include "MemoryX.h"
@@ -153,6 +152,7 @@ std::unique_ptr<EffectUIValidator> EffectTimeScale::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.SetBorder(5);
    S.AddSpace(0, 5);
 
@@ -336,7 +336,8 @@ void EffectTimeScale::Update_Text_PitchPercentChangeEnd()
 
 void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -346,7 +347,8 @@ void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(ev
 
 void EffectTimeScale::OnText_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -370,7 +372,8 @@ void EffectTimeScale::OnSlider_RatePercentChangeEnd(wxCommandEvent & evt)
 
 void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -381,7 +384,8 @@ void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
 
 void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -392,7 +396,8 @@ void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 
 void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -403,7 +408,8 @@ void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(e
 
 void EffectTimeScale::OnText_PitchPercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

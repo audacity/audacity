@@ -70,7 +70,6 @@
 #endif
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include "RealFFTf.h"
 #ifdef __WXMSW__

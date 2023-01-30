@@ -23,10 +23,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
-#include <wx/event.h>
-#include <wx/image.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
 #include <wx/tooltip.h>
 #endif
 

@@ -39,11 +39,8 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 #include <wx/dynlib.h>
-#include <wx/utils.h>
-#include <wx/timer.h>
 #include <wx/window.h>
 #include <wx/log.h>
-#include <wx/intl.h>
 #include <wx/stream.h>
 
 #include "Export.h"
@@ -52,7 +49,7 @@
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"

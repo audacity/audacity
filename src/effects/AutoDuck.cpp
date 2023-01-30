@@ -24,7 +24,6 @@
 
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/intl.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -334,6 +333,7 @@ std::unique_ptr<EffectUIValidator> EffectAutoDuck::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {

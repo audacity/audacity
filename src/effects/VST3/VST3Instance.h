@@ -47,7 +47,6 @@ public:
    VST3Instance& operator=(const VST3Instance&) = delete;
 
    size_t GetTailSize() const override;
-   bool Init() override;
    bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *pOutputs,
       unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;

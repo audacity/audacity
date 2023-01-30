@@ -17,8 +17,6 @@
 #include "Silence.h"
 #include "LoadEffects.h"
 
-#include <wx/intl.h>
-
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"

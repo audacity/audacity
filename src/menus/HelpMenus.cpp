@@ -14,7 +14,6 @@
 #include "../HelpUtilities.h"
 #include "../LogWindow.h"
 #include "../Menus.h"
-#include "../NoteTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectSelectionManager.h"
@@ -33,10 +32,6 @@
 
 #if defined(HAVE_UPDATES_CHECK)
 #include "update/UpdateManager.h"
-#endif
-
-#ifdef HAS_AUDIOCOM_UPLOAD
-#include "cloud/audiocom/LinkAccountDialog.h"
 #endif
 
 // private helper classes and functions
@@ -396,14 +391,6 @@ void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 }
 #endif
 
-#ifdef HAS_AUDIOCOM_UPLOAD
-void OnLinkAccount(const CommandContext&)
-{
-   cloud::audiocom::LinkAccountDialog dialog;
-   dialog.ShowModal();
-}
-#endif
-
 void OnAbout(const CommandContext &context)
 {
 #ifdef __WXMAC__
@@ -510,18 +497,9 @@ BaseItemSharedPtr HelpMenu()
                  AlwaysEnabledFlag)
       #endif
          )
-   #ifndef __WXMAC__
       ),
 
-      Section( "",
-#else
-      ,
-#endif
-#ifdef HAS_AUDIOCOM_UPLOAD
-         Command(
-            wxT("LinkAccount"), XXO("L&ink audio.com account..."),
-            OnLinkAccount, AlwaysEnabledFlag),
-#endif
+      Section( "Extra",
          // DA: Does not fully support update checking.
    #if !defined(EXPERIMENTAL_DA) && defined(HAVE_UPDATES_CHECK)
          Command( wxT("Updates"), XXO("&Check for Updates..."),

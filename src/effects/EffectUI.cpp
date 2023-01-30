@@ -20,6 +20,7 @@
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
@@ -91,7 +92,7 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "../../images/Effect.h"
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../prefs/GUISettings.h" // for RTL_WORKAROUND
@@ -787,9 +788,9 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       
       auto &projectAudioManager = ProjectAudioManager::Get( mProject );
       projectAudioManager.PlayPlayRegion(
-                                         SelectedRegion(mPlayPos, mRegion.t1()),
-                                         DefaultPlayOptions( mProject ),
-                                         PlayMode::normalPlay );
+         SelectedRegion{ mPlayPos, mRegion.t1() },
+         ProjectAudioIO::GetDefaultOptions(mProject),
+         PlayMode::normalPlay);
    }
 }
 
@@ -1123,11 +1124,8 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
             AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
       if (mpState) {
          // Find the right instance to connect to the dialog
-         if (!result) {
+         if (!result)
             result = mpState->GetInstance();
-            if (result && !result->Init())
-               result.reset();
-         }
 
          mpAccess2 = mpState->GetAccess();
          if (!(mpAccess2->IsSameAs(*mpAccess)))
@@ -1160,7 +1158,9 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
    }
    else {
       result = mEffectUIHost.MakeInstance();
-      if (result && !result->Init())
+      if (auto pInstanceEx =
+         std::dynamic_pointer_cast<EffectInstanceEx>(result)
+         ; pInstanceEx && !pInstanceEx->Init())
          result.reset();
    }
 

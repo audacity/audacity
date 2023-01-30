@@ -44,7 +44,6 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    &LabelTracksExistFlag(),
-   &UnsavedChangesFlag(),
    &UndoAvailableFlag(),
    &RedoAvailableFlag(),
    &ZoomInAvailableFlag(),

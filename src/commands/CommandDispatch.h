@@ -18,8 +18,15 @@
 class CommandContext;
 class CommandManager;
 
+namespace CommandDispatch {
 AUDACITY_DLL_API bool HandleTextualCommand( CommandManager &commandManager,
    const CommandID & Str,
    const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
+
+AUDACITY_DLL_API bool DoAudacityCommand(
+   const PluginID & ID, const CommandContext & context, unsigned flags );
+
+AUDACITY_DLL_API void OnAudacityCommand(const CommandContext & ctx);
+}
 
 #endif

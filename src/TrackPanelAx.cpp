@@ -27,9 +27,6 @@
 #include <wx/wx.h>
 #endif
 
-
-#include <wx/intl.h>
-
 #include "BasicUI.h"
 #include "Project.h"
 #include "SyncLock.h"

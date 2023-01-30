@@ -41,6 +41,7 @@
 #include <unordered_map>
 
 static const int kPlayID = 20102;
+static_assert(kPlayID == EffectUIValidator::kPlayID);
 
 using t2bHash = std::unordered_map< void*, bool >;
 
@@ -53,6 +54,12 @@ auto StatefulEffect::Instance::GetLatency(const EffectSettings &, double) const
    -> SampleCount
 {
    return GetEffect().GetLatency().as_long_long();
+}
+
+size_t StatefulEffect::Instance::ProcessBlock(EffectSettings &,
+   const float *const *, float *const *, size_t)
+{
+   return 0;
 }
 
 Effect::Effect()
@@ -607,69 +614,6 @@ bool Effect::TransferDataToWindow(const EffectSettings &)
 bool Effect::TransferDataFromWindow(EffectSettings &)
 {
    return true;
-}
-
-bool Effect::EnableApply(bool enable)
-{
-   // May be called during initialization, so try to find the dialog
-   wxWindow *dlg = mUIDialog;
-   if (!dlg && mUIParent)
-   {
-      dlg = wxGetTopLevelParent(mUIParent);
-   }
-
-   if (dlg)
-   {
-      wxWindow *apply = dlg->FindWindow(wxID_APPLY);
-
-      // Don't allow focus to get trapped
-      if (!enable)
-      {
-         wxWindow *focus = dlg->FindFocus();
-         if (focus == apply)
-         {
-            dlg->FindWindow(wxID_CLOSE)->SetFocus();
-         }
-      }
-
-      if (apply)
-         apply->Enable(enable);
-   }
-
-   EnablePreview(enable);
-
-   return enable;
-}
-
-bool Effect::EnablePreview(bool enable)
-{
-   // May be called during initialization, so try to find the dialog
-   wxWindow *dlg = mUIDialog;
-   if (!dlg && mUIParent)
-   {
-      dlg = wxGetTopLevelParent(mUIParent);
-   }
-
-   if (dlg)
-   {
-      wxWindow *play = dlg->FindWindow(kPlayID);
-      if (play)
-      {
-         // Don't allow focus to get trapped
-         if (!enable)
-         {
-            wxWindow *focus = dlg->FindFocus();
-            if (focus == play)
-            {
-               dlg->FindWindow(wxID_CLOSE)->SetFocus();
-            }
-         }
-
-         play->Enable(enable);
-      }
-   }
-
-   return enable;
 }
 
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const

@@ -28,13 +28,9 @@ hold information about one contributor to Audacity.
 
 #include "AboutDialog.h"
 
-#include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
-#include <wx/button.h>
 #include <wx/hyperlink.h>
-#include <wx/sizer.h>
 #include <wx/statbmp.h>
-#include <wx/intl.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 #include <wx/statbox.h>

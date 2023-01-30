@@ -44,7 +44,6 @@ a graph for EffectScienFilter.
 #include <wx/choice.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
@@ -262,6 +261,7 @@ std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.AddSpace(5);
    S.SetSizerProportion(1);
    S.StartMultiColumn(3, wxEXPAND);
@@ -626,7 +626,8 @@ void EffectScienFilter::OnFilterSubtype(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -636,7 +637,8 @@ void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -646,7 +648,8 @@ void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnStopbandRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

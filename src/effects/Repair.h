@@ -37,6 +37,8 @@ public:
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
+   bool NeedsDither() const override;
+
 private:
    // EffectRepair implementation
 

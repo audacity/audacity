@@ -26,8 +26,6 @@ the audio, rather than actually finding the clicks.
 
 #include <math.h>
 
-#include <wx/intl.h>
-
 #include "InterpolateAudio.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -149,6 +147,14 @@ bool EffectRepair::ProcessOne(int count, WaveTrack * track,
    track->GetFloats(buffer.get(), start, len);
    InterpolateAudio(buffer.get(), len, repairStart, repairLen);
    track->Set((samplePtr)&buffer[repairStart], floatSample,
-              start + repairStart, repairLen);
+      start + repairStart, repairLen,
+      // little repairs shouldn't force dither on rendering:
+      narrowestSampleFormat
+   );
    return !TrackProgress(count, 1.0); // TrackProgress returns true on Cancel.
+}
+
+bool EffectRepair::NeedsDither() const
+{
+   return false;
 }

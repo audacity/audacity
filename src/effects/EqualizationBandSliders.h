@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_EQUALIZATION_BAND_SLIDERS__
 #define __AUDACITY_EQUALIZATION_BAND_SLIDERS__
 
-#include <wx/event.h>
-
 #define NUMBER_OF_BANDS 31
 #define NUM_PTS 180
 

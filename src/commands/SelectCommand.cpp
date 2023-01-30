@@ -32,9 +32,11 @@ explicitly code all three.
 
 #include "SelectCommand.h"
 
-#include <wx/string.h>
 #include <float.h>
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "../ProjectSelectionManager.h"
 #include "../TrackPanel.h"
@@ -311,4 +313,36 @@ bool SelectCommand::VisitSettings( SettingsVisitor & S )
 bool SelectCommand::VisitSettings( ConstSettingsVisitor & S )
 {
    return VisitSettings<true>(S);
+}
+
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment1{
+   wxT("Optional/Extra/Part2/Scriptables1"),
+   Items( wxT(""),
+      // Note that the PLUGIN_SYMBOL must have a space between words,
+      // whereas the short-form used here must not.
+      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "CompareAudio" here.)
+      Command( wxT("SelectTime"), XXO("Select Time..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SelectTracks"), XXO("Select Tracks..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+   )
+};
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part2/Scriptables2"),
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("Select"), XXO("Select..."),
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+};
 }

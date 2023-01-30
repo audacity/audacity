@@ -38,11 +38,8 @@ with changes in the SelectionBar.
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
-#include <wx/intl.h>
-#include <wx/radiobut.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/valtext.h>
@@ -51,12 +48,12 @@ with changes in the SelectionBar.
 #include <wx/statline.h>
 
 
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "AColor.h"
 #include "../KeyboardCapture.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../ProjectSettings.h"
 #include "../Snap.h"
 #include "ViewInfo.h"

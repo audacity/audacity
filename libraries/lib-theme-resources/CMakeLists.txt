@@ -192,8 +192,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-theme-interface
-   PRIVATE
-   wxwidgets::wxwidgets
  )
 audacity_library( lib-theme-resources "${SOURCES}" "${LIBRARIES}"
    "" ""

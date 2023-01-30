@@ -18,6 +18,9 @@ SetPreferenceCommand classes
 
 #include "PreferenceCommands.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Prefs.h"
 #include "../Shuttle.h"
@@ -106,3 +109,22 @@ bool SetPreferenceCommand::Apply(const CommandContext & context)
    return bOK;
 }
 
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment1{
+   wxT("Optional/Extra/Part2/Scriptables1"),
+   Items( wxT(""),
+      // Note that the PLUGIN_SYMBOL must have a space between words,
+      // whereas the short-form used here must not.
+      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "CompareAudio" here.)
+      Command( wxT("GetPreference"), XXO("Get Preference..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SetPreference"), XXO("Set Preference..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+   )
+};
+}

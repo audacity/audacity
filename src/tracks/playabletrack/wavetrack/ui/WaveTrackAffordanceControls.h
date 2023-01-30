@@ -13,6 +13,7 @@
 #include <wx/font.h>
 
 #include "Observer.h"
+#include "ViewInfo.h"
 #include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../ui/TextEditHelper.h"
 
@@ -46,9 +47,9 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
     wxFont mClipNameFont;
-
-    //Helper flag, checked when text editing is triggered (and dialog-edit option is disabled)
-    bool mClipNameVisible { false };
+   
+    //Helper container used to track clips names visibility
+    std::vector<const WaveClip*> mLastVisibleClips;
 
 public:
     WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack);
@@ -56,11 +57,6 @@ public:
     std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject) override;
 
     void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
-
-    //Invokes name editing for a clip that currently is
-    //in focus(as a result of hit testing), returns true on success
-    //false if there is no focus
-    bool StartEditClipName(AudacityProject* project);
 
     std::weak_ptr<WaveClip> GetSelectedClip() const;
 
@@ -82,26 +78,32 @@ public:
     void OnTextModified(AudacityProject* project, const wxString& text) override;
     void OnTextContextMenu(AudacityProject* project, const wxPoint& position) override;
 
-    bool StartEditNameOfMatchingClip( AudacityProject &project,
-        std::function<bool(WaveClip&)> test /*!<
-            Edit the first clip in the track's list satisfying the test */
-    );
-
     unsigned OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project);
 
     bool OnTextCopy(AudacityProject& project);
     bool OnTextCut(AudacityProject& project);
     bool OnTextPaste(AudacityProject& project);
     bool OnTextSelect(AudacityProject& project);
+   
+    void StartEditSelectedClipName(AudacityProject& project);
 
 private:
+   
+    bool IsClipNameVisible(const WaveClip& clip) const noexcept;
+    ///@brief Starts in-place clip name editing or shows a Clip Name Edit dialog, depending on prefs
+    ///@param clip to be edited. Should belong to the same `WaveTrack` as returned by `FindTrack()`
+    bool StartEditClipName(AudacityProject& project, const std::shared_ptr<WaveClip>& clip);
+   
     void ResetClipNameEdit();
 
-    void OnTrackChanged(const TrackListEvent& evt);
+    void OnTrackListEvent(const TrackListEvent& evt);
 
+    void OnSelectionChange(NotifyingSelectedRegionMessage);
+   
     unsigned ExitTextEditing();
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
 
-    Observer::Subscription mSubscription;
+    Observer::Subscription mTrackListEventSubscription;
+    Observer::Subscription mSelectionChangeSubscription;
 };

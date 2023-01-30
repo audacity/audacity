@@ -22,7 +22,6 @@
 #include <math.h>
 
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/stattext.h>
 #include <wx/valgen.h>
 
@@ -215,6 +214,7 @@ std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    mCreating = true;
 
    S.StartVerticalLay(0);
@@ -473,7 +473,7 @@ void EffectNormalize::UpdateUI()
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
@@ -484,5 +484,5 @@ void EffectNormalize::UpdateUI()
    mStereoIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
-   EnableApply(mGain || mDC);
+   EffectUIValidator::EnableApply(mUIParent, mGain || mDC);
 }

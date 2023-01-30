@@ -90,6 +90,8 @@ private:
    void OnSliderDBMAX( wxCommandEvent & evt );
    void OnSliderDBMIN( wxCommandEvent & evt );
 
+   wxWeakRef<wxWindow> mUIParent{};
+
    float mCutoff;
    float mRipple;
    float mStopbandRipple;

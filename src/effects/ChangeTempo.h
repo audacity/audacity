@@ -80,6 +80,8 @@ private:
    void Update_Text_ToLength(); // Use m_FromLength & m_PercentChange to set NEW m_ToLength & control.
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    bool           mUseSBSMS;
    double         m_PercentChange;  // percent change to apply to tempo
                                     // -100% is meaningless, but sky's the upper limit

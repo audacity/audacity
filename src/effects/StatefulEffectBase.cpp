@@ -123,6 +123,23 @@ unsigned StatefulEffectBase::Instance::GetAudioOutCount() const
    return GetEffect().GetAudioOutCount();
 }
 
+bool StatefulEffectBase::Instance::NeedsDither() const
+{
+   return GetEffect().NeedsDither();
+}
+
+bool StatefulEffectBase::Instance::ProcessInitialize(
+   EffectSettings &settings, double sampleRate, ChannelNames chanMap)
+{
+   return GetEffect()
+      .ProcessInitialize(settings, sampleRate, chanMap);
+}
+
+bool StatefulEffectBase::Instance::ProcessFinalize() noexcept
+{
+   return GetEffect().ProcessFinalize();
+}
+
 size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 {
    mEffectBlockSize = maxBlockSize;
@@ -195,4 +212,20 @@ bool StatefulEffectBase::Init()
 sampleCount StatefulEffectBase::GetLatency() const
 {
    return 0;
+}
+
+bool StatefulEffectBase::NeedsDither() const
+{
+   return true;
+}
+
+bool StatefulEffectBase::ProcessInitialize(
+   EffectSettings &, double, ChannelNames)
+{
+   return true;
+}
+
+bool StatefulEffectBase::ProcessFinalize() noexcept
+{
+   return true;
 }

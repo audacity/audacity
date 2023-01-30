@@ -17,8 +17,6 @@
 #include "StereoToMono.h"
 #include "LoadEffects.h"
 
-#include <wx/intl.h>
-
 #include "Mix.h"
 #include "MixAndRender.h"
 #include "Project.h"
@@ -200,7 +198,12 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
       {
          ((float *)buffer)[i] /= 2.0;
       }
-      outTrack->Append(buffer, floatSample, blockLen);
+      // If mixing channels that both had only 16 bit effective format
+      // (for example), and no gains or envelopes, still there should be
+      // dithering because of the averaging above, which may introduce samples
+      // lying between the quantization levels.  So default the effectiveFormat
+      // to widest.
+      outTrack->Append(buffer, floatSample, blockLen, 1);
 
       curTime += blockLen;
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))

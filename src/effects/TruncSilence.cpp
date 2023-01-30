@@ -492,7 +492,12 @@ bool EffectTruncSilence::DoRemoval
             wt->Clear(cutStart, cutEnd);
 
             // Write cross-faded data
-            wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames);
+            wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames,
+               // This effect mostly shifts samples to remove silences, and
+               // does only a little bit of floating point calculations to
+               // cross-fade the splices, over a 100 sample interval by default.
+               // Don't dither.
+               narrowestSampleFormat);
          },
          [&](Track *t) {
             // Non-wave tracks: just do a sync-lock adjust
@@ -666,6 +671,7 @@ std::unique_ptr<EffectUIValidator> EffectTruncSilence::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    wxASSERT(nActions == WXSIZEOF(kActionStrings));
 
    S.AddSpace(0, 5);
@@ -935,8 +941,14 @@ void EffectTruncSilence::OnControlChange(wxCommandEvent & WXUNUSED(evt))
 
    UpdateUI();
 
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
+}
+
+bool EffectTruncSilence::NeedsDither() const
+{
+   return false;
 }

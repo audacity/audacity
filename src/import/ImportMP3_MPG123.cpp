@@ -27,7 +27,7 @@
 #include <mpg123.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
@@ -323,7 +323,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       {
          mChannels[channel]->Append(
             samples + sizeof(float) * channel, floatSample, samplesCount,
-            mNumChannels);
+            mNumChannels, floatSample);
       }
    }
 

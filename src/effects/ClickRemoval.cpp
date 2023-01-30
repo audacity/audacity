@@ -30,7 +30,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/valgen.h>
 
@@ -277,6 +276,7 @@ std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.AddSpace(0, 5);
    S.SetBorder(10);
 

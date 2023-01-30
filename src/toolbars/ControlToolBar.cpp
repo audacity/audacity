@@ -44,23 +44,19 @@
 #ifndef WX_PRECOMP
 #include <wx/app.h>
 #include <wx/dc.h>
-#include <wx/event.h>
-#include <wx/image.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/statusbr.h>
-#include <wx/timer.h>
 #endif
 #include <wx/tooltip.h>
 #include <wx/datetime.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "ImageManipulation.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "ProjectStatus.h"

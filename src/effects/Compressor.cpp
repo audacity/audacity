@@ -33,7 +33,6 @@
 #include <wx/brush.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
 
@@ -160,6 +159,7 @@ std::unique_ptr<EffectUIValidator> EffectCompressor::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.SetBorder(5);
 
    S.StartHorizontalLay(wxEXPAND, true);

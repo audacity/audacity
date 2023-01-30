@@ -27,7 +27,6 @@
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
@@ -210,6 +209,8 @@ std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 
    bool batch = IsBatchProcessing();
@@ -340,14 +341,15 @@ bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 
 void EffectAmplify::CheckClip()
 {
-   EnableApply(mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
+   EffectUIValidator::EnableApply(mUIParent,
+      mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
 }
 
 void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mAmpT->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -365,7 +367,7 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mNewPeakT->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 

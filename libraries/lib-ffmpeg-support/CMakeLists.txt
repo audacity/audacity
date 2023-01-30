@@ -94,8 +94,6 @@ if (${_OPT}use_ffmpeg)
 
    set( LIBRARIES
       PRIVATE
-      wxBase
-      lib-preferences
       lib-files
       lib-math
    )

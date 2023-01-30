@@ -32,7 +32,7 @@
 #include "../widgets/ProgressDialog.h"
 #include "Track.h"
 #include "ProjectRate.h"
-#include "../Tags.h"
+#include "Tags.h"
 
 //---------------------------------------------------------------------------
 // ExportWavPackOptions

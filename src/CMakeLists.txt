@@ -102,11 +102,6 @@ list( APPEND SOURCES
       AudacityFileConfig.h
       AudacityHeaders.cpp
       AudacityHeaders.h
-      AudioIO.cpp
-      AudioIO.h
-      AudioIOExt.cpp
-      AudioIOExt.h
-      AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
       BatchCommandDialog.cpp
@@ -127,6 +122,8 @@ list( APPEND SOURCES
       CrashReport.h
       DBConnection.cpp
       DBConnection.h
+      DefaultPlaybackPolicy.cpp
+      DefaultPlaybackPolicy.h
       Diags.cpp
       Diags.h
       DropTarget.cpp
@@ -192,18 +189,13 @@ list( APPEND SOURCES
       PasteOverPreservingClips.h
       PitchName.cpp
       PitchName.h
-      PlaybackSchedule.cpp
-      PlaybackSchedule.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp
       PluginStartupRegistration.h
       Printing.cpp
-      Printing.h
       Profiler.cpp
       Profiler.h
-      ProjectAudioIO.cpp
-      ProjectAudioIO.h
       ProjectAudioManager.cpp
       ProjectAudioManager.h
       ProjectFileIO.cpp
@@ -227,8 +219,6 @@ list( APPEND SOURCES
       ProjectWindows.h
       RealtimeEffectPanel.cpp
       RealtimeEffectPanel.h
-      RingBuffer.cpp
-      RingBuffer.h
       SampleBlock.cpp
       SampleBlock.h
       Screenshot.cpp
@@ -271,8 +261,6 @@ list( APPEND SOURCES
       SseMathFuncs.h
       SyncLock.cpp
       SyncLock.h
-      Tags.cpp
-      Tags.h
       TagsEditor.cpp
       TagsEditor.h
       ThemedWrappers.h
@@ -338,6 +326,7 @@ list( APPEND SOURCES
       commands/CommandContext.h
       commands/CommandDirectory.cpp
       commands/CommandDirectory.h
+      commands/CommandFlag.cpp
       commands/CommandFlag.h
       commands/CommandFunctors.h
       commands/CommandDispatch.cpp
@@ -482,12 +471,6 @@ list( APPEND SOURCES
       effects/PerTrackEffect.h
       effects/Phaser.cpp
       effects/Phaser.h
-      effects/RealtimeEffectList.cpp
-      effects/RealtimeEffectList.h
-      effects/RealtimeEffectManager.cpp
-      effects/RealtimeEffectManager.h
-      effects/RealtimeEffectState.cpp
-      effects/RealtimeEffectState.h
       effects/RealtimeEffectStateUI.h
       effects/RealtimeEffectStateUI.cpp
       effects/Repair.cpp
@@ -752,6 +735,7 @@ list( APPEND SOURCES
       >
 
       $<$<BOOL:${USE_MIDI}>:
+         export/ExportMIDI.cpp
          import/ImportMIDI.cpp
          import/ImportMIDI.h
       >
@@ -1237,14 +1221,12 @@ list( APPEND LDFLAGS
 #
 #
 #
-list( APPEND LIBRARIES
+set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      wxwidgets::wxwidgets
       libmp3lame::libmp3lame
       SndFile::sndfile
-      portaudio::portaudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
@@ -1267,7 +1249,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
-      $<$<BOOL:${USE_PORTMIXER}>:portmixer>
       $<$<BOOL:${USE_SBSMS}>:libsbsms>
       $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
@@ -1441,7 +1422,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          COMMAND
             ${CMAKE_COMMAND} -E echo "Fixing Xcode 14 code signing issues"
          COMMAND
-            codesign --force --deep --sign - "${_DESTDIR}/Audacity.app"
+            codesign --force --timestamp --deep --sign - "${_DESTDIR}/Audacity.app"
          POST_BUILD
       )
    endif()
@@ -1547,15 +1528,11 @@ endif()
 
 set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
-   lib-string-utils-interface
    lib-uuid-interface
-   lib-project-rate-interface
    lib-theme-resources-interface
-   lib-sample-track-interface
-   lib-module-manager-interface
-   lib-project-history-interface
    lib-graphics-interface
-   lib-audio-graph
+   lib-tags-interface
+   lib-audio-io-interface
 )
 
 if (${_OPT}use_ffmpeg)
@@ -1589,6 +1566,8 @@ list( APPEND AUDACITY_LIBRARIES
    # will be defined
    lib-sentry-reporting
 )
+
+propagate_interesting_dependencies( ${TARGET} "${AUDACITY_LIBRARIES}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
@@ -1649,7 +1628,9 @@ else()
 endif()
 
 # collect dependency information for third party libraries
-list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
+set( AUDACITY_NODE_ATTRIBUTES "shape=house" )
+append_node_attributes( AUDACITY_NODE_ATTRIBUTES ${TARGET} )
+list( APPEND GRAPH_EDGES "Audacity [${AUDACITY_NODE_ATTRIBUTES}]" )
 foreach( LIBRARY ${LIBRARIES} ${AUDACITY_LIBRARIES} )
    if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
       canonicalize_node_name(LIBRARY "${LIBRARY}")

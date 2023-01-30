@@ -41,7 +41,7 @@ struct RealtimeEffectListMessage final
    std::shared_ptr<RealtimeEffectState> affectedState;
 };
 
-class RealtimeEffectList final
+class REALTIME_EFFECTS_API RealtimeEffectList final
    // Inheritance from std::enable_shared_from_this must be public
    // but the per-track lists are managed by unique not shared pointers
    : public std::enable_shared_from_this<RealtimeEffectList>
@@ -86,6 +86,14 @@ public:
    void Visit(const StateVisitor &func)
    {
       for (auto &state : mStates)
+         func(*state, IsActive());
+   }
+
+   //! Apply the function to all states sequentially.
+   template<typename StateVisitor>
+   void Visit(const StateVisitor &func) const
+   {
+      for (const auto &state : mStates)
          func(*state, IsActive());
    }
 

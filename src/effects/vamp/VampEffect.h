@@ -88,6 +88,8 @@ private:
    void OnTextCtrl(wxCommandEvent & evt);
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    std::unique_ptr<Vamp::Plugin> mPlugin;
    PluginPath mPath;
    int mOutput;

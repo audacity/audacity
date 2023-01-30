@@ -40,9 +40,6 @@
 
 #ifndef WX_PRECOMP
 #include <wx/app.h>
-#include <wx/event.h>
-#include <wx/image.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/tooltip.h>
 #endif

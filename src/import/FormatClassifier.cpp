@@ -23,7 +23,6 @@ for classification of the sample format and the used endianness.
 #include <cmath>
 #include <cfloat>
 #include <vector>
-#include <cstdio>
 
 #include <wx/defs.h>
 

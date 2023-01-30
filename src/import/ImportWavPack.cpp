@@ -29,7 +29,7 @@
 #include<wavpack/wavpack.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -205,14 +205,14 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels);
+                  mFormat, samplesRead, mNumChannels, mFormat);
             }
 
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels);
+                  mFormat, samplesRead, mNumChannels, mFormat);
             }
 
          } else {
@@ -222,7 +222,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels);
+                  mFormat, samplesRead, mNumChannels, mFormat);
             }
          }
 

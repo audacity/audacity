@@ -16,6 +16,7 @@
 
 #include "AllThemeResources.h"
 #include "../widgets/AButton.h"
+#include "../Menus.h"
 #include "Project.h"
 
 #include "../commands/CommandContext.h"
@@ -49,7 +50,8 @@ void ToolBarButtons::OnButton(wxCommandEvent & event)
    auto flags = MenuManager::Get(mProject).GetUpdateFlags();
    const CommandContext context( mProject );
 
-   ::HandleTextualCommand( cm, mButtonList[id].commandName, context, flags, false );
+   CommandDispatch::HandleTextualCommand(cm,
+      mButtonList[id].commandName, context, flags, false );
 
 #if defined(__WXMAC__)
    // Bug 2402

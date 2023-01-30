@@ -16,7 +16,6 @@
 #include <thread>
 
 #include <wx/app.h>
-#include <wx/button.h>
 #include <wx/cmdline.h>
 #include <wx/combobox.h>
 #include <wx/log.h>
@@ -34,7 +33,7 @@
 #include "Prefs.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "float_cast.h"
 #include "../widgets/FileHistory.h"

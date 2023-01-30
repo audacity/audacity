@@ -21,7 +21,6 @@ Paul Licameli
 #include "TracksPrefs.h"
 
 #include <algorithm>
-#include <wx/intl.h>
 
 #include "Prefs.h"
 

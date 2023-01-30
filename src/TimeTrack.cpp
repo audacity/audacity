@@ -20,7 +20,6 @@
 #include <cfloat>
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
-#include <wx/intl.h>
 #include "widgets/Ruler.h"
 #include "Envelope.h"
 #include "Mix.h"

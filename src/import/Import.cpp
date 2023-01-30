@@ -44,8 +44,6 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include <unordered_set>
 
 #include <wx/textctrl.h>
-#include <wx/string.h>
-#include <wx/intl.h>
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer

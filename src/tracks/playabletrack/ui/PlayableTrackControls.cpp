@@ -18,11 +18,11 @@ Paul Licameli split from TrackInfo.cpp
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "../../../effects/RealtimeEffectManager.h"
+#include "RealtimeEffectManager.h"
 
 #include <wx/dc.h>
 
-#include "effects/RealtimeEffectList.h"
+#include "RealtimeEffectList.h"
 
 using TCPLine = TrackInfo::TCPLine;
 

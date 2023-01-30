@@ -19,7 +19,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/simplebook.h>
 #include <wx/valgen.h>
 
@@ -216,6 +215,7 @@ std::unique_ptr<EffectUIValidator> EffectLoudness::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartVerticalLay(0);
    {
       S.StartMultiColumn(2, wxALIGN_CENTER);
@@ -517,9 +517,9 @@ void EffectLoudness::UpdateUI()
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
       // TODO: recalculate layout here
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
-   EnableApply(true);
+   EffectUIValidator::EnableApply(mUIParent, true);
 }

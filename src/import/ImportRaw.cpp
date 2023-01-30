@@ -37,7 +37,6 @@ and sample size to help you importing data of an unknown format.
 #include "../widgets/ProgressDialog.h"
 
 #include <cmath>
-#include <cstdio>
 #include <stdint.h>
 #include <vector>
 
@@ -46,13 +45,9 @@ and sample size to help you importing data of an unknown format.
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/combobox.h>
-#include <wx/filename.h>
-#include <wx/intl.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/timer.h>
 
 // #include "RawAudioGuess.h"
 #include "FormatClassifier.h"
@@ -125,7 +120,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       if (!dlog.GetReturnCode())
          return;
 
-      int encoding = dlog.mEncoding;
+      const int encoding = dlog.mEncoding;
       unsigned numChannels = dlog.mChannels;
       double rate = dlog.mRate;
       sf_count_t offset = (sf_count_t)dlog.mOffset;
@@ -179,7 +174,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       // the quality of the original file.
       //
 
-      auto format = ImportFileHandle::ChooseFormat(
+      const auto format = ImportFileHandle::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
       results.resize(1);
@@ -243,7 +238,8 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
                      ((float *)srcbuffer.ptr())[numChannels*j+c];
                }
 
-               iter->get()->Append(buffer.ptr(), (format == int16Sample)?int16Sample:floatSample, block);
+               iter->get()->Append(buffer.ptr(), (format == int16Sample)?int16Sample:floatSample, block,
+                  1, sf_subtype_to_effective_format(encoding));
             }
             framescompleted += block;
          }

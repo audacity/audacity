@@ -28,8 +28,6 @@ set( SOURCES
 set( LIBRARIES
    lib-exceptions-interface
    lib-preferences-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-files "${SOURCES}" "${LIBRARIES}"
    "" ""

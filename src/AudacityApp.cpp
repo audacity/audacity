@@ -30,13 +30,10 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
 #include <wx/evtloop.h>
-#include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/docview.h>
-#include <wx/event.h>
 #include <wx/ipc.h>
 #include <wx/window.h>
-#include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/snglinst.h>
 #include <wx/splash.h>
@@ -45,7 +42,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/fontmap.h>
 
 #include <wx/fs_zip.h>
-#include <wx/image.h>
 
 #include <wx/dir.h>
 #include <wx/file.h>
@@ -85,7 +81,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
 #include "Journal.h"
-//#include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
 #include "PathList.h"
@@ -100,7 +95,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
-#include "Screenshot.h"
 #include "Sequence.h"
 #include "SelectFile.h"
 #include "TempDirectory.h"
@@ -123,6 +117,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "FrameStatisticsDialog.h"
 #include "PluginStartupRegistration.h"
 #include "IncompatiblePluginsDialog.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if defined(HAVE_UPDATES_CHECK)
 #  include "update/UpdateManager.h"
@@ -531,7 +526,6 @@ static void QuitAudacity(bool bForce)
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
 #endif
-   CloseScreenshotTools();
 
    // Logger window is always destroyed on macOS,
    // on other platforms - it prevents the runloop
@@ -1216,10 +1210,17 @@ AudacityApp::~AudacityApp()
 // Some of the many initialization steps
 void AudacityApp::OnInit0()
 {
-   // Inject basic GUI services behind the facade
+   // Inject basic GUI services behind the facades
    {
       static wxWidgetsBasicUI uiServices;
       (void)BasicUI::Install(&uiServices);
+
+      static WindowPlacementFactory::Scope scope {
+      [](AudacityProject &project)
+         -> std::unique_ptr<BasicUI::WindowPlacement> {
+         return std::make_unique<wxWidgetsWindowPlacement>(
+            &GetProjectFrame(project));
+      } };
    }
 
    // Fire up SQLite

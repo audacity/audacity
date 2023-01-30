@@ -22,7 +22,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/valgen.h>
 
 #include "../ShuttleGui.h"
@@ -174,6 +173,7 @@ std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S
@@ -218,7 +218,8 @@ bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
 {
-   EnableApply(mUIParent->TransferDataFromWindow());
+   EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow());
 }
 
 size_t EffectPaulstretch::GetBufferSize(double rate) const

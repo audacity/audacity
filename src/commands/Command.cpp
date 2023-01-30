@@ -80,7 +80,6 @@ classes derived from it.
 
 #include <map>
 #include <wx/log.h>
-#include <wx/string.h>
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 

@@ -32,16 +32,14 @@
 #include <algorithm>
 
 #include <wx/defs.h>
-#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/dcclient.h>
 #include <wx/datetime.h>
-#include <wx/dialog.h>
-#include <wx/event.h>
 #include <wx/evtloop.h>
 #include <wx/gauge.h>
 #include <wx/frame.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
@@ -51,6 +49,8 @@
 #include <wx/stattext.h>
 
 #include "Prefs.h"
+
+#include "MemoryX.h"
 
 // This really should be a Preferences setting
 static const unsigned char beep[] =
@@ -1047,6 +1047,13 @@ ProgressDialog::~ProgressDialog()
    if (mHadFocus && SearchForWindow(wxTopLevelWindows, mHadFocus)) {
       mHadFocus->SetFocus();
    }
+
+   using namespace std::chrono;
+   wxLogInfo(
+      "Operation '%s' took %f seconds. Poll was called %d times and took %f seconds. Yield was called %d times and took %f seconds.",
+      GetTitle(), mElapsedTime / 1000.0,
+      mPollsCount, duration_cast<duration<double>>(mTotalPollTime).count(),
+      mYieldsCount, duration_cast<duration<double>>(mTotalYieldTime).count());
 }
 
 void ProgressDialog::Init()
@@ -1077,6 +1084,7 @@ void ProgressDialog::Reinit()
    mStartTime = wxGetUTCTimeMillis().GetValue();
    mLastUpdate = mStartTime;
    mYieldTimer = mStartTime;
+   mElapsedTime = 0;
    mCancel = false;
    mStop = false;
 
@@ -1096,6 +1104,11 @@ void ProgressDialog::Reinit()
       button->Enable();
 
    wxDialogWrapper::Show(true);
+
+   mTotalPollTime = {};
+   mPollsCount = {};
+   mTotalYieldTime = {};
+   mYieldsCount = {};
 }
 
 void ProgressDialog::SetDialogTitle(const TranslatableString& title)
@@ -1332,6 +1345,13 @@ bool ProgressDialog::Create(const TranslatableString & title,
 ProgressResult ProgressDialog::Update(
    int value, const TranslatableString & message)
 {
+   using namespace std::chrono;
+   auto updatePollTime = finally([this, pollStart = high_resolution_clock::now()] {
+         mTotalPollTime += high_resolution_clock::now() - pollStart;
+   });
+
+   mPollsCount++;
+   
    if (mCancel)
    {
       // for compatibility with old Update, that returned false on cancel
@@ -1343,9 +1363,9 @@ ProgressResult ProgressDialog::Update(
    }
 
    wxLongLong_t now = wxGetUTCTimeMillis().GetValue();
-   wxLongLong_t elapsed = now - mStartTime;
+   mElapsedTime = now - mStartTime;
 
-   if (elapsed < 500)
+   if (mElapsedTime < 500)
    {
       return ProgressResult::Success;
    }
@@ -1366,7 +1386,7 @@ ProgressResult ProgressDialog::Update(
       value = 1000;
    }
 
-   wxLongLong_t estimate = elapsed * 1000ll / value;
+   wxLongLong_t estimate = mElapsedTime * 1000ll / value;
    wxLongLong_t remains = (estimate + mStartTime) - now;
 
    SetMessage(message);
@@ -1382,7 +1402,7 @@ ProgressResult ProgressDialog::Update(
    if ((now - mLastUpdate > 1000) || (value == 1000))
    {
       if (m_bShowElapsedTime) {
-         wxTimeSpan tsElapsed(0, 0, 0, elapsed);
+         wxTimeSpan tsElapsed(0, 0, 0, mElapsedTime);
          mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")));
          mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
          mElapsed->Update();
@@ -1413,7 +1433,10 @@ ProgressResult ProgressDialog::Update(
    // Nyquist effects call Update on every callback, but YieldFor is
    // quite slow on Linux / Mac, so don't call too frequently. (bug 1575)
    if ((now - mYieldTimer > 50) || (value == 1000)) {
+      const auto yieldStart = high_resolution_clock::now();
+      mYieldsCount++;
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
+      mTotalYieldTime += high_resolution_clock::now() - yieldStart;
       mYieldTimer = now;
    }
 

@@ -20,12 +20,12 @@
 #include <cassert>
 
 namespace {
-std::vector<std::shared_ptr<EffectInstanceEx>> MakeInstances(
+std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
    const AudioGraph::EffectStage::Factory &factory,
    EffectSettings &settings, double sampleRate, const Track &track
    , std::optional<sampleCount> genLength, bool multi)
 {
-   std::vector<std::shared_ptr<EffectInstanceEx>> instances;
+   std::vector<std::shared_ptr<EffectInstance>> instances;
    // Make as many instances as needed for the channels of the track, which
    // depends on how the instances report how many channels they accept
    const auto range = multi
@@ -301,7 +301,7 @@ std::optional<size_t> AudioGraph::EffectStage::FetchProcessAndAdvance(
    return oCurBlockSize;
 }
 
-bool AudioGraph::EffectStage::Process(EffectInstanceEx &instance,
+bool AudioGraph::EffectStage::Process(EffectInstance &instance,
    size_t channel, const Buffers &data, size_t curBlockSize,
    size_t outBufferOffset) const
 {

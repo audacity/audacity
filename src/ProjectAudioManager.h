@@ -27,9 +27,9 @@ class AudacityProject;
 struct AudioIOStartStreamOptions;
 class TrackList;
 class SelectedRegion;
-
-class WaveTrack;
-using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
+class WritableSampleTrack;
+using WritableSampleTrackArray =
+   std::vector< std::shared_ptr< WritableSampleTrack > >;
 
 enum class PlayMode : int {
    normalPlay,
@@ -68,16 +68,11 @@ public:
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
    // Find suitable tracks to record into, or return an empty array.
-   static WaveTrackArray ChooseExistingRecordingTracks(
+   static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
 
    static bool UseDuplex();
-
-   static TransportTracks GetAllPlaybackTracks(
-      TrackList &trackList, bool selectedOnly,
-      bool nonWaveToo = false //!< if true, collect all PlayableTracks
-   );
 
    explicit ProjectAudioManager( AudacityProject &project );
    ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
@@ -123,7 +118,7 @@ public:
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
    void PlayCurrentRegion(
-      bool newDefault = false, //!< See DefaultPlayOptions
+      bool newDefault = false, //!< See ProjectAudioIO::GetDefaultOptions
       bool cutpreview = false);
 
    void OnPause();
@@ -156,7 +151,7 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks(const WaveTrackArray *tracks) override;
+   void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
@@ -185,12 +180,6 @@ private:
          const AudacityProject &project, StatusBarField field);
 };
 
-AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultPlayOptions(
-   AudacityProject &project,
-   bool newDefault = false /*!< "new" default playback policy adjusts to
-      changes of the looping region, "old" default plays once straight */
-);
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected

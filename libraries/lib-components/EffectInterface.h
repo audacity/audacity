@@ -457,19 +457,6 @@ class COMPONENTS_API EffectInstance
 public:
    virtual ~EffectInstance();
 
-   //! Call once to set up state for whole list of tracks to be processed
-   /*!
-    @return success
-    Default implementation does nothing, returns true
-    */
-   virtual bool Init();
-
-   //! Actually do the effect here.
-   /*!
-    @return success
-    */
-   virtual bool Process(EffectSettings &settings) = 0;
-
    virtual size_t GetBlockSize() const = 0;
 
    // Suggest a block size, but the return is the size that was really set:
@@ -576,15 +563,10 @@ public:
     */
    virtual SampleCount GetLatency(
       const EffectSettings &settings, double sampleRate) const;
-};
 
-/***************************************************************************//**
-\class EffectInstanceEx
-@brief Performs effect computation
-*******************************************************************************/
-class COMPONENTS_API EffectInstanceEx : public virtual EffectInstance {
-public:
-   ~EffectInstanceEx() override;
+   /*! If true (default result), then results require dither if later rendered
+    to a narrower sample format */
+   virtual bool NeedsDither() const;
 
    //! Called at start of destructive processing, for each (mono/stereo) track
    //! Default implementation does nothing, returns true
@@ -641,136 +623,6 @@ public:
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
-};
-
-/*************************************************************************************/ /**
-
- \class EffectSettingChanged
-
- \brief Message sent by validator when a setting is changed by a user
-
- *******************************************************************************************/
-struct COMPONENTS_API EffectSettingChanged final
-{
-   size_t index { size_t(-1) };
-   float newValue {};
-};
-/*************************************************************************************//**
-
-\class EffectUIValidator
-
-\brief Interface for transferring values from a panel of effect controls
-
-*******************************************************************************************/
-class COMPONENTS_API EffectUIValidator /* not final */
-    : public Observer::Publisher<EffectSettingChanged>
-{
-public:
-   EffectUIValidator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access);
-
-   virtual ~EffectUIValidator();
-
-   //! Get settings data from the panel; may make error dialogs and return false
-   /*!
-    @return true only if panel settings are acceptable
-    */
-   virtual bool ValidateUI() = 0;
-
-   //! Update appearance of the panel for changes in settings
-   /*!
-    Default implementation does nothing, returns true
-
-    @return true if successful
-    */
-   virtual bool UpdateUI();
-
-   /*!
-    Default implementation returns false
-    @return true if using a native plug-in UI, not widgets
-    */
-   virtual bool IsGraphicalUI();
-
-   //! On the first call only, may disconnect from further event handling
-   /*!
-    Default implemantation does nothing
-    */
-   virtual void Disconnect();
-
-   /*!
-    Handle the UI OnClose event. Default implementation calls mEffect.CloseUI()
-   */
-   virtual void OnClose();
-
-protected:
-   // Convenience function template for binding event handler functions
-   template<typename EventTag, typename Class, typename Event>
-   void BindTo(
-      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
-   {
-      src.Bind(eventType, pmf, static_cast<Class *>(this));
-   }
-
-   EffectUIClientInterface &mEffect;
-   EffectSettingsAccess &mAccess;
-
-   bool mUIClosed { false };
-};
-
-/*************************************************************************************//**
-
-\class EffectUIClientInterface
-
-\brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
-values.  It can import and export presets.
-
-*******************************************************************************************/
-class COMPONENTS_API EffectUIClientInterface /* not final */
-{
-public:
-   virtual ~EffectUIClientInterface();
-
-   /*!
-    @return 0 if destructive effect processing should not proceed (and there
-    may be a non-modal dialog still opened); otherwise, modal dialog return code
-    */
-   virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal = false) = 0;
-
-   /*!
-    @return true if using a native plug-in UI, not widgets
-    */
-   virtual bool IsGraphicalUI() = 0;
-
-   //! Adds controls to a panel that is given as the parent window of `S`
-   /*!
-    @param S interface for adding controls to a panel in a dialog
-    @param instance guaranteed to have a lifetime containing that of the returned
-    object
-    @param access guaranteed to have a lifetime containing that of the returned
-    object
-    @param pOutputs null, or else points to outputs with lifetime containing
-    that of the returned object
-
-    @return null for failure; else an object invoked to retrieve values of UI
-    controls; it might also hold some state needed to implement event handlers
-    of the controls; it will exist only while the dialog continues to exist
-    */
-   virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
-      EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) = 0;
-
-   virtual bool CanExportPresets() = 0;
-   virtual void ExportPresets(const EffectSettings &settings) const = 0;
-   //! @return nullopt for failure
-   [[nodiscard]] virtual OptionalMessage
-      ImportPresets(EffectSettings &settings) = 0;
-
-   virtual bool HasOptions() = 0;
-   virtual void ShowOptions() = 0;
-
-   virtual bool ValidateUI(EffectSettings &settings) = 0;
-   virtual bool CloseUI() = 0;
 };
 
 //! Component of a configuration key path, for last-used destructive settings

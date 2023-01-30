@@ -14,10 +14,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 
 #include "Envelope.h"
+#include "Decibels.h"
 #include "../../EnvelopeEditor.h"
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
-#include "../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../RefreshCode.h"
 #include "../../TimeTrack.h"
@@ -58,7 +59,7 @@ namespace {
        double &dBRange, bool &dB, float &zoomMin, float &zoomMax)
    {
       const auto &viewInfo = ViewInfo::Get( project );
-      dBRange = viewInfo.dBr;
+      dBRange = DecibelScaleCutoff.Read();
       dB = tt.GetDisplayLog();
       zoomMin = tt.GetRangeLower(), zoomMax = tt.GetRangeUpper();
       if (dB) {

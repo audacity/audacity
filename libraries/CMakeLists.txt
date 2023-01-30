@@ -30,6 +30,9 @@ set( LIBRARIES
    lib-project-history
    lib-graphics
    lib-audio-graph
+   lib-tags
+   lib-realtime-effects
+   lib-audio-io
 )
 
 if( NOT ${_OPT}enable_experimental_qt_support )

@@ -23,7 +23,6 @@
 #include <wx/dc.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
-#include <wx/intl.h>
 
 #if defined(USE_MIDI)
 #include "../lib-src/header-substitutes/allegro.h"

@@ -25,8 +25,6 @@ around to NEW positions.
 
 #include <wx/defs.h>
 #include <wx/dcclient.h>
-#include <wx/event.h>
-#include <wx/intl.h>
 #include <wx/window.h>
 
 #include "AColor.h"

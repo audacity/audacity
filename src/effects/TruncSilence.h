@@ -73,6 +73,8 @@ public:
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
+   bool NeedsDither() const override;
+
 private:
    // EffectTruncSilence implementation
 
@@ -91,6 +93,8 @@ private:
    bool DoRemoval
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    double mThresholdDB {} ;
    int mActionIndex;

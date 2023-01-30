@@ -188,7 +188,7 @@ wxString TrackArt::TruncateText(wxDC& dc, const wxString& text, const int maxWid
    return wxEmptyString;
 }
 
-wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
+wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight, bool selected)
 {
    //To make sure that roundings do not overlap each other
    auto clipFrameRadius = std::min(ClipFrameRadius, rect.width / 2);
@@ -236,18 +236,24 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString
       GetAffordanceTitleRect(rect.Intersect(clipRect)) :
       GetAffordanceTitleRect(rect);
 
-   if (!title.empty())
-   {
-      auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
-      if (!truncatedTitle.empty())
-      {
-         auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ? wxALIGN_RIGHT : wxALIGN_LEFT;
-         dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
-      }
-      else
-         return { };
-   }
    return titleRect;
+}
+
+bool TrackArt::DrawClipTitle(wxDC &dc, const wxRect &titleRect, const wxString &title)
+{
+   if(titleRect.IsEmpty())
+      return false;
+   if(title.empty())
+      return true;
+
+   auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
+   if (!truncatedTitle.empty())
+   {
+      auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ? wxALIGN_RIGHT : wxALIGN_LEFT;
+      dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
+      return true;
+   }
+   return false;
 }
 
 void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)

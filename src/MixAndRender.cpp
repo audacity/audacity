@@ -12,7 +12,7 @@ Paul Licameli split from Mix.cpp
 
 #include "BasicUI.h"
 #include "Mix.h"
-#include "effects/RealtimeEffectList.h"
+#include "RealtimeEffectList.h"
 #include "WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -146,6 +146,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    using namespace BasicUI;
    auto updateResult = ProgressResult::Success;
    {
+      auto effectiveFormat = mixer.EffectiveFormat();
       auto pProgress = MakeProgress(XO("Mix and Render"),
          XO("Mixing and rendering tracks"));
 
@@ -157,13 +158,13 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
          if (mono) {
             auto buffer = mixer.GetBuffer();
-            mixLeft->Append(buffer, format, blockLen);
+            mixLeft->Append(buffer, format, blockLen, 1, effectiveFormat);
          }
          else {
             auto buffer = mixer.GetBuffer(0);
-            mixLeft->Append(buffer, format, blockLen);
+            mixLeft->Append(buffer, format, blockLen, 1, effectiveFormat);
             buffer = mixer.GetBuffer(1);
-            mixRight->Append(buffer, format, blockLen);
+            mixRight->Append(buffer, format, blockLen, 1, effectiveFormat);
          }
 
          updateResult = pProgress->Poll(
@@ -199,8 +200,8 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 }
 
-#include "effects/RealtimeEffectList.h"
-#include "effects/RealtimeEffectState.h"
+#include "RealtimeEffectList.h"
+#include "RealtimeEffectState.h"
 
 std::vector<MixerOptions::StageSpecification>
 GetEffectStages(const WaveTrack &track)
@@ -220,8 +221,7 @@ GetEffectStages(const WaveTrack &track)
       if (!settings.has_value())
          continue;
       auto &stage = result.emplace_back(MixerOptions::StageSpecification{
-         [pEffect]{ return std::dynamic_pointer_cast<EffectInstanceEx>(
-            pEffect->MakeInstance()); },
+         [pEffect]{ return pEffect->MakeInstance(); },
          settings });
    }
    return result;

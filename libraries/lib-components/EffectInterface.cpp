@@ -131,11 +131,6 @@ bool EffectSettingsManager::CopySettingsContents(
 
 EffectInstance::~EffectInstance() = default;
 
-bool EffectInstance::Init()
-{
-   return true;
-}
-
 bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
@@ -199,7 +194,10 @@ auto EffectInstance::GetLatency(const EffectSettings &, double) const
    return 0;
 }
 
-EffectInstanceEx::~EffectInstanceEx() = default;
+bool EffectInstance::NeedsDither() const
+{
+   return true;
+}
 
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
 
@@ -214,39 +212,6 @@ size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
 }
 
 EffectInstanceFactory::~EffectInstanceFactory() = default;
-
-EffectUIValidator::EffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access)
-   : mEffect{effect}
-   , mAccess{access}
-{}
-
-EffectUIValidator::~EffectUIValidator() = default;
-
-bool EffectUIValidator::UpdateUI()
-{
-   return true;
-}
-
-bool EffectUIValidator::IsGraphicalUI()
-{
-   return false;
-}
-
-void EffectUIValidator::Disconnect()
-{
-}
-
-void EffectUIValidator::OnClose()
-{
-   if (!mUIClosed)
-   {
-      mEffect.CloseUI();
-      mUIClosed = true;
-   }
-}
-
-EffectUIClientInterface::~EffectUIClientInterface() = default;
 
 const RegistryPath &CurrentSettingsGroup()
 {

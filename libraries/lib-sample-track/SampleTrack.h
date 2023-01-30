@@ -16,6 +16,8 @@ Paul Licameli split from WaveTrack.h
 #include "SampleFormat.h"
 #include "Track.h"
 
+enum class sampleFormat : unsigned;
+
 class SAMPLE_TRACK_API SampleTrack /* not final */
    : public PlayableTrack
 {
@@ -32,11 +34,13 @@ public:
    /*! May be called from a worker thread */
    virtual ChannelType GetChannelIgnoringPan() const = 0;
 
-   // Old gain is used in playback in linearly interpolating
-   // the gain.
-   virtual float GetOldChannelGain(int channel) const = 0;
-
    virtual double GetRate() const = 0;
+
+   //! @return widest effective SampleFormat in any part of the track
+   virtual sampleFormat WidestEffectiveFormat() const = 0;
+
+   //! @return whether envelope values are all unit
+   virtual bool HasTrivialEnvelope() const = 0;
 
    //! Fetch envelope values corresponding to uniformly separated sample times starting at the given time
    virtual void GetEnvelopeValues(double *buffer, size_t bufferLen,
@@ -123,15 +127,20 @@ public:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   virtual void SetOldChannelGain(int channel, float gain) = 0;
-
    /** @brief Append the sample data to the track. You must call Flush()
     * after the last Append.
     *
     * @return true in case a block was flushed from memory to underlying DB
     */
    virtual bool Append(constSamplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1) = 0;
+      size_t len, unsigned int stride=1,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   ) = 0;
 
    //! Flush must be called after last Append
    virtual void Flush() = 0;

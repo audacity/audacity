@@ -25,10 +25,9 @@ extern MATH_API DitherType gLowQualityDither, gHighQualityDither;
 // ----------------------------------------------------------------------------
 // Supported sample formats
 // ----------------------------------------------------------------------------
-enum sampleFormat : unsigned
-{
-   //! The increasing sequence of these enum values must correspond to the increasing data type width
-   //! These values persist in saved project files, so must not be changed in later program versions
+//! The ordering of these values with operator < agrees with the order of increasing bit width
+/*! These values persist in saved project files, so must not be changed in later program versions */
+enum class sampleFormat : unsigned {
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
    floatSample = 0x0004000F,
@@ -38,10 +37,17 @@ enum sampleFormat : unsigned
    widestSampleFormat = floatSample,
 };
 
+// C++20 using enum sampleFormat;
+constexpr sampleFormat int16Sample = sampleFormat::int16Sample;
+constexpr sampleFormat int24Sample = sampleFormat::int24Sample;
+constexpr sampleFormat floatSample = sampleFormat::floatSample;
+constexpr sampleFormat narrowestSampleFormat = sampleFormat::narrowestSampleFormat;
+constexpr sampleFormat widestSampleFormat = sampleFormat::widestSampleFormat;
+
 // ----------------------------------------------------------------------------
 // Provide the number of bytes a specific sample will take
 // ----------------------------------------------------------------------------
-#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
+#define SAMPLE_SIZE(SampleFormat) (static_cast<unsigned>(SampleFormat) >> 16)
 
 // ----------------------------------------------------------------------------
 // Generic pointer to sample data
@@ -61,6 +67,42 @@ typedef enum {
 
 class TranslatableString;
 MATH_API TranslatableString GetSampleFormatStr(sampleFormat format);
+
+//! Two sample formats, remembering format of original source and describing stored format
+/*! Useful when imported data are stored temporarily in a wider format but should be exported bit-perfect
+ without dither if to the original format again
+ 
+ @invariant `Effective() <= Stored()`
+ */
+class SampleFormats final {
+public:
+   /*! Construct sampleFormats, but may change effective to satisfy the invariant */
+   SampleFormats(
+      sampleFormat effective, //!< How much real information in each sample
+      sampleFormat stored     //!< The form used for storage
+   )
+      : m_Effective{ std::min( effective, stored ) }
+      , m_Stored{ stored }
+   {}
+
+   sampleFormat Effective() const { return m_Effective; }
+   sampleFormat Stored() const { return m_Stored; }
+
+   //! Update the effective format, for insertion of more samples into the sequence
+   /*! `GetEffective()` will not necessarily equal the given value, because the invariant will be preserved,
+    and also `GetEffective()` will never become narrower than before:  if any material in the sequence had
+    a wider format, assume that the whole sequence still requires dithering to lesser formats than that.
+    */
+   void UpdateEffective(sampleFormat effective)
+   {
+      if (effective > m_Effective)
+         m_Effective = std::min(effective, m_Stored);
+   }
+
+private:
+   sampleFormat m_Effective;
+   sampleFormat m_Stored;
+};
 
 //
 // Allocating/Freeing Samples

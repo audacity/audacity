@@ -14,7 +14,6 @@
 #include <bitset>
 #include <functional>
 #include <utility>
-#include <wx/string.h>
 
 #include "audacity/Types.h"
 
@@ -89,6 +88,11 @@ class AUDACITY_DLL_API ReservedCommandFlag : public CommandFlag
 {
 public:
    using Predicate = std::function< bool( const AudacityProject& ) >;
+   using Predicates = std::vector< Predicate >;
+
+   static const std::vector< CommandFlagOptions > &Options();
+   static const Predicates &RegisteredPredicates();
+
    ReservedCommandFlag( const Predicate &predicate,
       const CommandFlagOptions &options = {} );
 };
@@ -115,12 +119,13 @@ struct MenuItemEnabler {
    Action tryEnable;
 };
 
+using MenuItemEnablers = std::vector<MenuItemEnabler>;
+
 // Typically this is statically constructed:
 struct AUDACITY_DLL_API RegisteredMenuItemEnabler{
+   static const MenuItemEnablers &Enablers();
    RegisteredMenuItemEnabler( const MenuItemEnabler &enabler );
 };
 
-// Unnecessary #include to indicate otherwise hidden link dependencies
-#include "Menus.h"
 
 #endif

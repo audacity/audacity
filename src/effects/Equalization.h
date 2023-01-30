@@ -72,6 +72,7 @@ private:
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
    
+   wxWeakRef<wxWindow> mUIParent{};
    EqualizationFilter mParameters;
    EqualizationCurvesList mCurvesList{ mParameters };
    const int mOptions;

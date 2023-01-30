@@ -87,10 +87,8 @@ CommandManager.  It holds the callback for one command.
 #include <wx/evtloop.h>
 #include <wx/frame.h>
 #include <wx/hash.h>
-#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/menu.h>
-#include <wx/tokenzr.h>
 
 #include "../ActiveProject.h"
 #include "../Journal.h"

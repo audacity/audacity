@@ -65,7 +65,7 @@ using TagMap = std::unordered_map< wxString, wxString >;
 #define TAG_SOFTWARE wxT("Software")
 #define TAG_COPYRIGHT wxT("Copyright")
 
-class AUDACITY_DLL_API Tags final
+class TAGS_API Tags final
    : public XMLTagHandler
    , public std::enable_shared_from_this< Tags >
    , public ClientData::Base
@@ -121,7 +121,7 @@ class AUDACITY_DLL_API Tags final
    // UndoStateExtension implementation
    void RestoreUndoRedoState(AudacityProject &) override;
 
-   friend bool operator == (const Tags &lhs, const Tags &rhs);
+   friend TAGS_API bool operator == (const Tags &lhs, const Tags &rhs);
 
  private:
    TagMap mXref;

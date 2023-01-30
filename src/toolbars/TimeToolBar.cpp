@@ -19,7 +19,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #endif
 
@@ -27,9 +26,9 @@
 #include "SelectionBarListener.h"
 #include "ToolManager.h"
 
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "ViewInfo.h"

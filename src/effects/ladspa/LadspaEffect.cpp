@@ -40,7 +40,6 @@ effects from this one class.
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxprec.h>
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
 #include <wx/filename.h>
@@ -52,7 +51,6 @@ effects from this one class.
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>
-#include <wx/intl.h>
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
@@ -1519,6 +1517,7 @@ LadspaEffect::PopulateOrExchange(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {
+   mUIParent = S.GetParent();
    auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
    auto result = std::make_unique<Validator>(*this, access, mProjectRate,
       GetType(), pValues);

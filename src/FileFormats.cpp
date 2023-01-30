@@ -19,7 +19,6 @@ information.
 #include "FileFormats.h"
 
 #include <wx/arrstr.h>
-#include <wx/intl.h>
 #include "sndfile.h"
 #include "Internat.h"
 #include "MemoryX.h"

@@ -48,11 +48,15 @@ public:
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
+   bool NeedsDither() const override;
+
 private:
    // EffectRepeat implementation
 
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    int repeatCount;
 
@@ -68,4 +72,3 @@ static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
 };
 
 #endif
-

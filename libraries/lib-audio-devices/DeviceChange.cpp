@@ -22,7 +22,6 @@
 #if defined(HAVE_DEVICE_CHANGE)
 
 #include <wx/module.h>
-#include <wx/timer.h>
 #include <wx/thread.h>
 
 #if defined(__WXMSW__)
@@ -165,7 +164,6 @@ private:
 #elif defined(__WXGTK__)
 
 #include <libudev.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <unistd.h>

@@ -149,9 +149,6 @@ private:
 
    float GetChannelGain(int channel) const override;
 
-   float GetOldChannelGain(int channel) const override;
-   void SetOldChannelGain(int channel, float gain) override;
-
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 
@@ -246,7 +243,9 @@ private:
     *
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1) override;
+      size_t len, unsigned int stride = 1,
+      sampleFormat effectiveFormat = widestSampleFormat) override;
+
    void Flush() override;
 
    ///
@@ -269,7 +268,18 @@ private:
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const override;
    void Set(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len);
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
+   sampleFormat WidestEffectiveFormat() const override;
+
+   bool HasTrivialEnvelope() const override;
 
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const override;
@@ -289,7 +299,6 @@ private:
    Sequence* GetSequenceAtTime(double time);
    Envelope* GetEnvelopeAtTime(double time);
 
-   WaveClip* GetClipAtSample(sampleCount sample);
    WaveClip* GetClipAtTime(double time);
 
    //
@@ -552,8 +561,6 @@ private:
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mPan{ 0.0f };
    int           mWaveColorIndex;
-   //! A memo used by PortAudio thread, doesn't need atomics:
-   float         mOldGain[2];
 
 
    //

@@ -33,7 +33,6 @@ from the project that will own the track.
 #include "WaveClip.h"
 
 #include <wx/defs.h>
-#include <wx/intl.h>
 #include <wx/debug.h>
 #include <wx/log.h>
 
@@ -41,6 +40,7 @@ from the project that will own the track.
 #include <math.h>
 #include <algorithm>
 #include <optional>
+#include <numeric>
 
 #include "float_cast.h"
 
@@ -143,8 +143,6 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
 
    mFormat = format;
    mRate = (int) rate;
-   mOldGain[0] = 0.0;
-   mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
@@ -184,8 +182,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    mRate = orig.mRate;
    DoSetGain(orig.GetGain());
    DoSetPan(orig.GetPan());
-   mOldGain[0] = 0.0;
-   mOldGain[1] = 0.0;
    mDisplayMin = orig.mDisplayMin;
    mDisplayMax = orig.mDisplayMax;
    mSpectrumMin = orig.mSpectrumMin;
@@ -551,18 +547,6 @@ float WaveTrack::GetChannelGain(int channel) const
    else
       return right * gain;
 }
-
-float WaveTrack::GetOldChannelGain(int channel) const
-{
-   return mOldGain[channel%2];
-}
-
-void WaveTrack::SetOldChannelGain(int channel, float gain)
-{
-   mOldGain[channel % 2] = gain;
-}
-
-
 
 /*! @excsafety{Strong} */
 void WaveTrack::SetWaveColorIndex(int colorIndex)
@@ -1389,8 +1373,12 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       {
          // Check if clips can move
          if (EditClipsCanMove.Read()) {
-            auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
-            Paste(newT1, tmp.get());
+            const auto offset = newT1 - oldT1;
+            for(const auto& clip : mClips)
+            {
+               if (clip->GetPlayStartTime() > oldT1 - (1.0 / mRate))
+                  clip->Offset(offset);
+            }
          }
          return;
       }
@@ -1457,21 +1445,16 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
     // Make room for the pasted data
     if (editClipCanMove) {
         if (!singleClipMode) {
-            // We need to insert multiple clips, so split the current clip and
-            // move everything to the right, then try to paste again
-            if (!IsEmpty(t0, GetEndTime())) {
-                auto tmp = Cut(t0, GetEndTime() + 1.0 / mRate);
-                Paste(t0 + insertDuration, tmp.get());
-            }
+            // We need to insert multiple clips, so split the current clip and ...
+            SplitAt(t0);
         }
-        else {
-            // We only need to insert one single clip, so just move all clips
-            // to the right of the paste point out of the way
-            for (const auto& clip : mClips)
-            {
-                if (clip->GetPlayStartTime() > t0 - (1.0 / mRate))
-                    clip->Offset(insertDuration);
-            }
+        //else if there is a clip at t0 insert new clip inside it and ...
+       
+        // ... move everything to the right
+        for (const auto& clip : mClips)
+        {
+            if (clip->GetPlayStartTime() > t0 - (1.0 / mRate))
+                clip->Offset(insertDuration);
         }
     }
 
@@ -1774,9 +1757,10 @@ void WaveTrack::Join(double t0, double t1)
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
 bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
-                       size_t len, unsigned int stride /* = 1 */)
+   size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
-   return RightmostOrNewClip()->Append(buffer, format, len, stride);
+   return RightmostOrNewClip()
+      ->Append(buffer, format, len, stride, effectiveFormat);
 }
 
 sampleCount WaveTrack::GetBlockStart(sampleCount s) const
@@ -1825,7 +1809,9 @@ size_t WaveTrack::GetMaxBlockSize() const
    {
       // We really need the maximum block size, so create a
       // temporary sequence to get it.
-      maxblocksize = Sequence{ mpFactory, mFormat }.GetMaxBlockSize();
+      maxblocksize =
+         Sequence{ mpFactory, SampleFormats{mFormat, mFormat} }
+            .GetMaxBlockSize();
    }
 
    wxASSERT(maxblocksize > 0);
@@ -2203,7 +2189,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 
 /*! @excsafety{Weak} */
 void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
-                    sampleCount start, size_t len)
+   sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
    for (const auto &clip: mClips)
    {
@@ -2235,13 +2221,28 @@ void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
          }
 
          clip->SetSamples(
-               (constSamplePtr)(((const char*)buffer) +
-                           startDelta.as_size_t() *
-                           SAMPLE_SIZE(format)),
-                          format, inclipDelta, samplesToCopy.as_size_t() );
+            buffer + startDelta.as_size_t() * SAMPLE_SIZE(format),
+            format, inclipDelta, samplesToCopy.as_size_t(), effectiveFormat );
          clip->MarkChanged();
       }
    }
+}
+
+sampleFormat WaveTrack::WidestEffectiveFormat() const
+{
+   auto &clips = GetClips();
+   return std::accumulate(clips.begin(), clips.end(), narrowestSampleFormat,
+      [](sampleFormat format, const auto &pClip){
+         return std::max(format,
+            pClip->GetSequence()->GetSampleFormats().Effective());
+      });
+}
+
+bool WaveTrack::HasTrivialEnvelope() const
+{
+   auto &clips = GetClips();
+   return std::all_of(clips.begin(), clips.end(),
+      [](const auto &pClip){ return pClip->GetEnvelope()->IsTrivial(); });
 }
 
 void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
@@ -2308,20 +2309,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
-}
-
-WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
-{
-   for (const auto &clip: mClips)
-   {
-      auto start = clip->GetPlayStartSample();
-      auto len   = clip->GetPlaySamplesCount();
-
-      if (sample >= start && sample < start + len)
-         return clip.get();
-   }
-
-   return NULL;
 }
 
 // When the time is both the end of a clip and the start of the next clip, the
