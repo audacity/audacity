@@ -308,6 +308,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
       MakeMessageFS(const VSTEffectSettings& settings) const;
+
+   // This is an immutable property determined once, when mAEffect is loaded
+   // Whether the effect is capable of fancy native UI
+   bool mGui{ false };
 };
 
 class VSTEffectInstance;
@@ -437,7 +441,6 @@ private:
    PluginID mID;
      
    wxSizerItem* mContainer{};
-   bool mGui{false};
    
    friend class VSTEffectsModule;
 

@@ -1561,13 +1561,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
                           wxT("UseGUI"),
                           mGui,
                           true);
-   mGui = mAEffect->flags & effFlagsHasEditor ? mGui : false;
-
-   // Must use the GUI editor if parameters aren't provided
-   if (mAEffect->numParams == 0)
-   {
-      mGui = true;
-   }
 
    auto pParent = S.GetParent();
 
@@ -1929,6 +1922,14 @@ bool VSTEffectWrapper::Load()
    // Was it successful?
    if (mAEffect)
    {
+      mGui = mAEffect->flags & effFlagsHasEditor ? mGui : false;
+
+      // Must use the GUI editor if parameters aren't provided
+      if (mAEffect->numParams == 0)
+      {
+         mGui = true;
+      }
+
       // Save a reference to ourselves
       //
       // Note:  Some hosts use "user" and some use "ptr2/resvd2".  It might
