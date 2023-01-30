@@ -162,6 +162,14 @@ std::unique_ptr<EffectUIValidator> StatefulEffect::PopulateUI(ShuttleGui &S,
    return result;
 }
 
+std::unique_ptr<EffectUIValidator> StatefulEffect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
+{
+   assert(false);
+   return nullptr;
+}
+
 const EffectParameterMethods &Effect::Parameters() const
 {
    static const CapturedParameters<Effect> empty;
@@ -293,7 +301,7 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
    auto parent = S.GetParent();
 
    // Subclass must provide something
-   auto result = PopulateOrExchange(S, instance, access, pOutputs);
+   auto result = MakeEditor(S, instance, access, pOutputs);
    assert(result);
 
    parent->SetMinSize(parent->GetSizer()->GetMinSize());
@@ -589,13 +597,6 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
 
    return delegate.DoEffect(settings, mProjectRate, mTracks, mFactory,
       region, mUIFlags, nullptr, nullptr, nullptr);
-}
-
-std::unique_ptr<EffectUIValidator> Effect::PopulateOrExchange(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
-{
-   return nullptr;
 }
 
 bool Effect::TransferDataToWindow(const EffectSettings &)

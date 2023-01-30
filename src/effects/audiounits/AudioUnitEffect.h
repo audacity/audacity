@@ -137,6 +137,11 @@ private:
 #endif
 
 private:
+   //! Will never be called
+   virtual std::unique_ptr<EffectUIValidator> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) final;
+
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;

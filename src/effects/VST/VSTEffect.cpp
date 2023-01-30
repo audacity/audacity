@@ -1584,6 +1584,15 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
    return validator;
 }
 
+std::unique_ptr<EffectUIValidator> VSTEffect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
+{
+   //! Will not come here because Effect::PopulateUI is overridden
+   assert(false);
+   return nullptr;
+}
+
 bool VSTEffect::IsGraphicalUI()
 {
    return mGui;

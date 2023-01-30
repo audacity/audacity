@@ -119,7 +119,7 @@ public:
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    struct Validator;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectUIValidator> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 

@@ -1509,7 +1509,7 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 }
 
 std::unique_ptr<EffectUIValidator>
-LadspaEffect::PopulateOrExchange(ShuttleGui & S,
+LadspaEffect::MakeEditor(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {

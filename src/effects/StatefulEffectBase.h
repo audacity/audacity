@@ -62,6 +62,15 @@ public:
       StatefulEffectBase &GetEffect() const { return mEffect; }
    };
 
+   //! Add controls to effect panel; always succeeds
+   /*!
+    @return if not null, then return it from PopulateUI instead of a
+    DefaultEffectUIValidator; default implementation returns null
+    */
+   virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs);
+
    /*!
      @copydoc EffectInstance::Init()
      Default implementation does nothing, returns true

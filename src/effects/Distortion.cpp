@@ -448,7 +448,7 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id, EffectSettings& se
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator>
-EffectDistortion::PopulateOrExchange(ShuttleGui& S, EffectInstance& instance,
+EffectDistortion::MakeEditor(ShuttleGui& S, EffectInstance& instance,
    EffectSettingsAccess& access, const EffectOutputs* pOutputs)
 {   
    auto& settings = access.Get();

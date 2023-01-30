@@ -275,6 +275,15 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
    return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
+std::unique_ptr<EffectUIValidator> VST3Effect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
+{
+   //! Will not come here because Effect::PopulateUI is overridden
+   assert(false);
+   return nullptr;
+}
+
 bool VST3Effect::CloseUI()
 {
    mParent = nullptr;

@@ -410,7 +410,7 @@ void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectDtmf::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator> EffectDtmf::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

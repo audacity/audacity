@@ -189,7 +189,7 @@ struct EffectEcho::Validator
 
 
 
-std::unique_ptr<EffectUIValidator> EffectEcho::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator> EffectEcho::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

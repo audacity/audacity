@@ -358,6 +358,15 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    return result;
 }
 
+std::unique_ptr<EffectUIValidator> LV2Effect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
+{
+   //! Will not come here because Effect::PopulateUI is overridden
+   assert(false);
+   return nullptr;
+}
+
 bool LV2Effect::CloseUI()
 {
 #ifdef __WXMAC__

@@ -434,6 +434,15 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
 }
 
+std::unique_ptr<EffectUIValidator> AudioUnitEffect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
+{
+   //! Will not come here because Effect::PopulateUI is overridden
+   assert(false);
+   return nullptr;
+}
+
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
 bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 {
