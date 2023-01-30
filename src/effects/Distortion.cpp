@@ -129,7 +129,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectDistortion > reg; }
 struct EffectDistortion::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices& services,
+   Editor(const EffectUIServices& services,
       EffectDistortion::Instance& instance,
       EffectSettingsAccess& access, const EffectDistortionSettings& settings
    )  : EffectEditor{ services, access }
@@ -449,7 +449,7 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id, EffectSettings& se
 
 std::unique_ptr<EffectEditor>
 EffectDistortion::MakeEditor(ShuttleGui& S, EffectInstance& instance,
-   EffectSettingsAccess& access, const EffectOutputs* pOutputs)
+   EffectSettingsAccess& access, const EffectOutputs* pOutputs) const
 {   
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

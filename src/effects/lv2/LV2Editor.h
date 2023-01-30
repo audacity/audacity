@@ -52,7 +52,7 @@ class LV2Editor final : public EffectEditor
    , LV2UIFeaturesList::UIHandler
 {
 public:
-   LV2Editor(EffectBase &effect,
+   LV2Editor(const EffectBase &effect,
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs,
       double sampleRate,

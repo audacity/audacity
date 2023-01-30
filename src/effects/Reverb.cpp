@@ -95,7 +95,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
 struct EffectReverb::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices& services,
+   Editor(const EffectUIServices& services,
       EffectSettingsAccess& access, const EffectReverbSettings& settings
    )  : EffectEditor{ services, access }
       , mSettings{ settings }
@@ -512,7 +512,7 @@ EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 // Effect implementation
 std::unique_ptr<EffectEditor> EffectReverb::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

@@ -1186,7 +1186,7 @@ OptionalMessage LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 }
 
 struct LadspaEffect::Editor : EffectEditor {
-   Editor(EffectUIServices &effect,
+   Editor(const EffectUIServices &effect,
       EffectSettingsAccess &access, double sampleRate, EffectType type,
       const LadspaEffectOutputs *pOutputs)
       : EffectEditor{ effect, access }
@@ -1510,7 +1510,7 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
 
 std::unique_ptr<EffectEditor> LadspaEffect::MakeEditor(ShuttleGui & S,
    EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs)
+   const EffectOutputs *pOutputs) const
 {
    auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
    auto result = std::make_unique<Editor>(*this, access, mProjectRate,

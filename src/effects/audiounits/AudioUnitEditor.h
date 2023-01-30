@@ -27,12 +27,12 @@ class AudioUnitEditor : public wxEvtHandler, public EffectEditor {
    struct CreateToken{};
 public:
    static std::unique_ptr<EffectEditor> Create(
-      EffectUIServices &effect, ShuttleGui &S,
+      const EffectUIServices &effect, ShuttleGui &S,
       const wxString &uiType,
       EffectInstance &instance, EffectSettingsAccess &access);
 
    AudioUnitEditor(CreateToken,
-      EffectUIServices &effect, EffectSettingsAccess &access,
+      const EffectUIServices &effect, EffectSettingsAccess &access,
       AudioUnitInstance &instance, AUControl *pControl, bool isGraphical);
 
    ~AudioUnitEditor() override;

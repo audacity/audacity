@@ -25,7 +25,7 @@ bool EffectInstanceEx::Init()
 }
 
 EffectEditor::EffectEditor(
-   EffectUIServices &services, EffectSettingsAccess &access)
+   const EffectUIServices &services, EffectSettingsAccess &access)
    : mServices{ services }
    , mAccess{ access }
 {}

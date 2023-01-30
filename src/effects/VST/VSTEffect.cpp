@@ -1551,7 +1551,7 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
 
 std::unique_ptr<EffectEditor> VSTEffect::PopulateUI(const EffectPlugin &,
    ShuttleGui &S, EffectInstance& instance, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto parent = S.GetParent();
 
@@ -1589,7 +1589,7 @@ std::unique_ptr<EffectEditor> VSTEffect::PopulateUI(const EffectPlugin &,
 
 std::unique_ptr<EffectEditor> VSTEffect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    //! Will not come here because Effect::PopulateUI is overridden
    assert(false);
@@ -3927,7 +3927,7 @@ VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
 
 VSTEffectEditor::VSTEffectEditor(
    VSTEffectInstance&       instance,
-   EffectUIServices&        services,
+   const EffectUIServices&  services,
    EffectSettingsAccess&    access,
    wxWindow*                pParent,
    int                      numParams
@@ -4069,7 +4069,8 @@ bool VSTEffectEditor::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      const auto& eff = static_cast<VSTEffect&>(VSTEffectEditor::mServices);
+      const auto& eff =
+         static_cast<const VSTEffect&>(VSTEffectEditor::mServices);
       if (eff.GetType() == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
 

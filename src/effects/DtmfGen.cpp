@@ -291,7 +291,7 @@ size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
 struct EffectDtmf::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices &effect,
+   Editor(const EffectUIServices &effect,
       EffectSettingsAccess &access, const DtmfSettings &settings)
       : EffectEditor{effect, access}
       // Copy settings
@@ -412,7 +412,7 @@ void EffectDtmf::Editor::PopulateOrExchange(ShuttleGui & S,
 
 std::unique_ptr<EffectEditor> EffectDtmf::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto &settings = access.Get();
    auto &dtmfSettings = GetSettings(settings);

@@ -51,7 +51,7 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   bool ValidateUI(const EffectPlugin &plugin, EffectSettings &) override;
+   bool ValidateUI(const EffectPlugin &plugin, EffectSettings &) const override;
 
    // Effect implementation
 

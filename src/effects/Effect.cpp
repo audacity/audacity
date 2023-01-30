@@ -145,27 +145,30 @@ std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
 std::unique_ptr<EffectEditor> StatefulEffect::PopulateUI(
    const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs)
+   const EffectOutputs *pOutputs) const
 {
    auto parent = S.GetParent();
 
+   // As in MakeInstance, we still cheat const for stateful effects!
+   auto pThis = const_cast<StatefulEffect*>(this);
+
    // Let the effect subclass provide its own editor if it wants
-   auto result = PopulateOrExchange(S, instance, access, pOutputs);
+   auto result = pThis->PopulateOrExchange(S, instance, access, pOutputs);
 
    parent->SetMinSize(parent->GetSizer()->GetMinSize());
 
    if (!result) {
       // No custom editor object?  Then use the default
-      result = std::make_unique<DefaultEffectEditor>(*this,
-         *this, access, S.GetParent());
-      parent->PushEventHandler(this);
+      result = std::make_unique<DefaultEffectEditor>(*pThis,
+         *pThis, access, S.GetParent());
+      parent->PushEventHandler(pThis);
    }
    return result;
 }
 
 std::unique_ptr<EffectEditor> StatefulEffect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    assert(false);
    return nullptr;
@@ -297,7 +300,7 @@ OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
 
 std::unique_ptr<EffectEditor> Effect::PopulateUI(const EffectPlugin &,
    ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs)
+   const EffectOutputs *pOutputs) const
 {
    auto parent = S.GetParent();
 
@@ -310,7 +313,7 @@ std::unique_ptr<EffectEditor> Effect::PopulateUI(const EffectPlugin &,
    return result;
 }
 
-bool Effect::ValidateUI(const EffectPlugin &context, EffectSettings &)
+bool Effect::ValidateUI(const EffectPlugin &context, EffectSettings &) const
 {
    return true;
 }

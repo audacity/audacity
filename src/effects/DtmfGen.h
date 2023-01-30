@@ -61,7 +61,8 @@ public:
 
    std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;

@@ -117,7 +117,8 @@ public:
    struct Editor;
    std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
    bool CanExportPresets() const override;
    void ExportPresets(

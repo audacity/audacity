@@ -128,9 +128,10 @@ class AUDACITY_DLL_API Effect /* not final */
 
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
+      const EffectOutputs *pOutputs) const override;
    //! @return false
-   bool ValidateUI(const EffectPlugin &context, EffectSettings &) override;
+   bool ValidateUI(const EffectPlugin &context, EffectSettings &)
+      const override;
    bool CloseUI() const override;
 
    bool CanExportPresets() const override;
@@ -196,7 +197,7 @@ protected:
     */
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) = 0;
+      const EffectOutputs *pOutputs) const = 0;
 
    // No more virtuals!
 
@@ -360,13 +361,13 @@ public:
    //! Allows PopulateOrExchange to return null
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
+      const EffectOutputs *pOutputs) const override;
 
 private:
    //! Needed to make subclasses concrete, but should never be called
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) final;
+      const EffectOutputs *pOutputs) const final;
 };
 
 // FIXME:

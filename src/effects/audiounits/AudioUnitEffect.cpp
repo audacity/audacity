@@ -410,7 +410,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 std::unique_ptr<EffectEditor> AudioUnitEffect::PopulateUI(
    const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    wxString uiType;
    // Decide whether to build plain or fancy user interfaces
@@ -421,7 +421,7 @@ std::unique_ptr<EffectEditor> AudioUnitEffect::PopulateUI(
 
 std::unique_ptr<EffectEditor> AudioUnitEffect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    //! Will not come here because Effect::PopulateUI is overridden
    assert(false);
