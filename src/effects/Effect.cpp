@@ -14,8 +14,6 @@
 \brief Base class for many of the effects in Audacity.
 
 *//*******************************************************************/
-
-
 #include "Effect.h"
 
 #include <algorithm>
@@ -28,6 +26,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
+#include "StatefulEffectUIServices.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -723,36 +722,4 @@ int Effect::MessageBox( const TranslatableString& message,
 EffectUIServices* Effect::GetEffectUIServices()
 {
    return this;
-}
-
-DefaultEffectEditor::DefaultEffectEditor(const EffectPlugin &plugin,
-   EffectUIServices &services, EffectSettingsAccess &access,
-   wxWindow *pParent
-)  : EffectEditor{ services, access }
-   , mPlugin{ plugin }
-   , mpParent{ pParent }
-{
-}
-
-DefaultEffectEditor::~DefaultEffectEditor()
-{
-   Disconnect();
-}
-
-bool DefaultEffectEditor::ValidateUI()
-{
-   bool result {};
-   mAccess.ModifySettings([&](EffectSettings &settings){
-      result = mUIServices.ValidateUI(mPlugin, settings);
-      return nullptr;
-   });
-   return result;
-}
-
-void DefaultEffectEditor::Disconnect()
-{
-   if (mpParent) {
-      mpParent->PopEventHandler();
-      mpParent = nullptr;
-   }
 }

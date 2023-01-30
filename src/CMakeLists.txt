@@ -487,6 +487,8 @@ list( APPEND SOURCES
       effects/SoundTouchEffect.h
       effects/StatefulEffectBase.cpp
       effects/StatefulEffectBase.h
+      effects/StatefulEffectUIServices.cpp
+      effects/StatefulEffectUIServices.h
       effects/StatefulPerTrackEffect.cpp
       effects/StatefulPerTrackEffect.h
       effects/StereoToMono.cpp
