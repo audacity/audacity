@@ -308,6 +308,10 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
       MakeMessageFS(const VSTEffectSettings& settings) const;
+
+   // This is an immutable property determined once, when mAEffect is loaded
+   // Whether the effect is capable of fancy native UI
+   bool mGui{ false };
 };
 
 class VSTEffectInstance;
@@ -437,7 +441,6 @@ private:
    PluginID mID;
      
    wxSizerItem* mContainer{};
-   bool mGui{false};
    
    friend class VSTEffectsModule;
 
@@ -596,12 +599,12 @@ class VSTEffectValidator final
 {
 public:
 
-    VSTEffectValidator(VSTEffectInstance&       instance,
-                       EffectUIClientInterface& effect,
-                       EffectSettingsAccess&    access,
-                       wxWindow*                pParent,
-                       int                      numParams
-                      );
+   VSTEffectValidator(VSTEffectInstance&       instance, bool gui,
+      EffectUIClientInterface& effect,
+      EffectSettingsAccess&    access,
+      wxWindow*                pParent,
+      int                      numParams
+   );
 
    ~VSTEffectValidator() override;
 
@@ -639,6 +642,7 @@ private:
    void OnIdle(wxIdleEvent &evt);
 
    VSTEffectInstance& mInstance;
+   const bool mGui;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
    bool StoreSettingsToInstance(const EffectSettings& settings);

@@ -1446,7 +1446,7 @@ int VSTEffectValidator::ShowDialog(bool nonModal)
 
 bool VSTEffectValidator::IsGraphicalUI()
 {
-   return mEffect.IsGraphicalUI();
+   return mGui;
 }
 
 bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
@@ -1556,25 +1556,22 @@ std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
 {
    auto parent = S.GetParent();
 
-   // Determine if the VST editor is supposed to be used or not
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-                          wxT("UseGUI"),
-                          mGui,
-                          true);
-   mGui = mAEffect->flags & effFlagsHasEditor ? mGui : false;
+   // Determine whether fancy UI is available
+   bool gui = mGui;
 
-   // Must use the GUI editor if parameters aren't provided
-   if (mAEffect->numParams == 0)
-   {
-      mGui = true;
-   }
+   // Then use fancy UI only if preferences say so
+   if (gui)
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+                             wxT("UseGUI"),
+                             gui,
+                          true);
 
    auto pParent = S.GetParent();
 
    auto& vst2Instance = dynamic_cast<VSTEffectInstance&>(instance);
 
    auto validator = std::make_unique<VSTEffectValidator>(
-      vst2Instance, *this, access, pParent, mAEffect->numParams);
+      vst2Instance, gui, *this, access, pParent, mAEffect->numParams);
 
    // Also let the instance know about the validator, so it can forward
    // to it calls coming from the vst callback
@@ -1929,6 +1926,14 @@ bool VSTEffectWrapper::Load()
    // Was it successful?
    if (mAEffect)
    {
+      mGui = (mAEffect->flags & effFlagsHasEditor);
+
+      // Must use the GUI editor if parameters aren't provided
+      if (mAEffect->numParams == 0)
+      {
+         mGui = true;
+      }
+
       // Save a reference to ourselves
       //
       // Note:  Some hosts use "user" and some use "ptr2/resvd2".  It might
@@ -3923,6 +3928,7 @@ VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
 VSTEffectValidator::VSTEffectValidator
 (
    VSTEffectInstance&       instance,
+   bool                     gui,
    EffectUIClientInterface& effect,
    EffectSettingsAccess&    access,
    wxWindow*                pParent,
@@ -3930,6 +3936,7 @@ VSTEffectValidator::VSTEffectValidator
 )
    : EffectUIValidator(effect, access),
      mInstance(instance),
+     mGui{ gui },
      mParent(pParent),
      mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
      mNumParams(numParams)
