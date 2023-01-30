@@ -96,7 +96,7 @@ public:
 
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
+      const EffectOutputs *pOutputs) const override;
 
    bool CanExportPresets() const override;
    void ExportPresets(
@@ -114,7 +114,7 @@ private:
    //! Will never be called
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) final;
+      const EffectOutputs *pOutputs) const final;
    
    void LoadPreset(const wxString& id, EffectSettings& settings) const;
 };

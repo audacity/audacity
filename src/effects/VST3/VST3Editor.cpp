@@ -13,7 +13,8 @@
 #include "internal/x11/SocketWindow.h"
 #endif
 
-VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper, EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
+VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
+   const EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
    : EffectEditor(effect, access), mWrapper(wrapper), mParent(parent)
 {
    if(effect.GetType() == EffectTypeGenerate)

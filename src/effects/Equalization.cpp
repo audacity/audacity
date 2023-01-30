@@ -301,9 +301,10 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
 }
 
 bool EffectEqualization::ValidateUI(
-   const EffectPlugin &, EffectSettings &settings)
+   const EffectPlugin &, EffectSettings &settings) const
 {
-   return mUI.ValidateUI(settings);
+   // Stateful effect still cheats const_cast!
+   return const_cast<EffectEqualization&>(*this).mUI.ValidateUI(settings);
 }
 
 // Effect implementation

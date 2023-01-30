@@ -387,7 +387,7 @@ class VSTEffect final
    std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
+      const EffectOutputs *pOutputs) const override;
    bool CanExportPresets() const override;
    void ExportPresets(
       const EffectPlugin &plugin, const EffectSettings &settings)
@@ -411,7 +411,7 @@ protected:
    //! Will never be called
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) final;
+      const EffectOutputs *pOutputs) const final;
    
    void UpdateDisplay() override;
    
@@ -606,8 +606,8 @@ class VSTEffectEditor final
 {
 public:
 
-   VSTEffectEditor(VSTEffectInstance&       instance, bool bui,
-      EffectUIServices&        services,
+   VSTEffectEditor(VSTEffectInstance&       instance, bool gui,
+      const EffectUIServices&  services,
       EffectSettingsAccess&    access,
       wxWindow*                pParent,
       int                      numParams

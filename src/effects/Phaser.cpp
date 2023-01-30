@@ -65,7 +65,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectPhaser > reg; }
 struct EffectPhaser::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices& services,
+   Editor(const EffectUIServices& services,
       EffectSettingsAccess& access, const EffectPhaserSettings& settings
    )  : EffectEditor{ services, access }
       , mSettings{ settings }
@@ -281,7 +281,7 @@ size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &set
 // Effect implementation
 std::unique_ptr<EffectEditor> EffectPhaser::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

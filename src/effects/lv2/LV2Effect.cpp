@@ -314,7 +314,7 @@ bool LV2Effect::LoadSettings(
 // Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectEditor> LV2Effect::PopulateUI(const EffectPlugin &,
    ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs)
+   const EffectOutputs *pOutputs) const
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
@@ -359,7 +359,7 @@ std::unique_ptr<EffectEditor> LV2Effect::PopulateUI(const EffectPlugin &,
 
 std::unique_ptr<EffectEditor> LV2Effect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    //! Will not come here because Effect::PopulateUI is overridden
    assert(false);

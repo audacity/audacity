@@ -22,7 +22,7 @@
 #include "../../widgets/wxPanelWrapper.h"
 
 AudioUnitEditor::AudioUnitEditor(CreateToken,
-   EffectUIServices &effect,
+   const EffectUIServices &effect,
    EffectSettingsAccess &access, AudioUnitInstance &instance,
    AUControl *pControl, bool isGraphical
 )  : EffectEditor{ effect, access }
@@ -139,7 +139,7 @@ bool AudioUnitEditor::StoreSettingsToInstance(const EffectSettings &settings)
 }
 
 std::unique_ptr<EffectEditor> AudioUnitEditor::Create(
-   EffectUIServices &effect, ShuttleGui &S,
+   const EffectUIServices &effect, ShuttleGui &S,
    const wxString &uiType,
    EffectInstance &instance, EffectSettingsAccess &access)
 {

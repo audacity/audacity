@@ -59,7 +59,7 @@ public:
    //! Allows PopulateOrExchange to return null
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
+      const EffectOutputs *pOutputs) const override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
@@ -85,7 +85,7 @@ private:
    //! Needed to make subclasses concrete, but should never be called
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) final;
+      const EffectOutputs *pOutputs) const final;
 
    bool Process(EffectInstance &instance, EffectSettings &settings) final;
 

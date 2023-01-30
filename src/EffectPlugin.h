@@ -209,7 +209,7 @@ public:
    virtual std::unique_ptr<EffectEditor> PopulateUI(
       const EffectPlugin &plugin, ShuttleGui &S,
       EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) = 0;
+      const EffectOutputs *pOutputs) const = 0;
 
    virtual void ExportPresets(
       const EffectPlugin &plugin, const EffectSettings &settings) const = 0;
@@ -220,7 +220,7 @@ public:
    virtual void ShowOptions(const EffectPlugin &plugin) const = 0;
 
    virtual bool ValidateUI(
-      const EffectPlugin &context, EffectSettings &settings) = 0;
+      const EffectPlugin &context, EffectSettings &settings) const = 0;
    virtual bool CloseUI() const = 0;
 };
 
@@ -249,7 +249,7 @@ class AUDACITY_DLL_API EffectEditor /* not final */
 {
 public:
    EffectEditor(
-      EffectUIServices &services, EffectSettingsAccess &access);
+      const EffectUIServices &services, EffectSettingsAccess &access);
 
    virtual ~EffectEditor();
 
@@ -304,7 +304,7 @@ public:
       src.Bind(eventType, pmf, static_cast<Class *>(this));
    }
 
-   EffectUIServices &mUIServices;
+   const EffectUIServices &mUIServices;
    EffectSettingsAccess &mAccess;
 
    bool mUIClosed { false };

@@ -30,7 +30,8 @@ class VST3Editor
    VST3ParametersWindow* mPlainUI { nullptr };
    
 public:
-   VST3Editor(wxWindow* parent, VST3Wrapper& wrapper, EffectBase &effect, EffectSettingsAccess &access, bool useNativeUI);
+   VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
+      const EffectBase &effect, EffectSettingsAccess &access, bool useNativeUI);
    ~VST3Editor() override;
 
    bool IsGraphicalUI() override;

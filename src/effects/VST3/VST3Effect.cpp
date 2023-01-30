@@ -200,7 +200,7 @@ std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 
 std::unique_ptr<EffectEditor> VST3Effect::PopulateUI(const EffectPlugin &,
    ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    bool useGUI { true };
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -216,7 +216,7 @@ std::unique_ptr<EffectEditor> VST3Effect::PopulateUI(const EffectPlugin &,
 
 std::unique_ptr<EffectEditor> VST3Effect::MakeEditor(
    ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    //! Will not come here because Effect::PopulateUI is overridden
    assert(false);

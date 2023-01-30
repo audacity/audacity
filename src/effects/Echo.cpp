@@ -172,7 +172,7 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
 struct EffectEcho::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices& services,
+   Editor(const EffectUIServices& services,
       EffectSettingsAccess& access, const EffectEchoSettings& settings
    )  : EffectEditor{ services, access }
       , mSettings{ settings }
@@ -191,7 +191,7 @@ struct EffectEcho::Editor
 
 std::unique_ptr<EffectEditor> EffectEcho::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

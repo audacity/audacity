@@ -52,7 +52,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectWahwah > reg; }
 struct EffectWahwah::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices& services,
+   Editor(const EffectUIServices& services,
       EffectSettingsAccess& access, const EffectWahwahSettings& settings
    )  : EffectEditor{ services, access }
       , mSettings{ settings }
@@ -261,7 +261,7 @@ size_t EffectWahwah::Instance::RealtimeProcess(size_t group, EffectSettings &set
 
 std::unique_ptr<EffectEditor> EffectWahwah::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);

@@ -55,7 +55,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectBassTreble > reg; }
 struct EffectBassTreble::Editor
    : EffectEditor
 {
-   Editor(EffectUIServices& services,
+   Editor(const EffectUIServices& services,
       EffectSettingsAccess& access, const EffectBassTrebleSettings& settings
    )  : EffectEditor{ services, access }
       , mSettings{ settings }
@@ -267,7 +267,7 @@ bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings& settings) co
 
 std::unique_ptr<EffectEditor> EffectBassTreble::MakeEditor(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
