@@ -31,6 +31,14 @@ using OptionalMessage =
 class AUDACITY_DLL_API EffectUIServices /* not final */
 {
 public:
+   // Display a message box, using effect's (translated) name as the prefix
+   // for the title.
+   enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
+   static int DoMessageBox(const EffectPlugin &plugin,
+      const TranslatableString& message,
+      long style = DefaultMessageBoxStyle,
+      const TranslatableString &titleStr = {});
+
    virtual ~EffectUIServices();
 
    /*!
