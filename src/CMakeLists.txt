@@ -427,6 +427,8 @@ list( APPEND SOURCES
       effects/EffectManager.h
       effects/EffectUI.cpp
       effects/EffectUI.h
+      effects/EffectUIServices.cpp
+      effects/EffectUIServices.h
       effects/Equalization.cpp
       effects/Equalization.h
       effects/Equalization48x.cpp

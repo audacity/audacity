@@ -13,6 +13,7 @@
 **********************************************************************/
 #include "EffectEditor.h"
 #include "EffectPlugin.h"
+#include "EffectUIServices.h"
 #include <wx/window.h>
 
 EffectEditor::EffectEditor(

@@ -11,6 +11,7 @@
 
 **********************************************************************/
 #include "EffectUI.h"
+#include "EffectUIServices.h"
 #include "EffectEditor.h"
 
 #include "AllThemeResources.h"

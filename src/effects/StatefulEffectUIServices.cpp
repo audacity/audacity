@@ -11,6 +11,7 @@
 
 **********************************************************************/
 #include "StatefulEffectUIServices.h"
+#include "EffectUIServices.h"
 #include "StatefulEffectBase.h"
 #include <wx/window.h>
 
