@@ -64,6 +64,13 @@ public:
    EffectPlugin &operator=(EffectPlugin&) = delete;
    virtual ~EffectPlugin();
 
+   //! Whether there are preferences applying to the effect's family, for which
+   //! a UI may be needed to change them
+   virtual bool HasOptions() const = 0;
+
+   //! Whether the effect supports export of presets to files, and importing too
+   virtual bool CanExportPresets() const = 0;
+
    virtual const EffectSettingsManager& GetDefinition() const = 0;
 
    //! Usually applies factory to self and given access
@@ -207,13 +214,11 @@ public:
       EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) = 0;
 
-   virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;
    //! @return nullopt for failure
    [[nodiscard]] virtual OptionalMessage
       ImportPresets(EffectSettings &settings) = 0;
 
-   virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
 
    virtual bool ValidateUI(EffectSettings &settings) = 0;

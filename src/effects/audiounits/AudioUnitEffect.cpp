@@ -462,7 +462,7 @@ bool AudioUnitEffect::CloseUI()
    return true;
 }
 
-bool AudioUnitEffect::CanExportPresets()
+bool AudioUnitEffect::CanExportPresets() const
 {
    return true;
 }
@@ -550,7 +550,7 @@ OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
    return { nullptr };
 }
 
-bool AudioUnitEffect::HasOptions()
+bool AudioUnitEffect::HasOptions() const
 {
    return true;
 }

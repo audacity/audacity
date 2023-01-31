@@ -447,7 +447,7 @@ LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-bool LV2Effect::CanExportPresets()
+bool LV2Effect::CanExportPresets() const
 {
    return false;
 }
@@ -461,7 +461,7 @@ OptionalMessage LV2Effect::ImportPresets(EffectSettings &)
    return { nullptr };
 }
 
-bool LV2Effect::HasOptions()
+bool LV2Effect::HasOptions() const
 {
    return true;
 }

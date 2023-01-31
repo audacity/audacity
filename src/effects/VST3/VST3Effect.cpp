@@ -228,7 +228,7 @@ bool VST3Effect::CloseUI()
    return true;
 }
 
-bool VST3Effect::CanExportPresets()
+bool VST3Effect::CanExportPresets() const
 {
    return true;
 }
@@ -282,7 +282,7 @@ OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
    return { nullptr };
 }
 
-bool VST3Effect::HasOptions()
+bool VST3Effect::HasOptions() const
 {
    return true;
 }

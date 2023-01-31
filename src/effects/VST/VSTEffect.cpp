@@ -1609,7 +1609,7 @@ bool VSTEffect::CloseUI()
    return true;
 }
 
-bool VSTEffect::CanExportPresets()
+bool VSTEffect::CanExportPresets() const
 {
    return true;
 }
@@ -1747,7 +1747,7 @@ OptionalMessage VSTEffect::ImportPresets(EffectSettings& settings)
       VSTEffectInstance::GetSettings(settings));
 }
 
-bool VSTEffect::HasOptions()
+bool VSTEffect::HasOptions() const
 {
    return true;
 }
