@@ -44,7 +44,6 @@ public:
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
    , public EffectBase
-   , public BasicEffectUIServices
 {
  //
  // public methods
@@ -106,12 +105,6 @@ class AUDACITY_DLL_API Effect /* not final */
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
 
-   EffectUIServices* GetEffectUIServices() override;
-
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
-
    bool CanExportPresets() const override;
    bool HasOptions() const override;
 
@@ -160,15 +153,6 @@ protected:
    //! Default implementation returns `previewLength`
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
-
-   //! Called only from PopulateUI, to add controls to effect panel
-   /*!
-    @return also returned from PopulateUI
-    @post `result: result != nullptr`
-    */
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const = 0;
 
    // No more virtuals!
 

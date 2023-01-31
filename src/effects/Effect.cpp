@@ -15,18 +15,15 @@
 
 *//*******************************************************************/
 #include "Effect.h"
-#include "EffectEditor.h"
 
 #include <algorithm>
 
 #include <wx/defs.h>
-#include <wx/sizer.h>
 
 #include "ConfigInterface.h"
 #include "../ProjectSettings.h"
 #include "../SelectFile.h"
 #include "../ShuttleAutomation.h"
-#include "../ShuttleGui.h"
 #include "StatefulEffectUIServices.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
@@ -145,7 +142,9 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // The usual factory lets the client (which is this, when self-hosting)
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
-   EffectUIServices *const client = this;
+   const auto client = dynamic_cast<EffectUIServices*>(this);
+   if (!client)
+      return 0;
    auto results = factory(parent, *this, *client, access);
    auto pDialog = results.pDialog;
    pInstance = results.pInstance;
@@ -231,20 +230,6 @@ OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
-std::unique_ptr<EffectEditor> Effect::PopulateUI(
-   const EffectPlugin &, ShuttleGui &S, EffectInstance &instance,
-   EffectSettingsAccess &access, const EffectOutputs *pOutputs) const
-{
-   auto parent = S.GetParent();
-
-   // Subclass must provide something
-   auto result = MakeEditor(S, instance, access, pOutputs);
-   assert(result);
-
-   parent->SetMinSize(parent->GetSizer()->GetMinSize());
-
-   return result;
-}
 
 bool BasicEffectUIServices::ValidateUI(
    const EffectPlugin &context, EffectSettings &) const
@@ -653,9 +638,4 @@ int Effect::MessageBox( const TranslatableString& message,
       ? GetName()
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox(message, title, style);
-}
-
-EffectUIServices* Effect::GetEffectUIServices()
-{
-   return this;
 }

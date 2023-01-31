@@ -92,14 +92,6 @@ public:
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) = 0;
 
-   //! Returns the EffectUIServices instance for this effect
-   /*!
-    * Usually returns self. May return nullptr. EffectPlugin is responsible for the lifetime of the
-    * returned instance.
-    * @return EffectUIServices object or nullptr, if the effect does not implement the interface.
-    */
-   virtual EffectUIServices* GetEffectUIServices() = 0;
-
    //! Calculate temporary tracks of limited length with effect applied and play
    /*!
     @param updateUI called after adjusting temporary settings and before play
