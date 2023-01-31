@@ -115,8 +115,8 @@ const EffectParameterMethods &Effect::Parameters() const
    return empty;
 }
 
-int Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
-   wxDialog &dialog, EffectEditor *, bool forceModal) const
+int BasicEffectUIServices::ShowClientInterface(const EffectPlugin &plugin,
+   wxWindow &parent, wxDialog &dialog, EffectEditor *, bool forceModal) const
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    dialog.Layout();
@@ -124,7 +124,7 @@ int Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
    dialog.SetMinSize(dialog.GetSize());
    if (VetoDialogHook::Call(&dialog))
       return 0;
-   if (SupportsRealtime() && !forceModal) {
+   if (plugin.SupportsRealtime() && !forceModal) {
       dialog.Show();
       // Return false to bypass effect processing
       return 0;
@@ -233,9 +233,9 @@ OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
-std::unique_ptr<EffectEditor> Effect::PopulateUI(const EffectPlugin &,
-   ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs) const
+std::unique_ptr<EffectEditor> Effect::PopulateUI(
+   const EffectPlugin &, ShuttleGui &S, EffectInstance &instance,
+   EffectSettingsAccess &access, const EffectOutputs *pOutputs) const
 {
    auto parent = S.GetParent();
 
@@ -248,12 +248,13 @@ std::unique_ptr<EffectEditor> Effect::PopulateUI(const EffectPlugin &,
    return result;
 }
 
-bool Effect::ValidateUI(const EffectPlugin &context, EffectSettings &) const
+bool BasicEffectUIServices::ValidateUI(
+   const EffectPlugin &context, EffectSettings &) const
 {
    return true;
 }
 
-bool Effect::CloseUI() const
+bool BasicEffectUIServices::CloseUI() const
 {
    return true;
 }
@@ -272,12 +273,12 @@ static const FileNames::FileTypes &PresetTypes()
    return result;
 };
 
-void Effect::ExportPresets(
-   const EffectPlugin &, const EffectSettings &settings) const
+void BasicEffectUIServices::ExportPresets(
+   const EffectPlugin &plugin, const EffectSettings &settings) const
 {
    wxString params;
-   SaveSettingsAsString(settings, params);
-   auto commandId = GetSquashedName(GetSymbol().Internal());
+   plugin.SaveSettingsAsString(settings, params);
+   auto commandId = plugin.GetSquashedName(plugin.GetSymbol().Internal());
    params =  commandId.GET() + ":" + params;
 
    auto path = SelectFile(FileNames::Operation::Presets,
@@ -321,8 +322,8 @@ void Effect::ExportPresets(
 
 }
 
-OptionalMessage Effect::ImportPresets(
-   const EffectPlugin &, EffectSettings &settings) const
+OptionalMessage BasicEffectUIServices::ImportPresets(
+   const EffectPlugin &plugin, EffectSettings &settings) const
 {
    wxString params;
 
@@ -348,28 +349,29 @@ OptionalMessage Effect::ImportPresets(
       wxString ident = params.BeforeFirst(':');
       params = params.AfterFirst(':');
 
-      auto commandId = GetSquashedName(GetSymbol().Internal());
+      auto commandId = plugin.GetSquashedName(plugin.GetSymbol().Internal());
 
       if (ident != commandId) {
          // effect identifiers are a sensible length!
          // must also have some params.
-         if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30))
+         if ((params.Length() < 2 ) || (ident.Length() < 2) ||
+             (ident.Length() > 30))
          {
-            Effect::MessageBox(
+            EffectUIServices::MessageBox(plugin,
                /* i18n-hint %s will be replaced by a file name */
                XO("%s: is not a valid presets file.\n")
                .Format(wxFileNameFromPath(path)));
          }
          else
          {
-            Effect::MessageBox(
+            EffectUIServices::MessageBox(plugin,
                /* i18n-hint %s will be replaced by a file name */
                XO("%s: is for a different Effect, Generator or Analyzer.\n")
                .Format(wxFileNameFromPath(path)));
          }
          return {};
       }
-      result = LoadSettingsFromString(params, settings);
+      result = plugin.LoadSettingsFromString(params, settings);
    }
 
    //SetWindowTitle();
@@ -382,7 +384,7 @@ bool Effect::HasOptions() const
    return false;
 }
 
-void Effect::ShowOptions(const EffectPlugin &) const
+void BasicEffectUIServices::ShowOptions(const EffectPlugin &) const
 {
 }
 
