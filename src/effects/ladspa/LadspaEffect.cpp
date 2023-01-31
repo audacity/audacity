@@ -1541,7 +1541,7 @@ void LadspaEffect::Validator::Disconnect()
      }
 }
 
-bool LadspaEffect::CanExportPresets()
+bool LadspaEffect::CanExportPresets() const
 {
    return false;
 }
@@ -1555,7 +1555,7 @@ OptionalMessage LadspaEffect::ImportPresets(EffectSettings &)
    return { nullptr };
 }
 
-bool LadspaEffect::HasOptions()
+bool LadspaEffect::HasOptions() const
 {
    return true;
 }

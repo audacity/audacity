@@ -123,11 +123,11 @@ public:
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
-   bool CanExportPresets() override;
+   bool CanExportPresets() const override;
    void ExportPresets(const EffectSettings &settings) const override;
    OptionalMessage ImportPresets(EffectSettings &settings) override;
 
-   bool HasOptions() override;
+   bool HasOptions() const override;
    void ShowOptions() override;
 
    // LadspaEffect implementation

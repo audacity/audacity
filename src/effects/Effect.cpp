@@ -324,7 +324,7 @@ bool Effect::CloseUI()
    return true;
 }
 
-bool Effect::CanExportPresets()
+bool Effect::CanExportPresets() const
 {
    return true;
 }
@@ -441,7 +441,7 @@ OptionalMessage Effect::ImportPresets(EffectSettings &settings)
    return result;
 }
 
-bool Effect::HasOptions()
+bool Effect::HasOptions() const
 {
    return false;
 }

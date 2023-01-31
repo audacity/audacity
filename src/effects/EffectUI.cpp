@@ -707,10 +707,13 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    
    menu.AppendSeparator();
-   menu.Append(kImportID, _("Import..."))->Enable(mClient.CanExportPresets());
-   menu.Append(kExportID, _("Export..."))->Enable(mClient.CanExportPresets());
+   menu.Append(kImportID, _("Import..."))
+      ->Enable(mEffectUIHost.CanExportPresets());
+   menu.Append(kExportID, _("Export..."))
+      ->Enable(mEffectUIHost.CanExportPresets());
    menu.AppendSeparator();
-   menu.Append(kOptionsID, _("Options..."))->Enable(mClient.HasOptions());
+   menu.Append(kOptionsID, _("Options..."))
+      ->Enable(mEffectUIHost.HasOptions());
    menu.AppendSeparator();
    
    {
