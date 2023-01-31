@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_EFFECT_DTMF__
 #define __AUDACITY_EFFECT_DTMF__
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -39,7 +39,7 @@ struct DtmfSettings {
 };
 
 class EffectDtmf final
-   : public EffectWithSettings<DtmfSettings, PerTrackEffect>
+   : public EffectWithSettings<DtmfSettings, StatelessPerTrackEffect>
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

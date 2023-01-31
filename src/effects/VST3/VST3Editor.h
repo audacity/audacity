@@ -4,7 +4,7 @@
 
 #include "../EffectEditor.h"
 
-class Effect;
+class StatelessPerTrackEffect;
 class VST3Wrapper;
 
 namespace Steinberg
@@ -31,7 +31,7 @@ class VST3Editor
    
 public:
    VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
-      const Effect &effect, EffectSettingsAccess &access,
+      const StatelessPerTrackEffect &effect, EffectSettingsAccess &access,
       bool useNativeUI);
    ~VST3Editor() override;
 

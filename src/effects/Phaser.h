@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -70,7 +70,9 @@ struct EffectPhaserSettings
    double mOutGain { outGainDefault  };
 };
 
-class EffectPhaser final : public EffectWithSettings<EffectPhaserSettings, PerTrackEffect>
+class EffectPhaser final : public EffectWithSettings<
+   EffectPhaserSettings, StatelessPerTrackEffect
+>
 {
 public:
    
