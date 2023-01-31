@@ -19,7 +19,7 @@
 #include <wx/dialog.h>
 
 #include "EffectPlugin.h" // to inherit
-#include "EffectInterface.h" // to inherit
+#include "EffectUIServices.h"  // to inherit
 
 #include <any>
 

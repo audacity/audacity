@@ -23,5 +23,3 @@ bool EffectInstanceEx::Init()
 {
    return true;
 }
-
-EffectUIServices::~EffectUIServices() = default;

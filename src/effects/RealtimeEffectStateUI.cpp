@@ -14,6 +14,7 @@
 
 #include "EffectEditor.h"
 #include "EffectUI.h"
+#include "EffectUIServices.h"
 #include "RealtimeEffectState.h"
 
 #include "EffectManager.h"
