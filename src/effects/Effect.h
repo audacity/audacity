@@ -21,10 +21,30 @@ class WaveTrack;
 
 class sampleCount;
 
+//! Supplies implementations of all pure virtual functions of the base class
+//! except PopulateUI
+class BasicEffectUIServices
+   : public EffectUIServices
+{
+public:
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
+   bool ValidateUI(const EffectPlugin &context, EffectSettings &)
+      const override;
+   bool CloseUI() const override;
+};
+
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
    , public EffectBase
-   , public EffectUIServices
+   , public BasicEffectUIServices
 {
  //
  // public methods
@@ -86,29 +106,14 @@ class AUDACITY_DLL_API Effect /* not final */
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
 
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
    EffectUIServices* GetEffectUIServices() override;
 
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) const override;
-   //! @return false
-   bool ValidateUI(const EffectPlugin &context, EffectSettings &)
-      const override;
-   bool CloseUI() const override;
 
    bool CanExportPresets() const override;
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-
    bool HasOptions() const override;
-   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // EffectPlugin implementation
 
