@@ -29,8 +29,7 @@ class AudacityProject;
 class Track;
 
 class AUDACITY_DLL_API EffectBase /* not final */
-   : public EffectUIServices
-   , public EffectPlugin
+   : public EffectPlugin
 {
 public:
    EffectBase();

@@ -4,7 +4,7 @@
 
 #include "../EffectEditor.h"
 
-class EffectBase;
+class Effect;
 class VST3Wrapper;
 
 namespace Steinberg
@@ -31,7 +31,8 @@ class VST3Editor
    
 public:
    VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
-      const EffectBase &effect, EffectSettingsAccess &access, bool useNativeUI);
+      const Effect &effect, EffectSettingsAccess &access,
+      bool useNativeUI);
    ~VST3Editor() override;
 
    bool IsGraphicalUI() override;

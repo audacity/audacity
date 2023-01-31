@@ -45,14 +45,14 @@ class NumericTextCtrl;
 class LV2EffectMeter;
 class LV2Instance;
 class LV2Wrapper;
-class EffectBase;
+class Effect;
 
 class LV2Editor final : public EffectEditor
    , public wxEvtHandler
    , LV2UIFeaturesList::UIHandler
 {
 public:
-   LV2Editor(const EffectBase &effect,
+   LV2Editor(const Effect &effect,
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs,
       double sampleRate,
