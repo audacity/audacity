@@ -22,6 +22,7 @@
 class StatefulEffect
    : public StatefulEffectBase
    , public Effect
+   , public BasicEffectUIServices
 {
 public:
    class AUDACITY_DLL_API Instance : public StatefulEffectBase::Instance {
@@ -44,12 +45,6 @@ public:
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) const override;
-
-private:
-   //! Needed to make subclasses concrete, but should never be called
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const final;
 };
 
 #endif

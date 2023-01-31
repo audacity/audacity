@@ -65,7 +65,7 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
    if (effectPlugin == nullptr)
       return;
 
-   const auto client = effectPlugin->GetEffectUIServices();
+   const auto client = dynamic_cast<EffectUIServices *>(effectPlugin);
 
    // Effect has no client interface
    if (client == nullptr)

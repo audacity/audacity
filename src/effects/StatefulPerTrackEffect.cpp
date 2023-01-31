@@ -105,11 +105,3 @@ bool StatefulPerTrackEffect::ProcessFinalize() noexcept
 {
    return true;
 }
-
-std::unique_ptr<EffectEditor> StatefulPerTrackEffect::MakeEditor(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *) const
-{
-   assert(false);
-   return nullptr;
-}

@@ -68,11 +68,3 @@ std::unique_ptr<EffectEditor> StatefulEffect::PopulateUI(
    }
    return result;
 }
-
-std::unique_ptr<EffectEditor> StatefulEffect::MakeEditor(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *) const
-{
-   assert(false);
-   return nullptr;
-}
