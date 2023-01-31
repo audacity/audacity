@@ -5,7 +5,7 @@
 #include "VST3ParametersWindow.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
-#include "effects/Effect.h"
+#include "effects/StatelessPerTrackEffect.h"
 #include "internal/PlugFrame.h"
 #include "widgets/NumericTextCtrl.h"
 
@@ -14,7 +14,7 @@
 #endif
 
 VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
-   const Effect& effect, EffectSettingsAccess& access,
+   const StatelessPerTrackEffect& effect, EffectSettingsAccess& access,
    bool useNativeUI)
    : EffectEditor(effect, access), mWrapper(wrapper), mParent(parent)
 {

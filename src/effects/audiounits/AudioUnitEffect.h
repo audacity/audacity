@@ -25,7 +25,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../PerTrackEffect.h"
+#include "../StatelessPerTrackEffect.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>
@@ -38,7 +38,7 @@ class AudioUnitEffect;
 class AUControl;
 
 class AudioUnitEffect final
-   : public PerTrackEffect
+   : public StatelessPerTrackEffect
    , AudioUnitWrapper
 {
 public:

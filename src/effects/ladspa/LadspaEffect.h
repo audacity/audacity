@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "../PerTrackEffect.h"
+#include "../StatelessPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -63,7 +63,7 @@ struct LadspaEffectOutputs : EffectOutputs {
 };
 
 class LadspaEffect final
-   : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
+   : public EffectWithSettings<LadspaEffectSettings, StatelessPerTrackEffect>
 {
 public:
    LadspaEffect(const wxString & path, int index);

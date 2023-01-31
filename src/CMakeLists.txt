@@ -497,6 +497,8 @@ list( APPEND SOURCES
       effects/StatefulEffectUIServices.h
       effects/StatefulPerTrackEffect.cpp
       effects/StatefulPerTrackEffect.h
+      effects/StatelessPerTrackEffect.cpp
+      effects/StatelessPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
       effects/TimeScale.cpp

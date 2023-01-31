@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include "PerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -67,7 +67,9 @@ struct EffectWahwahSettings
 };
 
 
-class EffectWahwah final : public EffectWithSettings<EffectWahwahSettings, PerTrackEffect>
+class EffectWahwah final : public EffectWithSettings<
+   EffectWahwahSettings, StatelessPerTrackEffect
+>
 {
 public:
       

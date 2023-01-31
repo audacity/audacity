@@ -22,7 +22,7 @@
 #endif
 
 #include "LV2Editor.h"
-#include "effects/EffectBase.h"
+#include "effects/StatelessPerTrackEffect.h"
 #include "LV2EffectMeter.h"
 #include "LV2Instance.h"
 #include "LV2Wrapper.h"
@@ -99,7 +99,7 @@ void LV2Editor::UI::Destroy()
 #endif
 }
 
-LV2Editor::LV2Editor(const Effect &effect,
+LV2Editor::LV2Editor(const StatelessPerTrackEffect &effect,
    const LilvPlugin &plug, LV2Instance &instance,
    EffectSettingsAccess &access, const EffectOutputs *pOutputs,
    double sampleRate,

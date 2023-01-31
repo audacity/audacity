@@ -17,7 +17,7 @@
 
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "effects/PerTrackEffect.h"
+#include "effects/StatelessPerTrackEffect.h"
 
 namespace Steinberg
 {
@@ -35,7 +35,7 @@ class VST3ParametersWindow;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public PerTrackEffect
+class VST3Effect final : public StatelessPerTrackEffect
 {
    friend class VST3PluginValidator;
 

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "PerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 
@@ -48,7 +48,9 @@ struct EffectReverbSettings
 };
 
 
-class EffectReverb final : public EffectWithSettings<EffectReverbSettings, PerTrackEffect>
+class EffectReverb final : public EffectWithSettings<
+   EffectReverbSettings, StatelessPerTrackEffect
+>
 {
 public:
 

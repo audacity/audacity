@@ -13,7 +13,7 @@
 
 #include <queue>
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -68,7 +68,9 @@ struct EffectDistortionSettings
 };
 
 
-class EffectDistortion final : public EffectWithSettings<EffectDistortionSettings, PerTrackEffect>
+class EffectDistortion final : public EffectWithSettings<
+   EffectDistortionSettings, StatelessPerTrackEffect
+>
 {
 public:
    struct Params;

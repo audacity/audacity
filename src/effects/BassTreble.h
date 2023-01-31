@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -46,7 +46,9 @@ struct EffectBassTrebleSettings
 };
 
 
-class EffectBassTreble final : public EffectWithSettings<EffectBassTrebleSettings, PerTrackEffect>
+class EffectBassTreble final : public EffectWithSettings<
+   EffectBassTrebleSettings, StatelessPerTrackEffect
+>
 {
 public:
    
