@@ -99,7 +99,7 @@ void LV2Editor::UI::Destroy()
 #endif
 }
 
-LV2Editor::LV2Editor(const EffectBase &effect,
+LV2Editor::LV2Editor(const Effect &effect,
    const LilvPlugin &plug, LV2Instance &instance,
    EffectSettingsAccess &access, const EffectOutputs *pOutputs,
    double sampleRate,

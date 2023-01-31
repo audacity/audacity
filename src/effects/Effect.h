@@ -25,6 +25,7 @@ class sampleCount;
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
    , public EffectBase
+   , public EffectUIServices
 {
  //
  // public methods

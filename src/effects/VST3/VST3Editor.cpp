@@ -5,7 +5,7 @@
 #include "VST3ParametersWindow.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
-#include "effects/EffectBase.h"
+#include "effects/Effect.h"
 #include "internal/PlugFrame.h"
 #include "widgets/NumericTextCtrl.h"
 
@@ -13,8 +13,11 @@
 #include "internal/x11/SocketWindow.h"
 #endif
 
+class Effect;
+
 VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
-   const EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
+   const Effect& effect, EffectSettingsAccess& access,
+   bool useNativeUI)
    : EffectEditor(effect, access), mWrapper(wrapper), mParent(parent)
 {
    if(effect.GetType() == EffectTypeGenerate)
