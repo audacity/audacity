@@ -307,11 +307,6 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
    return result;
 }
 
-bool Effect::IsGraphicalUI()
-{
-   return false;
-}
-
 bool Effect::ValidateUI(EffectSettings &)
 {
    return true;
@@ -744,11 +739,6 @@ bool DefaultEffectUIValidator::ValidateUI()
       return nullptr;
    });
    return result;
-}
-
-bool DefaultEffectUIValidator::IsGraphicalUI()
-{
-   return mUIServices.IsGraphicalUI();
 }
 
 void DefaultEffectUIValidator::Disconnect()

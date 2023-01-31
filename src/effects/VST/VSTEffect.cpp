@@ -1597,13 +1597,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::MakeEditor(
    return nullptr;
 }
 
-bool VSTEffect::IsGraphicalUI()
-{
-   return mGui;
-}
-
-
-
 bool VSTEffect::CloseUI()
 {
    return true;
