@@ -11,7 +11,7 @@
 # 39185eb5873c356f8ca1bdf1533d87ba, 2016
 # Friederike Schertel, 2018
 # Friederike Schertel, 2018
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2022
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2022-2023
 # Heiko Abler <dj@audacity.de>, 2003
 # jhuffer <joachim.huffer@gmail.com>, 2020-2022
 # Martin H <pilino@posteo.de>, 2016
@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.2.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2012-07-27 10:44+0000\n"
+"PO-Revision-Date: 2023-01-31 00:32+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
@@ -9196,15 +9196,15 @@ msgstr "Legt die Spitzen-Amplitude von einer oder mehreren Spuren fest"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "DC-Versatz wird entfernt und normalisiert …\n"
+msgstr "DC-Versatz wird entfernt und normalisiert...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset...\n"
-msgstr "DC-Versatz wird entfernt …\n"
+msgstr "DC-Versatz wird entfernt...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Es wird normalisiert ohne DC-Versatz zu entfernen …\n"
+msgstr "Es wird normalisiert ohne DC-Versatz zu entfernen...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
@@ -17189,7 +17189,7 @@ msgstr "Aufnahme&kanäle"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Settings..."
-msgstr "Audio-&Einstellungen ..."
+msgstr "Audio-&Einstellungen..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
