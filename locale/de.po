@@ -29,11 +29,11 @@
 # valsu <valsu@hylia.de>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.2.3\n"
+"Project-Id-Version: audacity 3.2.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2023-01-31 00:32+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
