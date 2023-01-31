@@ -191,11 +191,6 @@ public:
    virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal = false) = 0;
 
-   /*!
-    @return true if using a native plug-in UI, not widgets
-    */
-   virtual bool IsGraphicalUI() = 0;
-
    //! Adds controls to a panel that is given as the parent window of `S`
    /*!
     @param S interface for adding controls to a panel in a dialog

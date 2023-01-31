@@ -1446,7 +1446,7 @@ int VSTEffectValidator::ShowDialog(bool nonModal)
 
 bool VSTEffectValidator::IsGraphicalUI()
 {
-   return mServices.IsGraphicalUI();
+   return mInstance.HasGUI();
 }
 
 bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
@@ -1592,13 +1592,6 @@ std::unique_ptr<EffectUIValidator> VSTEffect::MakeEditor(
    assert(false);
    return nullptr;
 }
-
-bool VSTEffect::IsGraphicalUI()
-{
-   return mGui;
-}
-
-
 
 bool VSTEffect::CloseUI()
 {

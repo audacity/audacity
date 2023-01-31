@@ -25,7 +25,7 @@ class WaveTrack;
 class sampleCount;
 
 //! Default implementation of EffectUIValidator invokes ValidateUI
-//! and IsGraphicalUI methods of an EffectUIServices
+//! method of an EffectUIServices
 /*
  Also pops the even handler stack of a window, if given to the contructor
 
@@ -50,8 +50,6 @@ public:
    ~DefaultEffectUIValidator() override;
    //! Calls mServices.ValidateUI()
    bool ValidateUI() override;
-   //! @return mServices.IsGraphicalUI()
-   bool IsGraphicalUI() override;
    void Disconnect() override;
 protected:
    wxWindow *mpParent{};
@@ -130,7 +128,6 @@ class AUDACITY_DLL_API Effect /* not final */
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
    //! @return false
-   bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 

@@ -389,7 +389,6 @@ class VSTEffect final
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) override;
-   bool IsGraphicalUI() override;
    
    bool CloseUI() override;
 
@@ -563,6 +562,8 @@ public:
    bool OnePresetWasLoadedWhilePlaying();
 
    void DeferChunkApplication();
+
+   bool HasGUI() const { return mGui; }
 
 private:
 
