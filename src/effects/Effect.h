@@ -56,8 +56,7 @@ using EffectDialogFactory = std::function< DialogFactoryResults(
    EffectSettingsAccess &) >;
 
 class AUDACITY_DLL_API Effect /* not final */
-   : public wxEvtHandler
-   , public EffectBase
+   : public EffectBase
 {
  //
  // public methods

@@ -16,13 +16,14 @@
 
 #include "StatefulEffectBase.h"
 #include "Effect.h"
+#include "StatefulEffectUIServices.h"
 
 //! Subclass of Effect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
 class StatefulEffect
    : public StatefulEffectBase
    , public Effect
-   , public BasicEffectUIServices
+   , public StatefulEffectUIServices
 {
 public:
    class AUDACITY_DLL_API Instance : public StatefulEffectBase::Instance {
@@ -40,11 +41,6 @@ public:
    ~StatefulEffect() override;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-
-   //! Allows PopulateOrExchange to return null
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
 };
 
 #endif

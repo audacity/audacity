@@ -16,7 +16,6 @@
 
 #include "EffectPlugin.h"
 
-class EffectEditor;
 class sampleCount;
 
 //! A mix-in class for effects that are not yet migrated to statelessness.
@@ -62,15 +61,6 @@ public:
       StatefulEffectBase &mEffect;
       StatefulEffectBase &GetEffect() const { return mEffect; }
    };
-
-   //! Add controls to effect panel; always succeeds
-   /*!
-    @return if not null, then return it from PopulateUI instead of a
-    DefaultEffectEditor; default implementation returns null
-    */
-   virtual std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs);
 
    /*!
      @copydoc EffectInstance::Init()

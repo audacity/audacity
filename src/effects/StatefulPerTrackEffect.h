@@ -16,13 +16,14 @@
 
 #include "PerTrackEffect.h" // to inherit
 #include "StatefulEffectBase.h" // to inherit
+#include "StatefulEffectUIServices.h" // to inherit
 
 //! Subclass of PerTrackEffect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
 class StatefulPerTrackEffect
    : public StatefulEffectBase
    , public PerTrackEffect
-   , public BasicEffectUIServices
+   , public StatefulEffectUIServices
 {
 public:
 
@@ -57,11 +58,6 @@ public:
    ~StatefulPerTrackEffect() override;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-
-   //! Allows PopulateOrExchange to return null
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
