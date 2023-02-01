@@ -522,16 +522,6 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
       region, mUIFlags, nullptr);
 }
 
-bool Effect::TransferDataToWindow(const EffectSettings &)
-{
-   return true;
-}
-
-bool Effect::TransferDataFromWindow(EffectSettings &)
-{
-   return true;
-}
-
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?

@@ -155,8 +155,6 @@ class AUDACITY_DLL_API Effect /* not final */
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;
    void UnsetBatchProcessing() override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // Effect implementation
 
