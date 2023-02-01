@@ -19,7 +19,8 @@
 #include <optional>
 
 #include "Identifier.h"
-#include "Effect.h" // for DialogFactoryResults
+#include "EffectUIServices.h" // for DialogFactoryResults
+#include "EffectPlugin.h" // for its nested types
 #include "Observer.h"
 #include "PluginInterface.h"
 #include "commands/CommandManagerWindowClasses.h"

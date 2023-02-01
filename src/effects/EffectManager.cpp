@@ -20,6 +20,7 @@ effects.
 
 
 #include "EffectManager.h"
+#include "Effect.h"
 
 #include <algorithm>
 
