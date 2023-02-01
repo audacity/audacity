@@ -13,41 +13,29 @@
 #ifndef __AUDACITY_STATEFUL_EFFECT_UI_SERVICES__
 #define __AUDACITY_STATEFUL_EFFECT_UI_SERVICES__
 
-#include "EffectEditor.h"
+#include "Effect.h"
+#include <wx/event.h>
 
-class EffectPlugin;
-class StatefulEffectBase;
-
-//! Default implementation of EffectEditor invokes ValidateUI
-//! method of an EffectUIServices
-/*
- Also pops the even handler stack of a window, if given to the contructor
-
- This is a transitional class; it should be eliminated when all effect classes
- define their own associated subclasses of EffectEditor, which can hold
- state only for the lifetime of a dialog, so the effect object need not hold it
-*/
-class DefaultEffectEditor
-   : public EffectEditor
-   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
-   , protected wxEvtHandler
+class StatefulEffectUIServices
+   : public wxEvtHandler
+   , public BasicEffectUIServices
 {
 public:
+   ~StatefulEffectUIServices() override;
+
+   //! Allows PopulateOrExchange to return null
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const override;
+
+   //! Add controls to effect panel; always succeeds
    /*!
-    @param pParent if not null, caller will push an event handler onto this
-    window; then this object is responsible to pop it
+    @return if not null, then return it from PopulateUI instead of a
+    DefaultEffectEditor; default implementation returns null
     */
-   DefaultEffectEditor(const EffectPlugin &plugin,
-      EffectUIServices &services, EffectSettingsAccess &access,
-      wxWindow *pParent = nullptr);
-   //! Calls Disconnect
-   ~DefaultEffectEditor() override;
-   //! Calls mServices.ValidateUI()
-   bool ValidateUI() override;
-   void Disconnect() override;
-protected:
-   const EffectPlugin &mPlugin;
-   wxWindow *mpParent{};
+   virtual std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs);
 };
 
 #endif
