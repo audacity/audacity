@@ -346,12 +346,14 @@ bool EffectManager::PromptUser(
       std::shared_ptr<EffectInstance> pInstance;
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
-      if (const auto pSettings = GetDefaultSettings(ID))
-         result = effect->ShowHostInterface(
+      if (const auto pSettings = GetDefaultSettings(ID)) {
+         const auto pServices = dynamic_cast<EffectUIServices *>(effect);
+         result = pServices && pServices->ShowHostInterface(*effect,
             parent, factory,
             pInstance,
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;
+      }
       return result;
    }
 
