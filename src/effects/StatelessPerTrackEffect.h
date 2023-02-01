@@ -11,6 +11,7 @@
 #define __AUDACITY_STATELESS_PER_TRACK_EFFECT__
 
 #include "PerTrackEffect.h"
+#include "BasicEffectUIServices.h"
 
 class StatelessEffectUIServices
    : public BasicEffectUIServices

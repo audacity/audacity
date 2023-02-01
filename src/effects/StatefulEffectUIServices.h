@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_STATEFUL_EFFECT_UI_SERVICES__
 #define __AUDACITY_STATEFUL_EFFECT_UI_SERVICES__
 
-#include "Effect.h"
+#include "BasicEffectUIServices.h"
 #include <wx/event.h>
 
 class StatefulEffectUIServices

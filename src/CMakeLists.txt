@@ -384,6 +384,8 @@ list( APPEND SOURCES
       effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
+      effects/BasicEffectUIServices.cpp
+      effects/BasicEffectUIServices.h
       effects/BassTreble.cpp
       effects/BassTreble.h
       effects/Biquad.cpp
