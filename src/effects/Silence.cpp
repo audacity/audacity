@@ -12,9 +12,8 @@
 \brief An effect to add silence.
 
 *//*******************************************************************/
-
-
 #include "Silence.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include "../ShuttleGui.h"

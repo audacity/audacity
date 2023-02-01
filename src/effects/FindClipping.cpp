@@ -17,10 +17,8 @@
 \brief FindClippingDialog used with EffectFindClipping
 
 *//*******************************************************************/
-
-
-
 #include "FindClipping.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

@@ -23,9 +23,8 @@
   and/or distribute it under the same terms as Audacity itself.
 
 *//*******************************************************************/
-
-
 #include "ClickRemoval.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>

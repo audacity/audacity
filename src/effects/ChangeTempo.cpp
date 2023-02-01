@@ -14,11 +14,9 @@
   slowing down tempo without changing pitch.
 
 *//*******************************************************************/
-
-
-
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"
+#include "EffectEditor.h"
 
 #if USE_SBSMS
 #include <wx/valgen.h>

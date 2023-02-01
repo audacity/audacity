@@ -23,9 +23,8 @@
 \brief Panel used within the EffectCompressor for EffectCompressor.
 
 *//*******************************************************************/
-
-
 #include "Compressor.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
