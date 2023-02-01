@@ -11,7 +11,7 @@
 
 **********************************************************************/
 #include "EffectUI.h"
-#include "EffectUIServices.h"
+#include "StatefulEffectUIServices.h"
 #include "EffectEditor.h"
 
 #include "AllThemeResources.h"
@@ -275,7 +275,9 @@ EffectUIHost::~EffectUIHost()
 bool EffectUIHost::TransferDataToWindow()
 {
    // Transfer-to takes const reference to settings
-   return mEffectUIHost.TransferDataToWindow(mpAccess->Get()) &&
+   const auto pServices =
+      dynamic_cast<StatefulEffectUIServices*>(&mEffectUIHost);
+   return (!pServices || pServices->TransferDataToWindow(mpAccess->Get())) &&
       //! Do other appearance updates
       mpEditor->UpdateUI() &&
       //! Do validators
@@ -299,8 +301,10 @@ bool EffectUIHost::TransferDataFromWindow()
    // Transfer-from takes non-const reference to settings
    bool result = true;
    mpAccess->ModifySettings([&](EffectSettings &settings){
+      const auto pServices =
+         dynamic_cast<StatefulEffectUIServices*>(&mEffectUIHost);
       // Allow other transfers, and reassignment of settings
-      result = mEffectUIHost.TransferDataFromWindow(settings);
+      result = (!pServices || pServices->TransferDataFromWindow(settings));
       if (result) {
          auto &definition = mEffectUIHost.GetDefinition();
          if (definition.GetType() == EffectTypeGenerate) {

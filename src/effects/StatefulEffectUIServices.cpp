@@ -114,3 +114,13 @@ std::unique_ptr<EffectEditor> StatefulEffectUIServices::PopulateOrExchange(
 {
    return nullptr;
 }
+
+bool StatefulEffectUIServices::TransferDataToWindow(const EffectSettings &)
+{
+   return true;
+}
+
+bool StatefulEffectUIServices::TransferDataFromWindow(EffectSettings &)
+{
+   return true;
+}

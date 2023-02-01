@@ -36,6 +36,14 @@ public:
    virtual std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs);
+
+   //! Update controls for the settings;
+   //! default does nothing, returns true
+   virtual bool TransferDataToWindow(const EffectSettings &settings);
+
+   //! Update the given settings from controls;
+   //! default does nothing, returns true
+   virtual bool TransferDataFromWindow(EffectSettings &settings);
 };
 
 #endif
