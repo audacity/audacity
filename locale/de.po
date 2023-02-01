@@ -29,7 +29,7 @@
 # valsu <valsu@hylia.de>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.2.4\n"
+"Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2023-01-31 00:32+0000\n"
@@ -108,7 +108,7 @@ msgstr "Absturzbericht konnte nicht gesendet werden"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "Stream ist aktiv … Informationen können nicht zusammengestellt werden.\n"
+msgstr "Stream ist aktiv ... Informationen können nicht zusammengestellt werden.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 #, c-format
@@ -15608,7 +15608,7 @@ msgstr "Befehlssatz"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
-msgstr "SSE/SSE2/…/AVX &verwenden"
+msgstr "SSE/SSE2/.../AVX &verwenden"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
