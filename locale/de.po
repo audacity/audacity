@@ -1,38 +1,26 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) 2023 Audacity Team
 # This file is distributed under the same license as the audacity package.
 #
 # Translators:
-# 39185eb5873c356f8ca1bdf1533d87ba, 2016
-# 6f148e04118603d5c67a618be9006666, 2012
-# 98b8e15effca642887a45c67ee7b17ec_412e51f, 2013
-# 5527760c8f29b02a470a5ee3b26b73e8_231f8d9 <ceb449f1811ff367b2235286902d5d43_32261>, 2012-2013,2015
 # Ettore Atalan <atalanttore@googlemail.com>, 2014-2020
-# 39185eb5873c356f8ca1bdf1533d87ba, 2016
-# Friederike Schertel, 2018
 # Friederike Schertel, 2018
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2022-2023
 # Heiko Abler <dj@audacity.de>, 2003
 # jhuffer <joachim.huffer@gmail.com>, 2020-2022
 # Martin H <pilino@posteo.de>, 2016
-# Martin H <pilino@posteo.de>, 2016
-# Michał Trzebiatowski <michtrz@gmail.com>, 2014
 # Michał Trzebiatowski <michtrz@gmail.com>, 2014,2016-2017
-# Martin H <pilino@posteo.de>, 2016
 # Shinrai, 2013
-# 98b8e15effca642887a45c67ee7b17ec_412e51f, 2013
 # Stefan Niedermann, 2013-2014
 # Tobias Bannert <tobannert@gmail.com>, 2014-2016,2018
 # Tobias Frei <tobias@freiwuppertal.de>, 2012
-# 6f148e04118603d5c67a618be9006666, 2012
-# valsu <valsu@hylia.de>, 2015
 # valsu <valsu@hylia.de>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
-"PO-Revision-Date: 2023-01-31 00:32+0000\n"
+"PO-Revision-Date: 2023-02-01 20:26+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
