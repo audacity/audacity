@@ -1333,8 +1333,11 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
             std::shared_ptr<EffectInstance> pInstance;
             std::shared_ptr<EffectInstanceEx> pInstanceEx;
             if ((flags & EffectManager::kConfigured) == 0 && pAccess) {
-               if (!effect->ShowHostInterface(
-                  window, DialogFactory, pInstance, *pAccess, true ) )
+               const auto pServices = dynamic_cast<EffectUIServices *>(effect);
+               if (!pServices ||
+                   !pServices->ShowHostInterface(*effect,
+                  window, DialogFactory, pInstance, *pAccess, true)
+               )
                   return {};
                else if (!(pInstanceEx =
                   std::dynamic_pointer_cast<EffectInstanceEx>(pInstance)

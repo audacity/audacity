@@ -19,12 +19,26 @@ class EffectInstance;
 class EffectPlugin;
 class EffectSettings;
 class EffectOutputs;
+class EffectUIServices;
 class ShuttleGui;
 class wxWindow;
 class wxDialog;
 
 using OptionalMessage =
    std::optional<std::unique_ptr<EffectSettingsAccess::Message>>;
+
+struct DialogFactoryResults {
+   wxDialog *pDialog{};
+   //! constructed and successfully Init()-ed; or null for failure
+   std::shared_ptr<EffectInstance> pInstance{};
+   EffectEditor *pEditor{};
+};
+
+//! Type of function that creates a dialog for an effect
+/*! The dialog may be modal or non-modal */
+using EffectDialogFactory = std::function< DialogFactoryResults(
+   wxWindow &parent, EffectPlugin &, EffectUIServices &,
+   EffectSettingsAccess &) >;
 
 //! Abstract base class to populate a UI and validate UI values.
 //! It can import and export presets.
@@ -40,6 +54,27 @@ public:
       const TranslatableString &titleStr = {});
 
    virtual ~EffectUIServices();
+
+   //! The only non-const member function,
+   //! it usually applies factory to plugin and self and given access
+   /*!
+    But there are a few unusual overrides for historical reasons that may ignore
+    the factory.
+
+    @param pInstance may be passed to factory, and is only guaranteed to have
+    lifetime suitable for a modal dialog, unless the dialog stores a copy of
+    pInstance
+
+    @param access is only guaranteed to have lifetime suitable for a modal
+    dialog, unless the dialog stores access.shared_from_this()
+
+    @return 0 if destructive effect processing should not proceed (and there
+    may be a non-modal dialog still opened); otherwise, modal dialog return code
+    */
+   virtual int ShowHostInterface(EffectPlugin &plugin,
+      wxWindow &parent, const EffectDialogFactory &factory,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
+      bool forceModal = false);
 
    /*!
     @return 0 if destructive effect processing should not proceed (and there

@@ -129,41 +129,6 @@ int BasicEffectUIServices::ShowClientInterface(const EffectPlugin &plugin,
    return dialog.ShowModal();
 }
 
-int Effect::ShowHostInterface(wxWindow &parent,
-   const EffectDialogFactory &factory,
-   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
-   bool forceModal)
-{
-   if (!IsInteractive())
-      // Effect without UI just proceeds quietly to apply it destructively.
-      return wxID_APPLY;
-
-   // Create the dialog
-   // Host, not client, is responsible for invoking the factory and managing
-   // the lifetime of the dialog.
-   // The usual factory lets the client (which is this, when self-hosting)
-   // populate it.  That factory function is called indirectly through a
-   // std::function to avoid source code dependency cycles.
-   const auto client = dynamic_cast<EffectUIServices*>(this);
-   if (!client)
-      return 0;
-   auto results = factory(parent, *this, *client, access);
-   auto pDialog = results.pDialog;
-   pInstance = results.pInstance;
-   if (!pDialog)
-      return 0;
-
-   // Let the client show the dialog and decide whether to keep it open
-   auto result = client->ShowClientInterface(*this, parent, *pDialog,
-      results.pEditor, forceModal);
-   if (pDialog && !pDialog->IsShown())
-      // Client didn't show it, or showed it modally and closed it
-      // So destroy it.
-      pDialog->Destroy();
-
-   return result;
-}
-
 bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
    Parameters().Visit(*this, visitor, settings);
