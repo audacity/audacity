@@ -15,9 +15,8 @@
 \brief a struct that holds a start and end time.
 
 *******************************************************************/
-
-
 #include "AutoDuck.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
