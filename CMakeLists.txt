@@ -605,6 +605,10 @@ endif()
 
 add_subdirectory( "help" )
 
+if(${_OPT}has_crashreports)
+   add_subdirectory( "crashreporter" )
+endif()
+
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
@@ -612,10 +616,6 @@ add_subdirectory( "src" )
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
-
-if(${_OPT}has_crashreports)
-   add_subdirectory( "crashreporter" )
-endif()
 
 add_subdirectory( "tests/journals" )
 

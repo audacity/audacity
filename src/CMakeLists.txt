@@ -1248,6 +1248,28 @@ set( LIBRARIES
       $<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
 )
 
+if( ${_OPT}has_crashreports )
+   add_dependencies(${TARGET} crashreporter)
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -E copy $<TARGET_FILE:crashreporter> ${_DESTDIR}/${_EXEDIR}/$<TARGET_FILE_NAME:crashreporter>
+      POST_BUILD
+   )
+   if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+      add_custom_command(
+         TARGET
+            ${TARGET}
+         COMMAND
+            ${PYTHON}
+            ${CMAKE_SOURCE_DIR}/scripts/build/macOS/fix_bundle.py
+            ${_DESTDIR}/${_EXEDIR}/$<TARGET_FILE_NAME:crashreporter>
+         POST_BUILD
+      )
+   endif()
+endif()
+
 set( BUILDING_AUDACITY YES )
 set( PKGLIBDIR "${_PKGLIBDIR}" )
 set( LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}" )
