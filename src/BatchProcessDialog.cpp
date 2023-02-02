@@ -1533,7 +1533,7 @@ BaseItemSharedPtr PluginMenuItems()
 {
    using Options = CommandManager::Options;
    static BaseItemSharedPtr items{
-   Items( "",
+   Items( "Macros",
       Section( "RepeatLast",
          // Delayed evaluation:
          [](AudacityProject &project)
