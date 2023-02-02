@@ -378,6 +378,18 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
    },
 
    {
+   /* i18n-hint: Name of time display format that shows time in seconds
+    * and milliseconds (1/1000 second) */
+   { XO("seconds + milliseconds") },
+   /* i18n-hint: Format string for displaying time in seconds and milliseconds 
+    * as fractional seconds. Change the comma in the middle to the 1000s separator
+    * for your locale, and the 'seconds' on the end to the word for seconds.
+    * Don't change the numbers. The decimal separator is specified using '<' if
+    * your languages uses a ',' or to '>' if your language uses a '.'. */
+   XO("01000,01000>01000 seconds")
+   },
+
+   {
    /* i18n-hint: Name of time display format that shows time in hours, minutes
     * and seconds */
    { XO("hh:mm:ss") },
