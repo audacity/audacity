@@ -43,6 +43,14 @@ struct EqualizationParameters {
    wxString mCurveName;
    float mdBMin;
    float mdBMax;
+   /*!
+   The parameter for the length of the finite impulse response.
+   It used to be adjustable by the user. Define LEGACY_EQ above to see how the
+   old effect was, combining the sliders and curve view in one.
+   You can see how changing M makes the blue curve approximate the green curve
+   more or less. A longer impulse reponse allows a closer approximation to the
+   curve the user specifies, but may make longer ringing artifacts.
+    */
    size_t mM;
    int mInterp;
    bool mDrawMode;
