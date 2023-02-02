@@ -41,7 +41,7 @@ int EffectUIServices::ShowHostInterface(EffectPlugin &plugin,
    return result;
 }
 
-int EffectUIServices::MessageBox(const EffectPlugin &plugin,
+int EffectUIServices::DoMessageBox(const EffectPlugin &plugin,
    const TranslatableString& message,
    long style, const TranslatableString &titleStr)
 {

@@ -142,14 +142,14 @@ OptionalMessage BasicEffectUIServices::ImportPresets(
          if ((params.Length() < 2 ) || (ident.Length() < 2) ||
              (ident.Length() > 30))
          {
-            EffectUIServices::MessageBox(plugin,
+            EffectUIServices::DoMessageBox(plugin,
                /* i18n-hint %s will be replaced by a file name */
                XO("%s: is not a valid presets file.\n")
                .Format(wxFileNameFromPath(path)));
          }
          else
          {
-            EffectUIServices::MessageBox(plugin,
+            EffectUIServices::DoMessageBox(plugin,
                /* i18n-hint %s will be replaced by a file name */
                XO("%s: is for a different Effect, Generator or Analyzer.\n")
                .Format(wxFileNameFromPath(path)));
