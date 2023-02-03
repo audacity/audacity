@@ -3571,7 +3571,7 @@ msgstr "Continuer"
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity a trouvé %d greffons incompatibles qui ne peuvent pas être chargés. Nous les avons désactivés pour éviter les blocages ou les plantages. Si vous souhaitez toujours essayer d'utiliser ces greffons, vous pouvez les activer en utilisant \"Gérer les greffons\". Sinon, selectionner \"Continuer\"
+msgstr "Audacity a trouvé %d greffons incompatibles qui ne peuvent pas être chargés. Nous les avons désactivés pour éviter les blocages ou les plantages. Si vous souhaitez toujours essayer d'utiliser ces greffons, vous pouvez les activer en utilisant \"Gérer les greffons\". Sinon, selectionner \"Continuer\"."
 
 #: src/JournalEvents.cpp
 #, fuzzy
@@ -5115,7 +5115,7 @@ msgstr "Inconnu"
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "No Effect"
-msgstr "Effet"
+msgstr "Pas d'effet"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -5125,12 +5125,12 @@ msgstr "Obtenir les préférences…"
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Add effect"
-msgstr "Tous les effets"
+msgstr "Ajouter un effet"
 
 #. i18n-hint: Hyperlink to the effects stack panel tutorial video
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
-msgstr ""
+msgstr "Regarder la vidéo"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
