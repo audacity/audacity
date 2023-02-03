@@ -152,6 +152,10 @@ if( ${_OPT}conan_enabled )
       set( _force_build "--force-build")
    endif()
 
+   if( NOT ${_OPT}conan_allow_prebuilt_binaries )
+      set( _disallow_prebuilt "--disallow-prebuilt")
+   endif()
+
    # Deduce the target architecture
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       set( _target_arch ${MACOS_ARCHITECTURE} )
@@ -185,6 +189,7 @@ if( ${_OPT}conan_enabled )
          --build-arch ${CMAKE_HOST_SYSTEM_PROCESSOR}
          ${_libdir}
          ${_force_build}
+         ${_disallow_prebuilt}
          ${_download_cache}
          ${_min_macos_version}
          -o ${conan_package_options}
