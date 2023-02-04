@@ -40,7 +40,7 @@ std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(const TrackList &tracks,
                   Mixer::WarpOptions{ tracks.GetOwner() },
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
-                  outRate, outFormat,
+                  outRate, outFormat, true, // double buffers
                   true, mixerSpec);
 }
 

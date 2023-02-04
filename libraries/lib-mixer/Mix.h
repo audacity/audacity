@@ -53,16 +53,21 @@ class MIXER_API Mixer {
     @pre any left channels in inputs are immediately followed by their
        partners
     @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
+    @post `HasDoubleBuffers() == doubleBuffers`
+
+    @param doubleBuffers whether to allocate a second set of output buffers
+    and enable swapping
     */
    Mixer(Inputs inputs, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
+         bool doubleBuffers = false,
          bool highQuality = true,
          //! Null or else must have a lifetime enclosing this object's
          MixerSpec *mixerSpec = nullptr,
-         bool applytTrackGains = true);
+         bool applyTrackGains = true);
 
    Mixer(const Mixer&) = delete;
    Mixer &operator=(const Mixer&) = delete;
@@ -70,6 +75,7 @@ class MIXER_API Mixer {
    virtual ~ Mixer();
 
    size_t BufferSize() const { return mBufferSize; }
+   bool HasDoubleBuffers() const { return !mAltBuffer.empty(); }
 
    //
    // Processing
@@ -107,6 +113,12 @@ class MIXER_API Mixer {
 
    //! Retrieve one of the non-interleaved buffers
    constSamplePtr GetBuffer(int channel);
+
+   //! Swap the output buffer in use
+   /*!
+    @pre `HasDoubleBuffers()`
+    */
+   void SwapBuffers();
 
    //! Deduce the effective width of the output, which may be narrower than the stored format
    sampleFormat EffectiveFormat() const;
@@ -152,7 +164,10 @@ class MIXER_API Mixer {
    std::vector<std::vector<float>> mTemp;
 
    // Final result applies dithering and interleaving
-   const std::vector<SampleBuffer> mBuffer;
+   std::vector<SampleBuffer> mBuffer;
+
+   // If not null, can swap with mBuffer
+   std::vector<SampleBuffer> mAltBuffer;
 
    std::vector<MixerSource> mSources;
    std::vector<EffectSettings> mSettings;

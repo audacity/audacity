@@ -75,6 +75,7 @@ Mixer::Mixer(Inputs inputs,
    const unsigned numOutChannels,
    const size_t outBufferSize, const bool outInterleaved,
    double outRate, sampleFormat outFormat,
+   const bool doubleBuffers,
    const bool highQuality, MixerSpec *const mixerSpec,
    const bool applyTrackGains
 )  : mNumChannels{ numOutChannels }
@@ -99,13 +100,20 @@ Mixer::Mixer(Inputs inputs,
 
    // non-interleaved
    , mTemp{ initVector<float>(mNumChannels, mBufferSize) }
-   , mBuffer{ initVector<SampleBuffer>(mInterleaved ? 1 : mNumChannels,
-      [format = mFormat,
-         size = mBufferSize * (mInterleaved ? mNumChannels : 1)
-      ](auto &buffer){ buffer.Allocate(size, format); }
-   )}
    , mEffectiveFormat{ floatSample }
 {
+   {
+      auto f = [format = mFormat,
+         size = mBufferSize * (mInterleaved ? mNumChannels : 1)
+      ](auto &buffer){
+         buffer.Allocate(size, format);
+      };
+      mBuffer = initVector<SampleBuffer>(mInterleaved ? 1 : mNumChannels, f);
+      if (doubleBuffers)
+         mAltBuffer =
+            initVector<SampleBuffer>(mInterleaved ? 1 : mNumChannels, f);
+   }
+
    assert(BufferSize() <= outBufferSize);
    const auto nChannelsIn =
    std::accumulate(mInputs.begin(), mInputs.end(), size_t{},
@@ -375,6 +383,12 @@ constSamplePtr Mixer::GetBuffer()
 constSamplePtr Mixer::GetBuffer(int channel)
 {
    return mBuffer[channel].ptr();
+}
+
+void Mixer::SwapBuffers()
+{
+   assert(HasDoubleBuffers());
+   mBuffer.swap(mAltBuffer);
 }
 
 sampleFormat Mixer::EffectiveFormat() const
