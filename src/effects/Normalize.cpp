@@ -36,7 +36,7 @@
 const EffectParameterMethods& EffectNormalize::Parameters() const
 {
    static CapturedParameters<EffectNormalize,
-      PeakLevel, ApplyGain, RemoveDC, StereoInd
+      PeakLevel, ApplyGain, RemoveDC, StereoInd, TrackInd
    > parameters;
    return parameters;
 }
@@ -282,6 +282,13 @@ std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
                .Validator<wxGenericValidator>(&mStereoInd)
                .AddCheckBox(XXO("N&ormalize stereo channels independently"),
                                                mStereoInd);
+
+            // TODO: better alignment on dialog; this is sort of crammed in at the bottom.
+            mTrackIndCheckBox = S
+               .Validator<wxGenericValidator>(&mTrackInd)
+               .AddCheckBox(XXO("Normalize &tracks independently"),
+                                               mTrackInd);
+
          }
          S.EndVerticalLay();
       }
@@ -508,7 +515,8 @@ void EffectNormalize::UpdateUI()
    // Disallow level stuff if not normalizing
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
-   mStereoIndCheckBox->Enable(mGain);
+   mStereoIndCheckBox->Enable(mGain /*&& mTrackIndCheckBox->IsChecked()*/ /* TODO */);
+   mTrackIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
    EnableApply(mGain || mDC);

@@ -88,6 +88,7 @@ private:
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
+   bool   mTrackInd;
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
@@ -95,6 +96,7 @@ private:
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
+   wxCheckBox* mTrackIndCheckBox;
    bool mCreating;
 
    const EffectParameterMethods& Parameters() const override;
@@ -108,6 +110,8 @@ static constexpr EffectParameter ApplyGain{ &EffectNormalize::mGain,
    L"ApplyGain",           true,    false,   true, 1  };
 static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
    L"StereoIndependent",   false,   false,   true, 1  };
+static constexpr EffectParameter TrackInd{ &EffectNormalize::mTrackInd,
+   L"TrackIndependent",    true,    false,   true, 1 };
 };
 
 #endif
