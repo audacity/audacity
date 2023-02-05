@@ -673,7 +673,6 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
                wxT("Size_limits_for_WAV_and_AIFF_files"));
          }
       }
-
       
       context.status = (selectionOnly
          ? XO("Exporting the selected audio as %s")
@@ -695,18 +694,22 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
    delegate.SetStatusString(context.status);
 
    auto exportResult = ExportResult::Success;
-   
+
    {
       std::vector<char> dither;
       if ((context.info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
-         dither.reserve(maxBlockLen * context.info.channels * SAMPLE_SIZE(int24Sample));
+         dither.reserve(
+            maxBlockLen * context.info.channels * SAMPLE_SIZE(int24Sample));
       }
 
-      while (exportResult == ExportResult::Success) {
-         sf_count_t samplesWritten;
+      struct Data {
+         constSamplePtr mixed;
+         size_t numSamples;
+      };
+      auto source = [&]() -> std::optional<Data> {
          size_t numSamples = context.mixer->Process();
          if (numSamples == 0)
-            break;
+            return {};
 
          auto mixed = context.mixer->GetBuffer();
 
@@ -716,21 +719,32 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                CopySamples(
                   mixed + (c * SAMPLE_SIZE(context.format)), context.format,
                   dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
-                  numSamples, gHighQualityDither, context.info.channels, context.info.channels
+                  numSamples, gHighQualityDither,
+                  context.info.channels, context.info.channels
                );
                // Copy back without dither
                CopySamples(
                   dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
                   const_cast<samplePtr>(mixed) // PRL fix this!
                      + (c * SAMPLE_SIZE(context.format)), context.format,
-                  numSamples, DitherType::none, context.info.channels, context.info.channels);
+                  numSamples, DitherType::none,
+                  context.info.channels, context.info.channels);
             }
          }
+         return { { mixed, numSamples } };
+      };
 
+      struct Stop{};
+
+      auto sink = [&](const Data &input) {
+         auto &[mixed, numSamples] = input;
+         sf_count_t samplesWritten{};
          if (context.format == int16Sample)
-            samplesWritten = SFCall<sf_count_t>(sf_writef_short, context.sf, (const short *)mixed, numSamples);
+            samplesWritten =
+               SFCall<sf_count_t>(sf_writef_short, context.sf, (const short *)mixed, numSamples);
          else
-            samplesWritten = SFCall<sf_count_t>(sf_writef_float, context.sf, (const float *)mixed, numSamples);
+            samplesWritten =
+               SFCall<sf_count_t>(sf_writef_float, context.sf, (const float *)mixed, numSamples);
 
          if (static_cast<size_t>(samplesWritten) != numSamples) {
             char buffer2[1000];
@@ -754,14 +768,22 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                   FileException::Cause::Write, context.fName }; });
 #endif
             exportResult = ExportResult::Error;
-            break;
          }
-         if(exportResult == ExportResult::Success)
+         else if(exportResult == ExportResult::Success)
             exportResult = ExportPluginHelpers::UpdateProgress(
                delegate, *context.mixer, context.t0, context.t1);
+         if (exportResult != ExportResult::Success)
+            throw Stop{};
+      };
+
+      try {
+         while (auto data = source())
+            sink(*data);
+      }
+      catch (const Stop &) {
       }
    }
-   
+
    // Install the WAV metata in a "LIST" chunk at the end of the file
    if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
       if (context.fileFormat == SF_FORMAT_WAV ||
