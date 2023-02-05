@@ -121,10 +121,14 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    else if(!mDC && !mGain)
       topMsg = XO("Not doing anything...\n");   // shouldn't get here
 
-   for ( auto track : mOutputTracks->Selected< WaveTrack >()
-            + ( mStereoInd ? &Track::Any : &Track::IsLeader ) ) {
+   std::vector<NormParams> tasks;
+
+   // first analyze each track for maximum values
+   for (auto track : mOutputTracks->Selected< WaveTrack >()
+        + (mStereoInd ? &Track::Any : &Track::IsLeader)) {
 
       NormParams cur;
+      cur.mTrack = track;
 
       //Get start and end times from track
       // PRL:  No accounting for multiple channels?
@@ -178,32 +182,53 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
          else
             cur.mMult = 1.0;
 
-         if (range.size() == 1) {
-            if (TrackList::Channels(track).size() == 1)
-               // really mono
-               msg = topMsg +
-                  XO("Processing: %s").Format( trackName );
-            else
-               //'stereo tracks independently'
-               // TODO: more-than-two-channels-message
-               msg = topMsg +
-                  XO("Processing stereo channels independently: %s").Format( trackName );
-         }
-         else
-            msg = topMsg +
-               // TODO: more-than-two-channels-message
-               XO("Processing first track of stereo pair: %s").Format( trackName );
+         // actual normalization will be applied below.
+         tasks.push_back(cur);
 
-         // Use multiplier in the second, processing loop over channels
-         auto pOffset = cur.mOffsets.begin();
-         for (auto channel : range) {
-            if (false ==
-                (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++, cur)) )
-               goto break2;
+      }
+
+   }
+
+   // now apply normalization to each track
+   for (const auto &params : tasks) {
+
+      auto track = params.mTrack;
+
+      auto range = mStereoInd
+         ? TrackList::SingletonRange(track)
+         : TrackList::Channels(track);
+
+      assert(params.mCurT1 > params.mCurT0);
+      assert(range.size() == params.mOffsets.size());
+
+      wxString trackName = track->GetName();
+      TranslatableString msg;
+
+      if (range.size() == 1) {
+         if (TrackList::Channels(track).size() == 1)
+            // really mono
+            msg = topMsg +
+               XO("Processing: %s").Format( trackName );
+         else
+            //'stereo tracks independently'
             // TODO: more-than-two-channels-message
             msg = topMsg +
-               XO("Processing second track of stereo pair: %s").Format( trackName );
-         }
+               XO("Processing stereo channels independently: %s").Format( trackName );
+      }
+      else
+         msg = topMsg +
+            // TODO: more-than-two-channels-message
+            XO("Processing first track of stereo pair: %s").Format( trackName );
+
+      // Use multiplier in the second, processing loop over channels
+      auto pOffset = params.mOffsets.begin();
+      for (auto channel : range) {
+         if (false ==
+               (bGoodResult = ProcessOne(channel, msg, progress, *pOffset++, params)) )
+            goto break2;
+         // TODO: more-than-two-channels-message
+         msg = topMsg +
+            XO("Processing second track of stereo pair: %s").Format( trackName );
       }
    }
 
