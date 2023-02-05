@@ -58,6 +58,7 @@ set( LIBRARIES
    lib-mixer
    lib-channel
    lib-stretching-sequence
+   lib-concurrency
 )
 
 if ( ${_OPT}has_networking )
