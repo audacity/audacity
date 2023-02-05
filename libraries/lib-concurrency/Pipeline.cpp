@@ -10,14 +10,11 @@
 #include "Pipeline.h"
 
 #include <algorithm>
-#include <optional>
 #include <thread>
 // C++20 use std::counting_semaphore not wxSemaphore
 #include <wx/log.h>
 #include <wx/thread.h>
-#include "Callable.h"
 #include "MemoryX.h"
-#include "Variant.h"
 
 namespace TaskParallel {
 namespace detail {
