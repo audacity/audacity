@@ -524,7 +524,7 @@ void EffectNormalize::UpdateUI()
    // Disallow level stuff if not normalizing
    mLevelTextCtrl->Enable(mGain);
    mLeveldB->Enable(mGain);
-   mStereoIndCheckBox->Enable(mGain /*&& mTrackIndCheckBox->IsChecked()*/ /* TODO */);
+   mStereoIndCheckBox->Enable(mGain && mTrackIndCheckBox->IsChecked());
    mTrackIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
