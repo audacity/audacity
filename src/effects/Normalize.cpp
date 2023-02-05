@@ -189,6 +189,15 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
 
    }
 
+   // if linking all tracks, use the minimum of all the multipliers
+   if (!mTrackInd && !tasks.empty()) {
+      auto minMult = tasks[0].mMult;
+      for (auto k = 1; k < tasks.size(); ++k)
+         minMult = std::min(minMult, tasks[k].mMult);
+      for (auto& params : tasks)
+         params.mMult = minMult;
+   }
+
    // now apply normalization to each track
    for (const auto &params : tasks) {
 
