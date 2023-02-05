@@ -543,15 +543,15 @@ template< typename T > struct NonInterfering
    using T::T;
 
    //! Allow assignment from default-aligned base type
-   void Set(const T &other)
+   T& Assign(const T &other)
    {
-      T::operator =(other);
+      return T::operator =(other);
    }
 
    //! Allow assignment from default-aligned base type
-   void Set(T &&other)
+   T& Assign(T &&other)
    {
-      T::operator =(std::move(other));
+      return T::operator =(std::move(other));
    }
 };
 

@@ -296,7 +296,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             // Finalize(), but after it is confirmed that any worker thread has
             // seen the values given to the last Set().  These values will also
             // be returned by Get().
-            pState->mMainSettings.Set(pAccessState->mLastSettings);
+            pState->mMainSettings.Assign(pAccessState->mLastSettings);
          }
       }
    }
