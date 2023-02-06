@@ -57,6 +57,7 @@ private:
 class ModelManagerPanel final : public wxPanelWrapper
 {
    CardFetchedCallback GetCardFetchedCallback();
+   CardFetchedCallback GetNewCardCallback();
 
 public:
    ModelManagerPanel(wxWindow *parent, Effect *effect,

@@ -29,6 +29,7 @@
 #include <wx/hyperlink.h>
 
 #include "widgets/AudacityTextEntryDialog.h"
+#include "widgets/ErrorDialog.h"
 #include "Internat.h"
 #include "AllThemeResources.h"
 #include "Theme.h"
@@ -142,6 +143,27 @@ CardFetchedCallback ModelManagerPanel::GetCardFetchedCallback()
    return onCardFetched;
 }
 
+CardFetchedCallback ModelManagerPanel::GetNewCardCallback()
+{
+   auto wthis = wxWeakRef(this);
+   CardFetchedCallback onNewCardFetched = [wthis](ModelCardHolder card)
+   {
+      // bail if we've been deleted
+      if (!wthis)
+         return;
+      bool found = wthis->mPanels.find(card->GetRepoID()) != wthis->mPanels.end();
+      bool effectTypeMatches = card->effect_type() == wthis->mDeepEffectID;
+      if (found)
+         throw InvalidModelCardDocument(XO("The model specified is already downloaded."));
+      else if (!effectTypeMatches)
+         throw InvalidModelCardDocument(XO("The model type specified does not match the effect type."));
+      else if (!found && effectTypeMatches)
+         wthis->AddCard(card);
+   };
+
+   return onNewCardFetched;
+}
+
 void ModelManagerPanel::FetchCards()
 {
    DeepModelManager &manager = DeepModelManager::Get();
@@ -150,6 +172,7 @@ void ModelManagerPanel::FetchCards()
    // prioritize local cards first
    manager.FetchLocalCards(onCardFetched);
    manager.FetchHuggingFaceCards(onCardFetched);
+   
 }
 
 void ModelManagerPanel::SetSelectedCard(ModelCardHolder card)
@@ -244,8 +267,20 @@ void ManagerToolsPanel::OnAddRepo(wxCommandEvent & WXUNUSED(event))
                   .Format(repoId)
             );
          }
-
-         wthis->mManagerPanel->GetCardFetchedCallback()(card);
+         try
+         {
+            wthis->mManagerPanel->GetNewCardCallback()(card);
+         }
+         catch(const InvalidModelCardDocument &e)
+         {
+            wxString errorMsg = wxString(e.what());
+            wxLogError(errorMsg);
+            BasicUI::ShowErrorDialog( {},
+               XO("Invalid Model Error"),
+               e.ErrorMessage(),
+               wxT("")
+            );
+         }
       });
 
       // make a non blocking call to fetch the card
