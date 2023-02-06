@@ -19,6 +19,7 @@
 #include "Dither.h"
 #include "FileFormats.h"
 #include "Mix.h"
+#include "Pipeline.h"
 #include "Prefs.h"
 #include "Tags.h"
 #include "Track.h"
@@ -696,6 +697,7 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
    auto exportResult = ExportResult::Success;
 
    {
+      using namespace TaskParallel;
       std::vector<char> dither;
       if ((context.info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
          dither.reserve(
@@ -706,7 +708,7 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
          constSamplePtr mixed;
          size_t numSamples;
       };
-      auto source = [&]() -> std::optional<Data> {
+      auto source = [&](void*) -> StageResult<Data> {
          size_t numSamples = context.mixer->Process();
          if (numSamples == 0)
             return {};
@@ -731,13 +733,16 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                   context.info.channels, context.info.channels);
             }
          }
-         return { { mixed, numSamples } };
+         context.mixer->SwapBuffers();
+         return Data{ mixed, numSamples };
       };
 
       struct Stop{};
 
-      auto sink = [&](const Data &input) {
-         auto &[mixed, numSamples] = input;
+      auto sink = [&](const Data *pInput) {
+         if (!pInput)
+            return;
+         auto &[mixed, numSamples] = *pInput;
          sf_count_t samplesWritten{};
          if (context.format == int16Sample)
             samplesWritten =
@@ -777,8 +782,8 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
       };
 
       try {
-         while (auto data = source())
-            sink(*data);
+         if (!Pipeline{ source, {}, sink }.Run(TaskAssignment::Sink))
+            exportResult = ExportResult::Error;
       }
       catch (const Stop &) {
       }

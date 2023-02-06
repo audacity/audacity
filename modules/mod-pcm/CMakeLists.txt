@@ -8,6 +8,7 @@ set( SOURCES
 
 set( LIBRARIES
    PRIVATE
+      lib-concurrency-interface
       lib-import-export-interface
       lib-file-formats-interface
       lib-wx-init-interface
