@@ -842,8 +842,8 @@ int main(int argc, char *argv[])
    // never be able to get rid of the messages entirely, but we should
    // look into what's causing them, so allow them to show in Debug
    // builds.
-   stdout = freopen("/dev/null", "w", stdout);
-   stderr = freopen("/dev/null", "w", stderr);
+   freopen("/dev/null", "w", stdout);
+   freopen("/dev/null", "w", stderr);
 
    return wxEntry(argc, argv);
 }
