@@ -76,6 +76,7 @@
 #include "FileNames.h"
 #include "float_cast.h"
 #include "Mix.h"
+#include "Pipeline.h"
 #include "Prefs.h"
 #include "Tags.h"
 #include "Track.h"
@@ -732,12 +733,12 @@ public:
    int GetOutBufferSize();
 
    /* returns the number of bytes written. input is interleaved if stereo*/
-   int EncodeBuffer(float inbuffer[], unsigned char outbuffer[]);
-   int EncodeRemainder(float inbuffer[], int nSamples,
+   int EncodeBuffer(const float inbuffer[], unsigned char outbuffer[]);
+   int EncodeRemainder(const float inbuffer[], int nSamples,
                        unsigned char outbuffer[]);
 
-   int EncodeBufferMono(float inbuffer[], unsigned char outbuffer[]);
-   int EncodeRemainderMono(float inbuffer[], int nSamples,
+   int EncodeBufferMono(const float inbuffer[], unsigned char outbuffer[]);
+   int EncodeRemainderMono(const float inbuffer[], int nSamples,
                            unsigned char outbuffer[]);
 
    int FinishStream(unsigned char outbuffer[]);
@@ -1271,7 +1272,7 @@ int MP3Exporter::GetOutBufferSize()
    return mOutBufferSize;
 }
 
-int MP3Exporter::EncodeBuffer(float inbuffer[], unsigned char outbuffer[])
+int MP3Exporter::EncodeBuffer(const float inbuffer[], unsigned char outbuffer[])
 {
    if (!mEncoding) {
       return -1;
@@ -1281,7 +1282,7 @@ int MP3Exporter::EncodeBuffer(float inbuffer[], unsigned char outbuffer[])
       outbuffer, mOutBufferSize);
 }
 
-int MP3Exporter::EncodeRemainder(float inbuffer[], int nSamples,
+int MP3Exporter::EncodeRemainder(const float inbuffer[], int nSamples,
                   unsigned char outbuffer[])
 {
    if (!mEncoding) {
@@ -1292,7 +1293,7 @@ int MP3Exporter::EncodeRemainder(float inbuffer[], int nSamples,
       mOutBufferSize);
 }
 
-int MP3Exporter::EncodeBufferMono(float inbuffer[], unsigned char outbuffer[])
+int MP3Exporter::EncodeBufferMono(const float inbuffer[], unsigned char outbuffer[])
 {
    if (!mEncoding) {
       return -1;
@@ -1302,7 +1303,7 @@ int MP3Exporter::EncodeBufferMono(float inbuffer[], unsigned char outbuffer[])
       outbuffer, mOutBufferSize);
 }
 
-int MP3Exporter::EncodeRemainderMono(float inbuffer[], int nSamples,
+int MP3Exporter::EncodeRemainderMono(const float inbuffer[], int nSamples,
                   unsigned char outbuffer[])
 {
    if (!mEncoding) {
@@ -1855,57 +1856,104 @@ ExportResult MP3ExportProcessor::Process(ExportProcessorDelegate& delegate)
    delegate.SetStatusString(context.status);
 
    auto& exporter = context.exporter;
-   int bytes = 0;
-
-   ArrayOf<unsigned char> buffer{ context.bufferSize };
-   wxASSERT(buffer);
 
    auto exportResult = ExportResult::Success;
-   
+   std::vector<ArrayOf<unsigned char>> allBuffers;
+   unsigned char *lastBuffer{};
    {
-      while (exportResult == ExportResult::Success) {
+      using namespace TaskParallel;
+      struct SourceResult {
+         const float *mixed{};
+         size_t blockLen{};
+      };
+      const auto source = [&](void*) -> StageResult<SourceResult> {
          auto blockLen = context.mixer->Process();
          if (blockLen == 0)
-            break;
+            return {};
+         auto mixed =
+            reinterpret_cast<const float *>(context.mixer->GetBuffer());
+         context.mixer->SwapBuffers();
+         return SourceResult{ mixed, blockLen };
+      };
 
-         float *mixed = (float *)context.mixer->GetBuffer();
-
-         if ((int)blockLen < context.inSamples) {
-            if (context.channels > 1) {
-               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer.get());
+      struct MyStageResult {
+         unsigned char *buffer{};
+         int bytes{};
+      };
+      allBuffers.reserve(2);
+      auto stageInitializer = [&allBuffers, bufferSize = context.bufferSize]() {
+         auto &buffer = allBuffers.emplace_back(bufferSize);
+         return MyStageResult{ buffer.get(), 0 };
+      };
+      const auto stage = [
+         &exporter, inSamples = context.inSamples, channels = context.channels
+      ](SourceResult *pInput, MyStageResult *pRecycled)
+         -> StageResult<MyStageResult>
+      {
+         if (!pInput)
+            return {};
+         auto [mixed, blockLen] = *pInput;
+         assert(pRecycled); // Pipeline guarantees it
+         auto [buffer, _] = *pRecycled;
+         int bytes = 0;
+         if (static_cast<int>(blockLen) < inSamples) {
+            if (channels > 1) {
+               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer);
             }
             else {
-               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer.get());
+               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer);
             }
          }
          else {
-            if (context.channels > 1) {
-               bytes = exporter.EncodeBuffer(mixed, buffer.get());
+            if (channels > 1) {
+               bytes = exporter.EncodeBuffer(mixed, buffer);
             }
             else {
-               bytes = exporter.EncodeBufferMono(mixed, buffer.get());
+               bytes = exporter.EncodeBufferMono(mixed, buffer);
             }
          }
+         return MyStageResult{ buffer, bytes };
+      };
 
-         if (bytes < 0) {
-            throw ExportException(XO("Error %ld returned from MP3 encoder")
-               .Format( bytes )
-               .Translation());
+      struct Stop{};
+
+      const auto sink = [
+         this, &exportResult, &delegate, &lastBuffer
+      ](MyStageResult *pInput){
+         if (pInput) {
+            auto [buffer, bytes] = *pInput;
+            lastBuffer = buffer;
+            if (bytes < 0) {
+               throw ExportException(XO("Error %ld returned from MP3 encoder")
+                  .Format( bytes )
+                  .Translation());
+            }
+
+            if (bytes > static_cast<int>(context.outFile.Write(buffer, bytes)))
+               // TODO: more precise message
+               throw ExportDiskFullError(context.outFile.GetName());
+
+            if(exportResult == ExportResult::Success)
+               exportResult = ExportPluginHelpers::UpdateProgress(
+                  delegate, *context.mixer, context.t0, context.t1);
+            if (exportResult != ExportResult::Success)
+               throw Stop{};
          }
+      };
 
-         if (bytes > (int)context.outFile.Write(buffer.get(), bytes)) {
-            // TODO: more precise message
-            throw ExportDiskFullError(context.outFile.GetName());
+      try {
+         if (!Pipeline{ source, std::tuple{ stage }, sink }
+             .Run(TaskAssignment::Sink, nullptr, stageInitializer)) {
+            exportResult = ExportResult::Error;
+            throw Stop{};
          }
-
-         if(exportResult == ExportResult::Success)
-            exportResult = ExportPluginHelpers::UpdateProgress(
-               delegate, *context.mixer, context.t0, context.t1);
       }
+      // Catch stop button but propagate other exceptions
+      catch (const Stop &) {}
    }
 
    if (exportResult == ExportResult::Success) {
-      bytes = exporter.FinishStream(buffer.get());
+      const auto bytes = exporter.FinishStream(lastBuffer);
 
       if (bytes < 0) {
          // TODO: more precise message
@@ -1913,15 +1961,16 @@ ExportResult MP3ExportProcessor::Process(ExportProcessorDelegate& delegate)
       }
 
       if (bytes > 0) {
-         if (bytes > (int)context.outFile.Write(buffer.get(), bytes)) {
+         if (bytes > static_cast<int>(context.outFile.Write(lastBuffer, bytes)))
             // TODO: more precise message
             throw ExportErrorException("MP3:1988");
-         }
       }
 
       // Write ID3 tag if it was supposed to be at the end of the file
       if (context.id3len > 0) {
-         if (bytes > (int)context.outFile.Write(context.id3buffer.get(), context.id3len)) {
+         if (bytes > static_cast<int>(
+            context.outFile.Write(context.id3buffer.get(), context.id3len))
+         ) {
             // TODO: more precise message
             throw ExportErrorException("MP3:1997");
          }

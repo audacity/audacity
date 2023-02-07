@@ -9,6 +9,7 @@ set( SOURCES
 
 set( LIBRARIES
    PRIVATE
+      lib-concurrency-interface
       Audacity
       libmp3lame::libmp3lame
 )
