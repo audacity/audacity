@@ -751,8 +751,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       }
       else if (t1 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
       {
-         // Clip is affected by command, but the entire clip is not contained
-         // in the selection
+         // Clip is affected by command
          //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
          const double clip_t0 = std::max(t0, clip->GetPlayStartTime());
@@ -764,19 +763,9 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
-         // If we are in the case with an audio clip on the right side with blank space to its left,
-         // we need to calculate the offset slightly differently:
-         //  |    [-----CLIP--|--]             [-|----CLIP----]      |
-         // t0                t1       VS.       t0                  t1
-         //  |----|                            |-|
-         //  OFFSET = clip_t0 - t0            OFFSET = 0
-         if (t0 < clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
-            wxASSERT(clip_t0 - t0 >= 0); //debugging
-            newClip->SetPlayStartTime(clip_t0-t0); //not sure why Offset doesn't work for this; may want to modify
-         }
-         else {
+         newClip->Offset(-t0);
+         if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
-         }
 
          newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
       }
