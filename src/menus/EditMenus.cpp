@@ -890,8 +890,6 @@ void OnSplitNew(const CommandContext &context)
          [&](WaveTrack *wt) {
             // Clips must be aligned to sample positions or the NEW clip will
             // not fit in the gap where it came from
-            double offset = wt->GetOffset();
-            offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
             double newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t0()));
             double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
