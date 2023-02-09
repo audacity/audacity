@@ -196,7 +196,10 @@ void DeepLearningAnalyzer::TensorToLabelTrack
    timestamps += tStart;
 
    // check that the output is one dimensional
-   wxASSERT(output.dim() == 1);
+   if (output.dim() != 1)
+      throw ModelException {
+         XO("Model Error: The tensor output by the labeler model is not one dimension."), ""
+      };
 
    // create a map of labels to timestamps
    std::map<wxString, std::vector<Stamp> > timestampsMap;
