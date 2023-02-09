@@ -303,14 +303,20 @@ void DeepModelManager::FetchHuggingFaceCards(CardFetchedCallback onCardFetched)
       // when this pool goes out of scope, all threads will join. 
       auto pool = ThreadPool(std::thread::hardware_concurrency());
 
+      CardExceptionCallback onCardException(
+      [] (const ModelManagerException &e)
+      {
+         wxLogError(wxString(e.what())); 
+      });
+
       int64_t total = repos.size();
       for (int64_t idx = 0;  idx < total ; idx++)
       {
          pool.enqueue(
-         [idx, total, this, onCardFetched, &repos]()
+         [idx, total, this, onCardFetched, onCardException, &repos]()
          {
             std::string repoId = repos[idx];
-            AddHuggingFaceCard(repoId, onCardFetched, true);
+            AddHuggingFaceCard(repoId, onCardFetched, onCardException, true);
          });
       }
    });
@@ -318,9 +324,12 @@ void DeepModelManager::FetchHuggingFaceCards(CardFetchedCallback onCardFetched)
    // all threads will join when the pool gets destroyed here
 }
 
-void DeepModelManager::AddHuggingFaceCard(const std::string &repoID, CardFetchedCallback onCardFetched, bool block)
+void DeepModelManager::AddHuggingFaceCard(const std::string &repoID, 
+                                          CardFetchedCallback onCardFetched, 
+                                          CardExceptionCallback onCardException,  
+                                          bool block)
 {
-   auto worker = [this, repoID, onCardFetched = std::move(onCardFetched)]()
+   auto worker = [this, repoID, onCardFetched = std::move(onCardFetched), onCardException = std::move(onCardException)]()
    {
       // need to catch any errors here and just log them
       try { 
@@ -336,10 +345,17 @@ void DeepModelManager::AddHuggingFaceCard(const std::string &repoID, CardFetched
             onCardFetched(card);
          });
       }
+
+      // both of these are `MessageBoxExceptions` so we could handle them in the same member 
+      // if we wanted to go that route 
       catch (const ModelManagerException &e)
       { 
-         wxLogError(wxString(e.what())); 
-         }
+         wxTheApp->CallAfter([onCardException = std::move(onCardException), e]()
+         {
+            onCardException(e);
+         });
+      }
+
       catch (const InvalidModelCardDocument &e)
       { 
          wxLogError(wxString(e.what())); 

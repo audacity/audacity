@@ -58,6 +58,7 @@ using InstallCompletionHandler = std::function<void()>;
 using ProgressCallback = std::function<void(int64_t current, int64_t expected)>;
 
 using CardFetchedCallback = std::function<void(ModelCardHolder card)>;
+using CardExceptionCallback = std::function<void(const ModelManagerException &)>;
 
 class DeepModelManager final
 {
@@ -122,7 +123,10 @@ public:
    //! if block == true, this function CAN be called from a UI thread, as it does not block, but returns immediately.
    //! callbacks are scheduled to run from the main UI thread. 
    //! all validation errors are caught and logged to the error log. 
-   void AddHuggingFaceCard(const std::string &repoID, CardFetchedCallback onCardFetched, bool block);
+   void AddHuggingFaceCard(const std::string &repoID, 
+                           CardFetchedCallback onCardFetched, 
+                           CardExceptionCallback onCardException, 
+                           bool block);
 
    //! performs a blocking network request. should NOT run from UI thread. 
    //! may throw ModelCardException if the json fails to parse

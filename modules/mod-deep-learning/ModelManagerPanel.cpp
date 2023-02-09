@@ -249,6 +249,8 @@ void ManagerToolsPanel::OnAddRepo(wxCommandEvent & WXUNUSED(event))
       wxString repoId = dialog.GetValue();
       // wrap the card fetched callback 
       auto wthis = wxWeakRef(this);
+
+      // define callbacks for successfuly fetching and exception handling
       CardFetchedCallback onCardFetched(
       [wthis, repoId, &manager](ModelCardHolder card)
       {
@@ -283,8 +285,24 @@ void ManagerToolsPanel::OnAddRepo(wxCommandEvent & WXUNUSED(event))
          }
       });
 
+
+      CardExceptionCallback onCardException(
+      [wthis] (const ModelManagerException &e)
+      {
+         wxLogError(wxString(e.what())); 
+         BasicUI::ShowErrorDialog( {},
+            XO("Invalid Model Error"),
+            e.ErrorMessage(),
+            wxT("")
+         );
+      });
+         
+
       // make a non blocking call to fetch the card
-      manager.AddHuggingFaceCard(audacity::ToUTF8(repoId), onCardFetched, false);
+      manager.AddHuggingFaceCard(audacity::ToUTF8(repoId), onCardFetched, onCardException, false);
+
+
+
    }
 }
 
