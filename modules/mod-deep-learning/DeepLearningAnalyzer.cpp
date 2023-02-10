@@ -137,6 +137,56 @@ bool DeepLearningAnalyzer::ProcessOne(WaveTrack *leader, double tStart, double t
    return true;
 }
 
+std::vector<Stamp> Coalesce(std::vector<Stamp> &timestamps)
+{
+   if (timestamps.size() == 0)
+      return timestamps;
+
+   // sort the stamps by start time
+   std::function< bool(Stamp &a, Stamp &b)> compareByStartTime (
+      [](Stamp &a, Stamp &b)
+      {
+         return a.first < b.first;
+      }
+   );
+
+   std::sort(timestamps.begin(), timestamps.end(), compareByStartTime);
+   std::vector<Stamp> coalescedStamps; 
+
+   Stamp prev = timestamps[0];
+   for (const auto &stamp : timestamps)
+   {
+      if (stamp.first <= prev.second)
+      {
+         if (stamp.second > prev.second)
+         {
+            prev.second = stamp.second;
+         }
+      }
+      else
+      {
+         coalescedStamps.emplace_back(prev);
+         prev = Stamp(stamp);
+      }
+   }
+
+   // check if last is not equal to end of last stamp
+   // append the last stamp
+   if (!coalescedStamps.empty())
+   {
+      if (coalescedStamps.back().second != prev.second)
+      {
+         coalescedStamps.emplace_back(prev);
+      }
+   }
+   else if (coalescedStamps.empty() && !timestamps.empty())
+   {
+      coalescedStamps.emplace_back(prev);
+   }
+
+   return coalescedStamps;
+}
+
 void DeepLearningAnalyzer::TensorToLabelTrack
 (torch::Tensor output, AddedAnalysisTrack &labelTrack,
    double tStart, double tEnd, torch::Tensor timestamps, 
