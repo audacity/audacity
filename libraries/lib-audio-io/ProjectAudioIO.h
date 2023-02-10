@@ -31,18 +31,16 @@ class AUDIO_IO_API ProjectAudioIO final
    , public Observer::Publisher<SpeedChangeMessage>
 {
 public:
-   //! Type of function constructing AudioIOStartStreamOptions
    using OptionsFactory =
       AudioIOStartStreamOptions(
          AudacityProject &project, bool newDefaults);
 
-   //! Function returning a default factory function, which ignores the
-   //! second argument
-   static const std::function<OptionsFactory> DefaultOptionsFactory();
+   static AudioIOStartStreamOptions
+      DefaultOptionsFactory(AudacityProject &project, bool newDefaults);
 
    //! Global hook making AudioIOStartStreamOptions for a project, which
    //! has a non-trivial default implementation
-   struct AUDIO_IO_API DefaultOptions : GlobalHook< DefaultOptions,
+   struct AUDIO_IO_API DefaultOptions : GlobalFactoryHook< DefaultOptions,
       OptionsFactory,
       DefaultOptionsFactory // default installed implementation
    >{};

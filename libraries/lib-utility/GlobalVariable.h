@@ -26,11 +26,12 @@
  no initializer function; if const-qualified, that means Get() gives
  non-mutating access, but Set() and Scope{...} are still possible if Type is
  movable
- @tparam initializer optional function that computes initial value
+ @tparam initializer either a constant value of Type, or a pointer to function
+    taking void and computing a value of Type, or nullptr
  @tparam ScopedOnly if true, then enforce RAII for changes of the variable
  (do not generate Set() or Scope::Commit())
  */
-template <typename Tag, typename Type, Type (*initializer)() = nullptr,
+template <typename Tag, typename Type, auto initializer = nullptr,
    bool ScopedOnly = true>
 class GlobalVariable {
    struct dummy{ explicit dummy(){} };
@@ -124,7 +125,13 @@ private:
    static mutable_type &Instance()
    {
       static_assert(!std::is_reference_v<stored_type>);
-      if constexpr (initializer != nullptr) {
+      if constexpr (
+         std::is_same_v<std::decay_t<decltype(initializer)>, mutable_type>)
+      {
+         static mutable_type instance{ initializer };
+         return instance;
+      }
+      else if constexpr (initializer != nullptr) {
          static mutable_type instance{ initializer() };
          return instance;
       }
@@ -143,7 +150,12 @@ private:
    }
 };
 
-//! Global function-valued variable, adding a convenient Call()
+//! Global std::function-valued variable, adding a convenient Call()
+/*!
+ Unlike with GlobalHook, the function is a stateless bare function pointer.
+ It is often used for high levels to inject a factory of objects for low
+ levels to use.
+ */
 template<typename Tag, typename Signature, auto... Options>
 class GlobalHook
    : public GlobalVariable<Tag, const std::function<Signature>, Options...>
@@ -158,6 +170,30 @@ public:
    static result_type Call(Arguments &&...arguments)
    {
       auto &fn = GlobalHook::Get();
+      if (fn)
+         return fn(std::forward<Arguments>(arguments)...);
+      else if constexpr (std::is_void_v<result_type>)
+         return;
+      else
+         return result_type{};
+   }
+};
+
+//! Global pointer-to-function-valued variable, adding a convenient Call()
+template<typename Tag, typename Signature, auto... Options>
+class GlobalFactoryHook
+   : public GlobalVariable<Tag, const Signature *, Options...>
+{
+public:
+   using result_type = typename std::function<Signature>::result_type;
+
+   //! Null check of the installed function is done for you
+   /*! Requires that the return type of the function is void or
+    default-constructible */
+   template<typename... Arguments>
+   static result_type Call(Arguments &&...arguments)
+   {
+      auto &fn = GlobalFactoryHook::Get();
       if (fn)
          return fn(std::forward<Arguments>(arguments)...);
       else if constexpr (std::is_void_v<result_type>)

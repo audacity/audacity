@@ -16,9 +16,9 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectRate.h"
 #include "Track.h"
 
-const std::function<ProjectAudioIO::OptionsFactory>
-ProjectAudioIO::DefaultOptionsFactory()
-{ return [] (AudacityProject &project, bool) {
+AudioIOStartStreamOptions ProjectAudioIO::DefaultOptionsFactory(
+   AudacityProject &project, bool newDefaults)
+{
    auto &projectAudioIO = Get(project);
    AudioIOStartStreamOptions options{
       project.shared_from_this(), ProjectRate::Get(project).GetRate()
@@ -30,7 +30,7 @@ ProjectAudioIO::DefaultOptionsFactory()
    // options.listener remains null
    // boolean argument is ignored
    return options;
-}; }
+}
 
 AudioIOStartStreamOptions ProjectAudioIO::GetDefaultOptions(
    AudacityProject &project, bool newDefaults)

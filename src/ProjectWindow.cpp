@@ -550,7 +550,7 @@ AttachedWindows::RegisteredFactory sProjectWindowKey{
 };
 
 }
-
+ 
 ProjectWindow &ProjectWindow::Get( AudacityProject &project )
 {
    return GetAttachedWindows(project).Get< ProjectWindow >(sProjectWindowKey);
