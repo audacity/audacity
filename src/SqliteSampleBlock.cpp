@@ -1065,7 +1065,7 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
          auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - purgeStartTime);
          if(elapsed >= ProgressDialogShowDelay)
-            progressDialog = MakeProgress(XO("Progress"), XO("Discarding undo/redo history"));
+            progressDialog = MakeProgress(XO("Progress"), XO("Discarding undo/redo history"), 0);
       }
       else
          progressDialog->Poll(nDeleted, nToDelete);

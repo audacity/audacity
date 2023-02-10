@@ -1192,12 +1192,16 @@ bool ProgressDialog::Create(const TranslatableString & title,
    // Set this boolean to indicate if we confirm the Cancel/Stop actions
    m_bConfirmAction = (flags & pdlgConfirmStopCancel)!=0;
 
+   const long dialogStyle = (flags & pdlgHideCancelButton) != 0 &&
+      (flags & pdlgHideStopButton) != 0 ?
+      wxCAPTION : wxDEFAULT_DIALOG_STYLE;
+
    bool success = wxDialogWrapper::Create(parent,
                                    wxID_ANY,
                                    title,
                                    wxDefaultPosition,
                                    wxDefaultSize,
-                                   wxDEFAULT_DIALOG_STYLE |
+                                   dialogStyle |
                                    wxFRAME_FLOAT_ON_PARENT);
    if (!success)
    {
