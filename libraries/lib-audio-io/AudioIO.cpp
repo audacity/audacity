@@ -608,6 +608,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       SetCaptureMeter( mOwningProject.lock(), options.captureMeter );
    }
 
+   const auto deviceInfo = usePlayback ?
+                              Pa_GetDeviceInfo(playbackParameters.device) :
+                              Pa_GetDeviceInfo(captureParameters.device);
+
+   mUsingAlsa = deviceInfo && deviceInfo->hostApi == paALSA;
+
    SetMeters();
 
 #ifdef USE_PORTMIXER
@@ -794,12 +800,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          std::this_thread::sleep_for(50ms);
       }
    }
-
-#ifdef __WXGTK__
-   // Detect whether ALSA is the chosen host, and do the various involved MIDI
-   // timing compensations only then.
-   mUsingAlsa = (AudioIOHost.Read() == L"ALSA");
-#endif
 
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
    gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mPauseRec, false);
