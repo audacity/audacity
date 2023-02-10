@@ -12,7 +12,7 @@
 #include <gtk/gtk.h>
 
 #include "Internat.h"
-#include "widgets/AudacityMessageBox.h"
+#include "BasicUI.h"
 #include "../FileDialog.h"
 
 #ifdef __UNIX__
@@ -68,12 +68,15 @@ static void gtk_filedialog_ok_callback(GtkWidget *widget, FileDialog *dialog)
         {
             if ( g_file_test(filename, G_FILE_TEST_EXISTS) )
             {
-                int result = AudacityMessageBox(
+                using namespace BasicUI;
+                auto result = ShowMessageBox(
                   XO("File '%s' already exists, do you really want to overwrite it?")
-                     .Format(wxString::FromUTF8(filename)),
-                  XO("Confirm"),
-                  wxYES_NO | wxICON_QUESTION);
-                if (result != wxID_YES)
+                        .Format(wxString::FromUTF8(filename)),
+                     MessageBoxOptions{}
+                        .Caption( XO("Confirm") )
+                        .IconStyle(Icon::Question)
+                        .ButtonStyle(Button::YesNo));
+                if (result != MessageBoxResult::Yes)
                 {
                     return;
                 }
@@ -86,9 +89,12 @@ static void gtk_filedialog_ok_callback(GtkWidget *widget, FileDialog *dialog)
     {
         if ( !g_file_test(filename, G_FILE_TEST_EXISTS) )
         {
-            AudacityMessageBox(XO("Please choose an existing file."),
-                               XO("Error"),
-                               wxOK | wxICON_ERROR);
+            using namespace BasicUI;
+            ShowMessageBox(XO("Please choose an existing file."),
+               MessageBoxOptions{}
+                  .Caption(XO("Error"))
+                  .ButtonStyle(Button::Ok)
+                  .IconStyle(Icon::Error));
             return;
         }
     }
