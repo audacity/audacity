@@ -68,12 +68,12 @@ ChoiceSetting EffectsGroupBy{
    {
       ByColumns,
       {
-         XO("Sorted by Effect Name") ,
-         XO("Sorted by Publisher and Effect Name") ,
-         XO("Sorted by Type and Effect Name") ,
-         XO("Grouped by Publisher") ,
-         XO("Grouped by Type") ,
-         XO("Default")
+         XO("Sort by effect name") ,
+         XO("Sort by publisher and effect name") ,
+         XO("Sort by type and effect name") ,
+         XO("Group by publisher") ,
+         XO("Group by type") ,
+         XO("Group by category")
       },
       {
          wxT("sortby:name") ,
@@ -198,7 +198,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          wxChoice *c = S
             .MinSize()
-            .TieChoice( XXO("S&ort or Group:"), EffectsGroupBy);
+            .TieChoice( XXO("Effect menu &organization:"), EffectsGroupBy);
 
          S.TieIntegerTextBox(XXO("&Maximum effects per group (0 to disable):"),
                              {wxT("/Effects/MaxPerGroup"),
