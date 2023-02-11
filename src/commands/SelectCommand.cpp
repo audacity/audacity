@@ -43,7 +43,7 @@ explicitly code all three.
 #include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 #include "Track.h"
-#include "../effects/Effect.h"
+#include "Effect.h"
 #include "ViewInfo.h"
 #include "CommandContext.h"
 

@@ -24,14 +24,11 @@
 #include "ConfigInterface.h"
 #include "ProjectNumericFormats.h"
 #include "ShuttleAutomation.h"
-#include "StatefulEffectUIServices.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "../widgets/ProgressDialog.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "NumericConverter.h"
 
 #include <unordered_map>
 
@@ -342,8 +339,8 @@ bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
       mProgress->Poll(frac * 1000, 1000, msg) :
-      ProgressResult::Success);
-   return (updateResult != ProgressResult::Success);
+      BasicUI::ProgressResult::Success);
+   return (updateResult != BasicUI::ProgressResult::Success);
 }
 
 bool Effect::TrackProgress(
@@ -352,8 +349,8 @@ bool Effect::TrackProgress(
    auto updateResult = (mProgress ?
       mProgress->Poll((whichTrack + frac) * 1000,
          (double) mNumTracks * 1000, msg) :
-      ProgressResult::Success);
-   return (updateResult != ProgressResult::Success);
+      BasicUI::ProgressResult::Success);
+   return (updateResult != BasicUI::ProgressResult::Success);
 }
 
 bool Effect::TrackGroupProgress(
@@ -362,8 +359,8 @@ bool Effect::TrackGroupProgress(
    auto updateResult = (mProgress ?
       mProgress->Poll((whichGroup + frac) * 1000,
          (double) mNumGroups * 1000, msg) :
-      ProgressResult::Success);
-   return (updateResult != ProgressResult::Success);
+      BasicUI::ProgressResult::Success);
+   return (updateResult != BasicUI::ProgressResult::Success);
 }
 
 void Effect::GetBounds(

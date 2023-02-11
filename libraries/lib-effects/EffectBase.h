@@ -23,7 +23,7 @@ namespace BasicUI { class ProgressDialog; }
 class AudacityProject;
 class Track;
 
-class AUDACITY_DLL_API EffectBase /* not final */
+class EFFECTS_API EffectBase /* not final */
    : public EffectPlugin
 {
 public:

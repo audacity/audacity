@@ -21,7 +21,7 @@ class WaveTrack;
 
 class sampleCount;
 
-class AUDACITY_DLL_API Effect /* not final */
+class EFFECTS_API Effect /* not final */
    : public EffectBase
 {
  //

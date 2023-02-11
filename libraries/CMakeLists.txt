@@ -39,6 +39,7 @@ set( LIBRARIES
    lib-project-file-io
    lib-command-parameters
    lib-numeric-formats
+   lib-effects
 )
 
 if ( ${_OPT}has_networking )

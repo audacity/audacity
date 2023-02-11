@@ -20,10 +20,10 @@ class sampleCount;
 
 //! A mix-in class for effects that are not yet migrated to statelessness.
 //! To be eliminated when all effects are migrated
-class AUDACITY_DLL_API StatefulEffectBase {
+class EFFECTS_API StatefulEffectBase {
 public:
    //! Calls through to members of StatefulEffectBase
-   class AUDACITY_DLL_API Instance : public virtual EffectInstanceEx {
+   class EFFECTS_API Instance : public virtual EffectInstanceEx {
    public:
       explicit Instance(StatefulEffectBase &effect);
       ~Instance() override;

@@ -126,8 +126,6 @@ list( APPEND SOURCES
       Diags.h
       DropTarget.cpp
       DropoutDetector.cpp
-      EffectPlugin.cpp
-      EffectPlugin.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
       FFmpeg.cpp
@@ -395,10 +393,6 @@ list( APPEND SOURCES
       effects/EBUR128.h
       effects/Echo.cpp
       effects/Echo.h
-      effects/Effect.cpp
-      effects/Effect.h
-      effects/EffectBase.cpp
-      effects/EffectBase.h
       effects/EffectEditor.cpp
       effects/EffectEditor.h
       effects/EffectManager.cpp
@@ -435,8 +429,6 @@ list( APPEND SOURCES
       effects/Generator.h
       effects/Invert.cpp
       effects/Invert.h
-      effects/LoadEffects.cpp
-      effects/LoadEffects.h
       effects/Loudness.cpp
       effects/Loudness.h
       effects/Noise.cpp
@@ -449,8 +441,6 @@ list( APPEND SOURCES
       effects/Normalize.h
       effects/Paulstretch.cpp
       effects/Paulstretch.h
-      effects/PerTrackEffect.cpp
-      effects/PerTrackEffect.h
       effects/Phaser.cpp
       effects/Phaser.h
       effects/RealtimeEffectStateUI.h
@@ -478,8 +468,6 @@ list( APPEND SOURCES
       effects/SoundTouchEffect.h
       effects/StatefulEffect.cpp
       effects/StatefulEffect.h
-      effects/StatefulEffectBase.cpp
-      effects/StatefulEffectBase.h
       effects/StatefulEffectUIServices.cpp
       effects/StatefulEffectUIServices.h
       effects/StatefulPerTrackEffect.cpp
@@ -1541,10 +1529,8 @@ set( AUDACITY_LIBRARIES
    lib-theme-resources-interface
    lib-graphics-interface
    lib-tags-interface
-   lib-audio-io-interface
    lib-project-file-io-interface
-   lib-command-parameters-interface
-   lib-numeric-formats-interface
+   lib-effects-interface
 )
 
 if (${_OPT}use_ffmpeg)

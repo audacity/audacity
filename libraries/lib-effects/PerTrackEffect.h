@@ -30,13 +30,13 @@
    Also uses GetLatency() to determine how many leading output samples to
    discard and how many extra samples to produce.
  */
-class PerTrackEffect
+class EFFECTS_API PerTrackEffect
    : public Effect
 {
 public:
    ~PerTrackEffect() override;
 
-   class AUDACITY_DLL_API Instance : public virtual EffectInstanceEx {
+   class EFFECTS_API Instance : public virtual EffectInstanceEx {
    public:
       explicit Instance(const PerTrackEffect &processor)
          : mProcessor{ processor }
