@@ -267,6 +267,9 @@ private:
 
 private:
 
+   std::vector<wxRect> mBoxes;
+   wxRect GetBox(size_t ii) const;
+
    bool           mMenuEnabled;
    bool           mReadOnly;
 

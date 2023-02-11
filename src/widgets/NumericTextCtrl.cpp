@@ -346,17 +346,15 @@ public:
 class DigitInfo
 {
 public:
-   DigitInfo(int _field, int _index, int _pos, wxRect _box)
+   DigitInfo(int _field, int _index, int _pos)
    {
       field = _field;
       index = _index;
       pos = _pos;
-      digitBox = _box;
    }
    int field; // Which field
    int index; // Index of this digit within the field
    int pos;   // Position in the ValueString
-   wxRect digitBox;
 };
 
 namespace {
@@ -912,7 +910,7 @@ void NumericConverter::ParseFormatString(
       mFields[i].pos = pos;
 
       for(j=0; j<mFields[i].digits; j++) {
-         mDigits.push_back(DigitInfo(i, j, pos, wxRect()));
+         mDigits.push_back(DigitInfo(i, j, pos));
          mValueTemplate += wxT("0");
          mValueMask += wxT("0");
          pos++;
@@ -1463,6 +1461,7 @@ bool NumericTextCtrl::SetFormatString(const FormatStrings & formatString)
    auto result =
       NumericConverter::SetFormatString(formatString);
    if (result) {
+      mBoxes.clear();
       Layout();
       Fit();
       ValueToControls();
@@ -1475,6 +1474,7 @@ bool NumericTextCtrl::SetFormatString(const FormatStrings & formatString)
 void NumericTextCtrl::SetSampleRate(double sampleRate)
 {
    NumericConverter::SetSampleRate(sampleRate);
+   mBoxes.clear();
    Layout();
    Fit();
    ValueToControls();
@@ -1590,6 +1590,7 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 
       // Reset digits array
       mDigits.clear();
+      mBoxes.clear();
 
       // Figure out the x-position of each field and label in the box
       for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
@@ -1601,7 +1602,8 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 
          // Remember metrics for each digit
          for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
-            mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop, boxW, boxH)));
+            mDigits.push_back(DigitInfo(i, j, pos));
+            mBoxes.push_back(wxRect{ x, mBorderTop, boxW, boxH });
             x += boxW;
             pos++;
          }
@@ -1679,7 +1681,7 @@ bool NumericTextCtrl::Layout()
    memDC.SetBrush(Brush);
    //memDC.SetBrush(*wxLIGHT_GREY_BRUSH);
    for(i = 0; i < mDigits.size(); i++)
-      memDC.DrawRectangle(mDigits[i].digitBox);
+      memDC.DrawRectangle(GetBox(i));
    memDC.SetBrush( wxNullBrush );
 
    for(i = 0; i < mFields.size(); i++)
@@ -1742,7 +1744,7 @@ void NumericTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    int i;
    for(i = 0; i < (int)mDigits.size(); i++) {
-      wxRect box = mDigits[i].digitBox;
+      wxRect box = GetBox(i);
       if (focused && mFocusedDigit == i) {
          dc.DrawRectangle(box);
          dc.SetTextForeground(theTheme.Colour( clrTimeFontFocus ));
@@ -1837,8 +1839,8 @@ void NumericTextCtrl::OnMouse(wxMouseEvent &event)
 
       mFocusedDigit = 0;
       for(i = 0; i < mDigits.size(); i++) {
-         int dist = abs(event.m_x - (mDigits[i].digitBox.x +
-                                     mDigits[i].digitBox.width/2));
+         int dist = abs(event.m_x - (GetBox(i).x +
+                                     GetBox(i).width/2));
          if (dist < bestDist) {
             mFocusedDigit = i;
             bestDist = dist;
@@ -2130,6 +2132,13 @@ void NumericTextCtrl::ControlsToValue()
    NumericConverter::ControlsToValue();
 }
 
+wxRect NumericTextCtrl::GetBox(size_t ii) const
+{
+   if (ii < mBoxes.size())
+      return mBoxes[ii];
+   return {};
+}
+
 #if wxUSE_ACCESSIBILITY
 
 NumericTextCtrlAx::NumericTextCtrlAx(NumericTextCtrl *ctrl)
@@ -2246,7 +2255,7 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
    {
 //      rect.x += mCtrl->mFields[elementId - 1].fieldX;
 //      rect.width =  mCtrl->mFields[elementId - 1].fieldW;
-        rect = mCtrl->mDigits[elementId - 1].digitBox;
+        rect = mCtrl->GetBox(elementId - 1);
         rect.SetPosition(mCtrl->ClientToScreen(rect.GetPosition()));
    }
    else
