@@ -39,6 +39,7 @@
 #include <wx/log.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
+#include <wx/weakref.h>
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"

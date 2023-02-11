@@ -13,6 +13,7 @@
 
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
+#include <wx/weakref.h>
 
 class wxTextCtrl;
 class ShuttleGui;

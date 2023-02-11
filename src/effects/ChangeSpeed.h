@@ -15,6 +15,7 @@
 
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
+#include <wx/weakref.h>
 
 class wxSlider;
 class wxChoice;

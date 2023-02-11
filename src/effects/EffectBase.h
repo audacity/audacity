@@ -14,10 +14,6 @@
 #ifndef __AUDACITY_EFFECT_BASE__
 #define __AUDACITY_EFFECT_BASE__
 
-// Wanted to include just wx/weakref.h, but it fails to compile on Windows
-// when you have wxWeakRef to an incomplete type
-#include <wx/dialog.h>
-
 #include "EffectPlugin.h" // to inherit
 
 #include <any>

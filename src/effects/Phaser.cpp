@@ -27,6 +27,7 @@
 
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
+#include <wx/weakref.h>
 
 const EffectParameterMethods& EffectPhaser::Parameters() const
 {

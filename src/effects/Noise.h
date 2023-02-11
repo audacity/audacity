@@ -15,6 +15,7 @@
 
 #include "StatefulPerTrackEffect.h"
 #include "ShuttleAutomation.h"
+#include <wx/weakref.h>
 
 class NumericTextCtrl;
 class ShuttleGui;

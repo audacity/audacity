@@ -23,6 +23,7 @@
 #include <wx/checkbox.h>
 #include <wx/panel.h>
 #include <wx/slider.h>
+#include <wx/weakref.h>
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"

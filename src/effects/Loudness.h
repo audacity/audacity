@@ -15,6 +15,7 @@
 #include <wx/choice.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/weakref.h>
 
 #include "StatefulEffect.h"
 #include "Biquad.h"

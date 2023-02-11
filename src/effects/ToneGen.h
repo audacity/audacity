@@ -16,6 +16,7 @@
 #include "StatefulPerTrackEffect.h"
 #include "ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
+#include <wx/weakref.h>
 
 class NumericTextCtrl;
 class ShuttleGui;

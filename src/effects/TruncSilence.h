@@ -19,6 +19,7 @@
 
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
+#include <wx/weakref.h>
 
 class ShuttleGui;
 class wxChoice;

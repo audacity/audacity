@@ -13,6 +13,7 @@
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
 #include <float.h> // for FLT_MAX
+#include <wx/weakref.h>
 
 class ShuttleGui;
 

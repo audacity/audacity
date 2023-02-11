@@ -27,6 +27,7 @@ the pitch without changing the tempo.
 
 #include "SoundTouchEffect.h"
 #include "ShuttleAutomation.h"
+#include <wx/weakref.h>
 
 class wxSlider;
 class wxChoice;

@@ -26,6 +26,7 @@
 #include <math.h>
 
 #include <wx/slider.h>
+#include <wx/weakref.h>
 
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
