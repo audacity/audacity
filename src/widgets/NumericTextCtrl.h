@@ -40,9 +40,48 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
  * to the user */
 struct BuiltinFormatString;
 
-class NumericField;
+struct NumericField
+{
+public:
+   NumericField(bool _frac, int _base, int _range, bool _zeropad)
+   {
+      frac = _frac;
+      base = _base;
+      range = _range;
+      zeropad = _zeropad;
+      digits = 0;
+   }
+   NumericField( const NumericField & ) = default;
+   NumericField &operator = ( const NumericField & ) = default;
+   //NumericField( NumericField && ) = default;
+   //NumericField &operator = ( NumericField && ) = default;
+   void CreateDigitFormatStr();
+   bool frac; // is it a fractional field
+   int base;  // divide by this (multiply, after decimal point)
+   int range; // then take modulo this
+   int digits;
+   int pos;   // Index of this field in the ValueString
+   int fieldX; // x-position of the field on-screen
+   int fieldW; // width of the field on-screen
+   int labelX; // x-position of the label on-screen
+   bool zeropad;
+   wxString label;
+   wxString formatStr;
+   wxString str;
+};
 
-class DigitInfo;
+struct DigitInfo
+{
+   DigitInfo(int _field, int _index, int _pos)
+   {
+      field = _field;
+      index = _index;
+      pos = _pos;
+   }
+   int field; // Which field
+   int index; // Index of this digit within the field
+   int pos;   // Position in the ValueString
+};
 
 class AUDACITY_DLL_API NumericConverter /* not final */
 {
