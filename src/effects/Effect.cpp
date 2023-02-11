@@ -24,7 +24,6 @@
 #include <wx/sizer.h>
 
 #include "ConfigInterface.h"
-#include "../LabelTrack.h"
 #include "../ProjectSettings.h"
 #include "../SelectFile.h"
 #include "../ShuttleAutomation.h"
@@ -706,91 +705,6 @@ Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
    mIMap.push_back(NULL);
    mOMap.push_back(t.get());
    return mOutputTracks->Add(t);
-}
-
-Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
-   : mpEffect(pEffect)
-{
-   if(!name.empty())
-      mpTrack = LabelTrack::Create(*pEffect->mTracks, name);
-   else
-      mpTrack = LabelTrack::Create(*pEffect->mTracks);
-}
-
-Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
-{
-   mpEffect = that.mpEffect;
-   mpTrack = that.mpTrack;
-   that.Commit();
-}
-
-void Effect::AddedAnalysisTrack::Commit()
-{
-   mpEffect = nullptr;
-}
-
-Effect::AddedAnalysisTrack::~AddedAnalysisTrack()
-{
-   if (mpEffect) {
-      // not committed -- DELETE the label track
-      mpEffect->mTracks->Remove(mpTrack);
-   }
-}
-
-auto Effect::AddAnalysisTrack(const wxString &name) -> std::shared_ptr<AddedAnalysisTrack>
-{
-   return std::shared_ptr<AddedAnalysisTrack>
-      { safenew AddedAnalysisTrack{ this, name } };
-}
-
-Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
-   (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name)
-   : mpEffect(pEffect)
-{
-   // copy LabelTrack here, so it can be undone on cancel
-   auto newTrack = pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime());
-
-   mpTrack = static_cast<LabelTrack*>(newTrack.get());
-
-   // Why doesn't LabelTrack::Copy complete the job? :
-   mpTrack->SetOffset(pOrigTrack->GetStartTime());
-   if (!name.empty())
-      mpTrack->SetName(name);
-
-   // mpOrigTrack came from mTracks which we own but expose as const to subclasses
-   // So it's okay that we cast it back to const
-   mpOrigTrack =
-      pEffect->mTracks->Replace(const_cast<LabelTrack*>(pOrigTrack),
-         newTrack );
-}
-
-Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
-{
-   mpEffect = that.mpEffect;
-   mpTrack = that.mpTrack;
-   mpOrigTrack = std::move(that.mpOrigTrack);
-   that.Commit();
-}
-
-void Effect::ModifiedAnalysisTrack::Commit()
-{
-   mpEffect = nullptr;
-}
-
-Effect::ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
-{
-   if (mpEffect) {
-      // not committed -- DELETE the label track
-      // mpOrigTrack came from mTracks which we own but expose as const to subclasses
-      // So it's okay that we cast it back to const
-      mpEffect->mTracks->Replace(mpTrack, mpOrigTrack);
-   }
-}
-
-auto Effect::ModifyAnalysisTrack
-   (const LabelTrack *pOrigTrack, const wxString &name) -> ModifiedAnalysisTrack
-{
-   return{ this, pOrigTrack, name };
 }
 
 bool Effect::CheckWhetherSkipEffect(const EffectSettings &) const

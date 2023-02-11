@@ -19,6 +19,7 @@
 class wxSlider;
 class wxChoice;
 class wxTextCtrl;
+class LabelTrack;
 class NumericTextCtrl;
 class ShuttleGui;
 
