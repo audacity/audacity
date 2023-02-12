@@ -29,8 +29,8 @@
 #include "AudioIO.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../ProjectSettings.h"
 #include "ViewInfo.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
@@ -84,13 +84,13 @@ const TimeToolBar &TimeToolBar::Get(const AudacityProject &project)
 
 void TimeToolBar::Populate()
 {
-   const auto &settings = ProjectSettings::Get(mProject);
+   const auto &formats = ProjectNumericFormats::Get(mProject);
 
    // Get the default sample rate
    auto rate = ProjectRate::Get(mProject).GetRate();
 
    // Get the default time format
-   auto format = settings.GetAudioTimeFormat();
+   auto format = formats.GetAudioTimeFormat();
 
    // Create the read-only time control
    mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverter::TIME, format, 0.0, rate);

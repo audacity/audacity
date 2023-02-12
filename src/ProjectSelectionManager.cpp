@@ -15,6 +15,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
@@ -56,6 +57,7 @@ ProjectSelectionManager::~ProjectSelectionManager() = default;
 bool ProjectSelectionManager::SnapSelection()
 {
    auto &project = mProject;
+   auto &formats = ProjectNumericFormats::Get( project );
    auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
    auto snapTo = settings.GetSnapTo();
@@ -63,7 +65,7 @@ bool ProjectSelectionManager::SnapSelection()
       auto &viewInfo = ViewInfo::Get( project );
       auto &selectedRegion = viewInfo.selectedRegion;
       NumericConverter nc(NumericConverter::TIME,
-         settings.GetSelectionFormat(), 0, ProjectRate::Get(project).GetRate());
+         formats.GetSelectionFormat(), 0, ProjectRate::Get(project).GetRate());
       const bool nearest = (snapTo == SNAP_NEAREST);
 
       const double oldt0 = selectedRegion.t0();
@@ -128,16 +130,16 @@ void ProjectSelectionManager::AS_SetSnapTo(int snap)
 const NumericFormatSymbol & ProjectSelectionManager::AS_GetSelectionFormat()
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetSelectionFormat();
+   auto &formats = ProjectNumericFormats::Get( project );
+   return formats.GetSelectionFormat();
 }
 
 void ProjectSelectionManager::AS_SetSelectionFormat(
    const NumericFormatSymbol & format)
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   settings.SetSelectionFormat( format );
+   auto &formats = ProjectNumericFormats::Get( project );
+   formats.SetSelectionFormat( format );
 
    gPrefs->Write(wxT("/SelectionFormat"), format.Internal());
    gPrefs->Flush();
@@ -151,16 +153,16 @@ void ProjectSelectionManager::AS_SetSelectionFormat(
 const NumericFormatSymbol & ProjectSelectionManager::TT_GetAudioTimeFormat()
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetAudioTimeFormat();
+   auto &formats = ProjectNumericFormats::Get( project );
+   return formats.GetAudioTimeFormat();
 }
 
 void ProjectSelectionManager::TT_SetAudioTimeFormat(
    const NumericFormatSymbol & format)
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   settings.SetAudioTimeFormat( format );
+   auto &formats = ProjectNumericFormats::Get( project );
+   formats.SetAudioTimeFormat( format );
 
    gPrefs->Write(wxT("/AudioTimeFormat"), format.Internal());
    gPrefs->Flush();
@@ -195,17 +197,17 @@ const NumericFormatSymbol &
 ProjectSelectionManager::SSBL_GetFrequencySelectionFormatName()
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetFrequencySelectionFormatName();
+   auto &formats = ProjectNumericFormats::Get( project );
+   return formats.GetFrequencySelectionFormatName();
 }
 
 void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
+   auto &formats = ProjectNumericFormats::Get( project );
 
-   settings.SetFrequencySelectionFormatName( formatName );
+   formats.SetFrequencySelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/FrequencySelectionFormatName"),
                  formatName.Internal());
@@ -220,17 +222,17 @@ const NumericFormatSymbol &
 ProjectSelectionManager::SSBL_GetBandwidthSelectionFormatName()
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetBandwidthSelectionFormatName();
+   auto &formats = ProjectNumericFormats::Get( project );
+   return formats.GetBandwidthSelectionFormatName();
 }
 
 void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
+   auto &formats = ProjectNumericFormats::Get( project );
 
-   settings.SetBandwidthSelectionFormatName( formatName );
+   formats.SetBandwidthSelectionFormatName( formatName );
 
    gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
       formatName.Internal());

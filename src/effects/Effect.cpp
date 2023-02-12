@@ -21,7 +21,7 @@
 #include <wx/defs.h>
 
 #include "ConfigInterface.h"
-#include "../ProjectSettings.h"
+#include "ProjectNumericFormats.h"
 #include "ShuttleAutomation.h"
 #include "StatefulEffectUIServices.h"
 #include "SyncLock.h"
@@ -197,7 +197,7 @@ const EffectSettingsManager& Effect::GetDefinition() const
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
    if( !IsBatchProcessing() && FindProject() )
-      return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
+      return ProjectNumericFormats::Get( *FindProject() ).GetSelectionFormat();
    return NumericConverter::HoursMinsSecondsFormat();
 }
 

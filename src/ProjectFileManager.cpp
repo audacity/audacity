@@ -25,6 +25,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectWindows.h"
 #include "ProjectRate.h"
@@ -1004,18 +1005,19 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const bool err = results.trackError;
 
    if (bParseSuccess) {
+      auto &formats = ProjectNumericFormats::Get( project );
       auto &settings = ProjectSettings::Get( project );
       window.mbInitializingScrollbar = true; // this must precede AS_SetSnapTo
          // to make persistence of the vertical scrollbar position work
 
       auto &selectionManager = ProjectSelectionManager::Get( project );
       selectionManager.AS_SetSnapTo(settings.GetSnapTo());
-      selectionManager.AS_SetSelectionFormat(settings.GetSelectionFormat());
-      selectionManager.TT_SetAudioTimeFormat(settings.GetAudioTimeFormat());
+      selectionManager.AS_SetSelectionFormat(formats.GetSelectionFormat());
+      selectionManager.TT_SetAudioTimeFormat(formats.GetAudioTimeFormat());
       selectionManager.SSBL_SetFrequencySelectionFormatName(
-      settings.GetFrequencySelectionFormatName());
+      formats.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
-      settings.GetBandwidthSelectionFormatName());
+      formats.GetBandwidthSelectionFormatName());
 
       SelectionBar::Get( project )
          .SetRate( ProjectRate::Get(project).GetRate() );
