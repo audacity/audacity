@@ -307,7 +307,7 @@ bool VampEffect::Init()
          // So is this check not adequate?
           {
              // TODO: more-than-two-channels-message
-             Effect::MessageBox(
+             EffectUIServices::DoMessageBox(*this,
                 XO(
 "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match.") );
              return false;
@@ -328,7 +328,8 @@ bool VampEffect::Init()
    mPlugin.reset(loader->loadPlugin(mKey, mRate, Vamp::HostExt::PluginLoader::ADAPT_ALL));
    if (!mPlugin)
    {
-      Effect::MessageBox( XO("Sorry, failed to load Vamp Plug-in.") );
+      EffectUIServices::DoMessageBox(*this,
+         XO("Sorry, failed to load Vamp Plug-in."));
       return false;
    }
 
@@ -421,8 +422,8 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       {
          if (!mPlugin->initialise(channels, step, block))
          {
-            Effect::MessageBox(
-               XO("Sorry, Vamp Plug-in failed to initialize.") );
+            EffectUIServices::DoMessageBox(*this,
+               XO("Sorry, Vamp Plug-in failed to initialize."));
             return false;
          }
       }

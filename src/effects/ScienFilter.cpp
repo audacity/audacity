@@ -244,7 +244,7 @@ bool EffectScienFilter::Init()
       {
          if (t->GetRate() != rate)
          {
-            Effect::MessageBox(
+            EffectUIServices::DoMessageBox(*this,
                XO(
 "To apply a filter, all selected tracks must have the same sample rate.") );
             return false;

@@ -286,7 +286,7 @@ OptionalMessage Effect::LoadSettingsFromString(
 
    if (!result)
    {
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
             .Format( GetName(), preset ) );
       // We are using default settings and we still wish to continue.
@@ -435,13 +435,4 @@ double Effect::CalcPreviewInputLength(
    const EffectSettings &, double previewLength) const
 {
    return previewLength;
-}
-
-int Effect::MessageBox( const TranslatableString& message,
-   long style, const TranslatableString &titleStr) const
-{
-   auto title = titleStr.empty()
-      ? GetName()
-      : XO("%s: %s").Format( GetName(), titleStr );
-   return AudacityMessageBox(message, title, style);
 }

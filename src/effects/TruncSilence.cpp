@@ -257,7 +257,7 @@ bool EffectTruncSilence::ProcessIndependently()
                   - [&](const Track *pTrack){
                         return channels.contains(pTrack); };
             if (otherTracks) {
-               ::Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   XO(
 "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group.") );
                return false;

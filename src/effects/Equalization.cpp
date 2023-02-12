@@ -329,7 +329,7 @@ bool EffectEqualization::Init()
 
          for (auto track : trackRange) {
             if (track->GetRate() != rate) {
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   XO(
    "To apply Equalization, all selected tracks must have the same sample rate.") );
                return(false);
@@ -345,7 +345,7 @@ bool EffectEqualization::Init()
    hiFreq = rate / 2.0;
    // Unlikely, but better than crashing.
    if (hiFreq <= loFreqI) {
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          XO("Track sample rate is too low for this effect."),
          wxOK | wxCENTRE,
          XO("Effect Unavailable") );

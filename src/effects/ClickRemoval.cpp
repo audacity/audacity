@@ -138,7 +138,7 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
       count++;
    }
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          XO("Algorithm not effective on this audio. Nothing changed."),
          wxOK | wxICON_ERROR );
 
@@ -150,7 +150,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 {
    if (len <= windowSize / 2)
    {
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          XO("Selection must be larger than %d samples.")
             .Format(windowSize / 2),
          wxOK | wxICON_ERROR );
