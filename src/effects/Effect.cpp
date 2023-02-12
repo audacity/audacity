@@ -20,6 +20,7 @@
 
 #include <wx/defs.h>
 
+#include "BasicUI.h"
 #include "ConfigInterface.h"
 #include "ProjectNumericFormats.h"
 #include "ShuttleAutomation.h"
@@ -286,12 +287,13 @@ OptionalMessage Effect::LoadSettingsFromString(
 
    if (!result)
    {
-      EffectUIServices::DoMessageBox(*this,
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
-            .Format( GetName(), preset ) );
+            .Format( GetName(), preset ),
+         MessageBoxOptions{}.Caption(GetName()));
       // We are using default settings and we still wish to continue.
       result = { nullptr };
-      //return false;
    }
    return result;
 }
