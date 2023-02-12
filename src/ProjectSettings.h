@@ -100,21 +100,6 @@ public:
 
    void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
    bool IsOvertones() const { return mbOvertones; }
-   
-   // Selection Format
-   void SetSelectionFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetSelectionFormat() const;
-
-   // AudioTime format
-   void SetAudioTimeFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetAudioTimeFormat() const;
-
-   // Spectral Selection Formats
-   void SetFrequencySelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
-
-   void SetBandwidthSelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
 
    bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
    bool IsSoloNone() const { return mSoloPref == wxT("None"); }
@@ -127,11 +112,6 @@ private:
    void UpdatePrefs() override;
 
    AudacityProject &mProject;
-
-   NumericFormatSymbol mSelectionFormat;
-   NumericFormatSymbol mFrequencySelectionFormatName;
-   NumericFormatSymbol mBandwidthSelectionFormatName;
-   NumericFormatSymbol mAudioTimeFormat;
 
    wxString mSoloPref;
 

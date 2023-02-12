@@ -6,6 +6,7 @@
 #include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
@@ -163,10 +164,10 @@ void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 double GridMove
 (AudacityProject &project, double t, int minPix)
 {
-   auto &settings = ProjectSettings::Get(project);
+   auto &formats = ProjectNumericFormats::Get(project);
    auto rate = ProjectRate::Get(project).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
-   auto format = settings.GetSelectionFormat();
+   auto format = formats.GetSelectionFormat();
 
    NumericConverter nc(NumericConverter::TIME, format, t, rate);
 

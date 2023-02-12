@@ -55,24 +55,8 @@ const ProjectSettings &ProjectSettings::Get( const AudacityProject &project )
 
 ProjectSettings::ProjectSettings(AudacityProject &project)
    : mProject{ project }
-   , mSelectionFormat{ NumericTextCtrl::LookupFormat(
-      NumericConverter::TIME,
-      gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
-}
-, mFrequencySelectionFormatName{ NumericTextCtrl::LookupFormat(
-   NumericConverter::FREQUENCY,
-   gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
-}
-, mBandwidthSelectionFormatName{ NumericTextCtrl::LookupFormat(
-   NumericConverter::BANDWIDTH,
-   gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
-}
-, mAudioTimeFormat{ NumericTextCtrl::LookupFormat(
-   NumericConverter::TIME,
-   gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
-}
-, mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
-, mCurrentBrushRadius ( 5 )
+   , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
+   , mCurrentBrushRadius ( 5 )
 {
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
@@ -116,50 +100,6 @@ void ProjectSettings::UpdatePrefs()
 #endif
 }
 
-const NumericFormatSymbol &
-ProjectSettings::GetFrequencySelectionFormatName() const
-{
-   return mFrequencySelectionFormatName;
-}
-
-void ProjectSettings::SetFrequencySelectionFormatName(
-   const NumericFormatSymbol & formatName)
-{
-   mFrequencySelectionFormatName = formatName;
-}
-
-const NumericFormatSymbol &
-ProjectSettings::GetBandwidthSelectionFormatName() const
-{
-   return mBandwidthSelectionFormatName;
-}
-
-void ProjectSettings::SetBandwidthSelectionFormatName(
-   const NumericFormatSymbol & formatName)
-{
-   mBandwidthSelectionFormatName = formatName;
-}
-
-void ProjectSettings::SetSelectionFormat(const NumericFormatSymbol & format)
-{
-   mSelectionFormat = format;
-}
-
-const NumericFormatSymbol & ProjectSettings::GetSelectionFormat() const
-{
-   return mSelectionFormat;
-}
-
-void ProjectSettings::SetAudioTimeFormat(const NumericFormatSymbol & format)
-{
-   mAudioTimeFormat = format;
-}
-
-const NumericFormatSymbol & ProjectSettings::GetAudioTimeFormat() const
-{
-   return mAudioTimeFormat;
-}
-
 void ProjectSettings::SetSnapTo(int snap)
 {
    mSnapTo = snap;
@@ -198,37 +138,18 @@ void ProjectSettings::SetSyncLock(bool flag)
 static ProjectFileIORegistry::AttributeWriterEntry entry {
 [](const AudacityProject &project, XMLWriter &xmlFile){
    auto &settings = ProjectSettings::Get(project);
-   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
-   xmlFile.WriteAttr(wxT("selectionformat"),
-                     settings.GetSelectionFormat().Internal());
-   xmlFile.WriteAttr(wxT("frequencyformat"),
-                     settings.GetFrequencySelectionFormatName().Internal());
-   xmlFile.WriteAttr(wxT("bandwidthformat"),
-                     settings.GetBandwidthSelectionFormatName().Internal());
+   xmlFile.WriteAttr(wxT("snapto"),
+                     settings.GetSnapTo() ? wxT("on") : wxT("off"));
 }
 };
 
 static ProjectFileIORegistry::AttributeReaderEntries entries {
 // Just a pointer to function, but needing overload resolution as non-const:
 (ProjectSettings& (*)(AudacityProject &)) &ProjectSettings::Get, {
-   // PRL:  The following have persisted as per-project settings for long.
+   // PRL:  The following has persisted as a per-project setting for long.
    // Maybe that should be abandoned.  Enough to save changes in the user
    // preference file.
    { "snapto", [](auto &settings, auto value){
       settings.SetSnapTo(value.ToWString() == wxT("on") ? true : false);
-   } },
-   { "selectionformat", [](auto &settings, auto value){
-      settings.SetSelectionFormat(NumericConverter::LookupFormat(
-              NumericConverter::TIME, value.ToWString()));
-   } },
-   { "frequencyformat", [](auto &settings, auto value){
-      settings.SetFrequencySelectionFormatName(
-              NumericConverter::LookupFormat(
-                 NumericConverter::FREQUENCY, value.ToWString()));
-   } },
-   { "bandwidthformat", [](auto &settings, auto value){
-      settings.SetBandwidthSelectionFormatName(
-              NumericConverter::LookupFormat(
-                 NumericConverter::BANDWIDTH, value.ToWString()));
    } },
 } };
