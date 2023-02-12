@@ -1534,6 +1534,7 @@ set( AUDACITY_LIBRARIES
    lib-audio-io-interface
    lib-project-file-io-interface
    lib-command-parameters-interface
+   lib-numeric-formats-interface
 )
 
 if (${_OPT}use_ffmpeg)
