@@ -36,6 +36,7 @@ set( LIBRARIES
    lib-audio-io
    lib-wave-track
    lib-command-parameters
+   lib-numeric-formats
 )
 
 if ( ${_OPT}has_networking )
