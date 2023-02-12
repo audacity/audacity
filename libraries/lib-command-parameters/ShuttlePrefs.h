@@ -14,7 +14,7 @@
 
 #include "SettingsVisitor.h"
 
-class ShuttlePrefs final
+class COMMAND_PARAMETERS_API ShuttlePrefs final
 {
 public:
    bool mbStoreInClient{};
