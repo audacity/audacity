@@ -30,8 +30,9 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../../../WaveClip.h"
-#include "../../../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "../../../../WaveTrackLocation.h"
 #include "../../../../prefs/WaveformSettings.h"
 
 #include "FrameStatistics.h"
@@ -120,12 +121,13 @@ void WaveformView::DoSetMinimized( bool minimized )
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
    if( bHalfWave )
    {
+      auto &cache = WaveformScale::Get(*wt);
       if (minimized)
          // Zoom to show fractionally more than the top half of the wave.
-         wt->SetDisplayBounds( -0.01f, 1.0f );
+         cache.SetDisplayBounds( -0.01f, 1.0f );
       else
          // Zoom out full
-         wt->SetDisplayBounds( -1.0f, 1.0f );
+         cache.SetDisplayBounds( -1.0f, 1.0f );
    }
 #endif
 
@@ -723,7 +725,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    double leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
 
-   const float dBRange = track->GetWaveformSettings().dBRange;
+   auto &settings = WaveformSettings::Get(*track);
+   const float dBRange = settings.dBRange;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
    int iColorIndex = clip->GetColourIndex();
@@ -732,7 +735,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    // The bounds (controlled by vertical zooming; -1.0...1.0
    // by default)
    float zoomMin, zoomMax;
-   track->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*track);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
@@ -759,7 +763,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       DrawWaveformBackground(context, leftOffset, mid,
          env,
          zoomMin, zoomMax,
-         track->ZeroLevelYCoordinate(mid),
+         cache.ZeroLevelYCoordinate(mid),
          dB, dBRange,
          tt0, tt1,
          !track->GetSelected(), highlightEnvelope);
@@ -1005,7 +1009,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
    highlight = target && target->GetTrack().get() == track;
 #endif
 
-   const bool dB = !track->GetWaveformSettings().isLinear();
+   const bool dB = !WaveformSettings::Get(*track).isLinear();
 
    const auto &blankSelectedBrush = artist->blankSelectedBrush;
    const auto &blankBrush = artist->blankBrush;
@@ -1037,8 +1041,10 @@ void WaveformView::Draw(
       // If both channels are visible, we will duplicate this effort, but that
       // matters little.
       for( auto channel:
-          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
-         channel->UpdateLocationsCache();
+          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) ) {
+         auto &locationsCache = WaveTrackLocations::Get( *channel );
+         locationsCache.Update( *channel );
+      }
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());

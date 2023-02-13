@@ -318,7 +318,7 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
-void SpecCache::Grow(size_t len_, const SpectrogramSettings& settings,
+void SpecCache::Grow(size_t len_, SpectrogramSettings& settings,
                        double pixelsPerSecond, double start_)
 {
    settings.CacheWindows();
@@ -477,7 +477,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(const WaveClip &clip,
 
    const auto track =
       static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
-   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   auto &settings = SpectrogramSettings::Get(*track);
    const auto rate = clip.GetRate();
 
    //Trim offset comparison failure forces spectrogram cache rebuild

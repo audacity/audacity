@@ -45,7 +45,7 @@
 #include "../SelectionState.h"
 #include "../ShuttleGui.h"
 #include "../TagsEditor.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/AudacityTextEntryDialog.h"

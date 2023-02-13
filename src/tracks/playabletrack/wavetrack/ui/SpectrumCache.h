@@ -54,8 +54,8 @@ public:
        float* __restrict out) const;
 
    // Grow the cache while preserving the (possibly now invalid!) contents
-   void Grow(size_t len_, const SpectrogramSettings& settings,
-               double pixelsPerSecond, double start_);
+   void Grow(size_t len_, SpectrogramSettings& settings,
+      double pixelsPerSecond, double start_);
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate

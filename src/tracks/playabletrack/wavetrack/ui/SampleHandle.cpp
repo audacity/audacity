@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../../../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 #include "../../../../widgets/AudacityMessageBox.h"
 
@@ -134,9 +134,9 @@ UIHandlePtr SampleHandle::HitTest
       return {};
 
    // Get y distance of envelope point from center line (in pixels).
+   auto &cache = WaveformScale::Get(*wavetrack);
    float zoomMin, zoomMax;
-
-   wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    double envValue = 1.0;
    Envelope* env = wavetrack->GetEnvelopeAtTime(time);
@@ -144,11 +144,12 @@ UIHandlePtr SampleHandle::HitTest
       // Calculate sample as it would be rendered, so quantize time
       envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
 
-   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
+   auto &settings = WaveformSettings::Get(*wavetrack);
+   const bool dB = !settings.isLinear();
    int yValue = GetWaveYPos(oneSample * envValue,
       zoomMin, zoomMax,
       rect.height, dB, true, 
-      wavetrack->GetWaveformSettings().dBRange, false) + rect.y;
+      settings.dBRange, false) + rect.y;
 
    // Get y position of mouse (in pixels)
    int yMouse = state.m_y;
@@ -449,14 +450,16 @@ float SampleHandle::FindSampleEditingLevel
 {
    // Calculate where the mouse is located vertically (between +/- 1)
    float zoomMin, zoomMax;
-   mClickedTrack->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*mClickedTrack);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    const int yy = event.m_y - mRect.y;
    const int height = mRect.GetHeight();
-   const bool dB = !mClickedTrack->GetWaveformSettings().isLinear();
+   auto &settings = WaveformSettings::Get(*mClickedTrack);
+   const bool dB = !settings.isLinear();
    float newLevel =
       ::ValueOfPixel(yy, height, false, dB, 
-         mClickedTrack->GetWaveformSettings().dBRange, zoomMin, zoomMax);
+         settings.dBRange, zoomMin, zoomMax);
 
    //Take the envelope into account
    const auto time = viewInfo.PositionToTime(event.m_x, mRect.x);

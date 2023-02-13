@@ -28,7 +28,7 @@
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/NumericTextCtrl.h"

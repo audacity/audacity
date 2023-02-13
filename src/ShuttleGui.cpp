@@ -2234,12 +2234,6 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
       Var = Val;
 };
 
-#ifdef EXPERIMENTAL_TRACK_PANEL
-// Additional includes down here, to make it easier to split this into
-// two files at some later date.
-#include "../extnpanel-src/GuiWaveTrack.h"
-#endif
-
 ShuttleGui::ShuttleGui(
    wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize)
    : ShuttleGuiBase( pParent, ShuttleMode, vertical, minSize )

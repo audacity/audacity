@@ -13,7 +13,7 @@
 #include "WaveTrackView.h"
 #include "ViewInfo.h"
 
-#include "../../../../WaveClip.h"
+#include "WaveClip.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "ProjectHistory.h"

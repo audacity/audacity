@@ -30,8 +30,6 @@
 #include "InconsistencyException.h"
 #include "UserException.h"
 
-#include "prefs/SpectrogramSettings.h"
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif

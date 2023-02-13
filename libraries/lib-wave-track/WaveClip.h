@@ -89,14 +89,14 @@ public:
    }
 };
 
-struct AUDACITY_DLL_API WaveClipListener
+struct WAVE_TRACK_API WaveClipListener
 {
    virtual ~WaveClipListener() = 0;
    virtual void MarkChanged() = 0;
    virtual void Invalidate() = 0;
 };
 
-class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
+class WAVE_TRACK_API WaveClip final : public XMLTagHandler
    , public ClientData::Site< WaveClip, WaveClipListener >
 {
 private:

@@ -30,11 +30,12 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "../../../../WaveClip.h"
-#include "../../../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
 #include "SampleTrackCache.h"
+#include "WaveTrackLocation.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -201,10 +202,11 @@ void SpectrumView::DoSetMinimized( bool minimized )
       // Nyquist frequency.
       constexpr auto max = std::numeric_limits<float>::max();
       const bool spectrumLinear =
-         (wt->GetSpectrogramSettings().scaleType ==
+         (SpectrogramSettings::Get(*wt).scaleType ==
             SpectrogramSettings::stLinear);
       // Zoom out full
-      wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
+      SpectrogramBounds::Get(*wt)
+         .SetBounds( spectrumLinear ? 0.0f : 1.0f, max );
    }
 #endif
 
@@ -343,12 +345,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       dynamic_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    if (!track)
       // Leave a blank rectangle.
-      // TODO: rewrite GetSpectrogramSettings and GetSpectrumBounds so they
-      // are not members of WaveTrack, but fetch UI related ClientData
+      // TODO: rewrite GetSpectrumBounds so it is
+      // not a member of WaveTrack, but fetch UI related ClientData
       // attachments; then this downcast from SampleTrack will not be needed.
       return;
 
-   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   auto &settings = SpectrogramSettings::Get(*track);
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
@@ -423,7 +425,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
-   track->GetSpectrumBounds(&minFreq, &maxFreq);
+   SpectrogramBounds::Get(*track)
+      .GetBounds(*track, minFreq, maxFreq);
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
@@ -880,8 +883,10 @@ void SpectrumView::Draw(
       // If both channels are visible, we will duplicate this effort, but that
       // matters little.
       for( auto channel:
-          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
-         channel->UpdateLocationsCache();
+          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) ) {
+         auto &locationsCache = WaveTrackLocations::Get( *channel );
+         locationsCache.Update( *channel );
+      }
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());

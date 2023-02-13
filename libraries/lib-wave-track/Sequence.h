@@ -51,9 +51,9 @@ using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
 
 // Put extra symbol information in the release build, for the purpose of gathering
 // profiling information (as from Windows Process Monitor), when there otherwise
-// isn't a need for AUDACITY_DLL_API.
+// isn't a need for WAVE_TRACK_API.
 #ifdef IS_ALPHA
-   #define PROFILE_DLL_API AUDACITY_DLL_API
+   #define PROFILE_DLL_API WAVE_TRACK_API
 #else
    #define PROFILE_DLL_API
 #endif

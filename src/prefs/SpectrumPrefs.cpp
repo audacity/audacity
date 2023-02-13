@@ -27,7 +27,7 @@
 #include "../ShuttleGui.h"
 
 #include "../TrackPanel.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 
 #include <algorithm>
@@ -42,10 +42,10 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
 , mPopulating(false)
 {
    if (mWt) {
-      SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      auto &settings = SpectrogramSettings::Get(*wt);
       mOrigDefaulted = mDefaulted = (&SpectrogramSettings::defaults() == &settings);
       mTempSettings = mOrigSettings = settings;
-      wt->GetSpectrumBounds(&mOrigMin, &mOrigMax);
+      SpectrogramBounds::Get(*wt).GetBounds(*wt, mOrigMin, mOrigMax);
       mTempSettings.maxFreq = mOrigMax;
       mTempSettings.minFreq = mOrigMin;
       mOrigPlacements = WaveTrackView::Get( *mWt ).SavePlacements();
@@ -399,13 +399,13 @@ void SpectrumPrefs::Rollback()
 
       for (auto channel : channels) {
          if (mOrigDefaulted) {
-            channel->SetSpectrogramSettings({});
-            channel->SetSpectrumBounds(-1, -1);
+            SpectrogramSettings::Reset(*channel);
+            SpectrogramBounds::Get(*channel).SetBounds(-1, -1);
          }
          else {
-            auto &settings =
-               channel->GetIndependentSpectrogramSettings();
-            channel->SetSpectrumBounds(mOrigMin, mOrigMax);
+            auto &settings = SpectrogramSettings::Own(*channel);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(mOrigMin, mOrigMax);
             settings = mOrigSettings;
          }
       }
@@ -448,14 +448,15 @@ void SpectrumPrefs::Preview()
    if (mWt) {
       for (auto channel : TrackList::Channels(mWt)) {
          if (mDefaulted) {
-            channel->SetSpectrogramSettings({});
+            SpectrogramSettings::Reset(*channel);
             // ... and so that the vertical scale also defaults:
-            channel->SetSpectrumBounds(-1, -1);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(-1, -1);
          }
          else {
-            SpectrogramSettings &settings =
-               channel->GetIndependentSpectrogramSettings();
-            channel->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
+            SpectrogramSettings &settings = SpectrogramSettings::Own(*channel);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
             settings = mTempSettings;
          }
       }
