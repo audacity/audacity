@@ -20390,7 +20390,7 @@ msgstr "Avertissements seulement"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Error: There is insufficient space to create labels.~%"
-msgstr "Erreur : l'espace est insuffisant pour créer des libellés.~ %"
+msgstr "Erreur : l'espace est insuffisant pour créer des libellés.~%"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
