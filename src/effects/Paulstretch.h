@@ -11,7 +11,7 @@
 #define __AUDACITY_EFFECT_PAULSTRETCH__
 
 #include "StatefulEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include <float.h> // for FLT_MAX
 
 class ShuttleGui;

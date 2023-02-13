@@ -20,7 +20,7 @@ class Effect;
 /*!
  It is meant to be stateless, so all member functions are const
  */
-class AUDACITY_DLL_API EffectParameterMethods {
+class COMMAND_PARAMETERS_API EffectParameterMethods {
 public:
    virtual ~EffectParameterMethods();
    virtual void Reset(Effect &effect) const = 0;
@@ -241,7 +241,8 @@ private:
 /**************************************************************************//**
 \brief SettingsVisitor that gets parameter values into a string.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleGetAutomation final : public ConstSettingsVisitor
+class COMMAND_PARAMETERS_API ShuttleGetAutomation final
+   : public ConstSettingsVisitor
 {
 public:
    ConstSettingsVisitor & Optional(const bool & var) override;
@@ -266,7 +267,7 @@ public:
 /**************************************************************************//**
 \brief SettingsVisitor that sets parameters to a value (from a string)
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleSetAutomation final : public SettingsVisitor
+class COMMAND_PARAMETERS_API ShuttleSetAutomation final : public SettingsVisitor
 {
 public:
    ShuttleSetAutomation() {}
@@ -307,7 +308,7 @@ public:
 /**************************************************************************//**
 \brief SettingsVisitor that sets parameters to their default values.
 ********************************************************************************/
-class ShuttleDefaults final : public SettingsVisitor
+class COMMAND_PARAMETERS_API ShuttleDefaults final : public SettingsVisitor
 {
 public:
    wxString Result;

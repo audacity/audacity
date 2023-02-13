@@ -22,7 +22,7 @@
 
 #include "ConfigInterface.h"
 #include "../ProjectSettings.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include "StatefulEffectUIServices.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"

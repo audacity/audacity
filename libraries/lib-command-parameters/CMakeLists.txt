@@ -4,6 +4,8 @@ effect, or command
 ]]
 
 set( SOURCES
+   ShuttleAutomation.cpp
+   ShuttleAutomation.h
    ShuttlePrefs.cpp
    ShuttlePrefs.h
    WrappedType.cpp

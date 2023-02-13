@@ -15,7 +15,7 @@
 #define __AUDACITY_EFFECT_DTMF__
 
 #include "StatelessPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class wxSlider;
 class wxStaticText;

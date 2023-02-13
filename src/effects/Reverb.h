@@ -13,7 +13,7 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include "StatelessPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 
 struct Reverb_priv_t;

@@ -12,7 +12,7 @@
 #define __AUDACITY_EFFECT_REPEAT__
 
 #include "StatefulEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class wxTextCtrl;
 class ShuttleGui;
