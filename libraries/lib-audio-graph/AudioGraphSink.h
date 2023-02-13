@@ -21,7 +21,7 @@ namespace AudioGraph {
 class Buffers;
 
 //! Downstream receiver of sample streams, taking Buffers as external context
-class Sink {
+class AUDIO_GRAPH_API Sink {
 public:
    using Buffers = AudioGraph::Buffers;
 

@@ -31,8 +31,8 @@ Edward Hui
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../../images/Cursors.h"
 #include "../playabletrack/wavetrack/ui/SpectrumView.h"
@@ -67,9 +67,9 @@ namespace
                                wxInt64 trackTopEdge,
                                int trackHeight)
    {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      const auto &settings = SpectrogramSettings::Get(*wt);
       float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(frequency);
       return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
@@ -93,9 +93,10 @@ namespace
           trackTopEdge + trackHeight - mouseYCoordinate < FREQ_SNAP_DISTANCE)
          return -1;
 
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      const auto &settings = SpectrogramSettings::Get(*wt);
+      const auto &cache = SpectrogramBounds::Get(*wt);
       float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      cache.GetBounds(*wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
       return numberScale.PositionToValue(1.0 - p);
@@ -127,7 +128,7 @@ namespace
             pTrackView->FindTrack() &&
             pTrackView->FindTrack()->TypeSwitch< bool >(
                   [&](const WaveTrack *wt) {
-                     const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+                     const auto &settings = SpectrogramSettings::Get(*wt);
                      return settings.SpectralSelectionEnabled();
                   });
    }
@@ -157,8 +158,9 @@ BrushHandle::BrushHandle
 
    mRect = st.rect;
    mBrushRadius = pSettings.GetBrushRadius();
-   mFreqUpperBound = wt->GetSpectrogramSettings().maxFreq - 1;
-   mFreqLowerBound = wt->GetSpectrogramSettings().minFreq + 1;
+   const auto &settings = SpectrogramSettings::Get(*wt);
+   mFreqUpperBound = settings.maxFreq - 1;
+   mFreqLowerBound = settings.minFreq + 1;
    mIsSmartSelection = pSettings.IsSmartSelection();
    mIsOvertones = pSettings.IsOvertones();
    // Borrowed from TimeToLongSample

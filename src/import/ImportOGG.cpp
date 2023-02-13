@@ -70,7 +70,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include <vorbis/vorbisfile.h>
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;

@@ -43,7 +43,7 @@
 #include "float_cast.h"
 #include "../widgets/Ruler.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "AllThemeResources.h"
 
 enum

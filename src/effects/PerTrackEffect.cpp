@@ -27,8 +27,8 @@
 #include "SampleTrackSource.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../WaveTrackSink.h"
+#include "WaveTrack.h"
+#include "WaveTrackSink.h"
 
 AudioGraph::Sink::~Sink() = default;
 

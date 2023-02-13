@@ -49,7 +49,7 @@ if(UNIX AND NOT APPLE)
    find_package(JACK QUIET)
 
    if( JACK_FOUND )
-      list(APPEND conan_package_options  "use_jack=False")
+      list(APPEND conan_package_options  "use_jack=True")
    endif()
 endif()
 

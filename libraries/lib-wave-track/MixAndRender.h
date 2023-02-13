@@ -37,7 +37,7 @@ class WaveTrackFactory;
  * @param newTrackName used only when there is more than one input track (one
  * mono channel or a stereo pair); else the unique track's name is copied
  */
-void AUDACITY_DLL_API MixAndRender(
+void WAVE_TRACK_API MixAndRender(
    const TrackIterRange<const WaveTrack> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,
@@ -50,7 +50,7 @@ void AUDACITY_DLL_API MixAndRender(
 enum ChannelName : int;
 using ChannelNames = const ChannelName *;
 
-AUDACITY_DLL_API
+WAVE_TRACK_API
 std::vector<MixerOptions::StageSpecification>
 GetEffectStages(const WaveTrack &track);
 

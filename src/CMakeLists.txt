@@ -179,14 +179,10 @@ list( APPEND SOURCES
       Menus.h
       MIDIPlay.cpp
       MIDIPlay.h
-      MixAndRender.cpp
-      MixAndRender.h
       MixerBoard.cpp
       MixerBoard.h
       NoteTrack.cpp
       NoteTrack.h
-      PasteOverPreservingClips.cpp
-      PasteOverPreservingClips.h
       PitchName.cpp
       PitchName.h
       PluginRegistrationDialog.cpp
@@ -219,8 +215,6 @@ list( APPEND SOURCES
       ProjectWindows.h
       RealtimeEffectPanel.cpp
       RealtimeEffectPanel.h
-      SampleBlock.cpp
-      SampleBlock.h
       Screenshot.cpp
       Screenshot.h
       ScrubState.cpp
@@ -231,8 +225,6 @@ list( APPEND SOURCES
       SelectFile.h
       SelectionState.cpp
       SelectionState.h
-      Sequence.cpp
-      Sequence.h
       Shuttle.cpp
       Shuttle.h
       ShuttleAutomation.cpp
@@ -300,13 +292,8 @@ list( APPEND SOURCES
       TransportUtilities.h
       VoiceKey.cpp
       VoiceKey.h
-      WaveClip.cpp
-      WaveClip.h
-      WaveTrack.cpp
-      WaveTrack.h
+      WaveTrackLocation.cpp
       WaveTrackLocation.h
-      WaveTrackSink.cpp
-      WaveTrackSink.h
       WrappedType.cpp
       WrappedType.h
 
@@ -1218,6 +1205,7 @@ list( APPEND LDFLAGS
       $<$<CXX_COMPILER_ID:GNU>:-Wl,--disable-new-dtags>
 )
 
+find_package( Threads QUIET )
 #
 #
 #
@@ -1254,8 +1242,7 @@ set( LIBRARIES
       $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:z>
-      $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
+      $<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
 )
 
 set( BUILDING_AUDACITY YES )
@@ -1531,6 +1518,7 @@ set( AUDACITY_LIBRARIES
    lib-graphics-interface
    lib-tags-interface
    lib-audio-io-interface
+   lib-wave-track-interface
 )
 
 if (${_OPT}use_ffmpeg)

@@ -65,7 +65,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "FLAC++/decoder.h"
 
 #include "Prefs.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 #ifdef USE_LIBID3TAG

@@ -22,7 +22,7 @@ class WaveTrack;
  @param len length to paste over in oldTrack
  @param newContents begins at offset 0
  */
-void PasteOverPreservingClips(
+WAVE_TRACK_API void PasteOverPreservingClips(
    WaveTrack &oldTrack, sampleCount start, sampleCount len,
    WaveTrack &newContents);
 

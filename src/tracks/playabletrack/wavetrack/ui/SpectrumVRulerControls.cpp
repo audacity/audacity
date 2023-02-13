@@ -17,7 +17,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../widgets/Ruler.h"
 
@@ -87,10 +87,10 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
       const int height = evt.rect.GetHeight();
       {
          const float delta = steps * movement / height;
-         SpectrogramSettings &settings = wt->GetIndependentSpectrogramSettings();
+         SpectrogramSettings &settings = SpectrogramSettings::Own(*wt);
          const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
          float bottom, top;
-         wt->GetSpectrumBounds(&bottom, &top);
+         SpectrogramBounds::Get(*wt).GetBounds(*wt, bottom, top);
          const double rate = wt->GetRate();
          const float bound = rate / 2;
          const NumberScale numberScale(settings.GetScale(bottom, top));
@@ -104,7 +104,8 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
                   numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
          
          for (auto channel : TrackList::Channels(wt))
-            channel->SetSpectrumBounds(newBottom, newTop);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(newBottom, newTop);
       }
    }
    else
@@ -135,9 +136,9 @@ void SpectrumVRulerControls::DoUpdateVRuler(
    const wxRect &rect, const WaveTrack *wt )
 {
    auto vruler = &WaveTrackVRulerControls::ScratchRuler();
-   const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+   const auto &settings = SpectrogramSettings::Get(*wt);
    float minFreq, maxFreq;
-   wt->GetSpectrumBounds(&minFreq, &maxFreq);
+   SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
    vruler->SetDbMirrorValue( 0.0 );
    
    switch (settings.scaleType) {
@@ -190,9 +191,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          vruler->SetRange(maxFreq, minFreq);
          vruler->SetUnits({});
          vruler->SetLog(true);
-         NumberScale scale(
-            wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
-               .Reversal() );
+         NumberScale scale(settings.GetScale(minFreq, maxFreq).Reversal() );
          vruler->SetNumberScale(scale);
       }
          break;

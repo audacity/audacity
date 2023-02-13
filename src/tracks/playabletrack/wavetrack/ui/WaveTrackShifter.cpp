@@ -5,8 +5,8 @@
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "ViewInfo.h"
-#include "../../../../WaveClip.h"
-#include "../../../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "WaveTrackView.h"
 
 class WaveTrackShifter final : public TrackShifter {

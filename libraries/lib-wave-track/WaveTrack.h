@@ -21,17 +21,11 @@
 #include <wx/thread.h>
 #include <wx/longlong.h>
 
-class wxRect;
-
-#include "WaveTrackLocation.h"
-
 namespace BasicUI{ class ProgressDialog; }
 
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
-class SpectrogramSettings;
-class WaveformSettings;
 class TimeWarper;
 
 class Sequence;
@@ -53,7 +47,7 @@ using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack final : public WritableSampleTrack
+class WAVE_TRACK_API WaveTrack final : public WritableSampleTrack
 {
 public:
    /// \brief Structure to hold region of a wavetrack and a comparison function
@@ -102,7 +96,6 @@ private:
    wxString MakeNewClipName() const;
  public:
 
-   typedef WaveTrackLocation Location;
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
@@ -160,15 +153,6 @@ private:
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
-   const SpectrogramSettings &GetSpectrogramSettings() const;
-   SpectrogramSettings &GetSpectrogramSettings();
-   SpectrogramSettings &GetIndependentSpectrogramSettings();
-   void SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pSettings);
-
-   const WaveformSettings &GetWaveformSettings() const;
-   WaveformSettings &GetWaveformSettings();
-   void SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings);
-   void UseSpectralPrefs( bool bUse=true );
    //
    // High-level editing
    //
@@ -491,12 +475,6 @@ private:
    // clipidx1 and clipidx2 are indices into the clip list.
    void MergeClips(int clipidx1, int clipidx2);
 
-   // Cache special locations (e.g. cut lines) for later speedy access
-   void UpdateLocationsCache() const;
-
-   // Get cached locations
-   const std::vector<Location> &GetCachedLocations() const { return mDisplayLocationsCache; }
-
    // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
    void ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
 
@@ -512,22 +490,6 @@ private:
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
-
-   int GetLastScaleType() const { return mLastScaleType; }
-   void SetLastScaleType() const;
-
-   int GetLastdBRange() const { return mLastdBRange; }
-   void SetLastdBRange() const;
-
-   void GetDisplayBounds(float *min, float *max) const;
-   void SetDisplayBounds(float min, float max) const;
-   void GetSpectrumBounds(float *min, float *max) const;
-   void SetSpectrumBounds(float min, float max) const;
-
-   // For display purposes, calculate the y coordinate where the midline of
-   // the wave should be drawn, if display minimum and maximum map to the
-   // bottom and top.  Maybe that is out of bounds.
-   int ZeroLevelYCoordinate(wxRect rect) const;
 
    class IntervalData final : public Track::IntervalData {
    public:
@@ -562,20 +524,6 @@ private:
    std::atomic<float> mPan{ 0.0f };
    int           mWaveColorIndex;
 
-
-   //
-   // Data that should be part of GUIWaveTrack
-   // and will be taken out of the WaveTrack class:
-   //
-   mutable float         mDisplayMin;
-   mutable float         mDisplayMax;
-   mutable float         mSpectrumMin;
-   mutable float         mSpectrumMax;
-
-   mutable int   mLastScaleType; // last scale type choice
-   mutable int           mLastdBRange;
-   mutable std::vector <Location> mDisplayLocationsCache;
-
 private:
    void DoSetPan(float value);
    void DoSetGain(float value);
@@ -587,9 +535,6 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-
-   std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
-   std::unique_ptr<WaveformSettings> mpWaveformSettings;
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
@@ -610,12 +555,12 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs = nullptr);
 
 // Non-mutating version of the above
-void InspectBlocks(const TrackList &tracks,
+WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
    BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
 class ProjectRate;
 
-class AUDACITY_DLL_API WaveTrackFactory final
+class WAVE_TRACK_API WaveTrackFactory final
    : public ClientData::Base
 {
  public:
@@ -656,17 +601,17 @@ class AUDACITY_DLL_API WaveTrackFactory final
    SampleBlockFactoryPtr mpFactory;
 };
 
-extern AUDACITY_DLL_API BoolSetting
+extern WAVE_TRACK_API BoolSetting
      EditClipsCanMove
 ;
 
-extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
+extern WAVE_TRACK_API StringSetting AudioTrackNameSetting;
 
-AUDACITY_DLL_API bool GetEditClipsCanMove();
+WAVE_TRACK_API bool GetEditClipsCanMove();
 
 // Generate a registry for serialized data
 #include "XMLMethodRegistry.h"
 using WaveTrackIORegistry = XMLMethodRegistry<WaveTrack>;
-DECLARE_XML_METHOD_REGISTRY( AUDACITY_DLL_API, WaveTrackIORegistry );
+DECLARE_XML_METHOD_REGISTRY( WAVE_TRACK_API, WaveTrackIORegistry );
 
 #endif // __AUDACITY_WAVETRACK__

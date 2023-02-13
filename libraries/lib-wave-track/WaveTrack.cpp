@@ -54,8 +54,6 @@ from the project that will own the track.
 
 #include "TimeWarper.h"
 #include "QualitySettings.h"
-#include "prefs/SpectrogramSettings.h"
-#include "prefs/WaveformSettings.h"
 
 #include "InconsistencyException.h"
 
@@ -144,27 +142,12 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mFormat = format;
    mRate = (int) rate;
    mWaveColorIndex = 0;
-   mDisplayMin = -1.0;
-   mDisplayMax = 1.0;
-   mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
-   mLastScaleType = -1;
-   mLastdBRange = -1;
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
    : WritableSampleTrack(orig, std::move(a))
    , mpFactory( orig.mpFactory )
-   , mpSpectrumSettings(orig.mpSpectrumSettings
-      ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
-      : nullptr
-   )
-   , mpWaveformSettings(orig.mpWaveformSettings 
-      ? std::make_unique<WaveformSettings>(*orig.mpWaveformSettings)
-      : nullptr
-   )
 {
-   mLastScaleType = -1;
-   mLastdBRange = -1;
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
       mClips.push_back
@@ -182,32 +165,15 @@ void WaveTrack::Init(const WaveTrack &orig)
    mRate = orig.mRate;
    DoSetGain(orig.GetGain());
    DoSetPan(orig.GetPan());
-   mDisplayMin = orig.mDisplayMin;
-   mDisplayMax = orig.mDisplayMax;
-   mSpectrumMin = orig.mSpectrumMin;
-   mSpectrumMax = orig.mSpectrumMax;
-   mDisplayLocationsCache.clear();
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
 {
    Init(orig);
 
-   {
-      auto &settings = orig.mpSpectrumSettings;
-      if (settings)
-         mpSpectrumSettings = std::make_unique<SpectrogramSettings>(*settings);
-      else
-         mpSpectrumSettings.reset();
-   }
-
-   {
-      auto &settings = orig.mpWaveformSettings;
-      if (settings)
-         mpWaveformSettings = std::make_unique<WaveformSettings>(*settings);
-      else
-         mpWaveformSettings.reset();
-   }
+   // Copy attached data from orig.  Nullify data in this where orig had null.
+   Attachments &attachments = *this;
+   attachments = orig;
 }
 
 void WaveTrack::Merge(const Track &orig)
@@ -216,12 +182,9 @@ void WaveTrack::Merge(const Track &orig)
       const WaveTrack &wt = *pwt;
       DoSetGain(wt.GetGain());
       DoSetPan(wt.GetPan());
-      mDisplayMin = wt.mDisplayMin;
-      mDisplayMax = wt.mDisplayMax;
-      SetSpectrogramSettings(wt.mpSpectrumSettings
-         ? std::make_unique<SpectrogramSettings>(*wt.mpSpectrumSettings) : nullptr);
-      SetWaveformSettings
-         (wt.mpWaveformSettings ? std::make_unique<WaveformSettings>(*wt.mpWaveformSettings) : nullptr);
+      // Copy attached data from orig.  Nullify data in this where orig had null.
+      Attachments &attachments = *this;
+      attachments = *pwt;
    });
    WritableSampleTrack::Merge(orig);
 }
@@ -321,84 +284,6 @@ auto WaveTrack::GetTypeInfo() const -> const TypeInfo &
 auto WaveTrack::ClassTypeInfo() -> const TypeInfo &
 {
    return typeInfo();
-}
-
-void WaveTrack::SetLastScaleType() const
-{
-   mLastScaleType = GetWaveformSettings().scaleType;
-}
-
-void WaveTrack::SetLastdBRange() const
-{
-   mLastdBRange = GetWaveformSettings().dBRange;
-}
-
-void WaveTrack::GetDisplayBounds(float *min, float *max) const
-{
-   *min = mDisplayMin;
-   *max = mDisplayMax;
-}
-
-void WaveTrack::SetDisplayBounds(float min, float max) const
-{
-   mDisplayMin = min;
-   mDisplayMax = max;
-}
-
-void WaveTrack::GetSpectrumBounds(float *min, float *max) const
-{
-   const double rate = GetRate();
-
-   const SpectrogramSettings &settings = GetSpectrogramSettings();
-   const SpectrogramSettings::ScaleType type = settings.scaleType;
-
-   const float top = (rate / 2.);
-
-   float bottom;
-   if (type == SpectrogramSettings::stLinear)
-      bottom = 0.0f;
-   else if (type == SpectrogramSettings::stPeriod) {
-      // special case
-      const auto half = settings.GetFFTLength() / 2;
-      // EAC returns no data for below this frequency:
-      const float bin2 = rate / half;
-      bottom = bin2;
-   }
-   else
-      // logarithmic, etc.
-      bottom = 1.0f;
-
-   {
-      float spectrumMax = mSpectrumMax;
-      if (spectrumMax < 0)
-         spectrumMax = settings.maxFreq;
-      if (spectrumMax < 0)
-         *max = top;
-      else
-         *max = std::max(bottom, std::min(top, spectrumMax));
-   }
-
-   {
-      float spectrumMin = mSpectrumMin;
-      if (spectrumMin < 0)
-         spectrumMin = settings.minFreq;
-      if (spectrumMin < 0)
-         *min = std::max(bottom, top / 1000.0f);
-      else
-         *min = std::max(bottom, std::min(top, spectrumMin));
-   }
-}
-
-void WaveTrack::SetSpectrumBounds(float min, float max) const
-{
-   mSpectrumMin = min;
-   mSpectrumMax = max;
-}
-
-int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
-{
-   return rect.GetTop() +
-      (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }
 
 template< typename Container >
@@ -721,19 +606,14 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          WaveClip *const newClip = newTrack->mClips.back().get();
          newClip->Offset(-t0);
       }
-      else if (t1 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
+      else if (clip->CountSamples(t0, t1) >= 1)
       {
          // Clip is affected by command
          //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
-         const double clip_t0 = std::max(t0, clip->GetPlayStartTime());
-         const double clip_t1 = std::min(t1, clip->GetPlayEndTime());
-
          auto newClip = std::make_unique<WaveClip>
-            (*clip, mpFactory, ! forClipboard, clip_t0, clip_t1);
+            (*clip, mpFactory, ! forClipboard, t0, t1);
          newClip->SetName(clip->GetName());
-
-         //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
          newClip->Offset(-t0);
          if (newClip->GetPlayStartTime() < 0)
@@ -778,75 +658,6 @@ void WaveTrack::Clear(double t0, double t1)
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
    HandleClear(t0, t1, true, false);
-}
-
-const SpectrogramSettings &WaveTrack::GetSpectrogramSettings() const
-{
-   if (mpSpectrumSettings)
-      return *mpSpectrumSettings;
-   else
-      return SpectrogramSettings::defaults();
-}
-
-SpectrogramSettings &WaveTrack::GetSpectrogramSettings()
-{
-   if (mpSpectrumSettings)
-      return *mpSpectrumSettings;
-   else
-      return SpectrogramSettings::defaults();
-}
-
-SpectrogramSettings &WaveTrack::GetIndependentSpectrogramSettings()
-{
-   if (!mpSpectrumSettings)
-      mpSpectrumSettings =
-      std::make_unique<SpectrogramSettings>(SpectrogramSettings::defaults());
-   return *mpSpectrumSettings;
-}
-
-void WaveTrack::SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pSettings)
-{
-   if (mpSpectrumSettings != pSettings) {
-      mpSpectrumSettings = std::move(pSettings);
-   }
-}
-
-void WaveTrack::UseSpectralPrefs( bool bUse )
-{  
-   if( bUse ){
-      if( !mpSpectrumSettings )
-         return;
-      // reset it, and next we will be getting the defaults.
-      mpSpectrumSettings.reset();
-   }
-   else {
-      if( mpSpectrumSettings )
-         return;
-      GetIndependentSpectrogramSettings();
-   }
-}
-
-
-
-const WaveformSettings &WaveTrack::GetWaveformSettings() const
-{
-   // Create on demand
-   return const_cast<WaveTrack*>(this)->GetWaveformSettings();
-}
-
-WaveformSettings &WaveTrack::GetWaveformSettings()
-{
-   // Create on demand
-   if (!mpWaveformSettings)
-      mpWaveformSettings = std::make_unique<WaveformSettings>(WaveformSettings::defaults());
-   return *mpWaveformSettings;
-}
-
-void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings)
-{
-   if (mpWaveformSettings != pSettings) {
-      mpWaveformSettings = std::move(pSettings);
-   }
 }
 
 namespace {
@@ -2093,8 +1904,8 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
       // if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       if (t1 >= clip->GetPlayStartTime() && t0 <= clip->GetPlayEndTime())
       {
-         auto clipStart = clip->TimeToSequenceSamples(wxMax(t0, clip->GetPlayStartTime()));
-         auto clipEnd = clip->TimeToSequenceSamples(wxMin(t1, clip->GetPlayEndTime()));
+         auto clipStart = clip->TimeToSequenceSamples(std::max(t0, clip->GetPlayStartTime()));
+         auto clipEnd = clip->TimeToSequenceSamples(std::min(t1, clip->GetPlayEndTime()));
 
          float cliprms = clip->GetRMS(t0, t1, mayThrow);
 
@@ -2536,78 +2347,6 @@ void WaveTrack::SplitAt(double t)
          return;
       }
    }
-}
-
-void WaveTrack::UpdateLocationsCache() const
-{
-   auto clips = SortedClipArray();
-
-   mDisplayLocationsCache.clear();
-
-   // Count number of display locations
-   int num = 0;
-   {
-      const WaveClip *prev = nullptr;
-      for (const auto clip : clips)
-      {
-         //enough for estimation
-         num += clip->NumCutLines();
-
-         if (prev && fabs(prev->GetPlayEndTime() -
-                          clip->GetPlayStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
-            ++num;
-         prev = clip;
-      }
-   }
-
-   if (num == 0)
-      return;
-
-   // Alloc necessary number of display locations
-   mDisplayLocationsCache.reserve(num);
-
-   // Add all display locations to cache
-   int curpos = 0;
-
-   const WaveClip *previousClip = nullptr;
-   for (const auto clip: clips)
-   {
-      for (const auto &cc : clip->GetCutLines())
-      {
-         auto cutlinePosition = clip->GetSequenceStartTime() + cc->GetSequenceStartTime();
-         if (clip->WithinPlayRegion(cutlinePosition))
-         {
-             // Add cut line expander point
-             mDisplayLocationsCache.push_back(WaveTrackLocation{
-                cutlinePosition,
-                WaveTrackLocation::locationCutLine
-             });
-         }
-         // If cutline is skipped, we still need to count it
-         // so that curpos match num at the end
-         curpos++;
-      }
-
-      if (previousClip)
-      {
-         if (fabs(previousClip->GetPlayEndTime() - clip->GetPlayStartTime())
-                                          < WAVETRACK_MERGE_POINT_TOLERANCE)
-         {
-            // Add merge point
-            mDisplayLocationsCache.push_back(WaveTrackLocation{
-               previousClip->GetPlayEndTime(),
-               WaveTrackLocation::locationMergePoint,
-               GetClipIndex(previousClip),
-               GetClipIndex(clip)
-            });
-            curpos++;
-         }
-      }
-
-      previousClip = clip;
-   }
-
-   wxASSERT(curpos == num);
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)

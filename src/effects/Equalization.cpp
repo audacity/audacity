@@ -39,8 +39,8 @@
 #include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"
 
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {

@@ -30,7 +30,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "Prefs.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectPaulstretch::Parameters() const
 {
