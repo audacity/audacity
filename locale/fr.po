@@ -67,7 +67,7 @@ msgstr "Commentaires"
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
-msgstr "Choisir un ou plusieurs fichier(s)"
+msgstr "Voir %s pour plus d'info."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
