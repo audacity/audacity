@@ -17,7 +17,7 @@
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
 #include "Effect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;

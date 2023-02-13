@@ -17,7 +17,7 @@
 #define __AUDACITY_EFFECT_PHASER__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class ShuttleGui;
 

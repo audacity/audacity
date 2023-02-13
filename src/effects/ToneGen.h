@@ -14,7 +14,7 @@
 #define __AUDACITY_EFFECT_TONEGEN__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
 
 class NumericTextCtrl;

@@ -19,7 +19,7 @@
 #include "Effect.h"
 #include "Biquad.h"
 #include "EBUR128.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include "Track.h"
 
 class wxChoice;

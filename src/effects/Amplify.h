@@ -16,7 +16,7 @@
 #define __AUDACITY_EFFECT_AMPLIFY__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 
 class wxSlider;

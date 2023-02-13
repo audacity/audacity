@@ -13,7 +13,7 @@
 #define __AUDACITY_EFFECT_ECHO__
 
 #include "PerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include <float.h> // for FLT_MAX
 
 class ShuttleGui;

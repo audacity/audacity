@@ -17,7 +17,7 @@ class wxString;
 class LabelTrack;
 
 #include "Effect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class EffectFindClipping final : public StatefulEffect
 {

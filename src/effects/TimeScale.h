@@ -16,7 +16,7 @@
 #if USE_SBSMS
 
 #include "SBSMSEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;

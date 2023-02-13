@@ -14,7 +14,7 @@
 #define __AUDACITY_EFFECT_NOISE__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class NumericTextCtrl;
 class ShuttleGui;

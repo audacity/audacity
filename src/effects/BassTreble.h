@@ -13,7 +13,7 @@
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class ShuttleGui;
 

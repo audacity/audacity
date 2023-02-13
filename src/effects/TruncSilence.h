@@ -18,7 +18,7 @@
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
 #include "Effect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class ShuttleGui;
 class wxChoice;
