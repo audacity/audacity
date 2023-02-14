@@ -218,3 +218,14 @@ bool wxWidgetsBasicUI::DoOpenInDefaultBrowser(const wxString &url)
 {
    return wxLaunchDefaultBrowser(url);
 }
+
+std::unique_ptr<BasicUI::WindowPlacement> wxWidgetsBasicUI::DoFindFocus()
+{
+   return std::make_unique<wxWidgetsWindowPlacement>(wxWindow::FindFocus());
+}
+
+void wxWidgetsBasicUI::DoSetFocus(const BasicUI::WindowPlacement &focus)
+{
+   auto pWindow = wxWidgetsWindowPlacement::GetParent(focus);
+   pWindow->SetFocus();
+}

@@ -183,6 +183,8 @@ bool RunXDGOpen(const std::string& uri)
 namespace  BasicUI {
 WindowPlacement::~WindowPlacement() = default;
 
+WindowPlacement::operator bool() const { return false; }
+
 Services::~Services() = default;
 
 ProgressDialog::~ProgressDialog() = default;

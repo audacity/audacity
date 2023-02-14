@@ -31,7 +31,6 @@
 #include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../widgets/ProgressDialog.h"
 #include "../widgets/NumericTextCtrl.h"
 
 // Effect application counter
@@ -341,7 +340,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       return;
    }
 
-   wxWindow *FocusDialog = wxWindow::FindFocus();
+   const auto FocusDialog = BasicUI::FindFocus();
+   assert(FocusDialog); // postcondition
 
    double previewDuration;
    bool isNyquist = GetFamily() == NYQUISTEFFECTS_FAMILY;
@@ -405,9 +405,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    auto cleanup2 = finally( [&] {
       mTracks = saveTracks;
-      if (FocusDialog) {
-         FocusDialog->SetFocus();
-      }
+      if (*FocusDialog)
+         BasicUI::SetFocus(*FocusDialog);
 
       // In case of failed effect, be sure to free memory.
       ReplaceProcessedTracks( false );
@@ -494,18 +493,20 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       int token = gAudioIO->StartStream(tracks, mT0, t1, t1, options);
 
       if (token) {
+         using namespace BasicUI;
          auto previewing = ProgressResult::Success;
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
          {
-            ProgressDialog progress
-            (GetName(), XO("Previewing"), pdlgHideCancelButton);
+            auto progress =
+               MakeProgress(GetName(), XO("Previewing"), ProgressShowStop);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                using namespace std::chrono;
                std::this_thread::sleep_for(100ms);
-               previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+               previewing = progress->Poll(
+                  gAudioIO->GetStreamTime() - mT0, t1 - mT0);
             }
          }
 
@@ -519,7 +520,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       else {
          using namespace BasicUI;
          ShowErrorDialog(
-            wxWidgetsWindowPlacement{ FocusDialog }, XO("Error"),
+            *FocusDialog, XO("Error"),
             XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
             wxT("Error_opening_sound_device"),
             ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );

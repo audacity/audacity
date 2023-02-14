@@ -48,6 +48,9 @@ protected:
       const TranslatableString &boxMsg, bool log) override;
 
    bool DoOpenInDefaultBrowser(const wxString &url) override;
+
+   std::unique_ptr<BasicUI::WindowPlacement> DoFindFocus() override;
+   void DoSetFocus(const BasicUI::WindowPlacement &focus) override;
 };
 
 #endif

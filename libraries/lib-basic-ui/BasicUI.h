@@ -34,6 +34,8 @@ public:
    WindowPlacement( const WindowPlacement& ) PROHIBITED;
    //! Don't slice
    WindowPlacement &operator=( const WindowPlacement& ) PROHIBITED;
+   //! Whether null; default in the base class returns false
+   virtual explicit operator bool() const;
    virtual ~WindowPlacement();
 };
 
@@ -215,6 +217,9 @@ public:
       const TranslatableString &boxMsg, bool log) = 0;
 
    virtual bool DoOpenInDefaultBrowser(const wxString &url) = 0;
+
+   virtual std::unique_ptr<WindowPlacement> DoFindFocus() = 0;
+   virtual void DoSetFocus(const WindowPlacement &focus) = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -329,6 +334,25 @@ inline int ShowMultiDialog(const TranslatableString &message,
       return p->DoMultiDialog(message, title, buttons, helpPage, boxMsg, log);
    else
       return -1;
+}
+
+//! Find the window that is accepting keyboard input, if any
+/*!
+ @post `result: result != nullptr` (but may point to an empty WindowPlacement)
+ */
+inline std::unique_ptr<WindowPlacement> FindFocus()
+{
+   if (auto p = Get())
+      if (auto result = p->DoFindFocus())
+         return result;
+   return std::make_unique<WindowPlacement>();
+}
+
+//! Set the window that accepts keyboard input
+inline void SetFocus(const WindowPlacement &focus)
+{
+   if (auto p = Get())
+      p->DoSetFocus(focus);
 }
 
 //! @}

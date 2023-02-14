@@ -15,6 +15,11 @@ using namespace BasicUI;
 
 wxWidgetsWindowPlacement::~wxWidgetsWindowPlacement() = default;
 
+wxWidgetsWindowPlacement::operator bool() const
+{
+   return pWindow != nullptr;
+}
+
 wxWindow *wxWidgetsWindowPlacement::GetParent(const WindowPlacement &placement)
 {
    if (auto *pPlacement =
