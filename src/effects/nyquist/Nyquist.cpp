@@ -69,7 +69,7 @@ effects from this one class.
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "../../widgets/valnum.h"
+#include "valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "Prefs.h"
 #include "wxFileNameWrapper.h"

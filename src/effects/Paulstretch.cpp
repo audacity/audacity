@@ -26,7 +26,7 @@
 
 #include "ShuttleGui.h"
 #include "FFT.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "Prefs.h"
 

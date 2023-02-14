@@ -40,7 +40,7 @@
 
 #include <wx/scrolwin.h>
 
-#include "../../widgets/valnum.h"
+#include "valnum.h"
 
 #include "../../widgets/NumericTextCtrl.h"
 

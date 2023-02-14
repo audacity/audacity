@@ -29,7 +29,13 @@ set( SOURCES
    ReadOnlyText.h
    ShuttleGui.cpp
    ShuttleGui.h
+   numformatter.cpp
+   numformatter.h
+   valnum.cpp
+   valnum.h
    wxTextCtrlWrapper.h
+   wxWidgetsWindowPlacement.cpp
+   wxWidgetsWindowPlacement.h
 )
 set( LIBRARIES
    PRIVATE

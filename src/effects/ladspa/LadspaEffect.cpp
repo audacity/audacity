@@ -58,7 +58,7 @@ effects from this one class.
 #include "FileNames.h"
 #include "ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/valnum.h"
+#include "valnum.h"
 #include "wxPanelWrapper.h"
 #include "ModuleManager.h"
 

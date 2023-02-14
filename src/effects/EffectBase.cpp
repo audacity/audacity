@@ -23,7 +23,7 @@
 #include <thread>
 #include "AudioIO.h"
 #include "ConfigInterface.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 #include "MixAndRender.h"
 #include "PluginManager.h"
 #include "ProjectAudioIO.h"

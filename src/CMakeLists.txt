@@ -1048,14 +1048,8 @@ list( APPEND SOURCES
       widgets/Warning.h
       widgets/auStaticText.cpp
       widgets/auStaticText.h
-      widgets/numformatter.cpp
-      widgets/numformatter.h
-      widgets/valnum.cpp
-      widgets/valnum.h
       widgets/wxWidgetsBasicUI.cpp
       widgets/wxWidgetsBasicUI.h
-      widgets/wxWidgetsWindowPlacement.cpp
-      widgets/wxWidgetsWindowPlacement.h
 
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:

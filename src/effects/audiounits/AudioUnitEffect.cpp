@@ -46,7 +46,7 @@
 #include "../../SelectFile.h"
 #include "ShuttleGui.h"
 #include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/valnum.h"
+#include "valnum.h"
 
 //
 // When a plug-in's state is saved to the settings file (as a preset),

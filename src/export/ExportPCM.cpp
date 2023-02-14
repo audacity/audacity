@@ -31,7 +31,7 @@
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
-#include "../widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 #include "wxFileNameWrapper.h"
 
 #include "Export.h"

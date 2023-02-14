@@ -16,7 +16,7 @@
 
 
 #include "BasicUI.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #include <wx/log.h>
 #include <wx/stdpaths.h>

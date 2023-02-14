@@ -27,7 +27,7 @@
 #include <wx/slider.h>
 
 #include "ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 const EffectParameterMethods& EffectWahwah::Parameters() const
 {

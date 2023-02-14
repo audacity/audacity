@@ -18,7 +18,7 @@ Paul Licameli
 class wxWindow;
 
 //! Window placement information for wxWidgetsBasicUI can be constructed from a wxWindow pointer
-struct AUDACITY_DLL_API wxWidgetsWindowPlacement final
+struct SHUTTLEGUI_API wxWidgetsWindowPlacement final
 : BasicUI::WindowPlacement {
    //! Retrieve the pointer to window, if placement is of this type; else null
    static wxWindow *GetParent(const WindowPlacement &placement);

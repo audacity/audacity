@@ -67,10 +67,10 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "Theme.h"
-#include "../widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #include "AllThemeResources.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

@@ -28,7 +28,7 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 const EffectParameterMethods& EffectBassTreble::Parameters() const
 {

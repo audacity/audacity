@@ -46,7 +46,7 @@ inline int operator & (NumValidatorStyle x, NumValidatorStyle y)
 // Base class for all numeric validators.
 // ----------------------------------------------------------------------------
 
-class AUDACITY_DLL_API NumValidatorBase /* not final */ : public wxValidator
+class SHUTTLEGUI_API NumValidatorBase /* not final */ : public wxValidator
 {
 public:
     // Change the validator style. Usually it's specified during construction.
@@ -277,7 +277,7 @@ private:
 // type-dependent code of wxIntegerValidator<> and always works with values of
 // type LongestValueType. It is not meant to be used directly, please use
 // IntegerValidator<> only instead.
-class AUDACITY_DLL_API IntegerValidatorBase /* not final */
+class SHUTTLEGUI_API IntegerValidatorBase /* not final */
    : public NumValidatorBase
 {
 protected:
@@ -382,7 +382,7 @@ MakeIntegerValidator(T *value, NumValidatorStyle style = NumValidatorStyle::DEFA
 
 // Similar to IntegerValidatorBase, this class is not meant to be used
 // directly, only FloatingPointValidator<> should be used in the user code.
-class AUDACITY_DLL_API FloatingPointValidatorBase /* not final */
+class SHUTTLEGUI_API FloatingPointValidatorBase /* not final */
    : public NumValidatorBase
 {
 public:
@@ -511,7 +511,7 @@ MakeFloatingPointValidator(int precision, T *value, NumValidatorStyle style = Nu
 
 // Sometimes useful for specifying max and min values for validators, when they
 // must have the same precision as the validated value
-AUDACITY_DLL_API double RoundValue(int precision, double value);
+SHUTTLEGUI_API double RoundValue(int precision, double value);
 
 #endif // wxUSE_VALIDATORS
 

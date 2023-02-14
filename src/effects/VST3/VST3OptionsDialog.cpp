@@ -12,7 +12,7 @@
 #include "VST3OptionsDialog.h"
 #include "ShuttleGui.h"
 #include "ConfigInterface.h"
-#include "widgets/valnum.h"
+#include "valnum.h"
 
 
 BEGIN_EVENT_TABLE(VST3OptionsDialog, wxDialogWrapper)

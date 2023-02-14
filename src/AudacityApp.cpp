@@ -117,7 +117,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "FrameStatisticsDialog.h"
 #include "PluginStartupRegistration.h"
 #include "IncompatiblePluginsDialog.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #if defined(HAVE_UPDATES_CHECK)
 #  include "update/UpdateManager.h"
