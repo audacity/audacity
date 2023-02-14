@@ -52,7 +52,7 @@
 
 #include "WaveTrack.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 #include <algorithm>
 #include <vector>

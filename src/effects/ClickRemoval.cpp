@@ -35,7 +35,7 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 #include "WaveTrack.h"
 

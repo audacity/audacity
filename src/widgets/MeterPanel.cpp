@@ -74,7 +74,7 @@
 #include "../widgets/RealFormat.h"
 
 #include "AllThemeResources.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

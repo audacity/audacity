@@ -28,7 +28,7 @@
 #include <wx/slider.h>
 
 #include "ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 #include "TimeWarper.h"
 
 #include "LoadEffects.h"

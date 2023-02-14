@@ -23,7 +23,7 @@
 
 #include "MemoryX.h"
 #include "ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 enum
 {

@@ -29,6 +29,10 @@ set( SOURCES
    ProgressDialog.h
    SelectFile.cpp
    SelectFile.h
+   numformatter.cpp
+   numformatter.h
+   valnum.cpp
+   valnum.h
    wxWidgetsBasicUI.cpp
    wxWidgetsBasicUI.h
    wxWidgetsWindowPlacement.cpp

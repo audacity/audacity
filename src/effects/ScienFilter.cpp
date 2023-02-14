@@ -57,7 +57,7 @@ a graph for EffectScienFilter.
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "WaveTrack.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 #include "AudacityMessageBox.h"
 #include "../widgets/RulerPanel.h"
 #include "../widgets/IntFormat.h"

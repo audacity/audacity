@@ -26,7 +26,7 @@
 
 #include "ShuttleGui.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 
 const EffectParameterMethods& EffectEcho::Parameters() const
 {

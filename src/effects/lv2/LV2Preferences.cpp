@@ -24,7 +24,7 @@
 #include "LV2Preferences.h"
 #include "ConfigInterface.h"
 #include "ShuttleGui.h"
-#include "../../widgets/valnum.h"
+#include "valnum.h"
 
 static constexpr auto SettingsStr = L"Settings";
 static constexpr auto BufferSizeStr = L"BufferSize";

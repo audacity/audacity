@@ -25,7 +25,7 @@
 #include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
-#include "../widgets/valnum.h"
+#include "valnum.h"
 #include "ProgressDialog.h"
 
 #include "LoadEffects.h"
