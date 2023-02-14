@@ -134,17 +134,9 @@ void AddEffectMenuItemGroup(
    const TranslatableStrings & names,
    const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
-   bool useSubgroups,
    void (*onMenuCommand)(const CommandContext&))
 {
    const int namesCnt = (int) names.size();
-   int perGroup;
-
-#if defined(__WXGTK__)
-   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 15);
-#else
-   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
-#endif
 
    int groupCnt = namesCnt;
    for (int i = 0; i < namesCnt; i++)
@@ -156,48 +148,25 @@ void AddEffectMenuItemGroup(
          groupCnt--;
       }
    }
-   
-   if (namesCnt > 0 && !useSubgroups)
-   {
-      perGroup = 0;
-   }
-
-   int max = perGroup;
-   int items = perGroup;
-
-   if (max > groupCnt)
-   {
-      max = 0;
-   }
 
    using namespace MenuTable;
-   // This finder scope may be redundant, but harmless
-   auto pTable = &table;
-   BaseItemPtrs temp1;
-
-   int groupNdx = 0;
+   
    for (int i = 0; i < namesCnt; i++)
    {
-      if (max > 0 && items == max)
-      {
-         // start collecting items for the next submenu
-         pTable = &temp1;
-      }
-
       // compare full translations not msgids!
       if (i + 1 < namesCnt && names[i].Translation() == names[i + 1].Translation())
       {
          // collect a sub-menu for like-named items
          const auto name = names[i];
          const auto translation = name.Translation();
-         BaseItemPtrs temp2;
+         BaseItemPtrs submenu;
          // compare full translations not msgids!
          while (i < namesCnt && names[i].Translation() == translation)
          {
             const PluginDescriptor *plug =
                PluginManager::Get().GetPlugin(plugs[i]);
             if( plug->GetPluginType() == PluginTypeEffect )
-               temp2.push_back( Command( plug->GetID(),
+               submenu.push_back( Command( plug->GetID(),
                   Verbatim( plug->GetPath() ),
                   onMenuCommand,
                   flags[i],
@@ -208,7 +177,7 @@ void AddEffectMenuItemGroup(
 
             i++;
          }
-         pTable->push_back( Menu( wxEmptyString, name, std::move( temp2 ) ) );
+         table.push_back( Menu( wxEmptyString, name, std::move( submenu ) ) );
          i--;
       }
       else
@@ -217,7 +186,7 @@ void AddEffectMenuItemGroup(
          const PluginDescriptor *plug =
             PluginManager::Get().GetPlugin(plugs[i]);
          if( plug->GetPluginType() == PluginTypeEffect )
-            pTable->push_back( Command(
+            table.push_back( Command(
                plug->GetID(),
                names[i],
                onMenuCommand,
@@ -227,27 +196,6 @@ void AddEffectMenuItemGroup(
                   .AllowInMacros()
                   .Parameter( plugs[i] ) ) );
       }
-
-      if (max > 0)
-      {
-         items--;
-         if (items == 0 || i + 1 == namesCnt)
-         {
-            int end = groupNdx + max;
-            if (end + 1 > groupCnt)
-            {
-               end = groupCnt;
-            }
-            // Done collecting
-            table.push_back( Menu( wxEmptyString,
-               XXO("Plugin %d to %d").Format( groupNdx + 1, end ),
-               std::move( temp1 )
-            ) );
-            items = max;
-            pTable = &table;
-            groupNdx += max;
-         }
-      }
    }
 }
 
@@ -256,7 +204,6 @@ void AddSortedEffectMenuItems(
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
    SortBy sortBy,
-   bool useSubgroups,
    void (*onMenuCommand)(const CommandContext&))
 {
    size_t pluginCnt = plugs.size();
@@ -302,7 +249,7 @@ void AddSortedEffectMenuItems(
    if (groupNames.size() > 0)
    {
       AddEffectMenuItemGroup(
-         table, groupNames, groupPlugs, groupFlags, useSubgroups,
+         table, groupNames, groupPlugs, groupFlags,
          onMenuCommand);
    }
 }
@@ -348,7 +295,7 @@ auto MakeAddGroupItems(
             BaseItemPtrs temp;
 
             AddEffectMenuItemGroup(temp,
-               groupNames, groupPlugs, groupFlags, false,
+               groupNames, groupPlugs, groupFlags,
                onMenuCommand);
 
             items.push_back( MenuOrItems( wxEmptyString,
@@ -364,7 +311,6 @@ void AddGroupedEffectMenuItems(
    std::vector<const PluginDescriptor*> & plugs,
    CommandFlag batchflags,
    GroupBy groupBy,
-   bool useSubgroups,
    void (*onMenuCommand)(const CommandContext&))
 {
    TranslatableString last;
@@ -410,7 +356,7 @@ void AddGroupedEffectMenuItems(
 
          AddEffectMenuItemGroup(temp,
             groupNames,
-            groupPlugs, groupFlags, useSubgroups,
+            groupPlugs, groupFlags,
             onMenuCommand);
 
          table.push_back( MenuOrItems( wxEmptyString,
@@ -435,7 +381,7 @@ void AddGroupedEffectMenuItems(
       bool bInSubmenu = groupNames.size() > 1;
 
       AddEffectMenuItemGroup(temp,
-         groupNames, groupPlugs, groupFlags, useSubgroups,
+         groupNames, groupPlugs, groupFlags,
          onMenuCommand);
 
       table.push_back( MenuOrItems( wxEmptyString,
@@ -601,19 +547,19 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
 
    std::vector<MenuSectionBuilder> sections;
    
-   auto MakeAddSortedItems = [=](SortBy sortby, bool useSubgroups)
+   auto MakeAddSortedItems = [=](SortBy sortby)
    {
       return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
       {
-         return AddSortedEffectMenuItems(items, plugins, batchflags, sortby, useSubgroups, onMenuCommand);
+         return AddSortedEffectMenuItems(items, plugins, batchflags, sortby, onMenuCommand);
       };
    };
 
-   auto MakeAddGroupedItems = [=](GroupBy groupBy, bool useSubgroups)
+   auto MakeAddGroupedItems = [=](GroupBy groupBy)
    {
       return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
       {
-         return AddGroupedEffectMenuItems(items, plugins, batchflags, groupBy, useSubgroups, onMenuCommand);
+         return AddGroupedEffectMenuItems(items, plugins, batchflags, groupBy, onMenuCommand);
       };
    };
 
@@ -640,7 +586,7 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
                {},
                IsEnabledPlugin,
                CompareEffectsByPublisher,
-               MakeAddGroupedItems(GroupBy::Publisher, false )
+               MakeAddGroupedItems(GroupBy::Publisher)
             });
       }
       else//Generators/Analyzers
@@ -650,14 +596,14 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
                {},
                [](auto plug){ return IsEnabledPlugin(plug) && IsBundledPlugin(plug); } ,
                CompareEffectsByName,
-               MakeAddSortedItems(SortBy::Name, false )
+               MakeAddSortedItems(SortBy::Name)
             });
          sections.emplace_back(
             MenuSectionBuilder {
                {},
                IsEnabledPlugin,
                CompareEffectsByPublisher,
-               MakeAddGroupedItems(GroupBy::Publisher, true )
+               MakeAddGroupedItems(GroupBy::Publisher)
             });
       }
    }
@@ -668,14 +614,14 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
             {},
             DefaultFilter,
             CompareEffectsByName,
-            MakeAddSortedItems(SortBy::PublisherName, false)
+            MakeAddSortedItems(SortBy::PublisherName)
          });
       sections.emplace_back(
          MenuSectionBuilder {
             {},
             IsEnabledPlugin,
             CompareEffectsByPublisherAndName,
-            MakeAddSortedItems(SortBy::PublisherName, true )
+            MakeAddSortedItems(SortBy::PublisherName)
          });
    }
    else if(groupby == "sortby:type:name")
@@ -685,14 +631,14 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
             {},
             DefaultFilter,
             CompareEffectsByName,
-            MakeAddSortedItems(SortBy::TypeName, false)
+            MakeAddSortedItems(SortBy::TypeName)
          });
       sections.emplace_back(
          MenuSectionBuilder {
             {},
             IsEnabledPlugin,
             CompareEffectsByPublisherAndName,
-            MakeAddSortedItems(SortBy::TypeName, true )
+            MakeAddSortedItems(SortBy::TypeName)
          });
    }
    else if(groupby == "groupby:publisher")
@@ -702,14 +648,14 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
             {},
             DefaultFilter,
             CompareEffectsByPublisher,
-            MakeAddGroupedItems(GroupBy::Publisher, false)
+            MakeAddGroupedItems(GroupBy::Publisher)
          });
       sections.emplace_back(
          MenuSectionBuilder {
             {},
             IsEnabledPlugin,
             CompareEffectsByPublisher,
-            MakeAddGroupedItems(GroupBy::Publisher, true )
+            MakeAddGroupedItems(GroupBy::Publisher)
          });
    }
    else if(groupby == "groupby:type")
@@ -719,14 +665,14 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
             {},
             DefaultFilter,
             CompareEffectsByType,
-            MakeAddGroupedItems(GroupBy::Type, false)
+            MakeAddGroupedItems(GroupBy::Type)
          });
       sections.emplace_back(
          MenuSectionBuilder {
             {},
             IsEnabledPlugin,
             CompareEffectsByType,
-            MakeAddGroupedItems(GroupBy::Type, true )
+            MakeAddGroupedItems(GroupBy::Type)
          });
    }
    else //if(groupby == "sortby:name")
@@ -736,14 +682,14 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
             {},
             DefaultFilter,
             CompareEffectsByName,
-            MakeAddSortedItems(SortBy::Name, false)
+            MakeAddSortedItems(SortBy::Name)
          });
       sections.emplace_back(
          MenuSectionBuilder {
             {},
             IsEnabledPlugin,
             CompareEffectsByName,
-            MakeAddSortedItems(SortBy::Name, true)
+            MakeAddSortedItems(SortBy::Name)
          });
    }
    for(auto& plugin : pm.EffectsOfType(type))
