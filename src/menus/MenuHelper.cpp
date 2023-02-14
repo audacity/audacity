@@ -24,7 +24,8 @@ struct MenuSectionBuilder
 enum class GroupBy
 {
    Publisher,
-   Type
+   Type,
+   TypePublisher
 };
 
 enum class SortBy
@@ -307,87 +308,84 @@ auto MakeAddGroupItems(
 }
 
 void AddGroupedEffectMenuItems(
-   MenuTable::BaseItemPtrs &table,
-   std::vector<const PluginDescriptor*> & plugs,
+   MenuTable::BaseItemPtrs& table,
+   std::vector<const PluginDescriptor*>& plugs,
    CommandFlag batchflags,
    GroupBy groupBy,
    void (*onMenuCommand)(const CommandContext&))
 {
-   TranslatableString last;
-   TranslatableString current;
+   using namespace MenuTable;
 
-   size_t pluginCnt = plugs.size();
+   const auto UnknownGroupName = XO("Unknown");
+   auto& effectManager = EffectManager::Get();
 
-   TranslatableStrings groupNames;
-   PluginIDs groupPlugs;
-   std::vector<CommandFlag> groupFlags;
+   std::vector<TranslatableString> path;
 
-   for (size_t i = 0; i < pluginCnt; i++)
+   BaseItemPtrs* parentTable = &table;
+   std::vector<TranslatableString> names;
+   PluginIDs group;
+   std::vector<CommandFlag> flags;
+
+   auto doAddGroup = [&]
    {
-      const PluginDescriptor *plug = plugs[i];
+      if(names.empty())
+         return;
 
-      auto name = plug->GetSymbol().Msgid();
+      const auto inSubmenu = !path.empty() && (names.size() > 1);
+      BaseItemPtrs items;
+      AddEffectMenuItemGroup(items, names, group, flags, onMenuCommand);
+      parentTable->push_back( MenuOrItems( wxEmptyString,
+            inSubmenu ? path.back() : TranslatableString{}, std::move( items )));
 
-      if (plug->IsEffectInteractive())
-         name += XO("...");
+      names.clear();
+      group.clear();
+      flags.clear();
+   };
+
+   for(auto plug : plugs)
+   {
+      if(groupBy == GroupBy::Publisher)
+      {
+         const auto vendorName = effectManager.GetVendorName(plug->GetID());
+         if(path.empty() || path[0] != vendorName)
+         {
+            doAddGroup();
+            path = { vendorName };
+         }
+      }
+      else if(groupBy == GroupBy::Type)
+      {
+         const auto effectFamilyName = effectManager.GetEffectFamilyName(plug->GetID());
+         if(path.empty() || path[0] != effectFamilyName)
+         {
+            doAddGroup();
+            path = { effectFamilyName };
+         }
+      }
+      else if(groupBy == GroupBy::TypePublisher)
+      {
+         const auto effectFamilyName = effectManager.GetEffectFamilyName(plug->GetID());
+         const auto vendorName = effectManager.GetVendorName(plug->GetID());
+         if(path.empty() || path[0] != effectFamilyName)
+         {
+            doAddGroup();
+            path = { effectFamilyName, vendorName };
+            auto menu = Menu({}, effectFamilyName, {});
+            parentTable = &menu->items;
+            table.push_back(std::move(menu));
+         }
+         else if(path[1] != vendorName)
+         {
+            doAddGroup();
+            path[1] = vendorName;
+         }
+      }
       
-      if (groupBy == GroupBy::Publisher/*wxT("groupby:publisher")*/)
-      {
-         current = EffectManager::Get().GetVendorName(plug->GetID());
-         if (current.empty())
-         {
-            current = XO("Unknown");
-         }
-      }
-      else if (groupBy == GroupBy::Type /*wxT("groupby:type")*/)
-      {
-         current = EffectManager::Get().GetEffectFamilyName(plug->GetID());
-         if (current.empty())
-         {
-            current = XO("Unknown");
-         }
-      }
-
-      if (current != last)
-      {
-         using namespace MenuTable;
-         BaseItemPtrs temp;
-         bool bInSubmenu = !last.empty() && (groupNames.size() > 1);
-
-         AddEffectMenuItemGroup(temp,
-            groupNames,
-            groupPlugs, groupFlags,
-            onMenuCommand);
-
-         table.push_back( MenuOrItems( wxEmptyString,
-            ( bInSubmenu ? last : TranslatableString{} ), std::move( temp )
-         ) );
-
-         groupNames.clear();
-         groupPlugs.clear();
-         groupFlags.clear();
-         last = current;
-      }
-
-      groupNames.push_back( name );
-      groupPlugs.push_back(plug->GetID());
-      groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
+      group.push_back(plug->GetID());
+      names.push_back(plug->GetSymbol().Msgid());
+      flags.push_back(FixBatchFlags( batchflags, plug ) );
    }
-
-   if (groupNames.size() > 0)
-   {
-      using namespace MenuTable;
-      BaseItemPtrs temp;
-      bool bInSubmenu = groupNames.size() > 1;
-
-      AddEffectMenuItemGroup(temp,
-         groupNames, groupPlugs, groupFlags,
-         onMenuCommand);
-
-      table.push_back( MenuOrItems( wxEmptyString,
-         ( bInSubmenu ? current : TranslatableString{} ), std::move( temp )
-      ) );
-   }
+   doAddGroup();
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
@@ -476,6 +474,30 @@ bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
          akey.Translation(), a->GetSymbol().Translation(), a->GetPath() ) <
       std::make_tuple(
          bkey.Translation(), b->GetSymbol().Translation(), b->GetPath() );
+}
+
+bool ComapareEffectsByTypeAndPublisher(const PluginDescriptor *a, const PluginDescriptor *b)
+{
+   auto &em = EffectManager::Get();
+   auto aType = em.GetEffectFamilyName(a->GetID());
+   auto bType = em.GetEffectFamilyName(b->GetID());
+   auto aVendor = em.GetVendorName(a->GetID());
+   auto bVendor = em.GetVendorName(b->GetID());
+
+   if (aType.empty())
+      aType = XO("Uncategorized");
+   if (bType.empty())
+      bType = XO("Uncategorized");
+   if (aVendor.empty())
+      aVendor = XO("Unknown");
+   if (bVendor.empty())
+      bVendor = XO("Unknown");
+
+   return
+      std::make_tuple(
+         aType.Translation(), aVendor.Translation(), a->GetSymbol().Translation(), a->GetPath() ) <
+      std::make_tuple(
+         bType.Translation(), bVendor.Translation(), b->GetSymbol().Translation(), b->GetPath() );
 }
 
 bool IsEnabledPlugin(const PluginDescriptor* plug)
@@ -673,6 +695,23 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
             IsEnabledPlugin,
             CompareEffectsByType,
             MakeAddGroupedItems(GroupBy::Type)
+         });
+   }
+   else if(groupby == "groupby:type:publisher")
+   {
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            DefaultFilter,
+            CompareEffectsByType,
+            MakeAddGroupedItems(GroupBy::Type)
+         });
+      sections.push_back(
+         MenuSectionBuilder {
+            {},
+            IsEnabledPlugin,
+            ComapareEffectsByTypeAndPublisher,
+            MakeAddGroupedItems(GroupBy::TypePublisher)
          });
    }
    else //if(groupby == "sortby:name")
