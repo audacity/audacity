@@ -39,4 +39,5 @@ class EffectsPrefs final : public PrefsPanel
 };
 
 AUDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
+AUDACITY_DLL_API extern ChoiceSetting RealtimeEffectsGroupBy;
 #endif

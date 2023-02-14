@@ -2,7 +2,6 @@
 #include "PluginManager.h"
 #include "effects/EffectManager.h"
 #include "CommonCommandFlags.h"
-#include "prefs/EffectsPrefs.h"
 #include "BatchCommands.h"
 #include "BatchProcessDialog.h"
 
@@ -559,13 +558,12 @@ auto MakeGroupsFilter(const EffectsMenuGroups& list) -> auto
 MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
    EffectType type,
    CommandFlag batchflags,
+   const wxString& groupby,
    void (*onMenuCommand)(const CommandContext&),
    std::function<bool(const PluginDescriptor&)> pred)
 {
    MenuTable::BaseItemPtrs result;
    PluginManager & pm = PluginManager::Get();
-   
-   const auto groupby = EffectsGroupBy.Read();
 
    std::vector<MenuSectionBuilder> sections;
    

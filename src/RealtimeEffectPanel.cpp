@@ -49,6 +49,7 @@
 #include "MovableControl.h"
 #include "menus/MenuHelper.h"
 #include "Menus.h"
+#include "prefs/EffectsPrefs.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -791,9 +792,11 @@ public:
          return desc.IsEffectRealtime();
       };
 
+      const auto groupby = RealtimeEffectsGroupBy.Read();
+
       auto analyzeItems = MenuHelper::PopulateEffectsMenu(
          EffectTypeAnalyze,
-         {}, nullptr,
+         {}, groupby, nullptr,
          realtimeEffectPredicate
       );
       
@@ -812,7 +815,7 @@ public:
    
       auto processItems = MenuHelper::PopulateEffectsMenu(
          EffectTypeProcess,
-         {}, nullptr,
+         {}, groupby, nullptr,
          realtimeEffectPredicate
       );
       

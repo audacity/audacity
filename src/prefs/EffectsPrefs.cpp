@@ -63,9 +63,7 @@ void EffectsPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-ChoiceSetting EffectsGroupBy{
-   wxT("/Effects/GroupBy"),
-   {
+EnumValueSymbols EffectsGroupSymbols {
       ByColumns,
       {
          XO("Sort by effect name") ,
@@ -85,8 +83,18 @@ ChoiceSetting EffectsGroupBy{
          wxT("default"),
          wxT("groupby:type:publisher")
       }
-   },
+};
+
+ChoiceSetting EffectsGroupBy{
+   wxT("/Effects/GroupBy"),
+   EffectsGroupSymbols,
    5 // "default"
+};
+
+ChoiceSetting RealtimeEffectsGroupBy{
+   wxT("/Effects/RealtimeGroupBy"),
+   EffectsGroupSymbols,
+   6 // "groupby:type:publisher"
 };
 
 void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
@@ -98,9 +106,10 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         wxChoice *c = S
-            .MinSize()
-            .TieChoice( XXO("Effect menu &organization:"), EffectsGroupBy);
+         S.MinSize()
+          .TieChoice( XXO("Effect menu &organization:"), EffectsGroupBy);
+         S.MinSize()
+          .TieChoice( XXO("Realtime effect o&rganization:"), RealtimeEffectsGroupBy);
       }
       S.EndMultiColumn();
    }

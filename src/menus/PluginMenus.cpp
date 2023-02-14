@@ -28,6 +28,7 @@
 #include "../prefs/PrefsDialog.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "MenuHelper.h"
+#include "prefs/EffectsPrefs.h"
 
 
 // private helper classes and functions
@@ -305,6 +306,7 @@ BaseItemSharedPtr GenerateMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeGenerate,
             AudioIONotBusyFlag(),
+            EffectsGroupBy.Read(),
             &OnEffect)
          ); }
       )
@@ -385,6 +387,7 @@ BaseItemSharedPtr EffectMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeProcess,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+            EffectsGroupBy.Read(),
             &OnEffect)
          ); }
       )
@@ -448,6 +451,7 @@ BaseItemSharedPtr AnalyzeMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeAnalyze,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
+            EffectsGroupBy.Read(),
             &OnEffect)
          ); }
       )
@@ -494,6 +498,7 @@ BaseItemSharedPtr ToolsMenu()
          { return Items( wxEmptyString, MenuHelper::PopulateEffectsMenu(
             EffectTypeTool,
             AudioIONotBusyFlag(),
+            EffectsGroupBy.Read(),
             OnEffect)
          ); }
       )
