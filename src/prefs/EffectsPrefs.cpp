@@ -22,8 +22,11 @@
 
 #include <wx/choice.h>
 #include <wx/defs.h>
+#include <wx/button.h>
 
 #include "PluginManager.h"
+#include "PluginRegistrationDialog.h"
+#include "Menus.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -124,6 +127,15 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+
+   S.AddButton(XO("Open Plugin Manager"), wxALIGN_LEFT)->Bind(wxEVT_BUTTON, [this](auto) {
+      //Adding dependency on PluginRegistrationDialog, not good. Alternatively
+      //that could be done with events, though event should be visible here too...
+      PluginRegistrationDialog dialog(wxGetTopLevelParent(this));
+      if(dialog.ShowModal() == wxID_OK)
+         MenuCreator::RebuildAllMenuBars();
+   });
+
    S.EndScroller();
 }
 
