@@ -2,51 +2,28 @@
 
   Audacity: A Digital Audio Editor
 
-  @file AudioUnitEffect.cpp
+  @file AudioUnitEffectBase.cpp
 
   Dominic Mazzoni
   Leland Lucius
 
+  Paul Licameli split from AudioUnitEffect
+
 *******************************************************************//**
 
-\class AudioUnitEffect
+\class AudioUnitEffectBase
 \brief An Effect class that handles a wide range of effects.  ??Mac only??
 
 *//*******************************************************************/
 
 #if USE_AUDIO_UNITS
-#include "AudioUnitEffect.h"
+#include "AudioUnitEffectBase.h"
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
-#include "AudioUnitEditor.h"
-#include "SampleCount.h"
 #include "ConfigInterface.h"
 
-#include <optional>
-#include <wx/defs.h>
-#include <wx/base64.h>
-#include <wx/control.h>
-#include <wx/crt.h>
-#include <wx/dir.h>
 #include <wx/ffile.h>
-
-#ifdef __WXMAC__
-#include <wx/evtloop.h>
-#endif
-
-#include <wx/filename.h>
-#include <wx/frame.h>
-#include <wx/listctrl.h>
-#include <wx/log.h>
-#include <wx/settings.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
 #include <wx/osx/core/private.h>
-
-#include "SelectFile.h"
-#include "ShuttleGui.h"
-#include "AudacityMessageBox.h"
-#include "../../widgets/valnum.h"
 
 //
 // When a plug-in's state is saved to the settings file (as a preset),
@@ -98,10 +75,6 @@ AudioUnitEffectBase::AudioUnitEffectBase(const PluginPath & path,
    , mPath{ path }
    , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
    , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
-{
-}
-
-AudioUnitEffect::~AudioUnitEffect()
 {
 }
 
@@ -265,17 +238,6 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-int AudioUnitEffect::ShowClientInterface(const EffectPlugin &,
-   wxWindow &parent, wxDialog &dialog,
-   EffectEditor *, bool forceModal) const
-{
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
-      dialog.Show();
-      return 0;
-   }
-   return dialog.ShowModal();
-}
-
 // Don't use the template-generated MakeSettings(), which default-constructs
 // the structure.  Instead allocate a number of values chosen by the plug-in
 EffectSettings AudioUnitEffectBase::MakeSettings() const
@@ -409,141 +371,14 @@ RegistryPaths AudioUnitEffectBase::GetFactoryPresets() const
    return presets;
 }
 
-std::unique_ptr<EffectEditor> AudioUnitEffect::PopulateUI(
-   const EffectPlugin &, ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *) const
-{
-   wxString uiType;
-   // Decide whether to build plain or fancy user interfaces
-   GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
-      uiType, FullValue.MSGID().GET() /* Config stores un-localized string */);
-   return AudioUnitEditor::Create(*this, S, uiType, instance, access);
-}
-
-std::unique_ptr<EffectEditor> AudioUnitEffect::MakeEditor(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *) const
-{
-   //! Will not come here because Effect::PopulateUI is overridden
-   assert(false);
-   return nullptr;
-}
-
-#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-bool AudioUnitEffect::CreatePlain(wxWindow *parent)
-{
-   // TODO???  Never implemented...
-   return false;
-}
-#endif
-
-bool AudioUnitEffect::CloseUI() const
-{
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-   wxEventLoop::SetBusyWaiting(false);
-#endif
-#endif
-   return true;
-}
-
 bool AudioUnitEffectBase::CanExportPresets() const
 {
    return true;
 }
 
-void AudioUnitEffect::ExportPresets(
-   const EffectPlugin &, const EffectSettings &settings) const
-{
-   // Generate the user domain path
-   wxFileName fn;
-   fn.SetPath(PRESET_USER_PATH);
-   fn.AppendDir(mVendor);
-   fn.AppendDir(mName);
-   fn.Normalize();
-   FilePath path = fn.GetFullPath();
-
-   if (!fn.Mkdir(fn.GetFullPath(), 0755, wxPATH_MKDIR_FULL)) {
-      wxLogError(wxT("Couldn't create the \"%s\" directory"), fn.GetPath());
-      return;
-   }
-
-   // Ask the user for the name to use
-   //
-   // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the SelectFile().
-   path = SelectFile(FileNames::Operation::_None,
-      XO("Export Audio Unit Preset As %s:").Format(fn.GetFullPath()),
-      fn.GetFullPath(),
-      wxEmptyString,
-      wxT("aupreset"),
-      {
-        { XO("Standard Audio Unit preset file"), { wxT("aupreset") }, true },
-      },
-      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-      NULL);
-
-   // User canceled...
-   if (path.empty())
-      return;
-
-   auto msg = Export(GetSettings(settings), path);
-   if (!msg.empty())
-      AudacityMessageBox(
-         XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
-         XO("Export Audio Unit Presets"),
-         wxOK | wxCENTRE);
-}
-
-OptionalMessage AudioUnitEffect::ImportPresets(
-   const EffectPlugin &, EffectSettings &settings) const
-{
-   // Generate the user domain path
-   wxFileName fn;
-   fn.SetPath(PRESET_USER_PATH);
-   fn.AppendDir(mVendor);
-   fn.AppendDir(mName);
-   fn.Normalize();
-   FilePath path = fn.GetFullPath();
-
-   // Ask the user for the name to use
-   //
-   // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the SelectFile().
-   path = SelectFile(FileNames::Operation::_None,
-      XO("Import Audio Unit Preset As %s:").Format(fn.GetFullPath()),
-      fn.GetFullPath(), wxEmptyString, wxT("aupreset"),
-      {
-        { XO("Standard Audio Unit preset file"), { wxT("aupreset") }, true },
-      },
-      wxFD_OPEN | wxRESIZE_BORDER,
-      nullptr);
-
-   // User canceled...
-   if (path.empty())
-      return {};
-
-   auto msg = Import(GetSettings(settings), path);
-   if (!msg.empty()) {
-      AudacityMessageBox(
-         XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
-         XO("Import Audio Unit Presets"),
-         wxOK | wxCENTRE);
-      return {};
-   }
-
-   return { nullptr };
-}
-
 bool AudioUnitEffectBase::HasOptions() const
 {
    return true;
-}
-
-void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
-{
-   AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }
 
 // ============================================================================
