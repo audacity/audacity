@@ -25,7 +25,7 @@
 #include "LoadCommands.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 
 const ComponentInterfaceSymbol SetClipCommand::Symbol

@@ -4,14 +4,14 @@
 
   ShuttleGetDefinition.h
 
-  Paul Licameli split this out of Shuttle.h
+  Paul Licameli split this out of SettingsVisitor.h
 
 **********************************************************************/
 
 #ifndef __AUDACITY_SHUTTLE_GET_DEFINITION__
 #define __AUDACITY_SHUTTLE_GET_DEFINITION__
 
-#include "Shuttle.h" // to inherit
+#include "SettingsVisitor.h" // to inherit
 #include "commands/CommandTargets.h" // to inherit
 
 /**************************************************************************//**

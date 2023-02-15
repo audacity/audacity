@@ -225,8 +225,6 @@ list( APPEND SOURCES
       SelectFile.h
       SelectionState.cpp
       SelectionState.h
-      Shuttle.cpp
-      Shuttle.h
       ShuttleAutomation.cpp
       ShuttleAutomation.h
       ShuttleGetDefinition.cpp

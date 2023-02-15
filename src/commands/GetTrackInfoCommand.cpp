@@ -20,7 +20,7 @@
 #include "GetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 

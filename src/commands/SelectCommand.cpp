@@ -40,7 +40,7 @@ explicitly code all three.
 #include "LoadCommands.h"
 #include "../ProjectSelectionManager.h"
 #include "../TrackPanel.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 #include "Track.h"
 #include "../effects/Effect.h"

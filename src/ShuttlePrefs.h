@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_SHUTTLE_PREFS__
 #define __AUDACITY_SHUTTLE_PREFS__
 
-#include "Shuttle.h"
+#include "SettingsVisitor.h"
 
 class ShuttlePrefs final
 {
