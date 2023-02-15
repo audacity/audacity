@@ -28,7 +28,7 @@ system by constructing BatchCommandEval objects.
 #include "Command.h"
 #include "CommandContext.h"
 #include "CommandTargets.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 
 CommandBuilder::CommandBuilder(
    AudacityProject &project, const wxString &cmdString)

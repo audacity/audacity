@@ -20,7 +20,7 @@
 #include "CommandDispatch.h"
 #include "CommandManager.h"
 #include "../CommonCommandFlags.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "LoadCommands.h"
 #include "../ShuttleGui.h"
 #include "CommandTargets.h"

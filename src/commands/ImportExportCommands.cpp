@@ -25,7 +25,7 @@
 #include "ViewInfo.h"
 #include "../export/Export.h"
 #include "../SelectUtilities.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"

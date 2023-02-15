@@ -1,41 +1,14 @@
 /**********************************************************************
 
-  Shuttle.cpp
+  SettingsVisitor.cpp
 
   James Crook
   (C) Audacity Developers, 2007
 
   wxWidgets license. See Licensing.txt
 
-*******************************************************************//**
-
-\file Shuttle.cpp
-\brief Implements Shuttle, ShuttleParams, their subclasses, and Enums.
-
-*//****************************************************************//**
-
-\class Enums
-\brief Enums is a helper class for Shuttle.  It defines enumerations
-which are used in effects dialogs, in the effects themselves and in
-preferences.
-
-(If it grows big, we will move it out of shuttle.h).
-
 *//*******************************************************************/
-
-
-#include "Shuttle.h"
-
-#include <wx/defs.h>
-#include <wx/checkbox.h>
-#include <wx/choice.h>
-#include <wx/statbox.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/listctrl.h>
-
-#include "WrappedType.h"
-//#include "effects/Effect.h"
+#include "SettingsVisitor.h"
 
 #ifdef _MSC_VER
 // If this is compiled with MSVC (Visual Studio)

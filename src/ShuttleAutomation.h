@@ -4,7 +4,7 @@
 
   @file ShuttleAutomation.h
 
-  Paul Licameli split from Shuttle.h
+  Paul Licameli split from SettingsVisitor.h
 
 **********************************************************************/
 
@@ -13,7 +13,7 @@
 
 #include <type_traits>
 #include "EffectInterface.h"
-#include "Shuttle.h"
+#include "SettingsVisitor.h"
 
 class Effect;
 //! Interface for manipulations of an Effect's settings

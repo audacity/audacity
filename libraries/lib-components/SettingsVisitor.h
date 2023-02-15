@@ -2,14 +2,13 @@
 
   Audacity: A Digital Audio Editor
 
-  Shuttle.h
+  SettingsVisitor.h
 
   James Crook
 
 **********************************************************************/
-
-#ifndef __AUDACITY_SHUTTLE__
-#define __AUDACITY_SHUTTLE__
+#ifndef __AUDACITY_SETTINGS_VISITOR__
+#define __AUDACITY_SETTINGS_VISITOR__
 
 #include <type_traits>
 
@@ -115,8 +114,8 @@ public:
       const EnumValueSymbol strings[], size_t nStrings );
 };
 
-extern template class AUDACITY_DLL_API SettingsVisitorBase<false>;
-extern template class AUDACITY_DLL_API SettingsVisitorBase<true>;
+extern template class COMPONENTS_API SettingsVisitorBase<false>;
+extern template class COMPONENTS_API SettingsVisitorBase<true>;
 
 using SettingsVisitor = SettingsVisitorBase<false>;
 using ConstSettingsVisitor = SettingsVisitorBase<true>;
