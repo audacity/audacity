@@ -72,7 +72,7 @@ class wxStaticBox;
 class wxSpinCtrl;
 class wxListBox;
 class wxGrid;
-class Shuttle;
+class ShuttlePrefs;
 class ReadOnlyText;
 
 class WrappedType;
@@ -527,7 +527,7 @@ protected:
    wxWindow *const mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
 
-   std::unique_ptr<Shuttle> mpShuttle; /*! Controls source/destination of shuttled data.  You can
+   std::unique_ptr<ShuttlePrefs> mpShuttle; /*! Controls source/destination of shuttled data.  You can
    leave this NULL if you are shuttling to variables */
    int miNoMatchSelector; //! Used in choices to determine which item to use on no match.
 
