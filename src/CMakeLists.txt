@@ -508,6 +508,8 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitEditor.h
          effects/audiounits/AudioUnitEffect.cpp
          effects/audiounits/AudioUnitEffect.h
+         effects/audiounits/AudioUnitEffectBase.cpp
+         effects/audiounits/AudioUnitEffectBase.h
          effects/audiounits/AudioUnitEffectOptionsDialog.cpp
          effects/audiounits/AudioUnitEffectOptionsDialog.h
          effects/audiounits/AudioUnitEffectsModule.cpp

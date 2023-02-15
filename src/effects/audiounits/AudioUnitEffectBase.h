@@ -2,39 +2,25 @@
 
   Audacity: A Digital Audio Editor
 
-  @file AudioUnitEffect.h
+  @file AudioUnitEffectBase.h
 
   Dominic Mazzoni
   Leland Lucius
 
+  Paul Licameli split from AudioUnitEffect.h
+
 **********************************************************************/
-#ifndef AUDACITY_AUDIOUNIT_EFFECT_H
-#define AUDACITY_AUDIOUNIT_EFFECT_H
-
-
+#ifndef AUDACITY_AUDIOUNIT_EFFECT_BASE_H
+#define AUDACITY_AUDIOUNIT_EFFECT_BASE_H
 
 #if USE_AUDIO_UNITS
 
 #include "AudioUnitWrapper.h"
-
-#include "MemoryX.h"
-#include <functional>
-#include <type_traits>
-#include <vector>
-
-#include <AudioToolbox/AudioUnitUtilities.h>
-#include <AudioUnit/AudioUnitProperties.h>
-
-#include "../StatelessPerTrackEffect.h"
-#include "PluginInterface.h"
-
-#include <wx/weakref.h>
+#include "PerTrackEffect.h"
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: the name of an Apple audio software protocol */
 #define AUDIOUNITEFFECTS_FAMILY EffectFamilySymbol{ wxT("AudioUnit"), XO("Audio Unit") }
-
-class AUControl;
 
 class AudioUnitEffectBase
    : public PerTrackEffect
@@ -129,40 +115,6 @@ protected:
    const wxString mVendor;
 
    bool mInteractive{ false };
-};
-
-class AudioUnitEffect final
-   : public StatelessEffectUIServices
-   , public AudioUnitEffectBase
-{
-public:
-   using AudioUnitEffectBase::AudioUnitEffectBase;
-   ~AudioUnitEffect() override;
-
-private:
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
-
-   bool CloseUI() const override;
-
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-
-   void ShowOptions(const EffectPlugin &plugin) const override;
-
-   //! Will never be called
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const final;
 };
 
 #endif
