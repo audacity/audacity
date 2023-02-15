@@ -14,21 +14,24 @@
 
 #include "Shuttle.h"
 
-class ShuttlePrefs final : public Shuttle
+class ShuttlePrefs final
 {
 public:
+   bool mbStoreInClient{};
+   wxString mValueString;
+
    // constructors and destructors
-   ShuttlePrefs(){;};
-   virtual ~ShuttlePrefs() {};
+   ShuttlePrefs(){}
+   ~ShuttlePrefs() {}
 
 public:
-   bool TransferBool( const wxString & Name, bool & bValue, const bool & bDefault ) override;
-//   bool TransferFloat( const wxString & Name, float & fValue, const float &fDefault ) override;
-   bool TransferDouble( const wxString & Name, double & dValue, const double &dDefault ) override;
-   bool TransferInt(const wxString & Name, int & iValue, const int &iDefault) override;
-   bool TransferString(const wxString & Name, wxString & strValue, const wxString &strDefault) override;
-   bool TransferWrappedType(const wxString & Name, WrappedType & W) override;
-   bool ExchangeWithMaster(const wxString & Name) override;
+   bool TransferBool( const wxString & Name, bool & bValue, const bool & bDefault );
+//   bool TransferFloat( const wxString & Name, float & fValue, const float &fDefault );
+   bool TransferDouble( const wxString & Name, double & dValue, const double &dDefault );
+   bool TransferInt(const wxString & Name, int & iValue, const int &iDefault);
+   bool TransferString(const wxString & Name, wxString & strValue, const wxString &strDefault);
+   bool TransferWrappedType(const wxString & Name, WrappedType & W);
+   bool ExchangeWithMaster(const wxString & Name);
 };
 
 #endif
