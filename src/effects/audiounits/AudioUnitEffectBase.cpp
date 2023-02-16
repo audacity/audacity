@@ -68,6 +68,13 @@ TranslatableString AudioUnitEffectBase::SaveBlobToConfig(
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+std::unique_ptr<AudioUnitEffectBase>
+   AudioUnitEffectBase::DefaultEffectFactory(const PluginPath & path,
+      const wxString & name, AudioComponent component)
+{
+   return std::make_unique<AudioUnitEffectBase>(path, name, component);
+}
+
 AudioUnitEffectBase::AudioUnitEffectBase(const PluginPath & path,
    const wxString & name, AudioComponent component,
    Parameters *pParameters, AudioUnitEffectBase *master

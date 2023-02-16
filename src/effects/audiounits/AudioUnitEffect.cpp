@@ -223,4 +223,12 @@ void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
    AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }
 
+// Inject factory hook to make AudioUnitEffect capable of UI
+static AudioUnitEffectBase::Factory::Scope scope{
+   [] (const PluginPath & path, const wxString & name, AudioComponent component)
+   -> std::unique_ptr<AudioUnitEffectBase> {
+      return std::make_unique<AudioUnitEffect>(path, name, component);
+   }
+};
+
 #endif

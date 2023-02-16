@@ -16,6 +16,7 @@
 #if USE_AUDIO_UNITS
 
 #include "AudioUnitWrapper.h"
+#include "GlobalVariable.h"
 #include "PerTrackEffect.h"
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
@@ -27,6 +28,21 @@ class AudioUnitEffectBase
    , public AudioUnitWrapper
 {
 public:
+   using FactoryType =
+      std::unique_ptr<AudioUnitEffectBase>(const PluginPath & path,
+         const wxString & name, AudioComponent component);
+
+   static std::unique_ptr<AudioUnitEffectBase>
+      DefaultEffectFactory(const PluginPath & path,
+         const wxString & name, AudioComponent component);
+
+   //! Global hook making AudioIOStartStreamOptions for a project, which
+   //! has a non-trivial default implementation
+   struct Factory : GlobalFactoryHook< Factory,
+      FactoryType,
+      DefaultEffectFactory // default installed implementation
+   >{};
+
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
 
    AudioUnitEffectBase(const PluginPath & path,
