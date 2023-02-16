@@ -26,13 +26,13 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/stattext.h>
 
 #include "../LabelTrack.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
+#include "WaveClip.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
 
@@ -117,13 +117,20 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          auto start = track->TimeToLongSamples(mT0);
          auto end = track->TimeToLongSamples(mT1);
          auto len = end - start;
-         double tLen = track->LongSamplesToTime(len);
-         double tc = mT0 + tLen;
+         const double tLen = track->LongSamplesToTime(len);
+         const double tc = mT0 + tLen;
 
          if (len <= 0)
             return;
 
-         auto dest = track->Copy(mT0, mT1);
+         auto dest = std::dynamic_pointer_cast<WaveTrack>(track->Copy(mT0, mT1));
+         std::vector<wxString> clipNames;
+         for(auto clip : dest->SortedClipArray())
+         {
+            if(!clip->GetIsPlaceholder())
+               clipNames.push_back(clip->GetName());
+         }
+         auto t0 = tc;
          for(int j=0; j<repeatCount; j++)
          {
             if (TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
@@ -131,11 +138,30 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
                bGoodResult = false;
                return;
             }
-            track->Paste(tc, dest.get());
-            tc += tLen;
+            track->Paste(t0, dest.get());
+            t0 += tLen;
          }
-         if (tc > maxDestLen)
-            maxDestLen = tc;
+         if (t0 > maxDestLen)
+            maxDestLen = t0; 
+
+         auto clips = track->SortedClipArray();
+         for(size_t i = 0; i < clips.size(); ++i)
+         {
+            const auto eps = 0.5 / track->GetRate();
+            //Find first pasted clip
+            if(std::abs(clips[i]->GetPlayStartTime() - tc) > eps)
+               continue;
+
+            //Fix pasted clips names
+            for(int j = 0; j < repeatCount; ++j)
+            {
+               for(size_t k = 0; k < clipNames.size(); ++k)
+                  clips[i + k]->SetName(clipNames[k]);
+               i += clipNames.size();
+            }
+            break;
+         }
+
          nTrack++;
       },
       [&](Track *t)
@@ -156,8 +182,10 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 }
 
 std::unique_ptr<EffectUIValidator> EffectRepeat::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartHorizontalLay(wxCENTER, false);
    {
       mRepeatCount = S.Validator<IntegerValidator<int>>(
@@ -188,6 +216,11 @@ bool EffectRepeat::TransferDataToWindow(const EffectSettings &)
 
 bool EffectRepeat::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
+
    long l;
 
    mRepeatCount->GetValue().ToLong(&l);
@@ -214,7 +247,7 @@ void EffectRepeat::DisplayNewTime()
    mCurrentTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    if (l > 0) {
-      EnableApply(true);
+      EffectUIValidator::EnableApply(mUIParent, true);
       repeatCount = l;
 
       nc.SetValue((mT1 - mT0) * (repeatCount + 1));
@@ -222,7 +255,7 @@ void EffectRepeat::DisplayNewTime()
    }
    else {
       str = _("Warning: No repeats.");
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
    }
    mTotalTime->SetLabel(str);
    mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
@@ -231,4 +264,9 @@ void EffectRepeat::DisplayNewTime()
 void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))
 {
    DisplayNewTime();
+}
+
+bool EffectRepeat::NeedsDither() const
+{
+   return false;
 }

@@ -345,62 +345,77 @@ bool TextEditHelper::OnRelease(const wxMouseEvent& event, AudacityProject* proje
     return HandleDragRelease(event, project);
 }
 
-void TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
+bool TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
 {
     mBBox = rect;
-    dc.SetFont(mFont);
+
+    if(rect.IsEmpty())
+       return false;
 
     const auto cursorHeight = dc.GetFontMetrics().height;
 
+    dc.SetFont(mFont);
+
     wxDCClipper clipper(dc, rect);
-    
-    auto rtl = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft;
 
     auto curPosX = 0;
     auto maxOffset = static_cast<int>(mText.Length());
-    mOffset = std::clamp(mOffset, 0, maxOffset);
+    mOffset = 0;
+    if(maxOffset > 0)
     {
-        auto leftBound = rect.GetLeft();
-        auto rightBound = rect.GetRight() + 1;
-        GetCharPositionX(mCurrentCursorPos, &curPosX);
-
-        if ((!rtl && curPosX >= rightBound) || (rtl && curPosX < leftBound))
+        const auto rtl = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft;
         {
-            while (mOffset < maxOffset)
+            auto leftBound = rect.GetLeft();
+            auto rightBound = rect.GetRight() + 1;
+            GetCharPositionX(mCurrentCursorPos, &curPosX);
+
+            if ((!rtl && curPosX >= rightBound) || (rtl && curPosX < leftBound))
             {
-                GetCharPositionX(mCurrentCursorPos, &curPosX);
-                if (curPosX < rightBound && curPosX >= leftBound)
-                    break;
-                ++mOffset;
+                while (mOffset < maxOffset)
+                {
+                    GetCharPositionX(mCurrentCursorPos, &curPosX);
+                    if (curPosX < rightBound && curPosX >= leftBound)
+                        break;
+                    ++mOffset;
+                }
+            }
+            if ((!rtl && curPosX < leftBound) || (rtl && curPosX >= rightBound))
+            {
+                while (mOffset > 0)
+                {
+                    GetCharPositionX(mCurrentCursorPos, &curPosX);
+                    if (curPosX >= leftBound && curPosX < rightBound)
+                        break;
+                    --mOffset;
+                }
             }
         }
-        if ((!rtl && curPosX < leftBound) || (rtl && curPosX >= rightBound))
+        // Text doesn't fit into rectangle
+        if(mOffset >= maxOffset)
+            return false;
+
+        if (mCurrentCursorPos != mInitialCursorPos)
         {
-            while (mOffset > 0)
-            {
-                GetCharPositionX(mCurrentCursorPos, &curPosX);
-                if (curPosX >= leftBound && curPosX < rightBound)
-                    break;
-                --mOffset;
-            }
+            auto left = 0;
+            auto right = 0;
+            GetCharPositionX(std::min(mCurrentCursorPos, mInitialCursorPos), &left);
+            GetCharPositionX(std::max(mCurrentCursorPos, mInitialCursorPos), &right);
+            dc.SetPen(*wxTRANSPARENT_PEN);
+            dc.SetBrush(mTextSelectionColor);
+            dc.DrawRectangle(wxRect(left, rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2, right - left, cursorHeight));
         }
-    }
 
-    if (mCurrentCursorPos != mInitialCursorPos)
+        
+        dc.SetTextBackground(wxTransparentColour);
+        dc.SetTextForeground(mTextColor);
+        dc.SetFont(wxFont(wxFontInfo()));
+        dc.DrawLabel(mText.Mid(mOffset), rect, (rtl ? wxALIGN_RIGHT : wxALIGN_LEFT) | wxALIGN_CENTER_VERTICAL);
+    }
+    else
     {
-        auto left = 0;
-        auto right = 0;
-        GetCharPositionX(std::min(mCurrentCursorPos, mInitialCursorPos), &left);
-        GetCharPositionX(std::max(mCurrentCursorPos, mInitialCursorPos), &right);
-        dc.SetPen(*wxTRANSPARENT_PEN);
-        dc.SetBrush(mTextSelectionColor);
-        dc.DrawRectangle(wxRect(left, rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2, right - left, cursorHeight));
+       mCurrentCursorPos = mInitialCursorPos = 0;
+       GetCharPositionX(mCurrentCursorPos, &curPosX);
     }
-
-    dc.SetTextBackground(wxTransparentColour);
-    dc.SetTextForeground(mTextColor);
-    dc.SetFont(wxFont(wxFontInfo()));
-    dc.DrawLabel(mText.Mid(mOffset), rect, (rtl ? wxALIGN_RIGHT : wxALIGN_LEFT) | wxALIGN_CENTER_VERTICAL);
 
     if (mCurrentCursorPos == mInitialCursorPos)
     {
@@ -408,6 +423,7 @@ void TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
         auto top = rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2;
         dc.DrawLine(curPosX, top, curPosX, top + cursorHeight);
     }
+    return true;
 }
 
 bool TextEditHelper::HandleDragRelease(const wxMouseEvent& event, AudacityProject* project)

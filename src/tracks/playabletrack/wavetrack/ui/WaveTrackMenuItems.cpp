@@ -23,7 +23,6 @@ Paul Licameli split from TrackMenus.cpp
 namespace {
 using namespace MenuTable;
 
-struct Handler : CommandHandlerObject {
 void OnNewWaveTrack(const CommandContext &context)
 {
    auto &project = context.project;
@@ -80,25 +79,13 @@ void OnNewStereoTrack(const CommandContext &context)
    left->EnsureVisible();
 }
 
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
-}
-
-#define FN(X) (&Handler :: X)
 AttachedItem sAttachment{ wxT("Tracks/Add/Add"),
-   ( FinderScope{ findCommandHandler },
    Items( "",
-      Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
+      Command( wxT("NewMonoTrack"), XXO("&Mono Track"), OnNewWaveTrack,
          AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),
       Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
-         FN(OnNewStereoTrack), AudioIONotBusyFlag() )
-   ) )
+         OnNewStereoTrack, AudioIONotBusyFlag() )
+   )
 };
-#undef FN
 
 }

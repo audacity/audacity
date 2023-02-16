@@ -32,7 +32,6 @@
 #include "CellularPanel.h"
 #include "../images/Cursors.h"
 #include "HitTestResult.h"
-#include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -50,6 +49,7 @@
 #include "prefs/TracksPrefs.h"
 #include "prefs/ThemePrefs.h"
 #include "toolbars/ToolBar.h"
+#include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/AButton.h"
@@ -1370,7 +1370,7 @@ void AdornedRulerPanel::ReCreateButtons()
 
    wxPoint position( 1, 0 );
 
-   Grabber * pGrabber = safenew Grabber(this, this->GetId());
+   Grabber * pGrabber = safenew Grabber(this, {});
    pGrabber->SetAsSpacer( true );
    //pGrabber->SetSize( 10, 27 ); // default is 10,27
    pGrabber->SetPosition( position );
@@ -2093,7 +2093,7 @@ void AdornedRulerPanel::StartQPPlay(
       newDefault = (loopEnabled && newDefault);
       if (newDefault)
          cutPreview = false;
-      auto options = DefaultPlayOptions( *mProject, newDefault );
+      auto options = ProjectAudioIO::GetDefaultOptions(*mProject, newDefault);
 
       if (!cutPreview) {
          if (pStartTime)
@@ -2246,7 +2246,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    {
       auto item = rulerMenu.Append(OnClearPlayRegionID,
          /* i18n-hint Clear is a verb */
-         _("Clear Looping Region"));
+         _("Clear Loop"));
    }
 
    {
@@ -2796,7 +2796,7 @@ void AdornedRulerPanel::TogglePinnedHead()
 {
    bool value = !TracksPrefs::GetPinnedHeadPreference();
    TracksPrefs::SetPinnedHeadPreference(value, true);
-   MenuManager::ModifyAllProjectToolbarMenus();
+   ToolManager::ModifyAllProjectToolbarMenus();
 
    auto &project = *mProject;
    // Update button image
@@ -2805,4 +2805,30 @@ void AdornedRulerPanel::TogglePinnedHead()
    auto &scrubber = Scrubber::Get( project );
    if (scrubber.HasMark())
       scrubber.SetScrollScrubbing(value);
+}
+
+// Attach menu item
+
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+
+namespace {
+void OnTogglePinnedHead(const CommandContext &context)
+{
+   AdornedRulerPanel::Get( context.project ).TogglePinnedHead();
+}
+
+using namespace MenuTable;
+using Options = CommandManager::Options;
+AttachedItem sAttachment{
+   { wxT("Transport/Other/Options/Part2"), { OrderingHint::Begin, {} } },
+   Command( wxT("PinnedHead"), XXO("Pinned Play/Record &Head (on/off)"),
+      OnTogglePinnedHead,
+      // Switching of scrolling on and off is permitted
+      // even during transport
+      AlwaysEnabledFlag,
+      Options{}.CheckTest([](const AudacityProject&){
+         return TracksPrefs::GetPinnedHeadPreference(); } ) )
+};
 }

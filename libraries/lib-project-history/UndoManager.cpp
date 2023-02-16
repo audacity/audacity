@@ -352,6 +352,11 @@ void UndoManager::VisitStates(
    }
 }
 
+void UndoManager::MarkUnsaved()
+{
+   saved = -1;
+}
+
 bool UndoManager::UnsavedChanges() const
 {
    return (saved != current);

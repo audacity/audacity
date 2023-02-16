@@ -17,6 +17,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
+#include "ToolBarButtons.h"
 
 class wxCommandEvent;
 class wxDC;
@@ -26,45 +27,11 @@ class wxWindow;
 
 class AButton;
 
-enum {
-   ETBZoomInID,
-   ETBZoomOutID,
-#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
-   ETBZoomToggleID,
-#endif
-
-   ETBZoomSelID,
-   ETBZoomFitID,
-
-   ETBTrimID,
-   ETBSilenceID,
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   //Undefined, so no sync-lock on/off button.
-   //#define OPTION_SYNC_LOCK_BUTTON
-#endif
-
-#ifdef OPTION_SYNC_LOCK_BUTTON
-   ETBSyncLockID,
-#endif
-
-   ETBUndoID,
-   ETBRedoID,
-
-   ETBNumButtons
-};
-
-const int first_ETB_ID = 11300;
-
-// flags so 1,2,4,8 etc.
-enum {
-   ETBActTooltips = 1,
-   ETBActEnableDisable = 2,
-};
-
 class EditToolBar final : public ToolBar {
 
  public:
+
+   static Identifier ID();
 
    EditToolBar( AudacityProject &project );
    virtual ~EditToolBar();
@@ -80,25 +47,16 @@ class EditToolBar final : public ToolBar {
 
  private:
 
-   static AButton *AddButton(
-      EditToolBar *pBar,
+   void AddButton(
       teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id, const TranslatableString &label, bool toggle = false);
 
    void AddSeparator();
 
-   void MakeButtons();
-
    void RegenerateTooltips() override;
-   void ForAllButtons(int Action);
 
-   AButton *mButtons[ETBNumButtons];
-
+   ToolBarButtons mButtons;
    wxGridSizer* mToolSizer;
-
-   wxImage *upImage;
-   wxImage *downImage;
-   wxImage *hiliteImage;
 
  public:
 

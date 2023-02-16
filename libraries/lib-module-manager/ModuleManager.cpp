@@ -25,7 +25,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include <wx/dynlib.h>
 #include <wx/log.h>
-#include <wx/string.h>
 #include <wx/filename.h>
 
 #include "FileNames.h"
@@ -174,7 +173,7 @@ void * Module::GetSymbol(const wxString &name)
 std::unique_ptr<ModuleManager> ModuleManager::mInstance{};
 
 // Give builtin providers a means to identify themselves
-using BuiltinProviderList = std::vector<PluginProviderMain>;
+using BuiltinProviderList = std::vector<PluginProviderFactory>;
 namespace {
    BuiltinProviderList &builtinProviderList()
    {
@@ -183,19 +182,17 @@ namespace {
    }
 }
 
-void RegisterProvider(PluginProviderMain pluginProviderMain)
+void RegisterProviderFactory(PluginProviderFactory pluginProviderFactory)
 {
    auto &list = builtinProviderList();
-   if ( pluginProviderMain )
-      list.push_back(pluginProviderMain);
-
-   return;
+   if(pluginProviderFactory)
+      list.push_back(std::move(pluginProviderFactory));
 }
 
-void UnregisterProvider(PluginProviderMain pluginProviderMain)
+void UnregisterProviderFactory(PluginProviderFactory pluginProviderFactory)
 {
    auto &list = builtinProviderList();
-   auto end = list.end(), iter = std::find(list.begin(), end, pluginProviderMain);
+   auto end = list.end(), iter = std::find(list.begin(), end, pluginProviderFactory);
    if (iter != end)
       list.erase(iter);
 }
@@ -387,6 +384,29 @@ int ModuleManager::Dispatch(ModuleDispatchTypes type)
    return 0;
 }
 
+PluginProviderUniqueHandle::~PluginProviderUniqueHandle()
+{
+   if(mPtr)
+   {
+      mPtr->Terminate();
+      //No profit in comparison to calling/performing PluginProvider::Terminate
+      //from a destructor of the PluginProvider, since we don't offer any
+      //options to deal with errors...
+      //
+      //Example:
+      //try {
+      //   provider->Terminate();
+      //}
+      //catch(e) {
+      //   if(Dialog::ShowError("... Are you sure?") != Dialog::ResultOk)
+      //      //other providers might have been terminated by that time,
+      //      //so it might be a better option to repeatedly ask "Try again"/"Continue"
+      //      return;
+      //}
+      //provider.reset();//no errors, or user confirmed deletion
+   }
+}
+
 // ============================================================================
 //
 // Return reference to singleton
@@ -396,9 +416,7 @@ int ModuleManager::Dispatch(ModuleDispatchTypes type)
 ModuleManager & ModuleManager::Get()
 {
    if (!mInstance)
-   {
-      mInstance.reset(safenew ModuleManager);
-   }
+      mInstance = std::make_unique<ModuleManager>();
 
    return *mInstance;
 }
@@ -457,30 +475,18 @@ bool ModuleManager::DiscoverProviders()
 
 void ModuleManager::InitializeBuiltins()
 {
-   for (auto pluginProviderMain : builtinProviderList())
+   for (const auto& pluginProviderFactory : builtinProviderList())
    {
-      PluginProviderHandle provider{ pluginProviderMain(), PluginProviderDeleter{} };
-      if (provider && provider->Initialize()) {
-         // Register the provider
-         auto pInterface = provider.get();
-         auto id = GetID(pInterface);
+      auto pluginProvider = pluginProviderFactory();
+      
+      if (pluginProvider && pluginProvider->Initialize()) {
+         PluginProviderUniqueHandle handle { std::move(pluginProvider) };
+         
+         auto id = GetID(handle.get());
 
          // Need to remember it 
-         mProviders[id] = std::move(provider);
+         mProviders[id] = std::move(handle);
       }
-      else
-      {
-         // Don't leak!  Destructor of module does that.
-      }
-   }
-}
-
-void PluginProviderDeleter::operator() (PluginProvider *pInterface) const
-{
-   if (pInterface)
-   {
-      pInterface->Terminate();
-      std::unique_ptr < PluginProvider > { pInterface }; // DELETE it
    }
 }
 
@@ -518,6 +524,14 @@ std::unique_ptr<ComponentInterface> ModuleManager::LoadPlugin(
       return iter->second->LoadPlugin(path);
 }
 
+bool ModuleManager::CheckPluginExist(const PluginID& providerId, const PluginPath& path)
+{
+   if(mProviders.find(providerId) == mProviders.end())
+      return false;
+
+   return mProviders[providerId]->CheckPluginExist(path);
+}
+
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
                                     const PluginPath & path)
 {
@@ -534,16 +548,4 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
    }
 
    return false;
-}
-
-bool ModuleManager::IsPluginValid(const PluginID & providerID,
-                                  const PluginPath & path,
-                                  bool bFast)
-{
-   if (mProviders.find(providerID) == mProviders.end())
-   {
-      return false;
-   }
-
-   return mProviders[providerID]->IsPluginValid(path, bFast);
 }

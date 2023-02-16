@@ -60,11 +60,10 @@ static Importer::RegisteredUnusableImportPlugin registered
 #endif
 
 #include <wx/file.h>
-#include <wx/string.h>
 
 #include "Prefs.h"
 #include "../Tags.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -1061,7 +1060,13 @@ enum mad_flow MP3ImportFileHandle::OutputCB(struct mad_header const * WXUNUSED(h
       }
 
       // And append to the channel
-      mChannels[chn]->Append((samplePtr) sampleBuf, floatSample, samples);
+      mChannels[chn]->Append(
+         (samplePtr) sampleBuf, floatSample, samples, 1,
+         // Samples were 28 bit fixed-point converted to float:
+         // see explanation above MAD_F_FRACBITS in mad.h
+         // Effective sample format must therefore be
+         // more than 24 bits, so this is our only choice.
+         floatSample);
    }
 
    return MAD_FLOW_CONTINUE;

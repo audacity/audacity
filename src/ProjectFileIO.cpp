@@ -54,10 +54,6 @@ Paul Licameli split from AudacityProject.cpp
    #define NO_SHM
 #endif
 
-wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
-wxDEFINE_EVENT( EVT_CHECKPOINT_FAILURE, wxCommandEvent);
-wxDEFINE_EVENT( EVT_RECONNECTION_FAILURE, wxCommandEvent);
-
 // Used to convert 4 byte-sized values into an integer for use in SQLite
 // PRAGMA statements. These values will be store in the database header.
 //
@@ -1662,8 +1658,10 @@ void ProjectFileIO::SetProjectTitle(int number)
       window.SetTitle( name );
       window.SetName(name);       // to make the nvda screen reader read the correct title
 
-      project.QueueEvent(
-         safenew wxCommandEvent{ EVT_PROJECT_TITLE_CHANGE } );
+      BasicUI::CallAfter( [wThis = weak_from_this()]{
+         if (auto pThis = wThis.lock())
+            pThis->Publish(ProjectFileIOMessage::ProjectTitleChange);
+      } );
    }
 }
 
@@ -1787,8 +1785,9 @@ XMLTagHandler *ProjectFileIO::HandleXMLChild(const std::string_view& tag)
 
 void ProjectFileIO::OnCheckpointFailure()
 {
-   wxCommandEvent evt{ EVT_CHECKPOINT_FAILURE };
-   mProject.ProcessEvent(evt);
+   // DBConnection promises to invoke this in main thread idle time
+   // So we don't need a redundant CallAfter to satisfy our own promise
+   Publish(ProjectFileIOMessage::CheckpointFailure);
 }
 
 void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
@@ -2239,8 +2238,7 @@ bool ProjectFileIO::SaveProject(
 "possibly because of limited space on the storage device."),
                   "Error:_Disk_full_or_not_writable"
                );
-               wxCommandEvent evt{ EVT_RECONNECTION_FAILURE };
-               mProject.ProcessEvent(evt);
+               Publish(ProjectFileIOMessage::ReconnectionFailure);
             });
 
             return false;
@@ -2692,7 +2690,7 @@ FROM sampleblocks WHERE blockid = ?1;)";
 }
 
 InvisibleTemporaryProject::InvisibleTemporaryProject()
-   : mpProject{ std::make_shared< AudacityProject >() }
+   : mpProject{ AudacityProject::Create() }
 {
 }
 

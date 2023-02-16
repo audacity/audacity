@@ -49,8 +49,8 @@ public:
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool DoTransferDataFromWindow();
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
@@ -77,6 +77,8 @@ private:
    void UpdateUI();
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    double    mRMSSum;
    size_t    mCircleSize;
    size_t    mCirclePos;
@@ -132,9 +134,9 @@ private:
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Threshold{ &EffectCompressor::mThreshold,
+static constexpr EffectParameter Threshold{ &EffectCompressor::mThresholdDB,
    L"Threshold",     -12.0,   -60.0,   -1.0,    1   };
-static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloor,
+static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloorDB,
    L"NoiseFloor",    -40.0,   -80.0,   -20.0,   0.2   };
 static constexpr EffectParameter Ratio{ &EffectCompressor::mRatio,
    L"Ratio",         2.0,     1.1,     10.0,    10  };

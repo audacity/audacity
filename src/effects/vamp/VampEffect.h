@@ -70,9 +70,10 @@ public:
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // VampEffect implementation
@@ -87,6 +88,8 @@ private:
    void OnTextCtrl(wxCommandEvent & evt);
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    std::unique_ptr<Vamp::Plugin> mPlugin;
    PluginPath mPath;
    int mOutput;

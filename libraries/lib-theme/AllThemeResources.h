@@ -108,6 +108,16 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpRedo, wxImage( 26, 24 ), wxT("Redo"));
    DEFINE_IMAGE( bmpRedoDisabled, wxImage( 26, 24 ), wxT("RedoDisabled"));
 
+   SET_THEME_FLAGS(  resFlagPaired  );
+   DEFINE_IMAGE( bmpCut, wxImage( 20, 20 ), wxT("Cut"));
+   DEFINE_IMAGE( bmpCutDisabled, wxImage( 20, 20 ), wxT("CutDisabled"));
+   DEFINE_IMAGE( bmpCopy, wxImage( 20, 20 ), wxT("Copy"));
+   DEFINE_IMAGE( bmpCopyDisabled, wxImage( 20, 20 ), wxT("CopyDisabled"));
+   DEFINE_IMAGE( bmpPaste, wxImage( 20, 20 ), wxT("Paste"));
+   DEFINE_IMAGE( bmpPasteDisabled, wxImage( 20, 20 ), wxT("PasteDisabled"));
+   DEFINE_IMAGE(bmpDelete, wxImage(20, 20), wxT("Delete"));
+   DEFINE_IMAGE(bmpDeleteDisabled, wxImage(20, 20), wxT("DeleteDisabled"));
+
    SET_THEME_FLAGS(  resFlagPaired | resFlagNewLine  );
    DEFINE_IMAGE( bmpTnStartOn, wxImage( 27, 27 ), wxT("TnStartOn"));
    DEFINE_IMAGE( bmpTnStartOnDisabled, wxImage( 27, 27 ), wxT("TnStartOnDisabled"));
@@ -210,10 +220,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpRecoloredDownSmall, wxImage( 27, 27 ), wxT("RecoloredDownSmall"));
    DEFINE_IMAGE( bmpRecoloredUpHiliteSmall, wxImage( 27, 27 ), wxT("RecoloredUpHiliteSmall"));
    DEFINE_IMAGE( bmpRecoloredHiliteSmall, wxImage( 27, 27 ), wxT("RecoloredHiliteSmall"));
-   DEFINE_IMAGE( bmpRecoloredSetupUpSmall, wxImage( 48, 27 ), wxT("RecoloredSetupUpSmall"));
-   DEFINE_IMAGE( bmpRecoloredSetupDownSmall, wxImage( 48, 27 ), wxT("RecoloredSetupDownSmall"));
-   DEFINE_IMAGE( bmpRecoloredSetupUpHiliteSmall, wxImage(48, 27), wxT("RecoloredSetupUpHiliteSmall"));
-   DEFINE_IMAGE( bmpRecoloredSetupHiliteSmall, wxImage( 48, 27 ), wxT("RecoloredSetupHiliteSmall"));
 
    SET_THEME_FLAGS(  resFlagCursor  );
    DEFINE_IMAGE( bmpIBeamCursor, wxImage( 32, 32 ), wxT("IBeamCursor"));
@@ -232,16 +238,21 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpSubViewsCursor, wxImage(32, 32), wxT("SubViewsCursor"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
-   DEFINE_IMAGE( bmpEffectOn, wxImage( 24, 25 ), wxT("EffectOn"));
-   DEFINE_IMAGE( bmpEffectOff, wxImage( 24, 25 ), wxT("EffectOff"));
+   DEFINE_IMAGE( bmpEffectOn, wxImage( 22, 22 ), wxT("EffectOn"));
+   DEFINE_IMAGE( bmpEffectOff, wxImage( 22, 22 ), wxT("EffectOff"));
    DEFINE_IMAGE( bmpDragArea, wxImage( 6, 14 ), wxT("DragArea"));
-   DEFINE_IMAGE( bmpEffectSettingsDown, wxImage( 24, 25 ), wxT("EffectSettingsDown"));
-   DEFINE_IMAGE( bmpEffectSettingsNormal, wxImage( 24, 25 ), wxT("EffectSettingsNormal"));
-   DEFINE_IMAGE( bmpEffectSettingsHover, wxImage( 24, 25 ), wxT("EffectSettingsHover"));
-
+   DEFINE_IMAGE( bmpMoreDown, wxImage( 22, 22 ), wxT("MoreDown"));
+   DEFINE_IMAGE( bmpMoreNormal, wxImage( 22, 22 ), wxT("MoreNormal"));
+   DEFINE_IMAGE( bmpMoreHover, wxImage( 22, 22 ), wxT("MoreHover"));
+   DEFINE_IMAGE( bmpMoreDisabled, wxImage( 22, 22 ), wxT("MoreDisabled"))
    DEFINE_IMAGE( bmpCloseDown, wxImage( 22, 22 ), wxT("CloseDown"));
    DEFINE_IMAGE( bmpCloseNormal, wxImage( 22, 22 ), wxT("CloseNormal"));
    DEFINE_IMAGE( bmpCloseHover, wxImage( 22, 22 ), wxT("CloseHover"));
+   DEFINE_IMAGE( bmpCloseDisabled, wxImage( 22, 22 ), wxT("CloseDisabled"))
+   DEFINE_IMAGE( bmpHButtonNormal, wxImage( 22, 22 ), wxT("HButtonNormal"))
+   DEFINE_IMAGE( bmpHButtonHover, wxImage( 22, 22 ), wxT("HButtonHover"))
+   DEFINE_IMAGE( bmpHButtonDown, wxImage( 22, 22 ), wxT("HButtonDown"))
+   DEFINE_IMAGE( bmpHButtonDisabled, wxImage( 22, 22 ), wxT("HButtonDisabled"))
 
    //SET_THEME_FLAGS(  resFlagNewLine  );
 
@@ -256,6 +267,10 @@ from there.  Audacity will look for a file called "Pause.png".
 
    SET_THEME_FLAGS( resFlagNewLine );
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
+
+   SET_THEME_FLAGS(resFlagNewLine);
+   DEFINE_IMAGE(bmpAnonymousUser, wxImage(20, 20), wxT("AnonymousUser"));
+   DEFINE_IMAGE(bmpShareAudio, wxImage(20, 20), wxT("ShareAudio"));
 
 
    DEFINE_COLOUR( clrBlank,      wxColour( 64,  64,  64), wxT("Blank"));

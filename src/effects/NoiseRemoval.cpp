@@ -45,7 +45,7 @@
 
 #include "LoadEffects.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "Prefs.h"
 #include "FileNames.h"
 #include "../ShuttleGui.h"
@@ -64,9 +64,6 @@
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>
-#include <wx/image.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>

@@ -39,17 +39,12 @@ or ASlider.
 #include <wx/dcbuffer.h>
 #include <wx/frame.h>
 #include <wx/graphics.h>
-#include <wx/image.h>
 #include <wx/panel.h>
 #include <wx/tooltip.h>
 #include <wx/debug.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
-#include <wx/dialog.h>
-#include <wx/sizer.h>
-#include <wx/button.h>
 #include <wx/statline.h>
-#include <wx/sizer.h>
 #include <wx/settings.h>
 #include <wx/popupwin.h>
 #include <wx/window.h>
@@ -302,6 +297,13 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                &mValue, NumValidatorStyle::DEFAULT, -50.0, 50.0)
             .AddTextBox({}, wxEmptyString, 15);
       }
+      else if(style == PERCENT_SLIDER)
+      {
+         mTextCtrl = S
+            .Validator<IntegerValidator<float>>(
+               &mValue, NumValidatorStyle::DEFAULT, 0.0, 100.0)
+            .AddTextBox({}, wxEmptyString, 15);
+      }
       else
       {
          mTextCtrl = S
@@ -335,7 +337,7 @@ SliderDialog::~SliderDialog()
 bool SliderDialog::TransferDataToWindow()
 {
    float value = mSlider->Get(false);
-   mValue = mStyle == PAN_SLIDER
+   mValue = mStyle == PAN_SLIDER || mStyle == PERCENT_SLIDER
       ? value * 100.0
       : value;
    mTextCtrl->GetValidator()->TransferToWindow();
@@ -355,7 +357,7 @@ bool SliderDialog::TransferDataFromWindow()
       float value = mValue;
       if (mStyle == DB_SLIDER)
          value = DB_TO_LINEAR(value);
-      else if (mStyle == PAN_SLIDER)
+      else if (mStyle == PAN_SLIDER || mStyle == PERCENT_SLIDER)
          value /= 100.0;
       mSlider->Set(value);
       if (mpOrigin) {
@@ -530,6 +532,7 @@ LWSlider::LWSlider(wxWindow *parent,
       speed = 0.5;
       break;
    case FRAC_SLIDER:
+   case PERCENT_SLIDER:
       minValue = 0.0f;
       maxValue = 1.0f;
       stepValue = STEP_CONTINUOUS;
@@ -603,11 +606,12 @@ void LWSlider::Init(wxWindow * parent,
    mThumbBitmapHilited = nullptr;
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
-   mTipPanel = NULL;
 
    AdjustSize(size);
 
    Move(pos);
+
+   CreatePopWin();
 }
 
 LWSlider::~LWSlider()
@@ -622,6 +626,17 @@ wxWindowID LWSlider::GetId()
 void LWSlider::SetId(wxWindowID id)
 {
    mID = id;
+}
+
+void LWSlider::SetName(const TranslatableString& name)
+{
+   mName = name;
+   if(mTipPanel)
+   {
+      mTipPanel->Destroy();
+      mTipPanel = nullptr;
+   }
+   CreatePopWin();
 }
 
 void LWSlider::SetDefaultValue(float value)
@@ -926,36 +941,26 @@ void LWSlider::SetToolTipTemplate(const TranslatableString & tip)
 
 void LWSlider::ShowTip(bool show)
 {
-   if (show && !mAlwaysHideTip)
+   if(!mTipPanel)
+      return;
+
+   if(show)
    {
-      if (mTipPanel)
-      {
-         if (mTipPanel->IsShownOnScreen())
-         {
-            return;
-         }
-
-         mTipPanel.reset();
-      }
-
-      CreatePopWin();
-      FormatPopWin();
+      mTipPanel->SetLabel(GetTip(mCurrentValue));
       SetPopWinPosition();
       mTipPanel->ShowWithoutActivating();
    }
    else
-   {
-      if (mTipPanel)
-      {
-         mTipPanel->Hide();
-         mTipPanel.reset();
-      }
-   }
+      mTipPanel->Hide();
 }
 
 void LWSlider::CreatePopWin()
 {
-   mTipPanel = std::make_unique<TipWindow>(mParent, GetWidestTips());
+   if(mTipPanel || mAlwaysHideTip || mParent == nullptr)
+      return;
+   
+   mTipPanel = safenew TipWindow(mParent, GetWidestTips());
+   mTipPanel->Hide();
 }
 
 void LWSlider::SetPopWinPosition()
@@ -1004,6 +1009,9 @@ TranslatableString LWSlider::GetTip(float value) const
       case FRAC_SLIDER:
          val = Verbatim("%.2f").Format( value );
          break;
+      case PERCENT_SLIDER:
+         val = Verbatim("%.0f%%").Format(value * 100.0f);
+         break;
 
       case DB_SLIDER:
          /* i18n-hint dB abbreviates decibels */
@@ -1044,8 +1052,13 @@ TranslatableString LWSlider::GetTip(float value) const
 #endif
       }
 
-      /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
-      label = XO("%s: %s").Format( mName, val );
+      if(!mName.empty())
+      {
+         /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
+         label = XO("%s: %s").Format( mName, val );
+      }
+      else
+         label = val;
    }
    else
    {
@@ -1070,6 +1083,9 @@ TranslatableStrings LWSlider::GetWidestTips() const
          results.push_back( GetTip( -1.99f ) );
          results.push_back( GetTip( +1.99f ) );
          break;
+
+      case PERCENT_SLIDER:
+         results.push_back(GetTip(1.0f));
 
       case DB_SLIDER:
          results.push_back( GetTip( -99.9f ) );
@@ -1327,30 +1343,36 @@ void LWSlider::OnKeyDown(wxKeyEvent & event)
          case WXK_UP:
             Increase( mScrollLine );
             SendUpdate( mCurrentValue );
+            ShowTip(true);
             break;
 
          case WXK_LEFT:
          case WXK_DOWN:
             Decrease( mScrollLine );
             SendUpdate( mCurrentValue );
+            ShowTip(true);
             break;
 
          case WXK_PAGEUP:
             Increase( mScrollPage );
             SendUpdate( mCurrentValue );
+            ShowTip(true);
             break;
 
          case WXK_PAGEDOWN:
             Decrease( mScrollPage );
             SendUpdate( mCurrentValue );
+            ShowTip(true);
             break;
 
          case WXK_HOME:
             SendUpdate( mMinValue );
+            ShowTip(true);
             break;
 
          case WXK_END:
             SendUpdate( mMaxValue );
+            ShowTip(true);
             break;
 
          case WXK_RETURN:
@@ -1378,6 +1400,15 @@ void LWSlider::OnKeyDown(wxKeyEvent & event)
    }
 }
 
+void LWSlider::SetParent(wxWindow* parent)
+{
+   mParent = parent;
+   //VS: create pop win if there is no one, don't re-parent
+   //as it seem to be a workaround for DC drawing purposes
+   //(see `WaveTrackControls::GainSlider`)
+   CreatePopWin();
+}
+
 void LWSlider::SendUpdate( float newValue )
 {
    mCurrentValue = newValue;
@@ -1400,6 +1431,35 @@ void LWSlider::SendUpdate( float newValue )
    e.SetInt( intValue );
    mParent->GetEventHandler()->ProcessEvent(e);
 }
+
+wxString LWSlider::GetStringValue() const
+{
+   switch(mStyle)
+   {
+   case FRAC_SLIDER:
+      return wxString::Format(wxT("%.0f"), mCurrentValue * 100);
+   case PERCENT_SLIDER:
+      return wxString::Format(wxT("%.0f%%"), mCurrentValue * 100.0f);
+   case DB_SLIDER:
+      return wxString::Format(wxT("%.0f"), mCurrentValue);
+   case PAN_SLIDER:
+      return wxString::Format(wxT("%.0f"), mCurrentValue * 100);
+   case SPEED_SLIDER:
+      return wxString::Format(wxT("%.0f"), mCurrentValue * 100 );
+#ifdef EXPERIMENTAL_MIDI_OUT
+   case VEL_SLIDER:
+      return wxString::Format(wxT("%.0f"), mCurrentValue);
+#endif
+   default:
+      return {};
+   }
+}
+
+void LWSlider::OnKillFocus()
+{
+   ShowTip(false);
+}
+
 
 int LWSlider::ValueToPosition(float val)
 {
@@ -1757,6 +1817,7 @@ void ASlider::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 
 void ASlider::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
+   mLWSlider->OnKillFocus();
    mSliderIsFocused = false;
    Refresh();
 }
@@ -2027,32 +2088,9 @@ wxAccStatus ASliderAx::GetValue(int childId, wxString* strValue)
 
    if ( childId == 0 )
    {
-      switch( as->mLWSlider->mStyle )
-      {
-         case FRAC_SLIDER:
-            strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue * 100 );
-            break;
-
-         case DB_SLIDER:
-            strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue );
-            break;
-
-         case PAN_SLIDER:
-            strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue * 100 );
-            break;
-
-         case SPEED_SLIDER:
-            strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue * 100 );
-            break;
-#ifdef EXPERIMENTAL_MIDI_OUT
-         case VEL_SLIDER:
-            strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue);
-            break;
-#endif
-      }
+      *strValue = as->mLWSlider->GetStringValue();
       return wxACC_OK;
    }
-
    return wxACC_NOT_SUPPORTED;
 }
 

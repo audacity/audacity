@@ -16,12 +16,14 @@
 
 #include "EffectPlugin.h"
 
+class sampleCount;
+
 //! A mix-in class for effects that are not yet migrated to statelessness.
 //! To be eliminated when all effects are migrated
 class AUDACITY_DLL_API StatefulEffectBase {
 public:
    //! Calls through to members of StatefulEffectBase
-   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
+   class AUDACITY_DLL_API Instance : public virtual EffectInstanceEx {
    public:
       explicit Instance(StatefulEffectBase &effect);
       ~Instance() override;
@@ -34,15 +36,27 @@ public:
       bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
          override;
       bool RealtimeAddProcessor(EffectSettings &settings,
+         EffectOutputs *pOutputs,
          unsigned numChannels, float sampleRate) override;
       bool RealtimeSuspend() override;
       bool RealtimeResume() override;
-      bool RealtimeProcessStart(EffectSettings &settings) override;
+      bool RealtimeProcessStart(MessagePackage &package) override;
       size_t RealtimeProcess(size_t group, EffectSettings &settings,
          const float *const *inBuf, float *const *outBuf, size_t numSamples)
       override;
       bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
       bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+
+      unsigned GetAudioInCount() const override;
+      unsigned GetAudioOutCount() const override;
+
+      bool NeedsDither() const override;
+      
+      bool ProcessInitialize(EffectSettings &settings,
+         double sampleRate, ChannelNames chanMap) override;
+
+      bool ProcessFinalize() noexcept override;
+
    protected:
       StatefulEffectBase &mEffect;
       StatefulEffectBase &GetEffect() const { return mEffect; }
@@ -69,8 +83,8 @@ public:
      @copydoc StatefulEffectBase::Instance::RealtimeAddProcessor()
      Default implementation does nothing, returns true
    */
-   virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+   virtual bool RealtimeAddProcessor(EffectSettings &settings,
+      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate);
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeSuspend()
@@ -84,11 +98,13 @@ public:
    */
    virtual bool RealtimeResume();
 
+   using MessagePackage = EffectInstance::MessagePackage;
+
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeProcessStart()
      Default implementation does nothing, returns true
    */
-   virtual bool RealtimeProcessStart(EffectSettings &settings);
+   virtual bool RealtimeProcessStart(MessagePackage &package);
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeProcess()
@@ -120,6 +136,39 @@ public:
      Default implementation returns mEffectBlockSize
    */
    virtual size_t GetBlockSize() const;
+
+   /*!
+     @copydoc StatefulEffectBase::Instance::GetAudioInCount()
+     Default implementation returns 0
+   */
+   virtual unsigned GetAudioInCount() const;
+
+   /*!
+     @copydoc StatefulEffectBase::Instance::GetAudioOutCount()
+     Default implementation returns 0
+   */
+   virtual unsigned GetAudioOutCount() const;
+
+   /*!
+    @copydoc StatefulEffectBase::Instance::GetLatency()
+    */
+   virtual sampleCount GetLatency() const;
+
+   /*!
+    @copydoc StateEffectBase::Instance::NeedsDither()
+    */
+   virtual bool NeedsDither() const;
+
+   /*!
+    @copydoc StatefulEffectBase::Instance::ProcessInitialize()
+    */
+   virtual bool ProcessInitialize(EffectSettings &settings, double sampleRate,
+      ChannelNames chanMap = nullptr);
+
+   /*!
+    @copydoc StatefulEffectBase::Instance::ProcessFinalize()
+    */
+   virtual bool ProcessFinalize() noexcept;
 
 private:
 

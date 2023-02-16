@@ -30,7 +30,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/valgen.h>
 
@@ -39,7 +38,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 enum
 {
@@ -274,8 +273,10 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
 }
 
 std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.AddSpace(0, 5);
    S.SetBorder(10);
 
@@ -316,6 +317,26 @@ std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
    S.EndMultiColumn();
 
    return nullptr;
+}
+
+bool EffectClickRemoval::TransferDataToWindow(const EffectSettings &)
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
+bool EffectClickRemoval::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   return true;
 }
 
 void EffectClickRemoval::OnWidthText(wxCommandEvent & WXUNUSED(evt))

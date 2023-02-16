@@ -69,7 +69,7 @@ public:
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override;
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
@@ -77,19 +77,14 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-
-   int GetMidiInCount() const override;
-   int GetMidiOutCount() const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
 
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
@@ -101,13 +96,13 @@ public:
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -115,6 +110,9 @@ public:
    // AudioUnitEffect implementation
 
 private:
+   static RegistryPath ChoosePresetKey(const EffectSettings &settings);
+   static RegistryPath FindPresetKey(const CommandParameters & parms);
+
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(
@@ -131,7 +129,8 @@ private:
 
    bool MigrateOldConfigFile(
       const RegistryPath & group, EffectSettings &settings) const;
-   bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
+   OptionalMessage
+      LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
    bool SavePreset(const RegistryPath & group,
       const AudioUnitEffectSettings &settings) const;
 
@@ -143,10 +142,6 @@ private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
-
-   // Initialized in GetChannelCounts()
-   unsigned mAudioIns{ 2 };
-   unsigned mAudioOuts{ 2 };
 
    bool mInteractive{ false };
    bool mUseLatency{ true };

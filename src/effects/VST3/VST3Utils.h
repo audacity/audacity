@@ -17,8 +17,6 @@
 #include <public.sdk/source/vst/hosting/module.h>
 #include <public.sdk/source/vst/vstpresetfile.h>
 
-#include <optional>
-
 class wxString;
 class wxWindow;
 
@@ -69,64 +67,3 @@ public:
 
    wxString toString() const;
 };
-
-struct EffectSettings;
-struct VST3EffectSettings
-{
-   // states as saved by IComponent::getState
-   std::optional<std::string> mProcessorStateStr;
-   std::optional<std::string> mControllerStateStr;
-};
-
-
-struct VST3Wrapper
-{
-   VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::Hosting::ClassInfo effectClassInfo)
-      : mModule(std::move(module)),
-        mEffectClassInfo(std::move(effectClassInfo))
-   {}
-
-   // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
-   // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
-   std::shared_ptr<VST3::Hosting::Module> mModule;
-
-   const VST3::Hosting::ClassInfo mEffectClassInfo;
-
-   // For the time being, here we have only members that are needed
-   // to iterate parameters and extract preset state
-   //
-   Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
-   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
-
-   bool FetchSettings(      VST3EffectSettings& settings) const;
-   bool StoreSettings(const VST3EffectSettings& settings) const;
-
-   bool LoadPreset(Steinberg::IBStream* fileStream);
-   bool SavePreset(Steinberg::IBStream* fileStream) const;
-
-
-   VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
-
-   //! This function will be rewritten when the effect is really stateless
-   VST3EffectSettings& GetSettings(EffectSettings&) const
-   {
-      return const_cast<VST3Wrapper*>(this)->mSettings;
-   }
-
-   //! This function will be rewritten when the effect is really stateless
-   const VST3EffectSettings& GetSettings(const EffectSettings&) const
-   {
-      return mSettings;
-   }
-
-   //! This is what ::GetSettings will be when the effect becomes really stateless
-   /*
-   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
-   {
-      auto pSettings = settings.cast<VST3EffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-   */
-};
-

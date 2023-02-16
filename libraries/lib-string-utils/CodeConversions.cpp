@@ -36,6 +36,12 @@ std::wstring ToWString (const std::string& str)
     return std::wstring_convert<std::codecvt_utf8<wchar_t>> ().from_bytes (str);
 }
 
+STRING_UTILS_API std::wstring ToWString(std::string_view str)
+{
+   return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(
+      str.data(), str.data() + str.length());
+}
+
 std::wstring ToWString (const char* str)
 {
     return std::wstring_convert<std::codecvt_utf8<wchar_t>> ().from_bytes (str);
@@ -49,6 +55,16 @@ std::wstring ToWString (const wxString& str)
 wxString ToWXString (const std::string& str)
 {
     return wxString::FromUTF8 (str);
+}
+
+STRING_UTILS_API wxString ToWXString(std::string_view str)
+{
+   return wxString::FromUTF8(str.data(), str.length());
+}
+
+STRING_UTILS_API wxString ToWXString(const char* str)
+{
+   return wxString::FromUTF8(str);
 }
 
 wxString ToWXString (const std::wstring& str)

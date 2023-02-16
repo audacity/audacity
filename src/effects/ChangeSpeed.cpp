@@ -20,7 +20,6 @@
 #include <math.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/slider.h>
 
 #include "ConfigInterface.h"
@@ -33,8 +32,8 @@
 #include "../widgets/valnum.h"
 
 #include "TimeWarper.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 enum
 {
@@ -139,13 +138,14 @@ EffectType EffectChangeSpeed::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectChangeSpeed::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage EffectChangeSpeed::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<EffectChangeSpeed&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
+OptionalMessage
+EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mFromVinyl = kVinyl_33AndAThird;
    mFormat = NumericConverter::DefaultSelectionFormat();
@@ -238,8 +238,11 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 }
 
 std::unique_ptr<EffectUIValidator> EffectChangeSpeed::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    {
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,
@@ -365,6 +368,11 @@ bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 {
    mbLoopDetect = true;
 
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    if (mFromVinyl == kVinyl_NA)
    {
       mFromVinyl = kVinyl_33AndAThird;
@@ -396,6 +404,10 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 {
    // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
    double exactPercent = m_PercentChange;
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
    m_PercentChange = exactPercent;
 
    // TODO: just visit these effect settings the default way
@@ -772,5 +784,6 @@ void EffectChangeSpeed::Update_TimeCtrl_ToLength()
 void EffectChangeSpeed::UpdateUI()
 // Disable OK and Preview if not in sensible range.
 {
-   EnableApply(m_PercentChange >= Percentage.min && m_PercentChange <= Percentage.max);
+   EffectUIValidator::EnableApply(mUIParent,
+      m_PercentChange >= Percentage.min && m_PercentChange <= Percentage.max);
 }

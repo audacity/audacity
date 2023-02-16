@@ -32,6 +32,35 @@ namespace audacity
 namespace network_manager
 {
 
+namespace common_headers
+{
+const std::string Accept = "Accept";
+const std::string AcceptEncoding = "Accept-Encoding";
+const std::string AcceptLanguage = "Accept-Language";
+const std::string Authorization = "Authorization";
+const std::string CacheControl = "Cache-Control";
+const std::string Connection = "Connection";
+const std::string ContentLength = "Content-Length";
+const std::string ContentType = "Content-Type";
+const std::string ContentDisposition = "Content-Disposition";
+const std::string Cookie = "Cookie";
+const std::string Host = "Host";
+const std::string Origin = "Origin";
+const std::string Referer = "Referer";
+const std::string UserAgent = "User-Agent";
+const std::string IfNoneMatch = "If-None-Match";
+const std::string IfModifiedSince = "If-Modified-Since";
+} // namespace common_headers
+
+namespace common_content_types
+{
+const std::string ApplicationJson = "application/json";
+const std::string ApplicationXml = "application/xml";
+const std::string ApplicationXWwwFormUrlencoded = "application/x-www-form-urlencoded";
+const std::string ApplicationXOctetStream = "application/x-octet-stream";
+const std::string ApplicationXGzip = "application/x-gzip";
+} // namespace common_content_types
+
 bool Header::hasSameName (const Header& header) const
 {
     return hasSameName (header.Name);

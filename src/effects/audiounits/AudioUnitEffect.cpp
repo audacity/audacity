@@ -25,7 +25,6 @@
 #include <optional>
 #include <wx/defs.h>
 #include <wx/base64.h>
-#include <wx/button.h>
 #include <wx/control.h>
 #include <wx/crt.h>
 #include <wx/dir.h>
@@ -184,10 +183,9 @@ bool AudioUnitEffect::IsDefault() const
 
 auto AudioUnitEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Always;
-   // return GetType() == EffectTypeProcess
-      // ? RealtimeSince::Always
-      // : RealtimeSince::Never;
+   return GetType() == EffectTypeProcess
+      ? RealtimeSince::After_3_1
+      : RealtimeSince::Never;
 }
 
 bool AudioUnitEffect::SupportsAutomation() const
@@ -228,6 +226,10 @@ bool AudioUnitEffect::InitializePlugin()
    if (!CreateAudioUnit())
       return false;
 
+   // Use an arbitrary rate while completing the discovery of channel support
+   if (!SetRateAndChannels(44100.0, GetSymbol().Internal()))
+      return false;
+
    // Determine interactivity
    mInteractive = (Count(mParameters) > 0);
    if (!mInteractive) {
@@ -246,6 +248,7 @@ bool AudioUnitEffect::InitializePlugin()
             kAudioUnitProperty_GetUIComponentList, compDesc);
       }
    }
+
    return true;
 }
 
@@ -267,26 +270,6 @@ bool AudioUnitEffect::FullyInitializePlugin()
       mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
 
    return true;
-}
-
-unsigned AudioUnitEffect::GetAudioInCount() const
-{
-   return mAudioIns;
-}
-
-unsigned AudioUnitEffect::GetAudioOutCount() const
-{
-   return mAudioOuts;
-}
-
-int AudioUnitEffect::GetMidiInCount() const
-{
-   return 0;
-}
-
-int AudioUnitEffect::GetMidiOutCount() const
-{
-   return 0;
 }
 
 #if 0
@@ -315,45 +298,64 @@ int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
 EffectSettings AudioUnitEffect::MakeSettings() const
 {
    AudioUnitEffectSettings settings;
-   FetchSettings(settings);
+   FetchSettings(settings, true);
    return EffectSettings::Make<AudioUnitEffectSettings>(std::move(settings));
 }
 
 bool AudioUnitEffect::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const
+   const EffectSettings &, EffectSettings &) const
 {
-   auto &dstSettings = GetSettings(dst);
-   auto &srcSettings = GetSettings(src);
-   dstSettings.pSource = srcSettings.pSource;
-
-   // Do an in-place rewrite of dst, avoiding allocations
-   auto &dstMap = dstSettings.values;
-   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
-   const auto &srcMap = srcSettings.values;
-   // Iterate the two maps in parallel, assuming correspondence of
-   // keys, because the settings objects ultimately came from MakeSettings()
-   // and copies.  Nothing else ever inserts or removes keys.
-   assert(srcMap.size() == dstMap.size());
-   for (auto &[key, oValue] : srcMap) {
-      assert(dstIter != dstEnd);
-      auto &[dstKey, dstOValue] = *dstIter;
-      assert(dstKey == key);
-      if (oValue)
-         dstOValue.emplace(*oValue);
-      else
-         dstOValue.reset();
-      ++dstIter;
-   }
-   assert(dstIter == dstEnd);
+   // Not needed -- rely on EffectInstance::Message instead
    return true;
+}
+
+constexpr auto PresetStr = "_PRESET";
+
+RegistryPath AudioUnitEffect::ChoosePresetKey(
+   const EffectSettings &settings)
+{
+   // Find a key to use for the preset that does not collide with any
+   // parameter name
+   wxString result = PresetStr;
+
+   // That string probably works but be sure
+   const auto &map = GetSettings(settings).values;
+   using Pair = decltype(*map.begin());
+   while (std::any_of(map.begin(), map.end(), [&](Pair &pair){
+      return pair.second && pair.second->first == result;
+   }))
+      result += "_";
+
+   return result;
+}
+
+RegistryPath AudioUnitEffect::FindPresetKey(const CommandParameters & parms)
+{
+   RegistryPath result;
+   auto len = strlen(PresetStr);
+   if (auto [index, key] = std::tuple(0L, wxString{})
+       ; parms.GetFirstEntry(key, index)
+   ) do {
+      if (key.StartsWith(PresetStr)
+          && key.Mid(len).find_first_not_of("_") == wxString::npos
+          && key.length() > result.length())
+         result = key;
+   } while(parms.GetNextEntry(key, index));
+   return result;
 }
 
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
+   const auto &mySettings = GetSettings(settings);
+   if (mySettings.mPresetNumber) {
+      const auto key = ChoosePresetKey(settings);
+      parms.Write(key, *mySettings.mPresetNumber);
+   }
+
    // Save settings into CommandParameters
    // Iterate the map only, not using any AudioUnit handles
-   for (auto &[ID, pPair] : GetSettings(settings).values)
+   for (auto &[ID, pPair] : mySettings.values)
       if (pPair)
          // Write names, not numbers, as keys in the config file
          parms.Write(pPair->first, pPair->second);
@@ -368,6 +370,13 @@ bool AudioUnitEffect::LoadSettings(
    mySettings.ResetValues();
    auto &map = mySettings.values;
 
+   // Reload preset first
+   if (auto presetKey = FindPresetKey(parms); !presetKey.empty()) {
+      SInt32 value = 0;
+      if (parms.Read(presetKey, &value))
+         AudioUnitWrapper::LoadFactoryPreset(*this, value, &settings);
+   }
+
    // Load settings from CommandParameters
    // Iterate the config only, not using any AudioUnit handles
    if (auto [index, key, value] = std::tuple(
@@ -375,14 +384,14 @@ bool AudioUnitEffect::LoadSettings(
        ; parms.GetFirstEntry(key, index)
    ) do {
       if (auto pKey = ParameterInfo::ParseKey(key)
-         ; pKey && parms.Read(key, value)
+         ; pKey && parms.Read(key, &value)
       )
          map[*pKey].emplace(mySettings.Intern(key), value);
    } while(parms.GetNextEntry(key, index));
    return true;
 }
 
-bool AudioUnitEffect::LoadUserPreset(
+OptionalMessage AudioUnitEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
@@ -395,23 +404,12 @@ bool AudioUnitEffect::SaveUserPreset(
    return SavePreset(name, GetSettings(settings));
 }
 
-bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage
+AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
-   // Retrieve the list of factory presets
-   CF_ptr<CFArrayRef> array;
-   if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
-       id < 0 || id >= CFArrayGetCount(array.get()))
-      return false;
-
-   // Mutate the scratch pad AudioUnit in the effect
-   if (!SetProperty(kAudioUnitProperty_PresentPreset,
-      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id)))) {
-      // Repopulate the AudioUnitEffectSettings from the change of state in
-      // the AudioUnit
-      FetchSettings(GetSettings(settings));
-      return true;
-   }
-   return false;
+   if (AudioUnitWrapper::LoadFactoryPreset(*this, id, &settings))
+      return { nullptr };
+   return {};
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -433,7 +431,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    mParent = S.GetParent();
    return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
@@ -506,7 +505,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
          mParent);
 }
 
-void AudioUnitEffect::ImportPresets(EffectSettings &settings)
+OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
 {
    // Generate the user domain path
    wxFileName fn;
@@ -531,15 +530,19 @@ void AudioUnitEffect::ImportPresets(EffectSettings &settings)
 
    // User canceled...
    if (path.empty())
-      return;
+      return {};
 
    auto msg = Import(GetSettings(settings), path);
-   if (!msg.empty())
+   if (!msg.empty()) {
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
+      return {};
+   }
+
+   return { nullptr };
 }
 
 bool AudioUnitEffect::HasOptions()
@@ -582,38 +585,22 @@ bool AudioUnitEffect::MigrateOldConfigFile(
    return false;
 }
 
-bool AudioUnitEffect::LoadPreset(
+OptionalMessage AudioUnitEffect::LoadPreset(
    const RegistryPath & group, EffectSettings &settings) const
 {
    if (MigrateOldConfigFile(group, settings))
-      return true;
+      return { nullptr };
 
-   // Retrieve the preset
-   wxString parms;
-   if (!GetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms,
-      wxEmptyString)) {
-      // Commented "CurrentSettings" gets tried a lot and useless messages appear
-      // in the log
-      //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
-      return false;
-   }
-
-   // Decode it, complementary to what SaveBlobToConfig did
-   auto error =
-      InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
-   if (!error.empty()) {
-      wxLogError(error.Debug());
-      return false;
-   }
-
-   return true;
+   if (AudioUnitWrapper::LoadPreset(*this, group, settings))
+      return { nullptr };
+   return {};
 }
 
 bool AudioUnitEffect::SavePreset(
    const RegistryPath & group, const AudioUnitEffectSettings &settings) const
 {
    wxCFStringRef cfname(wxFileNameFromPath(group));
-   const auto &[data, _] = MakeBlob(settings, cfname, true);
+   const auto &[data, _] = MakeBlob(*this, settings, cfname, true);
    if (!data)
       return false;
 
@@ -638,7 +625,7 @@ TranslatableString AudioUnitEffect::Export(
    // First set the name of the preset
    wxCFStringRef cfname(wxFileName(path).GetName());
 
-   const auto &[data, message] = MakeBlob(settings, cfname, false);
+   const auto &[data, message] = MakeBlob(*this, settings, cfname, false);
    if (!data || !message.empty())
       return message;
 

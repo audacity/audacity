@@ -19,7 +19,6 @@
 
 class AudacityProject;
 struct AudioIOEvent;
-struct SelectedRegionEvent;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.

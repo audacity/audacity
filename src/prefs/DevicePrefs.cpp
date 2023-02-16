@@ -31,7 +31,6 @@ other settings.
 #include <wx/defs.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
 
@@ -192,13 +191,13 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
             .NameSuffix(XO("milliseconds"))
             .TieNumericTextBox(XXO("&Buffer length:"),
                                  AudioIOLatencyDuration,
-                                 9);
+                                 25);
          S.AddUnits(XO("milliseconds"));
 
          w = S
             .NameSuffix(XO("milliseconds"))
             .TieNumericTextBox(XXO("&Latency compensation:"),
-               AudioIOLatencyCorrection, 9);
+               AudioIOLatencyCorrection, 25);
          S.AddUnits(XO("milliseconds"));
       }
       S.EndThreeColumn();
@@ -411,6 +410,8 @@ bool DevicePrefs::Commit()
       AudioIORecordChannels.Write(mChannels->GetSelection() + 1);
    }
 
+   AudioIOLatencyDuration.Invalidate();
+   AudioIOLatencyCorrection.Invalidate();
    return true;
 }
 

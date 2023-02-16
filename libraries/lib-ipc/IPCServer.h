@@ -39,4 +39,8 @@ public:
     * \brief Closes connection if any.
     */
    ~IPCServer();
+
+   ///Returns port number to connect to.
+   ///Valid until connection is established.
+   int GetConnectPort() const noexcept;
 };

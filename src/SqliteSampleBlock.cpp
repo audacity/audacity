@@ -740,7 +740,7 @@ void SqliteSampleBlock::Commit(Sizes sizes)
    // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
-   if (sqlite3_bind_int(stmt, 1, mSampleFormat) ||
+   if (sqlite3_bind_int(stmt, 1, static_cast<int>(mSampleFormat)) ||
        sqlite3_bind_double(stmt, 2, mSumMin) ||
        sqlite3_bind_double(stmt, 3, mSumMax) ||
        sqlite3_bind_double(stmt, 4, mSumRms) ||
@@ -1047,14 +1047,29 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
 {
    // Install a callback function that updates a progress indicator
    using namespace BasicUI;
-   auto pDialog = std::shared_ptr<ProgressDialog>{ MakeProgress(
-      XO("Progress"), XO("Discarding undo/redo history"), 0)
-   };
-   mScope.emplace( [ pDialog, nDeleted = 0,
-      nToDelete = EstimateRemovedBlocks(mProject, begin, end)
-   ] (const SampleBlock &) mutable {
-      pDialog->Poll(++nDeleted, nToDelete);
-   } );
+   
+   //Avoid showing dialog to the user if purge operation
+   //does not take much time, as it will resign focus from main window
+   //but dialog itself may not be presented to the user at all.
+   //On MacOS 13 (bug #3975) focus isn't restored in that case.
+   constexpr auto ProgressDialogShowDelay = std::chrono::milliseconds (200);
+   const auto nToDelete = EstimateRemovedBlocks(mProject, begin, end);
+   if(nToDelete == 0)
+       return;
+   auto purgeStartTime = std::chrono::system_clock::now();
+   std::shared_ptr<ProgressDialog> progressDialog;
+   mScope.emplace([=, nDeleted = 0](auto&) mutable {
+      ++nDeleted;
+      if(!progressDialog)
+      {
+         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - purgeStartTime);
+         if(elapsed >= ProgressDialogShowDelay)
+            progressDialog = MakeProgress(XO("Progress"), XO("Discarding undo/redo history"));
+      }
+      else
+         progressDialog->Poll(nDeleted, nToDelete);
+   });
 }
 
 void SqliteSampleBlockFactory::OnEndPurge()

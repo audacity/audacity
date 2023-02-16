@@ -18,17 +18,12 @@
 #include "BasicUI.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
-#include <stdexcept>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
 #include <wx/regex.h>
 
-#include <pluginterfaces/vst/ivsteditcontroller.h>
-#include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/hostclasses.h>
 
-#include "internal/ComponentHandler.h"
-#include "internal/ParameterChanges.h"
 #include "internal/PlugFrame.h"
 #include "internal/ConnectionProxy.h"
 
@@ -38,103 +33,21 @@
 
 #include "ShuttleGui.h"
 
-#include "memorystream.h"
 #include "VST3Utils.h"
 #include "VST3ParametersWindow.h"
 #include "VST3OptionsDialog.h"
+#include "VST3Wrapper.h"
 
 #ifdef __WXMSW__
 #include <shlobj.h>
-#elif __WXGTK__
-#include "internal/x11/SocketWindow.h"
 #endif
 
-#include "AudacityVst3HostApplication.h"
 #include "ConfigInterface.h"
-#include "VST3ParametersWindow.h"
+#include "VST3Instance.h"
+#include "VST3UIValidator.h"
 
 namespace {
 
-   // define some shared registry keys
-   constexpr auto processorStateKey  = wxT("ProcessorState");
-   constexpr auto controllerStateKey = wxT("ControllerState");
-
-//Activates main audio input/output buses and disables others (event, audio aux)
-void ActivateMainAudioBuses(Steinberg::Vst::IComponent& component)
-{
-   using namespace Steinberg;
-
-   std::vector<Vst::SpeakerArrangement> defaultInputSpeakerArrangements;
-   std::vector<Vst::SpeakerArrangement> defaultOutputSpeakerArrangements;
-
-   const auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
-
-   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kInput); i < count; ++i)
-   {
-      Vst::BusInfo busInfo {};
-      Vst::SpeakerArrangement arrangement {0ull};
-      if(component.getBusInfo(Vst::kAudio, Vst::kInput, i, busInfo) == kResultOk)
-      {
-         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
-            arrangement = (1ull << busInfo.channelCount) - 1ull;
-      }
-      if(component.activateBus(Vst::kAudio, Vst::kInput, i, arrangement > 0) != kResultOk)
-         arrangement = 0;
-
-      defaultInputSpeakerArrangements.push_back(arrangement);
-   }
-   for(int i = 0, count = component.getBusCount(Vst::kAudio, Vst::kOutput); i < count; ++i)
-   {
-      Vst::BusInfo busInfo {};
-      Vst::SpeakerArrangement arrangement {0ull};
-      if(component.getBusInfo(Vst::kAudio, Vst::kOutput, i, busInfo) == kResultOk)
-      {
-         if(busInfo.busType == Vst::kMain && busInfo.channelCount > 0)
-            arrangement = (1ull << busInfo.channelCount) - 1ull;
-      }
-      if(component.activateBus(Vst::kAudio, Vst::kOutput, i, arrangement > 0) != kResultOk)
-         arrangement = 0;
-
-      defaultOutputSpeakerArrangements.push_back(arrangement);
-   }
-   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kInput); i < count; ++i)
-      component.activateBus(Vst::kEvent, Vst::kInput, i, 0);
-   for(int i = 0, count = component.getBusCount(Vst::kEvent, Vst::kOutput); i < count; ++i)
-      component.activateBus(Vst::kEvent, Vst::kOutput, i, 0);
-
-   processor->setBusArrangements(
-      defaultInputSpeakerArrangements.empty() ? nullptr : defaultInputSpeakerArrangements.data(), defaultInputSpeakerArrangements.size(),
-      defaultOutputSpeakerArrangements.empty() ? nullptr : defaultOutputSpeakerArrangements.data(), defaultOutputSpeakerArrangements.size()
-   );
-}
-
-//The component should be disabled
-bool SetupProcessing(Steinberg::Vst::IComponent& component, Steinberg::Vst::ProcessSetup& setup)
-{
-   using namespace Steinberg;
-   auto processor = FUnknownPtr<Vst::IAudioProcessor>(&component);
-
-   if(processor->setupProcessing(setup) == kResultOk)
-   {
-      ActivateMainAudioBuses(component);
-      return true;
-   }
-   return false;
-}
-
-bool SyncComponentStates(Steinberg::Vst::IComponent& component, Steinberg::Vst::IEditController& editController)
-{
-   using namespace Steinberg;
-
-   Steinberg::MemoryStream stateStream;
-   if(component.getState(&stateStream) == kResultOk)
-   {
-      int64 unused;
-      stateStream.seek(0, IBStream::kIBSeekSet, &unused);
-      return editController.setComponentState(&stateStream) == kResultOk;
-   }
-   return false;
-}
 
 wxString GetFactoryPresetsBasePath()
 {
@@ -179,49 +92,9 @@ wxString GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo)
 
 }
 
-void VST3Effect::Initialize()
-{
-   using namespace Steinberg;
-
-   const auto& pluginFactory = mModule->getFactory();
-
-   auto effectComponent = pluginFactory.createInstance<Vst::IComponent>(mEffectClassInfo.ID());
-   if(!effectComponent)
-      throw std::runtime_error("Cannot create VST3 effect component");
-   if(effectComponent->initialize(&AudacityVst3HostApplication::Get()) != kResultOk)
-      throw std::runtime_error("Cannot initialize VST3 effect component");
-
-   auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effectComponent);
-   if(!audioProcessor)
-      //It's stated that "This interface must always be supported by audio processing plug-ins."
-      throw std::runtime_error("VST3 plugin does not provide audio processor interface");
-   
-   if(audioProcessor->canProcessSampleSize(Vst::kSample32) != kResultTrue)
-      throw std::runtime_error("32-bit sample size not supported");
-
-   mEffectComponent = effectComponent;
-   mAudioProcessor = audioProcessor;
-}
-
 EffectFamilySymbol VST3Effect::GetFamilySymbol()
 {
    return XO("VST3");
-}
-
-VST3Effect::VST3Effect(const VST3Effect& other)
-   : VST3Wrapper(other.mModule, other.mEffectClassInfo)
-{
-   mUseLatency = other.mUseLatency;
-   mUserBlockSize = other.mUserBlockSize;
-   mSetup = other.mSetup;
-   Initialize();
-
-   //Currently copies used in realtime processing do not need
-   //their own edit controller instance since they use same settings
-   //as in the global effect instance
-   
-   //Effect initialization isn't complete at this point,
-   //further steps are managed by VST3Effect::RealtimeAddProcessor
 }
 
 VST3Effect::~VST3Effect()
@@ -229,74 +102,14 @@ VST3Effect::~VST3Effect()
    using namespace Steinberg;
 
    CloseUI();
-   
-   if(mComponentConnectionProxy)
-      mComponentConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEditController));
-   if(mControllerConnectionProxy)
-      mControllerConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEffectComponent));
-
-   if(mEditController)
-   {
-      mEditController->setComponentHandler(nullptr);
-      mEditController->terminate();
-   }
-   if(mEffectComponent)
-      mEffectComponent->terminate();
 }
 
 VST3Effect::VST3Effect(
-   std::shared_ptr<VST3::Hosting::Module> module, 
+   std::shared_ptr<VST3::Hosting::Module> module,
    VST3::Hosting::ClassInfo effectClassInfo)
-
-   : VST3Wrapper(std::move(module), std::move(effectClassInfo))
+      : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
-   using namespace Steinberg;
-   Initialize();
-
-   //defaults
-   mSetup.processMode = Vst::kOffline;
-   mSetup.symbolicSampleSize = Vst::kSample32;
-   mSetup.maxSamplesPerBlock = mUserBlockSize;
-   mSetup.sampleRate = 44100.0;
-
-   const auto& pluginFactory = mModule->getFactory();
-   auto editController = FUnknownPtr<Vst::IEditController>(mEffectComponent);
-   if(editController.get() == nullptr)
-   {
-      TUID controllerCID;
-            
-		if (mEffectComponent->getControllerClassId (controllerCID) == kResultTrue)
-         editController = pluginFactory.createInstance<Vst::IEditController>(VST3::UID(controllerCID));
-   }
-
-   if(editController.get() == nullptr)
-      throw std::runtime_error("Failed to instantiate edit controller");
-   
-   mEditController = editController;
-   mEditController->initialize(&AudacityVst3HostApplication::Get());
-
-   mComponentHandler = owned(safenew internal::ComponentHandler);
-   mEditController->setComponentHandler(mComponentHandler);
-
-   const auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
-   const auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
-
-   if (componentConnectionPoint && controllerConnectionPoint)
-   {
-      mComponentConnectionProxy = owned(safenew internal::ConnectionProxy(componentConnectionPoint));
-      mControllerConnectionProxy = owned(safenew internal::ConnectionProxy(controllerConnectionPoint));
-
-      mComponentConnectionProxy->connect(controllerConnectionPoint);
-      mControllerConnectionProxy->connect(componentConnectionPoint);
-   }
-
-   SyncComponentStates(*mEffectComponent.get(), *mEditController.get());
-
-   if(!SetupProcessing(*mEffectComponent.get(), mSetup))
-      //ProcessInitiaize should attempt to change that...
-      mSetup.sampleRate = .0;
 }
-
 
 PluginPath VST3Effect::GetPath() const
 {
@@ -330,7 +143,7 @@ EffectType VST3Effect::GetType() const
    if(mEffectClassInfo.subCategoriesString() == kFxGenerator)
       return EffectTypeGenerate;
    const auto& cats = mEffectClassInfo.subCategories();
-   
+
    if(std::find(cats.begin(), cats.end(), kFx) != cats.end())
       return EffectTypeProcess;
 
@@ -344,7 +157,7 @@ EffectFamilySymbol VST3Effect::GetFamily() const
 
 bool VST3Effect::IsInteractive() const
 {
-   return mEditController != nullptr;
+   return true;
 }
 
 bool VST3Effect::IsDefault() const
@@ -354,131 +167,40 @@ bool VST3Effect::IsDefault() const
 
 auto VST3Effect::RealtimeSupport() const -> RealtimeSince
 {
-   // TODO reenable after achieving statelessness
-   // Also, as with old VST, perhaps only for plug-ins known not to be
-   // just generators
-   return RealtimeSince::Never;
-//   return RealtimeSince::Always;
+   return GetType() == EffectTypeProcess
+      ? RealtimeSince::After_3_1
+      : RealtimeSince::Never;
 }
 
 bool VST3Effect::SupportsAutomation() const
 {
-   if(mEditController == nullptr)
-      return false;
-
-   using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-      {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-            return true;
-      }
-   }
-
-   return false;
+   return true;
 }
 
 bool VST3Effect::SaveSettings(
    const EffectSettings& settings, CommandParameters& parms) const
 {
-   const auto& vst3Settings = GetSettings(settings);
-
-   if (vst3Settings.mProcessorStateStr)
-      parms.Write( processorStateKey,  wxString( *vst3Settings.mProcessorStateStr )  );
-
-   if (vst3Settings.mControllerStateStr)
-      parms.Write( controllerStateKey, wxString( *vst3Settings.mControllerStateStr) );
-
+   VST3Wrapper::SaveSettings(settings, parms);
    return true;
 }
 
 bool VST3Effect::LoadSettings(
    const CommandParameters& parms, EffectSettings& settings) const
 {
-   auto& vst3Settings = GetSettings(settings);
-
-   wxString tmpString;
-
-   if (parms.Read(processorStateKey, &tmpString))
-   {
-      vst3Settings.mProcessorStateStr = tmpString;
-   }
-   else
-   {
-      vst3Settings.mProcessorStateStr = std::nullopt;
-   }
-
-
-   if (parms.Read(controllerStateKey, &tmpString))
-   {
-      vst3Settings.mControllerStateStr = tmpString;
-   }
-   else
-   {
-      vst3Settings.mControllerStateStr = std::nullopt;
-   }
-   
+   VST3Wrapper::LoadSettings(parms, settings);
    return true;
 }
 
-bool VST3Effect::LoadUserPreset(
+OptionalMessage VST3Effect::LoadUserPreset(
    const RegistryPath& name, EffectSettings& settings) const
 {
-   using namespace Steinberg;
-
-   if(!mEditController)
-      return false;   
-
-   if(!PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, processorStateKey))
-      return false;
-
-   wxString processorStateStr;
-   if(!GetConfig(*this, PluginSettings::Private, name, processorStateKey, processorStateStr, wxEmptyString))
-      return false;
-   auto processorState = PresetsBufferStream::fromString(processorStateStr);
-   if(mEffectComponent->setState(processorState) != kResultOk)
-      return false;
-
-   if(PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, controllerStateKey))
-   {
-      wxString controllerStateStr;
-      if(!GetConfig(*this, PluginSettings::Private, name, controllerStateKey, controllerStateStr, wxEmptyString))
-         return false;
-      auto controllerState = PresetsBufferStream::fromString(controllerStateStr);
-
-      if(mEditController->setComponentState(processorState) != kResultOk ||
-         mEditController->setState(controllerState) != kResultOk)
-         return false;
-   }
-
-   FetchSettings(GetSettings(settings));
-
-   return true;
+   return VST3Wrapper::LoadUserPreset(*this, name, settings);
 }
 
 bool VST3Effect::SaveUserPreset(
    const RegistryPath& name, const EffectSettings& settings) const
 {
-   using namespace Steinberg;
-
-   if(!mEditController)
-      return false;
-
-   StoreSettings(GetSettings(settings));
-
-   auto processorState = owned(safenew PresetsBufferStream);
-   if(mEffectComponent->getState(processorState) != kResultOk)
-      return false;
-
-   SetConfig(*this, PluginSettings::Private, name, processorStateKey, processorState->toString());
-
-   auto controllerState = owned(safenew PresetsBufferStream);
-   if(mEditController->getState(controllerState) == kResultOk)
-      SetConfig(*this, PluginSettings::Private, name, controllerStateKey, controllerState->toString());
-
+   VST3Wrapper::SaveUserPreset(*this, name, settings);
    return true;
 }
 
@@ -502,348 +224,29 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      // To do: externalize state so const_cast isn't needed
-      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath(), settings);
+      if (!LoadPreset(filename.GetFullPath(), settings))
+         return {};
    }
-   return true;
-}
-
-namespace
-{
-   unsigned CountChannels(Steinberg::Vst::IComponent* component,
-      const Steinberg::Vst::MediaTypes mediaType, 
-      const Steinberg::Vst::BusDirection busDirection,
-      const Steinberg::Vst::BusType busType)
-   {
-      using namespace Steinberg;
-
-      unsigned channelsCount{0};
-
-      const auto busCount = component->getBusCount(mediaType, busDirection);
-      for(auto i = 0; i < busCount; ++i)
-      {
-         Vst::BusInfo busInfo;
-         if(component->getBusInfo(mediaType, busDirection, i, busInfo) == kResultOk)
-         {
-            if(busInfo.busType == busType)
-               channelsCount += busInfo.channelCount;
-         }
-      }
-      return channelsCount;
-   }
-}
-
-unsigned VST3Effect::GetAudioInCount() const
-{
-   return CountChannels(
-      mEffectComponent,
-      Steinberg::Vst::kAudio,
-      Steinberg::Vst::kInput,
-      Steinberg::Vst::kMain);
-}
-
-unsigned VST3Effect::GetAudioOutCount() const
-{
-   return CountChannels(
-      mEffectComponent,
-      Steinberg::Vst::kAudio,
-      Steinberg::Vst::kOutput,
-      Steinberg::Vst::kMain);
-}
-
-int VST3Effect::GetMidiInCount() const
-{
-   //Dummy
-   return 0;
-}
-
-int VST3Effect::GetMidiOutCount() const
-{
-   //Dummy
-   return 0;
-}
-
-size_t VST3Effect::SetBlockSize(size_t maxBlockSize)
-{
-   auto newBlockSize = 
-      static_cast<Steinberg::int32>(std::min(maxBlockSize, mUserBlockSize));
-   if(newBlockSize != mSetup.maxSamplesPerBlock)
-   {
-      auto setup = mSetup;
-      setup.maxSamplesPerBlock = newBlockSize;
-      if(SetupProcessing(*mEffectComponent.get(), setup))
-         mSetup = setup;
-   }
-   return mSetup.maxSamplesPerBlock;
-}
-
-size_t VST3Effect::GetBlockSize() const
-{
-   return mSetup.maxSamplesPerBlock;
-}
-
-sampleCount VST3Effect::GetLatency() const
-{
-   if(mUseLatency)
-   {
-      if(!mRealtimeGroupProcessors.empty())
-         return mRealtimeGroupProcessors[0]->GetLatency();
-      return mInitialDelay;
-   }
-   return { 0u };
-}
-
-bool VST3Effect::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
-{
-   if(mSetup.sampleRate != sampleRate)
-   {
-      auto setup = mSetup;
-      setup.sampleRate = sampleRate;
-      if(!SetupProcessing(*mEffectComponent.get(), setup))
-         return false;
-      mSetup = setup;
-   }
-   using namespace Steinberg;
-   
-   if(mEffectComponent->setActive(true) == kResultOk)
-   {
-      mActive = true;
-      SyncParameters();//will do nothing for realtime effect
-      mAudioProcessor->setProcessing(true);
-      mInitialDelay = static_cast<decltype(mInitialDelay)>(mAudioProcessor->getLatencySamples());
-      return true;
-   }
-   return false;
-}
-
-bool VST3Effect::ProcessFinalize()
-{
-   using namespace Steinberg;
-   mActive = false;
-   mAudioProcessor->setProcessing(false);
-   return mEffectComponent->setActive(false) == Steinberg::kResultOk;
-}
-
-namespace
-{
-   size_t VST3ProcessBlock(
-      Steinberg::Vst::IComponent* effect,
-      const Steinberg::Vst::ProcessSetup& setup,
-      const float* const* inBlock,
-      float* const* outBlock,
-      size_t blockLen,
-      Steinberg::Vst::IParameterChanges* inputParameterChanges)
-   {
-      using namespace Steinberg;
-      if(auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effect))
-      {
-         Vst::ProcessData data;
-         data.processMode = setup.processMode;
-         data.symbolicSampleSize = setup.symbolicSampleSize;
-         data.inputParameterChanges = inputParameterChanges;
-
-         static_assert(std::numeric_limits<decltype(blockLen)>::max()
-            >= std::numeric_limits<decltype(data.numSamples)>::max());
-
-         data.numSamples = static_cast<decltype(data.numSamples)>(std::min(
-            blockLen, 
-            static_cast<decltype(blockLen)>(setup.maxSamplesPerBlock)
-         ));
-
-         data.numInputs = inBlock == nullptr ? 0 : effect->getBusCount(Vst::kAudio, Vst::kInput);
-         data.numOutputs = outBlock == nullptr ? 0 : effect->getBusCount(Vst::kAudio, Vst::kOutput);
-
-         if(data.numInputs > 0)
-         {
-            int inputBlocksOffset {0};
-
-            data.inputs = static_cast<Vst::AudioBusBuffers*>(
-               alloca(sizeof(Vst::AudioBusBuffers) * data.numInputs));
-
-            for(int busIndex = 0; busIndex < data.numInputs; ++busIndex)
-            {
-               Vst::BusInfo busInfo { };
-               if(effect->getBusInfo(Vst::kAudio, Vst::kInput, busIndex, busInfo) != kResultOk)
-               {
-                  return 0;
-               }
-               if(busInfo.busType == Vst::kMain)
-               {
-                  data.inputs[busIndex].numChannels = busInfo.channelCount;
-                  data.inputs[busIndex].channelBuffers32 = const_cast<float**>(inBlock + inputBlocksOffset);
-                  inputBlocksOffset += busInfo.channelCount;
-               }
-               else
-               {
-                  //aux is not yet supported
-                  data.inputs[busIndex].numChannels = 0;
-                  data.inputs[busIndex].channelBuffers32 = nullptr;
-               }
-               data.inputs[busIndex].silenceFlags = 0UL;
-            }
-         }
-         if(data.numOutputs > 0)
-         {
-            int outputBlocksOffset {0};
-
-            data.outputs = static_cast<Vst::AudioBusBuffers*>(
-               alloca(sizeof(Vst::AudioBusBuffers) * data.numOutputs));
-            for(int busIndex = 0; busIndex < data.numOutputs; ++busIndex)
-            {
-               Vst::BusInfo busInfo { };
-               if(effect->getBusInfo(Vst::kAudio, Vst::kOutput, busIndex, busInfo) != kResultOk)
-               {
-                  return 0;
-               }
-               if(busInfo.busType == Vst::kMain)
-               {
-                  data.outputs[busIndex].numChannels = busInfo.channelCount;
-                  data.outputs[busIndex].channelBuffers32 = const_cast<float**>(outBlock + outputBlocksOffset);
-                  outputBlocksOffset += busInfo.channelCount;
-               }
-               else
-               {
-                  //aux is not yet supported
-                  data.outputs[busIndex].numChannels = 0;
-                  data.outputs[busIndex].channelBuffers32 = nullptr;
-               }
-               data.outputs[busIndex].silenceFlags = 0UL;
-            }
-         }
-      
-         const auto processResult = audioProcessor->process(data);
-      
-         return processResult == kResultOk ?
-            data.numSamples : 0;
-      }
-      return 0;
-   }
-}
-
-size_t VST3Effect::ProcessBlock(EffectSettings &,
-   const float* const* inBlock, float* const* outBlock, size_t blockLen)
-{
-   internal::ComponentHandler::PendingChangesPtr pendingChanges { nullptr };
-   if(mComponentHandler)
-      pendingChanges = mComponentHandler->getPendingChanges();
-   return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
-}
-
-bool VST3Effect::RealtimeInitialize(EffectSettings &settings, double sampleRate)
-{
-   if(mSetup.sampleRate != sampleRate)
-   {
-      auto setup = mSetup;
-      setup.sampleRate = sampleRate;
-      if(!SetupProcessing(*mEffectComponent.get(), setup))
-         return false;
-      mSetup = setup;
-   }
-   //reload current parameters form the editor into parameter queues
-   SyncParameters();
-   return true;
-}
-
-bool VST3Effect::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
-{
-   using namespace Steinberg;
-
-   try
-   {
-      auto effect = std::make_unique<VST3Effect>(*this);
-      effect->mSetup.processMode = Vst::kRealtime;
-      effect->mSetup.sampleRate = sampleRate;
-      //IAudioProcessor should be configured for a different processing mode
-      if(!SetupProcessing(*effect->mEffectComponent.get(), effect->mSetup))
-         return false;
-      
-      if(!effect->ProcessInitialize(settings, sampleRate, {0}, nullptr))
-         throw std::runtime_error { "VST3 realtime initialization failed" };
-
-      mRealtimeGroupProcessors.push_back(std::move(effect));
-      return true;
-   }
-   catch(std::exception& e)
-   {
-      //make_unique<> isn't likely to fail here since this effect instance
-      //somehow succeeded
-      wxLogError("Failed to add realtime processor: %s", e.what());
-   }
-   return false;
-}
-
-bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
-{
-   return GuardedCall<bool>([this]()
-   {
-      for(auto& processor : mRealtimeGroupProcessors)
-         processor->ProcessFinalize();
-
-      mRealtimeGroupProcessors.clear();
-      mPendingChanges.reset();
-      
-      return true;
-   });
-}
-
-bool VST3Effect::RealtimeSuspend()
-{
-   for(auto& effect : mRealtimeGroupProcessors)
-      effect->mAudioProcessor->setProcessing(false);
-   return true;
-}
-
-bool VST3Effect::RealtimeResume()
-{
-   for(auto& effect : mRealtimeGroupProcessors)
-      effect->mAudioProcessor->setProcessing(true);
-   return true;
-}
-
-bool VST3Effect::RealtimeProcessStart(EffectSettings &)
-{
-   assert(mPendingChanges == nullptr);
-
-   if(mComponentHandler != nullptr)
-      //Same parameter changes are used among all of the realtime processors
-      mPendingChanges = mComponentHandler->getPendingChanges();
-   return true;
-}
-
-size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
-   const float* const* inBuf, float* const* outBuf, size_t numSamples)
-{
-   if (group >= mRealtimeGroupProcessors.size())
-      return 0;
-   auto& effect = mRealtimeGroupProcessors[group];
-   return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
-}
-
-bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
-{
-   return GuardedCall<bool>([this]()
-   {
-      mPendingChanges.reset();
-      return true;
-   });
+   return { nullptr };
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
-   EffectUIValidator *, bool forceModal)
+   EffectUIValidator *validator, bool forceModal)
 {
-   if(!IsGraphicalUI())
-   {
-      //Restrict resize of the "plain" dialog
-      dialog.SetMaxSize(dialog.GetSize());
-      dialog.SetMinSize(dialog.GetSize());
-   }
+#ifdef __WXMSW__
+   if(validator->IsGraphicalUI())
+      //Not all platforms support window style change.
+      //Plugins that support resizing provide their own handles,
+      //which may overlap with system handle. Not all plugins
+      //support free sizing (e.g. fixed steps or fixed ratio)
+      dialog.SetWindowStyle(dialog.GetWindowStyle() & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX));
+#endif
+
    if(forceModal)
       return dialog.ShowModal();
 
@@ -851,112 +254,30 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog,
    return 0;
 }
 
-bool VST3Effect::InitializePlugin()
-{
-   return true;
-}
-   
 std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 {
-   return const_cast<VST3Effect*>(this)->DoMakeInstance();
-}
-   
-std::shared_ptr<EffectInstance> VST3Effect::DoMakeInstance()
-{
-   ReloadUserOptions();
-   return std::make_shared<Instance>(*this);
-}
-
-bool VST3Effect::IsGraphicalUI()
-{
-   return mPlugView != nullptr;
+   return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo.ID());
 }
 
 std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance& instance, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
-   using namespace Steinberg;
+   bool useGUI { true };
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+            wxT("UseGUI"),
+            useGUI,
+            useGUI);
 
+   const auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
    mParent = S.GetParent();
 
-   if(mComponentHandler != nullptr)
-   {
-      // PRL:  Is this sync really needed?
-      access.ModifySettings([&](EffectSettings &settings){
-         SyncParameters();
-      });
-
-      auto parent = S.GetParent();
-      if(GetType() == EffectTypeGenerate)
-      {
-         auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-         auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
-         if(!LoadVSTUI(controlsRoot))
-            mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mEditController, *mComponentHandler);
-         vSizer->Add(controlsRoot);
-
-         auto &extra = access.Get().extra;
-         mDuration = safenew NumericTextCtrl(
-               parent, wxID_ANY,
-               NumericConverter::TIME,
-               extra.GetDurationFormat(),
-               extra.GetDuration(),
-               mSetup.sampleRate,
-               NumericTextCtrl::Options{}
-                  .AutoPos(true)
-            );
-         mDuration->SetName( XO("Duration") );
-
-         auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
-         hSizer->AddSpacer(5);
-         hSizer->Add(mDuration);
-         vSizer->AddSpacer(10);
-         vSizer->Add(hSizer.release());
-
-         parent->SetMinSize(vSizer->CalcMin());
-         parent->SetSizer(vSizer.release());
-      }
-      else if(!LoadVSTUI(parent))
-      {
-         mPlainUI = VST3ParametersWindow::Setup(
-            *parent,
-            *mEditController,
-            *mComponentHandler
-         );
-      }
-
-      return std::make_unique<DefaultEffectUIValidator>(*this, access);
-   }
-   return nullptr;
-}
-
-bool VST3Effect::ValidateUI(EffectSettings &settings)
-{
-   if (mDuration != nullptr)
-      settings.extra.SetDuration(mDuration->GetValue());
-
-   FetchSettings(GetSettings(settings));
-
-   return true;
+   return std::make_unique<VST3UIValidator>(mParent, vst3instance->GetWrapper(), *this, access, useGUI);
 }
 
 bool VST3Effect::CloseUI()
 {
-   using namespace Steinberg;
-
-   mPlainUI = nullptr;
    mParent = nullptr;
-   if(mPlugView)
-   {
-      mPlugView->setFrame(nullptr);
-      mPlugView->removed();
-      mPlugView = nullptr;
-      mPlugFrame = nullptr;
-   }
-   else
-      FlushPendingChanges();
-
    return true;
 }
 
@@ -998,10 +319,11 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
       return;
    }
 
-   if (!StoreSettings(GetSettings(settings)))
-      return;
+   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+   auto dummy = EffectSettings { settings };
+   wrapper->FetchSettings(dummy);
 
-   if (!VST3Wrapper::SavePreset(fileStream))
+   if (!wrapper->SavePreset(fileStream))
    {
       BasicUI::ShowMessageBox(
          XO("Failed to save VST3 preset to file"),
@@ -1009,11 +331,10 @@ void VST3Effect::ExportPresets(const EffectSettings& settings) const
             .Caption(XO("Error"))
             .Parent(&dialogPlacement)
       );
-      return;
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings& settings)
+OptionalMessage VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -1029,9 +350,12 @@ void VST3Effect::ImportPresets(EffectSettings& settings)
       nullptr
    );
    if(path.empty())
-      return;
+      return {};
 
-   LoadPreset(path, settings);
+   if (!LoadPreset(path, settings))
+      return {};
+
+   return { nullptr };
 }
 
 bool VST3Effect::HasOptions()
@@ -1042,181 +366,10 @@ bool VST3Effect::HasOptions()
 void VST3Effect::ShowOptions()
 {
    VST3OptionsDialog dlg(mParent, *this);
-   if (dlg.ShowModal())
-   {
-      ReloadUserOptions();
-   }
+   dlg.ShowModal();
 }
 
-//Used as a workaround for issue #2555: some plugins do not accept changes
-//via IEditController::setParamNormalized, but seem to read current
-//parameter values directly from the DSP model.
-//
-//When processing is disabled this call helps synchronize internal state of the
-//IEditController, so that next time UI is opened it displays correct values.
-//
-//As a side effect subsequent call to IAudioProcessor::process may flush
-//plugin internal buffers
-void VST3Effect::FlushPendingChanges() const
-{
-   using namespace Steinberg;
-
-   if(mActive)
-      return;
-
-   auto pendingChanges = mComponentHandler->getPendingChanges();
-
-   if(pendingChanges && mEffectComponent->setActive(true) == kResultOk)
-   {
-      mAudioProcessor->setProcessing(true);
-      VST3ProcessBlock(mEffectComponent.get(), mSetup, nullptr, nullptr, 0, pendingChanges.get());
-      mAudioProcessor->setProcessing(false);
-      mEffectComponent->setActive(false);
-   }
-}
-
-void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
-{
-   using namespace Steinberg;
-
-   if(!mPlugView)
-      return;
-
-   const auto window = static_cast<wxWindow*>(evt.GetEventObject());
-   const auto windowSize = evt.GetSize();
-
-   {
-      //Workaround to prevent dialog window resize when
-      //plugin window reaches its maximum size
-      auto root = wxGetTopLevelParent(window);
-      wxSize maxRootSize = root->GetMaxSize();
-
-      //remember the current dialog size as its new maximum size
-      if(window->GetMaxWidth() != -1 && windowSize.GetWidth() >= window->GetMaxWidth())
-         maxRootSize.SetWidth(root->GetSize().GetWidth());
-      if(window->GetMaxHeight() != -1 && windowSize.GetHeight() >= window->GetMaxHeight())
-         maxRootSize.SetHeight(root->GetSize().GetHeight());
-      root->SetMaxSize(maxRootSize);
-   }
-   
-   ViewRect plugViewSize { 0, 0, windowSize.x, windowSize.y };
-   mPlugView->checkSizeConstraint(&plugViewSize);
-   mPlugView->onSize(&plugViewSize);
-}
-
-bool VST3Effect::LoadVSTUI(wxWindow* parent)
-{
-   using namespace Steinberg;
-   if(mEditController == nullptr)
-      return false;
-
-   bool useGUI { true };
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-            wxT("UseGUI"),
-            useGUI,
-            useGUI);
-   if(!useGUI)
-      return false;
-
-   if(const auto view = owned (mEditController->createView (Vst::ViewType::kEditor))) 
-   {  
-      parent->Bind(wxEVT_SIZE, &VST3Effect::OnEffectWindowResize, this);
-
-      ViewRect defaultSize;
-      if(view->getSize(&defaultSize) == kResultOk)
-      {
-         if(view->canResize() == Steinberg::kResultTrue)
-         {
-            ViewRect minSize {0, 0, parent->GetMinWidth(), parent->GetMinHeight()};
-            ViewRect maxSize {0, 0, 10000, 10000};
-            if(view->checkSizeConstraint(&minSize) != kResultOk)
-               minSize = defaultSize;
-
-            if(view->checkSizeConstraint(&maxSize) != kResultOk)
-               maxSize = defaultSize;
-
-            //No need to accommodate the off-by-one error with Steinberg::ViewRect
-            //as we do it with wxRect
-
-            if(defaultSize.getWidth() < minSize.getWidth())
-               defaultSize.right = defaultSize.left + minSize.getWidth();
-            if(defaultSize.getWidth() > maxSize.getWidth())
-               defaultSize.right = defaultSize.left + maxSize.getWidth();
-
-            if(defaultSize.getHeight() < minSize.getHeight())
-               defaultSize.bottom = defaultSize.top + minSize.getHeight();
-            if(defaultSize.getHeight() > maxSize.getHeight())
-               defaultSize.bottom = defaultSize.top + maxSize.getHeight();
-
-            parent->SetMinSize({minSize.getWidth(), minSize.getHeight()});
-            parent->SetMaxSize({maxSize.getWidth(), maxSize.getHeight()});
-         }
-         else
-         {
-            parent->SetMinSize({defaultSize.getWidth(), defaultSize.getHeight()});
-            parent->SetMaxSize(parent->GetMinSize());
-         }
-
-         parent->SetSize({defaultSize.getWidth(), defaultSize.getHeight()});
-      }
-
-#if __WXGTK__
-      mPlugView = view;
-      safenew internal::x11::SocketWindow(parent, wxID_ANY, view);
-      return true;
-#else
-
-      static const auto platformType =
-#  if __WXMAC__
-         kPlatformTypeNSView;
-#  elif __WXMSW__
-         kPlatformTypeHWND;
-#  else
-#     error "Platform not supported"
-#  endif
-      auto plugFrame = owned(safenew internal::PlugFrame { parent });
-      view->setFrame(plugFrame);
-      if(view->attached(parent->GetHandle(), platformType) != kResultOk)
-         return false;
-
-      mPlugView = view;
-      mPlugFrame = plugFrame;
-
-      return true;
-#endif
-
-      
-   }
-   return false;
-}
-
-// Transfers data from the dialog
-void VST3Effect::SyncParameters() const
-{
-   using namespace Steinberg;
-
-   if(mComponentHandler != nullptr)
-   {
-      for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-      {
-         Vst::ParameterInfo parameterInfo { };
-         if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-         {
-            if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
-               continue;
-
-            if(mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
-            {
-               auto cleanup = finally([&]{ mComponentHandler->endEdit(parameterInfo.id); });
-               mComponentHandler->performEdit(parameterInfo.id, mEditController->getParamNormalized(parameterInfo.id));
-            }
-         }
-      }
-      FlushPendingChanges();
-   }
-}
-
-bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
+bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -1234,7 +387,9 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       return false;
    }
 
-   if (!VST3Wrapper::LoadPreset(fileStream))
+   auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo.ID());
+
+   if (!wrapper->LoadPreset(fileStream))
    {
       BasicUI::ShowMessageBox(
          XO("Unable to apply VST3 preset file %s").Format(path),
@@ -1245,46 +400,18 @@ bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
       return false;
    }
 
-   
-
-   FetchSettings(GetSettings(settings));
+   wrapper->StoreSettings(settings);
 
    return true;
 }
 
-void VST3Effect::ReloadUserOptions()
-{
-   // Reinitialize configuration settings
-   int userBlockSize;
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("BufferSize"), userBlockSize, 8192);
-   mUserBlockSize = std::max( 1, userBlockSize );
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
-
-   SetBlockSize(mUserBlockSize);
-}
-
 EffectSettings VST3Effect::MakeSettings() const
 {
-   auto result = StatefulPerTrackEffect::MakeSettings();
-   // Cause initial population of the map stored in the stateful effect
-   if (!mInitialFetchDone) {
-      FetchSettings(GetSettings(result));
-      mInitialFetchDone = true;
-   }
-   return result;
+   return VST3Wrapper::MakeSettings();
 }
 
-bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
+bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
 {
-   if (!StoreSettings(GetSettings(settings)))
-      return false;
-
-   SyncParameters();
-
-   if (mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
-
-   return false;
+   VST3Wrapper::CopySettingsContents(src, dst);
+   return true;
 }

@@ -3,8 +3,6 @@ Small crossplatform IPC library, provides a simple way
 to transfer data/messages between processes.
 ]]
 
-add_compile_definitions(IPC_TCP_CONNECTION_PORT=4242)
-
 set( SOURCES
    IPCChannel.cpp
    IPCChannel.h

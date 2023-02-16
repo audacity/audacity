@@ -12,12 +12,12 @@
 
 #include "PluginHost.h"
 
-#include <wx/app.h>
 #include <wx/log.h>
 #include <wx/module.h>
 #include <wx/process.h>
 
 #include "BasicUI.h"
+#include "CommandLineArgs.h"
 #include "PathList.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
@@ -35,18 +35,34 @@ namespace
          if(auto provider = ModuleManager::Get().CreateProviderInstance(providerId, wxEmptyString))
          {
             TranslatableString errorMessage{};
-
-            provider->DiscoverPluginsAtPath(pluginPath, errorMessage, [&result](PluginProvider *provider, ComponentInterface *ident)
+            auto validator = provider->MakeValidator();
+            auto numPlugins = provider->DiscoverPluginsAtPath(
+               pluginPath, errorMessage, [&](PluginProvider *provider, ComponentInterface *ident)
             {
                //Workaround: use DefaultRegistrationCallback to create all descriptors for us
                //and then put a copy into result
                auto id = PluginManager::DefaultRegistrationCallback(provider, ident);
-               if(const auto desc = PluginManager::Get().GetPlugin(id))
-                  result.Add(PluginDescriptor { *desc });
+               if(const auto ptr = PluginManager::Get().GetPlugin(id))
+               {
+                  auto desc = *ptr;
+                  try
+                  {
+                     if(validator)
+                        validator->Validate(*ident);
+                  }
+                  catch(...)
+                  {
+                     desc.SetEnabled(false);
+                     desc.SetValid(false);
+                  }
+                  result.Add(std::move(desc));
+               }
                return id;
             });
             if(!errorMessage.empty())
                result.SetError(errorMessage.Debug());
+            else if(numPlugins == 0)
+               result.SetError("no plugins found");
          }
          else
             result.SetError("provider not found");
@@ -58,7 +74,7 @@ namespace
    }
 }
 
-PluginHost::PluginHost()
+PluginHost::PluginHost(int connectPort)
 {
    FileNames::InitializePathList();
 
@@ -73,7 +89,7 @@ PluginHost::PluginHost()
    moduleManager.Initialize();
    moduleManager.DiscoverProviders();
 
-   mClient = std::make_unique<IPCClient>(*this);
+   mClient = std::make_unique<IPCClient>(connectPort, *this);
 }
 
 void PluginHost::OnConnect(IPCChannel& channel) noexcept
@@ -123,6 +139,9 @@ bool PluginHost::Serve()
 
    if(mRequest)
    {
+      if(mChannel)
+         detail::PutMessage(*mChannel, wxEmptyString);
+
       std::optional<wxString> request;
       mRequest.swap(request);
 
@@ -168,9 +187,12 @@ void PluginHost::Stop() noexcept
    mRequestCondition.notify_one();
 }
 
-bool PluginHost::Start()
+bool PluginHost::Start(int connectPort)
 {
-   const auto cmd = wxString::Format("\"%s\" %s", PlatformCompatibility::GetExecutablePath(), PluginHost::HostArgument);
+   const auto cmd = wxString::Format("\"%s\" %s %d",
+      PlatformCompatibility::GetExecutablePath(),
+      PluginHost::HostArgument,
+      connectPort);
 
    auto process = std::make_unique<wxProcess>();
    process->Detach();
@@ -185,7 +207,8 @@ bool PluginHost::Start()
 
 bool PluginHost::IsHostProcess()
 {
-   return wxTheApp && wxTheApp->argc >= 2 && wxStrcmp(wxTheApp->argv[1], HostArgument) == 0;
+   return CommandLineArgs::argc >= 3 &&
+      wxStrcmp(CommandLineArgs::argv[1], HostArgument) == 0;
 }
 
 class PluginHostModule final :
@@ -198,17 +221,21 @@ public:
    {
       if(PluginHost::IsHostProcess())
       {
+         long connectPort;
+         if(!wxString{ CommandLineArgs::argv[2] }.ToLong(&connectPort))
+            return false;
+
          //log messages will appear in a separate window
          //redirect to log file later
          wxLog::EnableLogging(false);
 
          //Handle requests...
-         PluginHost host;
+         PluginHost host(connectPort);
          while(host.Serve()) { }
          //...and terminate app
          return false;
       }
-      //do noting if current process isn't a host process
+      //do nothing if current process isn't a host process
       return true;
    }
    

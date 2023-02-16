@@ -23,7 +23,6 @@ Paul Licameli split from TrackMenus.cpp
 namespace {
 using namespace MenuTable;
 
-struct Handler : CommandHandlerObject {
 void OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
@@ -50,22 +49,11 @@ void OnNewTimeTrack(const CommandContext &context)
    TrackFocus::Get(project).Set(t);
    t->EnsureVisible();
 }
-};
 
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
-}
-
-#define FN(X) (&Handler :: X)
 AttachedItem sAttachment{ wxT("Tracks/Add/Add"),
-   ( FinderScope{ findCommandHandler },
      Command( wxT("NewTimeTrack"), XXO("&Time Track"),
-        FN(OnNewTimeTrack), AudioIONotBusyFlag() )
+        OnNewTimeTrack, AudioIONotBusyFlag()
  )
 };
-#undef FN
 
 }

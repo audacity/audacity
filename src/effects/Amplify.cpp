@@ -27,7 +27,6 @@
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
@@ -36,7 +35,7 @@
 #include <wx/log.h>
 
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
 
 
@@ -68,9 +67,9 @@ const EffectParameterMethods& EffectAmplify::Parameters() const
    // Parameters differ depending on batch mode.  Option to disable clipping
    // is interactive only.
    if (IsBatchProcessing())
-      return parameters;
-   else
       return batchParameters;
+   else
+      return parameters;
 }
 
 //
@@ -150,13 +149,14 @@ size_t EffectAmplify::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectAmplify::LoadFactoryDefaults(EffectSettings &) const
+OptionalMessage
+EffectAmplify::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults();
+   return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-bool EffectAmplify::DoLoadFactoryDefaults()
+OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    Init();
 
@@ -173,7 +173,7 @@ bool EffectAmplify::DoLoadFactoryDefaults()
    mCanClip = false;
 
    ClampRatio();
-   return true;
+   return { nullptr };
 }
 
 // Effect implementation
@@ -206,8 +206,11 @@ void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
 }
 
 std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 
    bool batch = IsBatchProcessing();
@@ -315,6 +318,11 @@ bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    mRatio = DB_TO_LINEAR(std::clamp<double>(mAmp * Amp.scale, Amp.min * Amp.scale, Amp.max * Amp.scale) / Amp.scale);
 
    mCanClip = mClip->GetValue();
@@ -333,14 +341,15 @@ bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 
 void EffectAmplify::CheckClip()
 {
-   EnableApply(mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
+   EffectUIValidator::EnableApply(mUIParent,
+      mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
 }
 
 void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mAmpT->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 
@@ -358,7 +367,7 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mNewPeakT->GetValidator()->TransferFromWindow())
    {
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
 

@@ -84,10 +84,6 @@ supports PulseAudio, OSS and ALSA under Linux.
 %cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D audacity_conan_enabled=Off \
-    -D audacity_conan_allow_prebuilt_binaries=no \
-    -D audacity_conan_force_build_dependencies=yes \
-    -D audacity_lib_preference=system \
-    -D audacity_obey_system_dependencies=On \
     -D audacity_use_pch=no \
     -D audacity_use_portsmf=local \
     -D audacity_use_sbsms=local \
@@ -119,7 +115,7 @@ rm %{buildroot}%{_datadir}/doc/%{name}/LICENSE.txt
 %{_bindir}/%{name}
 %{_libdir}/%{name}
 %dir %{_datadir}/%{name}
-%{_datadir}/%{name}/EQDefaultCurves.xml
+%{_datadir}/%{name}/EffectsMenuDefaults.xml
 %{_datadir}/%{name}/nyquist/
 %{_datadir}/%{name}/plug-ins/
 %exclude %{_datadir}/%{name}/help

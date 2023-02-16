@@ -43,16 +43,20 @@ public:
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
+
+   bool NeedsDither() const override;
 
 private:
    // EffectRepeat implementation
 
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    int repeatCount;
 
@@ -68,4 +72,3 @@ static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
 };
 
 #endif
-

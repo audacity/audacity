@@ -21,17 +21,13 @@
 #include <vamp-hostsdk/PluginInputDomainAdapter.h>
 
 #include <wx/wxprec.h>
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/combobox.h>
-#include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/tokenzr.h>
-#include <wx/intl.h>
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
@@ -41,7 +37,7 @@
 #include "../../widgets/AudacityMessageBox.h"
 
 #include "../../LabelTrack.h"
-#include "../../WaveTrack.h"
+#include "WaveTrack.h"
 
 enum
 {
@@ -75,8 +71,8 @@ VampEffect::VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
    mHasParameters(hasParameters),
    mRate(0)
 {
-   mKey = mPath.BeforeLast(wxT('/')).ToUTF8();
-   mName = mPath.AfterLast(wxT('/'));
+   mKey = mPath.BeforeFirst(wxT('/')).ToUTF8();
+   mName = mPath.AfterFirst(wxT('/'));
 }
 
 VampEffect::~VampEffect()
@@ -527,8 +523,10 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 }
 
 std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    Vamp::Plugin::ProgramList programs = mPlugin->getPrograms();
 
    mParameters = mPlugin->getParameterDescriptors();
@@ -690,7 +688,23 @@ std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
 
 bool VampEffect::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    UpdateFromPlugin();
+
+   return true;
+}
+
+bool VampEffect::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    return true;
 }
 

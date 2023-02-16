@@ -29,7 +29,7 @@
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
@@ -130,7 +130,7 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
+               std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -157,7 +157,7 @@ ExportOGG::ExportOGG()
 }
 
 ProgressResult ExportOGG::Export(AudacityProject *project,
-                       std::unique_ptr<ProgressDialog> &pDialog,
+                       std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                        unsigned numChannels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,
@@ -285,8 +285,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
 
       while (updateResult == ProgressResult::Success && !eos) {
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
-         auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
-
+         auto samplesThisRun = mixer->Process();
          int err;
          if (samplesThisRun == 0) {
             // Tell the library that we wrote 0 bytes - signalling the end.
@@ -352,7 +351,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
             break;
          }
 
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 

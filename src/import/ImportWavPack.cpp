@@ -24,13 +24,15 @@
 #include "ImportPlugin.h"
 
 #include<wx/string.h>
+#include<wx/log.h>
 #include<stdlib.h>
 #include<wavpack/wavpack.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
+#include "Tags.h"
+#include "WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 #include "CodeConversions.h"
 
 #define DESC XO("WavPack files")
@@ -104,11 +106,12 @@ TranslatableString WavPackImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath &filename, AudacityProject*)
 {
    char errMessage[100]; // To hold possible error message
-   int flags = OPEN_WVC | OPEN_FILE_UTF8 | OPEN_TAGS;
+   int flags = OPEN_WVC | OPEN_FILE_UTF8 | OPEN_TAGS | OPEN_DSD_AS_PCM | OPEN_NORMALIZE;
    WavpackContext *wavpackContext = WavpackOpenFileInput(filename, errMessage, flags, 0);
    
    if (!wavpackContext) {
       // Some error occured(e.g. File not found or is invalid)
+      wxLogDebug("WavpackOpenFileInput() failed on file %s, error = %s", filename, errMessage);
       return nullptr;
    }
 
@@ -192,20 +195,24 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          samplesRead = WavpackUnpackSamples(mWavPackContext, wavpackBuffer.get(), SAMPLES_TO_READ);
 
          if (mFormat == int16Sample) {
-            for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
-               int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
+            if (mBytesPerSample == 1)
+               for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
+                  int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c] * 256);
+            else
+               for (int64_t c = 0; c < samplesRead * mNumChannels; c++)
+                  int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels);
+                  mFormat, samplesRead, mNumChannels, mFormat);
             }
 
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels);
+                  mFormat, samplesRead, mNumChannels, mFormat);
             }
 
          } else {
@@ -215,7 +222,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
                mChannels[channel]->Append(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + channel),
-                  mFormat, samplesRead, mNumChannels);
+                  mFormat, samplesRead, mNumChannels, mFormat);
             }
          }
 
@@ -223,6 +230,10 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
          updateResult = mProgress->Update(WavpackGetProgress(mWavPackContext), 1.0);
       } while (updateResult == ProgressResult::Success && samplesRead != 0);
    }
+
+   if (WavpackGetNumErrors(mWavPackContext))
+      AudacityMessageBox( XO( "Encountered %d errors decoding WavPack file!" ).Format( WavpackGetNumErrors(mWavPackContext) ),
+                          XO( "WavPack Importer" ), wxOK | wxICON_EXCLAMATION | wxCENTRE);
 
    if (updateResult != ProgressResult::Stopped && updateResult != ProgressResult::Cancelled
          && totalSamplesRead < mNumSamples)
@@ -251,12 +262,14 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
             itemLen = WavpackGetTagItemIndexed(mWavPackContext, i, NULL, 0);
             std::string item (itemLen + 1, '\0');
             WavpackGetTagItemIndexed(mWavPackContext, i, item.data(), itemLen + 1);
+            item.resize(itemLen);           // remove terminating NULL from std::string
             name = audacity::ToWXString(item);
 
             // Get the actual length of the value for this item key
             valueLen = WavpackGetTagItem(mWavPackContext, item.data(), NULL, 0);
             std::string itemValue (valueLen + 1, '\0');
             WavpackGetTagItem(mWavPackContext, item.data(), itemValue.data(), valueLen + 1);
+            itemValue.resize(valueLen);     // remove terminating NULL from std::string
 
             if (apeTag) {
                for (int j = 0; j < valueLen; j++) {

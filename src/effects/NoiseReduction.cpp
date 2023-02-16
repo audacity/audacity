@@ -50,7 +50,7 @@
 #include "RealFFTf.h"
 #include "../SpectrumTransformer.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
@@ -65,12 +65,10 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/dialog.h>
 #include <wx/radiobut.h>
 #include <wx/slider.h>
 #include <wx/valtext.h>
 #include <wx/textctrl.h>
-#include <wx/sizer.h>
 
 // SPECTRAL_SELECTION not to affect this effect for now, as there might be no indication that it does.
 // [Discussed and agreed for v2.1 by Steve, Paul, Bill].
@@ -411,7 +409,6 @@ namespace{ BuiltinEffectsModule::Registration< EffectNoiseReduction > reg; }
 EffectNoiseReduction::EffectNoiseReduction()
 : mSettings(std::make_unique<EffectNoiseReduction::Settings>())
 {
-   Init();
 }
 
 EffectNoiseReduction::~EffectNoiseReduction()
@@ -450,8 +447,6 @@ int EffectNoiseReduction::ShowHostInterface(
 {
    // Assign the out parameter
    pInstance = MakeInstance();
-   if (pInstance && !pInstance->Init())
-      pInstance.reset();
 
    // to do: use forceModal correctly
 
@@ -460,7 +455,7 @@ int EffectNoiseReduction::ShowHostInterface(
    // We may want to twiddle the levels if we are setting
    // from a macro editing dialog
    return mSettings->PromptUser(this, access, parent,
-      bool(mStatistics), forceModal);
+      bool(mStatistics), IsBatchProcessing());
 }
 
 int EffectNoiseReduction::Settings::PromptUser(EffectNoiseReduction *effect,
@@ -525,10 +520,10 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
 
    static const PrefsTableEntry<Settings, double> doubleTable[] = {
          { &Settings::mNewSensitivity, wxT("Sensitivity"), 6.0 },
-         { &Settings::mNoiseGain, wxT("Gain"), 12.0 },
+         { &Settings::mNoiseGain, wxT("Gain"), 6.0 },
          { &Settings::mAttackTime, wxT("AttackTime"), 0.02 },
          { &Settings::mReleaseTime, wxT("ReleaseTime"), 0.10 },
-         { &Settings::mFreqSmoothingBands, wxT("FreqSmoothing"), 3.0 },
+         { &Settings::mFreqSmoothingBands, wxT("FreqSmoothing"), 6.0 },
 
          // Advanced settings
          { &Settings::mOldSensitivity, wxT("OldSensitivity"), DEFAULT_OLD_SENSITIVITY },
@@ -983,7 +978,7 @@ bool EffectNoiseReduction::Worker::Classify(unsigned nWindows, int band)
       // avoid being fooled by up and down excursions into
       // either the mistake of classifying noise as not noise
       // (leaving a musical noise chime), or the opposite
-      // (distorting the signal with a drop out). 
+      // (distorting the signal with a drop out).
       if (nWindows <= 3)
          // No different from second greatest.
          goto secondGreatest;
@@ -1064,7 +1059,7 @@ void EffectNoiseReduction::Worker::ReduceNoise()
          pGain += mBinLow;
          for (size_t jj = mBinLow; jj < mBinHigh; ++jj) {
             const bool isNoise = Classify(nWindows, jj);
-            if (!isNoise) 
+            if (!isNoise)
                *pGain = 1.0;
             ++pGain;
          }
@@ -1415,8 +1410,8 @@ void EffectNoiseReduction::Dialog::DisableControlsIfIsolating()
 #endif
    };
    static const auto nToDisable = sizeof(toDisable) / sizeof(toDisable[0]);
-   
-   bool bIsolating = 
+
+   bool bIsolating =
 #ifdef ISOLATE_CHOICE
       mKeepNoise->GetValue();
 #else
@@ -1639,6 +1634,10 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectNoiseReduction::Dialog::TransferDataToWindow()
 {
+   // Do the choice controls:
+   if (!EffectDialog::TransferDataToWindow())
+      return false;
+
    for (int id = FIRST_SLIDER; id < END_OF_SLIDERS; id += 2) {
       wxSlider* slider =
          static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));

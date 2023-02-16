@@ -24,7 +24,6 @@
 
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/intl.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -33,7 +32,7 @@
 #include "Theme.h"
 #include "../widgets/valnum.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
@@ -331,8 +330,10 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 }
 
 std::unique_ptr<EffectUIValidator> EffectAutoDuck::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
@@ -413,7 +414,22 @@ bool EffectAutoDuck::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAutoDuck::DoTransferDataToWindow()
 {
+   // Issue 2324: don't remove these two lines
+   if (!mUIParent->TransferDataToWindow())
+      return false;
+
    mPanel->Refresh(false);
+
+   return true;
+}
+
+bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    return true;
 }
 

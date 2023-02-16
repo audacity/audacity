@@ -93,6 +93,8 @@ struct LV2AtomPortState final {
        which we can also munlock in its destructor?
        */
       zix_ring_mlock(mRing.get());
+
+      ResetForInstanceOutput();
    }
 
    //! Transfer incoming events from the ring buffer to the event buffer.
@@ -176,7 +178,7 @@ public:
       , mSampleRate{ sampleRate }
       , mTrigger{ trigger }, mLogarithmic{ logarithmic }
    {}
- 
+
    // ScalePoints
    const std::vector<double> mScaleValues;
    const wxArrayString mScaleLabels;
@@ -221,6 +223,15 @@ inline const LV2EffectSettings &GetSettings(const EffectSettings &settings)
 {
    return GetSettings(const_cast<EffectSettings &>(settings));
 }
+
+//! Carry output control port information back to main thread
+struct LV2EffectOutputs : EffectOutputs {
+   ~LV2EffectOutputs() override;
+   std::unique_ptr<EffectOutputs> Clone() const override;
+   void Assign(EffectOutputs &&src) override;
+   //! vector of values in correspondence with the control ports
+   std::vector<float> values;
+};
 
 //! Other UI related state of an instance of an LV2 Control port
 struct LV2ControlPortState final {

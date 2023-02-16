@@ -89,7 +89,7 @@ public:
     bool OnDrag(const wxMouseEvent& event, AudacityProject* project);
     bool OnRelease(const wxMouseEvent& event, AudacityProject* project);
 
-    void Draw(wxDC& dc, const wxRect& rect);
+    bool Draw(wxDC& dc, const wxRect& rect);
 
     bool CutSelectedText(AudacityProject& project);
     bool CopySelectedText(AudacityProject& project);

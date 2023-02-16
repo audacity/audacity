@@ -17,10 +17,8 @@
 #include "Silence.h"
 #include "LoadEffects.h"
 
-#include <wx/intl.h>
-
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
 const ComponentInterfaceSymbol EffectSilence::Symbol
@@ -66,7 +64,8 @@ EffectType EffectSilence::GetType() const
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectSilence::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    S.StartVerticalLay();
    {

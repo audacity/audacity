@@ -20,7 +20,6 @@ machine endianness representations.
 #include <stdexcept>
 #include <cstring>
 #include <stdint.h>
-#include <cstdio>
 
 #include <wx/defs.h>
 

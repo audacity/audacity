@@ -22,7 +22,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/valgen.h>
 
 #include "../ShuttleGui.h"
@@ -31,7 +30,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "Prefs.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectPaulstretch::Parameters() const
 {
@@ -171,8 +170,10 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 
 
 std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S
@@ -193,11 +194,32 @@ std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
    return nullptr;
 };
 
+bool EffectPaulstretch::TransferDataToWindow(const EffectSettings &)
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
+bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
 // EffectPaulstretch implementation
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
 {
-   EnableApply(mUIParent->TransferDataFromWindow());
+   EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow());
 }
 
 size_t EffectPaulstretch::GetBufferSize(double rate) const

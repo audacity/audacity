@@ -21,13 +21,15 @@ threshold of difference in two selected tracks
 
 #include "CompareAudioCommand.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 
 #include <float.h>
-#include <wx/intl.h>
 
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -170,3 +172,18 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
    return true;
 }
 
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment{
+   wxT("Optional/Extra/Part2/Scriptables2"),
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("CompareAudio"), XXO("Compare Audio..."),
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+};
+}

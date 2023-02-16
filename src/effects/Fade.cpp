@@ -16,8 +16,6 @@
 
 #include "Fade.h"
 
-#include <wx/intl.h>
-
 #include "LoadEffects.h"
 
 const ComponentInterfaceSymbol EffectFadeIn::Symbol
@@ -78,7 +76,7 @@ unsigned EffectFade::GetAudioOutCount() const
 }
 
 bool EffectFade::ProcessInitialize(
-   EffectSettings &, double, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double, ChannelNames chanMap)
 {
    mSample = 0;
    return true;

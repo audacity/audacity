@@ -615,14 +615,10 @@ void TrackList::PermutationEvent(TrackNodePointer node)
    QueueEvent({ TrackListEvent::PERMUTED, *node.first });
 }
 
-void TrackList::DeletionEvent(TrackNodePointer node)
+void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
 {
-   QueueEvent({
-      TrackListEvent::DELETION,
-      node.second && node.first != node.second->end()
-         ? *node.first
-         : nullptr
-   });
+   QueueEvent(
+      { TrackListEvent::DELETION, std::move(node), duringReplace ? 1 : 0 });
 }
 
 void TrackList::AdditionEvent(TrackNodePointer node)
@@ -741,7 +737,7 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
       pTrack->SetId( t->GetId() );
       RecalcPositions(node);
 
-      DeletionEvent(node);
+      DeletionEvent(t->shared_from_this(), true);
       AdditionEvent(node);
    }
    return holder;
@@ -814,7 +810,7 @@ TrackNodePointer TrackList::Remove(Track *t)
          if ( !isNull( result ) )
             RecalcPositions(result);
 
-         DeletionEvent(result);
+         DeletionEvent(t->shared_from_this(), false);
       }
    }
    return result;
@@ -826,9 +822,20 @@ void TrackList::Clear(bool sendEvent)
    // are outstanding shared_ptrs to those tracks, making them outlive
    // the temporary ListOfTracks below.
    for ( auto pTrack: *this )
-      pTrack->SetOwner( {}, {} );
+   {
+      pTrack->SetOwner({}, {});
+      
+      if (sendEvent)
+         DeletionEvent(pTrack->shared_from_this(), false);
+   }
+   
    for ( auto pTrack: mPendingUpdates )
-      pTrack->SetOwner( {}, {} );
+   {
+      pTrack->SetOwner({}, {});
+
+      if (sendEvent)
+         DeletionEvent(pTrack, false);
+   }
 
    ListOfTracks tempList;
    tempList.swap( *this );
@@ -837,9 +844,6 @@ void TrackList::Clear(bool sendEvent)
    updating.swap( mPendingUpdates );
 
    mUpdaters.clear();
-
-   if (sendEvent)
-      DeletionEvent();
 }
 
 /// Return a track in the list that comes after Track t
@@ -1117,6 +1121,7 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
             if (pAdded)
                pAdded->push_back( *it );
             (*it)->SetOwner( {}, {} );
+            DeletionEvent(*it, false);
             it = erase( it );
          }
          while (it != stop && it->get()->GetId() == TrackId{});
@@ -1132,7 +1137,6 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
 
    if (!empty()) {
       RecalcPositions(getBegin());
-      DeletionEvent( node );
    }
 }
 

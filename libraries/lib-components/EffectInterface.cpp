@@ -7,7 +7,6 @@
 **********************************************************************/
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
-#include <wx/window.h>
 
 const RegistryPath &EffectSettingsExtra::DurationKey()
 {
@@ -19,14 +18,23 @@ EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
 
+EffectOutputs::~EffectOutputs() = default;
+
+EffectSettingsAccess::Message::~Message() = default;
+
 const EffectSettings &SimpleEffectSettingsAccess::Get()
 {
    return mSettings;
 }
 
-void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
+void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
+   std::unique_ptr<Message>)
 {
    mSettings = std::move(settings);
+}
+
+void SimpleEffectSettingsAccess::Set(std::unique_ptr<Message>)
+{
 }
 
 void SimpleEffectSettingsAccess::Flush()
@@ -109,25 +117,27 @@ auto EffectSettingsManager::MakeSettings() const -> EffectSettings
    return {};
 }
 
+auto EffectSettingsManager::MakeOutputs() const
+   -> std::unique_ptr<EffectOutputs>
+{
+   return nullptr;
+}
+
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &, SettingsCopyDirection ) const
+   const EffectSettings &, EffectSettings &) const
 {
    return true;
 }
 
 EffectInstance::~EffectInstance() = default;
 
-bool EffectInstance::Init()
-{
-   return true;
-}
-
 bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }
 
-bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
+bool EffectInstance::RealtimeAddProcessor(
+   EffectSettings &, EffectOutputs *, unsigned, float)
 {
    return true;
 }
@@ -142,7 +152,17 @@ bool EffectInstance::RealtimeResume()
    return true;
 }
 
-bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
+{
+   return nullptr;
+}
+
+bool EffectInstance::UsesMessages() const noexcept
+{
+   return false;
+}
+
+bool EffectInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
@@ -168,6 +188,17 @@ size_t EffectInstance::GetTailSize() const
    return 0;
 }
 
+auto EffectInstance::GetLatency(const EffectSettings &, double) const
+   -> SampleCount
+{
+   return 0;
+}
+
+bool EffectInstance::NeedsDither() const
+{
+   return true;
+}
+
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
 
 size_t EffectInstanceWithBlockSize::GetBlockSize() const
@@ -181,45 +212,6 @@ size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
 }
 
 EffectInstanceFactory::~EffectInstanceFactory() = default;
-
-int EffectInstanceFactory::GetMidiInCount() const
-{
-   return 0;
-}
-
-int EffectInstanceFactory::GetMidiOutCount() const
-{
-   return 0;
-}
-
-EffectUIValidator::EffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access)
-   : mEffect{effect}
-   , mAccess{access}
-{}
-
-EffectUIValidator::~EffectUIValidator() = default;
-
-bool EffectUIValidator::UpdateUI()
-{
-   return true;
-}
-
-bool EffectUIValidator::IsGraphicalUI()
-{
-   return false;
-}
-
-void EffectUIValidator::OnClose()
-{
-   if (!mUIClosed)
-   {
-      mEffect.CloseUI();
-      mUIClosed = true;
-   }
-}
-
-EffectUIClientInterface::~EffectUIClientInterface() = default;
 
 const RegistryPath &CurrentSettingsGroup()
 {

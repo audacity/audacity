@@ -12,7 +12,6 @@
 #define __AUDACITY_FILE_NAMES__
 
 #include <wx/dir.h> // for wxDIR_FILES
-#include <wx/string.h> // function return value
 #include "Identifier.h"
 #include "Prefs.h"
 

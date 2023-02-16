@@ -75,7 +75,6 @@ ExpandingToolBar.
 #include <wx/wx.h>
 #include <wx/dcmemory.h>
 #include <wx/log.h>
-#include <wx/dialog.h>
 
 #include "AButton.h"
 #include "AllThemeResources.h"
@@ -544,11 +543,10 @@ void ExpandingToolBar::StartMoving()
 //   ImageRoll tgtImageRoll = ImageRoll(ImageRoll::VerticalRoll,
 //                                      tgtImage,
 //                                      magicColor);
-   mTargetPanel = safenew ImageRollPanel(mAreaParent, -1, //tgtImageRoll,
+   mTargetPanel = safenew wxPanelWrapper(mAreaParent, -1, //tgtImageRoll,
                                      wxDefaultPosition,
                                      wxDefaultSize,
                                      wxTRANSPARENT_WINDOW);
-   mTargetPanel->SetLogicalFunction(wxXOR);
    mTargetPanel->SetSize(mDropTarget);
 
    // This gives time for wx to finish redrawing the window that way.

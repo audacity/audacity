@@ -20,7 +20,6 @@
 
 #include <wx/arrstr.h>
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 
@@ -176,6 +175,7 @@ bool EffectReverb::Validator::ValidateUI()
          // pass back the modified settings to the MessageBuffer
 
          EffectReverb::GetSettings(settings) = mSettings;
+         return nullptr;
       }
    );
 
@@ -192,32 +192,36 @@ struct EffectReverb::Instance
    {}
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-   bool ProcessFinalize(void) override; // not every effect needs this
+   bool ProcessFinalize(void) noexcept override;
 
    // Realtime section
 
-   bool RealtimeInitialize(EffectSettings& settings, double) override
+   bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override
    {
       SetBlockSize(512);
       mSlaves.clear();
+
+      mLastAppliedSettings = GetSettings(settings);
+      mLastSampleRate = sampleRate;
+
       return true;
    }
 
-   bool RealtimeAddProcessor(EffectSettings& settings,
+   bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *,
       unsigned numChannels, float sampleRate) override
    {
-      EffectReverbState slave;
+      EffectReverb::Instance slave(mProcessor);
 
       // The notion of ChannelNames is unavailable here,
       // so we'll have to force the stereo init, if this is the case
       //
       InstanceInit(settings, sampleRate,
-         slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
+         slave.mState, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
 
       mSlaves.push_back( std::move(slave) );
       return true;
@@ -232,9 +236,66 @@ struct EffectReverb::Instance
    size_t RealtimeProcess(size_t group, EffectSettings& settings,
       const float* const* inbuf, float* const* outbuf, size_t numSamples) override
    {
+
+      const auto& incomingSettings = GetSettings(settings);
+      if ( !(incomingSettings == mLastAppliedSettings) )
+      {
+         const bool onlySimpleOnes = OnlySimpleParametersChanged(incomingSettings, mLastAppliedSettings);
+
+         for (auto& slave : mSlaves)
+         {
+            for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
+            {
+               auto& reverbCore = slave.mState.mP[i].reverb;
+               const auto& is = incomingSettings;
+
+               if (onlySimpleOnes)
+               {
+                  reverb_set_simple_params(&reverbCore, mLastSampleRate,
+                                           is.mWetGain, is.mReverberance, is.mHfDamping, is.mToneLow, is.mToneHigh);
+               }
+               else
+               {
+                  // One of the non-simple parameters changed, so we need to do a full reinit
+                  reverb_init(&reverbCore, mLastSampleRate,
+                              is.mWetGain, is.mRoomSize, is.mReverberance, is.mHfDamping,
+                              is.mPreDelay, is.mStereoWidth, is.mToneLow, is.mToneHigh   );
+               }
+            }
+         }         
+
+         mLastAppliedSettings = incomingSettings;
+      }
+
+
       if (group >= mSlaves.size())
          return 0;
-      return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+      return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
+   }
+
+
+   bool RealtimeSuspend() override
+   {
+      for (auto& slave : mSlaves)
+      {
+         for (unsigned int i = 0; i < slave.mState.mNumChans; i++)
+         {
+            reverb_clear( &(slave.mState.mP[i].reverb) );
+         }
+      }
+
+      return true;
+   }
+
+
+   unsigned GetAudioOutCount() const override
+   {
+      return mChannels;
+   }
+
+   unsigned GetAudioInCount() const override
+   {
+      return mChannels;
    }
 
    bool InstanceInit(EffectSettings& settings, double sampleRate,
@@ -243,8 +304,13 @@ struct EffectReverb::Instance
    size_t InstanceProcess(EffectSettings& settings, EffectReverbState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
-   EffectReverbState mMaster;
-   std::vector<EffectReverbState> mSlaves;
+   EffectReverbState mState;
+   std::vector<EffectReverb::Instance> mSlaves;
+
+   unsigned mChannels{ 2 };
+
+   EffectReverbSettings mLastAppliedSettings;
+   double mLastSampleRate{ 0 };
 };
 
 
@@ -289,36 +355,30 @@ EffectType EffectReverb::GetType() const
    return EffectTypeProcess;
 }
 
-unsigned EffectReverb::GetAudioInCount() const
-{
-   return 2;
-}
-
-unsigned EffectReverb::GetAudioOutCount() const
-{
-   return 2;
-}
-
 auto EffectReverb::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Since_3_2;
+   return RealtimeSince::After_3_1;
 }
 
 static size_t BLOCK = 16384;
 
 bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
+   // For descructive processing, fix the number of channels, maybe as 1 not 2
+   auto& rs = GetSettings(settings);
+   mChannels = rs.mStereoWidth ? 2 : 1;
+
    return InstanceInit(settings,
-      sampleRate, mMaster, chanMap, /* forceStereo = */ false);
+      sampleRate, mState, chanMap, /* forceStereo = */ false);
 }
 
 
 bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
    double sampleRate, EffectReverbState& state,
    ChannelNames chanMap, bool forceStereo)
-{   
-   auto& rs = GetSettings(settings);   
+{
+   auto& rs = GetSettings(settings);
 
    bool isStereo = false;
    state.mNumChans = 1;
@@ -350,7 +410,7 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
    return true;
 }
 
-bool EffectReverb::Instance::ProcessFinalize()
+bool EffectReverb::Instance::ProcessFinalize() noexcept
 {
    return true;
 }
@@ -358,7 +418,7 @@ bool EffectReverb::Instance::ProcessFinalize()
 size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
-   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
 size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectReverbState& state,
@@ -438,21 +498,23 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
 }
 
 
-bool EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
+OptionalMessage
+EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
-      return false;
+      return {};
    }
 
    EffectReverb::GetSettings(settings) = FactoryPresets[id].preset;
 
-   return true;
+   return { nullptr };
 }
 
 // Effect implementation
 std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
-   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
+   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
@@ -540,6 +602,7 @@ bool EffectReverb::Validator::UpdateUI()
       m ## n ## T->SetValue(wxString::Format(wxT("%d"), evt.GetInt())); \
       mProcessingEvent = false; \
       ValidateUI(); \
+      Publish(EffectSettingChanged{}); \
    } \
    void EffectReverb::Validator::On ## n ## Text(wxCommandEvent & evt) \
    { \
@@ -548,6 +611,7 @@ bool EffectReverb::Validator::UpdateUI()
       m ## n ## S->SetValue(std::clamp<long>(evt.GetInt(), n.min, n.max)); \
       mProcessingEvent = false; \
       ValidateUI(); \
+      Publish(EffectSettingChanged{}); \
    }
 
 SpinSliderHandlers(RoomSize)
@@ -563,6 +627,47 @@ SpinSliderHandlers(StereoWidth)
 void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
 {
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 #undef SpinSliderHandlers
+
+bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b)
+{
+   // With C++20, all of this can be replaced by =default
+   return      (a.mRoomSize     == b.mRoomSize)
+            && (a.mPreDelay     == b.mPreDelay)
+            && (a.mReverberance == b.mReverberance)
+            && (a.mHfDamping    == b.mHfDamping)
+            && (a.mToneLow      == b.mToneLow)
+            && (a.mToneHigh     == b.mToneHigh)
+            && (a.mWetGain      == b.mWetGain)
+            && (a.mDryGain      == b.mDryGain)
+            && (a.mStereoWidth  == b.mStereoWidth)
+            && (a.mWetOnly      == b.mWetOnly);           
+}
+
+bool OnlySimpleParametersChanged(const EffectReverbSettings& a, const EffectReverbSettings& b)
+{
+   // A "simple" reverb parameter is one that when changed, does not require the
+   // reverb allpass/comb filters to be reset. This distinction enables us to
+   // code things so that the user can keep hearing the processed sound while
+   // they tweak one of the simple parameters.
+
+   const bool oneSimpleParameterChanged =
+
+               (a.mReverberance != b.mReverberance)
+            || (a.mHfDamping    != b.mHfDamping)
+            || (a.mToneLow      != b.mToneLow)
+            || (a.mToneHigh     != b.mToneHigh)
+            || (a.mWetGain      != b.mWetGain);
+
+
+   const bool allNonSimpleParametersStayedTheSame =
+
+               (a.mRoomSize     == b.mRoomSize)
+            && (a.mPreDelay     == b.mPreDelay)
+            && (a.mStereoWidth  == b.mStereoWidth);           
+
+   return oneSimpleParameterChanged && allNonSimpleParametersStayedTheSame;
+}

@@ -14,7 +14,6 @@
 
 #include "EffectBase.h"
 
-#include "SampleCount.h"
 #include "StatefulEffectBase.h"
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
@@ -22,6 +21,8 @@
 class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
+
+class sampleCount;
 
 //! Default implementation of EffectUIValidator invokes ValidateUI
 //! and IsGraphicalUI methods of an EffectUIClientInterface
@@ -40,18 +41,20 @@ class DefaultEffectUIValidator
 public:
    /*!
     @param pParent if not null, caller will push an event handler onto this
-    window; then this object is responsible to pop it in the destructor
+    window; then this object is responsible to pop it
     */
    DefaultEffectUIValidator(
       EffectUIClientInterface &effect, EffectSettingsAccess &access,
       wxWindow *pParent = nullptr);
+   //! Calls Disconnect
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
    //! @return mEffect.IsGraphicalUI()
    bool IsGraphicalUI() override;
+   void Disconnect() override;
 protected:
-   wxWindow *const mpParent;
+   wxWindow *mpParent{};
 };
 
 class AUDACITY_DLL_API Effect /* not final */
@@ -102,17 +105,16 @@ class AUDACITY_DLL_API Effect /* not final */
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool LoadUserPreset(
+   OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool LoadFactoryDefaults(EffectSettings &settings) const override;
-
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
+   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
+      const override;
+   OptionalMessage LoadFactoryDefaults(EffectSettings &settings)
+      const override;
 
    // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
@@ -122,11 +124,13 @@ class AUDACITY_DLL_API Effect /* not final */
    int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
       EffectUIValidator *pValidator, bool forceModal) override;
 
+   EffectUIClientInterface* GetEffectUIClientInterface() override;
+
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) override;
    //! @return false
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
@@ -134,7 +138,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets(EffectSettings &settings) override;
+   OptionalMessage ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -152,7 +156,7 @@ class AUDACITY_DLL_API Effect /* not final */
       bool forceModal = false) override;
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
-   bool LoadSettingsFromString(
+   [[nodiscard]] OptionalMessage LoadSettingsFromString(
       const wxString & parms, EffectSettings &settings) const override;
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;
@@ -176,11 +180,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    static void IncEffectCounter(){ nEffectsDone++;}
 
-   bool EnableApply(bool enable = true);
-
- protected:
-   
-   bool EnablePreview(bool enable = true);
+protected:
 
    //! Default implementation returns false
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
@@ -195,7 +195,8 @@ class AUDACITY_DLL_API Effect /* not final */
     DefaultEffectUIValidator; default implementation returns null
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access);
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs);
 
    // No more virtuals!
 
@@ -299,12 +300,9 @@ protected:
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   wxWindow       *mUIParent{};
-
-public:
-   wxWindow* GetUIParent() { return mUIParent; }
 
 private:
+   wxWindow       *mUIParent{};
    wxString GetSavedStateGroup();
 
    bool mIsBatch{ false };
@@ -320,7 +318,7 @@ public:
       return EffectSettings::Make<Settings>();
    }
    bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection) const override
+      const EffectSettings &src, EffectSettings &dst) const override
    {
       return EffectSettings::Copy<Settings>(src, dst);
    }
@@ -353,6 +351,12 @@ public:
    public:
       using StatefulEffectBase::Instance::Instance;
       bool Process(EffectSettings &settings) override;
+      SampleCount GetLatency(
+         const EffectSettings &settings, double sampleRate) const override;
+      //! Default implementation fails (returns 0 always)
+      size_t ProcessBlock(EffectSettings &settings,
+         const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
    };
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 };

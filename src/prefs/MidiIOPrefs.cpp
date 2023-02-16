@@ -31,7 +31,6 @@ other settings.
 #include <wx/defs.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/textctrl.h>
 
 #include <portmidi.h>
@@ -282,6 +281,7 @@ bool MidiIOPrefs::Commit()
             wxString(wxSafeConvertMB2WX(info->name))));
    }
 #endif
+   MIDISynthLatency_ms.Invalidate();
    return gPrefs->Flush();
 }
 

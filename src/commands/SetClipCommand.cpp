@@ -19,9 +19,12 @@
 
 #include "SetClipCommand.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 
@@ -111,4 +114,20 @@ bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
       }
    } );
    return true;
+}
+
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment1{
+   wxT("Optional/Extra/Part2/Scriptables1"),
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("SetClip"), XXO("Set Clip..."),
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+};
 }

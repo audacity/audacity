@@ -5,15 +5,15 @@ $preview linear
 $i18n-hint named for Jean-Claude Risset (silent t)
 $name (_ "Risset Drum")
 $manpage "Risset_Drum"
-$action (_ "Generating Risset Drum...")
+$debugbutton false
 $author (_ "Steven Jones")
-$release 2.3.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 2.3.0-1
+$copyright (_ "GNU General Public License v2.0 or later")
 
 ;; rissetdrum.ny by Steven Jones, after Jean Claude Risset.
-;; Updated by Steve Daulton July 2012 and May 2015.
+;; Updated by Steve Daulton 2012 and May 2015.
 
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

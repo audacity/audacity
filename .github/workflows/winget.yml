@@ -1,0 +1,19 @@
+name: Publish to WinGet
+on:
+  release:
+    types: [released]
+jobs:
+  publish:
+    runs-on: windows-latest # action can only be run on windows
+    steps:
+      - name: Get version
+        id: get-version
+        run: |
+          $VERSION="${{ github.event.release.tag_name }}".TrimStart('Audacity-')
+          echo "::set-output name=version::$VERSION"
+        shell: pwsh
+      - uses: vedantmgoyal2009/winget-releaser@v2
+        with:
+          identifier: Audacity.Audacity
+          version: ${{ steps.get-version.outputs.version }}
+          token: ${{ secrets.WINGET_TOKEN }}

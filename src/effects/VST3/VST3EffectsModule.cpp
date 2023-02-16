@@ -26,8 +26,10 @@
 #include "wxArrayStringEx.h"
 #include "PluginInterface.h"
 #include "PluginProvider.h"
+#include "PluginProvider.h"
 #include "VST3Effect.h"
 #include "VST3Utils.h"
+#include "VST3Wrapper.h"
 #include "widgets/AButton.h"
 
 
@@ -35,7 +37,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VST3EffectsModule();
+   return std::make_unique<VST3EffectsModule>();
 }
 
 DECLARE_BUILTIN_PROVIDER(VST3Builtin);
@@ -251,18 +253,6 @@ unsigned VST3EffectsModule::DiscoverPluginsAtPath(const PluginPath& path, Transl
    return 0u;
 }
 
-bool VST3EffectsModule::IsPluginValid(const PluginPath& path, bool bFast)
-{
-   if(bFast)
-      return VST3Utils::ParsePluginPath(path, nullptr, nullptr);
-
-   wxString modulePath;
-   if(VST3Utils::ParsePluginPath(path, &modulePath, nullptr))
-      return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
-
-   return false;
-}
-
 std::unique_ptr<ComponentInterface>
 VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
 {
@@ -280,7 +270,6 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
       {
          if(effectUIDString == classInfo.ID().toString()) {
             auto result = std::make_unique<VST3Effect>(module, classInfo);
-            result->InitializePlugin();
             return result;
          }
       }
@@ -293,4 +282,34 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
    return nullptr;
 }
 
+class VST3PluginValidator final : public PluginProvider::Validator
+{
+public:
+   
+   void Validate(ComponentInterface& component) override
+   {
+      if(auto vst3effect = dynamic_cast<VST3Effect*>(&component))
+         VST3Wrapper wrapper (
+            *vst3effect->mModule,
+            vst3effect->mEffectClassInfo.ID()
+         );
+      else
+         throw std::runtime_error("Not a VST3Effect");
+   }
 
+};
+
+std::unique_ptr<PluginProvider::Validator> VST3EffectsModule::MakeValidator() const
+{
+   return std::make_unique<VST3PluginValidator>();
+}
+
+
+bool VST3EffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   wxString modulePath;
+   if(VST3Utils::ParsePluginPath(path, &modulePath, nullptr))
+      return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
+
+   return wxFileName::FileExists(path) || wxFileName::DirExists(path);
+}

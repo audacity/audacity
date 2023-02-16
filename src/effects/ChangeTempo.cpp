@@ -26,7 +26,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
@@ -195,8 +194,11 @@ bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
 }
 
 std::unique_ptr<EffectUIValidator> EffectChangeTempo::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    enum { precision = 2 };
 
    S.StartVerticalLay(0);
@@ -305,6 +307,11 @@ bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 
    m_bLoopDetect = true;
 
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    // percent change controls
    Update_Slider_PercentChange();
    Update_Text_ToBPM();
@@ -316,6 +323,16 @@ bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
    m_pTextCtrl_ToLength->SetName(
       wxString::Format( _("Length in seconds from %s, to"),
          m_pTextCtrl_FromLength->GetValue() ) );
+
+   return true;
+}
+
+bool EffectChangeTempo::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
 
    return true;
 }

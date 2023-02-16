@@ -26,9 +26,6 @@ function.
 
 #include <wx/choice.h>
 #include <wx/log.h>
-#include <wx/intl.h>
-#include <wx/timer.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/listbox.h>
 #include <wx/window.h>
@@ -38,7 +35,7 @@ function.
 #include "Mix.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
@@ -143,7 +140,7 @@ public:
    ///\param subformat index of export type
    ///\return true if export succeeded
    ProgressResult Export(AudacityProject *project,
-      std::unique_ptr<ProgressDialog> &pDialog,
+      std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
       unsigned channels,
       const wxFileNameWrapper &fName,
       bool selectedOnly,
@@ -449,7 +446,6 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    case FMT_M4A:
    {
       int q = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
-      mEncAudioCodecCtx->SetGlobalQuality(q);
 
       q = wxClip( q, 98 * mChannels, 160 * mChannels );
       // Set bit rate to between 98 kbps and 320 kbps (if two channels)
@@ -1101,9 +1097,9 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 }
 
 
-ProgressResult ExportFFmpeg::Export(AudacityProject *project,
-   std::unique_ptr<ProgressDialog> &pDialog,
-   unsigned channels, const wxFileNameWrapper &fName,
+ProgressResult ExportFFmpeg::Export(
+   AudacityProject* project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
+   unsigned channels, const wxFileNameWrapper& fName,
    bool selectionOnly, double t0, double t1,
    MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
@@ -1163,8 +1159,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
-         auto pcmNumSamples = mixer->Process(pcmBufferSize);
-
+         auto pcmNumSamples = mixer->Process();
          if (pcmNumSamples == 0)
             break;
 
@@ -1178,7 +1173,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
             break;
          }
 
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 

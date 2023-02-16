@@ -17,7 +17,6 @@
 #include "DtmfGen.h"
 #include "LoadEffects.h"
 
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/valgen.h>
 #include <wx/valtext.h>
@@ -119,11 +118,6 @@ EffectType EffectDtmf::GetType() const
    return EffectTypeGenerate;
 }
 
-unsigned EffectDtmf::GetAudioOutCount() const
-{
-   return 1;
-}
-
 //! Temporary state of the computation
 struct EffectDtmf::Instance
    : PerTrackEffect::Instance
@@ -135,10 +129,20 @@ struct EffectDtmf::Instance
    {}
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    override;
+
+   unsigned GetAudioInCount() const override
+   {
+      return 0;
+   }
+
+   unsigned GetAudioOutCount() const override
+   {
+      return 1;
+   }
 
    const double mT0;
    double mSampleRate{};
@@ -154,7 +158,7 @@ struct EffectDtmf::Instance
 };
 
 bool EffectDtmf::Instance::ProcessInitialize(
-   EffectSettings &settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings &settings, double sampleRate, ChannelNames)
 {
    mSampleRate = sampleRate;
 
@@ -262,6 +266,7 @@ size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
       if (isTone)
       {
          // generate the tone and append
+         assert(curSeqPos < dtmfSettings.dtmfNTones) ;
          MakeDtmfTone(buffer, len, mSampleRate,
             dtmfSettings.dtmfSequence[curSeqPos], curTonePos, numSamplesTone,
             dtmfSettings.dtmfAmplitude);
@@ -408,7 +413,8 @@ void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectDtmf::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto &settings = access.Get();
    auto &dtmfSettings = GetSettings(settings);
@@ -452,6 +458,7 @@ bool EffectDtmf::Validator::ValidateUI()
       // recalculate to make sure all values are up-to-date. This is especially
       // important if the user did not change any values in the dialog
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
 
    return true;
@@ -659,6 +666,7 @@ void EffectDtmf::Validator::OnSequence(wxCommandEvent & WXUNUSED(evt))
       auto &dtmfSettings = mSettings;
       dtmfSettings.dtmfSequence = mDtmfSequenceT->GetValue();
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
    DoUpdateUI();
 }
@@ -670,6 +678,7 @@ void EffectDtmf::Validator::OnDuration(wxCommandEvent & WXUNUSED(evt))
       auto &effect = GetEffect();
       settings.extra.SetDuration(mDtmfDurationT->GetValue());
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
    DoUpdateUI();
 }
@@ -680,6 +689,7 @@ void EffectDtmf::Validator::OnDutyCycle(wxCommandEvent & evt)
       auto &dtmfSettings = mSettings;
       dtmfSettings.dtmfDutyCycle = (double) evt.GetInt() / DutyCycle.scale;
       dtmfSettings.Recalculate(settings);
+      return nullptr;
    });
    DoUpdateUI();
 }

@@ -24,7 +24,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/slider.h>
 
 #include "../ShuttleGui.h"
@@ -96,18 +95,17 @@ struct EffectWahwah::Validator
    wxSlider* mOutGainS;
 
 
+   wxWeakRef<wxWindow> mUIParent;
    EffectWahwahSettings mSettings;
 
    void EnableApplyFromValidate()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      actualEffect.EnableApply(actualEffect.GetUIParent()->Validate());
+      EnableApply(mUIParent, mUIParent->Validate());
    }
 
    bool EnableApplyFromTransferDataToWindow()
    {
-      Effect& actualEffect = static_cast<Effect&>(mEffect);
-      return actualEffect.EnableApply(actualEffect.GetUIParent()->TransferDataFromWindow());
+      return EnableApply(mUIParent, mUIParent->TransferDataFromWindow());
    }
 };
 
@@ -120,6 +118,7 @@ bool EffectWahwah::Validator::ValidateUI()
       {
          // pass back the modified settings to the MessageBuffer
          GetSettings(settings) = mSettings;
+         return nullptr;
       }
    );
 
@@ -136,17 +135,17 @@ struct EffectWahwah::Instance
    {}
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-   //bool ProcessFinalize(void) override;
+   //bool ProcessFinalize() noexcept override;
 
    bool RealtimeInitialize(EffectSettings& settings, double) override;
 
    bool RealtimeAddProcessor(EffectSettings& settings,
-      unsigned numChannels, float sampleRate) override;
+      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate) override;
 
    bool RealtimeFinalize(EffectSettings& settings) noexcept override;
 
@@ -160,8 +159,11 @@ struct EffectWahwah::Instance
    size_t InstanceProcess(EffectSettings& settings, EffectWahwahState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
-   EffectWahwahState mMaster;
-   std::vector<EffectWahwahState> mSlaves;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+
+   EffectWahwahState mState;
+   std::vector<EffectWahwah::Instance> mSlaves;
 };
 
 
@@ -205,32 +207,22 @@ EffectType EffectWahwah::GetType() const
 
 auto EffectWahwah::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Always;
-}
-
-unsigned EffectWahwah::GetAudioInCount() const
-{
-   return 1;
-}
-
-unsigned EffectWahwah::GetAudioOutCount() const
-{
-   return 1;
+   return RealtimeSince::After_3_1;
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
-   InstanceInit(settings, mMaster, sampleRate);
+   InstanceInit(settings, mState, sampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
-      mMaster.phase += M_PI;
+      mState.phase += M_PI;
    return true;
 }
 
 size_t EffectWahwah::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
 bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &, double)
@@ -241,11 +233,11 @@ bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &, double)
 }
 
 bool EffectWahwah::Instance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
-   EffectWahwahState slave;
+   EffectWahwah::Instance slave(mProcessor);
 
-   InstanceInit(settings, slave, sampleRate);
+   InstanceInit(settings, slave.mState, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -264,13 +256,14 @@ size_t EffectWahwah::Instance::RealtimeProcess(size_t group, EffectSettings &set
 {
    if (group >= mSlaves.size())
       return 0;
-   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group].mState, inbuf, outbuf, numSamples);
 }
 
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectWahwah::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
@@ -281,6 +274,7 @@ std::unique_ptr<EffectUIValidator> EffectWahwah::PopulateOrExchange(
 
 void EffectWahwah::Validator::PopulateOrExchange(ShuttleGui & S)
 {
+   mUIParent = S.GetParent();
    auto& ms = mSettings;
 
    S.SetBorder(5);
@@ -468,6 +462,16 @@ size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
    return blockLen;
 }
 
+unsigned EffectWahwah::Instance::GetAudioOutCount() const
+{
+   return 1;
+}
+
+unsigned EffectWahwah::Instance::GetAudioInCount() const
+{
+   return 1;
+}
+
 void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
@@ -477,6 +481,7 @@ void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
@@ -491,6 +496,7 @@ void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
@@ -502,6 +508,7 @@ void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
@@ -513,6 +520,7 @@ void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
@@ -524,6 +532,7 @@ void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
@@ -535,6 +544,7 @@ void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
 
    EnableApplyFromValidate();
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
@@ -548,6 +558,7 @@ void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
 
    mFreqS->SetValue((int)(ms.mFreq * Freq.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
@@ -561,6 +572,7 @@ void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
 
    mPhaseS->SetValue((int)(ms.mPhase * Phase.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
@@ -574,6 +586,7 @@ void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
 
    mDepthS->SetValue((int)(ms.mDepth * Depth.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
@@ -587,6 +600,7 @@ void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
 
    mResS->SetValue((int)(ms.mRes * Res.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
@@ -600,6 +614,7 @@ void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
 
    mFreqOfsS->SetValue((int)(ms.mFreqOfs * FreqOfs.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }
 
 void EffectWahwah::Validator::OnGainText(wxCommandEvent& WXUNUSED(evt))
@@ -613,4 +628,5 @@ void EffectWahwah::Validator::OnGainText(wxCommandEvent& WXUNUSED(evt))
 
    mOutGainS->SetValue((int)(ms.mOutGain * OutGain.scale));
    ValidateUI();
+   Publish(EffectSettingChanged{});
 }

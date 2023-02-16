@@ -32,11 +32,6 @@ AUDACITY_DLL_API wxFrame *FindProjectFrame( AudacityProject *project );
 /// the given pointer is null, or the window was not yet set.
 AUDACITY_DLL_API const wxFrame *FindProjectFrame( const AudacityProject *project );
 
-//! Make a WindowPlacement object suitable for `project` (which may be null)
-/*! @post return value is not null */
-AUDACITY_DLL_API std::unique_ptr<const BasicUI::WindowPlacement>
-ProjectFramePlacement( AudacityProject *project );
-
 ///\brief Get the main sub-window of the project frame that displays track data
 // (as a wxWindow only, when you do not need to use the subclass TrackPanel)
 AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project );

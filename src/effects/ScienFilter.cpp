@@ -44,7 +44,6 @@ a graph for EffectScienFilter.
 #include <wx/choice.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
@@ -58,7 +57,7 @@ a graph for EffectScienFilter.
 #include "Project.h"
 #include "../ShuttleGui.h"
 #include "Theme.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Ruler.h"
@@ -198,7 +197,7 @@ unsigned EffectScienFilter::GetAudioOutCount() const
 }
 
 bool EffectScienFilter::ProcessInitialize(
-   EffectSettings &, double, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double, ChannelNames chanMap)
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
       mpBiquad[iPair].Reset();
@@ -259,8 +258,10 @@ bool EffectScienFilter::Init()
 }
 
 std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.AddSpace(5);
    S.SetSizerProportion(1);
    S.StartMultiColumn(3, wxEXPAND);
@@ -436,6 +437,11 @@ bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 {
    mOrderIndex = mOrder - 1;
 
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    mdBMinSlider->SetValue((int) mdBMin);
    mdBMin = 0.0;                     // force refresh in TransferGraphLimitsFromWindow()
 
@@ -449,6 +455,11 @@ bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 
 bool EffectScienFilter::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    mOrder = mOrderIndex + 1;
 
    CalcFilter();
@@ -615,7 +626,8 @@ void EffectScienFilter::OnFilterSubtype(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -625,7 +637,8 @@ void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }
@@ -635,7 +648,8 @@ void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnStopbandRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

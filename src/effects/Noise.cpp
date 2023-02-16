@@ -20,7 +20,6 @@
 #include <math.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/textctrl.h>
 #include <wx/valgen.h>
 
@@ -102,7 +101,7 @@ unsigned EffectNoise::GetAudioOutCount() const
 }
 
 bool EffectNoise::ProcessInitialize(EffectSettings &,
-   double sampleRate, sampleCount, ChannelNames)
+   double sampleRate, ChannelNames)
 {
    mSampleRate = sampleRate;
    return true;
@@ -177,8 +176,11 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectNoise::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
+
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
    S.StartMultiColumn(2, wxCENTER);
@@ -211,13 +213,22 @@ std::unique_ptr<EffectUIValidator> EffectNoise::PopulateOrExchange(
 
 bool EffectNoise::TransferDataToWindow(const EffectSettings &settings)
 {
-   mNoiseDurationT->SetValue(settings.extra.GetDuration());
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
 
+   mNoiseDurationT->SetValue(settings.extra.GetDuration());
    return true;
 }
 
 bool EffectNoise::TransferDataFromWindow(EffectSettings &settings)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    settings.extra.SetDuration(mNoiseDurationT->GetValue());
    return true;
 }

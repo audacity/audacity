@@ -37,13 +37,11 @@ public:
       {}
       ~Instance() override;
       bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-         sampleCount totalLen, ChannelNames chanMap) override;
-      bool ProcessFinalize() /* noexcept */ override;
+         ChannelNames chanMap) override;
+      bool ProcessFinalize() noexcept override;
       size_t ProcessBlock(EffectSettings &settings,
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-      sampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const override;
 
    protected:
       StatefulPerTrackEffect &GetEffect() const
@@ -60,20 +58,15 @@ public:
    size_t GetBlockSize() const override;
 
    /*!
-    @copydoc PerTrackEffect::Instance::GetLatency()
-    */
-   virtual sampleCount GetLatency() const;
-
-   /*!
     @copydoc PerTrackEffect::Instance::ProcessInitialize()
     */
    virtual bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap = nullptr);
+      ChannelNames chanMap = nullptr);
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessFinalize()
     */
-   virtual bool ProcessFinalize() /* noexcept */;
+   virtual bool ProcessFinalize() noexcept;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessBlock()

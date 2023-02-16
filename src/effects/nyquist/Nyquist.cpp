@@ -33,11 +33,9 @@ effects from this one class.
 
 #include <locale.h>
 
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/datetime.h>
-#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
@@ -52,6 +50,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
+#include "BasicUI.h"
 #include "../EffectManager.h"
 #include "FileNames.h"
 #include "../../LabelTrack.h"
@@ -68,8 +67,8 @@ effects from this one class.
 #include "TempDirectory.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "Prefs.h"
@@ -140,11 +139,11 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
 END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
+   : mIsPrompt{ fName == NYQUIST_PROMPT_ID }
 {
    mOutputTrack[0] = mOutputTrack[1] = nullptr;
 
    mAction = XO("Applying Nyquist Effect...");
-   mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
    mTrace = false;
@@ -170,14 +169,13 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist
-   if (fName == NYQUIST_PROMPT_ID) {
+   if (mIsPrompt) {
       mName = NYQUIST_PROMPT_NAME;
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
       mPromptType = mType;
       mOK = true;
-      mIsPrompt = true;
       return;
    }
 
@@ -586,45 +584,47 @@ bool NyquistEffect::Init()
    // selected track(s) - (but don't apply to Nyquist Prompt).
 
    if (!mIsPrompt && mIsSpectral) {
-      auto *project = FindProject();
-      bool bAllowSpectralEditing = false;
-      bool hasSpectral = false;
-
-      for ( auto t :
-               TrackList::Get( *project ).Selected< const WaveTrack >() ) {
-         // Find() not Get() to avoid creation-on-demand of views in case we are
-         // only previewing
-         auto pView = WaveTrackView::Find( t );
-         if ( pView ) {
-            const auto displays = pView->GetDisplays();
-            if (displays.end() != std::find(
-               displays.begin(), displays.end(),
-               WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
-               hasSpectral = true;
+      // Completely skip the spectral editing limitations if there is no
+      // project because that is editing of macro parameters
+      if (const auto project = FindProject()) {
+         bool bAllowSpectralEditing = false;
+         bool hasSpectral = false;
+         for ( auto t :
+                  TrackList::Get( *project ).Selected< const WaveTrack >() ) {
+            // Find() not Get() to avoid creation-on-demand of views in case we are
+            // only previewing
+            auto pView = WaveTrackView::Find( t );
+            if ( pView ) {
+               const auto displays = pView->GetDisplays();
+               if (displays.end() != std::find(
+                  displays.begin(), displays.end(),
+                  WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
+                  hasSpectral = true;
+            }
+            if ( hasSpectral &&
+                (SpectrogramSettings::Get(*t).SpectralSelectionEnabled())) {
+               bAllowSpectralEditing = true;
+               break;
+            }
          }
-         if ( hasSpectral &&
-             (t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
-            bAllowSpectralEditing = true;
-            break;
-         }
-      }
 
-      if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-         if (!hasSpectral) {
-            Effect::MessageBox(
-            XO("Enable track spectrogram view before\n"
-            "applying 'Spectral' effects."),
-            wxOK | wxICON_EXCLAMATION | wxCENTRE,
-            XO("Error") );
-         } else {
-            Effect::MessageBox(
-               XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                           "in the track Spectrogram settings and select the\n"
-                           "frequency range for the effect to act on."),
+         if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
+            if (!hasSpectral) {
+               Effect::MessageBox(
+               XO("Enable track spectrogram view before\n"
+               "applying 'Spectral' effects."),
                wxOK | wxICON_EXCLAMATION | wxCENTRE,
                XO("Error") );
+            } else {
+               Effect::MessageBox(
+                  XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                              "in the track Spectrogram settings and select the\n"
+                              "frequency range for the effect to act on."),
+                  wxOK | wxICON_EXCLAMATION | wxCENTRE,
+                  XO("Error") );
+            }
+            return false;
          }
-         return false;
       }
    }
 
@@ -650,7 +650,8 @@ bool NyquistEffect::Init()
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
 
-         LoadUserPreset(key, dummySettings);
+         // Ignore failure
+         (void) LoadUserPreset(key, dummySettings);
       }
    }
 
@@ -670,6 +671,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       NyquistEffect proxy{ NYQUIST_WORKER_ID };
       proxy.SetCommand(mInputCmd);
       proxy.mDebug = nyquistSettings.proxyDebug;
+      proxy.mControls = move(nyquistSettings.controls);
       auto result = Delegate(proxy, nyquistSettings.proxySettings);
       if (result) {
          mT0 = proxy.mT0;
@@ -1077,6 +1079,12 @@ int NyquistEffect::ShowHostInterface(
 
    NyquistEffect effect(NYQUIST_WORKER_ID);
    effect.SetCommand(mInputCmd);
+   Finally Do{[&]{
+      // A second dialog will use effect as a pushed event handler.
+      // wxWidgets delays window destruction until idle time.
+      // Yield to destroy the dialog while effect is still in scope.
+      BasicUI::Yield();
+   }};
 
    // Must give effect its own settings to interpret, not those in access
    // Let's also give it its own instance
@@ -1113,6 +1121,8 @@ int NyquistEffect::ShowHostInterface(
          auto &nyquistSettings = GetSettings(settings);
          nyquistSettings.proxySettings = std::move(newSettings);
          nyquistSettings.proxyDebug = this->mDebug;
+         nyquistSettings.controls = move(effect.mControls);
+         return nullptr;
       });
    }
    if (!pNewInstance)
@@ -1122,8 +1132,10 @@ int NyquistEffect::ShowHostInterface(
 }
 
 std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    if (mIsPrompt)
       BuildPromptWindow(S);
    else
@@ -1138,6 +1150,8 @@ bool NyquistEffect::EnablesDebug() const
 
 bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
+   mUIParent->TransferDataToWindow();
+
    bool success;
    if (mIsPrompt)
    {
@@ -1150,7 +1164,7 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
    if (success)
    {
-      EnablePreview(mEnablePreview);
+      EffectUIValidator::EnablePreview(mUIParent, mEnablePreview);
    }
 
    return success;
@@ -1158,6 +1172,11 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
 bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    if (mIsPrompt)
    {
       return TransferDataFromPromptWindow();
@@ -1204,7 +1223,8 @@ bool NyquistEffect::ProcessOne()
       mCurTrack[0]->TypeSwitch(
          [&](const WaveTrack *wt) {
             type = wxT("wave");
-            spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
+            spectralEditp = SpectrogramSettings::Get(*mCurTrack[0])
+               .SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing

@@ -94,7 +94,7 @@ is time to refresh some aspect of the screen.
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
 
-#include "effects/RealtimeEffectManager.h"
+#include "RealtimeEffectManager.h"
 
 static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 static_assert( kTrackInfoBtnSize == kAffordancesAreaHeight, "Drag bar is misaligned with the menu button");
@@ -364,7 +364,7 @@ AudacityProject * TrackPanel::GetProject() const
    while(window != nullptr)
    {
       if(const auto projectWindow = dynamic_cast<ProjectWindow*>(window))
-         return &projectWindow->GetProject();
+         return projectWindow->FindProject().get();
 
       window = window->GetParent();
    }

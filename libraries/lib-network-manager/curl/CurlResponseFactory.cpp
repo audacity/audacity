@@ -13,6 +13,7 @@
 #include <algorithm>
 
 #include "CurlResponse.h"
+#include "MultipartData.h"
 
 namespace audacity
 {
@@ -62,12 +63,35 @@ ResponsePtr CurlResponseFactory::performRequest (RequestVerb verb, const Request
 
     mThreadPool->enqueue ([response, dataBuffer = std::move (buffer)]() {
         if (!dataBuffer.empty())
-            response->perform (dataBuffer.data (), dataBuffer.size ());
-        else
-            response->perform (nullptr, 0);
+            response->setPayload (dataBuffer.data (), dataBuffer.size ());
+        
+        response->perform ();
     });
 
     return response;
+}
+
+ResponsePtr CurlResponseFactory::performRequest(
+   RequestVerb verb, const Request& request,
+   std::unique_ptr<MultipartData> form)
+{
+   if (!mThreadPool)
+      return {};
+
+   std::shared_ptr<CurlResponse> response =
+      std::make_shared<CurlResponse>(verb, request, mHandleManager.get());
+
+
+   mThreadPool->enqueue(
+      [response, rawForm = form.release()]() mutable
+      {
+         if (rawForm != nullptr && !rawForm->IsEmpty())
+            response->setForm(std::unique_ptr<MultipartData>(rawForm));
+
+         response->perform();
+      });
+
+   return response;
 }
 
 void CurlResponseFactory::terminate ()

@@ -16,8 +16,6 @@
 #include <wx/app.h>
 #include <wx/frame.h>
 
-wxDEFINE_EVENT(EVT_PROJECT_ACTIVATION, wxCommandEvent);
-
 //This is a pointer to the currently-active project.
 static std::weak_ptr<AudacityProject> gActiveProject;
 
@@ -32,7 +30,6 @@ void SetActiveProject(AudacityProject * project)
    if ( gActiveProject.lock() != pProject ) {
       gActiveProject = pProject;
       KeyboardCapture::Capture( nullptr );
-      wxTheApp->QueueEvent( safenew wxCommandEvent{ EVT_PROJECT_ACTIVATION } );
    }
    wxTheApp->SetTopWindow( FindProjectFrame( project ) );
 }

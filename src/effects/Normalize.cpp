@@ -22,14 +22,13 @@
 #include <math.h>
 
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/stattext.h>
 #include <wx/valgen.h>
 
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -212,8 +211,10 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
 }
 
 std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    mCreating = true;
 
    S.StartVerticalLay(0);
@@ -266,7 +267,23 @@ std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
 
 bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    UpdateUI();
+
+   return true;
+}
+
+bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    return true;
 }
 
@@ -456,7 +473,7 @@ void EffectNormalize::UpdateUI()
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
-      EnableApply(false);
+      EffectUIValidator::EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
@@ -467,5 +484,5 @@ void EffectNormalize::UpdateUI()
    mStereoIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
-   EnableApply(mGain || mDC);
+   EffectUIValidator::EnableApply(mUIParent, mGain || mDC);
 }

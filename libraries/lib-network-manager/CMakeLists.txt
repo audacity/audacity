@@ -16,6 +16,9 @@ set( SOURCES
     Request.h
     Request.cpp
 
+    MultipartData.h
+    MultipartData.cpp
+
     NetworkManager.h
     NetworkManager.cpp
 
@@ -30,11 +33,12 @@ set( SOURCES
 )
 
 
-set ( LIBRARIES PRIVATE
+set ( LIBRARIES
+    lib-string-utils-interface
+PRIVATE
     CURL::libcurl
-    ThreadPool::ThreadPool
-    lib-string-utils
-    wxwidgets::base
+    threadpool::threadpool
+    lib-exceptions-interface
 )
 
 set ( DEFINES INTERFACE "HAS_NETWORKING" )

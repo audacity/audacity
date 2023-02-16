@@ -134,7 +134,7 @@ ChoiceSetting GUIManualLocation{
       { XO("Local") ,  XO("From Internet") , },
       { wxT("Local") , wxT("FromInternet") , }
    },
-   0 // "Local"
+   1 // "FromInternet"
 };
 
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
@@ -155,7 +155,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice( XXO("&Language:"), LanguageSetting);
-         S.TieChoice( XXO("Location of &Manual:"), GUIManualLocation);
+         // S.TieChoice( XXO("Location of &Manual:"), GUIManualLocation);
          S.TieChoice( XXO("Th&eme:"), GUITheme());
          S.TieChoice( XXO("Meter dB &range:"), DBSetting);
       }
@@ -174,7 +174,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/GUI/ShowExtraMenus"),
                      false});
 #ifdef EXPERIMENTAL_THEME_PREFS
-      // We do not want to make this option mainstream.  It's a 
+      // We do not want to make this option mainstream.  It's a
       // convenience for developers.
       S.TieCheckBox(XXO("Show alternative &styling (Mac vs PC)"),
                     {wxT("/GUI/ShowMac"),
@@ -239,6 +239,8 @@ bool GUIPrefs::Commit()
    }
    AColor::ApplyUpdatedImages();
 
+   GUIBlendThemes.Invalidate();
+   DecibelScaleCutoff.Invalidate();
    return true;
 }
 

@@ -44,8 +44,6 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include <unordered_set>
 
 #include <wx/textctrl.h>
-#include <wx/string.h>
-#include <wx/intl.h>
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
@@ -53,7 +51,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include "FileNames.h"
 #include "../ShuttleGui.h"
 #include "Project.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 #include "Prefs.h"
 
@@ -138,7 +136,7 @@ bool Importer::Initialize()
    using namespace Registry;
    static OrderingPreferenceInitializer init{
       PathStart,
-      { {wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,FFmpeg") } }
+      { {wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,WavPack,FFmpeg") } }
       // QT and GStreamer are only conditionally compiled and would get
       // placed at the end if present
    };

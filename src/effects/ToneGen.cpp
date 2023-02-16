@@ -25,7 +25,6 @@ frequency changes smoothly during the tone.
 #include <math.h>
 
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/valgen.h>
 
 #include "Project.h"
@@ -144,7 +143,7 @@ unsigned EffectToneGen::GetAudioOutCount() const
 }
 
 bool EffectToneGen::ProcessInitialize(
-   EffectSettings &, double sampleRate, sampleCount, ChannelNames chanMap)
+   EffectSettings &, double sampleRate, ChannelNames chanMap)
 {
    mSampleRate = sampleRate;
    mPositionInCycles = 0.0;
@@ -271,8 +270,10 @@ void EffectToneGen::PostSet()
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    wxTextCtrl *t;
 
    S.StartMultiColumn(2, wxCENTER);
@@ -393,12 +394,22 @@ std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
 
 bool EffectToneGen::TransferDataToWindow(const EffectSettings &settings)
 {
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    mToneDurationT->SetValue(settings.extra.GetDuration());
    return true;
 }
 
 bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
    if (!mChirp)
    {
       mFrequency1 = mFrequency0;
@@ -414,7 +425,8 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 
 void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   if (!EffectUIValidator::EnableApply(
+      mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
    }

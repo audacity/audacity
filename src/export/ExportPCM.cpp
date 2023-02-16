@@ -16,9 +16,6 @@
 #include <wx/choice.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
-#include <wx/intl.h>
-#include <wx/timer.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/window.h>
 
@@ -30,7 +27,7 @@
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
@@ -389,7 +386,7 @@ public:
 
    void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
-                         std::unique_ptr<ProgressDialog> &pDialog,
+                         std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                          unsigned channels,
                          const wxFileNameWrapper &fName,
                          bool selectedOnly,
@@ -465,7 +462,7 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
  * file type, or giving the user full control over libsndfile.
  */
 ProgressResult ExportPCM::Export(AudacityProject *project,
-                                 std::unique_ptr<ProgressDialog> &pDialog,
+                                 std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                                  unsigned numChannels,
                                  const wxFileNameWrapper &fName,
                                  bool selectionOnly,
@@ -634,8 +631,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
          while (updateResult == ProgressResult::Success) {
             sf_count_t samplesWritten;
-            size_t numSamples = mixer->Process(maxBlockLen);
-
+            size_t numSamples = mixer->Process();
             if (numSamples == 0)
                break;
 
@@ -688,7 +684,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                break;
             }
             
-            updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+            updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
          }
       }
       
@@ -1102,3 +1098,31 @@ unsigned ExportPCM::GetMaxChannels(int index)
 static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "PCM",
    []{ return std::make_unique< ExportPCM >(); }
 };
+
+#ifdef HAS_CLOUD_UPLOAD
+#   include "CloudExporterPlugin.h"
+#   include "CloudExportersRegistry.h"
+
+class PCMCloudHelper : public cloud::CloudExporterPlugin
+{
+public:
+   wxString GetExporterID() const override
+   {
+      return "WAV";
+   }
+
+   FileExtension GetFileExtension() const override
+   {
+      return "wav";
+   }
+
+   void OnBeforeExport() override
+   {
+   }
+
+}; // WavPackCloudHelper
+
+static bool cloudExporterRegisterd = cloud::RegisterCloudExporter(
+   "audio/x-wav",
+   [](const AudacityProject&) { return std::make_unique<PCMCloudHelper>(); });
+#endif

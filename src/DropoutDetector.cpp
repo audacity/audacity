@@ -9,7 +9,9 @@ Paul Licameli split from ProjectAudioManager.cpp
 
 **********************************************************************/
 
+#include "ClientData.h"
 #include "LabelTrack.h"
+#include "Observer.h"
 #include "Project.h"
 #include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
@@ -18,11 +20,12 @@ Paul Licameli split from ProjectAudioManager.cpp
 #include <wx/app.h>
 #include <wx/frame.h>
 
-static AudacityProject::AttachedObjects::RegisteredFactory sKey {
-   []( AudacityProject &project ) {
-      project.Bind(EVT_RECORDING_DROPOUT,
-      [&project](RecordingDropoutEvent &evt){
-         evt.Skip();
+namespace {
+struct DropoutSubscription : ClientData::Base {
+   DropoutSubscription(AudacityProject &project)
+   {
+      mSubscription = ProjectAudioManager::Get(project).Subscribe(
+      [&project](const RecordingDropoutEvent &evt){
          // Make a track with labels for recording errors
          auto &tracks = TrackList::Get( project );
 
@@ -59,7 +62,13 @@ You are saving directly to a slow external storage device\n\
                XXO("Turn off dropout detection"));
          });
       });
-      // Don't need to construct anything
-      return nullptr;
+   }
+   Observer::Subscription mSubscription;
+};
+}
+
+static AudacityProject::AttachedObjects::RegisteredFactory sKey {
+   []( AudacityProject &project ) {
+      return std::make_shared<DropoutSubscription>(project);
    }
 };

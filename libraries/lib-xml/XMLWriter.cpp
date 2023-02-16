@@ -28,7 +28,6 @@ the general functionality for creating XML in UTF8 encoding.
 
 #include <wx/defs.h>
 #include <wx/ffile.h>
-#include <wx/intl.h>
 
 #include <cstring>
 

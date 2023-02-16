@@ -20,6 +20,7 @@ Paul Licameli
 #include <wx/app.h>
 #include <wx/progdlg.h>
 #include <wx/windowptr.h>
+#include <wx/utils.h>
 
 using namespace BasicUI;
 
@@ -154,24 +155,6 @@ wxWidgetsBasicUI::DoMessageBox(
    }
 }
 
-namespace {
-struct MyProgressDialog : ::ProgressDialog, BasicUI::ProgressDialog {
-   using ::ProgressDialog::ProgressDialog;
-   ~MyProgressDialog() override = default;
-   ProgressResult Poll(
-      unsigned long long numerator,
-      unsigned long long denominator,
-      const TranslatableString &message) override
-   {
-      return Update(numerator, denominator, message);
-   }
-   virtual void SetMessage(const TranslatableString & message) override
-   {
-      ::ProgressDialog::SetMessage(message);
-   }
-};
-}
-
 std::unique_ptr<BasicUI::ProgressDialog>
 wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    const TranslatableString &message,
@@ -179,9 +162,9 @@ wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    const TranslatableString &remainingLabelText)
 {
    unsigned options = 0;
-   if (~(flags & ProgressShowStop))
+   if (!(flags & ProgressShowStop))
       options |= pdlgHideStopButton;
-   if (~(flags & ProgressShowCancel))
+   if (!(flags & ProgressShowCancel))
       options |= pdlgHideCancelButton;
    if ((flags & ProgressHideTime))
       options |= pdlgHideElapsedTime;
@@ -191,7 +174,7 @@ wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    // See https://docs.wxwidgets.org/3.0/overview_windowdeletion.html
    // But on macOS the use of wxWindowPtr for the progress dialog sometimes
    // causes hangs.
-   return std::make_unique<MyProgressDialog>(
+   return std::make_unique<::ProgressDialog>(
       title, message, options, remainingLabelText);
 }
 
@@ -229,4 +212,20 @@ int wxWidgetsBasicUI::DoMultiDialog(const TranslatableString &message,
    const TranslatableString &boxMsg, bool log)
 {
    return ::ShowMultiDialog(message, title, buttons, helpPage, boxMsg, log);
+}
+
+bool wxWidgetsBasicUI::DoOpenInDefaultBrowser(const wxString &url)
+{
+   return wxLaunchDefaultBrowser(url);
+}
+
+std::unique_ptr<BasicUI::WindowPlacement> wxWidgetsBasicUI::DoFindFocus()
+{
+   return std::make_unique<wxWidgetsWindowPlacement>(wxWindow::FindFocus());
+}
+
+void wxWidgetsBasicUI::DoSetFocus(const BasicUI::WindowPlacement &focus)
+{
+   auto pWindow = wxWidgetsWindowPlacement::GetParent(focus);
+   pWindow->SetFocus();
 }

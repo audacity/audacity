@@ -25,14 +25,13 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
 
 #include "../LabelTrack.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectFindClipping::Parameters() const
 {
@@ -215,8 +214,10 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
 }
 
 std::unique_ptr<EffectUIValidator> EffectFindClipping::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    DoPopulateOrExchange(S, access);
    return nullptr;
 }
@@ -251,6 +252,11 @@ bool EffectFindClipping::TransferDataToWindow(const EffectSettings &)
 
 bool EffectFindClipping::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
+
    ShuttleGui S(mUIParent, eIsGettingFromDialog);
    // To do: eliminate this and just use validators for controls
    DoPopulateOrExchange(S, *mpAccess);

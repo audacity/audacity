@@ -4,15 +4,12 @@ $type process
 $name (_ "Crossfade Tracks")
 $manpage "Crossfade_Tracks"
 $debugbutton disabled
-$action (_ "Crossfading...")
 $preview selection
 $author (_ "Steve Daulton")
-$release 3.0.4
+$release 3.0.4-1
 $copyright (_ "GNU General Public License v2.0 or later")
 
-;; crossfadetracks.ny by Steve Daulton Nov 2014 / Sep 2015
-
-;; Released under terms of the GNU General Public License v2.0 or later:
+;; License: GPL v2+
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

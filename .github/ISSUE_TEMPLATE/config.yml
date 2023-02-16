@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Help forum
+    url: https://forum.audacityteam.org
+    about: Please ask questions here.
+  - name: Additional help resources
+    url: https://www.audacityteam.org/help/
+    about: Manual, help pages, FAQs etc.

@@ -28,12 +28,8 @@ ShuttleGui.
 #include <algorithm>
 
 #include <wx/defs.h>
-#include <wx/sizer.h>
 #include <wx/stockitem.h>
-#include <wx/string.h>
 #include <wx/tglbtn.h>
-#include <wx/timer.h>
-#include <wx/utils.h>
 #include <wx/log.h>
 
 #include "ConfigInterface.h"

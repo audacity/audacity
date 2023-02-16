@@ -33,7 +33,6 @@
 #include <wx/brush.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
 
@@ -44,7 +43,7 @@
 #include "float_cast.h"
 #include "../widgets/Ruler.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "AllThemeResources.h"
 
 enum
@@ -157,8 +156,10 @@ TranslatableString RatioLabelFormat( int sliderValue, double value )
 }
 
 std::unique_ptr<EffectUIValidator> EffectCompressor::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
+   mUIParent = S.GetParent();
    S.SetBorder(5);
 
    S.StartHorizontalLay(wxEXPAND, true);
@@ -292,6 +293,10 @@ bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
 
 bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
    return DoTransferDataFromWindow();
 }
 

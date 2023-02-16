@@ -1,367 +1,232 @@
-# Load Conan
-
-if ( ${_OPT}conan_allow_prebuilt_binaries )
-    set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-binaries )
-else()
-    set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-recipes )
-endif()
-
-if( ${_OPT}conan_force_build_dependencies )
-   set( CONAN_BUILD_MODE BUILD all )
-else()
-   set( CONAN_BUILD_MODE BUILD missing )
-endif()
-
-if( ${_OPT}conan_enabled )
-    include( conan )
-
-    conan_check()
-
-    # Conan will fail to detect the compiler in case /usr/bin/cc or /usr/bin/cxx are passed
-    # CMake will set CC and CXX variables, breaking the correct detection of compiler.
-    # However, we can safely unset them before running Conan, because we only care for
-    # the build tools environment here
-
-    if( DEFINED ENV{CC} )
-        set( OLD_CC $ENV{CC} )
-        unset( ENV{CC} )
-    endif()
-
-    if( DEFINED ENV{CXX} )
-        set( OLD_CXX $ENV{CXX} )
-        unset( ENV{CXX} )
-    endif()
-
-    execute_process( COMMAND ${CONAN_CMD} profile new audacity_build --detect --force )
-
-    # Conan will not detect compiler runtime
-    if(MSVC)
-       _get_msvc_ide_version(msvc_version_for_profile)
-
-       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler="Visual Studio" audacity_build )
-       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.version="${msvc_version_for_profile}" audacity_build )
-       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.runtime=MD audacity_build )
-       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.cppstd=17 audacity_build )
-    endif()
-
-    if( DEFINED OLD_CC )
-        set( ENV{CC} ${OLD_CC} )
-    endif()
-
-    if( DEFINED OLD_CXX )
-        set( ENV{CXX} ${OLD_CXX} )
-    endif()
-
-    set(ENV{CONAN_REVISIONS_ENABLED} 1)
-
-    conan_add_remote(NAME audacity
-        URL ${CONAN_REMOTE}
-        VERIFY_SSL True
-        INDEX 0
-    )
-
-    conan_add_remote(NAME conan-center-cache
-        URL https://artifactory.audacityteam.org/artifactory/api/conan/conancenter
-        VERIFY_SSL True
-        INDEX 1
-    )
-endif()
-
-set( CONAN_BUILD_REQUIRES )
-set( CONAN_REQUIRES )
-set( CONAN_PACKAGE_OPTIONS )
-set( CONAN_ONLY_DEBUG_RELEASE )
-set( CONAN_CONFIG_OPTIONS )
-set( CONAN_RESOLVE_LIST )
+set(find_package_file "${CMAKE_BINARY_DIR}/find_package_include.cmake")
+file(WRITE ${find_package_file} "# Generated dependecies list\n")
 
 #[[
-Add a Conan dependency
+   `audacity_find_package` emulates the behavior of `find_package` but
+   add some Audaicity-specific logic to it.
 
-Example usage:
+   Directly supported find_package options:
 
-add_conan_lib(
-  wxWdidget
-  wxwidgets/3.1.3-audacity
-  OPTION_NAME wxwidgets
-  SYMBOL WXWIDGET
-  REQUIRED
-  ALWAYS_ALLOW_CONAN_FALLBACK
-  PKG_CONFIG "wxwidgets >= 3.1.3"
-  FIND_PACKAGE_OPTIONS COMPONENTS adv base core html qa xml
-  INTERFACE_NAME wxwidgets::wxwidgets
-  HAS_ONLY_DEBUG_RELEASE
-  CONAN_OPTIONS
-       wxwidgets:shared=True
-)
+   * REQUIRED
+   * QUIET
 
-PKG_CONFIG accepts a list of possible package configurations.
-add_conan_lib will iterate over it one by one until the library is found.
+   Other options can be passed to the `find_package` call by passing
+   FIND_PACKAGE_OPTIONS before them.
+
+   Additionally, the following options are supported:
+
+   * CONAN_PACKAGE_NAME - name of the package in Conan. If not specified,
+     the name of the package is assumed to be the lowercase of the CMake package name.
+   * OPTION_NAME - name of the option to enable/disable the package. If not specified,
+     the name of the option is assumed to be the lowercase of the CMake package name.
+
+   Call to `audacity_find_package` will create the `option` with the name
+   audacity_use_<OPTION_NAME>. If REQUIRED is not specified, the option will allow
+   to disable the package. If Conan is enabled, the option will allow `local` state.
+   In all the cases the option allows `system` state. By default, the option is set
+   to audacity_lib_preference value.
+
+   If the option is set to `local`, the package will be enabled when running Conan.
+
+   If the option is not set to `off`, the package will be searched using `find_package`.
+
+   Usage:
+
+   audacity_find_package(
+      <package_name>
+      [REQUIRED]
+      [QUIET]
+      [FIND_PACKAGE_OPTIONS <find_package_options>]
+      [CONAN_PACKAGE_NAME <conan_package_name>]
+      [OPTION_NAME <option_name>]
+   )
 ]]
+function(audacity_find_package package_name)
+   set(options REQUIRED QUIET)
+   set(one_value_args VERSION CONAN_PACKAGE_NAME OPTION_NAME)
+   set(multi_value_args FIND_PACKAGE_OPTIONS)
+   cmake_parse_arguments(audacity_find_package "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 
-function (add_conan_lib package conan_package_name )
-    # Extract the list of packages from the function args
-    list( SUBLIST ARGV 2 -1 options )
+   #message(FATAL_ERROR "${package_name} R ${audicity_find_package_REQUIRED} Q ${audicity_find_package_QUIET} V ${audicity_find_package_VERSION} C ${audicity_find_package_CONAN_PACKAGE_NAME} O ${audicity_find_package_OPTION} F ${audicity_find_package_FIND_PACKAGE_OPTIONS}")
 
-    set( list_mode on )
-    set( current_var "conan_package_options" )
+   if(NOT audacity_find_package_OPTION_NAME)
+      string(TOLOWER "${package_name}" audacity_find_package_OPTION_NAME)
+   endif()
 
-    set( option_name_base ${package} )
-    set( allow_find_package off )
-    set( find_package_options )
-    set( conan_package_options )
-    set( required off )
-    set( pkg_config_options )
-    set( system_only ${${_OPT}obey_system_dependencies})
-    set( interface_name "${package}::${package}")
+   if(NOT audacity_find_package_CONAN_PACKAGE_NAME)
+      string(TOLOWER "${package_name}" audacity_find_package_CONAN_PACKAGE_NAME)
+   endif()
 
-    # Parse function arguments
+   set( option_name ${_OPT}use_${audacity_find_package_OPTION_NAME} )
 
-    foreach( opt IN LISTS options )
-        if( opt STREQUAL "FIND_PACKAGE_OPTIONS" )
-            set( list_mode on )
-            set( allow_find_package on )
-            set( current_var "find_package_options" )
-        elseif ( opt STREQUAL "ALLOW_FIND_PACKAGE" )
-            set ( allow_find_package on )
-        elseif ( opt STREQUAL "CONAN_OPTIONS" )
-            set( list_mode on )
-            set( current_var "conan_package_options" )
-        elseif ( opt STREQUAL "PKG_CONFIG" )
-            set( list_mode on )
-            set( current_var "pkg_config_options" )
-        elseif ( opt STREQUAL "OPTION_NAME" )
-            set( list_mode off )
-            set( current_var "option_name_base" )
-        elseif ( opt STREQUAL "SYMBOL" )
-            set( list_mode off )
-            set( current_var "symbol" )
-        elseif ( opt STREQUAL "INTERFACE_NAME" )
-            set( list_mode off )
-            set( current_var "interface_name" )
-        elseif ( opt STREQUAL "REQUIRED" )
-            set( required on )
-        elseif ( opt STREQUAL "ALWAYS_ALLOW_CONAN_FALLBACK" )
-            set( system_only off )
-        elseif ( opt STREQUAL "HAS_ONLY_DEBUG_RELEASE" )
-            set ( only_debug_release on )
-        else()
-            if( list_mode )
-                list( APPEND ${current_var} ${opt} )
-            else()
-                set (${current_var} ${opt})
-            endif()
-        endif()
-    endforeach()
+   set( option_desc "local" )
 
-    if( NOT DEFINED symbol )
-        string( TOUPPER "${option_name_base}" symbol)
-    endif()
+   set( sysopt "system" )
+   string( PREPEND option_desc "system (if available), " )
 
-    # Generate CMake option
-    set( option_name ${_OPT}use_${option_name_base} )
-
-    set( option_desc "local" )
-
-    if( pkg_config_options OR allow_find_package OR NOT ${_OPT}conan_enabled )
-        set( sysopt "system" )
-        string( PREPEND option_desc "system (if available), " )
-
-        if( ${_OPT}conan_enabled )
-            set( default "${${_OPT}lib_preference}" )
-        else()
-            set( default "system" )
-        endif()
-    else()
-        set( default "local" )
-    endif()
+   if( ${_OPT}conan_enabled )
+      set( default "${${_OPT}lib_preference}" )
+   else()
+      set( default "system" )
+   endif()
 
     if( ${_OPT}conan_enabled )
         set( localopt "local" )
     endif()
 
-    if( NOT required )
+    if( NOT audacity_find_package_REQUIRED )
         set( reqopt "off" )
         string( APPEND option_desc ", off" )
     endif()
 
-    cmd_option( ${option_name}
-                "Use ${option_name_base} library [${option_desc}]"
-                "${default}"
-                STRINGS ${sysopt} ${localopt} ${reqopt}
-    )
-
-    # Early bail out
-    if( ${option_name} STREQUAL "off" )
-
-      message( STATUS "========== ${option_name_base} disabled ==========" )
-
-      set( USE_${symbol} OFF CACHE INTERNAL "" FORCE )
-
-      return()
-    endif()
-
-    # Let the Audacity target know that this library will be used
-    set( USE_${symbol} ON CACHE INTERNAL "" FORCE )
-
-    if ( TARGET "${package}" )
-        return()
-    endif()
-
-    if( ${option_name} STREQUAL "system" OR NOT ${_OPT}conan_enabled )
-        if( pkg_config_options )
-            foreach(variant ${pkg_config_options})
-                pkg_check_modules( PKG_${package} ${variant} )
-
-                if( PKG_${package}_FOUND )
-                    message( STATUS "Using '${package}' system library" )
-
-                    # Create the target interface library
-                    add_library( ${interface_name} INTERFACE IMPORTED GLOBAL)
-
-                    # Retrieve the package information
-                    get_package_interface( PKG_${package} ${interface_name} )
-                    return()
-                endif()
-            endforeach()
-        endif()
-
-        if( allow_find_package )
-            find_package( ${package} QUIET ${find_package_options} )
-
-            if ( ${package}_FOUND )
-                message( STATUS "Using '${package}' system library" )
-                return()
-            endif()
-        endif()
-
-        if( system_only OR NOT ${_OPT}conan_enabled )
-            message( FATAL_ERROR "Failed to find the system package ${package}" )
-        else()
-            set( ${option_name} "local" )
-            set_property( CACHE ${option_name} PROPERTY VALUE "local" )
-        endif()
-    endif()
-
-    list( APPEND CONAN_REQUIRES ${conan_package_name} )
-    list( APPEND CONAN_PACKAGE_OPTIONS ${conan_package_options} )
-    list( APPEND CONAN_RESOLVE_LIST ${package} )
-
-    if ( only_debug_release )
-        message( STATUS "${package} only has Debug and Release versions" )
-        list( APPEND CONAN_ONLY_DEBUG_RELEASE ${package})
-    endif()
-
-    set( CONAN_REQUIRES           ${CONAN_REQUIRES}           PARENT_SCOPE )
-    set( CONAN_PACKAGE_OPTIONS    ${CONAN_PACKAGE_OPTIONS}    PARENT_SCOPE )
-    set( CONAN_RESOLVE_LIST       ${CONAN_RESOLVE_LIST}       PARENT_SCOPE )
-    set( CONAN_ONLY_DEBUG_RELEASE ${CONAN_ONLY_DEBUG_RELEASE} PARENT_SCOPE )
-
-    message (STATUS "Adding Conan dependency ${package}")
-endfunction()
-
-macro( set_conan_vars_to_parent )
-    set( CONAN_REQUIRES        ${CONAN_REQUIRES}        PARENT_SCOPE )
-    set( CONAN_PACKAGE_OPTIONS ${CONAN_PACKAGE_OPTIONS} PARENT_SCOPE )
-    set( CONAN_RESOLVE_LIST    ${CONAN_RESOLVE_LIST}    PARENT_SCOPE )
-    set( CONAN_BUILD_REQUIRES  ${CONAN_BUILD_REQUIRES}  PARENT_SCOPE )
-    set( CONAN_ONLY_DEBUG_RELEASE ${CONAN_ONLY_DEBUG_RELEASE} PARENT_SCOPE )
-endmacro()
-
-function ( _conan_install build_type )
-    conan_cmake_configure (
-        REQUIRES ${CONAN_REQUIRES}
-        GENERATORS cmake_find_package_multi
-        BUILD_REQUIRES ${CONAN_BUILD_REQUIRES}
-        ${CONAN_CONFIG_OPTIONS}
-        IMPORTS "bin, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dylib -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.so* -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        OPTIONS ${CONAN_PACKAGE_OPTIONS}
-    )
-
-    message(STATUS "Configuring packages for ${build_type}")
-
-    conan_cmake_autodetect(settings BUILD_TYPE ${build_type})
-
-    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-        if( MACOS_ARCHITECTURE STREQUAL "x86_64" )
-            set( CONAN_MACOS_ARCHITECTURE "x86_64" )
-        else()
-            set( CONAN_MACOS_ARCHITECTURE "armv8" )
-        endif()
-        list( APPEND settings "arch=${CONAN_MACOS_ARCHITECTURE}" )
-        list( APPEND settings "os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}" )
-        # This line is required to workaround the conan bug #8025
-        # https://github.com/conan-io/conan/issues/8025
-        # Without it, libjpeg-turbo will fail to cross-compile on AppleSilicon macs
-        set(ENV{CONAN_CMAKE_SYSTEM_NAME} "Darwin")
-        set(ENV{CONAN_CMAKE_SYSTEM_PROCESSOR} ${MACOS_ARCHITECTURE})
-    endif()
-
-    if (build_type MATCHES "MinSizeRel|RelWithDebInfo")
-        message(STATUS "Release only libraries: ${CONAN_ONLY_DEBUG_RELEASE}")
-
-        foreach( package ${CONAN_ONLY_DEBUG_RELEASE} )
-            list( APPEND settings "${package}:build_type=Release")
-        endforeach()
-    endif()
-
-   conan_cmake_install(PATH_OR_REFERENCE .
-        ${CONAN_BUILD_MODE}
-        PROFILE_BUILD audacity_build
-        SETTINGS_HOST ${settings}
+   cmd_option( ${option_name}
+      "Use ${option_name_base} library [${option_desc}]"
+      "${default}"
+      STRINGS ${sysopt} ${localopt} ${reqopt}
    )
+
+   string( TOUPPER "${audacity_find_package_OPTION_NAME}" symbol)
+
+   if( ${option_name} STREQUAL "off" )
+      message( STATUS "========== ${package_name} is disabled ==========" )
+      set( USE_${symbol} OFF CACHE INTERNAL "" FORCE )
+      list(APPEND conan_package_options "-o" "use_${audacity_find_package_CONAN_PACKAGE_NAME}=False")
+      return()
+   endif()
+
+   set( USE_${symbol} ON CACHE INTERNAL "" FORCE )
+
+   if( audacity_find_package_REQUIRED )
+      set(audacity_find_package_REQUIRED "REQUIRED")
+   else()
+      set(audacity_find_package_REQUIRED "")
+   endif()
+
+   if( audacity_find_package_QUIET )
+      set(audacity_find_package_QUIET "QUIET")
+   else()
+      set(audacity_find_package_QUIET "")
+   endif()
+
+   string(
+      JOIN " " find_package_string "find_package(" ${package_name}
+         ${audacity_find_package_VERSION}
+         ${audacity_find_package_REQUIRED}
+         ${audacity_find_package_QUIET}
+         ${audacity_find_package_FIND_PACKAGE_OPTIONS}
+      ")\n"
+   )
+
+   file(APPEND ${find_package_file} "${find_package_string}")
+
+   if( ${option_name} STREQUAL "local" )
+      message( STATUS "========== Using Conan version of ${package_name} ==========" )
+      list(APPEND conan_package_options "use_${audacity_find_package_CONAN_PACKAGE_NAME}=True")
+   else()
+      message( STATUS "========== Using system version of ${package_name} ==========" )
+   endif()
+
+   if(conan_package_options)
+      set(conan_package_options ${conan_package_options} PARENT_SCOPE)
+      mark_as_advanced(${package_name}_DIR)
+      mark_as_advanced(${audacity_find_package_OPTION_NAME}_DIR)
+      mark_as_advanced(${audacity_find_package_CONAN_PACKAGE_NAME}_DIR)
+   endif()
 endfunction()
 
-macro( resolve_conan_dependencies )
-    if( ${_OPT}conan_enabled )
-        message(STATUS
-        "Executing Conan: \
-            REQUIRES ${CONAN_REQUIRES}
-            GENERATORS cmake_find_package_multi
-            BUILD_REQUIRES ${CONAN_BUILD_REQUIRES}
-            ${CONAN_CONFIG_OPTIONS}
-            OPTIONS ${CONAN_PACKAGE_OPTIONS}
-        ")
+# Process the list of the 3d party libraries
+include (DependenciesList)
 
-        if(MSVC OR XCODE)
-            foreach(TYPE ${CMAKE_CONFIGURATION_TYPES})
-                _conan_install(${TYPE})
-            endforeach()
-        else()
-            _conan_install(${CMAKE_BUILD_TYPE})
-        endif()
+# If conan is enabled, run conan_runner.py
+if( ${_OPT}conan_enabled )
+   # Deduce the build type
+   get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+   if( is_multi_config )
+      set(_build_types ${CMAKE_CONFIGURATION_TYPES})
+   else()
+      set(_build_types ${CMAKE_BUILD_TYPE})
+   endif()
 
-        list( REMOVE_DUPLICATES CONAN_REQUIRES )
+   # Force the packages rebuld, if needed
+   if( ${_OPT}conan_force_build_dependencies )
+      set( _force_build "--force-build")
+   endif()
 
-        foreach( package ${CONAN_RESOLVE_LIST} )
-            message(STATUS "Resolving Conan library ${package}")
+   if( NOT ${_OPT}conan_allow_prebuilt_binaries )
+      set( _disallow_prebuilt "--disallow-prebuilt")
+   endif()
 
-            find_package(${package} CONFIG)
-            mark_as_advanced(${package}_DIR)
+   # Deduce the target architecture
+   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      set( _target_arch ${MACOS_ARCHITECTURE} )
+   elseif( MSVC )
+      set( _target_arch ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID} )
+   else()
+      set( _target_arch "${CMAKE_SYSTEM_PROCESSOR}" )
+   endif()
 
-            if (NOT ${package}_FOUND)
-                message( FATAL_ERROR "Failed to find the conan package ${package}" )
-            endif()
-        endforeach()
-    endif()
+   # Enable Conan download cache, if needed
+   if( ${_OPT}conan_download_cache )
+      set( _download_cache "--download-cache" ${${_OPT}conan_download_cache} )
+   endif()
 
-    file(GLOB dependency_helpers "${AUDACITY_MODULE_PATH}/dependencies/*.cmake")
+   # Set the libraries installation directory (Linux only, ignored on other platforms)
+   if( _PKGLIB )
+      set( _libdir "--lib-dir" ${_PKGLIB} )
+   endif()
 
-    foreach(f ${dependency_helpers})
-        include(${f})
-    endforeach()
-endmacro()
+   if( MIN_MACOS_VERSION )
+      set( _min_macos_version "--min-os-version" ${MIN_MACOS_VERSION} )
+   endif()
 
-macro ( find_required_package package_name system_package_name )
-    find_package ( ${package_name} QUIET ${ARGN} )
+   execute_process(
+      COMMAND ${PYTHON} "${CMAKE_SOURCE_DIR}/conan/conan_runner.py"
+         --build-dir ${CMAKE_BINARY_DIR}
+         --compiler ${CMAKE_CXX_COMPILER_ID}
+         --compiler-version ${CMAKE_CXX_COMPILER_VERSION}
+         --build-types ${_build_types}
+         --target-arch ${_target_arch}
+         --build-arch ${CMAKE_HOST_SYSTEM_PROCESSOR}
+         ${_libdir}
+         ${_force_build}
+         ${_disallow_prebuilt}
+         ${_download_cache}
+         ${_min_macos_version}
+         -o ${conan_package_options}
 
-    if ( NOT ${package_name}_FOUND )
-        if (CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
-            message( FATAL_ERROR "Error: ${package_name} is required")
-        else()
-            message( FATAL_ERROR "Error: ${package_name} is required.\nPlease install it with using command like:\n\t\$ sudo apt install ${system_package_name}" )
-        endif()
-    endif()
-endmacro()
+      RESULT_VARIABLE conan_result
+      COMMAND_ECHO STDOUT
+   )
+
+   if( conan_result )
+      message( FATAL_ERROR "Conan failed to install dependencies (${conan_result}) ${PYTHON}" )
+   endif()
+
+   set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+endif()
+
+if( ${_OPT}conan_enabled )
+   set( _file_name "${CMAKE_BINARY_DIR}/generators/pre-find-package.cmake" )
+
+   if( EXISTS "${_file_name}" )
+      message(STATUS "Including ${_file_name}")
+      include( ${_file_name} )
+   endif()
+endif()
+# Resolve the dependencies
+include(${find_package_file})
+
+# Monkey-patch some targets to make the names consistent
+file(GLOB dependency_helpers "${AUDACITY_MODULE_PATH}/dependencies/*.cmake")
+
+foreach(f ${dependency_helpers})
+    include(${f})
+endforeach()
+
+if( ${_OPT}conan_enabled )
+   set( _file_name "${CMAKE_BINARY_DIR}/generators/post-find-package.cmake" )
+   if( EXISTS "${_file_name}" )
+      message(STATUS "Including ${_file_name}")
+      include( ${_file_name} )
+   endif()
+endif()

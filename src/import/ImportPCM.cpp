@@ -22,16 +22,11 @@
 
 
 #include "Import.h"
-#include "../Tags.h"
+#include "Tags.h"
 
 #include <wx/wx.h>
-#include <wx/string.h>
-#include <wx/utils.h>
-#include <wx/intl.h>
 #include <wx/ffile.h>
-#include <wx/sizer.h>
 #include <wx/checkbox.h>
-#include <wx/button.h>
 #include <wx/stattext.h>
 
 #include "sndfile.h"
@@ -47,7 +42,7 @@
 #include "../FileFormats.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 #include <algorithm>
@@ -108,6 +103,7 @@ public:
 private:
    SFFile                mFile;
    const SF_INFO         mInfo;
+   sampleFormat          mEffectiveFormat;
    sampleFormat          mFormat;
 };
 
@@ -201,8 +197,10 @@ PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
    // the quality of the original file.
    //
 
-   mFormat =
-      ChooseFormat(sf_subtype_to_effective_format(mInfo.format));
+   // Effective format
+   mEffectiveFormat = sf_subtype_to_effective_format(mInfo.format);
+   // But maybe different storage format
+   mFormat = ChooseFormat(mEffectiveFormat);
 }
 
 TranslatableString PCMImportFileHandle::GetFileDescription()
@@ -366,7 +364,10 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
                         ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               iter->get()->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
+               iter->get()->Append(
+                  buffer.ptr(),
+                  (mFormat == int16Sample) ? int16Sample : floatSample,
+                  block, 1, mEffectiveFormat);
             }
             framescompleted += block;
          }

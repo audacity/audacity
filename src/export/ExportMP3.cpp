@@ -69,14 +69,11 @@
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
-#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/mimetype.h>
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/timer.h>
-#include <wx/utils.h>
 #include <wx/window.h>
 
 #include "FileNames.h"
@@ -88,7 +85,7 @@
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -1704,7 +1701,7 @@ public:
 
    void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
+               std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -1762,7 +1759,7 @@ int ExportMP3::SetNumExportChannels()
 
 
 ProgressResult ExportMP3::Export(AudacityProject *project,
-                       std::unique_ptr<ProgressDialog> &pDialog,
+                       std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
                        bool selectionOnly,
@@ -1971,11 +1968,9 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
-         auto blockLen = mixer->Process(inSamples);
-
-         if (blockLen == 0) {
+         auto blockLen = mixer->Process();
+         if (blockLen == 0)
             break;
-         }
 
          float *mixed = (float *)mixer->GetBuffer();
 
@@ -2011,7 +2006,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 

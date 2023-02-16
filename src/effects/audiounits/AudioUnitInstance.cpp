@@ -18,6 +18,43 @@
 #include "AudacityException.h"
 #include <wx/log.h>
 
+namespace {
+struct AudioUnitMessage : EffectInstance::Message {
+   explicit AudioUnitMessage(AudioUnitEffectSettings settings)
+      : settings{ std::move(settings) }
+   {}
+   ~AudioUnitMessage() override;
+   std::unique_ptr<Message> Clone() const override;
+   void Assign(Message &&src) override;
+   void Merge(Message &&src) override;
+
+   AudioUnitEffectSettings settings;
+};
+}
+
+AudioUnitMessage::~AudioUnitMessage() = default;
+
+auto AudioUnitMessage::Clone() const -> std::unique_ptr<Message>
+{
+   return std::make_unique<AudioUnitMessage>(*this);
+}
+
+void AudioUnitMessage::Assign(Message &&src)
+{
+   auto &dstSettings = this->settings;
+   auto &srcSettings = static_cast<AudioUnitMessage&>(src).settings;
+   AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, false);
+}
+
+void AudioUnitMessage::Merge(Message &&src)
+{
+   auto &dstSettings = this->settings;
+   auto &srcSettings = static_cast<AudioUnitMessage&>(src).settings;
+   AudioUnitWrapper::MoveSettingsContents(
+      std::move(srcSettings), dstSettings, true);
+}
+
 AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    AudioComponent component, Parameters &parameters,
    const wxString &identifier,
@@ -26,8 +63,10 @@ AudioUnitInstance::AudioUnitInstance(const PerTrackEffect &effect,
    , AudioUnitWrapper{ component, &parameters }
    , mIdentifier{ identifier }
    , mBlockSize{ InitialBlockSize() }
-   , mAudioIns{ audioIns }, mAudioOuts{ audioOuts }, mUseLatency{ useLatency }
+   , mUseLatency{ useLatency }
 {
+   mAudioIns = audioIns;
+   mAudioOuts = audioOuts;
    CreateAudioUnit();
 }
 
@@ -54,15 +93,24 @@ size_t AudioUnitInstance::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount AudioUnitInstance::GetLatency(
-   const EffectSettings &, double sampleRate) const
+unsigned AudioUnitInstance::GetAudioInCount() const
+{
+   return mAudioIns;
+}
+
+unsigned AudioUnitInstance::GetAudioOutCount() const
+{
+   return mAudioOuts;
+}
+
+auto AudioUnitInstance::GetLatency(
+   const EffectSettings &, double sampleRate) const -> SampleCount
 {
    // Retrieve the latency (can be updated via an event)
    if (mUseLatency) {
       Float64 latency = 0.0;
-      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
-         return sampleCount{ latency * sampleRate };
-      }
+      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency))
+         return latency * sampleRate;
    }
    return 0;
 }
@@ -79,9 +127,10 @@ size_t AudioUnitInstance::GetTailSize() const
 #endif
 
 bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
-   double sampleRate, sampleCount, ChannelNames chanMap)
+   double sampleRate, ChannelNames chanMap)
 {
-   StoreSettings(GetSettings(settings));
+   if (!StoreSettings(mProcessor, GetSettings(settings)))
+      return false;
 
    mInputList =
       PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
@@ -93,8 +142,24 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
                                // accumulate the number of frames processed so far
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
-   if (!SetRateAndChannels(sampleRate))
+   mInitialization.reset();
+   // Redo this with the correct sample rate, not the arbirary 44100 that the
+   // effect used
+   auto ins = mAudioIns;
+   auto outs = mAudioOuts;
+   if (!SetRateAndChannels(sampleRate, mIdentifier))
       return false;
+   if (AudioUnitInitialize(mUnit.get())) {
+      wxLogError("Couldn't initialize audio unit\n");
+      return false;
+   }
+   if (ins != mAudioIns || outs != mAudioOuts) {
+      // A change of channels with changing rate?  This is unexpected!
+      ins = mAudioIns;
+      outs = mAudioOuts;
+      return false;
+   }
+   mInitialization.reset(mUnit.get());
 
    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
       AudioUnitUtils::RenderCallback{ RenderCallback, this },
@@ -107,12 +172,13 @@ bool AudioUnitInstance::ProcessInitialize(EffectSettings &settings,
       return false;
 
    if (!BypassEffect(false))
-      return false;
+      // Ignore bad return value.  Some (like Xfer OTT) give a bad status.
+      ;
 
    return true;
 }
 
-bool AudioUnitInstance::ProcessFinalize()
+bool AudioUnitInstance::ProcessFinalize() noexcept
 {
    mOutputList.reset();
    mInputList.reset();
@@ -157,34 +223,27 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings &,
 bool AudioUnitInstance::RealtimeInitialize(
    EffectSettings &settings, double sampleRate)
 {
-   return ProcessInitialize(settings, sampleRate, 0, nullptr);
+   return ProcessInitialize(settings, sampleRate, nullptr);
 }
 
 bool AudioUnitInstance::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned, float sampleRate)
+   EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
-   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
-   auto *slave = this;
-   std::unique_ptr<AudioUnitInstance> uSlave;
-   if (!mRecruited)
+   if (!mRecruited) {
       // Assign self to the first processor
       mRecruited = true;
-   else {
-      // Assign another instance with independent state to other processors
-      uSlave = std::make_unique<AudioUnitInstance>(effect,
-         mComponent, mParameters, mIdentifier,
-         mAudioIns, mAudioOuts, mUseLatency);
-      slave = uSlave.get();
+      return true;
    }
 
-   slave->SetBlockSize(mBlockSize);
-
-   if (!slave->StoreSettings(GetSettings(settings)))
+   // Assign another instance with independent state to other processors
+   auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
+   auto uProcessor = std::make_unique<AudioUnitInstance>(effect,
+      mComponent, mParameters, mIdentifier,
+      mAudioIns, mAudioOuts, mUseLatency);
+   uProcessor->SetBlockSize(mBlockSize);
+   if (!uProcessor->ProcessInitialize(settings, sampleRate, nullptr))
       return false;
-   if (!slave->ProcessInitialize(settings, sampleRate, 0, nullptr))
-      return false;
-   if (uSlave)
-      mSlaves.push_back(move(uSlave));
+   mSlaves.push_back(move(uProcessor));
    return true;
 }
 
@@ -202,36 +261,77 @@ return GuardedCall<bool>([&]{
 bool AudioUnitInstance::RealtimeSuspend()
 {
    if (!BypassEffect(true))
-      return false;
+      //return false
+      ;
    for (auto &pSlave : mSlaves)
       if (!pSlave->BypassEffect(true))
-         return false;
+         //return false
+         ;
    return true;
 }
 
 bool AudioUnitInstance::RealtimeResume()
 {
    if (!BypassEffect(false))
-      return false;
+      //return false
+      ;
    for (auto &pSlave: mSlaves)
       if (!pSlave->BypassEffect(false))
-         return false;
+         //return false
+         ;
    return true;
 }
 
-bool AudioUnitInstance::RealtimeProcessStart(EffectSettings &settings)
+auto AudioUnitInstance::MakeMessage() const -> std::unique_ptr<Message>
 {
-   auto &mySettings = GetSettings(settings);
-   // Store only into the AudioUnit that was not also the source of the fetch
-   // in the main thread.  Not only for efficiency, but also because controls
-   // of at least one effect (AUGraphicEQ) are known to misbehave otherwise.
+   // Like AudioUnitEffect::MakeSettings, except it only allocates map entries
+   // containing nullopt
+   AudioUnitEffectSettings settings;
+   FetchSettings(settings, false);
+   return std::make_unique<AudioUnitMessage>(std::move(settings));
+}
+
+auto AudioUnitInstance::
+MakeMessage(AudioUnitParameterID id, AudioUnitParameterValue value) const
+   -> std::unique_ptr<Message>
+{
+   AudioUnitEffectSettings settings;
+   settings.values[id].emplace(wxString{}, value);
+   return std::make_unique<AudioUnitMessage>(std::move(settings));
+}
+
+bool AudioUnitInstance::UsesMessages() const noexcept
+{
+   return true;
+}
+
+bool AudioUnitInstance::RealtimeProcessStart(MessagePackage &package)
+{
+   if (!package.pMessage)
+      return true;
+   auto &values = static_cast<AudioUnitMessage*>(package.pMessage)
+      ->settings.values;
    auto storeSettings = [&](AudioUnitInstance &instance){
-      if (&instance != mySettings.pSource)
-         instance.StoreSettings(mySettings);
+      for (auto &[ID, oPair] : values)
+         if (oPair.has_value()) {
+            auto value = oPair->second;
+            if (AudioUnitSetParameter(mUnit.get(), ID,
+               kAudioUnitScope_Global, 0, value, 0)) {
+               // Probably failed because of an invalid parameter when
+               // a plug-in is in a certain mode that doesn't contain
+               // the parameter.  Ignore the failure
+            }
+         }
    };
    storeSettings(*this);
    for (auto &pSlave : mSlaves)
       storeSettings(*pSlave);
+
+   // Consume the settings change so we don't repeat setting of parameters
+   // until more inter-thread messages arrive
+   for (auto &[_, oPair] : values)
+      oPair.reset();
+
    return true;
 }
 
@@ -256,75 +356,6 @@ AudioUnitInstance::RealtimeProcess(size_t group, EffectSettings &settings,
 
 bool AudioUnitInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
-   return true;
-}
-
-bool AudioUnitInstance::SetRateAndChannels(double sampleRate)
-{
-   mInitialization.reset();
-   AudioUnitUtils::StreamBasicDescription streamFormat{
-      // Float64 mSampleRate;
-      sampleRate,
-
-      // UInt32  mFormatID;
-      kAudioFormatLinearPCM,
-
-      // UInt32  mFormatFlags;
-      (kAudioFormatFlagsNativeFloatPacked |
-          kAudioFormatFlagIsNonInterleaved),
-
-      // UInt32  mBytesPerPacket;
-      sizeof(float),
-
-      // UInt32  mFramesPerPacket;
-      1,
-
-      // UInt32  mBytesPerFrame;
-      sizeof(float),
-
-      // UInt32  mChannelsPerFrame;
-      0,
-
-      // UInt32  mBitsPerChannel;
-      sizeof(float) * 8,
-   };
-
-   const struct Info{
-      unsigned nChannels;
-      AudioUnitScope scope;
-      const char *const msg; // used only in log messages
-   } infos[]{
-      { 1, kAudioUnitScope_Global, "global" },
-      { mAudioIns, kAudioUnitScope_Input, "input" },
-      { mAudioOuts, kAudioUnitScope_Output, "output" },
-   };
-   for (const auto &[nChannels, scope, msg] : infos) {
-      if (nChannels) {
-         if (SetProperty(kAudioUnitProperty_SampleRate, sampleRate, scope)) {
-            wxLogError("%ls Didn't accept sample rate on %s\n",
-               // Exposing internal name only in logging
-               mIdentifier.wx_str(), msg);
-            return false;
-         }
-         if (scope != kAudioUnitScope_Global) {
-            streamFormat.mChannelsPerFrame = nChannels;
-            if (SetProperty(kAudioUnitProperty_StreamFormat,
-               streamFormat, scope)) {
-               wxLogError("%ls didn't accept stream format on %s\n",
-                  // Exposing internal name only in logging
-                  mIdentifier.wx_str(), msg);
-               return false;
-            }
-         }
-      }
-   }
-
-   if (AudioUnitInitialize(mUnit.get())) {
-      wxLogError("Couldn't initialize audio unit\n");
-      return false;
-   }
-
-   mInitialization.reset(mUnit.get());
    return true;
 }
 
@@ -391,6 +422,8 @@ void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
 bool AudioUnitInstance::BypassEffect(bool bypass)
 {
    UInt32 value = (bypass ? 1 : 0);
+   if (bypass && AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0))
+      return false;
    return !SetProperty(kAudioUnitProperty_BypassEffect, value);
 }
 

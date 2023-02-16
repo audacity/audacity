@@ -47,10 +47,11 @@ public:
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool DoTransferDataToWindow();
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectAutoDuck implementation
@@ -60,6 +61,8 @@ private:
    void OnValueChanged(wxCommandEvent & evt);
 
 private:
+   wxWeakRef<wxWindow> mUIParent{};
+
    double mDuckAmountDb;
    double mInnerFadeDownLen;
    double mInnerFadeUpLen;

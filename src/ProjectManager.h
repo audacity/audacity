@@ -24,9 +24,8 @@ class wxTimerEvent;
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 
-struct ProjectStatusEvent;
-
 enum StatusBarField : int;
+enum class ProjectFileIOMessage : int;
 
 ///\brief Object associated with a project for high-level management of the
 /// project's lifetime, including creation, destruction, opening from file,
@@ -117,10 +116,9 @@ public:
    static void SetClosingAll(bool closing);
 
 private:
-   void OnReconnectionFailure(wxCommandEvent & event);
+   void OnReconnectionFailure(ProjectFileIOMessage);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
-   void OnOpenAudioFile(wxCommandEvent & event);
    void OnStatusChange(StatusBarField field);
 
    void RestartTimer();
@@ -130,7 +128,8 @@ private:
 
    std::unique_ptr<wxTimer> mTimer;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mProjectStatusSubscription,
+      mProjectFileIOSubscription;
 
    DECLARE_EVENT_TABLE()
 

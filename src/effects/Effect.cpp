@@ -31,7 +31,7 @@
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -41,14 +41,25 @@
 #include <unordered_map>
 
 static const int kPlayID = 20102;
-static const int kRewindID = 20103;
-static const int kFFwdID = 20104;
+static_assert(kPlayID == EffectUIValidator::kPlayID);
 
 using t2bHash = std::unordered_map< void*, bool >;
 
 bool StatefulEffect::Instance::Process(EffectSettings &settings)
 {
    return GetEffect().Process(*this, settings);
+}
+
+auto StatefulEffect::Instance::GetLatency(const EffectSettings &, double) const
+   -> SampleCount
+{
+   return GetEffect().GetLatency().as_long_long();
+}
+
+size_t StatefulEffect::Instance::ProcessBlock(EffectSettings &,
+   const float *const *, float *const *, size_t)
+{
+   return 0;
 }
 
 Effect::Effect()
@@ -132,16 +143,6 @@ std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
    // Stateless effects should override this function and be really const
    // correct.
    return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
-}
-
-unsigned Effect::GetAudioInCount() const
-{
-   return 0;
-}
-
-unsigned Effect::GetAudioOutCount() const
-{
-   return 0;
 }
 
 const EffectParameterMethods &Effect::Parameters() const
@@ -241,7 +242,7 @@ bool Effect::LoadSettings(
    return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
 }
 
-bool Effect::LoadUserPreset(
+OptionalMessage Effect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    // Find one string in the registry and then reinterpret it
@@ -249,7 +250,7 @@ bool Effect::LoadUserPreset(
    wxString parms;
    if (!GetConfig(GetDefinition(), PluginSettings::Private,
       name, wxT("Parameters"), parms))
-      return false;
+      return {};
 
    return LoadSettingsFromString(parms, settings);
 }
@@ -271,12 +272,12 @@ RegistryPaths Effect::GetFactoryPresets() const
    return {};
 }
 
-bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
+OptionalMessage Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
-   return true;
+   return { nullptr };
 }
 
-bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage Effect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
@@ -284,7 +285,8 @@ bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
 // EffectUIClientInterface implementation
 
 std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
@@ -292,7 +294,7 @@ std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
 //   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
-   auto result = PopulateOrExchange(S, instance, access);
+   auto result = PopulateOrExchange(S, instance, access, pOutputs);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
@@ -384,7 +386,7 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-void Effect::ImportPresets(EffectSettings &settings)
+OptionalMessage Effect::ImportPresets(EffectSettings &settings)
 {
    wxString params;
 
@@ -397,42 +399,46 @@ void Effect::ImportPresets(EffectSettings &settings)
                                      wxFD_OPEN | wxRESIZE_BORDER,
                                      nullptr);
    if (path.empty()) {
-      return;
+      return {};
    }
 
    wxFFile f(path);
-   if (f.IsOpened()) {
-      if (f.ReadAll(&params)) {
-         wxString ident = params.BeforeFirst(':');
-         params = params.AfterFirst(':');
+   if (!f.IsOpened())
+      return {};
 
-         auto commandId = GetSquashedName(GetSymbol().Internal());
+   OptionalMessage result{};
 
-         if (ident != commandId) {
-            // effect identifiers are a sensible length!
-            // must also have some params.
-            if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30)) 
-            {
-               Effect::MessageBox(
-                  /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is not a valid presets file.\n")
-                  .Format(wxFileNameFromPath(path)));
-            }
-            else
-            {
-               Effect::MessageBox(
-                  /* i18n-hint %s will be replaced by a file name */
-                  XO("%s: is for a different Effect, Generator or Analyzer.\n")
-                  .Format(wxFileNameFromPath(path)));
-            }
-            return;
+   if (f.ReadAll(&params)) {
+      wxString ident = params.BeforeFirst(':');
+      params = params.AfterFirst(':');
+
+      auto commandId = GetSquashedName(GetSymbol().Internal());
+
+      if (ident != commandId) {
+         // effect identifiers are a sensible length!
+         // must also have some params.
+         if ((params.Length() < 2 ) || (ident.Length() < 2) || (ident.Length() > 30))
+         {
+            Effect::MessageBox(
+               /* i18n-hint %s will be replaced by a file name */
+               XO("%s: is not a valid presets file.\n")
+               .Format(wxFileNameFromPath(path)));
          }
-         LoadSettingsFromString(params, settings);
+         else
+         {
+            Effect::MessageBox(
+               /* i18n-hint %s will be replaced by a file name */
+               XO("%s: is for a different Effect, Generator or Analyzer.\n")
+               .Format(wxFileNameFromPath(path)));
+         }
+         return {};
       }
+      result = LoadSettingsFromString(params, settings);
    }
 
    //SetWindowTitle();
 
+   return result;
 }
 
 bool Effect::HasOptions()
@@ -483,7 +489,7 @@ bool Effect::SaveSettingsAsString(
    return eap.GetParameters(parms);
 }
 
-bool Effect::LoadSettingsFromString(
+OptionalMessage Effect::LoadSettingsFromString(
    const wxString & parms, EffectSettings &settings) const
 {
    // If the string starts with one of certain significant substrings,
@@ -493,28 +499,28 @@ bool Effect::LoadSettingsFromString(
    // ultimately the uses of it by EffectManager::GetPreset, which is used by
    // the macro management dialog)
    wxString preset = parms;
-   bool success = false;
+   OptionalMessage result;
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(UserPresetsGroup(preset), settings);
+      result = LoadUserPreset(UserPresetsGroup(preset), settings);
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
       auto presets = GetFactoryPresets();
-      success = LoadFactoryPreset(
+      result = LoadFactoryPreset(
          make_iterator_range( presets ).index( preset ), settings );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(CurrentSettingsGroup(), settings);
+      result = LoadUserPreset(CurrentSettingsGroup(), settings);
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(FactoryDefaultsGroup(), settings);
+      result = LoadUserPreset(FactoryDefaultsGroup(), settings);
    }
    else
    {
@@ -527,28 +533,30 @@ bool Effect::LoadSettingsFromString(
       S.SetForValidating( &eap );
       // VisitSettings returns false if not defined for this effect.
       // To do: fix const_cast in use of VisitSettings
-      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) )
+      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) ) {
          // the old method...
-         success = LoadSettings(eap, settings);
+         if (LoadSettings(eap, settings))
+            return { nullptr };
+      }
       else if( !S.bOK )
-         success = false;
+         result = {};
       else{
-         success = true;
+         result = { nullptr };
          S.SetForWriting( &eap );
          const_cast<Effect*>(this)->VisitSettings(S, settings);
       }
    }
 
-   if (!success)
+   if (!result)
    {
       Effect::MessageBox(
          XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
             .Format( GetName(), preset ) );
       // We are using default settings and we still wish to continue.
-      return true;
+      result = { nullptr };
       //return false;
    }
-   return true;
+   return result;
 }
 
 unsigned Effect::TestUIFlags(unsigned mask) {
@@ -578,7 +586,8 @@ void Effect::UnsetBatchProcessing()
    // If effect is not stateful, this call doesn't really matter, and the
    // settings object is a dummy
    auto dummySettings = MakeSettings();
-   LoadUserPreset(GetSavedStateGroup(), dummySettings);
+   // Ignore failure
+   (void ) LoadUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
 bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
@@ -591,7 +600,8 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
 }
 
 std::unique_ptr<EffectUIValidator> Effect::PopulateOrExchange(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *)
 {
    return nullptr;
 }
@@ -606,78 +616,6 @@ bool Effect::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-bool Effect::EnableApply(bool enable)
-{
-   // May be called during initialization, so try to find the dialog
-   wxWindow *dlg = mUIDialog;
-   if (!dlg && mUIParent)
-   {
-      dlg = wxGetTopLevelParent(mUIParent);
-   }
-
-   if (dlg)
-   {
-      wxWindow *apply = dlg->FindWindow(wxID_APPLY);
-
-      // Don't allow focus to get trapped
-      if (!enable)
-      {
-         wxWindow *focus = dlg->FindFocus();
-         if (focus == apply)
-         {
-            dlg->FindWindow(wxID_CLOSE)->SetFocus();
-         }
-      }
-
-      apply->Enable(enable);
-   }
-
-   EnablePreview(enable);
-
-   return enable;
-}
-
-bool Effect::EnablePreview(bool enable)
-{
-   // May be called during initialization, so try to find the dialog
-   wxWindow *dlg = mUIDialog;
-   if (!dlg && mUIParent)
-   {
-      dlg = wxGetTopLevelParent(mUIParent);
-   }
-
-   if (dlg)
-   {
-      wxWindow *play = dlg->FindWindow(kPlayID);
-      if (play)
-      {
-         wxWindow *rewind = dlg->FindWindow(kRewindID);
-         wxWindow *ffwd = dlg->FindWindow(kFFwdID);
-
-         // Don't allow focus to get trapped
-         if (!enable)
-         {
-            wxWindow *focus = dlg->FindFocus();
-            if (focus && (focus == play || focus == rewind || focus == ffwd))
-            {
-               dlg->FindWindow(wxID_CLOSE)->SetFocus();
-            }
-         }
-
-         play->Enable(enable);
-         if (SupportsRealtime())
-         {
-            if (rewind)
-               rewind->Enable(enable);
-            if (ffwd)
-               ffwd->Enable(enable);
-         }
-      }
-   }
-
-   return enable;
-}
-
 bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
@@ -690,7 +628,8 @@ bool Effect::TrackProgress(
    int whichTrack, double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
-      mProgress->Poll(whichTrack + frac, (double) mNumTracks, msg) :
+      mProgress->Poll((whichTrack + frac) * 1000,
+         (double) mNumTracks * 1000, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -699,7 +638,8 @@ bool Effect::TrackGroupProgress(
    int whichGroup, double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
-      mProgress->Poll(whichGroup + frac, (double) mNumGroups, msg) :
+      mProgress->Poll((whichGroup + frac) * 1000,
+         (double) mNumGroups * 1000, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -872,6 +812,10 @@ int Effect::MessageBox( const TranslatableString& message,
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox( message, title, style, mUIParent );
 }
+EffectUIClientInterface* Effect::GetEffectUIClientInterface()
+{
+   return this;
+}
 
 DefaultEffectUIValidator::DefaultEffectUIValidator(
    EffectUIClientInterface &effect, EffectSettingsAccess &access,
@@ -882,8 +826,7 @@ DefaultEffectUIValidator::DefaultEffectUIValidator(
 
 DefaultEffectUIValidator::~DefaultEffectUIValidator()
 {
-   if (mpParent)
-      mpParent->PopEventHandler();
+   Disconnect();
 }
 
 bool DefaultEffectUIValidator::ValidateUI()
@@ -891,6 +834,7 @@ bool DefaultEffectUIValidator::ValidateUI()
    bool result {};
    mAccess.ModifySettings([&](EffectSettings &settings){
       result = mEffect.ValidateUI(settings);
+      return nullptr;
    });
    return result;
 }
@@ -898,4 +842,12 @@ bool DefaultEffectUIValidator::ValidateUI()
 bool DefaultEffectUIValidator::IsGraphicalUI()
 {
    return mEffect.IsGraphicalUI();
+}
+
+void DefaultEffectUIValidator::Disconnect()
+{
+   if (mpParent) {
+      mpParent->PopEventHandler();
+      mpParent = nullptr;
+   }
 }

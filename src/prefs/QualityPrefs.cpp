@@ -200,6 +200,8 @@ bool QualityPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   QualitySettings::DefaultSampleRate.Invalidate();
+
    // The complex compound control may have value 'other' in which case the
    // value in prefs comes from the second field.
    if (mOtherSampleRate->IsEnabled()) {

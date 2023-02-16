@@ -13,8 +13,10 @@
 
 #include <optional>
 #include <vector>
+#include <wx/menu.h>
 #include "ToolBar.h"
 #include "Observer.h"
+#include "MemoryX.h"
 
 enum class DeviceChangeMessage : char;
 
@@ -23,8 +25,10 @@ class wxString;
 struct DeviceSourceMap;
 
 class AudioSetupToolBar final : public ToolBar {
+   static constexpr int kAudioSettings = 15800;
 
  public:
+   static Identifier ID();
 
    explicit AudioSetupToolBar( AudacityProject &project );
    virtual ~AudioSetupToolBar();
@@ -47,10 +51,16 @@ class AudioSetupToolBar final : public ToolBar {
 
  private:
    void OnRescannedDevices(DeviceChangeMessage);
-   void OnMenu(wxCommandEvent& event);
+   void OnHost(int id);
+   void OnInput(int id);
+   void OnChannels(int id);
+   void OnOutput(int id);
+   void OnSettings(wxCommandEvent& event);
+   void CommonMenuItemSteps(bool audioSettingsChosen);
 
    bool ChangeHost(int hostId);
-   void ChangeDevice(int deviceId, bool isInput);
+   class Choices;
+   void ChangeDeviceLabel(int deviceId, Choices &choices, bool isInput);
    void RepopulateMenus();
    void FillHosts();
    void FillHostDevices();
@@ -61,10 +71,14 @@ class AudioSetupToolBar final : public ToolBar {
    void MakeAudioSetupButton();
    void ArrangeButtons();
 
-   std::unique_ptr<wxMenu> CloneMenu(const wxMenu& menu) const;
-   void AppendSubMenu(wxMenu& menu, const std::unique_ptr<wxMenu>& submenu, const wxString& title);
-
-   std::optional<wxString> GetSelectedRadioItemLabel(const wxMenu& menu) const;
+   using Callback = void (AudioSetupToolBar::*)(int id);
+   // Append submenu with one radio item group
+   // Bind menu items to lambdas that invoke callback,
+   // with successive ids from 0
+   // Check the item with given index, or disable the submenu when that is < 0
+   static void AppendSubMenu(AudioSetupToolBar &toolbar, wxMenu& menu,
+      const wxArrayString &labels, int checkedItem,
+      Callback callback, const wxString& title);
 
    enum {
       ID_AUDIO_SETUP_BUTTON = 12000,
@@ -74,10 +88,58 @@ class AudioSetupToolBar final : public ToolBar {
    AButton *mAudioSetup{};
    wxBoxSizer *mSizer{};
 
-   std::unique_ptr<wxMenu> mInput;
-   std::unique_ptr<wxMenu> mOutput;
-   std::unique_ptr<wxMenu> mInputChannels;
-   std::unique_ptr<wxMenu> mHost;
+   class Choices {
+   public:
+      void Clear() { mStrings.Clear(); mIndex = -1; }
+      [[nodiscard]] bool Empty() const { return mStrings.empty(); }
+      std::optional<wxString> Get() const {
+         if (mIndex < 0 || mIndex >= mStrings.size())
+            return {};
+         return { mStrings[mIndex] };
+      }
+      wxString GetFirst() const {
+         if (!Empty())
+            return mStrings[0];
+         return {};
+      }
+      int GetSmallIntegerId() const {
+         return mIndex;
+      }
+      int Find(const wxString &name) const {
+         return make_iterator_range(mStrings).index(name);
+      }
+      bool Set(const wxString &name) {
+         auto index = make_iterator_range(mStrings).index(name);
+         if (index != -1) {
+            mIndex = index;
+            return true;
+         }
+         // else no state change
+         return false;
+      }
+      void Set(wxArrayString &&names) {
+         mStrings.swap(names);
+         mIndex = mStrings.empty() ? -1 : 0;
+      }
+      // id is just a small-integer index into the string array
+      bool Set(int id) {
+         if (id < 0 || id >= mStrings.size())
+            return false; // no change of state then
+         mIndex = id;
+         return true;
+      }
+      void AppendSubMenu(AudioSetupToolBar &toolBar,
+         wxMenu &menu, Callback callback, const wxString &title);
+
+   private:
+      wxArrayStringEx mStrings;
+      int mIndex{ -1 };
+   };
+
+   Choices mInput;
+   Choices mOutput;
+   Choices mInputChannels;
+   Choices mHost;
 
    Observer::Subscription mSubscription;
 

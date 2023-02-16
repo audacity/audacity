@@ -30,6 +30,7 @@
 #include <thread>
 #include <wx/msgqueue.h>
 
+struct EffectOutputs;
 struct LV2EffectSettings;
 class LV2Ports;
 class LV2PortStates;
@@ -53,23 +54,24 @@ public:
 public:
    //! Factory
    static std::unique_ptr<LV2Wrapper> Create(
-      const LV2FeaturesList &featuresList,
+      LV2InstanceFeaturesList &baseFeatures,
       const LV2Ports &ports, LV2PortStates &portStates,
-      const LV2EffectSettings &settings, float sampleRate, bool useOutput);
+      const LV2EffectSettings &settings, float sampleRate,
+      EffectOutputs *pOutputs);
 
    //! Constructor may spawn a thread
    LV2Wrapper(CreateToken&&,
-      const LV2FeaturesList &featuresList,
+      LV2InstanceFeaturesList &baseFeatures,
       const LilvPlugin &plugin, float sampleRate);
 
    //! If a thread was started, joins it
    ~LV2Wrapper();
 
    void ConnectControlPorts(const LV2Ports &ports,
-      const LV2EffectSettings &settings, bool useOutput);
+      const LV2EffectSettings &settings, EffectOutputs *pOutputs);
    void ConnectPorts(const LV2Ports &ports,
       LV2PortStates &portStates, const LV2EffectSettings &settings,
-      bool useOutput);
+      EffectOutputs *pOutputs);
    void Activate();
    void Deactivate();
    LilvInstance &GetInstance() const;
@@ -87,8 +89,8 @@ public:
                                     const void *data);
    LV2_Worker_Status Respond(uint32_t size, const void *data);
 
-   LV2InstanceFeaturesList &GetFeatures() { return mFeaturesList; }
-   const LV2InstanceFeaturesList &GetFeatures() const { return mFeaturesList; }
+   LV2WrapperFeaturesList &GetFeatures() { return mFeaturesList; }
+   const LV2WrapperFeaturesList &GetFeatures() const { return mFeaturesList; }
 
 private:
    void ThreadFunction();
@@ -96,7 +98,7 @@ private:
    // Another object with an explicit virtual function table
    LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
 
-   LV2InstanceFeaturesList mFeaturesList;
+   LV2WrapperFeaturesList mFeaturesList;
 
    //! @invariant not null
    const LilvInstancePtr mInstance;

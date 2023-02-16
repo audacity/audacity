@@ -195,7 +195,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       if (a < p1) {
          const auto appendBufferLen = clip.GetAppendBufferLen();
          const auto &appendBuffer = clip.GetAppendBuffer();
-         sampleFormat seqFormat = sequence->GetSampleFormat();
+         sampleFormat seqFormat = sequence->GetSampleFormats().Stored();
          bool didUpdate = false;
          for(auto i = a; i < p1; i++) {
             auto left = std::max(sampleCount{ 0 },
@@ -214,12 +214,12 @@ bool WaveClipWaveformCache::GetWaveDisplay(
                size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  pb = &((const float *)appendBuffer.ptr())[sLeft];
+                  pb = &((const float *)appendBuffer)[sLeft];
                else {
                   b.reinit(len);
                   pb = b.get();
                   SamplesToFloats(
-                     appendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
+                     appendBuffer + sLeft * SAMPLE_SIZE(seqFormat),
                      seqFormat, b.get(), len);
                }
 

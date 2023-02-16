@@ -1130,7 +1130,7 @@ void InvisiblePanel::OnPaint( wxPaintEvent & WXUNUSED(event))
    // event.Skip(); // swallow the paint event.
 }
 
-wxPanel * ShuttleGuiBase::StartInvisiblePanel()
+wxPanel * ShuttleGuiBase::StartInvisiblePanel(int border)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -1143,7 +1143,7 @@ wxPanel * ShuttleGuiBase::StartInvisiblePanel()
       wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)
       );
    SetProportions( 1 );
-   miBorder=0;
+   miBorder = border;
    UpdateSizers();  // adds window in to current sizer.
 
    // create a sizer within the window...
@@ -2233,12 +2233,6 @@ void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
    if( Val != NULL )
       Var = Val;
 };
-
-#ifdef EXPERIMENTAL_TRACK_PANEL
-// Additional includes down here, to make it easier to split this into
-// two files at some later date.
-#include "../extnpanel-src/GuiWaveTrack.h"
-#endif
 
 ShuttleGui::ShuttleGui(
    wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize)

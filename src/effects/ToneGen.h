@@ -40,7 +40,7 @@ public:
 
    unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -48,8 +48,8 @@ public:
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -57,6 +57,8 @@ private:
    // EffectToneGen implementation
 
    void OnControlUpdate(wxCommandEvent & evt);
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    double mSampleRate{};
    const bool mChirp;

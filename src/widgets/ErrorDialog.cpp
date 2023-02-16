@@ -18,15 +18,11 @@
 #include "ErrorDialog.h"
 
 #include <wx/app.h>
-#include <wx/button.h>
 #include <wx/collpane.h>
 #include <wx/icon.h>
-#include <wx/dialog.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
-#include <wx/utils.h>
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>

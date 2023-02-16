@@ -79,6 +79,22 @@ class COMPONENTS_API PluginProvider  /* not final */
    : public ComponentInterface
 {
 public:
+
+   //![Optional] Implementation may provide plugin validator
+   //!that may be used to perform additional checks. It's expected
+   //!that validation does actions that possibly can crash or throw,
+   //!for that reason it's not supposed to run within a main process.
+   //TODO: it may seem reasonable to require providers to perform that check
+   //in DiscoverPluginsAtPath, but some plugin types can safely provide meta
+   //data, which is a good reason to ask to avoid such checks during plugin
+   //discovery...
+   class Validator
+   {
+   public:
+      //!\param pluginInterface loaded plugin
+      virtual void Validate(ComponentInterface& pluginInterface) = 0;
+   };
+
    virtual ~PluginProvider();
 
    //! Called immediately after creation. Let provider initialize
@@ -155,8 +171,17 @@ public:
       const RegistrationCallback &callback )
          = 0;
 
-   /*! @return true if the plug-in is still valid, otherwise false. */
-   virtual bool IsPluginValid(const PluginPath & path, bool bFast) = 0;
+   /**
+    * \brief Performs plugin/module existence check, still plugin may fail to load.
+    * Implementation should avoid loading plugins during this check.
+    * \param path Internal plugin path/ID discovered via DiscoverPluginsAtPath
+    * or module path returned by FindModulePaths
+    */
+   virtual bool CheckPluginExist(const PluginPath& path) const = 0;
+
+   //! Implementation can provide plugin specific checks to the plugin instances.
+   //! By default returns null.
+   virtual std::unique_ptr<Validator> MakeValidator() const;
 
    //! Load the plug-in at a path reported by DiscoverPluginsAtPath
    /*!
@@ -171,7 +196,7 @@ public:
 // be declared static so as not to interfere with other providers during link.
 // ----------------------------------------------------------------------------
 #define DECLARE_PROVIDER_ENTRY(name)                  \
-static PluginProvider * name()
+static std::unique_ptr<PluginProvider> name()
 
 // ----------------------------------------------------------------------------
 // This will create a class and instance that will register the provider entry
@@ -203,11 +228,11 @@ static name name ## _instance;
 DECLARE_BUILTIN_PROVIDER_BASE(name)                   \
 void name::Register()                                 \
 {                                                     \
-   RegisterProvider(AudacityModule);                  \
+   RegisterProviderFactory(AudacityModule);                  \
 }                                                     \
 void name::Unregister()                               \
 {                                                     \
-   UnregisterProvider(AudacityModule);                \
+   UnregisterProviderFactory(AudacityModule);                \
 }
 
 #endif // __AUDACITY_MODULEINTERFACE_H__

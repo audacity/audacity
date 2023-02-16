@@ -4,11 +4,16 @@ A library holding image and color data for the four built-in themes
 
 # Names of the image files (and Colors.txt) expected in each theme
 set( IMAGE_LIST
+   AnonymousUser.png
    AudacityLogo48x48.png
    BandWidthCursor.png
    BottomFrequencyCursor.png
    Colors.txt
+   Copy.png
+   CopyDisabled.png
    CrosshairCursor.png
+   Cut.png
+   CutDisabled.png
    CutPreview.png
    CutPreviewDisabled.png
    DisabledCursor.png
@@ -63,6 +68,8 @@ set( IMAGE_LIST
    Multi.png
    Options.png
    OptionsDisabled.png
+   Paste.png
+   PasteDisabled.png
    Pause.png
    PauseDisabled.png
    Play.png
@@ -86,6 +93,7 @@ set( IMAGE_LIST
    Seek.png
    SeekDisabled.png
    Setup.png
+   ShareAudio.png
    Silence.png
    SilenceDisabled.png
    SliderThumb.png
@@ -184,8 +192,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-theme-interface
-   PRIVATE
-   wxwidgets::wxwidgets
  )
 audacity_library( lib-theme-resources "${SOURCES}" "${LIBRARIES}"
    "" ""

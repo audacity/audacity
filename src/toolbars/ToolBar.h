@@ -63,30 +63,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TOOLBAR_UPDATED, -1);
 //
 #define toolbarGap 1
 
-//
-// ToolBar IDs
-//
-enum ToolBarID
-{
-   NoBarID = -1,
-   TransportBarID,
-   ToolsBarID,
-   MeterBarID,
-   RecordMeterBarID,
-   PlayMeterBarID,
-   EditBarID,
-   TranscriptionBarID,
-   ScrubbingBarID,
-   DeviceBarID,
-   SelectionBarID,
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBarID,
-#endif
-   AudioSetupBarID,
-   TimeBarID,
-   ToolBarCount
-};
-
 // How may pixels padding each side of a floating toolbar
 enum { ToolBarFloatMargin = 1 };
 
@@ -102,11 +78,27 @@ class AUDACITY_DLL_API ToolBar /* not final */
    using Holder = wxWindowPtr<ToolBar>;
 
    ToolBar( AudacityProject &project,
-      int type, const TranslatableString & label, const wxString & section,
+      const TranslatableString & label, const Identifier &section,
       bool resizable = false);
    virtual ~ToolBar();
 
+   //! Whether the toolbar should be shown by default.  Default implementation returns true
+   virtual bool ShownByDefault() const;
+
+   //! Default implementation returns false
+   virtual bool HideAfterReset() const;
+
+   //! Identifies one of the docking areas for toolbars
+   enum DockID {
+      TopDockID = 1,
+      BotDockID = 2
+   };
+
+   //! Which dock the toolbar defaults into.  Default implementation chooses the top dock
+   virtual DockID DefaultDockID() const;
+
    bool AcceptsFocus() const override { return false; };
+   bool AcceptsFocusFromKeyboard() const override;
 
    virtual void SetToDefaultSize();
    //NEW virtuals:
@@ -116,17 +108,26 @@ class AUDACITY_DLL_API ToolBar /* not final */
    void UpdatePrefs() override;
    virtual void RegenerateTooltips() = 0;
 
-   int GetType();
+   //! Get a value used for computing cascading positions of undocked bars
+   int GetIndex() const { return mIndex; }
+   //! Set a value used for computing cascading positions of undocked bars
+   void SetIndex(int index) { mIndex = index; }
+
    TranslatableString GetTitle();
    TranslatableString GetLabel();
-   wxString GetSection();
+   Identifier GetSection();
    ToolDock *GetDock();
+
+   void SetPreferredNeighbors(Identifier left, Identifier top = {});
 
 private:
    void SetLabel(const wxString & label) override;
 public:
    void SetLabel(const TranslatableString & label);
    virtual void SetDocked(ToolDock *dock, bool pushed);
+
+   //! Defaults to (NoBarID, NoBarId)
+   std::pair<Identifier, Identifier> PreferredNeighbors() const noexcept;
 
    // NEW virtual:
    virtual bool Expose(bool show = true);
@@ -246,8 +247,8 @@ public:
  protected:
    AudacityProject &mProject;
    TranslatableString mLabel;
-   wxString mSection;
-   int mType;
+   Identifier mSection;
+   int mIndex{0};
  private:
    void Init(wxWindow *parent, int type, const wxString & title, const wxString & label);
 
@@ -257,6 +258,9 @@ public:
    ToolBarResizer *mResizer;
 
    wxBoxSizer *mHSizer;
+
+   Identifier mPreferredLeftNeighbor;
+   Identifier mPreferredTopNeighbor;
 
    bool mVisible;
    bool mResizable;
@@ -274,7 +278,7 @@ struct AUDACITY_DLL_API RegisteredToolbarFactory {
    using Function = std::function< ToolBar::Holder( AudacityProject & ) >;
    using Functions = std::vector< Function >;
 
-   RegisteredToolbarFactory( int id, const Function &function );
+   RegisteredToolbarFactory( const Function &function );
 
    static const Functions &GetFactories();
 };

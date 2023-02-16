@@ -15,17 +15,11 @@
 #include <wx/log.h>
 
 LV2InstanceFeaturesList::LV2InstanceFeaturesList(
-   const LV2FeaturesList &baseFeatures, float sampleRate,
-   const LV2_Worker_Schedule *pWorkerSchedule
-)  : ExtendedLV2FeaturesList{ baseFeatures }
-   , mSampleRate{ sampleRate }
+   const LV2FeaturesList &baseFeatures
+)  : ExtendedLV2FeaturesList{ WithBase, baseFeatures }
    , mOk{ InitializeOptions() }
 {
    AddFeature(LV2_OPTIONS__options, mOptions.data());
-   if (baseFeatures.SuppliesWorkerInterface()) {
-      // Inform the plugin how to send work to another thread
-      AddFeature( LV2_WORKER__schedule, pWorkerSchedule );
-   }
 }
 
 bool LV2InstanceFeaturesList::InitializeOptions()
@@ -130,4 +124,17 @@ bool LV2InstanceFeaturesList::CheckOptions(
       }
    }
    return supported;
+}
+
+LV2WrapperFeaturesList::LV2WrapperFeaturesList(
+   LV2InstanceFeaturesList &baseFeatures, float sampleRate,
+   const LV2_Worker_Schedule *pWorkerSchedule
+) : ExtendedLV2FeaturesList{ WithBase, baseFeatures }
+{
+   baseFeatures.mSampleRate = sampleRate;
+   auto &base = baseFeatures.Base();
+   if (base.SuppliesWorkerInterface()) {
+      // Inform the plugin how to send work to another thread
+      AddFeature( LV2_WORKER__schedule, pWorkerSchedule );
+   }
 }

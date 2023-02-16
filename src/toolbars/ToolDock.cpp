@@ -32,9 +32,7 @@
 #ifndef WX_PRECOMP
 #include <wx/dcclient.h>
 #include <wx/defs.h>
-#include <wx/event.h>
 #include <wx/gdicmn.h>
-#include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/settings.h>
 #include <wx/window.h>
@@ -93,6 +91,20 @@ auto ToolBarConfiguration::Find(const ToolBar *bar) const -> Position
       return UnspecifiedPosition;
    else
       return iter->position;
+}
+
+ToolBar* ToolBarConfiguration::FindToolBar(Identifier toolBarID) const
+{
+   if (toolBarID.empty())
+      return nullptr;
+   
+   auto This = const_cast<ToolBarConfiguration*>(this);
+   auto it = std::find_if(
+      This->begin(), This->end(),
+      [=](const Place& place)
+      { return place.pTree->pBar->GetSection() == toolBarID; });
+
+   return it != end() ? it->pTree->pBar : nullptr;
 }
 
 void ToolBarConfiguration::Insert(ToolBar *bar, Position position)
@@ -224,8 +236,22 @@ void ToolBarConfiguration::Remove(const ToolBar *bar)
 void ToolBarConfiguration::Show(ToolBar *bar)
 {
    // Do not assume the bar is absent, though in practice that is always so
-   if (!Contains(bar))
-      Insert(bar);
+   if (!Contains(bar)) {
+      auto position = UnspecifiedPosition;
+      const auto preferredNeighbors = bar->PreferredNeighbors();
+      if (!preferredNeighbors.first.empty() ||
+          !preferredNeighbors.second.empty())
+      {
+         auto leftNeighbor = FindToolBar(preferredNeighbors.first);
+         auto topNeighbor = FindToolBar(preferredNeighbors.second);
+
+         // Perform a sanity check to verify that neighbors are
+         // really inside this configuration
+         if (leftNeighbor != nullptr || topNeighbor != nullptr)
+            position = Position { leftNeighbor, topNeighbor };
+      }
+      Insert(bar, position);
+   }
 }
 
 void ToolBarConfiguration::Hide(ToolBar *bar)
@@ -267,9 +293,7 @@ bool ToolBarConfiguration::Read
       gPrefs->Read( wxT("Order"), &ord, -1 );
       // Index was written 1-based
       --ord;
-      if (ord >= ToolBarCount)
-         result = false;
-      else if (ord >= 0)
+      if (ord >= 0)
       {
          // Legacy preferences
          while (pLegacy->bars.size() <= size_t(ord))
@@ -383,7 +407,6 @@ ToolDock::ToolDock( wxEvtHandler *manager, wxWindow *parent, int dockid ):
 
    // Init
    mManager = manager;
-   memset(mBars, 0, sizeof(mBars)); // otherwise uninitialized
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    SetLayoutDirection(wxLayout_LeftToRight);
    // Use for testing gaps
@@ -406,7 +429,7 @@ void ToolDock::Undock( ToolBar *bar )
    {
       mConfiguration.Remove( bar );
    }
-   mBars[ bar->GetId() ] = nullptr;
+   mBars[ bar->GetSection() ] = nullptr;
 }
 
 //
@@ -421,7 +444,7 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
 
    // Adopt the toolbar into our family
    bar->Reparent( this );
-   mBars[ bar->GetId() ] = bar;
+   mBars[ bar->GetSection() ] = bar;
 
    // Reset size
    bar->SetSize(
@@ -448,7 +471,7 @@ void ToolDock::LoadConfig()
       this->Dock(bar, false);
       // Show it -- hidden bars are not (yet) ever saved as part of a
       // configuration
-      Expose( bar->GetId(), true );
+      Expose( bar->GetSection(), true );
    }
    Updated();
 }
@@ -498,12 +521,15 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
 
    // For recording the nested subdivisions of the rectangle
    struct Item {
-      int myBarID { NoBarID };
-      int parentBarID { NoBarID };
+      Identifier section;
+      Item *parent{};
       ToolBar *lastSib {};
       ToolBar *lastWrappedChild {};
       wxRect rect;
-   } layout[ ToolBarCount ];
+   };
+   std::vector<Item> items(mBars.size());
+   Item *layout = items.data();
+   Item *next = layout;
 
    ToolBar *lastRoot {};
    ToolBar *lastWrappedRoot {};
@@ -516,21 +542,23 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
 
       // set up the chain of ancestors.
       const auto parent = place.position.rightOf;
-      const auto type = ct->GetType();
-      auto &newItem = layout[ type ];
-      newItem.parentBarID = parent ? parent->GetType() : NoBarID;
+      const auto section = ct->GetSection();
+      auto &newItem = *next++;
+      if (parent)
+         newItem.parent = std::find_if(layout, next - 1, [&](Item &item){
+            return parent->GetSection() == item.section;
+         });
       // Mark the slots that really were visited, for final pass through
       // the spaces.
-      newItem.myBarID = type;
+      newItem.section = section;
 
-      const auto parentItem = parent ? &layout[ parent->GetType() ] : nullptr;
       ToolBar *prevSib;
       if (!parent) {
          prevSib = lastRoot;
          lastRoot = ct;
       }
       else {
-         auto &sib = parentItem->lastSib;
+         auto &sib = newItem.parent->lastSib;
          prevSib = sib;
          sib = ct;
       }
@@ -557,7 +585,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
       // window, the toolbars may "wrap."
       // Can always fall back to the main rectangle even if the bar is too
       // wide.
-      auto pItem = parentItem;
+      auto pItem = newItem.parent;
       auto pRect = pItem ? &pItem->rect : &main;
       while (pRect != &main)
       {
@@ -573,12 +601,13 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
          if (!bTooWide && !bTooHigh)
             break;
 
-         if (pItem->parentBarID == NoBarID) {
+         auto parentItem = pItem->parent;
+         if (!parentItem) {
             pItem = nullptr;
             pRect = &main;
          }
          else {
-            pItem = &layout[ pItem->parentBarID ];
+            pItem = parentItem;
             pRect = &pItem->rect;
          }
       }
@@ -586,7 +615,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
       // Record where the toolbar wrapped
       ToolBar *& sib = pItem ? pItem->lastWrappedChild : lastWrappedRoot;
       ToolBarConfiguration::Position newPosition {
-         pItem ? this->mBars[ pItem->myBarID ] : nullptr,
+         pItem ? this->mBars[ pItem->section ] : nullptr,
          sib
       };
       sib = ct;
@@ -610,19 +639,14 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
    if (visitor.ShouldVisitSpaces()) {
       // Visit the fringe where NEW leaves of the tree could go
 
-      // Find the items with leftover spaces
-      const auto end = std::remove_if(layout, layout + ToolBarCount,
-         [](const Item &item){
-            return item.myBarID == NoBarID || item.rect.IsEmpty();
-         }
-      );
       // Sort top to bottom for definiteness, though perhaps not really needed
-      std::sort(layout, end,
+      // Do not use the parent pointers after this sort!
+      std::sort(layout, next,
          [](const Item &lhs, const Item &rhs){
             return lhs.rect.y < rhs.rect.y;
          }
       );
-      for (auto iter = layout; iter != end; ++iter) {
+      for (auto iter = layout; iter != next; ++iter) {
          const auto &item = *iter;
          const auto &rect = item.rect;
 
@@ -632,7 +656,7 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
          // Let the visitor determine size
          wxSize sz {};
          ToolBarConfiguration::Position
-            position { this->mBars[ item.myBarID ], item.lastWrappedChild },
+            position { this->mBars[ item.section ], item.lastWrappedChild },
             prevPosition {};
          visitor.ModifySize(nullptr, globalRect, prevPosition, position, sz);
          int tw = sz.GetWidth() + toolbarGap;
@@ -831,7 +855,7 @@ void ToolDock::RestoreConfiguration(ToolBarConfiguration &backup)
 //
 // Set the visible/hidden state of a toolbar
 //
-void ToolDock::Expose( int type, bool show )
+void ToolDock::Expose( Identifier type, bool show )
 {
    ToolBar *t = mBars[ type ];
 

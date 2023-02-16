@@ -15,9 +15,6 @@
 #include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
-class wxSlider;
-class wxCheckBox;
-class wxTextCtrl;
 class ShuttleGui;
 
 class EffectBassTrebleState
@@ -34,11 +31,25 @@ public:
    double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
 };
 
-class EffectBassTreble final : public StatefulPerTrackEffect
+
+struct EffectBassTrebleSettings
+{
+   static constexpr double bassDefault   = 0.0;
+   static constexpr double trebleDefault = 0.0;
+   static constexpr double gainDefault   = 0.0;
+   static constexpr bool   linkDefault   = false;   
+
+   double mBass  { bassDefault   };
+   double mTreble{ trebleDefault };
+   double mGain  { gainDefault   };
+   bool   mLink  { linkDefault   };
+};
+
+
+class EffectBassTreble final : public EffectWithSettings<EffectBassTrebleSettings, PerTrackEffect>
 {
 public:
-   static inline EffectBassTreble *
-   FetchParameters(EffectBassTreble &e, EffectSettings &) { return &e; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectBassTreble();
@@ -55,84 +66,37 @@ public:
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
 
    // Effect Implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
-private:
-   // EffectBassTreble implementation
+   struct Validator;
 
-   void InstanceInit(EffectBassTrebleState & data, float sampleRate);
-   size_t InstanceProcess(EffectSettings &settings,
-      EffectBassTrebleState & data,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
+   struct Instance;
 
-   void Coefficients(double hz, double slope, double gain, double samplerate, int type,
-                    double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
-   float DoFilter(EffectBassTrebleState & data, float in);
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-   void OnBassText(wxCommandEvent & evt);
-   void OnTrebleText(wxCommandEvent & evt);
-   void OnGainText(wxCommandEvent & evt);
-   void OnBassSlider(wxCommandEvent & evt);
-   void OnTrebleSlider(wxCommandEvent & evt);
-   void OnGainSlider(wxCommandEvent & evt);
-   void OnLinkCheckbox(wxCommandEvent & evt);
-
-   // Auto-adjust gain to reduce variation in peak level
-   void UpdateGain(double oldVal, int control );
 
 private:
-   EffectBassTrebleState mMaster;
-   std::vector<EffectBassTrebleState> mSlaves;
-
-   double      mBass;
-   double      mTreble;
-   double      mGain;
-   bool        mLink;
-
-   wxSlider    *mBassS;
-   wxSlider    *mTrebleS;
-   wxSlider    *mGainS;
-
-   wxTextCtrl  *mBassT;
-   wxTextCtrl  *mTrebleT;
-   wxTextCtrl  *mGainT;
-
-   wxCheckBox  *mLinkCheckBox;
 
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Bass{ &EffectBassTreble::mBass,
-   L"Bass",          0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Treble{ &EffectBassTreble::mTreble,
-   L"Treble",        0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Gain{ &EffectBassTreble::mGain,
-   L"Gain",          0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Link{ &EffectBassTreble::mLink,
-   L"Link Sliders",  false,    false,  true,    1  };
+   static constexpr EffectParameter Bass{ &EffectBassTrebleSettings::mBass,
+                         L"Bass",          EffectBassTrebleSettings::bassDefault,     -30.0,   30.0,    1  };
+
+   static constexpr EffectParameter Treble{ &EffectBassTrebleSettings::mTreble,
+                         L"Treble",          EffectBassTrebleSettings::trebleDefault, -30.0,   30.0,    1  };
+
+   static constexpr EffectParameter Gain{ &EffectBassTrebleSettings::mGain,
+                         L"Gain",          EffectBassTrebleSettings::gainDefault,     -30.0,   30.0,    1  };
+
+   static constexpr EffectParameter Link{ &EffectBassTrebleSettings::mLink,
+                         L"Link Sliders",  EffectBassTrebleSettings::linkDefault,      false,  true,    1  };
 };
 
 #endif

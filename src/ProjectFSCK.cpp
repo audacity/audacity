@@ -13,7 +13,6 @@
 #include "ProjectFSCK.h"
 
 #include <wx/log.h>
-#include <wx/string.h>
 
 #include "BlockFile.h"
 #include "DirManager.h"

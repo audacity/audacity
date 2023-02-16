@@ -24,6 +24,7 @@ namespace x11
 class PlugFrame final : public Steinberg::IPlugFrame
 {
    wxWeakRef<wxWindow> mWindow;
+   bool mInitialized{false};
 
    Steinberg::IPtr<Steinberg::Linux::IRunLoop> mRunLoop;
 public:
@@ -31,12 +32,11 @@ public:
    PlugFrame(Steinberg::Linux::IRunLoop* runLoop, wxWindow* window);
    virtual ~PlugFrame();
 
+   void init(Steinberg::IPlugView* view, Steinberg::ViewRect* size);
+
    Steinberg::tresult PLUGIN_API resizeView(Steinberg::IPlugView* view, Steinberg::ViewRect* newSize) override;
 
    DECLARE_FUNKNOWN_METHODS
-
-private:
-   bool UpdateSize(const wxSize& newSize, bool fixed = false);
 };
 
 }

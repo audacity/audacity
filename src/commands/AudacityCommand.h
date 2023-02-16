@@ -16,7 +16,6 @@
 #include <set>
 
 #include <wx/defs.h>
-#include <wx/event.h> // to inherit
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 

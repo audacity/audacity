@@ -16,7 +16,6 @@ Paul Licameli
 #include "XMLAttributeValueView.h"
 
 #include "BasicUI.h"
-#include "Prefs.h"
 #include "Project.h"
 #include "XMLWriter.h"
 
@@ -262,12 +261,10 @@ void ViewInfo::UpdateSelectedPrefs( int id )
    if (id == UpdateScrollPrefsID())
       gPrefs->Read(wxT("/GUI/AutoScroll"), &bUpdateTrackIndicator,
                    true);
-   ZoomInfo::UpdateSelectedPrefs( id );
 }
 
 void ViewInfo::UpdatePrefs()
 {
-   ZoomInfo::UpdatePrefs();
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
    bScrollBeyondZero = ScrollingPreference.Read();
 #endif

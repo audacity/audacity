@@ -22,7 +22,8 @@
 #include "EffectPlugin.h"
 #include "Observer.h"
 #include "PluginInterface.h"
-#include "effects/RealtimeEffectManager.h"
+#include "commands/CommandManagerWindowClasses.h"
+#include "RealtimeEffectManager.h"
 
 struct AudioIOEvent;
 
@@ -38,7 +39,9 @@ class RealtimeEffectState;
 class wxCheckBox;
 
 //
-class EffectUIHost final : public wxDialogWrapper
+class EffectUIHost final
+   : public wxDialogWrapper
+   , public TopLevelKeystrokeHandlingWindow
 {
 public:
    // constructors and destructors
@@ -61,10 +64,19 @@ public:
    bool Initialize();
    EffectUIValidator *GetValidator() const { return mpValidator.get(); }
 
+   bool HandleCommandKeystrokes() override;
+
+   void SetClosed() {
+#if wxDEBUG_LEVEL
+      mClosed = true;
+#endif
+   }
+
 private:
    std::shared_ptr<EffectInstance> InitializeInstance();
 
    wxPanel *BuildButtonBar(wxWindow *parent, bool graphicalUI);
+   void BuildButtonBar(ShuttleGui &S, bool graphicalUI);
 
    void OnInitDialog(wxInitDialogEvent & evt);
    void OnErase(wxEraseEvent & evt);
@@ -73,13 +85,10 @@ private:
    void OnApply(wxCommandEvent & evt);
    void DoCancel();
    void OnCancel(wxCommandEvent & evt);
-   void OnHelp(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
-   void OnRewind(wxCommandEvent & evt);
-   void OnFFwd(wxCommandEvent & evt);
    void OnPlayback(AudioIOEvent);
    void OnCapture(AudioIOEvent);
    void OnUserPreset(wxCommandEvent & evt);
@@ -90,6 +99,10 @@ private:
    void OnExport(wxCommandEvent & evt);
    void OnOptions(wxCommandEvent & evt);
    void OnDefaults(wxCommandEvent & evt);
+   void OnIdle(wxIdleEvent &evt);
+   void OnCharHook(wxKeyEvent& evt);
+
+   bool IsOpenedFromEffectPanel() const;
 
    void UpdateControls();
    wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
@@ -97,8 +110,10 @@ private:
 
    void CleanupRealtime();
 
+   void StopPlayback();
+
 private:
-   Observer::Subscription mSubscription;
+   Observer::Subscription mAudioIOSubscription, mEffectStateSubscription;
 
    AudacityProject &mProject;
    wxWindow *const mParent;
@@ -108,8 +123,9 @@ private:
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess2;
-   std::shared_ptr<RealtimeEffectState> mpState{};
-   std::unique_ptr<EffectUIValidator> mpValidator;
+   std::weak_ptr<RealtimeEffectState> mwState{};
+   // Temporary state used for destructive processing
+   std::shared_ptr<RealtimeEffectState> mpTempProjectState {};
 
    RegistryPaths mUserPresets;
    bool mInitialized{ false };
@@ -118,20 +134,13 @@ private:
    bool mIsBatch{};
 
    wxButton *mApplyBtn{};
-   wxButton *mCloseBtn{};
    wxButton *mMenuBtn{};
-   wxButton *mPlayBtn{};
-   wxButton *mRewindBtn{};
-   wxButton *mFFwdBtn{};
-   wxCheckBox *mEnableCb{};
-
-   wxButton *mEnableToggleBtn{};
+   wxButton *mEnableBtn{};
+   wxButton *mDebugBtn{};
    wxButton *mPlayToggleBtn{};
 
-   wxBitmap mPlayBM;
-   wxBitmap mPlayDisabledBM;
-   wxBitmap mStopBM;
-   wxBitmap mStopDisabledBM;
+   wxBitmap mRealtimeEnabledBM;
+   wxBitmap mRealtimeDisabledBM;
 
    bool mEnabled{ true };
 
@@ -143,6 +152,7 @@ private:
    double mPlayPos{ 0.0 };
 
    bool mDismissed{};
+   const bool mHadPriorState;
 
 #if wxDEBUG_LEVEL
    // Used only in an assertion
@@ -150,6 +160,9 @@ private:
 #endif
 
    const std::shared_ptr<EffectInstance> mpInstance;
+   const EffectOutputs *const mpOutputs;
+
+   std::unique_ptr<EffectUIValidator> mpValidator;
 
    DECLARE_EVENT_TABLE()
 };

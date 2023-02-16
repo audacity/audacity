@@ -12,7 +12,6 @@
 
 #include "Identifier.h"
 
-#include <wx/string.h> // member variable
 #include "Prefs.h"
 #include "ClientData.h"
 #include "commands/CommandFlag.h"
@@ -71,9 +70,13 @@ public:
 
 struct ToolbarMenuVisitor;
 
+//! Sent when menus update (such as for changing enablement of items)
+struct MenuUpdateMessage {};
+
 class AUDACITY_DLL_API MenuManager final
    : public MenuCreator
    , public ClientData::Base
+   , public Observer::Publisher<MenuUpdateMessage>
    , private PrefsListener
 {
 public:
@@ -90,9 +93,6 @@ public:
    static void Visit( ToolbarMenuVisitor &visitor );
 
    static void ModifyUndoMenuItems(AudacityProject &project);
-   static void ModifyToolbarMenus(AudacityProject &project);
-   // Calls ModifyToolbarMenus() on all projects
-   static void ModifyAllProjectToolbarMenus();
 
    // checkActive is a temporary hack that should be removed as soon as we
    // get multiple effect preview working

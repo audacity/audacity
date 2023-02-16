@@ -16,7 +16,8 @@ Paul Licameli split from ProjectManager.h
 
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
-#include <wx/event.h> // to declare custom event type
+#include "Observer.h"
+#include "Observer.h"
 
 #include <atomic>
 
@@ -26,9 +27,9 @@ class AudacityProject;
 struct AudioIOStartStreamOptions;
 class TrackList;
 class SelectedRegion;
-
-class WaveTrack;
-using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
+class WritableSampleTrack;
+using WritableSampleTrackArray =
+   std::vector< std::shared_ptr< WritableSampleTrack > >;
 
 enum class PlayMode : int {
    normalPlay,
@@ -40,28 +41,17 @@ enum class PlayMode : int {
 struct TransportTracks;
 
 enum StatusBarField : int;
+enum class ProjectFileIOMessage : int;
 
-struct RecordingDropoutEvent;
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
-
-//! Notification, posted on the project, after recording has stopped, when dropouts have been detected
-struct RecordingDropoutEvent : public wxCommandEvent
-{
+//! Notification, after recording has stopped, when dropouts have been detected
+struct RecordingDropoutEvent {
    //! Start time and duration
    using Interval = std::pair<double, double>;
    using Intervals = std::vector<Interval>;
 
    explicit RecordingDropoutEvent(const Intervals &intervals)
-      : wxCommandEvent{ EVT_RECORDING_DROPOUT }
-      , intervals{ intervals }
+      : intervals{ intervals }
    {}
-
-   RecordingDropoutEvent( const RecordingDropoutEvent& ) = default;
-
-   wxEvent *Clone() const override {
-      // wxWidgets will own the event object
-      return safenew RecordingDropoutEvent(*this); }
 
    //! Disjoint and sorted increasingly
    const Intervals &intervals;
@@ -71,22 +61,18 @@ class AUDACITY_DLL_API ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
    , public std::enable_shared_from_this< ProjectAudioManager >
+   , public Observer::Publisher<RecordingDropoutEvent>
 {
 public:
    static ProjectAudioManager &Get( AudacityProject &project );
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
    // Find suitable tracks to record into, or return an empty array.
-   static WaveTrackArray ChooseExistingRecordingTracks(
+   static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
 
    static bool UseDuplex();
-
-   static TransportTracks GetAllPlaybackTracks(
-      TrackList &trackList, bool selectedOnly,
-      bool nonWaveToo = false //!< if true, collect all PlayableTracks
-   );
 
    explicit ProjectAudioManager( AudacityProject &project );
    ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
@@ -132,7 +118,7 @@ public:
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
    void PlayCurrentRegion(
-      bool newDefault = false, //!< See DefaultPlayOptions
+      bool newDefault = false, //!< See ProjectAudioIO::GetDefaultOptions
       bool cutpreview = false);
 
    void OnPause();
@@ -165,12 +151,13 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks(const WaveTrackArray *tracks) override;
+   void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
-   void OnCheckpointFailure(wxCommandEvent &evt);
+   void OnCheckpointFailure(ProjectFileIOMessage);
 
+   Observer::Subscription mCheckpointFailureSubcription;
    AudacityProject &mProject;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
@@ -193,12 +180,6 @@ private:
          const AudacityProject &project, StatusBarField field);
 };
 
-AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultPlayOptions(
-   AudacityProject &project,
-   bool newDefault = false /*!< "new" default playback policy adjusts to
-      changes of the looping region, "old" default plays once straight */
-);
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected

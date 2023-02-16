@@ -46,9 +46,7 @@
 #include "SampleFormat.h"
 
 #include <wx/wxcrtvararg.h>
-#include <wx/intl.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 
 #include "RealFFTf.h"

@@ -23,14 +23,13 @@
 StatefulPerTrackEffect::Instance::~Instance() = default;
 
 bool StatefulPerTrackEffect::Instance::ProcessInitialize(
-   EffectSettings &settings, double sampleRate,
-   sampleCount totalLen, ChannelNames chanMap)
+   EffectSettings &settings, double sampleRate, ChannelNames chanMap)
 {
    return GetEffect()
-      .ProcessInitialize(settings, sampleRate, totalLen, chanMap);
+      .ProcessInitialize(settings, sampleRate, chanMap);
 }
 
-bool StatefulPerTrackEffect::Instance::ProcessFinalize() /* noexcept */
+bool StatefulPerTrackEffect::Instance::ProcessFinalize() noexcept
 {
    return GetEffect().ProcessFinalize();
 }
@@ -39,12 +38,6 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
-}
-
-sampleCount StatefulPerTrackEffect::Instance::GetLatency(
-   const EffectSettings &, double) const
-{
-   return GetEffect().GetLatency();
 }
 
 std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
@@ -75,18 +68,13 @@ size_t StatefulPerTrackEffect::GetBlockSize() const
    return mBlockSize;
 }
 
-sampleCount StatefulPerTrackEffect::GetLatency() const
-{
-   return 0;
-}
-
 bool StatefulPerTrackEffect::ProcessInitialize(
-   EffectSettings &, double, sampleCount, ChannelNames)
+   EffectSettings &, double, ChannelNames)
 {
    return true;
 }
 
-bool StatefulPerTrackEffect::ProcessFinalize()
+bool StatefulPerTrackEffect::ProcessFinalize() noexcept
 {
    return true;
 }

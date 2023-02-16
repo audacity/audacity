@@ -22,9 +22,11 @@
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
+#include "Identifier.h"
 
 class wxCFStringRef;
 class wxMemoryBuffer;
+class EffectDefinitionInterface;
 class EffectSettings;
 class TranslatableString;
 class AudioUnitWrapper;
@@ -32,9 +34,6 @@ class AudioUnitWrapper;
 //! This works as a cached copy of state stored in an AudioUnit, but can also
 //! outlive it
 struct AudioUnitEffectSettings {
-   //! Object from which settings were fetched
-   const AudioUnitWrapper *pSource{};
-
    //! The effect object and all Settings objects coming from it share this
    //! set of strings, which allows Pair below to copy without allocations.
    /*!
@@ -46,6 +45,9 @@ struct AudioUnitEffectSettings {
    using StringSet = std::set<wxString>;
    const std::shared_ptr<StringSet> mSharedNames{
       std::make_shared<StringSet>() };
+
+   //! Optionally store a preset
+   std::optional<SInt32> mPresetNumber;
    
    //! Map from numerical parameter IDs (not always a small initial segment
    //! of the integers) to optional pairs of names and floating point values
@@ -134,6 +136,11 @@ struct AudioUnitWrapper
       std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
    void ForEachParameter(ParameterVisitor visitor) const;
 
+   bool LoadPreset(const EffectDefinitionInterface &effect,
+      const RegistryPath & group, EffectSettings &settings) const;
+   bool LoadFactoryPreset(const EffectDefinitionInterface &effect,
+      int id, EffectSettings *pSettings) const;
+
    //! Obtain dump of the setting state of an AudioUnit instance
    /*!
     @param binary if false, then produce XML serialization instead; but
@@ -141,7 +148,8 @@ struct AudioUnitWrapper
     @return smart pointer to data, and an error message
     */
    std::pair<CF_ptr<CFDataRef>, TranslatableString>
-   MakeBlob(const AudioUnitEffectSettings &settings,
+   MakeBlob(const EffectDefinitionInterface &effect,
+      const AudioUnitEffectSettings &settings,
       const wxCFStringRef &cfname, bool binary) const;
 
    //! Interpret the dump made before by MakeBlob
@@ -153,8 +161,14 @@ struct AudioUnitWrapper
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    //! May allocate memory, so should be called only in the main thread
-   bool FetchSettings(AudioUnitEffectSettings &settings) const;
-   bool StoreSettings(const AudioUnitEffectSettings &settings) const;
+   bool FetchSettings(AudioUnitEffectSettings &settings,
+      bool fetchValues, bool fetchPreset = false) const;
+   bool StoreSettings(const EffectDefinitionInterface &effect,
+      const AudioUnitEffectSettings &settings) const;
+
+   //! Copy, then clear the optionals in src
+   static bool MoveSettingsContents(
+      AudioUnitEffectSettings &&src, AudioUnitEffectSettings &dst, bool merge);
 
    bool CreateAudioUnit();
 
@@ -163,12 +177,19 @@ struct AudioUnitWrapper
    const Parameters &GetParameters() const
    { return mParameters; }
 
+   // @param identifier only for logging messages
+   bool SetRateAndChannels(double sampleRate, const wxString &identifier);
+
 protected:
    const AudioComponent mComponent;
    AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
 
    Parameters mOwnParameters;
    Parameters &mParameters;
+
+   // Reassinged in GetRateAndChannels()
+   unsigned mAudioIns{ 2 };
+   unsigned mAudioOuts{ 2 };
 };
 
 class AudioUnitWrapper::ParameterInfo final
@@ -180,7 +201,7 @@ public:
    static std::optional<AudioUnitParameterID> ParseKey(const wxString &key);
 
    std::optional<wxString> mName;
-   AudioUnitParameterInfo mInfo{};
+   AudioUnitUtils::ParameterInfo mInfo{};
 
 private:
    // constants

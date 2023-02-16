@@ -31,9 +31,10 @@ public:
     * Callback should be guaranteed to be alive
     * until either IPCChannelStatusCallback::OnDisconnect
     * or IPCChannelStatusCallback::OnConnectionError is called.
+    * \param port TCP port number used to connect to server
     * \param callback Channel status callback. May be accessed from working threads.
     */
-   IPCClient(IPCChannelStatusCallback& callback);
+   IPCClient(int port, IPCChannelStatusCallback& callback);
    /**
     * \brief Closes connection if any.
     */

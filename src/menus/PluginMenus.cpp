@@ -1,8 +1,8 @@
 
 
-#include "../AudioIO.h"
-#include "../BatchProcessDialog.h"
+#include "AudioIO.h"
 #include "../Benchmark.h"
+#include "../commands/CommandDispatch.h"
 #include "../CommonCommandFlags.h"
 #include "../Journal.h"
 #include "../Menus.h"
@@ -14,8 +14,8 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../ProjectSelectionManager.h"
+#include "RealtimeEffectPanel.h"
 #include "../toolbars/ToolManager.h"
-#include "../Screenshot.h"
 #include "../TrackPanelAx.h"
 #include "TempDirectory.h"
 #include "UndoManager.h"
@@ -23,19 +23,17 @@
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
-#include "../effects/RealtimeEffectManager.h"
+#include "RealtimeEffectManager.h"
 #include "../prefs/EffectsPrefs.h"
 #include "../prefs/PrefsDialog.h"
 #include "../widgets/AudacityMessageBox.h"
 
-#include <wx/log.h>
 #include <wx/stdpaths.h>
 
 #include "XMLFileReader.h"
 
 // private helper classes and functions
 namespace {
-
 
 using EffectsMenuGroups = std::vector<std::pair<TranslatableString, std::vector<TranslatableString>>>;
 
@@ -176,14 +174,10 @@ bool IsBundledPlugin(const PluginDescriptor* plug)
 {
    if(IsDefaultPlugin(plug))
       return true;
-   auto applicationBundlePath = wxFileName(wxStandardPaths::Get().GetExecutablePath());
-#if __WXMAC__
-   //Remove MacOSX
-   applicationBundlePath.RemoveLastDir();
-#endif
+   auto applicationResourcePath = wxFileName(FileNames::ResourcesDir());
    auto pluginPath = wxFileName(plug->GetPath());
    pluginPath.MakeAbsolute();
-   return pluginPath.GetPath().StartsWith(applicationBundlePath.GetPath());
+   return pluginPath.GetPath().StartsWith(applicationResourcePath.GetPath());
 }
 
 auto MakeGroupsFilter(const EffectsMenuGroups& list) -> auto
@@ -279,8 +273,7 @@ void AddGroupedEffectMenuItems(
 
       groupNames.push_back( name );
       groupPlugs.push_back(plug->GetID());
-      groupFlags.push_back(
-         plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+      groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
    }
 
    if (groupNames.size() > 0)
@@ -343,8 +336,7 @@ void AddSortedEffectMenuItems(
       );
 
       groupPlugs.push_back(plug->GetID());
-      groupFlags.push_back(
-         plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+      groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
    }
 
    if (groupNames.size() > 0)
@@ -383,8 +375,7 @@ auto MakeAddGroupItems(const EffectsMenuGroups& list, CommandFlag batchflags, Co
                groupNames.push_back( name );
 
             groupPlugs.push_back(plug->GetID());
-            groupFlags.push_back(
-               plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+            groupFlags.push_back(FixBatchFlags( batchflags, plug ) );
          }
 
          if (!groupNames.empty())
@@ -412,15 +403,6 @@ struct MenuSectionBuilder
    std::function<void(MenuTable::BaseItemPtrs&, std::vector<const PluginDescriptor*>&)> add;
 };
 
-AttachedWindows::RegisteredFactory sMacrosWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
-      return safenew MacrosWindow(
-         &window, parent, true
-      );
-   }
-};
-
 bool ShowManager(
    PluginManager &pm, wxWindow *parent)
 {
@@ -439,12 +421,11 @@ void DoManagePluginsMenu(AudacityProject &project)
 void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
 {
    auto &trackFocus = TrackFocus::Get(project);
-   auto &projectWindow = ProjectWindow::Get(project);
-
-   if (projectWindow.IsEffectsPanelShown())
-      projectWindow.HideEffectsPanel();
+   auto &panel = RealtimeEffectPanel::Get(project);
+   if (panel.IsShown())
+      panel.HidePanel();
    else
-      projectWindow.ShowEffectsPanel(project, trackFocus.Get());
+      panel.ShowPanel(trackFocus.Get(), true);
 }
 
 bool CompareEffectsByName(const PluginDescriptor *a, const PluginDescriptor *b)
@@ -572,13 +553,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
       if(type == EffectTypeProcess)
       {
          static auto effectMenuDefaults = [] {
-            wxFileName path = wxStandardPaths::Get().GetExecutablePath();
-#if defined(__WXMAC__)
-            //remove MacOSX
-            path.RemoveLastDir();
-#endif
-            path.AppendDir("res");
-            path.SetFullName("effects_menu_defaults.xml");
+            wxFileName path = wxFileName(FileNames::ResourcesDir(), wxT("EffectsMenuDefaults.xml"));
             return LoadEffectsMenuGroups(path.GetFullPath());
          }();
          static auto groupsFilter = MakeGroupsFilter(effectMenuDefaults);
@@ -733,17 +708,11 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    return result;
 }
 
-// Forward-declared function has its definition below with OnApplyMacroDirectly
-// in view
-MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  );
-
 }
 
-namespace PluginActions {
+namespace {
 
 // Menu handler functions
-
-struct Handler : CommandHandlerObject {
 
 void OnResetConfig(const CommandContext &context)
 {
@@ -866,31 +835,6 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
    }
 }
 
-void OnRepeatLastTool(const CommandContext& context)
-{
-   auto& menuManager = MenuManager::Get(context.project);
-   switch (menuManager.mLastToolRegistration) {
-     case MenuCreator::repeattypeplugin:
-     {
-        auto lastEffect = menuManager.mLastTool;
-        if (!lastEffect.empty())
-        {
-           EffectUI::DoEffect(
-              lastEffect, context, menuManager.mRepeatToolFlags);
-        }
-     }
-       break;
-     case MenuCreator::repeattypeunique:
-        CommandManager::Get(context.project).DoRepeatProcess(context,
-           menuManager.mLastToolRegisteredId);
-        break;
-     case MenuCreator::repeattypeapplymacro:
-        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
-        break;
-   }
-}
-
-
 void OnManageAnalyzers(const CommandContext &context)
 {
    auto &project = context.project;
@@ -901,38 +845,6 @@ void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
    DoManagePluginsMenu(project);
-}
-
-void OnManageMacros(const CommandContext &context )
-{
-   auto &project = context.project;
-   CommandManager::Get(project).RegisterLastTool(context);  //Register Macros as Last Tool
-   auto macrosWindow = &GetAttachedWindows(project)
-      .AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
-   if (macrosWindow) {
-      macrosWindow->Show();
-      macrosWindow->Raise();
-      macrosWindow->UpdateDisplay( true );
-   }
-}
-
-void OnApplyMacrosPalette(const CommandContext &context )
-{
-   auto &project = context.project;
-   CommandManager::Get(project).RegisterLastTool(context);  //Register Palette as Last Tool
-   auto macrosWindow = &GetAttachedWindows(project)
-      .AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
-   if (macrosWindow) {
-      macrosWindow->Show();
-      macrosWindow->Raise();
-      macrosWindow->UpdateDisplay( false );
-   }
-}
-
-void OnScreenshot(const CommandContext &context )
-{
-   CommandManager::Get(context.project).RegisterLastTool(context);  //Register Screenshot as Last Tool
-   ::OpenScreenshotTools( context.project );
 }
 
 void OnBenchmark(const CommandContext &context)
@@ -987,77 +899,9 @@ void OnWriteJournal(const CommandContext &)
       AudacityMessageBox( OffMessage );
 }
 
-void OnApplyMacroDirectly(const CommandContext &context )
-{
-   const MacroID& Name = context.parameter.GET();
-   OnApplyMacroDirectlyByName(context, Name);
-}
-void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Name)
-{
-   auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   //wxLogDebug( "Macro was: %s", context.parameter);
-   ApplyMacroDialog dlg( &window, project );
-   //const auto &Name = context.parameter;
-
-// We used numbers previously, but macros could get renumbered, making
-// macros containing macros unpredictable.
-#ifdef MACROS_BY_NUMBERS
-   long item=0;
-   // Take last three letters (of e.g. Macro007) and convert to a number.
-   Name.Mid( Name.length() - 3 ).ToLong( &item, 10 );
-   dlg.ApplyMacroToProject( item, false );
-#else
-   dlg.ApplyMacroToProject( Name, false );
-#endif
-   /* i18n-hint: %s will be the name of the macro which will be
-    * repeated if this menu item is chosen */
-   MenuManager::ModifyUndoMenuItems( project );
-
-   TranslatableString desc;
-   EffectManager& em = EffectManager::Get();
-   auto shortDesc = em.GetCommandName(Name);
-   auto& undoManager = UndoManager::Get(project);
-   auto& commandManager = CommandManager::Get(project);
-   int cur = undoManager.GetCurrentState();
-   if (undoManager.UndoAvailable()) {
-       undoManager.GetShortDescription(cur, &desc);
-       commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
-          .Format(desc));
-       auto& menuManager = MenuManager::Get(project);
-       menuManager.mLastTool = Name;
-       menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
-   }
-
-}
-
-void OnAudacityCommand(const CommandContext & ctx)
-{
-   // using GET in a log message for devs' eyes only
-   wxLogDebug( "Command was: %s", ctx.parameter.GET());
-   // Not configured, so prompt user.
-   MacroCommands::DoAudacityCommand(
-      EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
-      ctx, EffectManager::kNone);
-}
-
-}; // struct Handler
-
-} // namespace
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static PluginActions::Handler instance;
-   return instance;
-};
-
 // Menu definitions? ...
 
-#define FN(X) (& PluginActions::Handler :: X)
-
-// ... buf first some more helper definitions, which use FN
-namespace {
+// ... buf first some more helper definitions
 
 void AddEffectMenuItemGroup(
    MenuTable::BaseItemPtrs &table,
@@ -1101,7 +945,6 @@ void AddEffectMenuItemGroup(
 
    using namespace MenuTable;
    // This finder scope may be redundant, but harmless
-   auto scope = FinderScope( findCommandHandler );
    auto pTable = &table;
    BaseItemPtrs temp1;
 
@@ -1126,11 +969,10 @@ void AddEffectMenuItemGroup(
          {
             const PluginDescriptor *plug =
                PluginManager::Get().GetPlugin(plugs[i]);
-            wxString item = plug->GetPath();
             if( plug->GetPluginType() == PluginTypeEffect )
-               temp2.push_back( Command( item,
-                  Verbatim( item ),
-                  FN(OnEffect),
+               temp2.push_back( Command( plug->GetID(),
+                  Verbatim( plug->GetPath() ),
+                  OnEffect,
                   flags[i],
                   CommandManager::Options{}
                      .IsEffect()
@@ -1149,13 +991,9 @@ void AddEffectMenuItemGroup(
             PluginManager::Get().GetPlugin(plugs[i]);
          if( plug->GetPluginType() == PluginTypeEffect )
             pTable->push_back( Command(
-               // Call Debug() not MSGID() so that any concatenated "..." is
-               // included in the identifier, preserving old behavior, and
-               // avoiding the collision of the "Silence" command and the
-               // "Silence..." generator
-               names[i].Debug(), // names[i].MSGID(),
+               plug->GetID(),
                names[i],
-               FN(OnEffect),
+               OnEffect,
                flags[i],
                CommandManager::Options{}
                   .IsEffect()
@@ -1175,7 +1013,7 @@ void AddEffectMenuItemGroup(
             }
             // Done collecting
             table.push_back( Menu( wxEmptyString,
-               XXO("Plug-in %d to %d").Format( groupNdx + 1, end ),
+               XXO("Plugin %d to %d").Format( groupNdx + 1, end ),
                std::move( temp1 )
             ) );
             items = max;
@@ -1186,35 +1024,14 @@ void AddEffectMenuItemGroup(
    }
 }
 
-MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
-{
-   MenuTable::BaseItemPtrs result;
-   auto names = MacroCommands::GetNames(); // these names come from filenames
-   int i;
-
-   // This finder scope may be redundant, but harmless
-   auto scope = MenuTable::FinderScope( findCommandHandler );
-   for (i = 0; i < (int)names.size(); i++) {
-      auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
-      result.push_back( MenuTable::Command( MacroID,
-         Verbatim( names[i] ), // file name verbatim
-         FN(OnApplyMacroDirectly),
-         flags,
-         CommandManager::Options{}.AllowInMacros()
-      ) );
-   }
-
-   return result;
-}
-
 }
 
 // Menu definitions
 
 // Under /MenuBar
-namespace {
 using namespace MenuTable;
 
+namespace {
 const ReservedCommandFlag&
    HasLastGeneratorFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
@@ -1230,11 +1047,10 @@ BaseItemSharedPtr GenerateMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XXO("&Generate"),
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Plugin Manager"),
-            FN(OnManageGenerators), AudioIONotBusyFlag() )
+            OnManageGenerators, AudioIONotBusyFlag() )
       ),
 
       Section("RepeatLast",
@@ -1250,10 +1066,10 @@ BaseItemSharedPtr GenerateMenu()
                buildMenuLabel = XO("Repeat Last Generator");
 
             return Command(wxT("RepeatLastGenerator"), buildMenuLabel,
-               FN(OnRepeatLastGenerator),
+               OnRepeatLastGenerator,
                AudioIONotBusyFlag() |
                    HasLastGeneratorFlag(),
-               Options{}.IsGlobal(), findCommandHandler);
+               Options{}.IsGlobal());
          }
       ),
 
@@ -1266,7 +1082,7 @@ BaseItemSharedPtr GenerateMenu()
             AudioIONotBusyFlag())
          ); }
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1306,16 +1122,15 @@ BaseItemSharedPtr EffectMenu()
    // the plugin manager...sorry! :-(
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XXO("Effe&ct"),
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Plugin Manager"),
-            FN(OnManageEffects), AudioIONotBusyFlag() )
+            OnManageEffects, AudioIONotBusyFlag() )
       ),
 
       Section( "RealtimeEffects",
          Command ( wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
-            FN(OnAddRealtimeEffects),  HasTrackFocusFlag() )
+            OnAddRealtimeEffects,  HasTrackFocusFlag(), wxT("E") )
       ),
 
       Section( "RepeatLast",
@@ -1331,10 +1146,10 @@ BaseItemSharedPtr EffectMenu()
                buildMenuLabel = XO("Repeat Last Effect");
 
             return Command( wxT("RepeatLastEffect"), buildMenuLabel,
-               FN(OnRepeatLastEffect),
+               OnRepeatLastEffect,
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastEffectFlag(),
-               wxT("Ctrl+R"), findCommandHandler );
+               wxT("Ctrl+R") );
          }
       ),
 
@@ -1347,7 +1162,7 @@ BaseItemSharedPtr EffectMenu()
             IsRealtimeNotActiveFlag() )
          ); }
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1373,11 +1188,10 @@ BaseItemSharedPtr AnalyzeMenu()
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XXO("&Analyze"),
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Plugin Manager"),
-            FN(OnManageAnalyzers), AudioIONotBusyFlag() )
+            OnManageAnalyzers, AudioIONotBusyFlag() )
       ),
 
       Section("RepeatLast",
@@ -1393,10 +1207,10 @@ BaseItemSharedPtr AnalyzeMenu()
                buildMenuLabel = XO("Repeat Last Analyzer");
 
             return Command(wxT("RepeatLastAnalyzer"), buildMenuLabel,
-               FN(OnRepeatLastAnalyzer),
+               OnRepeatLastAnalyzer,
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastAnalyzerFlag(),
-               Options{}.IsGlobal(), findCommandHandler);
+               Options{}.IsGlobal());
          }
       ),
 
@@ -1411,7 +1225,7 @@ BaseItemSharedPtr AnalyzeMenu()
             IsRealtimeNotActiveFlag() )
          ); }
       )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1420,75 +1234,23 @@ AttachedItem sAttachment3{
    Shared( AnalyzeMenu() )
 };
 
-const ReservedCommandFlag&
-   HasLastToolFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
-      auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
-         return !menuManager.mLastTool.empty();
-      }
-   }; return flag;
-}
-
 BaseItemSharedPtr ToolsMenu()
 {
    using Options = CommandManager::Options;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
          Command( wxT("ManageTools"), XXO("Plugin Manager"),
-            FN(OnManageTools), AudioIONotBusyFlag() ),
+            OnManageTools, AudioIONotBusyFlag() )
 
          //Separator(),
-
-         Section( "RepeatLast",
-         // Delayed evaluation:
-         [](AudacityProject &project)
-         {
-            const auto &lastTool = MenuManager::Get(project).mLastTool;
-            TranslatableString buildMenuLabel;
-            if (!lastTool.empty())
-               buildMenuLabel = XO("Repeat %s")
-                  .Format( EffectManager::Get().GetCommandName(lastTool) );
-            else
-               buildMenuLabel = XO("Repeat Last Tool");
-
-            return Command( wxT("RepeatLastTool"), buildMenuLabel,
-               FN(OnRepeatLastTool),
-               AudioIONotBusyFlag() |
-                  HasLastToolFlag(),
-               Options{}.IsGlobal(), findCommandHandler );
-         }
-      ),
-
-      Command( wxT("ManageMacros"), XXO("&Macros..."),
-            FN(OnManageMacros), AudioIONotBusyFlag() ),
-
-         Menu( wxT("Macros"), XXO("&Apply Macro"),
-            // Palette has no access key to ensure first letter navigation of
-            // sub menu
-            Section( "",
-               Command( wxT("ApplyMacrosPalette"), XXO("Palette..."),
-                  FN(OnApplyMacrosPalette), AudioIONotBusyFlag() )
-            ),
-
-            Section( "",
-               // Delayed evaluation:
-               [](AudacityProject&)
-               { return Items( wxEmptyString, PopulateMacrosMenu( AudioIONotBusyFlag() ) ); }
-            )
-         )
       ),
 
       Section( "Other",
          Command( wxT("ConfigReset"), XXO("Reset &Configuration"),
-            FN(OnResetConfig),
+            OnResetConfig,
             AudioIONotBusyFlag() ),
-
-         Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
-            FN(OnScreenshot), AudioIONotBusyFlag() ),
 
    // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
    // as they used to in 1.3.x
@@ -1496,7 +1258,7 @@ BaseItemSharedPtr ToolsMenu()
          // TODO: What should we do here?  Make benchmark a plug-in?
          // Easy enough to do.  We'd call it mod-self-test.
          Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
-            FN(OnBenchmark), AudioIONotBusyFlag() )
+            OnBenchmark, AudioIONotBusyFlag() )
    //#endif
       ),
 
@@ -1515,14 +1277,14 @@ BaseItemSharedPtr ToolsMenu()
       Section( "",
          Command( wxT("SimulateRecordingErrors"),
             XXO("Simulate Recording Errors"),
-            FN(OnSimulateRecordingErrors),
+            OnSimulateRecordingErrors,
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
                [](AudacityProject&){
                   return AudioIO::Get()->mSimulateRecordingErrors; } ) ),
          Command( wxT("DetectUpstreamDropouts"),
             XXO("Detect Upstream Dropouts"),
-            FN(OnDetectUpstreamDropouts),
+            OnDetectUpstreamDropouts,
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
                [](AudacityProject&){
@@ -1538,14 +1300,14 @@ BaseItemSharedPtr ToolsMenu()
             /* i18n-hint a "journal" is a text file that records
              the user's interactions with the application */
             XXO("Write Journal"),
-            FN(OnWriteJournal),
+            OnWriteJournal,
             AlwaysEnabledFlag,
             Options{}.CheckTest( [](AudacityProject&){
                return Journal::RecordEnabled(); } ) )
       )
 #endif
 
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1554,103 +1316,4 @@ AttachedItem sAttachment4{
    Shared( ToolsMenu() )
 };
 
-BaseItemSharedPtr ExtraScriptablesIMenu()
-{
-   // These are the more useful to VI user Scriptables.
-   static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
-   // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables1"), XXO("Script&ables I"),
-      // Note that the PLUGIN_SYMBOL must have a space between words,
-      // whereas the short-form used here must not.
-      // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
-      // you would have to use "Compareaudio" here.)
-      Command( wxT("SelectTime"), XXO("Select Time..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SelectTracks"), XXO("Select Tracks..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("GetPreference"), XXO("Get Preference..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetPreference"), XXO("Set Preference..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetClip"), XXO("Set Clip..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetLabel"), XXO("Set Label..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetProject"), XXO("Set Project..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() )
-   ) ) };
-   return menu;
 }
-
-AttachedItem sAttachment5{
-   wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIMenu() )
-};
-
-BaseItemSharedPtr ExtraScriptablesIIMenu()
-{
-   // Less useful to VI users.
-   static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
-   // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SetTrack"), XXO("Set Track..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("GetInfo"), XXO("Get Info..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("Message"), XXO("Message..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("Help"), XXO("Help..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("Import2"), XXO("Import..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("Export2"), XXO("Export..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("OpenProject2"), XXO("Open Project..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("SaveProject2"), XXO("Save Project..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("Drag"), XXO("Move Mouse..."), FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      Command( wxT("CompareAudio"), XXO("Compare Audio..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() ),
-      // i18n-hint: Screenshot in the help menu has a much bigger dialog.
-      Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
-         FN(OnAudacityCommand),
-         AudioIONotBusyFlag() )
-   ) ) };
-   return menu;
-}
-
-AttachedItem sAttachment6{
-   wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIIMenu() )
-};
-
-}
-
-#undef FN

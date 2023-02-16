@@ -136,15 +136,27 @@ ErrorReportDialog::ErrorReportDialog(
 
                S.AddSpace(0, 20);
 
+               /* i18n-hint: %s is replaced with "here" */
+               AccessibleLinksFormatter errorpage(
+                  XO("More information about this error may be available %s."));
+               
+               errorpage.FormatLink(
+                  /* i18n-hint: Title of hyperlink to audacityteam.org/errors. */
+                  wxT("%s"),
+                  XO("here"),
+                  "https://audacityteam.org/errors");
+               errorpage.Populate(S);
+
+               S.AddSpace(0, 12);
                S.AddVariableText(XO(
-                     "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
+                     "Would you like to send a report to help us fix this issue?"))
                   ->SetFont(textFont);
 
                S.AddSpace(0, 6);
 
                /* i18n-hint: %s will be replaced with "our Privacy Policy" */
                AccessibleLinksFormatter privacyPolicy(
-                  XO("See %s for more info."));
+                  XO("All reports are anonymous. See %s for more info."));
 
                privacyPolicy.FormatLink(
                   /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */

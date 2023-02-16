@@ -23,7 +23,6 @@
 #include "ViewInfo.h"
 
 #include <wx/app.h>
-#include <wx/radiobut.h>
 #include <wx/toolbar.h>
 #include <wx/settings.h>
 
@@ -71,12 +70,11 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
    mProject = pProject;
 
    SetWindowTitle();
-   auto titleChanged = [&](wxCommandEvent &evt)
-   {
-      SetWindowTitle();
-      evt.Skip();
-   };
-   wxTheApp->Bind( EVT_PROJECT_TITLE_CHANGE, titleChanged );
+   mTitleChangeSubscription = ProjectFileIO::Get(*parent)
+      .Subscribe([this](ProjectFileIOMessage message){
+         if (message == ProjectFileIOMessage::ProjectTitleChange)
+            SetWindowTitle();
+      });
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
@@ -141,7 +139,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
 
    // Events from the project don't propagate directly to this other frame, so...
    if (pProject)
-      mSubscription = ProjectWindow::Get( *pProject ).GetPlaybackScroller()
+      mTimerSubscription = ProjectWindow::Get( *pProject ).GetPlaybackScroller()
          .Subscribe(*this, &LyricsWindow::OnTimer);
    Center();
 }
@@ -209,31 +207,21 @@ AttachedWindows::RegisteredFactory sLyricsWindowKey{
 };
 
 // Define our extra menu item that invokes that factory
-struct Handler : CommandHandlerObject {
-   void OnKaraoke(const CommandContext &context)
-   {
-      auto &project = context.project;
+void OnKaraoke(const CommandContext &context)
+{
+   auto &project = context.project;
 
-      auto lyricsWindow = &GetAttachedWindows(project).Get(sLyricsWindowKey);
-      lyricsWindow->Show();
-      lyricsWindow->Raise();
-   }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
+   auto lyricsWindow = &GetAttachedWindows(project).Get(sLyricsWindowKey);
+   lyricsWindow->Show();
+   lyricsWindow->Raise();
 }
 
 // Register that menu item
 
 using namespace MenuTable;
 AttachedItem sAttachment{ wxT("View/Windows"),
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("Karaoke"), XXO("&Karaoke..."), &Handler::OnKaraoke,
-         LabelTracksExistFlag() ) )
+   Command( wxT("Karaoke"), XXO("&Karaoke"), OnKaraoke,
+      LabelTracksExistFlag() )
 };
 
 }

@@ -15,7 +15,10 @@
 #pragma once
 
 #include <optional>
+#include <array>
+#include <map>
 
+#include "widgets/AButton.h"
 #include "Internat.h"
 #include "Observer.h"
 #include "Theme.h"
@@ -86,6 +89,7 @@ class ThemedButtonWrapper final :
 {
    Observer::Subscription mThemeChangeSubscription;
    int mBitmapIndex { -1 };
+   int mFocusBitmapIndex { -1 };
    int mLabelBitmapIndex { -1 };
    int mPressedBitmapIndex { -1 };
    int mCurrentBitmapIndex { -1 };
@@ -103,6 +107,12 @@ public:
    int GetBitmapIndex() const
    {
       return mBitmapIndex;
+   }
+
+   void SetBitmapFocusIndex(int index)
+   {
+      mFocusBitmapIndex = index;
+      ButtonBase::SetBitmapFocus(theTheme.Bitmap(mFocusBitmapIndex));
    }
 
    void SetBitmapIndex(int index)
@@ -161,10 +171,103 @@ protected:
             ButtonBase::SetBitmapPressed(theTheme.Bitmap(mPressedBitmapIndex));
          if(mCurrentBitmapIndex != -1)
             ButtonBase::SetBitmapCurrent(theTheme.Bitmap(mCurrentBitmapIndex));
+         if(mFocusBitmapIndex != -1)
+            ButtonBase::SetBitmapFocus(theTheme.Bitmap(mFocusBitmapIndex));
 
          if(mBackgroundColorIndex != -1)
             ButtonBase::SetBackgroundColour(theTheme.Colour(mBackgroundColorIndex));
          ButtonBase::Refresh();
       }
    }
+};
+
+template<typename AButtonBase>
+class ThemedAButtonWrapper final
+   : public AButtonBase
+   , public PrefsListener
+{
+   Observer::Subscription mThemeChangeSubscription;
+
+   std::map<int, std::array<int, AButton::AButtonStateCount>> mSets;
+   int mBackgroundColorIndex{-1};
+   int mForegroundColorIndex{-1};
+   std::optional<TranslatableString> mTranslatableLabel;
+
+public:
+   template <typename... Args>
+   ThemedAButtonWrapper(Args&&... args) : AButtonBase( std::forward<Args>(args)... )
+   {
+      mThemeChangeSubscription =
+         theTheme.Subscribe(*this, &ThemedAButtonWrapper::OnThemeChange);
+   }
+
+   void SetImageIndices(int setIndex, int up, int over, int down, int overDown, int disabled)
+   {
+      mSets[setIndex] = { up, over, down, overDown, disabled };
+      AButtonBase::SetAlternateImages(
+         setIndex,
+         theTheme.Image(up),
+         theTheme.Image(over),
+         theTheme.Image(down),
+         theTheme.Image(overDown),
+         theTheme.Image(disabled)
+      );
+   }
+
+   void SetBackgroundColorIndex(int index)
+   {
+      mBackgroundColorIndex = index;
+      if(index != -1)
+         AButtonBase::SetBackgroundColour(theTheme.Colour(mBackgroundColorIndex));
+   }
+
+   void SetForegroundColorIndex(int index)
+   {
+      mForegroundColorIndex = index;
+      if(index != -1)
+         AButtonBase::SetForegroundColour(theTheme.Colour(mForegroundColorIndex));
+   }
+
+   void SetTranslatableLabel(TranslatableString label)
+   {
+      mTranslatableLabel = std::move(label);
+      AButtonBase::SetLabel(*mTranslatableLabel);
+   }
+
+   void UpdatePrefs() override
+   {
+      PrefsListener::UpdatePrefs();
+      if(mTranslatableLabel)
+      {
+         AButtonBase::SetLabel(*mTranslatableLabel);
+         AButtonBase::Refresh(false);
+      }
+   }
+
+private:
+
+   void OnThemeChange(ThemeChangeMessage message)
+   {
+      if (message.appearance)
+      {
+         for(const auto& p : mSets)
+            AButtonBase::SetAlternateImages(
+               p.first,
+               theTheme.Image(p.second[AButton::AButtonUp]),
+               theTheme.Image(p.second[AButton::AButtonOver]),
+               theTheme.Image(p.second[AButton::AButtonDown]),
+               theTheme.Image(p.second[AButton::AButtonOverDown]),
+               theTheme.Image(p.second[AButton::AButtonDis])
+            );
+
+         if(mBackgroundColorIndex != -1)
+            AButtonBase::SetBackgroundColour(theTheme.Colour(mBackgroundColorIndex));
+
+         if(mForegroundColorIndex != -1)
+            AButtonBase::SetForegroundColour(theTheme.Colour(mForegroundColorIndex));
+
+         AButtonBase::Refresh(false);
+      }
+   }
+
 };

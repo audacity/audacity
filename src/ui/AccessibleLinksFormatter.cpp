@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <memory>
 
+#include "BasicUI.h"
+
 #include <wx/hyperlink.h>
 
 #ifdef __WXGTK__
@@ -123,19 +125,29 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
 
             // Add hyperlink
 #ifndef __WXGTK__
-            wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
-               S.GetParent(), wxID_ANY, argument->Value.Translation(),
-               argument->TargetURL);
-
-            if (argument->Handler)
+            const auto value = argument->Value.Translation();
+            // On macOS wx refuses to create wxHyperlinkCtrl with an empty value
+            if (!value.empty())
             {
-               hyperlink->Bind(
-                  wxEVT_HYPERLINK, [handler = argument->Handler](wxHyperlinkEvent& evt) { 
-                    handler(); 
-               });
-            }
+               wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
+                  S.GetParent(), wxID_ANY, argument->Value.Translation(),
+                  argument->TargetURL);
 
-            S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+               hyperlink->Bind(
+                  wxEVT_HYPERLINK,
+                  [handler = argument->Handler,
+                   url = argument->TargetURL](wxHyperlinkEvent& evt)
+                  {
+                     if (handler)
+                        handler();
+                     else if (!url.empty())
+                        BasicUI::OpenInDefaultBrowser(url);
+                     
+                  });
+               
+
+               S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+            }
 #else
             wxStaticText* hyperlink = S.AddVariableText(argument->Value);
 
@@ -147,7 +159,7 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
                 if (handler)
                     handler();
                 else if (!url.empty())
-                    wxLaunchDefaultBrowser(url);
+                     BasicUI::OpenInDefaultBrowser(url);
             });
 #endif
             // Update the currentPostion to the first symbol after the

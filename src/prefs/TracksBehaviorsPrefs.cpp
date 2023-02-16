@@ -20,7 +20,7 @@
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: i.e. the behaviors of tracks */
@@ -120,6 +120,8 @@ bool TracksBehaviorsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+   EditClipsCanMove.Invalidate();
+   ScrollingPreference.Invalidate();
 
    return true;
 }

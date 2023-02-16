@@ -13,7 +13,7 @@
 #include "Contrast.h"
 
 #include "../CommonCommandFlags.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectFileIO.h"
@@ -669,7 +669,7 @@ AttachedWindows::RegisteredFactory sContrastDialogKey{
 };
 
 // Define our extra menu item that invokes that factory
-struct Handler : CommandHandlerObject {
+namespace {
    void OnContrast(const CommandContext &context)
    {
       auto &project = context.project;
@@ -682,24 +682,16 @@ struct Handler : CommandHandlerObject {
          return;
       contrastDialog->Show();
    }
-};
-
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static Handler instance;
-   return instance;
 }
 
 // Register that menu item
 
 using namespace MenuTable;
 AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
-   ( FinderScope{ findCommandHandler },
-      Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
-         &Handler::OnContrast,
-         AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
-         wxT("Ctrl+Shift+T") ) )
+   Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
+      OnContrast,
+      AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag(),
+      wxT("Ctrl+Shift+T") )
 };
 
 }

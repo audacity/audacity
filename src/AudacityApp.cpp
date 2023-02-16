@@ -30,13 +30,10 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
 #include <wx/evtloop.h>
-#include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/docview.h>
-#include <wx/event.h>
 #include <wx/ipc.h>
 #include <wx/window.h>
-#include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/snglinst.h>
 #include <wx/splash.h>
@@ -45,7 +42,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/fontmap.h>
 
 #include <wx/fs_zip.h>
-#include <wx/image.h>
 
 #include <wx/dir.h>
 #include <wx/file.h>
@@ -78,13 +74,13 @@ It handles initialization and termination by subclassing wxApp.
 #include "AudioIO.h"
 #include "Benchmark.h"
 #include "Clipboard.h"
+#include "CommandLineArgs.h"
 #include "CrashReport.h" // for HAS_CRASH_REPORT
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
 #include "Journal.h"
-//#include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
 #include "PathList.h"
@@ -99,7 +95,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
-#include "Screenshot.h"
 #include "Sequence.h"
 #include "SelectFile.h"
 #include "TempDirectory.h"
@@ -122,6 +117,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "FrameStatisticsDialog.h"
 #include "PluginStartupRegistration.h"
 #include "IncompatiblePluginsDialog.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if defined(HAVE_UPDATES_CHECK)
 #  include "update/UpdateManager.h"
@@ -139,6 +135,7 @@ It handles initialization and termination by subclassing wxApp.
 //#include "Profiler.h"
 
 #include "ModuleManager.h"
+#include "PluginHost.h"
 
 #include "import/Import.h"
 
@@ -168,6 +165,14 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 
 #include <thread>
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+#include "URLSchemesRegistry.h"
+
+// This prefix is used to encode parameters
+// in RPC used by single instance checker
+static wxString urlPrefix = wxT("url:");
+#endif
 
 
 ////////////////////////////////////////////////////////////
@@ -398,6 +403,25 @@ void PopulatePreferences()
       gPrefs->Write(wxT("/GUI/Toolbars/Control/W"), -1);
    }
 
+   if(std::pair{vMajor, vMinor} < std::pair{3, 2})
+   {
+      if(gPrefs->Exists(wxT("/GUI/ToolBars")))
+         gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
+      if(gPrefs->Exists(wxT("Window")))
+         gPrefs->DeleteGroup(wxT("Window"));
+      if(gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+      if(gPrefs->Exists("/GUI/Help"))
+         gPrefs->DeleteEntry("/GUI/Help");
+   }
+
+   if(std::tuple{ vMajor, vMinor, vMicro } < std::tuple{ 3, 2, 3 })
+   {
+      // Reset Share Audio width if it was populated before 3.2.3
+      if(gPrefs->Exists("/GUI/ToolBars/Share Audio/W"))
+         gPrefs->DeleteEntry("/GUI/ToolBars/Share Audio/W");
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
@@ -410,7 +434,7 @@ void PopulatePreferences()
 void InitBreakpad()
 {
     wxFileName databasePath;
-    databasePath.SetPath(wxStandardPaths::Get().GetUserLocalDataDir());
+    databasePath.SetPath(FileNames::StateDir());
     databasePath.AppendDir("crashreports");
     databasePath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
     
@@ -502,7 +526,6 @@ static void QuitAudacity(bool bForce)
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
 #endif
-   CloseScreenshotTools();
 
    // Logger window is always destroyed on macOS,
    // on other platforms - it prevents the runloop
@@ -776,20 +799,42 @@ public:
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
+#include <ApplicationServices/ApplicationServices.h>
+
+namespace
+{
+bool sOSXIsGUIApplication { true };
+}
+
 int main(int argc, char *argv[])
 {
    wxDISABLE_DEBUG_SUPPORT();
+
+   CommandLineArgs::argc = argc;
+   CommandLineArgs::argv = argv;
+
+   if(PluginHost::IsHostProcess())
+   {
+      sOSXIsGUIApplication = false;
+      ProcessSerialNumber psn = { 0, kCurrentProcess };
+      TransformProcessType(&psn, kProcessTransformToUIElementApplication);
+   }
 
    return wxEntry(argc, argv);
 }
 
 #elif defined(__WXGTK__) && defined(NDEBUG)
 
+// Specially define main() for Linux debug
+
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
 int main(int argc, char *argv[])
 {
+   CommandLineArgs::argc = argc;
+   CommandLineArgs::argv = argv;
+
    wxDISABLE_DEBUG_SUPPORT();
 
    // Bug #1986 workaround - This doesn't actually reduce the number of 
@@ -797,14 +842,46 @@ int main(int argc, char *argv[])
    // never be able to get rid of the messages entirely, but we should
    // look into what's causing them, so allow them to show in Debug
    // builds.
-   stdout = freopen("/dev/null", "w", stdout);
-   stderr = freopen("/dev/null", "w", stderr);
+   freopen("/dev/null", "w", stdout);
+   freopen("/dev/null", "w", stderr);
 
    return wxEntry(argc, argv);
 }
 
+#elif defined(__WXGTK__)
+
+// Linux release build
+
+wxIMPLEMENT_WX_THEME_SUPPORT
+int main(int argc, char *argv[])
+{
+   CommandLineArgs::argc = argc;
+   CommandLineArgs::argv = argv;
+
+   wxDISABLE_DEBUG_SUPPORT();
+
+   return wxEntry(argc, argv);
+}
+wxIMPLEMENT_APP_NO_MAIN(AudacityApp);
+
 #else
-IMPLEMENT_APP(AudacityApp)
+
+wxIMPLEMENT_WX_THEME_SUPPORT
+extern "C" int WINAPI WinMain(HINSTANCE hInstance,
+                            HINSTANCE hPrevInstance,
+                            wxCmdLineArgType lpCmdLine,
+                            int nCmdShow)
+{
+   static CommandLineArgs::MSWParser wxArgs;
+   CommandLineArgs::argc = wxArgs.argc;
+   CommandLineArgs::argv = wxArgs.argv.data();
+
+   wxDISABLE_DEBUG_SUPPORT();
+
+   return wxEntry(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+}
+wxIMPLEMENT_APP_NO_MAIN(AudacityApp);
+
 #endif
 
 #ifdef __WXMAC__
@@ -833,6 +910,14 @@ void AudacityApp::MacNewFile()
    if (AllProjects{}.empty())
       (void) ProjectManager::New();
 }
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+void AudacityApp::MacOpenURL (const wxString& url)
+{
+   if(!url.IsEmpty())
+      ofqueue.push_back(urlPrefix + url);
+}
+#endif
 
 #endif //__WXMAC__
 
@@ -976,6 +1061,21 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
                continue;
             }
 
+         #ifdef HAS_CUSTOM_URL_HANDLING
+            if (name.StartsWith(urlPrefix))
+            {
+               const auto utf8Url = name.ToUTF8();
+               const size_t prefixSize = urlPrefix.Length();
+
+               if (utf8Url.length() <= prefixSize)
+                  continue;
+
+               URLSchemesRegistry::Get().HandleURL(
+                  { utf8Url.data() + prefixSize,
+                    utf8Url.length() - prefixSize });
+            }
+            else
+         #endif
             // TODO: Handle failures better.
             // Some failures are OK, e.g. file not found, just would-be-nices to do better,
             // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
@@ -1076,17 +1176,32 @@ bool AudacityApp::OnExceptionInMainLoop()
 
 AudacityApp::AudacityApp()
 {
+}
+
+bool AudacityApp::Initialize(int& argc, wxChar** argv)
+{
+   if(!PluginHost::IsHostProcess())
+   {
 #if defined(USE_BREAKPAD)
-    InitBreakpad();
-// Do not capture crashes in debug builds
+      InitBreakpad();
+      // Do not capture crashes in debug builds
 #elif !defined(_DEBUG)
 #if defined(HAS_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
-   wxHandleFatalExceptions();
+      wxHandleFatalExceptions();
 #endif
 #endif
 #endif
+   }
+   return wxApp::Initialize(argc, argv);
 }
+
+#ifdef __WXMAC__
+bool AudacityApp::OSXIsGUIApplication()
+{
+   return sOSXIsGUIApplication;
+}
+#endif
 
 AudacityApp::~AudacityApp()
 {
@@ -1095,10 +1210,17 @@ AudacityApp::~AudacityApp()
 // Some of the many initialization steps
 void AudacityApp::OnInit0()
 {
-   // Inject basic GUI services behind the facade
+   // Inject basic GUI services behind the facades
    {
       static wxWidgetsBasicUI uiServices;
       (void)BasicUI::Install(&uiServices);
+
+      static WindowPlacementFactory::Scope scope {
+      [](AudacityProject &project)
+         -> std::unique_ptr<BasicUI::WindowPlacement> {
+         return std::make_unique<wxWidgetsWindowPlacement>(
+            &GetProjectFrame(project));
+      } };
    }
 
    // Fire up SQLite
@@ -1496,7 +1618,8 @@ bool AudacityApp::InitPart2()
 
          if(!failedPlugins.empty())
          {
-            auto dialog = safenew IncompatiblePluginsDialog(GetTopWindow(), wxID_ANY, failedPlugins);
+            auto dialog = safenew IncompatiblePluginsDialog(GetTopWindow(), wxID_ANY, ScanType::Startup, failedPlugins);
+            dialog->Bind(wxEVT_CLOSE_WINDOW, [dialog](wxCloseEvent&) { dialog->Destroy(); });
             dialog->Show();
          }
       }
@@ -1558,6 +1681,18 @@ bool AudacityApp::InitPart2()
       wxSetlocale(LC_NUMERIC, Languages::GetLocaleName());
       event.Skip();
    });
+#endif
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+   // Schemes are case insensitive as per RFC: https://www.rfc-editor.org/rfc/rfc3986#section-3.1
+   URLSchemesRegistry::Get().RegisterScheme(AUDACITY_NAME);
+
+   wxString url;
+   if (parser->Found("u", &url))
+   {
+      auto utf8Url = url.ToUTF8();
+      URLSchemesRegistry::Get().HandleURL({ utf8Url.data(), utf8Url.length() });
+   }
 #endif
 
    return TRUE;
@@ -1772,6 +1907,12 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          }
       }
 
+   #ifdef HAS_CUSTOM_URL_HANDLING
+      wxString url;
+      parser->Found("u", &url);
+   #endif
+
+
       // On Windows, we attempt to make a connection
       // to an already active Audacity.  If successful, we send
       // the first command line argument (the audio file name)
@@ -1786,6 +1927,14 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          if (conn)
          {
             bool ok = false;
+         #ifdef HAS_CUSTOM_URL_HANDLING
+            if (!url.empty())
+            {
+               if (!conn->Execute(urlPrefix + url))
+                  return false;
+            }
+         #endif
+
             if (filenames.size() > 0)
             {
                for (size_t i = 0, cnt = filenames.size(); i < cnt; i++)
@@ -1855,6 +2004,17 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    // Create and map the shared memory segment where the port number
    // will be stored.
    int memid = shmget(memkey, sizeof(int), IPC_CREAT | S_IRUSR | S_IWUSR);
+   if (memid == -1)
+   {
+      AudacityMessageBox(
+         XO("Unable to create shared memory segment.\n\n"
+            "error code=%d : \"%s\".").Format(errno, strerror(errno)),
+         XO("Audacity Startup Failure"),
+         wxOK | wxICON_ERROR);
+
+      return false;
+   }
+
    int *portnum = (int *) shmat(memid, nullptr, 0);
 
    // Create (or return) the SERVER semaphore ID
@@ -2054,6 +2214,21 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       return false;
    }
 
+#ifdef HAS_CUSTOM_URL_HANDLING
+   wxString url;
+
+   if (parser->Found(wxT("u"), &url))
+   {
+      if (!url.empty())
+      {
+         url = urlPrefix + url;
+         auto str = url.c_str().AsWChar();
+
+         sock->WriteMsg(str, (url.length() + 1) * sizeof(*str));
+      }
+   }
+#endif
+
 #if defined(__WXMAC__)
    // On macOS the client gets events from the wxWidgets framework that
    // go to AudacityApp::MacOpenFile. Forward the file names to the prior
@@ -2162,6 +2337,11 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
    parser->AddParam(_("audio or project file name"),
                     wxCMD_LINE_VAL_STRING,
                     wxCMD_LINE_PARAM_MULTIPLE | wxCMD_LINE_PARAM_OPTIONAL);
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+   /* i18n-hint: This option is used to handle custom URLs in Audacity */
+   parser->AddOption(wxT("u"), wxT("url"), _("Handle 'audacity://' url"));
+#endif
 
    // Run the parser
    if (parser->Parse() == 0)

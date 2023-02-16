@@ -1,12 +1,9 @@
-
-
 #include "../AdornedRulerPanel.h"
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "../CommonCommandFlags.h"
-#include "../SpectrumAnalyst.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
@@ -17,7 +14,7 @@
 #include "../SelectUtilities.h"
 #include "../SyncLock.h"
 #include "../TrackPanel.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -25,36 +22,9 @@
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 // private helper classes and functions
 namespace {
-
-void DoNextPeakFrequency(AudacityProject &project, bool up)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-
-   // Find the first selected wave track that is in a spectrogram view.
-   const WaveTrack *pTrack {};
-   for ( auto wt : tracks.Selected< const WaveTrack >() ) {
-      const auto displays = WaveTrackView::Get( *wt ).GetDisplays();
-      bool hasSpectrum = (displays.end() != std::find(
-         displays.begin(), displays.end(),
-         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
-      ) );
-      if ( hasSpectrum ) {
-         pTrack = wt;
-         break;
-      }
-   }
-
-   if (pTrack) {
-      SpectrumAnalyst analyst;
-      SelectHandle::SnapCenterOnce(analyst, viewInfo, pTrack, up);
-      ProjectHistory::Get( project ).ModifyState(false);
-   }
-}
 
 double NearestZeroCrossing
 (AudacityProject &project, double t0)
@@ -618,48 +588,6 @@ void OnSelectionRestore(const CommandContext &context)
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-
-// Handler state:
-double mLastF0{ SelectedRegion::UndefinedFrequency };
-double mLastF1{ SelectedRegion::UndefinedFrequency };
-
-void OnToggleSpectralSelection(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-
-   const double f0 = selectedRegion.f0();
-   const double f1 = selectedRegion.f1();
-   const bool haveSpectralSelection =
-   !(f0 == SelectedRegion::UndefinedFrequency &&
-     f1 == SelectedRegion::UndefinedFrequency);
-   if (haveSpectralSelection)
-   {
-      mLastF0 = f0;
-      mLastF1 = f1;
-      selectedRegion.setFrequencies
-      (SelectedRegion::UndefinedFrequency, SelectedRegion::UndefinedFrequency);
-   }
-   else
-      selectedRegion.setFrequencies(mLastF0, mLastF1);
-
-   ProjectHistory::Get( project ).ModifyState(false);
-}
-
-void OnNextHigherPeakFrequency(const CommandContext &context)
-{
-   auto &project = context.project;
-   DoNextPeakFrequency(project, true);
-}
-
-void OnNextLowerPeakFrequency(const CommandContext &context)
-{
-   auto &project = context.project;
-   DoNextPeakFrequency(project, false);
-}
-#endif
-
 // Handler state:
 bool mCursorPositionHasBeenStored{ false };
 double mCursorPositionStored{ 0.0 };
@@ -1050,23 +978,10 @@ BaseItemSharedPtr SelectMenu()
                Command( wxT("SelRestore"), XXO("Retrieve Selectio&n"),
                   FN(OnSelectionRestore), TracksExistFlag() )
             )
-         ),
+         )
 
          //////////////////////////////////////////////////////////////////////////
 
-   #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         Menu( wxT("Spectral"), XXO("S&pectral"),
-            Command( wxT("ToggleSpectralSelection"),
-               XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
-               TracksExistFlag(), wxT("Q") ),
-            Command( wxT("NextHigherPeakFrequency"),
-               XXO("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency),
-               TracksExistFlag() ),
-            Command( wxT("NextLowerPeakFrequency"),
-               XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
-               TracksExistFlag() )
-         )
-   #endif
       ),
 
       Section( "",

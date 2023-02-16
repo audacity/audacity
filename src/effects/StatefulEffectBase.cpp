@@ -28,7 +28,7 @@
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -61,10 +61,12 @@ bool StatefulEffectBase::Instance::RealtimeInitialize(
    return GetEffect().RealtimeInitialize(settings, sampleRate);
 }
 
-bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
-   unsigned numChannels, float sampleRate)
+bool StatefulEffectBase::Instance::
+RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs *pOutputs, unsigned numChannels, float sampleRate)
 {
-   return GetEffect().RealtimeAddProcessor(settings, numChannels, sampleRate);
+   return GetEffect()
+      .RealtimeAddProcessor(settings, pOutputs, numChannels, sampleRate);
 }
 
 bool StatefulEffectBase::Instance::RealtimeSuspend()
@@ -77,9 +79,10 @@ bool StatefulEffectBase::Instance::RealtimeResume()
    return GetEffect().RealtimeResume();
 }
 
-bool StatefulEffectBase::Instance::RealtimeProcessStart(EffectSettings &settings)
+bool StatefulEffectBase::Instance::RealtimeProcessStart(
+   MessagePackage &package)
 {
-   return GetEffect().RealtimeProcessStart(settings);
+   return GetEffect().RealtimeProcessStart(package);
 }
 
 size_t StatefulEffectBase::Instance::RealtimeProcess(size_t group,
@@ -110,6 +113,33 @@ size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
    return GetEffect().SetBlockSize(maxBlockSize);
 }
 
+unsigned StatefulEffectBase::Instance::GetAudioInCount() const
+{
+   return GetEffect().GetAudioInCount();
+}
+
+unsigned StatefulEffectBase::Instance::GetAudioOutCount() const
+{
+   return GetEffect().GetAudioOutCount();
+}
+
+bool StatefulEffectBase::Instance::NeedsDither() const
+{
+   return GetEffect().NeedsDither();
+}
+
+bool StatefulEffectBase::Instance::ProcessInitialize(
+   EffectSettings &settings, double sampleRate, ChannelNames chanMap)
+{
+   return GetEffect()
+      .ProcessInitialize(settings, sampleRate, chanMap);
+}
+
+bool StatefulEffectBase::Instance::ProcessFinalize() noexcept
+{
+   return GetEffect().ProcessFinalize();
+}
+
 size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 {
    mEffectBlockSize = maxBlockSize;
@@ -121,13 +151,23 @@ size_t StatefulEffectBase::GetBlockSize() const
    return mEffectBlockSize;
 }
 
+unsigned StatefulEffectBase::GetAudioInCount() const
+{
+   return 0;
+}
+
+unsigned StatefulEffectBase::GetAudioOutCount() const
+{
+   return 0;
+}
+
 bool StatefulEffectBase::RealtimeInitialize(EffectSettings &, double)
 {
    return false;
 }
 
-bool StatefulEffectBase::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
+bool StatefulEffectBase::RealtimeAddProcessor(EffectSettings &settings,
+   EffectOutputs *, unsigned numChannels, float sampleRate)
 {
    return true;
 }
@@ -142,7 +182,7 @@ bool StatefulEffectBase::RealtimeResume()
    return true;
 }
 
-bool StatefulEffectBase::RealtimeProcessStart(EffectSettings &settings)
+bool StatefulEffectBase::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
@@ -165,6 +205,27 @@ bool StatefulEffectBase::RealtimeFinalize(EffectSettings &settings) noexcept
 }
 
 bool StatefulEffectBase::Init()
+{
+   return true;
+}
+
+sampleCount StatefulEffectBase::GetLatency() const
+{
+   return 0;
+}
+
+bool StatefulEffectBase::NeedsDither() const
+{
+   return true;
+}
+
+bool StatefulEffectBase::ProcessInitialize(
+   EffectSettings &, double, ChannelNames)
+{
+   return true;
+}
+
+bool StatefulEffectBase::ProcessFinalize() noexcept
 {
    return true;
 }

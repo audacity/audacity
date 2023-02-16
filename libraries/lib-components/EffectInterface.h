@@ -48,7 +48,11 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <optional>
+#include <type_traits>
 #include <wx/event.h>
+
+#include "Observer.h"
 
 class ShuttleGui;
 template<bool Const> class SettingsVisitorBase;
@@ -81,18 +85,11 @@ public:
    double GetDuration() const { return mDuration; }
    void SetDuration(double value) { mDuration = std::max(0.0, value); }
 
-   //! Versioning counter for detecting echo from worker thread;
-   //! it does not need a large range of values
-   using Counter = unsigned char;
-   Counter GetCounter() const { return mCounter; }
-   void SetCounter(Counter value) { mCounter = value; }
-
    bool GetActive() const { return mActive; }
    void SetActive(bool value) { mActive = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
-   Counter mCounter{ 0 };
    bool mActive{ true };
 };
 
@@ -129,6 +126,25 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
    }
 };
 
+//! Hold values to send to effect output meters
+class COMPONENTS_API EffectOutputs {
+public:
+   virtual ~EffectOutputs();
+   virtual std::unique_ptr<EffectOutputs> Clone() const = 0;
+
+   //! Update one Outputs object from another
+   /*!
+    This may run in a worker thread, and should avoid allocating and freeing.
+    Even on the main thread, it must avoid relocation of members of containers.
+    Therefore do not grow or clear any containers, but assign the preallocated
+    contents of one container from another.
+
+    @param src settings to copy from; assume it comes from the same
+    EffectSettingsManager as *this
+    */
+   virtual void Assign(EffectOutputs &&src) = 0;
+};
+
 //! Interface for accessing an EffectSettings that may change asynchronously in
 //! another thread; to be used in the main thread, only.
 /*! Updates are communicated atomically both ways.  The address of Get() should
@@ -136,11 +152,49 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
 class COMPONENTS_API EffectSettingsAccess
    : public std::enable_shared_from_this<EffectSettingsAccess> {
 public:
+   //! Type of messages to send from main thread to processing
+   class COMPONENTS_API Message {
+   public:
+      virtual ~Message();
+      virtual std::unique_ptr<Message> Clone() const = 0;
+
+      //! Update one Message object from another, which is then left "empty"
+      /*!
+       This may run in a worker thread, and should avoid allocating and freeing.
+       Therefore do not copy, grow or clear any containers in it, but assign the
+       preallocated contents of *this from another, which then should be
+       reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Assign(Message &&src) = 0;
+
+      //! Combine one Message object with another, which is then left "empty"
+      /*!
+       This runs in the main thread.
+       Combine the contents of one message into *this, and then the other
+       should be reassigned to an initial state.
+
+       Assume that src and *this come from the same EffectInstance.
+
+       @param src settings to copy from
+       */
+      virtual void Merge(Message &&src) = 0;
+   };
+
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
-   virtual void Set(EffectSettings &&settings) = 0;
+   virtual void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage = nullptr) = 0;
+   //! Message-only overload of Set().  In future, this should be the only one.
+   virtual void Set(std::unique_ptr<Message> pMessage = nullptr) = 0;
 
    //! Make the last `Set` changes "persistent" in underlying storage
+   /*!
+    @pre called on the main thread only
+    */
    virtual void Flush() = 0;
 
    //! @return whether this and the other give access to the same settings
@@ -148,15 +202,16 @@ public:
 
    //! Do a correct read-modify-write of settings
    /*!
-    @param function takes EffectSettings & and its return is ignored.
+    @param function takes EffectSettings & and its return is a unique pointer
+    to Message, possibly null.
     If it throws an exception, then the settings will not be updated.
     Thus, a strong exception safety guarantee.
     */
    template<typename Function>
    void ModifySettings(Function &&function) {
       auto settings = this->Get();
-      std::forward<Function>(function)(settings);
-      this->Set(std::move(settings));
+      auto result = std::forward<Function>(function)(settings);
+      this->Set(std::move(settings), std::move(result));
    }
 };
 
@@ -168,7 +223,9 @@ public:
       : mSettings{settings} {}
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
-   void Set(EffectSettings &&settings) override;
+   void Set(EffectSettings &&settings,
+      std::unique_ptr<Message> pMessage) override;
+   void Set(std::unique_ptr<Message> pMessage) override;
    void Flush() override;
    bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
@@ -211,7 +268,10 @@ public:
    //! In which versions of Audacity was an effect realtime capable?
    enum class RealtimeSince : unsigned {
       Never,
-      Since_3_2,
+      // For built-in effects that became realtime in 3.2.x or a later version
+      // but were non-realtime in an earlier version; must also increase
+      // REGVERCUR in any release with such a change
+      After_3_1,
       Always,
    };
 
@@ -239,14 +299,8 @@ public:
    virtual bool IsHiddenFromMenus() const;
 };
 
-//! Direction in which settings are copied
-enum class SettingsCopyDirection
-{
-   //! Main thread settings replicated to the worker thread
-   MainToWorker,
-   //! Worker thread settings replicated to main thread
-   WorkerToMain
-};
+using OptionalMessage =
+   std::optional<std::unique_ptr<EffectSettingsAccess::Message>>;
 
 /*************************************************************************************//**
 
@@ -290,7 +344,7 @@ public:
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst, SettingsCopyDirection copyDirection) const;
+      const EffectSettings &src, EffectSettings &dst) const;
 
    //! Store settings as keys and values
    /*!
@@ -311,16 +365,21 @@ public:
    virtual RegistryPaths GetFactoryPresets() const = 0;
 
    //! Change settings to a user-named preset
-   virtual bool LoadUserPreset(
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const = 0;
    //! Save settings in the configuration file as a user-named preset
    virtual bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const = 0;
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id, EffectSettings &settings) const = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadFactoryPreset(
+      int id, EffectSettings &settings) const = 0;
    //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
+   //! @return nullopt for failure
+   [[nodiscard]] virtual OptionalMessage LoadFactoryDefaults(
+      EffectSettings &settings) const = 0;
    //! @}
 
    //! Visit settings (and maybe change them), if defined.
@@ -334,6 +393,16 @@ public:
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
+
+   /*! @name outputs
+    @{
+    */
+   //! Produce an object to hold values to send to effect output meters
+   /*!
+    Default implementation returns nullptr
+    */
+   virtual std::unique_ptr<EffectOutputs> MakeOutputs() const;
+   //! @}
 };
 
 class wxDialog;
@@ -341,14 +410,11 @@ class wxWindow;
 
 class EffectUIClientInterface;
 
-class sampleCount;
-
 // ----------------------------------------------------------------------------
 // Supported channel assignments
 // ----------------------------------------------------------------------------
 
-typedef enum
-{
+enum ChannelName : int {
    // Use to mark end of list
    ChannelNameEOL = -1,
    // The default channel assignment
@@ -378,7 +444,8 @@ typedef enum
    ChannelNameBottomFrontCenter,
    ChannelNameBottomFrontLeft,
    ChannelNameBottomFrontRight,
-} ChannelName, *ChannelNames;
+};
+using ChannelNames = const ChannelName *;
 
 /***************************************************************************//**
 \class EffectInstance
@@ -390,26 +457,28 @@ class COMPONENTS_API EffectInstance
 public:
    virtual ~EffectInstance();
 
-   //! Call once to set up state for whole list of tracks to be processed
-   /*!
-    @return success
-    Default implementation does nothing, returns true
-    */
-   virtual bool Init();
-
-   //! Actually do the effect here.
-   /*!
-    @return success
-    */
-   virtual bool Process(EffectSettings &settings) = 0;
-
    virtual size_t GetBlockSize() const = 0;
 
    // Suggest a block size, but the return is the size that was really set:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
+   //! How many input buffers to allocate at once
+   /*!
+    If the instance processes channels independently, this can return 1
+    The result is not necessarily well defined before `RealtimeInitialize`
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   /*!
+    The result is not necessarily well defined before `RealtimeInitialize`
+    */
+   virtual unsigned GetAudioOutCount() const = 0;
+
    /*!
     @return success
+    @post `GetAudioInCount()` and `GetAudioOutCount()` are well defined
+
     Default implementation does nothing, returns false (so assume realtime is
     not supported).
     Other member functions related to realtime return true or zero, but will not
@@ -422,7 +491,8 @@ public:
     Default implementation does nothing, returns true
     */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate);
+      EffectSettings &settings, EffectOutputs *pOutputs,
+      unsigned numChannels, float sampleRate);
 
    /*!
     @return success
@@ -436,12 +506,31 @@ public:
     */
    virtual bool RealtimeResume();
 
+   //! Type of messages to send from main thread to processing, which can
+   //! describe the transitions of settings (instead of their states)
+   using Message = EffectSettingsAccess::Message;
+
+   //! Called on the main thread, in which the result may be cloned
+   /*! Default implementation returns a null */
+   virtual std::unique_ptr<Message> MakeMessage() const;
+
+   // TODO make it just an alias for Message *
+   struct MessagePackage { EffectSettings &settings; Message *pMessage{}; };
+
+   //! If true, the effect makes no use EffectSettings for inter-thread
+   //! comminication
+   /*!
+    Default implementation returns false.  In future, all effects should be
+    rewritten to use messages and this function will be removed.
+    */
+   virtual bool UsesMessages() const noexcept;
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeProcessStart(EffectSettings &settings);
+   virtual bool RealtimeProcessStart(MessagePackage &package);
 
    /*!
     @return success
@@ -466,6 +555,38 @@ public:
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
    virtual size_t GetTailSize() const;
+
+   using SampleCount = uint64_t;
+
+   /*!
+    Default implementation returns 0
+    */
+   virtual SampleCount GetLatency(
+      const EffectSettings &settings, double sampleRate) const;
+
+   /*! If true (default result), then results require dither if later rendered
+    to a narrower sample format */
+   virtual bool NeedsDither() const;
+
+   //! Called at start of destructive processing, for each (mono/stereo) track
+   //! Default implementation does nothing, returns true
+   /*!
+    @param chanMap null or array terminated with ChannelNameEOL.  Do not retain
+       the pointer
+    @post `GetAudioInCount()` and `GetAudioOutCount()` are well defined
+    */
+   virtual bool ProcessInitialize(EffectSettings &settings,
+      double sampleRate, ChannelNames chanMap) = 0;
+
+   //! Called at end of destructive processing, for each (mono/stereo) track
+   //! Default implementation does nothing, returns true
+   //! This may be called during stack unwinding:
+   virtual bool ProcessFinalize() noexcept = 0;
+
+   //! Called for destructive effect computation
+   virtual size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+   = 0;
 };
 
 //! Inherit to add a state variable to an EffectInstance subclass
@@ -502,126 +623,6 @@ public:
     */
    virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
-   //! How many input buffers to allocate at once
-   /*!
-    If the effect ALWAYS processes channels independently, this can return 1
-    */
-   virtual unsigned GetAudioInCount() const = 0;
-
-   //! How many output buffers to allocate at once
-   virtual unsigned GetAudioOutCount() const = 0;
-
-   //! Function that has not yet found a use
-   virtual int GetMidiInCount() const;
-
-   //! Function that has not yet found a use
-   virtual int GetMidiOutCount() const;
-};
-
-/*************************************************************************************//**
-
-\class EffectUIValidator
-
-\brief Interface for transferring values from a panel of effect controls
-
-*******************************************************************************************/
-class COMPONENTS_API EffectUIValidator /* not final */
-{
-public:
-   EffectUIValidator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access);
-
-   virtual ~EffectUIValidator();
-
-   //! Get settings data from the panel; may make error dialogs and return false
-   /*!
-    @return true only if panel settings are acceptable
-    */
-   virtual bool ValidateUI() = 0;
-
-   //! Update appearance of the panel for changes in settings
-   /*!
-    Default implementation does nothing, returns true
-
-    @return true if successful
-    */
-   virtual bool UpdateUI();
-
-   /*!
-    Default implementation returns false
-    @return true if using a native plug-in UI, not widgets
-    */
-   virtual bool IsGraphicalUI();
-
-   /*!
-    Handle the UI OnClose event. Default implementation calls mEffect.CloseUI()
-   */
-   virtual void OnClose();
-
-protected:
-   // Convenience function template for binding event handler functions
-   template<typename EventTag, typename Class, typename Event>
-   void BindTo(
-      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
-   {
-      src.Bind(eventType, pmf, static_cast<Class *>(this));
-   }
-
-   EffectUIClientInterface &mEffect;
-   EffectSettingsAccess &mAccess;
-
-   bool mUIClosed { false };
-};
-
-/*************************************************************************************//**
-
-\class EffectUIClientInterface
-
-\brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
-values.  It can import and export presets.
-
-*******************************************************************************************/
-class COMPONENTS_API EffectUIClientInterface /* not final */
-{
-public:
-   virtual ~EffectUIClientInterface();
-
-   /*!
-    @return 0 if destructive effect processing should not proceed (and there
-    may be a non-modal dialog still opened); otherwise, modal dialog return code
-    */
-   virtual int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal = false) = 0;
-
-   /*!
-    @return true if using a native plug-in UI, not widgets
-    */
-   virtual bool IsGraphicalUI() = 0;
-
-   //! Adds controls to a panel that is given as the parent window of `S`
-   /*!
-    @param S interface for adding controls to a panel in a dialog
-    @param instance guaranteed to have a lifetime containing that of the returned
-    object
-    @param access guaranteed to have a lifetime containing that of the returned
-    object
-
-    @return null for failure; else an object invoked to retrieve values of UI
-    controls; it might also hold some state needed to implement event handlers
-    of the controls; it will exist only while the dialog continues to exist
-    */
-   virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
-      EffectInstance &instance, EffectSettingsAccess &access) = 0;
-
-   virtual bool CanExportPresets() = 0;
-   virtual void ExportPresets(const EffectSettings &settings) const = 0;
-   virtual void ImportPresets(EffectSettings &settings) = 0;
-
-   virtual bool HasOptions() = 0;
-   virtual void ShowOptions() = 0;
-
-   virtual bool ValidateUI(EffectSettings &settings) = 0;
-   virtual bool CloseUI() = 0;
 };
 
 //! Component of a configuration key path, for last-used destructive settings

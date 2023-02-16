@@ -12,9 +12,8 @@
 
 #pragma once
 
-#include <gdk/gdk.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
+#include <glib.h>
+
 #include <wx/nativewin.h>
 
 #include <pluginterfaces/base/smartpointer.h>

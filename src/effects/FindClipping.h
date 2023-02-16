@@ -43,8 +43,8 @@ public:
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    void DoPopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access);
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -55,6 +55,8 @@ private:
 
    bool ProcessOne(LabelTrack *lt, int count, const WaveTrack * wt,
                    sampleCount start, sampleCount len);
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers

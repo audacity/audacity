@@ -34,6 +34,9 @@ public:
    explicit LV2FeaturesListBase(const LilvPlugin &plug);
    virtual ~LV2FeaturesListBase();
 
+   LV2FeaturesListBase(const LV2FeaturesListBase&) = delete;
+   LV2FeaturesListBase& operator=(const LV2FeaturesListBase&) = delete;
+
    //! Get vector of pointers to features, whose `.data()` can be passed to lv2
    using FeaturePointers = std::vector<const LV2_Feature *>;
    virtual FeaturePointers GetFeaturePointers() const = 0;
@@ -55,10 +58,15 @@ public:
    bool mNoResize{ false };
 };
 
+// Dummy "keyword" argument prevents overload resolution to the copy ctor
+struct WithBase_t{};
+constexpr WithBase_t WithBase;
+
 //! Extends one (immutable) feature list (whose lifetime contains this one's)
 class ExtendedLV2FeaturesList : public LV2FeaturesListBase {
 public:
-   explicit ExtendedLV2FeaturesList(const LV2FeaturesListBase &baseFeatures);
+   explicit ExtendedLV2FeaturesList(WithBase_t,
+      const LV2FeaturesListBase &baseFeatures);
    virtual ~ExtendedLV2FeaturesList();
    FeaturePointers GetFeaturePointers() const override;
    void AddFeature(const char *uri, const void *data);

@@ -28,13 +28,9 @@ hold information about one contributor to Audacity.
 
 #include "AboutDialog.h"
 
-#include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
-#include <wx/button.h>
 #include <wx/hyperlink.h>
-#include <wx/sizer.h>
 #include <wx/statbmp.h>
-#include <wx/intl.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 #include <wx/statbox.h>
@@ -49,12 +45,7 @@ hold information about one contributor to Audacity.
 #include "AllThemeResources.h"
 #include "Theme.h"
 
-// DA: Logo for About box.
-#ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
-#else
 #include "../images/AudacityLogoWithName.xpm"
-#endif
 
 // Notice this is a "system include".  This is on purpose and only until
 // we convert over to CMake.  Once converted, the "RevisionIndent.h" file
@@ -137,31 +128,24 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-
    AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Pietro Marcello"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Ryan Miller"), testerFormat, roleTeamMember);
+   AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
    AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Leo Wattenberg"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Leo Wattenberg"), designerFormat, roleTeamMember);
    AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
-   
-   // Former Musers
-   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleExMuse);
-   AddCredit(wxT("Jouni Helminen"), designerFormat, roleExMuse);
-   AddCredit(wxT("Pavel Penikov"), testerFormat, roleExMuse);
    
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
-   AddCredit(
-      wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]]"),
-      qualityAssuranceFormat, roleEmeritusTeam);
+   AddCredit(wxT("Gale Andrews"), qualityAssuranceFormat, roleEmeritusTeam);
    AddCredit(wxT("Richard Ash"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Christian Brochec"),
       documentationAndSupportFrenchFormat, roleEmeritusTeam);
@@ -197,15 +181,18 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Sami Boukortt"), developerFormat, roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
    AddCredit(wxT("Alex S. Brown"), developerFormat, roleContributor);
+   AddCredit(wxT("David Bryant"), developerFormat, roleContributor);
    AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
    AddCredit(wxT("Subhradeep Chakraborty"), developerFormat, roleContributor);
    AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
    AddCredit(wxT("Craig DeForest"), developerFormat, roleContributor);
    AddCredit(wxT("Edgar Franke (Edgar-RFT)"), developerFormat, roleContributor);
+   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleContributor);
    AddCredit(wxT("Mitch Golden"), developerFormat, roleContributor);
    AddCredit(wxT("Brian Gunlogson"), developerFormat, roleContributor);
    AddCredit(wxT("Andrew Hallendorff"), developerFormat, roleContributor);
    AddCredit(wxT("Robert H\u00E4nggi"), developerFormat, roleContributor);
+   AddCredit(wxT("Jouni Helminen"), designerFormat, roleContributor);
    AddCredit(wxT("Daniel Horgan"), developerFormat, roleContributor);
    AddCredit(wxT("David Hostetler"), developerFormat, roleContributor);
    AddCredit(wxT("Edward Hui"), developerFormat, roleContributor);
@@ -217,10 +204,12 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Paul Livesey"), developerFormat, roleContributor);
    AddCredit(wxT("Harvey Lubin"), graphicArtistFormat, roleContributor);
    AddCredit(wxT("Max Maisel"), developerFormat, roleContributor);
+   AddCredit(wxT("Pietro Marcello"), developerFormat, roleContributor);
    AddCredit(wxT("Greg Mekkes"), developerFormat, roleContributor);
    AddCredit(wxT("Abe Milde"), developerFormat, roleContributor);
    AddCredit(wxT("Paul Nasca"), developerFormat, roleContributor);
    AddCredit(wxT("Clayton Otey"), developerFormat, roleContributor);
+   AddCredit(wxT("Pavel Penikov"), testerFormat, roleContributor);
    AddCredit(wxT("Mark Phillips"), developerFormat, roleContributor);
    AddCredit(wxT("Andr\u00E9 Pinto"), developerFormat, roleContributor);
    AddCredit(wxT("Pokechu22"), developerFormat, roleContributor);
@@ -372,19 +361,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    wxTextOutputStream informationStr( o );   // string to build up list of information in
    informationStr
       << wxT("<center>")
-// DA: Description and provenance in About box
-#ifdef EXPERIMENTAL_DA
-      #undef _
-      #define _(s) wxGetTranslation((s))
-      << wxT("<h3>DarkAudacity ")
-      << wxString(AUDACITY_VERSION_STRING)
-      << wxT("</center></h3>")
-      << wxT("Customised version of the Audacity free, open source, cross-platform software " )
-      << wxT("for recording and editing sounds.")
-      << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2021 Audacity Team.<br>")
-      << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark.<br><br>")
-
-#else
       << XO("<h3>")
       << ProgramName
       << wxT(" ")
@@ -393,32 +369,16 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       /* i18n-hint: The program's name substitutes for %s */
       << XO("%s the free, open source, cross-platform software for recording and editing sounds.")
             .Format(ProgramName)
-#endif
 
       << wxT("<h3>")
       << XO("Credits")
       << wxT("</h3>")
-      << wxT("<p>")
-
-// DA: Customisation credit
-#ifdef EXPERIMENTAL_DA
-      << wxT("<p><b>")
-      << XO("DarkAudacity Customisation")
-      << wxT("</b><br>")
-      << wxT("James Crook, art, coding &amp; design<br>")
-#endif
 
       << wxT("<p><b>")
       /* i18n-hint: The program's name substitutes for %s */
       << XO("%s Team Members").Format( ProgramName )
       << wxT("</b><br>")
       << GetCreditsByRole(roleTeamMember)
-	  
-	  << wxT("<p><b>")
-	  /* i18n-hint: Musers are people working at Muse Group */
-      << XO("Former Musers")
-      << wxT("</b><br>")
-      << GetCreditsByRole(roleExMuse)
 
       << wxT("<p><b> ")
       << XO("Emeritus:")
@@ -466,14 +426,10 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << XO("%s website: ").Format( ProgramName )
       << wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]")
 
-// DA: Link for DA url too
-#ifdef EXPERIMENTAL_DA
-      << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
-#else
       << wxT("<p><br>&nbsp; &nbsp; ")
       /* i18n-hint Audacity's name substitutes for first and third %s,
        and a "copyright" symbol for the second */
-      << XO("%s software is copyright %s 1999-2021 %s Team.")
+      << XO("%s software is copyright %s 1999-2023 %s Team.")
          .Format(
             Verbatim("<b>%s<sup>&reg;</sup></b>").Format( ProgramName ),
             wxT("&copy;"),
@@ -485,8 +441,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << XO("The name %s is a registered trademark.")
          .Format( Verbatim("<b>%s</b>").Format( ProgramName ) )
       << wxT("<br><br>")
-#endif
-
       << wxT("</center>")
    ;
 
@@ -580,9 +534,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       XO("Release build (debug level %d)").Format(wxDEBUG_LEVEL);
 #endif
    ;
-   if( (sizeof(void*) == 8) )
+   if( (sizeof(void*) == 8) ) {
       buildType = XO("%s, 64 bits").Format( buildType );
-
+   } else {
+      buildType = XO("%s, 32 bits").Format( buildType );
+   }
 // Remove this once the transition to CMake is complete
 #if defined(CMAKE)
    buildType = Verbatim("CMake %s").Format( buildType );
@@ -727,12 +683,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       << wxT("<h3>")
       << XO("Features")
       << wxT("</h3>\n<table>");  // start table of features
-
-#ifdef EXPERIMENTAL_DA
-   AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), enabled);
-#else
-   AddBuildinfoRow(&informationStr, wxT("Theme"), XO("Dark Theme Extras"), disabled);
-#endif
 
    # if USE_NYQUIST
    AddBuildinfoRow(&informationStr, wxT("Nyquist"), XO("Plug-in support"),

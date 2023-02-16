@@ -23,6 +23,9 @@ This class now lists
 
 #include "GetInfoCommand.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
 #include "../ProjectWindows.h"
@@ -32,9 +35,10 @@ This class now lists
 #include "../widgets/Overlay.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
-#include "../WaveClip.h"
+#include "WaveClip.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
+#include "prefs/WaveformSettings.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
 #include "../TimeTrack.h"
@@ -481,7 +485,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       //context.AddItem( TrackView::Get( *trk ).GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
          float vzmin, vzmax;
-         t->GetDisplayBounds(&vzmin, &vzmax);
+         WaveformScale::Get(*t).GetDisplayBounds(vzmin, vzmax);
          context.AddItem( "wave", "kind" );
          context.AddItem( t->GetStartTime(), "start" );
          context.AddItem( t->GetEndTime(), "end" );
@@ -776,3 +780,19 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
    }
 }
 
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment{
+   wxT("Optional/Extra/Part2/Scriptables2"),
+   // Note that the PLUGIN_SYMBOL must have a space between words,
+   // whereas the short-form used here must not.
+   // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+   // you would have to use "CompareAudio" here.)
+   Command( wxT("GetInfo"), XXO("Get Info..."),
+      CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+};
+
+}

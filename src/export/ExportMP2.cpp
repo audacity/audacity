@@ -39,11 +39,8 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 #include <wx/dynlib.h>
-#include <wx/utils.h>
-#include <wx/timer.h>
 #include <wx/window.h>
 #include <wx/log.h>
-#include <wx/intl.h>
 #include <wx/stream.h>
 
 #include "Export.h"
@@ -52,7 +49,7 @@
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
@@ -206,7 +203,7 @@ public:
 
    void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<ProgressDialog> &pDialog,
+               std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
@@ -237,7 +234,7 @@ ExportMP2::ExportMP2()
 }
 
 ProgressResult ExportMP2::Export(AudacityProject *project,
-   std::unique_ptr<ProgressDialog> &pDialog,
+   std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int WXUNUSED(subformat))
@@ -314,8 +311,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {
-         auto pcmNumSamples = mixer->Process(pcmBufferSize);
-
+         auto pcmNumSamples = mixer->Process();
          if (pcmNumSamples == 0)
             break;
 
@@ -341,7 +337,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
             return ProgressResult::Cancelled;
          }
 
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 

@@ -34,12 +34,12 @@ xargs xgettext \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
 echo ";; Adding resource files to audacity.pot"
-for path in ../res ; do 
+for path in ../resources ; do 
    find $path -name \*.xml 
 done | \
 sed -E 's/\.\.\///g' |\
 xargs xgettext \
---its=res.its \
+--its=resources.its \
 --no-wrap \
 --default-domain=audacity \
 --directory=.. \

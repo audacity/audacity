@@ -71,9 +71,6 @@
 
 
 
-#include <wx/string.h>
-#include <wx/utils.h>
-#include <wx/intl.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
@@ -81,7 +78,7 @@
 #include "ImportMIDI.h"
 #endif // USE_MIDI
 #include "FileNames.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "Import.h"
 #include "Project.h"

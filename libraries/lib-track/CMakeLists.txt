@@ -33,9 +33,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-project-interface
-   lib-xml-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-track "${SOURCES}" "${LIBRARIES}"
    "" ""

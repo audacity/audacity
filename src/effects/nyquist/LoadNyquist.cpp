@@ -67,7 +67,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew NyquistEffectsModule();
+   return std::make_unique<NyquistEffectsModule>();
 }
 
 // ============================================================================
@@ -250,17 +250,6 @@ unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
    return 0;
 }
 
-bool NyquistEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   // Ignores bFast parameter, since checking file exists is fast enough for
-   // the small number of Nyquist plug-ins that we have.
-   static_cast<void>(bFast);
-   if(path == NYQUIST_PROMPT_ID)
-      return true;
-
-   return wxFileName::FileExists(path);
-}
-
 std::unique_ptr<ComponentInterface>
 NyquistEffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -269,6 +258,14 @@ NyquistEffectsModule::LoadPlugin(const PluginPath & path)
    if (effect->IsOk())
       return effect;
    return nullptr;
+}
+
+bool NyquistEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   if(path == NYQUIST_PROMPT_ID)
+      return true;
+
+   return wxFileName::FileExists(path);
 }
 
 // ============================================================================

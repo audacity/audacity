@@ -4,12 +4,12 @@ $type process
 $preview enabled
 $name (_ "Clip Fix")
 $manpage "Clip_Fix"
-$action (_ "Reconstructing clips...")
+$debugbutton false
 $author (_ "Benjamin Schwartz and Steve Daulton")
-$release 2.3.0
-$copyright (_ "Licensing confirmed under terms of the GNU General Public License version 2")
+$release 2.3.0-1
+$copyright (_ "GNU General Public License v2.0")
 
-;; Released under terms of the GNU General Public License version 2:
+;; License: GPL v2
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

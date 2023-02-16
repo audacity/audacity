@@ -16,7 +16,6 @@
 #include <thread>
 
 #include <wx/app.h>
-#include <wx/button.h>
 #include <wx/cmdline.h>
 #include <wx/combobox.h>
 #include <wx/log.h>
@@ -34,7 +33,7 @@
 #include "Prefs.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "float_cast.h"
 #include "../widgets/FileHistory.h"
@@ -282,7 +281,7 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
-                         std::unique_ptr<ProgressDialog> &pDialog,
+                         std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
                          unsigned channels,
                          const wxFileNameWrapper &fName,
                          bool selectedOnly,
@@ -355,8 +354,7 @@ ExportCL::ExportCL()
    SetDescription(XO("(external program)"),0);
 }
 
-ProgressResult ExportCL::Export(AudacityProject *project,
-                                std::unique_ptr<ProgressDialog> &pDialog,
+ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,
                                 unsigned channels,
                                 const wxFileNameWrapper &fName,
                                 bool selectionOnly,
@@ -531,10 +529,9 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
          // Need to mix another block
          if (numBytes == 0) {
-            auto numSamples = mixer->Process(maxBlockLen);
-            if (numSamples == 0) {
+            auto numSamples = mixer->Process();
+            if (numSamples == 0)
                break;
-            }
 
             mixed = mixer->GetBuffer();
             numBytes = numSamples * channels;
@@ -565,7 +562,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
          }
 
          // Update the progress display
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
       // Done with the progress display
    }

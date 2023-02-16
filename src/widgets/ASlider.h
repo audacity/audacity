@@ -36,6 +36,8 @@ class TipWindow;
 
 #define VEL_SLIDER 5    // -50..50
 
+#define PERCENT_SLIDER 6 //0% .. 100%
+
 #define DB_MIN -36.0f
 #define DB_MAX 36.0f
 #define FRAC_MIN 0.0f
@@ -120,6 +122,8 @@ class AUDACITY_DLL_API LWSlider
    wxWindowID GetId();
    void SetId(wxWindowID id);
 
+   void SetName(const TranslatableString& name);
+
    void SetDefaultValue(float value);
    void SetDefaultShortcut(bool value);
 
@@ -159,8 +163,12 @@ class AUDACITY_DLL_API LWSlider
    float GetMinValue() const;
    float GetMaxValue() const;
 
-   void SetParent(wxWindow *parent) { mParent = parent; }
+   void SetParent(wxWindow *parent);
    void SendUpdate(float newValue);
+
+   wxString GetStringValue() const;
+
+   void OnKillFocus();
 
  private:
 
@@ -236,7 +244,7 @@ class AUDACITY_DLL_API LWSlider
 
    wxWindowID mID;
 
-   std::unique_ptr<TipWindow> mTipPanel;
+   wxWeakRef<TipWindow> mTipPanel;
    TranslatableString mTipTemplate;
 
    bool mIsDragging;

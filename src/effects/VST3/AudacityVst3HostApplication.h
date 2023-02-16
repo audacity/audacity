@@ -1,8 +1,11 @@
 #pragma once
 
 #include <pluginterfaces/vst/ivsthostapplication.h>
+#include <pluginterfaces/vst/ivstpluginterfacesupport.h>
 
-class AudacityVst3HostApplication final : public Steinberg::Vst::IHostApplication
+class AudacityVst3HostApplication final :
+   public Steinberg::Vst::IHostApplication,
+   public Steinberg::Vst::IPlugInterfaceSupport
 {
 public:
 
@@ -11,9 +14,10 @@ public:
    AudacityVst3HostApplication();
    virtual ~AudacityVst3HostApplication();
 
-   static AudacityVst3HostApplication& Get();
+   static IHostApplication& Get();
 
    Steinberg::tresult PLUGIN_API getName(Steinberg::Vst::String128 name) override;
    Steinberg::tresult PLUGIN_API createInstance(Steinberg::TUID cid, Steinberg::TUID _iid, void** obj) override;
+   Steinberg::tresult PLUGIN_API isPlugInterfaceSupported(const Steinberg::TUID _iid) override;
 };
 

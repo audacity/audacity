@@ -52,6 +52,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/app.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
+#include <wx/splitter.h>
 
 #ifdef __WXGTK__
 #include "../images/AudacityLogoAlpha.xpm"
@@ -97,24 +98,15 @@ ProjectManager::ProjectManager( AudacityProject &project )
 {
    auto &window = ProjectWindow::Get( mProject );
    window.Bind( wxEVT_CLOSE_WINDOW, &ProjectManager::OnCloseWindow, this );
-   mSubscription = ProjectStatus::Get(mProject)
+   mProjectStatusSubscription = ProjectStatus::Get(mProject)
       .Subscribe(*this, &ProjectManager::OnStatusChange);
-   project.Bind( EVT_RECONNECTION_FAILURE,
-      &ProjectManager::OnReconnectionFailure, this );
+   mProjectFileIOSubscription = ProjectFileIO::Get(mProject)
+      .Subscribe(*this, &ProjectManager::OnReconnectionFailure);
 }
 
 ProjectManager::~ProjectManager() = default;
 
-// PRL:  This event type definition used to be in AudacityApp.h, which created
-// a bad compilation dependency.  The event was never emitted anywhere.  I
-// preserve it and its handler here but I move it to remove the dependency.
-// Asynchronous open
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_OPEN_AUDIO_FILE, wxCommandEvent);
-wxDEFINE_EVENT(EVT_OPEN_AUDIO_FILE, wxCommandEvent);
-
 BEGIN_EVENT_TABLE( ProjectManager, wxEvtHandler )
-   EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, ProjectManager::OnOpenAudioFile)
    EVT_TIMER(AudacityProjectTimerID, ProjectManager::OnTimer)
 END_EVENT_TABLE()
 
@@ -175,7 +167,10 @@ void ProjectManager::SaveWindowSize()
 
 void InitProjectWindow( ProjectWindow &window )
 {
-   auto &project = window.GetProject();
+   auto pProject = window.FindProject();
+   if (!pProject)
+      return;
+   auto &project = *pProject;
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -338,7 +333,7 @@ AudacityProject *ProjectManager::New()
    
    // Create and show a NEW project
    // Use a non-default deleter in the smart pointer!
-   auto sp = std::make_shared< AudacityProject >();
+   auto sp = AudacityProject::Create();
    AllProjects{}.Add( sp );
    auto p = sp.get();
    auto &project = *p;
@@ -399,12 +394,10 @@ AudacityProject *ProjectManager::New()
    return p;
 }
 
-void ProjectManager::OnReconnectionFailure(wxCommandEvent & event)
+void ProjectManager::OnReconnectionFailure(ProjectFileIOMessage message)
 {
-   event.Skip();
-   wxTheApp->CallAfter([this]{
+   if (message == ProjectFileIOMessage::ReconnectionFailure)
       ProjectWindow::Get(mProject).Close(true);
-   });
 }
 
 static bool sbClosingAll = false;
@@ -506,6 +499,9 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    window.ShowFullScreen(false);
 #endif
 
+   // This achieves auto save on close of project before other important
+   // project state is destroyed
+   window.Publish(ProjectWindowDestroyedMessage {});
    ModuleManager::Get().Dispatch(ProjectClosing);
 
    // Stop the timer since there's no need to update anything anymore
@@ -643,22 +639,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Destroys this
    pSelf.reset();
-}
-
-// PRL: I preserve this handler function for an event that was never sent, but
-// I don't know the intention.
-void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
-{
-   const wxString &cmd = event.GetString();
-   if (!cmd.empty()) {
-      ProjectChooser chooser{ &mProject, true };
-      if (auto project = ProjectFileManager::OpenFile(
-            std::ref(chooser), cmd)) {
-         auto &window = GetProjectFrame( *project );
-         window.RequestUserAttention();
-         chooser.Commit();
-      }
-   }
 }
 
 // static method, can be called outside of a project

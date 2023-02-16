@@ -34,6 +34,7 @@ public:
 
 	ResponsePtr performRequest (RequestVerb verb, const Request& request) override;
 	ResponsePtr performRequest (RequestVerb verb, const Request& request, const void* data, size_t size) override;
+	ResponsePtr performRequest (RequestVerb verb, const Request& request, std::unique_ptr<MultipartData> form) override;
 
 	void terminate () override;
 

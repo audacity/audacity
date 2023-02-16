@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "AColor.h"
 #include "../../HitTestResult.h"
-#include "../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"

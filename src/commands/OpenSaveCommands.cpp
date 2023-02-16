@@ -17,6 +17,9 @@
 
 #include "OpenSaveCommands.h"
 
+#include "CommandDispatch.h"
+#include "CommandManager.h"
+#include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "AudacityLogger.h"
 #include "Project.h"
@@ -219,4 +222,24 @@ bool ClearLogCommand::Apply(const CommandContext &context)
 {
    auto logger = AudacityLogger::Get();
    return logger->ClearLog();
+}
+
+namespace {
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment{
+   wxT("Optional/Extra/Part2/Scriptables2"),
+   Items( wxT(""),
+      // Note that the PLUGIN_SYMBOL must have a space between words,
+      // whereas the short-form used here must not.
+      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+      // you would have to use "CompareAudio" here.)
+      Command( wxT("OpenProject2"), XXO("Open Project..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
+      Command( wxT("SaveProject2"), XXO("Save Project..."),
+         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
+   )
+};
 }

@@ -1,4 +1,4 @@
-;   Audacity: A Digital Audio Editor
+﻿;   Audacity: A Digital Audio Editor
 ;   Audacity(R) is copyright (c) 1999-2021 Audacity Team.
 ;   License: GPL v2 or later.  See License.txt.
 ;
@@ -8,7 +8,7 @@
 
 ; This requires that the ISS Preprocessor be installed
 
-#define AppExe "Package\audacity.exe" 
+#define AppExe "Package\audacity.exe"
 #define AppMajor ""
 #define AppMinor ""
 #define AppRev ""
@@ -19,7 +19,7 @@
 
 [UninstallRun]
 ; Uninstall prior installations.
-Filename: "{app}\unins*.*"; 
+Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
@@ -31,13 +31,13 @@ WizardSmallImageFile=".\audacity_InnoWizardSmallImage.bmp"
 SolidCompression=yes
 
 ; installer-related directives
-; From Inno 5.5.7, Inno defaults to disabling the Welcome page as recommended 
+; From Inno 5.5.7, Inno defaults to disabling the Welcome page as recommended
 ; by Microsoft's desktop applications guideline, but we don't want to do that.
 DisableWelcomePage=no
 
 AppName={#AppName}
 AppVerName=Audacity {#AppVersion}
-; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
+; Specify AppVersion as well, so it appears in the Add/Remove Programs entry.
 AppVersion={#AppVersion}
 AppPublisher="Audacity Team"
 AppPublisherURL=http://audacityteam.org
@@ -54,7 +54,7 @@ VersionInfoDescription={#AppName + " " + AppVersion + " Setup"}
 VersionInfoVersion={#GetFileVersion(AppExe)}
 VersionInfoCopyright={#GetFileCopyright(AppExe)}
 
-; Don't disable the "Select Destination Location" wizard, even if 
+; Don't disable the "Select Destination Location" wizard, even if
 ; Audacity is already installed.
 DisableDirPage=no
 
@@ -65,11 +65,10 @@ UninstallDisplayIcon="{app}\audacity.exe"
 
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=".\audacity_InnoWizard_InfoBefore.rtf"
-InfoAfterFile=Additional\README.txt
 
-; We no longer produce new ANSI builds. 
-; As we use Inno Setup (u), the Unicode version, to build this script, 
-; the MinVersion will automatically be set to what we need. 
+; We no longer produce new ANSI builds.
+; As we use Inno Setup (u), the Unicode version, to build this script,
+; the MinVersion will automatically be set to what we need.
 ; We no longer explicitly set it.
 ;   MinVersion=4.0,5.0
 
@@ -92,20 +91,17 @@ Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 ; Prime the first time .ini file so the permissions can be set
 Source: ".\FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Permissions: users-modify
 
-; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
-Source: "Additional\README.txt"; DestDir: "{app}"; Flags: ignoreversion
-
 Source: "Additional\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Package\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 @MANUAL@
 
-Source: "Additional\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-
 ; We include all dll files from the Adacity root directory. This script is now executed as a part of CI build process,
 ; so we control which dll files are present in the directory.
 Source: "Package\*.dll"; DestDir: "{app}"; Flags: ignoreversion
+
+Source: "Package\*.xml"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "Package\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't ship all modules, so the next line is commented out
@@ -173,7 +169,7 @@ Type: files; Name: "{app}\Plug-Ins\gverb_1216.dll"
 Type: files; Name: "{app}\Plug-Ins\crossfadein.ny"
 Type: files; Name: "{app}\Plug-Ins\crossfadeout.ny"
 Type: files; Name: "{app}\Plug-Ins\clicktrack.ny"
-                                            
+
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Leaving this one commented out example of the old way.
@@ -185,6 +181,7 @@ Root: HKCR; Subkey: "Audacity.Project"; ValueType: string; ValueData: "Audacity 
 Root: HKCR; Subkey: "Audacity.Project\shell"; ValueType: string; ValueData: ""; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\shell\open"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; ValueData: """{app}\audacity.exe"" ""%1"""; Flags: uninsdeletekey;
+Root: HKCU; Subkey: "Software\Classes\Audacity"; Flags: uninsdeletekey;
 
 ;The following would allow a following 'help' installer to know where to put the 'help' files.
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
@@ -214,6 +211,20 @@ Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flag
   Local[1] = (FileExists(Local[0]) \
     ? "alreadyexists" \
     : Exec("powershell", "echo 'Downloading: " + URL + "'; $wc = new-object System.Net.WebClient; $wc.DownloadFile('" + URLBase + URL + "', '" + Local[0] + "')", '.\', , SW_NORMAL)), \
+  Local[0]
+
+; Set this to the base of the official  Inno Setup translations
+#define UrlBaseOfficial "http://raw.github.com/jrsoftware/issrc/master/Files/Languages/"
+
+; This macro will use the Windows PowerShell to download the given translation into
+; the Inno Setup Languages folder if it hasn't already been downloaded.
+; InnoSetup has no tags in their repo, so for some languages we have to change the Source
+; of the file
+#define GetOfficial(URL) \
+  Local[0] = ".\Languages\unofficial\" + Copy(URL, RPos("/", URL) + 1), \
+  Local[1] = (FileExists(Local[0]) \
+    ? "alreadyexists" \
+    : Exec("powershell", "echo 'Downloading: " + URL + "'; $wc = new-object System.Net.WebClient; $wc.DownloadFile('" + UrlBaseOfficial + URL + "', '" + Local[0] + "')", '.\', , SW_NORMAL)), \
   Local[0]
 
 ; This macro will define a dummy translation based on the Defaults.isl
@@ -253,7 +264,7 @@ Name: "gl"; MessagesFile: "{#Get('Galician.isl')}"
 Name: "he"; MessagesFile: "compiler:Languages\Hebrew.isl"
 Name: "hi"; MessagesFile: "{#Get('Hindi.islu')}"
 Name: "hr"; MessagesFile: "{#Get('Croatian.isl')}"
-Name: "hu"; MessagesFile: "{#Get('Hungarian.isl')}"
+Name: "hu"; MessagesFile: "{#GetOfficial('Hungarian.isl')}"
 Name: "hy"; MessagesFile: "compiler:Languages\Armenian.isl"
 Name: "id"; MessagesFile: "{#Get('Indonesian.isl')}"
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"

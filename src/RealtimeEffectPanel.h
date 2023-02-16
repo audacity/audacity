@@ -15,6 +15,7 @@
 #include <wx/weakref.h>
 
 #include "ThemedWrappers.h"
+#include "Observer.h"
 
 class Track;
 
@@ -30,24 +31,55 @@ class AudacityProject;
  * an individual track, provides controls for accessing effect settings,
  * stack manipulation (reorder, add, remove)
  */
-class RealtimeEffectPanel : public wxWindow
+class RealtimeEffectPanel : public wxPanel
 {
-   ThemedButtonWrapper<wxBitmapButton>* mToggleEffects{nullptr};
+   AButton* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
-   wxWeakRef<AudacityProject> mProject;
+   wxWindow* mHeader{nullptr};
+   AudacityProject& mProject;
+
+   std::weak_ptr<Track> mCurrentTrack;
+
+   Observer::Subscription mTrackListChanged;
+   Observer::Subscription mUndoSubscription;
+   Observer::Subscription mFocusChangeSubscription;
+
+   std::vector<std::shared_ptr<Track>> mPotentiallyRemovedTracks;
+
+   // RealtimeEffectPanel is wrapped using ThemedWindowWrapper,
+   // so we cannot subscribe to Prefs directly
+   struct PrefsListenerHelper;
+   std::unique_ptr<PrefsListenerHelper> mPrefsListenerHelper;
+
 public:
-   RealtimeEffectPanel(wxWindow *parent,
+   static RealtimeEffectPanel &Get(AudacityProject &project);
+   static const RealtimeEffectPanel &Get(const AudacityProject &project);
+
+   RealtimeEffectPanel(
+      AudacityProject& project, wxWindow* parent,
                 wxWindowID id,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,
                 long style = 0,
                 const wxString& name = wxPanelNameStr);
 
+   ~RealtimeEffectPanel() override;
+
+   void ShowPanel(Track* track, bool focus);
+   void HidePanel();
+
    /**
     * \brief Shows effects from the effect stack of the track
     * \param track Pointer to the existing track, or null
     */
-   void SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track);
+   void SetTrack(const std::shared_ptr<Track>& track);
    void ResetTrack();
+
+   bool IsTopNavigationDomain(NavigationKind) const override { return true; }
+   
+   void SetFocus() override;
+   
+private:
+   void OnCharHook(wxKeyEvent& evt);
 };

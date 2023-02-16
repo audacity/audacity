@@ -153,8 +153,8 @@ static const auto exts = {
 
 // all the includes live here by default
 #include "Import.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
+#include "Tags.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 class FFmpegImportFileHandle;
@@ -598,7 +598,7 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
          iter2->get()->Append(
             reinterpret_cast<samplePtr>(data.data() + chn), sc->SampleFormat,
             samplesPerChannel,
-            sc->CodecContext->GetChannels());
+            sc->CodecContext->GetChannels(), sc->SampleFormat);
       }
    }
    else if (sc->SampleFormat == floatSample)
@@ -614,7 +614,8 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
       {
          iter2->get()->Append(
             reinterpret_cast<samplePtr>(data.data() + chn), sc->SampleFormat,
-            samplesPerChannel, sc->CodecContext->GetChannels());
+            samplesPerChannel, sc->CodecContext->GetChannels(),
+            sc->SampleFormat);
       }
    }
 

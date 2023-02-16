@@ -70,6 +70,11 @@ public:
         unsigned getHTTPCode () const noexcept;
 
         void reset () noexcept;
+
+        CURL* getCurlHandle() const noexcept;
+
+        void disableSSLValidation();
+        void enableSSLValidation();
     private:
         CURL* mHandle { nullptr };
         CurlHandleManager* mOwner { nullptr };

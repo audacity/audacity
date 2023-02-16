@@ -23,8 +23,6 @@
 #include "Echo.h"
 #include "LoadEffects.h"
 
-#include <wx/intl.h>
-
 #include "../ShuttleGui.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
@@ -52,12 +50,22 @@ struct EffectEcho::Instance
    {}
 
    bool ProcessInitialize(EffectSettings& settings, double sampleRate,
-      sampleCount totalLen, ChannelNames chanMap) override;
+      ChannelNames chanMap) override;
 
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-   bool ProcessFinalize(void) override;
+   bool ProcessFinalize() noexcept override;
+
+   unsigned GetAudioOutCount() const override
+   {
+      return 1;
+   }
+
+   unsigned GetAudioInCount() const override
+   {
+      return 1;
+   }
 
    Floats history;
    size_t histPos;
@@ -107,18 +115,8 @@ EffectType EffectEcho::GetType() const
    return EffectTypeProcess;
 }
 
-unsigned EffectEcho::GetAudioInCount() const
-{
-   return 1;
-}
-
-unsigned EffectEcho::GetAudioOutCount() const
-{
-   return 1;
-}
-
 bool EffectEcho::Instance::ProcessInitialize(
-   EffectSettings& settings, double sampleRate, sampleCount, ChannelNames)
+   EffectSettings& settings, double sampleRate, ChannelNames)
 {
    auto& echoSettings = GetSettings(settings);  
    if (echoSettings.delay == 0.0)
@@ -144,7 +142,7 @@ bool EffectEcho::Instance::ProcessInitialize(
    return history != NULL;
 }
 
-bool EffectEcho::Instance::ProcessFinalize()
+bool EffectEcho::Instance::ProcessFinalize() noexcept
 {
    return true;
 }
@@ -194,7 +192,8 @@ struct EffectEcho::Validator
 
 
 std::unique_ptr<EffectUIValidator> EffectEcho::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
+   const EffectOutputs *)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
@@ -235,6 +234,7 @@ bool EffectEcho::Validator::ValidateUI()
       // pass back the modified settings to the MessageBuffer
 
       EffectEcho::GetSettings(settings) = mSettings;
+      return nullptr;
    }
    );
 

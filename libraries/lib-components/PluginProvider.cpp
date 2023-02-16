@@ -8,3 +8,8 @@
 #include "PluginProvider.h"
 
 PluginProvider::~PluginProvider() = default;
+
+std::unique_ptr<PluginProvider::Validator> PluginProvider::MakeValidator() const
+{
+   return {};
+}

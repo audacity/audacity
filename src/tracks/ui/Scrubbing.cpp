@@ -13,10 +13,10 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <functional>
 
-#include "../../AudioIO.h"
+#include "AudioIO.h"
 #include "../../CommonCommandFlags.h"
 #include "Project.h"
-#include "../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "../../ProjectWindows.h"
@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ScrubState.h"
 #include "Track.h"
 #include "ViewInfo.h"
-#include "../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ToolManager.h"
@@ -406,7 +406,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mSpeedPlaying = false;
             mKeyboardScrubbing = false;
             auto options =
-               DefaultPlayOptions( *mProject );
+               ProjectAudioIO::GetDefaultOptions(*mProject);
 
 #ifndef USE_SCRUB_THREAD
             // Yuck, we either have to poll "by hand" when scrub polling doesn't
@@ -970,8 +970,8 @@ void Scrubber::OnToggleScrubRuler(const CommandContext&)
    mShowScrubbing = !mShowScrubbing;
    WriteScrubEnabledPref(mShowScrubbing);
    gPrefs->Flush();
-   const auto toolbar =
-      ToolManager::Get( *mProject ).GetToolBar( ScrubbingBarID );
+   // To do: move this, or eliminate it, use an event instead
+   const auto toolbar = ToolManager::Get(*mProject).GetToolBar(wxT("Scrub"));
    toolbar->EnableDisableButtons();
    CheckMenuItems();
 }

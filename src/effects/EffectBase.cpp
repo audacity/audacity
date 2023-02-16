@@ -21,17 +21,16 @@
 #include "EffectBase.h"
 
 #include <thread>
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "ConfigInterface.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
-#include "../MixAndRender.h"
+#include "MixAndRender.h"
 #include "PluginManager.h"
-#include "../ProjectAudioManager.h"
+#include "ProjectAudioIO.h"
 #include "QualitySettings.h"
 #include "TransactionScope.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../widgets/ProgressDialog.h"
+#include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
 // Effect application counter
@@ -73,7 +72,10 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
 
    mFactory = factory;
    mProjectRate = projectRate;
-   mTracks = list;
+
+   SetTracks(list);
+   // Don't hold a dangling pointer when done
+   Finally Do([&]{ SetTracks(nullptr); });
 
    // This is for performance purposes only, no additional recovery implied
    auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
@@ -139,6 +141,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    auto updater = [&](EffectSettings &settings) {
       settings.extra.SetDuration(duration);
       settings.extra.SetDurationFormat( newFormat );
+      return nullptr;
    };
    // Update our copy of settings; update the EffectSettingsAccess too,
    // if we are going to show a dialog
@@ -166,7 +169,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    if ( pParent && dialogFactory && pAccess &&
       IsInteractive()) {
       if (!ShowHostInterface(
-         *pParent, dialogFactory, pInstance, *pAccess, IsBatchProcessing() ) )
+         *pParent, dialogFactory, pInstance, *pAccess, true ) )
          return false;
       else if (!pInstance)
          return false;
@@ -175,13 +178,14 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
          settings = pAccess->Get();
    }
 
-   if (!pInstance) {
+   auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(pInstance);
+   if (!pInstanceEx) {
       // Path that skipped the dialog factory -- effect may be non-interactive
       // or this is batch mode processing or repeat of last effect with stored
       // settings.
-      pInstance = MakeInstance();
+      pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
       // Note: Init may read parameters from preferences
-      if (!pInstance || !pInstance->Init())
+      if (!pInstanceEx || !pInstanceEx->Init())
          return false;
    }
 
@@ -202,8 +206,8 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
       );
       auto vr = valueRestorer( mProgress, progress.get() );
 
-      assert(pInstance); // null check above
-      returnVal = pInstance->Process(settings);
+      assert(pInstanceEx); // null check above
+      returnVal = pInstanceEx->Process(settings);
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -336,7 +340,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       return;
    }
 
-   wxWindow *FocusDialog = wxWindow::FindFocus();
+   const auto FocusDialog = BasicUI::FindFocus();
+   assert(FocusDialog); // postcondition
 
    double previewDuration;
    bool isNyquist = GetFamily() == NYQUISTEFFECTS_FAMILY;
@@ -374,7 +379,9 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       if (!dryOnly)
          // TODO remove this reinitialization of state within the Effect object
          // It is done indirectly via Effect::Instance
-         if (auto pInstance = MakeInstance())
+         if (auto pInstance =
+            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance())
+         )
             pInstance->Init();
 
       // In case any dialog control depends on mT1 or mDuration:
@@ -398,9 +405,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    auto cleanup2 = finally( [&] {
       mTracks = saveTracks;
-      if (FocusDialog) {
-         FocusDialog->SetFocus();
-      }
+      if (*FocusDialog)
+         BasicUI::SetFocus(*FocusDialog);
 
       // In case of failed effect, be sure to free memory.
       ReplaceProcessedTracks( false );
@@ -467,36 +473,40 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 
       access.ModifySettings([&](EffectSettings &settings){
          // Preview of non-realtime effect
-         auto pInstance = MakeInstance();
+         auto pInstance =
+            std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance());
          success = pInstance && pInstance->Process(settings);
+         return nullptr;
       });
    }
 
    if (success)
    {
-      auto tracks = ProjectAudioManager::GetAllPlaybackTracks(*mTracks, true);
+      auto tracks = TransportTracks{ *mTracks, true };
 
       // Some effects (Paulstretch) may need to generate more
       // than previewLen, so take the min.
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      auto options = DefaultPlayOptions(*pProject);
+      auto options = ProjectAudioIO::GetDefaultOptions(*pProject);
       int token = gAudioIO->StartStream(tracks, mT0, t1, t1, options);
 
       if (token) {
+         using namespace BasicUI;
          auto previewing = ProgressResult::Success;
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
          {
-            ProgressDialog progress
-            (GetName(), XO("Previewing"), pdlgHideCancelButton);
+            auto progress =
+               MakeProgress(GetName(), XO("Previewing"), ProgressShowStop);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                using namespace std::chrono;
                std::this_thread::sleep_for(100ms);
-               previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+               previewing = progress->Poll(
+                  gAudioIO->GetStreamTime() - mT0, t1 - mT0);
             }
          }
 
@@ -510,7 +520,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       else {
          using namespace BasicUI;
          ShowErrorDialog(
-            wxWidgetsWindowPlacement{ FocusDialog }, XO("Error"),
+            *FocusDialog, XO("Error"),
             XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
             wxT("Error_opening_sound_device"),
             ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );

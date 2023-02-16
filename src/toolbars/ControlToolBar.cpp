@@ -44,23 +44,19 @@
 #ifndef WX_PRECOMP
 #include <wx/app.h>
 #include <wx/dc.h>
-#include <wx/event.h>
-#include <wx/image.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/statusbr.h>
-#include <wx/timer.h>
 #endif
 #include <wx/tooltip.h>
 #include <wx/datetime.h>
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "ImageManipulation.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "ProjectStatus.h"
@@ -107,13 +103,18 @@ static const TranslatableString
    , sStateRecord = XO("Recording")
 ;
 
+Identifier ControlToolBar::ID()
+{
+   return wxT("Control");
+}
+
 //Standard constructor
 // This was called "Control" toolbar in the GUI before - now it is "Transport".
 // Note that we use the legacy "Control" string as the section because this
 // gets written to prefs and cannot be changed in prefs to maintain backwards
 // compatibility
 ControlToolBar::ControlToolBar( AudacityProject &project )
-: ToolBar(project, TransportBarID, XO("Transport"), wxT("Control"))
+: ToolBar(project, XO("Transport"), ID())
 {
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
@@ -129,14 +130,14 @@ ControlToolBar *ControlToolBar::Find( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return static_cast<ControlToolBar*>(
-      toolManager.GetToolBar(TransportBarID) );
+      toolManager.GetToolBar(ID()));
 }
 
 ControlToolBar &ControlToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return *static_cast<ControlToolBar*>(
-      toolManager.GetToolBar(TransportBarID) );
+      toolManager.GetToolBar(ID()));
 }
 
 const ControlToolBar &ControlToolBar::Get( const AudacityProject &project )
@@ -790,7 +791,7 @@ void ControlToolBar::StopScrolling()
          (ProjectWindow::PlaybackScroller::Mode::Off);
 }
 
-static RegisteredToolbarFactory factory{ TransportBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew ControlToolBar{ project } }; }
 };
@@ -799,6 +800,6 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       with the big buttons on it (play record etc) */
-   TransportBarID, wxT("ShowTransportTB"), XXO("&Transport Toolbar")
+   ControlToolBar::ID(), wxT("ShowTransportTB"), XXO("&Transport Toolbar")
 };
 }

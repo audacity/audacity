@@ -30,11 +30,12 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
-#include "../../../../WaveClip.h"
-#include "../../../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
 #include "SampleTrackCache.h"
+#include "WaveTrackLocation.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -201,10 +202,11 @@ void SpectrumView::DoSetMinimized( bool minimized )
       // Nyquist frequency.
       constexpr auto max = std::numeric_limits<float>::max();
       const bool spectrumLinear =
-         (wt->GetSpectrogramSettings().scaleType ==
+         (SpectrogramSettings::Get(*wt).scaleType ==
             SpectrogramSettings::stLinear);
       // Zoom out full
-      wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
+      SpectrogramBounds::Get(*wt)
+         .SetBounds( spectrumLinear ? 0.0f : 1.0f, max );
    }
 #endif
 
@@ -343,12 +345,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       dynamic_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    if (!track)
       // Leave a blank rectangle.
-      // TODO: rewrite GetSpectrogramSettings and GetSpectrumBounds so they
-      // are not members of WaveTrack, but fetch UI related ClientData
+      // TODO: rewrite GetSpectrumBounds so it is
+      // not a member of WaveTrack, but fetch UI related ClientData
       // attachments; then this downcast from SampleTrack will not be needed.
       return;
 
-   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   auto &settings = SpectrogramSettings::Get(*track);
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
@@ -423,7 +425,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
-   track->GetSpectrumBounds(&minFreq, &maxFreq);
+   SpectrogramBounds::Get(*track)
+      .GetBounds(*track, minFreq, maxFreq);
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
@@ -880,8 +883,10 @@ void SpectrumView::Draw(
       // If both channels are visible, we will duplicate this effort, but that
       // matters little.
       for( auto channel:
-          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
-         channel->UpdateLocationsCache();
+          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) ) {
+         auto &locationsCache = WaveTrackLocations::Get( *channel );
+         locationsCache.Update( *channel );
+      }
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());
@@ -1081,3 +1086,121 @@ unsigned SpectrumView::Char(
    event.Skip(!capture);
    return RefreshCode::RefreshNone;
 }
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+// Attach some related menu items
+#include "../../../ui/SelectHandle.h"
+#include "../../../../CommonCommandFlags.h"
+#include "Project.h"
+#include "../../../../SpectrumAnalyst.h"
+#include "../../../../commands/CommandContext.h"
+
+namespace {
+void DoNextPeakFrequency(AudacityProject &project, bool up)
+{
+   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
+
+   // Find the first selected wave track that is in a spectrogram view.
+   const WaveTrack *pTrack {};
+   for ( auto wt : tracks.Selected< const WaveTrack >() ) {
+      const auto displays = WaveTrackView::Get( *wt ).GetDisplays();
+      bool hasSpectrum = (displays.end() != std::find(
+         displays.begin(), displays.end(),
+         WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
+      ) );
+      if ( hasSpectrum ) {
+         pTrack = wt;
+         break;
+      }
+   }
+
+   if (pTrack) {
+      SpectrumAnalyst analyst;
+      SelectHandle::SnapCenterOnce(analyst, viewInfo, pTrack, up);
+      ProjectHistory::Get( project ).ModifyState(false);
+   }
+}
+
+struct Handler : CommandHandlerObject, ClientData::Base {
+
+// Handler state:
+double mLastF0{ SelectedRegion::UndefinedFrequency };
+double mLastF1{ SelectedRegion::UndefinedFrequency };
+
+void OnToggleSpectralSelection(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+
+   const double f0 = selectedRegion.f0();
+   const double f1 = selectedRegion.f1();
+   const bool haveSpectralSelection =
+   !(f0 == SelectedRegion::UndefinedFrequency &&
+     f1 == SelectedRegion::UndefinedFrequency);
+   if (haveSpectralSelection)
+   {
+      mLastF0 = f0;
+      mLastF1 = f1;
+      selectedRegion.setFrequencies
+      (SelectedRegion::UndefinedFrequency, SelectedRegion::UndefinedFrequency);
+   }
+   else
+      selectedRegion.setFrequencies(mLastF0, mLastF1);
+
+   ProjectHistory::Get( project ).ModifyState(false);
+}
+
+void OnNextHigherPeakFrequency(const CommandContext &context)
+{
+   auto &project = context.project;
+   DoNextPeakFrequency(project, true);
+}
+
+void OnNextLowerPeakFrequency(const CommandContext &context)
+{
+   auto &project = context.project;
+   DoNextPeakFrequency(project, false);
+}
+};
+
+// Handler is stateful.  Needs a factory registered with
+// AudacityProject.
+static const AttachedProjectObjects::RegisteredFactory key{
+   [](AudacityProject&) {
+      return std::make_unique< Handler >(); } };
+
+static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
+   return project.AttachedObjects::Get< Handler >( key );
+};
+
+using namespace MenuTable;
+#define FN(X) (& Handler :: X)
+
+BaseItemSharedPtr SpectralSelectionMenu()
+{
+   static BaseItemSharedPtr menu{
+   ( FinderScope{ findCommandHandler },
+   Menu( wxT("Spectral"), XXO("S&pectral"),
+      Command( wxT("ToggleSpectralSelection"),
+         XXO("To&ggle Spectral Selection"), FN(OnToggleSpectralSelection),
+         TracksExistFlag(), wxT("Q") ),
+      Command( wxT("NextHigherPeakFrequency"),
+         XXO("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency),
+         TracksExistFlag() ),
+      Command( wxT("NextLowerPeakFrequency"),
+         XXO("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency),
+         TracksExistFlag() )
+   ) ) };
+   return menu;
+}
+
+#undef FN
+
+AttachedItem sAttachment2{
+   Placement{ wxT("Select/Basic"), { OrderingHint::After, wxT("Region") } },
+   Shared( SpectralSelectionMenu() )
+};
+
+}
+#endif // EXPERIMENTAL_SPECTRAL_EDITING

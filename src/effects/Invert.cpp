@@ -17,8 +17,6 @@
 
 #include "Invert.h"
 
-#include <wx/intl.h>
-
 #include "LoadEffects.h"
 
 const ComponentInterfaceSymbol EffectInvert::Symbol
@@ -80,4 +78,9 @@ size_t EffectInvert::ProcessBlock(EffectSettings &,
    }
 
    return blockLen;
+}
+
+bool EffectInvert::NeedsDither() const
+{
+   return false;
 }

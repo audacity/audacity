@@ -19,8 +19,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/graphics.h>
 
 #include "AColor.h"
-#include "../../../../WaveClip.h"
-#include "../../../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 #include "../../../../../images/Cursors.h"
 #include "AllThemeResources.h"
@@ -786,7 +786,7 @@ void WaveTrackSubView::DrawBoldBoundaries(
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
-   for (const auto loc : track->GetCachedLocations()) {
+   for (const auto loc : WaveTrackLocations::Get(*track).Get()) {
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =
@@ -842,7 +842,7 @@ auto WaveTrackSubView::GetMenuItems(
          { L"Split", XO("Split Clip") },
          { L"TrackMute", XO("Mute/Unmute Track") },
          {},
-         { L"RenameClip", XO("Rename clip...") },
+         { L"RenameClip", XO("Rename Clip...") },
       };
    else
       return {

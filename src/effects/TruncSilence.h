@@ -68,9 +68,12 @@ public:
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
-   override;
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
+
+   bool NeedsDither() const override;
 
 private:
    // EffectTruncSilence implementation
@@ -90,6 +93,8 @@ private:
    bool DoRemoval
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    double mThresholdDB {} ;
    int mActionIndex;

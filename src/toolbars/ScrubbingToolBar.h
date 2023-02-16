@@ -40,8 +40,12 @@ class ScrubbingToolBar final : public ToolBar {
 
 public:
 
+   static Identifier ID();
+
    ScrubbingToolBar( AudacityProject &project );
    virtual ~ScrubbingToolBar();
+
+   bool ShownByDefault() const override;
 
    static ScrubbingToolBar &Get( AudacityProject &project );
    static const ScrubbingToolBar &Get( const AudacityProject &project );

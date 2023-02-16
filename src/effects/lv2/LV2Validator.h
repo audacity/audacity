@@ -48,13 +48,14 @@ class LV2Wrapper;
 class EffectBase;
 
 class LV2Validator final : public EffectUIValidator
-   , wxEvtHandler
+   , public wxEvtHandler
    , LV2UIFeaturesList::UIHandler
 {
 public:
    LV2Validator(EffectBase &effect,
       const LilvPlugin &plug, LV2Instance &instance,
-      EffectSettingsAccess &access, double sampleRate,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs,
+      double sampleRate,
       const LV2FeaturesList &features,
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
    ~LV2Validator() override;
@@ -62,6 +63,7 @@ public:
    bool ValidateUI() override;
    bool UpdateUI() override;
    bool IsGraphicalUI() override;
+   void Disconnect() override;
 
    int ui_resize(int width, int height) override;
    void ui_closed() override;
@@ -72,12 +74,18 @@ public:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy(const LV2Wrapper &wrapper, const EffectSettings &settings);
+   /*!
+    @pre `pWrapper != nullptr`
+    */
+   bool BuildFancy(std::unique_ptr<LV2Wrapper> pWrapper,
+      const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
    void suil_port_write(uint32_t port_index,
       uint32_t buffer_size, uint32_t protocol, const void *buffer) override;
    uint32_t suil_port_index(const char *port_symbol) override;
+
+   void UpdateControlPortValue(LV2EffectSettings& settings, size_t controlPortIndex, float value);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -93,13 +101,15 @@ public:
    const LilvPlugin &mPlug;
    const EffectType mType;
    LV2Instance &mInstance;
+   const EffectOutputs *mpOutputs{};
    const double mSampleRate;
    const LV2Ports &mPorts;
+   std::unique_ptr<LV2Wrapper> mpWrapper;
    std::optional<const LV2UIFeaturesList> mUIFeatures;
    LV2PortUIStates mPortUIStates;
 
    std::shared_ptr<SuilHost> mSuilHost;
-   wxWindow *const mParent;
+   wxWindow *mParent;
    bool mUseGUI{};
 
    // UI
@@ -118,10 +128,17 @@ public:
    std::vector<PlainUIControl> mPlainUIControls;
    void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
-   SuilInstancePtr mSuilInstance;
+   // Two smart pointers are grouped because their destruction needs caution
+   struct UI {
+      void Destroy();
+      ~UI() { Destroy(); }
+      SuilInstancePtr mSuilInstance;
+      wxWindowPtr<NativeWindow> mNativeWin{};
+#ifdef __WXMAC__
+      bool mJustLeakMemory{ false };
+#endif
+   } mUI;
 
-   //! Destroy before mSuilInstance
-   wxWindowPtr<NativeWindow> mNativeWin{};
    wxSize mNativeWinInitialSize{ wxDefaultSize };
    wxSize mNativeWinLastSize{ wxDefaultSize };
    bool mResizing{ false };

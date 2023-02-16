@@ -107,7 +107,7 @@ class ExpandingToolBar final : public wxPanelWrapper
    ToolBarDialog *mDialogParent;
    ToolBarArea *mAreaParent;
    std::unique_ptr<ToolBarArrangement> mSavedArrangement;
-   ImageRollPanel *mTargetPanel;
+   wxPanel *mTargetPanel;
    std::unique_ptr<wxDragImage> mDragImage;
    wxWindow *mTopLevelParent;
    std::vector<wxRect> mDropTargets;

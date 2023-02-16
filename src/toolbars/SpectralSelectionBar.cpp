@@ -41,11 +41,8 @@ with changes in the SpectralSelectionBar.
 
 #ifndef WX_PRECOMP
 #include <wx/defs.h>
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
-#include <wx/intl.h>
-#include <wx/radiobut.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/valtext.h>
@@ -93,9 +90,13 @@ END_EVENT_TABLE()
 static const wxString preferencePath
 (wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
+Identifier SpectralSelectionBar::ID()
+{
+   return wxT("SpectralSelection");
+}
+
 SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
-: ToolBar( project,
-   SpectralSelectionBarID, XO("Spectral Selection"), wxT("SpectralSelection") )
+: ToolBar( project, XO("Spectral Selection"), ID() )
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
@@ -108,11 +109,20 @@ SpectralSelectionBar::~SpectralSelectionBar()
    // Do nothing, sizer deletes the controls
 }
 
+bool SpectralSelectionBar::ShownByDefault() const
+{
+   return false;
+}
+
+ToolBar::DockID SpectralSelectionBar::DefaultDockID() const
+{
+   return BotDockID;
+}
+
 SpectralSelectionBar &SpectralSelectionBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<SpectralSelectionBar*>(
-      toolManager.GetToolBar(SpectralSelectionBarID) );
+   return *static_cast<SpectralSelectionBar*>(toolManager.GetToolBar(ID()));
 }
 
 const SpectralSelectionBar &SpectralSelectionBar::Get( const AudacityProject &project )
@@ -484,14 +494,14 @@ void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSy
    }
 }
 
-static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew SpectralSelectionBar{ project } }; }
 };
 
 namespace {
 AttachedToolBarMenuItem sAttachment{
-   SpectralSelectionBarID,
+   SpectralSelectionBar::ID(),
       /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a frequency range of audio */
    wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar")

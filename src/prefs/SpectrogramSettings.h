@@ -11,6 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
+#include "ClientData.h" // to inherit
 #include "Prefs.h"
 #include "SampleFormat.h"
 #include "RealFFTf.h"
@@ -22,8 +23,11 @@ struct FFTParam;
 class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
+class WaveTrack;
 
-class AUDACITY_DLL_API SpectrogramSettings : public PrefsListener
+class AUDACITY_DLL_API SpectrogramSettings
+   : public PrefsListener
+   , public ClientData::Cloneable< ClientData::UniquePtr >
 {
    friend class SpectrumPrefs;
 public:
@@ -70,11 +74,23 @@ public:
    static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
 
+   // Return either the track's independent settings or global defaults
+   //! Mutative access to attachment even if the track argument is const
+   static SpectrogramSettings &Get(const WaveTrack &track);
+
+   // Force creation of track's independent settings
+   static SpectrogramSettings &Own(WaveTrack &track);
+
+   //! Make track lose indpendent settings and use defaults
+   static void Reset(WaveTrack &track);
+
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
    SpectrogramSettings(const SpectrogramSettings &other);
    SpectrogramSettings& operator= (const SpectrogramSettings &other);
    ~SpectrogramSettings();
+
+   PointerType Clone() const override;
 
    bool IsDefault() const
    {
@@ -89,7 +105,7 @@ public:
 
    void InvalidateCaches();
    void DestroyWindows();
-   void CacheWindows() const;
+   void CacheWindows();
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
 
@@ -174,14 +190,37 @@ public:
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum
-   mutable HFFT           hFFT;
-   mutable Floats         window;
+   HFFT           hFFT;
+   Floats         window;
 
    // Two other windows for computing reassigned spectrogram
-   mutable Floats         tWindow; // Window times time parameter
-   mutable Floats         dWindow; // Derivative of window
+   Floats         tWindow; // Window times time parameter
+   Floats         dWindow; // Derivative of window
 };
 
 extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
+
+class AUDACITY_DLL_API SpectrogramBounds
+   : public ClientData::Cloneable< ClientData::UniquePtr >
+{
+public:
+
+   //! Get either the global default settings, or the track's own if previously created
+   static SpectrogramBounds &Get( WaveTrack &track );
+
+   //! @copydoc Get
+   static const SpectrogramBounds &Get( const WaveTrack &track );
+
+   ~SpectrogramBounds() override;
+   PointerType Clone() const override;
+
+   void GetBounds(const WaveTrack &wt, float &min, float &max) const;
+
+   void SetBounds(float min, float max)
+   { mSpectrumMin = min, mSpectrumMax = max; }
+
+private:
+   float mSpectrumMin = -1, mSpectrumMax = -1;
+};
 
 #endif

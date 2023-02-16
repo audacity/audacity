@@ -19,20 +19,16 @@
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "../Project.h"
 #include "Equalization.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../float_cast.h"
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/event.h>
-#include <wx/string.h>
-
 #if wxUSE_TOOLTIPS
 #include <wx/tooltip.h>
 #endif
-#include <wx/utils.h>
 
 #include <math.h>
 
@@ -48,7 +44,6 @@
 #include <malloc.h>
 #endif
 
-#include <stdio.h>
 #include <math.h>
 #include <emmintrin.h>
 

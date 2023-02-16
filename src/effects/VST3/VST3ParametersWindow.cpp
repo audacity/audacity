@@ -23,6 +23,9 @@
 
 #include "MemoryX.h"
 #include "VST3Utils.h"
+#if wxUSE_ACCESSIBILITY
+#include "../../widgets/WindowAccessible.h"
+#endif
 
 
 //Interface between wx control and IEditController parameter.
@@ -37,6 +40,8 @@ public:
    virtual void SetNormalizedValue(Steinberg::Vst::IEditController&, Steinberg::Vst::ParamValue value) = 0;
    //Convert current control value to normalized parameter value
    virtual Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const = 0;
+   //Update a control's accessible object if necessary
+   virtual void UpdateAccessible(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) {}
 
    Steinberg::Vst::ParamID GetParameterId() const noexcept { return mParameterId; }
 };
@@ -66,7 +71,7 @@ namespace
          if(mUnits.empty())
             SetLabel(VST3Utils::ToWxString(str));
          else
-            SetLabel(wxString::Format("%s %s", str, mUnits));
+            SetLabel(wxString::Format("%s %s", VST3Utils::ToWxString(str), mUnits));
       }
       
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -102,23 +107,44 @@ namespace
 
    class VST3ContinuousParameter final : public wxSlider, public VST3ParameterControl
    {
+      const wxString mTitle;
+      const wxString mUnits;
+
    public:
       static constexpr auto Step = 0.01;
 
       VST3ContinuousParameter(wxWindow *parent,
              wxWindowID id,
              Steinberg::Vst::ParamID paramId,
+             const wxString& title,
+             const wxString& units,
              const wxPoint& pos = wxDefaultPosition,
              const wxSize& size = wxDefaultSize,
              long style = wxSL_HORIZONTAL,
              const wxValidator& validator = wxDefaultValidator,
              const wxString& name = wxSliderNameStr)
       : wxSlider(parent, id, 0, 0, static_cast<int>(1.0 / Step), pos, size, style, validator, name)
-      , VST3ParameterControl(paramId) { }
+      , VST3ParameterControl(paramId)
+      , mTitle(title)
+      , mUnits(units)
+      {
+#if wxUSE_ACCESSIBILITY
+         SetAccessible(safenew WindowAccessible(this));
+#endif        
+      }
 
-      void SetNormalizedValue(Steinberg::Vst::IEditController&, Steinberg::Vst::ParamValue value) override
+      void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
          SetValue(static_cast<int>(value / Step));
+         UpdateAccessible(editController, value);         
+      }
+
+      void UpdateAccessible(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
+      {
+         Steinberg::Vst::String128 str{};
+         editController.getParamStringByValue(GetParameterId(), value, str);
+         SetName(wxString::Format("%s %s %s",
+            mTitle, VST3Utils::ToWxString(str), mUnits));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController&) const override
@@ -129,22 +155,42 @@ namespace
 
    class VST3DiscreteParameter final : public wxSlider, public VST3ParameterControl
    {
+      const wxString mTitle;
+      const wxString mUnits;
+
    public:
       VST3DiscreteParameter(wxWindow *parent,
              wxWindowID id,
              Steinberg::Vst::ParamID paramId,
              int maxValue,
+             const wxString& title,
+             const wxString& units,
              const wxPoint& pos = wxDefaultPosition,
              const wxSize& size = wxDefaultSize,
              long style = wxSL_HORIZONTAL,
              const wxValidator& validator = wxDefaultValidator,
              const wxString& name = wxSliderNameStr)
       : wxSlider(parent, id, 0, 0, maxValue, pos, size, style, validator, name)
-      , VST3ParameterControl(paramId) { }
+      , VST3ParameterControl(paramId)
+      , mTitle(title)
+      , mUnits(units)
+      {
+#if wxUSE_ACCESSIBILITY
+         SetAccessible(safenew WindowAccessible(this));
+#endif        
+      }
 
       void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
          SetValue(static_cast<int>(editController.normalizedParamToPlain(GetParameterId(), value)));
+         UpdateAccessible(editController, value);
+      }
+
+      void UpdateAccessible(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
+      {
+         Steinberg::Vst::String128 str{ };
+         editController.getParamStringByValue(GetParameterId(), value, str);
+         SetName(wxString::Format("%s %s %s", mTitle, VST3Utils::ToWxString(str), mUnits));
       }
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
@@ -159,13 +205,14 @@ namespace
 
       VST3ToggleParameter(wxWindow *parent,
                wxWindowID id,
+               const wxString& label,
                Steinberg::Vst::ParamID paramId,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize,
-               long style = 0,
+               long style = wxALIGN_RIGHT,
                const wxValidator& validator = wxDefaultValidator,
                const wxString& name = wxCheckBoxNameStr)
-      : wxCheckBox(parent, id, wxEmptyString, pos, size, style, validator, name)
+      : wxCheckBox(parent, id, label, pos, size, style, validator, name)
       , VST3ParameterControl(paramId) { }
 
       void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
@@ -208,14 +255,24 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
       if((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
          continue;
 
-      sizer->Add(safenew wxStaticText(
-         this,
-         wxID_ANY,
-         VST3Utils::ToWxString(parameterInfo.title),
-         wxDefaultPosition,
-         wxDefaultSize,
-         wxALIGN_RIGHT), 0, wxEXPAND
-      );
+      {
+         // Hide proxy parameters with name that starts with "MIDI CC "
+         // That prevents Plain UI from creating many useless controls
+         static_assert(sizeof(Steinberg::tchar) == sizeof(char16_t));
+         static const std::basic_string_view<tchar> MIDI_CC { reinterpret_cast<const tchar*>(u"MIDI CC ") };
+         if(std::basic_string_view<tchar>(parameterInfo.title).rfind(MIDI_CC, 0) == 0)
+            continue;
+      }
+      
+      if (parameterInfo.stepCount != 1)      // not a toggle
+         sizer->Add(safenew wxStaticText(
+            this,
+            wxID_ANY,
+            VST3Utils::ToWxString(parameterInfo.title),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_RIGHT), 0, wxEXPAND
+         );
       
       if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
       {
@@ -232,9 +289,11 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
       //toggle
       else if(parameterInfo.stepCount == 1)
       {
-         const auto toggle = safenew VST3ToggleParameter (this, wxID_ANY, parameterInfo.id);
+         const auto toggle = safenew VST3ToggleParameter (this, wxID_ANY,
+            VST3Utils::ToWxString(parameterInfo.title), parameterInfo.id);
          toggle->Bind(wxEVT_CHECKBOX, &VST3ParametersWindow::OnParameterValueChanged, this);
          sizer->Add(toggle, 0, wxEXPAND);
+         sizer->AddStretchSpacer();
          sizer->AddStretchSpacer();
          RegisterParameterControl(toggle);
       }
@@ -263,7 +322,8 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
          //continuous
          if(parameterInfo.stepCount == 0)
          {
-            auto slider = safenew VST3ContinuousParameter(this, wxID_ANY, parameterInfo.id);
+            auto slider = safenew VST3ContinuousParameter(this, wxID_ANY, parameterInfo.id,
+               VST3Utils::ToWxString(parameterInfo.title), VST3Utils::ToWxString(parameterInfo.units));
             sizer->Add(slider, 0, wxEXPAND);
             slider->Bind(wxEVT_SLIDER, &VST3ParametersWindow::OnParameterValueChanged, this);
             RegisterParameterControl(slider);
@@ -271,7 +331,8 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
          //discrete
          else
          {
-            auto slider = safenew VST3DiscreteParameter(this, wxID_ANY, parameterInfo.id, parameterInfo.stepCount);
+            auto slider = safenew VST3DiscreteParameter(this, wxID_ANY, parameterInfo.id, parameterInfo.stepCount,
+               VST3Utils::ToWxString(parameterInfo.title), VST3Utils::ToWxString(parameterInfo.units));
             sizer->Add(slider, 0, wxEXPAND);
             slider->Bind(wxEVT_SLIDER, &VST3ParametersWindow::OnParameterValueChanged, this);
             RegisterParameterControl(slider);
@@ -333,8 +394,10 @@ void VST3ParametersWindow::OnParameterValueChanged(const wxCommandEvent& evt)
          mComponentHandler->performEdit(paramId, normalizedValue);
       }
       auto it = mLabels.find(paramId);
-      if(it != mLabels.end())
+      if (it != mLabels.end()) {
          it->second->SetNormalizedValue(*mEditController, normalizedValue);
+         control->UpdateAccessible(*mEditController, normalizedValue);
+      }
    }
 }
 

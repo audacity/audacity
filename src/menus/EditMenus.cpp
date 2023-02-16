@@ -5,7 +5,6 @@
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
-#include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
@@ -18,11 +17,10 @@
 #include "../TrackPanelAx.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "TimeWarper.h"
-#include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
@@ -134,11 +132,10 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
 }
 
-namespace EditActions {
+namespace {
 
 // Menu handler functions
 
-struct Handler : CommandHandlerObject {
 void OnUndo(const CommandContext &context)
 {
    auto &project = context.project;
@@ -890,15 +887,18 @@ void OnSplitNew(const CommandContext &context)
          [&](WaveTrack *wt) {
             // Clips must be aligned to sample positions or the NEW clip will
             // not fit in the gap where it came from
-            double offset = wt->GetOffset();
-            offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
             double newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t0()));
             double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t1()));
-            dest = wt->SplitCut(newt0, newt1);
+            // Fix issue 2846 by calling copy with forClipboard = false.
+            // This avoids creating the blank placeholder clips
+            dest = wt->Copy(newt0, newt1, false);
+            wt->SplitDelete(newt0, newt1);
             if (dest) {
-               dest->SetOffset(wxMax(newt0, offset));
+               // The copy function normally puts the clip at time 0
+               // This offset lines it up with the original track's timing
+               dest->Offset(newt0);
                FinishCopy(wt, dest, tracks);
             }
          }
@@ -958,13 +958,6 @@ void OnDisjoin(const CommandContext &context)
       XO("Detach"));
 }
 
-void OnEditMetadata(const CommandContext &context)
-{
-   auto &project = context.project;
-   (void)Exporter::DoEditMetadata( project,
-      XO("Edit Metadata Tags"), XO("Metadata Tags"), true);
-}
-
 void OnPreferences(const CommandContext &context)
 {
    auto &project = context.project;
@@ -1021,22 +1014,9 @@ void OnPasteOver(const CommandContext &context)
 }
 #endif
 
-}; // struct Handler
-
-} // namespace
-
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
-   // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
-   static EditActions::Handler instance;
-   return instance;
-};
-
 // Menu definitions
 
-#define FN(X) (& EditActions::Handler :: X)
-
-static const ReservedCommandFlag
+const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
       auto range = TrackList::Get( project ).Any<const LabelTrack>()
@@ -1061,7 +1041,6 @@ static const ReservedCommandFlag
    cutCopyOptions()
 }; return flag; }
 
-namespace {
 using namespace MenuTable;
 BaseItemSharedPtr EditMenu()
 {
@@ -1090,13 +1069,12 @@ BaseItemSharedPtr EditMenu()
    ;
 
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
-         Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
+         Command( wxT("Undo"), XXO("&Undo"), OnUndo,
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
-         Command( wxT("Redo"), XXO("&Redo"), FN(OnRedo),
+         Command( wxT("Redo"), XXO("&Redo"), OnRedo,
             AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
             
          Special( wxT("UndoItemsUpdateStep"),
@@ -1109,42 +1087,42 @@ BaseItemSharedPtr EditMenu()
       Section( "Basic",
          // Basic Edit commands
          /* i18n-hint: (verb)*/
-         Command( wxT("Cut"), XXO("Cu&t"), FN(OnCut),
+         Command( wxT("Cut"), XXO("Cu&t"), OnCut,
             AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
             wxT("Ctrl+X") ),
-         Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
+         Command( wxT("Delete"), XXO("&Delete"), OnDelete,
             AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
             wxT("Ctrl+K") ),
          /* i18n-hint: (verb)*/
-         Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
+         Command( wxT("Copy"), XXO("&Copy"), OnCopy,
             AudioIONotBusyFlag() | CutCopyAvailableFlag(), wxT("Ctrl+C") ),
          /* i18n-hint: (verb)*/
-         Command( wxT("Paste"), XXO("&Paste"), FN(OnPaste),
+         Command( wxT("Paste"), XXO("&Paste"), OnPaste,
             AudioIONotBusyFlag(), wxT("Ctrl+V") ),
          /* i18n-hint: (verb)*/
-         Command( wxT("Duplicate"), XXO("Duplic&ate"), FN(OnDuplicate),
+         Command( wxT("Duplicate"), XXO("Duplic&ate"), OnDuplicate,
             NotBusyTimeAndTracksFlags, wxT("Ctrl+D") ),
 
          Section( "",
             Menu( wxT("RemoveSpecial"), XXO("R&emove Special"),
                Section( "",
                   /* i18n-hint: (verb) Do a special kind of cut*/
-                  Command( wxT("SplitCut"), XXO("Spl&it Cut"), FN(OnSplitCut),
+                  Command( wxT("SplitCut"), XXO("Spl&it Cut"), OnSplitCut,
                      NotBusyTimeAndTracksFlags,
                      Options{ wxT("Ctrl+Alt+X") } ),
                   /* i18n-hint: (verb) Do a special kind of DELETE*/
-                  Command( wxT("SplitDelete"), XXO("Split D&elete"), FN(OnSplitDelete),
+                  Command( wxT("SplitDelete"), XXO("Split D&elete"), OnSplitDelete,
                      NotBusyTimeAndTracksFlags,
                      Options{ wxT("Ctrl+Alt+K") } )
                ),
 
                Section( "",
                   /* i18n-hint: (verb)*/
-                  Command( wxT("Silence"), XXO("Silence Audi&o"), FN(OnSilence),
+                  Command( wxT("Silence"), XXO("Silence Audi&o"), OnSilence,
                      AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
                      wxT("Ctrl+L") ),
                   /* i18n-hint: (verb)*/
-                  Command( wxT("Trim"), XXO("Tri&m Audio"), FN(OnTrim),
+                  Command( wxT("Trim"), XXO("Tri&m Audio"), OnTrim,
                      AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
                      Options{ wxT("Ctrl+T") } )
                )
@@ -1159,29 +1137,22 @@ BaseItemSharedPtr EditMenu()
          Menu( wxT("Clip"), XXO("Audi&o Clips"),
             Section( "",
                /* i18n-hint: (verb) It's an item on a menu. */
-               Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),
+               Command( wxT("Split"), XXO("Sp&lit"), OnSplit,
                   AudioIONotBusyFlag() | WaveTracksSelectedFlag(),
                   Options{ wxT("Ctrl+I") } ),
-               Command( wxT("SplitNew"), XXO("Split Ne&w"), FN(OnSplitNew),
+               Command( wxT("SplitNew"), XXO("Split Ne&w"), OnSplitNew,
                   AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
                   Options{ wxT("Ctrl+Alt+I") } )
             ),
 
             Section( "",
                /* i18n-hint: (verb)*/
-               Command( wxT("Join"), XXO("&Join"), FN(OnJoin),
+               Command( wxT("Join"), XXO("&Join"), OnJoin,
                   NotBusyTimeAndTracksFlags, wxT("Ctrl+J") ),
-               Command( wxT("Disjoin"), XXO("Detac&h at Silences"), FN(OnDisjoin),
+               Command( wxT("Disjoin"), XXO("Detac&h at Silences"), OnDisjoin,
                   NotBusyTimeAndTracksFlags, wxT("Ctrl+Alt+J") )
             )
-         ),
-
-         //////////////////////////////////////////////////////////////////////////
-
-         Command( wxT("EditMetaData"), XXO("&Metadata..."), FN(OnEditMetadata),
-            AudioIONotBusyFlag() )
-
-         //////////////////////////////////////////////////////////////////////////
+         )
 
       ),
 
@@ -1190,11 +1161,11 @@ BaseItemSharedPtr EditMenu()
       // not appear in the Edit menu but instead under Audacity, consistent with
       // MacOS conventions.
       Section( "Preferences",
-         Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
+         Command( wxT("Preferences"), XXO("Pre&ferences"), OnPreferences,
             AudioIONotBusyFlag(), prefKey )
       )
 
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1209,15 +1180,14 @@ BaseItemSharedPtr ExtraEditMenu()
    static const auto flags =
       AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag();
    static BaseItemSharedPtr menu{
-   ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XXO("&Edit"),
-      Command( wxT("DeleteKey"), XXO("&Delete Key"), FN(OnDelete),
+      Command( wxT("DeleteKey"), XXO("&Delete Key"), OnDelete,
          (flags | NoAutoSelect()),
          wxT("Backspace") ),
-      Command( wxT("DeleteKey2"), XXO("Delete Key&2"), FN(OnDelete),
+      Command( wxT("DeleteKey2"), XXO("Delete Key&2"), OnDelete,
          (flags | NoAutoSelect()),
          wxT("Delete") )
-   ) ) };
+   ) };
    return menu;
 }
 
@@ -1265,4 +1235,3 @@ AttachedItem sAttachment2{
 };
 
 }
-#undef FN

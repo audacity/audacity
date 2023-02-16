@@ -28,6 +28,10 @@ struct AUDACITY_DLL_API NonKeystrokeInterceptingWindow
 struct AUDACITY_DLL_API TopLevelKeystrokeHandlingWindow
 {
    virtual ~TopLevelKeystrokeHandlingWindow();
+
+   //!By default returns true, meaning that keystrokes
+   //!should be handled by associated CommandManager.
+   virtual bool HandleCommandKeystrokes();
 };
 
 #endif

@@ -1,0 +1,74 @@
+name: Bug report
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Bug description
+      description: A more detailled description of the bug
+      placeholder: Context for the bug that didn't fit in the title
+    validations:
+      required: false
+  - type: textarea
+    id: str
+    attributes:
+      label: Steps to reproduce
+      description: Please provide step-by-step instructions to reproduce this bug 
+      placeholder: |
+        1. go to ...
+        2. then click on ...
+        3. then ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen when you do these things?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What are you actually seeing?
+    validations:
+      required: false
+  - type: dropdown
+    id: version
+    attributes:
+      label: Audacity Version
+      description: What version of Audacity are you running?
+      options:
+        - current master / alpha / nightly build
+        - latest beta
+        - latest stable version (from audacityteam.org/download)
+        - stable version (from a Linux repository)
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      description: What OS does this bug occur on?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations: 
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Further information which may be relevant to this bug
+      placeholder: Sound card, Screenshots, commit ID, related bugs, ...
+  - type: markdown
+    attributes:
+      value: >
+        Please note that Audacity is currently undergoing major restructuring. See the [Roadmap](https://github.com/audacity/audacity/wiki/Roadmap)
+        for further info. Bug fixes may be delayed or postponed significantly. 

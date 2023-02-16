@@ -15,14 +15,15 @@
 #define __AUDACITY_AUDIO_UNIT_VALIDATOR__
 
 #include <AudioToolbox/AudioUnitUtilities.h>
+#include <unordered_map>
 #include "AudioUnitUtils.h"
-#include "EffectInterface.h"
+#include "EffectPlugin.h"
 
 class AUControl;
 
 class AudioUnitInstance;
 
-class AudioUnitValidator : public EffectUIValidator {
+class AudioUnitValidator : public wxEvtHandler, public EffectUIValidator {
    struct CreateToken{};
 public:
    static std::unique_ptr<EffectUIValidator> Create(
@@ -46,6 +47,7 @@ private:
       UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue);
    void EventListener(const AudioUnitEvent *inEvent,
       AudioUnitParameterValue inParameterValue);
+   void OnIdle(wxIdleEvent &evt);
    bool FetchSettingsFromInstance(EffectSettings &settings);
    bool StoreSettingsToInstance(const EffectSettings &settings);
 
@@ -61,6 +63,12 @@ private:
    AudioUnitInstance &mInstance;
    const EventListenerPtr mEventListenerRef;
    AUControl *const mpControl{};
+   std::vector<
+      std::pair<AudioUnitParameterID, AudioUnitParameterValue>> mToUpdate;
    const bool mIsGraphical;
+
+   // The map of parameter IDs to their current values
+   std::unordered_map<AudioUnitParameterID, AudioUnitParameterValue>
+      mParameterValues;
 };
 #endif

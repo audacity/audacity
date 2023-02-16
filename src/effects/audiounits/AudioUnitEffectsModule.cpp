@@ -30,17 +30,16 @@ static const struct
 }
 BlackList[] =
 {
-   /*
    { 'appl', 'augn', 'afpl' },   // Apple: AUAudioFilePlayer
    { 'appl', 'augn', 'sspl' },   // Apple: AUScheduledSoundPlayer
    { 'appl', 'augn', 'ttsp' },   // Apple: AUSpeechSynthesis
    { 'appl', 'augn', 'nrcv' },   // Apple: AUNetReceive
    { 'appl', 'aumx', '3dmx' },   // Apple: AUMixer3D
    { 'appl', 'aumx', 'mspl' },   // Apple: AUMultiSplitter
-   { 'appl', 'aumx', 'mxcm' },   // Apple: AUMultiChannelMixer
+   { 'appl', 'aumx', 'mcmx' },   // Apple: AUMultiChannelMixer
    { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
    { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
-    */
+   { 'Ignt', 'aufx', 'PTQX' },   // Ignite Amps PTEq-X
 };
 
 // ============================================================================
@@ -56,7 +55,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew AudioUnitEffectsModule();
+   return std::make_unique<AudioUnitEffectsModule>();
 }
 
 // ============================================================================
@@ -69,6 +68,51 @@ DECLARE_BUILTIN_PROVIDER(AudioUnitEffectsBuiltin);
 // AudioUnitEffectsModule
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+
+namespace
+{
+
+wxString FromOSType(OSType type)
+{
+   OSType rev = (type & 0xff000000) >> 24 |
+                (type & 0x00ff0000) >> 8  |
+                (type & 0x0000ff00) << 8  |
+                (type & 0x000000ff) << 24;
+   
+   return wxString::FromUTF8(reinterpret_cast<char *>(&rev), 4);
+}
+
+OSType ToOSType(const wxString & type)
+{
+   wxCharBuffer buf = type.ToUTF8();
+
+   OSType rev = ((unsigned char)buf.data()[0]) << 24 |
+                ((unsigned char)buf.data()[1]) << 16 |
+                ((unsigned char)buf.data()[2]) << 8 |
+                ((unsigned char)buf.data()[3]);
+
+   return rev;
+}
+
+AudioComponent FindAudioUnit(const PluginPath & path,
+                                                     wxString & name)
+{
+   wxStringTokenizer tokens(path, wxT("/"));
+
+   AudioComponentDescription desc;
+
+   desc.componentManufacturer = ToOSType(tokens.GetNextToken());
+   desc.componentType = ToOSType(tokens.GetNextToken());
+   desc.componentSubType = ToOSType(tokens.GetNextToken());
+   desc.componentFlags = 0;
+   desc.componentFlagsMask = 0;
+
+   name = tokens.GetNextToken();
+   return AudioComponentFindNext(NULL, &desc);
+}
+
+}
 
 AudioUnitEffectsModule::AudioUnitEffectsModule()
 {
@@ -187,17 +231,6 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
    return 1;
 }
 
-bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if (bFast)
-   {
-      return true;
-   }
-
-   wxString name;
-   return FindAudioUnit(path, name) != NULL;
-}
-
 std::unique_ptr<ComponentInterface>
 AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {
@@ -208,6 +241,12 @@ AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
       return result;
    }
    return nullptr;
+}
+
+bool AudioUnitEffectsModule::CheckPluginExist(const PluginPath& path) const
+{
+   wxString unused;
+   return FindAudioUnit(path, unused) != nullptr;
 }
 
 // ============================================================================
@@ -265,42 +304,4 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
    }
 }
 
-AudioComponent AudioUnitEffectsModule::FindAudioUnit(const PluginPath & path,
-                                                     wxString & name)
-{
-   wxStringTokenizer tokens(path, wxT("/"));
-
-   AudioComponentDescription desc;
-
-   desc.componentManufacturer = ToOSType(tokens.GetNextToken());
-   desc.componentType = ToOSType(tokens.GetNextToken());
-   desc.componentSubType = ToOSType(tokens.GetNextToken());
-   desc.componentFlags = 0;
-   desc.componentFlagsMask = 0;
-
-   name = tokens.GetNextToken();
-   return AudioComponentFindNext(NULL, &desc);
-}
-
-wxString AudioUnitEffectsModule::FromOSType(OSType type)
-{
-   OSType rev = (type & 0xff000000) >> 24 |
-                (type & 0x00ff0000) >> 8  |
-                (type & 0x0000ff00) << 8  |
-                (type & 0x000000ff) << 24;
-   
-   return wxString::FromUTF8(reinterpret_cast<char *>(&rev), 4);
-}
-
-OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
-{
-   wxCharBuffer buf = type.ToUTF8();
-
-   OSType rev = ((unsigned char)buf.data()[0]) << 24 |
-                ((unsigned char)buf.data()[1]) << 16 |
-                ((unsigned char)buf.data()[2]) << 8 |
-                ((unsigned char)buf.data()[3]);
-
-   return rev;
-}
 #endif

@@ -14,17 +14,18 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 
 #include "Envelope.h"
+#include "Decibels.h"
 #include "../../EnvelopeEditor.h"
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
-#include "../../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../RefreshCode.h"
 #include "../../TimeTrack.h"
 #include "../../TrackArt.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../images/Cursors.h"
 
 #include <wx/event.h>
@@ -58,7 +59,7 @@ namespace {
        double &dBRange, bool &dB, float &zoomMin, float &zoomMax)
    {
       const auto &viewInfo = ViewInfo::Get( project );
-      dBRange = viewInfo.dBr;
+      dBRange = DecibelScaleCutoff.Read();
       dB = tt.GetDisplayLog();
       zoomMin = tt.GetRangeLower(), zoomMax = tt.GetRangeUpper();
       if (dB) {
@@ -101,12 +102,13 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
       return {};
 
    // Get envelope point, range 0.0 to 1.0
-   const bool dB = !wt->GetWaveformSettings().isLinear();
+   const bool dB = !WaveformSettings::Get(*wt).isLinear();
 
    float zoomMin, zoomMax;
-   wt->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*wt);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
-   const float dBRange = wt->GetWaveformSettings().dBRange;
+   const float dBRange = WaveformSettings::Get(*wt).dBRange;
 
    return EnvelopeHandle::HitEnvelope
        (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange, false);
@@ -189,9 +191,10 @@ UIHandle::Result EnvelopeHandle::Click
          if (!mEnvelope)
             return Cancelled;
 
-         mLog = !wt->GetWaveformSettings().isLinear();
-         wt->GetDisplayBounds(&mLower, &mUpper);
-         mdBRange = wt->GetWaveformSettings().dBRange;
+         mLog = !WaveformSettings::Get(*wt).isLinear();
+         auto &cache = WaveformScale::Get(*wt);
+         cache.GetDisplayBounds(mLower, mUpper);
+         mdBRange = WaveformSettings::Get(*wt).dBRange;
          auto channels = TrackList::Channels( wt );
          for ( auto channel : channels ) {
             if (channel == wt)

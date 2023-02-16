@@ -14,8 +14,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-exceptions-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-transactions "${SOURCES}" "${LIBRARIES}"
    ""

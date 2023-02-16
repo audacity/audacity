@@ -21,11 +21,9 @@ set( SOURCES
    Meter.h
 )
 set( LIBRARIES
-   PortAudio::PortAudio
+   portaudio::portaudio
    $<$<BOOL:${USE_PORTMIXER}>:portmixer>
    lib-preferences-interface
-   PRIVATE
-   wxBase
 )
 audacity_library( lib-audio-devices "${SOURCES}" "${LIBRARIES}"
    "" ""
