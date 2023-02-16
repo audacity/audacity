@@ -18,7 +18,6 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffectBase.h"
-#include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
 #include "ConfigInterface.h"
 
