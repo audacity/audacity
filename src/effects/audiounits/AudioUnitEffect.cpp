@@ -221,4 +221,7 @@ void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
    AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }
 
+// Inject factory hook to make AudioUnitEffect capable of UI
+static AudioUnitEffectBase::Factory::SubstituteInUnique<AudioUnitEffect> scope;
+
 #endif

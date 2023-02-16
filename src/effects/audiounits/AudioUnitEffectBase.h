@@ -16,6 +16,7 @@
 #if USE_AUDIO_UNITS
 
 #include "AudioUnitWrapper.h"
+#include "GlobalVariable.h"
 #include "PerTrackEffect.h"
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
@@ -27,6 +28,11 @@ class AudioUnitEffectBase
    , public AudioUnitWrapper
 {
 public:
+   struct Factory : DefaultedGlobalHook<Factory,
+      UniquePtrFactory<AudioUnitEffectBase,
+         const PluginPath &, const wxString &/*name*/, AudioComponent>::Function
+   >{};
+
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
 
    AudioUnitEffectBase(const PluginPath & path,
