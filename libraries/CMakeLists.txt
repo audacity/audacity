@@ -44,6 +44,7 @@ set( LIBRARIES
    lib-wx-wrappers
    lib-shuttlegui
    lib-wx-init
+   lib-audio-units
 )
 
 if ( ${_OPT}has_networking )

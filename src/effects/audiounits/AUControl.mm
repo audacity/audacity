@@ -32,7 +32,7 @@
 #endif
 
 #include "MemoryX.h"
-#include "AudioUnitUtils.h"
+#include    "AudioUnitUtils.h"
 
 class AUControlImpl final : public wxWidgetCocoaImpl
 {

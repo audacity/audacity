@@ -549,18 +549,8 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitEditor.h
          effects/audiounits/AudioUnitEffect.cpp
          effects/audiounits/AudioUnitEffect.h
-         effects/audiounits/AudioUnitEffectBase.cpp
-         effects/audiounits/AudioUnitEffectBase.h
          effects/audiounits/AudioUnitEffectOptionsDialog.cpp
          effects/audiounits/AudioUnitEffectOptionsDialog.h
-         effects/audiounits/AudioUnitEffectsModule.cpp
-         effects/audiounits/AudioUnitEffectsModule.h
-         effects/audiounits/AudioUnitInstance.cpp
-         effects/audiounits/AudioUnitInstance.h
-         effects/audiounits/AudioUnitUtils.cpp
-         effects/audiounits/AudioUnitUtils.h
-         effects/audiounits/AudioUnitWrapper.cpp
-         effects/audiounits/AudioUnitWrapper.h
       >
 
       # Ladspa Effects
@@ -1354,7 +1344,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # Add our required frameworks
    list( APPEND LIBRARIES
       PRIVATE
-         "-framework AudioUnit"
          "-framework CoreAudio"
          "-framework CoreAudioKit"
    )
@@ -1508,6 +1497,7 @@ set( AUDACITY_LIBRARIES
    lib-project-file-io-interface
    lib-effects-interface
    lib-wx-init-interface
+   lib-audio-unit-interface
 )
 
 if (${_OPT}use_ffmpeg)
