@@ -18,6 +18,9 @@
 #include "AudioUnitWrapper.h"
 #include "PerTrackEffect.h"
 
+constexpr auto OptionsKey = L"Options";
+constexpr auto UseLatencyKey = L"UseLatency";
+
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: the name of an Apple audio software protocol */
 #define AUDIOUNITEFFECTS_FAMILY EffectFamilySymbol{ wxT("AudioUnit"), XO("Audio Unit") }
