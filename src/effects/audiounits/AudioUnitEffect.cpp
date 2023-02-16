@@ -19,6 +19,7 @@
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
 #include "AudioUnitEditor.h"
+#include "AudioUnitEffectsModule.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
@@ -220,5 +221,8 @@ void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
 {
    AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make AudioUnitEffect capable of UI
+static AudioUnitEffectsModule::Factory::SubstituteInUnique<AudioUnitEffect> scope;
 
 #endif
