@@ -20,6 +20,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
    // Add names to this list, of modules that are expected to ship
    // with Audacity and enable automatically.
    static std::unordered_set<wxString> modules{
+      "mod-audio-units"
    };
    return modules;
 }

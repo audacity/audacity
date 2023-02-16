@@ -231,4 +231,7 @@ static AudioUnitEffectBase::Factory::Scope scope{
    }
 };
 
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
+
 #endif
