@@ -318,9 +318,14 @@ RealtimeEffectState::RealtimeEffectState(const PluginID& id)
    BuildAll();
 }
 
-RealtimeEffectState::~RealtimeEffectState()
-{
+RealtimeEffectState::~RealtimeEffectState() = default;
 
+std::shared_ptr<RealtimeEffectState> RealtimeEffectState::Clone() const
+{
+   auto pNewState = RealtimeEffectState::make_shared(GetID());
+   pNewState->mPlugin = mPlugin;
+   pNewState->mMainSettings.Set(mMainSettings);
+   return pNewState;
 }
 
 void RealtimeEffectState::SetID(const PluginID & id)
