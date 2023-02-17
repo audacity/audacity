@@ -19,7 +19,6 @@
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
 class EffectParameterMethods;
-class LabelTrack;
 class WaveTrack;
 
 class sampleCount;
@@ -229,69 +228,6 @@ protected:
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    // If not all sync-locked selected, then only selected wave tracks.
    void CopyInputTracks(bool allSyncLockSelected = false);
-
-   // For the use of analyzers, which don't need to make output wave tracks,
-   // but may need to add label tracks.
-   class AUDACITY_DLL_API AddedAnalysisTrack {
-      friend Effect;
-      AddedAnalysisTrack(Effect *pEffect, const wxString &name);
-      AddedAnalysisTrack(const AddedAnalysisTrack&) PROHIBITED;
-
-   public:
-
-      AddedAnalysisTrack() {}
-
-      // So you can have a vector of them
-      AddedAnalysisTrack(AddedAnalysisTrack &&that);
-
-      LabelTrack *get() const { return mpTrack; }
-
-      // Call this to indicate successful completion of the analyzer.
-      void Commit();
-
-      // Destructor undoes the addition of the analysis track if not committed.
-      ~AddedAnalysisTrack();
-
-   private:
-      Effect *mpEffect{};
-      LabelTrack *mpTrack{};
-   };
-
-   // Set name to given value if that is not empty, else use default name
-   std::shared_ptr<AddedAnalysisTrack> AddAnalysisTrack(const wxString &name = wxString());
-
-   // For the use of analyzers, which don't need to make output wave tracks,
-   // but may need to modify label tracks.
-   class AUDACITY_DLL_API ModifiedAnalysisTrack {
-      friend Effect;
-      ModifiedAnalysisTrack
-         (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name);
-      ModifiedAnalysisTrack(const ModifiedAnalysisTrack&) PROHIBITED;
-
-   public:
-
-      ModifiedAnalysisTrack();
-
-      // So you can have a vector of them
-      ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that);
-
-      LabelTrack *get() const { return mpTrack; }
-
-      // Call this to indicate successful completion of the analyzer.
-      void Commit();
-
-      // Destructor undoes the modification of the analysis track if not committed.
-      ~ModifiedAnalysisTrack();
-
-   private:
-      Effect *mpEffect{};
-      LabelTrack *mpTrack{};
-      std::shared_ptr<Track> mpOrigTrack{};
-   };
-
-   // Set name to given value if that is not empty, else use default name
-   ModifiedAnalysisTrack ModifyAnalysisTrack
-      (const LabelTrack *pOrigTrack, const wxString &name = wxString());
 
    // Use this to append a NEW output track.
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);

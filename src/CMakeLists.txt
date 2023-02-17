@@ -378,6 +378,8 @@ list( APPEND SOURCES
 
       effects/Amplify.cpp
       effects/Amplify.h
+      effects/AnalysisTracks.cpp
+      effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
       effects/BassTreble.cpp

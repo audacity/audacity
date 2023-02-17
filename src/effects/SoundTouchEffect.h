@@ -27,6 +27,7 @@ namespace soundtouch { class SoundTouch; }
 
 
 class TimeWarper;
+class LabelTrack;
 class NoteTrack;
 class WaveTrack;
 

@@ -15,6 +15,7 @@
 
 #if defined(USE_VAMP)
 #include "VampEffect.h"
+#include "../AnalysisTracks.h"
 
 #include <vamp-hostsdk/Plugin.h>
 #include <vamp-hostsdk/PluginChannelAdapter.h>
@@ -357,7 +358,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       multiple = true;
    }
 
-   std::vector<std::shared_ptr<Effect::AddedAnalysisTrack>> addedTracks;
+   std::vector<std::shared_ptr<AddedAnalysisTrack>> addedTracks;
 
    for (auto leader : inputTracks()->Leaders<const WaveTrack>())
    {
@@ -429,7 +430,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       }
 
       const auto effectName = GetSymbol().Translation();
-      addedTracks.push_back(AddAnalysisTrack(
+      addedTracks.push_back(AddAnalysisTrack(*this,
          multiple
          ? wxString::Format( _("%s: %s"), left->GetName(), effectName )
          : effectName

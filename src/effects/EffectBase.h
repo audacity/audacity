@@ -124,8 +124,11 @@ private:
 
    void CountWaveTracks();
 
+public:
+   // Public until we can move this field out of here into EffectContext
    TrackList *mTracks{}; // the complete list of all tracks
-   //! This weak pointer may be the same as mHostUIDialog, or null
+
+private:
    bool mIsLinearEffect{ false };
    bool mPreviewWithNotSelected{ false };
    bool mPreviewFullSelection{ false };
