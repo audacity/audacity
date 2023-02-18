@@ -908,24 +908,33 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
    return true;
 }
 
-LadspaInstance::LadspaInstance(const PerTrackEffect &processor)
-   : PerTrackEffect::Instance{ processor }
+LadspaInstance::LadspaInstance(const PerTrackEffect &processor,
+   const LADSPA_Descriptor *pData,
+   const ArrayOf<unsigned long> &inputPorts,
+   const ArrayOf<unsigned long> &outputPorts,
+   unsigned audioIns, unsigned audioOuts, int latencyPort
+)  : PerTrackEffect::Instance{ processor }
+   , mData{ pData }, mInputPorts{ inputPorts }, mOutputPorts{ outputPorts }
+   , mAudioIns{ audioIns }, mAudioOuts{ audioOuts }
+   , mLatencyPort{ latencyPort }
    , mUseLatency{ LoadUseLatency(processor) }
 {
+   
 }
 
 std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
 {
-   return std::make_shared<LadspaInstance>(*this);
+   return std::make_shared<LadspaInstance>(*this, mData,
+      mInputPorts, mOutputPorts, mAudioIns, mAudioOuts,
+      mLatencyPort);
 }
 
 auto LadspaInstance::GetLatency(
    const EffectSettings &settings, double) const -> SampleCount
 {
-   auto &effect = GetEffect();
    auto &controls = GetSettings(settings).controls;
-   if (mUseLatency && effect.mLatencyPort >= 0)
-      return controls[effect.mLatencyPort];
+   if (mUseLatency && mLatencyPort >= 0)
+      return controls[mLatencyPort];
    return 0;
 }
 
@@ -934,10 +943,9 @@ bool LadspaInstance::ProcessInitialize(
 {
    /* Instantiate the plugin */
    if (!mReady) {
-      auto &effect = GetEffect();
       auto &ladspaSettings = GetSettings(settings);
       // Destructive effect processing doesn't need output ports
-      mMaster = effect.InitInstance(sampleRate, ladspaSettings, nullptr);
+      mMaster = InitInstance(sampleRate, ladspaSettings, nullptr);
       if (!mMaster)
          return false;
       mReady = true;
@@ -950,7 +958,7 @@ bool LadspaInstance::ProcessFinalize() noexcept
 return GuardedCall<bool>([&]{
    if (mReady) {
       mReady = false;
-      GetEffect().FreeInstance(mMaster);
+      FreeInstance(mMaster);
       mMaster = nullptr;
    }
 
@@ -961,15 +969,14 @@ return GuardedCall<bool>([&]{
 size_t LadspaInstance::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   auto &effect = GetEffect();
-   for (unsigned i = 0; i < effect.mAudioIns; ++i)
-      effect.mData->connect_port(mMaster, effect.mInputPorts[i],
+   for (unsigned i = 0; i < mAudioIns; ++i)
+      mData->connect_port(mMaster, mInputPorts[i],
          const_cast<float*>(inBlock[i]));
 
-   for (unsigned i = 0; i < effect.mAudioOuts; ++i)
-      effect.mData->connect_port(mMaster, effect.mOutputPorts[i], outBlock[i]);
+   for (unsigned i = 0; i < mAudioOuts; ++i)
+      mData->connect_port(mMaster, mOutputPorts[i], outBlock[i]);
 
-   effect.mData->run(mMaster, blockLen);
+   mData->run(mMaster, blockLen);
    return blockLen;
 }
 
@@ -981,14 +988,13 @@ bool LadspaInstance::RealtimeInitialize(EffectSettings &, double)
 bool LadspaInstance::RealtimeAddProcessor(
    EffectSettings &settings, EffectOutputs *pOutputs, unsigned, float sampleRate)
 {
-   auto &effect = GetEffect();
    auto &ladspaSettings = GetSettings(settings);
    // Connect to outputs only if this is the first processor for the track.
    // (What's right when a mono effect is on a stereo channel?  Unclear, but
    // this definitely causes connection with the first channel.)
    auto pLadspaOutputs = mSlaves.empty()
       ? static_cast<LadspaEffectOutputs *>(pOutputs) : nullptr;
-   auto slave = effect.InitInstance(sampleRate, ladspaSettings, pLadspaOutputs);
+   auto slave = InitInstance(sampleRate, ladspaSettings, pLadspaOutputs);
    if (!slave)
       return false;
    mSlaves.push_back(slave);
@@ -997,25 +1003,19 @@ bool LadspaInstance::RealtimeAddProcessor(
 
 unsigned LadspaInstance::GetAudioOutCount() const
 {
-   return GetEffect().mAudioOuts;
+   return mAudioOuts;
 }
 
 unsigned LadspaInstance::GetAudioInCount() const
 {
-   return GetEffect().mAudioIns;
-}
-
-const LadspaEffect &LadspaInstance::GetEffect() const
-{
-   return static_cast<const LadspaEffect &>(mProcessor);
+   return mAudioIns;
 }
 
 bool LadspaInstance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
-   auto &effect = GetEffect();
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
-      effect.FreeInstance(mSlaves[i]);
+      FreeInstance(mSlaves[i]);
    mSlaves.clear();
 
    return true;
@@ -1024,7 +1024,7 @@ return GuardedCall<bool>([&]{
 
 bool LadspaInstance::RealtimeSuspend()
 {
-   if (auto fn = GetEffect().mData->deactivate)
+   if (auto fn = mData->deactivate)
       for (auto &slave : mSlaves)
          fn(slave);
    return true;
@@ -1032,7 +1032,7 @@ bool LadspaInstance::RealtimeSuspend()
 
 bool LadspaInstance::RealtimeResume()
 {
-   if (auto fn = GetEffect().mData->activate)
+   if (auto fn = mData->activate)
       for (auto &slave : mSlaves)
          fn(slave);
    return true;
@@ -1049,16 +1049,15 @@ size_t LadspaInstance::RealtimeProcess(size_t group, EffectSettings &,
    if (group >= mSlaves.size())
       return 0;
 
-   auto &effect = GetEffect();
-   for (unsigned i = 0; i < effect.mAudioIns; ++i)
-      effect.mData->connect_port(mSlaves[group], effect.mInputPorts[i],
+   for (unsigned i = 0; i < mAudioIns; ++i)
+      mData->connect_port(mSlaves[group], mInputPorts[i],
          const_cast<float*>(inbuf[i]));
 
-   for (unsigned i = 0; i < effect.mAudioOuts; ++i)
-      effect.mData->connect_port(
-         mSlaves[group], effect.mOutputPorts[i], outbuf[i]);
+   for (unsigned i = 0; i < mAudioOuts; ++i)
+      mData->connect_port(
+         mSlaves[group], mOutputPorts[i], outbuf[i]);
 
-   effect.mData->run(mSlaves[group], numSamples);
+   mData->run(mSlaves[group], numSamples);
 
    return numSamples;
 }
@@ -1610,7 +1609,7 @@ bool LadspaEffect::SaveParameters(
       group, wxT("Parameters"), parms);
 }
 
-LADSPA_Handle LadspaEffect::InitInstance(
+LADSPA_Handle LadspaInstance::InitInstance(
    float sampleRate, LadspaEffectSettings &settings,
    LadspaEffectOutputs *pOutputs) const
 {
@@ -1638,7 +1637,7 @@ LADSPA_Handle LadspaEffect::InitInstance(
    return handle;
 }
 
-void LadspaEffect::FreeInstance(LADSPA_Handle handle) const
+void LadspaInstance::FreeInstance(LADSPA_Handle handle) const
 {
    if (mData->deactivate)
    {
