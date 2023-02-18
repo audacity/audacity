@@ -43,18 +43,6 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
-//! Carry output control port information back to main thread
-struct LadspaEffectOutputs : EffectOutputs {
-   ~LadspaEffectOutputs() override;
-   std::unique_ptr<EffectOutputs> Clone() const override;
-
-   void Assign(EffectOutputs &&src) override;
-
-   // Allocate as many slots as there are ports, although some may correspond
-   // to input and audio ports and remain unused
-   std::vector<float> controls;
-};
-
 class LadspaEffect final
    : public EffectWithSettings<LadspaEffectSettings, StatelessPerTrackEffect>
 {
@@ -131,11 +119,6 @@ public:
       const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
-
-   LADSPA_Handle InitInstance(
-      float sampleRate, LadspaEffectSettings &settings,
-      LadspaEffectOutputs *pOutputs) const;
-   void FreeInstance(LADSPA_Handle handle) const;
 
    const wxString mPath;
    const int mIndex;

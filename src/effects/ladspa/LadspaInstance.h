@@ -8,14 +8,11 @@
   Paul Licameli split from LadspaEffect.cpp
 
 **********************************************************************/
-
 #ifndef __AUDACITY_LADSPA_INSTANCE__
 #define __AUDACITY_LADSPA_INSTANCE__
 
 #include "PerTrackEffect.h"
 #include "ladspa.h"
-
-class LadspaEffect;
 
 struct LadspaEffectSettings {
    explicit LadspaEffectSettings(size_t nPorts = 0)
@@ -24,6 +21,18 @@ struct LadspaEffectSettings {
 
    // Allocate as many slots as there are ports, although some may correspond
    // to audio, not control, ports and so rest unused
+   std::vector<float> controls;
+};
+
+//! Carry output control port information back to main thread
+struct LadspaEffectOutputs : EffectOutputs {
+   ~LadspaEffectOutputs() override;
+   std::unique_ptr<EffectOutputs> Clone() const override;
+
+   void Assign(EffectOutputs &&src) override;
+
+   // Allocate as many slots as there are ports, although some may correspond
+   // to input and audio ports and remain unused
    std::vector<float> controls;
 };
 
@@ -52,7 +61,11 @@ struct LadspaInstance
       return GetSettings(const_cast<EffectSettings &>(settings));
    }
 
-   explicit LadspaInstance(const PerTrackEffect &processor);
+   LadspaInstance(const PerTrackEffect &processor,
+      const LADSPA_Descriptor *pData,
+      const ArrayOf<unsigned long> &inputPorts,
+      const ArrayOf<unsigned long> &outputPorts,
+      unsigned audioIns, unsigned audioOuts, int latencyPort);
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       ChannelNames chanMap) override;
    bool ProcessFinalize() noexcept override;
@@ -80,7 +93,14 @@ struct LadspaInstance
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   const LadspaEffect &GetEffect() const;
+   LADSPA_Handle InitInstance(
+      float sampleRate, LadspaEffectSettings &settings,
+      LadspaEffectOutputs *pOutputs) const;
+   void FreeInstance(LADSPA_Handle handle) const;
+
+   const LADSPA_Descriptor *const mData;
+   const ArrayOf<unsigned long> &mInputPorts;
+   const ArrayOf<unsigned long> &mOutputPorts;
 
    bool mReady{ false };
    LADSPA_Handle mMaster{};
@@ -88,6 +108,9 @@ struct LadspaInstance
    // Realtime processing
    std::vector<LADSPA_Handle> mSlaves;
 
+   const unsigned mAudioIns;
+   const unsigned mAudioOuts;
+   const int mLatencyPort;
    const bool mUseLatency;
 };
 
