@@ -20,7 +20,7 @@
 HAVE_DOT = YES
 DOT_IMAGE_FORMAT = svg
 
-## These further increased time to about 27 minutes, and space requirements to 400 about MB:
+## These further increased time to about 27 minutes, and space requirements to about 400 MB:
 
 CALL_GRAPH = YES
 CALLER_GRAPH = YES
