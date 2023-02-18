@@ -244,7 +244,7 @@ std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
                      PeakLevel.min,
                      PeakLevel.max )
                   .AddTextBox( {}, L"", 10);
-               mLeveldB = S.AddVariableText(XO("dB (Maximum 0dB)"), false,
+               mLeveldB = S.AddVariableText(XO("dB (Maximum 0dB)  "), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
