@@ -54,14 +54,31 @@ public:
 private:
    // EffectNormalize implementation
 
-   bool ProcessOne(
-      WaveTrack * t, const TranslatableString &msg, double& progress, float offset);
+   struct NormParams { // per track
+      WaveTrack* mTrack;
+      double mCurT0;
+      double mCurT1;
+      float  mMult;
+      double mSum;
+      std::vector<float> mOffsets; // per channel
+      NormParams () : mTrack(nullptr), mCurT0(0), mCurT1(0), mMult(0), mSum(0) { }
+   };
+
+   // Note: 'offset' is always passed separately from 'params' because offsets are per channel,
+   // not per track, and NormParams was added after the fact (used to be member vars). The
+   // alternative would be to pass a channel index to each of these functions (to specify which
+   // of params.mOffsets[] to use). Using a channel index would be a debatably better approach,
+   // but would require some additional code changes, and I am trying to make the least amount
+   // of changes possible. Possible TODO.           [JC3, 2023-Feb-04, while adding NormParams]
+
+   bool ProcessOne(WaveTrack * t, const TranslatableString &msg, double& progress,
+                   float offset, const NormParams &params);
    bool AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,
-                     double &progress, float &offset, float &extent);
+                     double &progress, float &offset, float &extent, NormParams &params);
    bool AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg, double &progress,
-                     float &offset);
-   void AnalyseDataDC(float *buffer, size_t len);
-   void ProcessData(float *buffer, size_t len, float offset);
+                     float &offset, NormParams &params);
+   void AnalyseDataDC(float *buffer, size_t len, NormParams &params);
+   void ProcessData(float *buffer, size_t len, float offset, const NormParams &params);
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
@@ -71,11 +88,7 @@ private:
    bool   mGain;
    bool   mDC;
    bool   mStereoInd;
-
-   double mCurT0;
-   double mCurT1;
-   float  mMult;
-   double mSum;
+   bool   mTrackInd;
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
@@ -83,6 +96,7 @@ private:
    wxStaticText *mLeveldB;
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
+   wxCheckBox* mTrackIndCheckBox;
    bool mCreating;
 
    const EffectParameterMethods& Parameters() const override;
@@ -96,6 +110,8 @@ static constexpr EffectParameter ApplyGain{ &EffectNormalize::mGain,
    L"ApplyGain",           true,    false,   true, 1  };
 static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
    L"StereoIndependent",   false,   false,   true, 1  };
+static constexpr EffectParameter TrackInd{ &EffectNormalize::mTrackInd,
+   L"TrackIndependent",    true,    false,   true, 1 };
 };
 
 #endif
