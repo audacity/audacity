@@ -21,8 +21,6 @@ effects from this one class.
 
 *//*******************************************************************/
 
-
-
 #include "LadspaEffect.h"       // This class's header file
 #include "../EffectEditor.h"
 #include "SampleCount.h"
@@ -448,11 +446,6 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
    return pathList;
 }
 
-namespace {
-bool LoadUseLatency(const EffectDefinitionInterface &effect);
-bool SaveUseLatency(const EffectDefinitionInterface &effect, bool value);
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LadspaEffectOptionsDialog
@@ -484,7 +477,7 @@ LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
    const EffectDefinitionInterface &effect
 )  : wxDialogWrapper{ nullptr, wxID_ANY, XO("LADSPA Effect Options") }
    , mEffect{ effect }
-   , mUseLatency{ LoadUseLatency(mEffect) }
+   , mUseLatency{ LadspaInstance::LoadUseLatency(mEffect) }
 {
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -497,8 +490,7 @@ LadspaEffectOptionsDialog::~LadspaEffectOptionsDialog()
 static const wchar_t *OptionsKey = L"Options";
 static const wchar_t *UseLatencyKey = L"UseLatency";
 
-namespace {
-bool LoadUseLatency(const EffectDefinitionInterface &effect)
+bool LadspaInstance::LoadUseLatency(const EffectDefinitionInterface &effect)
 {
    bool result{};
    GetConfig(effect, PluginSettings::Shared,
@@ -506,11 +498,11 @@ bool LoadUseLatency(const EffectDefinitionInterface &effect)
    return result;
 }
 
-bool SaveUseLatency(const EffectDefinitionInterface &effect, bool value)
+bool LadspaInstance::SaveUseLatency(
+   const EffectDefinitionInterface &effect, bool value)
 {
    return SetConfig(
       effect, PluginSettings::Shared, OptionsKey, UseLatencyKey, value);
-}
 }
 
 void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
@@ -562,7 +554,7 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // the values, in this case mUseLatency
    PopulateOrExchange(S);
 
-   SaveUseLatency(mEffect, mUseLatency);
+   LadspaInstance::SaveUseLatency(mEffect, mUseLatency);
 
    EndModal(wxID_OK);
 }
@@ -916,51 +908,7 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
    return true;
 }
 
-struct LadspaEffect::Instance
-   : PerTrackEffect::Instance
-   , EffectInstanceWithBlockSize
-{
-   explicit Instance(const PerTrackEffect &processor);
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   bool ProcessFinalize() noexcept override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   SampleCount GetLatency(const EffectSettings &settings, double sampleRate)
-      const override;
-
-   bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
-      override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      EffectOutputs *pOutputs, unsigned numChannels, float sampleRate)
-   override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(MessagePackage &package) override;
-   size_t RealtimeProcess(size_t group, EffectSettings &settings,
-      const float *const *inBuf, float *const *outBuf, size_t numSamples)
-   override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-
-   const LadspaEffect &GetEffect() const
-      { return static_cast<const LadspaEffect &>(mProcessor); }
-
-   bool mReady{ false };
-   LADSPA_Handle mMaster{};
-
-   // Realtime processing
-   std::vector<LADSPA_Handle> mSlaves;
-
-   const bool mUseLatency;
-};
-
-LadspaEffect::Instance::Instance(const PerTrackEffect &processor)
+LadspaInstance::LadspaInstance(const PerTrackEffect &processor)
    : PerTrackEffect::Instance{ processor }
    , mUseLatency{ LoadUseLatency(processor) }
 {
@@ -968,10 +916,10 @@ LadspaEffect::Instance::Instance(const PerTrackEffect &processor)
 
 std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
 {
-   return std::make_shared<Instance>(*this);
+   return std::make_shared<LadspaInstance>(*this);
 }
 
-auto LadspaEffect::Instance::GetLatency(
+auto LadspaInstance::GetLatency(
    const EffectSettings &settings, double) const -> SampleCount
 {
    auto &effect = GetEffect();
@@ -981,7 +929,7 @@ auto LadspaEffect::Instance::GetLatency(
    return 0;
 }
 
-bool LadspaEffect::Instance::ProcessInitialize(
+bool LadspaInstance::ProcessInitialize(
    EffectSettings &settings, double sampleRate, ChannelNames)
 {
    /* Instantiate the plugin */
@@ -997,7 +945,7 @@ bool LadspaEffect::Instance::ProcessInitialize(
    return true;
 }
 
-bool LadspaEffect::Instance::ProcessFinalize() noexcept
+bool LadspaInstance::ProcessFinalize() noexcept
 {
 return GuardedCall<bool>([&]{
    if (mReady) {
@@ -1010,7 +958,7 @@ return GuardedCall<bool>([&]{
 });
 }
 
-size_t LadspaEffect::Instance::ProcessBlock(EffectSettings &,
+size_t LadspaInstance::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    auto &effect = GetEffect();
@@ -1025,12 +973,12 @@ size_t LadspaEffect::Instance::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &, double)
+bool LadspaInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeAddProcessor(
+bool LadspaInstance::RealtimeAddProcessor(
    EffectSettings &settings, EffectOutputs *pOutputs, unsigned, float sampleRate)
 {
    auto &effect = GetEffect();
@@ -1047,17 +995,22 @@ bool LadspaEffect::Instance::RealtimeAddProcessor(
    return true;
 }
 
-unsigned LadspaEffect::Instance::GetAudioOutCount() const
+unsigned LadspaInstance::GetAudioOutCount() const
 {
    return GetEffect().mAudioOuts;
 }
 
-unsigned LadspaEffect::Instance::GetAudioInCount() const
+unsigned LadspaInstance::GetAudioInCount() const
 {
    return GetEffect().mAudioIns;
 }
 
-bool LadspaEffect::Instance::RealtimeFinalize(EffectSettings &) noexcept
+const LadspaEffect &LadspaInstance::GetEffect() const
+{
+   return static_cast<const LadspaEffect &>(mProcessor);
+}
+
+bool LadspaInstance::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    auto &effect = GetEffect();
@@ -1069,7 +1022,7 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool LadspaEffect::Instance::RealtimeSuspend()
+bool LadspaInstance::RealtimeSuspend()
 {
    if (auto fn = GetEffect().mData->deactivate)
       for (auto &slave : mSlaves)
@@ -1077,7 +1030,7 @@ bool LadspaEffect::Instance::RealtimeSuspend()
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeResume()
+bool LadspaInstance::RealtimeResume()
 {
    if (auto fn = GetEffect().mData->activate)
       for (auto &slave : mSlaves)
@@ -1085,12 +1038,12 @@ bool LadspaEffect::Instance::RealtimeResume()
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeProcessStart(MessagePackage &)
+bool LadspaInstance::RealtimeProcessStart(MessagePackage &)
 {
    return true;
 }
 
-size_t LadspaEffect::Instance::RealtimeProcess(size_t group, EffectSettings &,
+size_t LadspaInstance::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
@@ -1110,7 +1063,7 @@ size_t LadspaEffect::Instance::RealtimeProcess(size_t group, EffectSettings &,
    return numSamples;
 }
 
-bool LadspaEffect::Instance::RealtimeProcessEnd(EffectSettings &) noexcept
+bool LadspaInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
