@@ -22,11 +22,11 @@ effects from this one class.
 *//*******************************************************************/
 #include "LadspaEffect.h"       // This class's header file
 #include "LadspaEditor.h"
+#include "LadspaEffectOptionsDialog.h"
 #include "ConfigInterface.h"
 
 #include <wx/log.h>
 #include "ShuttleGui.h"
-#include "wxPanelWrapper.h"
 
 // Don't use the template-generated MakeSettings(), which default-constructs
 // the structure.  Instead allocate a number of values chosen by the plug-in
@@ -77,29 +77,6 @@ auto LadspaEffect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
    result->controls.resize(mData->PortCount);
    return result;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// LadspaEffectOptionsDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LadspaEffectOptionsDialog final : public wxDialogWrapper
-{
-public:
-   explicit LadspaEffectOptionsDialog(const EffectDefinitionInterface &effect);
-   virtual ~LadspaEffectOptionsDialog();
-
-   void PopulateOrExchange(ShuttleGui & S);
-
-   void OnOk(wxCommandEvent & evt);
-
-private:
-   const EffectDefinitionInterface &mEffect;
-   bool mUseLatency{};
-
-   DECLARE_EVENT_TABLE()
-};
 
 BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
