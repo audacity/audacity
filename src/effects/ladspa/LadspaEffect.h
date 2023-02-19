@@ -43,6 +43,9 @@ public:
    LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
 
+   bool InitializePlugin();
+
+private:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
@@ -83,7 +86,7 @@ public:
    int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
       wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
    const override;
-   bool InitializePlugin();
+
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
@@ -136,8 +139,6 @@ public:
    unsigned mNumOutputControls{ 0 };
 
    int mLatencyPort{ -1 };
-
-   friend class LadspaEffectsModule;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
