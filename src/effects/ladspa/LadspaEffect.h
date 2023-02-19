@@ -139,8 +139,8 @@ public:
    // Mapping from output channel number to audio port number
    ArrayOf<unsigned long> mOutputPorts;
 
-   int mNumInputControls{ 0 };
-   int mNumOutputControls{ 0 };
+   unsigned mNumInputControls{ 0 };
+   unsigned mNumOutputControls{ 0 };
 
    int mLatencyPort{ -1 };
 

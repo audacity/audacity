@@ -838,7 +838,7 @@ bool LadspaEffect::InitializePlugin()
       else if (LADSPA_IS_PORT_CONTROL(d)) {
          if (LADSPA_IS_PORT_INPUT(d)) {
             mInteractive = true;
-            mNumInputControls++;
+            ++mNumInputControls;
          }
          else if (LADSPA_IS_PORT_OUTPUT(d)) {
             // LADSPA effects have a convention of providing latency on an output
@@ -847,7 +847,7 @@ bool LadspaEffect::InitializePlugin()
                mLatencyPort = p;
             else {
                mInteractive = true;
-               mNumOutputControls++;
+               ++mNumOutputControls;
             }
          }
       }
@@ -959,13 +959,12 @@ bool LadspaEditor::UpdateUI()
 
 void LadspaEditor::PopulateUI(ShuttleGui &S)
 {
-   auto &effect = GetEffect();
    auto &controls = mSettings.controls;
    auto parent = S.GetParent();
 
    mParent = parent;
 
-   const auto &data = *effect.mData;
+   const auto &data = *mInstance.mData;
    mToggles.reinit( data.PortCount );
    mSliders.reinit( data.PortCount );
    mFields.reinit( data.PortCount, true);
@@ -997,7 +996,7 @@ void LadspaEditor::PopulateUI(ShuttleGui &S)
       marginSizer = uMarginSizer.get();
 
       // Make user-adjustible input controls
-      if (effect.mNumInputControls) {
+      if (mNumInputControls) {
          auto paramSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Effect Settings"));
 
          auto gridSizer = std::make_unique<wxFlexGridSizer>(5, 0, 0);
@@ -1172,7 +1171,7 @@ void LadspaEditor::PopulateUI(ShuttleGui &S)
       }
 
       // Make output meters
-      if (effect.mNumOutputControls > 0) {
+      if (mNumOutputControls > 0) {
          auto paramSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Effect Output"));
 
          auto gridSizer = std::make_unique<wxFlexGridSizer>(2, 0, 0);
@@ -1231,20 +1230,27 @@ void LadspaEditor::PopulateUI(ShuttleGui &S)
 }
 
 std::unique_ptr<EffectEditor> LadspaEffect::MakeEditor(ShuttleGui & S,
-   EffectInstance &, EffectSettingsAccess &access,
+   EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs) const
 {
    auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
-   auto result = std::make_unique<LadspaEditor>(*this, access, mProjectRate,
+   auto result = std::make_unique<LadspaEditor>(*this,
+      dynamic_cast<LadspaInstance&>(instance),
+      mNumInputControls, mNumOutputControls, access, mProjectRate,
       GetType(), pValues);
    result->PopulateUI(S);
    return result;
 }
 
 LadspaEditor::LadspaEditor(const EffectUIServices &effect,
+   const LadspaInstance &instance,
+   unsigned numInputControls, unsigned numOutputControls,
    EffectSettingsAccess &access, double sampleRate, EffectType type,
    const LadspaEffectOutputs *pOutputs
 )  : EffectEditor{ effect, access }
+   , mInstance{ instance }
+   , mNumInputControls{ numInputControls }
+   , mNumOutputControls{ numOutputControls }
    , mSampleRate{ sampleRate }
    , mType{ type }
    // Copy settings
@@ -1407,7 +1413,7 @@ void LadspaEditor::OnSlider(wxCommandEvent & evt)
    float range;
    bool forceint = false;
 
-   LADSPA_PortRangeHint hint = GetEffect().mData->PortRangeHints[p];
+   LADSPA_PortRangeHint hint = mInstance.mData->PortRangeHints[p];
    if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor))
       lower = hint.LowerBound;
    if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor))
@@ -1443,7 +1449,7 @@ void LadspaEditor::OnTextCtrl(wxCommandEvent & evt)
 
    val = Internat::CompatibleToDouble(mFields[p]->GetValue());
 
-   LADSPA_PortRangeHint hint = GetEffect().mData->PortRangeHints[p];
+   LADSPA_PortRangeHint hint = mInstance.mData->PortRangeHints[p];
    if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor))
       lower = hint.LowerBound;
    if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor))
@@ -1474,7 +1480,7 @@ void LadspaEditor::RefreshControls()
 
    auto& controls = mSettings.controls;
 
-   const auto &data = *GetEffect().mData;
+   const auto &data = *mInstance.mData;
    for (unsigned long p = 0; p < data.PortCount; ++p) {
       LADSPA_PortDescriptor d = data.PortDescriptors[p];
       if (!(LADSPA_IS_PORT_CONTROL(d)))
@@ -1521,7 +1527,7 @@ void LadspaEditor::UpdateControl(int index, float value, float epsilon)
 
 void LadspaEditor::UpdateControls(const LadspaEffectSettings& src)
 {
-   const auto& data = *GetEffect().mData;
+   const auto& data = *mInstance.mData;
 
    for (size_t portIndex = 0, portsCount = src.controls.size();
         portIndex < portsCount;
@@ -1532,7 +1538,7 @@ void LadspaEditor::UpdateControls(const LadspaEffectSettings& src)
       if (!(LADSPA_IS_PORT_CONTROL(d)) || (LADSPA_IS_PORT_OUTPUT(d)))
          continue;
 
-      LADSPA_PortRangeHint hint = GetEffect().mData->PortRangeHints[portIndex];
+      LADSPA_PortRangeHint hint = mInstance.mData->PortRangeHints[portIndex];
 
       const bool isIntValue = (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) ||
                               (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor)) ||
