@@ -94,7 +94,6 @@ public:
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   struct Editor;
    std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs)

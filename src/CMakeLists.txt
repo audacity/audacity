@@ -534,6 +534,7 @@ list( APPEND SOURCES
       # Ladspa Effects
 
       $<$<BOOL:${USE_LADSPA}>:
+         effects/ladspa/LadspaEditor.h
          effects/ladspa/LadspaEffect.cpp
          effects/ladspa/LadspaEffect.h
          effects/ladspa/LadspaInstance.cpp
