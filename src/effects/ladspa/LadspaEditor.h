@@ -14,6 +14,8 @@
 
 #include "../EffectEditor.h"
 
+struct LadspaInstance;
+
 struct LadspaEditor : EffectEditor {
    //! Assume settings originated from MakeSettings() and copies thereof
    static inline LadspaEffectSettings &GetSettings(EffectSettings &settings)
@@ -30,6 +32,8 @@ struct LadspaEditor : EffectEditor {
    }
 
    LadspaEditor(const EffectUIServices &effect,
+      const LadspaInstance &instance,
+      unsigned numInputControls, unsigned numOutputControls,
       EffectSettingsAccess &access, double sampleRate, EffectType type,
       const LadspaEffectOutputs *pOutputs);
 
@@ -47,8 +51,9 @@ struct LadspaEditor : EffectEditor {
    void UpdateControl(int index, float value, float epsilon);
    void UpdateControls(const LadspaEffectSettings& src);
 
-   const LadspaEffect &GetEffect()
-      { return static_cast<const LadspaEffect &>(mUIServices); }
+   const LadspaInstance &mInstance;
+   const unsigned mNumInputControls;
+   const unsigned mNumOutputControls;
 
    const double mSampleRate;
    const EffectType mType;
