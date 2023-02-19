@@ -564,6 +564,8 @@ list( APPEND SOURCES
          effects/ladspa/LadspaEditor.h
          effects/ladspa/LadspaEffect.cpp
          effects/ladspa/LadspaEffect.h
+         effects/ladspa/LadspaEffectsModule.cpp
+         effects/ladspa/LadspaEffectsModule.h
          effects/ladspa/LadspaInstance.cpp
          effects/ladspa/LadspaInstance.h
          effects/ladspa/ladspa.h
