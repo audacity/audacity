@@ -156,4 +156,8 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
+extern AUDACITY_DLL_API ChoiceSetting
+     GUIManualLocation
+;
+
 #endif // __AUDACITY_HELPSYSTEM__

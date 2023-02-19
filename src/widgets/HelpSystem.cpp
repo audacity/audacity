@@ -40,7 +40,6 @@
 #include "../HelpText.h"
 #include "Prefs.h"
 #include "wxFileNameWrapper.h"
-#include "../prefs/GUIPrefs.h"
 
 #include "BasicUI.h"
 
@@ -587,3 +586,14 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
       return;
    pDlg->UpdateButtons();
 }
+
+ChoiceSetting GUIManualLocation{
+   wxT("/GUI/Help"),
+   {
+      ByColumns,
+      { XO("Local") ,  XO("From Internet") , },
+      { wxT("Local") , wxT("FromInternet") , }
+   },
+   1 // "FromInternet"
+};
+

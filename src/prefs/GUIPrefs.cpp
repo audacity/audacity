@@ -127,16 +127,6 @@ void GUIPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-ChoiceSetting GUIManualLocation{
-   wxT("/GUI/Help"),
-   {
-      ByColumns,
-      { XO("Local") ,  XO("From Internet") , },
-      { wxT("Local") , wxT("FromInternet") , }
-   },
-   1 // "FromInternet"
-};
-
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    ChoiceSetting LanguageSetting{ wxT("/Locale/Language"),
