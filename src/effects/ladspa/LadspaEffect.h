@@ -12,22 +12,15 @@
 
 #include "LadspaInstance.h"
 
-class wxSlider;
-class wxStaticText;
-class wxTextCtrl;
-class wxCheckBox;
-
-class NumericTextCtrl;
-
 #include <wx/dynlib.h> // member variable
-#include <wx/event.h> // to inherit
-#include <wx/weakref.h>
+//#include <wx/event.h> // to inherit
+//#include <wx/weakref.h>
 
 #include "../StatelessPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
-#include "SampleFormat.h"
+//#include "SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
