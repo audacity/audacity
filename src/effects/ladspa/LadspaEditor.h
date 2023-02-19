@@ -13,8 +13,17 @@
 #define __AUDACITY_LADSPA_EDITOR__
 
 #include "../EffectEditor.h"
+#include "LadspaInstance.h" // for LadspaEffectSettings
+
+#include <wx/weakref.h>
 
 struct LadspaInstance;
+class NumericTextCtrl;
+class wxSlider;
+class wxTextCtrl;
+class wxStaticText;
+class wxCheckBox;
+class LadspaEffectMeter;
 
 struct LadspaEditor : EffectEditor {
    //! Assume settings originated from MakeSettings() and copies thereof
