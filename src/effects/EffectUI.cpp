@@ -29,7 +29,7 @@
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 #include "Theme.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
 {
@@ -103,8 +103,8 @@ private:
 #include "ViewInfo.h"
 #include "../commands/AudacityCommand.h"
 #include "../commands/CommandContext.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 #include "../widgets/AButton.h"
 
 #include <wx/button.h>

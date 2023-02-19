@@ -34,7 +34,7 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 
 #define DESC XO("FFmpeg-compatible files")

@@ -17,8 +17,8 @@
 #include <wx/dialog.h>
 #include <wx/ffile.h>
 #include <wx/filedlg.h>
-#include "../SelectFile.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "SelectFile.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/VetoDialogHook.h"
 
 int BasicEffectUIServices::ShowClientInterface(const EffectPlugin &plugin,

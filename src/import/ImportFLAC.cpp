@@ -37,9 +37,9 @@
 #include "Import.h"
 #include "ImportPlugin.h"
 
-#include "../SelectFile.h"
+#include "SelectFile.h"
 #include "Tags.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
 

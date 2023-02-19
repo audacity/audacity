@@ -16,7 +16,7 @@
 #include "EqualizationParameters.h"
 
 #include <wx/log.h>
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "FileNames.h"
 #include "XMLFileReader.h"
 

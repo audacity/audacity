@@ -13,8 +13,8 @@
 #include "Internat.h"
 #include "ShuttleGui.h"
 #include "../prefs/LibraryPrefs.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 #include "ReadOnlyText.h"
 #include <wx/stattext.h>
 

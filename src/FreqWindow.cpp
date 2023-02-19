@@ -77,8 +77,8 @@ the mouse around.
 
 #include "WaveTrack.h"
 
-#include "./widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
 #include "widgets/RulerPanel.h"
 #include "widgets/LinearUpdater.h"
 #include "widgets/LogarithmicUpdater.h"

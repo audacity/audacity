@@ -12,7 +12,7 @@ Paul Licameli split from AudacityLogger.h
 #define __AUDACITY_LOG_WINDOW__
 
 //! Maintains the unique logging window which displays debug information
-class AUDACITY_DLL_API LogWindow
+class WX_INIT_API LogWindow
 {
 public:
    //! Show or hide the unique logging window; create it on demand the first time it is shown

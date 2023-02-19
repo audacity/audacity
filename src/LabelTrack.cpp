@@ -43,7 +43,7 @@ for drawing different aspects of the label and its text box.
 #include "prefs/ImportExportPrefs.h"
 
 #include "TimeWarper.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "labeltrack",

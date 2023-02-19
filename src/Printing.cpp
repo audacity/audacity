@@ -26,7 +26,7 @@
 #include "ViewInfo.h"
 #include "Track.h"
 #include "widgets/Ruler.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "widgets/LinearUpdater.h"
 #include "widgets/TimeFormat.h"
 

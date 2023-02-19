@@ -25,9 +25,9 @@
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/ToolManager.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "BasicUI.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #include <thread>
 #include <float.h>

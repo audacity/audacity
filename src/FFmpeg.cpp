@@ -22,8 +22,8 @@ License: GPL v2 or later.  See License.txt.
 
 #include "FileNames.h"
 #include "SelectFile.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
 
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>

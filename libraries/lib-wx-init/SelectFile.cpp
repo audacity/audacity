@@ -11,7 +11,7 @@
 #include "SelectFile.h"
 #include "FileNames.h"
 #include "FileDialog/FileDialog.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 FilePath
 SelectFile(FileNames::Operation op,

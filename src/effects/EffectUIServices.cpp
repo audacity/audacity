@@ -9,7 +9,7 @@
 **********************************************************************/
 #include "EffectUIServices.h"
 #include "EffectPlugin.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 EffectUIServices::~EffectUIServices() = default;
 

@@ -14,7 +14,7 @@ Paul Licameli split from HelpMenus.cpp
 #include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 
 #include <wx/button.h>

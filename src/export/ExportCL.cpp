@@ -31,14 +31,14 @@
 
 #include "Mix.h"
 #include "Prefs.h"
-#include "../SelectFile.h"
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
 #include "float_cast.h"
 #include "../widgets/FileHistory.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 #include "../widgets/Warning.h"
 #include "wxFileNameWrapper.h"
 

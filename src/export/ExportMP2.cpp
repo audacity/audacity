@@ -51,8 +51,8 @@
 #include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"

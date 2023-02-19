@@ -33,7 +33,7 @@
 
 #include "ShuttleGui.h"
 
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher

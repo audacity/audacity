@@ -28,8 +28,8 @@
 
 #include "ShuttleGui.h"
 #include "../ProjectSettings.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 #include "Track.h"
 #include "ProjectRate.h"
 #include "Tags.h"

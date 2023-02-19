@@ -15,8 +15,8 @@
 #include "PluginManager.h"
 #include "PluginStartupRegistration.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include <set>
 #include <wx/setup.h> // for wxUSE_* macros

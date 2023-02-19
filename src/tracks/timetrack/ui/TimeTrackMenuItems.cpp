@@ -18,7 +18,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "ViewInfo.h"
 #include "../../../commands/CommandContext.h"
 #include "../../../commands/CommandManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 namespace {
 using namespace MenuTable;

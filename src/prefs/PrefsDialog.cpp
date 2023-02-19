@@ -39,7 +39,7 @@
 
 #include "PrefsPanel.h"
 
-#include "../widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

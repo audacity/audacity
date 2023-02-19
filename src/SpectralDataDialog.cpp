@@ -58,7 +58,7 @@
 #include "WaveTrack.h"
 
 #include "commands/CommandManagerWindowClasses.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h" // to inherit
 
 // If defined, make a checkbox for smart selection of the fundamental

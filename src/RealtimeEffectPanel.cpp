@@ -21,7 +21,7 @@
 
 #include <wx/dcbuffer.h>
 
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"

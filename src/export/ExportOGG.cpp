@@ -31,8 +31,8 @@
 
 #include "Tags.h"
 #include "Track.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions

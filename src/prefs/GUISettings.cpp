@@ -12,7 +12,7 @@ Paul Licameli split from GUIPrefs.cpp
 
 #include "FileNames.h"
 #include "Languages.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #include <wx/app.h>
 

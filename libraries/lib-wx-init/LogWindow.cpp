@@ -18,7 +18,7 @@ Paul Licameli split from AudacityLogger.cpp
 #include <wx/weakref.h>
 
 #include "AudacityLogger.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "MemoryX.h"
@@ -26,7 +26,7 @@ Paul Licameli split from AudacityLogger.cpp
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 
-#include "../images/AudacityLogoAlpha.xpm"
+#include "AudacityLogoAlpha.xpm"
 
 // If wxLogWindow is used and initialized before the Mac's "root" window, then
 //     Audacity may crash when terminating.  It's not fully understood why this occurs

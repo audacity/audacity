@@ -47,7 +47,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
 #include "toolbars/SelectionBar.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
 #include "widgets/Warning.h"
@@ -1334,7 +1334,7 @@ bool ProjectFileManager::Import(
 
 #include "Clipboard.h"
 #include "ShuttleGui.h"
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 // Compact dialog
 namespace {

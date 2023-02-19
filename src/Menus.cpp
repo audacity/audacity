@@ -37,7 +37,7 @@
 #include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "BasicUI.h"
 
 #include <unordered_set>

@@ -39,7 +39,7 @@ of sample block storage.
 
 #include "FileNames.h"
 #include "SelectFile.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 
 // Change these to the desired format...should probably make the

@@ -58,9 +58,9 @@
 #include "FileDialog/FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "AudacityTextEntryDialog.h"
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

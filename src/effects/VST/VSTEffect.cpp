@@ -29,7 +29,7 @@
 #include "ModuleManager.h"
 #include "SampleCount.h"
 
-#include "../../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #if 0
 #if defined(BUILDING_AUDACITY)
@@ -81,10 +81,10 @@
 
 #include "FileNames.h"
 #include "PlatformCompatibility.h"
-#include "../../SelectFile.h"
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "XMLFileReader.h"
 #include "Base64.h"

@@ -30,8 +30,8 @@
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../toolbars/ToolManager.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include <wx/combobox.h>
 

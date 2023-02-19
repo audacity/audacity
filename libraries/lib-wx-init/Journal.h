@@ -25,17 +25,21 @@ namespace Journal
 {
    //\brief Whether recording is enabled; but recording will happen only if this
    // was true at application start up
+   WX_INIT_API
    bool RecordEnabled();
 
    //\brief Change the enablement of recording and store in preferences
    //\return whether successful
+   WX_INIT_API
    bool SetRecordEnabled(bool value);
 
    //\brief Whether actually replaying.
    // IsRecording() && IsReplaying() is possible
+   WX_INIT_API
    bool IsReplaying();
 
    //\brief Set the played back journal file at start up
+   WX_INIT_API
    void SetInputFileName( const wxString &path );
 
    //\brief Initialize playback if a file name has been set, and initialize
@@ -45,23 +49,29 @@ namespace Journal
    // @param dataDir the output journal.txt will be in this directory, and the
    // input file, if it was relative, is made absolute with respect to it
    // @return true if successful
+   WX_INIT_API
    bool Begin( const FilePath &dataDir );
 
    //\brief Consume next line from the input journal (skipping blank lines and
    // comments) and tokenize it.
    // Throws SyncException if no next line or not replaying
+   WX_INIT_API
    wxArrayStringEx GetTokens();
 
    //\brief if playing back and commands remain, may execute one.
    // May throw SyncException if playing back but none remain, or if other error
    // conditions are encountered.
    // Returns true if any command was dispatched
+   WX_INIT_API
    bool Dispatch();
 
    //\brief If recording, output the strings; if playing back, require
    // identical strings.  None of them may contain newlines
+   WX_INIT_API
    void Sync( const wxString &string );
+   WX_INIT_API
    void Sync( const wxArrayString &strings );
+   WX_INIT_API
    void Sync( std::initializer_list< const wxString > strings );
 
    //! Function that returns a value which will be written to the journal
@@ -77,14 +87,16 @@ namespace Journal
     the journal; throw SyncException if the value is ill-formed; otherwise
     output the value (if also recording), and return it
     */
+   WX_INIT_API
    int IfNotPlaying(
       const wxString &string, const InteractiveAction &action );
 
    //\brief Get the value that the application will return to the command line
+   WX_INIT_API
    int GetExitCode();
 
    //\brief thrown when playback of a journal doesn't match the recording
-   class SyncException : public AudacityException {
+   class WX_INIT_API SyncException : public AudacityException {
    public:
       //! Constructs an exception with a message; message is logged into the `journallog.txt` file.
       explicit SyncException(const wxString& message);

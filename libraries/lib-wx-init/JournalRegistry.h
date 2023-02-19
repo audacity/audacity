@@ -20,11 +20,13 @@ class wxString;
 namespace Journal
 {
    //\brief Whether the initialization or playback of journalling failed
+   WX_INIT_API
    bool GetError();
 
    //\brief Make GetError() return false
    // If replaying, then the program will return non-zero status to the command
    // line
+   WX_INIT_API
    void SetError();
 
    //\brief Type of a function that interprets a line of the input journal.
@@ -35,7 +37,7 @@ namespace Journal
    //\brief Associates a dispatcher with a keyword in the default dictionary.
    // The keyword will also be the first field passed to the dispatcher.  This
    // struct is meant for static construction
-   struct RegisteredCommand{
+   struct WX_INIT_API RegisteredCommand{
       explicit RegisteredCommand(
          const wxString &name, Dispatcher dispatcher );
    };
@@ -52,13 +54,14 @@ namespace Journal
 
    //\brief Registers an initialization step in its constructor.
    // Typically statically constructed
-   struct RegisteredInitializer{
+   struct WX_INIT_API RegisteredInitializer{
       explicit RegisteredInitializer( Initializer initializer );
    };
 
    using Initializers = std::vector< Initializer >;
 
    //\brief Get all registered initializers
+   WX_INIT_API
    const Initializers &GetInitializers();
 
 }

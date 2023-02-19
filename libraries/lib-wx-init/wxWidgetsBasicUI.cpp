@@ -10,11 +10,11 @@ Paul Licameli
 #include "wxWidgetsBasicUI.h"
 #include "wxWidgetsWindowPlacement.h"
 #include "MemoryX.h" // for Destroy_ptr
-#include "widgets/ErrorDialog.h"
+#include "ErrorDialog.h"
 #ifdef HAS_SENTRY_REPORTING
 #include "widgets/ErrorReportDialog.h"
 #endif
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 #include "MultiDialog.h"
 #include <wx/app.h>

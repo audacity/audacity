@@ -27,7 +27,7 @@ parameters.  It is for development purposes.
 
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 #include "../commands/CommandContext.h"
 

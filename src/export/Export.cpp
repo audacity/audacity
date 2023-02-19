@@ -64,13 +64,13 @@
 #include "../TagsEditor.h"
 #include "Theme.h"
 #include "WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/Warning.h"
-#include "../widgets/HelpSystem.h"
+#include "HelpSystem.h"
 #include "AColor.h"
 #include "FileNames.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/ProgressDialog.h"
+#include "HelpSystem.h"
+#include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------

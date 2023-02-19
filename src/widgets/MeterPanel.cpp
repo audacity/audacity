@@ -68,7 +68,7 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "Theme.h"
-#include "../widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 #include "../widgets/LinearUpdater.h"
 #include "../widgets/LinearDBFormat.h"
 #include "../widgets/RealFormat.h"

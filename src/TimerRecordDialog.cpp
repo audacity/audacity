@@ -49,9 +49,9 @@
 #include "Prefs.h"
 #include "Track.h"
 #include "widgets/NumericTextCtrl.h"
-#include "widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 #include "wxTextCtrlWrapper.h"
 
 #if wxUSE_ACCESSIBILITY

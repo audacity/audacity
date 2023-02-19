@@ -21,7 +21,7 @@
 #include "Project.h"
 #include "../ProjectWindows.h"
 #include "SelectFile.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "FileDialog/FileDialog.h"
 
 // Insert a menu item

@@ -32,7 +32,7 @@
 #include "../widgets/valnum.h"
 
 #include "WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
 {

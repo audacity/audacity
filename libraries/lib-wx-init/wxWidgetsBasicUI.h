@@ -16,8 +16,8 @@ Paul Licameli
 class wxWindow;
 
 //! An implementation of BasicUI::Services in terms of the wxWidgets toolkit
-/*! This is a singleton that doesn't need AUDACITY_DLL_API visibility */
-class wxWidgetsBasicUI final : public BasicUI::Services {
+/*! This is a singleton that doesn't need WX_INIT_API visibility */
+class WX_INIT_API wxWidgetsBasicUI final : public BasicUI::Services {
 public:
    ~wxWidgetsBasicUI() override;
 

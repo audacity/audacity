@@ -47,7 +47,7 @@ enum ProgressDialogFlags
 /// ProgressDialog Class
 ////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API ProgressDialog /* not final */ :
+class WX_INIT_API ProgressDialog /* not final */ :
     public wxDialogWrapper,
     public BasicUI::ProgressDialog
 {
@@ -162,7 +162,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-class AUDACITY_DLL_API TimerProgressDialog final : public ProgressDialog
+class WX_INIT_API TimerProgressDialog final : public ProgressDialog
 {
 public:
    TimerProgressDialog(const wxLongLong_t duration,

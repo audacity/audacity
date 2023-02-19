@@ -47,7 +47,7 @@
 #include "ShuttleGui.h"
 #include "../widgets/Grabber.h"
 #include "DeviceManager.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

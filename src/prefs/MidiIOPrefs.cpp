@@ -38,7 +38,7 @@ other settings.
 #include "NoteTrack.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 enum {
    HostID = 10000,

@@ -19,7 +19,7 @@
 #include "ProjectAudioManager.h"
 #include "ViewInfo.h"
 #include "toolbars/ControlToolBar.h"
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 void TransportUtilities::PlayCurrentRegionAndWait(
    const CommandContext &context,
