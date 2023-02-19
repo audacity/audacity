@@ -22,7 +22,7 @@ effects from this one class.
 *//*******************************************************************/
 
 #include "LadspaEffect.h"       // This class's header file
-#include "../EffectEditor.h"
+#include "LadspaEditor.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
@@ -951,57 +951,13 @@ OptionalMessage LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
    return { nullptr };
 }
 
-struct LadspaEffect::Editor : EffectEditor {
-   Editor(const EffectUIServices &effect,
-      EffectSettingsAccess &access, double sampleRate, EffectType type,
-      const LadspaEffectOutputs *pOutputs)
-      : EffectEditor{ effect, access }
-      , mSampleRate{ sampleRate }
-      , mType{ type }
-      // Copy settings
-      , mSettings{ GetSettings(access.Get()) }
-      , mpOutputs{ pOutputs }
-   {}
-
-   bool UpdateUI() override;
-   bool ValidateUI() override;
-   void Disconnect() override;
-
-   void PopulateUI(ShuttleGui &S);
-
-   void OnCheckBox(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnTextCtrl(wxCommandEvent & evt);
-   void RefreshControls();
-
-   void UpdateControl(int index, float value, float epsilon);
-   void UpdateControls(const LadspaEffectSettings& src);
-
-   const LadspaEffect &GetEffect()
-      { return static_cast<const LadspaEffect &>(mUIServices); }
-
-   const double mSampleRate;
-   const EffectType mType;
-   LadspaEffectSettings mSettings;
-   const LadspaEffectOutputs *const mpOutputs;
-
-   NumericTextCtrl *mDuration{};
-   wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent{};
-   ArrayOf<wxSlider*> mSliders;
-   ArrayOf<wxTextCtrl*> mFields;
-   ArrayOf<wxStaticText*> mLabels;
-   ArrayOf<wxCheckBox*> mToggles;
-   std::vector<LadspaEffectMeter *> mMeters;
-};
-
-bool LadspaEffect::Editor::UpdateUI()
+bool LadspaEditor::UpdateUI()
 {
    RefreshControls();
    return true;
 }
 
-void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
+void LadspaEditor::PopulateUI(ShuttleGui &S)
 {
    auto &effect = GetEffect();
    auto &controls = mSettings.controls;
@@ -1088,7 +1044,7 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
                mToggles[p]->SetName(labelText);
                mToggles[p]->SetValue(controls[p] > 0);
                BindTo(*mToggles[p],
-                  wxEVT_COMMAND_CHECKBOX_CLICKED, &Editor::OnCheckBox);
+                  wxEVT_COMMAND_CHECKBOX_CLICKED, &LadspaEditor::OnCheckBox);
                gridSizer->Add(mToggles[p], 0, wxALL, 5);
 
                gridSizer->Add(1, 1, 0);
@@ -1137,7 +1093,7 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
             mFields[p] = safenew wxTextCtrl(w, ID_Texts + p);
             mFields[p]->SetName(labelText);
             BindTo(*mFields[p],
-               wxEVT_COMMAND_TEXT_UPDATED, &Editor::OnTextCtrl);
+               wxEVT_COMMAND_TEXT_UPDATED, &LadspaEditor::OnTextCtrl);
             gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
             wxString str;
@@ -1166,7 +1122,7 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
 #endif
             mSliders[p]->SetName(labelText);
             BindTo(*mSliders[p],
-               wxEVT_COMMAND_SLIDER_UPDATED, &Editor::OnSlider);
+               wxEVT_COMMAND_SLIDER_UPDATED, &LadspaEditor::OnSlider);
             gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
 
             if (hashi) {
@@ -1279,13 +1235,24 @@ std::unique_ptr<EffectEditor> LadspaEffect::MakeEditor(ShuttleGui & S,
    const EffectOutputs *pOutputs) const
 {
    auto pValues = static_cast<const LadspaEffectOutputs *>(pOutputs);
-   auto result = std::make_unique<Editor>(*this, access, mProjectRate,
+   auto result = std::make_unique<LadspaEditor>(*this, access, mProjectRate,
       GetType(), pValues);
    result->PopulateUI(S);
    return result;
 }
 
-bool LadspaEffect::Editor::ValidateUI()
+LadspaEditor::LadspaEditor(const EffectUIServices &effect,
+   EffectSettingsAccess &access, double sampleRate, EffectType type,
+   const LadspaEffectOutputs *pOutputs
+)  : EffectEditor{ effect, access }
+   , mSampleRate{ sampleRate }
+   , mType{ type }
+   // Copy settings
+   , mSettings{ GetSettings(access.Get()) }
+   , mpOutputs{ pOutputs }
+{}
+
+bool LadspaEditor::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings &settings){
       if (mType == EffectTypeGenerate)
@@ -1296,7 +1263,7 @@ bool LadspaEffect::Editor::ValidateUI()
    return true;
 }
 
-void LadspaEffect::Editor::Disconnect()
+void LadspaEditor::Disconnect()
 {
   for (auto &meter : mMeters)
      if (meter) {
@@ -1422,7 +1389,7 @@ bool LadspaEffect::SaveParameters(
       group, wxT("Parameters"), parms);
 }
 
-void LadspaEffect::Editor::OnCheckBox(wxCommandEvent & evt)
+void LadspaEditor::OnCheckBox(wxCommandEvent & evt)
 {
    int p = evt.GetId() - ID_Toggles;
    // 0.5 is a half of the interval
@@ -1430,7 +1397,7 @@ void LadspaEffect::Editor::OnCheckBox(wxCommandEvent & evt)
    ValidateUI();
 }
 
-void LadspaEffect::Editor::OnSlider(wxCommandEvent & evt)
+void LadspaEditor::OnSlider(wxCommandEvent & evt)
 {
    int p = evt.GetId() - ID_Sliders;
 
@@ -1465,7 +1432,7 @@ void LadspaEffect::Editor::OnSlider(wxCommandEvent & evt)
    ValidateUI();
 }
 
-void LadspaEffect::Editor::OnTextCtrl(wxCommandEvent & evt)
+void LadspaEditor::OnTextCtrl(wxCommandEvent & evt)
 {
    int p = evt.GetId() - ID_Texts;
 
@@ -1497,7 +1464,7 @@ void LadspaEffect::Editor::OnTextCtrl(wxCommandEvent & evt)
    ValidateUI();
 }
 
-void LadspaEffect::Editor::RefreshControls()
+void LadspaEditor::RefreshControls()
 {
    if (!mParent)
       return;
@@ -1539,7 +1506,7 @@ void LadspaEffect::Editor::RefreshControls()
    }
 }
 
-void LadspaEffect::Editor::UpdateControl(int index, float value, float epsilon)
+void LadspaEditor::UpdateControl(int index, float value, float epsilon)
 {
    auto& controls = mSettings.controls;
 
@@ -1552,7 +1519,7 @@ void LadspaEffect::Editor::UpdateControl(int index, float value, float epsilon)
    Publish({ size_t(index), value });
 }
 
-void LadspaEffect::Editor::UpdateControls(const LadspaEffectSettings& src)
+void LadspaEditor::UpdateControls(const LadspaEffectSettings& src)
 {
    const auto& data = *GetEffect().mData;
 
