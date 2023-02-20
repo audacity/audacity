@@ -91,6 +91,7 @@ void ScriptCommandRelay::StartScriptServer(tpRegScriptServerFunc scriptFn)
    std::thread(server, scriptFn).detach();
 }
 
+#if USE_NYQUIST
 void * ExecForLisp( char * pIn )
 {
    wxString Str1(pIn);
@@ -100,3 +101,4 @@ void * ExecForLisp( char * pIn )
 
    return nyq_reformat_aud_do_response(Str2);
 }
+#endif
