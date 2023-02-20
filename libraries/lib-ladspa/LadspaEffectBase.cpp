@@ -21,6 +21,7 @@ effects from this one class.
 #include "ConfigInterface.h"
 
 #include <wx/log.h>
+#include <wx/utils.h>
 
 // Don't use the template-generated MakeSettings(), which default-constructs
 // the structure.  Instead allocate a number of values chosen by the plug-in

@@ -45,6 +45,7 @@ set( LIBRARIES
    lib-shuttlegui
    lib-wx-init
    lib-note-track
+   lib-ladspa
 )
 
 if ( ${_OPT}has_networking )

@@ -64,14 +64,6 @@ else()
    set ( wxIS_GTK on)
 endif()
 
-# Handle Ladspa option
-cmd_option(
-   ${_OPT}use_ladspa
-   "Use LADSPA plug-in support [on, off]"
-   ON
-)
-set( USE_LADSPA ${${_OPT}use_ladspa} CACHE INTERNAL "" )
-
 # Handle VST option
 cmd_option(
    ${_OPT}use_vst
@@ -564,15 +556,8 @@ list( APPEND SOURCES
          effects/ladspa/LadspaEditor.h
          effects/ladspa/LadspaEffect.cpp
          effects/ladspa/LadspaEffect.h
-         effects/ladspa/LadspaEffectBase.cpp
-         effects/ladspa/LadspaEffectBase.h
 	 effects/ladspa/LadspaEffectOptionsDialog.cpp
 	 effects/ladspa/LadspaEffectOptionsDialog.h
-         effects/ladspa/LadspaEffectsModule.cpp
-         effects/ladspa/LadspaEffectsModule.h
-         effects/ladspa/LadspaInstance.cpp
-         effects/ladspa/LadspaInstance.h
-         effects/ladspa/ladspa.h
       >
 
       # LV2 Effects
@@ -1516,6 +1501,7 @@ set( AUDACITY_LIBRARIES
    lib-effects-interface
    lib-wx-init-interface
    lib-note-track-interface
+   lib-ladspa-interface
 )
 
 if (${_OPT}use_ffmpeg)

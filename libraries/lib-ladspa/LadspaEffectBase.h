@@ -22,11 +22,11 @@
  */
 #define LADSPAEFFECTS_FAMILY XO("LADSPA")
 
-class LadspaEffectBase
+class LADSPA_API LadspaEffectBase
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
 public:
-   struct Factory : DefaultedGlobalHook< Factory,
+   struct LADSPA_API Factory : DefaultedGlobalHook< Factory,
       UniquePtrFactory<LadspaEffectBase, const wxString &, int>::Function
    >{};
 
