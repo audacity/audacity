@@ -49,6 +49,7 @@ set( LIBRARIES
    lib-snapping
    lib-vst
    lib-lv2
+   lib-ladspa
 )
 
 if ( ${_OPT}has_networking )

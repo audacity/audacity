@@ -27,6 +27,7 @@
 #include <thread>
 #include <wx/log.h>
 #include <wx/tokenzr.h>
+#include <wx/utils.h>
 #include "FileNames.h"
 #include "ModuleManager.h"
 

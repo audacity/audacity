@@ -25,7 +25,7 @@ struct LadspaEffectSettings {
 };
 
 //! Carry output control port information back to main thread
-struct LadspaEffectOutputs : EffectOutputs {
+struct LADSPA_API LadspaEffectOutputs : EffectOutputs {
    ~LadspaEffectOutputs() override;
    std::unique_ptr<EffectOutputs> Clone() const override;
 
@@ -36,7 +36,7 @@ struct LadspaEffectOutputs : EffectOutputs {
    std::vector<float> controls;
 };
 
-struct LadspaInstance
+struct LADSPA_API LadspaInstance
    : PerTrackEffect::Instance
    , EffectInstanceWithBlockSize
 {

@@ -21,7 +21,7 @@
  */
 #define LADSPAEFFECTS_FAMILY XO("LADSPA")
 
-class LadspaEffectBase
+class LADSPA_API LadspaEffectBase
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
 public:

@@ -19,7 +19,7 @@
 class LadspaEffectsModule final : public PluginProvider
 {
 public:
-   struct Factory : DefaultedGlobalHook< Factory,
+   struct LADSPA_API Factory : DefaultedGlobalHook< Factory,
       UniquePtrFactory<LadspaEffectBase, const wxString &, int>::Function
    >{};
 
