@@ -28,37 +28,27 @@
  */
 #define LADSPAEFFECTS_FAMILY XO("LADSPA")
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// LadspaEffect
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LadspaEffect final
-   : public EffectWithSettings<LadspaEffectSettings, StatelessPerTrackEffect>
+class LadspaEffectBase
+   : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
 public:
-   LadspaEffect(const wxString & path, int index);
-   virtual ~LadspaEffect();
+   LadspaEffectBase(const wxString & path, int index);
+   ~LadspaEffectBase() override;
 
    bool InitializePlugin();
 
-private:
+protected:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
 
    std::unique_ptr<EffectOutputs> MakeOutputs() const override;
 
-   // ComponentInterface implementation
-
    PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() const override;
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
-
-   // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
    EffectFamilySymbol GetFamily() const override;
@@ -81,29 +71,13 @@ private:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
 
    bool CanExportPresets() const override;
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
    bool HasOptions() const override;
-   void ShowOptions(const EffectPlugin &plugin) const override;
-
-   // LadspaEffect implementation
 
    bool Load();
    void Unload();
@@ -137,5 +111,32 @@ private:
    unsigned mNumOutputControls{ 0 };
 
    int mLatencyPort{ -1 };
+};
+
+class LadspaEffect final
+   : public LadspaEffectBase
+   , public StatelessEffectUIServices
+{
+public:
+   using LadspaEffectBase::LadspaEffectBase;
+   ~LadspaEffect() override;
+
+private:
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
+
+   std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
+
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
+
+   void ShowOptions(const EffectPlugin &plugin) const override;
 };
 #endif

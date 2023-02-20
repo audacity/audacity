@@ -24,14 +24,14 @@ effects from this one class.
 
 // Don't use the template-generated MakeSettings(), which default-constructs
 // the structure.  Instead allocate a number of values chosen by the plug-in
-EffectSettings LadspaEffect::MakeSettings() const
+EffectSettings LadspaEffectBase::MakeSettings() const
 {
    auto result = EffectSettings::Make<LadspaEffectSettings>( mData->PortCount );
    InitializeControls(GetSettings(result));
    return result;
 }
 
-bool LadspaEffect::CopySettingsContents(
+bool LadspaEffectBase::CopySettingsContents(
    const EffectSettings &src, EffectSettings &dst) const
 {
    // Do not use the copy constructor of std::vector.  Do an in-place rewrite
@@ -65,7 +65,7 @@ bool LadspaEffect::CopySettingsContents(
    return true;
 }
 
-auto LadspaEffect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
+auto LadspaEffectBase::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
 {
    auto result = std::make_unique<LadspaEffectOutputs>();
    result->controls.resize(mData->PortCount);
@@ -78,41 +78,41 @@ auto LadspaEffect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-LadspaEffect::LadspaEffect(const wxString & path, int index)
+LadspaEffectBase::LadspaEffectBase(const wxString & path, int index)
    : mPath{ path }
    , mIndex{ index }
 {
 }
 
-LadspaEffect::~LadspaEffect()
-{
-}
+LadspaEffectBase::~LadspaEffectBase() = default;
+
+LadspaEffect::~LadspaEffect() = default;
 
 // ============================================================================
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffect::GetPath() const
+PluginPath LadspaEffectBase::GetPath() const
 {
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-ComponentInterfaceSymbol LadspaEffect::GetSymbol() const
+ComponentInterfaceSymbol LadspaEffectBase::GetSymbol() const
 {
    return LAT1CTOWX(mData->Name);
 }
 
-VendorSymbol LadspaEffect::GetVendor() const
+VendorSymbol LadspaEffectBase::GetVendor() const
 {
    return { LAT1CTOWX(mData->Maker) };
 }
 
-wxString LadspaEffect::GetVersion() const
+wxString LadspaEffectBase::GetVersion() const
 {
    return "n/a";
 }
 
-TranslatableString LadspaEffect::GetDescription() const
+TranslatableString LadspaEffectBase::GetDescription() const
 {
    return Verbatim( LAT1CTOWX(mData->Copyright) );
 }
@@ -121,7 +121,7 @@ TranslatableString LadspaEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType LadspaEffect::GetType() const
+EffectType LadspaEffectBase::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
@@ -141,29 +141,29 @@ EffectType LadspaEffect::GetType() const
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LadspaEffect::GetFamily() const
+EffectFamilySymbol LadspaEffectBase::GetFamily() const
 {
    return LADSPAEFFECTS_FAMILY;
 }
 
-bool LadspaEffect::IsInteractive() const
+bool LadspaEffectBase::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool LadspaEffect::IsDefault() const
+bool LadspaEffectBase::IsDefault() const
 {
    return false;
 }
 
-auto LadspaEffect::RealtimeSupport() const -> RealtimeSince
+auto LadspaEffectBase::RealtimeSupport() const -> RealtimeSince
 {
    return GetType() == EffectTypeProcess
       ? RealtimeSince::After_3_1
       : RealtimeSince::Never;
 }
 
-bool LadspaEffect::SupportsAutomation() const
+bool LadspaEffectBase::SupportsAutomation() const
 {
    return mNumInputControls > 0;
 }
@@ -233,7 +233,7 @@ float InputControlPortDefaultValue(
 }
 }
 
-bool LadspaEffect::InitializePlugin()
+bool LadspaEffectBase::InitializePlugin()
 {
    if (!Load())
       return false;
@@ -271,7 +271,7 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
+bool LadspaEffectBase::InitializeControls(LadspaEffectSettings &settings) const
 {
    auto &controls = settings.controls;
    // (Re-)initialize with right-sized vector
@@ -289,7 +289,7 @@ bool LadspaEffect::InitializeControls(LadspaEffectSettings &settings) const
    return true;
 }
 
-std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
+std::shared_ptr<EffectInstance> LadspaEffectBase::MakeInstance() const
 {
    return std::make_shared<LadspaInstance>(*this, mData,
       mInputPorts, mOutputPorts, mAudioIns, mAudioOuts,
@@ -313,7 +313,7 @@ int LadspaEffect::ShowClientInterface(const EffectPlugin &,
    return dialog.ShowModal();
 }
 
-bool LadspaEffect::SaveSettings(
+bool LadspaEffectBase::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
    const auto &controls = GetSettings(settings).controls;
@@ -326,7 +326,7 @@ bool LadspaEffect::SaveSettings(
    return true;
 }
 
-bool LadspaEffect::LoadSettings(
+bool LadspaEffectBase::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    auto &controls = GetSettings(settings).controls;
@@ -345,24 +345,24 @@ bool LadspaEffect::LoadSettings(
    return true;
 }
 
-OptionalMessage LadspaEffect::LoadUserPreset(
+OptionalMessage LadspaEffectBase::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
    return LoadParameters(name, settings);
 }
 
-bool LadspaEffect::SaveUserPreset(
+bool LadspaEffectBase::SaveUserPreset(
    const RegistryPath & name, const EffectSettings &settings) const
 {
    return SaveParameters(name, settings);
 }
 
-RegistryPaths LadspaEffect::GetFactoryPresets() const
+RegistryPaths LadspaEffectBase::GetFactoryPresets() const
 {
    return {};
 }
 
-OptionalMessage LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
+OptionalMessage LadspaEffectBase::LoadFactoryPreset(int, EffectSettings &) const
 {
    return { nullptr };
 }
@@ -380,7 +380,7 @@ std::unique_ptr<EffectEditor> LadspaEffect::MakeEditor(ShuttleGui & S,
    return result;
 }
 
-bool LadspaEffect::CanExportPresets() const
+bool LadspaEffectBase::CanExportPresets() const
 {
    return false;
 }
@@ -396,7 +396,7 @@ OptionalMessage LadspaEffect::ImportPresets(
    return { nullptr };
 }
 
-bool LadspaEffect::HasOptions() const
+bool LadspaEffectBase::HasOptions() const
 {
    return true;
 }
@@ -410,7 +410,7 @@ void LadspaEffect::ShowOptions(const EffectPlugin &) const
 // LadspaEffect Implementation
 // ============================================================================
 
-bool LadspaEffect::Load()
+bool LadspaEffectBase::Load()
 {
    if (mLib.IsLoaded())
    {
@@ -449,7 +449,7 @@ bool LadspaEffect::Load()
    return false;
 }
 
-void LadspaEffect::Unload()
+void LadspaEffectBase::Unload()
 {
    if (mLib.IsLoaded())
    {
@@ -457,7 +457,7 @@ void LadspaEffect::Unload()
    }
 }
 
-OptionalMessage LadspaEffect::LoadParameters(
+OptionalMessage LadspaEffectBase::LoadParameters(
    const RegistryPath & group, EffectSettings &settings) const
 {
    wxString parms;
@@ -478,7 +478,7 @@ OptionalMessage LadspaEffect::LoadParameters(
    return { nullptr };
 }
 
-bool LadspaEffect::SaveParameters(
+bool LadspaEffectBase::SaveParameters(
    const RegistryPath & group, const EffectSettings &settings) const
 {
    CommandParameters eap;
