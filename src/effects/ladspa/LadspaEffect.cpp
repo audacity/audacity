@@ -66,3 +66,6 @@ void LadspaEffect::ShowOptions(const EffectPlugin &) const
 {
    LadspaEffectOptionsDialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make LadspaEffect capable of UI
+static LadspaEffectBase::Factory::SubstituteInUnique<LadspaEffect> scope;

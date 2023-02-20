@@ -13,6 +13,7 @@
 #define __AUDACITY_LADSPA_EFFECT_BASE__
 
 #include "LadspaInstance.h" // for LadspaEffectSettings
+#include "GlobalVariable.h"
 #include <wx/dynlib.h> // member variable
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
@@ -25,6 +26,10 @@ class LadspaEffectBase
    : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
 public:
+   struct Factory : DefaultedGlobalHook< Factory,
+      UniquePtrFactory<LadspaEffectBase, const wxString &, int>::Function
+   >{};
+
    LadspaEffectBase(const wxString & path, int index);
    ~LadspaEffectBase() override;
 
