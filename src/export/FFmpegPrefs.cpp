@@ -2,35 +2,39 @@
 
   Audacity: A Digital Audio Editor
 
-  LibraryPrefs.cpp
+  @file FFmpegPrefs.cpp
+  @brief adds controls for FFmpeg import/export to Library preferences
 
-  Joshua Haberman
-  Dominic Mazzoni
-  James Crook
+  Paul Licameli split from LibraryPrefs.cpp
 
-*******************************************************************//**
+**********************************************************************/
 
-\class LibraryPrefs
-\brief A PrefsPanel used to select manage external libraries like the
-MP3 and FFmpeg encoding libraries.
-
-*//*******************************************************************/
-
-
-#include "LibraryPrefs.h"
-
-#include <wx/defs.h>
+#include "../FFmpeg.h"
+#include "Internat.h"
+#include "ShuttleGui.h"
+#include "../prefs/LibraryPrefs.h"
+#include "../widgets/AudacityMessageBox.h"
+#include "widgets/HelpSystem.h"
+#include "widgets/ReadOnlyText.h"
 #include <wx/button.h>
 #include <wx/stattext.h>
 
-#include "../FFmpeg.h"
-#include "../export/ExportMP3.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ReadOnlyText.h"
-#include "../widgets/wxTextCtrlWrapper.h"
+namespace {
 
+struct State {
+   wxWindow *parent = nullptr;
+   ReadOnlyText *FFmpegVersion = nullptr;
+};
 
+void OnFFmpegFindButton(State &state);
+
+void SetFFmpegVersionText(State &state)
+{
+   auto FFmpegVersion = state.FFmpegVersion;
+   FFmpegVersion->SetValue(GetFFmpegVersion());
+}
+
+#if 0
 ////////////////////////////////////////////////////////////////////////////////
 
 #define ID_FFMPEG_FIND_BUTTON       7003
@@ -83,82 +87,65 @@ void LibraryPrefs::Populate()
    SetFFmpegVersionText();
 }
 
-/// This PopulateOrExchange function is a good example of mixing the fully
-/// automatic style of reading/writing from GUI to prefs with the partial form.
-///
-/// You'll notice that some of the Tie functions have Prefs identifiers in them
-/// and others don't.
-void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
-{
-   S.SetBorder(2);
-   S.StartScroller();
+#endif
 
-   S.StartStatic(XO("LAME MP3 Export Library"));
-   {
-      S.StartTwoColumn();
-      {
-         mMP3Version = S
-            .Position(wxALIGN_CENTRE_VERTICAL)
-            .AddReadOnlyText(XO("MP3 Library Version:"), "");
-      }
-      S.EndTwoColumn();
-   }
-   S.EndStatic();
+void AddControls( ShuttleGui &S )
+{
+   auto pState = std::make_shared<State>();
+   pState->parent = S.GetParent();
 
    S.StartStatic(XO("FFmpeg Import/Export Library"));
    {
       S.StartTwoColumn();
       {
          auto version =
-#if defined(USE_FFMPEG)
+ #if defined(USE_FFMPEG)
             XO("No compatible FFmpeg library was found");
-#else
+ #else
             XO("FFmpeg support is not compiled in");
-#endif
+ #endif
 
-         mFFmpegVersion = S
-            .Position(wxALIGN_CENTRE_VERTICAL)
+         pState->FFmpegVersion = S
+           .Position(wxALIGN_CENTRE_VERTICAL)
             .AddReadOnlyText(XO("FFmpeg Library Version:"), version.Translation());
 
          S.AddVariableText(XO("FFmpeg Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_FFMPEG_FIND_BUTTON);
+
+         auto pFindButton =
          S
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
             .Disable()
 #endif
             .AddButton(XXO("Loca&te..."),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         pFindButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
+            OnFFmpegFindButton(*pState);
+         });
+
          S.AddVariableText(XO("FFmpeg Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_FFMPEG_DOWN_BUTTON);
+
+         auto pDownButton =
          S
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
             .Disable()
 #endif
             .AddButton(XXO("Dow&nload"),
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         pDownButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
+            HelpSystem::ShowHelp(pState->parent,
+               wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"), true);
+         });
       }
       S.EndTwoColumn();
    }
    S.EndStatic();
-   S.EndScroller();
 
+   SetFFmpegVersionText(*pState);
 }
 
-/// Sets the a text area on the dialog to have the name
-/// of the MP3 Library version.
-void LibraryPrefs::SetMP3VersionText(bool prompt)
-{
-   mMP3Version->SetValue(GetMP3Version(this, prompt));
-}
-
-void LibraryPrefs::SetFFmpegVersionText()
-{
-   mFFmpegVersion->SetValue(GetFFmpegVersion());
-}
-
-void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
+void OnFFmpegFindButton(State &state)
 {
 #ifdef USE_FFMPEG
    bool showerrs =
@@ -184,39 +171,13 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
    if (locate) {
       // Show "Locate FFmpeg" dialog
-      FindFFmpegLibs(this);
+      FindFFmpegLibs(state.parent);
       LoadFFmpeg(showerrs);
    }
-
-   SetFFmpegVersionText();
+   SetFFmpegVersionText(state);
 #endif
 }
 
-void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
-{
-   HelpSystem::ShowHelp(this, L"FAQ:Installing_the_FFmpeg_Import_Export_Library", true);
-}
+LibraryPrefs::RegisteredControls reg{ wxT("FFmpeg"), AddControls };
 
-bool LibraryPrefs::Commit()
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   return true;
 }
-
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
-namespace{
-PrefsPanel::Registration sAttachment{ "Library",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
-   {
-      wxASSERT(parent); // to justify safenew
-      return safenew LibraryPrefs(parent, winid);
-   },
-   false,
-   // Register with an explicit ordering hint because this one is
-   // only conditionally compiled
-   { "", { Registry::OrderingHint::Before, "Directories" } }
-};
-}
-#endif
