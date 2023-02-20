@@ -18,6 +18,7 @@ effects from this one class.
 #include "LadspaEffect.h"       // This class's header file
 #include "LadspaEditor.h"
 #include "LadspaEffectOptionsDialog.h"
+#include "LadspaEffectsModule.h"
 
 LadspaEffect::~LadspaEffect() = default;
 
@@ -66,3 +67,6 @@ void LadspaEffect::ShowOptions(const EffectPlugin &) const
 {
    LadspaEffectOptionsDialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make LadspaEffect capable of UI
+static LadspaEffectsModule::Factory::SubstituteInUnique<LadspaEffect> scope;

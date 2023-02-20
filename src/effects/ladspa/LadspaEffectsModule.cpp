@@ -12,7 +12,6 @@
 
 *//*******************************************************************/
 #include "LadspaEffectsModule.h"
-#include "LadspaEffect.h"
 
 #include "ConfigInterface.h"
 
@@ -295,7 +294,7 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    long index;
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
-   auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
+   auto result = Factory::Call(realPath, (int)index);
    result->InitializePlugin();
    return result;
 }

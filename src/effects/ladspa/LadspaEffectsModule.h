@@ -12,11 +12,17 @@
 #ifndef __AUDACITY_LADSPA_EFFECTS_MODULE__
 #define __AUDACITY_LADSPA_EFFECTS_MODULE__
 
+#include "GlobalVariable.h"
+#include "LadspaEffectBase.h"
 #include "PluginProvider.h"
 
 class LadspaEffectsModule final : public PluginProvider
 {
 public:
+   struct Factory : DefaultedGlobalHook< Factory,
+      UniquePtrFactory<LadspaEffectBase, const wxString &, int>::Function
+   >{};
+
    LadspaEffectsModule();
    virtual ~LadspaEffectsModule();
 
