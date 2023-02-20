@@ -538,6 +538,8 @@ list( APPEND SOURCES
          effects/ladspa/LadspaEditor.h
          effects/ladspa/LadspaEffect.cpp
          effects/ladspa/LadspaEffect.h
+         effects/ladspa/LadspaEffectBase.cpp
+         effects/ladspa/LadspaEffectBase.h
 	 effects/ladspa/LadspaEffectOptionsDialog.cpp
 	 effects/ladspa/LadspaEffectOptionsDialog.h
          effects/ladspa/LadspaEffectsModule.cpp

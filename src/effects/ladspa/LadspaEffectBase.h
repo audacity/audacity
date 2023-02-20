@@ -2,25 +2,18 @@
 
   Audacity: A Digital Audio Editor
 
-  LadspaEffect.h
+  LadspaEffectBase.h
 
   Dominic Mazzoni
 
+  Paul Licameli split from LadspaEffect.h
+
 **********************************************************************/
-#ifndef __AUDACITY_LADSPA_EFFECT__
-#define __AUDACITY_LADSPA_EFFECT__
+#ifndef __AUDACITY_LADSPA_EFFECT_BASE__
+#define __AUDACITY_LADSPA_EFFECT_BASE__
 
-#include "LadspaInstance.h"
-
+#include "LadspaInstance.h" // for LadspaEffectSettings
 #include <wx/dynlib.h> // member variable
-//#include <wx/event.h> // to inherit
-//#include <wx/weakref.h>
-
-#include "../StatelessPerTrackEffect.h"
-#include "PluginProvider.h"
-#include "PluginInterface.h"
-
-//#include "SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
@@ -111,32 +104,5 @@ protected:
    unsigned mNumOutputControls{ 0 };
 
    int mLatencyPort{ -1 };
-};
-
-class LadspaEffect final
-   : public LadspaEffectBase
-   , public StatelessEffectUIServices
-{
-public:
-   using LadspaEffectBase::LadspaEffectBase;
-   ~LadspaEffect() override;
-
-private:
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
-
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-
-   void ShowOptions(const EffectPlugin &plugin) const override;
 };
 #endif
