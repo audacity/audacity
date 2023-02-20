@@ -16,6 +16,7 @@ SampleBlock.h
 #include <memory>
 #include <unordered_set>
 
+#include "Observer.h"
 #include "XMLTagHandler.h"
 
 class AudacityProject;
@@ -105,8 +106,11 @@ BlockSpaceUsageAccumulator (unsigned long long &total)
    };
 };
 
+struct SampleBlockCreateMessage { };
+
 ///\brief abstract base class with methods to produce @ref SampleBlock objects
 class WAVE_TRACK_API SampleBlockFactory
+   : public Observer::Publisher<SampleBlockCreateMessage>
 {
 public:
    //! Global factory of per-project factories of sample blocks
