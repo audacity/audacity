@@ -71,7 +71,6 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void OnUpdate(wxCommandEvent &evt);
    void OnChangedTime(wxCommandEvent &evt);
 
-   void OnChoice(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
@@ -99,7 +98,6 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    NumericTextCtrl   *mLengthTime;
    NumericTextCtrl   *mEndTime;
    NumericTextCtrl   *mAudioTime;
-   wxChoice          *mChoice;
    wxStaticText      *mProxy;
 
    wxString mLastValidText;
