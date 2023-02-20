@@ -5,6 +5,7 @@
   SelectionBar.cpp
 
   Copyright 2005 Dominic Mazzoni
+            2023 Dmitry Vedenko
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -211,7 +212,7 @@ void SelectionBar::Populate()
    // Inner sizers have space on right only.
    // This choice makes for a nice border and internal spacing and places clear responsibility
    // on each sizer as to what spacings it creates.
-   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1);
+   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(5, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    // Top row (mostly labels)
@@ -221,10 +222,6 @@ void SelectionBar::Populate()
    AddVLine( mainSizer );
    auStaticText *snapLabel = AddTitle( XO("Snap-To"), mainSizer );
    AddVLine( mainSizer );
-#ifdef TIME_IN_SELECT_TOOLBAR
-   AddTitle( XO("Audio Position"), mainSizer );
-   AddVLine( mainSizer );
-#endif
 
    {
       const wxString choices[4] = {
@@ -314,19 +311,6 @@ void SelectionBar::Populate()
    mainSizer->Add(mSnapTo, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 5);
 
    AddVLine( mainSizer );
-
-#ifdef TIME_IN_SELECT_TOOLBAR
-   mAudioTime = AddTime( XO("Audio Position"), AudioTimeID, mainSizer );
-   // This vertical line is NOT just for decoration!
-   // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
-   // into the radiobutton group jumps to selecting the first item in the 
-   // group even if some other item had been selected.
-   // It is an important bug to work around for screen reader users, who use TAB 
-   // a lot in navigation.
-   // More about the bug here:
-   // https://forums.wxwidgets.org/viewtopic.php?t=41120
-   AddVLine( mainSizer );
-#endif
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
