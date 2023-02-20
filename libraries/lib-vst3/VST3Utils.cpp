@@ -16,7 +16,6 @@
 
 #include <wx/string.h>
 #include <wx/filename.h>
-#include <wx/sizer.h>
 
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>

@@ -45,6 +45,7 @@ set( LIBRARIES
    lib-shuttlegui
    lib-wx-init
    lib-time-track
+   lib-vst3
 )
 
 if ( ${_OPT}has_networking )

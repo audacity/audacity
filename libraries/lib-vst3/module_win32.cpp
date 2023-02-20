@@ -114,7 +114,7 @@ private:
 #endif // USE_OLE
 
 //------------------------------------------------------------------------
-class Win32Module : public Module
+class VST3_API Win32Module : public Module
 {
 public:
 	template <typename T>
