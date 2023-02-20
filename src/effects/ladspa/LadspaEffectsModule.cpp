@@ -249,7 +249,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
          const LADSPA_Descriptor *data;
 
          for (data = mainFn(index); data; data = mainFn(++index)) {
-            LadspaEffect effect(path, index);
+            LadspaEffectBase effect(path, index);
             if (effect.InitializePlugin()) {
                ++nLoaded;
                if (callback)
