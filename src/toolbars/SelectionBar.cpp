@@ -47,6 +47,7 @@ with changes in the SelectionBar.
 #include <wx/stattext.h>
 #endif
 #include <wx/statline.h>
+#include <wx/menu.h>
 
 
 #include "AudioIO.h"
@@ -59,8 +60,11 @@ with changes in the SelectionBar.
 #include "../ProjectSettings.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
+#include "../widgets/AButton.h"
 #include "../widgets/auStaticText.h"
+#include "../widgets/BasicMenu.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -77,14 +81,10 @@ const static wxChar *numbers[] =
 enum {
    SelectionBarFirstID = 2700,
    
-   ChoiceID,
-
    StartTimeID,
    LengthTimeID,
    CenterTimeID,
    EndTimeID,
-
-   AudioTimeID,
 };
 
 BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
@@ -93,7 +93,6 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(LengthTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(CenterTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
-   EVT_CHOICE(ChoiceID, SelectionBar::OnChoice )
    
    EVT_IDLE( SelectionBar::OnIdle )
 
@@ -113,7 +112,7 @@ SelectionBar::SelectionBar( AudacityProject &project )
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0),
   mStartTime(NULL), mCenterTime(NULL), mLengthTime(NULL), mEndTime(NULL),
-  mAudioTime(NULL), mChoice(NULL),
+  mAudioTime(NULL),
   mRateChangedSubscription(
      ProjectRate::Get(project).Subscribe(
          [this](double rate) { UpdateRate(rate); }))
@@ -175,7 +174,7 @@ auStaticText * SelectionBar::AddTitle(
    auStaticText * pTitle = safenew auStaticText(this, translated );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxRIGHT, 5 );
+   pSizer->Add( pTitle, 0, wxEXPAND | wxRIGHT, 5 );
 
    return pTitle;
 }
@@ -209,53 +208,73 @@ void SelectionBar::Populate()
    // Inner sizers have space on right only.
    // This choice makes for a nice border and internal spacing and places clear responsibility
    // on each sizer as to what spacings it creates.
-   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
+   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(2, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    // Top row (mostly labels)
    
    {
-      const wxString choices[4] = {
-         _("Start and End of Selection"),
-         _("Start and Length of Selection"),
-         _("Length and End of Selection"),
-         _("Length and Center of Selection"),
+      auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      auto selectionText = AddTitle(XO("Selection"), vSizer.get());
+
+      auto setupBtn =
+         safenew AButton(this, wxID_ANY, wxDefaultPosition, { 20, 20 });
+
+      auto showMenu = [this, setupBtn]()
+      {
+         const wxString choices[4] = {
+            _("Start and End of Selection"),
+            _("Start and Length of Selection"),
+            _("Length and End of Selection"),
+            _("Length and Center of Selection"),
+         };
+         //mSelectionMode
+         wxMenu menu;
+         int id = 0;
+         for (auto& choice : choices)
+         {
+            auto subMenu = menu.AppendRadioItem(wxID_ANY, choice);
+
+            if (id == mSelectionMode)
+               subMenu->Check();
+
+            menu.Bind(
+               wxEVT_MENU,
+               [this, id](auto& evt)
+               {
+                  SetSelectionMode(id);
+                  SelectionModeUpdated();
+               },
+               subMenu->GetId());
+
+            ++id;
+         }
+
+         menu.Bind(wxEVT_MENU_CLOSE, [setupBtn](auto&) { setupBtn->PopUp(); });
+         
+         
+         BasicMenu::Handle { &menu }.Popup(
+            wxWidgetsWindowPlacement { setupBtn });
       };
-      mChoice = safenew wxChoice
-         (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
-          0, wxDefaultValidator, _("Show"));
-      mChoice->SetSelection(0);
-#if wxUSE_ACCESSIBILITY
-      // so that name can be set on a standard control
-      mChoice->SetAccessible(safenew WindowAccessible(mChoice));
-#endif
-      mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
+
+      setupBtn->Bind(wxEVT_BUTTON, [this, showMenu](auto&) { showMenu(); });
+
+      vSizer->AddStretchSpacer();
+      vSizer->Add(setupBtn, 0, wxALIGN_RIGHT | wxBOTTOM | wxRIGHT, 5);
+      
+      mainSizer->Add(vSizer.release(), 0, wxALIGN_TOP | wxRIGHT | wxEXPAND, 0);    
    }
 
    {
-      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-      mStartTime  = AddTime( XO("Start"), StartTimeID, hSizer.get() );
-      mLengthTime = AddTime( XO("Length"), LengthTimeID, hSizer.get() );
-      mCenterTime = AddTime( XO("Center"), CenterTimeID, hSizer.get() );
-      mEndTime    = AddTime( XO("End"), EndTimeID, hSizer.get() );
-      mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
+      mStartTime  = AddTime( XO("Start"), StartTimeID, vSizer.get() );
+      mLengthTime = AddTime( XO("Length"), LengthTimeID, vSizer.get() );
+      mCenterTime = AddTime( XO("Center"), CenterTimeID, vSizer.get() );
+      mEndTime    = AddTime( XO("End"), EndTimeID, vSizer.get() );
+      mainSizer->Add(vSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
    }
 
-#if defined(__WXGTK3__)
-   // Nothing special
-#elif defined(__WXGTK__)
-   // Ensure the font fits inside (hopefully)
-   wxFont font = mChoice->GetFont();
-   font.Scale((double) toolbarSingle / mChoice->GetSize().GetHeight());
-   
-   mChoice->SetFont(font);
-#endif
-
-   // Make sure they are fully expanded to the longest item
-   mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
-
-   mChoice->MoveBeforeInTabOrder( mStartTime );
    // This shows/hides controls.
    // Do this before layout so that we are sized right.
    SetSelectionMode(mSelectionMode);
@@ -433,8 +452,6 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    for( i=0;i<5;i++)
       *Ctrls[i]=NULL;
 
-   mChoice = NULL;
-
    ToolBar::ReCreateButtons();
 
    ValuesToControls();
@@ -490,13 +507,6 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
    }
 }
 
-void SelectionBar::OnChoice(wxCommandEvent & WXUNUSED(event))
-{
-   int mode = mChoice->GetSelection();
-   SetSelectionMode( mode );
-   SelectionModeUpdated();
-}
-
 void SelectionBar::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
@@ -546,7 +556,6 @@ void SelectionBar::SetSelectionMode(int mode)
    if( mode < 0 )
       mode = 0;
    mSelectionMode = mode;
-   mChoice->SetSelection( mode ); 
 
    // First decide which two controls drive the others...
    // For example the last option is with all controls shown, and in that mode we 
