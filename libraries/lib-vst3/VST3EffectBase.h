@@ -20,7 +20,7 @@
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3EffectBase : public PerTrackEffect
+class VST3_API VST3EffectBase : public PerTrackEffect
 {
    friend class VST3PluginValidator;
 
@@ -37,7 +37,7 @@ protected:
 
 public:
  
-   struct Factory : DefaultedGlobalHook<Factory,
+   struct VST3_API Factory : DefaultedGlobalHook<Factory,
       UniquePtrFactory<VST3EffectBase,
          std::shared_ptr<VST3::Hosting::Module>, VST3::Hosting::ClassInfo
       >::Function

@@ -18,7 +18,7 @@
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/log.h>
-
+#include <wx/utils.h>
 
 #include "AudacityVst3HostApplication.h"
 #include "ModuleManager.h"
@@ -30,7 +30,6 @@
 #include "VST3EffectBase.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
-#include "widgets/AButton.h"
 
 
 DECLARE_PROVIDER_ENTRY(AudacityModule)
