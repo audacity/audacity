@@ -53,7 +53,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void UpdatePrefs() override;
 
    void SetTimes(double start, double end, double audio);
-   void SetSnapTo(int);
+
    void SetSelectionFormat(const NumericFormatSymbol & format);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;
@@ -70,8 +70,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
    void OnChangedTime(wxCommandEvent &evt);
-   
-   void OnSnapTo(wxCommandEvent & event);
+
    void OnChoice(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
@@ -102,7 +101,6 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    NumericTextCtrl   *mAudioTime;
    wxChoice          *mChoice;
    wxStaticText      *mProxy;
-   wxChoice          *mSnapTo;
 
    wxString mLastValidText;
 

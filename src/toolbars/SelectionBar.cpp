@@ -57,11 +57,10 @@ with changes in the SelectionBar.
 #include "ProjectAudioIO.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"
-#include "../Snap.h"
 #include "ViewInfo.h"
-#include "QualitySettings.h"
 #include "AllThemeResources.h"
 #include "../widgets/auStaticText.h"
+#include "../widgets/NumericTextCtrl.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -77,10 +76,7 @@ const static wxChar *numbers[] =
 
 enum {
    SelectionBarFirstID = 2700,
-
-   SnapToID,
-   OnMenuID,
-
+   
    ChoiceID,
 
    StartTimeID,
@@ -97,7 +93,6 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(LengthTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(CenterTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
-   EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
    EVT_CHOICE(ChoiceID, SelectionBar::OnChoice )
    
    EVT_IDLE( SelectionBar::OnIdle )
@@ -214,16 +209,11 @@ void SelectionBar::Populate()
    // Inner sizers have space on right only.
    // This choice makes for a nice border and internal spacing and places clear responsibility
    // on each sizer as to what spacings it creates.
-   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(3, 1, 1);
+   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    // Top row (mostly labels)
-   wxColour clrText =  theTheme.Colour( clrTrackPanelText );
-   wxColour clrText2 = *wxBLUE;
-
-   auStaticText *snapLabel = AddTitle( XO("Snap-To"), mainSizer );
-   AddVLine( mainSizer );
-
+   
    {
       const wxString choices[4] = {
          _("Start and End of Selection"),
@@ -242,31 +232,6 @@ void SelectionBar::Populate()
       mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
    }
 
-   mSnapTo = safenew wxChoice(this, SnapToID,
-      wxDefaultPosition, wxDefaultSize,
-      transform_container< wxArrayStringEx >(
-         SnapManager::GetSnapLabels(),
-         std::mem_fn( &TranslatableString::Translation ) ) );
-
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   mSnapTo->SetAccessible(safenew WindowAccessible(mSnapTo));
-#endif
-   mSnapTo->SetName(_("Snap To"));
-   //mSnapTo->SetForegroundColour( clrText2 );
-   mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
-
-   mSnapTo->Bind(wxEVT_SET_FOCUS,
-                    &SelectionBar::OnFocus,
-                    this);
-   mSnapTo->Bind(wxEVT_KILL_FOCUS,
-                    &SelectionBar::OnFocus,
-                    this);
-
-   mainSizer->Add(mSnapTo, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 5);
-
-   AddVLine( mainSizer );
-
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
@@ -284,14 +249,11 @@ void SelectionBar::Populate()
    wxFont font = mChoice->GetFont();
    font.Scale((double) toolbarSingle / mChoice->GetSize().GetHeight());
    
-   snapLabel->SetFont(font);
    mChoice->SetFont(font);
-   mSnapTo->SetFont(font);
 #endif
 
    // Make sure they are fully expanded to the longest item
    mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
-   mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, toolbarSingle));
 
    mChoice->MoveBeforeInTabOrder( mStartTime );
    // This shows/hides controls.
@@ -336,7 +298,6 @@ void SelectionBar::UpdatePrefs()
 void SelectionBar::SetListener(SelectionBarListener *l)
 {
    mListener = l;
-   SetSnapTo(mListener->AS_GetSnapTo());
    SetSelectionFormat(mListener->AS_GetSelectionFormat());
 };
 
@@ -347,9 +308,6 @@ void SelectionBar::RegenerateTooltips()
       mListener
          ? mListener->AS_GetSelectionFormat()
          : NumericFormatSymbol{};
-   mSnapTo->SetToolTip(
-      wxString::Format(
-         _("Snap Clicks/Selections to %s"), formatName.Translation() ));
 #endif
 }
 
@@ -476,7 +434,6 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
       *Ctrls[i]=NULL;
 
    mChoice = NULL;
-   mSnapTo = NULL;
 
    ToolBar::ReCreateButtons();
 
@@ -650,11 +607,6 @@ void SelectionBar::SetTimes(double start, double end, double audio)
    }
 }
 
-void SelectionBar::SetSnapTo(int snap)
-{
-   mSnapTo->SetSelection(snap);
-}
-
 void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
 {
    bool changed =
@@ -706,11 +658,6 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
    }
 
    event.Skip();
-}
-
-void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
-{
-   mListener->AS_SetSnapTo(mSnapTo->GetSelection());
 }
 
 static RegisteredToolbarFactory factory{

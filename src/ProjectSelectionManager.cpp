@@ -122,8 +122,6 @@ void ProjectSelectionManager::AS_SetSnapTo(int snap)
    SnapSelection();
 
    window.RedrawProject();
-
-   SelectionBar::Get( project ).SetSnapTo(snap);
 }
 
 const NumericFormatSymbol & ProjectSelectionManager::AS_GetSelectionFormat()
