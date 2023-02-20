@@ -57,6 +57,11 @@ public:
    //Attempts to extract a unique VST3 parameter id from the key.
    //Returns true on success.
    static bool ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId);
+
+   static wxString MakeFactoryPresetID(Steinberg::Vst::UnitID unitId, Steinberg::int32 programIndex);
+   static bool ParseFactoryPresetID(const wxString& presetId, Steinberg::Vst::UnitID& unitId, Steinberg::int32& programIndex);
+
+   static wxString GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo);
 };
 
 class PresetsBufferStream : public Steinberg::Vst::BufferStream

@@ -32,11 +32,12 @@ namespace
    }
 }
 
-VST3Instance::VST3Instance(const PerTrackEffect& effect, VST3::Hosting::Module& module, VST3::UID effectUID)
-   : Instance(effect), mEffectUID(effectUID)
+VST3Instance::VST3Instance(const PerTrackEffect& effect, VST3::Hosting::Module& module, const VST3::Hosting::ClassInfo& effectClassInfo)
+   : Instance(effect)
 {
    ReloadUserOptions();
-   mWrapper = std::make_unique<VST3Wrapper>(module, mEffectUID);
+   mWrapper = std::make_unique<VST3Wrapper>(module, effectClassInfo);
+   mWrapper->InitializeComponents();
 }
 
 VST3Instance::~VST3Instance() = default;
@@ -57,7 +58,7 @@ bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings,
    // Assign another instance with independent state to other processors
    auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
    auto uProcessor =
-      std::make_unique<VST3Instance>(effect, mWrapper->GetModule(), mEffectUID);
+      std::make_unique<VST3Instance>(effect, mWrapper->GetModule(), mWrapper->GetEffectClassInfo());
    if (!uProcessor->RealtimeInitialize(settings, sampleRate))
       return false;
    mProcessors.push_back(move(uProcessor));
@@ -148,7 +149,7 @@ bool VST3Instance::ProcessFinalize() noexcept
 
 bool VST3Instance::ProcessInitialize(EffectSettings &settings, double sampleRate, ChannelNames chanMap)
 {
-   if(mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kRealtime, mProcessingBlockSize))
+   if(mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kOffline, mProcessingBlockSize))
    {
       mInitialDelay = mWrapper->GetLatencySamples();
       return true;
