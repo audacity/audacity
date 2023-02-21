@@ -8,6 +8,7 @@ set( IMAGE_LIST
    AudacityLogo48x48.png
    BandWidthCursor.png
    BottomFrequencyCursor.png
+   Cogwheel.png
    Colors.txt
    Copy.png
    CopyDisabled.png
