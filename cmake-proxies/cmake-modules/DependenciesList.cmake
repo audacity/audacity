@@ -68,6 +68,9 @@ audacity_find_package(PortMidi OPTION_NAME midi)
 
 if(${_OPT}has_crashreports)
    audacity_find_package(breakpad REQUIRED)
+   if(${_OPT}crashreport_backend STREQUAL crashpad)
+      audacity_find_package(crashpad REQUIRED)
+   endif()
 endif()
 
 if(${_OPT}has_vst3)

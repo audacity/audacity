@@ -141,6 +141,8 @@ It handles initialization and termination by subclassing wxApp.
 
 #if defined(USE_BREAKPAD)
 #include "BreakpadConfigurer.h"
+#elif defined(USE_CRASHPAD)
+#include "CrashpadConfigurer.h"
 #endif
 
 #ifdef EXPERIMENTAL_SCOREALIGN
@@ -430,33 +432,71 @@ void PopulatePreferences()
    gPrefs->Flush();
 }
 
-#if defined(USE_BREAKPAD)
-void InitBreakpad()
+void InitCrashreports()
 {
-    wxFileName databasePath;
-    databasePath.SetPath(FileNames::StateDir());
-    databasePath.AppendDir("crashreports");
-    databasePath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+#if defined(USE_BREAKPAD) || defined(USE_CRASHPAD)
+   wxFileName databasePath;
+   databasePath.SetPath(FileNames::StateDir());
+   databasePath.AppendDir("crashreports");
+   databasePath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
     
-    if(databasePath.DirExists())
-    {   
-        const auto sentryRelease = wxString::Format(
-           "audacity@%d.%d.%d", AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION
-        );
-        BreakpadConfigurer configurer;
-        configurer.SetDatabasePathUTF8(databasePath.GetPath().ToUTF8().data())
-            .SetSenderPathUTF8(wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath().ToUTF8().data())
+   if(databasePath.DirExists())
+   {
+      const auto sentryRelease = wxString::Format(
+         "audacity@%d.%d.%d", AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
+#if defined(USE_BREAKPAD)
+      BreakpadConfigurer configurer;
+      configurer.SetDatabasePathUTF8(databasePath.GetPath().ToUTF8().data())
+         .SetSenderPathUTF8(wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath().ToUTF8().data())
     #if defined(CRASH_REPORT_URL)
-            .SetReportURL(CRASH_REPORT_URL)
+         .SetReportURL(CRASH_REPORT_URL)
     #endif
-            .SetParameters({
-                { "version", wxString(AUDACITY_VERSION_STRING).ToUTF8().data() },
-                { "sentry[release]",  sentryRelease.ToUTF8().data() }
-            })
-            .Start();
-    }
-}
+         .SetParameters({
+            { "version", wxString(AUDACITY_VERSION_STRING).ToUTF8().data() },
+            { "sentry[release]",  sentryRelease.ToUTF8().data() }
+         })
+         .Start();
+#elif defined(USE_CRASHPAD)
+      try
+      {
+         const auto executableDir = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
+         const wxFileName crashpadHandlerPath(executableDir, CRASHPAD_HANDLER_NAME);
+         const wxFileName crashreporterPath(executableDir, CRASHREPORTER_NAME);
+         const wxFileName metricsDir = databasePath;
+         std::vector<std::string> arguments = {
+            wxString::Format("--crashreporter-path=%s", crashreporterPath.GetFullPath()).ToUTF8().data(),
+#if defined(CRASH_REPORT_URL)
+            wxString::Format(
+               "--crashreporter-argument=-u=%s",
+               CRASH_REPORT_URL).ToUTF8().data(),
+            wxString::Format(
+               "--crashreporter-argument=-a=version=\"%s\",sentry[release]=\"%s\"",
+               AUDACITY_VERSION_STRING,
+               sentryRelease).ToUTF8().data()
 #endif
+         };
+         CrashpadConfigurer configurer;
+         configurer.SetHandlerPathUTF8(crashpadHandlerPath.GetFullPath().ToUTF8().data())
+            .SetDatabasePathUTF8(databasePath.GetFullPath().ToUTF8().data())
+            .SetMetricsDirUTF8(metricsDir.GetFullPath().ToUTF8().data())
+            .SetArguments(arguments)
+            .Start();
+      }
+      catch (std::exception& e)
+      {
+         wxLogError("Crashpad init error: %s", e.what());
+      }
+   }
+#endif
+#elif !defined(_DEBUG)// Do not capture crashes in debug builds
+#if defined(HAS_CRASH_REPORT)
+#if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
+   wxHandleFatalExceptions();
+#endif
+#endif
+#endif
+}
+
 }
 
 static bool gInited = false;
@@ -1182,16 +1222,7 @@ bool AudacityApp::Initialize(int& argc, wxChar** argv)
 {
    if(!PluginHost::IsHostProcess())
    {
-#if defined(USE_BREAKPAD)
-      InitBreakpad();
-      // Do not capture crashes in debug builds
-#elif !defined(_DEBUG)
-#if defined(HAS_CRASH_REPORT)
-#if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
-      wxHandleFatalExceptions();
-#endif
-#endif
-#endif
+      InitCrashreports();
    }
    return wxApp::Initialize(argc, argv);
 }

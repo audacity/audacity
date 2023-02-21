@@ -14,9 +14,20 @@ set(SOURCES
 
 add_executable(${TARGET})
 target_sources(${TARGET} ${SOURCES})
-target_link_libraries(${TARGET} breakpad::processor breakpad::sender wxwidgets::wxwidgets)
+target_link_libraries(${TARGET} 
+   breakpad::processor 
+   breakpad::sender 
+   wxwidgets::wxwidgets
+   lib-strings-interface
+)
 
-add_dependencies( ${TARGET} Audacity )
+target_compile_definitions(${TARGET} PRIVATE INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+
+set_target_properties(
+	${TARGET} 
+	PROPERTIES 
+		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TARGET}/bin/$<CONFIG>
+)
 
 if(WIN32)
 	set_target_properties(${TARGET} PROPERTIES WIN32_EXECUTABLE ON)

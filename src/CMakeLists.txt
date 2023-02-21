@@ -1220,7 +1220,6 @@ set( LIBRARIES
       libmp3lame::libmp3lame
       SndFile::sndfile
       sqlite
-      $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::pluginterfaces>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
@@ -1248,6 +1247,28 @@ set( LIBRARIES
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
       $<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>
 )
+
+if( ${_OPT}has_crashreports )
+   add_dependencies(${TARGET} crashreporter)
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -E copy $<TARGET_FILE:crashreporter> ${_DESTDIR}/${_EXEDIR}/$<TARGET_FILE_NAME:crashreporter>
+      POST_BUILD
+   )
+   if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+      add_custom_command(
+         TARGET
+            ${TARGET}
+         COMMAND
+            ${PYTHON}
+            ${CMAKE_SOURCE_DIR}/scripts/build/macOS/fix_bundle.py
+            ${_DESTDIR}/${_EXEDIR}/$<TARGET_FILE_NAME:crashreporter>
+         POST_BUILD
+      )
+   endif()
+endif()
 
 set( BUILDING_AUDACITY YES )
 set( PKGLIBDIR "${_PKGLIBDIR}" )
@@ -1547,6 +1568,23 @@ if( ${_OPT}has_audiocom_upload )
    list( APPEND AUDACITY_LIBRARIES
       lib-cloud-audiocom-interface
    )
+endif()
+
+if( ${_OPT}has_crashreports )
+   if( ${_OPT}crashreport_backend STREQUAL "crashpad" )
+      list(APPEND DEFINES 
+         PRIVATE
+            CRASHREPORTER_NAME="$<TARGET_FILE_NAME:crashreporter>"
+            CRASHPAD_HANDLER_NAME="crashpad_handler${CMAKE_EXECUTABLE_SUFFIX}"
+      )
+      list( APPEND AUDACITY_LIBRARIES 
+         lib-crashpad-configurer-interface
+      )
+   elseif( ${_OPT}crashreport_backend STREQUAL "breakpad" )
+      list( APPEND AUDACITY_LIBRARIES 
+         lib-breakpad-configurer-interface
+      )
+   endif()
 endif()
 
 list( APPEND AUDACITY_LIBRARIES
