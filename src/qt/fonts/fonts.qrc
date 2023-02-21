@@ -1,0 +1,14 @@
+<RCC>
+   <qresource prefix="/fonts">
+      <file>MusescoreIcon.ttf</file>
+      <file>Inter-Black.ttf</file>
+      <file>Inter-Bold.ttf</file>
+      <file>Inter-ExtraBold.ttf</file>
+      <file>Inter-ExtraLight.ttf</file>
+      <file>Inter-Light.ttf</file>
+      <file>Inter-Medium.ttf</file>
+      <file>Inter-Regular.ttf</file>
+      <file>Inter-SemiBold.ttf</file>
+      <file>Inter-Thin.ttf</file>
+   </qresource>
+</RCC>

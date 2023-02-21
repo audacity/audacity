@@ -1,31 +1,45 @@
 qt_standard_project_setup()
 set(QAUDACITY ${CMAKE_PROJECT_NAME})
 
+set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml)
+
 set(SOURCES
    main.cpp
+   EditToolbarHandler.cpp
+   EditToolbarHandler.h
+   ToolsToolbarHandler.cpp
+   ToolsToolbarHandler.h
+   TransportToolbarHandler.cpp
+   TransportToolbarHandler.h
 )
 
 set(RESOURCES
    audacity.qrc
+   fonts/fonts.qrc
 )
 
 qt_add_resources(QT_RESOURCES
    ${RESOURCES}
 )
 
+add_subdirectory(uicomponents)
+
 qt_add_executable(${QAUDACITY} ${SOURCES} ${QT_RESOURCES} MANUAL_FINALIZATION)
 
 set(QML_SOURCES
    qml/main.qml
+   qml/EditToolbar.qml
+   qml/ToolsToolbar.qml
+   qml/TransportToolbar.qml
+   qml/Workspace.qml
 )
 
 qt_add_qml_module(
 	${QAUDACITY}
-	URI qml
+	URI Audacity
 	VERSION 1.0
 	QML_FILES
 		${QML_SOURCES}
-
 )
 
 set_target_properties(
@@ -58,7 +72,7 @@ endif()
 
 target_compile_definitions( ${QAUDACITY} PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG> )
 target_link_libraries( ${QAUDACITY} PUBLIC ${AUDACITY_LIBRARIES} )
-target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick kddockwidgets::kddockwidgets )
+target_link_libraries( ${QAUDACITY} PRIVATE Qt6::Core Qt6::Gui Qt6::Quick kddockwidgets::kddockwidgets uicomponentsplugin)
 
 qt_finalize_target(${QAUDACITY})
 
