@@ -37,12 +37,6 @@
 
 #include <unordered_map>
 
-static const int kPlayID = 20102;
-static const int kRewindID = 20103;
-static const int kFFwdID = 20104;
-
-using t2bHash = std::unordered_map< void*, bool >;
-
 StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
    : mEffect{ effect }
 {

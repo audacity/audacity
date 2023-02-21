@@ -19,7 +19,8 @@
 #include <optional>
 
 #include "Identifier.h"
-#include "EffectPlugin.h"
+#include "EffectUIServices.h" // for DialogFactoryResults
+#include "EffectPlugin.h" // for its nested types
 #include "Observer.h"
 #include "PluginInterface.h"
 #include "commands/CommandManagerWindowClasses.h"
@@ -50,7 +51,7 @@ public:
     (and then must call Init() with success), or leave null for failure
     */
    EffectUIHost(wxWindow *parent, AudacityProject &project,
-      EffectPlugin &effect, EffectUIClientInterface &client,
+      EffectPlugin &effect, EffectUIServices &client,
       std::shared_ptr<EffectInstance> &pInstance,
       EffectSettingsAccess &access,
       const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
@@ -62,7 +63,7 @@ public:
    int ShowModal() override;
 
    bool Initialize();
-   EffectUIValidator *GetValidator() const { return mpValidator.get(); }
+   EffectEditor *GetEditor() const { return mpEditor.get(); }
 
    bool HandleCommandKeystrokes() override;
 
@@ -118,7 +119,7 @@ private:
    AudacityProject &mProject;
    wxWindow *const mParent;
    EffectPlugin &mEffectUIHost;
-   EffectUIClientInterface &mClient;
+   EffectUIServices &mClient;
    //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
@@ -162,7 +163,7 @@ private:
    const std::shared_ptr<EffectInstance> mpInstance;
    const EffectOutputs *const mpOutputs;
 
-   std::unique_ptr<EffectUIValidator> mpValidator;
+   std::unique_ptr<EffectEditor> mpEditor;
 
    DECLARE_EVENT_TABLE()
 };
@@ -173,7 +174,7 @@ namespace  EffectUI {
 
    AUDACITY_DLL_API
    DialogFactoryResults DialogFactory(wxWindow &parent, EffectPlugin &host,
-      EffectUIClientInterface &client, EffectSettingsAccess &access);
+      EffectUIServices &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

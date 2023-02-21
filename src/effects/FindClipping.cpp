@@ -17,11 +17,9 @@
 \brief FindClippingDialog used with EffectFindClipping
 
 *//*******************************************************************/
-
-
-
 #include "FindClipping.h"
 #include "AnalysisTracks.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -214,7 +212,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectFindClipping::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectFindClipping::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_GENERATOR__
 #define __AUDACITY_GENERATOR__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include "SampleCount.h"
 
 // Base class for Generators (effects which fill a given duration)

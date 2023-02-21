@@ -14,6 +14,7 @@
 #include "EqualizationUI.h"
 #include "EqualizationCurvesDialog.h"
 #include "EqualizationPanel.h"
+#include "EffectEditor.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>
@@ -61,7 +62,7 @@ bool EqualizationUI::ValidateUI(EffectSettings &)
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> EqualizationUI::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

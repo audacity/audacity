@@ -12,9 +12,8 @@
 \brief An effect to add white noise.
 
 *//*******************************************************************/
-
-
 #include "Noise.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -175,7 +174,7 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectNoise::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectNoise::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

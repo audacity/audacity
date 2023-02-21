@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  @file AudioUnitValidator.h
+  @file AudioUnitEditor.h
 
   Dominic Mazzoni
   Leland Lucius
@@ -12,7 +12,7 @@
 **********************************************************************/
 
 #if USE_AUDIO_UNITS
-#include "AudioUnitValidator.h"
+#include "AudioUnitEditor.h"
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
 #include "AUControl.h"
@@ -21,11 +21,11 @@
 #include "../../ShuttleGui.h"
 #include "../../widgets/wxPanelWrapper.h"
 
-AudioUnitValidator::AudioUnitValidator(CreateToken,
-   EffectUIClientInterface &effect,
+AudioUnitEditor::AudioUnitEditor(CreateToken,
+   const EffectUIServices &effect,
    EffectSettingsAccess &access, AudioUnitInstance &instance,
    AUControl *pControl, bool isGraphical
-)  : EffectUIValidator{ effect, access }
+)  : EffectEditor{ effect, access }
    , mInstance{ instance }
    , mEventListenerRef{ MakeListener() }
    , mpControl{ pControl }
@@ -35,16 +35,16 @@ AudioUnitValidator::AudioUnitValidator(CreateToken,
    // build a UI
    StoreSettingsToInstance(mAccess.Get());
 
-   wxTheApp->Bind(wxEVT_IDLE, &AudioUnitValidator::OnIdle, this);
+   wxTheApp->Bind(wxEVT_IDLE, &AudioUnitEditor::OnIdle, this);
 }
 
-AudioUnitValidator::~AudioUnitValidator()
+AudioUnitEditor::~AudioUnitEditor()
 {
    if (mpControl)
       mpControl->Close();
 }
 
-auto AudioUnitValidator::MakeListener()
+auto AudioUnitEditor::MakeListener()
    -> EventListenerPtr
 {
    const auto unit = mInstance.GetAudioUnit();
@@ -52,7 +52,7 @@ auto AudioUnitValidator::MakeListener()
 
    // Register a callback with the audio unit
    AUEventListenerRef eventListenerRef{};
-   if (AUEventListenerCreate(AudioUnitValidator::EventListenerCallback,
+   if (AUEventListenerCreate(AudioUnitEditor::EventListenerCallback,
       this,
       static_cast<CFRunLoopRef>( const_cast<void*>(
          GetCFRunLoopFromEventLoop(GetCurrentEventLoop()))),
@@ -90,7 +90,7 @@ auto AudioUnitValidator::MakeListener()
    return result;
 }
 
-bool AudioUnitValidator::UpdateUI()
+bool AudioUnitEditor::UpdateUI()
 {
    // Update parameter values in AudioUnit, and propagate to any listeners
    if (StoreSettingsToInstance(mAccess.Get())) {
@@ -106,7 +106,7 @@ bool AudioUnitValidator::UpdateUI()
    return false;
 }
 
-bool AudioUnitValidator::ValidateUI()
+bool AudioUnitEditor::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings &settings){
 #if 0
@@ -121,25 +121,25 @@ bool AudioUnitValidator::ValidateUI()
    return true;
 }
 
-bool AudioUnitValidator::IsGraphicalUI()
+bool AudioUnitEditor::IsGraphicalUI()
 {
    return mIsGraphical;
 }
 
-bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
+bool AudioUnitEditor::FetchSettingsFromInstance(EffectSettings &settings)
 {
    return mInstance
       .FetchSettings(AudioUnitInstance::GetSettings(settings), true, true);
 }
 
-bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
+bool AudioUnitEditor::StoreSettingsToInstance(const EffectSettings &settings)
 {
    return mInstance.StoreSettings(mInstance.mProcessor,
       AudioUnitInstance::GetSettings(settings));
 }
 
-std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
-   EffectUIClientInterface &effect, ShuttleGui &S,
+std::unique_ptr<EffectEditor> AudioUnitEditor::Create(
+   const EffectUIServices &effect, ShuttleGui &S,
    const wxString &uiType,
    EffectInstance &instance, EffectSettingsAccess &access)
 {
@@ -192,11 +192,11 @@ std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
 #endif
    }
 
-   return std::make_unique<AudioUnitValidator>(
+   return std::make_unique<AudioUnitEditor>(
       CreateToken{}, effect, access, myInstance, pControl, isGraphical);
 }
 
-void AudioUnitValidator::Notify()
+void AudioUnitEditor::Notify()
 {
    AudioUnitParameter aup = {};
    aup.mAudioUnit = mInstance.GetAudioUnit();
@@ -206,7 +206,7 @@ void AudioUnitValidator::Notify()
    AUParameterListenerNotify(NULL, NULL, &aup);
 }
 
-void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
+void AudioUnitEditor::EventListener(const AudioUnitEvent *inEvent,
    AudioUnitParameterValue inParameterValue)
 {
    // Modify the instance and its workers
@@ -240,15 +240,15 @@ void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
 }
 
 // static
-void AudioUnitValidator::EventListenerCallback(void *inCallbackRefCon,
+void AudioUnitEditor::EventListenerCallback(void *inCallbackRefCon,
    void *inObject, const AudioUnitEvent *inEvent, UInt64 inEventHostTime,
    AudioUnitParameterValue inParameterValue)
 {
-   static_cast<AudioUnitValidator *>(inCallbackRefCon)
+   static_cast<AudioUnitEditor *>(inCallbackRefCon)
       ->EventListener(inEvent, inParameterValue);
 }
 
-void AudioUnitValidator::OnIdle(wxIdleEvent &evt)
+void AudioUnitEditor::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
    if (mToUpdate.size()) {

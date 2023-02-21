@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_ECHO__
 #define __AUDACITY_EFFECT_ECHO__
 
-#include "PerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for FLT_MAX
 
@@ -30,7 +30,9 @@ struct EffectEchoSettings
    double decay{ decayDefault };
 };
 
-class EffectEcho final : public EffectWithSettings<EffectEchoSettings, PerTrackEffect>
+class EffectEcho final : public EffectWithSettings<
+   EffectEchoSettings, StatelessPerTrackEffect
+>
 {
 public:
    
@@ -50,11 +52,12 @@ public:
    EffectType GetType() const override;
 
    // Effect implementation
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
-   struct Validator;
+   struct Editor;
 
    struct Instance;
 

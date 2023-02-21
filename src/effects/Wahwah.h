@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include "PerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -67,7 +67,9 @@ struct EffectWahwahSettings
 };
 
 
-class EffectWahwah final : public EffectWithSettings<EffectWahwahSettings, PerTrackEffect>
+class EffectWahwah final : public EffectWithSettings<
+   EffectWahwahSettings, StatelessPerTrackEffect
+>
 {
 public:
       
@@ -89,11 +91,12 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
-   struct Validator;
+   struct Editor;
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 

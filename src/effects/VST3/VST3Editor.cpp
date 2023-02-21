@@ -1,11 +1,11 @@
-#include "VST3UIValidator.h"
+#include "VST3Editor.h"
 
 #include <pluginterfaces/gui/iplugview.h>
 
 #include "VST3ParametersWindow.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
-#include "effects/EffectBase.h"
+#include "effects/StatelessPerTrackEffect.h"
 #include "internal/PlugFrame.h"
 #include "widgets/NumericTextCtrl.h"
 
@@ -13,8 +13,10 @@
 #include "internal/x11/SocketWindow.h"
 #endif
 
-VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectBase& effect, EffectSettingsAccess& access, bool useNativeUI)
-   : EffectUIValidator(effect, access), mWrapper(wrapper), mParent(parent)
+VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
+   const StatelessPerTrackEffect& effect, EffectSettingsAccess& access,
+   bool useNativeUI)
+   : EffectEditor(effect, access), mWrapper(wrapper), mParent(parent)
 {
    if(effect.GetType() == EffectTypeGenerate)
    {
@@ -62,17 +64,17 @@ VST3UIValidator::VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectB
    
    mWrapper.BeginParameterEdit(mAccess);
 
-   Bind(wxEVT_IDLE, &VST3UIValidator::OnIdle, this);
+   Bind(wxEVT_IDLE, &VST3Editor::OnIdle, this);
 
    mParent->PushEventHandler(this);
 }
 
-VST3UIValidator::~VST3UIValidator()
+VST3Editor::~VST3Editor()
 {
    mWrapper.ParamChangedHandler = {};
 }
 
-void VST3UIValidator::OnIdle(wxIdleEvent& evt)
+void VST3Editor::OnIdle(wxIdleEvent& evt)
 {
    evt.Skip();
    if(!mWrapper.IsActive())
@@ -89,7 +91,7 @@ void VST3UIValidator::OnIdle(wxIdleEvent& evt)
 }
 
 
-bool VST3UIValidator::TryLoadNativeUI(wxWindow* parent)
+bool VST3Editor::TryLoadNativeUI(wxWindow* parent)
 {
    using namespace Steinberg;
 
@@ -128,12 +130,12 @@ bool VST3UIValidator::TryLoadNativeUI(wxWindow* parent)
    return false;
 }
 
-bool VST3UIValidator::IsGraphicalUI()
+bool VST3Editor::IsGraphicalUI()
 {
    return mPlugView != nullptr;
 }
 
-bool VST3UIValidator::ValidateUI()
+bool VST3Editor::ValidateUI()
 {
    mAccess.ModifySettings([&](EffectSettings &settings){
       if (mDuration != nullptr)
@@ -146,7 +148,7 @@ bool VST3UIValidator::ValidateUI()
    return true;
 }
 
-void VST3UIValidator::OnClose()
+void VST3Editor::OnClose()
 {
    using namespace Steinberg;
 
@@ -177,10 +179,10 @@ void VST3UIValidator::OnClose()
 
    mWrapper.ParamChangedHandler = {};
 
-   EffectUIValidator::OnClose();
+   EffectEditor::OnClose();
 }
 
-bool VST3UIValidator::UpdateUI()
+bool VST3Editor::UpdateUI()
 {
    mAccess.ModifySettings([&](EffectSettings& settings) {
       mWrapper.FetchSettings(settings);

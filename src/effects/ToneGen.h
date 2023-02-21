@@ -47,7 +47,7 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

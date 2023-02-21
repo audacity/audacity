@@ -12,11 +12,9 @@
 \brief An EffectTimeScale does high quality sliding time scaling/pitch shifting
 
 *//*******************************************************************/
-
-
-
 #if USE_SBSMS
 #include "TimeScale.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -123,11 +121,10 @@ double EffectTimeScale::CalcPreviewInputLength(
    }
 }
 
-void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
+std::any EffectTimeScale::BeginPreview(const EffectSettings &settings)
 {
-   previewSelectedDuration = access.Get().extra.GetDuration();
-   auto cleanup = valueRestorer( bPreview, true );
-   Effect::Preview(access, dryOnly);
+   previewSelectedDuration = settings.extra.GetDuration();
+   return { CopyableValueRestorer{ bPreview, true } };
 }
 
 bool EffectTimeScale::Process(
@@ -148,7 +145,7 @@ bool EffectTimeScale::Process(
    return EffectSBSMS::Process(instance, settings);
 }
 
-std::unique_ptr<EffectUIValidator> EffectTimeScale::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectTimeScale::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -336,7 +333,7 @@ void EffectTimeScale::Update_Text_PitchPercentChangeEnd()
 
 void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -347,7 +344,7 @@ void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(ev
 
 void EffectTimeScale::OnText_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -372,7 +369,7 @@ void EffectTimeScale::OnSlider_RatePercentChangeEnd(wxCommandEvent & evt)
 
 void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -384,7 +381,7 @@ void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
 
 void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -396,7 +393,7 @@ void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 
 void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -408,7 +405,7 @@ void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(e
 
 void EffectTimeScale::OnText_PitchPercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;

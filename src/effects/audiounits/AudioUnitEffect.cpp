@@ -18,7 +18,7 @@
 #include "AudioUnitEffect.h"
 #include "AudioUnitEffectOptionsDialog.h"
 #include "AudioUnitInstance.h"
-#include "AudioUnitValidator.h"
+#include "AudioUnitEditor.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
@@ -203,13 +203,13 @@ bool AudioUnitEffect::SupportsAutomation() const
 
 std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
 {
-   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters,
-      GetSymbol().Internal(), mAudioIns, mAudioOuts, mUseLatency);
-}
+   bool useLatency;
+   GetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
+      useLatency, true);
 
-constexpr auto OptionsKey = L"Options";
-constexpr auto UseLatencyKey = L"UseLatency";
-constexpr auto UITypeKey = L"UIType";
+   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters,
+      GetSymbol().Internal(), mAudioIns, mAudioOuts, useLatency);
+}
 
 bool AudioUnitEffect::InitializePlugin()
 {
@@ -252,26 +252,6 @@ bool AudioUnitEffect::InitializePlugin()
    return true;
 }
 
-bool AudioUnitEffect::FullyInitializePlugin()
-{
-   if (!InitializePlugin())
-      return false;
-
-   // Reading these values from the config file can't be done in the PluginHost
-   // process but isn't needed only for plugin discovery.
-
-   // Consult preferences
-   // Decide mUseLatency, which affects GetLatency(), which is actually used
-   // so far only in destructive effect processing
-   GetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
-      mUseLatency, true);
-   // Decide whether to build plain or fancy user interfaces
-   GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
-      mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
-
-   return true;
-}
-
 #if 0
 size_t AudioUnitInstance::GetTailSize() const
 {
@@ -283,8 +263,9 @@ size_t AudioUnitInstance::GetTailSize() const
 }
 #endif
 
-int AudioUnitEffect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *, bool forceModal)
+int AudioUnitEffect::ShowClientInterface(const EffectPlugin &,
+   wxWindow &parent, wxDialog &dialog,
+   EffectEditor *, bool forceModal) const
 {
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       dialog.Show();
@@ -426,16 +407,25 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
    return presets;
 }
 
-// ============================================================================
-// EffectUIClientInterface Implementation
-// ============================================================================
-
-std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
+std::unique_ptr<EffectEditor> AudioUnitEffect::PopulateUI(
+   const EffectPlugin &, ShuttleGui &S,
    EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
-   mParent = S.GetParent();
-   return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
+   wxString uiType;
+   // Decide whether to build plain or fancy user interfaces
+   GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
+      uiType, FullValue.MSGID().GET() /* Config stores un-localized string */);
+   return AudioUnitEditor::Create(*this, S, uiType, instance, access);
+}
+
+std::unique_ptr<EffectEditor> AudioUnitEffect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *) const
+{
+   //! Will not come here because Effect::PopulateUI is overridden
+   assert(false);
+   return nullptr;
 }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -446,23 +436,23 @@ bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 }
 #endif
 
-bool AudioUnitEffect::CloseUI()
+bool AudioUnitEffect::CloseUI() const
 {
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
 #endif
-   mParent = nullptr;
    return true;
 }
 
-bool AudioUnitEffect::CanExportPresets()
+bool AudioUnitEffect::CanExportPresets() const
 {
    return true;
 }
 
-void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
+void AudioUnitEffect::ExportPresets(
+   const EffectPlugin &, const EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -501,11 +491,11 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
       AudacityMessageBox(
          XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
          XO("Export Audio Unit Presets"),
-         wxOK | wxCENTRE,
-         mParent);
+         wxOK | wxCENTRE);
 }
 
-OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
+OptionalMessage AudioUnitEffect::ImportPresets(
+   const EffectPlugin &, EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -537,28 +527,21 @@ OptionalMessage AudioUnitEffect::ImportPresets(EffectSettings &settings)
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
-         wxOK | wxCENTRE,
-         mParent);
+         wxOK | wxCENTRE);
       return {};
    }
 
    return { nullptr };
 }
 
-bool AudioUnitEffect::HasOptions()
+bool AudioUnitEffect::HasOptions() const
 {
    return true;
 }
 
-void AudioUnitEffect::ShowOptions()
+void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, mUseLatency, mUIType);
-   if (dlg.ShowModal()) {
-      // Save changed values to the config file
-      SetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
-         mUseLatency);
-      SetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey, mUIType);
-   }
+   AudioUnitEffectOptionsDialog{ *this }.ShowModal();
 }
 
 // ============================================================================

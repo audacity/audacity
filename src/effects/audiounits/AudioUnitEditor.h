@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  @file AudioUnitValidator.h
+  @file AudioUnitEditor.h
 
   Dominic Mazzoni
   Leland Lucius
@@ -11,31 +11,34 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_AUDIO_UNIT_VALIDATOR__
-#define __AUDACITY_AUDIO_UNIT_VALIDATOR__
+#ifndef __AUDACITY_AUDIO_UNIT_EDITOR__
+#define __AUDACITY_AUDIO_UNIT_EDITOR__
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <unordered_map>
 #include "AudioUnitUtils.h"
-#include "EffectPlugin.h"
+#include "../EffectEditor.h"
 
 class AUControl;
 
 class AudioUnitInstance;
+class EffectSettings;
+class EffectInstance;
+class ShuttleGui;
 
-class AudioUnitValidator : public wxEvtHandler, public EffectUIValidator {
+class AudioUnitEditor : public wxEvtHandler, public EffectEditor {
    struct CreateToken{};
 public:
-   static std::unique_ptr<EffectUIValidator> Create(
-      EffectUIClientInterface &effect, ShuttleGui &S,
+   static std::unique_ptr<EffectEditor> Create(
+      const EffectUIServices &effect, ShuttleGui &S,
       const wxString &uiType,
       EffectInstance &instance, EffectSettingsAccess &access);
 
-   AudioUnitValidator(CreateToken,
-      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+   AudioUnitEditor(CreateToken,
+      const EffectUIServices &effect, EffectSettingsAccess &access,
       AudioUnitInstance &instance, AUControl *pControl, bool isGraphical);
 
-   ~AudioUnitValidator() override;
+   ~AudioUnitEditor() override;
 
    bool UpdateUI() override;
    bool ValidateUI() override;

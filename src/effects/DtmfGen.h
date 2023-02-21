@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_EFFECT_DTMF__
 #define __AUDACITY_EFFECT_DTMF__
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -39,7 +39,7 @@ struct DtmfSettings {
 };
 
 class EffectDtmf final
-   : public EffectWithSettings<DtmfSettings, PerTrackEffect>
+   : public EffectWithSettings<DtmfSettings, StatelessPerTrackEffect>
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -59,9 +59,10 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
@@ -74,7 +75,7 @@ private:
                      sampleCount total, float amplitude);
 
 public:
-   struct Validator;
+   struct Editor;
 
 private:
    const EffectParameterMethods& Parameters() const override;

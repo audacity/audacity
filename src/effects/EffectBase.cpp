@@ -56,14 +56,14 @@ double EffectBase::GetDefaultDuration()
 // the recursive paths into this function via Effect::Delegate are simplified,
 // and we don't have both EffectSettings and EffectSettingsAccessPtr
 // If pAccess is not null, settings should have come from its Get()
-bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
-    TrackList *list,
-    WaveTrackFactory *factory,
-    NotifyingSelectedRegion &selectedRegion,
-    unsigned flags,
-    wxWindow *pParent,
-    const EffectDialogFactory &dialogFactory,
-    const EffectSettingsAccessPtr &pAccess)
+bool EffectBase::DoEffect(EffectSettings &settings,
+   const InstanceFinder &finder,
+   double projectRate,
+   TrackList *list,
+   WaveTrackFactory *factory,
+   NotifyingSelectedRegion &selectedRegion,
+   unsigned flags,
+   const EffectSettingsAccessPtr &pAccess)
 {
    auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
@@ -163,19 +163,11 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    // Allow the dialog factory to fill this in, but it might not
    std::shared_ptr<EffectInstance> pInstance;
 
-   // Prompting will be bypassed when applying an effect that has already
-   // been configured, e.g. repeating the last effect on a different selection.
-   // Prompting may call EffectBase::Preview
-   if ( pParent && dialogFactory && pAccess &&
-      IsInteractive()) {
-      if (!ShowHostInterface(
-         *pParent, dialogFactory, pInstance, *pAccess, true ) )
-         return false;
-      else if (!pInstance)
-         return false;
+   if (IsInteractive()) {
+      if (auto result = finder(settings))
+         pInstance = *result;
       else
-         // Retrieve again after the dialog modified settings
-         settings = pAccess->Get();
+         return false;
    }
 
    auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(pInstance);
@@ -329,8 +321,16 @@ void EffectBase::CountWaveTracks()
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
-void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
+std::any EffectBase::BeginPreview(const EffectSettings &)
 {
+   return {};
+}
+
+void EffectBase::Preview(
+   EffectSettingsAccess &access, std::function<void()> updateUI, bool dryOnly)
+{
+   auto cleanup0 = BeginPreview(access.Get());
+
    if (mNumTracks == 0) { // nothing to preview
       return;
    }
@@ -383,10 +383,6 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
             std::dynamic_pointer_cast<EffectInstanceEx>(MakeInstance())
          )
             pInstance->Init();
-
-      // In case any dialog control depends on mT1 or mDuration:
-      if ( mUIDialog )
-         mUIDialog->TransferDataToWindow();
    } );
 
    auto vr0 = valueRestorer( mT0 );
@@ -396,9 +392,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       mT1 = t1;
 
    // In case any dialog control depends on mT1 or mDuration:
-   if ( mUIDialog ) {
-      mUIDialog->TransferDataToWindow();
-   }
+   if (updateUI)
+      updateUI();
 
    // Save the original track list
    TrackList *saveTracks = mTracks;

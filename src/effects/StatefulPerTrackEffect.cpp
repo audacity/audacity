@@ -16,9 +16,9 @@
 \brief Base class for many of the effects in Audacity.
 
 *//*******************************************************************/
-
-
 #include "StatefulPerTrackEffect.h"
+#include "ShuttleGui.h"
+#include <wx/sizer.h>
 
 StatefulPerTrackEffect::Instance::~Instance() = default;
 
@@ -39,6 +39,8 @@ size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
 {
    return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
+
+StatefulPerTrackEffect::~StatefulPerTrackEffect() = default;
 
 std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
 {

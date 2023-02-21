@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "PerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 
@@ -48,7 +48,9 @@ struct EffectReverbSettings
 };
 
 
-class EffectReverb final : public EffectWithSettings<EffectReverbSettings, PerTrackEffect>
+class EffectReverb final : public EffectWithSettings<
+   EffectReverbSettings, StatelessPerTrackEffect
+>
 {
 public:
 
@@ -75,11 +77,12 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
-   struct Validator;
+   struct Editor;
 
    struct Instance;
 

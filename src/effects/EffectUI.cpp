@@ -10,9 +10,10 @@
   License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
-
-
 #include "EffectUI.h"
+#include "Effect.h"
+#include "StatefulEffectUIServices.h"
+#include "EffectEditor.h"
 
 #include "AllThemeResources.h"
 #include "widgets/BasicMenu.h"
@@ -128,7 +129,7 @@ static const int kUserPresetsDummyID = 20006;
 static const int kDeletePresetDummyID = 20007;
 static const int kMenuID = 20100;
 static const int kEnableID = 20101;
-static const int kPlayID = 20102;
+static const int kPlayID = EffectEditor::kPlayID;
 static const int kPlaybackID = 20105;
 static const int kCaptureID = 20106;
 static const int kUserPresetsID = 21000;
@@ -226,7 +227,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project, EffectPlugin &effect,
-   EffectUIClientInterface &client, std::shared_ptr<EffectInstance> &pInstance,
+   EffectUIServices &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
@@ -262,8 +263,8 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
 EffectUIHost::~EffectUIHost()
 {
-   if (mpValidator)
-      mpValidator->Disconnect();
+   if (mpEditor)
+      mpEditor->Disconnect();
    DestroyChildren();
    wxASSERT(mClosed);
 }
@@ -275,9 +276,11 @@ EffectUIHost::~EffectUIHost()
 bool EffectUIHost::TransferDataToWindow()
 {
    // Transfer-to takes const reference to settings
-   return mEffectUIHost.TransferDataToWindow(mpAccess->Get()) &&
+   const auto pServices =
+      dynamic_cast<StatefulEffectUIServices*>(&mEffectUIHost);
+   return (!pServices || pServices->TransferDataToWindow(mpAccess->Get())) &&
       //! Do other appearance updates
-      mpValidator->UpdateUI() &&
+      mpEditor->UpdateUI() &&
       //! Do validators
       wxDialogWrapper::TransferDataToWindow();
 }
@@ -293,14 +296,16 @@ bool EffectUIHost::TransferDataFromWindow()
       return false;
 
    //! Do other custom validation and transfer actions
-   if (!mpValidator->ValidateUI())
+   if (!mpEditor->ValidateUI())
       return false;
    
    // Transfer-from takes non-const reference to settings
    bool result = true;
    mpAccess->ModifySettings([&](EffectSettings &settings){
+      const auto pServices =
+         dynamic_cast<StatefulEffectUIServices*>(&mEffectUIHost);
       // Allow other transfers, and reassignment of settings
-      result = mEffectUIHost.TransferDataFromWindow(settings);
+      result = (!pServices || pServices->TransferDataFromWindow(settings));
       if (result) {
          auto &definition = mEffectUIHost.GetDefinition();
          if (definition.GetType() == EffectTypeGenerate) {
@@ -439,11 +444,12 @@ bool EffectUIHost::Initialize()
 
       // Let the client add things to the panel
       ShuttleGui S1{ uw.get(), eIsCreating };
-      mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess, mpOutputs);
-      if (!mpValidator)
+      mpEditor = mClient.PopulateUI(mEffectUIHost,
+         S1, *mpInstance, *mpAccess, mpOutputs);
+      if (!mpEditor)
          return false;
 
-      BuildButtonBar(S, mpValidator->IsGraphicalUI());
+      BuildButtonBar(S, mpEditor->IsGraphicalUI());
 
       S.StartHorizontalLay( wxEXPAND );
       {
@@ -526,8 +532,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    DoCancel();
    CleanupRealtime();
 
-   if (mpValidator)
-      mpValidator->OnClose();
+   if (mpEditor)
+      mpEditor->OnClose();
    
    Hide();
    Destroy();
@@ -707,10 +713,13 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    
    menu.AppendSeparator();
-   menu.Append(kImportID, _("Import..."))->Enable(mClient.CanExportPresets());
-   menu.Append(kExportID, _("Export..."))->Enable(mClient.CanExportPresets());
+   menu.Append(kImportID, _("Import..."))
+      ->Enable(mEffectUIHost.CanExportPresets());
+   menu.Append(kExportID, _("Export..."))
+      ->Enable(mEffectUIHost.CanExportPresets());
    menu.AppendSeparator();
-   menu.Append(kOptionsID, _("Options..."))->Enable(mClient.HasOptions());
+   menu.Append(kOptionsID, _("Options..."))
+      ->Enable(mEffectUIHost.HasOptions());
    menu.AppendSeparator();
    
    {
@@ -755,8 +764,12 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       if (!TransferDataFromWindow())
          return;
       
-      mEffectUIHost.Preview(*mpAccess, false);
-      
+      auto updater = [this]{ TransferDataToWindow(); };
+      mEffectUIHost.Preview(*mpAccess, updater, false);
+      // After restoration of settings and effect state:
+      // In case any dialog control depends on mT1 or mDuration:
+      updater();
+
       return;
    }
    
@@ -956,7 +969,7 @@ void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
       // ignore failure
-      return mClient.ImportPresets(settings).value_or(nullptr);
+      return mClient.ImportPresets(mEffectUIHost, settings).value_or(nullptr);
    });
    TransferDataToWindow();
    LoadUserPresets();
@@ -969,14 +982,14 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
    // may throw
    // exceptions are handled in AudacityApp::OnExceptionInMainLoop
    if (TransferDataFromWindow())
-     mClient.ExportPresets(mpAccess->Get());
+     mClient.ExportPresets(mEffectUIHost, mpAccess->Get());
    
    return;
 }
 
 void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 {
-   mClient.ShowOptions();
+   mClient.ShowOptions(mEffectUIHost);
    
    return;
 }
@@ -1200,7 +1213,7 @@ void EffectUIHost::StopPlayback()
 }
 
 DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
-   EffectPlugin &host, EffectUIClientInterface &client,
+   EffectPlugin &host, EffectUIServices &client,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1217,9 +1230,9 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
       return {};
    }
    if (dlg->Initialize()) {
-      auto pValidator = dlg->GetValidator();
+      auto pEditor = dlg->GetEditor();
       // release() is safe because parent will own it
-      return { dlg.release(), pInstance, pValidator };
+      return { dlg.release(), pInstance, pEditor };
    }
    return {};
 }
@@ -1307,21 +1320,43 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
 
    em.SetSkipStateFlag( false );
    success = false;
-   if (auto effect = em.GetEffect(ID)) {
+   if (auto effect = dynamic_cast<Effect*>(em.GetEffect(ID))) {
       if (const auto pSettings = em.GetDefaultSettings(ID)) {
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
+         const auto finder =
+         [effect, &window, pAccess, flags] (EffectSettings &settings)
+            -> std::optional<std::shared_ptr<EffectInstanceEx>>
+         {
+            // Prompting will be bypassed when applying an effect that has
+            // already been configured, e.g. repeating the last effect on a
+            // different selection.  Prompting may call EffectBase::Preview
+            std::shared_ptr<EffectInstance> pInstance;
+            std::shared_ptr<EffectInstanceEx> pInstanceEx;
+            if ((flags & EffectManager::kConfigured) == 0 && pAccess) {
+               const auto pServices = dynamic_cast<EffectUIServices *>(effect);
+               if (!pServices ||
+                   !pServices->ShowHostInterface(*effect,
+                  window, DialogFactory, pInstance, *pAccess, true)
+               )
+                  return {};
+               else if (!(pInstanceEx =
+                  std::dynamic_pointer_cast<EffectInstanceEx>(pInstance)
+               ))
+                  return {};
+               else
+                  // Retrieve again after the dialog modified settings
+                  settings = pAccess->Get();
+            }
+            return { pInstanceEx };
+         };
          pAccess->ModifySettings([&](EffectSettings &settings){
-            success = effect->DoEffect(settings,
+            success = effect->DoEffect(settings, finder,
                rate,
                &tracks,
                &trackFactory,
                selectedRegion,
                flags,
-               &window,
-               (flags & EffectManager::kConfigured) == 0
-                  ? DialogFactory
-                  : nullptr,
                pAccess);
             return nullptr;
          });

@@ -13,6 +13,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffectOptionsDialog.h"
+#include "ConfigInterface.h"
 #include "../../ShuttleGui.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,13 +27,22 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
-   wxWindow * parent, bool &useLatency, wxString &uiType)
-: wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mUseLatency{ useLatency }
-, mUIType{ uiType }
-// Get the localization of the string for display to the user
-, mUITypeString{ mUIType, {} }
+   const EffectDefinitionInterface &effect
+)  : wxDialogWrapper{ nullptr, wxID_ANY, XO("Audio Unit Effect Options") }
+   , mEffect{ effect }
 {
+   // Consult preferences
+   // Decide mUseLatency, which affects GetLatency(), which is actually used
+   // so far only in destructive effect processing
+   GetConfig(effect, PluginSettings::Shared, OptionsKey, UseLatencyKey,
+      mUseLatency, true);
+
+   wxString uiType;
+   GetConfig(effect, PluginSettings::Shared, OptionsKey, UITypeKey,
+      uiType, FullValue.MSGID().GET() /* Config stores un-localized string */);
+   // Get the localization of the string for display to the user
+   mUITypeString = TranslatableString{ uiType, {} };
+
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
@@ -113,7 +123,13 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    PopulateOrExchange(S);
 
    // un-translate the type
-   mUIType = mUITypeString.MSGID().GET();
+   auto uiType = mUITypeString.MSGID().GET();
+
+   // Save changed values to the config file
+   SetConfig(mEffect, PluginSettings::Shared, OptionsKey, UseLatencyKey,
+      mUseLatency);
+   SetConfig(mEffect, PluginSettings::Shared, OptionsKey, UITypeKey, uiType);
+   
    EndModal(wxID_OK);
 }
 #endif

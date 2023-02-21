@@ -21,7 +21,7 @@
 
 #include "LV2Effect.h"
 #include "LV2Instance.h"
-#include "LV2Validator.h"
+#include "LV2Editor.h"
 #include "LV2Wrapper.h"
 #include "SampleCount.h"
 
@@ -246,12 +246,12 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
    return nullptr;
 }
 
-int LV2Effect::ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-   EffectUIValidator *pValidator, bool forceModal)
+int LV2Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
+   wxDialog &dialog, EffectEditor *pEditor, bool forceModal) const
 {
-   if (pValidator)
+   if (pEditor)
       // Remember the dialog with a weak pointer, but don't control its lifetime
-      static_cast<LV2Validator*>(pValidator)->mDialog = &dialog;
+      static_cast<LV2Editor*>(pEditor)->mDialog = &dialog;
    // Try to give the window a sensible default/minimum size
    dialog.Layout();
    dialog.Fit();
@@ -310,19 +310,14 @@ bool LV2Effect::LoadSettings(
    return true;
 }
 
-// ============================================================================
-// EffectUIClientInterface Implementation
-// ============================================================================
-
 // May come here before destructive processing
 // Or maybe not (if you "Repeat Last Effect")
-std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
-   EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs)
+std::unique_ptr<EffectEditor> LV2Effect::PopulateUI(const EffectPlugin &,
+   ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+   const EffectOutputs *pOutputs) const
 {
    auto &settings = access.Get();
    auto parent = S.GetParent();
-   mParent = parent;
 
    auto &myInstance = dynamic_cast<LV2Instance &>(instance);
    auto pWrapper =
@@ -343,7 +338,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    if (GetType() == EffectTypeGenerate)
       useGUI = false;
 
-   auto result = std::make_unique<LV2Validator>(*this, mPlug,
+   auto result = std::make_unique<LV2Editor>(*this, mPlug,
       dynamic_cast<LV2Instance&>(instance),
       access, pOutputs, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
@@ -362,7 +357,16 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    return result;
 }
 
-bool LV2Effect::CloseUI()
+std::unique_ptr<EffectEditor> LV2Effect::MakeEditor(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
+   const EffectOutputs *) const
+{
+   //! Will not come here because Effect::PopulateUI is overridden
+   assert(false);
+   return nullptr;
+}
+
+bool LV2Effect::CloseUI() const
 {
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -370,7 +374,6 @@ bool LV2Effect::CloseUI()
 #endif
 #endif
 
-   mParent = nullptr;
    return true;
 }
 
@@ -442,28 +445,30 @@ LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-bool LV2Effect::CanExportPresets()
+bool LV2Effect::CanExportPresets() const
 {
    return false;
 }
 
-void LV2Effect::ExportPresets(const EffectSettings &) const
+void LV2Effect::ExportPresets(
+   const EffectPlugin &, const EffectSettings &) const
 {
 }
 
-OptionalMessage LV2Effect::ImportPresets(EffectSettings &)
+OptionalMessage LV2Effect::ImportPresets(
+   const EffectPlugin &, EffectSettings &) const
 {
    return { nullptr };
 }
 
-bool LV2Effect::HasOptions()
+bool LV2Effect::HasOptions() const
 {
    return true;
 }
 
-void LV2Effect::ShowOptions()
+void LV2Effect::ShowOptions(const EffectPlugin &) const
 {
-   LV2Preferences::Dialog{ mParent, *this }.ShowModal();
+   LV2Preferences::Dialog{ *this }.ShowModal();
 }
 
 // ============================================================================

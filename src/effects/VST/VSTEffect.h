@@ -7,12 +7,10 @@
   Dominic Mazzoni
 
 **********************************************************************/
-
-
-
 #if USE_VST
 
-#include "../PerTrackEffect.h"
+#include "../StatelessPerTrackEffect.h"
+#include "../EffectEditor.h"
 #include "CFResources.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
@@ -282,8 +280,6 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    int GetProcessLevel();
    int mProcessLevel{ 1 };  // in GUI thread
 
-   bool   mUseLatency{ true };
-
    // The vst callback is currently called both for the effect and for instances.
    //
    static intptr_t AudioMaster(AEffect *effect,
@@ -301,13 +297,17 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    
 
    // Some other methods called by the callback make sense for Instances:
-   void         SetBufferDelay(int samples);
+   virtual void SetBufferDelay(int samples);
 
 
    // Make message carrying all the information in settings, including chunks
    // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
       MakeMessageFS(const VSTEffectSettings& settings) const;
+
+   // This is an immutable property determined once, when mAEffect is loaded
+   // Whether the effect is capable of fancy native UI
+   bool mGui{ false };
 };
 
 class VSTEffectInstance;
@@ -324,7 +324,7 @@ wxDECLARE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
-class VSTEffectValidator;
+class VSTEffectEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
@@ -333,8 +333,8 @@ class VSTEffectValidator;
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
-   :  public VSTEffectWrapper
-     ,public PerTrackEffect
+   : public VSTEffectWrapper
+   , public StatelessPerTrackEffect
    
 {
  public:
@@ -374,29 +374,29 @@ class VSTEffect final
       const override;
    bool DoLoadFactoryPreset(int id);
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
 
    bool InitializePlugin();
 
 
-   // EffectUIClientInterface implementation
-
    std::shared_ptr<EffectInstance> MakeInstance() const override;
    std::shared_ptr<EffectInstance> DoMakeInstance();
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
-   bool IsGraphicalUI() override;
-   
-   bool CloseUI() override;
+      const EffectOutputs *pOutputs) const override;
+   bool CanExportPresets() const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
+   // Non-const and non-virtual function:
+   OptionalMessage ImportPresetsNC(EffectSettings &settings);
 
-   bool CanExportPresets() override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
-
-   bool HasOptions() override;
-   void ShowOptions() override;
+   bool HasOptions() const override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // VSTEffect implementation
 
@@ -406,6 +406,10 @@ class VSTEffect final
    EffectSettings MakeSettings() const override;
 
 protected:
+   //! Will never be called
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const final;
    
    void UpdateDisplay() override;
    
@@ -437,7 +441,6 @@ private:
    PluginID mID;
      
    wxSizerItem* mContainer{};
-   bool mGui{false};
    
    friend class VSTEffectsModule;
 
@@ -539,6 +542,8 @@ public:
    void PowerOn();
    void PowerOff();
 
+   const bool mUseLatency;
+
    size_t mBlockSize{ 8192 };
 
    std::unique_ptr<Message> MakeMessage() const override;
@@ -550,6 +555,7 @@ public:
    void Automate(int index, float value) override;
    void NeedIdle()                       override;
    void SizeWindow(int w, int h)         override;
+   void SetBufferDelay(int samples)      override;
 
    // The overrides above will forward calls to them to the corresponding
    // overrides in the Validator which owns the instance - this sets it.
@@ -558,6 +564,8 @@ public:
    bool OnePresetWasLoadedWhilePlaying();
 
    void DeferChunkApplication();
+
+   bool HasGUI() const { return mGui; }
 
 private:
 
@@ -589,21 +597,21 @@ private:
 };
 
 
-class VSTEffectValidator final
+class VSTEffectEditor final
    : public wxEvtHandler
-   , public EffectUIValidator
+   , public EffectEditor
    , public VSTEffectUIWrapper
 {
 public:
 
-    VSTEffectValidator(VSTEffectInstance&       instance,
-                       EffectUIClientInterface& effect,
-                       EffectSettingsAccess&    access,
-                       wxWindow*                pParent,
-                       int                      numParams
-                      );
+   VSTEffectEditor(VSTEffectInstance&       instance, bool gui,
+      const EffectUIServices&  services,
+      EffectSettingsAccess&    access,
+      wxWindow*                pParent,
+      int                      numParams
+   );
 
-   ~VSTEffectValidator() override;
+   ~VSTEffectEditor() override;
 
    VSTEffectInstance& GetInstance() const;
 
@@ -639,6 +647,7 @@ private:
    void OnIdle(wxIdleEvent &evt);
 
    VSTEffectInstance& mInstance;
+   const bool mGui;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
    bool StoreSettingsToInstance(const EffectSettings& settings);

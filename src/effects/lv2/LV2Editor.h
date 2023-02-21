@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  @file LV2Validator.h
+  @file LV2Editor.h
   @brief Event handling object for user interfaces of LV2 effects
 
   Paul Licameli split from LV2Effect.h
@@ -12,12 +12,12 @@
 
 *********************************************************************/
 
-#ifndef __AUDACITY_LV2_VALIDATOR__
-#define __AUDACITY_LV2_VALIDATOR__
+#ifndef __AUDACITY_LV2_EDITOR__
+#define __AUDACITY_LV2_EDITOR__
 
 #if USE_LV2
 
-#include "EffectPlugin.h"
+#include "../EffectEditor.h"
 
 #include <optional>
 #include <vector>
@@ -45,20 +45,20 @@ class NumericTextCtrl;
 class LV2EffectMeter;
 class LV2Instance;
 class LV2Wrapper;
-class EffectBase;
+class StatelessPerTrackEffect;
 
-class LV2Validator final : public EffectUIValidator
+class LV2Editor final : public EffectEditor
    , public wxEvtHandler
    , LV2UIFeaturesList::UIHandler
 {
 public:
-   LV2Validator(EffectBase &effect,
+   LV2Editor(const StatelessPerTrackEffect &effect,
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs,
       double sampleRate,
       const LV2FeaturesList &features,
       const LV2Ports &ports, wxWindow *parent, bool useGUI);
-   ~LV2Validator() override;
+   ~LV2Editor() override;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -70,7 +70,7 @@ public:
 
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition,
-      LV2Validator *pValidator);
+      LV2Editor *pEditor);
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 

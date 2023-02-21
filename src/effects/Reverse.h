@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_REVERSE__
 #define __AUDACITY_EFFECT_REVERSE__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 
 class EffectReverse final : public StatefulEffect
 {

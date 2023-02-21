@@ -41,7 +41,7 @@ bool GetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
 }
 
 template<typename T>
-bool SetSetting(EffectDefinitionInterface &effect, const wchar_t *path,
+bool SetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
    const T& value)
 {
    return SetConfig(effect, PluginSettings::Shared, SettingsStr, path,
@@ -56,7 +56,7 @@ bool LV2Preferences::GetBufferSize(
 }
 
 bool LV2Preferences::SetBufferSize(
-   EffectDefinitionInterface &effect, int bufferSize)
+   const EffectDefinitionInterface &effect, int bufferSize)
 {
    return SetSetting(effect, BufferSizeStr, bufferSize);
 }
@@ -68,7 +68,7 @@ bool LV2Preferences::GetUseLatency(
 }
 
 bool LV2Preferences::SetUseLatency(
-   EffectDefinitionInterface &effect, bool useLatency)
+   const EffectDefinitionInterface &effect, bool useLatency)
 {
    return SetSetting(effect, UseLatencyStr, useLatency);
 }
@@ -80,7 +80,7 @@ bool LV2Preferences::GetUseGUI(
 }
 
 bool LV2Preferences::SetUseGUI(
-   EffectDefinitionInterface &effect, bool useGUI)
+   const EffectDefinitionInterface &effect, bool useGUI)
 {
    return SetSetting(effect, UseGUIStr, useGUI);
 }
@@ -89,10 +89,9 @@ BEGIN_EVENT_TABLE(LV2Preferences::Dialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2Preferences::Dialog::OnOk)
 END_EVENT_TABLE()
 
-LV2Preferences::Dialog::Dialog(
-   wxWindow *parent, EffectDefinitionInterface &effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
-, mEffect{ effect }
+LV2Preferences::Dialog::Dialog(const EffectDefinitionInterface &effect)
+   : wxDialogWrapper{ nullptr, wxID_ANY, XO("LV2 Effect Settings") }
+   , mEffect{ effect }
 {
    using namespace LV2Preferences;
    GetBufferSize(mEffect, mBufferSize);

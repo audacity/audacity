@@ -15,12 +15,15 @@
 #define __AUDACITY_STATEFUL_PER_TRACK_EFFECT__
 
 #include "PerTrackEffect.h" // to inherit
+#include "StatefulEffectBase.h" // to inherit
+#include "StatefulEffectUIServices.h" // to inherit
 
 //! Subclass of PerTrackEffect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
 class StatefulPerTrackEffect
    : public StatefulEffectBase
    , public PerTrackEffect
+   , public StatefulEffectUIServices
 {
 public:
 
@@ -52,6 +55,8 @@ public:
       }
    };
 
+   ~StatefulPerTrackEffect() override;
+
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -60,13 +65,13 @@ public:
    /*!
     @copydoc PerTrackEffect::Instance::ProcessInitialize()
     */
-   virtual bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap = nullptr);
+   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
+      ChannelNames chanMap = nullptr) override;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessFinalize()
     */
-   virtual bool ProcessFinalize() noexcept;
+   bool ProcessFinalize() noexcept override;
 
    /*!
     @copydoc PerTrackEffect::Instance::ProcessBlock()

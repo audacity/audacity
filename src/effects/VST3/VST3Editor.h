@@ -2,9 +2,9 @@
 
 #include <pluginterfaces/base/smartpointer.h>
 
-#include "EffectPlugin.h"
+#include "../EffectEditor.h"
 
-class EffectBase;
+class StatelessPerTrackEffect;
 class VST3Wrapper;
 
 namespace Steinberg
@@ -16,9 +16,9 @@ namespace Steinberg
 class NumericTextCtrl;
 class VST3ParametersWindow;
 
-class VST3UIValidator
+class VST3Editor
    : public wxEvtHandler
-   , public EffectUIValidator
+   , public EffectEditor
 {
    VST3Wrapper& mWrapper;
    //Used if provided by the plugin and enabled in the settings
@@ -30,8 +30,10 @@ class VST3UIValidator
    VST3ParametersWindow* mPlainUI { nullptr };
    
 public:
-   VST3UIValidator(wxWindow* parent, VST3Wrapper& wrapper, EffectBase &effect, EffectSettingsAccess &access, bool useNativeUI);
-   ~VST3UIValidator() override;
+   VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
+      const StatelessPerTrackEffect &effect, EffectSettingsAccess &access,
+      bool useNativeUI);
+   ~VST3Editor() override;
 
    bool IsGraphicalUI() override;
    bool UpdateUI() override;

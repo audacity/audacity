@@ -39,13 +39,13 @@ constexpr auto DEFAULT_BLOCKSIZE = 1048576;
  @{
  */
 bool GetBufferSize(const EffectDefinitionInterface &effect, int &bufferSize);
-bool SetBufferSize(EffectDefinitionInterface &effect, int bufferSize);
+bool SetBufferSize(const EffectDefinitionInterface &effect, int bufferSize);
 
 bool GetUseLatency(const EffectDefinitionInterface &effect, bool &useLatency);
-bool SetUseLatency(EffectDefinitionInterface &effect, bool useLatency);
+bool SetUseLatency(const EffectDefinitionInterface &effect, bool useLatency);
 
 bool GetUseGUI(const EffectDefinitionInterface &effect, bool &useGUI);
-bool SetUseGUI(EffectDefinitionInterface &effect, bool useGUI);
+bool SetUseGUI(const EffectDefinitionInterface &effect, bool useGUI);
 /*!
  @}
 */
@@ -53,7 +53,7 @@ bool SetUseGUI(EffectDefinitionInterface &effect, bool useGUI);
 class Dialog final : public wxDialogWrapper
 {
 public:
-   Dialog(wxWindow *parent, EffectDefinitionInterface &effect);
+   explicit Dialog(const EffectDefinitionInterface &effect);
    virtual ~Dialog();
 
    void PopulateOrExchange(ShuttleGui &S);
@@ -61,7 +61,7 @@ public:
    void OnOk(wxCommandEvent &evt);
 
 private:
-   EffectDefinitionInterface &mEffect;
+   const EffectDefinitionInterface &mEffect;
    int mBufferSize{};
    bool mUseLatency{};
    bool mUseGUI{};

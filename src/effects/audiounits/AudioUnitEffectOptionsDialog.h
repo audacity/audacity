@@ -16,7 +16,12 @@
 
 #include "../../widgets/wxPanelWrapper.h"
 
+class EffectDefinitionInterface;
 class ShuttleGui;
+
+constexpr auto OptionsKey = L"Options";
+constexpr auto UseLatencyKey = L"UseLatency";
+constexpr auto UITypeKey = L"UIType";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -27,14 +32,14 @@ class ShuttleGui;
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   AudioUnitEffectOptionsDialog(
-      wxWindow * parent, bool &useLatencey, wxString &uiType);
+   explicit AudioUnitEffectOptionsDialog(
+      const EffectDefinitionInterface &effect);
    virtual ~AudioUnitEffectOptionsDialog();
    void PopulateOrExchange(ShuttleGui & S);
    void OnOk(wxCommandEvent & evt);
 private:
-   bool &mUseLatency;
-   wxString &mUIType;
+   const EffectDefinitionInterface &mEffect;
+   bool mUseLatency;
    TranslatableString mUITypeString;
    DECLARE_EVENT_TABLE()
 };

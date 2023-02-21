@@ -51,6 +51,7 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "BasicUI.h"
+#include "../EffectEditor.h"
 #include "../EffectManager.h"
 #include "FileNames.h"
 #include "../../LabelTrack.h"
@@ -1053,7 +1054,7 @@ finish:
    return success;
 }
 
-int NyquistEffect::ShowHostInterface(
+int NyquistEffect::ShowHostInterface(EffectPlugin &plugin,
    wxWindow &parent, const EffectDialogFactory &factory,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
@@ -1061,7 +1062,7 @@ int NyquistEffect::ShowHostInterface(
    int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = Effect::ShowHostInterface(
+      res = EffectUIServices::ShowHostInterface(plugin,
          parent, factory, pInstance, access, forceModal);
    }
 
@@ -1100,7 +1101,8 @@ int NyquistEffect::ShowHostInterface(
       effect.LoadSettings(cp, newSettings);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(
+      // Don't pass this as first argument, pass the worker to itself
+      res = effect.ShowHostInterface(effect,
          parent, factory, pNewInstance, *newAccess, forceModal);
       if (res) {
          CommandParameters cp;
@@ -1111,7 +1113,8 @@ int NyquistEffect::ShowHostInterface(
    else {
       if (!factory)
          return 0;
-      res = effect.ShowHostInterface(
+      // Don't pass this as first argument, pass the worker to itself
+      res = effect.ShowHostInterface(effect,
          parent, factory, pNewInstance, *newAccess, false );
       if (!res)
          return 0;
@@ -1131,7 +1134,7 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
+std::unique_ptr<EffectEditor> NyquistEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -1164,7 +1167,7 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 
    if (success)
    {
-      EffectUIValidator::EnablePreview(mUIParent, mEnablePreview);
+      EffectEditor::EnablePreview(mUIParent, mEnablePreview);
    }
 
    return success;

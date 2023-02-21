@@ -10,12 +10,10 @@
   http://www.vamp-plugins.org/
 
 **********************************************************************/
-
-
-
 #if defined(USE_VAMP)
 #include "VampEffect.h"
 #include "../AnalysisTracks.h"
+#include "../EffectEditor.h"
 
 #include <vamp-hostsdk/Plugin.h>
 #include <vamp-hostsdk/PluginChannelAdapter.h>
@@ -523,7 +521,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> VampEffect::PopulateOrExchange(
+std::unique_ptr<EffectEditor> VampEffect::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

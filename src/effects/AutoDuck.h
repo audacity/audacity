@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_AUTODUCK__
 #define __AUDACITY_EFFECT_AUTODUCK__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
 #include "../widgets/wxPanelWrapper.h"
@@ -46,7 +46,7 @@ public:
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

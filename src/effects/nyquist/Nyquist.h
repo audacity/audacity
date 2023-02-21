@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include "../Effect.h"
+#include "../StatefulEffect.h"
 #include "FileNames.h"
 #include "SampleCount.h"
 #include "../../widgets/wxPanelWrapper.h"
@@ -120,11 +120,11 @@ public:
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   int ShowHostInterface( wxWindow &parent,
+   int ShowHostInterface(EffectPlugin &plugin, wxWindow &parent,
       const EffectDialogFactory &factory,
       std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       bool forceModal = false) override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -70,7 +70,9 @@ struct EffectPhaserSettings
    double mOutGain { outGainDefault  };
 };
 
-class EffectPhaser final : public EffectWithSettings<EffectPhaserSettings, PerTrackEffect>
+class EffectPhaser final : public EffectWithSettings<
+   EffectPhaserSettings, StatelessPerTrackEffect
+>
 {
 public:
    
@@ -93,11 +95,12 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
-   struct Validator;
+   struct Editor;
 
 private:
    // EffectPhaser implementation

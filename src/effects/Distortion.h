@@ -13,7 +13,7 @@
 
 #include <queue>
 
-#include "StatefulPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;
@@ -68,7 +68,9 @@ struct EffectDistortionSettings
 };
 
 
-class EffectDistortion final : public EffectWithSettings<EffectDistortionSettings, PerTrackEffect>
+class EffectDistortion final : public EffectWithSettings<
+   EffectDistortionSettings, StatelessPerTrackEffect
+>
 {
 public:
    struct Params;
@@ -97,11 +99,12 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
-   struct Validator;
+   struct Editor;
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 

@@ -19,8 +19,8 @@
 #include <wx/dialog.h>
 
 #include "EffectPlugin.h" // to inherit
-#include "EffectInterface.h" // to inherit
 
+#include <any>
 
 namespace BasicUI { class ProgressDialog; }
 
@@ -28,8 +28,7 @@ class AudacityProject;
 class Track;
 
 class AUDACITY_DLL_API EffectBase /* not final */
-   : public EffectUIClientInterface
-   , public EffectPlugin
+   : public EffectPlugin
 {
 public:
    EffectBase();
@@ -38,20 +37,29 @@ public:
    void SetTracks(TrackList *pTracks) { mTracks = pTracks; }
 
 protected:
+   //! Called when Preview() starts, to allow temporary effect state changes
+   /*!
+    default returns a null
+    @return will undo its effects in its destructor before Preview() finishes
+    */
+   virtual std::any BeginPreview(const EffectSettings &settings);
+
    // The EffectBase class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
+   void Preview(
+      EffectSettingsAccess &access, std::function<void()> updateUI,
+      bool dryOnly) final;
 
+ public:
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
+      const InstanceFinder &finder,
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       unsigned flags,
-      // Prompt the user for input only if the next arguments are not all null.
-      wxWindow *pParent,
-      const EffectDialogFactory &dialogFactory,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
 
+protected:
    //! After Init(), tell whether Process() should be skipped
    /*
      Typically this is only useful in automation, for example
@@ -116,9 +124,6 @@ protected:
 
 private:
    friend class Effect;
-
-   //! This weak pointer may be the same as mUIParent, or null
-   wxWeakRef<wxDialog> mUIDialog;
 
    double GetDefaultDuration();
 

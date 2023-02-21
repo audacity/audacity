@@ -15,9 +15,8 @@
 \brief a struct that holds a start and end time.
 
 *******************************************************************/
-
-
 #include "AutoDuck.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -329,7 +328,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    return !cancel;
 }
 
-std::unique_ptr<EffectUIValidator> EffectAutoDuck::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectAutoDuck::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {

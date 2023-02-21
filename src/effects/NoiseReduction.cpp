@@ -440,7 +440,7 @@ EffectType EffectNoiseReduction::GetType() const
  its unusual two-pass nature.  First choose and analyze an example of noise,
  then apply noise reduction to another selection.  That is difficult to fit into
  the framework for managing settings of other effects. */
-int EffectNoiseReduction::ShowHostInterface(
+int EffectNoiseReduction::ShowHostInterface(EffectPlugin &,
    wxWindow &parent, const EffectDialogFactory &,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
@@ -1480,7 +1480,10 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
-   m_pEffect->Preview(mAccess, false);
+   m_pEffect->Preview(mAccess,
+      // Don't need any UI updates for preview
+      {},
+      false);
 }
 
 void EffectNoiseReduction::Dialog::OnReduceNoise( wxCommandEvent & WXUNUSED(event))

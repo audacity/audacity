@@ -32,9 +32,9 @@
    Clone of the FFT Filter effect, no longer part of Audacity.
 
 *//*******************************************************************/
-
 #include "Equalization.h"
 #include "EqualizationUI.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 #include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"
@@ -300,13 +300,11 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-
-
-// EffectUIClientInterface implementation
-
-bool EffectEqualization::ValidateUI(EffectSettings &settings)
+bool EffectEqualization::ValidateUI(
+   const EffectPlugin &, EffectSettings &settings) const
 {
-   return mUI.ValidateUI(settings);
+   // Stateful effect still cheats const_cast!
+   return const_cast<EffectEqualization&>(*this).mUI.ValidateUI(settings);
 }
 
 // Effect implementation
@@ -396,12 +394,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectEqualization::CloseUI()
-{
-   return Effect::CloseUI();
-}
-
-std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectEqualization::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {

@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Effect.h
+  StatefulEffectBase.h
 
   Dominic Mazzoni
   Vaughan Johnson

@@ -13,9 +13,8 @@
 \brief An Extreme Time Stretch and Time Smear effect
 
 *//*******************************************************************/
-
-
 #include "Paulstretch.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <algorithm>
@@ -169,7 +168,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 }
 
 
-std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectPaulstretch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -218,7 +217,7 @@ bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
 {
-   EffectUIValidator::EnableApply(
+   EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow());
 }
 

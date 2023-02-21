@@ -21,6 +21,7 @@
 
 
 #include "Echo.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include "../ShuttleGui.h"
@@ -169,17 +170,15 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
 
 
 
-struct EffectEcho::Validator
-   : EffectUIValidator
+struct EffectEcho::Editor
+   : EffectEditor
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectEchoSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Editor(const EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectEchoSettings& settings
+   )  : EffectEditor{ services, access }
       , mSettings{ settings }
    {}
-   virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+   virtual ~Editor() = default;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -191,19 +190,19 @@ struct EffectEcho::Validator
 
 
 
-std::unique_ptr<EffectUIValidator> EffectEcho::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectEcho::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
-   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   auto result = std::make_unique<Editor>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
 }
 
 
-void EffectEcho::Validator::PopulateOrExchange(ShuttleGui & S)
+void EffectEcho::Editor::PopulateOrExchange(ShuttleGui & S)
 {
    auto& echoSettings = mSettings;
 
@@ -225,7 +224,7 @@ void EffectEcho::Validator::PopulateOrExchange(ShuttleGui & S)
 }
 
 
-bool EffectEcho::Validator::ValidateUI()
+bool EffectEcho::Editor::ValidateUI()
 {
    mAccess.ModifySettings
    (
@@ -242,7 +241,7 @@ bool EffectEcho::Validator::ValidateUI()
 }
 
 
-bool EffectEcho::Validator::UpdateUI()
+bool EffectEcho::Editor::UpdateUI()
 {
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();

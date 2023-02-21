@@ -384,6 +384,8 @@ list( APPEND SOURCES
       effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
+      effects/BasicEffectUIServices.cpp
+      effects/BasicEffectUIServices.h
       effects/BassTreble.cpp
       effects/BassTreble.h
       effects/Biquad.cpp
@@ -412,10 +414,14 @@ list( APPEND SOURCES
       effects/Effect.h
       effects/EffectBase.cpp
       effects/EffectBase.h
+      effects/EffectEditor.cpp
+      effects/EffectEditor.h
       effects/EffectManager.cpp
       effects/EffectManager.h
       effects/EffectUI.cpp
       effects/EffectUI.h
+      effects/EffectUIServices.cpp
+      effects/EffectUIServices.h
       effects/Equalization.cpp
       effects/Equalization.h
       effects/Equalization48x.cpp
@@ -485,10 +491,16 @@ list( APPEND SOURCES
       effects/SimpleMono.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
+      effects/StatefulEffect.cpp
+      effects/StatefulEffect.h
       effects/StatefulEffectBase.cpp
       effects/StatefulEffectBase.h
+      effects/StatefulEffectUIServices.cpp
+      effects/StatefulEffectUIServices.h
       effects/StatefulPerTrackEffect.cpp
       effects/StatefulPerTrackEffect.h
+      effects/StatelessPerTrackEffect.cpp
+      effects/StatelessPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
       effects/TimeScale.cpp
@@ -531,6 +543,8 @@ list( APPEND SOURCES
          effects/VST3/AudacityVst3HostApplication.cpp
          effects/VST3/memorystream.h
          effects/VST3/memorystream.cpp
+         effects/VST3/VST3Editor.cpp
+         effects/VST3/VST3Editor.h
          effects/VST3/VST3Effect.h
          effects/VST3/VST3Effect.cpp
          effects/VST3/VST3EffectsModule.h
@@ -545,8 +559,6 @@ list( APPEND SOURCES
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h
          effects/VST3/VST3ParametersWindow.cpp
-         effects/VST3/VST3UIValidator.cpp
-         effects/VST3/VST3UIValidator.h
          effects/VST3/internal/ConnectionProxy.h
          effects/VST3/internal/ConnectionProxy.cpp
          effects/VST3/internal/PlugFrame.h
@@ -574,6 +586,8 @@ list( APPEND SOURCES
       $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
          effects/audiounits/AUControl.h
          effects/audiounits/AUControl.mm
+         effects/audiounits/AudioUnitEditor.cpp
+         effects/audiounits/AudioUnitEditor.h
          effects/audiounits/AudioUnitEffect.cpp
          effects/audiounits/AudioUnitEffect.h
          effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -584,8 +598,6 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitInstance.h
          effects/audiounits/AudioUnitUtils.cpp
          effects/audiounits/AudioUnitUtils.h
-         effects/audiounits/AudioUnitValidator.cpp
-         effects/audiounits/AudioUnitValidator.h
          effects/audiounits/AudioUnitWrapper.cpp
          effects/audiounits/AudioUnitWrapper.h
       >
@@ -601,6 +613,8 @@ list( APPEND SOURCES
       # LV2 Effects
 
       $<$<BOOL:${USE_LV2}>:
+         effects/lv2/LV2Editor.cpp
+         effects/lv2/LV2Editor.h
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
          effects/lv2/LV2EffectMeter.cpp
@@ -620,8 +634,6 @@ list( APPEND SOURCES
          effects/lv2/LV2UIFeaturesList.cpp
          effects/lv2/LV2UIFeaturesList.h
          effects/lv2/LV2Utils.h
-         effects/lv2/LV2Validator.cpp
-         effects/lv2/LV2Validator.h
          effects/lv2/LV2Wrapper.cpp
          effects/lv2/LV2Wrapper.h
          effects/lv2/LoadLV2.cpp

@@ -20,6 +20,7 @@
 
 
 #include "Amplify.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -197,15 +198,14 @@ bool EffectAmplify::Init()
    return true;
 }
 
-void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
+std::any EffectAmplify::BeginPreview(const EffectSettings &settings)
 {
-   auto cleanup1 = valueRestorer( mRatio );
-   auto cleanup2 = valueRestorer( mPeak );
-
-   Effect::Preview(access, dryOnly);
+   return { std::pair{
+      CopyableValueRestorer(mRatio), CopyableValueRestorer(mPeak)
+   } };
 }
 
-std::unique_ptr<EffectUIValidator> EffectAmplify::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectAmplify::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -341,7 +341,7 @@ bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 
 void EffectAmplify::CheckClip()
 {
-   EffectUIValidator::EnableApply(mUIParent,
+   EffectEditor::EnableApply(mUIParent,
       mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
 }
 
@@ -349,7 +349,7 @@ void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mAmpT->GetValidator()->TransferFromWindow())
    {
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
 
@@ -367,7 +367,7 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mNewPeakT->GetValidator()->TransferFromWindow())
    {
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
 

@@ -20,7 +20,7 @@ class wxArrayString;
 #include "LV2Ports.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
-#include "../PerTrackEffect.h"
+#include "../StatelessPerTrackEffect.h"
 
 // We use deprecated LV2 interfaces to remain compatible with older
 // plug-ins, so disable warnings
@@ -31,9 +31,9 @@ LV2_DISABLE_DEPRECATION_WARNINGS
    "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
 #define LV2EFFECTS_FAMILY XO("LV2")
 
-class LV2Validator;
+class LV2Editor;
 
-class LV2Effect final : public PerTrackEffect
+class LV2Effect final : public StatelessPerTrackEffect
 {
 
    friend class LV2PluginValidator;
@@ -73,29 +73,36 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
 
    bool InitializePlugin();
 
-   // EffectUIClientInterface implementation
-
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
-   bool CloseUI() override;
+      const EffectOutputs *pOutputs) const override;
+   bool CloseUI() const override;
 
-   bool CanExportPresets() override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
+   bool CanExportPresets() const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
-   bool HasOptions() override;
-   void ShowOptions() override;
+   bool HasOptions() const override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // LV2Effect implementation
 
 private:
+   //! Will never be called
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const final;
+
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
@@ -122,8 +129,6 @@ private:
    FloatBuffers mCVOutBuffers;
 
    double mLength{};
-
-   wxWindow *mParent{};
 
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };

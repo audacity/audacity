@@ -20,6 +20,7 @@
 
 
 #include "Wahwah.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -49,17 +50,15 @@ const ComponentInterfaceSymbol EffectWahwah::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectWahwah > reg; }
 
-struct EffectWahwah::Validator
-   : EffectUIValidator
+struct EffectWahwah::Editor
+   : EffectEditor
 {
-   Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, const EffectWahwahSettings& settings)
-      : EffectUIValidator{ effect, access }
+   Editor(const EffectUIServices& services,
+      EffectSettingsAccess& access, const EffectWahwahSettings& settings
+   )  : EffectEditor{ services, access }
       , mSettings{ settings }
    {}
-   virtual ~Validator() = default;
-
-   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+   virtual ~Editor() = default;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -110,7 +109,7 @@ struct EffectWahwah::Validator
 };
 
 
-bool EffectWahwah::Validator::ValidateUI()
+bool EffectWahwah::Editor::ValidateUI()
 {
    mAccess.ModifySettings
    (
@@ -261,18 +260,18 @@ size_t EffectWahwah::Instance::RealtimeProcess(size_t group, EffectSettings &set
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectWahwah::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectWahwah::MakeEditor(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+   const EffectOutputs *) const
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
-   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   auto result = std::make_unique<Editor>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
 }
 
-void EffectWahwah::Validator::PopulateOrExchange(ShuttleGui & S)
+void EffectWahwah::Editor::PopulateOrExchange(ShuttleGui & S)
 {
    mUIParent = S.GetParent();
    auto& ms = mSettings;
@@ -288,20 +287,20 @@ void EffectWahwah::Validator::PopulateOrExchange(ShuttleGui & S)
          .Validator<FloatingPointValidator<double>>(
             5, &ms.mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, Freq.min, Freq.max)
          .AddTextBox(XXO("LFO Freq&uency (Hz):"), L"", 12);
-      BindTo(*mFreqT, wxEVT_TEXT, &Validator::OnFreqText);
+      BindTo(*mFreqT, wxEVT_TEXT, &Editor::OnFreqText);
 
       mFreqS = S
          .Name(XO("LFO frequency in hertz"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Freq.def * Freq.scale, Freq.max * Freq.scale, Freq.min * Freq.scale);
-      BindTo(*mFreqS, wxEVT_SLIDER, &Validator::OnFreqSlider);
+      BindTo(*mFreqS, wxEVT_SLIDER, &Editor::OnFreqSlider);
 
       mPhaseT = S
          .Validator<FloatingPointValidator<double>>(
             1, &ms.mPhase, NumValidatorStyle::DEFAULT, Phase.min, Phase.max)
          .AddTextBox(XXO("LFO Sta&rt Phase (deg.):"), L"", 12);
-      BindTo(*mPhaseT, wxEVT_TEXT, &Validator::OnPhaseText);
+      BindTo(*mPhaseT, wxEVT_TEXT, &Editor::OnPhaseText);
 
       mPhaseS = S
          .Name(XO("LFO start phase in degrees"))
@@ -309,64 +308,64 @@ void EffectWahwah::Validator::PopulateOrExchange(ShuttleGui & S)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Phase.def * Phase.scale, Phase.max * Phase.scale, Phase.min * Phase.scale);
       mPhaseS->SetLineSize(10);
-      BindTo(*mPhaseS, wxEVT_SLIDER, &Validator::OnPhaseSlider);
+      BindTo(*mPhaseS, wxEVT_SLIDER, &Editor::OnPhaseSlider);
 
       mDepthT = S
          .Validator<IntegerValidator<int>>(
             &ms.mDepth, NumValidatorStyle::DEFAULT, Depth.min, Depth.max)
          .AddTextBox(XXO("Dept&h (%):"), L"", 12);
-      BindTo(*mDepthT, wxEVT_TEXT, &Validator::OnDepthText);
+      BindTo(*mDepthT, wxEVT_TEXT, &Editor::OnDepthText);
 
       mDepthS = S
          .Name(XO("Depth in percent"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Depth.def * Depth.scale, Depth.max * Depth.scale, Depth.min * Depth.scale);
-      BindTo(*mDepthS, wxEVT_SLIDER, &Validator::OnDepthSlider);
+      BindTo(*mDepthS, wxEVT_SLIDER, &Editor::OnDepthSlider);
 
       mResT = S
          .Validator<FloatingPointValidator<double>>(
             1, &ms.mRes, NumValidatorStyle::DEFAULT, Res.min, Res.max)
          .AddTextBox(XXO("Reso&nance:"), L"", 12);
-      BindTo(*mResT, wxEVT_TEXT, &Validator::OnResonanceText);
+      BindTo(*mResT, wxEVT_TEXT, &Editor::OnResonanceText);
 
       mResS = S
          .Name(XO("Resonance"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Res.def * Res.scale, Res.max * Res.scale, Res.min * Res.scale);
-      BindTo(*mResS, wxEVT_SLIDER, &Validator::OnResonanceSlider);
+      BindTo(*mResS, wxEVT_SLIDER, &Editor::OnResonanceSlider);
 
       mFreqOfsT = S
          .Validator<IntegerValidator<int>>(
             &ms.mFreqOfs, NumValidatorStyle::DEFAULT, FreqOfs.min, FreqOfs.max)
          .AddTextBox(XXO("Wah Frequency Offse&t (%):"), L"", 12);
-      BindTo(*mFreqOfsT, wxEVT_TEXT, &Validator::OnFreqOffText);
+      BindTo(*mFreqOfsT, wxEVT_TEXT, &Editor::OnFreqOffText);
 
       mFreqOfsS = S
          .Name(XO("Wah frequency offset in percent"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, FreqOfs.def * FreqOfs.scale, FreqOfs.max * FreqOfs.scale, FreqOfs.min * FreqOfs.scale);
-      BindTo(*mFreqOfsS, wxEVT_SLIDER, &Validator::OnFreqOffSlider);
+      BindTo(*mFreqOfsS, wxEVT_SLIDER, &Editor::OnFreqOffSlider);
 
       mOutGainT = S
          .Validator<FloatingPointValidator<double>>(
             1, &ms.mOutGain, NumValidatorStyle::DEFAULT, OutGain.min, OutGain.max)
          .AddTextBox(XXO("&Output gain (dB):"), L"", 12);
-      BindTo(*mOutGainT, wxEVT_TEXT, &Validator::OnGainText);
+      BindTo(*mOutGainT, wxEVT_TEXT, &Editor::OnGainText);
 
       mOutGainS = S
          .Name(XO("Output gain (dB)"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, OutGain.def * OutGain.scale, OutGain.max * OutGain.scale, OutGain.min * OutGain.scale);
-      BindTo(*mOutGainS, wxEVT_SLIDER, &Validator::OnGainSlider);
+      BindTo(*mOutGainS, wxEVT_SLIDER, &Editor::OnGainSlider);
    }
    S.EndMultiColumn();
 }
 
-bool EffectWahwah::Validator::UpdateUI()
+bool EffectWahwah::Editor::UpdateUI()
 {
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();
@@ -472,7 +471,7 @@ unsigned EffectWahwah::Instance::GetAudioInCount() const
    return 1;
 }
 
-void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)
+void EffectWahwah::Editor::OnFreqSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
@@ -484,7 +483,7 @@ void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
+void EffectWahwah::Editor::OnPhaseSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
@@ -499,7 +498,7 @@ void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
+void EffectWahwah::Editor::OnDepthSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
@@ -511,7 +510,7 @@ void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
+void EffectWahwah::Editor::OnResonanceSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
@@ -523,7 +522,7 @@ void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
+void EffectWahwah::Editor::OnFreqOffSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
@@ -535,7 +534,7 @@ void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
+void EffectWahwah::Editor::OnGainSlider(wxCommandEvent& evt)
 {
    auto& ms = mSettings;
 
@@ -547,7 +546,7 @@ void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
+void EffectWahwah::Editor::OnFreqText(wxCommandEvent& WXUNUSED(evt))
 {
    auto& ms = mSettings;
 
@@ -561,7 +560,7 @@ void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
+void EffectWahwah::Editor::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
 {
    auto& ms = mSettings;
 
@@ -575,7 +574,7 @@ void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
+void EffectWahwah::Editor::OnDepthText(wxCommandEvent& WXUNUSED(evt))
 {
    auto& ms = mSettings;
 
@@ -589,7 +588,7 @@ void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
+void EffectWahwah::Editor::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
 {
    auto& ms = mSettings;
 
@@ -603,7 +602,7 @@ void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
+void EffectWahwah::Editor::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
 {
    auto& ms = mSettings;
 
@@ -617,7 +616,7 @@ void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
    Publish(EffectSettingChanged{});
 }
 
-void EffectWahwah::Validator::OnGainText(wxCommandEvent& WXUNUSED(evt))
+void EffectWahwah::Editor::OnGainText(wxCommandEvent& WXUNUSED(evt))
 {
    auto& ms = mSettings;
 
