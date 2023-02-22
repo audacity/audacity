@@ -2,7 +2,6 @@ $nyquist plug-in
 $version 4
 $type generate
 $name (_ "Pluck")
-$manpage "Pluck"
 $debugbutton false
 $preview linear
 $author (_ "David R.Sky")

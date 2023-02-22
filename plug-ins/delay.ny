@@ -3,7 +3,6 @@ $version 4
 $type process
 $preview linear
 $name (_ "Delay")
-$manpage "Delay"
 $debugbutton false
 $author (_ "Steve Daulton")
 $release 2.3.1-1

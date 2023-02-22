@@ -3,7 +3,6 @@ $version 3
 $type process
 $preview linear
 $name (_ "Tremolo")
-$manpage "Tremolo"
 $debugbutton disabled
 $author (_ "Steve Daulton")
 $release 2.3.0-1

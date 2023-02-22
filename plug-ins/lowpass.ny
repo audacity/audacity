@@ -3,7 +3,6 @@ $version 4
 $type process
 $preview linear
 $name (_ "Low-Pass Filter")
-$manpage "Low-Pass_Filter"
 $debugbutton disabled
 $author (_ "Dominic Mazzoni")
 $release 2.3.0-1
