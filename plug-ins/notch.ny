@@ -3,7 +3,6 @@ $version 4
 $type process
 $preview linear
 $name (_ "Notch Filter")
-$manpage "Notch_Filter"
 $debugbutton false
 $author (_ "Steve Daulton and Bill Wharrie")
 $release 2.3.0-1

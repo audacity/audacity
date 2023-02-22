@@ -3,7 +3,6 @@ $version 4
 $type analyze
 ;i18n-hint: Name of effect that labels sounds
 $name (_ "Label Sounds")
-$manpage "Label_Sounds"
 $debugbutton false
 $author (_ "Steve Daulton")
 $release 3.0.4-1

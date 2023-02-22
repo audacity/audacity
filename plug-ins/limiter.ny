@@ -2,7 +2,6 @@ $nyquist plug-in
 $version 4
 $type process
 $name (_ "Limiter")
-$manpage "Limiter"
 $debugbutton false
 $preview enabled
 $author (_ "Steve Daulton")

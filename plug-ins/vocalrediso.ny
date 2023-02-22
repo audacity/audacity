@@ -3,7 +3,6 @@ $version 4
 $type process
 $preview linear
 $name (_ "Vocal Reduction and Isolation")
-$manpage "Vocal_Reduction_and_Isolation"
 $debugbutton false
 $author (_ "Robert Haenggi")
 $release 3.0.1-1

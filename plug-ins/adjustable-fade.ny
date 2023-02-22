@@ -4,7 +4,6 @@ $type process
 $preview linear
 $preview selection
 $name (_ "Adjustable Fade")
-$manpage "Adjustable_Fade"
 $debugbutton false
 $author (_ "Steve Daulton")
 $release 3.0.4-1

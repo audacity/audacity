@@ -2,7 +2,6 @@ $nyquist plug-in
 $version 4
 $type process
 $name (_ "Noise Gate")
-$manpage "Noise_Gate"
 $debugbutton false
 $preview enabled
 $author (_ "Steve Daulton")
