@@ -31,10 +31,12 @@
 #include "VST3Editor.h"
 
 
-EffectFamilySymbol VST3Effect::GetFamilySymbol()
+EffectFamilySymbol VST3EffectBase::GetFamilySymbol()
 {
    return XO("VST3");
 }
+
+VST3EffectBase::~VST3EffectBase() = default;
 
 VST3Effect::~VST3Effect()
 {
@@ -43,40 +45,40 @@ VST3Effect::~VST3Effect()
    CloseUI();
 }
 
-VST3Effect::VST3Effect(
+VST3EffectBase::VST3EffectBase(
    std::shared_ptr<VST3::Hosting::Module> module,
    VST3::Hosting::ClassInfo effectClassInfo)
       : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
 {
 }
 
-PluginPath VST3Effect::GetPath() const
+PluginPath VST3EffectBase::GetPath() const
 {
    return VST3Utils::MakePluginPathString( { mModule->getPath() }, mEffectClassInfo.ID().toString());
 }
 
-ComponentInterfaceSymbol VST3Effect::GetSymbol() const
+ComponentInterfaceSymbol VST3EffectBase::GetSymbol() const
 {
    return wxString { mEffectClassInfo.name() };
 }
 
-VendorSymbol VST3Effect::GetVendor() const
+VendorSymbol VST3EffectBase::GetVendor() const
 {
    return wxString { mEffectClassInfo.vendor() };
 }
 
-wxString VST3Effect::GetVersion() const
+wxString VST3EffectBase::GetVersion() const
 {
    return mEffectClassInfo.version();
 }
 
-TranslatableString VST3Effect::GetDescription() const
+TranslatableString VST3EffectBase::GetDescription() const
 {
    //i18n-hint VST3 effect description string
    return XO("SubCategories: %s").Format( mEffectClassInfo.subCategoriesString() );
 }
 
-EffectType VST3Effect::GetType() const
+EffectType VST3EffectBase::GetType() const
 {
    using namespace Steinberg::Vst::PlugType;
    if(mEffectClassInfo.subCategoriesString() == kFxGenerator)
@@ -89,61 +91,61 @@ EffectType VST3Effect::GetType() const
    return EffectTypeNone;
 }
 
-EffectFamilySymbol VST3Effect::GetFamily() const
+EffectFamilySymbol VST3EffectBase::GetFamily() const
 {
-   return VST3Effect::GetFamilySymbol();
+   return VST3EffectBase::GetFamilySymbol();
 }
 
-bool VST3Effect::IsInteractive() const
+bool VST3EffectBase::IsInteractive() const
 {
    return true;
 }
 
-bool VST3Effect::IsDefault() const
+bool VST3EffectBase::IsDefault() const
 {
    return false;
 }
 
-auto VST3Effect::RealtimeSupport() const -> RealtimeSince
+auto VST3EffectBase::RealtimeSupport() const -> RealtimeSince
 {
    return GetType() == EffectTypeProcess
       ? RealtimeSince::After_3_1
       : RealtimeSince::Never;
 }
 
-bool VST3Effect::SupportsAutomation() const
+bool VST3EffectBase::SupportsAutomation() const
 {
    return true;
 }
 
-bool VST3Effect::SaveSettings(
+bool VST3EffectBase::SaveSettings(
    const EffectSettings& settings, CommandParameters& parms) const
 {
    VST3Wrapper::SaveSettings(settings, parms);
    return true;
 }
 
-bool VST3Effect::LoadSettings(
+bool VST3EffectBase::LoadSettings(
    const CommandParameters& parms, EffectSettings& settings) const
 {
    VST3Wrapper::LoadSettings(parms, settings);
    return true;
 }
 
-OptionalMessage VST3Effect::LoadUserPreset(
+OptionalMessage VST3EffectBase::LoadUserPreset(
    const RegistryPath& name, EffectSettings& settings) const
 {
    return VST3Wrapper::LoadUserPreset(*this, name, settings);
 }
 
-bool VST3Effect::SaveUserPreset(
+bool VST3EffectBase::SaveUserPreset(
    const RegistryPath& name, const EffectSettings& settings) const
 {
    VST3Wrapper::SaveUserPreset(*this, name, settings);
    return true;
 }
 
-RegistryPaths VST3Effect::GetFactoryPresets() const
+RegistryPaths VST3EffectBase::GetFactoryPresets() const
 {
    if(!mRescanFactoryPresets)
       return mFactoryPresetNames;
@@ -159,7 +161,7 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-OptionalMessage VST3Effect::LoadFactoryPreset(int index, EffectSettings& settings) const
+OptionalMessage VST3EffectBase::LoadFactoryPreset(int index, EffectSettings& settings) const
 {
    if(index >= 0 && index < mFactoryPresetIDs.size())
    {
@@ -193,7 +195,7 @@ int VST3Effect::ShowClientInterface(const EffectPlugin &,
    return 0;
 }
 
-std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
+std::shared_ptr<EffectInstance> VST3EffectBase::MakeInstance() const
 {
    return std::make_shared<VST3Instance>(*this, *mModule, mEffectClassInfo);
 }
@@ -211,7 +213,7 @@ std::unique_ptr<EffectEditor> VST3Effect::PopulateUI(const EffectPlugin &,
    const auto vst3instance = dynamic_cast<VST3Instance*>(&instance);
 
    return std::make_unique<VST3Editor>(S.GetParent(),
-      vst3instance->GetWrapper(), *this, access, useGUI);
+      vst3instance->GetWrapper(), *this, GetType(), access, useGUI);
 }
 
 std::unique_ptr<EffectEditor> VST3Effect::MakeEditor(
@@ -223,7 +225,7 @@ std::unique_ptr<EffectEditor> VST3Effect::MakeEditor(
    return nullptr;
 }
 
-bool VST3Effect::CanExportPresets() const
+bool VST3EffectBase::CanExportPresets() const
 {
    return true;
 }
@@ -279,7 +281,7 @@ OptionalMessage VST3Effect::ImportPresets(
    return { nullptr };
 }
 
-bool VST3Effect::HasOptions() const
+bool VST3EffectBase::HasOptions() const
 {
    return true;
 }
@@ -289,7 +291,7 @@ void VST3Effect::ShowOptions(const EffectPlugin &) const
    VST3OptionsDialog{ *this }.ShowModal();
 }
 
-void VST3Effect::LoadPreset(const wxString& id, EffectSettings& settings) const
+void VST3EffectBase::LoadPreset(const wxString& id, EffectSettings& settings) const
 {
    auto wrapper = std::make_unique<VST3Wrapper>(*mModule, mEffectClassInfo);
    wrapper->InitializeComponents();
@@ -297,12 +299,12 @@ void VST3Effect::LoadPreset(const wxString& id, EffectSettings& settings) const
    wrapper->StoreSettings(settings);
 }
 
-EffectSettings VST3Effect::MakeSettings() const
+EffectSettings VST3EffectBase::MakeSettings() const
 {
    return VST3Wrapper::MakeSettings();
 }
 
-bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
+bool VST3EffectBase::CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const
 {
    VST3Wrapper::CopySettingsContents(src, dst);
    return true;
