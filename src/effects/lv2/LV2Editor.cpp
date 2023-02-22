@@ -99,7 +99,7 @@ void LV2Editor::UI::Destroy()
 #endif
 }
 
-LV2Editor::LV2Editor(const StatelessPerTrackEffect &effect,
+LV2Editor::LV2Editor(const StatelessEffectUIServices &effect, EffectType type,
    const LilvPlugin &plug, LV2Instance &instance,
    EffectSettingsAccess &access, const EffectOutputs *pOutputs,
    double sampleRate,
@@ -107,7 +107,7 @@ LV2Editor::LV2Editor(const StatelessPerTrackEffect &effect,
    const LV2Ports &ports, wxWindow *parent, bool useGUI
 )  : EffectEditor{ effect, access }
    , mPlug{ plug }
-   , mType{ effect.GetType() }
+   , mType{ type }
    , mInstance{ instance }
    , mpOutputs{ pOutputs }
    , mSampleRate{ sampleRate }

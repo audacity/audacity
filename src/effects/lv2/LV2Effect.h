@@ -33,14 +33,15 @@ LV2_DISABLE_DEPRECATION_WARNINGS
 
 class LV2Editor;
 
-class LV2Effect final : public StatelessPerTrackEffect
+class LV2EffectBase
+   : public PerTrackEffect
 {
 
    friend class LV2PluginValidator;
 
 public:
-   LV2Effect(const LilvPlugin &plug);
-   virtual ~LV2Effect();
+   LV2EffectBase(const LilvPlugin &plug);
+   ~LV2EffectBase() override;
 
    // ComponentInterface implementation
 
@@ -73,36 +74,17 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
    bool InitializePlugin();
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
-   bool CloseUI() const override;
 
    bool CanExportPresets() const override;
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
    bool HasOptions() const override;
-   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // LV2Effect implementation
 
 private:
-   //! Will never be called
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const final;
-
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
@@ -114,7 +96,7 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-private:
+protected:
    const LilvPlugin &mPlug;
    const LV2FeaturesList mFeatures{ mPlug };
 
@@ -134,6 +116,38 @@ private:
    mutable bool mFactoryPresetsLoaded{ false };
    mutable RegistryPaths mFactoryPresetNames;
    mutable wxArrayString mFactoryPresetUris;
+};
+
+class LV2Effect final
+   : public StatelessEffectUIServices
+   , public LV2EffectBase
+{
+public:
+   using LV2EffectBase::LV2EffectBase;
+   ~LV2Effect() override;
+
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
+
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const override;
+   bool CloseUI() const override;
+
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
+
+   void ShowOptions(const EffectPlugin &plugin) const override;
+
+private:
+   //! Will never be called
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const final;
 };
 
 #endif

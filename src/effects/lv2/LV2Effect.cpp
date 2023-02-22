@@ -51,29 +51,29 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-LV2Effect::LV2Effect(const LilvPlugin &plug) : mPlug{ plug }
+LV2EffectBase::LV2EffectBase(const LilvPlugin &plug) : mPlug{ plug }
 {
 }
 
-LV2Effect::~LV2Effect()
-{
-}
+LV2EffectBase::~LV2EffectBase() = default;
+
+LV2Effect::~LV2Effect() = default;
 
 // ============================================================================
 // ComponentInterface Implementation
 // ============================================================================
 
-PluginPath LV2Effect::GetPath() const
+PluginPath LV2EffectBase::GetPath() const
 {
    return LilvString(lilv_plugin_get_uri(&mPlug));
 }
 
-ComponentInterfaceSymbol LV2Effect::GetSymbol() const
+ComponentInterfaceSymbol LV2EffectBase::GetSymbol() const
 {
    return LV2FeaturesList::GetPluginSymbol(mPlug);
 }
 
-VendorSymbol LV2Effect::GetVendor() const
+VendorSymbol LV2EffectBase::GetVendor() const
 {
    wxString vendor = LilvStringMove(lilv_plugin_get_author_name(&mPlug));
 
@@ -85,12 +85,12 @@ VendorSymbol LV2Effect::GetVendor() const
    return {vendor};
 }
 
-wxString LV2Effect::GetVersion() const
+wxString LV2EffectBase::GetVersion() const
 {
    return wxT("1.0");
 }
 
-TranslatableString LV2Effect::GetDescription() const
+TranslatableString LV2EffectBase::GetDescription() const
 {
    return XO("n/a");
 }
@@ -99,7 +99,7 @@ TranslatableString LV2Effect::GetDescription() const
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType LV2Effect::GetType() const
+EffectType LV2EffectBase::GetType() const
 {
    if (mPorts.mAudioIn == 0 && mPorts.mAudioOut == 0)
    {
@@ -119,22 +119,22 @@ EffectType LV2Effect::GetType() const
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LV2Effect::GetFamily() const
+EffectFamilySymbol LV2EffectBase::GetFamily() const
 {
    return LV2EFFECTS_FAMILY;
 }
 
-bool LV2Effect::IsInteractive() const
+bool LV2EffectBase::IsInteractive() const
 {
    return mPorts.mControlPorts.size() != 0;
 }
 
-bool LV2Effect::IsDefault() const
+bool LV2EffectBase::IsDefault() const
 {
    return false;
 }
 
-auto LV2Effect::RealtimeSupport() const -> RealtimeSince
+auto LV2EffectBase::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
    return GetType() == EffectTypeProcess
@@ -142,12 +142,12 @@ auto LV2Effect::RealtimeSupport() const -> RealtimeSince
       : RealtimeSince::Never;
 }
 
-bool LV2Effect::SupportsAutomation() const
+bool LV2EffectBase::SupportsAutomation() const
 {
    return true;
 }
 
-bool LV2Effect::InitializePlugin()
+bool LV2EffectBase::InitializePlugin()
 {
    if (!mFeatures.mOk)
       return false;
@@ -178,7 +178,7 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-EffectSettings LV2Effect::MakeSettings() const
+EffectSettings LV2EffectBase::MakeSettings() const
 {
    auto result = EffectSettings::Make<LV2EffectSettings>();
    auto &settings = GetSettings(result);
@@ -191,7 +191,7 @@ EffectSettings LV2Effect::MakeSettings() const
    return result;
 }
 
-bool LV2Effect::CopySettingsContents(
+bool LV2EffectBase::CopySettingsContents(
    const EffectSettings &src, EffectSettings &dst) const
 {
    auto &srcControls = GetSettings(src).values;
@@ -229,7 +229,7 @@ bool LV2Effect::CopySettingsContents(
    return true;
 }
 
-auto LV2Effect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
+auto LV2EffectBase::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
 {
    auto result = std::make_unique<LV2EffectOutputs>();
    auto &values = result->values;
@@ -238,7 +238,7 @@ auto LV2Effect::MakeOutputs() const -> std::unique_ptr<EffectOutputs>
    return result;
 }
 
-std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
+std::shared_ptr<EffectInstance> LV2EffectBase::MakeInstance() const
 {
    auto result = std::make_shared<LV2Instance>(*this, mFeatures, mPorts);
    if (result->IsOk())
@@ -265,7 +265,7 @@ int LV2Effect::ShowClientInterface(const EffectPlugin &, wxWindow &parent,
    return dialog.ShowModal();
 }
 
-bool LV2Effect::SaveSettings(
+bool LV2EffectBase::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
    auto &values = GetSettings(settings).values;
@@ -279,7 +279,7 @@ bool LV2Effect::SaveSettings(
    return true;
 }
 
-bool LV2Effect::LoadSettings(
+bool LV2EffectBase::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
@@ -338,7 +338,7 @@ std::unique_ptr<EffectEditor> LV2Effect::PopulateUI(const EffectPlugin &,
    if (GetType() == EffectTypeGenerate)
       useGUI = false;
 
-   auto result = std::make_unique<LV2Editor>(*this, mPlug,
+   auto result = std::make_unique<LV2Editor>(*this, GetType(), mPlug,
       dynamic_cast<LV2Instance&>(instance),
       access, pOutputs, mProjectRate, mFeatures, mPorts, parent, useGUI);
 
@@ -377,19 +377,19 @@ bool LV2Effect::CloseUI() const
    return true;
 }
 
-OptionalMessage LV2Effect::LoadUserPreset(
+OptionalMessage LV2EffectBase::LoadUserPreset(
    const RegistryPath &name, EffectSettings &settings) const
 {
    return LoadParameters(name, settings);
 }
 
-bool LV2Effect::SaveUserPreset(
+bool LV2EffectBase::SaveUserPreset(
    const RegistryPath &name, const EffectSettings &settings) const
 {
    return SaveParameters(name, settings);
 }
 
-RegistryPaths LV2Effect::GetFactoryPresets() const
+RegistryPaths LV2EffectBase::GetFactoryPresets() const
 {
    using namespace LV2Symbols;
    if (mFactoryPresetsLoaded)
@@ -420,7 +420,7 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
 }
 
 OptionalMessage
-LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
+LV2EffectBase::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
@@ -445,7 +445,7 @@ LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-bool LV2Effect::CanExportPresets() const
+bool LV2EffectBase::CanExportPresets() const
 {
    return false;
 }
@@ -461,7 +461,7 @@ OptionalMessage LV2Effect::ImportPresets(
    return { nullptr };
 }
 
-bool LV2Effect::HasOptions() const
+bool LV2EffectBase::HasOptions() const
 {
    return true;
 }
@@ -475,7 +475,7 @@ void LV2Effect::ShowOptions(const EffectPlugin &) const
 // LV2Effect Implementation
 // ============================================================================
 
-OptionalMessage LV2Effect::LoadParameters(
+OptionalMessage LV2EffectBase::LoadParameters(
    const RegistryPath &group, EffectSettings &settings) const
 {
    wxString parms;
@@ -490,7 +490,7 @@ OptionalMessage LV2Effect::LoadParameters(
    return { nullptr };
 }
 
-bool LV2Effect::SaveParameters(
+bool LV2EffectBase::SaveParameters(
    const RegistryPath &group, const EffectSettings &settings) const
 {
    // PRL: This function just dumps the several control port values to the

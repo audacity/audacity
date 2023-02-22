@@ -45,14 +45,14 @@ class NumericTextCtrl;
 class LV2EffectMeter;
 class LV2Instance;
 class LV2Wrapper;
-class StatelessPerTrackEffect;
+class StatelessEffectUIServices;
 
 class LV2Editor final : public EffectEditor
    , public wxEvtHandler
    , LV2UIFeaturesList::UIHandler
 {
 public:
-   LV2Editor(const StatelessPerTrackEffect &effect,
+   LV2Editor(const StatelessEffectUIServices &effect, EffectType type,
       const LilvPlugin &plug, LV2Instance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs,
       double sampleRate,
