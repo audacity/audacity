@@ -2,35 +2,19 @@
 
   Audacity: A Digital Audio Editor
 
-  @file VST3Effect.h
+  @file VST3EffectBase.h
 
   @author Vitaly Sverchinsky
+
+  Paul Licameli split from VST3Effect.h
 
   @brief Part of Audacity VST3 module
 
 **********************************************************************/
-
-
 #pragma once
 
-#include <wx/wx.h>
-
 #include <public.sdk/source/vst/hosting/module.h>
-
-#include "effects/StatelessPerTrackEffect.h"
-
-namespace Steinberg
-{
-   namespace Vst
-   {
-      class IEditController;
-   }
-}
-
-class NumericTextCtrl;
-class VST3Instance;
-
-class VST3ParametersWindow;
+#include "PerTrackEffect.h"
 
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
@@ -100,36 +84,4 @@ public:
 
 protected:
    void LoadPreset(const wxString& id, EffectSettings& settings) const;
-};
-
-class VST3Effect final
-   : public StatelessEffectUIServices
-   , public VST3EffectBase
-{
-public:
-   ~VST3Effect() override;
-
-   using VST3EffectBase::VST3EffectBase;
-
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
-
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-
-   void ShowOptions(const EffectPlugin &plugin) const override;
-
-private:
-   //! Will never be called
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const final;
 };
