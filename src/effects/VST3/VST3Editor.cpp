@@ -14,11 +14,12 @@
 #endif
 
 VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
-   const StatelessPerTrackEffect& effect, EffectSettingsAccess& access,
+   const EffectUIServices& effect, EffectType type,
+   EffectSettingsAccess& access,
    bool useNativeUI)
    : EffectEditor(effect, access), mWrapper(wrapper), mParent(parent)
 {
-   if(effect.GetType() == EffectTypeGenerate)
+   if (type == EffectTypeGenerate)
    {
       auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
