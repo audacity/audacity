@@ -225,8 +225,6 @@ list( APPEND SOURCES
       SelectUtilities.h
       SelectFile.cpp
       SelectFile.h
-      SelectionState.cpp
-      SelectionState.h
       Shuttle.cpp
       Shuttle.h
       ShuttleAutomation.cpp
@@ -253,8 +251,6 @@ list( APPEND SOURCES
       SqliteSampleBlock.cpp
       SseMathFuncs.cpp
       SseMathFuncs.h
-      SyncLock.cpp
-      SyncLock.h
       TagsEditor.cpp
       TagsEditor.h
       ThemedWrappers.h

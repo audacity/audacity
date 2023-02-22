@@ -11,10 +11,34 @@ Paul Licameli split from Track.cpp
 #ifndef __AUDACITY_SYNC_LOCK__
 #define __AUDACITY_SYNC_LOCK__
 
+#include "Prefs.h"
 #include "Track.h" // for TrackIterRange
 #include "AttachedVirtualFunction.h"
+#include "Observer.h"
 
-class AUDACITY_DLL_API SyncLock {
+//! Sent after sync lock setting changes, with its new state
+struct SyncLockChangeMessage{ const bool on; };
+
+class TRACK_SELECTION_API SyncLockState final
+   : public ClientData::Base
+   , public Observer::Publisher<SyncLockChangeMessage>
+{
+public:
+   static SyncLockState &Get( AudacityProject &project );
+   static const SyncLockState &Get( const AudacityProject &project );
+   explicit SyncLockState( AudacityProject &project );
+   SyncLockState( const SyncLockState & ) = delete;
+   SyncLockState &operator=( const SyncLockState & ) = delete;
+
+   bool IsSyncLocked() const;
+   void SetSyncLock(bool flag);
+
+private:
+   AudacityProject &mProject;
+   bool mIsSyncLocked{ false };
+};
+
+class TRACK_SELECTION_API SyncLock {
 public:
    //! @return pTrack is not null, sync lock is on, and some member of its group is selected
    static bool IsSyncLockSelected( const Track *pTrack );
@@ -48,6 +72,8 @@ AttachedVirtualFunction<
    SyncLockPolicy,
    const Track
 >;
-DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, GetSyncLockPolicy);
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(TRACK_SELECTION_API, GetSyncLockPolicy);
+
+extern TRACK_SELECTION_API BoolSetting SyncLockTracks;
 
 #endif

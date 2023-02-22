@@ -11,8 +11,47 @@ Paul Licameli split from Track.cpp
 
 #include "SyncLock.h"
 
-#include "ProjectSettings.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "Track.h"
+
+static const AudacityProject::AttachedObjects::RegisteredFactory
+sSyncLockStateKey{
+  []( AudacityProject &project ){
+     auto result = std::make_shared< SyncLockState >( project );
+     return result;
+   }
+};
+
+SyncLockState &SyncLockState::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< SyncLockState >(
+      sSyncLockStateKey );
+}
+
+const SyncLockState &SyncLockState::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+SyncLockState::SyncLockState(AudacityProject &project)
+   : mProject{project}
+   , mIsSyncLocked(SyncLockTracks.Read())
+{
+}
+
+bool SyncLockState::IsSyncLocked() const
+{
+   return mIsSyncLocked;
+}
+
+void SyncLockState::SetSyncLock(bool flag)
+{
+   if (flag != mIsSyncLocked) {
+      mIsSyncLocked = flag;
+      Publish({ flag });
+   }
+}
 
 namespace {
 inline bool IsSyncLockableNonSeparatorTrack( const Track *pTrack )
@@ -49,7 +88,7 @@ bool SyncLock::IsSyncLockSelected( const Track *pTrack )
       return false;
 
    auto p = pList->GetOwner();
-   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
+   if (!p || !SyncLockState::Get( *p ).IsSyncLocked())
       return false;
 
    auto shTrack = pTrack->SubstituteOriginalTrack();
@@ -129,3 +168,5 @@ TrackIterRange< Track > SyncLock::Group( Track *pTrack )
 DEFINE_ATTACHED_VIRTUAL(GetSyncLockPolicy) {
    return [](auto&){ return SyncLockPolicy::Isolated; };
 }
+
+BoolSetting SyncLockTracks{ "/GUI/SyncLockTracks", false };

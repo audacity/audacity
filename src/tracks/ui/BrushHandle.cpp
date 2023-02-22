@@ -23,7 +23,7 @@ Edward Hui
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
 #include "../../SelectUtilities.h"
-#include "../../SelectionState.h"
+#include "SelectionState.h"
 #include "../../SpectralDataManager.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelAx.h"

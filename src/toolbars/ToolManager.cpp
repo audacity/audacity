@@ -55,6 +55,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
+#include "SyncLock.h"
 #include "widgets/AButton.h"
 #include "widgets/ASlider.h"
 #include "widgets/MeterPanelBase.h"
@@ -821,7 +822,6 @@ void ToolManager::ReadConfig()
             bar->ResizingDone();
          }
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
          // Set the width
          if( width[ ndx ] >= bar->GetSize().x )
          {
@@ -829,24 +829,7 @@ void ToolManager::ReadConfig()
             bar->SetSize( sz );
             bar->Layout();
          }
-#else
-         // note that this section is here because if you had been using sync-lock and now you aren't,
-         // the space for the extra button is stored in audacity.cfg, and so you get an extra space
-         // in the EditToolbar.
-         // It is needed so that the meterToolbar size gets preserved.
-         // Longer-term we should find a better fix for this.
-         wxString thisBar = bar->GetSection();
-         if( thisBar != wxT("Edit"))
-         {
-            // Set the width
-            if( width[ ndx ] >= bar->GetSize().x )
-            {
-               wxSize sz( width[ ndx ], bar->GetSize().y );
-               bar->SetSize( sz );
-               bar->Layout();
-            }
-         }
-#endif
+
          // make a note of docked and hidden toolbars
          if (!show[ndx])
             dockedAndHidden.push_back(bar);
@@ -1572,14 +1555,11 @@ void ToolManager::ModifyAllProjectToolbarMenus()
 }
 
 #include "../commands/CommandManager.h"
-#include "../ProjectSettings.h"
 void ToolManager::ModifyToolbarMenus(AudacityProject &project)
 {
    // Refreshes can occur during shutdown and the toolmanager may already
    // be deleted, so protect against it.
    auto &toolManager = ToolManager::Get( project );
-
-   auto &settings = ProjectSettings::Get( project );
 
    // Now, go through each toolbar, and call EnableDisableButtons()
    toolManager.ForEach([](auto bar){
@@ -1589,10 +1569,8 @@ void ToolManager::ModifyToolbarMenus(AudacityProject &project)
 
    // These don't really belong here, but it's easier and especially so for
    // the Edit toolbar and the sync-lock menu item.
-   bool active;
-
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
-   settings.SetSyncLock(active);
+   bool active = SyncLockTracks.Read();
+   SyncLockState::Get(project).SetSyncLock(active);
 
    CommandManager::Get( project ).UpdateCheckmarks( project );
 }

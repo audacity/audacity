@@ -25,7 +25,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
 #include "../../SelectUtilities.h"
-#include "../../SelectionState.h"
+#include "SelectionState.h"
+#include "SyncLock.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
@@ -556,7 +557,6 @@ UIHandle::Result SelectHandle::Click
       return RefreshAll | Cancelled;
    
    auto &selectionState = SelectionState::Get( *pProject );
-   const auto &settings = ProjectSettings::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
       auto &trackList = TrackList::Get( *pProject );
 
@@ -567,7 +567,7 @@ UIHandle::Result SelectHandle::Click
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
-         ( viewInfo, *pTrack, settings.IsSyncLocked() );
+         ( viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked() );
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip

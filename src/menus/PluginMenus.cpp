@@ -15,6 +15,7 @@
 #include "../ProjectWindows.h"
 #include "../ProjectSelectionManager.h"
 #include "RealtimeEffectPanel.h"
+#include "SyncLock.h"
 #include "../toolbars/ToolManager.h"
 #include "../TrackPanelAx.h"
 #include "TempDirectory.h"
@@ -739,8 +740,8 @@ void OnResetConfig(const CommandContext &context)
    // - Reset Play-at-speed speed to x1
    // - Stop playback/recording and unapply pause.
    // - Set Zoom sensibly.
-   gPrefs->Write("/GUI/SyncLockTracks", 0);
-   gPrefs->Write("/AudioIO/SoundActivatedRecord", 0);
+   SyncLockTracks.Reset();
+   SoundActivatedRecord.Reset();
    gPrefs->Write("/SelectionToolbarMode", 0);
    gPrefs->Flush();
    DoReloadPreferences(project);

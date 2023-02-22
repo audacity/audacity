@@ -6,7 +6,7 @@
 
 #include "../AboutDialog.h"
 #include "AllThemeResources.h"
-#include "AudioIOBase.h"
+#include "AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../CrashReport.h" // for HAS_CRASH_REPORT
 #include "FileNames.h"
@@ -21,6 +21,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
+#include "SyncLock.h"
 #include "Theme.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -88,9 +89,9 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
 {
    const long SNAP_OFF = 0;
 
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mbSyncLocked, false);
+   mbSyncLocked = SyncLockTracks.Read();
    mbInSnapTo = gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) !=0;
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mbSoundActivated, false);
+   mbSoundActivated = SoundActivatedRecord.Read();
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -158,9 +159,9 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
          mItem = -1;
 
          auto defaultAction =
-         [](AudacityProject *pProject, const wxString &path){ return
-            [pProject, path]{
-               gPrefs->Write(path, 0);
+         [](AudacityProject *pProject, BoolSetting &setting){ return
+            [pProject, &setting]{
+               setting.Reset();
                gPrefs->Flush();
                // This is overkill (aka slow), as all preferences are
                // reloaded and all
@@ -175,7 +176,7 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
          // Local help may well not be installed.
          auto pProject = &mProject;
          AddStuck( S, mbSyncLocked,
-            defaultAction( pProject, "/GUI/SyncLockTracks" ),
+            defaultAction( pProject, SyncLockTracks ),
             XO("Clocks on the Tracks"), "Quick_Fix#sync_lock" );
          AddStuck( S, mbInSnapTo,
             [pProject] {
@@ -188,7 +189,7 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
             },
             XO("Can't select precisely"), "Quick_Fix#snap_to" );
          AddStuck( S, mbSoundActivated,
-            defaultAction( pProject, "/AudioIO/SoundActivatedRecord" ),
+            defaultAction( pProject, SoundActivatedRecord ),
             XO("Recording stops and starts"),
             "Quick_Fix#sound_activated_recording" );
       }

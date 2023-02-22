@@ -12,7 +12,7 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "../TrackPanel.h"
 #include "WaveTrack.h"
 #include "../LabelTrack.h"
@@ -934,15 +934,11 @@ BaseItemSharedPtr SelectMenu()
             Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
                FN(OnSelectAllTracks),
                TracksExistFlag(),
-               wxT("Ctrl+Shift+K") )
-
-   #ifdef EXPERIMENTAL_SYNC_LOCK
-            ,
+               wxT("Ctrl+Shift+K") ),
             Command( wxT("SelSyncLockTracks"), XXO("In All &Sync-Locked Tracks"),
                FN(OnSelectSyncLockSel),
                EditableTracksSelectedFlag() | IsSyncLockedFlag(),
                Options{ wxT("Ctrl+Shift+Y"), XO("Select Sync-Locked") } )
-   #endif
          ),
 
          //////////////////////////////////////////////////////////////////////////

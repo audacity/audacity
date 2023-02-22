@@ -24,7 +24,7 @@
 #include "../ProjectSettings.h"
 #include "../ShuttleAutomation.h"
 #include "StatefulEffectUIServices.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"

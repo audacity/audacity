@@ -22,11 +22,10 @@
 
 #include "ConfigInterface.h"
 #include "../LabelTrack.h"
-#include "../ProjectSettings.h"
 #include "../SelectFile.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"

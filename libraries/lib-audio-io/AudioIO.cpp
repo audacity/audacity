@@ -819,7 +819,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
 
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mPauseRec, false);
+   mPauseRec = SoundActivatedRecord.Read();
    gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
    int silenceLevelDB;
    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
@@ -3329,3 +3329,5 @@ bool AudioIO::IsCapturing() const
       mPlaybackSchedule.GetTrackTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
 }
+
+BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };
