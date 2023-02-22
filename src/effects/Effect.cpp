@@ -129,14 +129,14 @@ bool Effect::SupportsAutomation() const
    return true;
 }
 
-std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
-{
-   // Cheat with const-cast to return an object that calls through to
-   // non-const methods of a stateful effect.
-   // Stateless effects should override this function and be really const
-   // correct.
-   return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
-}
+// std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
+// {
+//    // Cheat with const-cast to return an object that calls through to
+//    // non-const methods of a stateful effect.
+//    // Stateless effects should override this function and be really const
+//    // correct.
+//    return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
+// }
 
 const EffectParameterMethods &Effect::Parameters() const
 {

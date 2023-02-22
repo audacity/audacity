@@ -361,7 +361,13 @@ public:
       SampleCount GetLatency(
          const EffectSettings &settings, double sampleRate) const override;
    };
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override {
+      // Cheat with const-cast to return an object that calls through to
+      // non-const methods of a stateful effect.
+      // Stateless effects should override this function and be really const
+      // correct.
+      return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
+   };
 };
 
 // FIXME:
