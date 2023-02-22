@@ -497,6 +497,8 @@ list( APPEND SOURCES
          effects/VST3/VST3Editor.h
          effects/VST3/VST3Effect.h
          effects/VST3/VST3Effect.cpp
+         effects/VST3/VST3EffectBase.h
+         effects/VST3/VST3EffectBase.cpp
          effects/VST3/VST3EffectsModule.h
          effects/VST3/VST3EffectsModule.cpp
          effects/VST3/VST3Instance.h
