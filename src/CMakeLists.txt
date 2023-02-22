@@ -546,6 +546,8 @@ list( APPEND SOURCES
          effects/lv2/LV2Editor.h
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
+         effects/lv2/LV2EffectBase.cpp
+         effects/lv2/LV2EffectBase.h
          effects/lv2/LV2EffectMeter.cpp
          effects/lv2/LV2EffectMeter.h
          effects/lv2/LV2FeaturesList.cpp
