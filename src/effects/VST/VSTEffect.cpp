@@ -413,11 +413,6 @@ bool VSTEffect::InitializePlugin()
 
 std::shared_ptr<EffectInstance> VSTEffect::MakeInstance() const
 {
-   return const_cast<VSTEffect*>(this)->DoMakeInstance();
-}
-
-std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
-{
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), userBlockSize, 8192);
