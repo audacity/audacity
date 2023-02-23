@@ -15,10 +15,10 @@
 
 #include "aeffectx.h"
 
-class VSTEffectLink /* not final */
+class VSTLink /* not final */
 {
 public:
-   virtual ~VSTEffectLink() {};
+   virtual ~VSTLink() {};
    virtual intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt) = 0;
 };
 
@@ -35,7 +35,7 @@ public:
    {
    }
 
-   virtual bool Create(wxWindow *parent, VSTEffectLink *link)
+   virtual bool Create(wxWindow *parent, VSTLink *link)
    {
       mParent = parent;
       mLink = link;
@@ -50,7 +50,7 @@ public:
    
 protected:
    wxWindow *mParent;
-   VSTEffectLink *mLink;
+   VSTLink *mLink;
 };
 
 #endif

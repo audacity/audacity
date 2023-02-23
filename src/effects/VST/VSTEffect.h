@@ -61,8 +61,7 @@ typedef float (*getParameterFn)(AEffect * effect,
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
-class VSTEffectTimer;
-class VSTEffectDialog;
+class VSTTimer;
 class VSTEffect;
 class wxDynamicLibrary;
 
@@ -78,7 +77,7 @@ typedef SInt16 CFBundleRefNum;
 #endif
 
 
-struct VSTEffectSettings
+struct VSTSettings
 {
    // These are saved in the Config and checked against when loading a preset, to make sure
    // that we are loading a Config  which is compatible.
@@ -100,7 +99,7 @@ struct VSTEffectSettings
 };
 
 
-struct VSTEffectUIWrapper
+struct VSTUIWrapper
 {
    virtual void NeedIdle();
    virtual void SizeWindow(int w, int h);
@@ -109,28 +108,28 @@ struct VSTEffectUIWrapper
 };
 
 
-struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VSTEffectUIWrapper
+struct VSTWrapper : public VSTLink, public XMLTagHandler, public VSTUIWrapper
 {
-   static inline VSTEffectSettings& GetSettings(EffectSettings& settings)
+   static inline VSTSettings& GetSettings(EffectSettings& settings)
    {
-      auto pSettings = settings.cast<VSTEffectSettings>();
+      auto pSettings = settings.cast<VSTSettings>();
       assert(pSettings);
       return *pSettings;
    }
 
-   static inline const VSTEffectSettings& GetSettings(const EffectSettings& settings)
+   static inline const VSTSettings& GetSettings(const EffectSettings& settings)
    {
-      auto pSettings = settings.cast<VSTEffectSettings>();
+      auto pSettings = settings.cast<VSTSettings>();
       assert(pSettings);
       return *pSettings;
    }
 
-   explicit VSTEffectWrapper(const PluginPath& path)
+   explicit VSTWrapper(const PluginPath& path)
       : mPath(path)
       , mMainThreadId{ std::this_thread::get_id() }
    {}
 
-   ~VSTEffectWrapper();
+   ~VSTWrapper();
 
    AEffect* mAEffect = nullptr;
    std::thread::id mMainThreadId;
@@ -164,9 +163,9 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
 
    void ForEachParameter(ParameterVisitor visitor) const;
 
-   bool FetchSettings(VSTEffectSettings& vst3Settings, bool doFetch=true) const;
+   bool FetchSettings(VSTSettings& vst3Settings, bool doFetch=true) const;
 
-   bool StoreSettings(const VSTEffectSettings& vst3settings) const;
+   bool StoreSettings(const VSTSettings& vst3settings) const;
 
    VstPatchChunkInfo GetChunkInfo() const;
 
@@ -303,15 +302,15 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler, public VST
    // Make message carrying all the information in settings, including chunks
    // This is called only on the main thread
    std::unique_ptr<EffectInstance::Message>
-      MakeMessageFS(const VSTEffectSettings& settings) const;
+      MakeMessageFS(const VSTSettings& settings) const;
 
    // This is an immutable property determined once, when mAEffect is loaded
    // Whether the effect is capable of fancy native UI
    bool mGui{ false };
 };
 
-class VSTEffectInstance;
-using VSTInstanceArray = std::vector < std::unique_ptr<VSTEffectInstance> >;
+class VSTInstance;
+using VSTInstanceArray = std::vector < std::unique_ptr<VSTInstance> >;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -324,16 +323,16 @@ wxDECLARE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
-class VSTEffectEditor;
+class VSTEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
 /// VSTEffect is an Audacity effect that forwards actual
-/// audio processing via a VSTEffectLink
+/// audio processing via a VSTLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
-   : public VSTEffectWrapper
+   : public VSTWrapper
    , public StatelessPerTrackEffect
    
 {
@@ -485,19 +484,19 @@ public:
 
 
 
-class VSTEffectInstance final : public PerTrackEffect::Instance,
-   public VSTEffectWrapper
+class VSTInstance final : public PerTrackEffect::Instance,
+   public VSTWrapper
 {
 public:
 
-   VSTEffectInstance(PerTrackEffect&   effect,
+   VSTInstance(PerTrackEffect&   effect,
                      const PluginPath& path,
                      size_t            blockSize,
                      size_t            userBlockSize,
                      bool              useLatency
                     );
 
-   ~VSTEffectInstance() override;
+   ~VSTInstance() override;
 
 
    bool ProcessInitialize(EffectSettings& settings, double sampleRate,
@@ -550,7 +549,7 @@ public:
 
    std::unique_ptr<Message> MakeMessage(int id, double value) const;
 
-   // VSTEffectUIWrapper overrides
+   // VSTUIWrapper overrides
 
    void Automate(int index, float value) override;
    void NeedIdle()                       override;
@@ -559,7 +558,7 @@ public:
 
    // The overrides above will forward calls to them to the corresponding
    // overrides in the Validator which owns the instance - this sets it.
-   void SetOwningValidator(VSTEffectUIWrapper* vi);
+   void SetOwningValidator(VSTUIWrapper* vi);
 
    bool OnePresetWasLoadedWhilePlaying();
 
@@ -582,7 +581,7 @@ private:
 
    bool mRecruited{ false };
 
-   VSTEffectUIWrapper* mpOwningValidator{};
+   VSTUIWrapper* mpOwningValidator{};
 
    std::atomic_bool mPresetLoadedWhilePlaying{ false };
 
@@ -597,23 +596,23 @@ private:
 };
 
 
-class VSTEffectEditor final
+class VSTEditor final
    : public wxEvtHandler
    , public EffectEditor
-   , public VSTEffectUIWrapper
+   , public VSTUIWrapper
 {
 public:
 
-   VSTEffectEditor(VSTEffectInstance&       instance, bool gui,
+   VSTEditor(VSTInstance&       instance, bool gui,
       const EffectUIServices&  services,
       EffectSettingsAccess&    access,
       wxWindow*                pParent,
       int                      numParams
    );
 
-   ~VSTEffectEditor() override;
+   ~VSTEditor() override;
 
-   VSTEffectInstance& GetInstance() const;
+   VSTInstance& GetInstance() const;
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -625,7 +624,7 @@ public:
 
    void OnTimer();
 
-   std::unique_ptr<VSTEffectTimer> mTimer;   
+   std::unique_ptr<VSTTimer> mTimer;
 
    void RefreshParameters(int skip = -1) const;
 
@@ -646,7 +645,7 @@ private:
    void NotifyParameterChanged(int index, float value);
    void OnIdle(wxIdleEvent &evt);
 
-   VSTEffectInstance& mInstance;
+   VSTInstance& mInstance;
    const bool mGui;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
