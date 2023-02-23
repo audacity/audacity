@@ -11,8 +11,8 @@ Rectangle {
    width: parent.width
    color: appConfig.backgroundColor1
 
-   property bool isPlaying: false
    property var workspaceMode: Workspace.Mode.Classic
+   property alias enableVolumeTester: masterVolumeToolbar.testerVisible
 
    signal updateStatusBar(status: string)
 
@@ -32,7 +32,7 @@ Rectangle {
    Flow {
       id: flowId
       spacing: 0
-      Layout.alignment: Qt.AlignHCenter
+      Layout.alignment: Qt.AlignVCenter
       anchors.fill: parent
 
       TransportToolbar {
@@ -46,12 +46,25 @@ Rectangle {
          }
       }
 
+      EditToolbar {
+         id: editToolbar
+         height: root.height
+         gripVisible:  Positioner.isFirstItem
+         separatorVisible: !Positioner.isLastItem
+
+         onUpdateStatusBar: function(status) {
+            root.updateStatusBar(status)
+         }
+      }
+
       RowLayout {
          spacing: 8
+         height: parent.height
 
-         EditToolbar {
-            id: editToolbar
+         MasterVolumeToolbar {
+            id: masterVolumeToolbar
             height: root.height
+            width: 200
             gripVisible:  Positioner.isFirstItem
             separatorVisible: !Positioner.isLastItem
 
@@ -61,8 +74,8 @@ Rectangle {
          }
 
          FlatButton {
-            x: root.width - implicitWidth - 12
             id: setup
+            x: root.width - implicitWidth - 12
             icon: IconCode.SETUP
             onClicked: toolbarHandler.Setup()
          }

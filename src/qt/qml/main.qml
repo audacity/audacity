@@ -7,7 +7,7 @@ import Audacity.UiComponents
 
 ApplicationWindow {
    id: root
-   width: 640
+   width: 1024
    height: 480
    visible: true
    title: qsTr("Audacity")
@@ -16,6 +16,12 @@ ApplicationWindow {
 
    required property ApplicationConfiguration appConfig
    property alias workspaceMode: toolsToolbar.workspaceMode
+   property alias enableVolumeTester: toolsToolbar.enableVolumeTester
+
+   QtObject {
+      id: testers
+      property bool volumeVisible: false
+   }
 
    menuBar: MenuBar {
       Menu {
@@ -65,6 +71,19 @@ ApplicationWindow {
             checked: root.workspaceMode === Workspace.Mode.SpectralEditing
             onTriggered: {
                workspaceMode = Workspace.Mode.SpectralEditing
+            }
+         }
+      }
+
+      Menu {
+         title: qsTr("Testers")
+         MenuItem {
+            text: qsTr("VolumeControl")
+            autoExclusive: true
+            checkable: true
+            checked: enableVolumeTester
+            onTriggered: {
+               enableVolumeTester = !enableVolumeTester
             }
          }
       }

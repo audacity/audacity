@@ -8,15 +8,22 @@ target_link_libraries(${MODULE_NAME} PRIVATE Qt6::Quick)
 set(MODULE_SOURCES
    ApplicationConfiguration.cpp
    ApplicationConfiguration.h
+   VolumeControlHandler.cpp
+   VolumeControlHandler.h
+   MeterPanelHandler.cpp
+   MeterPanelHandler.h
    IconCode.h
 )
 
 set(MODULE_QML_SOURCES
    qml/FlatButton.qml
+   qml/MeterPanel.qml
    qml/StyledIconLabel.qml
    qml/StyledTextLabel.qml
    qml/ToolbarGrip.qml
    qml/ToolbarSeparator.qml
+   qml/VolumeControl.qml
+   qml/VolumeControlTester.qml
 )
 
 qt_add_qml_module(${MODULE_NAME}

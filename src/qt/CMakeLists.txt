@@ -29,6 +29,7 @@ qt_add_executable(${QAUDACITY} ${SOURCES} ${QT_RESOURCES} MANUAL_FINALIZATION)
 set(QML_SOURCES
    qml/main.qml
    qml/EditToolbar.qml
+   qml/MasterVolumeToolbar.qml
    qml/ToolsToolbar.qml
    qml/TransportToolbar.qml
    qml/Workspace.qml
