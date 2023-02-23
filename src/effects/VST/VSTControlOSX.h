@@ -33,7 +33,7 @@ public:
    VSTControl();
    ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTEffectLink *link);
+   bool Create(wxWindow *parent, VSTLink *link);
    void Close();
 
 private:

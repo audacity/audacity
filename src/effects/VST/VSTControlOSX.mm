@@ -86,7 +86,7 @@ void VSTControl::Close()
    }
 }
 
-bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
+bool VSTControl::Create(wxWindow *parent, VSTLink *link)
 {
    DontCreatePeer();
    
