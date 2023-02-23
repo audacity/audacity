@@ -82,6 +82,9 @@ time warp info and AudioIOListener and whether the playback is looped.
 #endif
 
 #include "portaudio.h"
+#ifdef __WXMSW__
+#include "pa_win_wasapi.h"
+#endif
 
 #if USE_PORTMIXER
 #include "portmixer.h"
@@ -494,6 +497,16 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // rate is suggested, but we may get something else if it isn't supported
    mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
 
+   // GetBestRate() will return 0.0 for bidirectional streams when there is no
+   // common sample rate supported by both the input and output devices.
+   // Bidirectional streams are used when recording while overdub or
+   // software playthrough options are enabled.
+
+   // Pa_OpenStream() will return paInvalidSampleRate when trying to create the
+   // bidirectional stream with a sampleRate of 0.0
+   bool isStreamBidirectional = (numCaptureChannels > 0) && (numPlaybackChannels > 0);
+   bool isUnsupportedSampleRate = isStreamBidirectional && (mRate == 0.0);
+
    // July 2016 (Carsten and Uwe)
    // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using
    // userData.
@@ -517,6 +530,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    bool usePlayback = false, useCapture = false;
    PaStreamParameters playbackParameters{};
    PaStreamParameters captureParameters{};
+   PaWasapiStreamInfo wasapiStreamInfo{};
 
    auto latencyDuration = AudioIOLatencyDuration.Read();
 
@@ -539,6 +553,22 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       playbackParameters.hostApiSpecificStreamInfo = NULL;
       playbackParameters.channelCount = mNumPlaybackChannels;
 
+      const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
+      bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+
+      // If the host API is WASAPI, the stream is bidirectional and there is no
+      // supported sample rate enable the WASAPI Sample Rate Conversion
+      // for the playback device.
+      if (isWASAPI && isUnsupportedSampleRate)
+      {
+         wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
+         wasapiStreamInfo.hostApiType = paWASAPI;
+         wasapiStreamInfo.version = 1;
+         wasapiStreamInfo.flags = paWinWasapiAutoConvert;
+
+         playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
+      }
+
       if (mSoftwarePlaythrough)
          playbackParameters.suggestedLatency =
             playbackDeviceInfo->defaultLowOutputLatency;
@@ -548,8 +578,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          // there was the suggested latency. This results in the last "suggested latency"
          // of a selection not being played. So for WASAPI use 0.0 for the suggested
          // latency regardless of user setting. See bug 1949.
-         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
-         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
@@ -569,6 +597,14 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 
       if( captureDeviceInfo == NULL )
          return false;
+
+      const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(captureDeviceInfo->hostApi);
+      bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+
+      // If the stream is bidirectional and there is no supported sample rate
+      // set mRate to the value supported by the capture device.
+      if (isWASAPI && isUnsupportedSampleRate)
+         mRate = captureDeviceInfo->defaultSampleRate;
 
       captureParameters.sampleFormat =
          AudacityToPortAudioSampleFormat(mCaptureFormat);
