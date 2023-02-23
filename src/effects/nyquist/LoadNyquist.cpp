@@ -44,6 +44,7 @@ const static wxChar *kShippedEffects[] =
    wxT("rissetdrum.ny"),
    wxT("sample-data-export.ny"),
    wxT("sample-data-import.ny"),
+   wxT("ShelfFilter.ny"),
    wxT("spectral-delete.ny"),
    wxT("SpectralEditMulti.ny"),
    wxT("SpectralEditParametricEQ.ny"),
