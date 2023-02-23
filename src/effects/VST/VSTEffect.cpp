@@ -766,7 +766,7 @@ intptr_t VSTWrapper::AudioMaster(AEffect * effect,
 }
 
 #if !defined(__WXMSW__)
-void VSTEffect::ModuleDeleter::operator() (void* p) const
+void VSTWrapper::ModuleDeleter::operator() (void* p) const
 {
    if (p)
       dlclose(p);
@@ -774,7 +774,7 @@ void VSTEffect::ModuleDeleter::operator() (void* p) const
 #endif
 
 #if defined(__WXMAC__)
-void VSTEffect::ResourceHandle::reset()
+void VSTWrapper::ResourceHandle::reset()
 {
    if (mpHandle)
       CFBundleCloseBundleResourceMap(mpHandle, mNum);

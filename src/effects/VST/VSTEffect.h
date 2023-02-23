@@ -221,7 +221,6 @@ struct VSTWrapper : public VSTLink, public XMLTagHandler, public VSTUIWrapper
    };
    using ModuleHandle = std::unique_ptr < char, ModuleDeleter >;
 #endif
-
    ModuleHandle mModule{};
 
    wxString mVendor;
@@ -405,6 +404,7 @@ class VSTEffect final
    EffectSettings MakeSettings() const override;
 
 protected:
+
    //! Will never be called
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
