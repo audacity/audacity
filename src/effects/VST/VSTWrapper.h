@@ -281,9 +281,6 @@ struct VSTWrapper : public VSTLink, public XMLTagHandler, public VSTUIWrapper
    //
    // - All GUI-related stuff 
    
-   virtual void UpdateDisplay();
-   
-
    // Some other methods called by the callback make sense for Instances:
    virtual void SetBufferDelay(int samples);
 

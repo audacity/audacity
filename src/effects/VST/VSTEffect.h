@@ -22,7 +22,6 @@
 #include <optional>
 #include <atomic>
 
-class wxSizerItem;
 class wxSlider;
 class wxStaticText;
 
@@ -155,10 +154,6 @@ class VSTEffect final
    void ShowOptions(const EffectPlugin &plugin) const override;
 
    // VSTEffect implementation
-
-
-   
-
    EffectSettings MakeSettings() const override;
 
    // Plugin loading and unloading
@@ -171,31 +166,8 @@ protected:
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) const final;
    
-   void UpdateDisplay() override;
-   
 private:
-   // UI
-   
-   
-   void OnUpdateDisplay(wxCommandEvent & evt);
-
-
-   void OnProgram(wxCommandEvent & evt);
-   void OnProgramText(wxCommandEvent & evt);
-   void OnLoad(wxCommandEvent & evt);
-   void OnSave(wxCommandEvent & evt);
-   void OnSettings(wxCommandEvent & evt);
-
-   
-   wxSizer *BuildProgramBar();
-
- private:
-
    PluginID mID;
-     
-   wxSizerItem* mContainer{};
-   
-   //mutable bool mInitialFetchDone{ false };
 };
 
 class VSTEditor final

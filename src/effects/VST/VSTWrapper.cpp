@@ -109,7 +109,6 @@ intptr_t VSTWrapper::AudioMaster(AEffect * effect,
       case audioMasterUpdateDisplay:
          if (vst)
          {
-            vst->UpdateDisplay();
             return 1;
          }
          return 0;
@@ -1834,10 +1833,6 @@ VSTWrapper::MakeMessageFS(const VSTSettings &settings) const
 
    return std::make_unique<VSTMessage>(
       settings.mChunk /* vector copy */, std::move(paramVector));
-}
-
-void VSTWrapper::UpdateDisplay()
-{
 }
 
 void VSTUIWrapper::Automate(int index, float value)

@@ -1021,19 +1021,6 @@ void VSTEditor::SizeWindow(int w, int h)
    return;
 }
 
-void VSTEffect::UpdateDisplay()
-{
-#if 0
-   // Tell the dialog to refresh effect information
-   if (mParent)
-   {
-      wxCommandEvent ud(EVT_UPDATEDISPLAY);
-      mParent->GetEventHandler()->AddPendingEvent(ud);
-   }
-#endif
-   return;
-}
-
 static void OnSize(wxSizeEvent & evt)
 {
    evt.Skip();
