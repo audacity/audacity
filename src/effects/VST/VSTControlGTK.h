@@ -20,7 +20,7 @@ public:
    VSTControl();
    virtual ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTEffectLink *link) override;
+   bool Create(wxWindow *parent, VSTLink *link) override;
 
 private:
    struct Impl;

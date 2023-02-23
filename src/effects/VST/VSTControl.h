@@ -13,14 +13,7 @@
 
 #include <wx/control.h> // to inherit
 
-#include "aeffectx.h"
-
-class VSTLink /* not final */
-{
-public:
-   virtual ~VSTLink() {};
-   virtual intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt) = 0;
-};
+#include "VSTWrapper.h" // for VSTLink
 
 class VSTControlBase /* not final */ : public wxControl
 {
