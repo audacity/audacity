@@ -467,6 +467,8 @@ list( APPEND SOURCES
          effects/VST/VSTControl.h
          effects/VST/VSTEffect.cpp
          effects/VST/VSTEffect.h
+         effects/VST/VSTWrapper.cpp
+         effects/VST/VSTWrapper.h
          effects/VST/aeffectx.h
       >
 

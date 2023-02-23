@@ -2,72 +2,24 @@
 
   Audacity: A Digital Audio Editor
 
-  VSTEffect.cpp
+  VSTWrapper.cpp
 
   Dominic Mazzoni
+
+  Paul Licameli split from VSTEffect.cpp
 
   This class implements a VST Plug-in effect.  The plug-in must be
   loaded in a platform-specific way and passed into the constructor,
   but from here this class handles the interfacing.
 
-********************************************************************//**
-
-\class AEffect
-\brief VST Effects class, conforming to VST layout.
-
 *//********************************************************************/
 
-//#define VST_DEBUG
-//#define DEBUG_VST
-
-// *******************************************************************
-// WARNING:  This is NOT 64-bit safe
-// *******************************************************************
-
-
-#include "VSTEffect.h"
-#include "ModuleManager.h"
-#include "SampleCount.h"
-
-#include "../../widgets/ProgressDialog.h"
-
-#if 0
-#if defined(BUILDING_AUDACITY)
-#include "../../PlatformCompatibility.h"
-
-// Make the main function private
-#else
-#define USE_VST 1
-#endif
-#endif
+#include "VSTWrapper.h"
 
 #if USE_VST
 
-#include <limits.h>
-
-#include <wx/setup.h> // for wxUSE_* macros
-#include <wx/dynlib.h>
-#include <wx/app.h>
-#include <wx/defs.h>
-#include <wx/buffer.h>
-#include <wx/busyinfo.h>
-#include <wx/combobox.h>
-#include <wx/file.h>
-#include <wx/filename.h>
-#include <wx/imaglist.h>
-#include <wx/listctrl.h>
 #include <wx/log.h>
-#include <wx/module.h>
-#include <wx/process.h>
-#include <wx/recguard.h>
-#include <wx/sizer.h>
-#include <wx/scrolwin.h>
-#include <wx/sstream.h>
-#include <wx/statbox.h>
-#include <wx/stattext.h>
-#include <wx/timer.h>
-#include <wx/tokenzr.h>
-#include <wx/utils.h>
+#include <wx/time.h>
 
 #if defined(__WXMSW__)
 #include <shlwapi.h>
@@ -76,36 +28,16 @@
 #include <dlfcn.h>
 #endif
 
-// TODO:  Unfortunately we have some dependencies on Audacity provided 
-//        dialogs, widgets and other stuff.  This will need to be cleaned up.
-
-#include "FileNames.h"
-#include "PlatformCompatibility.h"
-#include "../../SelectFile.h"
-#include "../../ShuttleGui.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "XMLFileReader.h"
-#include "Base64.h"
-
-#if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#if defined(__WXMAC__)
+#include <wx/osx/core/private.h>
 #endif
-
-#include "ConfigInterface.h"
 
 #include <cstring>
 
-// Put this inclusion last.  On Linux it makes some unfortunate pollution of
-// preprocessor macro name space that interferes with other headers.
-#if defined(__WXOSX__)
-#include "VSTControlOSX.h"
-#elif defined(__WXMSW__)
-#include "VSTControlMSW.h"
-#elif defined(__WXGTK__)
-#include "VSTControlGTK.h"
-#endif
+#include "FileNames.h"
+#include "../../widgets/AudacityMessageBox.h"
+#include "XMLFileReader.h"
+#include "Base64.h"
 
 static float reinterpretAsFloat(uint32_t x)
 {
@@ -123,481 +55,6 @@ static uint32_t reinterpretAsUint32(float f)
     std::memcpy(&x, &f, sizeof(uint32_t));
     return x;
 }
-
-// NOTE:  To debug the subprocess, use wxLogDebug and, on Windows, Debugview
-//        from TechNet (Sysinternals).
-
-// ============================================================================
-//
-// Module registration entry point
-//
-// This is the symbol that Audacity looks for when the module is built as a
-// dynamic library.
-//
-// When the module is builtin to Audacity, we use the same function, but it is
-// declared static so as not to clash with other builtin modules.
-//
-// ============================================================================
-DECLARE_PROVIDER_ENTRY(AudacityModule)
-{
-   // Create our effects module and register
-   // Trust the module manager not to leak this
-   return std::make_unique<VSTEffectsModule>();
-}
-
-// ============================================================================
-//
-// Register this as a builtin module
-// 
-// We also take advantage of the fact that wxModules are initialized before
-// the wxApp::OnInit() method is called.  We check to see if Audacity was
-// executed to scan a VST effect in a different process.
-//
-// ============================================================================
-DECLARE_BUILTIN_PROVIDER(VSTBuiltin);
-
-
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Auto created at program start up, this initialises VST.
-///
-///////////////////////////////////////////////////////////////////////////////
-
-VSTEffectsModule::VSTEffectsModule()
-{
-}
-
-VSTEffectsModule::~VSTEffectsModule()
-{
-}
-
-// ============================================================================
-// ComponentInterface implementation
-// ============================================================================
-
-PluginPath VSTEffectsModule::GetPath() const
-{
-   return {};
-}
-
-ComponentInterfaceSymbol VSTEffectsModule::GetSymbol() const
-{
-   return XO("VST Effects");
-}
-
-VendorSymbol VSTEffectsModule::GetVendor() const
-{
-   return XO("The Audacity Team");
-}
-
-wxString VSTEffectsModule::GetVersion() const
-{
-   // This "may" be different if this were to be maintained as a separate DLL
-   return AUDACITY_VERSION_STRING;
-}
-
-TranslatableString VSTEffectsModule::GetDescription() const
-{
-   return XO("Adds the ability to use VST effects in Audacity.");
-}
-
-// ============================================================================
-// PluginProvider implementation
-// ============================================================================
-
-bool VSTEffectsModule::Initialize()
-{
-   // Nothing to do here
-   return true;
-}
-
-void VSTEffectsModule::Terminate()
-{
-   // Nothing to do here
-   return;
-}
-
-EffectFamilySymbol VSTEffectsModule::GetOptionalFamilySymbol()
-{
-#if USE_VST
-   return VSTPLUGINTYPE;
-#else
-   return {};
-#endif
-}
-
-const FileExtensions &VSTEffectsModule::GetFileExtensions()
-{
-   static FileExtensions result{{ _T("vst") }};
-   return result;
-}
-
-FilePath VSTEffectsModule::InstallPath()
-{
-   // Not yet ready for VST drag-and-drop...
-   // return FileNames::PlugInDir();
-
-   return {};
-}
-
-void VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
-{
-}
-
-PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
-{
-   FilePaths pathList;
-   FilePaths files;
-
-   // Check for the VST_PATH environment variable
-   wxString vstpath = wxString::FromUTF8(getenv("VST_PATH"));
-   if (!vstpath.empty())
-   {
-      wxStringTokenizer tok(vstpath, wxPATH_SEP);
-      while (tok.HasMoreTokens())
-      {
-         pathList.push_back(tok.GetNextToken());
-      }
-   }
-
-#if defined(__WXMAC__)  
-#define VSTPATH wxT("/Library/Audio/Plug-Ins/VST")
-
-   // Look in ~/Library/Audio/Plug-Ins/VST and /Library/Audio/Plug-Ins/VST
-   pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + VSTPATH);
-   pathList.push_back(VSTPATH);
-
-   // Recursively search all paths for Info.plist files.  This will identify all
-   // bundles.
-   pm.FindFilesInPathList(wxT("Info.plist"), pathList, files, true);
-
-   // Remove the 'Contents/Info.plist' portion of the names
-   for (size_t i = 0; i < files.size(); i++)
-   {
-      files[i] = wxPathOnly(wxPathOnly(files[i]));
-      if (!files[i].EndsWith(wxT(".vst")))
-      {
-         files.erase( files.begin() + i-- );
-      }
-   }
-
-#elif defined(__WXMSW__)
-
-   TCHAR dpath[MAX_PATH];
-   TCHAR tpath[MAX_PATH];
-   DWORD len;
-
-   // Try HKEY_CURRENT_USER registry key first
-   len = WXSIZEOF(tpath);
-   if (SHRegGetUSValue(wxT("Software\\VST"),
-                       wxT("VSTPluginsPath"),
-                       NULL,
-                       tpath,
-                       &len,
-                       FALSE,
-                       NULL,
-                       0) == ERROR_SUCCESS)
-   {
-      tpath[len] = 0;
-      dpath[0] = 0;
-      ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.push_back(dpath);
-   }
-
-   // Then try HKEY_LOCAL_MACHINE registry key
-   len = WXSIZEOF(tpath);
-   if (SHRegGetUSValue(wxT("Software\\VST"),
-                       wxT("VSTPluginsPath"),
-                       NULL,
-                       tpath,
-                       &len,
-                       TRUE,
-                       NULL,
-                       0) == ERROR_SUCCESS)
-   {
-      tpath[len] = 0;
-      dpath[0] = 0;
-      ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.push_back(dpath);
-   }
-
-   // Add the default path last
-   dpath[0] = 0;
-   ExpandEnvironmentStrings(wxT("%ProgramFiles%\\Steinberg\\VSTPlugins"),
-                            dpath,
-                            WXSIZEOF(dpath));
-   pathList.push_back(dpath);
-
-   dpath[0] = 0;
-   ExpandEnvironmentStrings(wxT("%COMMONPROGRAMFILES%\\VST2"),
-                            dpath,
-                            WXSIZEOF(dpath));
-   pathList.push_back(dpath);
-
-   // Recursively scan for all DLLs
-   pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
-
-#else
-
-   // Nothing specified in the VST_PATH environment variable...provide defaults
-   if (vstpath.empty())
-   {
-      // We add this "non-default" one
-      pathList.push_back(wxT(LIBDIR) wxT("/vst"));
-
-      // These are the defaults used by other hosts
-      pathList.push_back(wxT("/usr/lib/vst"));
-      pathList.push_back(wxT("/usr/local/lib/vst"));
-      pathList.push_back(wxGetHomeDir() + wxFILE_SEP_PATH + wxT(".vst"));
-   }
-
-   // Recursively scan for all shared objects
-   pm.FindFilesInPathList(wxT("*.so"), pathList, files, true);
-
-#endif
-
-   return { files.begin(), files.end() };
-}
-
-unsigned VSTEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, TranslatableString &errMsg,
-   const RegistrationCallback &callback)
-{
-
-   VSTEffect effect(path);
-   if(effect.InitializePlugin())
-   {
-      auto effectIDs = effect.GetEffectIDs();
-      if(effectIDs.empty())
-         //Each VST plugin path in Audacity should have id(index) part in it
-         effectIDs.push_back(0);
-
-      for(auto id : effectIDs)
-      {
-         //Subsequent VSTEffect::Load may seem like overhead, but we need
-         //to initialize EffectDefinitionInterface part, which includes
-         //properly formatted plugin path
-         VSTEffect subeffect(wxString::Format("%s;%d", path, id));
-         subeffect.Load();
-         if(callback)
-            callback(this, &subeffect);
-      }
-      return effectIDs.size();
-   }
-   errMsg = XO("Could not load the library");
-   return 0;
-}
-
-std::unique_ptr<ComponentInterface>
-VSTEffectsModule::LoadPlugin(const PluginPath & path)
-{
-   // Acquires a resource for the application.
-   // For us, the ID is simply the path to the effect
-   auto result = std::make_unique<VSTEffect>(path);
-   if (!result->InitializePlugin())
-      result.reset();
-   return result;
-}
-
-bool VSTEffectsModule::CheckPluginExist(const PluginPath& path) const
-{
-   const auto modulePath = path.BeforeFirst(wxT(';'));
-   return wxFileName::FileExists(modulePath) || wxFileName::DirExists(modulePath);
-}
-
-// ============================================================================
-// ModuleEffectInterface implementation
-// ============================================================================
-
-// ============================================================================
-// VSTEffectsModule implementation
-// ============================================================================
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// Dialog for configuring latency, buffer size and graphics mode for a
-// VST effect.
-//
-///////////////////////////////////////////////////////////////////////////////
-class VSTEffectOptionsDialog final : public wxDialogWrapper
-{
-public:
-   explicit VSTEffectOptionsDialog(const EffectDefinitionInterface &effect);
-   virtual ~VSTEffectOptionsDialog();
-
-   void PopulateOrExchange(ShuttleGui & S);
-
-   void OnOk(wxCommandEvent & evt);
-
-private:
-   const EffectDefinitionInterface &mEffect;
-   int mBufferSize;
-   bool mUseLatency;
-   bool mUseGUI;
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, VSTEffectOptionsDialog::OnOk)
-END_EVENT_TABLE()
-
-VSTEffectOptionsDialog::VSTEffectOptionsDialog(
-   const EffectDefinitionInterface &effect
-)  : wxDialogWrapper{ nullptr, wxID_ANY, XO("VST Effect Options") }
-   , mEffect{ effect }
-{
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("BufferSize"), mBufferSize, 8192);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseGUI"), mUseGUI, true);
-
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
-}
-
-VSTEffectOptionsDialog::~VSTEffectOptionsDialog()
-{
-}
-
-void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   S.SetBorder(5);
-   S.StartHorizontalLay(wxEXPAND, 1);
-   {
-      S.StartVerticalLay(false);
-      {
-         S.StartStatic(XO("Buffer Size"));
-         {
-            S.AddVariableText( XO(
-"The buffer size controls the number of samples sent to the effect "
-"on each iteration. Smaller values will cause slower processing and "
-"some effects require 8192 samples or less to work properly. However "
-"most effects can accept large buffers and using them will greatly "
-"reduce processing time."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               wxTextCtrl *t;
-               t = S.Validator<IntegerValidator<int>>(
-                     &mBufferSize, NumValidatorStyle::DEFAULT, 8, 1048576 * 1)
-                  .MinSize( { 100, -1 } )
-                  .TieNumericTextBox(XXO("&Buffer Size (8 to 1048576 samples):"),
-                                       mBufferSize,
-                                       12);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("Latency Compensation"));
-         {
-            S.AddVariableText( XO(
-"As part of their processing, some VST effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
-"notice that small silences have been inserted into the audio. "
-"Enabling this option will provide that compensation, but it may "
-"not work for all VST effects."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               S.TieCheckBox(XXO("Enable &compensation"),
-                             mUseLatency);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("Graphical Mode"));
-         {
-            S.AddVariableText( XO(
-"Most VST effects have a graphical interface for setting parameter values."
-" A basic text-only method is also available. "
-" Reopen the effect for this to take effect."),
-               false, 0, 650);
-            S.TieCheckBox(XXO("Enable &graphical interface"),
-                          mUseGUI);
-         }
-         S.EndStatic();
-      }
-      S.EndVerticalLay();
-   }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   Center();
-}
-
-void VSTEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
-{
-   if (!Validate())
-   {
-      return;
-   }
-
-   ShuttleGui S(this, eIsGettingFromDialog);
-   PopulateOrExchange(S);
-
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("BufferSize"), mBufferSize);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseGUI"), mUseGUI);
-
-   EndModal(wxID_OK);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Wrapper for wxTimer that calls a VST effect at regular intervals.
-///
-/// \todo should there be tests for no timer available?
-///
-///////////////////////////////////////////////////////////////////////////////
-class VSTTimer final : public wxTimer
-{
-public:
-   VSTTimer(VSTEditor* pEditor)
-   :  wxTimer(),
-      mpEditor(pEditor)
-   {
-   }
-
-   ~VSTTimer()
-   {
-   }
-
-   void Notify()
-   {
-      mpEditor->OnTimer();
-   }
-
-private:
-   VSTEditor* mpEditor;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffect
-//
-///////////////////////////////////////////////////////////////////////////////
-enum
-{
-   ID_Duration = 20000,
-   ID_Sliders = 21000,
-};
-
-wxDEFINE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
-DEFINE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY);
-
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
@@ -783,6 +240,7 @@ void VSTWrapper::ResourceHandle::reset()
 }
 #endif
 
+#if 0
 VSTEffect::VSTEffect(const PluginPath & path)
 :  VSTWrapper(path)
 {
@@ -914,6 +372,7 @@ bool VSTEffect::InitializePlugin()
 
    return true;
 }
+#endif
 
 VSTMessage::~VSTMessage() = default;
 
@@ -981,7 +440,7 @@ void VSTMessage::Merge(Message && src)
 
 }
 
-
+#if 0
 std::unique_ptr<EffectInstance::Message> VSTInstance::MakeMessage() const
 {
    // The purpose here is just to allocate vectors (chunk and paramVector)
@@ -1219,7 +678,7 @@ void VSTInstance::DeferChunkApplication()
    std::lock_guard<std::mutex> guard(mDeferredChunkMutex);
 
    if (! mChunkToSetAtIdleTime.empty() )
-   {    
+   {
       ApplyChunk(mChunkToSetAtIdleTime);
       mChunkToSetAtIdleTime.resize(0);
    }
@@ -1726,6 +1185,8 @@ void VSTEffect::ShowOptions(const EffectPlugin &) const
 // VSTEffect implementation
 // ============================================================================
 
+#endif
+
 bool VSTWrapper::Load()
 {
    vstPluginMain pluginMain;
@@ -1990,7 +1451,6 @@ bool VSTWrapper::Load()
    return success;
 }
 
-
 void VSTWrapper::Unload()
 {
    if (mAEffect)
@@ -2002,7 +1462,6 @@ void VSTWrapper::Unload()
 
    //ResetModuleAndHandle();
 }
-
 
 void VSTWrapper::ResetModuleAndHandle()
 {
@@ -2018,35 +1477,11 @@ void VSTWrapper::ResetModuleAndHandle()
    }
 }
 
-
 VSTWrapper::~VSTWrapper()
 {
    Unload();
    ResetModuleAndHandle();
 }
-
-
-std::vector<int> VSTEffect::GetEffectIDs()
-{
-   std::vector<int> effectIDs;
-
-   // Are we a shell?
-   if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
-   {
-      char name[64];
-      int effectID;
-
-      effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
-      while (effectID)
-      {
-         effectIDs.push_back(effectID);
-         effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
-      }
-   }
-
-   return effectIDs;
-}
-
 
 VstPatchChunkInfo VSTWrapper::GetChunkInfo() const
 {
@@ -2061,6 +1496,7 @@ bool VSTWrapper::IsCompatible(const VstPatchChunkInfo& info) const
            (info.numElements    == mAEffect->numParams);
 }
 
+#if 0
 OptionalMessage VSTEffect::LoadUserPreset(
    const RegistryPath & group, EffectSettings &settings) const
 {
@@ -2162,9 +1598,12 @@ bool VSTEffect::SaveUserPreset(
       group, wxT("Parameters"), parms);
 }
 
+#endif
+
 void VSTUIWrapper::Flush()
 {}
 
+#if 0
 void VSTEditor::Flush()
 {
    mAccess.Flush();
@@ -2195,31 +1634,11 @@ void VSTEditor::OnTimer()
    }
 }
 
+#endif
+
 void VSTUIWrapper::NeedIdle()
 {   
 }
-
-void VSTInstance::NeedIdle()
-{
-   if (mpOwningValidator)
-   {
-      mpOwningValidator->NeedIdle();
-   }
-}
-
-void VSTEditor::NeedIdle()
-{
-   mWantsIdle = true;
-   mTimer->Start(100);
-}
-
-void VSTEditor::NeedEditIdle(bool state)
-{
-   mWantsEditIdle = state;
-   mTimer->Start(100);
-}
-
-
 
 VstTimeInfo* VSTWrapper::GetTimeInfo()
 {
@@ -2237,6 +1656,7 @@ int VSTWrapper::GetProcessLevel()
    return mProcessLevel;
 }
 
+#if 0
 void VSTInstance::PowerOn()
 {
    if (!mHasPower)
@@ -2273,10 +1693,13 @@ void VSTInstance::PowerOff()
    }
 }
 
+#endif
+
 void VSTUIWrapper::SizeWindow(int w, int h)
 {
 }
 
+#if 0
 void VSTInstance::SizeWindow(int w, int h)
 {
    if (mpOwningValidator)
@@ -2298,7 +1721,7 @@ void VSTEditor::NotifyParameterChanged(int index, float value)
          auto it = settings.mParamsMap.find(pi.mName);
 
          // For consistency with other plugin families
-         constexpr float epsilon = 1.0e-5f; 
+         constexpr float epsilon = 1.0e-5f;
 
          if (
             it == settings.mParamsMap.end() || !it->second.has_value() ||
@@ -2370,11 +1793,13 @@ void VSTEffect::UpdateDisplay()
 }
 
 
+#endif
+
 void VSTWrapper::SetBufferDelay(int)
 {
 }
 
-
+#if 0
 void VSTInstance::SetBufferDelay(int samples)
 {
    // We do not support negative delay
@@ -2385,6 +1810,7 @@ void VSTInstance::SetBufferDelay(int samples)
 
    return;
 }
+#endif
 
 int VSTWrapper::GetString(wxString & outstr, int opcode, int index) const
 {
@@ -2434,6 +1860,7 @@ intptr_t VSTWrapper::constCallDispatcher(int opcode,
       ->callDispatcher(opcode, index, value, ptr, opt);
 }
 
+#if 0
 void VSTInstance::callProcessReplacing(const float *const *inputs,
    float *const *outputs, int sampleframes)
 {
@@ -2441,13 +1868,12 @@ void VSTInstance::callProcessReplacing(const float *const *inputs,
       const_cast<float**>(inputs),
       const_cast<float**>(outputs), sampleframes);
 }
+#endif
 
 float VSTWrapper::callGetParameter(int index) const
 {
    return mAEffect->getParameter(mAEffect, index);
 }
-
-
 
 void VSTWrapper::callSetParameter(int index, float value) const
 {
@@ -2457,7 +1883,6 @@ void VSTWrapper::callSetParameter(int index, float value) const
    }
 }
 
-
 void VSTWrapper::callSetProgram(int index)
 {
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
@@ -2466,7 +1891,6 @@ void VSTWrapper::callSetProgram(int index)
 
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 }
-
 
 void VSTWrapper::callSetChunk(bool isPgm, int len, void *buf)
 {
@@ -2503,286 +1927,6 @@ void VSTWrapper::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo 
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    constCallDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
    constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
-}
-
-
-
-static void OnSize(wxSizeEvent & evt)
-{
-   evt.Skip();
-
-   // Once the parent dialog reaches its final size as indicated by
-   // a non-default minimum size, we set the maximum size to match.
-   // This is a bit of a hack to prevent VSTs GUI windows from resizing
-   // there's no real reason to allow it.  But, there should be a better
-   // way of handling it.
-   wxWindow *w = (wxWindow *) evt.GetEventObject();
-   wxSize sz = w->GetMinSize();
-
-   if (sz != wxDefaultSize)
-   {
-      w->SetMaxSize(sz);
-   }
-}
-
-void VSTEditor::BuildFancy(EffectInstance& instance)
-{
-   auto& vstEffInstance = dynamic_cast<VSTInstance&>(instance);
-
-   // Turn the power on...some effects need this when the editor is open
-   vstEffInstance.PowerOn();
-
-   auto control = Destroy_ptr<VSTControl>{ safenew VSTControl };
-   if (!control)
-   {
-      return;
-   }
-
-   if (!control->Create(mParent, &vstEffInstance))
-   {
-      return;
-   }
-
-   {
-      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
-      mainSizer->Add((mControl = control.release()), 0, wxALIGN_CENTER);
-
-      mParent->SetMinSize(wxDefaultSize);
-      mParent->SetSizer(mainSizer.release());
-   }
-
-   NeedEditIdle(true);
-
-   mDialog->Bind(wxEVT_SIZE, OnSize);
-   
-   
-   BindTo(*mDialog, EVT_SIZEWINDOW, &VSTEditor::OnSizeWindow);
-
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-   wxEventLoop::SetBusyWaiting(true);
-#endif
-#endif
-
-   return;
-}
-
-void VSTEditor::BuildPlain(EffectSettingsAccess &access, EffectType effectType, double projectRate)
-{
-   wxASSERT(mParent); // To justify safenew
-   wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
-      wxID_ANY,
-      wxDefaultPosition,
-      wxDefaultSize,
-      wxVSCROLL | wxTAB_TRAVERSAL);
-
-   {
-      auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
-      // Try to give the window a sensible default/minimum size
-      scroller->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
-         mParent->GetSize().GetHeight() / 2));
-      scroller->SetScrollRate(0, 20);
-
-      // This fools NVDA into not saying "Panel" when the dialog gets focus
-      scroller->SetName(wxT("\a"));
-      scroller->SetLabel(wxT("\a"));
-
-      mainSizer->Add(scroller, 1, wxEXPAND | wxALL, 5);
-      mParent->SetSizer(mainSizer.release());
-   }
-
-   mNames.reinit(static_cast<size_t>   (mNumParams));
-   mSliders.reinit(static_cast<size_t> (mNumParams));
-   mDisplays.reinit(static_cast<size_t>(mNumParams));
-   mLabels.reinit(static_cast<size_t>  (mNumParams));
-
-   {
-      auto paramSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, scroller, _("Effect Settings"));
-
-      {
-         auto gridSizer = std::make_unique<wxFlexGridSizer>(4, 0, 0);
-         gridSizer->AddGrowableCol(1);
-
-         // Add the duration control for generators
-         if (effectType == EffectTypeGenerate)
-         {
-            wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
-            gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-            auto &extra = access.Get().extra;
-            mDuration = safenew
-               NumericTextCtrl(scroller, ID_Duration,
-                  NumericConverter::TIME,
-                  extra.GetDurationFormat(),
-                  extra.GetDuration(),
-                  projectRate,
-                  NumericTextCtrl::Options{}
-                     .AutoPos(true));
-            mDuration->SetName( XO("Duration") );
-            gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
-            gridSizer->Add(1, 1, 0);
-            gridSizer->Add(1, 1, 0);
-         }
-
-         // Find the longest parameter name.
-         int namew = 0;
-         int w;
-         int h;
-         for (int i = 0; i < mNumParams; i++)
-         {
-            wxString text = GetInstance().GetString(effGetParamName, i);
-
-            if (text.Right(1) != wxT(':'))
-            {
-               text += wxT(':');
-            }
-
-            scroller->GetTextExtent(text, &w, &h);
-            if (w > namew)
-            {
-               namew = w;
-            }
-         }
-
-         scroller->GetTextExtent(wxT("HHHHHHHH"), &w, &h);
-
-         for (int i = 0; i < mNumParams; i++)
-         {
-            mNames[i] = safenew wxStaticText(scroller,
-               wxID_ANY,
-               wxEmptyString,
-               wxDefaultPosition,
-               wxSize(namew, -1),
-               wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
-            gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-
-            mSliders[i] = safenew wxSliderWrapper(scroller,
-               ID_Sliders + i,
-               0,
-               0,
-               1000,
-               wxDefaultPosition,
-               wxSize(200, -1));
-            gridSizer->Add(mSliders[i], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
-#if wxUSE_ACCESSIBILITY
-            // so that name can be set on a standard control
-            mSliders[i]->SetAccessible(safenew WindowAccessible(mSliders[i]));
-#endif
-
-            // Bind the slider to ::OnSlider
-            BindTo(*mSliders[i], wxEVT_COMMAND_SLIDER_UPDATED, &VSTEditor::OnSlider);
-
-            mDisplays[i] = safenew wxStaticText(scroller,
-               wxID_ANY,
-               wxEmptyString,
-               wxDefaultPosition,
-               wxSize(w, -1),
-               wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
-            gridSizer->Add(mDisplays[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-
-            mLabels[i] = safenew wxStaticText(scroller,
-               wxID_ANY,
-               wxEmptyString,
-               wxDefaultPosition,
-               wxSize(w, -1),
-               wxALIGN_LEFT | wxST_NO_AUTORESIZE);
-            gridSizer->Add(mLabels[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT | wxALL, 5);
-         }
-
-         paramSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
-      }
-      scroller->SetSizer(paramSizer.release());
-   }
-
-   RefreshParameters();
-
-   mSliders[0]->SetFocus();
-}
-
-void VSTEditor::RefreshParameters(int skip) const
-{
-   if (!mNames)
-   {
-      return;
-   }
-
-   for (int i = 0; i < mNumParams; i++)
-   {
-      wxString text = GetInstance().GetString(effGetParamName, i);
-
-      text = text.Trim(true).Trim(false);
-
-      wxString name = text;
-
-      if (text.Right(1) != wxT(':'))
-      {
-         text += wxT(':');
-      }
-      mNames[i]->SetLabel(text);
-
-      // For some parameters types like on/off, setting the slider value has
-      // a side effect that causes it to only move when the parameter changes
-      // from off to on.  However, this prevents changing the value using the
-      // keyboard, so we skip the active slider if any.
-      if (i != skip)
-      {
-         mSliders[i]->SetValue(GetInstance().callGetParameter(i) * 1000);
-      }
-      name = text;
-
-      text = GetInstance().GetString(effGetParamDisplay, i);
-      if (text.empty())
-      {
-         text.Printf(wxT("%.5g"), GetInstance().callGetParameter(i));
-      }
-      mDisplays[i]->SetLabel(wxString::Format(wxT("%8s"), text));
-      name += wxT(' ') + text;
-
-      text = GetInstance().GetString(effGetParamDisplay, i);
-      if (!text.empty())
-      {
-         text.Printf(wxT("%-8s"), GetInstance().GetString(effGetParamLabel, i));
-         mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text));
-         name += wxT(' ') + text;
-      }
-
-      mSliders[i]->SetName(name);
-   }
-}
-
-void VSTEditor::OnSizeWindow(wxCommandEvent & evt)
-{
-   if (!mControl)
-   {
-      return;
-   }
-
-   mControl->SetMinSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
-   mControl->SetSize(wxSize(evt.GetInt(), (int) evt.GetExtraLong()));
-
-   // DO NOT CHANGE THE ORDER OF THESE
-   //
-   // Guitar Rig (and possibly others) Cocoa VSTs can resize too large
-   // if the bounds are unlimited.
-   mDialog->SetMinSize(wxDefaultSize);
-   mDialog->SetMaxSize(wxDefaultSize);
-   mDialog->Layout();
-   mDialog->SetMinSize(mDialog->GetBestSize());
-   mDialog->SetMaxSize(mDialog->GetBestSize());
-   mDialog->Fit();
-}
-
-void VSTEditor::OnSlider(wxCommandEvent & evt)
-{
-   wxSlider *s = (wxSlider *) evt.GetEventObject();
-   int i = s->GetId() - ID_Sliders;
-   float value = s->GetValue() / 1000.0;
-
-   NotifyParameterChanged(i, value);
-   // Send changed settings (only) to the worker thread
-   mAccess.Set(GetInstance().MakeMessage(i, value));
-   mLastMovements.emplace_back(i, value);
 }
 
 bool VSTWrapper::LoadFXB(const wxFileName & fn)
@@ -3716,7 +2860,6 @@ XMLTagHandler *VSTWrapper::HandleXMLChild(const std::string_view& tag)
    return NULL;
 }
 
-
 void VSTWrapper::ForEachParameter(ParameterVisitor visitor) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
@@ -3742,7 +2885,6 @@ void VSTWrapper::ForEachParameter(ParameterVisitor visitor) const
          break;
    }
 }
-
 
 bool VSTWrapper::FetchSettings(VSTSettings& vstSettings, bool doFetch) const
 {
@@ -3843,32 +2985,10 @@ bool VSTWrapper::StoreSettings(const VSTSettings& vstSettings) const
    return true;
 }
 
-bool VSTEditor::UpdateUI()
-{
-   // Update the controls on the plain UI
-   RefreshParameters();
-
-   return true;
-}
-
 ComponentInterfaceSymbol VSTWrapper::GetSymbol() const
 {
    return mName;
 }
-
-EffectSettings VSTEffect::MakeSettings() const
-{
-   VSTSettings settings;
-   FetchSettings(settings);
-   return EffectSettings::Make<VSTSettings>(std::move(settings));
-}
-
-VSTEditor::~VSTEditor()
-{
-   // Just for extra safety
-   GetInstance().SetOwningValidator(nullptr);
-}
-
 
 std::unique_ptr<EffectInstance::Message>
 VSTWrapper::MakeMessageFS(const VSTSettings &settings) const
@@ -3893,197 +3013,12 @@ VSTWrapper::MakeMessageFS(const VSTSettings &settings) const
       settings.mChunk /* vector copy */, std::move(paramVector));
 }
 
-VSTEditor::VSTEditor(
-   VSTInstance&       instance,
-   bool                     gui,
-   const EffectUIServices&  services,
-   EffectSettingsAccess&    access,
-   wxWindow*                pParent,
-   int                      numParams
-)
-   : EffectEditor(services, access),
-     mInstance(instance),
-     mGui{ gui },
-     mParent(pParent),
-     mDialog( static_cast<wxDialog*>(wxGetTopLevelParent(pParent)) ),
-     mNumParams(numParams)
-{
-   // In case of nondestructive processing, put an initial message in the
-   // queue for the instance
-   mAccess.ModifySettings([&](EffectSettings &settings){
-      return GetInstance().MakeMessageFS(VSTInstance::GetSettings(settings));
-   });
-
-   auto settings = mAccess.Get();
-   StoreSettingsToInstance(settings);
-
-   //! Note the parameter names for later use
-   mInstance.ForEachParameter([&](const VSTWrapper::ParameterInfo &pi) {
-      mParamNames.push_back(pi.mName);
-      return true;
-   } );
-
-   mTimer = std::make_unique<VSTTimer>(this);
-
-   wxTheApp->Bind(wxEVT_IDLE, &VSTEditor::OnIdle, this);
-}
-
-
-VSTInstance& VSTEditor::GetInstance() const
-{
-   return mInstance;
-}
-
-
-
 void VSTWrapper::UpdateDisplay()
 {
 }
 
-
 void VSTUIWrapper::Automate(int index, float value)
 {
-}
-
-void VSTInstance::Automate(int index, float value)
-{
-   if (mMainThreadId != std::this_thread::get_id())
-      return;
-
-   if (mpOwningValidator)
-   {
-      mpOwningValidator->Automate(index, value);
-   }
-}
-
-
-void VSTEditor::Automate(int index, float value)
-{
-   NotifyParameterChanged(index, value);
-   // Send changed settings (only) to the worker thread
-   mAccess.Set(GetInstance().MakeMessage(index, value));
-   mLastMovements.emplace_back(index, value);
-}
-
-
-
-VSTInstance::VSTInstance
-(
-   PerTrackEffect& effect,
-   const PluginPath& path,
-   size_t            blockSize,
-   size_t            userBlockSize,
-   bool              useLatency
-)
-
-   : PerTrackEffect::Instance(effect)
-   , VSTWrapper(path)
-   , mUseLatency{ useLatency }
-{
-   // what also happens in the effect ctor
-   //
-   memset(&mTimeInfo, 0, sizeof(mTimeInfo));
-   mTimeInfo.samplePos = 0.0;
-   mTimeInfo.sampleRate = 44100.0;  // this is a bogus value, but it's only for the display
-   mTimeInfo.nanoSeconds = wxGetUTCTimeMillis().ToDouble();
-   mTimeInfo.tempo = 120.0;
-   mTimeInfo.timeSigNumerator = 4;
-   mTimeInfo.timeSigDenominator = 4;
-   mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
-
-   mBlockSize = blockSize;
-   mUserBlockSize = userBlockSize;
-
-   Load();
-
-   if (!IsReady() )
-   {
-      // Set some defaults since some VSTs need them...these will be reset when
-      // normal or realtime processing begins
-      mBlockSize = 8192;
-      DoProcessInitialize(44100.0);
-   }
-
-   mIsMeldaPlugin = (mVendor == "MeldaProduction");
-}
-
-
-VSTInstance::~VSTInstance()
-{
-   PowerOff();
-}
-
-
-void VSTInstance::SetOwningValidator(VSTUIWrapper* vi)
-{
-   mpOwningValidator = vi;
-}
-
-
-bool VSTEditor::FetchSettingsFromInstance(EffectSettings& settings)
-{
-   return mInstance.FetchSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mUIServices).GetSettings(settings));
-}
-
-
-bool VSTEditor::StoreSettingsToInstance(const EffectSettings& settings)
-{
-   return mInstance.StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mUIServices).GetSettings(settings));
-}
-
-
-bool VSTEditor::ValidateUI()
-{
-   mAccess.ModifySettings([this](EffectSettings& settings)
-   {
-      const auto& eff =
-         static_cast<const VSTEffect&>(VSTEditor::mUIServices);
-      if (eff.GetType() == EffectTypeGenerate)
-         settings.extra.SetDuration(mDuration->GetValue());
-
-      FetchSettingsFromInstance(settings);
-
-      return GetInstance().MakeMessage();
-   });
-
-   return true;
-}
-
-
-void VSTEditor::OnClose()
-{
-
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-   wxEventLoop::SetBusyWaiting(false);
-#endif
-   if (mControl)
-      mControl->Close();
-#endif
-
-   // Tell the instance not to use me anymore - if we do not do this,
-   // hiding the gui and then showing it again *while playing*, would leave
-   // the instance with a dangling pointer to the old owning validator
-   // for a fraction of time, thereby causing a crash.
-   GetInstance().SetOwningValidator(nullptr);
-
-   NeedEditIdle(false);
-
-   mNames.reset();
-   mSliders.reset();
-   mDisplays.reset();
-   mLabels.reset();
-
-   mParent = NULL;
-   mDialog = NULL;
-
-   mAccess.Flush();
-
-   ValidateUI();
 }
 
 #endif // USE_VST
