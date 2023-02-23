@@ -283,7 +283,7 @@ enum
 wxDEFINE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
 DEFINE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY);
 
-VSTEffect::VSTEffect(const PluginPath & path)
+VSTEffectBase::VSTEffectBase(const PluginPath & path)
 :  VSTWrapper(path)
 {
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
@@ -296,26 +296,26 @@ VSTEffect::VSTEffect(const PluginPath & path)
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
 }
 
-VSTEffect::~VSTEffect()
-{
-}
+VSTEffectBase::~VSTEffectBase() = default;
 
-PluginPath VSTEffect::GetPath() const
+VSTEffect::~VSTEffect() = default;
+
+PluginPath VSTEffectBase::GetPath() const
 {
    return mPath;
 }
 
-ComponentInterfaceSymbol VSTEffect::GetSymbol() const
+ComponentInterfaceSymbol VSTEffectBase::GetSymbol() const
 {
    return VSTWrapper::GetSymbol();
 }
 
-VendorSymbol VSTEffect::GetVendor() const
+VendorSymbol VSTEffectBase::GetVendor() const
 {
    return { mVendor };
 }
 
-wxString VSTEffect::GetVersion() const
+wxString VSTEffectBase::GetVersion() const
 {
    wxString version;
 
@@ -334,7 +334,7 @@ wxString VSTEffect::GetVersion() const
    return version;
 }
 
-TranslatableString VSTEffect::GetDescription() const
+TranslatableString VSTEffectBase::GetDescription() const
 {
    // VST does have a product string opcode and some effects return a short
    // description, but most do not or they just return the name again.  So,
@@ -346,7 +346,7 @@ TranslatableString VSTEffect::GetDescription() const
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType VSTEffect::GetType() const
+EffectType VSTEffectBase::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
@@ -367,22 +367,22 @@ EffectType VSTEffect::GetType() const
 }
 
 
-EffectFamilySymbol VSTEffect::GetFamily() const
+EffectFamilySymbol VSTEffectBase::GetFamily() const
 {
    return VSTPLUGINTYPE;
 }
 
-bool VSTEffect::IsInteractive() const
+bool VSTEffectBase::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool VSTEffect::IsDefault() const
+bool VSTEffectBase::IsDefault() const
 {
    return false;
 }
 
-auto VSTEffect::RealtimeSupport() const -> RealtimeSince
+auto VSTEffectBase::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::Always;
 
@@ -391,12 +391,12 @@ auto VSTEffect::RealtimeSupport() const -> RealtimeSince
       : RealtimeSince::Never; */
 }
 
-bool VSTEffect::SupportsAutomation() const
+bool VSTEffectBase::SupportsAutomation() const
 {
    return mAutomatable;
 }
 
-bool VSTEffect::InitializePlugin()
+bool VSTEffectBase::InitializePlugin()
 {
    if (!mAEffect)
    {
@@ -411,7 +411,7 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-std::shared_ptr<EffectInstance> VSTEffect::MakeInstance() const
+std::shared_ptr<EffectInstance> VSTEffectBase::MakeInstance() const
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -481,7 +481,7 @@ bool VSTEditor::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
+bool VSTEffectBase::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
 {
    const VSTSettings& vstSettings = GetSettings(settings);
 
@@ -502,8 +502,7 @@ bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& 
    return true;
 }
 
-
-bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
+bool VSTEffectBase::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
 {
    VSTSettings& vstSettings = GetSettings(settings);
 
@@ -541,7 +540,7 @@ bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& set
    return true;
 }
 
-RegistryPaths VSTEffect::GetFactoryPresets() const
+RegistryPaths VSTEffectBase::GetFactoryPresets() const
 {
    RegistryPaths progs;
 
@@ -560,10 +559,10 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
 }
 
 OptionalMessage
-VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
+VSTEffectBase::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   bool loadOK = const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id) &&
+   bool loadOK = const_cast<VSTEffectBase*>(this)->DoLoadFactoryPreset(id) &&
       FetchSettings(GetSettings(settings));
    if (!loadOK)
       return {};
@@ -571,7 +570,7 @@ VSTEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
       VSTInstance::GetSettings(settings));
 }
 
-bool VSTEffect::DoLoadFactoryPreset(int id)
+bool VSTEffectBase::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
 
@@ -629,7 +628,7 @@ std::unique_ptr<EffectEditor> VSTEffect::MakeEditor(
    return nullptr;
 }
 
-bool VSTEffect::CanExportPresets() const
+bool VSTEffectBase::CanExportPresets() const
 {
    return true;
 }
@@ -777,7 +776,7 @@ OptionalMessage VSTEffect::ImportPresetsNC(EffectSettings& settings)
       VSTInstance::GetSettings(settings));
 }
 
-bool VSTEffect::HasOptions() const
+bool VSTEffectBase::HasOptions() const
 {
    return true;
 }
@@ -787,7 +786,7 @@ void VSTEffect::ShowOptions(const EffectPlugin &) const
    VSTEffectOptionsDialog{ *this }.ShowModal();
 }
 
-std::vector<int> VSTEffect::GetEffectIDs()
+std::vector<int> VSTEffectBase::GetEffectIDs()
 {
    std::vector<int> effectIDs;
 
@@ -808,7 +807,7 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-OptionalMessage VSTEffect::LoadUserPreset(
+OptionalMessage VSTEffectBase::LoadUserPreset(
    const RegistryPath & group, EffectSettings &settings) const
 {
    wxString value;
@@ -866,7 +865,7 @@ OptionalMessage VSTEffect::LoadUserPreset(
       VSTInstance::GetSettings(settings));
 }
 
-bool VSTEffect::SaveUserPreset(
+bool VSTEffectBase::SaveUserPreset(
    const RegistryPath & group, const EffectSettings &settings) const
 {
    const auto& vstSettings = GetSettings(settings);
@@ -1307,7 +1306,7 @@ bool VSTEditor::UpdateUI()
    return true;
 }
 
-EffectSettings VSTEffect::MakeSettings() const
+EffectSettings VSTEffectBase::MakeSettings() const
 {
    VSTSettings settings;
    FetchSettings(settings);

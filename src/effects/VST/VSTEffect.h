@@ -88,14 +88,13 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 class VSTEditor;
 
-class VSTEffect final
+class VSTEffectBase
    : public VSTWrapper
-   , public StatelessPerTrackEffect
-   
+   , public PerTrackEffect
 {
  public:
-   VSTEffect(const PluginPath & path);
-   virtual ~VSTEffect();
+   VSTEffectBase(const PluginPath & path);
+   ~VSTEffectBase() override;
 
    // ComponentInterface implementation
 
@@ -130,44 +129,54 @@ class VSTEffect final
       const override;
    bool DoLoadFactoryPreset(int id);
 
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
    bool InitializePlugin();
 
-
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
    bool CanExportPresets() const override;
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-   // Non-const and non-virtual function:
-   OptionalMessage ImportPresetsNC(EffectSettings &settings);
 
    bool HasOptions() const override;
-   void ShowOptions(const EffectPlugin &plugin) const override;
 
-   // VSTEffect implementation
    EffectSettings MakeSettings() const override;
 
    // Plugin loading and unloading
    std::vector<int> GetEffectIDs();
 
-protected:
+private:
+   PluginID mID;
+};
+
+class VSTEffect final
+   : public StatelessEffectUIServices
+   , public VSTEffectBase
+{
+public:
+   using VSTEffectBase::VSTEffectBase;
+   ~VSTEffect() override;
+
+private:
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
+
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const override;
+
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
+
+   // Non-const and non-virtual function:
+   OptionalMessage ImportPresetsNC(EffectSettings &settings);
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    //! Will never be called
    virtual std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) const final;
-   
-private:
-   PluginID mID;
 };
 
 class VSTEditor final
