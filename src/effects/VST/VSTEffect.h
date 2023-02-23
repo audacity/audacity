@@ -308,6 +308,37 @@ struct VSTWrapper : public VSTLink, public XMLTagHandler, public VSTUIWrapper
    bool mGui{ false };
 };
 
+struct VSTMessage : EffectInstance::Message
+{
+   using ParamVector = std::vector<std::optional<double> >;
+
+   // Make a message from a chunk and ID-value pairs
+   explicit VSTMessage(std::vector<char> chunk, ParamVector params)
+      : mChunk(std::move(chunk)),
+        mParamsVec(std::move(params))
+   {
+   }
+
+   // Make a message from a single parameter
+   explicit VSTMessage(int id, double value, size_t numParams)
+   {
+      mParamsVec.resize(numParams, std::nullopt);
+      if (id < numParams)
+         mParamsVec[id] = value;
+   }
+
+   ~VSTMessage() override;
+
+   std::unique_ptr<Message> Clone() const override;
+   void Assign(Message&& src) override;
+   void Merge(Message&& src) override;
+
+
+   std::vector<char> mChunk;
+   ParamVector       mParamsVec;
+
+};
+
 class VSTInstance;
 using VSTInstanceArray = std::vector < std::unique_ptr<VSTInstance> >;
 
