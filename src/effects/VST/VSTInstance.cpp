@@ -452,7 +452,7 @@ void VSTInstance::Automate(int index, float value)
 
 VSTInstance::VSTInstance
 (
-   PerTrackEffect& effect,
+   const PerTrackEffect& effect,
    const PluginPath& path,
    size_t            blockSize,
    size_t            userBlockSize,

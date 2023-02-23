@@ -28,7 +28,7 @@ class VSTInstance final : public PerTrackEffect::Instance,
 {
 public:
 
-   VSTInstance(PerTrackEffect&   effect,
+   VSTInstance(const PerTrackEffect&   effect,
                      const PluginPath& path,
                      size_t            blockSize,
                      size_t            userBlockSize,

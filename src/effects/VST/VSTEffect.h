@@ -139,7 +139,6 @@ class VSTEffect final
 
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
       const EffectOutputs *pOutputs) const override;
