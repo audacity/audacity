@@ -34,8 +34,8 @@
 
 #include <cstring>
 
+#include "BasicUI.h"
 #include "FileNames.h"
-#include "../../widgets/AudacityMessageBox.h"
 #include "XMLFileReader.h"
 #include "Base64.h"
 
@@ -768,11 +768,11 @@ bool VSTWrapper::LoadFXB(const wxFileName & fn)
    ArrayOf<unsigned char> data{ size_t(f.Length()) };
    if (!data)
    {
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("Unable to allocate memory when loading presets file."),
-         XO("Error Loading VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Loading VST Presets")));
       return false;
    }
    unsigned char *bptr = data.get();
@@ -783,11 +783,11 @@ bool VSTWrapper::LoadFXB(const wxFileName & fn)
       ssize_t len = f.Read((void *) bptr, f.Length());
       if (f.Error())
       {
-         AudacityMessageBox(
+         using namespace BasicUI;
+         ShowMessageBox(
             XO("Unable to read presets file."),
-            XO("Error Loading VST Presets"),
-            wxOK | wxCENTRE,
-            nullptr);
+            MessageBoxOptions{}
+               .Caption(XO("Error Loading VST Presets")));
          break;
       }
 
@@ -941,11 +941,11 @@ bool VSTWrapper::LoadFXP(const wxFileName & fn)
    ArrayOf<unsigned char> data{ size_t(f.Length()) };
    if (!data)
    {
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("Unable to allocate memory when loading presets file."),
-         XO("Error Loading VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Loading VST Presets")));
       return false;
    }
    unsigned char *bptr = data.get();
@@ -956,11 +956,11 @@ bool VSTWrapper::LoadFXP(const wxFileName & fn)
       ssize_t len = f.Read((void *) bptr, f.Length());
       if (f.Error())
       {
-         AudacityMessageBox(
+         using namespace BasicUI;
+         ShowMessageBox(
             XO("Unable to read presets file."),
-            XO("Error Loading VST Presets"),
-            wxOK | wxCENTRE,
-            nullptr);
+            MessageBoxOptions{}
+               .Caption(XO("Error Loading VST Presets")));
          break;
       }
 
@@ -1152,12 +1152,12 @@ bool VSTWrapper::LoadXML(const wxFileName & fn)
 
    if (!ok)
    {
+      using namespace BasicUI;
       // Inform user of load failure
-      AudacityMessageBox(
+      ShowMessageBox(
          reader.GetErrorStr(),
-         XO("Error Loading VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Loading VST Presets")));
       return false;
    }
 
@@ -1171,11 +1171,11 @@ void VSTWrapper::SaveFXB(const wxFileName & fn) const
    wxFFile f(fullPath, wxT("wb"));
    if (!f.IsOpened())
    {
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("Could not open file: \"%s\"").Format( fullPath ),
-         XO("Error Saving VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Saving VST Presets")));
       return;
    }
 
@@ -1240,11 +1240,11 @@ void VSTWrapper::SaveFXB(const wxFileName & fn) const
 
    if (f.Error())
    {
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("Error writing to file: \"%s\"").Format( fullPath ),
-         XO("Error Saving VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Saving VST Presets")));
    }
 
    f.Close();
@@ -1259,11 +1259,11 @@ void VSTWrapper::SaveFXP(const wxFileName & fn) const
    wxFFile f(fullPath, wxT("wb"));
    if (!f.IsOpened())
    {
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("Could not open file: \"%s\"").Format( fullPath ),
-         XO("Error Saving VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Saving VST Presets")));
       return;
    }
 
@@ -1276,11 +1276,11 @@ void VSTWrapper::SaveFXP(const wxFileName & fn) const
    f.Write(buf.GetData(), buf.GetDataLen());
    if (f.Error())
    {
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          XO("Error writing to file: \"%s\"").Format( fullPath ),
-         XO("Error Saving VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+         MessageBoxOptions{}
+            .Caption(XO("Error Saving VST Presets")));
    }
 
    f.Close();
@@ -1457,17 +1457,16 @@ bool VSTWrapper::HandleXMLTag(const std::string_view& tag, const AttributesList 
 
             if (strValue != GetSymbol().Internal())
             {
+               using namespace BasicUI;
                auto msg = XO("This parameter file was saved from %s. Continue?")
                   .Format( strValue );
-               int result = AudacityMessageBox(
+               auto result = ShowMessageBox(
                   msg,
-                  XO("Confirm"),
-                  wxYES_NO,
-                  nullptr );
-               if (result == wxNO)
-               {
+                  MessageBoxOptions{}
+                     .Caption(XO("Confirm"))
+                     .ButtonStyle(Button::YesNo));
+               if (result == MessageBoxResult::No)
                   return false;
-               }
             }
          }
          else if (attr == "version")
