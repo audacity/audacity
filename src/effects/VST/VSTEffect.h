@@ -162,6 +162,9 @@ class VSTEffect final
 
    EffectSettings MakeSettings() const override;
 
+   // Plugin loading and unloading
+   std::vector<int> GetEffectIDs();
+
 protected:
 
    //! Will never be called
@@ -171,14 +174,7 @@ protected:
    
    void UpdateDisplay() override;
    
-
 private:
-
-
-   // Plugin loading and unloading
-   
-   std::vector<int> GetEffectIDs();
-
    // UI
    
    
@@ -200,8 +196,6 @@ private:
      
    wxSizerItem* mContainer{};
    
-   friend class VSTEffectsModule;
-
    //mutable bool mInitialFetchDone{ false };
 };
 
