@@ -360,7 +360,7 @@ std::unique_ptr<EffectEditor> VSTEffect::PopulateUI(const EffectPlugin &,
    auto& vst2Instance = dynamic_cast<VSTInstance&>(instance);
 
    auto editor = std::make_unique<VSTEditor>(
-      vst2Instance, gui, *this, access, pParent, mAEffect->numParams);
+      vst2Instance, GetType(), gui, *this, access, pParent, mAEffect->numParams);
 
    // Also let the instance know about the validator, so it can forward
    // to it calls coming from the vst callback
@@ -944,7 +944,8 @@ VSTEditor::~VSTEditor()
 }
 
 VSTEditor::VSTEditor(
-   VSTInstance&       instance,
+   VSTInstance&             instance,
+   EffectType               type,
    bool                     gui,
    const EffectUIServices&  services,
    EffectSettingsAccess&    access,
@@ -952,6 +953,7 @@ VSTEditor::VSTEditor(
    int                      numParams
 )
    : EffectEditor(services, access),
+     mType{ type },
      mInstance(instance),
      mGui{ gui },
      mParent(pParent),
@@ -994,25 +996,19 @@ void VSTEditor::Automate(int index, float value)
 
 bool VSTEditor::FetchSettingsFromInstance(EffectSettings& settings)
 {
-   return mInstance.FetchSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mUIServices).GetSettings(settings));
+   return mInstance.FetchSettings(VSTWrapper::GetSettings(settings));
 }
 
 bool VSTEditor::StoreSettingsToInstance(const EffectSettings& settings)
 {
-   return mInstance.StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const VSTEffect&>(mUIServices).GetSettings(settings));
+   return mInstance.StoreSettings(VSTWrapper::GetSettings(settings));
 }
 
 bool VSTEditor::ValidateUI()
 {
    mAccess.ModifySettings([this](EffectSettings& settings)
    {
-      const auto& eff =
-         static_cast<const VSTEffect&>(VSTEditor::mUIServices);
-      if (eff.GetType() == EffectTypeGenerate)
+      if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
 
       FetchSettingsFromInstance(settings);
