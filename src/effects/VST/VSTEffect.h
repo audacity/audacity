@@ -123,7 +123,7 @@ class VSTEditor final
 {
 public:
 
-   VSTEditor(VSTInstance&       instance, bool gui,
+   VSTEditor(VSTInstance&       instance, EffectType type, bool gui,
       const EffectUIServices&  services,
       EffectSettingsAccess&    access,
       wxWindow*                pParent,
@@ -166,6 +166,7 @@ private:
    void OnIdle(wxIdleEvent &evt);
 
    VSTInstance& mInstance;
+   const EffectType mType;
    const bool mGui;
 
    bool FetchSettingsFromInstance(EffectSettings& settings);
