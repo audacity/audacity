@@ -465,6 +465,8 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_VST}>:
          effects/VST/VSTControl.h
+         effects/VST/VSTEditor.cpp
+         effects/VST/VSTEditor.h
          effects/VST/VSTEffect.cpp
          effects/VST/VSTEffect.h
          effects/VST/VSTEffectBase.cpp
