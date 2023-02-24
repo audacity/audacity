@@ -14,6 +14,7 @@
 #ifndef __AUDACITY_VST_EFFECT_BASE__
 #define __AUDACITY_VST_EFFECT_BASE__
 
+#include "GlobalVariable.h"
 #include "VSTWrapper.h"
 #include "PerTrackEffect.h"
 #include "PluginInterface.h"
@@ -29,6 +30,10 @@ class VSTEffectBase
    , public PerTrackEffect
 {
  public:
+   struct Factory : DefaultedGlobalHook< Factory,
+      UniquePtrFactory<VSTEffectBase, const PluginPath&>::Function
+   >{};
+
    VSTEffectBase(const PluginPath & path);
    ~VSTEffectBase() override;
 

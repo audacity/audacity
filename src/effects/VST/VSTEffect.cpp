@@ -446,4 +446,7 @@ void VSTEffect::ShowOptions(const EffectPlugin &) const
    VSTEffectOptionsDialog{ *this }.ShowModal();
 }
 
+// Inject factory hook to make VSTEffect capable of UI
+static VSTEffectBase::Factory::SubstituteInUnique<VSTEffect> scope;
+
 #endif // USE_VST
