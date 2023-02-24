@@ -2,119 +2,31 @@
 
   Audacity: A Digital Audio Editor
 
-  VSTEffect.h
+  VSTEditor.h
 
   Dominic Mazzoni
+
+  Paul Licameli split from VSTEffect.h
 
 **********************************************************************/
 #if USE_VST
 
-#ifndef __AUDACITY_VST_EFFECT__
-#define __AUDACITY_VST_EFFECT__
+#ifndef __AUDACITY_VST_EDITOR__
+#define __AUDACITY_VST_EDITOR__
 
-#include "VSTEffectBase.h"
-#include "../StatelessPerTrackEffect.h"
+#include "VSTWrapper.h"
 #include "../EffectEditor.h"
 
-#include "SampleFormat.h"
 #include <wx/weakref.h>
-
-#include <optional>
-#include <atomic>
-
-class wxSlider;
-class wxStaticText;
-
-class NumericTextCtrl;
-
-class VSTControl;
-#include "VSTControl.h"
-
-typedef intptr_t (*dispatcherFn)(AEffect * effect,
-                                 int opCode,
-                                 int index,
-                                 intptr_t value,
-                                 void *ptr,
-                                 float opt);
-
-typedef void (*processFn)(AEffect * effect,
-                          float **inputs,
-                          float **outputs,
-                          int sampleframes);
-
-typedef void (*setParameterFn)(AEffect * effect,
-                               int index,
-                               float parameter);
-
-typedef float (*getParameterFn)(AEffect * effect,
-                                int index);
-
-typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
-
-class VSTTimer;
-class VSTEffect;
-class wxDynamicLibrary;
-
-#if defined(__WXMAC__)
-struct __CFBundle;
-typedef struct __CFBundle *CFBundleRef;
-#if __LP64__
-typedef int CFBundleRefNum;
-#else
-typedef signed short                    SInt16;
-typedef SInt16 CFBundleRefNum;
-#endif
-#endif
+#include <wx/event.h>
 
 class VSTInstance;
-using VSTInstanceArray = std::vector < std::unique_ptr<VSTInstance> >;
+class wxSlider;
+class wxStaticText;
+class NumericTextCtrl;
+class VSTControl;
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffect
-//
-///////////////////////////////////////////////////////////////////////////////
-
-
-wxDECLARE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
-DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
-
-
-class VSTEditor;
-
-class VSTEffect final
-   : public StatelessEffectUIServices
-   , public VSTEffectBase
-{
-public:
-   using VSTEffectBase::VSTEffectBase;
-   ~VSTEffect() override;
-
-private:
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
-
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-
-   // Non-const and non-virtual function:
-   OptionalMessage ImportPresetsNC(EffectSettings &settings);
-   void ShowOptions(const EffectPlugin &plugin) const override;
-
-   //! Will never be called
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const final;
-};
+class VSTTimer;
 
 class VSTEditor final
    : public wxEvtHandler
