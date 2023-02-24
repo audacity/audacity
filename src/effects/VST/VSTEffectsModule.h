@@ -14,11 +14,18 @@
 #ifndef __AUDACITY_VST_EFFECTS_MODULE__
 #define __AUDACITY_VST_EFFECTS_MODULE__
 
+#include "GlobalVariable.h"
 #include "PluginProvider.h"
+#include "VSTEffectBase.h"
 
 class VSTEffectsModule final : public PluginProvider
 {
 public:
+ public:
+   struct Factory : DefaultedGlobalHook< Factory,
+      UniquePtrFactory<VSTEffectBase, const PluginPath&>::Function
+   >{};
+
    VSTEffectsModule();
    virtual ~VSTEffectsModule();
 

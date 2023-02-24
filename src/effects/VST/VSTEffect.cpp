@@ -26,6 +26,7 @@
 
 #include "VSTEffect.h"
 #include "VSTEditor.h"
+#include "VSTEffectsModule.h"
 #include "VSTInstance.h"
 #include "SampleCount.h"
 
@@ -445,5 +446,8 @@ void VSTEffect::ShowOptions(const EffectPlugin &) const
 {
    VSTEffectOptionsDialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make VSTEffect capable of UI
+static VSTEffectsModule::Factory::SubstituteInUnique<VSTEffect> scope;
 
 #endif // USE_VST

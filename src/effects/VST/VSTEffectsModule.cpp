@@ -11,7 +11,6 @@
 
 *//********************************************************************/
 #include "VSTEffectsModule.h"
-#include "VSTEffect.h"
 
 #include "ModuleManager.h"
 #include "wxArrayStringEx.h"
@@ -262,7 +261,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    const RegistrationCallback &callback)
 {
 
-   VSTEffect effect(path);
+   VSTEffectBase effect(path);
    if(effect.InitializePlugin())
    {
       auto effectIDs = effect.GetEffectIDs();
@@ -275,7 +274,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
          //Subsequent VSTEffect::Load may seem like overhead, but we need
          //to initialize EffectDefinitionInterface part, which includes
          //properly formatted plugin path
-         VSTEffect subeffect(wxString::Format("%s;%d", path, id));
+         VSTEffectBase subeffect(wxString::Format("%s;%d", path, id));
          subeffect.Load();
          if(callback)
             callback(this, &subeffect);
@@ -291,7 +290,7 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   auto result = std::make_unique<VSTEffect>(path);
+   auto result = Factory::Call(path);
    if (!result->InitializePlugin())
       result.reset();
    return result;
