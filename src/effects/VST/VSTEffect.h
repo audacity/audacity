@@ -12,9 +12,9 @@
 #ifndef __AUDACITY_VST_EFFECT__
 #define __AUDACITY_VST_EFFECT__
 
+#include "VSTEffectBase.h"
 #include "../StatelessPerTrackEffect.h"
 #include "../EffectEditor.h"
-#include "PluginInterface.h"
 
 #include "SampleFormat.h"
 #include <wx/weakref.h>
@@ -29,12 +29,6 @@ class NumericTextCtrl;
 
 class VSTControl;
 #include "VSTControl.h"
-
-/* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-   developed by Steinberg GmbH */
-#define VSTPLUGINTYPE XO("VST")
-
-#define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
 typedef intptr_t (*dispatcherFn)(AEffect * effect,
                                  int opCode,
@@ -87,63 +81,6 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 
 class VSTEditor;
-
-class VSTEffectBase
-   : public VSTWrapper
-   , public PerTrackEffect
-{
- public:
-   VSTEffectBase(const PluginPath & path);
-   ~VSTEffectBase() override;
-
-   // ComponentInterface implementation
-
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
-
-   // EffectDefinitionInterface implementation
-
-   EffectType GetType() const override;
-   EffectFamilySymbol GetFamily() const override;
-   bool IsInteractive() const override;
-   bool IsDefault() const override;
-   RealtimeSince RealtimeSupport() const override;
-   bool SupportsAutomation() const override;
-
-   bool SaveSettings(
-      const EffectSettings &settings, CommandParameters & parms) const override;
-   bool LoadSettings(
-      const CommandParameters & parms, EffectSettings &settings) const override;
-
-   OptionalMessage LoadUserPreset(
-      const RegistryPath & name, EffectSettings &settings) const override;
-   
-   bool SaveUserPreset(
-      const RegistryPath & name, const EffectSettings &settings) const override;
-
-   RegistryPaths GetFactoryPresets() const override;
-   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
-      const override;
-   bool DoLoadFactoryPreset(int id);
-
-   bool InitializePlugin();
-
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
-   bool CanExportPresets() const override;
-
-   bool HasOptions() const override;
-
-   EffectSettings MakeSettings() const override;
-
-   // Plugin loading and unloading
-   std::vector<int> GetEffectIDs();
-
-private:
-   PluginID mID;
-};
 
 class VSTEffect final
    : public StatelessEffectUIServices
