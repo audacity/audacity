@@ -62,7 +62,7 @@ typedef SInt16 CFBundleRefNum;
 #endif
 #endif
 
-class VSTLink /* not final */
+class VST_API VSTLink /* not final */
 {
 public:
    virtual ~VSTLink() {};
@@ -90,7 +90,7 @@ struct VSTSettings
    std::unordered_map<wxString, std::optional<double> > mParamsMap;
 };
 
-struct VSTUIWrapper
+struct VST_API VSTUIWrapper
 {
    virtual void Idle();
    virtual void NeedIdle();
@@ -99,7 +99,8 @@ struct VSTUIWrapper
    virtual void Flush();
 };
 
-struct VSTWrapper : public VSTLink, public XMLTagHandler, public VSTUIWrapper
+struct VST_API VSTWrapper
+   : public VSTLink, public XMLTagHandler, public VSTUIWrapper
 {
    static inline VSTSettings& GetSettings(EffectSettings& settings)
    {

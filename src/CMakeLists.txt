@@ -469,17 +469,8 @@ list( APPEND SOURCES
          effects/VST/VSTEditor.h
          effects/VST/VSTEffect.cpp
          effects/VST/VSTEffect.h
-         effects/VST/VSTEffectBase.cpp
-         effects/VST/VSTEffectBase.h
-         effects/VST/VSTEffectsModule.cpp
-         effects/VST/VSTEffectsModule.h
          effects/VST/VSTEffectOptionsDialog.cpp
          effects/VST/VSTEffectOptionsDialog.h
-         effects/VST/VSTInstance.cpp
-         effects/VST/VSTInstance.h
-         effects/VST/VSTWrapper.cpp
-         effects/VST/VSTWrapper.h
-         effects/VST/aeffectx.h
       >
 
       $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
@@ -1484,6 +1475,12 @@ set( AUDACITY_LIBRARIES
    lib-time-track-interface
    lib-snapping-interface
 )
+
+if (USE_VST)
+   list( APPEND AUDACITY_LIBRARIES
+      lib-vst-interface
+   )
+endif()
 
 if (${_OPT}has_vst3)
    list( APPEND AUDACITY_LIBRARIES

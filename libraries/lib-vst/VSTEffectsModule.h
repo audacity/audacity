@@ -18,11 +18,11 @@
 #include "PluginProvider.h"
 #include "VSTEffectBase.h"
 
-class VSTEffectsModule final : public PluginProvider
+class VST_API VSTEffectsModule final : public PluginProvider
 {
 public:
  public:
-   struct Factory : DefaultedGlobalHook< Factory,
+   struct VST_API Factory : DefaultedGlobalHook< Factory,
       UniquePtrFactory<VSTEffectBase, const PluginPath&>::Function
    >{};
 
