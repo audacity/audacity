@@ -146,4 +146,8 @@ void LV2Effect::ShowOptions(const EffectPlugin &) const
 {
    LV2Preferences::Dialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make LV2Effect capable of UI
+static LV2EffectBase::Factory::SubstituteInUnique<LV2Effect> scope;
+
 #endif
