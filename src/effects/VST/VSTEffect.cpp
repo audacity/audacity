@@ -25,6 +25,7 @@
 // *******************************************************************
 
 #include "VSTEffect.h"
+#include "VSTEffectOptionsDialog.h"
 #include "VSTEditor.h"
 #include "VSTInstance.h"
 #include "SampleCount.h"
@@ -51,31 +52,6 @@
 
 // NOTE:  To debug the subprocess, use wxLogDebug and, on Windows, Debugview
 //        from TechNet (Sysinternals).
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// Dialog for configuring latency, buffer size and graphics mode for a
-// VST effect.
-//
-///////////////////////////////////////////////////////////////////////////////
-class VSTEffectOptionsDialog final : public wxDialogWrapper
-{
-public:
-   explicit VSTEffectOptionsDialog(const EffectDefinitionInterface &effect);
-   virtual ~VSTEffectOptionsDialog();
-
-   void PopulateOrExchange(ShuttleGui & S);
-
-   void OnOk(wxCommandEvent & evt);
-
-private:
-   const EffectDefinitionInterface &mEffect;
-   int mBufferSize;
-   bool mUseLatency;
-   bool mUseGUI;
-
-   DECLARE_EVENT_TABLE()
-};
 
 BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VSTEffectOptionsDialog::OnOk)
