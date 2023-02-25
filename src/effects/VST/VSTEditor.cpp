@@ -141,6 +141,11 @@ void VSTEditor::NeedIdle()
    mTimer->Start(100);
 }
 
+void VSTEditor::Idle()
+{
+   wxYieldIfNeeded();
+}
+
 void VSTEditor::NeedEditIdle(bool state)
 {
    mWantsEditIdle = state;

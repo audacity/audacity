@@ -85,6 +85,7 @@ private:
    bool StoreSettingsToInstance(const EffectSettings& settings);
    void NeedEditIdle(bool state);
    void NeedIdle() override;
+   void Idle() override;
 
    void OnSizeWindow(wxCommandEvent& evt);
 
