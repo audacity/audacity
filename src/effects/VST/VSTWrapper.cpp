@@ -138,7 +138,8 @@ intptr_t VSTWrapper::AudioMaster(AEffect * effect,
          return 0;
 
       case audioMasterIdle:
-         wxYieldIfNeeded();
+         if (vst)
+            vst->Idle();
          return 1;
 
       case audioMasterGetCurrentProcessLevel:
@@ -617,8 +618,12 @@ bool VSTWrapper::IsCompatible(const VstPatchChunkInfo& info) const
 void VSTUIWrapper::Flush()
 {}
 
+void VSTUIWrapper::Idle()
+{
+}
+
 void VSTUIWrapper::NeedIdle()
-{   
+{
 }
 
 VstTimeInfo* VSTWrapper::GetTimeInfo()

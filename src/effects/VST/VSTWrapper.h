@@ -92,6 +92,7 @@ struct VSTSettings
 
 struct VSTUIWrapper
 {
+   virtual void Idle();
    virtual void NeedIdle();
    virtual void SizeWindow(int w, int h);
    virtual void Automate(int index, float value);
