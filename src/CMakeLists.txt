@@ -473,6 +473,7 @@ list( APPEND SOURCES
          effects/VST/VSTEffectBase.h
          effects/VST/VSTEffectsModule.cpp
          effects/VST/VSTEffectsModule.h
+         effects/VST/VSTEffectOptionsDialog.cpp
          effects/VST/VSTEffectOptionsDialog.h
          effects/VST/VSTInstance.cpp
          effects/VST/VSTInstance.h
