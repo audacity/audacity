@@ -20,6 +20,7 @@
 #endif
 
 #include "LV2Effect.h"
+#include "LoadLV2.h"
 #include "LV2Instance.h"
 #include "LV2Editor.h"
 #include "LV2Wrapper.h"
@@ -146,4 +147,8 @@ void LV2Effect::ShowOptions(const EffectPlugin &) const
 {
    LV2Preferences::Dialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make LV2Effect capable of UI
+static LV2EffectsModule::Factory::SubstituteInUnique<LV2Effect> scope;
+
 #endif

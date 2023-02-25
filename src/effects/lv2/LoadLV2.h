@@ -9,7 +9,6 @@
   License: GPL v2 or later.  See License.txt.
 
 *********************************************************************/
-
 #ifndef LV2EFFECTSMODULE_H
 #define LV2EFFECTSMODULE_H
 
@@ -17,6 +16,8 @@
 
 #include "lilv/lilv.h"
 
+#include "GlobalVariable.h"
+#include "LV2EffectBase.h"
 #include "PluginProvider.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,10 @@
 class LV2EffectsModule final : public PluginProvider
 {
 public:
+   struct Factory : DefaultedGlobalHook< Factory,
+      UniquePtrFactory<LV2EffectBase, const LilvPlugin &>::Function
+   >{};
+
    LV2EffectsModule();
    virtual ~LV2EffectsModule();
 

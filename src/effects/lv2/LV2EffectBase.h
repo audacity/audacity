@@ -29,9 +29,6 @@
 class LV2EffectBase
    : public PerTrackEffect
 {
-
-   friend class LV2PluginValidator;
-
 public:
    LV2EffectBase(const LilvPlugin &plug);
    ~LV2EffectBase() override;
@@ -77,7 +74,6 @@ public:
 
    // LV2Effect implementation
 
-private:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
@@ -89,7 +85,6 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-protected:
    const LilvPlugin &mPlug;
    const LV2FeaturesList mFeatures{ mPlug };
 
