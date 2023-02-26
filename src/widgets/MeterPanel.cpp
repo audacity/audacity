@@ -57,7 +57,7 @@
 
 #include "AudioIO.h"
 #include "AColor.h"
-#include "../widgets/BasicMenu.h"
+#include "BasicMenu.h"
 #include "ImageManipulation.h"
 #include "Decibels.h"
 #include "LinearUpdater.h"

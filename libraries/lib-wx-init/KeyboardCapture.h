@@ -29,18 +29,18 @@
 /// don't actually come from wxWidgets, but are simulated by Audacity, as
 /// translations of the EVT_CHAR_HOOK event); or, wxEVT_KEY_UP (really from
 /// wxWidgets).
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WX_INIT_API, EVT_CAPTURE_KEY, -1);
 
 namespace KeyboardCapture
 {
-   AUDACITY_DLL_API bool IsHandler(const wxWindow *handler);
-   AUDACITY_DLL_API wxWindow *GetHandler();
-   AUDACITY_DLL_API void Capture(wxWindow *handler);
-   AUDACITY_DLL_API void Release(wxWindow *handler);
+   WX_INIT_API bool IsHandler(const wxWindow *handler);
+   WX_INIT_API wxWindow *GetHandler();
+   WX_INIT_API void Capture(wxWindow *handler);
+   WX_INIT_API void Release(wxWindow *handler);
 
    //! Pre-filter is called before passing the event to the captured window
    /*! If it returns false, then skip the event entirely */
-   struct AUDACITY_DLL_API PreFilter : GlobalHook<PreFilter,
+   struct WX_INIT_API PreFilter : GlobalHook<PreFilter,
       bool( wxKeyEvent& )
    >{};
    
@@ -52,7 +52,7 @@ namespace KeyboardCapture
        wxKEY_DOWN or a wxKEY_UP event; if it returns false, then the event is
        skipped
     */
-   struct AUDACITY_DLL_API PostFilter : GlobalHook<PostFilter,
+   struct WX_INIT_API PostFilter : GlobalHook<PostFilter,
       bool( wxKeyEvent& )
    >{};
 
@@ -60,7 +60,7 @@ namespace KeyboardCapture
    /// The window releases the keyboard if the event is for killing focus,
    /// otherwise the window captures the keyboard; then refresh the window
    /// and skip the event
-   AUDACITY_DLL_API
+   WX_INIT_API
    void OnFocus( wxWindow &window, wxFocusEvent &event );
 }
 

@@ -143,12 +143,6 @@ list( APPEND SOURCES
       HitTestResult.h
       IncompatiblePluginsDialog.cpp
       IncompatiblePluginsDialog.h
-      JournalEvents.cpp
-      JournalEvents.h
-      JournalWindowPaths.cpp
-      JournalWindowPaths.h
-      KeyboardCapture.cpp
-      KeyboardCapture.h
       LabelDialog.cpp
       LabelDialog.h
       LabelTrack.cpp
@@ -955,8 +949,6 @@ list( APPEND SOURCES
       widgets/AttachableScrollBar.h
       widgets/BackedPanel.cpp
       widgets/BackedPanel.h
-      widgets/BasicMenu.cpp
-      widgets/BasicMenu.h
       widgets/CustomUpdater.cpp
       widgets/CustomUpdater.h
       widgets/CustomUpdaterPosition.cpp
@@ -991,8 +983,6 @@ list( APPEND SOURCES
       widgets/MeterPanelBase.h
       widgets/MissingPluginsErrorDialog.cpp
       widgets/MissingPluginsErrorDialog.h
-      widgets/NumericTextCtrl.cpp
-      widgets/NumericTextCtrl.h
       widgets/Overlay.cpp
       widgets/Overlay.h
       widgets/OverlayPanel.cpp
@@ -1019,8 +1009,6 @@ list( APPEND SOURCES
       widgets/UnwritableLocationErrorDialog.h
       widgets/Warning.cpp
       widgets/Warning.h
-      widgets/auStaticText.cpp
-      widgets/auStaticText.h
 
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:
@@ -1291,7 +1279,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # from precompiled header usage
    set_source_files_properties(
       AudacityApp.mm
-      KeyboardCapture.cpp
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
       widgets/FileDialog/mac/FileDialogPrivate.mm

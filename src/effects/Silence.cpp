@@ -18,7 +18,7 @@
 
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 const ComponentInterfaceSymbol EffectSilence::Symbol
 /* i18n-hint: noun */

@@ -28,7 +28,7 @@
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "widgets/BasicMenu.h"
+#include "BasicMenu.h"
 #include "CellularPanel.h"
 #include "../images/Cursors.h"
 #include "HitTestResult.h"

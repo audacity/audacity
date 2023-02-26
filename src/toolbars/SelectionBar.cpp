@@ -50,7 +50,7 @@ with changes in the SelectionBar.
 
 #include "AudioIO.h"
 #include "AColor.h"
-#include "../KeyboardCapture.h"
+#include "KeyboardCapture.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -59,7 +59,7 @@ with changes in the SelectionBar.
 #include "ViewInfo.h"
 #include "QualitySettings.h"
 #include "AllThemeResources.h"
-#include "../widgets/auStaticText.h"
+#include "auStaticText.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

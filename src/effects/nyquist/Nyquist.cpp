@@ -77,7 +77,7 @@ effects from this one class.
 #include "../../prefs/GUIPrefs.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
-#include "../../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "ProgressDialog.h"
 
 #include "FileDialog/FileDialog.h"

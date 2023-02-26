@@ -42,7 +42,7 @@
 
 #include "valnum.h"
 
-#include "../../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>

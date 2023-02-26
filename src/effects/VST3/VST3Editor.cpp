@@ -7,7 +7,7 @@
 #include "VST3Wrapper.h"
 #include "StatelessPerTrackEffect.h"
 #include "internal/PlugFrame.h"
-#include "widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 #ifdef __WXGTK__
 #include "internal/x11/SocketWindow.h"

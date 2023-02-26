@@ -26,14 +26,14 @@
 #include "AllThemeResources.h"
 #include "AudioIOBase.h"
 #include "DeviceToolBar.h"
-#include "../KeyboardCapture.h"
+#include "KeyboardCapture.h"
 #include "Project.h"
 #include "../ProjectWindows.h"
 #include "DeviceManager.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/DevicePrefs.h"
 #include "../widgets/AButton.h"
-#include "../widgets/BasicMenu.h"
+#include "BasicMenu.h"
 #include "wxWidgetsWindowPlacement.h"
 
 namespace {

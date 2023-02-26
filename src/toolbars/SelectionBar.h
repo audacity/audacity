@@ -14,7 +14,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
-#include "widgets/auStaticText.h"
+#include "auStaticText.h"
 
 // Column for 
 //   Project rate

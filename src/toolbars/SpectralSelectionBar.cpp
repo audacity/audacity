@@ -60,7 +60,7 @@ with changes in the SpectralSelectionBar.
 #include "WindowAccessible.h"
 #endif
 
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 

@@ -17,7 +17,7 @@
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "BasicMenu.h"
-#include "../KeyboardCapture.h"
+#include "KeyboardCapture.h"
 #include "Theme.h"
 #include "wxWidgetsWindowPlacement.h"
 

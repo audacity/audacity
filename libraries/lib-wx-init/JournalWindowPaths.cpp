@@ -15,7 +15,7 @@
 #include "Identifier.h"
 #include "Theme.h"
 #include "wxArrayStringEx.h"
-#include "widgets/auStaticText.h"
+#include "auStaticText.h"
 
 
 namespace Journal {

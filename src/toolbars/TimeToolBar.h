@@ -14,7 +14,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "Observer.h"
 
 class NumericTextCtrl;

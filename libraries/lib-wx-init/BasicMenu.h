@@ -22,7 +22,7 @@ namespace BasicMenu {
 
 using Point = BasicUI::Point;
 
-class AUDACITY_DLL_API Handle
+class WX_INIT_API Handle
 {
 public:
 

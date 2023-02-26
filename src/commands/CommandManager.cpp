@@ -1704,7 +1704,7 @@ void CommandManager::RemoveDuplicateShortcuts()
    }
 }
 
-#include "../KeyboardCapture.h"
+#include "KeyboardCapture.h"
 
 static KeyboardCapture::PreFilter::Scope scope1{
 []( wxKeyEvent & ) {

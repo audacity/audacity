@@ -48,7 +48,7 @@
 #include "ProjectRate.h"
 #include "Prefs.h"
 #include "Track.h"
-#include "widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"

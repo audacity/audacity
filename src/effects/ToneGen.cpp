@@ -30,7 +30,7 @@ frequency changes smoothly during the tone.
 #include "ProjectRate.h"
 #include "ShuttleGui.h"
 #include "valnum.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 const EnumValueSymbol EffectToneGen::kInterStrings[nInterpolations] =
 {

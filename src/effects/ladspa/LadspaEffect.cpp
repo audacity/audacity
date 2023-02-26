@@ -58,7 +58,7 @@ effects from this one class.
 #include "AudacityException.h"
 #include "FileNames.h"
 #include "ShuttleGui.h"
-#include "../../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "valnum.h"
 #include "wxPanelWrapper.h"
 #include "ModuleManager.h"

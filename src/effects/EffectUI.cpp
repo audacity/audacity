@@ -16,7 +16,7 @@
 #include "EffectEditor.h"
 
 #include "AllThemeResources.h"
-#include "widgets/BasicMenu.h"
+#include "BasicMenu.h"
 #include "BasicUI.h"
 #include "ConfigInterface.h"
 #include "EffectManager.h"

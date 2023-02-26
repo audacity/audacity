@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../LabelTrack.h"
 
 #include "AColor.h"
-#include "../../../widgets/BasicMenu.h"
+#include "BasicMenu.h"
 #include "AllThemeResources.h"
 #include "../../../HitTestResult.h"
 #include "Project.h"

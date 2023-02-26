@@ -25,7 +25,7 @@
 
 #include "Prefs.h"
 #include "ShuttleGui.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "valnum.h"
 
 

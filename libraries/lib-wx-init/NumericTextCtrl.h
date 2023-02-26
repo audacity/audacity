@@ -26,12 +26,12 @@
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and
 // update their formats to agree.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TIMETEXTCTRL_UPDATED, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
+DECLARE_EXPORTED_EVENT_TYPE(WX_INIT_API, EVT_TIMETEXTCTRL_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WX_INIT_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(WX_INIT_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
                             -1);
 
-class AUDACITY_DLL_API NumericTextCtrl final
+class WX_INIT_API NumericTextCtrl final
    : public wxControl, public NumericConverter
 {
    friend class NumericTextCtrlAx;

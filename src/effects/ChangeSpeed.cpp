@@ -29,7 +29,7 @@
 #include "Resample.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "valnum.h"
 
 #include "TimeWarper.h"

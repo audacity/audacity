@@ -24,7 +24,7 @@
 #include "FileNames.h"
 #include "ViewInfo.h"
 #include "HelpSystem.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "AudacityMessageBox.h"
 #include "VetoDialogHook.h"
 

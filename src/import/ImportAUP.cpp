@@ -44,7 +44,7 @@
 #include "WaveTrack.h"
 #include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
-#include "widgets/NumericTextCtrl.h"
+#include "NumericTextCtrl.h"
 #include "ProgressDialog.h"
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"

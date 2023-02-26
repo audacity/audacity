@@ -17,7 +17,7 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include "widgets/NumericTextCtrl.h" // member variable
+#include "NumericTextCtrl.h" // member variable
 
 class AudacityProject;
 class Track;

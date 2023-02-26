@@ -41,7 +41,7 @@
 #include "AllThemeResources.h"
 #include "AudioIOBase.h"
 #include "ImageManipulation.h"
-#include "../KeyboardCapture.h"
+#include "KeyboardCapture.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
