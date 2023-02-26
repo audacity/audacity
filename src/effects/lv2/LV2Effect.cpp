@@ -145,7 +145,7 @@ OptionalMessage LV2Effect::ImportPresets(
 
 void LV2Effect::ShowOptions(const EffectPlugin &) const
 {
-   LV2Preferences::Dialog{ *this }.ShowModal();
+   LV2PreferencesDialog{ *this }.ShowModal();
 }
 
 // Inject factory hook to make LV2Effect capable of UI

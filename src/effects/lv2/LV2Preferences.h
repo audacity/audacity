@@ -49,12 +49,13 @@ bool SetUseGUI(const EffectDefinitionInterface &effect, bool useGUI);
 /*!
  @}
 */
+}
 
-class Dialog final : public wxDialogWrapper
+class LV2PreferencesDialog final : public wxDialogWrapper
 {
 public:
-   explicit Dialog(const EffectDefinitionInterface &effect);
-   virtual ~Dialog();
+   explicit LV2PreferencesDialog(const EffectDefinitionInterface &effect);
+   virtual ~LV2PreferencesDialog();
 
    void PopulateOrExchange(ShuttleGui &S);
 
@@ -68,7 +69,6 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
-}
 
 #endif
 #endif

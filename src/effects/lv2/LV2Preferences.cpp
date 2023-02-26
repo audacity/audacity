@@ -85,12 +85,13 @@ bool LV2Preferences::SetUseGUI(
    return SetSetting(effect, UseGUIStr, useGUI);
 }
 
-BEGIN_EVENT_TABLE(LV2Preferences::Dialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, LV2Preferences::Dialog::OnOk)
+BEGIN_EVENT_TABLE(LV2PreferencesDialog, wxDialogWrapper)
+   EVT_BUTTON(wxID_OK, LV2PreferencesDialog::OnOk)
 END_EVENT_TABLE()
 
-LV2Preferences::Dialog::Dialog(const EffectDefinitionInterface &effect)
-   : wxDialogWrapper{ nullptr, wxID_ANY, XO("LV2 Effect Settings") }
+LV2PreferencesDialog::LV2PreferencesDialog(
+   const EffectDefinitionInterface &effect
+)  : wxDialogWrapper{ nullptr, wxID_ANY, XO("LV2 Effect Settings") }
    , mEffect{ effect }
 {
    using namespace LV2Preferences;
@@ -101,11 +102,9 @@ LV2Preferences::Dialog::Dialog(const EffectDefinitionInterface &effect)
    PopulateOrExchange(S);
 }
 
-LV2Preferences::Dialog::~Dialog()
-{
-}
+LV2PreferencesDialog::~LV2PreferencesDialog() = default;
 
-void LV2Preferences::Dialog::PopulateOrExchange(ShuttleGui &S)
+void LV2PreferencesDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, 1);
@@ -119,7 +118,7 @@ void LV2Preferences::Dialog::PopulateOrExchange(ShuttleGui &S)
          S.StartStatic(XO("Buffer Size"));
          {
             IntegerValidator<int> vld(&mBufferSize);
-            vld.SetRange(8, DEFAULT_BLOCKSIZE);
+            vld.SetRange(8, LV2Preferences::DEFAULT_BLOCKSIZE);
 
             S.AddVariableText( XO(
 "The buffer size controls the number of samples sent to the effect "
@@ -134,7 +133,7 @@ void LV2Preferences::Dialog::PopulateOrExchange(ShuttleGui &S)
                wxTextCtrl *t;
                t = S.TieNumericTextBox(
                   XXO("&Buffer Size (8 to %d) samples:")
-                     .Format( DEFAULT_BLOCKSIZE ),
+                     .Format( LV2Preferences::DEFAULT_BLOCKSIZE ),
                   mBufferSize,
                   12);
                t->SetMinSize(wxSize(100, -1));
@@ -186,7 +185,7 @@ void LV2Preferences::Dialog::PopulateOrExchange(ShuttleGui &S)
    Center();
 }
 
-void LV2Preferences::Dialog::OnOk(wxCommandEvent &WXUNUSED(evt))
+void LV2PreferencesDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
 {
    if (!Validate())
    {
