@@ -25,10 +25,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
-#include "wxPanelWrapper.h"
-
 class EffectDefinitionInterface;
-class ShuttleGui;
 
 
 namespace LV2Preferences {
@@ -50,25 +47,6 @@ bool SetUseGUI(const EffectDefinitionInterface &effect, bool useGUI);
  @}
 */
 }
-
-class LV2PreferencesDialog final : public wxDialogWrapper
-{
-public:
-   explicit LV2PreferencesDialog(const EffectDefinitionInterface &effect);
-   virtual ~LV2PreferencesDialog();
-
-   void PopulateOrExchange(ShuttleGui &S);
-
-   void OnOk(wxCommandEvent &evt);
-
-private:
-   const EffectDefinitionInterface &mEffect;
-   int mBufferSize{};
-   bool mUseLatency{};
-   bool mUseGUI{};
-
-   DECLARE_EVENT_TABLE()
-};
 
 #endif
 #endif

@@ -22,6 +22,7 @@
 #include "lv2/data-access/data-access.h"
 
 struct LV2WrapperFeaturesList;
+class wxWindow;
 
 struct LV2UIFeaturesList final : ExtendedLV2FeaturesList {
    //! Abstraction of host services that a plug-ins native UI needs

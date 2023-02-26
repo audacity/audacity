@@ -14,6 +14,7 @@
 #include "LV2UIFeaturesList.h"
 #include "LV2InstanceFeaturesList.h"
 #include "lv2/instance-access/instance-access.h"
+#include <wx/window.h>
 
 LV2UIFeaturesList::LV2UIFeaturesList(
    const LV2WrapperFeaturesList &baseFeatures, UIHandler *pHandler,

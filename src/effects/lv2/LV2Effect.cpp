@@ -22,6 +22,7 @@
 #include "LV2Effect.h"
 #include "LV2Instance.h"
 #include "LV2Editor.h"
+#include "LV2PreferencesDialog.h"
 #include "LV2Wrapper.h"
 
 #include <cmath>
