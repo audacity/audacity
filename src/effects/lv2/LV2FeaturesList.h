@@ -19,6 +19,7 @@
 #include "lv2/log/log.h"
 #include "lv2/uri-map/uri-map.h"
 
+#include "ComponentInterfaceSymbol.h"
 #include "LV2Symbols.h"
 #include "LV2Preferences.h" // for DEFAULT_BLOCKSIZE
 

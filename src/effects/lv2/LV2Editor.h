@@ -23,6 +23,7 @@
 #include <vector>
 
 #include <wx/timer.h>
+#include <wx/weakref.h>
 #include <wx/window.h>
 #include <wx/windowptr.h>
 
@@ -36,6 +37,7 @@ using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 // plug-ins, so disable warnings
 LV2_DISABLE_DEPRECATION_WARNINGS
 
+class wxButton;
 class wxCheckBox;
 class wxChoice;
 class wxSlider;

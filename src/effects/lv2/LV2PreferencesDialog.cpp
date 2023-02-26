@@ -2,9 +2,9 @@
 
   Audacity: A Digital Audio Editor
 
-  LV2Preferences.cpp
+  LV2PreferencesDialog.cpp
 
-  Paul Licameli split from LV2Effect.cpp
+  Paul Licameli split from LV2Prefernces.cpp
 
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2 or later.  See License.txt.
@@ -21,69 +21,11 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
+#include "LV2PreferencesDialog.h"
 #include "LV2Preferences.h"
 #include "ConfigInterface.h"
 #include "ShuttleGui.h"
 #include "../../widgets/valnum.h"
-
-static constexpr auto SettingsStr = L"Settings";
-static constexpr auto BufferSizeStr = L"BufferSize";
-static constexpr auto UseLatencyStr = L"UseLatency";
-static constexpr auto UseGUIStr = L"UseGUI";
-
-namespace {
-template<typename T>
-bool GetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
-   T& var, const T &defaultValue)
-{
-   return GetConfig(effect, PluginSettings::Shared, SettingsStr, path,
-      var, defaultValue);
-}
-
-template<typename T>
-bool SetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
-   const T& value)
-{
-   return SetConfig(effect, PluginSettings::Shared, SettingsStr, path,
-      value);
-}
-}
-
-bool LV2Preferences::GetBufferSize(
-   const EffectDefinitionInterface &effect, int &bufferSize)
-{
-   return GetSetting(effect, BufferSizeStr, bufferSize, 8192);
-}
-
-bool LV2Preferences::SetBufferSize(
-   const EffectDefinitionInterface &effect, int bufferSize)
-{
-   return SetSetting(effect, BufferSizeStr, bufferSize);
-}
-
-bool LV2Preferences::GetUseLatency(
-   const EffectDefinitionInterface &effect, bool &useLatency)
-{
-   return GetSetting(effect, UseLatencyStr, useLatency, true);
-}
-
-bool LV2Preferences::SetUseLatency(
-   const EffectDefinitionInterface &effect, bool useLatency)
-{
-   return SetSetting(effect, UseLatencyStr, useLatency);
-}
-
-bool LV2Preferences::GetUseGUI(
-   const EffectDefinitionInterface &effect, bool &useGUI)
-{
-   return GetSetting(effect, UseGUIStr, useGUI, true);
-}
-
-bool LV2Preferences::SetUseGUI(
-   const EffectDefinitionInterface &effect, bool useGUI)
-{
-   return SetSetting(effect, UseGUIStr, useGUI);
-}
 
 BEGIN_EVENT_TABLE(LV2PreferencesDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2PreferencesDialog::OnOk)

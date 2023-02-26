@@ -2,18 +2,18 @@
 
   Audacity: A Digital Audio Editor
 
-  @file LV2Preferences.h
-  @brief Persistent settings that can apply to any LV2 effect
+  @file LV2PreferencesDialog.h
+  @brief UI to change persistent settings that can apply to any LV2 effect
 
-  Paul Licameli split from LV2Effect.cpp
+  Paul Licameli split from LV2Preferences.h
 
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LV2_PREFERENCES__
-#define __AUDACITY_LV2_PREFERENCES__
+#ifndef __AUDACITY_LV2_PREFERENCES_DIALOG__
+#define __AUDACITY_LV2_PREFERENCES_DIALOG__
 
 #if defined(USE_LV2)
 
@@ -30,26 +30,6 @@
 class EffectDefinitionInterface;
 class ShuttleGui;
 
-
-namespace LV2Preferences {
-//! Maximum block size in number of samples (not bytes)
-constexpr auto DEFAULT_BLOCKSIZE = 1048576;
-
-/*! @name Persistent settings that can apply to any LV2 effect
- @{
- */
-bool GetBufferSize(const EffectDefinitionInterface &effect, int &bufferSize);
-bool SetBufferSize(const EffectDefinitionInterface &effect, int bufferSize);
-
-bool GetUseLatency(const EffectDefinitionInterface &effect, bool &useLatency);
-bool SetUseLatency(const EffectDefinitionInterface &effect, bool useLatency);
-
-bool GetUseGUI(const EffectDefinitionInterface &effect, bool &useGUI);
-bool SetUseGUI(const EffectDefinitionInterface &effect, bool useGUI);
-/*!
- @}
-*/
-}
 
 class LV2PreferencesDialog final : public wxDialogWrapper
 {
