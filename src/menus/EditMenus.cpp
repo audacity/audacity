@@ -27,7 +27,7 @@
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
+#include "VetoDialogHook.h"
 #include "../AudioPasteDialog.h"
 #include "BasicUI.h"
 #include "Sequence.h"

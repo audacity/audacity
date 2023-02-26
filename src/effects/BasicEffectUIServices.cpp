@@ -19,7 +19,7 @@
 #include <wx/filedlg.h>
 #include "SelectFile.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
+#include "VetoDialogHook.h"
 
 int BasicEffectUIServices::ShowClientInterface(const EffectPlugin &plugin,
    wxWindow &parent, wxDialog &dialog, EffectEditor *, bool forceModal) const

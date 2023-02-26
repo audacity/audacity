@@ -42,7 +42,7 @@ small calculations of rectangles.
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "Track.h"
-#include "../widgets/VetoDialogHook.h"
+#include "VetoDialogHook.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 #include "CommandDispatch.h"

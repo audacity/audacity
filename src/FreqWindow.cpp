@@ -84,7 +84,7 @@ the mouse around.
 #include "widgets/LogarithmicUpdater.h"
 #include "widgets/LinearDBFormat.h"
 #include "widgets/RealFormat.h"
-#include "widgets/VetoDialogHook.h"
+#include "VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

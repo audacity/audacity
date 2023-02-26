@@ -29,6 +29,7 @@ set( SOURCES
    ProgressDialog.h
    SelectFile.cpp
    SelectFile.h
+   VetoDialogHook.h
    numformatter.cpp
    numformatter.h
    valnum.cpp
