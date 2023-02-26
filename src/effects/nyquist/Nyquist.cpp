@@ -51,7 +51,7 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "BasicUI.h"
-#include "../EffectEditor.h"
+#include "EffectEditor.h"
 #include "../EffectManager.h"
 #include "FileNames.h"
 #include "../../LabelTrack.h"

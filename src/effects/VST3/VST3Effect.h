@@ -17,7 +17,7 @@
 
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "effects/StatelessPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 
 namespace Steinberg
 {

@@ -28,7 +28,7 @@ struct EffectSettingChanged final
    float newValue {};
 };
 
-class AUDACITY_DLL_API EffectEditor /* not final */
+class WX_EFFECTS_API EffectEditor /* not final */
     : public Observer::Publisher<EffectSettingChanged>
 {
 public:

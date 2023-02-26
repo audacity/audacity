@@ -17,7 +17,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <unordered_map>
 #include "AudioUnitUtils.h"
-#include "../EffectEditor.h"
+#include "EffectEditor.h"
 
 class AUControl;
 

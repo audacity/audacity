@@ -9,8 +9,8 @@
 **********************************************************************/
 #if USE_VST
 
-#include "../StatelessPerTrackEffect.h"
-#include "../EffectEditor.h"
+#include "StatelessPerTrackEffect.h"
+#include "EffectEditor.h"
 #include "CFResources.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"

@@ -13,7 +13,7 @@
 #if defined(USE_VAMP)
 #include "VampEffect.h"
 #include "../AnalysisTracks.h"
-#include "../EffectEditor.h"
+#include "EffectEditor.h"
 
 #include <vamp-hostsdk/Plugin.h>
 #include <vamp-hostsdk/PluginChannelAdapter.h>

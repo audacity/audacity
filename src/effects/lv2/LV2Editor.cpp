@@ -22,7 +22,7 @@
 #endif
 
 #include "LV2Editor.h"
-#include "effects/StatelessPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "LV2EffectMeter.h"
 #include "LV2Instance.h"
 #include "LV2Wrapper.h"

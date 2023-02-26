@@ -25,7 +25,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../StatelessPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>

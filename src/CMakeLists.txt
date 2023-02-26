@@ -353,8 +353,6 @@ list( APPEND SOURCES
       effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
-      effects/BasicEffectUIServices.cpp
-      effects/BasicEffectUIServices.h
       effects/BassTreble.cpp
       effects/BassTreble.h
       effects/Biquad.cpp
@@ -379,14 +377,10 @@ list( APPEND SOURCES
       effects/EBUR128.h
       effects/Echo.cpp
       effects/Echo.h
-      effects/EffectEditor.cpp
-      effects/EffectEditor.h
       effects/EffectManager.cpp
       effects/EffectManager.h
       effects/EffectUI.cpp
       effects/EffectUI.h
-      effects/EffectUIServices.cpp
-      effects/EffectUIServices.h
       effects/Equalization.cpp
       effects/Equalization.h
       effects/Equalization48x.cpp
@@ -458,8 +452,6 @@ list( APPEND SOURCES
       effects/StatefulEffectUIServices.h
       effects/StatefulPerTrackEffect.cpp
       effects/StatefulPerTrackEffect.h
-      effects/StatelessPerTrackEffect.cpp
-      effects/StatelessPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
       effects/TimeScale.cpp
@@ -1490,9 +1482,9 @@ set( AUDACITY_LIBRARIES
    lib-graphics-interface
    lib-tags-interface
    lib-project-file-io-interface
-   lib-effects-interface
    lib-wx-init-interface
    lib-audio-unit-interface
+   lib-wx-effects-interface
 )
 
 if (${_OPT}use_ffmpeg)

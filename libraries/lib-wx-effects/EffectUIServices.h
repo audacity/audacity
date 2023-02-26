@@ -42,7 +42,7 @@ using EffectDialogFactory = std::function< DialogFactoryResults(
 
 //! Abstract base class to populate a UI and validate UI values.
 //! It can import and export presets.
-class AUDACITY_DLL_API EffectUIServices /* not final */
+class WX_EFFECTS_API EffectUIServices /* not final */
 {
 public:
    // Display a message box, using effect's (translated) name as the prefix

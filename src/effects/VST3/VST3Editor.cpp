@@ -5,7 +5,7 @@
 #include "VST3ParametersWindow.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
-#include "effects/StatelessPerTrackEffect.h"
+#include "StatelessPerTrackEffect.h"
 #include "internal/PlugFrame.h"
 #include "widgets/NumericTextCtrl.h"
 
