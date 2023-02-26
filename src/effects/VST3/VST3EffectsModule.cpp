@@ -30,7 +30,6 @@
 #include "VST3Effect.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
-#include "widgets/AButton.h"
 
 
 DECLARE_PROVIDER_ENTRY(AudacityModule)
