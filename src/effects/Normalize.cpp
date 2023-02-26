@@ -24,7 +24,6 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "valnum.h"
