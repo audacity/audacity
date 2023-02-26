@@ -26,8 +26,7 @@
    "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
 #define LV2EFFECTS_FAMILY XO("LV2")
 
-class LV2EffectBase
-   : public PerTrackEffect
+class LV2_API LV2EffectBase : public PerTrackEffect
 {
 public:
    LV2EffectBase(const LilvPlugin &plug);

@@ -48,6 +48,7 @@ set( LIBRARIES
    lib-vst3
    lib-snapping
    lib-vst
+   lib-lv2
 )
 
 if ( ${_OPT}has_networking )

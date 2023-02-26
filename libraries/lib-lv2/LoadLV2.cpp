@@ -30,6 +30,7 @@ Functions that find and load all LV2 plugins on the system.
 #include <wx/dynlib.h>
 #include <wx/filename.h>
 #include <wx/log.h>
+#include <wx/utils.h>
 
 #include "Internat.h"
 #include "wxArrayStringEx.h"
@@ -270,6 +271,7 @@ bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
    return GetPlugin(path) != nullptr;
 }
 
+namespace {
 class LV2PluginValidator : public PluginProvider::Validator
 {
 public:
@@ -300,6 +302,7 @@ public:
          throw std::runtime_error("Not a LV2Effect");
    }
 };
+}
 
 std::unique_ptr<PluginProvider::Validator> LV2EffectsModule::MakeValidator() const
 {

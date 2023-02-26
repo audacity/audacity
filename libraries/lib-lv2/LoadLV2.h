@@ -26,10 +26,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectsModule final : public PluginProvider
+class LV2_API LV2EffectsModule final : public PluginProvider
 {
 public:
-   struct Factory : DefaultedGlobalHook< Factory,
+   struct LV2_API Factory : DefaultedGlobalHook< Factory,
       UniquePtrFactory<LV2EffectBase, const LilvPlugin &>::Function
    >{};
 
