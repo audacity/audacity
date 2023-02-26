@@ -18,7 +18,7 @@
 #include <vamp-hostsdk/PluginLoader.h>
 
 #include <wx/weakref.h>
-#include "../StatefulEffect.h"
+#include "StatefulEffect.h"
 #include "MemoryX.h"
 
 class wxStaticText;

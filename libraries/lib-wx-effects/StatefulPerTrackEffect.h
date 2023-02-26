@@ -29,7 +29,7 @@ public:
 
    //! Implemented with call-throughs to the
    //! StatefulPerTrackEffect virtual functions
-   class AUDACITY_DLL_API Instance
+   class WX_EFFECTS_API Instance
       : public StatefulEffectBase::Instance
       , public PerTrackEffect::Instance
    {

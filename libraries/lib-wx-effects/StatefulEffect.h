@@ -20,13 +20,13 @@
 
 //! Subclass of Effect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
-class StatefulEffect
+class WX_EFFECTS_API StatefulEffect
    : public StatefulEffectBase
    , public Effect
    , public StatefulEffectUIServices
 {
 public:
-   class AUDACITY_DLL_API Instance : public StatefulEffectBase::Instance {
+   class WX_EFFECTS_API Instance : public StatefulEffectBase::Instance {
    public:
       using StatefulEffectBase::Instance::Instance;
       bool Process(EffectSettings &settings) override;

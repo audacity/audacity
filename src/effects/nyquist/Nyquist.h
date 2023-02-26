@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include "../StatefulEffect.h"
+#include "StatefulEffect.h"
 #include "FileNames.h"
 #include "SampleCount.h"
 #include "wxPanelWrapper.h"

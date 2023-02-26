@@ -440,12 +440,6 @@ list( APPEND SOURCES
       effects/SimpleMono.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
-      effects/StatefulEffect.cpp
-      effects/StatefulEffect.h
-      effects/StatefulEffectUIServices.cpp
-      effects/StatefulEffectUIServices.h
-      effects/StatefulPerTrackEffect.cpp
-      effects/StatefulPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
       effects/TimeScale.cpp

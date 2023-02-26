@@ -9,6 +9,12 @@ set( SOURCES
    EffectEditor.h
    EffectUIServices.cpp
    EffectUIServices.h
+   StatefulEffect.cpp
+   StatefulEffect.h
+   StatefulEffectUIServices.cpp
+   StatefulEffectUIServices.h
+   StatefulPerTrackEffect.cpp
+   StatefulPerTrackEffect.h
    StatelessPerTrackEffect.cpp
    StatelessPerTrackEffect.h
 )
