@@ -38,11 +38,11 @@ for drawing different aspects of the label and its text box.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
+#include "BasicUI.h"
 #include "Prefs.h"
 #include "Project.h"
 
 #include "TimeWarper.h"
-#include "AudacityMessageBox.h"
 
 EnumSetting< bool > LabelTrack::StyleSetting{
    wxT("/FileFormats/LabelStyleChoice"),
@@ -582,7 +582,7 @@ void LabelTrack::Import(wxTextFile & in)
       catch(const LabelStruct::BadFormatException&) { error = true; }
    }
    if (error)
-      ::AudacityMessageBox( XO("One or more saved labels could not be read.") );
+      BasicUI::ShowMessageBox(XO("One or more saved labels could not be read."));
    SortLabels();
 }
 
