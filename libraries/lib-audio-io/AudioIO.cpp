@@ -530,7 +530,10 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    bool usePlayback = false, useCapture = false;
    PaStreamParameters playbackParameters{};
    PaStreamParameters captureParameters{};
+
+   #ifdef __WXMSW__
    PaWasapiStreamInfo wasapiStreamInfo{};
+   #endif
 
    auto latencyDuration = AudioIOLatencyDuration.Read();
 
@@ -556,6 +559,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
       bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
 
+      #ifdef __WXMSW__
       // If the host API is WASAPI, the stream is bidirectional and there is no
       // supported sample rate enable the WASAPI Sample Rate Conversion
       // for the playback device.
@@ -568,6 +572,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 
          playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
       }
+      #endif
 
       if (mSoftwarePlaythrough)
          playbackParameters.suggestedLatency =
