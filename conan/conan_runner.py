@@ -8,7 +8,7 @@ import hashlib
 from contextlib import contextmanager
 import configparser
 
-required_conan_version = (1, 52, 0)
+required_conan_version = (1, 58, 0)
 
 class ConanVenv(venv.EnvBuilder):
     def post_setup(self, context):
@@ -17,7 +17,7 @@ class ConanVenv(venv.EnvBuilder):
             python_exe = os.path.join(context.bin_path, 'python.exe')
         else:
             python_exe = os.path.join(context.bin_path, 'python')
-        cmd = [python_exe, '-m', 'pip', 'install', 'conan']
+        cmd = [python_exe, '-m', 'pip', 'install', 'conan==1.59.0']
         subprocess.check_call(cmd)
 
 

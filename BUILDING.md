@@ -18,6 +18,8 @@ However, if you want to install Conan manually, you can do so by following the i
 Manual installation can be useful if you want to use Conan to manage dependencies for other projects or if you plan to have multiple builds of Audacity on the 
 same machine.
 
+At this time, Audacity **does not support Conan 2.0**. If you have Conan 2.0 installed, you will need to downgrade to Conan 1.59.0.
+
 ### CMake
 
 On Windows, please use the [prebuilt binaries](https://cmake.org/download/). Ensure you select one of the options to add cmake to the system path.
@@ -45,7 +47,7 @@ Here are the dependencies you need to install on various distribution families.
 ```
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential cmake git python3-pip
-$ sudo pip3 install conan
+$ sudo pip3 install conan==1.59.0
 $ sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
 ```
 
@@ -55,7 +57,7 @@ $ sudo apt-get install libgtk2.0-dev libasound2-dev libjack-jackd2-dev uuid-dev
 $ sudo zypper refresh
 $ sudo zypper install patterns-devel-C-C++-devel_C_C++ cmake git python3-pip \
                       gtk2-devel libjack-devel uuid-devel libSM-devel
-$ sudo pip3 install conan
+$ sudo pip3 install conan==1.59.0
 ```
 
 #### Fedora Workstation
@@ -64,7 +66,7 @@ $ sudo pip3 install conan
 $ sudo dnf update
 $ sudo dnf install gcc-c++ cmake git python3-pip perl-core \
                    gtk2-devel gtk3-devel alsa-lib-devel jack-audio-connection-kit-devel uuid-devel libSM-devel
-$ sudo pip3 install conan
+$ sudo pip3 install conan==1.59.0
 ```
 
 ### Graphviz
