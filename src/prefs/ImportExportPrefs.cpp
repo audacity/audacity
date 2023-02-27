@@ -20,6 +20,7 @@
 
 #include <wx/defs.h>
 
+#include "LabelTrack.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
@@ -60,19 +61,6 @@ void ImportExportPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-EnumSetting< bool > ImportExportPrefs::LabelStyleSetting{
-   wxT("/FileFormats/LabelStyleChoice"),
-   {
-      EnumValueSymbol{ wxT("Standard"), XXO("S&tandard") },
-      EnumValueSymbol{ wxT("Extended"), XXO("E&xtended (with frequency ranges)") },
-   },
-   0, // true
-
-   {
-      true, false,
-   },
-};
-
 EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
    wxT("/FileFormats/AllegroStyleChoice"),
    {
@@ -100,7 +88,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       // on the Mac, VoiceOver will announce as radio buttons.
       S.StartPanel();
       {
-         S.StartRadioButtonGroup(ImportExportPrefs::LabelStyleSetting);
+         S.StartRadioButtonGroup(LabelTrack::StyleSetting);
          {
             S.TieRadioButton();
             S.TieRadioButton();

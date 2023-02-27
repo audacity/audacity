@@ -40,10 +40,22 @@ for drawing different aspects of the label and its text box.
 
 #include "Prefs.h"
 #include "Project.h"
-#include "prefs/ImportExportPrefs.h"
 
 #include "TimeWarper.h"
 #include "AudacityMessageBox.h"
+
+EnumSetting< bool > LabelTrack::StyleSetting{
+   wxT("/FileFormats/LabelStyleChoice"),
+   {
+      EnumValueSymbol{ wxT("Standard"), XXO("S&tandard") },
+      EnumValueSymbol{ wxT("Extended"), XXO("E&xtended (with frequency ranges)") },
+   },
+   0, // true
+
+   {
+      true, false,
+   },
+};
 
 LabelTrack::Interval::~Interval() = default;
 
@@ -462,7 +474,7 @@ void LabelStruct::Export(wxTextFile &file) const
    auto f1 = selectedRegion.f1();
    if ((f0 == SelectedRegion::UndefinedFrequency &&
       f1 == SelectedRegion::UndefinedFrequency) ||
-      ImportExportPrefs::LabelStyleSetting.ReadEnum())
+      LabelTrack::StyleSetting.ReadEnum())
       return;
 
    // Write a \ character at the start of a second line,

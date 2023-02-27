@@ -13,6 +13,7 @@
 #ifndef _LABELTRACK_
 #define _LABELTRACK_
 
+#include "Prefs.h"
 #include "SelectedRegion.h"
 #include "Track.h"
 
@@ -86,6 +87,8 @@ class AUDACITY_DLL_API LabelTrack final
    , public Observer::Publisher<struct LabelTrackEvent>
 {
  public:
+   static EnumSetting< bool > StyleSetting;
+
    static wxString GetDefaultName();
 
    // Construct and also build all attachments
