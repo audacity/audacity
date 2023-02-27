@@ -242,7 +242,7 @@ int ExportFLAC::GetFormatCount() const
 FormatInfo ExportFLAC::GetFormatInfo(int) const
 {
    return {
-      wxT("FLAC"), XO("FLAC Files"), { wxT("flac") }, {}, FLAC__MAX_CHANNELS, true
+      wxT("FLAC"), XO("FLAC Files"), { wxT("flac") }, FLAC__MAX_CHANNELS, true
    };
 }
 

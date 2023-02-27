@@ -50,7 +50,6 @@ struct AUDACITY_DLL_API FormatInfo
    wxString mFormat;
    TranslatableString mDescription;
    FileExtensions mExtensions;
-   FileNames::FileTypes mMask;
    unsigned mMaxChannels;
    bool mCanMetaData;
 };

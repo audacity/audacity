@@ -434,7 +434,6 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
          sf_header_shortname(si.format),
          XO("Other uncompressed files"),
          { sf_header_extension(si.format) },
-         {},
          static_cast<unsigned>(si.channels),
          true
       };
@@ -443,7 +442,6 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
       kFormats[index].name,
       kFormats[index].desc,
       { sf_header_extension(kFormats[index].format) },
-      {},
       255,
       true
    };

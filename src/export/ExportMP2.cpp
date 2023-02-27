@@ -235,7 +235,7 @@ int ExportMP2::GetFormatCount() const
 FormatInfo ExportMP2::GetFormatInfo(int) const
 {
    return {
-      wxT("MP2"), XO("MP2 Files"), { wxT("mp2") }, {}, 2, true
+      wxT("MP2"), XO("MP2 Files"), { wxT("mp2") }, 2, true
    };
 }
 
