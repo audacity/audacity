@@ -277,6 +277,9 @@ public:
 
    ExportCL();
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int) const override;
+   
    // Required
    void OptionsCreate(ShuttleGui &S, int format) override;
 
@@ -343,15 +346,18 @@ private:
    };
 };
 
-ExportCL::ExportCL()
-:  ExportPlugin()
+ExportCL::ExportCL() = default;
+
+int ExportCL::GetFormatCount() const
 {
-   AddFormat();
-   SetFormat(wxT("CL"),0);
-   AddExtension(wxT(""),0);
-   SetMaxChannels(255,0);
-   SetCanMetaData(false,0);
-   SetDescription(XO("(external program)"),0);
+   return 1;
+}
+
+FormatInfo ExportCL::GetFormatInfo(int) const
+{
+   return {
+      wxT("CL"), XO("(external program)"), {""}, {}, 255, false
+   };
 }
 
 ProgressResult ExportCL::Export(AudacityProject *project, std::unique_ptr<BasicUI::ProgressDialog>& pDialog,

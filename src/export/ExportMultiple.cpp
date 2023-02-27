@@ -253,13 +253,13 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          ++i;
          for (int j = 0; j < pPlugin->GetFormatCount(); j++)
          {
-            auto format = mPlugins[i]->GetDescription(j);
-            visibleFormats.push_back( format );
+            auto formatInfo = pPlugin->GetFormatInfo(j);
+            visibleFormats.push_back( formatInfo.mDescription );
             // use MSGID of description as a value too, written into config file
             // This is questionable.  A change in the msgid can make the
             // preference stored in old config files inapplicable
-            formats.push_back( format.MSGID().GET() );
-            if (mPlugins[i]->GetFormat(j) == defaultFormat) {
+            formats.push_back( formatInfo.mDescription.MSGID().GET() );
+            if (formatInfo.mFormat == defaultFormat) {
                mPluginIndex = i;
                mSubFormatIndex = j;
             }
@@ -770,12 +770,13 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
 
    // Figure out how many channels we should export.
    auto channels = GetNumExportChannels( *mTracks );
-
+   auto formatInfo = mPlugins[mPluginIndex]->GetFormatInfo(mSubFormatIndex);
+   
    FilePaths otherNames;  // keep track of file names we will use, so we
    // don't duplicate them
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
-   setting.destfile.SetExt(mPlugins[mPluginIndex]->GetExtension(mSubFormatIndex));
+   setting.destfile.SetExt(formatInfo.mExtensions[0]);
    wxLogDebug(wxT("Plug-in index = %d, Sub-format = %d"), mPluginIndex, mSubFormatIndex);
    wxLogDebug(wxT("File extension is %s"), setting.destfile.GetExt());
    wxString name;    // used to hold file name whilst we mess with it
@@ -853,7 +854,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
          auto &settings = ProjectSettings::Get( *mProject );
          bool bShowTagsDialog = settings.GetShowId3Dialog();
 
-         bShowTagsDialog = bShowTagsDialog && mPlugins[mPluginIndex]->GetCanMetaData(mSubFormatIndex);
+         bShowTagsDialog = bShowTagsDialog && formatInfo.mCanMetaData;
 
          if( bShowTagsDialog ){
             bool bCancelled = !TagsEditorDialog::ShowEditDialog(setting.filetags,
@@ -914,12 +915,13 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    int l = 0;     // track counter
    auto ok = ProgressResult::Success;
    FilePaths otherNames;
+   auto formatInfo = mPlugins[mPluginIndex]->GetFormatInfo(mSubFormatIndex);
    std::vector<ExportKit> exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
    exportSettings.reserve(mNumWaveTracks);   // Allocate some guessed space to use.
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
-   setting.destfile.SetExt(mPlugins[mPluginIndex]->GetExtension(mSubFormatIndex));
+   setting.destfile.SetExt(formatInfo.mExtensions[0]);
 
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
@@ -997,7 +999,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
          auto &settings = ProjectSettings::Get( *mProject );
          bool bShowTagsDialog = settings.GetShowId3Dialog();
 
-         bShowTagsDialog = bShowTagsDialog && mPlugins[mPluginIndex]->GetCanMetaData(mSubFormatIndex);
+         bShowTagsDialog = bShowTagsDialog && formatInfo.mCanMetaData;
 
          if( bShowTagsDialog ){
             bool bCancelled = !TagsEditorDialog::ShowEditDialog(setting.filetags,

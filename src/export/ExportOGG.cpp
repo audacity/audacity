@@ -126,6 +126,9 @@ public:
 
    ExportOGG();
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int) const override;
+   
    // Required
    void OptionsCreate(ShuttleGui &S, int format) override;
 
@@ -145,15 +148,18 @@ private:
    bool FillComment(AudacityProject *project, vorbis_comment *comment, const Tags *metadata);
 };
 
-ExportOGG::ExportOGG()
-:  ExportPlugin()
+ExportOGG::ExportOGG() = default;
+
+int ExportOGG::GetFormatCount() const
 {
-   AddFormat();
-   SetFormat(wxT("OGG"),0);
-   AddExtension(wxT("ogg"),0);
-   SetMaxChannels(255,0);
-   SetCanMetaData(true,0);
-   SetDescription(XO("Ogg Vorbis Files"),0);
+   return 1;
+}
+
+FormatInfo ExportOGG::GetFormatInfo(int) const
+{
+   return {
+      wxT("OGG"), XO("Ogg Vorbis Files"), { wxT("ogg") }, {}, 255, true
+   };
 }
 
 ProgressResult ExportOGG::Export(AudacityProject *project,

@@ -1697,6 +1697,9 @@ public:
    ExportMP3();
    bool CheckFileName(wxFileName & filename, int format) override;
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int) const override;
+   
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
@@ -1721,15 +1724,18 @@ private:
    int SetNumExportChannels() override;
 };
 
-ExportMP3::ExportMP3()
-:  ExportPlugin()
+ExportMP3::ExportMP3() = default;
+
+int ExportMP3::GetFormatCount() const
 {
-   AddFormat();
-   SetFormat(wxT("MP3"),0);
-   AddExtension(wxT("mp3"),0);
-   SetMaxChannels(2,0);
-   SetCanMetaData(true,0);
-   SetDescription(XO("MP3 Files"),0);
+   return 1;
+}
+
+FormatInfo ExportMP3::GetFormatInfo(int) const
+{
+   return {
+      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, {}, 2, true
+   };
 }
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))

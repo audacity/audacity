@@ -205,6 +205,9 @@ public:
 
    ExportFLAC();
 
+   int GetFormatCount() const override;
+   FormatInfo GetFormatInfo(int) const override;
+   
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
@@ -229,15 +232,18 @@ private:
 
 //----------------------------------------------------------------------------
 
-ExportFLAC::ExportFLAC()
-:  ExportPlugin()
+ExportFLAC::ExportFLAC() = default;
+
+int ExportFLAC::GetFormatCount() const
 {
-   AddFormat();
-   SetFormat(wxT("FLAC"),0);
-   AddExtension(wxT("flac"),0);
-   SetMaxChannels(FLAC__MAX_CHANNELS,0);
-   SetCanMetaData(true,0);
-   SetDescription(XO("FLAC Files"),0);
+   return 1;
+}
+
+FormatInfo ExportFLAC::GetFormatInfo(int) const
+{
+   return {
+      wxT("FLAC"), XO("FLAC Files"), { wxT("flac") }, {}, FLAC__MAX_CHANNELS, true
+   };
 }
 
 ProgressResult ExportFLAC::Export(AudacityProject *project,
