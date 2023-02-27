@@ -64,6 +64,8 @@ class AUDACITY_DLL_API NoteTrack final
    , public OtherPlayableSequence
 {
 public:
+   static EnumSetting<bool> AllegroStyleSetting;
+
    // Construct and also build all attachments
    static NoteTrack *New(AudacityProject &project);
 
