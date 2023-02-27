@@ -51,7 +51,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "../../NoteTrack.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../prefs/GUIPrefs.h"

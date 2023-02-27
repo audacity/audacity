@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "LabelTrackView.h"
 #include "../../../HitTestResult.h"
-#include "../../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "../../../widgets/PopupMenuTable.h"
 #include "Prefs.h"
 #include "../../../RefreshCode.h"

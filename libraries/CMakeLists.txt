@@ -58,6 +58,7 @@ set( LIBRARIES
    lib-mixer
    lib-channel
    lib-stretching-sequence
+   lib-label-track
 )
 
 if ( ${_OPT}has_networking )

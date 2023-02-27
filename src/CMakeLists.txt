@@ -118,8 +118,6 @@ list( APPEND SOURCES
       KeyboardCapture.h
       LabelDialog.cpp
       LabelDialog.h
-      LabelTrack.cpp
-      LabelTrack.h
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
@@ -321,8 +319,6 @@ list( APPEND SOURCES
 
       effects/Amplify.cpp
       effects/Amplify.h
-      effects/AnalysisTracks.cpp
-      effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
       effects/BasicEffectUIServices.cpp
@@ -1350,6 +1346,7 @@ set( AUDACITY_LIBRARIES
    lib-import-export-interface
    lib-export-ui-interface
    lib-file-formats-interface
+   lib-label-track-interface
 )
 
 if (USE_VST)

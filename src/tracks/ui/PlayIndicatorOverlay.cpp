@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AdornedRulerPanel.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"

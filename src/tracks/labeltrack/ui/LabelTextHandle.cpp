@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelTrackView.h"
 
 #include "../../../HitTestResult.h"
-#include "../../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "UndoManager.h"

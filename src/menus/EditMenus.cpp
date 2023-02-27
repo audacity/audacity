@@ -2,7 +2,7 @@
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
 #include "Project.h"

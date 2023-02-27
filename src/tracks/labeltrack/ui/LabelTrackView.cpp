@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/TextEditHelper.h"
 
-#include "../../../LabelTrack.h"
+#include "LabelTrack.h"
 
 #include "AColor.h"
 #include "../../../widgets/BasicMenu.h"

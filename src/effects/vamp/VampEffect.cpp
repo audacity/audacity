@@ -12,7 +12,7 @@
 **********************************************************************/
 #if defined(USE_VAMP)
 #include "VampEffect.h"
-#include "../AnalysisTracks.h"
+#include "AnalysisTracks.h"
 #include "../EffectEditor.h"
 
 #include <vamp-hostsdk/Plugin.h>
@@ -35,7 +35,7 @@
 #include "../../widgets/valnum.h"
 #include "AudacityMessageBox.h"
 
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "WaveTrack.h"
 
 enum

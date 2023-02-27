@@ -1,6 +1,6 @@
 #include "../CommonCommandFlags.h"
 #include "FileNames.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"

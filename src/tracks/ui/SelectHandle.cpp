@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "../../SpectrumAnalyst.h"
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "NumberScale.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"

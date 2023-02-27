@@ -18,7 +18,7 @@
 #include "../TrackPanel.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"

@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 #include "AnalysisTracks.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 
 AddedAnalysisTrack::AddedAnalysisTrack(
    TrackList &trackList, const wxString &name)
