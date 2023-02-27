@@ -409,7 +409,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       }
 
       const auto effectName = GetSymbol().Translation();
-      addedTracks.push_back(AddAnalysisTrack(*this,
+      addedTracks.push_back(AddAnalysisTrack(*mTracks,
          multiple
          ? wxString::Format( _("%s: %s"), leader->GetName(), effectName )
          : effectName

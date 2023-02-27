@@ -17,50 +17,50 @@
 
 *//*******************************************************************/
 #include "AnalysisTracks.h"
-#include "Effect.h"
 #include "../LabelTrack.h"
 
-AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
-   : mpEffect(pEffect)
+AddedAnalysisTrack::AddedAnalysisTrack(
+   TrackList &trackList, const wxString &name)
+   : mpTrackList(&trackList)
 {
    if(!name.empty())
-      mpTrack = LabelTrack::Create(*pEffect->mTracks, name);
+      mpTrack = LabelTrack::Create(*mpTrackList, name);
    else
-      mpTrack = LabelTrack::Create(*pEffect->mTracks);
+      mpTrack = LabelTrack::Create(*mpTrackList);
 }
 
 AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
 {
-   mpEffect = that.mpEffect;
+   mpTrackList = that.mpTrackList;
    mpTrack = that.mpTrack;
    that.Commit();
 }
 
 void AddedAnalysisTrack::Commit()
 {
-   mpEffect = nullptr;
+   mpTrackList = nullptr;
 }
 
 AddedAnalysisTrack::~AddedAnalysisTrack()
 {
-   if (mpEffect) {
+   if (mpTrackList) {
       // Label tracks are always leaders
       assert(mpTrack->IsLeader());
       // not committed -- DELETE the label track
-      mpEffect->mTracks->Remove(*mpTrack);
+      mpTrackList->Remove(*mpTrack);
    }
 }
 
 std::shared_ptr<AddedAnalysisTrack> AddAnalysisTrack(
-   Effect &effect, const wxString &name)
+   TrackList &trackList, const wxString &name)
 {
    return std::shared_ptr<AddedAnalysisTrack>
-      { safenew AddedAnalysisTrack{ &effect, name } };
+      { safenew AddedAnalysisTrack{ trackList, name } };
 }
 
 ModifiedAnalysisTrack::ModifiedAnalysisTrack(
-   Effect *pEffect, const LabelTrack &origTrack, const wxString &name
-)  : mpEffect(pEffect)
+   TrackList &trackList, const LabelTrack &origTrack, const wxString &name
+)  : mpTrackList(&trackList)
 {
    // copy LabelTrack here, so it can be undone on cancel
    const auto startTime = origTrack.GetStartTime();
@@ -77,13 +77,13 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack(
    // mpOrigTrack came from mTracks which we own but expose as const to subclasses
    // So it's okay that we cast it back to const
    mpOrigTrack =
-      pEffect->mTracks->ReplaceOne(const_cast<LabelTrack&>(origTrack),
+      mpTrackList->ReplaceOne(const_cast<LabelTrack&>(origTrack),
          std::move(*list));
 }
 
 ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
 {
-   mpEffect = that.mpEffect;
+   mpTrackList = that.mpTrackList;
    mpTrack = that.mpTrack;
    mpOrigTrack = std::move(that.mpOrigTrack);
    that.Commit();
@@ -91,21 +91,22 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
 
 void ModifiedAnalysisTrack::Commit()
 {
-   mpEffect = nullptr;
+   mpTrackList = nullptr;
 }
 
 ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
 {
-   if (mpEffect && mpTrack) {
+   if (mpTrackList && mpTrack) {
       // not committed -- DELETE the label track
-      // mpOrigTrack came from mTracks which we own but expose as const to subclasses
+      // mpOrigTrack came from mTracks which we own but expose as const to
+      // subclasses
       // So it's okay that we cast it back to const
-      mpEffect->mTracks->ReplaceOne(*mpTrack, std::move(*mpOrigTrack));
+      mpTrackList->ReplaceOne(*mpTrack, std::move(*mpOrigTrack));
    }
 }
 
 ModifiedAnalysisTrack ModifyAnalysisTrack(
-   Effect &effect, const LabelTrack &origTrack, const wxString &name)
+   TrackList &trackList, const LabelTrack &origTrack, const wxString &name)
 {
-   return{ &effect, origTrack, name };
+   return{ trackList, origTrack, name };
 }

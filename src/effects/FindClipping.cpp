@@ -92,9 +92,9 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
 
    LabelTrack *lt{};
    if (!clt)
-      addedTrack = (AddAnalysisTrack(*this, name)), lt = addedTrack->get();
+      addedTrack = (AddAnalysisTrack(*mTracks, name)), lt = addedTrack->get();
    else
-      modifiedTrack.emplace(ModifyAnalysisTrack(*this, *clt, name)),
+      modifiedTrack.emplace(ModifyAnalysisTrack(*mTracks, *clt, name)),
       lt = modifiedTrack->get();
 
    int count = 0;
