@@ -55,13 +55,24 @@ using NoteTrackBase =
 
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
+class NoteTrack;
 class StretchHandle;
 class TimeWarper;
 
+using NoteTrackAttachment = ClientData::Cloneable<>;
+
+using NoteTrackAttachments = ClientData::Site<
+   NoteTrack,
+   NoteTrackAttachment,
+   ClientData::DeepCopying
+>;
+
 class NOTE_TRACK_API NoteTrack final
    : public NoteTrackBase
+   , public NoteTrackAttachments
 {
 public:
+   using Attachments = NoteTrackAttachments;
    static EnumSetting< bool > AllegroStyleSetting;
 
    // Construct and also build all attachments
@@ -69,6 +80,7 @@ public:
 
    NoteTrack();
    //! Copy construction hasn't been necessary yet
+   NoteTrack(const NoteTrack &orig) = delete;
    NoteTrack(const NoteTrack &orig, ProtectedCreationArg &&) = delete;
    virtual ~NoteTrack();
 
