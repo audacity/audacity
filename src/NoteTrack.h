@@ -237,8 +237,6 @@ private:
 
    //! A bit set; atomic because it may be read by worker threads in playback
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };
-
-   std::weak_ptr<StretchHandle> mStretchHandle;
    double mOrigin{ 0.0 };
 };
 
