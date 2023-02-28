@@ -41,7 +41,7 @@ This class now lists
 #include "prefs/WaveformSettings.h"
 #include "../LabelTrack.h"
 #include "NoteTrack.h"
-#include "../TimeTrack.h"
+#include "TimeTrack.h"
 #include "Envelope.h"
 
 #include "SelectCommand.h"

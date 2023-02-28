@@ -19,7 +19,7 @@ class wxRect;
 class BoundedEnvelope;
 struct TrackPanelDrawingContext;
 
-class AUDACITY_DLL_API TimeTrack final : public Track {
+class TIME_TRACK_API TimeTrack final : public Track {
 
  public:
 

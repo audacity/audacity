@@ -18,7 +18,6 @@
 
 #include <cfloat>
 #include <wx/wxcrtvararg.h>
-#include <wx/dc.h>
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"

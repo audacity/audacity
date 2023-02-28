@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../RefreshCode.h"
-#include "../../TimeTrack.h"
+#include "TimeTrack.h"
 #include "../../TrackArt.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"

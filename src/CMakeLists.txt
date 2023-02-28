@@ -198,8 +198,6 @@ list( APPEND SOURCES
       ThemedWrappers.h
       TimeDialog.cpp
       TimeDialog.h
-      TimeTrack.cpp
-      TimeTrack.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TrackArt.cpp
@@ -1426,6 +1424,7 @@ set( AUDACITY_LIBRARIES
    lib-lv2-interface
    lib-vst-interface
    lib-vst3-interface
+   lib-time-track-interface
 )
 if (USE_AUDIO_UNITS AND wxIS_MAC)
    list(APPEND AUDACITY_LIBRARIES lib-audio-unit-interface)
