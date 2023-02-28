@@ -186,7 +186,11 @@ TrackListHolder NoteTrack::Clone() const
    else {
       // We are duplicating a default-constructed NoteTrack, and that's okay
    }
+
    // copy some other fields here
+   Attachments &attachments = *duplicate;
+   attachments = *this;
+
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetTopNote(mTopNote);
    duplicate->SetVisibleChannels(GetVisibleChannels());
