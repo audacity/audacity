@@ -13,10 +13,64 @@
 #define __AUDACITY_NOTE_TRACK_DISPLAY_DATA
 
 #include <wx/gdicmn.h>
+#include "NoteTrack.h"
 
+class Alg_seq;
 class NoteTrack;
 
-/// Data used to display a note track
+/// Persistent data for display of a note track
+class NoteTrackRange final : public NoteTrackAttachment
+{
+public:
+   //! Allow mutative access to attached data of a const track
+   static NoteTrackRange &Get(const NoteTrack &track);
+
+   ~NoteTrackRange() override;
+   std::unique_ptr<NoteTrackAttachment> Clone() const override;
+
+   enum { MinPitch = 0, MaxPitch = 127 };
+
+   /// Gets the current bottom note (a pitch)
+   int GetBottomNote() const { return mBottomNote; }
+   /// Gets the current top note (a pitch)
+   int GetTopNote() const { return mTopNote; }
+
+   /// Sets the bottom note (a pitch), making sure that it is never greater than the top note.
+   void SetBottomNote(int note);
+   /// Sets the top note (a pitch), making sure that it is never less than the bottom note.
+   void SetTopNote(int note);
+
+   /// Sets the top and bottom note (both pitches) automatically, swapping them if needed.
+   void SetNoteRange(int note1, int note2);
+   /// Shifts all notes vertically by the given pitch
+   void ShiftNoteRange(int offset);
+
+   /// Zooms so that all notes are visible
+   void ZoomAllNotes(Alg_seq *pSeq);
+   /// Zooms so that the entire track is visible
+   void ZoomMaxExtent() { SetNoteRange(MinPitch, MaxPitch); }
+
+#if 0
+   // Vertical scrolling is performed by dragging the keyboard at
+   // left of track. Protocol is call StartVScroll, then update by
+   // calling VScroll with original and final mouse position.
+   // These functions are not used -- instead, zooming/dragging works like
+   // audio track zooming/dragging. The vertical scrolling is nice however,
+   // so I left these functions here for possible use in the future.
+   void StartVScroll();
+   void VScroll(int start, int end);
+#endif
+
+private:
+   int mBottomNote{ MinPitch };
+   int mTopNote{ MaxPitch };
+#if 0
+   // Also unused from vertical scrolling
+   int mStartBottomNote;
+#endif
+};
+
+/// Temporary data used to display a note track
 class NoteTrackDisplayData {
 private:
    const NoteTrack &mTrack;

@@ -11,20 +11,135 @@
 
 #include "NoteTrackDisplayData.h"
 #include "NoteTrack.h"
+#include "../../lib-src/header-substitutes/allegro.h"
+
+static NoteTrackAttachments::RegisteredFactory key{
+   [](NoteTrack&){ return std::make_unique<NoteTrackRange>(); }
+};
+
+NoteTrackRange &NoteTrackRange::Get(const NoteTrack &track)
+{
+   auto &mutTrack = const_cast<NoteTrack&>(track);
+   return static_cast<NoteTrackRange&>(
+      mutTrack.NoteTrackAttachments::Get(key));
+}
+
+NoteTrackRange::~NoteTrackRange() = default;
+
+std::unique_ptr<NoteTrackAttachment> NoteTrackRange::Clone() const
+{
+   return std::make_unique<NoteTrackRange>(*this);
+}
+
+void NoteTrackRange::SetBottomNote(int note)
+{
+   if (note < MinPitch)
+      note = MinPitch;
+   else if (note > 96)
+      note = 96;
+
+   wxCHECK(note <= mTopNote, );
+
+   mBottomNote = note;
+}
+
+void NoteTrackRange::SetTopNote(int note)
+{
+   if (note > MaxPitch)
+      note = MaxPitch;
+
+   wxCHECK(note >= mBottomNote, );
+
+   mTopNote = note;
+}
+
+void NoteTrackRange::SetNoteRange(int note1, int note2)
+{
+   // Bounds check
+   if (note1 > MaxPitch)
+      note1 = MaxPitch;
+   else if (note1 < MinPitch)
+      note1 = MinPitch;
+   if (note2 > MaxPitch)
+      note2 = MaxPitch;
+   else if (note2 < MinPitch)
+      note2 = MinPitch;
+   // Swap to ensure ordering
+   if (note2 < note1) { auto tmp = note1; note1 = note2; note2 = tmp; }
+
+   mBottomNote = note1;
+   mTopNote = note2;
+}
+
+void NoteTrackRange::ShiftNoteRange(int offset)
+{
+   // Ensure everything stays in bounds
+   if (mBottomNote + offset < MinPitch || mTopNote + offset > MaxPitch)
+       return;
+
+   mBottomNote += offset;
+   mTopNote += offset;
+}
+
+#if 0
+void NoteTrackRange::StartVScroll()
+{
+    mStartBottomNote = mBottomNote;
+}
+
+void NoteTrackRange::VScroll(int start, int end)
+{
+    int ph = GetPitchHeight();
+    int delta = ((end - start) + ph / 2) / ph;
+    ShiftNoteRange(delta);
+}
+#endif
+
+void NoteTrackRange::ZoomAllNotes(Alg_seq *pSeq)
+{
+   Alg_iterator iterator( pSeq, false );
+   iterator.begin();
+   Alg_event_ptr evt;
+
+   // Go through all of the notes, finding the minimum and maximum value pitches.
+   bool hasNotes = false;
+   int minPitch = MaxPitch;
+   int maxPitch = MinPitch;
+
+   while (NULL != (evt = iterator.next())) {
+      if (evt->is_note()) {
+         int pitch = (int) evt->get_pitch();
+         hasNotes = true;
+         if (pitch < minPitch)
+            minPitch = pitch;
+         if (pitch > maxPitch)
+            maxPitch = pitch;
+      }
+   }
+
+   if (!hasNotes) {
+      // Semi-arbitrary default values:
+      minPitch = 48;
+      maxPitch = 72;
+   }
+
+   SetNoteRange(minPitch, maxPitch);
+}
 
 NoteTrackDisplayData::NoteTrackDisplayData(
    const NoteTrack &track, const wxRect &rect)
    : mTrack{ track }
    , mRect{ rect }
 {
-   auto span = mTrack.GetTopNote() - mTrack.GetBottomNote() + 1; // + 1 to make sure it includes both
+   auto &data = NoteTrackRange::Get(mTrack);
+   auto span = data.GetTopNote() - data.GetBottomNote() + 1; // + 1 to make sure it includes both
 
    mMargin = std::min((int) (rect.height / (float)(span)) / 2, rect.height / 4);
 
    // Count the number of dividers between B/C and E/F
    int numC = 0, numF = 0;
-   auto botOctave = mTrack.GetBottomNote() / 12, botNote = mTrack.GetBottomNote() % 12;
-   auto topOctave = mTrack.GetTopNote() / 12, topNote = mTrack.GetTopNote() % 12;
+   auto botOctave = data.GetBottomNote() / 12, botNote = data.GetBottomNote() % 12;
+   auto topOctave = data.GetTopNote() / 12, topNote = data.GetTopNote() % 12;
    if (topOctave == botOctave)
    {
       if (botNote == 0) numC = 1;
@@ -70,8 +185,9 @@ int NoteTrackDisplayData::YToIPitch(int y) const
 
 void NoteTrackDisplayData::Zoom(int y, float multiplier, bool center)
 {
+   auto &data = NoteTrackRange::Get(mTrack);
    int clickedPitch = YToIPitch(y);
-   int extent = mTrack.GetTopNote() - mTrack.GetBottomNote() + 1;
+   int extent = data.GetTopNote() - data.GetBottomNote() + 1;
    int newExtent = (int) (extent / multiplier);
    float position;
    if (center) {
@@ -79,11 +195,11 @@ void NoteTrackDisplayData::Zoom(int y, float multiplier, bool center)
       position = .5;
    } else {
       // align to keep the pitch that the user clicked on in the same place
-      position = extent / (clickedPitch - mTrack.GetBottomNote());
+      position = extent / (clickedPitch - data.GetBottomNote());
    }
    int newBottomNote = clickedPitch - (newExtent * position);
    int newTopNote = clickedPitch + (newExtent * (1 - position));
-   mTrack.SetNoteRange(newBottomNote, newTopNote);
+   data.SetNoteRange(newBottomNote, newTopNote);
 }
 
 void NoteTrackDisplayData::ZoomTo(int start, int end)
@@ -97,7 +213,7 @@ void NoteTrackDisplayData::ZoomTo(int start, int end)
       return;
    }
    // It's fine for this to be in either order
-   mTrack.SetNoteRange(pitch1, pitch2);
+   NoteTrackRange::Get(mTrack).SetNoteRange(pitch1, pitch2);
 }
 
 int NoteTrackDisplayData::GetPitchHeight(int factor) const
