@@ -21,7 +21,7 @@ class WaveTrack;
 
 class AUDACITY_DLL_API WaveformSettings
    : public PrefsListener
-   , public ClientData::Cloneable< ClientData::UniquePtr >
+   , public ClientData::Cloneable<>
 {
 public:
 
@@ -90,7 +90,7 @@ public:
 };
 
 class AUDACITY_DLL_API WaveformScale
-   : public ClientData::Cloneable< ClientData::UniquePtr >
+   : public ClientData::Cloneable<>
 {
 public:
    //! Mutative access to attachment even if the track argument is const
