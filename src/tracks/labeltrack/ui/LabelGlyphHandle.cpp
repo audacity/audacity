@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "LabelTrackView.h"
 #include "../../../HitTestResult.h"
+#include "LabelLayout.h"
 #include "LabelTrack.h"
 #include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
@@ -235,7 +236,7 @@ void LabelGlyphHandle::MayAdjustLabel
    auto labelStruct = mLabels[ iLabel ];
 
    // Adjust the requested edge.
-   bool flipped = labelStruct.AdjustEdge( iEdge, fNewTime );
+   bool flipped = LabelLayout::AdjustEdge(labelStruct, iEdge, fNewTime);
    // If the edges did not swap, then we are done.
    if( ! flipped ) {
       pTrack->SetLabel( iLabel, labelStruct );
@@ -246,7 +247,7 @@ void LabelGlyphHandle::MayAdjustLabel
    // we didn't move.  Then we're done.
    if( !bAllowSwapping )
    {
-      labelStruct.AdjustEdge( -iEdge, fNewTime );
+      LabelLayout::AdjustEdge(labelStruct, -iEdge, fNewTime);
       pTrack->SetLabel( iLabel, labelStruct );
       return;
    }
@@ -266,7 +267,7 @@ void LabelGlyphHandle::MayMoveLabel( int iLabel, int iEdge, double fNewTime)
    const auto pTrack = mpLT;
    const auto &mLabels = pTrack->GetLabels();
    auto labelStruct = mLabels[ iLabel ];
-   labelStruct.MoveLabel( iEdge, fNewTime );
+   LabelLayout::MoveLabel(labelStruct, iEdge, fNewTime);
    pTrack->SetLabel( iLabel, labelStruct );
 }
 
@@ -296,21 +297,24 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       bool updated = false;
       if( hit.mMouseOverLabelLeft >= 0 ) {
          auto labelStruct = mLabels[ hit.mMouseOverLabelLeft ];
-         updated |= labelStruct.updated;
-         labelStruct.updated = false;
+         auto &u = LabelLayout::Get(labelStruct).updated;
+         updated = u;
+         u = false;
          pTrack->SetLabel( hit.mMouseOverLabelLeft, labelStruct );
       }
       if( hit.mMouseOverLabelRight >= 0 ) {
          auto labelStruct = mLabels[ hit.mMouseOverLabelRight ];
-         updated |= labelStruct.updated;
-         labelStruct.updated = false;
+         auto &u = LabelLayout::Get(labelStruct).updated;
+         updated = updated || u;
+         u = false;
          pTrack->SetLabel( hit.mMouseOverLabelRight, labelStruct );
       }
 
       if (hit.mMouseOverLabel >= 0)
       {
           auto labelStruct = mLabels[hit.mMouseOverLabel];
-          if (!labelStruct.updated)
+          auto &layout = LabelLayout::Get(labelStruct);
+          if (!layout.updated)
           {
               //happens on click over bar between handles (without moving a cursor)
               newSel = labelStruct.selectedRegion;
@@ -343,7 +347,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
           }
           else
           {
-              labelStruct.updated = false;
+              layout.updated = false;
               pTrack->SetLabel(hit.mMouseOverLabel, labelStruct);
               updated = true;
           }

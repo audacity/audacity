@@ -708,6 +708,8 @@ list( APPEND SOURCES
       tracks/labeltrack/ui/LabelDefaultClickHandle.h
       tracks/labeltrack/ui/LabelGlyphHandle.cpp
       tracks/labeltrack/ui/LabelGlyphHandle.h
+      tracks/labeltrack/ui/LabelLayout.cpp
+      tracks/labeltrack/ui/LabelLayout.h
       tracks/labeltrack/ui/LabelTextHandle.cpp
       tracks/labeltrack/ui/LabelTextHandle.h
       tracks/labeltrack/ui/LabelTrackControls.cpp
