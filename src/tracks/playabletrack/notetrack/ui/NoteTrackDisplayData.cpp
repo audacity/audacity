@@ -31,6 +31,28 @@ std::unique_ptr<NoteTrackAttachment> NoteTrackRange::Clone() const
    return std::make_unique<NoteTrackRange>(*this);
 }
 
+void NoteTrackRange::WriteXML(XMLWriter &xmlFile) const
+{
+   xmlFile.WriteAttr(wxT("bottomnote"), mBottomNote);
+   xmlFile.WriteAttr(wxT("topnote"), mTopNote);
+}
+
+bool NoteTrackRange::HandleAttribute(const Attribute &pair)
+{
+   auto attr = pair.first;
+   auto value = pair.second;
+   long nValue{};
+   if (attr == "bottomnote" && value.TryGet(nValue)) {
+      SetBottomNote(nValue);
+      return true;
+   }
+   if (attr == "topnote" && value.TryGet(nValue)) {
+      SetTopNote(nValue);
+      return true;
+   }
+   return false;
+}
+
 void NoteTrackRange::SetBottomNote(int note)
 {
    if (note < MinPitch)
