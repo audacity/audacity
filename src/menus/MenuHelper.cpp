@@ -597,7 +597,7 @@ MenuTable::BaseItemPtrs MenuHelper::PopulateEffectsMenu(
          sections.emplace_back(
             MenuSectionBuilder {
                {},
-               [=](auto plug) { return IsEnabledPlugin(plug) && groupsFilter(plug); },
+               [=](auto plug) { return IsBundledPlugin(plug) && groupsFilter(plug); },
                nullptr,
                MakeAddGroupItems(effectMenuDefaults, batchflags, onMenuCommand)
             });
