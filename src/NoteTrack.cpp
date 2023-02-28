@@ -126,9 +126,6 @@ NoteTrack::NoteTrack()
 
    mSeq = NULL;
    mSerializationLength = 0;
-
-   mBottomNote = MinPitch;
-   mTopNote = MaxPitch;
 }
 
 NoteTrack::~NoteTrack()
@@ -191,8 +188,6 @@ TrackListHolder NoteTrack::Clone() const
    Attachments &attachments = *duplicate;
    attachments = *this;
 
-   duplicate->SetBottomNote(mBottomNote);
-   duplicate->SetTopNote(mTopNote);
    duplicate->SetVisibleChannels(GetVisibleChannels());
    duplicate->MoveTo(mOrigin);
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -838,10 +833,12 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          else if (attr == "velocity" && value.TryGet(dblValue))
             DoSetVelocity(static_cast<float>(dblValue));
 #endif
+#if 0
          else if (attr == "bottomnote" && value.TryGet(nValue))
             SetBottomNote(nValue);
          else if (attr == "topnote" && value.TryGet(nValue))
             SetTopNote(nValue);
+#endif
          else if (attr == "data") {
              std::string s(value.ToWString());
              std::istringstream data(s);
@@ -883,105 +880,12 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("velocity"),
       static_cast<double>(saveme->GetVelocity()));
 #endif
+#if 0
    xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
    xmlFile.WriteAttr(wxT("topnote"), saveme->mTopNote);
+#endif
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
-}
-
-void NoteTrack::SetBottomNote(int note)
-{
-   if (note < MinPitch)
-      note = MinPitch;
-   else if (note > 96)
-      note = 96;
-
-   wxCHECK(note <= mTopNote, );
-
-   mBottomNote = note;
-}
-
-void NoteTrack::SetTopNote(int note)
-{
-   if (note > MaxPitch)
-      note = MaxPitch;
-
-   wxCHECK(note >= mBottomNote, );
-
-   mTopNote = note;
-}
-
-void NoteTrack::SetNoteRange(int note1, int note2) const
-{
-   // Bounds check
-   if (note1 > MaxPitch)
-      note1 = MaxPitch;
-   else if (note1 < MinPitch)
-      note1 = MinPitch;
-   if (note2 > MaxPitch)
-      note2 = MaxPitch;
-   else if (note2 < MinPitch)
-      note2 = MinPitch;
-   // Swap to ensure ordering
-   if (note2 < note1) { auto tmp = note1; note1 = note2; note2 = tmp; }
-
-   mBottomNote = note1;
-   mTopNote = note2;
-}
-
-void NoteTrack::ShiftNoteRange(int offset)
-{
-   // Ensure everything stays in bounds
-   if (mBottomNote + offset < MinPitch || mTopNote + offset > MaxPitch)
-       return;
-
-   mBottomNote += offset;
-   mTopNote += offset;
-}
-
-#if 0
-void NoteTrack::StartVScroll()
-{
-    mStartBottomNote = mBottomNote;
-}
-
-void NoteTrack::VScroll(int start, int end)
-{
-    int ph = GetPitchHeight();
-    int delta = ((end - start) + ph / 2) / ph;
-    ShiftNoteRange(delta);
-}
-#endif
-
-void NoteTrack::ZoomAllNotes()
-{
-   Alg_iterator iterator( &GetSeq(), false );
-   iterator.begin();
-   Alg_event_ptr evt;
-
-   // Go through all of the notes, finding the minimum and maximum value pitches.
-   bool hasNotes = false;
-   int minPitch = MaxPitch;
-   int maxPitch = MinPitch;
-
-   while (NULL != (evt = iterator.next())) {
-      if (evt->is_note()) {
-         int pitch = (int) evt->get_pitch();
-         hasNotes = true;
-         if (pitch < minPitch)
-            minPitch = pitch;
-         if (pitch > maxPitch)
-            maxPitch = pitch;
-      }
-   }
-
-   if (!hasNotes) {
-      // Semi-arbitrary default values:
-      minPitch = 48;
-      maxPitch = 72;
-   }
-
-   SetNoteRange(minPitch, maxPitch);
 }
 
 #include <wx/log.h>

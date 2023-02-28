@@ -128,35 +128,6 @@ public:
    bool StretchRegion
       ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur );
 
-   /// Gets the current bottom note (a pitch)
-   int GetBottomNote() const { return mBottomNote; }
-   /// Gets the current top note (a pitch)
-   int GetTopNote() const { return mTopNote; }
-   /// Sets the bottom note (a pitch), making sure that it is never greater than the top note.
-   void SetBottomNote(int note);
-   /// Sets the top note (a pitch), making sure that it is never less than the bottom note.
-   void SetTopNote(int note);
-   /// Sets the top and bottom note (both pitches) automatically, swapping them if needed.
-   void SetNoteRange(int note1, int note2) const;
-
-   /// Zooms so that all notes are visible
-   void ZoomAllNotes();
-   /// Zooms so that the entire track is visible
-   void ZoomMaxExtent() { SetNoteRange(MinPitch, MaxPitch); }
-   /// Shifts all notes vertically by the given pitch
-   void ShiftNoteRange(int offset);
-
-#if 0
-   // Vertical scrolling is performed by dragging the keyboard at
-   // left of track. Protocol is call StartVScroll, then update by
-   // calling VScroll with original and final mouse position.
-   // These functions are not used -- instead, zooming/dragging works like
-   // audio track zooming/dragging. The vertical scrolling is nice however,
-   // so I left these functions here for possible use in the future.
-   void StartVScroll();
-   void VScroll(int start, int end);
-#endif
-
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
@@ -238,14 +209,6 @@ private:
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mVelocity{ 0.0f }; // velocity offset
 #endif
-
-   mutable int mBottomNote, mTopNote;
-#if 0
-   // Also unused from vertical scrolling
-   int mStartBottomNote;
-#endif
-
-   enum { MinPitch = 0, MaxPitch = 127 };
 
    //! A bit set; atomic because it may be read by worker threads in playback
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };

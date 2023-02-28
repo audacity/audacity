@@ -229,9 +229,10 @@ void NoteTrackVRulerMenuTable::InitUserData(void *pUserData)
 }
 
 void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
+   auto &data = NoteTrackRange::Get(*mpData->pTrack);
    switch( iZoomCode ){
    case kZoomReset:
-      mpData->pTrack->ZoomAllNotes();
+      data.ZoomAllNotes(&mpData->pTrack->GetSeq());
       break;
    case kZoomIn:
       NoteTrackDisplayData{ *mpData->pTrack, mpData->rect }.ZoomIn(mpData->yy);
@@ -240,13 +241,13 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       NoteTrackDisplayData{ *mpData->pTrack, mpData->rect }.ZoomOut(mpData->yy);
       break;
    case kZoomMax:
-      mpData->pTrack->ZoomMaxExtent();
+      data.ZoomMaxExtent();
       break;
    case kUpOctave:
-      mpData->pTrack->ShiftNoteRange(12);
+      data.ShiftNoteRange(12);
       break;
    case kDownOctave:
-      mpData->pTrack->ShiftNoteRange(-12);
+      data.ShiftNoteRange(-12);
       break;
    }
    AudacityProject *const project = &mpData->project;
@@ -335,14 +336,15 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    }
    else if (event.ShiftDown() || event.RightUp()) {
       if (event.ShiftDown() && event.RightUp()) {
-         auto oldBotNote = pTrack->GetBottomNote();
-         auto oldTopNote = pTrack->GetTopNote();
+         auto &data = NoteTrackRange::Get(*pTrack);
+         auto oldBotNote = data.GetBottomNote();
+         auto oldTopNote = data.GetTopNote();
          // Zoom out to show all notes
-         pTrack->ZoomAllNotes();
-         if (pTrack->GetBottomNote() == oldBotNote &&
-               pTrack->GetTopNote() == oldTopNote) {
+         data.ZoomAllNotes(&pTrack->GetSeq());
+         if (data.GetBottomNote() == oldBotNote &&
+               data.GetTopNote() == oldTopNote) {
             // However if we are already showing all notes, zoom out further
-            pTrack->ZoomMaxExtent();
+            data.ZoomMaxExtent();
          }
       } else {
          // Zoom out
