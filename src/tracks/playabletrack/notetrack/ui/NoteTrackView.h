@@ -38,5 +38,9 @@ private:
       const wxRect &rect, unsigned iPass ) override;
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
+
+#ifdef EXPERIMENTAL_MIDI_STRETCHING
+   std::weak_ptr<class StretchHandle> mStretchHandle;
+#endif
 };
 #endif

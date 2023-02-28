@@ -42,9 +42,9 @@ NoteTrackView::~NoteTrackView()
 {
 }
 
-std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
-(const TrackPanelMouseState &WXUNUSED(state),
- const AudacityProject *WXUNUSED(pProject), int, bool )
+std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest(
+   const TrackPanelMouseState &state, const AudacityProject *pProject,
+   int, bool )
 {
    // Eligible for stretch?
    UIHandlePtr result;
@@ -52,7 +52,8 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
 #ifdef USE_MIDI
 #ifdef EXPERIMENTAL_MIDI_STRETCHING
    result = StretchHandle::HitTest(
-      mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );
+      mStretchHandle, state, pProject,
+      std::static_pointer_cast<NoteTrack>(FindTrack()));
    if (result)
       results.push_back(result);
 #endif
