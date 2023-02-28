@@ -101,6 +101,8 @@
 #include <id3tag.h>
 #endif
 
+#include "ExportUtils.h"
+
 //----------------------------------------------------------------------------
 // ExportMP3Options
 //----------------------------------------------------------------------------
@@ -1945,7 +1947,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    wxASSERT(buffer);
 
    {
-      auto mixer = CreateMixer(tracks, selectionOnly,
+      auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
          t0, t1,
          channels, inSamples, true,
          rate, floatSample, mixerSpec);
@@ -1970,7 +1972,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
                .Format( bitrate );
       }
 
-      InitProgress( pDialog, fName, title );
+      ExportUtils::InitProgress( pDialog, fName, title );
       auto &progress = *pDialog;
 
       while (updateResult == ProgressResult::Success) {

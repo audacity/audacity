@@ -54,6 +54,8 @@
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 
+#include "ExportUtils.h"
+
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
 
@@ -303,12 +305,12 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    auto updateResult = ProgressResult::Success;
    {
-      auto mixer = CreateMixer(tracks, selectionOnly,
+      auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
          t0, t1,
          stereo ? 2 : 1, pcmBufferSize, true,
          rate, int16Sample, mixerSpec);
 
-      InitProgress( pDialog, fName,
+      ExportUtils::InitProgress( pDialog, fName,
          selectionOnly
             ? XO("Exporting selected audio at %ld kbps")
                  .Format( bitrate )

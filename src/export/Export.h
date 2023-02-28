@@ -35,14 +35,12 @@ namespace MixerOptions{ class Downmix; }
 using MixerSpec = MixerOptions::Downmix;
 class ProgressDialog;
 class ShuttleGui;
-class Mixer;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-namespace BasicUI{ enum class ProgressResult : unsigned; }
-class wxFileNameWrapper;
 
 namespace BasicUI
 {
 class ProgressDialog;
+enum class ProgressResult : unsigned;
 }
 
 struct AUDACITY_DLL_API FormatInfo
@@ -112,18 +110,7 @@ public:
                        int subformat = 0) = 0;
 
 protected:
-   std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
-         bool selectionOnly,
-         double startTime, double stopTime,
-         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
-         double outRate, sampleFormat outFormat,
-         MixerSpec *mixerSpec);
-
-   // Create or recycle a dialog.
-   static void InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-         const TranslatableString &title, const TranslatableString &message);
-   static void InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-         const wxFileNameWrapper &title, const TranslatableString &message);
+   
 };
 
 using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
