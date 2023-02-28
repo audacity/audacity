@@ -229,10 +229,6 @@ public:
    int mStartBottomNote;
 #endif
 
-   // Remember continuous variation for zooming,
-   // but it is rounded off whenever drawing:
-   float mPitchHeight;
-
    enum { MinPitch = 0, MaxPitch = 127 };
    static const float ZoomStep;
 
