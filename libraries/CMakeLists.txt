@@ -37,6 +37,8 @@ set( LIBRARIES
    lib-wave-track
    lib-track-selection
    lib-project-file-io
+   lib-command-parameters
+   lib-numeric-formats
 )
 
 if ( ${_OPT}has_networking )

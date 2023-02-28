@@ -28,7 +28,7 @@ system by constructing BatchCommandEval objects.
 #include "Command.h"
 #include "CommandContext.h"
 #include "CommandTargets.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 
 CommandBuilder::CommandBuilder(
    AudacityProject &project, const wxString &cmdString)
@@ -82,6 +82,60 @@ void CommandBuilder::Success(const OldStyleCommandPointer &cmd)
    mValid = true;
 }
 
+namespace {
+// This class was formerly in Shuttle.cpp and inherited Shuttle but the
+// polymorphism wasn't really needed in the sole use of the class in this file
+struct ShuttleCli final // : public Shuttle
+{
+   wxString mValueString;
+   bool TransferString(const wxString & Name, wxString & strValue);
+   wxString mParams;
+
+//   virtual ~ShuttleCli() {}
+
+   bool ExchangeWithMaster(const wxString & Name);
+};
+
+// uses values of the form
+// param1=value1 param2=value2
+bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
+{
+   int i;
+   mParams = L" " + mParams;
+   i = mParams.Find( L" " + Name + L"=" );
+   if( i >= 0 ){
+      int j = i + 2 + Name.Length();
+      wxString terminator = L' ';
+      if (mParams.GetChar(j) == L'"') //Strings are surrounded by quotes
+      {
+         terminator = L'"';
+         j++;
+      }
+      else if(mParams.GetChar(j) == L'\'') // or by single quotes.
+      {
+         terminator = L'\'';
+         j++;
+      }
+      i = j;
+      while( j<(int)mParams.Length() && mParams.GetChar(j) != terminator )
+         j++;
+      mValueString = mParams.Mid(i, j - i);
+      return true;
+   }
+   return false;
+}
+
+bool ShuttleCli::TransferString(const wxString & Name, wxString & strValue)
+{
+   if( ExchangeWithMaster(Name)) {
+      strValue = mValueString;
+      return true;
+   }
+   else
+      return false;
+}
+}
+
 void CommandBuilder::BuildCommand(AudacityProject &project,
                                   const wxString &cmdName,
                                   const wxString &cmdParamsArg)
@@ -119,7 +173,6 @@ void CommandBuilder::BuildCommand(AudacityProject &project,
 
    ShuttleCli shuttle;
    shuttle.mParams = cmdParamsArg;
-   shuttle.mbStoreInClient = true;
 
    ParamValueMap::const_iterator iter;
    ParamValueMap params = signature.GetDefaults();

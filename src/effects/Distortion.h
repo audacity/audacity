@@ -14,7 +14,7 @@
 #include <queue>
 
 #include "StatelessPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class ShuttleGui;
 

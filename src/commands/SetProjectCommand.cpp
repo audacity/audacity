@@ -27,7 +27,7 @@
 #include "Project.h"
 #include "../ProjectWindows.h"
 #include "WaveTrack.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
 #include "../toolbars/SelectionBar.h"

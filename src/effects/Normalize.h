@@ -14,7 +14,7 @@
 
 #include "StatefulEffect.h"
 #include "Biquad.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxStaticText;

@@ -2,14 +2,13 @@
 
   Audacity: A Digital Audio Editor
 
-  Shuttle.h
+  SettingsVisitor.h
 
   James Crook
 
 **********************************************************************/
-
-#ifndef __AUDACITY_SHUTTLE__
-#define __AUDACITY_SHUTTLE__
+#ifndef __AUDACITY_SETTINGS_VISITOR__
+#define __AUDACITY_SETTINGS_VISITOR__
 
 #include <type_traits>
 
@@ -67,41 +66,6 @@ template<typename Structure, typename Member, typename... Args>
 EnumParameter(Member Structure::*const mem, Args...)
    -> EnumParameter<Structure, Member>;
 
-class Shuttle /* not final */ {
- public:
-   // constructors and destructors
-   Shuttle();
-   virtual ~Shuttle() {}
-
- public:
-   bool mbStoreInClient;
-   wxString mValueString;
-   // Even though virtual, mostly the transfer functions won't change
-   // for special kinds of archive.
-   virtual bool TransferBool( const wxString & Name, bool & bValue, const bool & bDefault );
-   virtual bool TransferFloat( const wxString & Name, float & fValue, const float &fDefault );
-   virtual bool TransferDouble( const wxString & Name, double & dValue, const double &dDefault );
-   virtual bool TransferInt( const wxString & Name, int & iValue, const int &iDefault );
-   virtual bool TransferInt( const wxString & Name, wxLongLong_t & iValue, const wxLongLong_t &iDefault );
-   virtual bool TransferLongLong( const wxString & Name, wxLongLong_t & iValue, const wxLongLong_t &iDefault );
-   virtual bool TransferString( const wxString & Name, wxString & strValue, const wxString &strDefault );
-   virtual bool TransferEnum( const wxString & Name, int & iValue,
-      const int nChoices, const wxString * pFirstStr);
-   virtual bool TransferWrappedType( const wxString & Name, WrappedType & W );
-   // We expect the ExchangeWithMaster function to change from one type of
-   // archive to another.
-   virtual bool ExchangeWithMaster(const wxString & Name);
-};
-
-class ShuttleCli final : public Shuttle
-{
-public:
-   wxString mParams;
-   ShuttleCli() {}
-   virtual ~ShuttleCli() {}
-   bool ExchangeWithMaster(const wxString & Name) override;
-};
-
 class CommandParameters;
 /**************************************************************************//**
 \brief Visitor of effect or command parameters.  This is a base class with lots of
@@ -150,8 +114,8 @@ public:
       const EnumValueSymbol strings[], size_t nStrings );
 };
 
-extern template class AUDACITY_DLL_API SettingsVisitorBase<false>;
-extern template class AUDACITY_DLL_API SettingsVisitorBase<true>;
+extern template class COMPONENTS_API SettingsVisitorBase<false>;
+extern template class COMPONENTS_API SettingsVisitorBase<true>;
 
 using SettingsVisitor = SettingsVisitorBase<false>;
 using ConstSettingsVisitor = SettingsVisitorBase<true>;

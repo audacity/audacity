@@ -23,7 +23,7 @@
 #include "ConfigInterface.h"
 #include "../LabelTrack.h"
 #include "../SelectFile.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"

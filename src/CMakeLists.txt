@@ -217,16 +217,10 @@ list( APPEND SOURCES
       SelectUtilities.h
       SelectFile.cpp
       SelectFile.h
-      Shuttle.cpp
-      Shuttle.h
-      ShuttleAutomation.cpp
-      ShuttleAutomation.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
       ShuttleGui.cpp
       ShuttleGui.h
-      ShuttlePrefs.cpp
-      ShuttlePrefs.h
       Snap.cpp
       Snap.h
       SoundActivatedRecord.cpp
@@ -283,8 +277,6 @@ list( APPEND SOURCES
       VoiceKey.h
       WaveTrackLocation.cpp
       WaveTrackLocation.h
-      WrappedType.cpp
-      WrappedType.h
 
       # Commands
 
@@ -1541,6 +1533,8 @@ set( AUDACITY_LIBRARIES
    lib-tags-interface
    lib-audio-io-interface
    lib-project-file-io-interface
+   lib-command-parameters-interface
+   lib-numeric-formats-interface
 )
 
 if (${_OPT}use_ffmpeg)

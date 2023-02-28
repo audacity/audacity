@@ -21,7 +21,7 @@
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "CommandContext.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "../ShuttleGui.h"
 
 const ComponentInterfaceSymbol MessageCommand::Symbol

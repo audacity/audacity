@@ -49,7 +49,7 @@ This class now lists
 #include "CommandContext.h"
 
 #include "../prefs/PrefsDialog.h"
-#include "../Shuttle.h"
+#include "SettingsVisitor.h"
 #include "PluginManager.h"
 #include "../tracks/ui/TrackView.h"
 #include "../ShuttleGui.h"

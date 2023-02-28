@@ -6,26 +6,22 @@
 
   Dominic Mazzoni
 
-  See NumericTextCtrl.cpp for documentation on how to use the
+  See NumericConverter.cpp for documentation on how to use the
   format string to specify how a NumericTextCtrl's fields are
   laid out.
 
 **********************************************************************/
-
 #ifndef __AUDACITY_TIME_TEXT_CTRL__
 #define __AUDACITY_TIME_TEXT_CTRL__
 
-
+#include "NumericConverter.h"
 
 #include "MemoryX.h"
 #include "ComponentInterface.h"
-#include "ComponentInterfaceSymbol.h"
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/control.h> // to inherit
-
-#include "Internat.h"
 
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and
@@ -34,138 +30,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TIMETEXTCTRL_UPDATED, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
                             -1);
-
-/** \brief struct to hold a formatting control string and its user facing name
- * Used in an array to hold the built-in time formats that are always available
- * to the user */
-struct BuiltinFormatString;
-
-class NumericField;
-
-class DigitInfo;
-
-class AUDACITY_DLL_API NumericConverter /* not final */
-{
-public:
-
-   enum Type {
-      TIME,
-      ATIME, // for Audio time control.
-      FREQUENCY,
-      BANDWIDTH,
-   };
-
-   struct FormatStrings {
-      TranslatableString formatStr;
-      // How to name the fraction of the unit; not necessary for time formats
-      // or when the format string has no decimal point
-      TranslatableString fraction;
-
-      FormatStrings(
-         const TranslatableString &format = {},
-         const TranslatableString &fraction = {})
-         : formatStr{ format }, fraction{ fraction }
-      {}
-
-      friend bool operator == ( const FormatStrings &x, const FormatStrings &y )
-         { return x.formatStr == y.formatStr && x.fraction == y.fraction; }
-      friend bool operator != ( const FormatStrings &x, const FormatStrings &y )
-         { return !(x == y); }
-   };
-
-   static NumericFormatSymbol DefaultSelectionFormat();
-   static NumericFormatSymbol TimeAndSampleFormat();
-   static NumericFormatSymbol SecondsFormat();
-   static NumericFormatSymbol HoursMinsSecondsFormat();
-   static NumericFormatSymbol HundredthsFormat();
-   static NumericFormatSymbol HertzFormat();
-   
-   static NumericFormatSymbol LookupFormat( Type type, const wxString& id);
-
-   NumericConverter(Type type,
-                    const NumericFormatSymbol & formatName = {},
-                    double value = 0.0f,
-                    double sampleRate = 1.0f /* to prevent div by 0 */);
-   NumericConverter(const NumericConverter&);
-
-   virtual ~NumericConverter();
-
-   // ValueToControls() formats a raw value (either provided as
-   // argument, or mValue, depending on the version of the function
-   // called). The result is stored to mValueString.
-   virtual void ValueToControls();
-   virtual void ValueToControls(double rawValue, bool nearest = true);
-
-   // Converts the stored formatted string (mValueString) back to a
-   // raw value (mValue).
-   virtual void ControlsToValue();
-
-private:
-   void ParseFormatString(const TranslatableString & untranslatedFormat);
-
-public:
-   void PrintDebugInfo();
-
-   // returns true iff the format name really changed:
-   bool SetFormatName(const NumericFormatSymbol & formatName);
-
-   // returns true iff the format string really changed:
-   bool SetFormatString(const FormatStrings & formatString);
-
-   void SetSampleRate(double sampleRate);
-   void SetValue(double newValue);
-   void SetMinValue(double minValue);
-   void ResetMinValue();
-   void SetMaxValue(double maxValue);
-   void ResetMaxValue();
-
-   double GetValue();
-
-   wxString GetString();
-
-   int GetFormatIndex();
-
-   int GetNumBuiltins();
-   NumericFormatSymbol GetBuiltinName(const int index);
-   FormatStrings GetBuiltinFormat(const int index);
-   FormatStrings GetBuiltinFormat(const NumericFormatSymbol & name);
-
-   // Adjust the value by the number "steps" in the active format.
-   // Increment if "dir" is 1, decrement if "dir" is -1.
-   void Adjust(int steps, int dir);
-
-   void Increment();
-   void Decrement();
-
-protected:
-   Type           mType;
-
-   double         mValue;
-
-   double         mMinValue;
-   double         mMaxValue;
-   double         mInvalidValue;
-
-   FormatStrings mFormatString;
-
-   std::vector<NumericField> mFields;
-   wxString       mPrefix;
-   wxString       mValueTemplate;
-   wxString       mValueMask;
-   // Formatted mValue, by ValueToControls().
-   wxString       mValueString;
-
-   double         mScalingFactor;
-   double         mSampleRate;
-   bool           mNtscDrop;
-
-   int            mFocusedDigit;
-   std::vector<DigitInfo> mDigits;
-
-   const BuiltinFormatString *mBuiltinFormatStrings;
-   const size_t mNBuiltins;
-   int mDefaultNdx;
-};
 
 class AUDACITY_DLL_API NumericTextCtrl final
    : public wxControl, public NumericConverter
@@ -266,6 +130,9 @@ private:
    void Updated(bool keyup = false);
 
 private:
+
+   std::vector<wxRect> mBoxes;
+   wxRect GetBox(size_t ii) const;
 
    bool           mMenuEnabled;
    bool           mReadOnly;
