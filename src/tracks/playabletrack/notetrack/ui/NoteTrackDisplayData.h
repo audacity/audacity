@@ -28,6 +28,9 @@ public:
    ~NoteTrackRange() override;
    std::unique_ptr<NoteTrackAttachment> Clone() const override;
 
+   void WriteXML(XMLWriter &xmlFile) const override;
+   bool HandleAttribute(const Attribute &attribute) override;
+
    enum { MinPitch = 0, MaxPitch = 127 };
 
    /// Gets the current bottom note (a pitch)

@@ -96,6 +96,7 @@ SONFNS(AutoSave)
 
 #endif
 
+
 NoteTrack::Interval::~Interval() = default;
 
 std::shared_ptr<ChannelInterval>
@@ -104,6 +105,16 @@ NoteTrack::Interval::DoGetChannel(size_t iChannel)
    if (iChannel == 0)
       return std::make_shared<ChannelInterval>();
    return {};
+}
+
+NoteTrackAttachment::~NoteTrackAttachment() = default;
+
+void NoteTrackAttachment::WriteXML(XMLWriter &xmlFile) const
+{}
+
+bool NoteTrackAttachment::HandleAttribute(const Attribute &attribute)
+{
+   return false;
 }
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
@@ -819,6 +830,10 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          double dblValue;
          if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
+         else if (this->Attachments::FindIf([&](auto &attachment){
+            return attachment.HandleAttribute(pair);
+         }))
+            ;
          else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
          {}
          else if (attr == "offset" && value.TryGet(dblValue))
@@ -832,12 +847,6 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
 #ifdef EXPERIMENTAL_MIDI_OUT
          else if (attr == "velocity" && value.TryGet(dblValue))
             DoSetVelocity(static_cast<float>(dblValue));
-#endif
-#if 0
-         else if (attr == "bottomnote" && value.TryGet(nValue))
-            SetBottomNote(nValue);
-         else if (attr == "topnote" && value.TryGet(nValue))
-            SetTopNote(nValue);
 #endif
          else if (attr == "data") {
              std::string s(value.ToWString());
@@ -880,10 +889,9 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("velocity"),
       static_cast<double>(saveme->GetVelocity()));
 #endif
-#if 0
-   xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
-   xmlFile.WriteAttr(wxT("topnote"), saveme->mTopNote);
-#endif
+   saveme->Attachments::ForEach([&](auto &attachment){
+      attachment.WriteXML(xmlFile);
+   });
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
 }

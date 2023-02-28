@@ -60,7 +60,15 @@ class NoteTrack;
 class StretchHandle;
 class TimeWarper;
 
-using NoteTrackAttachment = ClientData::Cloneable<>;
+struct AUDACITY_DLL_API NoteTrackAttachment
+   : ClientData::Cloneable<NoteTrackAttachment, ClientData::UniquePtr>
+{
+   ~NoteTrackAttachment() override;
+   //! Default implementation does nothing
+   virtual void WriteXML(XMLWriter &xmlFile) const;
+   //! Return whether the attribute was used; default returns false
+   virtual bool HandleAttribute(const Attribute &attribute);
+};
 
 using NoteTrackAttachments = ClientData::Site<
    NoteTrack,
