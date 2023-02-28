@@ -22,7 +22,7 @@
 #include <wx/wxcrtvararg.h>
 
 #if defined(USE_MIDI)
-#include "../lib-src/header-substitutes/allegro.h"
+#include "../../lib-src/header-substitutes/allegro.h"
 
 #include <sstream>
 

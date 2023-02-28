@@ -13,6 +13,7 @@
 
 #include <utility>
 #include "AudioIOSequences.h"
+#include "CRTPBase.h"
 #include "Prefs.h"
 #include "PlayableTrack.h"
 
@@ -60,8 +61,10 @@ class NoteTrack;
 class StretchHandle;
 class TimeWarper;
 
-struct AUDACITY_DLL_API NoteTrackAttachment
-   : ClientData::Cloneable<NoteTrackAttachment, ClientData::UniquePtr>
+struct NOTE_TRACK_API NoteTrackAttachment;
+CRTP_BASE(NoteTrackAttachmentBase, struct,
+   ClientData::Cloneable<NoteTrackAttachment, ClientData::UniquePtr>);
+struct NoteTrackAttachment : NoteTrackAttachmentBase
 {
    ~NoteTrackAttachment() override;
    //! Default implementation does nothing
@@ -76,7 +79,7 @@ using NoteTrackAttachments = ClientData::Site<
    ClientData::DeepCopying
 >;
 
-class AUDACITY_DLL_API NoteTrack final
+class NOTE_TRACK_API NoteTrack final
    : public UniqueChannelTrack<NoteTrackBase>
    , public OtherPlayableSequence
    , public NoteTrackAttachments
@@ -223,9 +226,9 @@ private:
    double mOrigin{ 0.0 };
 };
 
-extern AUDACITY_DLL_API StringSetting MIDIPlaybackDevice;
-extern AUDACITY_DLL_API StringSetting MIDIRecordingDevice;
-extern AUDACITY_DLL_API IntSetting MIDISynthLatency_ms;
+extern NOTE_TRACK_API StringSetting MIDIPlaybackDevice;
+extern NOTE_TRACK_API StringSetting MIDIRecordingDevice;
+extern NOTE_TRACK_API IntSetting MIDISynthLatency_ms;
 
 ENUMERATE_TRACK_TYPE(NoteTrack);
 
@@ -252,6 +255,6 @@ ENUMERATE_TRACK_TYPE(NoteTrack);
 #endif
 
 
-AUDACITY_DLL_API wxString GetMIDIDeviceInfo();
+NOTE_TRACK_API wxString GetMIDIDeviceInfo();
 
 #endif

@@ -15,7 +15,6 @@ if (NOT USE_MIDI AND
    message(FATAL_ERROR "EXPERIMENTAL_MIDI_OUT requires USE_MIDI")
 endif ()
 
-addlib( portsmf            portsmf     PORTSMF     NO    YES   "portSMF >= 0.1" )
 addlib( libsbsms           sbsms       SBSMS       NO    YES   "sbsms >= 2.2.0" )
 addlib( soundtouch         soundtouch  SOUNDTOUCH  NO    YES   "soundtouch >= 1.7.1" )
 addlib( twolame            twolame     LIBTWOLAME  NO    YES   "twolame >= 0.3.13" )

@@ -17,7 +17,7 @@
 #include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanel.h"
 #include "UndoManager.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "ViewInfo.h"
 
 VelocitySliderHandle::VelocitySliderHandle

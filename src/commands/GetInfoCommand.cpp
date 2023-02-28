@@ -39,7 +39,7 @@ This class now lists
 #include "WaveTrack.h"
 #include "prefs/WaveformSettings.h"
 #include "../LabelTrack.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #include "TimeTrack.h"
 #include "Envelope.h"
 

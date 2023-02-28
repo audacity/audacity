@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanel.h"
 #include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
