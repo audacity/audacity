@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
-#include "../../../TimeTrack.h"
+#include "TimeTrack.h"
 #include "../../../widgets/PopupMenuTable.h"
 #include <wx/numdlg.h>
 
