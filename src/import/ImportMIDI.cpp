@@ -26,7 +26,7 @@
 #include "FileNames.h"
 #include "../NoteTrack.h"
 #include "Project.h"
-#include "../ProjectFileIO.h"
+#include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "ProjectWindows.h"

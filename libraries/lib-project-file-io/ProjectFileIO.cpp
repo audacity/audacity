@@ -15,26 +15,24 @@ Paul Licameli split from AudacityProject.cpp
 #include <optional>
 #include <cstring>
 
-#include <wx/app.h>
 #include <wx/crt.h>
-#include <wx/frame.h>
 #include <wx/log.h>
 #include <wx/sstream.h>
+#include <wx/utils.h>
 
 #include "ActiveProjects.h"
 #include "CodeConversions.h"
 #include "DBConnection.h"
+#include "FileNames.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSerializer.h"
-#include "ProjectWindows.h"
+#include "FileNames.h"
 #include "SampleBlock.h"
 #include "TempDirectory.h"
 #include "TransactionScope.h"
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
-#include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 #include "XMLFileReader.h"
 #include "SentryHelper.h"
@@ -425,48 +423,6 @@ bool ProjectFileIO::InitializeSQL()
    return sqliteIniter.mRc == SQLITE_OK;
 }
 
-static void RefreshAllTitles(bool bShowProjectNumbers )
-{
-   for ( auto pProject : AllProjects{} ) {
-      if ( !GetProjectFrame( *pProject ).IsIconized() ) {
-         ProjectFileIO::Get( *pProject ).SetProjectTitle(
-            bShowProjectNumbers ? pProject->GetProjectNumber() : -1 );
-      }
-   }
-}
-
-TitleRestorer::TitleRestorer(
-   wxTopLevelWindow &window, AudacityProject &project )
-{
-   if( window.IsIconized() )
-      window.Restore();
-   window.Raise(); // May help identifying the window on Mac
-
-   // Construct this project's name and number.
-   sProjName = project.GetProjectName();
-   if ( sProjName.empty() ) {
-      sProjName = _("<untitled>");
-      UnnamedCount = std::count_if(
-         AllProjects{}.begin(), AllProjects{}.end(),
-         []( const AllProjects::value_type &ptr ){
-            return ptr->GetProjectName().empty();
-         }
-      );
-      if ( UnnamedCount > 1 ) {
-         sProjNumber.Printf(
-            _("[Project %02i] "), project.GetProjectNumber() + 1 );
-         RefreshAllTitles( true );
-      } 
-   }
-   else
-      UnnamedCount = 0;
-}
-
-TitleRestorer::~TitleRestorer() {
-   if( UnnamedCount > 1 )
-      RefreshAllTitles( false );
-}
-
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{
    []( AudacityProject &parent ){
       auto result = std::make_shared< ProjectFileIO >( parent );
@@ -495,7 +451,7 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
    mModified = false;
    mTemporary = true;
 
-   UpdatePrefs();
+   SetProjectTitle();
 
    // Make sure there is plenty of space for Sqlite files
    wxLongLong freeSpace = 0;
@@ -986,6 +942,8 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    bool prune /* = false */,
    const std::vector<const TrackList *> &tracks /* = {} */)
 {
+   using namespace BasicUI;
+
    auto pConn = CurrConn().get();
    if (!pConn)
       return false;
@@ -1139,7 +1097,8 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
-      ProgressDialog progress(XO("Progress"), msg, pdlgHideStopButton);
+      auto progress =
+         BasicUI::MakeProgress(XO("Progress"), msg, ProgressShowCancel);
       ProgressResult result = ProgressResult::Success;
 
       wxLongLong_t count = 0;
@@ -1196,7 +1155,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
             THROW_INCONSISTENCY_EXCEPTION;
          }
 
-         result = progress.Update(++count, total);
+         result = progress->Poll(++count, total);
          if (result != ProgressResult::Success)
          {
             // Note that we're not setting success, so the finally
@@ -1621,12 +1580,6 @@ void ProjectFileIO::UpdatePrefs()
 void ProjectFileIO::SetProjectTitle(int number)
 {
    auto &project = mProject;
-   auto pWindow = FindProjectFrame(&project);
-   if (!pWindow)
-   {
-      return;
-   }
-   auto &window = *pWindow;
    wxString name = project.GetProjectName();
 
    // If we are showing project numbers, then we also explicitly show "<untitled>" if there
@@ -1653,11 +1606,8 @@ void ProjectFileIO::SetProjectTitle(int number)
       name += _("(Recovered)");
    }
 
-   if (name != window.GetTitle())
-   {
-      window.SetTitle( name );
-      window.SetName(name);       // to make the nvda screen reader read the correct title
-
+   if (name != mTitle) {
+      mTitle = name;
       BasicUI::CallAfter( [wThis = weak_from_this()]{
          if (auto pThis = wThis.lock())
             pThis->Publish(ProjectFileIOMessage::ProjectTitleChange);
@@ -2230,7 +2180,7 @@ bool ProjectFileIO::SaveProject(
          }
 
          if (!reopened) {
-            wxTheApp->CallAfter([this]{
+            BasicUI::CallAfter([this]{
                ShowError( {},
                   XO("Warning"),
                   XO(
@@ -2703,12 +2653,12 @@ InvisibleTemporaryProject::~InvisibleTemporaryProject()
 
    // Consume some delayed track list related events before destroying the
    // temporary project
-   try { wxTheApp->Yield(); } catch(...) {}
+   try { BasicUI::Yield(); } catch(...) {}
 
    // Destroy the project and yield again to let delayed window deletions happen
    projectFileIO.CloseProject();
    mpProject.reset();
-   try { wxTheApp->Yield(); } catch(...) {}
+   try { BasicUI::Yield(); } catch(...) {}
 }
 
 //! Install the callback from undo manager

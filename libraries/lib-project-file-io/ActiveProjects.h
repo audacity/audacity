@@ -14,10 +14,10 @@
 
 namespace ActiveProjects
 {
-   FilePaths GetAll();
-   void Add(const FilePath &path);
-   void Remove(const FilePath &path);
-   wxString Find(const FilePath &path);
+   PROJECT_FILE_IO_API FilePaths GetAll();
+   PROJECT_FILE_IO_API void Add(const FilePath &path);
+   PROJECT_FILE_IO_API void Remove(const FilePath &path);
+   PROJECT_FILE_IO_API wxString Find(const FilePath &path);
 };
 
 #endif

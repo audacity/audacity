@@ -55,7 +55,7 @@ enum class ProjectFileIOMessage : int {
 
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
-class AUDACITY_DLL_API ProjectFileIO final
+class PROJECT_FILE_IO_API ProjectFileIO final
    : public ClientData::Base
    , public XMLTagHandler
    , private PrefsListener
@@ -72,9 +72,11 @@ public:
 
    explicit ProjectFileIO( AudacityProject &project );
 
-   ProjectFileIO( const ProjectFileIO & ) PROHIBITED;
-   ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
+   ProjectFileIO( const ProjectFileIO & ) = delete;
+   ProjectFileIO &operator=( const ProjectFileIO & ) = delete;
    ~ProjectFileIO();
+
+   const wxString &GetProjectTitle() const { return mTitle; }
 
    // It seems odd to put this method in this class, but the results do depend
    // on what is discovered while opening the file, such as whether it is a
@@ -162,7 +164,7 @@ public:
 
    // Object manages the temporary backing-up of project paths while
    // trying to overwrite with new contents, and restoration in case of failure
-   class BackupProject {
+   class PROJECT_FILE_IO_API BackupProject {
    public:
       //! Rename project file at path, and any auxiliary files, to backup path names
       BackupProject( ProjectFileIO &projectFileIO, const FilePath &path );
@@ -287,6 +289,8 @@ private:
    // non-static data members
    AudacityProject &mProject;
 
+   wxString mTitle;
+
    std::shared_ptr<DBConnectionErrors> mpErrors;
 
    // The project's file path
@@ -312,20 +316,8 @@ private:
    bool mPrevTemporary;
 };
 
-class wxTopLevelWindow;
-
-// TitleRestorer restores project window titles to what they were, in its destructor.
-class TitleRestorer{
-public:
-   TitleRestorer( wxTopLevelWindow &window, AudacityProject &project );
-   ~TitleRestorer();
-   wxString sProjNumber;
-   wxString sProjName;
-   size_t UnnamedCount;
-};
-
 //! Makes a temporary project that doesn't display on the screen
-class AUDACITY_DLL_API InvisibleTemporaryProject
+class PROJECT_FILE_IO_API InvisibleTemporaryProject
 {
 public:
    InvisibleTemporaryProject();
