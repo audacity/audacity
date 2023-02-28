@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/TrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"

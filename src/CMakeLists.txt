@@ -167,14 +167,10 @@ list( APPEND SOURCES
       LyricsWindow.h
       Menus.cpp
       Menus.h
-      MIDIPlay.cpp
-      MIDIPlay.h
       MixerBoard.cpp
       MixerBoard.h
       MovableControl.cpp
       MovableControl.h
-      NoteTrack.cpp
-      NoteTrack.h
       PitchName.cpp
       PitchName.h
       PluginRegistrationDialog.cpp
@@ -1203,7 +1199,6 @@ set( LIBRARIES
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
-      $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:libsbsms>
@@ -1510,6 +1505,7 @@ set( AUDACITY_LIBRARIES
    lib-project-file-io-interface
    lib-effects-interface
    lib-wx-init-interface
+   lib-note-track-interface
 )
 
 if (${_OPT}use_ffmpeg)

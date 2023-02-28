@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../lib-src/header-substitutes/allegro.h"
 
 #include "NoteTrackVRulerControls.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"

@@ -24,7 +24,7 @@
 //#include "mfmidi.h"
 
 #include "FileNames.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
