@@ -66,10 +66,6 @@ public:
    virtual int GetFormatCount() const = 0;
    virtual FormatInfo GetFormatInfo(int index) const = 0;
 
-   virtual bool IsExtension(const FileExtension & ext, int index);
-
-   virtual bool DisplayOptions(wxWindow *parent, int format = 0);
-   
    virtual void OptionsCreate(ShuttleGui &S, int format) = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
@@ -161,9 +157,6 @@ public:
       unsigned numChannels, const FileExtension& type, const wxString& filename,
       bool selectedOnly, double t0, double t1,
       std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
-
-   void DisplayOptions(int index);
-   int FindFormatIndex(int exportindex);
 
    const ExportPluginArray &GetPlugins();
 
