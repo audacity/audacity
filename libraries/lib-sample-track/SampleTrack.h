@@ -22,7 +22,7 @@ class SampleTrack;
 
 using SampleTrackAttachments = ClientData::Site<
    SampleTrack,
-   ClientData::Cloneable< ClientData::UniquePtr >,
+   ClientData::Cloneable<>,
    ClientData::DeepCopying
 >;
 

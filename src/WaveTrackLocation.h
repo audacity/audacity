@@ -57,7 +57,7 @@ bool operator != (const WaveTrackLocation &a, const WaveTrackLocation &b)
 }
 
 class AUDACITY_DLL_API WaveTrackLocations final
-   : public ClientData::Cloneable< ClientData::UniquePtr >
+   : public ClientData::Cloneable<>
 {
    using Location = WaveTrackLocation;
    std::vector <Location> mDisplayLocationsCache;
