@@ -22,13 +22,25 @@ class wxTextFile;
 class AudacityProject;
 class TimeWarper;
 
+class LabelStruct;
 class LabelTrack;
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
 
+using LabelStructAttachment = ClientData::Cloneable<>;
+
+using LabelStructAttachments = ClientData::Site<
+   LabelStruct,
+   LabelStructAttachment,
+   ClientData::DeepCopying
+>;
+
 class LABEL_TRACK_API LabelStruct
+   : public LabelStructAttachments
 {
 public:
+   using Attachments = LabelStructAttachments;
+
    LabelStruct() = default;
    // Copies region
    LabelStruct(const SelectedRegion& region, const wxString &aTitle);
