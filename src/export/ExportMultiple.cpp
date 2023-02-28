@@ -34,6 +34,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
+#include <wx/sizer.h>
 
 #include "FileNames.h"
 #include "LabelTrack.h"
