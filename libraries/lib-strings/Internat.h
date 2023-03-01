@@ -56,9 +56,7 @@ extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
 
    #ifdef __WXMSW__
 
-   // Eventually pulls in <windows.h> which indirectly defines DebugBreak(). Can't
-   // include <windows.h> directly since it then causes "MemoryX.h" to spew errors.
-   #include <wx/app.h>
+   extern "C" __declspec(dllimport) void __stdcall DebugBreak();
    #define _(s) ((wxTranslations::Get() || (DebugBreak(), true)), \
                 GetCustomTranslation((s)))
 
