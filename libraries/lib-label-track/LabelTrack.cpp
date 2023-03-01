@@ -727,7 +727,10 @@ bool LabelTrack::PasteOver(double t, const Track &src)
             labelStruct.getT1() + t,
             labelStruct.title
          };
-         mLabels.insert(mLabels.begin() + pos++, l);
+         mLabels.insert(mLabels.begin() + pos, l);
+         Publish({ LabelTrackEvent::Addition,
+            this->SharedPointer<LabelTrack>(), labelStruct.title, -1, pos });
+         ++pos;
       }
 
       return true;
@@ -792,8 +795,12 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
             // Figure out where to insert
             while (pos < mLabels.size() &&
                    mLabels[pos].getT0() < l.getT0())
-               pos++;
+               ++pos;
             mLabels.insert(mLabels.begin() + pos, l);
+
+            Publish({ LabelTrackEvent::Addition,
+               this->SharedPointer<LabelTrack>(), label.title, -1,
+                  static_cast<int>(pos) });
          }
       }
       else if (relation == LabelStruct::BEGINS_IN_LABEL)
@@ -852,6 +859,9 @@ void LabelTrack::Silence(double t0, double t1, ProgressReporter)
          // This might not be the right place to insert, but we sort at the end
          ++i;
          mLabels.insert(mLabels.begin() + i, l);
+
+         Publish({ LabelTrackEvent::Addition,
+            this->SharedPointer<LabelTrack>(), label.title, -1, i });
       }
       else if (relation == LabelStruct::ENDS_IN_LABEL)
       {
