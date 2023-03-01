@@ -220,17 +220,18 @@ struct LabelTrackEvent
       Deletion,
       Permutation,
       Selection,
+      TitleChange,
    } type;
 
    const std::weak_ptr<Track> mpTrack;
 
-   // invalid for selection events
+   // invalid for selection events; holds former text for title change
    wxString mTitle;
 
    // invalid for addition and selection events
    int mFormerPosition;
 
-   // invalid for deletion and selection events
+   // invalid for deletion and selection events; == former for title change
    int mPresentPosition;
 
    LabelTrackEvent( Type type, const std::shared_ptr<LabelTrack> &pTrack,

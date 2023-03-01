@@ -249,8 +249,12 @@ private:
    void OnLabelDeleted( const LabelTrackEvent& );
    void OnLabelPermuted( const LabelTrackEvent& );
    void OnSelectionChange( const LabelTrackEvent& );
+   void OnTitleChange( const LabelTrackEvent& );
+   void UpdateAllWidths();
+   void UpdateOneWidth(wxDC &dc, const LabelStruct &labelStruct);
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mTrackChangeSubscription;
+   Observer::Subscription mFontChangeSubscription;
 
    std::shared_ptr<LabelTrack> FindLabelTrack();
    std::shared_ptr<const LabelTrack> FindLabelTrack() const;

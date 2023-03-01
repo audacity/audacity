@@ -168,7 +168,15 @@ void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )
       wxASSERT( false );
       mLabels.resize( iLabel + 1 );
    }
-   mLabels[ iLabel ] = newLabel;
+   auto &label = mLabels[ iLabel ];
+   bool titleChange = (label.title != newLabel.title);
+   auto oldTitle = titleChange ? label.title : wxString{};
+   label = newLabel;
+   if (titleChange) {
+      auto ii = static_cast<int>(iLabel);
+      Publish({ LabelTrackEvent::TitleChange,
+         this->SharedPointer<LabelTrack>(), oldTitle, ii, ii });
+   }
 }
 
 LabelTrack::~LabelTrack()

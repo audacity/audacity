@@ -98,10 +98,21 @@ void LabelTrackView::Index::SetModified(bool modified)
    mModified = modified;
 }
 
+namespace {
+   struct FontChangeNotifier : Observer::Publisher<>{
+      using Observer::Publisher<>::Publish;
+   } sFontChangeNotifier;
+}
+
 LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonChannelView{ pTrack, 0 }
 {
    ResetFont();
+   UpdateAllWidths();
+   mFontChangeSubscription = sFontChangeNotifier.Subscribe([this](auto){
+      UpdateAllWidths();
+   });
+
    CreateCustomGlyphs();
    ResetFlags();
 
@@ -126,7 +137,8 @@ void LabelTrackView::Reparent( const std::shared_ptr<Track> &parent )
 void LabelTrackView::BindTo( LabelTrack *pParent )
 {
    // Destroys any previous subscription to another track
-   mSubscription = pParent->Subscribe([this](const LabelTrackEvent &e){
+   mTrackChangeSubscription =
+   pParent->Subscribe([this](const LabelTrackEvent &e){
       switch (e.type) {
       case LabelTrackEvent::Addition:
          return OnLabelAdded(e);
@@ -136,6 +148,8 @@ void LabelTrackView::BindTo( LabelTrack *pParent )
          return OnLabelPermuted(e);
       case LabelTrackEvent::Selection:
          return OnSelectionChange(e);
+      case LabelTrackEvent::TitleChange:
+         return OnTitleChange(e);
       default:
          return;
       }
@@ -282,7 +296,11 @@ void LabelTrackView::ResetFont()
    mFontHeight = -1;
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
    int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), static_cast<int>(DefaultFontSize));
-   msFont = GetFont(facename, size);
+   auto font = GetFont(facename, size);
+   if (msFont != font) {
+      msFont = font;
+      sFontChangeNotifier.Publish({});
+   }
 }
 
 /// ComputeTextPosition is 'smart' about where to display
@@ -741,8 +759,8 @@ namespace {
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelTrackView::Draw
-( TrackPanelDrawingContext &context, const wxRect & r ) const
+void LabelTrackView::Draw(TrackPanelDrawingContext &context, const wxRect & r)
+   const
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -750,7 +768,7 @@ void LabelTrackView::Draw
 
    auto pHit = findHit( artist->parent );
 
-   if(msFont.Ok())
+   if (msFont.Ok())
       dc.SetFont(msFont);
 
    if (mFontHeight == -1)
@@ -763,17 +781,6 @@ void LabelTrackView::Draw
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
       SyncLock::IsSelectedOrSyncLockSelected(pTrack.get()) );
-
-   wxCoord textWidth, textHeight;
-
-   // Get the text widths.
-   // TODO: Make more efficient by only re-computing when a
-   // text label title changes.
-   for (const auto &labelStruct : mLabels) {
-      dc.GetTextExtent(labelStruct.title, &textWidth, &textHeight);
-      // Mutation during the draw function!  Can this be moved?
-      LabelLayout::Get(labelStruct).width = textWidth;
-   }
 
    // TODO: And this only needs to be done once, but we
    // do need the dc to do it.
@@ -1456,9 +1463,7 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project, const wxPoint& p
       wxClientDC dc(parent);
 
       if (msFont.Ok())
-      {
          dc.SetFont(msFont);
-      }
 
       //int x = 0;
       //bool success = CalcCursorX( project, &x );
@@ -1667,6 +1672,8 @@ void LabelTrackView::OnLabelAdded( const LabelTrackEvent &e )
       SetTextSelection(pos, title.Length(), title.Length());
    if( mRestoreFocus < 0 )
       mRestoreFocus = -2;
+
+   OnTitleChange(e);
 }
 
 void LabelTrackView::OnLabelDeleted( const LabelTrackEvent &e )
@@ -1717,6 +1724,35 @@ void LabelTrackView::OnSelectionChange( const LabelTrackEvent &e )
        SetNavigationIndex(-1);
        ResetTextSelection();
    }
+}
+
+void LabelTrackView::OnTitleChange(const LabelTrackEvent &e)
+{
+   wxMemoryDC dc;
+   if (msFont.Ok())
+      dc.SetFont(msFont);
+   const auto pTrack = std::static_pointer_cast<LabelTrack>(
+      FindTrack()->SubstitutePendingChangedTrack());
+   auto &labelStruct = pTrack->GetLabels()[e.mPresentPosition];
+   UpdateOneWidth(dc, labelStruct);
+}
+
+void LabelTrackView::UpdateAllWidths()
+{
+   wxMemoryDC dc;
+   if (msFont.Ok())
+      dc.SetFont(msFont);
+   const auto pTrack = std::static_pointer_cast<LabelTrack>(
+      FindTrack()->SubstitutePendingChangedTrack());
+   for (auto &labelStruct : pTrack->GetLabels())
+      UpdateOneWidth(dc, labelStruct);
+}
+
+void LabelTrackView::UpdateOneWidth(wxDC &dc, const LabelStruct &labelStruct)
+{
+   wxCoord textWidth, textHeight;
+   dc.GetTextExtent(labelStruct.title, &textWidth, &textHeight);
+   LabelLayout::Get(labelStruct).width = textWidth;
 }
 
 wxBitmap & LabelTrackView::GetGlyph( int i)
