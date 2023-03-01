@@ -394,7 +394,7 @@ void SelectionBar::ModifySelection(int driver, bool done)
 
    // Places the start-end markers on the track panel.
    auto &manager = ProjectSelectionManager::Get(mProject);
-   manager.AS_ModifySelection(mStart, mEnd, done);
+   manager.ModifySelection(mStart, mEnd, done);
 }
 
 // Called when one of the format drop downs is changed.

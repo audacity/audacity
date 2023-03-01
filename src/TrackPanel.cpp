@@ -334,6 +334,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
             RefreshTrack(msg.track.get());
       });
 
+   mSelectionSubscription = viewInfo->selectedRegion
+      .Subscribe([this](auto&){ Refresh(false); });
+
    UpdatePrefs();
 }
 

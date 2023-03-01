@@ -190,6 +190,7 @@ protected:
       , mFocusChangeSubscription
       , mRealtimeEffectManagerSubscription
       , mSyncLockSubscription
+      , mSelectionSubscription
    ;
 
    TrackPanelListener *mListener;

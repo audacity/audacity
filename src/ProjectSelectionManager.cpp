@@ -18,7 +18,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectSnap.h"
 #include "ProjectTimeSignature.h"
 #include "Snap.h"
-#include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "toolbars/SelectionBar.h"
@@ -82,10 +81,7 @@ void ProjectSelectionManager::SnapSelection()
    const double t1 = projectSnap.SnapTime(oldt1).time;
 
    if (t0 != oldt0 || t1 != oldt1)
-   {
       selectedRegion.setTimes(t0, t1);
-      TrackPanel::Get(mProject).Refresh(false);
-   }
 }
 
 void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
@@ -123,18 +119,15 @@ void ProjectSelectionManager::TT_SetAudioTimeFormat(
    TimeToolBar::Get( project ).SetAudioTimeFormat(format);
 }
 
-void ProjectSelectionManager::AS_ModifySelection(
+void ProjectSelectionManager::ModifySelection(
    double &start, double &end, bool done)
 {
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.selectedRegion.setTimes(start, end);
-   trackPanel.Refresh(false);
-   if (done) {
+   if (done)
       history.ModifyState(false);
-   }
 }
 
 void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
@@ -171,15 +164,13 @@ void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
 #endif
 }
 
-void ProjectSelectionManager::SSBL_ModifySpectralSelection(
+void ProjectSelectionManager::ModifySpectralSelection(
    double &bottom, double &top, bool done)
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    auto &project = mProject;
-   auto &history = ProjectHistory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-
+   auto &history = ProjectHistory::Get(project);
+   auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(mProject);
    auto nyq = std::max(ProjectRate::Get(project).GetRate(),
       tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate))
@@ -189,10 +180,8 @@ void ProjectSelectionManager::SSBL_ModifySpectralSelection(
    if (top >= 0.0)
       top = std::min(nyq, top);
    viewInfo.selectedRegion.setFrequencies(bottom, top);
-   trackPanel.Refresh(false);
-   if (done) {
+   if (done)
       history.ModifyState(false);
-   }
 #else
    bottom; top; done;
 #endif
