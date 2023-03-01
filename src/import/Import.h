@@ -16,19 +16,16 @@
 #include <vector>
 #include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
-#include "wxPanelWrapper.h" // to inherit
 #include "FileNames.h" // for FileType
 
 #include "Registry.h"
 
 class wxArrayString;
-class wxListBox;
 class AudacityProject;
 class Tags;
 class WaveTrackFactory;
 class Track;
 class ImportPlugin;
-class ImportFileHandle;
 class UnusableImportPlugin;
 typedef bool (*progress_callback_t)( void *userData, float percent );
 
@@ -192,34 +189,6 @@ private:
    ExtImportItems mExtImportItems;
    static ImportPluginList &sImportPluginList();
    static UnusableImportPluginList &sUnusableImportPluginList();
-};
-
-//----------------------------------------------------------------------------
-// ImportStreamDialog
-//----------------------------------------------------------------------------
-
-class ImportStreamDialog final : public wxDialogWrapper
-{
-public:
-   // constructors and destructors
-   ImportStreamDialog( ImportFileHandle *_mFile,
-      wxWindow *parent, wxWindowID id, const TranslatableString &title,
-      const wxPoint& pos = wxDefaultPosition,
-      const wxSize& size = wxDefaultSize,
-      long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
-   virtual ~ImportStreamDialog();
-
-private:
-   ImportFileHandle *mFile;
-   wxInt32 scount;
-   wxListBox *StreamList;
-
-private:
-   void OnOk( wxCommandEvent &event );
-   void OnCancel( wxCommandEvent &event );
-
-private:
-   DECLARE_EVENT_TABLE()
 };
 
 extern AUDACITY_DLL_API BoolSetting NewImportingSession;
