@@ -500,12 +500,23 @@ void LabelTrackView::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) c
 
    { int i = -1; for (const auto &labelStruct : mLabels) { ++i;
       auto &layout = LabelLayout::Get(labelStruct);
-      const int x = zoomInfo.TimeToPosition(labelStruct.getT0(), r.x);
-      const int x1 = zoomInfo.TimeToPosition(labelStruct.getT1(), r.x);
+   
+      const auto t0 = labelStruct.getT0();
+      const auto t1 = labelStruct.getT1();
+      const int x = zoomInfo.TimeToPosition(t0, r.x);
+      const int x1 = zoomInfo.TimeToPosition(t1, r.x);
       int y = r.y;
 
       layout.x = x;
       layout.x1 = x1;
+
+      // Bug 2388 - Point label and range label can appear identical
+      // If the start and end times are not actually the same, but they
+      // would appear so when drawn as lines at current zoom, be sure to draw
+      // two lines - i.e. displace the second line slightly.
+      if (x == x1 && t0 != t1)
+         ++layout.x1;
+
       layout.y = -1;// -ve indicates nothing doing.
       iRow=0;
       // Our first preference is a row that ends where we start.
@@ -564,18 +575,8 @@ void LabelTrackView::DrawLines(
 {
    const auto &layout = LabelLayout::Get(ls);
    auto &x = layout.x;
-   // May mutate!  See bug fix
-   auto &x1 = const_cast<int&>(layout.x1);
+   auto &x1 = layout.x1;
    auto &y = layout.y;
-
-   // Bug 2388 - Point label and range label can appear identical
-   // If the start and end times are not actually the same, but they 
-   // would appear so when drawn as lines at current zoom, be sure to draw 
-   // two lines - i.e. displace the second line slightly.
-   if (ls.getT0() != ls.getT1()) {
-      if (x == x1)
-         x1++;
-   }
 
    // How far out from the centre line should the vertical lines
    // start, i.e. what is the y position of the icon?
