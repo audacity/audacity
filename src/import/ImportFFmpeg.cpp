@@ -156,6 +156,7 @@ static const auto exts = {
 #include "Tags.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 
 class FFmpegImportFileHandle;
 
@@ -481,7 +482,7 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
       stream.resize(sc.InitialChannels);
 
       for (auto &channel : stream)
-         channel = NewWaveTrack(*trackFactory, sc.SampleFormat, sc.CodecContext->GetSampleRate());
+         channel = ImportUtils::NewWaveTrack(*trackFactory, sc.SampleFormat, sc.CodecContext->GetSampleRate());
    }
 
    // Handles the start_time by creating silence. This may or may not be correct.

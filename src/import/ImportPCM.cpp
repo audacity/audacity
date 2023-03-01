@@ -44,6 +44,7 @@
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 
 #include <algorithm>
 
@@ -200,7 +201,7 @@ PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
    // Effective format
    mEffectiveFormat = sf_subtype_to_effective_format(mInfo.format);
    // But maybe different storage format
-   mFormat = ChooseFormat(mEffectiveFormat);
+   mFormat = ImportUtils::ChooseFormat(mEffectiveFormat);
 }
 
 TranslatableString PCMImportFileHandle::GetFileDescription()
@@ -299,7 +300,7 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
       // iter not used outside this scope.
       auto iter = channels.begin();
       for (int c = 0; c < mInfo.channels; ++iter, ++c)
-         *iter = NewWaveTrack(*trackFactory, mFormat, mInfo.samplerate);
+         *iter = ImportUtils::NewWaveTrack(*trackFactory, mFormat, mInfo.samplerate);
    }
 
    auto fileTotalFrames =

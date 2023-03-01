@@ -67,6 +67,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "Prefs.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
+#include "ImportUtils.h"
 
 #ifdef USE_LIBID3TAG
 extern "C" {
@@ -421,7 +422,7 @@ ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
    {
       auto iter = mChannels.begin();
       for (size_t c = 0; c < mNumChannels; ++iter, ++c)
-         *iter = NewWaveTrack(*trackFactory, mFormat, mSampleRate);
+         *iter = ImportUtils::NewWaveTrack(*trackFactory, mFormat, mSampleRate);
    }
 
    // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
