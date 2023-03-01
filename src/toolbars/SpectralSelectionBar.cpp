@@ -337,7 +337,7 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
 
    // Notify project and track panel, which may change
    // the values again, and call back to us in SetFrequencies()
-   manager.SSBL_ModifySpectralSelection(bottom, top, done);
+   manager.ModifySpectralSelection(bottom, top, done);
 }
 
 void SpectralSelectionBar::OnCtrl(wxCommandEvent & event)

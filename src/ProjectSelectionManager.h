@@ -39,14 +39,14 @@ public:
    void AS_SetSelectionFormat(const NumericFormatID & format);
 
    void TT_SetAudioTimeFormat(const NumericFormatID & format);
-   void AS_ModifySelection(double &start, double &end, bool done);
+   void ModifySelection(double &start, double &end, bool done);
 
 
    void SSBL_SetFrequencySelectionFormatName(
       const NumericFormatID & formatName);
    void SSBL_SetBandwidthSelectionFormatName(
       const NumericFormatID & formatName);
-   void SSBL_ModifySpectralSelection(
+   void ModifySpectralSelection(
       double &bottom, double &top, bool done);
 
 private:
