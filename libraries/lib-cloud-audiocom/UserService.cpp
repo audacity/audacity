@@ -122,6 +122,10 @@ void UserService::ClearUserData()
    BasicUI::CallAfter(
       [this]()
       {
+         // No valid data was present, do not spam Publish()
+         if (GetUserSlug().empty())
+            return;
+
          userName.Write({});
          displayName.Write({});
          avatarEtag.Write({});

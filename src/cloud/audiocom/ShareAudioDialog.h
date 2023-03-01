@@ -83,6 +83,8 @@ private:
       void UpdateUserData();
       void OnLinkButtonPressed();
 
+      void SetAnonymousState();
+
    } mInitialStatePanel;
 
    struct ProgressPanel final
