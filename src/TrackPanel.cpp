@@ -340,6 +340,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mProjectRulerInvalidatedSubscription =
       ProjectTimeRuler::Get(*theProject).GetRuler().Subscribe([this](auto mode) { Refresh(); });
+   mSelectionSubscription = viewInfo->selectedRegion
+      .Subscribe([this](auto&){ Refresh(false); });
 
    UpdatePrefs();
 }
