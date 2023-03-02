@@ -31,8 +31,9 @@ struct CollectedItems
       // Ordering hint for the merged item:
       OrderingHint hint;
    };
-   std::vector< Item > items;
    std::vector< BaseItemSharedPtr > &computedItems;
+   std::vector< Item > items;
+   std::unordered_set<Identifier> mResolvedConflicts;
 
    // A linear search.  Smarter search may not be worth the effort.
    using Iterator = decltype( items )::iterator;
@@ -49,7 +50,7 @@ struct CollectedItems
    auto InsertNewItemUsingPreferences(
       ItemOrdering &itemOrdering, BaseItem *pItem ) -> bool;
 
-   auto InsertNewItemUsingHint(
+   auto InsertNewItemUsingHint( ItemOrdering &itemOrdering,
       BaseItem *pItem, const OrderingHint &hint, size_t endItemsCount,
       bool force )
          -> bool;
@@ -61,24 +62,26 @@ struct CollectedItems
    auto SubordinateMultipleItems( Item &found, GroupItem *pItems ) -> void;
 
    auto MergeWithExistingItem(
-      Visitor &visitor, ItemOrdering &itemOrdering, BaseItem *pItem ) -> bool;
+      ItemOrdering &itemOrdering,
+      BaseItem *pItem, OrderingHint::ConflictResolutionPolicy policy) -> bool;
 
    using NewItem = std::pair< BaseItem*, OrderingHint >;
    using NewItems = std::vector< NewItem >;
 
-   auto MergeLikeNamedItems(
-      Visitor &visitor, ItemOrdering &itemOrdering,
-      NewItems::const_iterator left, NewItems::const_iterator right,
-      int iPass, size_t endItemsCount, bool force )
+   auto InsertFirstNamedItem( ItemOrdering &itemOrdering,
+      NewItem &item, size_t endItemsCount, bool force )
          -> bool;
 
-   auto MergeItemsAscendingNamesPass(
-      Visitor &visitor, ItemOrdering &itemOrdering,
+   auto MergeLikeNamedItems(ItemOrdering &itemOrdering,
+      NewItems::const_iterator left, NewItems::const_iterator right,
+      int iPass )
+         -> void;
+
+   auto MergeItemsAscendingNamesPass(ItemOrdering &itemOrdering,
       NewItems &newItems, int iPass, size_t endItemsCount, bool force )
          -> void;
 
-   auto MergeItemsDescendingNamesPass(
-      Visitor &visitor, ItemOrdering &itemOrdering,
+   auto MergeItemsDescendingNamesPass(ItemOrdering &itemOrdering,
       NewItems &newItems, int iPass, size_t endItemsCount, bool force )
          -> void;
 
@@ -89,11 +92,19 @@ struct CollectedItems
 
 // When a computed or shared item, or nameless grouping, specifies a hint and
 // the subordinate does not, propagate the hint.
-const OrderingHint &ChooseHint(BaseItem *delegate, const OrderingHint &hint)
+// Likewise for conflict resolution.
+OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 {
-   return !delegate || delegate->orderingHint.type == OrderingHint::Unspecified
+   auto result =
+      !delegate || delegate->orderingHint.type == OrderingHint::Unspecified
       ? hint
       : delegate->orderingHint;
+   auto policy =
+      !delegate || delegate->orderingHint.policy == OrderingHint::None
+      ? hint.policy
+      : delegate->orderingHint.policy;
+   result.policy = policy;
+   return result;
 }
 
 // "Collection" of items is the first pass of visitation, and resolves
@@ -126,7 +137,7 @@ void CollectItem( Registry::Visitor &visitor,
       if ( delegate )
          // recursion
          CollectItem( visitor, collection, delegate,
-            ChooseHint( delegate, pShared->orderingHint ) );
+            ChooseHint(delegate, ChooseHint(pShared, hint)) );
    }
    else
    if (const auto pComputed =
@@ -137,7 +148,7 @@ void CollectItem( Registry::Visitor &visitor,
          collection.computedItems.push_back( result );
          // recursion
          CollectItem( visitor, collection, result.get(),
-            ChooseHint( result.get(), pComputed->orderingHint ) );
+            ChooseHint(result.get(), ChooseHint(pComputed, hint)));
       }
    }
    else
@@ -154,7 +165,8 @@ void CollectItem( Registry::Visitor &visitor,
          collection.items.push_back( {pItem, nullptr, hint} );
    }
    else {
-      wxASSERT( dynamic_cast<SingleItem*>(pItem) );
+      // Exhaustive type switch
+      assert(dynamic_cast<SingleItem*>(pItem));
       // common to all single items
       collection.items.push_back( {pItem, nullptr, hint} );
    }
@@ -162,44 +174,46 @@ void CollectItem( Registry::Visitor &visitor,
 
 using Path = std::vector< Identifier >;
 
-   std::unordered_set< wxString > sBadPaths;
-   void BadPath(
-     const TranslatableString &format, const wxString &key, const Identifier &name )
-   {
-     // Warn, but not more than once in a session for each bad path
-     auto badPath = key + '/' + name.GET();
-     if ( sBadPaths.insert( badPath ).second ) {
-        auto msg = TranslatableString{ format }.Format( badPath );
-        // debug message
-        wxLogDebug( msg.Translation() );
+std::unordered_set< wxString > sBadPaths;
+void BadPath(
+  const TranslatableString &format, const wxString &key, const Identifier &name )
+{
+  // Warn, but not more than once in a session for each bad path
+  auto badPath = key + '/' + name.GET();
+  if ( sBadPaths.insert( badPath ).second ) {
+     auto msg = TranslatableString{ format }.Format( badPath );
+     // debug message
+     wxLogDebug( msg.Debug() );
 #ifdef IS_ALPHA
-        // user-visible message
-        BasicUI::ShowMessageBox( msg );
+     // user-visible message
+     BasicUI::ShowMessageBox( msg );
 #endif
-     }
-   }
+  }
+}
 
-   void ReportGroupGroupCollision( const wxString &key, const Identifier &name )
-   {
-      BadPath(
+void ReportGroupGroupCollision( const wxString &key, const Identifier &name )
+{
+   BadPath(
 XO("Plug-in group at %s was merged with a previously defined group"),
-         key, name);
-   }
+      key, name);
+}
 
-   void ReportItemItemCollision( const wxString &key, const Identifier &name )
-   {
-      BadPath(
+void ReportItemItemCollision( const wxString &key, const Identifier &name )
+{
+   BadPath(
 XO("Plug-in item at %s conflicts with a previously defined item and was discarded"),
-         key, name);
-   }
+      key, name);
+}
 
-   void ReportConflictingPlacements( const wxString &key, const Identifier &name )
-   {
-      BadPath(
+void ReportConflictingPlacements( const wxString &key, const Identifier &name )
+{
+   BadPath(
 XO("Plug-in items at %s specify conflicting placements"),
-         key, name);
-   }
+      key, name);
+}
 
+// This structure caches left-to-right ordering of an internal node of a
+// registry, as determined by config file, and does linear lookup of names
 struct ItemOrdering {
    wxString key;
 
@@ -207,11 +221,12 @@ struct ItemOrdering {
    {
       // The set of path names determines only an unordered tree.
       // We want an ordering of the tree that is stable across runs.
-      // The last used ordering for this node can be found in preferences at this
-      // key:
+      // The last used ordering for this node can be found in preferences at
+      // this key:
       wxArrayString strings;
       for (const auto &id : path)
          strings.push_back( id.GET() );
+      // Components of the path are assumed not to contain '/'
       key = '/' + ::wxJoin( strings, '/', '\0' );
    }
 
@@ -220,7 +235,7 @@ struct ItemOrdering {
    wxString strValue;
    wxArrayString ordering;
 
-   auto Get() -> wxArrayString & {
+   auto Get() -> const wxArrayString & {
       if ( !gotOrdering ) {
          gPrefs->Read(key, &strValue);
          ordering = ::wxSplit( strValue, ',' );
@@ -228,6 +243,16 @@ struct ItemOrdering {
       }
       return ordering;
    };
+
+   int Find( Identifier component ) {
+      auto &components = Get();
+      auto begin = components.begin();
+      auto end = components.end();
+      auto found = std::find( begin, end, component.GET() );
+      if ( found == end )
+         return -1;
+      return found - begin;
+   }
 };
 
 // For each group node, this is called only in the first pass of merging of
@@ -235,6 +260,7 @@ struct ItemOrdering {
 // registry, but then succeed in later visitations in the same or later
 // runs of the program, because of persistent side-effects on the
 // preferences done at the very end of the visitation.
+// This function will succeed whenever the item's name is in the ordering.
 auto CollectedItems::InsertNewItemUsingPreferences(
    ItemOrdering &itemOrdering, BaseItem *pItem )
    -> bool
@@ -248,12 +274,15 @@ auto CollectedItems::InsertNewItemUsingPreferences(
    // sessions.  But whatever ordering is chosen the first time some
    // plug-in is seen -- that ordering gets remembered in preferences.
 
-   if ( !pItem->name.empty() ) {
+   auto &name = pItem->name;
+   if ( !name.empty() ) {
       // Check saved ordering first, and rebuild that as well as is possible
       auto &ordering = itemOrdering.Get();
       auto begin2 = ordering.begin(), end2 = ordering.end(),
-         found2 = std::find( begin2, end2, pItem->name );
+         found2 = std::find( begin2, end2, name );
       if ( found2 != end2 ) {
+         // Insert the item.  This procedure depends on the items later in the
+         // ordering (when present in the program run) being inserted already.
          auto insertPoint = items.end();
          // Find the next name in the saved ordering that is known already
          // in the collection.
@@ -275,13 +304,15 @@ auto CollectedItems::InsertNewItemUsingPreferences(
 }
 
 // For each group node, this may be called in the second and later passes
-// of merging of items
-auto CollectedItems::InsertNewItemUsingHint(
+// of merging of items.  It will succeed if force is true.
+auto CollectedItems::InsertNewItemUsingHint( ItemOrdering &itemOrdering,
    BaseItem *pItem, const OrderingHint &hint, size_t endItemsCount,
    bool force ) -> bool
 {
    auto begin = items.begin(), end = items.end(),
       insertPoint = end - endItemsCount;
+   auto &ordering = itemOrdering.ordering;
+   auto orderingInsertPoint = ordering.end() - endItemsCount;
 
    // pItem should have a name; if not, ignore the hint, and put it at the
    // default place, but only if in the final pass.
@@ -298,20 +329,29 @@ auto CollectedItems::InsertNewItemUsingHint(
             if ( found == end ) {
                if ( !force )
                   return false;
-               else
+               else {
                   insertPoint = found;
+                  orderingInsertPoint = ordering.end();
+               }
             }
             else {
                insertPoint = found;
-               if ( hint.type == OrderingHint::After )
+               orderingInsertPoint = std::find(
+                  ordering.begin(), ordering.end(), hint.name );
+               if ( hint.type == OrderingHint::After ) {
                   ++insertPoint;
+                  if ( orderingInsertPoint != ordering.end() )
+                     ++orderingInsertPoint;
+               }
             }
             break;
          }
          case OrderingHint::Begin:
             insertPoint = begin;
+            orderingInsertPoint = ordering.begin();
             break;
          case OrderingHint::End:
+            orderingInsertPoint = ordering.end();
             insertPoint = end;
             break;
          case OrderingHint::Unspecified:
@@ -326,17 +366,24 @@ auto CollectedItems::InsertNewItemUsingHint(
    items.insert( insertPoint, {pItem, nullptr,
       // Hints no longer matter:
       {}} );
+
+   // update the ordering preference too, so as not to lose any information
+   // in it, in case of named but not yet loaded items mentioned in the
+   // preferences
+   if (!itemOrdering.ordering.empty() && !pItem->name.empty())
+      itemOrdering.ordering.insert( orderingInsertPoint, pItem->name.GET() );
    return true;
 }
 
+//! Create, on demand, a temporary transparent group item
 auto CollectedItems::MergeLater( Item &found, const Identifier &name )
    -> GroupItem *
 {
-   auto subGroup = found.mergeLater;
+   auto &subGroup = found.mergeLater;
    if ( !subGroup ) {
       auto newGroup = std::make_shared<TransparentGroupItem<>>( name );
       computedItems.push_back( newGroup );
-      subGroup = found.mergeLater = newGroup.get();
+      subGroup = newGroup.get();
    }
    return subGroup;
 }
@@ -361,7 +408,8 @@ auto CollectedItems::SubordinateMultipleItems( Item &found, GroupItem *pItems )
 }
 
 auto CollectedItems::MergeWithExistingItem(
-   Visitor &visitor, ItemOrdering &itemOrdering, BaseItem *pItem ) -> bool
+   ItemOrdering &itemOrdering,
+   BaseItem *pItem, OrderingHint::ConflictResolutionPolicy policy) -> bool
 {
    // Assume no null pointers remain after CollectItems:
    const auto &name = pItem->name;
@@ -411,12 +459,29 @@ auto CollectedItems::MergeWithExistingItem(
             found->visitNow = pRegistryGroup;
             SubordinateSingleItem( *found, demoted );
          }
-         else
-            // Collision of non-group items is the worst case!
-            // The later-registered item is lost.
-            // Which one you lose might be unpredictable when both originate
-            // from static registries.
-            ReportItemItemCollision( itemOrdering.key, name );
+         else {
+            // Collision of non-group items.
+            // Try conflict resolution.
+            switch( policy ) {
+            case OrderingHint::Ignore:
+               break;
+            case OrderingHint::Replace:
+               // At most one item with this policy may be substituted
+               if (mResolvedConflicts.insert(name).second) {
+                  found->visitNow = pItem;
+                  break;
+               }
+               [[fallthrough]] ;
+            case OrderingHint::Error:
+            default:
+               // Unresolved collision of non-group items is the worst case!
+               // The later-registered item is lost.
+               // Which one you lose might be unpredictable when both originate
+               // from static registries.
+               ReportItemItemCollision( itemOrdering.key, name );
+               break;
+            }
+         }
       }
       return true;
    }
@@ -425,49 +490,50 @@ auto CollectedItems::MergeWithExistingItem(
       return false;
 }
 
-auto CollectedItems::MergeLikeNamedItems(
-   Visitor &visitor, ItemOrdering &itemOrdering,
-   NewItems::const_iterator left, NewItems::const_iterator right,
-   const int iPass, size_t endItemsCount, bool force )
+auto CollectedItems::InsertFirstNamedItem( ItemOrdering &itemOrdering,
+   NewItem &item, size_t endItemsCount, bool force )
    -> bool
 {
    // Try to place the first item of the range.
    // If such an item is a group, then we always retain the kind of
    // grouping that was registered.  (Which doesn't always happen when
    // there is name collision in MergeWithExistingItem.)
+
+   // Later passes for choosing placements.
+   // Maybe it fails in this pass, because a placement refers to some
+   // other name that has not yet been placed.
+   bool success = InsertNewItemUsingHint( itemOrdering,
+      item.first, item.second, endItemsCount, force );
+   // The function promises to succeed when force is true.
+   assert(!force || success);
+
+   return success;
+}
+
+auto CollectedItems::MergeLikeNamedItems(
+   ItemOrdering &itemOrdering,
+   NewItems::const_iterator left, NewItems::const_iterator right,
+   const int iPass )
+   -> void
+{
+   // Resolve collisions among remaining like-named items.
    auto iter = left;
    auto &item = *iter;
    auto pItem = item.first;
    const auto &hint = item.second;
-   bool success = false;
-   if ( iPass == -1 )
-      // A first pass consults preferences.
-      success = InsertNewItemUsingPreferences( itemOrdering, pItem );
-   else if ( iPass == hint.type ) {
-      // Later passes for choosing placements.
-      // Maybe it fails in this pass, because a placement refers to some
-      // other name that has not yet been placed.
-      success =
-         InsertNewItemUsingHint( pItem, hint, endItemsCount, force );
-      wxASSERT( !force || success );
-   }
-
-   if ( success ) {
-      // Resolve collisions among remaining like-named items.
-      ++iter;
-      if ( iter != right && iPass != 0 &&
-          iter->second.type != OrderingHint::Unspecified &&
+   ++iter;
+   while ( iter != right ) {
+      if ( iter->second.type != OrderingHint::Unspecified &&
           !( iter->second == hint ) ) {
          // A diagnostic message sometimes
          ReportConflictingPlacements( itemOrdering.key, pItem->name );
       }
-      while ( iter != right )
-         // Re-invoke MergeWithExistingItem for this item, which is known
-         // to have a name collision, so ignore the return value.
-         MergeWithExistingItem( visitor, itemOrdering, iter++ -> first );
+      // Re-invoke MergeWithExistingItem for this item, which is known
+      // to have a name collision, so ignore the return value.
+      MergeWithExistingItem(
+         itemOrdering, iter->first, iter->second.policy );
+      ++iter;
    }
-
-   return success;
 }
 
 inline bool MajorComp(
@@ -491,7 +557,7 @@ inline bool Comp(
 };
 
 auto CollectedItems::MergeItemsAscendingNamesPass(
-  Visitor &visitor, ItemOrdering &itemOrdering, NewItems &newItems,
+  ItemOrdering &itemOrdering, NewItems &newItems,
   const int iPass, size_t endItemsCount, bool force ) -> void
 {
    // Inner loop over ranges of like-named items.
@@ -503,13 +569,18 @@ auto CollectedItems::MergeItemsAscendingNamesPass(
       auto rleft = std::find_if(
          rright + 1, rend, std::bind( MajorComp, _1, *rright ) );
 
-      bool success = MergeLikeNamedItems(
-         visitor, itemOrdering, rleft.base(), rright.base(), iPass,
-         endItemsCount, force );
+      auto left = rleft.base(), right = rright.base();
+
+      bool success = (left->second.type == iPass) &&
+         InsertFirstNamedItem( itemOrdering,
+            *left, endItemsCount, force );
+
+      if (success)
+         MergeLikeNamedItems(itemOrdering, left, right, iPass);
 
       if ( success ) {
          auto diff = rend - rleft;
-         newItems.erase( rleft.base(), rright.base() );
+         newItems.erase( left, right );
          rend = newItems.rend();
          rleft = rend - diff;
       }
@@ -518,7 +589,7 @@ auto CollectedItems::MergeItemsAscendingNamesPass(
 }
 
 auto CollectedItems::MergeItemsDescendingNamesPass(
-  Visitor &visitor, ItemOrdering &itemOrdering, NewItems &newItems,
+  ItemOrdering &itemOrdering, NewItems &newItems,
   const int iPass, size_t endItemsCount, bool force ) -> void
 {
    // Inner loop over ranges of like-named items.
@@ -529,9 +600,12 @@ auto CollectedItems::MergeItemsDescendingNamesPass(
       auto right = std::find_if(
          left + 1, newItems.end(), std::bind( MajorComp, *left, _1 ) );
 
-      bool success = MergeLikeNamedItems(
-         visitor, itemOrdering, left, right, iPass,
-         endItemsCount, force );
+      bool success = (left->second.type == iPass) &&
+         InsertFirstNamedItem( itemOrdering,
+            *left, endItemsCount, force );
+
+      if (success)
+         MergeLikeNamedItems(itemOrdering, left, right, iPass);
 
       if ( success )
          left = newItems.erase( left, right );
@@ -546,28 +620,61 @@ auto CollectedItems::MergeItems(
 {
    // First do expansion of nameless groupings, and caching of computed
    // items, just as for the previously collected items.
-   CollectedItems newCollection{ {}, computedItems };
+   CollectedItems newCollection{ computedItems };
    CollectItems( visitor, newCollection, toMerge, hint );
 
    // Try to merge each, resolving name collisions with items already in the
    // tree, and collecting those with names that don't collide.
    NewItems newItems;
    for ( const auto &item : newCollection.items )
-      if ( !MergeWithExistingItem( visitor, itemOrdering, item.visitNow ) )
-          newItems.push_back( { item.visitNow, item.hint } );
+      if ( !MergeWithExistingItem(
+         itemOrdering, item.visitNow, item.hint.policy ) )
+         newItems.push_back( { item.visitNow, item.hint } );
 
    // Choose placements for items with NEW names.
+   auto begin = newItems.begin(), end = newItems.end();
 
-   // First sort so that like named items are together, and for the same name,
+   // Segregate the ones that are placed by preferences.
+   const auto middle = std::partition( begin, end,
+      [&](const NewItem &item){
+         return -1 == itemOrdering.Find(item.first->name);
+      } );
+
+   // Sort those according to their (descending) place in the preferences.
+   std::sort( middle, end,
+      [&](const NewItem &a, const NewItem &b){
+         return itemOrdering.Find(a.first->name) >
+            itemOrdering.Find(b.first->name);
+      } );
+
+   // Process them
+   for ( auto iter = middle; iter != end; ) {
+      auto pItem = iter ->first;
+      auto &name = pItem->name;
+      bool success = InsertNewItemUsingPreferences( itemOrdering, pItem );
+      // Will succeed because the name is in the ordering
+      assert(success);
+
+      auto right = iter + 1;
+      while ( right != end && right->first->name == name )
+         ++right;
+      MergeLikeNamedItems(itemOrdering, iter, right, -1);
+      iter = right;
+   }
+
+   newItems.erase( middle, end );
+   end = newItems.end();
+
+   // Sort others so that like named items are together, and for the same name,
    // items with more specific ordering hints come earlier.
-   std::sort( newItems.begin(), newItems.end(), Comp );
+   std::sort( begin, end, Comp );
 
    // Outer loop over trial passes.
-   int iPass = -1;
+   int iPass = 0;
    bool force = false;
-   size_t oldSize = 0;
-   size_t endItemsCount = 0;
-   auto prevSize = newItems.size();
+   size_t oldSize = newItems.size();
+   int endItemsCount = 0;
+   auto prevSize = oldSize;
    while( !newItems.empty() )
    {
       // If several items have the same hint, we try to preserve the sort by
@@ -579,33 +686,34 @@ auto CollectedItems::MergeItems(
 
       if ( descending )
          MergeItemsDescendingNamesPass(
-            visitor, itemOrdering, newItems, iPass, endItemsCount, force );
+            itemOrdering, newItems, iPass, endItemsCount, force );
       else
          MergeItemsAscendingNamesPass(
-            visitor, itemOrdering, newItems, iPass, endItemsCount, force );
+            itemOrdering, newItems, iPass, endItemsCount, force );
 
       auto newSize = newItems.size();
-      ++iPass;
 
-      if ( iPass == 0 )
-         // Just tried insertion by preferences.  Don't try it again.
-         oldSize = newSize;
-      else if ( iPass == OrderingHint::Unspecified ) {
+      if ( iPass == OrderingHint::End )
+         // Remember how many were placed; so that default placement is
+         // before all explicit End items, but after other items
+         endItemsCount = prevSize - newSize;
+      assert(endItemsCount >= 0);
+
+      ++iPass;
+      if ( iPass == OrderingHint::Unspecified ) {
+         // Don't place the Unspecified until we have passed through the other
+         // ordering hint types with no further progress in placement of
+         // other items, and then once more, forcing placement with Before and
+         // After hints that reference a nonexistent item.
          if ( !force ) {
-            iPass = 0, oldSize = newSize;
-            // Are we really ready for the final pass?
-            bool progress = ( oldSize > newSize );
-            if ( progress )
-               // No.  While some progress is made, don't force final placements.
-               // Retry Before and After hints.
-               ;
-            else
-               force = true;
+            // Begin and End placements always succeed, so don't retry them.
+            iPass = OrderingHint::Before;
+            // Retry placement of Before and After items, in case they
+            // depended on placement of other items that were not yet placed.
+            force = (oldSize == newSize);
+            oldSize = newSize;
          }
       }
-      else if ( iPass == OrderingHint::End && endItemsCount == 0 )
-         // Remember the size before we put the ending items in place
-         endItemsCount = newSize - prevSize;
 
       prevSize = newSize;
    }
@@ -624,7 +732,7 @@ void VisitItems(
    bool &doFlush )
 {
    // Make a NEW collection for this subtree, sharing the memo cache
-   CollectedItems newCollection{ {}, collection.computedItems };
+   CollectedItems newCollection{ collection.computedItems };
 
    // Gather items at this level
    // (The ordering hint is irrelevant when not merging items in)
@@ -642,12 +750,11 @@ void VisitItems(
       // This makes a side effect in preferences.
       if ( itemOrdering.gotOrdering ) {
          wxString newValue;
-         for ( const auto &item : newCollection.items ) {
-            const auto &name = item.visitNow->name;
+         for ( const auto &name : itemOrdering.ordering ) {
             if ( !name.empty() )
                newValue += newValue.empty()
-                  ? name.GET()
-                  : ',' + name.GET();
+                  ? name
+                  : ',' + name;
          }
          if (newValue != itemOrdering.strValue) {
             gPrefs->Write( itemOrdering.key, newValue );
@@ -675,7 +782,7 @@ void VisitItem(
 
    if (const auto pSingle =
        dynamic_cast<SingleItem*>( pItem )) {
-      wxASSERT( !pToMerge );
+      assert(!pToMerge);
       visitor.Visit( *pSingle, path );
    }
    else
@@ -688,7 +795,9 @@ void VisitItem(
       visitor.EndGroup( *pGroup, path );
    }
    else
-      wxASSERT( false );
+      // Topmost entry passes a GroupItem; recursve invocations have
+      // eliminated ComputedItem and SharedItem
+      assert(false);
 }
 
 }
@@ -710,11 +819,11 @@ void Visitor::BeginGroup(GroupItem &, const Path &) {}
 void Visitor::EndGroup(GroupItem &, const Path &) {}
 void Visitor::Visit(SingleItem &, const Path &) {}
 
-void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
+void Visit( Visitor &visitor, GroupItem *pTopItem, const GroupItem *pRegistry )
 {
-   std::vector< BaseItemSharedPtr > computedItems;
+   visitor.computedItems.clear();
    bool doFlush = false;
-   CollectedItems collection{ {}, computedItems };
+   CollectedItems collection{ visitor.computedItems };
    Path emptyPath;
    VisitItem(
       visitor, collection, emptyPath, pTopItem,
@@ -734,6 +843,8 @@ OrderingPreferenceInitializer::OrderingPreferenceInitializer(
 
 void OrderingPreferenceInitializer::operator () ()
 {
+   // Default, as needed, any registry items that specify left-to-right
+   // orderings of internal nodes.
    bool doFlush = false;
    for (const auto &pair : mPairs) {
       const auto key = wxString{'/'} + mRoot + pair.first;

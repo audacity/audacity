@@ -285,23 +285,7 @@ BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
 END_EVENT_TABLE()
 
 namespace {
-const auto PathStart = wxT("Exporters");
-
-static Registry::GroupItem &sRegistry()
-{
-   static Registry::TransparentGroupItem<> registry{ PathStart };
-   return registry;
-}
-
-struct ExporterItem final : Registry::SingleItem {
-   ExporterItem(
-      const Identifier &id, const Exporter::ExportPluginFactory &factory )
-      : SingleItem{ id }
-      , mFactory{ factory }
-   {}
-
-   Exporter::ExportPluginFactory mFactory;
-};
+   const auto PathStart = wxT("Exporters");
 
    using ExportPluginFactories = std::vector< Exporter::ExportPluginFactory >;
    ExportPluginFactories &sFactories()
@@ -311,14 +295,27 @@ struct ExporterItem final : Registry::SingleItem {
    }
 }
 
+Registry::GroupItem &Exporter::ExporterItem::Registry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
+
+Exporter::ExporterItem::ExporterItem(
+   const Identifier &id, const Exporter::ExportPluginFactory &factory )
+   : SingleItem{ id }
+   , mFactory{ factory }
+{}
+
 Exporter::RegisteredExportPlugin::RegisteredExportPlugin(
    const Identifier &id,
    const ExportPluginFactory &factory,
    const Registry::Placement &placement )
+   : RegisteredItem{
+      factory ? std::make_unique< ExporterItem >( id, factory ) : nullptr,
+      placement
+   }
 {
-   if ( factory )
-      Registry::RegisterItem( sRegistry(), placement,
-         std::make_unique< ExporterItem >( id, factory ) );
 }
 
 Exporter::Exporter( AudacityProject &project )
@@ -343,7 +340,7 @@ Exporter::Exporter( AudacityProject &project )
          // visit the registry to collect the plug-ins properly
          // sorted
          TransparentGroupItem<> top{ PathStart };
-         Registry::Visit( *this, &top, &sRegistry() );
+         Registry::Visit( *this, &top, &ExporterItem::Registry() );
       }
 
       void Visit( SingleItem &item, const Path &path ) override

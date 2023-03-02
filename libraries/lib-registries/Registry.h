@@ -22,29 +22,49 @@ namespace Registry {
    // the same ordering), but this is not treated as an error.
    struct OrderingHint
    {
-      // The default Unspecified hint is just like End, except that in case the
+      // The default Unspecified hint is like End, but is overridden if the
       // item is delegated to (by a SharedItem, ComputedItem, or nameless
-      // transparent group), the delegating item's hint will be used instead
+      // transparent group).  The delegating item's hint will be used instead
       enum Type : int {
-         Before, After,
          Begin, End,
+         Before, After,
          Unspecified // keep this last
       } type{ Unspecified };
+
+      //! What to do in case a registered SingleItem is at the same path as a
+      //! predefined SingleItem
+      // The default None policy is like Error, but is overridden if the
+      // item is delegated to (by a SharedItem, ComputedItem, or nameless
+      // transparent group).  The delegating item's policy will be used instead
+      enum ConflictResolutionPolicy : int {
+         Error,   /*!<
+            By default, ignore the registered item and display an error */
+         Ignore,  //!< Yield to any other item
+         Replace, /*!<
+            At most one registered SingleItem may replace the predefined
+            without error */
+         None
+      } policy{ None };
 
       // name of some other BaseItem; significant only when type is Before or
       // After:
       Identifier name;
 
       OrderingHint() {}
-      OrderingHint( Type type_, const wxString &name_ = {} )
-         : type(type_), name(name_) {}
+      OrderingHint( Type type,
+         const wxString &name = {}, ConflictResolutionPolicy policy = Error )
+         : type{ type }, name{ name }, policy{ policy } {}
 
+      //! The conflict resolution policy is not significant in equality
+      //! comparison
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
 
+      //! The conflict resolution policy is not significant in ordering
+      //! comparison
+      /*! This sorts unspecified placements later */
       bool operator < ( const OrderingHint &other ) const
       {
-         // This sorts unspecified placements later
          return std::make_pair( type, name ) <
             std::make_pair( other.type, other.name );
       }
@@ -53,9 +73,10 @@ namespace Registry {
    // TODO C++17: maybe use std::variant (discriminated unions) to achieve
    // polymorphism by other means, not needing unique_ptr and dynamic_cast
    // and using less heap.
-   // Most items in the table will be the large ones describing commands, so the
-   // waste of space in unions for separators and sub-menus should not be
+   // Most items in the table will be the large ones describing commands, so
+   // the waste of space in unions for separators and sub-menus should not be
    // large.
+   // Application code MUST NOT define any new direct subclasses of BaseItem
    struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
@@ -97,6 +118,8 @@ namespace Registry {
    // the ComputedItem is visited
    // The name of the substitute is significant for path calculations, but the
    // ComputedItem's ordering hint is used if the substitute has none
+   // It expects a certain Visitor subtype as context for the function, but
+   // which type that is -- is type-erased
    struct REGISTRIES_API ComputedItem final : BaseItem {
       // The type of functions that generate descriptions of items.
       // Return type is a shared_ptr to let the function decide whether to
@@ -142,6 +165,7 @@ namespace Registry {
    };
    
    // GroupItem adding variadic constructor conveniences
+   // The template parameter is what ComputedItems will accept
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct InlineGroupItem : GroupItem {
       using GroupItem::GroupItem;
@@ -152,20 +176,13 @@ namespace Registry {
          { Append( std::forward< Args >( args )... ); }
 
    private:
-      // nullary overload grounds the recursion
-      void Append() {}
-      // recursive overload
-      template< typename Arg, typename... Args >
-         void Append( Arg &&arg, Args&&... moreArgs )
-         {
-            // Dispatch one argument to the proper overload of AppendOne.
-            // std::forward preserves rvalue/lvalue distinction of the actual
-            // argument of the constructor call; that is, it inserts a
-            // std::move() if and only if the original argument is rvalue
-            AppendOne( std::forward<Arg>( arg ) );
-            // recur with the rest of the arguments
-            Append( std::forward<Args>(moreArgs)... );
-         };
+      template< typename... Args > void Append( Args&&... args ) {
+         // Dispatch each argument to the proper overload of AppendOne
+         // std::forward preserves rvalue/lvalue distinction of the actual
+         // argument of the constructor call; that is, it inserts a
+         // std::move() if and only if the original argument is rvalue
+         ( AppendOne( std::forward<Args>( args ) ), ... );
+      };
 
       // Move one unique_ptr to an item into our array
       void AppendOne( BaseItemPtr&& ptr )
@@ -173,13 +190,14 @@ namespace Registry {
          items.push_back( std::move( ptr ) );
       }
       // This overload allows a lambda or function pointer in the variadic
-      // argument lists without any other syntactic wrapping, and also
-      // allows implicit conversions to type Factory.
-      // (Thus, a lambda can return a unique_ptr<BaseItem> rvalue even though
-      // Factory's return type is shared_ptr, and the needed conversion is
+      // argument lists without any other syntactic wrapping, and makes a
+      // ComputedItem.
+      // (The factory can return a unique_ptr<BaseItem> rvalue even though
+      // Factory's return type is shared_ptr.  The needed conversion is
       // applied implicitly.)
       void AppendOne( const ComputedItem::Factory<VisitorType> &factory )
       {
+         // Note type erasure of VisitorType, and copy of factory
          auto adaptedFactory = [factory]( Registry::Visitor &visitor ){
             return factory( dynamic_cast< VisitorType& >( visitor ) );
          };
@@ -202,9 +220,9 @@ namespace Registry {
    };
 
    // Concrete subclass of GroupItem that adds nothing else
-   // TransparentGroupItem with an empty name is transparent to item path calculations
-   // and propagates its ordering hint if subordinates don't specify hints
-   // and it does specify one
+   // TransparentGroupItem with an empty name is transparent to item path
+   // calculations and propagates its ordering hint and conflict resolution
+   // if subordinates don't specify them and it does
    template< typename VisitorType = ComputedItem::DefaultVisitor >
    struct TransparentGroupItem final : ConcreteGroupItem< true, VisitorType >
    {
@@ -230,10 +248,29 @@ namespace Registry {
    // This function puts one more item into the registry.
    // The sequence of calls to RegisterItem has no significance for
    // determining the visitation ordering.  When sequence is important, register
-   // a GroupItem.
+   // a GroupItem as a subgroup.
    REGISTRIES_API
    void RegisterItem( GroupItem &registry, const Placement &placement,
-      BaseItemPtr pItem );
+      BaseItemPtr pItem //!< Registry takes ownership
+   );
+   
+   //! Generates classes whose instances register and unregister items at
+   //! construction and destruction
+   /*!
+       Usually constructed statically
+       @tparam Item inherits `BaseItem`
+       @tparam RegistryClass defines static member `Registry()` returning
+       `GroupItem&`
+    */
+   template<typename Item, typename RegistryClass = Item> class RegisteredItem {
+   public:
+      RegisteredItem(std::unique_ptr<Item> pItem, const Placement &placement)
+      {
+         if (pItem)
+            RegisterItem(
+               RegistryClass::Registry(), placement, std::move( pItem ) );
+      }
+   };
    
    // Define actions to be done in Visit.
    // Default implementations do nothing
@@ -246,6 +283,13 @@ namespace Registry {
       virtual void BeginGroup( GroupItem &item, const Path &path );
       virtual void EndGroup( GroupItem &item, const Path &path );
       virtual void Visit( SingleItem &item, const Path &path );
+
+   private:
+      std::vector< BaseItemSharedPtr > computedItems;
+      friend REGISTRIES_API void Visit(
+         Visitor &visitor,
+         GroupItem *pTopItem,
+         const GroupItem *pRegistry );
    };
 
    // Top-down visitation of all items and groups in a tree rooted in
@@ -254,18 +298,20 @@ namespace Registry {
    // So neither given tree is modified.
    // But there may be a side effect on preferences to remember the ordering
    // imposed on each node of the unordered tree of registered items; each item
-   // seen in the registry for the first time is placed somehere, and that
+   // seen in the registry for the first time is placed somewhere, and that
    // ordering should be kept the same thereafter in later runs (which may add
    // yet other previously unknown items).
+   // Computed registry items' lifetimes last until visitor is destroyed or
+   // passed again to Visit().
    REGISTRIES_API void Visit(
       Visitor &visitor,
-      BaseItem *pTopItem,
+      GroupItem *pTopItem,
       const GroupItem *pRegistry = nullptr );
 
-   // Typically a static object.  Constructor initializes certain preferences
-   // if they are not present.  These preferences determine an extrinsic
-   // visitation ordering for registered items.  This is needed in some
-   // places that have migrated from a system of exhaustive listings, to a
+   // Typically a static object.  Constructor or operator initializes certain
+   // preferences if they are not present.  These preferences determine an
+   // extrinsic visitation ordering for registered items.  This is needed in
+   // some places that have migrated from a system of exhaustive listings, to a
    // registry of plug-ins, and something must be done to preserve old
    // behavior.  It can be done in the central place using string literal
    // identifiers only, not requiring static compilation or linkage dependency.
@@ -283,7 +329,7 @@ namespace Registry {
          // desired ordering at one node of the tree:
          Pairs pairs );
 
-      void operator () () override;
+      void operator () () final;
 
    private:
       Pairs mPairs;
