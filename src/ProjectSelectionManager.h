@@ -19,37 +19,41 @@ Paul Licameli split from ProjectManager.cpp
 class AudacityProject;
 struct ProjectNumericFormatsEvent;
 
+//! This object is useful mostly as an observer of others in the project
+/*!
+ It listens for changes of selection formats and snap-to choices, and reacts
+ by updating persistent preferences, and updating the time selection to be
+ consistent with those choices.
+ */
 class AUDACITY_DLL_API ProjectSelectionManager final
    : public ClientData::Base
 {
-public:
+ public:
    static ProjectSelectionManager &Get( AudacityProject &project );
    static const ProjectSelectionManager &Get( const AudacityProject &project );
 
-   explicit ProjectSelectionManager( AudacityProject &project );
-   ProjectSelectionManager( const ProjectSelectionManager & ) PROHIBITED;
+   explicit ProjectSelectionManager(AudacityProject &project);
+   ProjectSelectionManager(const ProjectSelectionManager &) = delete;
    ProjectSelectionManager &operator=(
-      const ProjectSelectionManager & ) PROHIBITED;
+      const ProjectSelectionManager &) = delete;
    ~ProjectSelectionManager() override;
+
+   void ModifySelection(double &start, double &end, bool done);
+   void ModifySpectralSelection(
+      double &bottom, double &top, bool done);
 
 private:
    void OnFormatsChanged(ProjectNumericFormatsEvent);
 
-public:
-
    void SetSelectionFormat(const NumericFormatSymbol & format);
 
    void SetAudioTimeFormat(const NumericFormatSymbol & format);
-   void ModifySelection(double &start, double &end, bool done);
 
    void SetFrequencySelectionFormatName(
       const NumericFormatSymbol & formatName);
    void SetBandwidthSelectionFormatName(
       const NumericFormatSymbol & formatName);
-   void ModifySpectralSelection(
-      double &bottom, double &top, bool done);
 
-private:
    void SnapSelection();
 
    Observer::Subscription mFormatsSubscription;
