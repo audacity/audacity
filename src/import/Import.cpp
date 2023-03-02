@@ -47,7 +47,6 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
-#include "../FFmpeg.h"
 #include "FileNames.h"
 #include "../ShuttleGui.h"
 #include "Project.h"
@@ -86,32 +85,35 @@ ImportPluginList &Importer::sImportPluginList()
 }
 
 namespace {
-static const auto PathStart = wxT("Importers");
+static const auto PathStart = L"Importers";
 
-static Registry::GroupItem &sRegistry()
+
+}
+
+Registry::GroupItem &Importer::ImporterItem::Registry()
 {
    static Registry::TransparentGroupItem<> registry{ PathStart };
    return registry;
 }
 
-struct ImporterItem final : Registry::SingleItem {
-   ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin )
-      : SingleItem{ id }
-      , mpPlugin{ std::move( pPlugin ) }
-   {}
+Importer::ImporterItem::ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin )
+   : SingleItem{ id }
+   , mpPlugin{ std::move( pPlugin ) }
+{}
 
-   std::unique_ptr<ImportPlugin> mpPlugin;
-};
-}
+Importer::ImporterItem::~ImporterItem() = default;
 
 Importer::RegisteredImportPlugin::RegisteredImportPlugin(
    const Identifier &id,
    std::unique_ptr<ImportPlugin> pPlugin,
    const Registry::Placement &placement )
+   : RegisteredItem{
+      pPlugin
+         ? std::make_unique< ImporterItem >( id, std::move( pPlugin ) )
+         : nullptr,
+      placement
+   }
 {
-   if ( pPlugin )
-      Registry::RegisterItem( sRegistry(), placement,
-         std::make_unique< ImporterItem >( id, std::move( pPlugin ) ) );
 }
 
 UnusableImportPluginList &Importer::sUnusableImportPluginList()
@@ -147,7 +149,7 @@ bool Importer::Initialize()
          // Once only, visit the registry to collect the plug-ins properly
          // sorted
          TransparentGroupItem<> top{ PathStart };
-         Registry::Visit( *this, &top, &sRegistry() );
+         Registry::Visit( *this, &top, &ImporterItem::Registry() );
       }
 
       void Visit( SingleItem &item, const Path &path ) override
@@ -795,15 +797,19 @@ bool Importer::Import( AudacityProject &project,
       }
 
       // we were not able to recognize the file type
+      TranslatableString extraMessages;
+      for(const auto &importPlugin : sImportPluginList()) {
+         auto message = importPlugin->FailureHint();
+         if (!message.empty()) {
+            extraMessages += message;
+            extraMessages += Verbatim("\n");
+         }
+      }
+
       errorMessage = XO(
 /* i18n-hint: %s will be the filename */
 "Audacity did not recognize the type of the file '%s'.\n\n%sFor uncompressed files, also try File > Import > Raw Data.")
-         .Format( fName,
-#if defined(USE_FFMPEG)
-               !FFmpegFunctions::Load()
-                  ? XO("Try installing FFmpeg.\n\n") :
-#endif
-                  Verbatim("") );
+         .Format( fName, extraMessages );
    }
    else
    {

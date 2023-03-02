@@ -33,6 +33,11 @@ bool ImportPlugin::SupportsExtension(const FileExtension &extension)
    return mExtensions.Index(extension, false) != wxNOT_FOUND;
 }
 
+TranslatableString ImportPlugin::FailureHint() const
+{
+   return {};
+}
+
 ImportFileHandle::ImportFileHandle(const FilePath & filename)
 :  mFilename(filename)
 {
