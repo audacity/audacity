@@ -16,7 +16,7 @@
 
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
-#include "../../../../Snap.h"
+#include "Snap.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../../images/Cursors.h"
 #include "WaveClip.h"

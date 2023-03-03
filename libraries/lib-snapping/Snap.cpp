@@ -19,7 +19,7 @@
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
 #include "Track.h"
-#include "ViewInfo.h"
+#include "ZoomInfo.h"
 
 inline bool operator < (SnapPoint s1, SnapPoint s2)
 {

@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
-#include "../../Snap.h"
+#include "Snap.h"
 #include "SyncLock.h"
 #include "Track.h"
 #include "../../TrackArt.h"
