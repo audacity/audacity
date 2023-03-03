@@ -1404,8 +1404,10 @@ void ProjectFileManager::Compact()
    const auto least = std::min<size_t>(savedState, currentState);
    const auto greatest = std::max<size_t>(savedState, currentState);
    std::vector<const TrackList*> trackLists;
-   auto fn = [&](auto& elem){
-      trackLists.push_back(elem.state.tracks.get()); };
+   auto fn = [&](const UndoStackElem& elem) {
+      if (auto pTracks = TrackList::FindUndoTracks(elem))
+         trackLists.push_back(pTracks);
+   };
    undoManager.VisitStates(fn, least, 1 + least);
    if (least != greatest)
       undoManager.VisitStates(fn, greatest, 1 + greatest);

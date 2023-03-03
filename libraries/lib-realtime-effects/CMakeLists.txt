@@ -14,7 +14,7 @@ set( SOURCES
 set( LIBRARIES
    lib-math-interface
    lib-module-manager-interface
-   lib-project-history-interface
+   lib-track-interface
 )
 audacity_library( lib-realtime-effects "${SOURCES}" "${LIBRARIES}"
    "" ""

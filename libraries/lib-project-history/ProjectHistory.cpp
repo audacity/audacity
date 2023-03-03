@@ -11,7 +11,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 
 #include "Project.h"
-#include "Track.h"
 #include "UndoManager.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {
@@ -39,14 +38,11 @@ ProjectHistory::~ProjectHistory() = default;
 void ProjectHistory::InitialState()
 {
    auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
 
    undoManager.ClearStates();
 
-   undoManager.PushState(
-      tracks,
-      XO("Created new project"), {});
+   undoManager.PushState(XO("Created new project"), {});
 
    undoManager.StateSaved();
 }
@@ -54,19 +50,15 @@ void ProjectHistory::InitialState()
 bool ProjectHistory::UndoAvailable() const
 {
    auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   return undoManager.UndoAvailable() &&
-       !tracks.HasPendingTracks();
+   return undoManager.UndoAvailable();
 }
 
 bool ProjectHistory::RedoAvailable() const
 {
    auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   return undoManager.RedoAvailable() &&
-      !tracks.HasPendingTracks();
+   return undoManager.RedoAvailable();
 }
 
 void ProjectHistory::PushState(
@@ -84,9 +76,8 @@ void ProjectHistory::PushState(const TranslatableString &desc,
       AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
-   auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   undoManager.PushState(tracks, desc, shortDesc, flags);
+   undoManager.PushState(desc, shortDesc, flags);
 
    mDirty = true;
 }
@@ -105,9 +96,8 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
       AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
-   auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   undoManager.ModifyState(tracks);
+   undoManager.ModifyState();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -120,18 +110,11 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
       AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
-   TrackList *const tracks = state.tracks.get();
-   wxASSERT(tracks);
-   auto &dstTracks = TrackList::Get( project );
 
    // Restore extra state
    for (auto &pExtension : state.extensions)
       if (pExtension)
          pExtension->RestoreUndoRedoState(project);
-
-   dstTracks.Clear();
-   for (auto t : tracks->Any())
-      dstTracks.Add(t->Duplicate());
 }
 
 void ProjectHistory::SetStateTo(unsigned int n, bool doAutosave)

@@ -27,12 +27,16 @@ UndoManager
 
 #include "BasicUI.h"
 #include "Project.h"
-#include "Track.h"
 #include "TransactionScope.h"
 //#include "NoteTrack.h"  // for Sonify* function declarations
 
 
 UndoStateExtension::~UndoStateExtension() = default;
+
+bool UndoStateExtension::CanUndoOrRedo(const AudacityProject &)
+{
+   return true;
+}
 
 namespace {
    using Savers = std::vector<UndoRedoExtensionRegistry::Saver>;
@@ -167,37 +171,35 @@ unsigned int UndoManager::GetCurrentState()
 
 bool UndoManager::UndoAvailable()
 {
-   return (current > 0);
+   return CheckAvailable(current - 1);
 }
 
 bool UndoManager::RedoAvailable()
 {
-   return (current < (int)stack.size() - 1);
+   return CheckAvailable(current + 1);
 }
 
-void UndoManager::ModifyState(const TrackList &l)
+bool UndoManager::CheckAvailable(int index)
+{
+   if (index < 0 || index >= (int)stack.size())
+      return false;
+   auto &extensions = stack[index]->state.extensions;
+   return std::all_of(extensions.begin(), extensions.end(), [&](auto &ext){
+      return !ext || ext->CanUndoOrRedo(mProject);
+   });
+}
+
+void UndoManager::ModifyState()
 {
    if (current == wxNOT_FOUND) {
       return;
    }
 
 //   SonifyBeginModifyState();
-   // Delete current -- not necessary, but let's reclaim space early
    auto &state = stack[current]->state;
-   state.tracks.reset();
-
-   // Duplicate
-   auto tracksCopy = TrackList::Create( nullptr );
-   for (auto t : l) {
-      if ( t->GetId() == TrackId{} )
-         // Don't copy a pending added track
-         continue;
-      tracksCopy->Add(t->Duplicate());
-   }
 
    // Re-create all captured project state
    state.extensions = GetExtensions(mProject);
-   state.tracks = std::move(tracksCopy);
 
 //   SonifyEndModifyState();
 
@@ -217,8 +219,7 @@ void UndoManager::RenameState( int state,
    }
 }
 
-void UndoManager::PushState(const TrackList &l,
-                            const TranslatableString &longDescription,
+void UndoManager::PushState(const TranslatableString &longDescription,
                             const TranslatableString &shortDescription,
                             UndoPush flags)
 {
@@ -226,7 +227,7 @@ void UndoManager::PushState(const TrackList &l,
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
-      ModifyState(l);
+      ModifyState();
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
       if (current == saved) {
@@ -235,22 +236,13 @@ void UndoManager::PushState(const TrackList &l,
       return;
    }
 
-   auto tracksCopy = TrackList::Create( nullptr );
-   for (auto t : l) {
-      if ( t->GetId() == TrackId{} )
-         // Don't copy a pending added track
-         continue;
-      tracksCopy->Add(t->Duplicate());
-   }
-
    mayConsolidate = true;
 
    AbandonRedo();
 
    stack.push_back(
       std::make_unique<UndoStackElem>
-         (GetExtensions(mProject), std::move(tracksCopy),
-            longDescription, shortDescription)
+         (GetExtensions(mProject), longDescription, shortDescription)
    );
 
    current++;

@@ -9,7 +9,7 @@ set( SOURCES
    UndoManager.h
 )
 set( LIBRARIES
-   lib-track-interface
+   lib-project-interface
    lib-transactions-interface
 )
 audacity_library( lib-project-history "${SOURCES}" "${LIBRARIES}"
