@@ -53,7 +53,6 @@ selection range.
 #include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectTimeSignature.h"
-#include "../ProjectSettings.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
 #include "ImageManipulation.h"

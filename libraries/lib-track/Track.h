@@ -34,7 +34,6 @@
 
 class wxTextFile;
 class Track;
-class ProjectSettings;
 class AudacityProject;
 
 using TrackArray = std::vector< Track* >;

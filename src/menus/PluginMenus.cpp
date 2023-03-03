@@ -10,7 +10,6 @@
 #include "Project.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
-#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "RealtimeEffectPanel.h"
