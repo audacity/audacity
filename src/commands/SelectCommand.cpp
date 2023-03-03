@@ -38,7 +38,7 @@ explicitly code all three.
 #include "CommandManager.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
-#include "../ProjectSelectionManager.h"
+#include "ProjectSelectionManager.h"
 #include "../TrackPanel.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"

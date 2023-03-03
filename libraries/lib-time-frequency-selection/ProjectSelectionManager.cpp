@@ -12,7 +12,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
-#include "ProjectRate.h"
 #include "ProjectSnap.h"
 #include "ProjectTimeSignature.h"
 #include "Snap.h"

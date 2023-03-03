@@ -47,7 +47,7 @@ frequency selection range.
 #include "Project.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../ProjectSelectionManager.h"
+#include "ProjectSelectionManager.h"
 #include "AllThemeResources.h"
 #include "SelectedRegion.h"
 #include "ViewInfo.h"

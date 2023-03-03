@@ -25,7 +25,7 @@ struct ProjectNumericFormatsEvent;
  by updating persistent preferences, and updating the time selection to be
  consistent with those choices.
  */
-class AUDACITY_DLL_API ProjectSelectionManager final
+class TIME_FREQUENCY_SELECTION_API ProjectSelectionManager final
    : public ClientData::Base
 {
  public:
