@@ -157,8 +157,6 @@ list( APPEND SOURCES
       ProjectFileManager.h
       ProjectManager.cpp
       ProjectManager.h
-      ProjectSelectionManager.cpp
-      ProjectSelectionManager.h
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectTempoListener.cpp
