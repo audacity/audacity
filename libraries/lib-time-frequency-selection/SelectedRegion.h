@@ -35,7 +35,7 @@
 class XMLWriter;
 class XMLAttributeValueView;
 
-class SCREEN_GEOMETRY_API SelectedRegion {
+class TIME_FREQUENCY_SELECTION_API SelectedRegion {
 
    // Maintains the invariant:  t1() >= t0()
 

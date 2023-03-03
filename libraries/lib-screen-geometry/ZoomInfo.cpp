@@ -11,6 +11,7 @@
 #include "ZoomInfo.h"
 
 #include <cmath>
+#include <wx/debug.h>
 
 namespace {
 static const double gMaxZoom = 6000000;

@@ -14,8 +14,7 @@ set( SOURCES
    SyncLock.h
 )
 set( LIBRARIES
-   lib-screen-geometry-interface
-   lib-track-interface
+   lib-time-frequency-selection-interface
 )
 audacity_library( lib-track-selection "${SOURCES}" "${LIBRARIES}"
    "" ""

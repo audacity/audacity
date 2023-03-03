@@ -11,13 +11,14 @@
 #ifndef __AUDACITY_ZOOM_INFO__
 #define __AUDACITY_ZOOM_INFO__
 
-#include "ClientData.h" // to inherit
-
 #ifdef __GNUC__
 #define CONST
 #else
 #define CONST const
 #endif
+
+#include <wx/types.h> // wxInt64
+#include <vector>
 
 class AudacityProject;
 
@@ -41,7 +42,6 @@ enum : int {
 class SCREEN_GEOMETRY_API ZoomInfo /* not final */
    // Note that ViewInfo inherits from ZoomInfo but there are no virtual functions.
    // That's okay if we pass always by reference and never copy, suffering "slicing."
-   : public ClientData::Base
 {
 public:
    ZoomInfo(double start, double pixelsPerSecond);
@@ -160,15 +160,15 @@ public:
 
    // Return true if the mouse position is anywhere in the fisheye
    // origin specifies the pixel corresponding to time h
-   bool InFisheye(wxInt64 /*position*/, wxInt64 WXUNUSED(origin = 0)) const
+   bool InFisheye(wxInt64 /*position*/, wxInt64 = 0) const
    {return false;} // stub
 
    // These accessors ignore the fisheye hiding state.
    // Inclusive:
-   wxInt64 GetFisheyeLeftBoundary(wxInt64 WXUNUSED(origin = 0)) const
+   wxInt64 GetFisheyeLeftBoundary(wxInt64 = 0) const
    {return 0;} // stub
    // Exclusive:
-   wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0)) const
+   wxInt64 GetFisheyeRightBoundary(wxInt64 = 0) const
    {return 0;} // stub
 
    int mWidth{ 0 };
