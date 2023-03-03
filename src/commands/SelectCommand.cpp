@@ -39,7 +39,7 @@ explicitly code all three.
 #include "../CommonCommandFlags.h"
 #include "EffectOutputTracks.h"
 #include "LoadCommands.h"
-#include "../ProjectSelectionManager.h"
+#include "ProjectSelectionManager.h"
 #include "../TrackPanel.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
