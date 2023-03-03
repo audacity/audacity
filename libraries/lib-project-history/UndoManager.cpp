@@ -175,8 +175,7 @@ bool UndoManager::RedoAvailable()
    return (current < (int)stack.size() - 1);
 }
 
-void UndoManager::ModifyState(const TrackList &l,
-                              const SelectedRegion &selectedRegion)
+void UndoManager::ModifyState(const TrackList &l)
 {
    if (current == wxNOT_FOUND) {
       return;
@@ -184,7 +183,8 @@ void UndoManager::ModifyState(const TrackList &l,
 
 //   SonifyBeginModifyState();
    // Delete current -- not necessary, but let's reclaim space early
-   stack[current]->state.tracks.reset();
+   auto &state = stack[current]->state;
+   state.tracks.reset();
 
    // Duplicate
    auto tracksCopy = TrackList::Create( nullptr );
@@ -195,11 +195,10 @@ void UndoManager::ModifyState(const TrackList &l,
       tracksCopy->Add(t->Duplicate());
    }
 
-   // Replace
-   stack[current]->state.extensions = GetExtensions(mProject);
-   stack[current]->state.tracks = std::move(tracksCopy);
+   // Re-create all captured project state
+   state.extensions = GetExtensions(mProject);
+   state.tracks = std::move(tracksCopy);
 
-   stack[current]->state.selectedRegion = selectedRegion;
 //   SonifyEndModifyState();
 
    EnqueueMessage({ UndoRedoMessage::Modified });
@@ -219,7 +218,6 @@ void UndoManager::RenameState( int state,
 }
 
 void UndoManager::PushState(const TrackList &l,
-                            const SelectedRegion &selectedRegion,
                             const TranslatableString &longDescription,
                             const TranslatableString &shortDescription,
                             UndoPush flags)
@@ -228,7 +226,7 @@ void UndoManager::PushState(const TrackList &l,
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
-      ModifyState(l, selectedRegion);
+      ModifyState(l);
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
       if (current == saved) {
@@ -252,7 +250,7 @@ void UndoManager::PushState(const TrackList &l,
    stack.push_back(
       std::make_unique<UndoStackElem>
          (GetExtensions(mProject), std::move(tracksCopy),
-            longDescription, shortDescription, selectedRegion)
+            longDescription, shortDescription)
    );
 
    current++;

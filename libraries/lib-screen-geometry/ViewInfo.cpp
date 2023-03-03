@@ -17,6 +17,7 @@ Paul Licameli
 
 #include "BasicUI.h"
 #include "Project.h"
+#include "UndoManager.h"
 #include "XMLWriter.h"
 
 XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
@@ -333,3 +334,22 @@ static ProjectFileIORegistry::AttributeWriterEntry entry {
 };
 
 BoolSetting ScrollingPreference{ L"/GUI/ScrollBeyondZero", false };
+
+// Undo/redo handling of selection changes
+namespace {
+struct SelectedRegionRestorer final : UndoStateExtension {
+   SelectedRegionRestorer(AudacityProject &project)
+      : mSelectedRegion{ ViewInfo::Get(project).selectedRegion }
+   {}
+   void RestoreUndoRedoState(AudacityProject &project) override {
+      ViewInfo::Get(project).selectedRegion = mSelectedRegion;
+   }
+   SelectedRegion mSelectedRegion;
+};
+
+UndoRedoExtensionRegistry::Entry sEntry {
+   [](AudacityProject &project) -> std::shared_ptr<UndoStateExtension> {
+      return std::make_shared<SelectedRegionRestorer>(project);
+   }
+};
+}

@@ -54,7 +54,6 @@
 #include <vector>
 #include "ClientData.h"
 #include "Observer.h"
-#include "SelectedRegion.h"
 
 //! Type of message published by UndoManager
 /*! all are published only during idle time, except BeginPurge and EndPurge */
@@ -113,15 +112,13 @@ struct UndoState {
    using Extensions = std::vector<std::shared_ptr<UndoStateExtension>>;
 
    UndoState( Extensions extensions,
-      std::shared_ptr<TrackList> &&tracks_,
-      const SelectedRegion &selectedRegion_)
+      std::shared_ptr<TrackList> &&tracks_)
       : extensions(std::move(extensions))
-      , tracks(std::move(tracks_)), selectedRegion(selectedRegion_)
+      , tracks(std::move(tracks_))
    {}
 
    Extensions extensions;
    std::shared_ptr<TrackList> tracks;
-   SelectedRegion selectedRegion; // by value
 };
 
 struct UndoStackElem {
@@ -129,9 +126,8 @@ struct UndoStackElem {
    UndoStackElem( UndoState::Extensions extensions,
       std::shared_ptr<TrackList> &&tracks_,
       const TranslatableString &description_,
-      const TranslatableString &shortDescription_,
-      const SelectedRegion &selectedRegion_)
-      : state(std::move(extensions), std::move(tracks_), selectedRegion_)
+      const TranslatableString &shortDescription_)
+      : state(std::move(extensions), std::move(tracks_))
       , description(description_)
       , shortDescription(shortDescription_)
    {
@@ -177,12 +173,10 @@ class PROJECT_HISTORY_API UndoManager final
    UndoManager& operator = ( const UndoManager& ) = delete;
 
    void PushState(const TrackList &l,
-                  const SelectedRegion &selectedRegion,
                   const TranslatableString &longDescription,
                   const TranslatableString &shortDescription,
                   UndoPush flags = UndoPush::NONE);
-   void ModifyState(const TrackList &l,
-                    const SelectedRegion &selectedRegion);
+   void ModifyState(const TrackList &l);
    void RenameState( int state,
       const TranslatableString &longDescription,
       const TranslatableString &shortDescription);

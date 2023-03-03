@@ -13,7 +13,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Project.h"
 #include "Track.h"
 #include "UndoManager.h"
-#include "ViewInfo.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {
    []( AudacityProject &project ) {
@@ -41,13 +40,12 @@ void ProjectHistory::InitialState()
 {
    auto &project = mProject;
    auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
 
    undoManager.ClearStates();
 
    undoManager.PushState(
-      tracks, viewInfo.selectedRegion,
+      tracks,
       XO("Created new project"), {});
 
    undoManager.StateSaved();
@@ -87,11 +85,8 @@ void ProjectHistory::PushState(const TranslatableString &desc,
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   undoManager.PushState(
-      tracks, viewInfo.selectedRegion,
-      desc, shortDesc, flags);
+   undoManager.PushState(tracks, desc, shortDesc, flags);
 
    mDirty = true;
 }
@@ -111,9 +106,8 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   undoManager.ModifyState(tracks, viewInfo.selectedRegion);
+   undoManager.ModifyState(tracks);
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -129,9 +123,6 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
    TrackList *const tracks = state.tracks.get();
    wxASSERT(tracks);
    auto &dstTracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-
-   viewInfo.selectedRegion = state.selectedRegion;
 
    // Restore extra state
    for (auto &pExtension : state.extensions)

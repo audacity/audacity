@@ -9,7 +9,6 @@ set( SOURCES
    UndoManager.h
 )
 set( LIBRARIES
-   lib-screen-geometry-interface
    lib-track-interface
    lib-transactions-interface
 )
