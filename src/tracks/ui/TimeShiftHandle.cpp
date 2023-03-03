@@ -19,6 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Snap.h"
 #include "SyncLock.h"
 #include "Track.h"
+#include "../../TrackArt.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -993,8 +994,8 @@ void TimeShiftHandle::Draw(
       auto &dc = context.dc;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
-         mSnapManager->Draw(
-            &dc, mClipMoveState.snapLeft, mClipMoveState.snapRight );
+         TrackArt::DrawSnapLines(
+            &dc, mClipMoveState.snapLeft, mClipMoveState.snapRight);
       }
    }
 }
