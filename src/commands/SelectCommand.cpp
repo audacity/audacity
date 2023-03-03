@@ -46,6 +46,7 @@ explicitly code all three.
 #include "Effect.h"
 #include "ViewInfo.h"
 #include "CommandContext.h"
+#include "WaveTrack.h"
 
 
 const ComponentInterfaceSymbol SelectTimeCommand::Symbol
@@ -193,7 +194,8 @@ bool SelectFrequenciesCommand::Apply(const CommandContext & context){
    if( !bHasBottom )
       mBottom = 0.0;
 
-   ProjectSelectionManager::Get( context.project ).ModifySpectralSelection(
+   ProjectSelectionManager::Get(context.project).ModifySpectralSelection(
+      WaveTrack::ProjectNyquistFrequency(context.project),
       mBottom, mTop, false);// false for not done.
    return true;
 }

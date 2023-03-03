@@ -17,7 +17,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectTimeSignature.h"
 #include "Snap.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSelectionManagerKey {
@@ -147,21 +146,17 @@ void ProjectSelectionManager::SetBandwidthSelectionFormatName(
    gPrefs->Flush();
 }
 
-void ProjectSelectionManager::ModifySpectralSelection(
+void ProjectSelectionManager::ModifySpectralSelection(double nyquist,
    double &bottom, double &top, bool done)
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    auto &project = mProject;
    auto &history = ProjectHistory::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
-   auto &tracks = TrackList::Get(mProject);
-   auto nyq = std::max(ProjectRate::Get(project).GetRate(),
-      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate))
-      / 2.0;
    if (bottom >= 0.0)
-      bottom = std::min(nyq, bottom);
+      bottom = std::min(nyquist, bottom);
    if (top >= 0.0)
-      top = std::min(nyq, top);
+      top = std::min(nyquist, top);
    viewInfo.selectedRegion.setFrequencies(bottom, top);
    if (done)
       history.ModifyState(false);

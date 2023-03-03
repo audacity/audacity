@@ -39,7 +39,7 @@ class AUDACITY_DLL_API ProjectSelectionManager final
    ~ProjectSelectionManager() override;
 
    void ModifySelection(double &start, double &end, bool done);
-   void ModifySpectralSelection(
+   void ModifySpectralSelection(double nyquist,
       double &bottom, double &top, bool done);
 
 private:

@@ -21,6 +21,8 @@
 #include <wx/thread.h>
 #include <wx/longlong.h>
 
+class AudacityProject;
+
 namespace BasicUI{ class ProgressDialog; }
 
 class SampleBlockFactory;
@@ -69,6 +71,8 @@ public:
    using Regions = std::vector < Region >;
 
    static wxString GetDefaultAudioTrackNamePreference();
+
+   static double ProjectNyquistFrequency(const AudacityProject &project);
 
    //
    // Constructor / Destructor / Duplicator
