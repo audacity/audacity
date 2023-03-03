@@ -80,9 +80,6 @@ public:
    SnapResults Snap(Track *currentTrack,
              double t,
              bool rightEdge);
-   
-   // The two coordinates need not be ordered:
-   static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );
 
 private:
 
