@@ -17,6 +17,7 @@
 #include <optional>
 #include <array>
 #include <map>
+#include <type_traits>
 
 #include "widgets/AButton.h"
 #include "Internat.h"
@@ -24,15 +25,20 @@
 #include "Theme.h"
 #include "Prefs.h"
 
+struct PrefsListenerDummy { };
+
 template<class WindowBase>
 class ThemedWindowWrapper final :
    public WindowBase,
-   public PrefsListener
+   public std::conditional_t<std::is_base_of_v<PrefsListener, WindowBase>, PrefsListenerDummy, PrefsListener>
 {
    Observer::Subscription mThemeChangeSubscription;
    std::optional<TranslatableString> mTranslatableLabel;
    int mForegroundColorIndex { -1 };
    int mBackgroundColorIndex { -1 };
+   
+   using PrefsListenerBase = std::conditional_t<std::is_base_of_v<PrefsListener, WindowBase>, WindowBase, PrefsListener>;
+   
 public:
    template <typename... Args>
    ThemedWindowWrapper(Args&&... args) : WindowBase( std::forward<Args>(args)... )
@@ -63,7 +69,7 @@ public:
 
    void UpdatePrefs() override
    {
-      PrefsListener::UpdatePrefs();
+      PrefsListenerBase::UpdatePrefs();
       if(mTranslatableLabel)
          WindowBase::SetLabel(mTranslatableLabel->Translation());
    }

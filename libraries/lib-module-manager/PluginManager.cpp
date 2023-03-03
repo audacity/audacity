@@ -525,6 +525,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                   mRegisteredPlugins[id].SetEnabled(enable);
                // Make changes to enabled status persist:
                this->Save();
+               this->NotifyPluginsChanged();
             }
 
             return true;
@@ -907,6 +908,11 @@ void PluginManager::Save()
    registry.Flush();
 
    mRegver = REGVERCUR;
+}
+
+void PluginManager::NotifyPluginsChanged()
+{
+   Publisher<PluginsChangedMessage>::Publish({});
 }
 
 const PluginRegistryVersion &PluginManager::GetRegistryVersion() const

@@ -235,6 +235,7 @@ void PluginStartupRegistration::Run(std::chrono::seconds timeout)
       evt.Skip();
       mValidator.reset();
       PluginManager::Get().Save();
+      PluginManager::Get().NotifyPluginsChanged();
    });
 
    dialog.CenterOnScreen();
