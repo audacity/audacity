@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../UIHandle.h"
 #include "SelectedRegion.h"
-#include "../../Snap.h"
+#include "Snap.h"
 
 #include <vector>
 
