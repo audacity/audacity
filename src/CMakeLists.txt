@@ -178,8 +178,6 @@ list( APPEND SOURCES
       SelectUtilities.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
-      Snap.cpp
-      Snap.h
       SoundActivatedRecord.cpp
       SoundActivatedRecord.h
       SpectralDataDialog.cpp

@@ -14,13 +14,17 @@ set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 set(SOURCES
    ProjectSnap.cpp
    ProjectSnap.h
+   Snap.cpp
+   Snap.h
    SnapUtils.cpp
    SnapUtils.h
 )
 
 set( LIBRARIES
-   lib-project-rate
-   lib-numeric-formats
+   lib-project-rate-interface
+   lib-numeric-formats-interface
+   lib-screen-geometry-interface
+   lib-track-interface
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

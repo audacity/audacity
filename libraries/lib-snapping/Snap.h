@@ -52,7 +52,7 @@ struct SnapResults {
    bool Snapped() const { return snappedPoint || snappedTime; }
 };
 
-class AUDACITY_DLL_API SnapManager
+class SNAPPING_API SnapManager
 {
 public:
    //! Construct only for specified candidate points
