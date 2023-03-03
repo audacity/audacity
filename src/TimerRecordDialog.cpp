@@ -47,7 +47,6 @@
 #include "ProjectManager.h"
 #include "ProjectRate.h"
 #include "ProjectWindow.h"
-#include "ProjectSettings.h"
 #include "Project.h"
 #include "Prefs.h"
 #include "Track.h"

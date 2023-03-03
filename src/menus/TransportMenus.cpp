@@ -8,7 +8,6 @@
 #include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"

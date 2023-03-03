@@ -16,7 +16,6 @@
 
 #include "Export.h"
 #include "ExportUtils.h"
-#include "ProjectSettings.h"
 #include "WaveTrack.h"
 #include "LabelTrack.h"
 #include "Mix.h"

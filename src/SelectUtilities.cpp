@@ -22,7 +22,6 @@
 #include "ProjectNumericFormats.h"
 #include "ProjectWindows.h"
 #include "ProjectRate.h"
-#include "ProjectSettings.h"
 #include "SelectionState.h"
 #include "SyncLock.h"
 #include "TimeDialog.h"

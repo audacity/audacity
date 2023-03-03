@@ -26,7 +26,6 @@
 
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectSettings.h"
 #include "ViewInfo.h"
 
 #include "AllThemeResources.h"
