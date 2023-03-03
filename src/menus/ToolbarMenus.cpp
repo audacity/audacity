@@ -1,4 +1,3 @@
-#include "../ProjectSettings.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ToolManager.h"

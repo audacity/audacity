@@ -81,7 +81,6 @@
 #include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
-#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"

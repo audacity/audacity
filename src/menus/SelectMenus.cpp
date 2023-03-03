@@ -9,7 +9,6 @@
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
-#include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
