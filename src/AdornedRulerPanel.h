@@ -13,6 +13,7 @@
 
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
+#include "widgets/LinearUpdater.h"
 #include "Observer.h"
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
@@ -133,8 +134,8 @@ private:
 
 private:
 
-   LinearUpdater *mpUpdater{};
-   Ruler mRuler;
+   LinearUpdater mUpdater;
+   Ruler mRuler{ mUpdater };
    AudacityProject *const mProject;
    TrackList *mTracks;
 

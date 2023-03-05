@@ -26,7 +26,7 @@ Paul Licameli split from TrackPanel.cpp
 ///////////////////////////////////////////////////////////////////////////////
 Ruler &WaveTrackVRulerControls::ScratchRuler()
 {
-   static Ruler theRuler{ std::make_unique<LinearUpdater>() };
+   static Ruler theRuler{ LinearUpdater::Instance() };
    return theRuler;
 }
 

@@ -239,7 +239,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetFormat(RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
-      vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      vruler->SetUpdater(&LinearUpdater::Instance());
    }
    else {
       wxASSERT(scaleType == WaveformSettings::stLogarithmic);
@@ -348,7 +348,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
 #endif
       vruler->SetFormat(RealLogFormat);
       vruler->SetLabelEdges(true);
-      vruler->SetUpdater(std::make_unique<LinearUpdater>());
+      vruler->SetUpdater(&LinearUpdater::Instance());
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

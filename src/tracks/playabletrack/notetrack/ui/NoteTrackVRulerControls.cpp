@@ -222,7 +222,7 @@ void NoteTrackVRulerControls::UpdateRuler( const wxRect &rect )
    if (!nt)
       return;
 
-   static Ruler ruler{ std::make_unique<LinearUpdater>() };
+   static Ruler ruler{ LinearUpdater::Instance() };
    const auto vruler = &ruler;
 
    vruler->SetBounds(rect.x, rect.y, rect.x + 1, rect.y + rect.height-1);

@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_TIMETRACK__
 #define __AUDACITY_TIMETRACK__
 
+#include "widgets/LinearUpdater.h"
 #include "Track.h"
 
 #include <algorithm>
@@ -107,6 +108,7 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
    const ZoomInfo  *const mZoomInfo;
    std::unique_ptr<BoundedEnvelope> mEnvelope;
+   LinearUpdater mUpdater;
    std::unique_ptr<Ruler> mRuler;
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files

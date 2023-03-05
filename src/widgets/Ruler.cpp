@@ -63,9 +63,8 @@ using std::max;
 // Ruler
 //
 
-Ruler::Ruler(std::unique_ptr<RulerUpdater> pUpdater)
+Ruler::Ruler(const RulerUpdater &updater)
 {
-   assert(pUpdater);
    mHasSetSpacing = false;
 
    mbTicksOnly = true;
@@ -87,7 +86,7 @@ Ruler::Ruler(std::unique_ptr<RulerUpdater> pUpdater)
 
    mTwoTone = false;
 
-   SetUpdater(move(pUpdater));
+   SetUpdater(&updater);
 }
 
 Ruler::~Ruler()
@@ -111,12 +110,12 @@ void Ruler::SetFormat(RulerFormat format)
    }
 }
 
-void Ruler::SetUpdater(std::unique_ptr<const RulerUpdater> pUpdater)
+void Ruler::SetUpdater(const RulerUpdater *pUpdater)
 {
-   // Should a comparison be made between mpUpdater and pUpdater?
-   // Runtime type comparison isn't clean in c++
-   mpUpdater = std::move(pUpdater);
-   Invalidate();
+   if (mpUpdater != pUpdater) {
+      mpUpdater = pUpdater;
+      Invalidate();
+   }
 }
 
 void Ruler::SetUnits(const TranslatableString &units)

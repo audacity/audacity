@@ -83,7 +83,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    double scale = height / (double)screenTotalHeight;
 
    int rulerPageHeight = (int)(rulerScreenHeight * scale);
-   Ruler ruler{ std::make_unique<LinearUpdater>() };
+   Ruler ruler{ LinearUpdater::Instance() };
    ruler.SetBounds(0, 0, width, rulerPageHeight);
    ruler.SetOrientation(wxHORIZONTAL);
    ruler.SetRange(0.0, mTracks->GetEndTime());

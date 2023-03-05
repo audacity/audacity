@@ -12,6 +12,12 @@
 
 #include "CustomUpdaterValue.h"
 
+const CustomUpdaterValue &CustomUpdaterValue::Instance()
+{
+   static CustomUpdaterValue instance;
+   return instance;
+}
+
 bool CustomUpdaterValue::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    // in/out:
    TickOutputs outputs,

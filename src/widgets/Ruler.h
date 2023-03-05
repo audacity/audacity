@@ -31,8 +31,7 @@ class AUDACITY_DLL_API Ruler {
    // Constructor / Destructor
    //
 
-   //! @pre pUpdater is not null
-   Ruler(std::unique_ptr<RulerUpdater> pUpdater);
+   Ruler(const RulerUpdater &updater);
    ~Ruler();
 
    //
@@ -59,7 +58,7 @@ class AUDACITY_DLL_API Ruler {
    // Set the kind of updater the ruler will use (Linear, Logarithmic, Custom, etc.)
    // Invalidates the ruler.  However ruler doesn't invalidate automatically
    // if the updater's state is mutated elsewhere.
-   void SetUpdater(std::unique_ptr<const RulerUpdater> pUpdater);
+   void SetUpdater(const RulerUpdater *pUpdater);
 
    //
    // Optional Ruler Parameters
@@ -145,7 +144,7 @@ private:
 
    std::unique_ptr<RulerStruct::Fonts> mpUserFonts;
 
-   std::unique_ptr<const RulerUpdater> mpUpdater;
+   const RulerUpdater *mpUpdater{};
 
    RulerUpdater::Bits mUserBits;
 

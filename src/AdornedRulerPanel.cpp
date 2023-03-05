@@ -1258,11 +1258,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    const wxSize& size,
    ViewInfo *viewinfo
 )  : CellularPanel(parent, id, pos, size, viewinfo)
-   , mRuler{ [this]{
-      auto pUpdater = std::make_unique<LinearUpdater>();
-      mpUpdater = pUpdater.get();
-      return pUpdater;
-   }() }
    , mProject(project)
 {
    SetLayoutDirection(wxLayout_LeftToRight);
@@ -1286,7 +1281,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
-   mpUpdater->SetData(mViewInfo, mLeftOffset);
+   mUpdater.SetData(mViewInfo, mLeftOffset);
    mRuler.SetLabelEdges( false );
    mRuler.SetFormat( TimeFormat );
 
@@ -2584,7 +2579,7 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
 {
    if (mLeftOffset != offset) {
       mLeftOffset = offset;
-      mpUpdater->SetData(mViewInfo, offset);
+      mUpdater.SetData(mViewInfo, offset);
       mRuler.Invalidate();
    }
 }

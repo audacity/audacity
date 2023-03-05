@@ -42,11 +42,11 @@ RulerPanel::RulerPanel(wxWindow* parent, wxWindowID id,
                        const wxPoint& pos /*= wxDefaultPosition*/,
                        const wxSize& size /*= wxDefaultSize*/)
    : wxPanelWrapper(parent, id, pos, size)
-   , ruler{ [&]() -> std::unique_ptr<RulerUpdater> {
+   , ruler{ [&]() -> const RulerUpdater& {
       if (options.log)
-         return std::make_unique<LogarithmicUpdater>();
+         return LogarithmicUpdater::Instance();
       else
-         return std::make_unique<LinearUpdater>();
+         return LinearUpdater::Instance();
    }() }
 {
    ruler.SetBounds( 0, 0, bounds.x, bounds.y );

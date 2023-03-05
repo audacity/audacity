@@ -16,14 +16,17 @@
 
 class LogarithmicUpdater final : public GeneratedUpdater {
 public:
-   using GeneratedUpdater::GeneratedUpdater;
+   static const LogarithmicUpdater &Instance();
+
    ~LogarithmicUpdater() override;
 
    void Update(
       wxDC& dc, const Envelope* envelope,
       UpdateOutputs& allOutputs, const RulerStruct& context
    ) const override;
+
+private:
+   LogarithmicUpdater() = default;
 };
 
 #endif
-

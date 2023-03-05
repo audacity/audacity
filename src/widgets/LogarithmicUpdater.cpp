@@ -11,6 +11,12 @@
 
 #include "LogarithmicUpdater.h"
 
+const LogarithmicUpdater &LogarithmicUpdater::Instance()
+{
+   static LogarithmicUpdater instance;
+   return instance;
+}
+
 void LogarithmicUpdater::Update(
    wxDC& dc, const Envelope* envelope,
    UpdateOutputs& allOutputs, const RulerStruct& context) const

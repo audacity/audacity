@@ -12,6 +12,12 @@
 
 #include "CustomUpdaterPosition.h"
 
+const CustomUpdaterPosition &CustomUpdaterPosition::Instance()
+{
+   static CustomUpdaterPosition instance;
+   return instance;
+}
+
 bool CustomUpdaterPosition::TickCustom(wxDC& dc, int labelIdx, wxFont font,
    // in/out:
    TickOutputs outputs,

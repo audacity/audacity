@@ -650,7 +650,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    int w = 0;
    int h = 0;
 
-   Ruler vRuler{ std::make_unique<LinearUpdater>() };
+   Ruler vRuler{ LinearUpdater::Instance() };
    vRuler.SetBounds(0, 0, width, height);
    vRuler.SetOrientation(wxVERTICAL);
    vRuler.SetRange(0, -rangeDB);
@@ -658,7 +658,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    vRuler.SetUnits(XO("dB"));
    vRuler.GetMaxSize(&w, NULL);
 
-   Ruler hRuler{ std::make_unique<LinearUpdater>() };
+   Ruler hRuler{ LinearUpdater::Instance() };
    hRuler.SetBounds(0, 0, width, height);
    hRuler.SetOrientation(wxHORIZONTAL);
    hRuler.SetRange(-rangeDB, 0);

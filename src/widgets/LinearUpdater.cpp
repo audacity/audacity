@@ -11,6 +11,12 @@
 
 #include "LinearUpdater.h"
 
+const LinearUpdater &LinearUpdater::Instance()
+{
+   static LinearUpdater instance;
+   return instance;
+}
+
 void LinearUpdater::Update(
    wxDC& dc, const Envelope* envelope,
    UpdateOutputs& allOutputs, const RulerStruct& context) const

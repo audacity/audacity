@@ -18,7 +18,11 @@ class ZoomInfo;
 
 class LinearUpdater final : public GeneratedUpdater {
 public:
-   using GeneratedUpdater::GeneratedUpdater;
+   LinearUpdater() = default;
+
+   // Always has default data values
+   static const LinearUpdater &Instance();
+
    ~LinearUpdater() override;
 
    void Update(

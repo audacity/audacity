@@ -16,7 +16,8 @@
 
 class CustomUpdaterValue final : public CustomUpdater {
 public:
-   using CustomUpdater::CustomUpdater;
+   static const CustomUpdaterValue &Instance();
+   CustomUpdaterValue() = default;
    ~CustomUpdaterValue() override;
 
 protected:

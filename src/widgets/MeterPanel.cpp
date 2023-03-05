@@ -315,7 +315,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mNumBars(0),
    mLayoutValid(false),
    mBitmap{},
-   mRuler{ std::make_unique<LinearUpdater>() }
+   mRuler{ LinearUpdater::Instance() }
 {
    // i18n-hint: Noun (the meter is used for playback or record level monitoring)
    SetName( XO("Meter") );

@@ -16,7 +16,8 @@
 
 class CustomUpdaterPosition final : public CustomUpdater {
 public:
-   using CustomUpdater::CustomUpdater;
+   static const CustomUpdaterPosition &Instance();
+   CustomUpdaterPosition() = default;
    ~CustomUpdaterPosition() override;
 
 protected:
