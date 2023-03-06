@@ -351,8 +351,11 @@ function( append_node_attributes var target )
    if( NOT "wxwidgets::wxwidgets" IN_LIST dependencies )
       # Toolkit neutral targets
       set( color "lightgreen" )
-      # Enforce usage of only a subset of wxBase that excludes the event loop
-      apply_wxbase_restrictions( ${target} )
+      get_target_property(type ${target} TYPE)
+      if (NOT ${type} STREQUAL "INTERFACE_LIBRARY")
+         # Enforce usage of only a subset of wxBase that excludes the event loop
+         apply_wxbase_restrictions( ${target} )
+      endif()
    endif()
    string( APPEND "${var}" " style=filled fillcolor=${color}" )
    set( "${var}" "${${var}}" PARENT_SCOPE)
@@ -393,6 +396,54 @@ function (propagate_interesting_dependencies target direct_dependencies )
       AUDACITY_GRAPH_DEPENDENCIES "${interesting_dependencies}" )
 endfunction()
 
+function(collect_edges TARGET IMPORT_TARGETS LIBTYPE)
+   if (LIBTYPE STREQUAL "MODULE")
+      set( ATTRIBUTES "shape=box" )
+   else()
+      set( ATTRIBUTES "shape=octagon" )
+   endif()
+
+   propagate_interesting_dependencies( ${TARGET} "${IMPORT_TARGETS}" )
+ 
+   append_node_attributes( ATTRIBUTES ${TARGET} )
+
+   list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
+   set(accesses PUBLIC PRIVATE INTERFACE)
+   set(access PUBLIC)
+   foreach( IMPORT ${IMPORT_TARGETS} )
+      if( IMPORT IN_LIST accesses )
+         set( access "${IMPORT}" )
+         continue()
+      endif()
+      canonicalize_node_name( IMPORT "${IMPORT}" )
+      set_edge_attributes( attributes "${access}" )
+      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\" ${attributes}" )
+   endforeach()
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+endfunction()
+
+function ( make_interface_alias TARGET REAL_LIBTYTPE )
+   set(INTERFACE_TARGET "${TARGET}-interface")
+   if (NOT REAL_LIBTYPE STREQUAL "MODULE")
+      add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
+   else()
+      add_library("${INTERFACE_TARGET}" INTERFACE)
+      foreach(PROP
+         INTERFACE_INCLUDE_DIRECTORIES
+         INTERFACE_COMPILE_DEFINITIONS
+         INTERFACE_LINK_LIBRARIES
+	 AUDACITY_GRAPH_DEPENDENCIES
+      )
+         get_target_property( PROPS "${TARGET}" "${PROP}" )
+         if (PROPS)
+            set_target_properties(
+               "${INTERFACE_TARGET}"
+               PROPERTIES "${PROP}" "${PROPS}" )
+         endif()
+      endforeach()
+   endif()
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
@@ -431,7 +482,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif ()
 
    if (LIBTYPE STREQUAL "MODULE")
-      set( ATTRIBUTES "shape=box" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_DESTDIR}/${_MODDIR}" )
       set_target_properties( ${TARGET}
          PROPERTIES
@@ -446,7 +496,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
       fix_bundle( ${TARGET} )
    else()
-      set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_DESTDIR}/${_PKGLIB}" )
       set_target_properties( ${TARGET}
          PROPERTIES
@@ -459,10 +508,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
          install(TARGETS ${TARGET} DESTINATION ${_PKGLIB} )
       endif()
    endif()
-
-   propagate_interesting_dependencies( ${TARGET} "${IMPORT_TARGETS}" )
-
-   append_node_attributes( ATTRIBUTES ${TARGET} )
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
@@ -518,39 +563,10 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif()
 
    # define an additional interface library target
-   set(INTERFACE_TARGET "${TARGET}-interface")
-   if (NOT REAL_LIBTYPE STREQUAL "MODULE")
-      add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
-   else()
-      add_library("${INTERFACE_TARGET}" INTERFACE)
-      foreach(PROP
-         INTERFACE_INCLUDE_DIRECTORIES
-         INTERFACE_COMPILE_DEFINITIONS
-         INTERFACE_LINK_LIBRARIES
-	 AUDACITY_GRAPH_DEPENDENCIES
-      )
-         get_target_property( PROPS "${TARGET}" "${PROP}" )
-         if (PROPS)
-            set_target_properties(
-               "${INTERFACE_TARGET}"
-               PROPERTIES "${PROP}" "${PROPS}" )
-         endif()
-      endforeach()
-   endif()
+   make_interface_alias(${TARGET} ${REAL_LIBTYPE})
 
-   # collect dependency information
-   list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
-   set(accesses PUBLIC PRIVATE INTERFACE)
-   set(access PUBLIC)
-   foreach( IMPORT ${IMPORT_TARGETS} )
-      if( IMPORT IN_LIST accesses )
-         set( access "${IMPORT}" )
-         continue()
-      endif()
-      canonicalize_node_name( IMPORT "${IMPORT}" )
-      set_edge_attributes( attributes "${access}" )
-      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\" ${attributes}" )
-   endforeach()
+   # collect dependency information just for graphviz
+   collect_edges( ${TARGET} "${IMPORT_TARGETS}" ${LIBTYPE} )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 
    # collect unit test targets if they are present
@@ -616,6 +632,13 @@ macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
    target_sources( ${NAME} INTERFACE ${SOURCES})
    target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
    target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
+
+   # define an additional interface library target
+   make_interface_alias(${NAME} "SHARED")
+
+   # just for graphviz
+   collect_edges( ${NAME} "${IMPORT_TARGETS}" "SHARED" )
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 endmacro()
 
 #
