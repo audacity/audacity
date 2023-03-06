@@ -166,7 +166,7 @@ bool EffectDtmf::Instance::ProcessInitialize(
    auto &dtmfSettings = GetSettings(settings);
    if (dtmfSettings.dtmfNTones == 0) {   // Bail if no DTFM sequence.
       // TODO:  don't use mProcessor for this
-      mProcessor.MessageBox(
+      EffectUIServices::DoMessageBox(mProcessor,
                XO("DTMF sequence empty.\nCheck ALL settings for this effect."),
          wxICON_ERROR );
 

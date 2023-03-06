@@ -17,6 +17,7 @@
 
 #include <vamp-hostsdk/PluginLoader.h>
 
+#include <wx/weakref.h>
 #include "../StatefulEffect.h"
 #include "MemoryX.h"
 

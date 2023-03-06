@@ -20,7 +20,7 @@
 
 #include "LV2InstanceFeaturesList.h"
 #include "LV2Ports.h"
-#include "../PerTrackEffect.h"
+#include "PerTrackEffect.h"
 
 class LV2Wrapper;
 

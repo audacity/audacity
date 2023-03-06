@@ -47,7 +47,7 @@
 #include "SelectUtilities.h"
 #include "Track.h"
 #include "commands/CommandManager.h"
-#include "effects/Effect.h"
+#include "Effect.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"

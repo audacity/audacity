@@ -21,7 +21,7 @@ class WaveTrack;
 
 class sampleCount;
 
-class AUDACITY_DLL_API Effect /* not final */
+class EFFECTS_API Effect /* not final */
    : public EffectBase
 {
  //
@@ -106,13 +106,6 @@ class AUDACITY_DLL_API Effect /* not final */
 
    //! Re-invoke DoEffect on another Effect object that implements the work
    bool Delegate(Effect &delegate, EffectSettings &settings);
-
-   // Display a message box, using effect's (translated) name as the prefix
-   // for the title.
-   enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
-   int MessageBox(const TranslatableString& message,
-                  long style = DefaultMessageBoxStyle,
-                  const TranslatableString& titleStr = {}) const;
 
    static void IncEffectCounter(){ nEffectsDone++;}
 

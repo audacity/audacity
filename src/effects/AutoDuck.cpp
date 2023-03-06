@@ -143,7 +143,7 @@ bool EffectAutoDuck::Init()
                return true;
             },
             [&](const Track *) {
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
                    * of the audio automatically when there is sound on another track.  Not as
                    * in 'Donald-Duck'!*/
@@ -159,7 +159,7 @@ bool EffectAutoDuck::Init()
 
    if (!controlTrackCandidate)
    {
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
           * of the audio automatically when there is sound on another track.  Not as
           * in 'Donald-Duck'!*/

@@ -11,30 +11,8 @@
   Paul Licameli split from Effect.cpp
 
 **********************************************************************/
-
-
 #include "StatefulEffectBase.h"
-
-#include <algorithm>
-
-#include <wx/defs.h>
-#include <wx/sizer.h>
-
-#include "ConfigInterface.h"
-#include "../LabelTrack.h"
-#include "../SelectFile.h"
-#include "ShuttleAutomation.h"
-#include "../ShuttleGui.h"
-#include "SyncLock.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
-#include "wxFileNameWrapper.h"
-#include "../widgets/ProgressDialog.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
-
-#include <unordered_map>
+#include "SampleCount.h"
 
 StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
    : mEffect{ effect }

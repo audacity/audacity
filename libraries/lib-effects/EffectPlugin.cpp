@@ -8,7 +8,6 @@
 
 **********************************************************************/
 #include "EffectPlugin.h"
-#include <wx/window.h>
 
 EffectPlugin::~EffectPlugin() = default;
 

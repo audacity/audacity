@@ -611,13 +611,13 @@ bool NyquistEffect::Init()
 
          if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
             if (!hasSpectral) {
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                XO("Enable track spectrogram view before\n"
                "applying 'Spectral' effects."),
                wxOK | wxICON_EXCLAMATION | wxCENTRE,
                XO("Error") );
             } else {
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
                               "in the track Spectrogram settings and select the\n"
                               "frequency range for the effect to act on."),
@@ -858,7 +858,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
    // Nyquist Prompt does not require a selection, but effects do.
    if (!bOnePassTool && (mNumSelectedChannels == 0)) {
       auto message = XO("Audio selection required.");
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          message,
          wxOK | wxCENTRE | wxICON_EXCLAMATION,
          XO("Nyquist Error") );
@@ -897,7 +897,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 
                mCurTrack[1] = * ++ channels.first;
                if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
-                  Effect::MessageBox(
+                  EffectUIServices::DoMessageBox(*this,
                      XO(
 "Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
                      wxOK | wxCENTRE );
@@ -922,7 +922,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                   XO(
 "Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate).")
                      .Format((long)NYQ_MAX_LEN, hours);
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   message,
                   wxOK | wxCENTRE,
                   XO("Nyquist Error") );
@@ -1546,7 +1546,8 @@ bool NyquistEffect::ProcessOne()
       if (GetType() == EffectTypeTool) {
          mProjectChanged = true;
       } else {
-         Effect::MessageBox(XO("Nyquist returned a list.") );
+         EffectUIServices::DoMessageBox(*this,
+            XO("Nyquist returned a list.") );
       }
       return true;
    }
@@ -1557,7 +1558,7 @@ bool NyquistEffect::ProcessOne()
       // is communicated back to C++
       auto msg = Verbatim( NyquistToWxString(nyx_get_string()) );
       if (!msg.empty()) { // Empty string may be used as a No-Op return value.
-         Effect::MessageBox( msg );
+         EffectUIServices::DoMessageBox(*this, msg);
       }
       else if (GetType() == EffectTypeTool) {
          // ;tools may change the project with aud-do commands so
@@ -1580,14 +1581,14 @@ bool NyquistEffect::ProcessOne()
    if (rval == nyx_double) {
       auto str = XO("Nyquist returned the value: %f")
          .Format(nyx_get_double());
-      Effect::MessageBox( str );
+      EffectUIServices::DoMessageBox(*this, str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
    if (rval == nyx_int) {
       auto str = XO("Nyquist returned the value: %d")
          .Format(nyx_get_int());
-      Effect::MessageBox( str );
+      EffectUIServices::DoMessageBox(*this, str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
@@ -1621,18 +1622,20 @@ bool NyquistEffect::ProcessOne()
 
    int outChannels = nyx_get_audio_num_channels();
    if (outChannels > (int)mCurNumChannels) {
-      Effect::MessageBox( XO("Nyquist returned too many audio channels.\n") );
+      EffectUIServices::DoMessageBox(*this,
+         XO("Nyquist returned too many audio channels.\n"));
       return false;
    }
 
    if (outChannels == -1) {
-      Effect::MessageBox(
-         XO("Nyquist returned one audio channel as an array.\n") );
+      EffectUIServices::DoMessageBox(*this,
+         XO("Nyquist returned one audio channel as an array.\n"));
       return false;
    }
 
    if (outChannels == 0) {
-      Effect::MessageBox( XO("Nyquist returned an empty array.\n") );
+      EffectUIServices::DoMessageBox(*this,
+         XO("Nyquist returned an empty array.\n"));
       return false;
    }
 
@@ -1676,7 +1679,8 @@ bool NyquistEffect::ProcessOne()
       mOutputTime = outputTrack[i]->GetEndTime();
 
       if (mOutputTime <= 0) {
-         Effect::MessageBox( XO("Nyquist returned nil audio.\n") );
+         EffectUIServices::DoMessageBox(
+            *this, XO("Nyquist returned nil audio.\n"));
          return false;
       }
    }
@@ -2319,7 +2323,7 @@ bool NyquistEffect::Parse(
                         tokens[3], mFileName.GetFullPath());
 
                // Too disturbing to show alert before Audacity frame is up.
-               //    Effect::MessageBox(
+               //    EffectUIServices::DoMessageBox(*this,
                //       str,
                //       wxOK | wxICON_EXCLAMATION,
                //       XO("Nyquist Warning") );
@@ -2470,12 +2474,12 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    {
       /* i1n-hint: SAL and LISP are names for variant syntaxes for the
        Nyquist programming language.  Leave them, and 'return', untranslated. */
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          XO(
 "Your code looks like SAL syntax, but there is no \'return\' statement.\n\
 For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
 or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
-         Effect::DefaultMessageBoxStyle,
+         EffectUIServices::DefaultMessageBoxStyle,
          XO("Error in Nyquist code") );
       /* i18n-hint: refers to programming "languages" */
       mInitError = XO("Could not determine language");
@@ -2778,7 +2782,7 @@ bool NyquistEffect::TransferDataFromEffectWindow()
                   {
                      const auto message =
                         XO("\"%s\" is not a valid file path.").Format( token );
-                     Effect::MessageBox(
+                     EffectUIServices::DoMessageBox(*this,
                         message,
                         wxOK | wxICON_EXCLAMATION | wxCENTRE,
                         XO("Error") );
@@ -2792,7 +2796,7 @@ bool NyquistEffect::TransferDataFromEffectWindow()
                const auto message =
                   /* i18n-hint: Warning that there is one quotation mark rather than a pair.*/
                   XO("Mismatched quotes in\n%s").Format( ctrl->valStr );
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   message,
                   wxOK | wxICON_EXCLAMATION | wxCENTRE,
                   XO("Error") );
@@ -2808,7 +2812,7 @@ bool NyquistEffect::TransferDataFromEffectWindow()
          // Validation failed
          const auto message =
             XO("\"%s\" is not a valid file path.").Format( ctrl->valStr );
-         Effect::MessageBox(
+         EffectUIServices::DoMessageBox(*this,
             message,
             wxOK | wxICON_EXCLAMATION | wxCENTRE,
             XO("Error") );
@@ -3081,7 +3085,7 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 {
    if (mCommandText->IsModified())
    {
-      if (wxNO == Effect::MessageBox(
+      if (wxNO == EffectUIServices::DoMessageBox(*this,
          XO("Current program has been modified.\nDiscard changes?"),
          wxYES_NO ) )
       {
@@ -3111,7 +3115,7 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 
    if (!mCommandText->LoadFile(mFileName.GetFullPath()))
    {
-      Effect::MessageBox( XO("File could not be loaded") );
+      EffectUIServices::DoMessageBox(*this, XO("File could not be loaded"));
    }
 }
 
@@ -3138,7 +3142,7 @@ void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
 
    if (!mCommandText->SaveFile(mFileName.GetFullPath()))
    {
-      Effect::MessageBox( XO("File could not be saved") );
+      EffectUIServices::DoMessageBox(*this, XO("File could not be saved"));
    }
 }
 
@@ -3194,7 +3198,7 @@ void NyquistEffect::OnTime(wxCommandEvent& evt)
       if (val < ctrl.low || val > ctrl.high) {
          const auto message = XO("Value range:\n%s to %s")
             .Format( ToTimeFormat(ctrl.low), ToTimeFormat(ctrl.high) );
-         Effect::MessageBox(
+         EffectUIServices::DoMessageBox(*this,
             message,
             wxOK | wxCENTRE,
             XO("Value Error") );

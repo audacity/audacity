@@ -22,8 +22,8 @@
 
 #include <thread>
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "ConfigInterface.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
 #include "MixAndRender.h"
 #include "PluginManager.h"
 #include "ProjectAudioIO.h"
@@ -31,7 +31,7 @@
 #include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../widgets/NumericTextCtrl.h"
+#include "NumericConverter.h"
 
 // Effect application counter
 int EffectBase::nEffectsDone = 0;

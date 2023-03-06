@@ -136,7 +136,8 @@ bool EffectEcho::Instance::ProcessInitialize(
       history.reinit(histLen, true);
    }
    catch ( const std::bad_alloc& ) {
-      mProcessor.MessageBox( XO("Requested value exceeds memory capacity.") );
+      EffectUIServices::DoMessageBox(mProcessor,
+         XO("Requested value exceeds memory capacity."));
       return false;
    }
 

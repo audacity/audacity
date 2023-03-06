@@ -2,7 +2,7 @@
 
 #include <public.sdk/source/vst/utility/uid.h>
 
-#include "effects/PerTrackEffect.h"
+#include "PerTrackEffect.h"
 
 namespace Steinberg
 {

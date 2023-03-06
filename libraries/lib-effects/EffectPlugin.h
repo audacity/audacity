@@ -31,7 +31,7 @@ class EffectInstanceEx;
 \class EffectPlugin
 @brief Factory of instances of an effect
 *******************************************************************************/
-class AUDACITY_DLL_API EffectPlugin
+class EFFECTS_API EffectPlugin
    : public EffectInstanceFactory
 {
 public:
@@ -100,7 +100,7 @@ public:
 \class EffectInstanceEx
 @brief Performs effect computation
 *******************************************************************************/
-class AUDACITY_DLL_API EffectInstanceEx : public virtual EffectInstance {
+class EFFECTS_API EffectInstanceEx : public virtual EffectInstance {
 public:
    //! Call once to set up state for whole list of tracks to be processed
    /*!

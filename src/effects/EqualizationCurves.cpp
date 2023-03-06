@@ -41,7 +41,7 @@ int EQUtils::DoMessageBox(
    const TranslatableString &titleStr,
    long style)
 {
-   // Compare with Effect::MessageBox
+   // Compare with EffectUIServices::DoMessageBox
    auto title = titleStr.empty()
       ? name
       : XO("%s: %s").Format( name, titleStr );

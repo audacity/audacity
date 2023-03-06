@@ -26,7 +26,7 @@ class Effect;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API BuiltinEffectsModule final : public PluginProvider
+class EFFECTS_API BuiltinEffectsModule final : public PluginProvider
 {
 public:
    BuiltinEffectsModule();
