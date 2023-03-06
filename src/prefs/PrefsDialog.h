@@ -23,12 +23,6 @@ class wxTreeEvent;
 class SettingTransaction;
 class ShuttleGui;
 
-#ifdef __GNUC__
-#define CONST
-#else
-#define CONST const
-#endif
-
 class AudacityProject;
 
 class AUDACITY_DLL_API PrefsDialog /* not final */ : public wxDialogWrapper

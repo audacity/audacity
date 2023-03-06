@@ -11,12 +11,6 @@
 #ifndef __AUDACITY_ZOOM_INFO__
 #define __AUDACITY_ZOOM_INFO__
 
-#ifdef __GNUC__
-#define CONST
-#else
-#define CONST const
-#endif
-
 #include <wx/types.h> // wxInt64
 #include <vector>
 
@@ -133,7 +127,7 @@ public:
    void ZoomBy(double multiplier);
 
    struct Interval {
-      CONST wxInt64 position; CONST double averageZoom; CONST bool inFisheye;
+      wxInt64 position; double averageZoom; bool inFisheye;
       Interval(wxInt64 p, double z, bool i)
          : position(p), averageZoom(z), inFisheye(i) {}
    };
