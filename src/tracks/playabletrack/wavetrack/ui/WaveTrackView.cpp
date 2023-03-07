@@ -1633,8 +1633,8 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
        = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
     if (outShowSamples != nullptr)
        *outShowSamples = showIndividualSamples;
-    constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
+    constexpr auto edgeLeft = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
+    constexpr auto edgeRight = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
     auto left = std::clamp(
        zoomInfo.TimeToPosition(
           clip.GetPlayStartTime(), viewRect.x, true

@@ -9,7 +9,6 @@ set( SOURCES
    ZoomInfo.h
 )
 set( LIBRARIES
-   wxBase
 )
 audacity_library( lib-screen-geometry "${SOURCES}" "${LIBRARIES}"
    "" ""

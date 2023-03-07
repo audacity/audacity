@@ -92,7 +92,7 @@ namespace {
       ( const ViewInfo &viewInfo, const WaveTrack *wt, double time, int width )
    {
       // Require more than 3 pixels per sample
-      const wxInt64 xx = std::max(wxInt64(0), viewInfo.TimeToPosition(time));
+      const auto xx = std::max<ZoomInfo::int64>(0, viewInfo.TimeToPosition(time));
       ZoomInfo::Intervals intervals;
       const double rate = wt->GetRate();
       viewInfo.FindIntervals(rate, intervals, width);
