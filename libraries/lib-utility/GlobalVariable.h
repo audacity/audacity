@@ -158,6 +158,9 @@ class GlobalHook : public GlobalVariable<Tag,
 {
 public:
    using result_type = typename std::function<Signature>::result_type;
+   using Scope = typename GlobalVariable<Tag,
+      const std::function<Signature>, Default, Options...
+   >::Scope;
 
    //! Null check of the installed function is done for you
    /*! Requires that the return type of the function is void or
@@ -173,6 +176,24 @@ public:
       else
          return result_type{};
    }
+
+   //! Can generate overriding hooks of unique_ptr factories
+   template<typename Derived>
+   struct SubstituteInUnique : Scope { SubstituteInUnique() : Scope{
+      // Generic lambda is coerced to the needed pointer-to-function type
+      [](auto &&...args) -> result_type { return
+         std::make_unique<Derived>(std::forward<decltype(args)>(args)...);
+      }
+   }{}};
+
+   //! Can generate overriding hooks of shared_ptr factories
+   template<typename Derived>
+   struct SubstituteInShared : Scope { SubstituteInShared() : Scope{
+      // Generic lambda is coerced to the needed pointer-to-function type
+      [](auto &&...args) -> result_type { return
+         std::make_shared<Derived>(std::forward<decltype(args)>(args)...);
+      }
+   }{}};
 };
 
 //! Global function-valued variable, with a default implementation given,
@@ -186,6 +207,22 @@ class DefaultedGlobalHook : public GlobalHook< Tag,
    Options...
 >
 {
+};
+
+//! Generates functions useful as defaults of hooks
+template<typename Type, typename... Arguments> struct UniquePtrFactory {
+   static auto Function(Arguments... arguments) -> std::unique_ptr<Type>
+   {
+      return std::make_unique<Type>(std::forward<Arguments&&>(arguments)...);
+   }
+};
+
+//! Generates functions useful as defaults of hooks
+template<typename Type, typename... Arguments> struct SharedPtrFactory {
+   static auto Function(Arguments... arguments) -> std::shared_ptr<Type>
+   {
+      return std::make_shared<Type>(std::forward<Arguments&&>(arguments)...);
+   }
 };
 
 #endif
