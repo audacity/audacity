@@ -26,11 +26,11 @@
  no initializer function; if const-qualified, that means Get() gives
  non-mutating access, but Set() and Scope{...} are still possible if Type is
  movable
- @tparam initializer optional function that computes initial value
+ @tparam initializer initial value, or a function that computes initial value
  @tparam ScopedOnly if true, then enforce RAII for changes of the variable
  (do not generate Set() or Scope::Commit())
  */
-template <typename Tag, typename Type, Type (*initializer)() = nullptr,
+template <typename Tag, typename Type, auto initializer = nullptr,
    bool ScopedOnly = true>
 class GlobalVariable {
    struct dummy{ explicit dummy(){} };
@@ -124,7 +124,13 @@ private:
    static mutable_type &Instance()
    {
       static_assert(!std::is_reference_v<stored_type>);
-      if constexpr (initializer != nullptr) {
+      if constexpr (std::is_convertible_v<
+        decltype(initializer), mutable_type
+      >) {
+         static mutable_type instance{ initializer };
+         return instance;
+      }
+      else if constexpr (initializer != nullptr) {
          static mutable_type instance{ initializer() };
          return instance;
       }
@@ -144,9 +150,11 @@ private:
 };
 
 //! Global function-valued variable, adding a convenient Call()
-template<typename Tag, typename Signature, auto... Options>
-class GlobalHook
-   : public GlobalVariable<Tag, const std::function<Signature>, Options...>
+template<typename Tag, typename Signature, auto Default = nullptr,
+   auto... Options>
+class GlobalHook : public GlobalVariable<Tag,
+   const std::function<Signature>, Default, Options...
+>
 {
 public:
    using result_type = typename std::function<Signature>::result_type;

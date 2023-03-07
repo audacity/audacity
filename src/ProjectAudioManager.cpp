@@ -1159,7 +1159,7 @@ const ReservedCommandFlag&
 static ProjectAudioIO::DefaultOptions::Scope sScope {
 [](AudacityProject &project, bool newDefault) -> AudioIOStartStreamOptions {
    //! Invoke the library default implemantation directly bypassing the hook
-   auto options = ProjectAudioIO::DefaultOptionsFactory()(project, newDefault);
+   auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
 
    //! Decorate with more info
    options.listener = ProjectAudioManager::Get(project).shared_from_this();
