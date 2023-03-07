@@ -28,6 +28,7 @@
 #include "ConfigInterface.h"
 #include "VST3Instance.h"
 #include "VST3Editor.h"
+#include "VST3EffectsModule.h"
 
 
 VST3Effect::~VST3Effect()
@@ -137,3 +138,6 @@ void VST3Effect::ShowOptions(const EffectPlugin &) const
 {
    VST3OptionsDialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make VST3Effect capable of UI
+static VST3EffectsModule::Factory::SubstituteInUnique<VST3Effect> scope;

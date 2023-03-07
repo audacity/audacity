@@ -15,7 +15,9 @@
 #include <unordered_map>
 #include <memory>
 
+#include "GlobalVariable.h"
 #include "PluginProvider.h"
+#include "VST3EffectBase.h"
 
 namespace VST3
 {
@@ -39,6 +41,11 @@ class VST3EffectsModule final : public PluginProvider
    std::shared_ptr<VST3::Hosting::Module> GetModule(const wxString& path);
 
 public:
+   struct Factory : DefaultedGlobalHook<Factory,
+      UniquePtrFactory<VST3EffectBase,
+         std::shared_ptr<VST3::Hosting::Module>, VST3::Hosting::ClassInfo
+      >::Function
+   >{};
 
    PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;

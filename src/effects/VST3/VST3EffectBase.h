@@ -35,7 +35,6 @@ protected:
    mutable std::vector<wxString> mFactoryPresetIDs;
 
 public:
-
    static EffectFamilySymbol GetFamilySymbol();
 
    VST3EffectBase(
