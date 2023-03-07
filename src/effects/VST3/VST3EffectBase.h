@@ -14,6 +14,7 @@
 #pragma once
 
 #include <public.sdk/source/vst/hosting/module.h>
+#include "GlobalVariable.h"
 #include "PerTrackEffect.h"
 
 /**
@@ -35,6 +36,12 @@ protected:
    mutable std::vector<wxString> mFactoryPresetIDs;
 
 public:
+ 
+   struct Factory : DefaultedGlobalHook<Factory,
+      UniquePtrFactory<VST3EffectBase,
+         std::shared_ptr<VST3::Hosting::Module>, VST3::Hosting::ClassInfo
+      >::Function
+   >{};
 
    static EffectFamilySymbol GetFamilySymbol();
 

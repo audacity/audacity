@@ -137,3 +137,7 @@ void VST3Effect::ShowOptions(const EffectPlugin &) const
 {
    VST3OptionsDialog{ *this }.ShowModal();
 }
+
+// Inject factory hook to make VST3Effect capable of UI
+static VST3EffectBase::Factory::SubstituteInUnique<VST3Effect> scope;
+

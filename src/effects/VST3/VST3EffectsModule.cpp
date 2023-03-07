@@ -27,7 +27,7 @@
 #include "PluginInterface.h"
 #include "PluginProvider.h"
 #include "PluginProvider.h"
-#include "VST3Effect.h"
+#include "VST3EffectBase.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
 #include "widgets/AButton.h"
@@ -127,7 +127,7 @@ void VST3EffectsModule::Terminate()
 
 EffectFamilySymbol VST3EffectsModule::GetOptionalFamilySymbol()
 {
-   return VST3Effect::GetFamilySymbol();
+   return VST3EffectBase::GetFamilySymbol();
 }
 
 const FileExtensions& VST3EffectsModule::GetFileExtensions()
@@ -213,10 +213,10 @@ unsigned VST3EffectsModule::DiscoverPluginsAtPath(const PluginPath& path, Transl
       {
          if(classInfo.category() == kVstAudioEffectClass)
          {
-            std::unique_ptr<VST3Effect> effect;
+            std::unique_ptr<VST3EffectBase> effect;
             try
             {
-               effect = std::make_unique<VST3Effect>(module, classInfo);
+               effect = VST3EffectBase::Factory::Call(module, classInfo);
                ++nEffects;
             }
             catch(std::exception& e)
@@ -269,7 +269,8 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
       for(const auto& classInfo : pluginFactory.classInfos())
       {
          if(effectUIDString == classInfo.ID().toString()) {
-            auto result = std::make_unique<VST3Effect>(module, classInfo);
+            auto result =
+               VST3EffectBase::Factory::Call(module, classInfo);
             return result;
          }
       }
@@ -288,7 +289,7 @@ public:
    
    void Validate(ComponentInterface& component) override
    {
-      if(auto vst3effect = dynamic_cast<VST3Effect*>(&component))
+      if(auto vst3effect = dynamic_cast<VST3EffectBase*>(&component))
       {
          VST3Wrapper wrapper (
             *vst3effect->mModule,
