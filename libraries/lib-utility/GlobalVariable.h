@@ -175,4 +175,17 @@ public:
    }
 };
 
+//! Global function-valued variable, with a default implementation given,
+//! and adding a convenient Call()
+/*!
+ @tparam DefaultFunction names a function or static member function
+ */
+template<typename Tag, auto DefaultFunction, auto... Options>
+class DefaultedGlobalHook : public GlobalHook< Tag,
+   std::remove_pointer_t<decltype(DefaultFunction)>, DefaultFunction,
+   Options...
+>
+{
+};
+
 #endif
