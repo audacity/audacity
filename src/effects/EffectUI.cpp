@@ -1549,33 +1549,3 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 #include "RealtimeEffectState.h"
 static RealtimeEffectState::EffectFactory::Scope
 scope{ &EffectManager::GetInstanceFactory };
-
-/* The following registration objects need a home at a higher level to avoid
- dependency either way between WaveTrack or RealtimeEffectList, which need to
- be in different libraries that do not depend either on the other.
-
- WaveTrack, like AudacityProject, has a registry for attachment of serializable
- data.  RealtimeEffectList exposes an interface for serialization.  This is
- where we connect them.
- */
-#include "RealtimeEffectList.h"
-static ProjectFileIORegistry::ObjectReaderEntry projectAccessor {
-   RealtimeEffectList::XMLTag(),
-   [](AudacityProject &project) { return &RealtimeEffectList::Get(project); }
-};
-
-static ProjectFileIORegistry::ObjectWriterEntry projectWriter {
-[](const AudacityProject &project, XMLWriter &xmlFile){
-   RealtimeEffectList::Get(project).WriteXML(xmlFile);
-} };
-
-static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
-   RealtimeEffectList::XMLTag(),
-   [](WaveTrack &track) { return &RealtimeEffectList::Get(track); }
-};
-
-static WaveTrackIORegistry::ObjectWriterEntry waveTrackWriter {
-[](const WaveTrack &track, auto &xmlFile) {
-   if (track.IsLeader())
-      RealtimeEffectList::Get(track).WriteXML(xmlFile);
-} };
