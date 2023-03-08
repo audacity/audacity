@@ -28,7 +28,7 @@ capture the more lengthy output from some commands.
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include "ShuttleGui.h"
-#include "AudacityMessageBox.h"
+#include "BasicUI.h"
 #include "wxPanelWrapper.h"
 
 #include <locale>
@@ -270,7 +270,7 @@ MessageBoxTarget::~MessageBoxTarget() = default;
 void MessageBoxTarget::Update(const wxString &message)
 {
    // Should these messages be localized?
-   AudacityMessageBox( Verbatim( message ) );
+   BasicUI::ShowMessageBox(Verbatim(message));
 }
 
 ResponseTarget::~ResponseTarget() = default;

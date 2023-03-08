@@ -202,7 +202,7 @@ public:
    void Update(const wxString &) override {}
 };
 
-/// Displays messages from a command in an AudacityMessageBox
+/// Displays messages from a command in a BasicUI::MessageBox
 class AUDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
 {
 public:
