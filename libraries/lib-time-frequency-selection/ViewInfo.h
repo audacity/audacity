@@ -14,6 +14,7 @@
 #include <utility>
 #include <vector>
 #include <wx/weakref.h> // member variable
+#include "ClientData.h"
 #include "SelectedRegion.h"
 #include <memory>
 #include "Observer.h"
@@ -25,7 +26,7 @@ struct NotifyingSelectedRegionMessage : Observer::Message {};
 
 // This heavyweight wrapper of the SelectedRegion structure emits events
 // on mutating operations, that other classes can listen for.
-class SCREEN_GEOMETRY_API NotifyingSelectedRegion
+class TIME_FREQUENCY_SELECTION_API NotifyingSelectedRegion
    : public Observer::Publisher<NotifyingSelectedRegionMessage>
    , public wxTrackable
 {
@@ -102,7 +103,7 @@ enum : int {
 
 struct PlayRegionMessage : Observer::Message {};
 
-class SCREEN_GEOMETRY_API PlayRegion
+class TIME_FREQUENCY_SELECTION_API PlayRegion
    : public Observer::Publisher<PlayRegionMessage>
 {
 public:
@@ -182,11 +183,12 @@ private:
    bool mActive{ false };
 };
 
-extern SCREEN_GEOMETRY_API const TranslatableString LoopToggleText;
+extern TIME_FREQUENCY_SELECTION_API const TranslatableString LoopToggleText;
 
-class SCREEN_GEOMETRY_API ViewInfo final
+class TIME_FREQUENCY_SELECTION_API ViewInfo final
    : public ZoomInfo
    , public PrefsListener
+   , public ClientData::Base
 {
 public:
    static ViewInfo &Get( AudacityProject &project );
@@ -250,5 +252,5 @@ private:
    struct ProjectFileIORegistration;
 };
 
-extern SCREEN_GEOMETRY_API BoolSetting ScrollingPreference;
+extern TIME_FREQUENCY_SELECTION_API BoolSetting ScrollingPreference;
 #endif

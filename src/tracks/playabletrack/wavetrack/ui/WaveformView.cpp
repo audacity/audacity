@@ -291,8 +291,8 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
 
 struct WavePortion {
    wxRect rect;
-   CONST double averageZoom;
-   CONST bool inFisheye;
+   double averageZoom;
+   bool inFisheye;
    WavePortion(int x, int y, int w, int h, double zoom, bool i)
       : rect(x, y, w, h), averageZoom(zoom), inFisheye(i)
    {}

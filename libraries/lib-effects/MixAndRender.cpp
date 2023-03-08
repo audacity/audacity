@@ -226,3 +226,36 @@ GetEffectStages(const WaveTrack &track)
    }
    return result;
 }
+
+/* The following registration objects need a home at a higher level to avoid
+ dependency either way between WaveTrack or RealtimeEffectList, which need to
+ be in different libraries that do not depend either on the other.
+
+ WaveTrack, like AudacityProject, has a registry for attachment of serializable
+ data.  RealtimeEffectList exposes an interface for serialization.  This is
+ where we connect them.
+ 
+ There is also registration for serialization of the project-wide master effect
+ stack (whether or not UI makes it available).
+ */
+#include "Project.h"
+static ProjectFileIORegistry::ObjectReaderEntry projectAccessor {
+   RealtimeEffectList::XMLTag(),
+   [](AudacityProject &project) { return &RealtimeEffectList::Get(project); }
+};
+
+static ProjectFileIORegistry::ObjectWriterEntry projectWriter {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   RealtimeEffectList::Get(project).WriteXML(xmlFile);
+} };
+
+static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
+   RealtimeEffectList::XMLTag(),
+   [](WaveTrack &track) { return &RealtimeEffectList::Get(track); }
+};
+
+static WaveTrackIORegistry::ObjectWriterEntry waveTrackWriter {
+[](const WaveTrack &track, auto &xmlFile) {
+   if (track.IsLeader())
+      RealtimeEffectList::Get(track).WriteXML(xmlFile);
+} };

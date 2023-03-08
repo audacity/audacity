@@ -1020,8 +1020,9 @@ static size_t EstimateRemovedBlocks(
 
    // Collect ids that survive
    SampleBlockIDSet wontDelete;
-   auto f = [&](const UndoStackElem &elem){
-      InspectBlocks(*elem.state.tracks, {}, &wontDelete);
+   auto f = [&](const UndoStackElem &elem) {
+      if (auto pTracks = TrackList::FindUndoTracks(elem))
+         InspectBlocks(*pTracks, {}, &wontDelete);
    };
    manager.VisitStates(f, 0, begin);
    manager.VisitStates(f, end, manager.GetNumStates());
@@ -1031,15 +1032,18 @@ static size_t EstimateRemovedBlocks(
 
    // Collect ids that won't survive (and are not negative pseudo ids)
    SampleBlockIDSet seen, mayDelete;
-   manager.VisitStates( [&](const UndoStackElem &elem){
-      auto &tracks = *elem.state.tracks;
-      InspectBlocks(tracks, [&]( const SampleBlock &block ){
-         auto id = block.GetBlockID();
-         if ( id > 0 && !wontDelete.count( id ) )
-            mayDelete.insert( id );
-      },
-      &seen);
-   }, begin, end );
+   manager.VisitStates([&](const UndoStackElem &elem) {
+      if (auto pTracks = TrackList::FindUndoTracks(elem)) {
+         InspectBlocks(*pTracks,
+            [&](const SampleBlock &block){
+               auto id = block.GetBlockID();
+               if (id > 0 && !wontDelete.count(id))
+                  mayDelete.insert(id);
+            },
+            &seen
+         );
+      }
+   }, begin, end);
    return mayDelete.size();
 }
 

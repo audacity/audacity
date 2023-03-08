@@ -17,8 +17,6 @@ and WaveTrackSink make new WaveTrack objects.
 ]]
 
 set( SOURCES
-   MixAndRender.cpp
-   MixAndRender.h
    PasteOverPreservingClips.cpp
    PasteOverPreservingClips.h
    SampleBlock.cpp
@@ -34,7 +32,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-project-rate-interface
-   lib-realtime-effects-interface
    lib-sample-track-interface
    lib-track-selection-interface
 )

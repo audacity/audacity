@@ -11,6 +11,8 @@ set( SOURCES
    EffectPlugin.h
    LoadEffects.cpp
    LoadEffects.h
+   MixAndRender.cpp
+   MixAndRender.h
    PerTrackEffect.cpp
    PerTrackEffect.h
    StatefulEffectBase.cpp

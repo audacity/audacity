@@ -27,8 +27,9 @@ set( SOURCES
    Gain.h
 )
 set( LIBRARIES
-   libsoxr
    lib-preferences-interface
+   PRIVATE
+   libsoxr
 )
 audacity_library( lib-math "${SOURCES}" "${LIBRARIES}"
    "" ""

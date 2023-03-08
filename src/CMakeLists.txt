@@ -1574,14 +1574,6 @@ if( ${_OPT}has_crashreports )
    endif()
 endif()
 
-list( APPEND AUDACITY_LIBRARIES
-   # If Sentry reporting is enabled, this library depends on
-   # lib-network-manager
-   # If Sentry reporting is disabled, an INTERFACE library
-   # will be defined
-   lib-sentry-reporting
-)
-
 propagate_interesting_dependencies( ${TARGET} "${AUDACITY_LIBRARIES}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )

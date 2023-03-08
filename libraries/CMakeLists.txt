@@ -40,6 +40,7 @@ set( LIBRARIES
    lib-command-parameters
    lib-numeric-formats
    lib-effects
+   lib-time-frequency-selection
 )
 
 if ( ${_OPT}has_networking )

@@ -13,7 +13,6 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-preferences-interface
-   wxBase
 )
 audacity_library( lib-command-parameters "${SOURCES}" "${LIBRARIES}"
    "" ""
