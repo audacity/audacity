@@ -10,6 +10,5 @@ Paul Licameli
 
 #include "ClientData.h"
 
-// These are needed out-of-line for the Windows link
+// This is needed out-of-line for the Windows link
 ClientData::Base::~Base() = default;
-template<> ClientData::Cloneable<>::~Cloneable() = default;
