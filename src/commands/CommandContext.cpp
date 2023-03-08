@@ -19,8 +19,6 @@ channels for Error, Progress and Status.  Status is used for general
 messaging from a command back to its invoker.
 
 *//*******************************************************************/
-
-
 #include "CommandContext.h"
 
 #include <map>
@@ -28,7 +26,7 @@ messaging from a command back to its invoker.
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
-#include "CommandTargets.h"
+#include "wxCommandTargets.h"
 
 CommandContext::CommandContext(
       AudacityProject &p

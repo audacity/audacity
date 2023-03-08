@@ -18,7 +18,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 
 #include "Screenshot.h"
 #include "commands/ScreenshotCommand.h"
-#include "commands/CommandTargets.h"
+#include "commands/wxCommandTargets.h"
 #include "commands/CommandContext.h"
 #include <wx/app.h>
 #include <wx/defs.h>

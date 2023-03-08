@@ -30,10 +30,6 @@ status in a briefer listing
 \brief LispyCommandMessageTarget is a CommandOutputTarget that provides status 
 in a lispy style.
 
-\class MessageDialogTarget
-\brief MessageDialogTarget is a CommandOutputTarget that sends its status
-to the LongMessageDialog.
-
 \class CommandOutputTargets
 \brief CommandOutputTargets a mix of three output classes to output 
 progress indication, status messages and errors.
@@ -156,28 +152,6 @@ public:
    void Update(double WXUNUSED(completed)) override {}
 };
 
-#if 0
-
-//#include "ProgressDialog.h" // Member variable
-
-/// Sends command progress information to a ProgressDialog
-class GUIProgressTarget final : public CommandProgressTarget
-{
-private:
-   ProgressDialog &mProgress;
-public:
-   GUIProgressTarget(ProgressDialog &pd)
-      : mProgress(pd)
-   {}
-   ~GUIProgressTarget() override;
-   void Update(double completed) override
-   {
-      mProgress.Update(completed);
-   }
-};
-#endif
-
-
 ///
 class ProgressToMessageTarget final : public CommandProgressTarget
 {
@@ -207,19 +181,6 @@ class AUDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    ~MessageBoxTarget() override;
-   void Update(const wxString &message) override;
-};
-
-/// Displays messages from a command in a wxStatusBar
-class AUDACITY_DLL_API StatusBarTarget final : public CommandMessageTarget
-{
-private:
-   wxStatusBar &mStatus;
-public:
-   StatusBarTarget(wxStatusBar &sb)
-      : mStatus(sb)
-   {}
-   ~StatusBarTarget() override;
    void Update(const wxString &message) override;
 };
 
@@ -400,13 +361,6 @@ public :
    ~BriefCommandOutputTargets();
 private:
    CommandOutputTargets * pToRestore;
-};
-
-class InteractiveOutputTargets : public CommandOutputTargets
-{
-public:
-   InteractiveOutputTargets();
-
 };
 
 #endif /* End of include guard: __COMMANDTARGETS__ */

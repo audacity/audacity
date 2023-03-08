@@ -316,6 +316,8 @@ list( APPEND SOURCES
       commands/SetTrackInfoCommand.cpp
       commands/SetTrackInfoCommand.h
       commands/Validators.h
+      commands/wxCommandTargets.cpp
+      commands/wxCommandTargets.h
 
       # Built-in Effects
 
