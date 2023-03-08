@@ -28,6 +28,7 @@ capture the more lengthy output from some commands.
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include "ShuttleGui.h"
+#include "CommandContext.h"
 #include "BasicUI.h"
 #include "wxPanelWrapper.h"
 
@@ -174,13 +175,19 @@ public:
    }
 };
 
-InteractiveOutputTargets::InteractiveOutputTargets() :
-   CommandOutputTargets( 
-      ExtTargetFactory::ProgressDefault(), 
-      ExtTargetFactory::LongMessages(), 
+namespace {
+struct InteractiveOutputTargets : CommandOutputTargets {
+   InteractiveOutputTargets() : CommandOutputTargets{
+      ExtTargetFactory::ProgressDefault(),
+      ExtTargetFactory::LongMessages(),
       ExtTargetFactory::MessageDefault()
-   )
-{
+   } {}
+};
+
+// Inject a substitute factory
+static CommandContext::TargetFactory::SubstituteInUnique<
+   InteractiveOutputTargets
+> scope;
 }
 
 StatusBarTarget::~StatusBarTarget() = default;

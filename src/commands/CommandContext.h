@@ -12,6 +12,9 @@
 #define __AUDACITY_COMMAND_CONTEXT__
 
 #include <memory>
+#include "Callable.h"
+#include "CommandTargets.h"
+#include "GlobalVariable.h"
 #include "Identifier.h"
 
 class AudacityProject;
@@ -33,6 +36,10 @@ struct TemporarySelection {
 
 class AUDACITY_DLL_API CommandContext {
 public:
+   struct TargetFactory : DefaultedGlobalHook< TargetFactory,
+      Callable::UniquePtrFactory<CommandOutputTargets>::Function
+   >{};
+
    CommandContext(
       AudacityProject &p
       , const wxEvent *e = nullptr

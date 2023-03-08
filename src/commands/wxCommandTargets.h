@@ -70,11 +70,4 @@ public:
    void Update(const wxString &message) override;
 };
 
-class InteractiveOutputTargets : public CommandOutputTargets
-{
-public:
-   InteractiveOutputTargets();
-
-};
-
 #endif /* End of include guard: __COMMANDTARGETS__ */

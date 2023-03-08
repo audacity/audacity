@@ -26,7 +26,7 @@ messaging from a command back to its invoker.
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
-#include "wxCommandTargets.h"
+#include "CommandTargets.h"
 
 CommandContext::CommandContext(
       AudacityProject &p
@@ -36,7 +36,7 @@ CommandContext::CommandContext(
    )
       : project{ p }
       // No target specified?  Use the special interactive one that pops up a dialog.
-      , pOutput( std::make_unique<InteractiveOutputTargets>() )
+      , pOutput{ TargetFactory::Call() }
       , pEvt{ e }
       , index{ ii }
       , parameter{ param }
