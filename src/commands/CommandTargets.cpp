@@ -34,6 +34,13 @@ capture the more lengthy output from some commands.
 #include <locale>
 #include <sstream>
 
+CommandProgressTarget::~CommandProgressTarget() = default;
+
+CommandMessageTarget::~CommandMessageTarget()
+{
+   Flush();
+}
+
 void CommandMessageTarget::StartArray()
 {
    wxString Padding;
@@ -119,7 +126,9 @@ wxString CommandMessageTarget::Escaped( const wxString & str){
    return Temp;
 }
 
+CommandMessageTargetDecorator::~CommandMessageTargetDecorator() = default;
 
+LispyCommandMessageTarget::~LispyCommandMessageTarget() = default;
 
 void LispyCommandMessageTarget::StartArray()
 {
@@ -185,10 +194,7 @@ void LispyCommandMessageTarget::EndField(){
    Update( ")" );
 }
 
-
-
-
-
+BriefCommandMessageTarget::~BriefCommandMessageTarget() = default;
 
 void BriefCommandMessageTarget::StartArray()
 {
@@ -249,6 +255,17 @@ void BriefCommandMessageTarget::EndField(){
    }
 }
 
+NullProgressTarget::~NullProgressTarget() = default;
+
+#if 0
+GUIProgressTarget::~GUIProgressTarget() = default;
+#endif
+
+ProgressToMessageTarget::~ProgressToMessageTarget() = default;
+
+NullMessageTarget::~NullMessageTarget() = default;
+
+MessageBoxTarget::~MessageBoxTarget() = default;
 
 void MessageBoxTarget::Update(const wxString &message)
 {
@@ -256,6 +273,9 @@ void MessageBoxTarget::Update(const wxString &message)
    AudacityMessageBox( Verbatim( message ) );
 }
 
+ResponseTarget::~ResponseTarget() = default;
+
+CombinedMessageTarget::~CombinedMessageTarget() = default;
 
 LispifiedCommandOutputTargets::LispifiedCommandOutputTargets( CommandOutputTargets & target )
  : CommandOutputTargets() ,
@@ -438,7 +458,7 @@ public:
 
 
 /// Extended Target Factory with more options.
-class ExtTargetFactory : public TargetFactory
+class ExtTargetFactory final : public TargetFactory
 {
 public:
    static std::shared_ptr<CommandMessageTarget> LongMessages()
@@ -457,6 +477,8 @@ InteractiveOutputTargets::InteractiveOutputTargets() :
    )
 {
 }
+
+StatusBarTarget::~StatusBarTarget() = default;
 
 void StatusBarTarget::Update(const wxString &message)
 {

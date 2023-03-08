@@ -66,7 +66,7 @@ class wxStatusBar;
 class CommandProgressTarget /* not final */
 {
 public:
-   virtual ~CommandProgressTarget() {}
+   virtual ~CommandProgressTarget();
    virtual void Update(double completed) = 0;
 };
 
@@ -75,7 +75,7 @@ class AUDACITY_DLL_API CommandMessageTarget /* not final */
 {
 public:
    CommandMessageTarget() {mCounts.push_back(0);}
-   virtual ~CommandMessageTarget() { Flush();}
+   virtual ~CommandMessageTarget();
    virtual void Update(const wxString &message) = 0;
    virtual void StartArray();
    virtual void EndArray();
@@ -95,7 +95,7 @@ class CommandMessageTargetDecorator : public CommandMessageTarget
 {
 public:
    CommandMessageTargetDecorator( CommandMessageTarget & target): mTarget(target) {}
-   ~CommandMessageTargetDecorator() override { }
+   ~CommandMessageTargetDecorator() override;
    void Update(const wxString &message) override { mTarget.Update( message );}
    void StartArray() override { mTarget.StartArray();}
    void EndArray() override { mTarget.EndArray();}
@@ -120,6 +120,7 @@ class LispyCommandMessageTarget : public CommandMessageTargetDecorator /* not fi
 {
 public:
    LispyCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   ~LispyCommandMessageTarget() override;
    virtual void StartArray() override;
    virtual void EndArray() override;
    virtual void StartStruct() override;
@@ -135,6 +136,7 @@ class BriefCommandMessageTarget : public CommandMessageTargetDecorator /* not fi
 {
 public:
    BriefCommandMessageTarget( CommandMessageTarget & target): CommandMessageTargetDecorator(target) {};
+   ~BriefCommandMessageTarget() override;
    virtual void StartArray() override;
    virtual void EndArray() override;
    virtual void StartStruct() override;
@@ -150,7 +152,7 @@ public:
 class NullProgressTarget final : public CommandProgressTarget
 {
 public:
-   virtual ~NullProgressTarget() {}
+   ~NullProgressTarget() override;
    void Update(double WXUNUSED(completed)) override {}
 };
 
@@ -167,7 +169,7 @@ public:
    GUIProgressTarget(ProgressDialog &pd)
       : mProgress(pd)
    {}
-   virtual ~GUIProgressTarget() {}
+   ~GUIProgressTarget() override;
    void Update(double completed) override
    {
       mProgress.Update(completed);
@@ -185,9 +187,7 @@ public:
    ProgressToMessageTarget(std::unique_ptr<CommandMessageTarget> &&target)
       : mTarget(std::move(target))
    { }
-   virtual ~ProgressToMessageTarget()
-   {
-   }
+   ~ProgressToMessageTarget() override;
    void Update(double completed) override
    {
       mTarget->Update(wxString::Format(wxT("%.2f%%"), completed*100));
@@ -198,7 +198,7 @@ public:
 class NullMessageTarget final : public CommandMessageTarget
 {
 public:
-   virtual ~NullMessageTarget() {}
+   ~NullMessageTarget() override;
    void Update(const wxString &) override {}
 };
 
@@ -206,7 +206,7 @@ public:
 class AUDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
 {
 public:
-   virtual ~MessageBoxTarget() {}
+   ~MessageBoxTarget() override;
    void Update(const wxString &message) override;
 };
 
@@ -219,6 +219,7 @@ public:
    StatusBarTarget(wxStatusBar &sb)
       : mStatus(sb)
    {}
+   ~StatusBarTarget() override;
    void Update(const wxString &message) override;
 };
 
@@ -236,9 +237,7 @@ public:
       // Cater for handling long responses quickly.
       mBuffer.Alloc(40000);
    }
-   virtual ~ResponseTarget()
-   {
-   }
+   ~ResponseTarget() override;
    void Update(const wxString &message) override
    {
       mBuffer += message;
@@ -267,9 +266,7 @@ public:
       wxASSERT(m1);
       wxASSERT(m2);
    }
-   ~CombinedMessageTarget()
-   {
-   }
+   ~CombinedMessageTarget() override;
    void Update(const wxString &message) override
    {
       m1->Update(message);
