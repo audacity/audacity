@@ -17,7 +17,7 @@ public:
    virtual ~ToolsToolbarHandler() = default;
 
 public slots:
-   void setup();
+   void Setup();
 };
 
 #endif

@@ -17,14 +17,14 @@ public:
    virtual ~EditToolbarHandler() = default;
 
 public slots:
-   void automation();
-   void zoomIn();
-   void zoomOut();
-   void fitSelection();
-   void fitProject();
-   void zoomToggle();
-   void trim();
-   void silence();
+   void Automation();
+   void ZoomIn();
+   void ZoomOut();
+   void FitSelection();
+   void FitProject();
+   void ZoomToggle();
+   void Trim();
+   void Silence();
 };
 
 #endif

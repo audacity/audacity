@@ -6,42 +6,42 @@ EditToolbarHandler::EditToolbarHandler(QObject *parent)
 {
 }
 
-void EditToolbarHandler::automation()
+void EditToolbarHandler::Automation()
 {
    emit updateStatusBar("Automation clicked");
 }
 
-void EditToolbarHandler::zoomIn()
+void EditToolbarHandler::ZoomIn()
 {
    emit updateStatusBar("Zoom in clicked");
 }
 
-void EditToolbarHandler::zoomOut()
+void EditToolbarHandler::ZoomOut()
 {
    emit updateStatusBar("Zoom out clicked");
 }
 
-void EditToolbarHandler::fitSelection()
+void EditToolbarHandler::FitSelection()
 {
    emit updateStatusBar("Zoom fit to selection clicked");
 }
 
-void EditToolbarHandler::fitProject()
+void EditToolbarHandler::FitProject()
 {
    emit updateStatusBar("Zoom fit to project clicked");
 }
 
-void EditToolbarHandler::zoomToggle()
+void EditToolbarHandler::ZoomToggle()
 {
    emit updateStatusBar("Zoom toggle clicked");
 }
 
-void EditToolbarHandler::trim()
+void EditToolbarHandler::Trim()
 {
    emit updateStatusBar("Trim clicked");
 }
 
-void EditToolbarHandler::silence()
+void EditToolbarHandler::Silence()
 {
    emit updateStatusBar("Silence clicked");
 }

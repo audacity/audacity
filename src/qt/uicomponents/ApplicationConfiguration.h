@@ -11,34 +11,34 @@ class ApplicationConfiguration : public QObject
    Q_OBJECT
    QML_ELEMENT
 
-   Q_PROPERTY(QFont iconFont READ iconFont NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QFont bodyFont READ bodyFont NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QFont iconFont READ IconFont NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QFont bodyFont READ BodyFont NOTIFY themeChanged FINAL)
 
-   Q_PROPERTY(QColor backgroundColor1 READ backgroundColor1 NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor backgroundColor2 READ backgroundColor2 NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor backgroundColor3 READ backgroundColor3 NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor fontColor1 READ fontColor1 NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor fontColor2 READ fontColor2 NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor buttonColor READ buttonColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor accentColor READ accentColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor textFieldColor READ textFieldColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor timecodeColor READ timecodeColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor playColor READ playColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor recordColor READ recordColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor strokeColor1 READ strokeColor1 NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor waveformRMSColor READ waveformRMSColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor waveformHighlightColor READ waveformHighlightColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor waveformPeakColor READ waveformPeakColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor clipRegionColor READ clipRegionColor NOTIFY themeChanged FINAL)
-   Q_PROPERTY(QColor clipStrokeColor READ clipStrokeColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor backgroundColor1 READ BackgroundColor1 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor backgroundColor2 READ BackgroundColor2 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor backgroundColor3 READ BackgroundColor3 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor fontColor1 READ FontColor1 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor fontColor2 READ FontColor2 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor buttonColor READ ButtonColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor accentColor READ AccentColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor textFieldColor READ TextFieldColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor timecodeColor READ TimecodeColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor playColor READ PlayColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor recordColor READ RecordColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor strokeColor1 READ StrokeColor1 NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor waveformRMSColor READ WaveformRMSColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor waveformHighlightColor READ WaveformHighlightColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor waveformPeakColor READ WaveformPeakColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor clipRegionColor READ ClipRegionColor NOTIFY themeChanged FINAL)
+   Q_PROPERTY(QColor clipStrokeColor READ ClipStrokeColor NOTIFY themeChanged FINAL)
 
-   Q_PROPERTY(qreal itemOpacityDisabled READ itemOpacityDisabled NOTIFY themeChanged FINAL)
-   Q_PROPERTY(qreal buttonOpacityNormal READ buttonOpacityNormal NOTIFY themeChanged FINAL)
-   Q_PROPERTY(qreal buttonOpacityHit READ buttonOpacityHit NOTIFY themeChanged FINAL)
-   Q_PROPERTY(qreal buttonOpacityHover READ buttonOpacityHover NOTIFY themeChanged FINAL)
+   Q_PROPERTY(qreal itemOpacityDisabled READ ItemOpacityDisabled NOTIFY themeChanged FINAL)
+   Q_PROPERTY(qreal buttonOpacityNormal READ ButtonOpacityNormal NOTIFY themeChanged FINAL)
+   Q_PROPERTY(qreal buttonOpacityHit READ ButtonOpacityHit NOTIFY themeChanged FINAL)
+   Q_PROPERTY(qreal buttonOpacityHover READ ButtonOpacityHover NOTIFY themeChanged FINAL)
 
-   Q_PROPERTY(int borderWidth READ borderWidth NOTIFY themeChanged FINAL)
-   Q_PROPERTY(int defaultButtonSize READ defaultButtonSize NOTIFY themeChanged FINAL)
+   Q_PROPERTY(int borderWidth READ BorderWidth NOTIFY themeChanged FINAL)
+   Q_PROPERTY(int defaultButtonSize READ DefaultButtonSize NOTIFY themeChanged FINAL)
 
 signals:
    void themeChanged();
@@ -46,34 +46,34 @@ signals:
 public:
    ApplicationConfiguration();
 
-   QFont iconFont() const;
-   QFont bodyFont() const;
+   QFont IconFont() const;
+   QFont BodyFont() const;
 
-   QColor backgroundColor1() const;
-   QColor backgroundColor2() const;
-   QColor backgroundColor3() const;
-   QColor fontColor1() const;
-   QColor fontColor2() const;
-   QColor buttonColor() const;
-   QColor accentColor() const;
-   QColor textFieldColor() const;
-   QColor timecodeColor() const;
-   QColor playColor() const;
-   QColor recordColor() const;
-   QColor strokeColor1() const;
-   QColor waveformRMSColor() const;
-   QColor waveformHighlightColor() const;
-   QColor waveformPeakColor() const;
-   QColor clipRegionColor() const;
-   QColor clipStrokeColor() const;
+   QColor BackgroundColor1() const;
+   QColor BackgroundColor2() const;
+   QColor BackgroundColor3() const;
+   QColor FontColor1() const;
+   QColor FontColor2() const;
+   QColor ButtonColor() const;
+   QColor AccentColor() const;
+   QColor TextFieldColor() const;
+   QColor TimecodeColor() const;
+   QColor PlayColor() const;
+   QColor RecordColor() const;
+   QColor StrokeColor1() const;
+   QColor WaveformRMSColor() const;
+   QColor WaveformHighlightColor() const;
+   QColor WaveformPeakColor() const;
+   QColor ClipRegionColor() const;
+   QColor ClipStrokeColor() const;
 
-   qreal itemOpacityDisabled() const;
-   qreal buttonOpacityNormal() const;
-   qreal buttonOpacityHit() const;
-   qreal buttonOpacityHover() const;
+   qreal ItemOpacityDisabled() const;
+   qreal ButtonOpacityNormal() const;
+   qreal ButtonOpacityHit() const;
+   qreal ButtonOpacityHover() const;
 
-   int borderWidth() const;
-   int defaultButtonSize() const;
+   int BorderWidth() const;
+   int DefaultButtonSize() const;
 
 private:
    QFont m_iconFont;

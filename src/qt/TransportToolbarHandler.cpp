@@ -6,12 +6,12 @@ TransportToolbarHandler::TransportToolbarHandler(QObject *parent)
 {
 }
 
-bool TransportToolbarHandler::playing() const
+bool TransportToolbarHandler::Playing() const
 {
    return m_isPlaying;
 }
 
-void TransportToolbarHandler::setPlaying(bool state)
+void TransportToolbarHandler::SetPlaying(bool state)
 {
    if (m_isPlaying != state)
    {
@@ -20,33 +20,33 @@ void TransportToolbarHandler::setPlaying(bool state)
    }
 }
 
-void TransportToolbarHandler::play()
+void TransportToolbarHandler::Play()
 {
-   setPlaying(!playing());
-   emit updateStatusBar(playing() ? "Play clicked" : "Pause clicked");
+   SetPlaying(!Playing());
+   emit updateStatusBar(Playing() ? "Play clicked" : "Pause clicked");
 }
 
-void TransportToolbarHandler::stop()
+void TransportToolbarHandler::Stop()
 {
    emit updateStatusBar("Stop clicked");
 }
 
-void TransportToolbarHandler::rewind()
+void TransportToolbarHandler::Rewind()
 {
    emit updateStatusBar("Rewind clicked");
 }
 
-void TransportToolbarHandler::fastForward()
+void TransportToolbarHandler::FastForward()
 {
    emit updateStatusBar("Fast forward clicked");
 }
 
-void TransportToolbarHandler::record()
+void TransportToolbarHandler::Record()
 {
    emit updateStatusBar("Record clicked");
 }
 
-void TransportToolbarHandler::loop()
+void TransportToolbarHandler::Loop()
 {
    emit updateStatusBar("Loop clicked");
 }

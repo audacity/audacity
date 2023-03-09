@@ -56,13 +56,13 @@ Item {
             id: play
             icon: isPlaying ? IconCode.SOLID_PAUSE : IconCode.SOLID_PLAY
             iconColor: isPlaying ? "black" : appConfig.playColor
-            onClicked: toolbarHandler.play()
+            onClicked: toolbarHandler.Play()
          }
 
          FlatButton {
             id: stop
             icon: IconCode.SOLID_STOP
-            onClicked: toolbarHandler.stop()
+            onClicked: toolbarHandler.Stop()
          }
 
          FlatButton {
@@ -70,21 +70,21 @@ Item {
             icon: IconCode.SOLID_RECORD
             iconColor: appConfig.recordColor
             visible: root.workspaceMode === Workspace.Mode.Classic
-            onClicked: toolbarHandler.record()
+            onClicked: toolbarHandler.Record()
          }
 
          FlatButton {
             id: rewind
             icon: IconCode.SOLID_REWIND
             visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
-            onClicked: toolbarHandler.rewind()
+            onClicked: toolbarHandler.Rewind()
          }
 
          FlatButton {
             id: fastForward
             icon: IconCode.SOLID_FAST_FORWARD
             visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
-            onClicked: toolbarHandler.fastForward()
+            onClicked: toolbarHandler.FastForward()
          }
 
          FlatButton {
@@ -92,14 +92,14 @@ Item {
             icon: IconCode.SOLID_RECORD
             iconColor: appConfig.recordColor
             visible: root.workspaceMode !== Workspace.Mode.Classic
-            onClicked: toolbarHandler.record()
+            onClicked: toolbarHandler.Record()
          }
 
          FlatButton {
             id: loop
             icon: IconCode.LOOP
             visible: root.workspaceMode !== Workspace.Mode.SimpleRecording
-            onClicked: toolbarHandler.loop()
+            onClicked: toolbarHandler.Loop()
          }
       }
 

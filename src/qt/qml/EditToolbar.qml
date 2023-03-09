@@ -52,7 +52,7 @@ Item {
             icon: IconCode.AUTOMATION
             visible: root.workspaceMode === Workspace.Mode.Classic ||
                      root.workspaceMode === Workspace.Mode.AudioEditing
-            onClicked: toolbarHandler.automation()
+            onClicked: toolbarHandler.Automation()
          }
       }
 
@@ -61,13 +61,13 @@ Item {
          FlatButton {
             id: zoomIn
             icon: IconCode.ZOOM_IN
-            onClicked: toolbarHandler.zoomIn()
+            onClicked: toolbarHandler.ZoomIn()
          }
 
          FlatButton {
             id: zoomOut
             icon: IconCode.ZOOM_OUT
-            onClicked: toolbarHandler.zoomOut()
+            onClicked: toolbarHandler.ZoomOut()
          }
 
          FlatButton {
@@ -75,7 +75,7 @@ Item {
             icon: IconCode.ZOOM_FIT_SELECTION
             visible: root.workspaceMode === Workspace.Mode.Classic ||
                   root.workspaceMode === Workspace.Mode.SpectralEditing
-            onClicked: toolbarHandler.fitSelection()
+            onClicked: toolbarHandler.FitSelection()
          }
 
          FlatButton {
@@ -83,7 +83,7 @@ Item {
             icon: IconCode.ZOOM_FIT_PROJECT
             visible: root.workspaceMode === Workspace.Mode.Classic ||
                      root.workspaceMode === Workspace.Mode.SpectralEditing
-            onClicked: toolbarHandler.fitProject()
+            onClicked: toolbarHandler.FitProject()
          }
 
          FlatButton {
@@ -91,7 +91,7 @@ Item {
             icon: IconCode.ZOOM_TOGGLE
             visible: root.workspaceMode === Workspace.Mode.Classic ||
                      root.workspaceMode === Workspace.Mode.SpectralEditing
-            onClicked: toolbarHandler.zoomToggle()
+            onClicked: toolbarHandler.ZoomToggle()
          }
       }
 
@@ -102,13 +102,13 @@ Item {
         FlatButton {
             id: trim
             icon: IconCode.TRIM
-            onClicked: toolbarHandler.trim()
+            onClicked: toolbarHandler.Trim()
          }
 
          FlatButton {
             id: silence
             icon: IconCode.SILENCE
-            onClicked: toolbarHandler.silence()
+            onClicked: toolbarHandler.Silence()
          }
       }
 

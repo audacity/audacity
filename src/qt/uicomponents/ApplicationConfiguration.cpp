@@ -30,127 +30,127 @@ ApplicationConfiguration::ApplicationConfiguration()
    m_bodyFont = GetApplicationFont(":/fonts/Inter-Regular.ttf");
 }
 
-QFont ApplicationConfiguration::iconFont() const
+QFont ApplicationConfiguration::IconFont() const
 {
    return m_iconFont;
 }
 
-QFont ApplicationConfiguration::bodyFont() const
+QFont ApplicationConfiguration::BodyFont() const
 {
    return m_bodyFont;
 }
 
-QColor ApplicationConfiguration::backgroundColor1() const
+QColor ApplicationConfiguration::BackgroundColor1() const
 {
    return m_backgroundColor1;
 }
 
-QColor ApplicationConfiguration::backgroundColor2() const
+QColor ApplicationConfiguration::BackgroundColor2() const
 {
    return m_backgroundColor2;
 }
 
-QColor ApplicationConfiguration::backgroundColor3() const
+QColor ApplicationConfiguration::BackgroundColor3() const
 {
    return m_backgroundColor3;
 }
 
-QColor ApplicationConfiguration::fontColor1() const
+QColor ApplicationConfiguration::FontColor1() const
 {
    return m_fontColor1;
 }
 
-QColor ApplicationConfiguration::fontColor2() const
+QColor ApplicationConfiguration::FontColor2() const
 {
    return m_fontColor2;
 }
 
-QColor ApplicationConfiguration::buttonColor() const
+QColor ApplicationConfiguration::ButtonColor() const
 {
    return m_buttonColor;
 }
 
-QColor ApplicationConfiguration::accentColor() const
+QColor ApplicationConfiguration::AccentColor() const
 {
    return m_accentColor;
 }
 
-QColor ApplicationConfiguration::textFieldColor() const
+QColor ApplicationConfiguration::TextFieldColor() const
 {
    return m_textFieldColor;
 }
 
-QColor ApplicationConfiguration::timecodeColor() const
+QColor ApplicationConfiguration::TimecodeColor() const
 {
    return m_timecodeColor;
 }
 
-QColor ApplicationConfiguration::playColor() const
+QColor ApplicationConfiguration::PlayColor() const
 {
    return m_playColor;
 }
 
-QColor ApplicationConfiguration::recordColor() const
+QColor ApplicationConfiguration::RecordColor() const
 {
    return m_recordColor;
 }
 
-QColor ApplicationConfiguration::strokeColor1() const
+QColor ApplicationConfiguration::StrokeColor1() const
 {
    return m_strokeColor1;
 }
 
-QColor ApplicationConfiguration::waveformRMSColor() const
+QColor ApplicationConfiguration::WaveformRMSColor() const
 {
    return m_waveformRMSColor;
 }
 
-QColor ApplicationConfiguration::waveformHighlightColor() const
+QColor ApplicationConfiguration::WaveformHighlightColor() const
 {
    return m_waveformHighlightColor;
 }
 
-QColor ApplicationConfiguration::waveformPeakColor() const
+QColor ApplicationConfiguration::WaveformPeakColor() const
 {
    return m_waveformPeakColor;
 }
 
-QColor ApplicationConfiguration::clipRegionColor() const
+QColor ApplicationConfiguration::ClipRegionColor() const
 {
    return m_clipRegionColor;
 }
 
-QColor ApplicationConfiguration::clipStrokeColor() const
+QColor ApplicationConfiguration::ClipStrokeColor() const
 {
    return m_clipRegionColor;
 }
 
-qreal ApplicationConfiguration::itemOpacityDisabled() const
+qreal ApplicationConfiguration::ItemOpacityDisabled() const
 {
    return m_itemOpacityDisabled;
 }
 
-qreal ApplicationConfiguration::buttonOpacityNormal() const
+qreal ApplicationConfiguration::ButtonOpacityNormal() const
 {
    return m_buttonOpacityNormal;
 }
 
-qreal ApplicationConfiguration::buttonOpacityHit() const
+qreal ApplicationConfiguration::ButtonOpacityHit() const
 {
    return m_buttonOpacityHit;
 }
 
-qreal ApplicationConfiguration::buttonOpacityHover() const
+qreal ApplicationConfiguration::ButtonOpacityHover() const
 {
    return m_buttonOpacityHover;
 }
 
-int ApplicationConfiguration::borderWidth() const
+int ApplicationConfiguration::BorderWidth() const
 {
    return m_borderWidth;
 }
 
-int ApplicationConfiguration::defaultButtonSize() const
+int ApplicationConfiguration::DefaultButtonSize() const
 {
    return m_defaultButtonSize;
 }

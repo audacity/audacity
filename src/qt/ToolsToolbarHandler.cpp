@@ -6,7 +6,7 @@ ToolsToolbarHandler::ToolsToolbarHandler(QObject *parent)
 {
 }
 
-void ToolsToolbarHandler::setup()
+void ToolsToolbarHandler::Setup()
 {
    emit updateStatusBar("Setup clicked");
 }

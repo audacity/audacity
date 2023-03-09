@@ -9,7 +9,7 @@ class TransportToolbarHandler : public QObject
    Q_OBJECT
    QML_ELEMENT
 
-   Q_PROPERTY(bool isPlaying READ playing WRITE setPlaying)
+   Q_PROPERTY(bool isPlaying READ Playing WRITE SetPlaying)
 
 signals:
    void updateStatusBar(QString status);
@@ -19,16 +19,16 @@ public:
    explicit TransportToolbarHandler(QObject *parent = nullptr);
    virtual ~TransportToolbarHandler() = default;
 
-   bool playing() const;
-   void setPlaying(bool state);
+   bool Playing() const;
+   void SetPlaying(bool state);
 
 public slots:
-   void play();
-   void stop();
-   void rewind();
-   void fastForward();
-   void record();
-   void loop();
+   void Play();
+   void Stop();
+   void Rewind();
+   void FastForward();
+   void Record();
+   void Loop();
 
 private:
    bool m_isPlaying{ false };

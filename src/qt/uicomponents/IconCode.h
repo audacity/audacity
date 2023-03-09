@@ -72,7 +72,7 @@ public:
    Q_ENUM(Code)
 };
 
-static inline QChar iconCodeToChar(IconCode::Code code)
+static inline QChar IconCodeToChar(IconCode::Code code)
 {
    return QChar(static_cast<char16_t>(code));
 }

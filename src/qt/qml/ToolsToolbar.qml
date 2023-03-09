@@ -54,13 +54,17 @@ Rectangle {
             height: root.height
             gripVisible:  Positioner.isFirstItem
             separatorVisible: !Positioner.isLastItem
+
+            onUpdateStatusBar: function(status) {
+               root.updateStatusBar(status)
+            }
          }
 
          FlatButton {
             x: root.width - implicitWidth - 12
             id: setup
             icon: IconCode.SETUP
-            onClicked: toolbarHandler.setup()
+            onClicked: toolbarHandler.Setup()
          }
       }
    }
