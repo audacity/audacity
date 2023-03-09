@@ -14,6 +14,7 @@
 
 #include "WaveTrack.h"
 #include "QualitySettings.h"
+#include "BasicUI.h"
 
 #include <wx/filename.h>
 
@@ -36,4 +37,10 @@ std::shared_ptr<WaveTrack> ImportUtils::NewWaveTrack(
    WaveTrackFactory &trackFactory, sampleFormat effectiveFormat, double rate)
 {
    return trackFactory.Create(ChooseFormat(effectiveFormat), rate);
+}
+
+void ImportUtils::ShowMessageBox(const TranslatableString &message, const TranslatableString& caption)
+{
+   BasicUI::ShowMessageBox(message,
+                           BasicUI::MessageBoxOptions().Caption(caption));
 }

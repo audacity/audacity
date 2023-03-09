@@ -117,6 +117,8 @@ public:
    virtual ~ImportFileHandle();
    
    virtual FilePath GetFilename() const = 0;
+   
+   virtual TranslatableString GetErrorMessage() const;
 
    // This is similar to GetPluginFormatDescription, but if possible the
    // importer will return a more specific description of the
