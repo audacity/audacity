@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Theme.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
 #include "RealtimeEffectManager.h"

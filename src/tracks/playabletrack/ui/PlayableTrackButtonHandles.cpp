@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../RealtimeEffectPanel.h"
 #include "SampleTrack.h"
-#include "../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../TrackUtilities.h"

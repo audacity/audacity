@@ -38,7 +38,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "SelectionState.h"
 #include "Tags.h"
 #include "TempDirectory.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"

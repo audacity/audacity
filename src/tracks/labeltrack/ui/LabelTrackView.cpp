@@ -32,7 +32,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Theme.h"
 #include "../../../TrackArt.h"
 #include "../../../TrackArtist.h"
-#include "../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"

@@ -42,7 +42,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "WaveTrack.h"
 #include "../prefs/WaveformSettings.h"

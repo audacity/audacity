@@ -19,7 +19,7 @@
 #include "SyncLock.h"
 #include "../toolbars/ToolManager.h"
 #include "../toolbars/SelectionBar.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TempDirectory.h"
 #include "UndoManager.h"
 #include "CommandContext.h"

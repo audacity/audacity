@@ -44,7 +44,7 @@
 #include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelAx.h"
+#include "TrackFocus.h"
 
 #include "../WaveTrackUtils.h"
 

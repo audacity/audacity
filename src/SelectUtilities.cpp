@@ -25,7 +25,7 @@
 #include "SelectionState.h"
 #include "SyncLock.h"
 #include "TimeDialog.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"

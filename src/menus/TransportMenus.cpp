@@ -12,7 +12,7 @@
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../SoundActivatedRecord.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "../TransportUtilities.h"
 #include "UndoManager.h"

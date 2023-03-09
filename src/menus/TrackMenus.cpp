@@ -14,7 +14,7 @@
 #include "../SelectUtilities.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
-#include "../TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "../TrackUtilities.h"
 #include "UndoManager.h"

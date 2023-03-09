@@ -33,7 +33,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
 #include "ScrubState.h"
-#include "TrackPanelAx.h"
+#include "TrackFocus.h"
 #include "TransportUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
