@@ -18710,7 +18710,7 @@ msgid "App update checking"
 msgstr "Έλεγχος ενημέρωσης εφαρμογής"
 
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgid "Audacity will notify you when a new version is available"
 msgstr "Για να μείνετε ενημερωμένοι, θα λαμβάνετε μια ειδοποίηση στην εφαρμογή όποτε υπάρχει μια νέα έκδοση του Audacity διαθέσιμη για λήψη."
 
 #: src/update/UpdateNoticeDialog.cpp

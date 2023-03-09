@@ -18725,7 +18725,7 @@ msgid "App update checking"
 msgstr "Sjekker oppdatering av app"
 
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgid "Audacity will notify you when a new version is available"
 msgstr "For å holde deg oppdatert vil du få varsel om nye versjoner av Audacity i programmet."
 
 #: src/update/UpdateNoticeDialog.cpp

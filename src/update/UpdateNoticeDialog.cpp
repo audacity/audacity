@@ -26,7 +26,7 @@ static const auto title =
 
 static const auto firstParagraph =
    /* i18-hint: The first paragraph of app update notice dialog. */
-   XO("To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.");
+   XO("Audacity will notify you when a new version is available");
 
 static const auto secondParagraph =
    /* i18-hint: The second paragraph of app update notice dialog */
