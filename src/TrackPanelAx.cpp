@@ -35,29 +35,59 @@
 #include "NoteTrack.h"
 #include "TimeTrack.h"
 
-TrackPanelAx::TrackPanelAx( AudacityProject &project )
-   :
-#if wxUSE_ACCESSIBILITY
-     WindowAccessible( nullptr ) // window pointer must be set after construction
-   ,
-#endif
-     mProject{ project }
+TrackFocusCallbacks::~TrackFocusCallbacks() = default;
+
+TrackPanelAx::Adapter::~Adapter() = default;
+
+void TrackPanelAx::Adapter::MessageForScreenReader(
+   const TranslatableString& message)
 {
-   mTrackName = true;
-   mMessageCount = 0;
-   mNumFocusedTrack = 0;
+   if (mwAx)
+      mwAx->MessageForScreenReader(message);
+}
+
+void TrackPanelAx::Adapter::BeginChangeFocus()
+{
+   if (mwAx)
+      mwAx->BeginChangeFocus();
+}
+
+void TrackPanelAx::Adapter::EndChangeFocus(
+   const std::shared_ptr<Track> &track)
+{
+   if (mwAx)
+      mwAx->EndChangeFocus(track);
+}
+
+void TrackPanelAx::Adapter::UpdateAccessibility()
+{
+   if (mwAx)
+      mwAx->UpdateAccessibility();
+}
+
+
+TrackPanelAx::TrackPanelAx(
+   std::weak_ptr<TrackFocus> wFocus, RectangleFinder finder
+)  :
+#if wxUSE_ACCESSIBILITY
+   // window pointer must be set after construction
+     WindowAccessible(nullptr),
+#endif
+     mwFocus{ move(wFocus) }
+   , mFinder{ move(finder) }
+{
 }
 
 TrackPanelAx::~TrackPanelAx()
 {
 }
 
-TrackList &TrackPanelAx::GetTracks()
+TrackList &TrackFocus::GetTracks()
 {
    return TrackList::Get( mProject );
 }
 
-const TrackList &TrackPanelAx::GetTracks() const
+const TrackList &TrackFocus::GetTracks() const
 {
    return TrackList::Get( mProject );
 }
@@ -66,7 +96,7 @@ const TrackList &TrackPanelAx::GetTracks() const
 // if that track no longer exists, if there is a track at
 // the same position, use that, else if there is a first
 // track, use that.
-std::shared_ptr<Track> TrackPanelAx::GetFocus()
+std::shared_ptr<Track> TrackFocus::GetFocus()
 {
    auto focusedTrack = mFocusedTrack.lock();
    if( !focusedTrack ) {
@@ -95,61 +125,76 @@ std::shared_ptr<Track> TrackPanelAx::GetFocus()
    return( focusedTrack );
 }
 
-std::shared_ptr<Track> TrackPanelAx::PeekFocus() const
+std::shared_ptr<Track> TrackFocus::PeekFocus() const
 {
    return mFocusedTrack.lock();
 }
 
-// Changes focus to a specified track
-std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
+void TrackPanelAx::BeginChangeFocus()
 {
    mTrackName = true;
-
 #if wxUSE_ACCESSIBILITY
-
-   auto focusedTrack = PeekFocus();
-   if( focusedTrack && !focusedTrack->GetSelected() )
-   {
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return;
+   
+   auto focusedTrack = pFocus->PeekFocus();
+   if (focusedTrack && !focusedTrack->GetSelected()) {
       NotifyEvent( wxACC_EVENT_OBJECT_SELECTIONREMOVE,
                    GetWindow(),
                    wxOBJID_CLIENT,
-                   TrackNum( focusedTrack ) );
+                   pFocus->TrackNum(focusedTrack));
    }
 #endif
+}
+
+// Changes focus to a specified track
+std::shared_ptr<Track> TrackFocus::SetFocus(std::shared_ptr<Track> track)
+{
+   if (mpCallbacks)
+      mpCallbacks->BeginChangeFocus();
 
    if (!track)
       track = Track::SharedPointer(*GetTracks().begin());
 
    if (PeekFocus() != track) {
       mFocusedTrack = track;
-      BasicUI::CallAfter([wFocus = TrackFocus::Get(mProject).weak_from_this()]{
+      BasicUI::CallAfter([wFocus = weak_from_this()]{
          if (auto pFocus = wFocus.lock())
             pFocus->Publish({});
       });
    }
    mNumFocusedTrack = TrackNum(track);
 
+   if (mpCallbacks)
+      mpCallbacks->EndChangeFocus(track);
+
+   return track;
+}
+
+void TrackPanelAx::EndChangeFocus(const std::shared_ptr<Track> &track)
+{
 #if wxUSE_ACCESSIBILITY
-   if( track )
-   {
-      if (GetWindow() == wxWindow::FindFocus())
-      {
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return;
+
+   if (track) {
+      if (GetWindow() == wxWindow::FindFocus()) {
          NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
                       GetWindow(),
                       wxOBJID_CLIENT,
-                      NumFocusedTrack());
+                      pFocus->NumFocusedTrack());
       }
 
-      if( track->GetSelected() )
-      {
+      if (track->GetSelected()) {
          NotifyEvent( wxACC_EVENT_OBJECT_SELECTION,
                       GetWindow(),
                       wxOBJID_CLIENT,
-                      NumFocusedTrack());
+                      pFocus->NumFocusedTrack());
       }
    }
-   else
-   {
+   else {
       NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
          GetWindow(),
          wxOBJID_CLIENT,
@@ -157,11 +202,9 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
    }
 
 #endif
-
-   return track;
 }
 
-int TrackPanelAx::TrackNum(const std::shared_ptr<Track> &target) const
+int TrackFocus::TrackNum(const std::shared_ptr<Track> &target) const
 {
    // Find 1-based position of the target in the visible tracks, or 0 if not
    // found
@@ -178,11 +221,11 @@ int TrackPanelAx::TrackNum(const std::shared_ptr<Track> &target) const
    return 0;
 }
 
-std::shared_ptr<Track> TrackPanelAx::FindTrack( int num )
+std::shared_ptr<Track> TrackFocus::FindTrack(int num) const
 {
    int ndx = 0;
 
-   for (auto t : GetTracks()) {
+   for (auto t : TrackList::Get(mProject)) {
       ndx++;
       if( ndx == num )
          return t->SharedPointer();
@@ -191,10 +234,19 @@ std::shared_ptr<Track> TrackPanelAx::FindTrack( int num )
    return {};
 }
 
+void TrackPanelAx::UpdateAccessibility()
+{
+   Updated();
+}
+
 void TrackPanelAx::Updated()
 {
 #if wxUSE_ACCESSIBILITY
-   auto t = GetFocus();
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return;
+   
+   auto t = pFocus->GetFocus();
    mTrackName = true;
 
    // The object_focus event is only needed by Window-Eyes
@@ -202,22 +254,26 @@ void TrackPanelAx::Updated()
    NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
                GetWindow(),
                wxOBJID_CLIENT,
-               TrackNum(t));
+               pFocus->TrackNum(t));
 
    NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
       GetWindow(),
       wxOBJID_CLIENT,
-      TrackNum(t));
+      pFocus->TrackNum(t));
 #endif
 }
 
 void TrackPanelAx::MessageForScreenReader(const TranslatableString& message)
 {
 #if wxUSE_ACCESSIBILITY
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return;
+
    if (GetWindow() == wxWindow::FindFocus())
    {
-      auto t = GetFocus();
-      int childId = t ? TrackNum(t) : 0;
+      auto t = pFocus->GetFocus();
+      int childId = t ? pFocus->TrackNum(t) : 0;
 
       mMessage = message.Translation();
 
@@ -258,7 +314,11 @@ wxAccStatus TrackPanelAx::GetChild( int childId, wxAccessible** child )
 // Gets the number of children.
 wxAccStatus TrackPanelAx::GetChildCount( int* childCount )
 {
-   *childCount = GetTracks().Any().size();
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return wxACC_FAIL;
+
+   *childCount = as_const(*pFocus).GetTracks().Any().size();
    return wxACC_OK;
 }
 
@@ -304,6 +364,10 @@ wxAccStatus TrackPanelAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *
 // rect is in screen coordinates.
 wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
 {
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return wxACC_FAIL;
+
    wxRect client;
 
    if( elementId == wxACC_SELF )
@@ -312,7 +376,7 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
    }
    else
    {
-      auto t = FindTrack( elementId );
+      auto t = pFocus->FindTrack(elementId);
 
       if( t == NULL )
       {
@@ -346,12 +410,16 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
       }
       else
       {
-         auto t = FindTrack( childId );
+         auto pFocus = mwFocus.lock();
+         if (!pFocus)
+            return wxACC_FAIL;
+
+         auto t = pFocus->FindTrack(childId);
 
          if( t == NULL )
             return wxACC_FAIL;
 
-         name->Printf("%d %s", TrackNum(t), t->GetName());
+         name->Printf("%d %s", pFocus->TrackNum(t), t->GetName());
 
          if(dynamic_cast<LabelTrack*>(t.get()))
          {
@@ -481,14 +549,18 @@ wxAccStatus TrackPanelAx::GetSelections( wxVariant * WXUNUSED(selections) )
 wxAccStatus TrackPanelAx::GetState( int childId, long* state )
 {
 #if defined(__WXMSW__)
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return wxACC_FAIL;
+
    if( childId > 0 )
    {
-      auto t = FindTrack( childId );
+      auto t = pFocus->FindTrack(childId);
 
       *state = wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
       if (t)
       {
-         if (t == PeekFocus())
+         if (t == pFocus->PeekFocus())
          {
             *state |= wxACC_STATE_SYSTEM_FOCUSED;
          }
@@ -506,15 +578,19 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
 #endif
 
 #if defined(__WXMAC__)
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return wxACC_FAIL;
+
    *state = wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
 
    if( childId > 0 )
    {
-      auto t = FindTrack( childId );
+      auto t = pFocus->FindTrack(childId);
 
       if (t)
       {
-         if (t == PeekFocus())
+         if (t == pFocus->PeekFocus())
          {
             *state |= wxACC_STATE_SYSTEM_FOCUSED;
          }
@@ -549,7 +625,11 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
    }
    else
    {
-      auto t = FindTrack( childId );
+      auto pFocus = mwFocus.lock();
+      if (!pFocus)
+         return wxACC_FAIL;
+
+      auto t = pFocus->FindTrack(childId);
 
       if( t == NULL )
       {
@@ -558,7 +638,7 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
       else
       {
          /* i18n-hint: The %d is replaced by the number of the track.*/
-         strValue->Printf(_("Track %d"), TrackNum(t));
+         strValue->Printf(_("Track %d"), pFocus->TrackNum(t));
          strValue->Append(" " + t->GetName());
 
          // LLL: Remove these during "refactor"
@@ -588,14 +668,18 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
 // If this object has the focus, child should be 'this'.
 wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
 {
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return wxACC_FAIL;
+
 #if defined(__WXMSW__)
 
    if (GetWindow() == wxWindow::FindFocus())
    {
-      auto focusedTrack = PeekFocus();
+      auto focusedTrack = pFocus->PeekFocus();
       if (focusedTrack)
       {
-         *childId = TrackNum(focusedTrack);
+         *childId = pFocus->TrackNum(focusedTrack);
       }
       else
       {
@@ -609,10 +693,10 @@ wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
 #if defined(__WXMAC__)
    if( GetWindow() == wxWindow::FindFocus() )
    {
-      auto focusedTrack = PeekFocus();
+      auto focusedTrack = pFocus->PeekFocus();
       if( focusedTrack )
       {
-         *childId = TrackNum( focusedTrack );
+         *childId = pFocus->TrackNum(focusedTrack);
       }
       else
       {
@@ -688,6 +772,10 @@ wxAccStatus TrackPanelAx::Navigate(wxNavDir navDir, int fromId, int* toId, wxAcc
 // Modify focus or selection
 wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
 {
+   auto pFocus = mwFocus.lock();
+   if (!pFocus)
+      return wxACC_FAIL;
+
    // Only support change of focus
    if (selectFlags != wxACC_SEL_TAKEFOCUS)
       return wxACC_NOT_IMPLEMENTED;
@@ -698,9 +786,9 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
       if (childId > childCount)
            return wxACC_FAIL;
 
-      Track* t = FindTrack(childId).get();
+      Track* t = pFocus->FindTrack(childId).get();
       if (t) {
-         SetFocus( t->SharedPointer() );
+         pFocus->SetFocus(t->SharedPointer());
          t->EnsureVisible();
       }
    }
@@ -713,8 +801,8 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
 #endif // wxUSE_ACCESSIBILITY
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   []( AudacityProject &parent ){
-      return std::make_shared< TrackFocus >( parent );
+   [](AudacityProject &parent){
+      return std::make_shared<TrackFocus>(parent);
    }
 };
 
@@ -737,43 +825,30 @@ TrackFocus::~TrackFocus()
 {
 }
 
+void TrackFocus::SetCallbacks(std::unique_ptr<TrackFocusCallbacks> pCallbacks)
+{
+   mpCallbacks = move(pCallbacks);
+}
+
 Track *TrackFocus::Get()
 {
-   if (mAx)
-      return mAx->GetFocus().get();
-   return nullptr;
+   return GetFocus().get();
 }
 
 void TrackFocus::Set( Track *pTrack )
 {
-   if (mAx) {
-      pTrack = *TrackList::Get( mProject ).Find( pTrack );
-      mAx->SetFocus( Track::SharedPointer( pTrack ) );
-   }
+   pTrack = *TrackList::Get(mProject).Find(pTrack);
+   SetFocus(Track::SharedPointer(pTrack));
 }
 
-void TrackFocus::SetAccessible(
-   wxWindow &owner,
-   std::unique_ptr< TrackPanelAx > pAx
-)
+void TrackFocus::MessageForScreenReader(const TranslatableString &message)
 {
-#if wxUSE_ACCESSIBILITY
-   // wxWidgets owns the accessible object
-   owner.SetAccessible(mAx = pAx.release());
-#else
-   // wxWidgets does not own the object, but we need to retain it
-   mAx = std::move(pAx);
-#endif
-}
-
-void TrackFocus::MessageForScreenReader(const TranslatableString& message)
-{
-   if (mAx)
-      mAx->MessageForScreenReader( message );
+   if (mpCallbacks)
+      mpCallbacks->MessageForScreenReader(message);
 }
 
 void TrackFocus::UpdateAccessibility()
 {
-   if (mAx)
-      mAx->Updated();
+   if (mpCallbacks)
+      mpCallbacks->UpdateAccessibility();
 }
