@@ -1004,6 +1004,12 @@ list( APPEND SOURCES
       widgets/BackedPanel.h
       widgets/BasicMenu.cpp
       widgets/BasicMenu.h
+      widgets/CustomUpdater.cpp
+      widgets/CustomUpdater.h
+      widgets/CustomUpdaterPosition.cpp
+      widgets/CustomUpdaterPosition.h
+      widgets/CustomUpdaterValue.cpp
+      widgets/CustomUpdaterValue.h
       widgets/ErrorDialog.cpp
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
@@ -1024,6 +1030,8 @@ list( APPEND SOURCES
       >
       widgets/FileHistory.cpp
       widgets/FileHistory.h
+      widgets/GeneratedUpdater.cpp
+      widgets/GeneratedUpdater.h
       widgets/Grabber.cpp
       widgets/Grabber.h
       widgets/Grid.cpp
@@ -1034,8 +1042,16 @@ list( APPEND SOURCES
       widgets/HtmlWindow.h
       widgets/ImageRoll.cpp
       widgets/ImageRoll.h
+      widgets/IntFormat.cpp
+      widgets/IntFormat.h
       widgets/KeyView.cpp
       widgets/KeyView.h
+      widgets/LinearDBFormat.cpp
+      widgets/LinearDBFormat.h
+      widgets/LinearUpdater.cpp
+      widgets/LinearUpdater.h
+      widgets/LogarithmicUpdater.cpp
+      widgets/LogarithmicUpdater.h
       widgets/MeterPanel.cpp
       widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
@@ -1055,12 +1071,22 @@ list( APPEND SOURCES
       widgets/ProgressDialog.cpp
       widgets/ProgressDialog.h
       widgets/ReadOnlyText.h
+      widgets/RealFormat.cpp
+      widgets/RealFormat.h
       widgets/Ruler.cpp
       widgets/Ruler.h
+      widgets/RulerFormat.cpp
+      widgets/RulerFormat.h
+      widgets/RulerPanel.cpp
+      widgets/RulerPanel.h
+      widgets/RulerUpdater.cpp
+      widgets/RulerUpdater.h
       $<$<BOOL:${${_OPT}has_sentry_reporting}>:
          widgets/ErrorReportDialog.cpp
          widgets/ErrorReportDialog.h
       >
+      widgets/TimeFormat.cpp
+      widgets/TimeFormat.h
       widgets/UnwritableLocationErrorDialog.cpp
       widgets/UnwritableLocationErrorDialog.h
       widgets/VetoDialogHook.h

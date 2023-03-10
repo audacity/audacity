@@ -20,6 +20,10 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../widgets/Ruler.h"
+#include "../../../../widgets/LinearUpdater.h"
+#include "../../../../widgets/LogarithmicUpdater.h"
+#include "../../../../widgets/IntFormat.h"
+#include "../../../../widgets/RealFormat.h"
 
 SpectrumVRulerControls::~SpectrumVRulerControls() = default;
 
@@ -155,7 +159,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           */
          vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(Ruler::RealFormat);
+         vruler->SetFormat(&RealFormat::LinearInstance());
          vruler->SetLabelEdges(true);
          // use kHz in scale, if appropriate
          if (maxFreq >= 2000) {
@@ -168,7 +172,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
             vruler->SetRange((int)(maxFreq), (int)(minFreq));
             vruler->SetUnits({});
          }
-         vruler->SetLog(false);
+         vruler->SetUpdater(&LinearUpdater::Instance());
       }
          break;
       case SpectrogramSettings::stLogarithmic:
@@ -186,12 +190,12 @@ void SpectrumVRulerControls::DoUpdateVRuler(
           */
          vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
          vruler->SetOrientation(wxVERTICAL);
-         vruler->SetFormat(Ruler::IntFormat);
+         vruler->SetFormat(&IntFormat::Instance());
          vruler->SetLabelEdges(true);
          vruler->SetRange(maxFreq, minFreq);
          vruler->SetUnits({});
-         vruler->SetLog(true);
-         NumberScale scale(settings.GetScale(minFreq, maxFreq).Reversal() );
+         vruler->SetUpdater(&LogarithmicUpdater::Instance());
+         NumberScale scale(settings.GetScale(minFreq, maxFreq).Reversal());
          vruler->SetNumberScale(scale);
       }
          break;

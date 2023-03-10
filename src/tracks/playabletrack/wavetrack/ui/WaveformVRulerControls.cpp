@@ -21,8 +21,69 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveTrack.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
+#include "../../../../widgets/LinearUpdater.h"
+#include "../../../../widgets/RealFormat.h"
+#include "../../../../widgets/CustomUpdaterValue.h"
 
 WaveformVRulerControls::~WaveformVRulerControls() = default;
+
+// These are doubles beacuse of the type of value in Label,
+// but for the purpose of labelling the linear dB waveform ruler,
+// these should always be integer numbers.
+using LinearDBValues = std::vector<double>;
+
+static LinearDBValues majorValues{}, minorValues{}, minorMinorValues{};
+
+void RegenerateLinearDBValues(int dBRange, float min, float max, int height)
+{
+   majorValues.clear();
+   minorValues.clear();
+   minorMinorValues.clear();
+
+   majorValues.push_back(0);
+   majorValues.push_back(-dBRange);
+   majorValues.push_back(2 * -dBRange);
+
+   const double EPSILON = .1e-5;
+
+   // No marks allowed within CENTER_SPACING pixels from the center
+   // Calculate the closest allowed major / minor and remove everything around those
+   const double CENTER = height / 2;
+   const int CENTER_SPACING = 30;
+   const double SIZE_SCALE = (max - min) / 2;
+
+   double centerSpacingMark = 0;
+
+   for (double major = 0.1; major < 2; major += .1) {
+      double val = std::round(major * 10) / 10;
+      double mappedVal = std::trunc(-dBRange * val);
+      double pixVal = mappedVal < -dBRange ? - 2 * dBRange - mappedVal : mappedVal;
+      double pixDist = fabs(CENTER - ((1 - DB_TO_LINEAR(pixVal)) * CENTER)) / SIZE_SCALE;
+      if (pixDist > CENTER_SPACING) {
+         if (major - EPSILON <= 1)
+            centerSpacingMark = major;
+         if (fabs(major - 1) > EPSILON)
+            majorValues.push_back(mappedVal);
+      }
+   }
+   for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
+      double val = std::round(minor * 100) / 100;
+      double mappedVal = std::trunc(-dBRange * val);
+      double spacing = fabs(fabs(1 - minor) - 1);
+      if (spacing < centerSpacingMark) {
+         minorValues.push_back(mappedVal);
+      }
+   }
+   for (int minorMinor = 1; minorMinor < 2 * dBRange; minorMinor++) {
+      double absDist = fabs(fabs(dBRange - minorMinor) - dBRange) / dBRange;
+      if (absDist < centerSpacingMark) {
+         if ((minorMinor % (int)std::round(dBRange / 20)) != 0) {
+            minorMinorValues.push_back(-minorMinor);
+         }
+      }
+   }
+
+}
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
@@ -89,9 +150,8 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
    using namespace WaveTrackViewConstants;
    auto &settings = WaveformSettings::Get(*wt);
    auto &cache = WaveformScale::Get(*wt);
-   const bool isDB =
-      settings.scaleType == WaveformSettings::stLogarithmic;
-   // Special cases for Waveform dB only.
+   const bool isDB = !settings.isLinear();
+   // Special cases for Waveform (logarithmic) dB only.
    // Set the bottom of the dB scale but only if it's visible
    if (isDB && event.ShiftDown() && event.CmdDown()) {
       float min, max;
@@ -189,6 +249,8 @@ void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
    DoUpdateVRuler( rect, wt.get() );
 }
 
+static CustomUpdaterValue updater;
+
 void WaveformVRulerControls::DoUpdateVRuler(
    const wxRect &rect, const WaveTrack *wt )
 {
@@ -199,15 +261,20 @@ void WaveformVRulerControls::DoUpdateVRuler(
    auto &settings = WaveformSettings::Get(*wt);
    const float dBRange = settings.dBRange;
 
+   float min, max;
+   auto &cache = WaveformScale::Get(*wt);
+   cache.GetDisplayBounds(min, max);
+   const float lastdBRange = cache.GetLastDBRange();
+   if (dBRange != lastdBRange)
+      SetLastdBRange(cache, *wt);
+
    auto scaleType = settings.scaleType;
    
-   auto &cache = WaveformScale::Get(*wt);
-   if (scaleType == WaveformSettings::stLinear) {
+   if (settings.isLinear()) {
       // Waveform
       
-      float min, max;
-      cache.GetDisplayBounds(min, max);
-      if (cache.GetLastScaleType() != scaleType &&
+      if (cache.GetLastScaleType() != WaveformSettings::stLinearAmp &&
+          cache.GetLastScaleType() != WaveformSettings::stLinearDb &&
           cache.GetLastScaleType() != -1)
       {
          // do a translation into the linear space
@@ -235,23 +302,63 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
-      vruler->SetFormat(Ruler::RealFormat);
-      vruler->SetUnits({});
-      vruler->SetLabelEdges(false);
-      vruler->SetLog(false);
+      vruler->SetFormat(&RealFormat::LinearInstance());
+      if (scaleType == WaveformSettings::stLinearAmp) {
+         vruler->SetLabelEdges(false);
+         vruler->SetUnits({});
+         vruler->SetUpdater(&LinearUpdater::Instance());
+      }
+      else {
+         RegenerateLinearDBValues(dBRange, min, max, rect.GetHeight());
+         vruler->SetLabelEdges(true);
+         vruler->SetUnits(XO("dB"));
+         vruler->SetUpdater(&updater);
+         RulerUpdater::Labels major, minor, minorMinor;
+         std::vector<LinearDBValues> values = { majorValues, minorValues, minorMinorValues };
+         for (int ii = 0; ii < 3; ii++) {
+            RulerUpdater::Labels labs;
+            int size = (ii == 0) ? majorValues.size() :
+               (ii == 1) ? minorValues.size() : minorMinorValues.size();
+            for (int i = 0; i < size; i++) {
+               double value = (ii == 0) ? majorValues[i] :
+                  (ii == 1) ? minorValues[i] : minorMinorValues[i];
+               RulerUpdater::Label lab;
+
+               if (value == -dBRange)
+                  lab.value = 0;
+               else {
+                  float sign = (value > -dBRange ? 1 : -1);
+                  if (value < -dBRange)
+                     value = -2 * dBRange - value;
+                  lab.value = DB_TO_LINEAR(value) * sign;
+               }
+
+               wxString s = (value == -dBRange) ?
+                  wxString(L"-\u221e") : wxString::FromDouble(value);
+               // \u221e represents the infinity symbol
+               // Should this just be -dBRange so it is consistent?
+               //wxString s = wxString::FromDouble(value);
+               lab.text = Verbatim(s);
+
+               labs.push_back(lab);
+            }
+            if (ii == 0)
+               major = labs;
+            else if (ii == 1)
+               minor = labs;
+            else
+               minorMinor = labs;
+         }
+         updater.SetData(major, minor, minorMinor);
+      }
    }
    else {
-      wxASSERT(scaleType == WaveformSettings::stLogarithmic);
-      scaleType = WaveformSettings::stLogarithmic;
-      
       vruler->SetUnits({});
       
-      float min, max;
       auto &cache = WaveformScale::Get(*wt);
-      cache.GetDisplayBounds(min, max);
-      float lastdBRange;
       
-      if (cache.GetLastScaleType() != scaleType &&
+      if (cache.GetLastScaleType() != WaveformSettings::stLogarithmicDb &&
+         // When Logarithmic Amp happens, put that here
           cache.GetLastScaleType() != -1)
       {
          // do a translation into the dB space
@@ -274,7 +381,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          }
          cache.SetDisplayBounds(min, max);
       }
-      else if (dBRange != (lastdBRange = cache.GetLastDBRange())) {
+      else if (dBRange != lastdBRange) {
          SetLastdBRange(cache, *wt);
          // Remap the max of the scale
          float newMax = max;
@@ -345,9 +452,9 @@ void WaveformVRulerControls::DoUpdateVRuler(
       else
          vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
 #endif
-      vruler->SetFormat(Ruler::RealLogFormat);
+      vruler->SetFormat(&RealFormat::LogInstance());
       vruler->SetLabelEdges(true);
-      vruler->SetLog(false);
+      vruler->SetUpdater(&LinearUpdater::Instance());
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

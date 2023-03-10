@@ -13,12 +13,15 @@
 
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
+#include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 #include "Observer.h"
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
 
 class AudacityProject;
 struct AudioIOEvent;
+class LinearUpdater;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.
@@ -132,7 +135,8 @@ private:
 
 private:
 
-   Ruler mRuler;
+   LinearUpdater mUpdater;
+   Ruler mRuler{ mUpdater, TimeFormat::Instance() };
    AudacityProject *const mProject;
    TrackList *mTracks;
 

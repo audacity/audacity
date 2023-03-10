@@ -258,32 +258,32 @@ class AUDACITY_DLL_API MeterPanel final
    int       mWidth;
    int       mHeight;
 
-   int       mRulerWidth;
-   int       mRulerHeight;
+   int       mRulerWidth{};
+   int       mRulerHeight{};
 
    bool      mIsInput;
 
-   Style     mStyle;
+   Style     mStyle{};
    Style     mDesiredStyle;
    bool      mGradient;
    bool      mDB;
    int       mDBRange;
    bool      mDecay;
-   float     mDecayRate; // dB/sec
+   float     mDecayRate{}; // dB/sec
    bool      mClip;
    int       mNumPeakSamplesToClip;
    double    mPeakHoldDuration;
    double    mT;
    double    mRate;
-   long      mMeterRefreshRate;
-   long      mMeterDisabled; //is used as a bool, needs long for easy gPrefs...
+   long      mMeterRefreshRate{};
+   long      mMeterDisabled{}; //is used as a bool, needs long for easy gPrefs...
 
    bool      mMonitoring;
 
    bool      mActive;
 
    unsigned  mNumBars;
-   MeterBar  mBar[kMaxMeterBars];
+   MeterBar  mBar[kMaxMeterBars]{};
 
    bool      mLayoutValid;
 
@@ -310,7 +310,7 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool mEnabled{ true };
 
-   bool mIsFocused;
+   bool mIsFocused{};
    wxRect mFocusRect;
 
    friend class MeterAx;

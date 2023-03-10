@@ -55,6 +55,8 @@
 #include "widgets/AButton.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/Grabber.h"
+#include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/dcclient.h>
@@ -1255,9 +1257,9 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    wxWindowID id,
    const wxPoint& pos,
    const wxSize& size,
-   ViewInfo *viewinfo)
-:  CellularPanel(parent, id, pos, size, viewinfo)
-, mProject(project)
+   ViewInfo *viewinfo
+)  : CellularPanel(parent, id, pos, size, viewinfo)
+   , mProject(project)
 {
    SetLayoutDirection(wxLayout_LeftToRight);
 
@@ -1280,9 +1282,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
-   mRuler.SetUseZoomInfo(mLeftOffset, mViewInfo);
+   mUpdater.SetData(mViewInfo, mLeftOffset);
    mRuler.SetLabelEdges( false );
-   mRuler.SetFormat( Ruler::TimeFormat );
 
    mTracks = &TrackList::Get( *project );
 
@@ -2576,8 +2577,11 @@ int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
 
 void AdornedRulerPanel::SetLeftOffset(int offset)
 {
-   mLeftOffset = offset;
-   mRuler.SetUseZoomInfo(offset, mViewInfo);
+   if (mLeftOffset != offset) {
+      mLeftOffset = offset;
+      mUpdater.SetData(mViewInfo, offset);
+      mRuler.Invalidate();
+   }
 }
 
 // Draws the scrubbing/seeking indicator.

@@ -21,6 +21,8 @@
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
 #include "widgets/Ruler.h"
+#include "widgets/LinearUpdater.h"
+#include "widgets/TimeFormat.h"
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"
@@ -72,10 +74,9 @@ void TimeTrack::CleanState()
    //Time track is always unique
    SetName(GetDefaultName());
 
-   mRuler = std::make_unique<Ruler>();
-   mRuler->SetUseZoomInfo(0, mZoomInfo);
+   mUpdater.SetData(mZoomInfo);
+   mRuler = std::make_unique<Ruler>(mUpdater, TimeFormat::Instance() );
    mRuler->SetLabelEdges(false);
-   mRuler->SetFormat(Ruler::TimeFormat);
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
@@ -100,10 +101,9 @@ TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
    mEnvelope->SetOffset(0);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
-   mRuler = std::make_unique<Ruler>();
-   mRuler->SetUseZoomInfo(0, mZoomInfo);
+   mUpdater.SetData(mZoomInfo);
+   mRuler = std::make_unique<Ruler>(mUpdater, TimeFormat::Instance());
    mRuler->SetLabelEdges(false);
-   mRuler->SetFormat(Ruler::TimeFormat);
 }
 
 // Copy the track metadata but not the contents.

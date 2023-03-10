@@ -25,6 +25,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UIHandle.h"
 #include "../../../widgets/Ruler.h"
+#include "../../../widgets/LinearUpdater.h"
+#include "../../../widgets/LogarithmicUpdater.h"
+#include "../../../widgets/RealFormat.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {
@@ -33,7 +36,9 @@ TimeTrackVRulerControls::~TimeTrackVRulerControls()
 namespace {
    Ruler &ruler()
    {
-      static Ruler theRuler;
+      static Ruler theRuler{
+         LinearUpdater::Instance(), RealFormat::LinearInstance()
+      };
       return theRuler;
    }
 }
@@ -117,10 +122,15 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height-1);
    vruler->SetOrientation(wxVERTICAL);
    vruler->SetRange(max, min);
-   vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
+   vruler->SetFormat(tt->GetDisplayLog()
+      ? &RealFormat::LogInstance()
+      : &RealFormat::LinearInstance());
    vruler->SetUnits({});
    vruler->SetLabelEdges(false);
-   vruler->SetLog(tt->GetDisplayLog());
+   if (tt->GetDisplayLog())
+      vruler->SetUpdater(&LogarithmicUpdater::Instance());
+   else
+      vruler->SetUpdater(&LinearUpdater::Instance());
 
    vruler->GetMaxSize( &tt->vrulerSize.first, &tt->vrulerSize.second );
 }
