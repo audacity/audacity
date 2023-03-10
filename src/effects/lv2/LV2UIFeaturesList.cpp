@@ -68,3 +68,11 @@ void LV2UIFeaturesList::suil_port_write(SuilController controller,
 }
 
 LV2UIFeaturesList::UIHandler::~UIHandler() = default;
+
+static LV2InstanceFeaturesList::ValidatePlugin::Scope scope{
+   [](const LilvPlugin &plug, LV2InstanceFeaturesList &instanceFeatures){
+      return LV2UIFeaturesList{ LV2WrapperFeaturesList{ instanceFeatures },
+         nullptr, lilv_plugin_get_uri(&plug)
+      }.mOk;
+   }
+};

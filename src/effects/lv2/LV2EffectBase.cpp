@@ -22,7 +22,6 @@
 
 #include "LV2EffectBase.h"
 #include "LV2Instance.h"
-#include "LV2UIFeaturesList.h"
 #include "LV2Wrapper.h"
 #include "ConfigInterface.h"
 
@@ -129,9 +128,7 @@ bool LV2EffectBase::InitializePlugin()
    auto instanceFeatures = LV2InstanceFeaturesList{ mFeatures };
    if (!instanceFeatures.mOk)
       return false;
-   if (!LV2UIFeaturesList{ LV2WrapperFeaturesList{instanceFeatures},
-      nullptr, lilv_plugin_get_uri(&mPlug)
-   }.mOk)
+   if (!LV2InstanceFeaturesList::ValidatePlugin::Call(mPlug, instanceFeatures))
       return false;
 
    // Determine available extensions

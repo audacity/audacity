@@ -17,10 +17,16 @@
 #if USE_LV2
 
 #include "LV2FeaturesList.h"
+#include "GlobalVariable.h"
 #include "lv2/options/options.h"
 #include "lv2/worker/worker.h"
 
 struct LV2InstanceFeaturesList final : ExtendedLV2FeaturesList {
+   //! Perform extra initialization-time checks
+   struct ValidatePlugin : DefaultedGlobalHook<ValidatePlugin,
+      Constantly<true, const LilvPlugin &, LV2InstanceFeaturesList &>::Function
+   >{};
+
    explicit LV2InstanceFeaturesList(
       const LV2FeaturesList &baseFeatures);
 
