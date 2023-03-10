@@ -343,6 +343,17 @@ int EffectUIHost::ShowModal()
 // EffectUIHost implementation
 // ============================================================================
 
+namespace {
+AButton* MakeBitmapToggleButton(wxWindow *parent,
+   const wxImage& ImageOn, const wxImage& ImageOff)
+{
+   auto pBtn = safenew AButton(parent, kEnableID,
+      wxDefaultPosition, wxDefaultSize, true);
+   pBtn->SetImages(ImageOff, ImageOff, ImageOn, ImageOn, ImageOff);
+   return pBtn;
+}
+}
+
 void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 {
    mIsGUI = graphicalUI;
@@ -358,10 +369,12 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
       {
          if (IsOpenedFromEffectPanel())
          {
-            mEnableBtn = S.Id(kEnableID)
+            mEnableBtn = MakeBitmapToggleButton(S.GetParent(),
+               theTheme.Image(bmpEffectOn), theTheme.Image(bmpEffectOff));
+            S
                .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
                .Name(XO("Power"))
-               .AddBitmapToggleButton(theTheme.Image(bmpEffectOn), theTheme.Image(bmpEffectOff));
+               .AddWindow(mEnableBtn);
          }
 
          mMenuBtn = S.Id( kMenuID )

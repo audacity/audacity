@@ -120,7 +120,6 @@ for registering for changes.
 #include "widgets/ReadOnlyText.h"
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/wxTextCtrlWrapper.h"
-#include "widgets/AButton.h"
 #include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -394,21 +393,6 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
    UpdateSizersCore(false, PositionFlags | wxALL);
    if (setDefault)
       pBtn->SetDefault();
-   return pBtn;
-}
-
-AButton* ShuttleGuiBase::AddBitmapToggleButton(
-   const wxImage& ImageOn, const wxImage& ImageOff, int PositionFlags)
-{
-   UseUpId();
-   if (mShuttleMode != eIsCreating)
-      return wxDynamicCast(wxWindow::FindWindowById(miId, mpDlg), AButton);
-   AButton* pBtn;
-   mpWind = pBtn = safenew AButton(GetParent(), miId,
-      wxDefaultPosition, wxDefaultSize, true);
-   pBtn->SetImages(ImageOff, ImageOff, ImageOn, ImageOn, ImageOff);
-   miProp = 0;
-   UpdateSizersCore(false, PositionFlags | wxALL);
    return pBtn;
 }
 
