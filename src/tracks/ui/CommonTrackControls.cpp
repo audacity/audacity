@@ -18,7 +18,7 @@ Paul Licameli split from TrackControls.cpp
 #include "ProjectHistory.h"
 #include "../../ProjectWindows.h"
 #include "../../TrackArtist.h"
-#include "../../TrackInfo.h"
+#include "CommonTrackInfo.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../TrackUtilities.h"
@@ -275,7 +275,7 @@ unsigned CommonTrackControls::DoContextMenu(
 {
    using namespace RefreshCode;
    wxRect buttonRect;
-   TrackInfo::GetTitleBarRect(rect, buttonRect);
+   CommonTrackInfo::GetTitleBarRect(rect, buttonRect);
 
    auto track = FindTrack();
    if (!track)
@@ -380,7 +380,7 @@ void CommonTrackControls::Draw(
 
       if (pTrack)
          // Draw things within the track control panel
-         TrackInfo::DrawItems( context, rect, *pTrack );
+         CommonTrackInfo::DrawItems( context, rect, *pTrack );
 
       //mTrackInfo.DrawBordersWithin( dc, rect, *t );
    }

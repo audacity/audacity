@@ -2,13 +2,13 @@
 
 Audacity: A Digital Audio Editor
 
-TrackInfo.cpp
+CommonTrackInfo.cpp
 
-Paul Licameli split from TrackPanel.cpp
+Paul Licameli split from TrackInfo.cpp
 
 ********************************************************************//*!
 
-\namespace TrackInfo
+\namespace CommonTrackInfo
 \brief
   Functions for drawing the track control panel, which is shown to the side
   of a track
@@ -24,77 +24,20 @@ Paul Licameli split from TrackPanel.cpp
   of this class for each track displayed.
 
 **********************************************************************/
+#include "CommonTrackInfo.h"
 
-
-#include "TrackInfo.h"
-
-#include <wx/app.h>
 #include <wx/dc.h>
-#include <wx/frame.h>
-
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "PlayableTrack.h"
-#include "Prefs.h"
-#include "Project.h"
 #include "SyncLock.h"
 #include "Theme.h"
+#include "Track.h"
 #include "TrackPanelDrawingContext.h"
 #include "UIHandle.h"
 #include "ViewInfo.h"
 #include "tracks/ui/ChannelView.h"
 
-// Subscribe to preference changes to update static variables
-struct Settings : PrefsListener {
-   wxFont gFont;
-
-   bool mInitialized{ false };
-
-   void UpdatePrefs() override
-   {
-      // Calculation of best font size depends on language, so it should be redone in case
-      // the language preference changed.
-
-      // wxWidgets seems to need a window to do this portably.
-      if ( !wxTheApp )
-         return;
-      auto window = wxTheApp->GetTopWindow();
-      if ( !window )
-         return;
-
-      int fontSize = 10;
-      gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-      int allowableWidth =
-         // PRL:  was it correct to include the margin?
-         ( kTrackInfoWidth + kLeftMargin )
-            - 2; // 2 to allow for left/right borders
-      int textWidth;
-      do {
-         gFont.SetPointSize(fontSize);
-         window->GetTextExtent(_("Stereo, 999999Hz"),
-            &textWidth, nullptr, nullptr, nullptr, &gFont);
-         fontSize--;
-      } while (textWidth >= allowableWidth);
-
-      mInitialized = true;
-   }
-};
-
-static Settings &settings()
-{
-   static Settings theSettings;
-   if ( !theSettings.mInitialized )
-      theSettings.UpdatePrefs();
-   return theSettings;
-}
-
-bool TrackInfo::HasSoloButton()
-{
-   return TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone;
-}
-
-#define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
+#define RANGE(array) std::begin(array), std::end(array)
 using TCPLine = TrackInfo::TCPLine;
 using TCPLines = TrackInfo::TCPLines;
 
@@ -109,7 +52,7 @@ static const TCPLines &commonTrackTCPLines()
 #else
 
       { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 0,
-        &TrackInfo::CloseTitleDrawFunction },
+        &CommonTrackInfo::CloseTitleDrawFunction },
 
 #endif
    };
@@ -138,23 +81,6 @@ int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 }
 }
 
-// return y value and height
-std::pair< int, int >
-TrackInfo::CalcItemY( const TCPLines &lines, unsigned iItem )
-{
-   int y = 0;
-   auto pLines = lines.begin();
-   while ( pLines != lines.end() &&
-           0 == (pLines->items & iItem) ) {
-      y += pLines->height + pLines->extraSpace;
-      ++pLines;
-   }
-   int height = 0;
-   if ( pLines != lines.end() )
-      height = pLines->height;
-   return { y, height };
-}
-
 namespace {
 
 // Items for the bottom of the panel, listed bottom-upwards
@@ -163,7 +89,7 @@ const TrackInfo::TCPLine defaultCommonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
    { TCPLine::kItemSyncLock | TCPLine::kItemMinimize, kTrackInfoBtnSize, 0,
-     &TrackInfo::MinimizeSyncLockDrawFunction },
+     &CommonTrackInfo::MinimizeSyncLockDrawFunction },
 };
 TCPLines commonTrackTCPBottomLines{ RANGE(defaultCommonTrackTCPBottomLines) };
 
@@ -190,7 +116,7 @@ const TCPLines &CommonTrackControls::GetTCPLines() const
    return commonTrackTCPLines();
 }
 
-unsigned TrackInfo::MinimumTrackHeight()
+unsigned CommonTrackInfo::MinimumTrackHeight()
 {
    unsigned height = 0;
    if (!commonTrackTCPLines().empty())
@@ -202,7 +128,7 @@ unsigned TrackInfo::MinimumTrackHeight()
    return height + kVerticalPadding + 1;
 }
 
-bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
+bool CommonTrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
                  int allowance ) {
    auto limit = CalcBottomItemY
    ( commonTrackTCPBottomLines, TCPLine::kHighestBottomItem, rect.height).first;
@@ -211,7 +137,7 @@ bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
    return subRect.y + subRect.height - allowance >= rect.y + limit;
 }
 
-void TrackInfo::DrawItems
+void CommonTrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track &track  )
 {
@@ -223,7 +149,7 @@ void TrackInfo::DrawItems
       ( context, rect, &track, topLines, bottomLines );
 }
 
-void TrackInfo::DrawItems
+void CommonTrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack,
   const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines )
@@ -239,7 +165,7 @@ void TrackInfo::DrawItems
             rect.x, rect.y + yy,
             rect.width, line.height
          };
-         if ( !TrackInfo::HideTopItem( rect, itemRect ) &&
+         if ( !CommonTrackInfo::HideTopItem( rect, itemRect ) &&
               line.drawFunction )
             line.drawFunction( context, itemRect, pTrack );
          yy += line.height + line.extraSpace;
@@ -260,7 +186,7 @@ void TrackInfo::DrawItems
    }
 }
 
-void TrackInfo::DrawCloseButton(
+void CommonTrackInfo::DrawCloseButton(
    TrackPanelDrawingContext &context, const wxRect &bev,
    const Track *pTrack, UIHandle *target)
 {
@@ -294,7 +220,7 @@ void TrackInfo::DrawCloseButton(
    //   bev.Inflate(-1, -1);
 }
 
-void TrackInfo::CloseTitleDrawFunction
+void CommonTrackInfo::CloseTitleDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
@@ -322,7 +248,7 @@ void TrackInfo::CloseTitleDrawFunction
       AColor::Bevel2(*dc, !down, bev, selected, hit);
 
       // Draw title text
-      SetTrackInfoFont(dc);
+      TrackInfo::SetTrackInfoFont(dc);
 
       // Bug 1660 The 'k' of 'Audio Track' was being truncated.
       // Constant of 32 found by counting pixels on a windows machine.
@@ -369,7 +295,7 @@ void TrackInfo::CloseTitleDrawFunction
    }
 }
 
-void TrackInfo::MinimizeSyncLockDrawFunction
+void CommonTrackInfo::MinimizeSyncLockDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
@@ -430,7 +356,7 @@ void TrackInfo::MinimizeSyncLockDrawFunction
       wxString str = _("Select");
       wxCoord textWidth;
       wxCoord textHeight;
-      SetTrackInfoFont(dc);
+      TrackInfo::SetTrackInfoFont(dc);
       dc->GetTextExtent(str, &textWidth, &textHeight);
 
       dc->SetTextForeground( c );
@@ -454,13 +380,13 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
-void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
+void CommonTrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    dest.x = rect.x;
    dest.width = kTrackInfoBtnSize;
 }
 
-void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
+void CommonTrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
 {
    GetCloseBoxHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
@@ -468,7 +394,7 @@ void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
    dest.height = results.second;
 }
 
-void TrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
+void CommonTrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    // to right of CloseBoxRect, plus a little more
    wxRect closeRect;
@@ -477,7 +403,7 @@ void TrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
    dest.width = rect.x + rect.width - dest.x + TitleSoloBorderOverlap;
 }
 
-void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
+void CommonTrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
 {
    GetTitleBarHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
@@ -485,13 +411,13 @@ void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
    dest.height = results.second;
 }
 
-void TrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest )
+void CommonTrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest )
 {
    dest.x = topleft.x + 6;
    dest.width = kTrackInfoSliderWidth;
 }
 
-void TrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
+void CommonTrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
    const int space = 0;// was 3.
    dest.x = rect.x + space;
@@ -505,7 +431,7 @@ void TrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
 // rect.width - (space + syncLockRect.width);
 }
 
-void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
+void CommonTrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
 {
    GetMinimizeHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
@@ -514,7 +440,7 @@ void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
    dest.height = results.second;
 }
 
-void TrackInfo::GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest )
+void CommonTrackInfo::GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
    const int space = 0;// was 3.
    dest.x = rect.x + space;
@@ -531,7 +457,7 @@ void TrackInfo::GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &des
 }
 
 
-void TrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
+void CommonTrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
 {
    GetSelectButtonHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
@@ -540,13 +466,13 @@ void TrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
    dest.height = results.second;
 }
 
-void TrackInfo::GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest )
+void CommonTrackInfo::GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
    dest.width = kTrackInfoBtnSize;
    dest.x = rect.x + rect.width - dest.width;
 }
 
-void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
+void CommonTrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 {
    GetSyncLockHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
@@ -555,15 +481,7 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
    dest.height = results.second;
 }
 
-/// \todo Probably should move to 'Utils.cpp'.
-void TrackInfo::SetTrackInfoFont(wxDC * dc)
-{
-   dc->SetFont(settings().gFont);
-}
-
-//#define USE_BEVELS
-
-unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
+unsigned CommonTrackInfo::DefaultTrackHeight( const TCPLines &topLines )
 {
    int needed =
       kVerticalPadding +

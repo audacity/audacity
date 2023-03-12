@@ -41,7 +41,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../ui/ButtonHandle.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 
 #include "../WaveTrackUtils.h"
 
@@ -745,7 +745,7 @@ public:
       override
    {
       if ( iPass == TrackArtist::PassMargins ) { // after PassTracks
-          TrackInfo::DrawCloseButton(
+          CommonTrackInfo::DrawCloseButton(
              context, GetButtonRect(rect), GetTrack().get(), this );
       }
    }

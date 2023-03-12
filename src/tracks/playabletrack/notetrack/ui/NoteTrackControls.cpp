@@ -11,28 +11,19 @@ Paul Licameli split from TrackPanel.cpp
 
 #ifdef USE_MIDI
 #include "NoteTrackControls.h"
-
-#include "NoteTrackButtonHandle.h"
-#include "Observer.h"
-#include "Theme.h"
-
 #include "../../ui/PlayableTrackButtonHandles.h"
+#include "NoteTrackButtonHandle.h"
 #include "NoteTrackSliderHandles.h"
-
-#include "../../../../HitTestResult.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
+#include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "Project.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../prefs/ThemePrefs.h"
-
-#include <mutex>
-#include <wx/app.h>
+#include "Theme.h"
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,7 +136,6 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 
 // drawing related
 #include "../../../../widgets/ASlider.h"
-#include "../../../../TrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
@@ -180,7 +170,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto nt = static_cast<const NoteTrack*>( pTrack );
    Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -235,7 +225,7 @@ static const struct NoteTrackTCPLines
 
 void NoteTrackControls::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
 {
-   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
@@ -252,7 +242,7 @@ void NoteTrackControls::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
 
 unsigned NoteTrackControls::DefaultNoteTrackHeight()
 {
-   return TrackInfo::DefaultTrackHeight( noteTrackTCPLines );
+   return CommonTrackInfo::DefaultTrackHeight( noteTrackTCPLines );
 }
 
 const TCPLines &NoteTrackControls::GetTCPLines() const

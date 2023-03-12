@@ -11,9 +11,10 @@ Paul Licameli split from TrackInfo.cpp
 #include "PlayableTrack.h"
 #include "PlayableTrackButtonHandles.h"
 #include "AColor.h"
-#include "../../../TrackInfo.h"
+#include "../../ui/CommonTrackInfo.h"
 #include "../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "RealtimeEffectManager.h"
 
 #include <wx/dc.h>
@@ -156,7 +157,7 @@ void MuteAndSoloDrawFunction
   const wxRect &rect, const Track *pTrack )
 {
    auto dc = &context.dc;
-   bool bHasSoloButton = TrackInfo::HasSoloButton();
+   bool bHasSoloButton = (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone);
 
    wxRect bev = rect;
    if ( bHasSoloButton )

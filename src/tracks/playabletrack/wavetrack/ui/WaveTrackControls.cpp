@@ -967,7 +967,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 
 // drawing related
 #include "../../../../widgets/ASlider.h"
-#include "../../../../TrackInfo.h"
+#include "../../../ui/CommonTrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
@@ -981,7 +981,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const WaveTrack*>( pTrack );
    Selector( sliderRect, wt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -1092,7 +1092,7 @@ static const struct WaveTrackTCPLines
 
 void WaveTrackControls::GetGainRect(const wxPoint &topleft, wxRect & dest)
 {
-   TrackInfo::GetSliderHorizontalBounds( topleft, dest );
+   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
    dest.y = topleft.y + results.first;
    dest.height = results.second;
@@ -1107,7 +1107,7 @@ void WaveTrackControls::GetPanRect(const wxPoint &topleft, wxRect & dest)
 
 unsigned WaveTrackControls::DefaultWaveTrackHeight()
 {
-   return TrackInfo::DefaultTrackHeight( waveTrackTCPLines );
+   return CommonTrackInfo::DefaultTrackHeight( waveTrackTCPLines );
 }
 
 const TCPLines &WaveTrackControls::GetTCPLines() const
