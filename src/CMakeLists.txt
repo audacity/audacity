@@ -53,17 +53,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
 endif()
 
-# Detect, which version of FileDialog to use for
-# We always assume that GTK is used on platforms other than Windows and macOS,
-# as there is no other implementation available now
-if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( wxIS_MAC on )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   set ( wxIS_WIN on )
-else()
-   set ( wxIS_GTK on)
-endif()
-
 # Handle VST option
 cmd_option(
    ${_OPT}use_vst
@@ -489,46 +478,25 @@ list( APPEND SOURCES
       >
 
       $<$<BOOL:${${_OPT}has_vst3}>:
-         effects/VST3/AudacityVst3HostApplication.h
-         effects/VST3/AudacityVst3HostApplication.cpp
-         effects/VST3/memorystream.h
-         effects/VST3/memorystream.cpp
          effects/VST3/VST3Editor.cpp
          effects/VST3/VST3Editor.h
          effects/VST3/VST3Effect.h
          effects/VST3/VST3Effect.cpp
-         effects/VST3/VST3EffectsModule.h
-         effects/VST3/VST3EffectsModule.cpp
-         effects/VST3/VST3Instance.h
-         effects/VST3/VST3Instance.cpp
-         effects/VST3/VST3Utils.h
-         effects/VST3/VST3Utils.cpp
-         effects/VST3/VST3Wrapper.h
-         effects/VST3/VST3Wrapper.cpp
          effects/VST3/VST3OptionsDialog.h
          effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/VST3ParametersWindow.h
          effects/VST3/VST3ParametersWindow.cpp
-         effects/VST3/internal/ConnectionProxy.h
-         effects/VST3/internal/ConnectionProxy.cpp
          effects/VST3/internal/PlugFrame.h
          effects/VST3/internal/PlugFrame.cpp
       >
 
-      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_WIN}>>:
-         effects/VST3/module_win32.cpp
-      >
       $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_GTK}>>:
-         effects/VST3/module_linux.cpp
          effects/VST3/internal/x11/RunLoop.h
          effects/VST3/internal/x11/RunLoop.cpp
          effects/VST3/internal/x11/PlugFrame.h
          effects/VST3/internal/x11/PlugFrame.cpp
          effects/VST3/internal/x11/SocketWindow.h
          effects/VST3/internal/x11/SocketWindow.cpp
-      >
-      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_MAC}>>:
-         effects/VST3/module_mac.mm
       >
 
       # Audio Unit Effects
@@ -1161,10 +1129,6 @@ set( LIBRARIES
       ZLIB::ZLIB
       libmp3lame::libmp3lame
       SndFile::sndfile
-      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
-      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::pluginterfaces>
-      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
-      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_common>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
@@ -1313,19 +1277,12 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    )
    if(${_OPT}has_vst3 AND ${wxIS_MAC})
       set_source_files_properties(
-         effects/VST3/module_mac.mm
-         PROPERTIES
-            COMPILE_FLAGS "-fobjc-arc"
-            SKIP_PRECOMPILE_HEADERS YES
-      )
-
-      set_source_files_properties(
          effects/VST/VSTControlOSX.mm
          PROPERTIES
             SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
-
+ 
    # Add our required frameworks
    list( APPEND LIBRARIES
       PRIVATE
@@ -1487,6 +1444,7 @@ set( AUDACITY_LIBRARIES
    lib-ladspa-interface
    lib-lv2-interface
    lib-vst-interface
+   lib-vst3-interface
 )
 
 if (${_OPT}use_ffmpeg)

@@ -25,7 +25,7 @@ namespace VST3
 class VST3Wrapper;
 class VST3Effect;
 
-class VST3Instance
+class VST3_API VST3Instance
    : public PerTrackEffect::Instance
 {
    std::unique_ptr<VST3Wrapper> mWrapper;

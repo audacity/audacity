@@ -48,6 +48,7 @@ set( LIBRARIES
    lib-ladspa
    lib-lv2
    lib-vst
+   lib-vst3
 )
 
 if ( ${_OPT}has_networking )

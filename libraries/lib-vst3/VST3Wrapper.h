@@ -51,7 +51,7 @@ public:
    DECLARE_FUNKNOWN_METHODS
 };
 
-class VST3Wrapper
+class VST3_API VST3Wrapper
 {
    EffectSettings mDefaultSettings;
    VST3::Hosting::Module& mModule;

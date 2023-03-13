@@ -6,6 +6,7 @@
 
 class StatelessPerTrackEffect;
 class VST3Wrapper;
+enum EffectType : int;
 
 namespace Steinberg
 {
@@ -31,7 +32,8 @@ class VST3Editor
    
 public:
    VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
-      const StatelessPerTrackEffect &effect, EffectSettingsAccess &access,
+      const EffectUIServices &effect, EffectType type,
+      EffectSettingsAccess &access,
       bool useNativeUI);
    ~VST3Editor() override;
 
