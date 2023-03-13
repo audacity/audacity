@@ -43,13 +43,20 @@ template< typename Object > using BarePtr = Object*;
  @sa ClientData::DeepCopying
  */
 template<
+   typename Covariant = void, // CRTP derived class when not void
    template<typename> class Owner = UniquePtr
-> struct REGISTRIES_API Cloneable
+> struct
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+Cloneable
 {
-   using Base = Cloneable;
+   using Base = std::conditional_t<
+      std::is_void_v<Covariant>, Cloneable, Covariant
+   >;
    using PointerType = Owner< Base >;
 
-   virtual ~Cloneable();
+   virtual ~Cloneable() {};
    virtual PointerType Clone() const = 0;
 };
 

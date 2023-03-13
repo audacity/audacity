@@ -4,7 +4,7 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"

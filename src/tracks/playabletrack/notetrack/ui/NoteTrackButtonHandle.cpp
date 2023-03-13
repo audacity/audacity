@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "NoteTrackControls.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
@@ -50,6 +50,37 @@ UIHandle::Result NoteTrackButtonHandle::NeedChangeHighlight
    return 0;
 }
 
+static int FindChannel(const wxRect &rect, int mx, int my)
+{
+   wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
+   wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
+
+   auto cellWidth = rect.width / 4;
+   auto cellHeight = rect.height / 4;
+
+   int col = (mx - rect.x) / cellWidth;
+   int row = (my - rect.y) / cellHeight;
+
+   return row * 4 + col;
+}
+
+
+// Handles clicking within the midi controls rect (same as DrawLabelControls).
+// This is somewhat oddly written, as these aren't real buttons - they act
+// when the mouse goes down; you can't hold it pressed and move off of it.
+// Left-clicking toggles a single channel; right-clicking turns off all other channels.
+static bool LabelClick(
+   NoteTrack &track, const wxRect &rect, int mx, int my, bool right)
+{
+   auto channel = FindChannel(rect, mx, my);
+   if (right)
+      track.SoloVisibleChan(channel);
+   else
+      track.ToggleVisibleChan(channel);
+
+   return true;
+}
+
 UIHandlePtr NoteTrackButtonHandle::HitTest
    (std::weak_ptr<NoteTrackButtonHandle> &holder,
     const wxMouseState &state, const wxRect &rect,
@@ -60,7 +91,7 @@ UIHandlePtr NoteTrackButtonHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, midiRect ) )
       return {};
    if (midiRect.Contains(state.m_x, state.m_y)) {
-      auto channel = pTrack->FindChannel(midiRect, state.m_x, state.m_y);
+      auto channel = FindChannel(midiRect, state.m_x, state.m_y);
       auto result = std::make_shared<NoteTrackButtonHandle>(
          pTrack, channel, midiRect );
       result = AssignUIHandlePtr(holder, result);
@@ -103,7 +134,7 @@ UIHandle::Result NoteTrackButtonHandle::Release
       return Cancelled;
 
    const wxMouseEvent &event = evt.event;
-   if (pTrack->LabelClick(mRect, event.m_x, event.m_y,
+   if (LabelClick(*pTrack, mRect, event.m_x, event.m_y,
       event.Button(wxMOUSE_BTN_RIGHT))) {
       // No undo items needed??
       ProjectHistory::Get( *pProject ).ModifyState(false);

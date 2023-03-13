@@ -10,12 +10,13 @@ Paul Licameli split from TrackPanel.cpp
 
 
 #include "NoteTrackView.h"
+#include "NoteTrackDisplayData.h"
 
 #ifdef USE_MIDI
 #include "../lib-src/header-substitutes/allegro.h"
 
 #include "NoteTrackVRulerControls.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -41,9 +42,9 @@ NoteTrackView::~NoteTrackView()
 {
 }
 
-std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
-(const TrackPanelMouseState &WXUNUSED(state),
- const AudacityProject *WXUNUSED(pProject), int, bool )
+std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest(
+   const TrackPanelMouseState &state, const AudacityProject *pProject,
+   int, bool )
 {
    // Eligible for stretch?
    UIHandlePtr result;
@@ -51,7 +52,8 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
 #ifdef USE_MIDI
 #ifdef EXPERIMENTAL_MIDI_STRETCHING
    result = StretchHandle::HitTest(
-      mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );
+      mStretchHandle, state, pProject,
+      std::static_pointer_cast<NoteTrack>(FindTrack()));
    if (result)
       results.push_back(result);
 #endif
@@ -284,7 +286,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    // need overlap between MIDI data and the background region
    if (left >= right) return;
 
-   NoteTrackDisplayData data{ track, rect };
+   NoteTrackDisplayData data{ *track, rect };
    dc.SetBrush(bb);
    int octave = 0;
    // obottom is the window coordinate of octave divider line
@@ -382,7 +384,7 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    if (!track->GetSelected())
       sel0 = sel1 = 0.0;
 
-   NoteTrackDisplayData data{ track, rect };
+   NoteTrackDisplayData data{ *track, rect };
 
    // reserve 1/2 note height at top and bottom of track for
    // out-of-bounds notes

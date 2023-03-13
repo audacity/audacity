@@ -39,7 +39,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../images/Cursors.h"
 
 // Only for definition of SonifyBeginModifyState:
-//#include "../../NoteTrack.h"
+//#include "NoteTrack.h"
 
 enum {
    //This constant determines the size of the horizontal region (in pixels) around

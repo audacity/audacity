@@ -56,7 +56,7 @@ effects from this one class.
 #include "FileNames.h"
 #include "../../LabelTrack.h"
 #include "Languages.h"
-#include "../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "PluginManager.h"

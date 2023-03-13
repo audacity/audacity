@@ -20,28 +20,20 @@
 
 
 #include <wx/wxcrtvararg.h>
-#include <wx/dc.h>
-#include <wx/brush.h>
-#include <wx/pen.h>
 
 #if defined(USE_MIDI)
-#include "../lib-src/header-substitutes/allegro.h"
+#include "../../lib-src/header-substitutes/allegro.h"
 
 #include <sstream>
 
 #define ROUND(x) ((int) ((x) + 0.5))
 
-#include "AColor.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "prefs/ImportExportPrefs.h"
 
 #include "InconsistencyException.h"
 
 #include "TimeWarper.h"
-
-#include "AllThemeResources.h"
-#include "Theme.h"
 
 #ifdef SONIFY
 #include <portmidi.h>
@@ -104,7 +96,15 @@ SONFNS(AutoSave)
 
 #endif
 
+NoteTrackAttachment::~NoteTrackAttachment() = default;
 
+void NoteTrackAttachment::WriteXML(XMLWriter &xmlFile) const
+{}
+
+bool NoteTrackAttachment::HandleAttribute(const Attribute &attribute)
+{
+   return false;
+}
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "notetrack",
@@ -126,9 +126,6 @@ NoteTrack::NoteTrack()
 
    mSeq = NULL;
    mSerializationLength = 0;
-
-   mBottomNote = MinPitch;
-   mTopNote = MaxPitch;
 }
 
 NoteTrack::~NoteTrack()
@@ -186,9 +183,11 @@ Track::Holder NoteTrack::Clone() const
    else {
       // We are duplicating a default-constructed NoteTrack, and that's okay
    }
+
    // copy some other fields here
-   duplicate->SetBottomNote(mBottomNote);
-   duplicate->SetTopNote(mTopNote);
+   Attachments &attachments = *duplicate;
+   attachments = *this;
+
    duplicate->SetVisibleChannels(GetVisibleChannels());
    duplicate->SetOffset(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -247,133 +246,6 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    }
    // about to redisplay, so might as well convert back to time now
    seq.convert_to_seconds();
-}
-
-// Draws the midi channel toggle buttons within the given rect.
-// The rect should be evenly divisible by 4 on both axis.
-void NoteTrack::DrawLabelControls
-( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect, int highlightedChannel )
-{
-   dc.SetTextForeground(theTheme.Colour(clrLabelTrackText));
-   wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
-   wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
-
-   auto cellWidth = rect.width / 4;
-   auto cellHeight = rect.height / 4;
-
-   wxRect box;
-   for (int row = 0; row < 4; row++) {
-      for (int col = 0; col < 4; col++) {
-         // chanName is the "external" channel number (1-16)
-         // used by AColor and button labels
-         int chanName = row * 4 + col + 1;
-
-         box.x = rect.x + col * cellWidth;
-         box.y = rect.y + row * cellHeight;
-         box.width = cellWidth;
-         box.height = cellHeight;
-
-         bool visible = pTrack ? pTrack->IsVisibleChan(chanName - 1) : true;
-         if (visible) {
-            // highlightedChannel counts 0 based
-            if ( chanName == highlightedChannel + 1 )
-               AColor::LightMIDIChannel(&dc, chanName);
-            else
-               AColor::MIDIChannel(&dc, chanName);
-            dc.DrawRectangle(box);
-// two choices: channel is enabled (to see and play) when button is in
-// "up" position (original Audacity style) or in "down" position
-//
-#define CHANNEL_ON_IS_DOWN 1
-#if CHANNEL_ON_IS_DOWN
-            AColor::DarkMIDIChannel(&dc, chanName);
-#else
-            AColor::LightMIDIChannel(&dc, chanName);
-#endif
-            AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
-            AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
-
-#if CHANNEL_ON_IS_DOWN
-            AColor::LightMIDIChannel(&dc, chanName);
-#else
-            AColor::DarkMIDIChannel(&dc, chanName);
-#endif
-            AColor::Line(dc,
-                         box.x + box.width - 1, box.y,
-                         box.x + box.width - 1, box.y + box.height - 1);
-            AColor::Line(dc,
-                         box.x, box.y + box.height - 1,
-                         box.x + box.width - 1, box.y + box.height - 1);
-         } else {
-            if ( chanName == highlightedChannel + 1 )
-               AColor::LightMIDIChannel(&dc, chanName);
-            else
-               AColor::MIDIChannel(&dc, 0);
-            dc.DrawRectangle(box);
-#if CHANNEL_ON_IS_DOWN
-            AColor::LightMIDIChannel(&dc, 0);
-#else
-            AColor::DarkMIDIChannel(&dc, 0);
-#endif
-            AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
-            AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
-
-#if CHANNEL_ON_IS_DOWN
-            AColor::DarkMIDIChannel(&dc, 0);
-#else
-            AColor::LightMIDIChannel(&dc, 0);
-#endif
-            AColor::Line(dc,
-                         box.x + box.width - 1, box.y,
-                         box.x + box.width - 1, box.y + box.height - 1);
-            AColor::Line(dc,
-                         box.x, box.y + box.height - 1,
-                         box.x + box.width - 1, box.y + box.height - 1);
-
-         }
-
-         wxString text;
-         wxCoord w;
-         wxCoord h;
-
-         text.Printf(wxT("%d"), chanName);
-         dc.GetTextExtent(text, &w, &h);
-
-         dc.DrawText(text, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
-      }
-   }
-   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
-   AColor::MIDIChannel(&dc, 0); // always return with gray color selected
-}
-
-int NoteTrack::FindChannel(const wxRect &rect, int mx, int my)
-{
-   wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
-   wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
-
-   auto cellWidth = rect.width / 4;
-   auto cellHeight = rect.height / 4;
-
-   int col = (mx - rect.x) / cellWidth;
-   int row = (my - rect.y) / cellHeight;
-
-   return row * 4 + col;
-}
-
-
-// Handles clicking within the midi controls rect (same as DrawLabelControls).
-// This is somewhat oddly written, as these aren't real buttons - they act
-// when the mouse goes down; you can't hold it pressed and move off of it.
-// Left-clicking toggles a single channel; right-clicking turns off all other channels.
-bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
-{
-   auto channel = FindChannel(rect, mx, my);
-   if (right)
-      SoloVisibleChan(channel);
-   else
-      ToggleVisibleChan(channel);
-
-   return true;
 }
 
 void NoteTrack::SetSequence(std::unique_ptr<Alg_seq> &&seq)
@@ -888,10 +760,25 @@ bool NoteTrack::ExportMIDI(const wxString &f) const
    return rslt;
 }
 
+EnumSetting< bool > NoteTrack::AllegroStyleSetting{
+   wxT("/FileFormats/AllegroStyleChoice"),
+   {
+      EnumValueSymbol{ wxT("Seconds"), XXO("&Seconds") },
+      EnumValueSymbol{ wxT("Beats"), XXO("&Beats") },
+   },
+   0, // true
+
+   // for migrating old preferences:
+   {
+      true, false,
+   },
+   wxT("/FileFormats/AllegroStyle"),
+};
+
 bool NoteTrack::ExportAllegro(const wxString &f) const
 {
    double offset = GetOffset();
-   auto in_seconds = ImportExportPrefs::AllegroStyleSetting.ReadEnum();
+   auto in_seconds = AllegroStyleSetting.ReadEnum();
    auto &seq = GetSeq();
    if (in_seconds) {
        seq.convert_to_seconds();
@@ -921,6 +808,10 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          double dblValue;
          if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
+         else if (this->Attachments::FindIf([&](auto &attachment){
+            return attachment.HandleAttribute(pair);
+         }))
+            ;
          else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
          {}
          else if (attr == "offset" && value.TryGet(dblValue))
@@ -935,10 +826,6 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          else if (attr == "velocity" && value.TryGet(dblValue))
             DoSetVelocity(static_cast<float>(dblValue));
 #endif
-         else if (attr == "bottomnote" && value.TryGet(nValue))
-            SetBottomNote(nValue);
-         else if (attr == "topnote" && value.TryGet(nValue))
-            SetTopNote(nValue);
          else if (attr == "data") {
              std::string s(value.ToWString());
              std::istringstream data(s);
@@ -979,196 +866,12 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("velocity"),
       static_cast<double>(saveme->GetVelocity()));
 #endif
-   xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
-   xmlFile.WriteAttr(wxT("topnote"), saveme->mTopNote);
+   saveme->Attachments::ForEach([&](auto &attachment){
+      attachment.WriteXML(xmlFile);
+   });
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
 }
-
-void NoteTrack::SetBottomNote(int note)
-{
-   if (note < MinPitch)
-      note = MinPitch;
-   else if (note > 96)
-      note = 96;
-
-   wxCHECK(note <= mTopNote, );
-
-   mBottomNote = note;
-}
-
-void NoteTrack::SetTopNote(int note)
-{
-   if (note > MaxPitch)
-      note = MaxPitch;
-
-   wxCHECK(note >= mBottomNote, );
-
-   mTopNote = note;
-}
-
-void NoteTrack::SetNoteRange(int note1, int note2)
-{
-   // Bounds check
-   if (note1 > MaxPitch)
-      note1 = MaxPitch;
-   else if (note1 < MinPitch)
-      note1 = MinPitch;
-   if (note2 > MaxPitch)
-      note2 = MaxPitch;
-   else if (note2 < MinPitch)
-      note2 = MinPitch;
-   // Swap to ensure ordering
-   if (note2 < note1) { auto tmp = note1; note1 = note2; note2 = tmp; }
-
-   mBottomNote = note1;
-   mTopNote = note2;
-}
-
-void NoteTrack::ShiftNoteRange(int offset)
-{
-   // Ensure everything stays in bounds
-   if (mBottomNote + offset < MinPitch || mTopNote + offset > MaxPitch)
-       return;
-
-   mBottomNote += offset;
-   mTopNote += offset;
-}
-
-#if 0
-void NoteTrack::StartVScroll()
-{
-    mStartBottomNote = mBottomNote;
-}
-
-void NoteTrack::VScroll(int start, int end)
-{
-    int ph = GetPitchHeight();
-    int delta = ((end - start) + ph / 2) / ph;
-    ShiftNoteRange(delta);
-}
-#endif
-
-void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
-{
-   NoteTrackDisplayData data = NoteTrackDisplayData(this, rect);
-   int clickedPitch = data.YToIPitch(y);
-   int extent = mTopNote - mBottomNote + 1;
-   int newExtent = (int) (extent / multiplier);
-   float position;
-   if (center) {
-      // center the pitch that the user clicked on
-      position = .5;
-   } else {
-      // align to keep the pitch that the user clicked on in the same place
-      position = extent / (clickedPitch - mBottomNote);
-   }
-   int newBottomNote = clickedPitch - (newExtent * position);
-   int newTopNote = clickedPitch + (newExtent * (1 - position));
-   SetNoteRange(newBottomNote, newTopNote);
-}
-
-
-void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
-{
-   wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
-   NoteTrackDisplayData data = NoteTrackDisplayData(this, trackRect);
-   int pitch1 = data.YToIPitch(start);
-   int pitch2 = data.YToIPitch(end);
-   if (pitch1 == pitch2) {
-      // Just zoom in instead of zooming to show only one note
-      Zoom(rect, start, 1, true);
-      return;
-   }
-   // It's fine for this to be in either order
-   SetNoteRange(pitch1, pitch2);
-}
-
-void NoteTrack::ZoomAllNotes()
-{
-   Alg_iterator iterator( &GetSeq(), false );
-   iterator.begin();
-   Alg_event_ptr evt;
-
-   // Go through all of the notes, finding the minimum and maximum value pitches.
-   bool hasNotes = false;
-   int minPitch = MaxPitch;
-   int maxPitch = MinPitch;
-
-   while (NULL != (evt = iterator.next())) {
-      if (evt->is_note()) {
-         int pitch = (int) evt->get_pitch();
-         hasNotes = true;
-         if (pitch < minPitch)
-            minPitch = pitch;
-         if (pitch > maxPitch)
-            maxPitch = pitch;
-      }
-   }
-
-   if (!hasNotes) {
-      // Semi-arbitrary default values:
-      minPitch = 48;
-      maxPitch = 72;
-   }
-
-   SetNoteRange(minPitch, maxPitch);
-}
-
-NoteTrackDisplayData::NoteTrackDisplayData(const NoteTrack* track, const wxRect &r)
-{
-   auto span = track->GetTopNote() - track->GetBottomNote() + 1; // + 1 to make sure it includes both
-
-   mMargin = std::min((int) (r.height / (float)(span)) / 2, r.height / 4);
-
-   // Count the number of dividers between B/C and E/F
-   int numC = 0, numF = 0;
-   auto botOctave = track->GetBottomNote() / 12, botNote = track->GetBottomNote() % 12;
-   auto topOctave = track->GetTopNote() / 12, topNote = track->GetTopNote() % 12;
-   if (topOctave == botOctave)
-   {
-      if (botNote == 0) numC = 1;
-      if (topNote <= 5) numF = 1;
-   }
-   else
-   {
-      numC = topOctave - botOctave;
-      numF = topOctave - botOctave - 1;
-      if (botNote == 0) numC++;
-      if (botNote <= 5) numF++;
-      if (topOctave <= 5) numF++;
-   }
-   // Effective space, excluding the margins and the lines between some notes
-   auto effectiveHeight = r.height - (2 * (mMargin + 1)) - numC - numF;
-   // Guaranteed that both the bottom and top notes will be visible
-   // (assuming that the clamping below does not happen)
-   mPitchHeight = effectiveHeight / ((float) span);
-
-   if (mPitchHeight < MinPitchHeight)
-      mPitchHeight = MinPitchHeight;
-   if (mPitchHeight > MaxPitchHeight)
-      mPitchHeight = MaxPitchHeight;
-
-   mBottom = r.y + r.height - GetNoteMargin() - 1 - GetPitchHeight(1) +
-            botOctave * GetOctaveHeight() + GetNotePos(botNote);
-}
-
-int NoteTrackDisplayData::IPitchToY(int p) const
-{ return mBottom - (p / 12) * GetOctaveHeight() - GetNotePos(p % 12); }
-
-int NoteTrackDisplayData::YToIPitch(int y) const
-{
-   y = mBottom - y; // pixels above pitch 0
-   int octave = (y / GetOctaveHeight());
-   y -= octave * GetOctaveHeight();
-   // result is approximate because C and G are one pixel taller than
-   // mPitchHeight.
-   // Poke 1-13-18: However in practice this seems not to be an issue,
-   // as long as we use mPitchHeight and not the rounded version
-   return (y / mPitchHeight) + octave * 12;
-}
-
-const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
 
 #include <wx/log.h>
 #include <wx/sstream.h>

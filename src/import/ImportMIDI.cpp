@@ -24,7 +24,8 @@
 //#include "mfmidi.h"
 
 #include "FileNames.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
+#include "../tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
@@ -123,7 +124,7 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
    dest->SetName(trackNameBase);
    mf.Close();
 
-   dest->ZoomAllNotes();
+   NoteTrackRange::Get(*dest).ZoomAllNotes(&dest->GetSeq());
    return true;
 }
 

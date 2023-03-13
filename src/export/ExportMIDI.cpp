@@ -17,7 +17,7 @@
 //#include "mfmidi.h"
 
 #include "FileNames.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #include "Project.h"
 #include "../ProjectWindows.h"
 #include "SelectFile.h"
