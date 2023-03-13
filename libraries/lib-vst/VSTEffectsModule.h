@@ -16,7 +16,7 @@
 
 #include "PluginProvider.h"
 
-class VSTEffectsModule final : public PluginProvider
+class VST_API VSTEffectsModule final : public PluginProvider
 {
 public:
    VSTEffectsModule();

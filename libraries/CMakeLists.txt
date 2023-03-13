@@ -47,6 +47,7 @@ set( LIBRARIES
    lib-note-track
    lib-ladspa
    lib-lv2
+   lib-vst
 )
 
 if ( ${_OPT}has_networking )

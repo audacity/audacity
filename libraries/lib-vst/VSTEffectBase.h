@@ -25,7 +25,7 @@
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
-class VSTEffectBase
+class VST_API VSTEffectBase
    : public VSTWrapper
    , public PerTrackEffect
 {

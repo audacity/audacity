@@ -23,7 +23,7 @@
 class VSTInstance;
 using VSTInstanceArray = std::vector < std::unique_ptr<VSTInstance> >;
 
-class VSTInstance final : public PerTrackEffect::Instance,
+class VST_API VSTInstance final : public PerTrackEffect::Instance,
    public VSTWrapper
 {
 public:

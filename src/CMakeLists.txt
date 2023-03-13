@@ -469,17 +469,8 @@ list( APPEND SOURCES
          effects/VST/VSTEditor.h
          effects/VST/VSTEffect.cpp
          effects/VST/VSTEffect.h
-         effects/VST/VSTEffectBase.cpp
-         effects/VST/VSTEffectBase.h
-         effects/VST/VSTEffectsModule.cpp
-         effects/VST/VSTEffectsModule.h
          effects/VST/VSTEffectOptionsDialog.cpp
          effects/VST/VSTEffectOptionsDialog.h
-         effects/VST/VSTInstance.cpp
-         effects/VST/VSTInstance.h
-         effects/VST/VSTWrapper.cpp
-         effects/VST/VSTWrapper.h
-         effects/VST/aeffectx.h
       >
 
       $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
@@ -1495,6 +1486,7 @@ set( AUDACITY_LIBRARIES
    lib-note-track-interface
    lib-ladspa-interface
    lib-lv2-interface
+   lib-vst-interface
 )
 
 if (${_OPT}use_ffmpeg)
