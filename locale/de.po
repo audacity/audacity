@@ -11,7 +11,7 @@
 # 39185eb5873c356f8ca1bdf1533d87ba, 2016
 # Friederike Schertel, 2018
 # Friederike Schertel, 2018
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2022
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2022-2023
 # Heiko Abler <dj@audacity.de>, 2003
 # jhuffer <joachim.huffer@gmail.com>, 2020-2022
 # Martin H <pilino@posteo.de>, 2016
@@ -29,11 +29,11 @@
 # valsu <valsu@hylia.de>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.2.3\n"
+"Project-Id-Version: audacity 3.3.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-12-20 09:37-0500\n"
 "PO-Revision-Date: 2012-07-27 10:44+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2022\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -108,7 +108,7 @@ msgstr "Absturzbericht konnte nicht gesendet werden"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "Stream ist aktiv … Informationen können nicht zusammengestellt werden.\n"
+msgstr "Stream ist aktiv ... Informationen können nicht zusammengestellt werden.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 #, c-format
@@ -9196,15 +9196,15 @@ msgstr "Legt die Spitzen-Amplitude von einer oder mehreren Spuren fest"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "DC-Versatz wird entfernt und normalisiert …\n"
+msgstr "DC-Versatz wird entfernt und normalisiert...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset...\n"
-msgstr "DC-Versatz wird entfernt …\n"
+msgstr "DC-Versatz wird entfernt...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Es wird normalisiert ohne DC-Versatz zu entfernen …\n"
+msgstr "Es wird normalisiert ohne DC-Versatz zu entfernen...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
@@ -15608,7 +15608,7 @@ msgstr "Befehlssatz"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
-msgstr "SSE/SSE2/…/AVX &verwenden"
+msgstr "SSE/SSE2/.../AVX &verwenden"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -17189,7 +17189,7 @@ msgstr "Aufnahme&kanäle"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Settings..."
-msgstr "Audio-&Einstellungen ..."
+msgstr "Audio-&Einstellungen..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
