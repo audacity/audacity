@@ -19,12 +19,12 @@ public:
    ~BeatsFormat() override;
 
    void SetTickSizes(
-      double units, double& mMajor, double& mMinor, double &mMinorMinor,
+      double units, double& major, double& minor, double &minorMinor,
       int& mDigits
    ) const override;
 
    void SetLabelString(
-      wxString& s, double d, double mMinor, int mDigits, TickType tickType
+      wxString& s, double d, double units, double minor, int mDigits, TickType tickType
    ) const override;
 
    void SetData(double bpm, int timeSigUpper, int timeSigLower)

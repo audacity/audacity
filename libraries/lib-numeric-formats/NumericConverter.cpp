@@ -426,6 +426,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    XO("01000,01000 frames|75")
    },
 
+   // Beats and Measures must be the last format for UpdatePrefs to work
    {
    /* i18n-hint: Name of time display format that shows time beats and measures */
    { XO("beats and measures") },
@@ -439,7 +440,7 @@ namespace {
 struct BeatsUpdater : PrefsListener {
    void UpdatePrefs() override
    {
-      TimeConverterFormats_[16] =
+      TimeConverterFormats_[WXSIZEOF(TimeConverterFormats_) - 1] =
       {
          { XO("beats and measures") },
          BuildBeatsFormat()

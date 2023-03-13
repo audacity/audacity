@@ -2512,6 +2512,14 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 
    mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
+   if (mBeatsAndMeasures)
+   {
+      mRuler.SetTickLengths({ 5, 3, 1 });
+   }
+   else
+   {
+      mRuler.SetTickLengths({ 4, 2, 2 });
+   }
    mRuler.Draw( *dc );
 }
 
