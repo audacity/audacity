@@ -25,7 +25,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectsModule final : public PluginProvider
+class LV2_API LV2EffectsModule final : public PluginProvider
 {
 public:
    LV2EffectsModule();

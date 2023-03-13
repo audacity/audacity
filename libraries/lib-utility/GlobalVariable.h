@@ -225,4 +225,10 @@ template<typename Type, typename... Arguments> struct SharedPtrFactory {
    }
 };
 
+//! Generates functions returning a constant
+//! (not needed for the default-constructed value of a hook's return type)
+template<auto Value, typename... Arguments> struct Constantly {
+   static decltype(Value) Function (Arguments...) { return Value; }
+};
+
 #endif

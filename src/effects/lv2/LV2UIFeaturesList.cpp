@@ -14,6 +14,7 @@
 #include "LV2UIFeaturesList.h"
 #include "LV2InstanceFeaturesList.h"
 #include "lv2/instance-access/instance-access.h"
+#include <wx/window.h>
 
 LV2UIFeaturesList::LV2UIFeaturesList(
    const LV2WrapperFeaturesList &baseFeatures, UIHandler *pHandler,
@@ -67,3 +68,11 @@ void LV2UIFeaturesList::suil_port_write(SuilController controller,
 }
 
 LV2UIFeaturesList::UIHandler::~UIHandler() = default;
+
+static LV2InstanceFeaturesList::ValidatePlugin::Scope scope{
+   [](const LilvPlugin &plug, LV2InstanceFeaturesList &instanceFeatures){
+      return LV2UIFeaturesList{ LV2WrapperFeaturesList{ instanceFeatures },
+         nullptr, lilv_plugin_get_uri(&plug)
+      }.mOk;
+   }
+};

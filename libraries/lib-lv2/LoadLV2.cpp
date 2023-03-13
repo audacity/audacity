@@ -33,11 +33,12 @@ Functions that find and load all LV2 plugins on the system.
 #include <wx/dynlib.h>
 #include <wx/filename.h>
 #include <wx/log.h>
+#include <wx/utils.h>
 
 #include "Internat.h"
 #include "wxArrayStringEx.h"
 
-#include "LV2Effect.h"
+#include "LV2EffectBase.h"
 
 #include <unordered_map>
 
@@ -246,7 +247,7 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
 {
    errMsg = {};
    if (const auto plug = GetPlugin(path)) {
-      LV2Effect effect(*plug);
+      LV2EffectBase effect(*plug);
       if (effect.InitializePlugin()) {
          if (callback)
             callback( this, &effect );
@@ -263,7 +264,7 @@ LV2EffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    if (const auto plug = GetPlugin(path)) {
-      auto result = std::make_unique<LV2Effect>(*plug);
+      auto result = LV2EffectBase::Factory::Call(*plug);
       result->InitializePlugin();
       return result;
    }
@@ -275,12 +276,13 @@ bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
    return GetPlugin(path) != nullptr;
 }
 
+namespace {
 class LV2PluginValidator : public PluginProvider::Validator
 {
 public:
    void Validate(ComponentInterface& pluginInterface) override
    {
-      if(auto lv2effect = dynamic_cast<LV2Effect*>(&pluginInterface))
+      if(auto lv2effect = dynamic_cast<LV2EffectBase*>(&pluginInterface))
       {
          LV2_Atom_Forge forge;
          lv2_atom_forge_init(&forge, lv2effect->mFeatures.URIDMapFeature());
@@ -305,6 +307,7 @@ public:
          throw std::runtime_error("Not a LV2Effect");
    }
 };
+}
 
 std::unique_ptr<PluginProvider::Validator> LV2EffectsModule::MakeValidator() const
 {
