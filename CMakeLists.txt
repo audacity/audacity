@@ -609,6 +609,14 @@ if(${_OPT}has_crashreports)
    add_subdirectory( "crashreporter" )
 endif()
 
+# Handle Ladspa option
+cmd_option(
+   ${_OPT}use_ladspa
+   "Use LADSPA plug-in support [on, off]"
+   ON
+)
+set( USE_LADSPA ${${_OPT}use_ladspa} CACHE INTERNAL "" )
+
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
