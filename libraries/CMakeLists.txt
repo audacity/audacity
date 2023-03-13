@@ -46,6 +46,7 @@ set( LIBRARIES
    lib-wx-init
    lib-note-track
    lib-ladspa
+   lib-lv2
 )
 
 if ( ${_OPT}has_networking )

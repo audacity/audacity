@@ -24,7 +24,7 @@
 
 class LV2Wrapper;
 
-class LV2Instance final : public PerTrackEffect::Instance
+class LV2_API LV2Instance final : public PerTrackEffect::Instance
 {
 public:
    LV2Instance(const PerTrackEffect &effect,

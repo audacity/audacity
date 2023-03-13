@@ -137,16 +137,16 @@
 
 namespace LV2Symbols {
 
-extern LilvWorld *gWorld;
+extern LV2_API LilvWorld *gWorld;
 
 using URIDMap = std::vector<MallocString<>>;
 
 //! Declare the global map of positive integers to URIs
-extern URIDMap gURIDMap;
+extern LV2_API URIDMap gURIDMap;
 
 //! Do reverse lookup in a map of URIs to positive integers,
 //! returning 0 if not found and `!add`
-LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
+LV2_API LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
 
 // Declare the static LILV URI nodes
 #undef NODE
@@ -161,9 +161,9 @@ NODELIST
 URIDLIST
 
 //! Call before any use of the constants defined in this file
-bool InitializeGWorld();
+LV2_API bool InitializeGWorld();
 //! Call at end of session
-void FinalizeGWorld();
+LV2_API void FinalizeGWorld();
 
 }
 

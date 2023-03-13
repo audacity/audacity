@@ -76,7 +76,7 @@ using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
 using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;
 
 //! State of an instance of an LV2 Atom port
-struct LV2AtomPortState final {
+struct LV2_API LV2AtomPortState final {
    //! @pre `pPort != nullptr`
    explicit LV2AtomPortState(LV2AtomPortPtr pPort)
       : mpPort{ move(pPort) }
@@ -157,7 +157,7 @@ struct LV2CVPortState final {
 using LV2CVPortStateArray = std::vector<LV2CVPortState>;
 
 //! Immutable description of an LV2 control port
-class LV2ControlPort final : public LV2Port
+class LV2_API LV2ControlPort final : public LV2Port
 {
 public:
    LV2ControlPort(const LilvPort *port, int index, bool isInput,
@@ -225,7 +225,7 @@ inline const LV2EffectSettings &GetSettings(const EffectSettings &settings)
 }
 
 //! Carry output control port information back to main thread
-struct LV2EffectOutputs : EffectOutputs {
+struct LV2_API LV2EffectOutputs : EffectOutputs {
    ~LV2EffectOutputs() override;
    std::unique_ptr<EffectOutputs> Clone() const override;
    void Assign(EffectOutputs &&src) override;
@@ -254,7 +254,7 @@ struct LV2ControlPortState final {
 //! No need yet for extra indirection
 using LV2ControlPortStateArray = std::vector<LV2ControlPortState>;
 
-class LV2Ports {
+class LV2_API LV2Ports {
 public:
    //! @post every member of `mGroups` occurs as a key in `mGroupMap`
    explicit LV2Ports(const LilvPlugin &plug);
@@ -289,14 +289,14 @@ public:
    int mLatencyPort{ -1 };
 };
 
-class LV2PortStates {
+class LV2_API LV2PortStates {
 public:
    explicit LV2PortStates(const LV2Ports &ports);
    LV2AtomPortStateArray mAtomPortStates;
    LV2CVPortStateArray mCVPortStates;
 };
 
-class LV2PortUIStates {
+class LV2_API LV2PortUIStates {
 public:
    LV2PortUIStates(const LV2PortStates &states, const LV2Ports &ports);
    LV2AtomPortStatePtr mControlIn;
