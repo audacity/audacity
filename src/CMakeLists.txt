@@ -43,16 +43,6 @@ else()
    file( WRITE "${_PRVDIR}/RevisionIdent.h" "" )
 endif()
 
-# Handle Audio Units option
-if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   cmd_option(
-      ${_OPT}use_audio_units
-      "Use Audio Units plug-in support [on, off]"
-      ON
-   )
-   set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
-endif()
-
 # Handle VST option
 cmd_option(
    ${_OPT}use_vst
@@ -510,14 +500,6 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitEffect.h
          effects/audiounits/AudioUnitEffectOptionsDialog.cpp
          effects/audiounits/AudioUnitEffectOptionsDialog.h
-         effects/audiounits/AudioUnitEffectsModule.cpp
-         effects/audiounits/AudioUnitEffectsModule.h
-         effects/audiounits/AudioUnitInstance.cpp
-         effects/audiounits/AudioUnitInstance.h
-         effects/audiounits/AudioUnitUtils.cpp
-         effects/audiounits/AudioUnitUtils.h
-         effects/audiounits/AudioUnitWrapper.cpp
-         effects/audiounits/AudioUnitWrapper.h
       >
 
       # Ladspa Effects
@@ -1286,7 +1268,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # Add our required frameworks
    list( APPEND LIBRARIES
       PRIVATE
-         "-framework AudioUnit"
          "-framework CoreAudio"
          "-framework CoreAudioKit"
    )
@@ -1446,7 +1427,9 @@ set( AUDACITY_LIBRARIES
    lib-vst-interface
    lib-vst3-interface
 )
-
+if (USE_AUDIO_UNITS AND wxIS_MAC)
+   list(APPEND AUDACITY_LIBRARIES lib-audio-unit-interface)
+endif()
 if (${_OPT}use_ffmpeg)
    list( APPEND AUDACITY_LIBRARIES
       lib-ffmpeg-support-interface

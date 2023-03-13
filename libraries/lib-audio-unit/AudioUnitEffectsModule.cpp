@@ -14,7 +14,7 @@
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffectsModule.h"
 
-#include "AudioUnitEffect.h"
+#include "AudioUnitEffectBase.h"
 #include "ModuleManager.h"
 #include <wx/log.h>
 #include <wx/tokenzr.h>
@@ -214,7 +214,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
       return 0;
    }
 
-   AudioUnitEffect effect(path, name, component);
+   AudioUnitEffectBase effect(path, name, component);
    if (!effect.InitializePlugin())
    {
       // TODO:  Is it worth it to discriminate all the ways SetHost might
@@ -236,7 +236,7 @@ AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    if (wxString name; auto component = FindAudioUnit(path, name)) {
-      auto result = std::make_unique<AudioUnitEffect>(path, name, component);
+      auto result = AudioUnitEffectBase::Factory::Call(path, name, component);
       result->InitializePlugin();
       return result;
    }

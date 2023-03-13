@@ -628,6 +628,16 @@ else()
    set ( wxIS_GTK on)
 endif()
 
+# Handle Audio Units option
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   cmd_option(
+      ${_OPT}use_audio_units
+      "Use Audio Units plug-in support [on, off]"
+      ON
+   )
+   set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
+endif()
+
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )

@@ -49,6 +49,7 @@ set( LIBRARIES
    lib-lv2
    lib-vst
    lib-vst3
+   lib-audio-unit
 )
 
 if ( ${_OPT}has_networking )
