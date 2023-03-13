@@ -31,6 +31,7 @@ other settings.
 #include <wx/defs.h>
 
 #include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
 
@@ -39,6 +40,7 @@ other settings.
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "DeviceManager.h"
+#include "ProjectRate.h"
 
 enum {
    HostID = 10000,
@@ -52,8 +54,9 @@ BEGIN_EVENT_TABLE(DevicePrefs, PrefsPanel)
    EVT_CHOICE(RecordID, DevicePrefs::OnDevice)
 END_EVENT_TABLE()
 
-DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid)
+DevicePrefs::DevicePrefs(wxWindow * parent, wxWindowID winid, AudacityProject* project)
 :  PrefsPanel(parent, winid, XO("Devices"))
+, mProject(project)
 {
    Populate();
 }
@@ -203,6 +206,38 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
+
+   if (mProject != nullptr)
+   {
+      S.StartStatic(XO("Quality"));
+      {
+         S.StartThreeColumn();
+
+         auto cmbProjectRate = S.AddCombo(XO("Project rate:"), {}, {});
+
+         for (auto i = 0; i < AudioIOBase::NumStandardRates; ++i)
+            cmbProjectRate->Append(
+               wxString::Format("%d", AudioIOBase::StandardRates[i]));
+
+         cmbProjectRate->SetValue(wxString::Format(
+            "%d", static_cast<int>(ProjectRate::Get(*mProject).GetRate())));
+
+         cmbProjectRate->Bind(
+            wxEVT_COMBOBOX,
+            [this, cmbProjectRate](auto)
+            {
+               long value;
+               if (cmbProjectRate->GetValue().ToLong(&value))
+                  ProjectRate::Get(*mProject).SetRate(value);
+            });
+
+         S.AddUnits(XO("Hz"));
+
+         S.EndThreeColumn();
+      }
+      S.EndStatic();
+   }
+
    S.EndScroller();
 
 }
@@ -415,10 +450,10 @@ bool DevicePrefs::Commit()
    return true;
 }
 
-PrefsPanel *DevicePrefsFactory(wxWindow *parent, wxWindowID winid, AudacityProject *)
+PrefsPanel *DevicePrefsFactory(wxWindow *parent, wxWindowID winid, AudacityProject *project)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew DevicePrefs(parent, winid);
+   return safenew DevicePrefs(parent, winid, project);
 }
 
 namespace{
