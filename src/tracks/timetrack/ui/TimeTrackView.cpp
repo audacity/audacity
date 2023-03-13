@@ -9,7 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "TimeTrackView.h"
-#include "../../../TimeTrack.h"
+#include "TimeTrack.h"
 
 #include "TimeTrackControls.h"
 
@@ -25,6 +25,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
 #include "../../../widgets/Ruler.h"
+#include "../../../widgets/LinearUpdater.h"
+#include "../../../widgets/TimeFormat.h"
 
 #include "../../ui/EnvelopeHandle.h"
 
@@ -32,7 +34,7 @@ Paul Licameli split from TrackPanel.cpp
 
 using Doubles = ArrayOf<double>;
 
-TimeTrackView::TimeTrackView( const std::shared_ptr<Track> &pTrack )
+TimeTrackView::TimeTrackView(const std::shared_ptr<Track> &pTrack)
    : CommonTrackView{ pTrack }
 {
 }
@@ -57,7 +59,7 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
 using DoGetTimeTrackView = DoGetView::Override< TimeTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
    return [](TimeTrack &track) {
-      return std::make_shared<TimeTrackView>( track.SharedPointer() );
+      return std::make_shared<TimeTrackView>(track.SharedPointer());
    };
 }
 
@@ -156,9 +158,33 @@ void TimeTrackView::Draw(
    const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassTracks ) {
+      const auto pTrack = FindTrack();
+      const auto pList = pTrack->GetOwner();
+      if (!pList)
+         // Track isn't owned by a list.  Can't proceed!
+         return;
+      const auto pProject = pList->GetOwner();
+      if (!pProject)
+         // List isn't owned by a project.  Can't proceed!
+         // But this shouldn't happen when drawing it
+         return;
+
+      auto &zoomInfo = ViewInfo::Get(*pProject);
+      LinearUpdater updater;
+      updater.SetData(&zoomInfo);
+
+      // Just using a stack-local Ruler object.  Observe the "Invalidate"
+      // call above which has long been done with every redraw.
+      // Avoiding invalidation with every draw, and making the ruler persistent
+      // between drawings, would require that it be invalidated whenever the
+      // user drags points, or the time selection changes -- really too much
+      // work.
+      Ruler ruler{ updater, TimeFormat::Instance() };
+      ruler.SetLabelEdges(false);
+
       const auto tt = std::static_pointer_cast<const TimeTrack>(
-         FindTrack()->SubstitutePendingChangedTrack());
-      DrawTimeTrack( context, *tt, tt->GetRuler(), rect );
+         pTrack->SubstitutePendingChangedTrack());
+      DrawTimeTrack(context, *tt, ruler, rect);
    }
    CommonTrackView::Draw( context, rect, iPass );
 }

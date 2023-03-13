@@ -16,18 +16,12 @@
 
 #include "TimeTrack.h"
 
-#include "ActiveProject.h"
 #include <cfloat>
 #include <wx/wxcrtvararg.h>
-#include <wx/dc.h>
-#include "widgets/Ruler.h"
-#include "widgets/LinearUpdater.h"
-#include "widgets/TimeFormat.h"
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"
 #include "ProjectRate.h"
-#include "ViewInfo.h"
 
 
 //TODO-MB: are these sensible values?
@@ -47,15 +41,12 @@ wxString TimeTrack::GetDefaultName()
 TimeTrack *TimeTrack::New( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto result = tracks.Add(std::make_shared<TimeTrack>(&viewInfo));
+   auto result = tracks.Add(std::make_shared<TimeTrack>());
    result->AttachedTrackObjects::BuildAll();
    return result;
 }
 
-TimeTrack::TimeTrack(const ZoomInfo *zoomInfo):
-   Track()
-   , mZoomInfo(zoomInfo)
+TimeTrack::TimeTrack()
 {
    CleanState();
 }
@@ -73,16 +64,11 @@ void TimeTrack::CleanState()
 
    //Time track is always unique
    SetName(GetDefaultName());
-
-   mUpdater.SetData(mZoomInfo);
-   mRuler = std::make_unique<Ruler>(mUpdater, TimeFormat::Instance() );
-   mRuler->SetLabelEdges(false);
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
    double *pT0, double *pT1
 )  : Track(orig, std::move(a))
-   , mZoomInfo(orig.mZoomInfo)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
@@ -99,11 +85,6 @@ TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,
 
    mEnvelope->SetTrackLen( len );
    mEnvelope->SetOffset(0);
-
-   ///@TODO: Give Ruler:: a copy-constructor instead of this?
-   mUpdater.SetData(mZoomInfo);
-   mRuler = std::make_unique<Ruler>(mUpdater, TimeFormat::Instance());
-   mRuler->SetLabelEdges(false);
 }
 
 // Copy the track metadata but not the contents.
@@ -167,7 +148,7 @@ Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
    if( auto pTrack = *TrackList::Get( project ).Any<TimeTrack>().begin() )
       pNewTrack = pTrack->SharedPointer<TimeTrack>();
    else
-      pNewTrack = std::make_shared<TimeTrack>( &ViewInfo::Get( project ) );
+      pNewTrack = std::make_shared<TimeTrack>();
 
    // Should come here only for .aup3 import, not for paste (because the
    // track is skipped in cut/copy commands)
@@ -195,24 +176,25 @@ Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
 }
 
 namespace {
-double GetRate() {
-   auto pProject = GetActiveProject().lock();
-   return pProject
-      ? ProjectRate::Get( *pProject ).GetRate()
-      : 44100.0;
+double GetRate(const Track &track) {
+   if (auto pList = track.GetOwner()) {
+      if (auto pProject = pList->GetOwner())
+         return ProjectRate::Get(*pProject).GetRate();
+   }
+   return 44100.0;
 }
 }
 
 void TimeTrack::Clear(double t0, double t1)
 {
-   auto sampleTime = 1.0 / GetRate();
+   auto sampleTime = 1.0 / GetRate(*this);
    mEnvelope->CollapseRegion( t0, t1, sampleTime );
 }
 
 void TimeTrack::Paste(double t, const Track * src)
 {
    bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
-      auto sampleTime = 1.0 / GetRate();
+      auto sampleTime = 1.0 / GetRate(*this);
       mEnvelope->PasteEnvelope
          (t, tt->mEnvelope.get(), sampleTime);
       return true;

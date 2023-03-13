@@ -11,18 +11,15 @@
 #ifndef __AUDACITY_TIMETRACK__
 #define __AUDACITY_TIMETRACK__
 
-#include "widgets/LinearUpdater.h"
 #include "Track.h"
 
 #include <algorithm>
 
 class wxRect;
 class BoundedEnvelope;
-class Ruler;
-class ZoomInfo;
 struct TrackPanelDrawingContext;
 
-class AUDACITY_DLL_API TimeTrack final : public Track {
+class TIME_TRACK_API TimeTrack final : public Track {
 
  public:
 
@@ -31,11 +28,11 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
    // Construct and also build all attachments
    static TimeTrack *New(AudacityProject &project);
 
-   explicit TimeTrack(const ZoomInfo *zoomInfo);
+   TimeTrack();
    /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *
     * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the
-    * Envelope:: and Ruler:: members in order to copy one to the other - unfortunately both lack a
+    * Envelope:: members in order to copy one to the other - unfortunately both lack a
     * copy-constructor to encapsulate this.
     * @param orig The original track to copy from
     * @param pT0 if not null, then the start of the sub-range to copy
@@ -101,15 +98,10 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
    void testMe();
 
-   Ruler &GetRuler() const { return *mRuler; }
-
  private:
    void CleanState();
 
-   const ZoomInfo  *const mZoomInfo;
    std::unique_ptr<BoundedEnvelope> mEnvelope;
-   LinearUpdater mUpdater;
-   std::unique_ptr<Ruler> mRuler;
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
 

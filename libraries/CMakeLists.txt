@@ -50,6 +50,7 @@ set( LIBRARIES
    lib-vst
    lib-vst3
    lib-audio-unit
+   lib-time-track
 )
 
 if ( ${_OPT}has_networking )
