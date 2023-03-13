@@ -39,7 +39,7 @@ VSTControl::~VSTControl()
       mLink->callDispatcher(effEditClose, 0, (intptr_t)mImpl->display, (void *)mImpl->window, 0.0);
 }
 
-bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
+bool VSTControl::Create(wxWindow *parent, VSTLink *link)
 {
    if (!VSTControlBase::Create(parent, link))
    {

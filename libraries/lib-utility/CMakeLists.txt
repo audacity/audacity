@@ -20,6 +20,7 @@ set( SOURCES
    BufferedStreamReader.h
    CommandLineArgs.cpp
    CommandLineArgs.h
+   CFResources.cpp
    CFResources.h
    GlobalVariable.h
    MemoryX.cpp
@@ -35,6 +36,14 @@ set( SOURCES
    spinlock.h
    TypedAny.h
 )
-audacity_library( lib-utility "${SOURCES}" ""
+set( LIBRARIES
+)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    find_library(CORE_FOUNDATION CoreFoundation)
+    set( LIBRARIES PRIVATE ${CORE_FOUNDATION})
+endif()
+
+audacity_library( lib-utility "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

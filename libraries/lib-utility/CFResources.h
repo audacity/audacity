@@ -19,6 +19,7 @@
 #include <memory>
 #include <type_traits>
 #include <utility>
+#include <CoreFoundation/CFBase.h>
 
 template<typename T = void *> struct CFReleaser{
    void operator () (T p) const noexcept { if (p) CFRelease(p); } };
@@ -38,6 +39,8 @@ template<typename T = void *> struct CFReleaser{
  */
 template<typename T> using CF_ptr =
    std::unique_ptr<std::remove_pointer_t<T>, CFReleaser<T>>;
+
+extern template struct CFReleaser<>;
 
 #endif
 #endif

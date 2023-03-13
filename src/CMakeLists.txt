@@ -465,9 +465,12 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_VST}>:
          effects/VST/VSTControl.h
+         effects/VST/VSTEditor.cpp
+         effects/VST/VSTEditor.h
          effects/VST/VSTEffect.cpp
          effects/VST/VSTEffect.h
-         effects/VST/aeffectx.h
+         effects/VST/VSTEffectOptionsDialog.cpp
+         effects/VST/VSTEffectOptionsDialog.h
       >
 
       $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
@@ -1483,6 +1486,7 @@ set( AUDACITY_LIBRARIES
    lib-note-track-interface
    lib-ladspa-interface
    lib-lv2-interface
+   lib-vst-interface
 )
 
 if (${_OPT}use_ffmpeg)

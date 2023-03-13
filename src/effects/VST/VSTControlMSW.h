@@ -21,7 +21,7 @@ public:
    VSTControl();
    ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTEffectLink *link);
+   bool Create(wxWindow *parent, VSTLink *link);
 
 private:
    HANDLE mHwnd;
