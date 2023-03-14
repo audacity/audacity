@@ -21,10 +21,6 @@
 #include "Mix.h"
 #include "MixAndRender.h"
 #include "Project.h"
-#include "ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../TagsEditor.h"
-#include "Theme.h"
 #include "WaveTrack.h"
 #include "FileNames.h"
 #include "ProgressDialog.h"
@@ -200,17 +196,6 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
 
 bool Exporter::Process()
 {
-   auto exportFormatInfo = mPlugins[mFormat]->GetFormatInfo(mSubFormat);
-
-   // Let user edit MetaData
-   if (exportFormatInfo.mCanMetaData) {
-      if (!TagsEditorDialog::DoEditMetadata( *mProject,
-         XO("Edit Metadata Tags"), XO("Exported Tags"),
-         ProjectSettings::Get( *mProject ).GetShowId3Dialog())) {
-         return false;
-      }
-   }
-
    // Ensure filename doesn't interfere with project files.
    FixFilename();
 
@@ -336,21 +321,6 @@ bool Exporter::ExportTracks(
    return success;
 }
 
-bool Exporter::ProcessFromTimerRecording()
-{
-   // Ensure filename doesn't interfere with project files.
-   FixFilename();
-
-   // Export the tracks
-   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
-   bool success = ExportTracks(pDialog);
-
-   // Get rid of mixerspec
-   mMixerSpec.reset();
-
-   return success;
-}
-
 int Exporter::GetAutoExportFormat() {
    return mFormat;
 }
@@ -361,20 +331,6 @@ int Exporter::GetAutoExportSubFormat() {
 
 wxFileName Exporter::GetAutoExportFileName() {
    return mFilename;
-}
-
-bool Exporter::SetAutoExportOptions() {
-   // Let user edit MetaData
-   if (mPlugins[mFormat]->GetFormatInfo(mSubFormat).mCanMetaData) {
-      if (!TagsEditorDialog::DoEditMetadata( *mProject,
-         XO("Edit Metadata Tags"),
-         XO("Exported Tags"),
-         ProjectSettings::Get(*mProject).GetShowId3Dialog())) {
-         return false;
-      }
-   }
-
-   return true;
 }
 
 MixerOptions::Downmix* Exporter::CreateMixerSpec()
@@ -421,6 +377,11 @@ Exporter::DownMixMode Exporter::SetUseStereoOrMonoOutput()
       return mChannels == 1 ? DownMixMode::Mono : DownMixMode::Stereo;
    
    return DownMixMode::None;
+}
+
+bool Exporter::CanMetaData() const
+{
+   return mPlugins[mFormat]->GetFormatInfo(mSubFormat).mCanMetaData;
 }
 
 TranslatableString AudacityExportCaptionStr()

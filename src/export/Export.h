@@ -70,6 +70,8 @@ public:
    
    DownMixMode SetUseStereoOrMonoOutput();
    
+   bool CanMetaData() const;
+   
    bool Process();
    bool Process(unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
@@ -81,11 +83,7 @@ public:
       std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
 
    const ExportPluginArray &GetPlugins();
-
-   // Auto Export from Timer Recording
-   bool ProcessFromTimerRecording();
    
-   bool SetAutoExportOptions();
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
    wxFileName GetAutoExportFileName();
