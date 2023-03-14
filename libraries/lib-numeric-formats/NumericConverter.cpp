@@ -527,9 +527,9 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
 // ----------------------------------------------------------------------------
 //
 NumericFormatSymbol NumericConverter::DefaultSelectionFormat()
-{ return TimeConverterFormats_[4].name; }
-NumericFormatSymbol NumericConverter::TimeAndSampleFormat()
 { return TimeConverterFormats_[5].name; }
+NumericFormatSymbol NumericConverter::TimeAndSampleFormat()
+{ return TimeConverterFormats_[6].name; }
 NumericFormatSymbol NumericConverter::SecondsFormat()
 { return TimeConverterFormats_[0].name; }
 NumericFormatSymbol NumericConverter::HoursMinsSecondsFormat()
@@ -574,7 +574,7 @@ NumericConverter::NumericConverter(Type type,
    mType = type;
 
    if (type == NumericConverter::TIME )
-      mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
+      mDefaultNdx = 5; // Default to "hh:mm:ss + milliseconds".
 
    mScalingFactor = 1.0f;
    mSampleRate = 1.0f;
