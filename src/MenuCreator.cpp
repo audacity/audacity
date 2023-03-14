@@ -264,7 +264,8 @@ void MenuCreator::UpdateMenus( bool checkActive )
 {
    auto &project = mProject;
 
-   auto flags = GetUpdateFlags(checkActive);
+   bool quick = checkActive && !GetProjectFrame(mProject).IsActive();
+   auto flags = GetUpdateFlags(quick);
    // Return from this function if nothing's changed since
    // the last time we were here.
    if (flags == mLastFlags)

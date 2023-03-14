@@ -87,7 +87,6 @@ CommandManager.  It holds the callback for one command.
 
 #include "BasicUI.h"
 #include "Project.h"
-#include "ProjectWindows.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 
@@ -1516,7 +1515,7 @@ TranslatableString CommandManager::ReportDuplicateShortcuts()
    return disabledShortcuts;
 }
 
-CommandFlag CommandManager::GetUpdateFlags( bool checkActive ) const
+CommandFlag CommandManager::GetUpdateFlags(bool quick) const
 {
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,
@@ -1539,7 +1538,7 @@ CommandFlag CommandManager::GetUpdateFlags( bool checkActive ) const
       ++ii;
    }
 
-   if ( checkActive && !GetProjectFrame( mProject ).IsActive() )
+   if (quick)
       // quick 'short-circuit' return.
       flags = (lastFlags & ~quickFlags) | flags;
    else {

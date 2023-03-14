@@ -78,9 +78,8 @@ public:
    CommandManager &operator=(const CommandManager &) = delete;
    ~CommandManager() override;
 
-   // If checkActive, do not do complete flags testing on an
-   // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
+   // If quick, skip some needlessly expensive checks.
+   CommandFlag GetUpdateFlags(bool quick = false) const;
    void UpdatePrefs() override;
 
    // Command Handling
