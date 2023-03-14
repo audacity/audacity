@@ -10,8 +10,9 @@
 #ifndef __AUDACITY_MENUS__
 #define __AUDACITY_MENUS__
 
+#include "Callable.h"
+#include "GlobalVariable.h"
 #include "Identifier.h"
-
 #include "Prefs.h"
 #include "ClientData.h"
 #include "commands/CommandFlag.h"
@@ -48,6 +49,9 @@ class AUDACITY_DLL_API MenuManager
    , private PrefsListener
 {
 public:
+   struct Factory : DefaultedGlobalHook<Factory,
+      Callable::SharedPtrFactory<MenuManager, AudacityProject &>::Function
+   >{};
 
    static MenuManager &Get( AudacityProject &project );
    static const MenuManager &Get( const AudacityProject &project );

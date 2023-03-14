@@ -56,8 +56,9 @@ MenuCreator::MenuCreator(AudacityProject &project)
 MenuCreator::~MenuCreator() = default;
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  [](AudacityProject &project){
-     return std::make_shared<MenuCreator>(project); }
+   [](AudacityProject &project){
+      return MenuManager::Factory::Call(project);
+   }
 };
 
 MenuManager &MenuManager::Get( AudacityProject &project )
@@ -755,3 +756,5 @@ void MenuCreator::RemoveDuplicateShortcuts()
       RebuildAllMenuBars();
    }
 }
+
+static MenuManager::Factory::SubstituteInShared<MenuCreator> scope;
