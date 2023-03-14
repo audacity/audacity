@@ -126,6 +126,8 @@ public:
    // get multiple effect preview working
    void UpdateMenus( bool checkActive = true );
 
+   void RemoveDuplicateShortcuts();
+
 private:
    void OnUndoRedo(struct UndoRedoMessage);
    Observer::Subscription mUndoSubscription;

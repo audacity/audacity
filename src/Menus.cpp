@@ -739,3 +739,19 @@ void MenuManager::TellUserWhyDisallowed(
       reason,
       helpPage);
 }
+
+void MenuCreator::RemoveDuplicateShortcuts()
+{
+   const auto disabledShortcuts =
+      CommandManager::Get(mProject).ReportDuplicateShortcuts();
+   if (!disabledShortcuts.Translation().empty()) {
+      TranslatableString message = XO("The following commands have had their shortcuts removed,"
+      " because their default shortcut is new or changed, and is the same shortcut"
+      " that you have assigned to another command.")
+         + disabledShortcuts;
+      AudacityMessageBox(message, XO("Shortcuts have been removed"), wxOK | wxCENTRE);
+
+      gPrefs->Flush();
+      RebuildAllMenuBars();
+   }
+}

@@ -266,7 +266,8 @@ class AUDACITY_DLL_API CommandManager final
 #if defined(_DEBUG)
    void CheckDups();
 #endif
-   void RemoveDuplicateShortcuts();
+   // May have side-effect on the config file
+   TranslatableString ReportDuplicateShortcuts();
 
    //
    // Loading/Saving

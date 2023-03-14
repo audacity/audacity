@@ -1683,7 +1683,7 @@ void CommandManager::CheckDups()
 // because the defaults appear as user assigned shortcuts in audacity.cfg,
 // the previous default overrides the changed default, and no duplicate can
 // be introduced.
-void CommandManager::RemoveDuplicateShortcuts()
+TranslatableString CommandManager::ReportDuplicateShortcuts()
 {
    TranslatableString disabledShortcuts;
 
@@ -1704,16 +1704,7 @@ void CommandManager::RemoveDuplicateShortcuts()
       }
    }
 
-   if (!disabledShortcuts.Translation().empty()) {
-      TranslatableString message = XO("The following commands have had their shortcuts removed,"
-      " because their default shortcut is new or changed, and is the same shortcut"
-      " that you have assigned to another command.")
-         + disabledShortcuts;
-      AudacityMessageBox(message, XO("Shortcuts have been removed"), wxOK | wxCENTRE);
-
-      gPrefs->Flush();
-      MenuCreator::RebuildAllMenuBars();
-   }
+   return disabledShortcuts;
 }
 
 #include "../KeyboardCapture.h"

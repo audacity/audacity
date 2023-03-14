@@ -1617,7 +1617,7 @@ bool AudacityApp::InitPart2()
       GetPreferencesVersion(vMajorInit, vMinorInit, vMicroInit);
       if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
          || vMicroInit != AUDACITY_REVISION) {
-         CommandManager::Get(*project).RemoveDuplicateShortcuts();
+         MenuCreator::Get(*project).RemoveDuplicateShortcuts();
       }
       //
       // Auto-recovery
