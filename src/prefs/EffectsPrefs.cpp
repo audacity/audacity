@@ -26,7 +26,7 @@
 
 #include "PluginManager.h"
 #include "PluginRegistrationDialog.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
 

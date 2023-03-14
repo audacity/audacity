@@ -14,11 +14,7 @@
 It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
-
-
 #include "AudacityApp.h"
-
-
 
 #if 0
 // This may be used to debug memory leaks.
@@ -81,7 +77,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/ASlider.h"
 #include "Journal.h"
 #include "Languages.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "PathList.h"
 #include "PluginManager.h"
 #include "Project.h"

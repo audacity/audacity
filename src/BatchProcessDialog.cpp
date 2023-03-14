@@ -13,8 +13,6 @@
 \brief Shows progress in executing commands in MacroCommands.
 
 *//*******************************************************************/
-
-
 #include "BatchProcessDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -37,7 +35,7 @@
 
 #include "Clipboard.h"
 #include "ShuttleGui.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
@@ -1396,6 +1394,8 @@ AttachedWindows::RegisteredFactory sMacrosWindowKey{
       );
    }
 };
+
+using MacroID = wxString;
 
 void OnApplyMacroDirectlyByName(
    const CommandContext& context, const MacroID& Name);

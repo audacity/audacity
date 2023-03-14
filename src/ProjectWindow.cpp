@@ -7,15 +7,12 @@ ProjectWindow.cpp
 Paul Licameli split from AudacityProject.cpp
 
 **********************************************************************/
-
 #include "ProjectWindow.h"
-
-
 
 #include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"

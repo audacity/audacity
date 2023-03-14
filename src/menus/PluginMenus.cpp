@@ -3,7 +3,7 @@
 #include "../commands/CommandDispatch.h"
 #include "../CommonCommandFlags.h"
 #include "Journal.h"
-#include "../Menus.h"
+#include "../MenuCreator.h"
 #include "PluginManager.h"
 #include "../PluginRegistrationDialog.h"
 #include "Prefs.h"

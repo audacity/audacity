@@ -7,17 +7,14 @@ ProjectManager.cpp
 Paul Licameli split from AudacityProject.cpp
 
 **********************************************************************/
-
 #include "ProjectManager.h"
-
-
 
 #include "ActiveProject.h"
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
 #include "FileNames.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "ModuleManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"

@@ -132,6 +132,8 @@ list( APPEND SOURCES
       Lyrics.h
       LyricsWindow.cpp
       LyricsWindow.h
+      MenuCreator.cpp
+      MenuCreator.h
       Menus.cpp
       Menus.h
       MIDIPlay.cpp

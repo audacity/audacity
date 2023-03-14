@@ -96,7 +96,7 @@ private:
 #include "../../images/Effect.h"
 #include "AudioIO.h"
 #include "../CommonCommandFlags.h"
-#include "../Menus.h"
+#include "../MenuCreator.h"
 #include "../prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "../ProjectAudioManager.h"

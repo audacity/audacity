@@ -13,8 +13,6 @@
 \brief Dialog that shows the current PrefsPanel in a tabbed divider.
 
 *//*******************************************************************/
-
-
 #include "PrefsDialog.h"
 
 #include <thread>
@@ -856,7 +854,7 @@ void PrefsDialog::RecordExpansionState()
 }
 
 #include <wx/frame.h>
-#include "../Menus.h"
+#include "../MenuCreator.h"
 #include "Project.h"
 
 void DoReloadPreferences( AudacityProject &project )

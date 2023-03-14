@@ -14,9 +14,7 @@
 processing.  See also MacrosWindow and ApplyMacroDialog.
 
 *//*******************************************************************/
-
 #define wxLOG_COMPONENT "MacroCommands"
-
 
 #include "BatchCommands.h"
 
@@ -35,7 +33,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "FileNames.h"
-#include "Menus.h"
+#include "MenuCreator.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "SelectFile.h"

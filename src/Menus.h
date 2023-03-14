@@ -12,26 +12,14 @@
 
 #include "Callable.h"
 #include "GlobalVariable.h"
-#include "Identifier.h"
+
 #include "Prefs.h"
 #include "ClientData.h"
 #include "commands/CommandFlag.h"
+
 #include "Observer.h"
 
-class wxArrayString;
-class wxCommandEvent;
 class AudacityProject;
-class CommandContext;
-class CommandManager;
-class Track;
-class TrackList;
-class ViewInfo;
-
-enum EffectType : int;
-
-typedef wxString PluginID;
-typedef wxString MacroID;
-typedef wxArrayString PluginIDs;
 
 namespace MenuTable {
    struct Traits;
@@ -62,8 +50,8 @@ public:
    MenuManager &operator=( const MenuManager & ) = delete;
    ~MenuManager() override;
 
-   static void Visit(
-      MenuTable::Visitor<MenuTable::Traits> &visitor, AudacityProject &project);
+   static void Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
+      AudacityProject &project);
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
@@ -111,30 +99,4 @@ public:
    int  mWhatIfNoSelection;
    bool mStopIfWasPaused;
 };
-
-class AUDACITY_DLL_API MenuCreator final : public MenuManager
-{
-public:
-   static MenuCreator &Get(AudacityProject &project);
-   static const MenuCreator &Get(const AudacityProject &project);
-
-   MenuCreator(AudacityProject &project);
-   ~MenuCreator() override;
-   void CreateMenusAndCommands();
-   void RebuildMenuBar();
-   static void RebuildAllMenuBars();
-
-   void ModifyUndoMenuItems();
-
-   // checkActive is a temporary hack that should be removed as soon as we
-   // get multiple effect preview working
-   void UpdateMenus( bool checkActive = true );
-
-   void RemoveDuplicateShortcuts();
-
-private:
-   void OnUndoRedo(struct UndoRedoMessage);
-   Observer::Subscription mUndoSubscription;
-};
-
 #endif

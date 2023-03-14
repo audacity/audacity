@@ -924,7 +924,7 @@ static const WaveChannelSubViews::RegisteredFactory key{
 // source file with the rest of the spectrum view implementation.
 #include "WaveTrackControls.h"
 #include "AudioIOBase.h"
-#include "../../../../Menus.h"
+#include "../../../../MenuCreator.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/PrefsDialog.h"
