@@ -35,7 +35,7 @@
 #include "tracks/ui/ChannelView.h"
 
 #include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "Project.h"
 #include "TrackPanel.h"

@@ -17,7 +17,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "TrackPanelAx.h"
 #include "WaveTrack.h"
 #include "../../../../commands/CommandContext.h"
-#include "../../../../commands/CommandManager.h"
+#include "../../../../MenuRegistry.h"
 #include "QualitySettings.h"
 
 namespace {

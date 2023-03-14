@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "EffectInterface.h"
 
 class PluginDescriptor;

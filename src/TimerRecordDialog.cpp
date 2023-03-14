@@ -1171,7 +1171,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 // Register a menu item
 
 #include "commands/CommandContext.h"
-#include "commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "Project.h"
 #include "ProjectHistory.h"

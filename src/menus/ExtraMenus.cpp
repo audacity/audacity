@@ -3,7 +3,6 @@
 #include "Project.h"
 #include "ProjectWindows.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
 #include "../toolbars/ToolManager.h"
 
 #include <wx/frame.h>

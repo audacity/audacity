@@ -18,7 +18,7 @@
 #include "HelpCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "SettingsVisitor.h"
 #include "LoadCommands.h"

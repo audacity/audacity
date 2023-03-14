@@ -12,7 +12,6 @@
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
 #include "../toolbars/ToolManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"

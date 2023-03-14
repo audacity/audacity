@@ -130,7 +130,7 @@ void LinkAccountDialog::OnTextChanged()
 
 // Remaining code hooks this add-on into the application
 #include "../../commands/CommandContext.h"
-#include "../../commands/CommandManager.h"
+#include "MenuRegistry.h"
 
 namespace {
 // Define our extra menu item

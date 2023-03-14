@@ -17,7 +17,7 @@
 #include "../../../../commands/CommandContext.h"
 #include "../../../../commands/CommandFlag.h"
 #include "../../../../commands/CommandFunctors.h"
-#include "../../../../commands/CommandManager.h"
+#include "../../../../MenuRegistry.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"

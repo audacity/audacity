@@ -18,7 +18,7 @@ Paul Licameli split from TrackMenus.cpp
 
 #include "AudioIOBase.h"
 #include "../../../../commands/CommandContext.h"
-#include "../../../../commands/CommandManager.h"
+#include "../../../../MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "HelpUtilities.h"
 #include "NoteTrack.h"

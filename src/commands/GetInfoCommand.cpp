@@ -24,7 +24,6 @@ This class now lists
 #include "GetInfoCommand.h"
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "Project.h"

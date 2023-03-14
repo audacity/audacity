@@ -26,7 +26,6 @@
 #include "ToolDock.h"
 
 #include "../commands/CommandFunctors.h"
-#include "../commands/CommandManager.h"
 
 
 class wxCommandEvent;
@@ -241,7 +240,7 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
-
+#include "MenuRegistry.h"
 
 // Construct a static instance of this class to add a menu item that shows and
 // hides a toolbar

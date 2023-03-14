@@ -24,7 +24,7 @@
 #include "SyncLock.h"
 #include "Theme.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "../MenuRegistry.h"
 #include "../prefs/PrefsDialog.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
@@ -359,7 +359,7 @@ void OnMenuTree(const CommandContext &context)
          Return();
       }
    };
-   CommandManager::Visit(visitor, project);
+   MenuRegistry::Visit(visitor, project);
 
    ShowDiagnostics( project, info,
       Verbatim("Menu Tree"), wxT("menutree.txt"), true );

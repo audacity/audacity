@@ -8,7 +8,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "../tracks/ui/TimeShiftHandle.h"
 
 #include <cassert>

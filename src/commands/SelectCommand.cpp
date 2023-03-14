@@ -35,7 +35,7 @@ explicitly code all three.
 #include <float.h>
 
 #include "CommandDispatch.h"
-#include "CommandManager.h"
+#include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "EffectOutputTracks.h"
 #include "LoadCommands.h"

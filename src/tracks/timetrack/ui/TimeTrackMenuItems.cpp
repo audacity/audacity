@@ -16,7 +16,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "TimeTrack.h"
 #include "TrackPanelAx.h"
 #include "../../../commands/CommandContext.h"
-#include "../../../commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "AudacityMessageBox.h"
 
 namespace {

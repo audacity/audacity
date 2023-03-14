@@ -19,6 +19,7 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "AudioIO.h"
 #include "BasicUI.h"
+#include "commands/CommandManager.h"
 #include "CommonCommandFlags.h"
 #include "DefaultPlaybackPolicy.h"
 #include "Meter.h"

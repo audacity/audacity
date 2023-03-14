@@ -2,18 +2,19 @@
 
   Audacity: A Digital Audio Editor
 
-  Menus.cpp
+  MenuRegistry.cpp
+
+  (formerly Menus.cpp)
 
   Dominic Mazzoni
   Brian Gunlogson
   et al.
 
 *//*******************************************************************/
-#include "Menus.h"
+#include "MenuRegistry.h"
 #include <wx/frame.h>
 #include "Project.h"
 #include "ProjectWindows.h"
-#include "commands/CommandManager.h"
 #include "BasicUI.h"
 #include <wx/log.h>
 
@@ -183,8 +184,7 @@ auto MenuRegistry::ItemRegistry::Registry() -> Registry::GroupItem<Traits> &
    return registry;
 }
 
-void CommandManager::Visit(MenuRegistry::Visitor<MenuRegistry::Traits> &visitor,
-   AudacityProject &project)
+void MenuRegistry::Visit(Visitor<Traits> &visitor, AudacityProject &project)
 {
    // Once only, cause initial population of preferences for the ordering
    // of some menu items that used to be given in tables but are now separately

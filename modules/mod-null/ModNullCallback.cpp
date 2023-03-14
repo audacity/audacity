@@ -30,7 +30,7 @@ click from the menu into the actual function to be called.
 #include "ModuleConstants.h"
 #include "ShuttleGui.h"
 #include "Project.h"
-#include "commands/CommandManager.h"
+#include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 
 /*

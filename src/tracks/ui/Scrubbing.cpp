@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <functional>
 
 #include "AudioIO.h"
+#include "commands/CommandManager.h"
 #include "../../CommonCommandFlags.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"

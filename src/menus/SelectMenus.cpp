@@ -20,7 +20,7 @@
 #include "WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "../MenuRegistry.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"

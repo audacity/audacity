@@ -151,7 +151,7 @@ void MenuCreator::CreateMenusAndCommands()
    wxASSERT(menubar);
 
    MenuItemVisitor visitor{ project, *this };
-   Visit(visitor, project);
+   MenuRegistry::Visit(visitor, project);
 
    GetProjectFrame( project ).SetMenuBar(menubar.release());
 
