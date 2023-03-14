@@ -46,17 +46,18 @@
 #include <wx/windowptr.h>
 #include <wx/log.h>
 
-MenuCreator::MenuCreator()
+MenuCreator::MenuCreator(AudacityProject &project)
+   : MenuManager{ project }
 {
+   mUndoSubscription = UndoManager::Get(project)
+      .Subscribe(*this, &MenuCreator::OnUndoRedo);
 }
 
-MenuCreator::~MenuCreator()
-{
-}
+MenuCreator::~MenuCreator() = default;
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  []( AudacityProject &project ){
-     return std::make_shared< MenuManager >( project ); }
+  [](AudacityProject &project){
+     return std::make_shared<MenuCreator>(project); }
 };
 
 MenuManager &MenuManager::Get( AudacityProject &project )
@@ -69,12 +70,20 @@ const MenuManager &MenuManager::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
+MenuCreator &MenuCreator::Get(AudacityProject &project)
+{
+   return static_cast<MenuCreator&>(MenuManager::Get(project));
+}
+
+const MenuCreator &MenuCreator::Get(const AudacityProject &project)
+{
+   return static_cast<const MenuCreator&>(MenuManager::Get(project));
+}
+
 MenuManager::MenuManager( AudacityProject &project )
    : mProject{ project }
 {
    UpdatePrefs();
-   mUndoSubscription = UndoManager::Get(project)
-      .Subscribe(*this, &MenuManager::OnUndoRedo);
 }
 
 MenuManager::~MenuManager()
@@ -348,8 +357,9 @@ struct MenuItemVisitor : Visitor<Traits> {
 };
 }
 
-void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
+void MenuCreator::CreateMenusAndCommands()
 {
+   auto &project = mProject;
    // Once only, cause initial population of preferences for the ordering
    // of some menu items that used to be given in tables but are now separately
    // registered in several .cpp files; the sequence of registration depends
@@ -401,7 +411,7 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
    wxASSERT(menubar);
 
    MenuItemVisitor visitor{ project, commandManager };
-   MenuManager::Visit(visitor, project);
+   Visit(visitor, project);
 
    GetProjectFrame( project ).SetMenuBar(menubar.release());
 
@@ -423,8 +433,9 @@ void MenuManager::Visit(
 }
 
 // TODO: This surely belongs in CommandManager?
-void MenuManager::ModifyUndoMenuItems(AudacityProject &project)
+void MenuCreator::ModifyUndoMenuItems()
 {
+   auto &project = mProject;
    TranslatableString desc;
    auto &undoManager = UndoManager::Get( project );
    auto &commandManager = CommandManager::Get( project );
@@ -465,8 +476,9 @@ public:
    using wxFrame::DetachMenuBar;
 };
 
-void MenuCreator::RebuildMenuBar(AudacityProject &project)
+void MenuCreator::RebuildMenuBar()
 {
+   auto &project = mProject;
    // On OSX, we can't rebuild the menus while a modal dialog is being shown
    // since the enabled state for menus like Quit and Preference gets out of
    // sync with wxWidgets idea of what it should be.
@@ -489,10 +501,10 @@ void MenuCreator::RebuildMenuBar(AudacityProject &project)
 
    CommandManager::Get( project ).PurgeData();
 
-   CreateMenusAndCommands(project);
+   CreateMenusAndCommands();
 }
 
-void MenuManager::OnUndoRedo(UndoRedoMessage message)
+void MenuCreator::OnUndoRedo(UndoRedoMessage message)
 {
    switch (message.type) {
    case UndoRedoMessage::UndoOrRedo:
@@ -503,7 +515,7 @@ void MenuManager::OnUndoRedo(UndoRedoMessage message)
    default:
       return;
    }
-   ModifyUndoMenuItems( mProject );
+   ModifyUndoMenuItems();
    UpdateMenus();
 }
 
@@ -549,7 +561,7 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
 
 // checkActive is a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void MenuManager::UpdateMenus( bool checkActive )
+void MenuCreator::UpdateMenus( bool checkActive )
 {
    auto &project = mProject;
 
@@ -596,7 +608,7 @@ void MenuManager::UpdateMenus( bool checkActive )
 void MenuCreator::RebuildAllMenuBars()
 {
    for( auto p : AllProjects{} ) {
-      MenuManager::Get(*p).RebuildMenuBar(*p);
+      Get(*p).RebuildMenuBar();
 #if defined(__WXGTK__)
       // Workaround for:
       //
@@ -618,7 +630,6 @@ bool MenuManager::ReportIfActionNotAllowed(
    bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
    if( bAllowed )
       return true;
-   auto &cm = CommandManager::Get( project );
    TellUserWhyDisallowed( Name, flags & flagsRqd, flagsRqd);
    return false;
 }

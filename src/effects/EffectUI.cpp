@@ -1195,7 +1195,7 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          // For now, we're limiting realtime preview to a single effect, so
          // make sure the menus reflect that fact that one may have just been
          // opened.
-         MenuManager::Get(project).UpdateMenus( false );
+         MenuCreator::Get(project).UpdateMenus( false );
       }
 
    } );
@@ -1287,13 +1287,13 @@ DialogFactoryResults EffectUI::DialogFactory(wxWindow &parent,
          case EffectTypeAnalyze:
             commandManager.Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
             menuManager.mLastAnalyzer = ID;
-            menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypeplugin;
+            menuManager.mLastAnalyzerRegistration = MenuManager::repeattypeplugin;
             menuManager.mRepeatAnalyzerFlags = EffectManager::kConfigured;
             break;
          case EffectTypeTool:
             commandManager.Modify(wxT("RepeatLastTool"), lastEffectDesc);
             menuManager.mLastTool = ID;
-            menuManager.mLastToolRegistration = MenuCreator::repeattypeplugin;
+            menuManager.mLastToolRegistration = MenuManager::repeattypeplugin;
             menuManager.mRepeatToolFlags = EffectManager::kConfigured;
             if (shortDesc == NYQUIST_PROMPT_NAME) {
                menuManager.mRepeatToolFlags = EffectManager::kRepeatNyquistPrompt;  //Nyquist Prompt is not configured

@@ -345,7 +345,7 @@ AudacityProject *ProjectManager::New()
    // There is a dependency on the order of initialisation.
    // The menus must be created, and registered, before
    // InitProjectWindows can UpdateMenus.
-   MenuManager::Get(project).CreateMenusAndCommands(project);
+   MenuCreator::Get(project).CreateMenusAndCommands();
 
    InitProjectWindow( window );
 

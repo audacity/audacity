@@ -772,7 +772,7 @@ void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
    auto p = &mProject;
-   MenuManager::Get(*p).RebuildMenuBar(*p);
+   MenuCreator::Get(*p).RebuildMenuBar();
 }
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )
@@ -1404,7 +1404,7 @@ void OnRepeatLastTool(const CommandContext& context)
 {
    auto& menuManager = MenuManager::Get(context.project);
    switch (menuManager.mLastToolRegistration) {
-     case MenuCreator::repeattypeplugin:
+     case MenuManager::repeattypeplugin:
      {
         auto lastEffect = menuManager.mLastTool;
         if (!lastEffect.empty())
@@ -1414,11 +1414,11 @@ void OnRepeatLastTool(const CommandContext& context)
         }
      }
        break;
-     case MenuCreator::repeattypeunique:
+     case MenuManager::repeattypeunique:
         CommandManager::Get(context.project).DoRepeatProcess(context,
            menuManager.mLastToolRegisteredId);
         break;
-     case MenuCreator::repeattypeapplymacro:
+     case MenuManager::repeattypeapplymacro:
         OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
         break;
    }
@@ -1477,7 +1477,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 #endif
    /* i18n-hint: %s will be the name of the macro which will be
     * repeated if this menu item is chosen */
-   MenuManager::ModifyUndoMenuItems( project );
+   MenuCreator::Get(project).ModifyUndoMenuItems();
 
    TranslatableString desc;
    EffectManager& em = EffectManager::Get();
@@ -1491,7 +1491,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
           .Format(desc));
        auto& menuManager = MenuManager::Get(project);
        menuManager.mLastTool = Name;
-       menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
+       menuManager.mLastToolRegistration = MenuManager::repeattypeapplymacro;
    }
 
 }
@@ -1514,7 +1514,7 @@ const ReservedCommandFlag&
    HasLastToolFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
       auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
+         if (menuManager.mLastToolRegistration == MenuManager::repeattypeunique) return true;
          return !menuManager.mLastTool.empty();
       }
    }; return flag;

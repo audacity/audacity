@@ -1290,7 +1290,7 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
    if (mLastProcessId != 0) {
       auto& menuManager = MenuManager::Get(context.project);
-      menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypeunique;
+      menuManager.mLastAnalyzerRegistration = MenuManager::repeattypeunique;
       menuManager.mLastAnalyzerRegisteredId = mLastProcessId;
       auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
       Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
@@ -1303,7 +1303,7 @@ void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
 void CommandManager::RegisterLastTool(const CommandContext& context) {
    if (mLastProcessId != 0) {
       auto& menuManager = MenuManager::Get(context.project);
-      menuManager.mLastToolRegistration = MenuCreator::repeattypeunique;
+      menuManager.mLastToolRegistration = MenuManager::repeattypeunique;
       menuManager.mLastToolRegisteredId = mLastProcessId;
       auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
       Modify(wxT("RepeatLastTool"), lastEffectDesc);

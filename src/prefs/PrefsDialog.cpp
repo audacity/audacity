@@ -875,7 +875,7 @@ void DoReloadPreferences( AudacityProject &project )
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
    for (auto p : AllProjects{}) {
-      MenuManager::Get(*p).RebuildMenuBar(*p);
+      MenuCreator::Get(*p).RebuildMenuBar();
 // TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:

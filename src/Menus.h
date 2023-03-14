@@ -37,17 +37,42 @@ namespace MenuTable {
    template<typename MenuTraits> struct Visitor;
 }
 
-class AUDACITY_DLL_API MenuCreator
+struct ProjectMenuVisitor;
+
+//! Sent when menus update (such as for changing enablement of items)
+struct MenuUpdateMessage {};
+
+class AUDACITY_DLL_API MenuManager
+   : public ClientData::Base
+   , public Observer::Publisher<MenuUpdateMessage>
+   , private PrefsListener
 {
 public:
-   MenuCreator();
-   ~MenuCreator();
-   void CreateMenusAndCommands(AudacityProject &project);
-   void RebuildMenuBar(AudacityProject &project);
 
-   static void RebuildAllMenuBars();
+   static MenuManager &Get( AudacityProject &project );
+   static const MenuManager &Get( const AudacityProject &project );
 
-public:
+   explicit
+   MenuManager( AudacityProject &project );
+   MenuManager( const MenuManager & ) = delete;
+   MenuManager &operator=( const MenuManager & ) = delete;
+   ~MenuManager() override;
+
+   static void Visit(
+      MenuTable::Visitor<MenuTable::Traits> &visitor, AudacityProject &project);
+
+   // If checkActive, do not do complete flags testing on an
+   // inactive project as it is needlessly expensive.
+   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
+   void UpdatePrefs() override;
+
+   // Command Handling
+   bool ReportIfActionNotAllowed(
+      const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd );
+   bool TryToMakeActionAllowed(
+      CommandFlag & flags, CommandFlag flagsRqd );
+
+
    CommandFlag mLastFlags = AlwaysEnabledFlag;
    
    // Last effect applied to this project
@@ -69,62 +94,41 @@ public:
    unsigned mRepeatEffectFlags = 0;
    unsigned mRepeatAnalyzerFlags = 0;
    unsigned mRepeatToolFlags = 0;
-};
-
-//! Sent when menus update (such as for changing enablement of items)
-struct MenuUpdateMessage {};
-
-class AUDACITY_DLL_API MenuManager final
-   : public MenuCreator
-   , public ClientData::Base
-   , public Observer::Publisher<MenuUpdateMessage>
-   , private PrefsListener
-{
-public:
-
-   static MenuManager &Get( AudacityProject &project );
-   static const MenuManager &Get( const AudacityProject &project );
-
-   explicit
-   MenuManager( AudacityProject &project );
-   MenuManager( const MenuManager & ) = delete;
-   MenuManager &operator=( const MenuManager & ) = delete;
-   ~MenuManager();
-
-   static void Visit(
-      MenuTable::Visitor<MenuTable::Traits> &visitor, AudacityProject &project);
-
-   static void ModifyUndoMenuItems(AudacityProject &project);
-
-   // checkActive is a temporary hack that should be removed as soon as we
-   // get multiple effect preview working
-   void UpdateMenus( bool checkActive = true );
-
-   // If checkActive, do not do complete flags testing on an
-   // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
-   void UpdatePrefs() override;
-
-   // Command Handling
-   bool ReportIfActionNotAllowed(
-      const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd );
-   bool TryToMakeActionAllowed(
-      CommandFlag & flags, CommandFlag flagsRqd );
-
 
 private:
    void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
       CommandFlag flagsRequired);
 
-   void OnUndoRedo(struct UndoRedoMessage);
-
-   Observer::Subscription mUndoSubscription;
+protected:
    AudacityProject &mProject;
 
 public:
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
    int  mWhatIfNoSelection;
    bool mStopIfWasPaused;
+};
+
+class AUDACITY_DLL_API MenuCreator final : public MenuManager
+{
+public:
+   static MenuCreator &Get(AudacityProject &project);
+   static const MenuCreator &Get(const AudacityProject &project);
+
+   MenuCreator(AudacityProject &project);
+   ~MenuCreator() override;
+   void CreateMenusAndCommands();
+   void RebuildMenuBar();
+   static void RebuildAllMenuBars();
+
+   void ModifyUndoMenuItems();
+
+   // checkActive is a temporary hack that should be removed as soon as we
+   // get multiple effect preview working
+   void UpdateMenus( bool checkActive = true );
+
+private:
+   void OnUndoRedo(struct UndoRedoMessage);
+   Observer::Subscription mUndoSubscription;
 };
 
 #endif

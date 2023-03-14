@@ -72,8 +72,8 @@ void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
    auto &menuManager = MenuManager::Get(project);
-   menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypenone;
-   menuManager.mLastToolRegistration = MenuCreator::repeattypenone;
+   menuManager.mLastAnalyzerRegistration = MenuManager::repeattypenone;
+   menuManager.mLastToolRegistration = MenuManager::repeattypenone;
    menuManager.mLastGenerator = "";
    menuManager.mLastEffect = "";
    menuManager.mLastAnalyzer = "";
@@ -173,7 +173,7 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
 {
    auto& menuManager = MenuManager::Get(context.project);
    switch (menuManager.mLastAnalyzerRegistration) {
-   case MenuCreator::repeattypeplugin:
+   case MenuManager::repeattypeplugin:
      {
        auto lastEffect = menuManager.mLastAnalyzer;
        if (!lastEffect.empty())
@@ -183,7 +183,7 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
        }
      }
       break;
-   case MenuCreator::repeattypeunique:
+   case MenuManager::repeattypeunique:
       CommandManager::Get(context.project).DoRepeatProcess(context,
          menuManager.mLastAnalyzerRegisteredId);
       break;
@@ -403,7 +403,7 @@ AttachedItem sAttachment2{ Indirect(EffectMenu()) };
 const ReservedCommandFlag&
    HasLastAnalyzerFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
-         if (MenuManager::Get(project).mLastAnalyzerRegistration == MenuCreator::repeattypeunique) return true;
+         if (MenuManager::Get(project).mLastAnalyzerRegistration == MenuManager::repeattypeunique) return true;
          return !MenuManager::Get(project).mLastAnalyzer.empty();
       }
    }; return flag;

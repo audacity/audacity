@@ -54,7 +54,7 @@ auto ExtraMiscItems()
    static auto items = std::shared_ptr{
    Items( wxT("Misc"),
       // Delayed evaluation
-      []( AudacityProject &project ) {
+      [](AudacityProject &) {
 
    static const auto key =
 #ifdef __WXMAC__

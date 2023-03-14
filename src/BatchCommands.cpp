@@ -587,7 +587,7 @@ bool MacroCommands::ApplyCommandInBatchMode(
    AudacityProject *project = &mProject;
    auto &settings = ProjectSettings::Get( *project );
    // Recalc flags and enable items that may have become enabled.
-   MenuManager::Get(*project).UpdateMenus(false);
+   MenuCreator::Get(*project).UpdateMenus(false);
    // enter batch mode...
    project->mBatchMode++;
    auto cleanup = finally( [&] {
