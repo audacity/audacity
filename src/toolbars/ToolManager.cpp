@@ -1558,6 +1558,8 @@ void ToolManager::ModifyToolbarMenus(AudacityProject &project)
    CommandManager::Get(project).UpdateCheckmarks();
 }
 
+using namespace MenuTable;
+
 AttachedToolBarMenuItem::AttachedToolBarMenuItem(
    Identifier id, const CommandID &name, const TranslatableString &label_in,
    const Registry::OrderingHint &hint,
@@ -1570,7 +1572,7 @@ AttachedToolBarMenuItem::AttachedToolBarMenuItem(
          MenuTable::Command( name, label_in,
             &AttachedToolBarMenuItem::OnShowToolBar,
             AlwaysEnabledFlag,
-            CommandManager::Options{}.CheckTest( [id](AudacityProject &project){
+            Options{}.CheckTest( [id](AudacityProject &project){
                auto &toolManager = ToolManager::Get( project );
                return toolManager.IsVisible( id ); } ) ) ),
       Registry::Placement{ wxT("View/Other/Toolbars/Toolbars/Other"), hint }

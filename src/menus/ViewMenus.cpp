@@ -401,7 +401,6 @@ namespace {
 using namespace MenuTable;
 auto ViewMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("View"), XXO("&View"),

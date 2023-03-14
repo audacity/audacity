@@ -752,8 +752,6 @@ using namespace MenuTable;
 
 auto ClipSelectMenu()
 {
-   using Options = CommandManager::Options;
-
    static auto menu = std::shared_ptr{
    Menu( wxT("Clip"), XXO("Audi&o Clips"),
       Command( wxT("SelPrevClipBoundaryToCursor"),
@@ -778,7 +776,6 @@ AttachedItem sAttachment1{ Indirect(ClipSelectMenu()), wxT("Select/Basic") };
 
 auto ClipCursorItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    Items( wxT("Clip"),
       Command( wxT("CursPrevClipBoundary"), XXO("Pre&vious Clip Boundary"),
@@ -800,7 +797,6 @@ AttachedItem sAttachment2{ Indirect(ClipCursorItems()),
 
 auto ExtraTimeShiftItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    Items( wxT("TimeShift"),
       Command( wxT("ClipLeft"), XXO("Time Shift &Left"), OnClipLeft,

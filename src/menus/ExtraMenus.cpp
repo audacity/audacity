@@ -47,8 +47,6 @@ AttachedItem sAttachment1{ Indirect(ExtraMenu()) };
 // Under /MenuBar/Optional/Extra/Part2
 auto ExtraMiscItems()
 {
-   using Options = CommandManager::Options;
-
    // Not a menu.
    static auto items = std::shared_ptr{
    Items( wxT("Misc"),

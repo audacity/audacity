@@ -127,7 +127,7 @@ CommandItem::CommandItem(const CommandID &name_,
          const TranslatableString &label_in_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
-         const CommandManager::Options &options_,
+         const Options &options_,
          CommandHandlerFinder finder_)
 : SingleItem{ name_ }, label_in{ label_in_ }
 , finder{ finder_ }, callback{ callback_ }

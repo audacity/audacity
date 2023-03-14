@@ -488,7 +488,7 @@ MenuTable::AttachedItem sAttachment{
       XXO("Spectra&l Selection Panel"),
       OnSpectralEditingPanel,
       AlwaysEnabledFlag,
-      CommandManager::Options{}
+      Options{}
          .CheckTest( [](AudacityProject &project) {
             // Find not Get to avoid creating the dialog if not yet done
             auto pDialog = SpectralDataDialog::Find(&project);

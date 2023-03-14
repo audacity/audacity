@@ -170,7 +170,7 @@ void AddEffectMenuItemGroup(
                   Verbatim( plug->GetPath() ),
                   onMenuCommand,
                   flags[i],
-                  CommandManager::Options{}
+                  Options{}
                      .IsEffect()
                      .AllowInMacros()
                      .Parameter( plugs[i] ) ) );
@@ -191,7 +191,7 @@ void AddEffectMenuItemGroup(
                names[i],
                onMenuCommand,
                flags[i],
-               CommandManager::Options{}
+               Options{}
                   .IsEffect()
                   .AllowInMacros()
                   .Parameter( plugs[i] ) ) );

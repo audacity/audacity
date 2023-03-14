@@ -2916,7 +2916,6 @@ void OnTogglePinnedHead(const CommandContext &context)
 }
 
 using namespace MenuTable;
-using Options = CommandManager::Options;
 AttachedItem sAttachment{
    Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
       OnTogglePinnedHead,

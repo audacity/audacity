@@ -1135,7 +1135,6 @@ static const auto finder =
 using namespace MenuTable;
 auto ToolbarMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = []{
       FinderScope scope{ finder };
       auto menu = std::shared_ptr{ Menu("Scrubbing", XXO("Scru&bbing")) };
@@ -1160,7 +1159,6 @@ AttachedItem sAttachment{ Indirect(ToolbarMenu()), wxT("Transport/Basic") };
 
 auto KeyboardScrubbingItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    ( FinderScope{ finder },
    Items( wxT("KeyboardScrubbing"),

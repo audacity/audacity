@@ -273,7 +273,6 @@ auto GenerateMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Generate"), XXO("&Generate"),
       Section( "Manage",
@@ -416,7 +415,6 @@ auto AnalyzeMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Analyze"), XXO("&Analyze"),
       Section( "Manage",
@@ -468,7 +466,6 @@ AttachedItem sAttachment3{ Indirect(AnalyzeMenu()) };
 
 auto ToolsMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",

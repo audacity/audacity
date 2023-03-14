@@ -735,7 +735,6 @@ void OnStopSelect(const CommandContext &context)
 using namespace MenuTable;
 auto TransportMenu()
 {
-   using Options = CommandManager::Options;
    static const auto CanStopFlags =
       AudioIONotBusyFlag() | CanStopAudioStreamFlag();
    static auto menu = std::shared_ptr{
@@ -914,7 +913,6 @@ AttachedItem sAttachment2{ Indirect(ExtraTransportMenu()),
 
 auto ExtraSelectionItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    Items(wxT("MoveToLabel"),
       Command(wxT("MoveToPrevLabel"), XXO("Move to Pre&vious Label"),

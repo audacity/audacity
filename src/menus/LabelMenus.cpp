@@ -687,7 +687,6 @@ using namespace MenuTable;
 auto LabelEditMenus()
 {
    using namespace MenuTable;
-   using Options = CommandManager::Options;
 
    static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag() |

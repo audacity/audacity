@@ -27,6 +27,7 @@
 #include "Project.h"
 #include "Registry.h"
 
+#include <functional>
 #include <vector>
 
 #include "XMLTagHandler.h"
@@ -61,6 +62,79 @@ class CommandContext;
 namespace MenuTable {
    struct Traits;
    template<typename MenuTraits> struct Visitor;
+
+   // type of a function that determines checkmark state
+   using CheckFn = std::function< bool(AudacityProject&) >;
+
+   struct AUDACITY_DLL_API Options
+   {
+      Options() {}
+      // Allow implicit construction from an accelerator string, which is
+      // a very common case
+      Options( const wxChar *accel_ ) : accel{ accel_ } {}
+      // A two-argument constructor for another common case
+      Options(
+         const wxChar *accel_,
+         const TranslatableString &longName_ )
+      : accel{ accel_ }, longName{ longName_ } {}
+
+      Options &&Accel (const wxChar *value) &&
+         { accel = value; return std::move(*this); }
+      Options &&IsEffect (bool value = true) &&
+         { bIsEffect = value; return std::move(*this); }
+      Options &&Parameter (const CommandParameter &value) &&
+         { parameter = value; return std::move(*this); }
+      Options &&LongName (const TranslatableString &value ) &&
+         { longName = value; return std::move(*this); }
+      Options &&IsGlobal () &&
+         { global = true; return std::move(*this); }
+      Options &&UseStrictFlags () &&
+         { useStrictFlags = true; return std::move(*this); }
+      Options &&WantKeyUp () &&
+         { wantKeyUp = true; return std::move(*this); }
+      Options &&SkipKeyDown () &&
+         { skipKeyDown = true; return std::move(*this); }
+
+      // This option affects debugging only:
+      Options &&AllowDup () &&
+         { allowDup = true; return std::move(*this); }
+
+      Options &&AllowInMacros ( int value = 1 ) &&
+         { allowInMacros = value; return std::move(*this); }
+
+      // CheckTest is overloaded
+      // Take arbitrary predicate
+      Options &&CheckTest (const CheckFn &fn) &&
+         { checker = fn; return std::move(*this); }
+      // Take a preference path
+      Options &&CheckTest (const wxChar *key, bool defaultValue) && {
+         checker = MakeCheckFn( key, defaultValue );
+         return std::move(*this);
+      }
+      // Take a BoolSetting
+      Options &&CheckTest ( const BoolSetting &setting ) && {
+         checker = MakeCheckFn( setting );
+         return std::move(*this);
+      }
+
+      const wxChar *accel{ wxT("") };
+      CheckFn checker; // default value means it's not a check item
+      bool bIsEffect{ false };
+      CommandParameter parameter{};
+      TranslatableString longName{};
+      bool global{ false };
+      bool useStrictFlags{ false };
+      bool wantKeyUp{ false };
+      bool skipKeyDown{ false };
+      bool allowDup{ false };
+      int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
+
+   private:
+      static CheckFn
+         MakeCheckFn( const wxString key, bool defaultValue );
+      static CheckFn
+         MakeCheckFn( const BoolSetting &setting );
+   };
 }
 
 //! Sent when menus update (such as for changing enablement of items)
@@ -147,80 +221,7 @@ public:
    wxMenu *BeginMenu(const TranslatableString & tName);
    void EndMenu();
 
-   // type of a function that determines checkmark state
-   using CheckFn = std::function< bool(AudacityProject&) >;
-
-   // For specifying unusual arguments in AddItem
-   struct AUDACITY_DLL_API Options
-   {
-      Options() {}
-      // Allow implicit construction from an accelerator string, which is
-      // a very common case
-      Options( const wxChar *accel_ ) : accel{ accel_ } {}
-      // A two-argument constructor for another common case
-      Options(
-         const wxChar *accel_,
-         const TranslatableString &longName_ )
-      : accel{ accel_ }, longName{ longName_ } {}
-
-      Options &&Accel (const wxChar *value) &&
-         { accel = value; return std::move(*this); }
-      Options &&IsEffect (bool value = true) &&
-         { bIsEffect = value; return std::move(*this); }
-      Options &&Parameter (const CommandParameter &value) &&
-         { parameter = value; return std::move(*this); }
-      Options &&LongName (const TranslatableString &value ) &&
-         { longName = value; return std::move(*this); }
-      Options &&IsGlobal () &&
-         { global = true; return std::move(*this); }
-      Options &&UseStrictFlags () &&
-         { useStrictFlags = true; return std::move(*this); }
-      Options &&WantKeyUp () &&
-         { wantKeyUp = true; return std::move(*this); }
-      Options &&SkipKeyDown () &&
-         { skipKeyDown = true; return std::move(*this); }
-
-      // This option affects debugging only:
-      Options &&AllowDup () &&
-         { allowDup = true; return std::move(*this); }
-
-      Options &&AllowInMacros ( int value = 1 ) &&
-         { allowInMacros = value; return std::move(*this); }
-
-      // CheckTest is overloaded
-      // Take arbitrary predicate
-      Options &&CheckTest (const CheckFn &fn) &&
-         { checker = fn; return std::move(*this); }
-      // Take a preference path
-      Options &&CheckTest (const wxChar *key, bool defaultValue) && {
-         checker = MakeCheckFn( key, defaultValue );
-         return std::move(*this);
-      }
-      // Take a BoolSetting
-      Options &&CheckTest ( const BoolSetting &setting ) && {
-         checker = MakeCheckFn( setting );
-         return std::move(*this);
-      }
-
-      const wxChar *accel{ wxT("") };
-      CheckFn checker; // default value means it's not a check item
-      bool bIsEffect{ false };
-      CommandParameter parameter{};
-      TranslatableString longName{};
-      bool global{ false };
-      bool useStrictFlags{ false };
-      bool wantKeyUp{ false };
-      bool skipKeyDown{ false };
-      bool allowDup{ false };
-      int allowInMacros{ -1 }; // 0 = never, 1 = always, -1 = deduce from label
-
-   private:
-      static CheckFn
-         MakeCheckFn( const wxString key, bool defaultValue );
-      static CheckFn
-         MakeCheckFn( const BoolSetting &setting );
-   };
-
+public:
    void AddItemList(const CommandID & name,
                     const ComponentInterfaceSymbol items[],
                     size_t nItems,
@@ -234,7 +235,7 @@ public:
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags,
-                const Options &options = {});
+                const MenuTable::Options &options = {});
 
    void AddSeparator();
 
@@ -357,13 +358,13 @@ private:
                                    const CommandID &nameSuffix,
                                    int index,
                                    int count,
-                                   const Options &options);
+                                   const MenuTable::Options &options);
    
    void AddGlobalCommand(const CommandID &name,
                          const TranslatableString &label,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
-                         const Options &options = {});
+                         const MenuTable::Options &options = {});
 
    //
    // Executing commands
@@ -615,7 +616,7 @@ namespace detail {
                const TranslatableString &label_in_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
-               const CommandManager::Options &options_,
+               const Options &options_,
                CommandHandlerFinder finder_);
 
       // Takes a pointer to member function directly, and delegates to the
@@ -628,7 +629,7 @@ namespace detail {
                const TranslatableString &label_in,
                void (Handler::*pmf)(const CommandContext&),
                CommandFlag flags,
-               const CommandManager::Options &options = {},
+               const Options &options = {},
                CommandHandlerFinder finder = FinderScope::DefaultFinder())
          : CommandItem(name, label_in,
             CommandFunctorPointer{
@@ -642,7 +643,7 @@ namespace detail {
                const TranslatableString &label_in,
                CommandFunctorPointer::NonMemberFn callback,
                CommandFlag flags,
-               const CommandManager::Options &options = {})
+               const Options &options = {})
          : CommandItem(name, label_in,
             CommandFunctorPointer{ callback },
             flags, options, nullptr)
@@ -654,7 +655,7 @@ namespace detail {
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandFlag flags;
-      CommandManager::Options options;
+      Options options;
    };
 
    // Describes several successive commands in a menu that are closely related

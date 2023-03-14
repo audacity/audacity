@@ -1062,8 +1062,6 @@ const ReservedCommandFlag
 using namespace MenuTable;
 auto EditMenu()
 {
-   using Options = CommandManager::Options;
-
    static const auto NotBusyTimeAndTracksFlags =
       AudioIONotBusyFlag() | TimeSelectedFlag() | EditableTracksSelectedFlag();
 
@@ -1191,7 +1189,6 @@ AttachedItem sAttachment1{ Indirect(EditMenu()) };
 
 auto ExtraEditMenu()
 {
-   using Options = CommandManager::Options;
    static const auto flags =
       AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag();
    static auto menu = std::shared_ptr{

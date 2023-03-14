@@ -525,7 +525,6 @@ using namespace MenuTable;
 auto ExtraGlobalCommands()
 {
    // Ceci n'est pas un menu
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    ( FinderScope{ findCommandHandler },
    Items( wxT("Navigation"),

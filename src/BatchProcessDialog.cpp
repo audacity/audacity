@@ -1499,6 +1499,7 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
 {
+   using namespace MenuTable;
    auto names = MacroCommands::GetNames(); // these names come from filenames
    for (const auto &name : names) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName(name);
@@ -1506,7 +1507,7 @@ void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
          Verbatim(name), // file name verbatim
          OnApplyMacroDirectly,
          flags,
-         CommandManager::Options{}.AllowInMacros()
+         Options{}.AllowInMacros()
       ));
    }
 }
@@ -1528,7 +1529,6 @@ using namespace MenuTable;
 
 auto PluginMenuItems()
 {
-   using Options = CommandManager::Options;
    static auto items = std::shared_ptr{
    Items( "Macros",
       Section( "RepeatLast",

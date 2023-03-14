@@ -1137,7 +1137,6 @@ using namespace MenuTable;
 auto TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Tracks"), XXO("&Tracks"),
       Section( "Add",
@@ -1284,7 +1283,6 @@ AttachedItem sAttachment1{ Indirect(TracksMenu()) };
 
 auto ExtraTrackMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("Track"), XXO("&Track"),
       Command( wxT("TrackPan"), XXO("Change P&an on Focused Track..."),

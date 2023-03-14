@@ -12,7 +12,6 @@ using namespace MenuTable;
 
 auto ToolbarsMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Section( wxT("Toolbars"),
       Menu( wxT("Toolbars"), XXO("&Toolbars"),

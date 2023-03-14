@@ -431,7 +431,6 @@ using namespace MenuTable;
 
 auto FileMenu()
 {
-   using Options = CommandManager::Options;
    static auto menu = std::shared_ptr{
    Menu( wxT("File"), XXO("&File"),
       Section( "Basic",
