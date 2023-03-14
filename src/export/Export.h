@@ -33,6 +33,14 @@ class  AUDACITY_DLL_API Exporter final
 {
    struct ExporterItem;
 public:
+   
+   enum class DownMixMode
+   {
+      None,
+      Mono,
+      Stereo,
+      FormatDefined
+   };
 
    using ExportPluginFactory =
       std::function< std::unique_ptr< ExportPlugin >() >;
@@ -58,6 +66,10 @@ public:
    
    bool SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning = false);
    
+   MixerOptions::Downmix* CreateMixerSpec();
+   
+   DownMixMode SetUseStereoOrMonoOutput();
+   
    bool Process();
    bool Process(unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
@@ -71,9 +83,8 @@ public:
    const ExportPluginArray &GetPlugins();
 
    // Auto Export from Timer Recording
-   bool ProcessFromTimerRecording(wxFileName fnFile,
-                                  int iFormat,
-                                  int iSubFormat);
+   bool ProcessFromTimerRecording();
+   
    bool SetAutoExportOptions();
    int GetAutoExportFormat();
    int GetAutoExportSubFormat();
@@ -88,7 +99,6 @@ private:
    };
 
    void FixFilename();
-   bool CheckMix(bool prompt = true);
    bool ExportTracks(std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
 
 private:

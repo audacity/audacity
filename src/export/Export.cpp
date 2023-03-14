@@ -20,22 +20,16 @@
 #include "BasicUI.h"
 #include "Mix.h"
 #include "MixAndRender.h"
-#include "Prefs.h"
-#include "../prefs/ImportExportPrefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../ProjectWindows.h"
 #include "../TagsEditor.h"
 #include "Theme.h"
 #include "WaveTrack.h"
-#include "../widgets/Warning.h"
 #include "FileNames.h"
 #include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
-#include "ExportMixerDialog.h"
 #include "ExportUtils.h"
 
 namespace {
@@ -206,11 +200,6 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
 
 bool Exporter::Process()
 {
-   // Check for down mixing
-   if (!CheckMix()) {
-      return false;
-   }
-   
    auto exportFormatInfo = mPlugins[mFormat]->GetFormatInfo(mSubFormat);
 
    // Let user edit MetaData
@@ -300,91 +289,6 @@ void Exporter::FixFilename()
    }
 }
 
-bool Exporter::CheckMix(bool prompt /*= true*/ )
-{
-   // Clean up ... should never happen
-   mMixerSpec.reset();
-
-   // Determine if exported file will be stereo or mono or multichannel,
-   // and if mixing will occur.
-
-   auto downMix = ImportExportPrefs::ExportDownMixSetting.ReadEnum();
-
-   if (downMix) {
-      if (mNumRight > 0 || mNumLeft > 0) {
-         mChannels = 2;
-      }
-      else {
-         mChannels = 1;
-      }
-      mChannels = std::min(mChannels,
-                           mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels);
-
-      auto numLeft =  mNumLeft + mNumMono;
-      auto numRight = mNumRight + mNumMono;
-
-      if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
-         if (prompt) {
-            wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat;
-            int exportedChannels = -1;//undefined
-            if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG"))
-               exportedChannels = mChannels;
-            
-            auto pWindow = ProjectWindow::Find(mProject);
-            if (exportedChannels == 1) {
-               if (ShowWarningDialog(pWindow,
-                  wxT("MixMono"),
-                  XO("Your tracks will be mixed down and exported as one mono file."),
-                  true) == wxID_CANCEL)
-                  return false;
-            }
-            else if (exportedChannels == 2) {
-               if (ShowWarningDialog(pWindow,
-                  wxT("MixStereo"),
-                  XO("Your tracks will be mixed down and exported as one stereo file."),
-                  true) == wxID_CANCEL)
-                  return false;
-            }
-            else {
-               if (ShowWarningDialog(pWindow,
-                  wxT("MixUnknownChannels"),
-                  XO("Your tracks will be mixed down to one exported file according to the encoder settings."),
-                  true) == wxID_CANCEL)
-                  return false;
-            }
-         }
-      }
-   }
-   else
-   {
-      constexpr auto MaxExportChannels = 32u;
-
-      auto exportTracks = ExportUtils::FindExportWaveTracks(TrackList::Get( *mProject ), mSelectedOnly);
-      mMixerSpec = std::make_unique<MixerOptions::Downmix>(exportTracks.size(),
-                                                           // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
-                                                           // sometimes not slidable.  My suspicion is that a mixer may incorrectly
-                                                           // state the number of channels - so we assume there are always at least two.
-                                                           // The downside is that if someone is exporting to a mono device, the dialog
-                                                           // will allow them to output to two channels. Hmm.  We may need to revisit this.
-                                                           // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
-                                                           std::clamp(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels,
-                                                                      1u,
-                                                                      MaxExportChannels));
-      if(prompt)
-      {
-         ExportMixerDialog md(exportTracks, mMixerSpec.get(),
-                              NULL,
-                              1,
-                              XO("Advanced Mixing Options"));
-         if(md.ShowModal() != wxID_OK)
-            return false;
-      }
-      mChannels = mMixerSpec->GetNumChannels();
-   }
-
-   return true;
-}
-
 bool Exporter::ExportTracks(
    std::unique_ptr<BasicUI::ProgressDialog>& progressDialog)
 {
@@ -432,20 +336,8 @@ bool Exporter::ExportTracks(
    return success;
 }
 
-bool Exporter::ProcessFromTimerRecording(wxFileName fnFile,
-                                         int iFormat,
-                                         int iSubFormat)
+bool Exporter::ProcessFromTimerRecording()
 {
-   // Auto Export Parameters
-   mFilename = fnFile;
-   mFormat = iFormat;
-   mSubFormat = iSubFormat;
-
-   // Check for down mixing
-   if (!CheckMix(false)) {
-      return false;
-   }
-
    // Ensure filename doesn't interfere with project files.
    FixFilename();
 
@@ -483,6 +375,52 @@ bool Exporter::SetAutoExportOptions() {
    }
 
    return true;
+}
+
+MixerOptions::Downmix* Exporter::CreateMixerSpec()
+{
+   constexpr auto MaxExportChannels = 32u;
+
+   auto exportTracks = ExportUtils::FindExportWaveTracks(TrackList::Get( *mProject ), mSelectedOnly);
+   mMixerSpec = std::make_unique<MixerOptions::Downmix>(exportTracks.size(),
+                                                        std::clamp(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels,
+                                                                   // JKC: This is an attempt to fix a 'watching brief' issue, where the slider is
+                                                                   // sometimes not slidable.  My suspicion is that a mixer may incorrectly
+                                                                   // state the number of channels - so we assume there are always at least two.
+                                                                   // The downside is that if someone is exporting to a mono device, the dialog
+                                                                   // will allow them to output to two channels. Hmm.  We may need to revisit this.
+                                                                   // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
+                                                                   1u,
+                                                                   MaxExportChannels));
+   return mMixerSpec.get();
+}
+
+Exporter::DownMixMode Exporter::SetUseStereoOrMonoOutput()
+{
+   // Clean up ... should never happen
+   mMixerSpec.reset();
+   
+   if (mNumRight > 0 || mNumLeft > 0) {
+      mChannels = 2;
+   }
+   else {
+      mChannels = 1;
+   }
+   mChannels = std::min(mChannels,
+                        mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels);
+   
+   auto numLeft =  mNumLeft + mNumMono;
+   auto numRight = mNumRight + mNumMono;
+
+   wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat;
+   //TODO: violates OCP
+   if(exportFormat == wxT("CL") || exportFormat == wxT("FFMPEG"))
+      return DownMixMode::FormatDefined;
+   
+   if(numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels)
+      return mChannels == 1 ? DownMixMode::Mono : DownMixMode::Stereo;
+   
+   return DownMixMode::None;
 }
 
 TranslatableString AudacityExportCaptionStr()
