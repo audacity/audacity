@@ -48,13 +48,6 @@
 
 MenuCreator::MenuCreator()
 {
-   mLastAnalyzerRegistration = repeattypenone;
-   mLastToolRegistration = repeattypenone;
-   
-   mRepeatGeneratorFlags = 0;
-   mRepeatEffectFlags = 0;
-   mRepeatAnalyzerFlags = 0;
-   mRepeatToolFlags = 0;
 }
 
 MenuCreator::~MenuCreator()

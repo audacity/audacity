@@ -48,27 +48,27 @@ public:
    static void RebuildAllMenuBars();
 
 public:
-   CommandFlag mLastFlags;
+   CommandFlag mLastFlags = AlwaysEnabledFlag;
    
    // Last effect applied to this project
    PluginID mLastGenerator{};
    PluginID mLastEffect{};
    PluginID mLastAnalyzer{};
-   int mLastAnalyzerRegistration;
-   int mLastAnalyzerRegisteredId;
+   int mLastAnalyzerRegistration = repeattypenone;
+   int mLastAnalyzerRegisteredId = -1;
    PluginID mLastTool{};
-   int mLastToolRegistration;
-   int mLastToolRegisteredId;
+   int mLastToolRegistration = repeattypenone;
+   int mLastToolRegisteredId = -1;
    enum {
       repeattypenone = 0,
       repeattypeplugin = 1,
       repeattypeunique = 2,
       repeattypeapplymacro = 3
    };
-   unsigned mRepeatGeneratorFlags;
-   unsigned mRepeatEffectFlags;
-   unsigned mRepeatAnalyzerFlags;
-   unsigned mRepeatToolFlags;
+   unsigned mRepeatGeneratorFlags = 0;
+   unsigned mRepeatEffectFlags = 0;
+   unsigned mRepeatAnalyzerFlags = 0;
+   unsigned mRepeatToolFlags = 0;
 };
 
 //! Sent when menus update (such as for changing enablement of items)
