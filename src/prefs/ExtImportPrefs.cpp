@@ -22,9 +22,9 @@
 #include <wx/dnd.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../import/Import.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/Grid.h"
 
 #define EXTIMPORT_MIME_SUPPORT 0

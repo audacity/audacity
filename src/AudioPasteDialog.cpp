@@ -17,7 +17,7 @@
 
 #include "ShuttleGui.h"
 #include "prefs/TracksBehaviorsPrefs.h"
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 BEGIN_EVENT_TABLE(AudioPasteDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioPasteDialog::OnContinue)

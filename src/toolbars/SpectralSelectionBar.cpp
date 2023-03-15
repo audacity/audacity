@@ -57,7 +57,7 @@ with changes in the SpectralSelectionBar.
 #include "ViewInfo.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #include "../widgets/NumericTextCtrl.h"

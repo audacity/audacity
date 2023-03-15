@@ -31,8 +31,8 @@
 #include "Prefs.h"
 #include "Tags.h"
 #include "WaveTrack.h"
-#include "../widgets/ProgressDialog.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "ProgressDialog.h"
+#include "AudacityMessageBox.h"
 #include "CodeConversions.h"
 
 #define DESC XO("WavPack files")

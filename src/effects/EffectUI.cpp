@@ -29,7 +29,7 @@
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 #include "Theme.h"
-#include "widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
 {
@@ -99,12 +99,12 @@ private:
 #include "../prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "../ProjectAudioManager.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "ViewInfo.h"
 #include "../commands/AudacityCommand.h"
 #include "../commands/CommandContext.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 #include "../widgets/AButton.h"
 
 #include <wx/button.h>
@@ -343,6 +343,17 @@ int EffectUIHost::ShowModal()
 // EffectUIHost implementation
 // ============================================================================
 
+namespace {
+AButton* MakeBitmapToggleButton(wxWindow *parent,
+   const wxImage& ImageOn, const wxImage& ImageOff)
+{
+   auto pBtn = safenew AButton(parent, kEnableID,
+      wxDefaultPosition, wxDefaultSize, true);
+   pBtn->SetImages(ImageOff, ImageOff, ImageOn, ImageOn, ImageOff);
+   return pBtn;
+}
+}
+
 void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 {
    mIsGUI = graphicalUI;
@@ -358,10 +369,12 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
       {
          if (IsOpenedFromEffectPanel())
          {
-            mEnableBtn = S.Id(kEnableID)
+            mEnableBtn = MakeBitmapToggleButton(S.GetParent(),
+               theTheme.Image(bmpEffectOn), theTheme.Image(bmpEffectOff));
+            S
                .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
                .Name(XO("Power"))
-               .AddBitmapToggleButton(theTheme.Image(bmpEffectOn), theTheme.Image(bmpEffectOff));
+               .AddWindow(mEnableBtn);
          }
 
          mMenuBtn = S.Id( kMenuID )

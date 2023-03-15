@@ -64,23 +64,23 @@ effects from this one class.
 #include "ProjectRate.h"
 #include "ShuttleAutomation.h"
 #include "../../ShuttleGetDefinition.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "TempDirectory.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "Prefs.h"
 #include "wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
-#include "../../widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist

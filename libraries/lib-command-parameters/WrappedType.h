@@ -12,8 +12,6 @@
 #ifndef __WRAPPED_TYPE__
 #define __WRAPPED_TYPE__
 
-
-
 enum teWrappedType
 {
    eWrappedNotSet,

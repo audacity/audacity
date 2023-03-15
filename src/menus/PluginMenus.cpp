@@ -4,7 +4,7 @@
 #include "../Benchmark.h"
 #include "../commands/CommandDispatch.h"
 #include "../CommonCommandFlags.h"
-#include "../Journal.h"
+#include "Journal.h"
 #include "../Menus.h"
 #include "PluginManager.h"
 #include "../PluginRegistrationDialog.h"
@@ -26,7 +26,7 @@
 #include "../effects/EffectUI.h"
 #include "RealtimeEffectManager.h"
 #include "../prefs/PrefsDialog.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "MenuHelper.h"
 #include "prefs/EffectsPrefs.h"
 

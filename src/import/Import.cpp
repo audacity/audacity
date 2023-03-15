@@ -48,13 +48,13 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
 #include "FileNames.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Project.h"
 #include "WaveTrack.h"
 
 #include "Prefs.h"
 
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 

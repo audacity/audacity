@@ -26,7 +26,7 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "SettingsVisitor.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol SetClipCommand::Symbol
 { XO("Set Clip") };

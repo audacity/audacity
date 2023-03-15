@@ -21,7 +21,7 @@
 
 #include <wx/dcbuffer.h>
 
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
@@ -52,7 +52,7 @@
 #include "prefs/EffectsPrefs.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 namespace

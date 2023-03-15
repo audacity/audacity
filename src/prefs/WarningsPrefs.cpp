@@ -23,7 +23,7 @@
 #include <wx/defs.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

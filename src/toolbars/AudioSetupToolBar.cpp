@@ -34,7 +34,7 @@
 #include "../prefs/DevicePrefs.h"
 #include "../widgets/AButton.h"
 #include "../widgets/BasicMenu.h"
-#include "../widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 namespace {
    class ViewDeviceSettingsDialog final : public PrefsDialog

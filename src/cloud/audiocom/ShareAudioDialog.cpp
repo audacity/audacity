@@ -44,8 +44,8 @@
 #include "export/Export.h"
 #include "ui/AccessibleLinksFormatter.h"
 
-#include "widgets/WindowAccessible.h"
-#include "widgets/HelpSystem.h"
+#include "WindowAccessible.h"
+#include "HelpSystem.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"

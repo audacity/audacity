@@ -11,7 +11,7 @@
 #include "UpdateManager.h"
 
 #include "ShuttleGui.h"
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 #include <wx/debug.h>
 #include <wx/sstream.h>

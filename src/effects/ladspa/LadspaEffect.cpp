@@ -57,14 +57,14 @@ effects from this one class.
 
 #include "AudacityException.h"
 #include "FileNames.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include "ModuleManager.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 // ============================================================================

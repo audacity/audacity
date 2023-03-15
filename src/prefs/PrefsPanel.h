@@ -28,7 +28,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #define __AUDACITY_PREFS_PANEL__
 
 #include <functional>
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 #include "ComponentInterface.h"
 #include "Registry.h"
 

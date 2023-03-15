@@ -24,8 +24,8 @@
 #include "EffectEditor.h"
 #include "LoadEffects.h"
 
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "ShuttleGui.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
 const EffectParameterMethods& EffectEcho::Parameters() const

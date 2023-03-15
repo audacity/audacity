@@ -28,7 +28,7 @@
 #include <wx/slider.h>
 #include <wx/weakref.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/valnum.h"
 
 const EffectParameterMethods& EffectWahwah::Parameters() const

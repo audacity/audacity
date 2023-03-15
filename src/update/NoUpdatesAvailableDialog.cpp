@@ -11,7 +11,7 @@
 
 #include "NoUpdatesAvailableDialog.h"
 
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 #include "ShuttleGui.h"
 
 #include "prefs/PrefsDialog.h"

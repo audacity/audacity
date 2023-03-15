@@ -13,9 +13,9 @@
 #include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "widgets/Grid.h"
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 #include "XMLFileReader.h"
 #include <wx/combobox.h>
 #include <wx/display.h>

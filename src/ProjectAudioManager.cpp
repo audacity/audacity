@@ -40,7 +40,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/MeterPanelBase.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 
 static AudacityProject::AttachedObjects::RegisteredFactory

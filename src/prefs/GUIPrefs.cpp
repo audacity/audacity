@@ -26,7 +26,7 @@
 #include "Languages.h"
 #include "Theme.h"
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include "Decibels.h"
 
@@ -126,16 +126,6 @@ void GUIPrefs::Populate()
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
 }
-
-ChoiceSetting GUIManualLocation{
-   wxT("/GUI/Help"),
-   {
-      ByColumns,
-      { XO("Local") ,  XO("From Internet") , },
-      { wxT("Local") , wxT("FromInternet") , }
-   },
-   1 // "FromInternet"
-};
 
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {

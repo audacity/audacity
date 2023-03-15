@@ -41,8 +41,8 @@ undo memory so as to free up space.
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #include <unordered_set>
 #include "SampleBlock.h"

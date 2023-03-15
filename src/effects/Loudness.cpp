@@ -23,10 +23,10 @@
 #include "Internat.h"
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #include "LoadEffects.h"
 

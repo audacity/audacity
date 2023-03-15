@@ -14,7 +14,7 @@
 #define __AUDACITY_EQUALIZATION_CURVES_DIALOG__
 
 #include "EqualizationCurves.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 class wxListCtrl;
 class wxListEvent;

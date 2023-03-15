@@ -19,13 +19,13 @@
 #include "ProjectFileIO.h"
 #include "ProjectRate.h"
 #include "../ProjectWindow.h"
-#include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
 #include "FileNames.h"
 #include "ViewInfo.h"
-#include "../widgets/HelpSystem.h"
+#include "HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/VetoDialogHook.h"
 
 #include <cmath>

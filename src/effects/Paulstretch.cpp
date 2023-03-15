@@ -23,10 +23,10 @@
 
 #include <wx/valgen.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "FFT.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "Prefs.h"
 
 #include "WaveTrack.h"

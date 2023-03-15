@@ -9,7 +9,7 @@
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
-#include "../SelectFile.h"
+#include "SelectFile.h"
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -21,10 +21,10 @@
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportRaw.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>

@@ -27,7 +27,7 @@ Paul Licameli
 
 #include <cmath>
 
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 IntSetting SpectrumMaxFreq{
    L"/Spectrum/MaxFreq", 20000 };

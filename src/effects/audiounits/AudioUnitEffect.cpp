@@ -43,9 +43,9 @@
 #include <wx/textctrl.h>
 #include <wx/osx/core/private.h>
 
-#include "../../SelectFile.h"
-#include "../../ShuttleGui.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
+#include "AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
 
 //

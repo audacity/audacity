@@ -40,18 +40,18 @@ KeyConfigPrefs and MousePrefs use.
 #include "../commands/CommandManager.h"
 #include "XMLFileReader.h"
 
-#include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
 
 #include "FileNames.h"
 
 #include "../widgets/BasicMenu.h"
 #include "../widgets/KeyView.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/wxWidgetsWindowPlacement.h"
+#include "AudacityMessageBox.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 //

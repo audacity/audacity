@@ -17,7 +17,6 @@
 #include "MemoryStream.h"
 
 #include "FileException.h"
-
 #include "Identifier.h"
 
 ///

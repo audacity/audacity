@@ -27,7 +27,7 @@
 #include "Dither.h"
 #include "Prefs.h"
 #include "Resample.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #define ID_SAMPLE_RATE_CHOICE           7001
 

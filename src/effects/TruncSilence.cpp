@@ -29,11 +29,11 @@
 
 #include "Prefs.h"
 #include "Project.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "SyncLock.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 class Enums {
 public:

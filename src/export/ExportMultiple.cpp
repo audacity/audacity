@@ -43,13 +43,13 @@
 #include "ProjectWindows.h"
 #include "Prefs.h"
 #include "SelectionState.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "WaveTrack.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/AudacityTextEntryDialog.h"
-#include "../widgets/ProgressDialog.h"
+#include "HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "AudacityTextEntryDialog.h"
+#include "ProgressDialog.h"
 
 
 namespace {

@@ -927,7 +927,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"
-#include "../../../../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../../../../widgets/PopupMenuTable.h"
 
 namespace {

@@ -14,7 +14,7 @@
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffectOptionsDialog.h"
 #include "ConfigInterface.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //

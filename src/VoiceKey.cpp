@@ -27,8 +27,8 @@ or "OFF" point
 #include <iostream>
 
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h"
+#include "AudacityMessageBox.h"
+#include "wxPanelWrapper.h"
 
 using std::cout;
 using std::endl;

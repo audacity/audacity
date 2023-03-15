@@ -43,15 +43,15 @@
 #include "EffectManager.h"
 #include "EffectUI.h"
 
-#include "../ShuttleGui.h"
-#include "../widgets/HelpSystem.h"
+#include "ShuttleGui.h"
+#include "HelpSystem.h"
 #include "FFT.h"
 #include "Prefs.h"
 #include "RealFFTf.h"
 #include "../SpectrumTransformer.h"
 
 #include "WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
 #include <algorithm>

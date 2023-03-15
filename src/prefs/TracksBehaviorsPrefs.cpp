@@ -23,9 +23,9 @@
 #include <wx/statbox.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "WaveTrack.h"
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: i.e. the behaviors of tracks */

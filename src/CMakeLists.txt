@@ -136,8 +136,6 @@ list( APPEND SOURCES
       FrameStatisticsDialog.h
       FreqWindow.cpp
       FreqWindow.h
-      HelpText.cpp
-      HelpText.h
       HelpUtilities.cpp
       HelpUtilities.h
       HistoryWindow.cpp
@@ -145,14 +143,8 @@ list( APPEND SOURCES
       HitTestResult.h
       IncompatiblePluginsDialog.cpp
       IncompatiblePluginsDialog.h
-      Journal.cpp
-      Journal.h
       JournalEvents.cpp
       JournalEvents.h
-      JournalOutput.cpp
-      JournalOutput.h
-      JournalRegistry.cpp
-      JournalRegistry.h
       JournalWindowPaths.cpp
       JournalWindowPaths.h
       KeyboardCapture.cpp
@@ -169,8 +161,6 @@ list( APPEND SOURCES
       ListNavigationEnabled.h
       ListNavigationPanel.cpp
       ListNavigationPanel.h
-      LogWindow.cpp
-      LogWindow.h
       Lyrics.cpp
       Lyrics.h
       LyricsWindow.cpp
@@ -219,12 +209,8 @@ list( APPEND SOURCES
       ScrubState.h
       SelectUtilities.cpp
       SelectUtilities.h
-      SelectFile.cpp
-      SelectFile.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
-      ShuttleGui.cpp
-      ShuttleGui.h
       Snap.cpp
       Snap.h
       SoundActivatedRecord.cpp
@@ -996,10 +982,6 @@ list( APPEND SOURCES
       widgets/ASlider.h
       widgets/AttachableScrollBar.cpp
       widgets/AttachableScrollBar.h
-      widgets/AudacityMessageBox.cpp
-      widgets/AudacityMessageBox.h
-      widgets/AudacityTextEntryDialog.cpp
-      widgets/AudacityTextEntryDialog.h
       widgets/BackedPanel.cpp
       widgets/BackedPanel.h
       widgets/BasicMenu.cpp
@@ -1010,24 +992,8 @@ list( APPEND SOURCES
       widgets/CustomUpdaterPosition.h
       widgets/CustomUpdaterValue.cpp
       widgets/CustomUpdaterValue.h
-      widgets/ErrorDialog.cpp
-      widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
       widgets/ExpandingToolBar.h
-      widgets/FileDialog/FileDialog.cpp
-      widgets/FileDialog/FileDialog.h
-      $<$<BOOL:${wxIS_WIN}>:
-         widgets/FileDialog/win/FileDialogPrivate.cpp
-         widgets/FileDialog/win/FileDialogPrivate.h
-      >
-      $<$<BOOL:${wxIS_MAC}>:
-         widgets/FileDialog/mac/FileDialogPrivate.mm
-         widgets/FileDialog/mac/FileDialogPrivate.h
-      >
-      $<$<BOOL:${wxIS_GTK}>:
-         widgets/FileDialog/gtk/FileDialogPrivate.cpp
-         widgets/FileDialog/gtk/FileDialogPrivate.h
-      >
       widgets/FileHistory.cpp
       widgets/FileHistory.h
       widgets/GeneratedUpdater.cpp
@@ -1036,10 +1002,6 @@ list( APPEND SOURCES
       widgets/Grabber.h
       widgets/Grid.cpp
       widgets/Grid.h
-      widgets/HelpSystem.cpp
-      widgets/HelpSystem.h
-      widgets/HtmlWindow.cpp
-      widgets/HtmlWindow.h
       widgets/ImageRoll.cpp
       widgets/ImageRoll.h
       widgets/IntFormat.cpp
@@ -1058,8 +1020,6 @@ list( APPEND SOURCES
       widgets/MeterPanelBase.h
       widgets/MissingPluginsErrorDialog.cpp
       widgets/MissingPluginsErrorDialog.h
-      widgets/MultiDialog.cpp
-      widgets/MultiDialog.h
       widgets/NumericTextCtrl.cpp
       widgets/NumericTextCtrl.h
       widgets/Overlay.cpp
@@ -1068,9 +1028,6 @@ list( APPEND SOURCES
       widgets/OverlayPanel.h
       widgets/PopupMenuTable.cpp
       widgets/PopupMenuTable.h
-      widgets/ProgressDialog.cpp
-      widgets/ProgressDialog.h
-      widgets/ReadOnlyText.h
       widgets/RealFormat.cpp
       widgets/RealFormat.h
       widgets/Ruler.cpp
@@ -1092,21 +1049,12 @@ list( APPEND SOURCES
       widgets/VetoDialogHook.h
       widgets/Warning.cpp
       widgets/Warning.h
-      widgets/WindowAccessible.cpp
-      widgets/WindowAccessible.h
       widgets/auStaticText.cpp
       widgets/auStaticText.h
       widgets/numformatter.cpp
       widgets/numformatter.h
       widgets/valnum.cpp
       widgets/valnum.h
-      widgets/wxPanelWrapper.cpp
-      widgets/wxPanelWrapper.h
-      widgets/wxTextCtrlWrapper.h
-      widgets/wxWidgetsBasicUI.cpp
-      widgets/wxWidgetsBasicUI.h
-      widgets/wxWidgetsWindowPlacement.cpp
-      widgets/wxWidgetsWindowPlacement.h
 
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:
@@ -1557,6 +1505,7 @@ set( AUDACITY_LIBRARIES
    lib-tags-interface
    lib-project-file-io-interface
    lib-effects-interface
+   lib-wx-init-interface
 )
 
 if (${_OPT}use_ffmpeg)

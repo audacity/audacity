@@ -54,15 +54,15 @@ a graph for EffectScienFilter.
 #include "PlatformCompatibility.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/RulerPanel.h"
 #include "../widgets/IntFormat.h"
 #include "../widgets/LinearDBFormat.h"
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795

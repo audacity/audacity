@@ -42,7 +42,7 @@
 #include <wx/weakref.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/valnum.h"
 
 const EnumValueSymbol EffectDistortion::kTableTypeStrings[nTableTypes] =

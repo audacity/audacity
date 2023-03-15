@@ -19,7 +19,7 @@
 
 #include "Prefs.h"
 #include "Theme.h"
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 #include <wx/windowptr.h>
 
 class wxBoxSizer;

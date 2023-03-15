@@ -11,7 +11,7 @@
 #pragma once
 
 	
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 /// An error dialog about unwritable location, that allows to navigate to settings quickly
 class UnwritableLocationErrorDialog final : public wxDialogWrapper
