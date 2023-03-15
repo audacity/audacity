@@ -21,6 +21,7 @@ set( SOURCES
 set( LIBRARIES
    lib-files-interface
    lib-string-utils-interface
+   PRIVATE
    expat::expat
 )
 audacity_library( lib-xml "${SOURCES}" "${LIBRARIES}"

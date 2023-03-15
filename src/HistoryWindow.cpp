@@ -41,8 +41,8 @@ undo memory so as to free up space.
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 #include <unordered_set>
 #include "SampleBlock.h"
@@ -88,10 +88,10 @@ struct SpaceUsageCalculator {
       // state.
 
       manager.VisitStates(
-         [this, &seen]( const UndoStackElem &elem ){
+         [this, &seen](const UndoStackElem &elem) {
             // Scan all tracks at current level
-            auto &tracks = *elem.state.tracks;
-            space.push_back(CalculateUsage(tracks, seen));
+            if (auto pTracks = TrackList::FindUndoTracks(elem))
+               space.push_back(CalculateUsage(*pTracks, seen));
          },
          true // newest state first
       );

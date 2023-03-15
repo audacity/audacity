@@ -6,15 +6,16 @@
 #include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "../TrackPanel.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -163,10 +164,10 @@ void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 double GridMove
 (AudacityProject &project, double t, int minPix)
 {
-   auto &settings = ProjectSettings::Get(project);
+   auto &formats = ProjectNumericFormats::Get(project);
    auto rate = ProjectRate::Get(project).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
-   auto format = settings.GetSelectionFormat();
+   auto format = formats.GetSelectionFormat();
 
    NumericConverter nc(NumericConverter::TIME, format, t, rate);
 
@@ -934,15 +935,11 @@ BaseItemSharedPtr SelectMenu()
             Command( wxT("SelAllTracks"), XXO("In All &Tracks"),
                FN(OnSelectAllTracks),
                TracksExistFlag(),
-               wxT("Ctrl+Shift+K") )
-
-   #ifdef EXPERIMENTAL_SYNC_LOCK
-            ,
+               wxT("Ctrl+Shift+K") ),
             Command( wxT("SelSyncLockTracks"), XXO("In All &Sync-Locked Tracks"),
                FN(OnSelectSyncLockSel),
                EditableTracksSelectedFlag() | IsSyncLockedFlag(),
                Options{ wxT("Ctrl+Shift+Y"), XO("Select Sync-Locked") } )
-   #endif
          ),
 
          //////////////////////////////////////////////////////////////////////////

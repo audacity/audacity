@@ -3,7 +3,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES 
+set( SOURCES 
    PRIVATE
       ${TARGET_ROOT}/source/SoundTouch/AAFilter.cpp
       ${TARGET_ROOT}/source/SoundTouch/FIFOSampleBuffer.cpp
@@ -16,13 +16,13 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/source/SoundTouch/sse_optimized.cpp
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PUBLIC
       ${_PUBDIR}
       ${TARGET_ROOT}/include
 )
 
-list( APPEND OPTIONS
+set( OPTIONS
    PRIVATE
       ${MMX_FLAG}
       ${SSE_FLAG}
@@ -35,3 +35,4 @@ target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 
+set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)

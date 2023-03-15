@@ -47,7 +47,6 @@
 #include "UndoManager.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindows.h"
@@ -59,8 +58,8 @@
 #include "WaveTrack.h"
 
 #include "commands/CommandManagerWindowClasses.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "AudacityMessageBox.h"
+#include "wxPanelWrapper.h" // to inherit
 
 // If defined, make a checkbox for smart selection of the fundamental
 // independently of overtones

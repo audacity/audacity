@@ -15,8 +15,8 @@
 #include "PluginManager.h"
 #include "PluginStartupRegistration.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include <set>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -38,7 +38,7 @@
 //
 // ============================================================================
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 class CheckListAx final : public WindowAccessible
 {
@@ -916,6 +916,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
       }
 
       pm.Save();
+      pm.NotifyPluginsChanged();
 
       if (!failedPlugins.empty())
       {
@@ -1058,6 +1059,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       }
 
       pm.Save();
+      pm.NotifyPluginsChanged();
    }
 
    EndModal(wxID_OK);

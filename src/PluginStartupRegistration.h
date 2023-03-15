@@ -17,7 +17,7 @@
 #include <wx/string.h>
 #include <wx/timer.h>
 #include "AsyncPluginValidator.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 ///Helper class that passes plugins provided in constructor
 ///to plugin validator, then "good" plugins are registered in

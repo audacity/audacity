@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "../PerTrackEffect.h"
+#include "../StatelessPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -63,15 +63,11 @@ struct LadspaEffectOutputs : EffectOutputs {
 };
 
 class LadspaEffect final
-   : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
+   : public EffectWithSettings<LadspaEffectSettings, StatelessPerTrackEffect>
 {
 public:
    LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
-
-   static bool LoadUseLatency(const EffectDefinitionInterface &effect);
-   static bool SaveUseLatency(
-      const EffectDefinitionInterface &effect, bool value);
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(
@@ -110,27 +106,29 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
    bool InitializePlugin();
-   bool FullyInitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
-
-   // EffectUIClientInterface implementation
 
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   struct Validator;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   struct Editor;
+   std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
 
-   bool CanExportPresets() override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
+   bool CanExportPresets() const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
-   bool HasOptions() override;
-   void ShowOptions() override;
+   bool HasOptions() const override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // LadspaEffect implementation
 
@@ -149,8 +147,6 @@ private:
    void FreeInstance(LADSPA_Handle handle) const;
 
 private:
-
-   wxWeakRef<wxWindow> mUIParent{};
 
    const wxString mPath;
    const int mIndex;
@@ -175,7 +171,6 @@ private:
    int mNumInputControls{ 0 };
    int mNumOutputControls{ 0 };
 
-   bool mUseLatency{ true };
    int mLatencyPort{ -1 };
 
    friend class LadspaEffectsModule;

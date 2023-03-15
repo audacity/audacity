@@ -7,7 +7,6 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
-#include "../ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindows.h"
@@ -20,15 +19,15 @@
 #include "UndoManager.h"
 #include "../prefs/RecordingPrefs.h"
 #include "../prefs/TracksPrefs.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/ToolManager.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "BasicUI.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #include <thread>
 #include <float.h>
@@ -410,9 +409,7 @@ void OnSoundActivated(const CommandContext &context)
 
 void OnToggleSoundActivated(const CommandContext &WXUNUSED(context) )
 {
-   bool pause;
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &pause, false);
-   gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
+   SoundActivatedRecord.Toggle();
    gPrefs->Flush();
    ToolManager::ModifyAllProjectToolbarMenus();
 }
@@ -822,7 +819,7 @@ BaseItemSharedPtr TransportMenu()
                   XXO("Sound A&ctivated Recording (on/off)"),
                   OnToggleSoundActivated,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
-                  Options{}.CheckTest(wxT("/AudioIO/SoundActivatedRecord"), false) )
+                  Options{}.CheckTest(SoundActivatedRecord) )
             ),
 
             Section( "Part2",

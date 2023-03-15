@@ -1,12 +1,12 @@
 #include "../CommonCommandFlags.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
+#include "SyncLock.h"
 #include "../TrackPanelAx.h"
 #include "../ProjectWindow.h"
 #include "UndoManager.h"
-#include "../WaveClip.h"
+#include "WaveClip.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../tracks/ui/TimeShiftHandle.h"
@@ -714,9 +714,8 @@ void DoClipLeftOrRight
    auto &trackFocus = TrackFocus::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &selectedRegion = viewInfo.selectedRegion;
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto isSyncLocked = settings.IsSyncLocked();
+   auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
 
    auto amount = DoClipMove( project, trackFocus.Get(),
         tracks, isSyncLocked, right );

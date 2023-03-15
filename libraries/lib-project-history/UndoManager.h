@@ -6,11 +6,7 @@
 
   Dominic Mazzoni
 
-  After each operation, call UndoManager's PushState, pass it
-  the entire track hierarchy.  The UndoManager makes a duplicate
-  of every single track using its Duplicate method, which should
-  increment reference counts.  If we were not at the top of
-  the stack when this is called, DELETE above first.
+  After each operation, call UndoManager's PushState.
 
   If a minor change is made, for example changing the visual
   display of a track or changing the selection, you can call
@@ -34,9 +30,8 @@
   recent Undo state, if descriptions match and if no Undo or Redo or rollback
   operation intervened since that state was pushed.
 
-  Undo() temporarily moves down one state and returns the track
-  hierarchy.  If another PushState is called, the redo information
-  is lost.
+  Undo() temporarily moves down one state.
+  If another PushState is called, the redo information is lost.
 
   Redo()
 
@@ -54,7 +49,6 @@
 #include <vector>
 #include "ClientData.h"
 #include "Observer.h"
-#include "SelectedRegion.h"
 
 //! Type of message published by UndoManager
 /*! all are published only during idle time, except BeginPurge and EndPurge */
@@ -84,8 +78,6 @@ struct UndoRedoMessage {
 };
 
 class AudacityProject;
-class Track;
-class TrackList;
 
 //! Base class for extra information attached to undo/redo states
 class PROJECT_HISTORY_API UndoStateExtension {
@@ -93,7 +85,10 @@ public:
    virtual ~UndoStateExtension();
 
    //! Modify the project when undoing or redoing to some state in history
-   virtual void RestoreUndoRedoState(AudacityProject &) = 0;
+   virtual void RestoreUndoRedoState(AudacityProject &project) = 0;
+
+   //! Whether undo or redo is now permitted; default returns true
+   virtual bool CanUndoOrRedo(const AudacityProject &project);
 };
 
 class PROJECT_HISTORY_API UndoRedoExtensionRegistry {
@@ -112,26 +107,19 @@ public:
 struct UndoState {
    using Extensions = std::vector<std::shared_ptr<UndoStateExtension>>;
 
-   UndoState( Extensions extensions,
-      std::shared_ptr<TrackList> &&tracks_,
-      const SelectedRegion &selectedRegion_)
+   UndoState(Extensions extensions)
       : extensions(std::move(extensions))
-      , tracks(std::move(tracks_)), selectedRegion(selectedRegion_)
    {}
 
    Extensions extensions;
-   std::shared_ptr<TrackList> tracks;
-   SelectedRegion selectedRegion; // by value
 };
 
 struct UndoStackElem {
 
    UndoStackElem( UndoState::Extensions extensions,
-      std::shared_ptr<TrackList> &&tracks_,
       const TranslatableString &description_,
-      const TranslatableString &shortDescription_,
-      const SelectedRegion &selectedRegion_)
-      : state(std::move(extensions), std::move(tracks_), selectedRegion_)
+      const TranslatableString &shortDescription_)
+      : state(std::move(extensions))
       , description(description_)
       , shortDescription(shortDescription_)
    {
@@ -176,13 +164,10 @@ class PROJECT_HISTORY_API UndoManager final
    UndoManager( const UndoManager& ) = delete;
    UndoManager& operator = ( const UndoManager& ) = delete;
 
-   void PushState(const TrackList &l,
-                  const SelectedRegion &selectedRegion,
-                  const TranslatableString &longDescription,
+   void PushState(const TranslatableString &longDescription,
                   const TranslatableString &shortDescription,
                   UndoPush flags = UndoPush::NONE);
-   void ModifyState(const TrackList &l,
-                    const SelectedRegion &selectedRegion);
+   void ModifyState();
    void RenameState( int state,
       const TranslatableString &longDescription,
       const TranslatableString &shortDescription);
@@ -226,6 +211,8 @@ class PROJECT_HISTORY_API UndoManager final
    // void Debug(); // currently unused
 
  private:
+   bool CheckAvailable(int index);
+
    void EnqueueMessage(UndoRedoMessage message);
    void RemoveStateAt(int n);
 
@@ -233,8 +220,7 @@ class PROJECT_HISTORY_API UndoManager final
  
    int current;
    int saved;
-   
-   //! @invariant each state holds a non-null pointer to TrackList
+
    UndoStack stack;
 
    TranslatableString lastAction;

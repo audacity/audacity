@@ -23,12 +23,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "Project.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../../../ProjectSettings.h"
 #include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
-#include "../../../SyncLock.h"
+#include "SyncLock.h"
 #include "Theme.h"
 #include "../../../TrackArt.h"
 #include "../../../TrackArtist.h"
@@ -37,8 +37,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../../../widgets/AudacityTextEntryDialog.h"
-#include "../../../widgets/wxWidgetsWindowPlacement.h"
+#include "AudacityTextEntryDialog.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>
@@ -2271,9 +2271,9 @@ void LabelTrackView::CreateCustomGlyphs()
 void LabelTrackView::DoEditLabels
 (AudacityProject &project, LabelTrack *lt, int index)
 {
-   const auto &settings = ProjectSettings::Get( project );
-   auto format = settings.GetSelectionFormat(),
-      freqFormat = settings.GetFrequencySelectionFormatName();
+   const auto &formats = ProjectNumericFormats::Get( project );
+   auto format = formats.GetSelectionFormat(),
+      freqFormat = formats.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
    auto rate = ProjectRate::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );

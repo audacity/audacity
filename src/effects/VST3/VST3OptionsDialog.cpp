@@ -19,10 +19,9 @@ BEGIN_EVENT_TABLE(VST3OptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VST3OptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-VST3OptionsDialog::VST3OptionsDialog(
-   wxWindow * parent, EffectDefinitionInterface &effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
-, mEffect{ effect }
+VST3OptionsDialog::VST3OptionsDialog(const EffectDefinitionInterface &effect)
+   : wxDialogWrapper{ nullptr, wxID_ANY, XO("VST Effect Options") }
+   , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), mBufferSize, 8192);

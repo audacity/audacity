@@ -12,10 +12,11 @@
 
 **********************************************************************/
 #include "EqualizationCurvesDialog.h"
+#include "EffectUIServices.h"
 
 #include <wx/listctrl.h>
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityTextEntryDialog.h"
+#include "ShuttleGui.h"
+#include "AudacityTextEntryDialog.h"
 
 BEGIN_EVENT_TABLE(EqualizationCurvesDialog, wxDialogWrapper)
    EVT_BUTTON(UpButtonID, EqualizationCurvesDialog::OnUp)
@@ -334,25 +335,23 @@ void EqualizationCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
    {
       if(item == mList->GetItemCount()-1)   //unnamed
       {
-         mEffect->Effect::MessageBox(
+         EQUtils::DoMessageBox(mName,
             XO("You cannot delete the 'unnamed' curve."),
-            wxOK | wxCENTRE,
             XO("Can't delete 'unnamed'") );
       }
       else
       {
          // Create the prompt
          auto quest = XO("Delete '%s'?")
-            .Format(mEditCurves[ item-deleted ].Name));
+            .Format(mEditCurves[ item-deleted ].Name);
 
          // Ask for confirmation before removal
-         int ans = mEffect->Effect::MessageBox(
+         int ans = EQUtils::DoMessageBox(mName,
             quest,
-            wxYES_NO | wxCENTRE,
             XO("Confirm Deletion") );
          if( ans == wxYES )
          {  // Remove the curve from the array
-            mEditCurves.RemoveAt( item-deleted );
+            mEditCurves.erase( mEditCurves.begin() + (item - deleted) );
             deleted++;
          }
          else

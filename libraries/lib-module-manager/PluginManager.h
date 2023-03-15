@@ -22,6 +22,7 @@
 #include "EffectInterface.h"
 #include "PluginInterface.h"
 #include "PluginDescriptor.h"
+#include "Observer.h"
 
 class wxArrayString;
 class FileConfig;
@@ -38,7 +39,11 @@ typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
-class MODULE_MANAGER_API PluginManager final : public PluginManagerInterface
+struct PluginsChangedMessage { };
+
+class MODULE_MANAGER_API PluginManager final
+   : public PluginManagerInterface
+   , public Observer::Publisher<PluginsChangedMessage>
 {
 public:
 
@@ -174,6 +179,8 @@ public:
    void Load();
    //! Save to preferences
    void Save();
+   
+   void NotifyPluginsChanged();
 
    //! What is the plugin registry version number now in the file?
    //! (Save() updates it)

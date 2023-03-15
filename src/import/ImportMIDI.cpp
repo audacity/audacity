@@ -26,13 +26,13 @@
 #include "FileNames.h"
 #include "../NoteTrack.h"
 #include "Project.h"
-#include "../ProjectFileIO.h"
+#include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "../SelectUtilities.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 
 // Given an existing project, try to import into it, return true on success

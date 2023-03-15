@@ -11,13 +11,27 @@ Paul Licameli
 #ifndef __AUDACITY_WAVEFORM_SETTINGS__
 #define __AUDACITY_WAVEFORM_SETTINGS__
 
+#include "ClientData.h" // to inherit
 #include "Prefs.h"
 
-class EnumValueSymbols;
+class wxRect;
 
-class AUDACITY_DLL_API WaveformSettings : public PrefsListener
+class EnumValueSymbols;
+class WaveTrack;
+
+class AUDACITY_DLL_API WaveformSettings
+   : public PrefsListener
+   , public ClientData::Cloneable< ClientData::UniquePtr >
 {
 public:
+
+   //! Create waveform settings for the track on demand
+   //! Mutative access to attachment even if the track argument is const
+   static WaveformSettings &Get(const WaveTrack &track);
+
+   //! Guarantee independence of settings, then assign
+   static void Set(
+      WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings );
 
    // Singleton for settings that are not per-track
    class AUDACITY_DLL_API Globals
@@ -32,10 +46,13 @@ public:
    };
 
    static WaveformSettings &defaults();
+
    WaveformSettings();
    WaveformSettings(const WaveformSettings &other);
    WaveformSettings& operator= (const WaveformSettings &other);
-   ~WaveformSettings();
+   ~WaveformSettings() override;
+
+   PointerType Clone() const override;
 
    bool IsDefault() const
    {
@@ -56,8 +73,9 @@ public:
 
    typedef int ScaleType;
    enum ScaleTypeValues : int {
-      stLinear,
-      stLogarithmic,
+      stLinearAmp,
+      stLogarithmicDb,
+      stLinearDb,
 
       stNumScaleTypes,
    };
@@ -68,6 +86,37 @@ public:
    int dBRange;
 
    // Convenience
-   bool isLinear() const { return stLinear == scaleType; }
+   bool isLinear() const { return scaleType == stLinearAmp || scaleType == stLinearDb; }
 };
+
+class AUDACITY_DLL_API WaveformScale
+   : public ClientData::Cloneable< ClientData::UniquePtr >
+{
+public:
+   //! Mutative access to attachment even if the track argument is const
+   static WaveformScale &Get(const WaveTrack &track);
+
+   ~WaveformScale() override;
+   PointerType Clone() const override;
+
+   int ZeroLevelYCoordinate(wxRect rect) const;
+
+   void GetDisplayBounds(float &min, float &max) const
+   { min = mDisplayMin; max = mDisplayMax; }
+
+   void SetDisplayBounds(float min, float max)
+   { mDisplayMin = min; mDisplayMax = max; }
+
+   float GetLastScaleType() const { return mLastScaleType; }
+   void SetLastScaleType(int type) { mLastScaleType = type; }
+
+   int GetLastDBRange() const { return mLastdBRange; }
+   void SetLastDBRange(int range) { mLastdBRange = range; }
+
+private:
+   float mDisplayMin = -1.0f, mDisplayMax = 1.0f;
+   int mLastScaleType = -1;
+   int mLastdBRange = -1;
+};
+
 #endif

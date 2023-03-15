@@ -4,29 +4,27 @@
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
-#include "../SelectFile.h"
+#include "SelectFile.h"
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
-#include "../export/ExportMP3.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportRaw.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -37,7 +35,6 @@ namespace {
 void DoExport(AudacityProject &project, const FileExtension &format)
 {
    auto &tracks = TrackList::Get( project );
-   auto &projectFileIO = ProjectFileIO::Get( project );
    
    Exporter e{ project };
 

@@ -40,7 +40,7 @@
 #include "Import.h"
 #include "Prefs.h"
 #include "Tags.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 
 #define DESC XO("Ogg Vorbis files")
@@ -70,7 +70,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include <vorbis/vorbisfile.h>
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;

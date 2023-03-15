@@ -18,7 +18,7 @@
 
 #if USE_SBSMS
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include <sbsms.h>
 
 using namespace _sbsms_;

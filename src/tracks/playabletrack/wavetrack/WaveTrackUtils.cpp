@@ -10,7 +10,7 @@
 
 #include "WaveTrackUtils.h"
 #include "ViewInfo.h"
-#include "../../../WaveClip.h"
+#include "WaveClip.h"
 
 
 bool WaveTrackUtils::IsClipSelected(const ViewInfo& viewInfo, const WaveClip& clip)

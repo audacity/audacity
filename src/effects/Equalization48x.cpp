@@ -19,8 +19,8 @@
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "../Project.h"
 #include "Equalization.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../float_cast.h"
 #include <vector>
 

@@ -18,8 +18,8 @@ Vaughan Johnson (Preview)
 #include "Biquad.h"
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "ShuttleAutomation.h"
+#include "wxPanelWrapper.h"
 #include <float.h> // for FLT_MAX
 
 class wxBitmap;
@@ -63,7 +63,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

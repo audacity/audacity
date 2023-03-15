@@ -83,6 +83,17 @@ inline bool GetConfig( const EffectDefinitionInterface& ident,
    const RegistryPath & key, Value &var, ConvertibleToValue defval)
 { return GetConfig(ident, type, group, key, var, static_cast<Value>(defval)); }
 
+// Deleted overloads for const Value as destination
+template<typename Value>
+inline bool GetConfig( const EffectDefinitionInterface& ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, const Value &var, const Value &defval) = delete;
+template<typename Value, typename ConvertibleToValue>
+inline bool GetConfig( const EffectDefinitionInterface& ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, const Value &var, ConvertibleToValue defval)
+      = delete;
+
 // GetConfig with default value assumed to be Value{}
 template <typename Value>
 inline bool GetConfig( const EffectDefinitionInterface& ident,

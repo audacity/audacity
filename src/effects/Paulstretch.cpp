@@ -13,9 +13,8 @@
 \brief An Extreme Time Stretch and Time Smear effect
 
 *//*******************************************************************/
-
-
 #include "Paulstretch.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <algorithm>
@@ -24,13 +23,13 @@
 
 #include <wx/valgen.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "FFT.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "Prefs.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectPaulstretch::Parameters() const
 {
@@ -169,7 +168,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 }
 
 
-std::unique_ptr<EffectUIValidator> EffectPaulstretch::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectPaulstretch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -218,7 +217,7 @@ bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
 {
-   EffectUIValidator::EnableApply(
+   EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow());
 }
 
@@ -247,7 +246,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    const auto stretch_buf_size = GetBufferSize(track->GetRate());
    if (stretch_buf_size == 0) {
-      ::Effect::MessageBox( badAllocMessage );
+      EffectUIServices::DoMessageBox(*this, badAllocMessage);
       return false;
    }
 
@@ -260,7 +259,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    const auto minDuration = stretch_buf_size * 2 + 1;
    if (minDuration < stretch_buf_size) {
       // overflow!
-      ::Effect::MessageBox( badAllocMessage );
+      EffectUIServices::DoMessageBox(*this, badAllocMessage);
       return false;
    }
 
@@ -275,7 +274,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &defaultPreviewLen, 6.0);
 
          if ((minDuration / mProjectRate) < defaultPreviewLen) {
-            ::Effect::MessageBox(
+            EffectUIServices::DoMessageBox(*this,
                /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
                XO("Audio selection too short to preview.\n\n"
                   "Try increasing the audio selection to at least %.1f seconds,\n"
@@ -286,7 +285,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
                wxOK | wxICON_EXCLAMATION );
          }
          else {
-            ::Effect::MessageBox(
+            EffectUIServices::DoMessageBox(*this,
                /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
                XO("Unable to Preview.\n\n"
                   "For the current audio selection, the maximum\n"
@@ -296,7 +295,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          }
       }
       else {
-         ::Effect::MessageBox(
+         EffectUIServices::DoMessageBox(*this,
             /* i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.*/
             XO("The 'Time Resolution' is too long for the selection.\n\n"
                "Try increasing the audio selection to at least %.1f seconds,\n"
@@ -391,7 +390,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       return !cancelled;
    }
    catch ( const std::bad_alloc& ) {
-      ::Effect::MessageBox( badAllocMessage );
+      EffectUIServices::DoMessageBox(*this, badAllocMessage);
       return false;
    }
 };

@@ -1,7 +1,7 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../MixAndRender.h"
+#include "MixAndRender.h"
 
 #include "Prefs.h"
 #include "Project.h"
@@ -13,15 +13,15 @@
 #include "ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../ShuttleGui.h"
-#include "../SyncLock.h"
+#include "ShuttleGui.h"
+#include "SyncLock.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../TrackUtilities.h"
 #include "UndoManager.h"
-#include "../WaveClip.h"
+#include "WaveClip.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
@@ -30,8 +30,8 @@
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../toolbars/ToolManager.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include <wx/combobox.h>
 
@@ -983,9 +983,7 @@ void OnSyncLock(const CommandContext &context)
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
 
-   bool bSyncLockTracks;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
-   gPrefs->Write(wxT("/GUI/SyncLockTracks"), !bSyncLockTracks);
+   SyncLockTracks.Toggle();
    gPrefs->Flush();
 
    // Toolbar, project sync-lock handled within
@@ -1323,18 +1321,13 @@ BaseItemSharedPtr TracksMenu()
          )
 
          //////////////////////////////////////////////////////////////////////////
-      )
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-      ,
+      ),
 
       Section( "",
          Command( wxT("SyncLock"), XXO("Sync-&Lock Tracks (on/off)"),
             OnSyncLock, AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/SyncLockTracks"), false ) )
+            Options{}.CheckTest(SyncLockTracks) )
       )
-
-#endif
 
    ) };
    return menu;

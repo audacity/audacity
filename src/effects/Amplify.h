@@ -16,8 +16,8 @@
 #define __AUDACITY_EFFECT_AMPLIFY__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
-
+#include "ShuttleAutomation.h"
+#include <wx/weakref.h>
 
 class wxSlider;
 class wxCheckBox;
@@ -56,8 +56,8 @@ public:
    // Effect implementation
 
    bool Init() override;
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::any BeginPreview(const EffectSettings &settings) override;
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

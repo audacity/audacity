@@ -40,13 +40,13 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "Prefs.h"
 #include "SelectFile.h"
 #include "SelectUtilities.h"
-#include "Shuttle.h"
+#include "SettingsVisitor.h"
 #include "Track.h"
 #include "UndoManager.h"
 
 #include "AllThemeResources.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #include "commands/CommandContext.h"
 #include "commands/CommandDispatch.h"

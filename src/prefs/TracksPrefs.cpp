@@ -25,8 +25,8 @@
 //#include <wx/defs.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 
@@ -55,21 +55,24 @@ namespace {
 
 namespace {
    const auto waveformScaleKey = wxT("/GUI/DefaultWaveformScaleChoice");
-   const auto dbValueString = wxT("dB");
+   const auto dbLogValueString = wxT("dB");
+   const auto dbLinValueString = wxT("dBLin");
 }
 
 static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
    waveformScaleKey,
    {
-      { XO("Linear") },
-      { dbValueString, XO("Logarithmic (dB)") },
+      { wxT("Linear"), XO("Linear (amp)") },
+      { dbLogValueString, XO("Logarithmic (dB)") },
+      { dbLinValueString, XO("Linear (dB)") },
    },
 
    0, // linear
    
    {
-      WaveformSettings::stLinear,
-      WaveformSettings::stLogarithmic,
+      WaveformSettings::stLinearAmp,
+      WaveformSettings::stLogarithmicDb,
+      WaveformSettings::stLinearDb,
    }
 };
 
@@ -134,7 +137,7 @@ public:
       if ( !gPrefs->Read( key3, &value ) ) {
          if (newValue == obsoleteValue) {
             newValue = waveformSymbol.Internal();
-            gPrefs->Write(waveformScaleKey, dbValueString);
+            gPrefs->Write(waveformScaleKey, dbLogValueString);
          }
 
          Write( value = newValue );

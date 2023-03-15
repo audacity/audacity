@@ -28,9 +28,9 @@
 
 #include "Prefs.h"
 #include "Tags.h"
-#include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "WaveTrack.h"
+#include "AudacityMessageBox.h"
+#include "ProgressDialog.h"
 
 #include "CodeConversions.h"
 #include "FromChars.h"

@@ -14,7 +14,7 @@
 
 #include <functional>
 #include <vector>
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 #include "PrefsPanel.h"
 
 class AudacityProject;
@@ -22,12 +22,6 @@ class wxTreebook;
 class wxTreeEvent;
 class SettingTransaction;
 class ShuttleGui;
-
-#ifdef __GNUC__
-#define CONST
-#else
-#define CONST const
-#endif
 
 class AudacityProject;
 

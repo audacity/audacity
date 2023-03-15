@@ -12,13 +12,12 @@
 \brief An effect to add silence.
 
 *//*******************************************************************/
-
-
 #include "Silence.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
 const ComponentInterfaceSymbol EffectSilence::Symbol
@@ -63,7 +62,7 @@ EffectType EffectSilence::GetType() const
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator> EffectSilence::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectSilence::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

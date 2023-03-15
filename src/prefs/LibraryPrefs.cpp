@@ -19,26 +19,39 @@ MP3 and FFmpeg encoding libraries.
 
 #include "LibraryPrefs.h"
 
+#include "ShuttleGui.h"
+
 #include <wx/defs.h>
 #include <wx/stattext.h>
 
-#include "../FFmpeg.h"
-#include "../export/ExportMP3.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ReadOnlyText.h"
-#include "../widgets/wxTextCtrlWrapper.h"
-
-
 ////////////////////////////////////////////////////////////////////////////////
+static const auto PathStart = wxT("LibraryPreferences");
 
-#define ID_FFMPEG_FIND_BUTTON       7003
-#define ID_FFMPEG_DOWN_BUTTON       7004
+Registry::GroupItem &LibraryPrefs::PopulatorItem::Registry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
 
-BEGIN_EVENT_TABLE(LibraryPrefs, PrefsPanel)
-   EVT_BUTTON(ID_FFMPEG_FIND_BUTTON, LibraryPrefs::OnFFmpegFindButton)
-   EVT_BUTTON(ID_FFMPEG_DOWN_BUTTON, LibraryPrefs::OnFFmpegDownButton)
-END_EVENT_TABLE()
+LibraryPrefs::PopulatorItem::PopulatorItem(
+   const Identifier &id, Populator populator)
+   : SingleItem{ id }
+   , mPopulator{ move(populator) }
+{}
+
+LibraryPrefs::RegisteredControls::RegisteredControls(
+   const Identifier &id, Populator populator,
+   const Registry::Placement &placement )
+   : RegisteredItem{
+      std::make_unique< PopulatorItem >( id, move(populator) ),
+      placement
+   }
+{}
+
+bool LibraryPrefs::RegisteredControls::Any()
+{
+   return !PopulatorItem::Registry().items.empty();
+}
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent, wxWindowID winid)
 /* i18-hint: refers to optional plug-in software libraries */
@@ -76,10 +89,6 @@ void LibraryPrefs::Populate()
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
-
-   // Set the MP3 Version string.
-   SetMP3VersionText();
-   SetFFmpegVersionText();
 }
 
 /// This PopulateOrExchange function is a good example of mixing the fully
@@ -89,111 +98,33 @@ void LibraryPrefs::Populate()
 /// and others don't.
 void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   using namespace Registry;
+   static OrderingPreferenceInitializer init{
+      PathStart,
+      { {wxT(""), wxT("MP3,FFmpeg") } },
+   };
+
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(XO("LAME MP3 Export Library"));
-   {
-      S.StartTwoColumn();
+   struct MyVisitor final : Visitor {
+      MyVisitor( ShuttleGui &S ) : S{ S }
       {
-         mMP3Version = S
-            .Position(wxALIGN_CENTRE_VERTICAL)
-            .AddReadOnlyText(XO("MP3 Library Version:"), "");
+         // visit the registry to collect the plug-ins properly
+         // sorted
+         TransparentGroupItem<> top{ PathStart };
+         Registry::Visit( *this, &top, &PopulatorItem::Registry() );
       }
-      S.EndTwoColumn();
-   }
-   S.EndStatic();
 
-   S.StartStatic(XO("FFmpeg Import/Export Library"));
-   {
-      S.StartTwoColumn();
+      void Visit( Registry::SingleItem &item, const Path &path ) override
       {
-         auto version =
-#if defined(USE_FFMPEG)
-            XO("No compatible FFmpeg library was found");
-#else
-            XO("FFmpeg support is not compiled in");
-#endif
-
-         mFFmpegVersion = S
-            .Position(wxALIGN_CENTRE_VERTICAL)
-            .AddReadOnlyText(XO("FFmpeg Library Version:"), version.Translation());
-
-         S.AddVariableText(XO("FFmpeg Library:"),
-            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_FFMPEG_FIND_BUTTON);
-         S
-#if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
-            .Disable()
-#endif
-            .AddButton(XXO("Loca&te..."),
-                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         S.AddVariableText(XO("FFmpeg Library:"),
-            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_FFMPEG_DOWN_BUTTON);
-         S
-#if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
-            .Disable()
-#endif
-            .AddButton(XXO("Dow&nload"),
-                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+         static_cast<PopulatorItem&>(item).mPopulator(S);
       }
-      S.EndTwoColumn();
-   }
-   S.EndStatic();
+
+      ShuttleGui &S;
+   } visitor{ S };
+
    S.EndScroller();
-
-}
-
-/// Sets the a text area on the dialog to have the name
-/// of the MP3 Library version.
-void LibraryPrefs::SetMP3VersionText(bool prompt)
-{
-   mMP3Version->SetValue(GetMP3Version(this, prompt));
-}
-
-void LibraryPrefs::SetFFmpegVersionText()
-{
-   mFFmpegVersion->SetValue(GetFFmpegVersion());
-}
-
-void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
-{
-#ifdef USE_FFMPEG
-   bool showerrs =
-#if defined(_DEBUG)
-      true;
-#else
-      false;
-#endif
-   // Load the libs ('true' means that all errors will be shown)
-   bool locate = !LoadFFmpeg(showerrs);
-
-   // Libs are fine, don't show "locate" dialog unless user really wants it
-   if (!locate) {
-      int response = AudacityMessageBox(
-         XO(
-"Audacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
-         XO("Success"),
-         wxCENTRE | wxYES_NO | wxNO_DEFAULT |wxICON_QUESTION);
-      if (response == wxYES) {
-        locate = true;
-      }
-   }
-
-   if (locate) {
-      // Show "Locate FFmpeg" dialog
-      FindFFmpegLibs(this);
-      LoadFFmpeg(showerrs);
-   }
-
-   SetFFmpegVersionText();
-#endif
-}
-
-void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
-{
-   HelpSystem::ShowHelp(this, L"FAQ:Installing_the_FFmpeg_Import_Export_Library", true);
 }
 
 bool LibraryPrefs::Commit()
@@ -204,18 +135,24 @@ bool LibraryPrefs::Commit()
    return true;
 }
 
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
 namespace{
 PrefsPanel::Registration sAttachment{ "Library",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, AudacityProject *) -> PrefsPanel *
    {
       wxASSERT(parent); // to justify safenew
-      return safenew LibraryPrefs(parent, winid);
+      if (LibraryPrefs::RegisteredControls::Any())
+         return safenew LibraryPrefs(parent, winid);
+      else
+         return nullptr;
    },
    false,
-   // Register with an explicit ordering hint because this one is
-   // only conditionally compiled
+   // Register with an explicit ordering hint because this one might be
+   // absent
    { "", { Registry::OrderingHint::Before, "Directories" } }
 };
 }
-#endif
+
+LibraryPrefs::RegisteredControls::Init::Init()
+{
+   (void) PopulatorItem::Registry();
+}

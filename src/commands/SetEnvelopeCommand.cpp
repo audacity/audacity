@@ -26,11 +26,11 @@
 #include "LoadCommands.h"
 #include "ProjectHistory.h"
 #include "UndoManager.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "Envelope.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "SettingsVisitor.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol SetEnvelopeCommand::Symbol
 { XO("Set Envelope") };

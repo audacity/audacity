@@ -14,7 +14,7 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include "EqualizationUI.h"
 
 class EffectEqualization : public StatefulEffect
@@ -51,17 +51,14 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   // EffectUIClientInterface implementation
-
-   bool ValidateUI(EffectSettings &) override;
+   bool ValidateUI(const EffectPlugin &plugin, EffectSettings &) const override;
 
    // Effect implementation
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
-   bool CloseUI() override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

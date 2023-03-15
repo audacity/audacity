@@ -408,8 +408,6 @@ public:
 class wxDialog;
 class wxWindow;
 
-class EffectUIClientInterface;
-
 // ----------------------------------------------------------------------------
 // Supported channel assignments
 // ----------------------------------------------------------------------------

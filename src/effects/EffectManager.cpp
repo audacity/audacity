@@ -20,12 +20,11 @@ effects.
 
 
 #include "EffectManager.h"
-
 #include "Effect.h"
 
 #include <algorithm>
 
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #include "ConfigInterface.h"
 #include "../ShuttleGetDefinition.h"
@@ -332,7 +331,7 @@ bool EffectManager::PromptUser(
    const PluginID & ID, const EffectDialogFactory &factory, wxWindow &parent)
 {
    bool result = false;
-   if (auto effect = GetEffect(ID)) {
+   if (auto effect = dynamic_cast<Effect*>(GetEffect(ID))) {
 
       auto empty = TrackList::Create(nullptr);
       auto pEffectBase = dynamic_cast<EffectBase*>(effect);
@@ -348,12 +347,14 @@ bool EffectManager::PromptUser(
       std::shared_ptr<EffectInstance> pInstance;
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
-      if (const auto pSettings = GetDefaultSettings(ID))
-         result = effect->ShowHostInterface(
+      if (const auto pSettings = GetDefaultSettings(ID)) {
+         const auto pServices = dynamic_cast<EffectUIServices *>(effect);
+         result = pServices && pServices->ShowHostInterface(*effect,
             parent, factory,
             pInstance,
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;
+      }
       return result;
    }
 
@@ -406,7 +407,7 @@ bool EffectManager::HasPresets(const PluginID & ID)
 
 #include <wx/choice.h>
 #include <wx/listbox.h>
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 namespace {
 
@@ -854,12 +855,6 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
 
       if (auto effect = dynamic_cast<EffectPlugin *>(component))
          return (mEffects[ID] = { effect, std::move(settings) });
-      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component)) {
-         // Nothing inherits EffectUIClientInterface now that does not also
-         // inherit EffectPlugin
-         wxASSERT(false);
-         return empty;
-      }
       else {
          if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(

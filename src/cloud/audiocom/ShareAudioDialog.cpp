@@ -44,8 +44,8 @@
 #include "export/Export.h"
 #include "ui/AccessibleLinksFormatter.h"
 
-#include "widgets/WindowAccessible.h"
-#include "widgets/HelpSystem.h"
+#include "WindowAccessible.h"
+#include "HelpSystem.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
@@ -741,19 +741,20 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
 
    if (!oauthService.HasRefreshToken())
    {
-      name->SetLabel(XO("Anonymous").Translation());
-      avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
-      oauthButton->SetLabel(XXO("&Link Account").Translation());
-
+      SetAnonymousState();
       return;
    }
 
    if (!oauthService.HasAccessToken())
       oauthService.ValidateAuth({});
 
-   oauthButton->SetLabel(XXO("&Unlink Account").Translation());
-
    auto& userService = GetUserService();
+
+   if (userService.GetUserSlug().empty())
+   {
+      SetAnonymousState();
+      return;
+   }
 
    const auto displayName = userService.GetDisplayName();
 
@@ -766,6 +767,8 @@ void ShareAudioDialog::InitialStatePanel::UpdateUserData()
       avatar->SetBitmap(avatarPath);
    else
       avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
+
+   oauthButton->SetLabel(XXO("&Unlink Account").Translation());
 }
 
 void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
@@ -787,6 +790,13 @@ void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
          dlg.ShowModal();
       }
    }
+}
+
+void ShareAudioDialog::InitialStatePanel::SetAnonymousState()
+{
+   name->SetLabel(XO("Anonymous").Translation());
+   avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
+   oauthButton->SetLabel(XXO("&Link Account").Translation());
 }
 
 void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)

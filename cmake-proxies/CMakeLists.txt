@@ -1,7 +1,7 @@
 # Required libraries
 #
 #       directory          option      symbol      req   chk   version
-addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.1" )
+
 
 # Optional libraries
 #

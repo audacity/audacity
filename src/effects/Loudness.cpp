@@ -12,10 +12,8 @@
 \brief An Effect to bring the loudness level up to a chosen level.
 
 *//*******************************************************************/
-
-
-
 #include "Loudness.h"
+#include "EffectEditor.h"
 
 #include <math.h>
 
@@ -25,10 +23,10 @@
 #include "Internat.h"
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #include "LoadEffects.h"
 
@@ -211,7 +209,7 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectLoudness::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectLoudness::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -517,9 +515,9 @@ void EffectLoudness::UpdateUI()
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
       // TODO: recalculate layout here
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
-   EffectUIValidator::EnableApply(mUIParent, true);
+   EffectEditor::EnableApply(mUIParent, true);
 }

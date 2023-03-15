@@ -25,15 +25,16 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
 #include "../../SelectUtilities.h"
-#include "../../SelectionState.h"
+#include "SelectionState.h"
+#include "SyncLock.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../../images/Cursors.h"
 
@@ -66,9 +67,9 @@ namespace
       wxInt64 trackTopEdge,
       int trackHeight)
    {
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      const auto &settings = SpectrogramSettings::Get(*wt);
       float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(frequency);
       return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
@@ -92,9 +93,10 @@ namespace
          trackTopEdge + trackHeight - mouseYCoordinate < FREQ_SNAP_DISTANCE)
          return -1;
 
-      const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      const auto &settings = SpectrogramSettings::Get(*wt);
       float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      SpectrogramBounds::Get(*wt)
+         .GetBounds(*wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
       return numberScale.PositionToValue(1.0 - p);
@@ -116,7 +118,7 @@ namespace
         pTrackView->FindTrack() &&
         pTrackView->FindTrack()->TypeSwitch< bool >(
            [&](const WaveTrack *wt) {
-              const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+              const auto &settings = SpectrogramSettings::Get(*wt);
               return settings.SpectralSelectionEnabled();
            });
    }
@@ -555,7 +557,6 @@ UIHandle::Result SelectHandle::Click
       return RefreshAll | Cancelled;
    
    auto &selectionState = SelectionState::Get( *pProject );
-   const auto &settings = ProjectSettings::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
       auto &trackList = TrackList::Get( *pProject );
 
@@ -566,7 +567,7 @@ UIHandle::Result SelectHandle::Click
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
-         ( viewInfo, *pTrack, settings.IsSyncLocked() );
+         ( viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked() );
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
@@ -1374,7 +1375,7 @@ void SelectHandle::StartSnappingFreqSelection
    // Use same settings as are now used for spectrogram display,
    // except, shrink the window as needed so we get some answers
 
-   const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
+   const auto &settings = SpectrogramSettings::Get(*pTrack);
    auto windowSize = settings.GetFFTLength();
 
    while(windowSize > effectiveLength)
@@ -1442,7 +1443,7 @@ void SelectHandle::SnapCenterOnce
    (SpectrumAnalyst &analyst,
     ViewInfo &viewInfo, const WaveTrack *pTrack, bool up)
 {
-   const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
+   const auto &settings = SpectrogramSettings::Get(*pTrack);
    const auto windowSize = settings.GetFFTLength();
    const double rate = pTrack->GetRate();
    const double nyq = rate / 2.0;

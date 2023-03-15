@@ -20,9 +20,9 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include <math.h>
 
 #include "../LabelTrack.h"
-#include "../SyncLock.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "SyncLock.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../NoteTrack.h"
 #include "TimeWarper.h"
 

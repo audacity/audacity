@@ -19,7 +19,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 
 SpectrumVZoomHandle::SpectrumVZoomHandle
@@ -123,10 +123,10 @@ void SpectrumVZoomHandle::DoZoom(
    const double rate = pTrack->GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
-   const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
+   const auto &specSettings = SpectrogramSettings::Get(*pTrack);
    NumberScale scale;
    const bool spectrumLinear =
-      (pTrack->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
+      (SpectrogramSettings::Get(*pTrack).scaleType == SpectrogramSettings::stLinear);
 
 
    bool bDragZoom = WaveTrackVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
@@ -141,7 +141,7 @@ void SpectrumVZoomHandle::DoZoom(
    float half=0.5;
 
    {
-      pTrack->GetSpectrumBounds(&min, &max);
+      SpectrogramBounds::Get(*pTrack).GetBounds(*pTrack, min, max);
       scale = (specSettings.GetScale(min, max));
       const auto fftLength = specSettings.GetFFTLength();
       const float binSize = rate / fftLength;
@@ -252,7 +252,7 @@ void SpectrumVZoomHandle::DoZoom(
 
    // Now actually apply the zoom.
    for (auto channel : TrackList::Channels(pTrack))
-      channel->SetSpectrumBounds(min, max);
+      SpectrogramBounds::Get(*channel).SetBounds(min, max);
 
    zoomEnd = zoomStart = 0;
    if( pProject )
@@ -283,7 +283,7 @@ BeginSection( "Scales" );
                      .mpData->pTrack;
                if ( id ==
                   OnFirstSpectrumScaleID +
-                      (int)(wt->GetSpectrogramSettings().scaleType ) )
+                      static_cast<int>(SpectrogramSettings::Get(*wt).scaleType))
                   menu.Check(id, true);
             }
          );
@@ -322,9 +322,9 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
             std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstSpectrumScaleID
       )));
-   if (wt->GetSpectrogramSettings().scaleType != newScaleType) {
+   if (SpectrogramSettings::Get(*wt).scaleType != newScaleType) {
       for (auto channel : TrackList::Channels(wt))
-         channel->GetIndependentSpectrogramSettings().scaleType = newScaleType;
+         SpectrogramSettings::Own(*channel).scaleType = newScaleType;
 
       ProjectHistory::Get( mpData->project ).ModifyState(true);
 

@@ -31,9 +31,8 @@
 a graph for EffectScienFilter.
 
 *//*******************************************************************/
-
-
 #include "ScienFilter.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -55,13 +54,15 @@ a graph for EffectScienFilter.
 #include "PlatformCompatibility.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/Ruler.h"
-#include "../widgets/WindowAccessible.h"
+#include "AudacityMessageBox.h"
+#include "../widgets/RulerPanel.h"
+#include "../widgets/IntFormat.h"
+#include "../widgets/LinearDBFormat.h"
+#include "WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
@@ -245,7 +246,7 @@ bool EffectScienFilter::Init()
       {
          if (t->GetRate() != rate)
          {
-            Effect::MessageBox(
+            EffectUIServices::DoMessageBox(*this,
                XO(
 "To apply a filter, all selected tracks must have the same sample rate.") );
             return false;
@@ -257,7 +258,7 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectScienFilter::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -279,7 +280,7 @@ std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
             S.GetParent(), wxID_ANY, wxVERTICAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ 30.0, -120.0 },
-            Ruler::LinearDBFormat,
+            LinearDBFormat::Instance(),
             XO("dB"),
             RulerPanel::Options{}
                .LabelEdges(true)
@@ -337,7 +338,7 @@ std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
          S.GetParent(), wxID_ANY, wxHORIZONTAL,
          wxSize{ 100, 100 }, // Ruler can't handle small sizes
          RulerPanel::Range{ mLoFreq, mNyquist },
-         Ruler::IntFormat,
+         IntFormat::Instance(),
          {},
          RulerPanel::Options{}
             .Log(true)
@@ -626,7 +627,7 @@ void EffectScienFilter::OnFilterSubtype(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -637,7 +638,7 @@ void EffectScienFilter::OnCutoff(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;
@@ -648,7 +649,7 @@ void EffectScienFilter::OnRipple(wxCommandEvent & WXUNUSED(evt))
 
 void EffectScienFilter::OnStopbandRipple(wxCommandEvent & WXUNUSED(evt))
 {
-   if (!EffectUIValidator::EnableApply(
+   if (!EffectEditor::EnableApply(
       mUIParent, mUIParent->TransferDataFromWindow()))
    {
       return;

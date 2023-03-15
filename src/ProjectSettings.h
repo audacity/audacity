@@ -63,7 +63,6 @@ public:
    
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
-      ChangedSyncLock,
       ChangedTool,
    };
 
@@ -78,9 +77,6 @@ public:
    bool GetShowId3Dialog() const { return mShowId3Dialog; } //lda
    void SetShowId3Dialog(bool flag) { mShowId3Dialog = flag; } //lda
 
-   bool IsSyncLocked() const;
-   void SetSyncLock(bool flag);
-   
    // Snap To
 
    void SetSnapTo(int snap);
@@ -100,21 +96,6 @@ public:
 
    void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
    bool IsOvertones() const { return mbOvertones; }
-   
-   // Selection Format
-   void SetSelectionFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetSelectionFormat() const;
-
-   // AudioTime format
-   void SetAudioTimeFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetAudioTimeFormat() const;
-
-   // Spectral Selection Formats
-   void SetFrequencySelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
-
-   void SetBandwidthSelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
 
    bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
    bool IsSoloNone() const { return mSoloPref == wxT("None"); }
@@ -128,11 +109,6 @@ private:
 
    AudacityProject &mProject;
 
-   NumericFormatSymbol mSelectionFormat;
-   NumericFormatSymbol mFrequencySelectionFormatName;
-   NumericFormatSymbol mBandwidthSelectionFormatName;
-   NumericFormatSymbol mAudioTimeFormat;
-
    wxString mSoloPref;
 
    int mSnapTo;
@@ -145,7 +121,6 @@ private:
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mShowId3Dialog{ true }; //lda
-   bool mIsSyncLocked{ false };
    bool mEmptyCanBeDirty;
    bool mShowSplashScreen;
 };

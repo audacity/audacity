@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackArt.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../images/Cursors.h"
 
 #include <wx/event.h>
@@ -102,12 +102,13 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
       return {};
 
    // Get envelope point, range 0.0 to 1.0
-   const bool dB = !wt->GetWaveformSettings().isLinear();
+   const bool dB = !WaveformSettings::Get(*wt).isLinear();
 
    float zoomMin, zoomMax;
-   wt->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*wt);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
-   const float dBRange = wt->GetWaveformSettings().dBRange;
+   const float dBRange = WaveformSettings::Get(*wt).dBRange;
 
    return EnvelopeHandle::HitEnvelope
        (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange, false);
@@ -190,9 +191,10 @@ UIHandle::Result EnvelopeHandle::Click
          if (!mEnvelope)
             return Cancelled;
 
-         mLog = !wt->GetWaveformSettings().isLinear();
-         wt->GetDisplayBounds(&mLower, &mUpper);
-         mdBRange = wt->GetWaveformSettings().dBRange;
+         mLog = !WaveformSettings::Get(*wt).isLinear();
+         auto &cache = WaveformScale::Get(*wt);
+         cache.GetDisplayBounds(mLower, mUpper);
+         mdBRange = WaveformSettings::Get(*wt).dBRange;
          auto channels = TrackList::Channels( wt );
          for ( auto channel : channels ) {
             if (channel == wt)

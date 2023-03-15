@@ -97,7 +97,7 @@ class AUDACITY_DLL_API TrackPanel final
    void OnSize( wxSizeEvent & );
    void OnIdle(wxIdleEvent & event);
    void OnTimer(wxTimerEvent& event);
-   void OnProjectSettingsChange(wxCommandEvent &event);
+   void OnSyncLockChange(struct SyncLockChangeMessage);
    void OnTrackFocusChange(struct TrackFocusChangeMessage);
 
    void OnUndoReset(struct UndoRedoMessage);
@@ -189,6 +189,7 @@ protected:
       , mUndoSubscription
       , mFocusChangeSubscription
       , mRealtimeEffectManagerSubscription
+      , mSyncLockSubscription
    ;
 
    TrackPanelListener *mListener;

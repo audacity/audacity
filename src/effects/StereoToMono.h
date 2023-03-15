@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_STEREO_TO_MONO__
 #define __AUDACITY_EFFECT_STEREO_TO_MONO__
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 
 class EffectStereoToMono final : public StatefulEffect
 {

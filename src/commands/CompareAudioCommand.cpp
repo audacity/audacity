@@ -26,14 +26,14 @@ threshold of difference in two selected tracks
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 
 #include <float.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "SettingsVisitor.h"
+#include "ShuttleGui.h"
+#include "AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 #include "CommandContext.h"
 

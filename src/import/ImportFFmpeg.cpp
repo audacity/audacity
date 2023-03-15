@@ -34,7 +34,7 @@ Licensed under the GNU General Public License v2 or later
 #include <wx/window.h>
 #endif
 
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 
 #define DESC XO("FFmpeg-compatible files")
@@ -154,7 +154,7 @@ static const auto exts = {
 // all the includes live here by default
 #include "Import.h"
 #include "Tags.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 class FFmpegImportFileHandle;
@@ -173,6 +173,12 @@ public:
 
    wxString GetPluginStringID() override { return wxT("libav"); }
    TranslatableString GetPluginFormatDescription() override;
+
+   TranslatableString FailureHint() const override
+   {
+      return !FFmpegFunctions::Load()
+         ? XO("Try installing FFmpeg.\n") : TranslatableString{};
+   }
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(

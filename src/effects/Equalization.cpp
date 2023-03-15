@@ -32,15 +32,15 @@
    Clone of the FFT Filter effect, no longer part of Audacity.
 
 *//*******************************************************************/
-
 #include "Equalization.h"
 #include "EqualizationUI.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 #include "PasteOverPreservingClips.h"
 #include "ShuttleGui.h"
 
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {
@@ -300,13 +300,11 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    return { nullptr };
 }
 
-
-
-// EffectUIClientInterface implementation
-
-bool EffectEqualization::ValidateUI(EffectSettings &settings)
+bool EffectEqualization::ValidateUI(
+   const EffectPlugin &, EffectSettings &settings) const
 {
-   return mUI.ValidateUI(settings);
+   // Stateful effect still cheats const_cast!
+   return const_cast<EffectEqualization&>(*this).mUI.ValidateUI(settings);
 }
 
 // Effect implementation
@@ -331,7 +329,7 @@ bool EffectEqualization::Init()
 
          for (auto track : trackRange) {
             if (track->GetRate() != rate) {
-               Effect::MessageBox(
+               EffectUIServices::DoMessageBox(*this,
                   XO(
    "To apply Equalization, all selected tracks must have the same sample rate.") );
                return(false);
@@ -347,7 +345,7 @@ bool EffectEqualization::Init()
    hiFreq = rate / 2.0;
    // Unlikely, but better than crashing.
    if (hiFreq <= loFreqI) {
-      Effect::MessageBox(
+      EffectUIServices::DoMessageBox(*this,
          XO("Track sample rate is too low for this effect."),
          wxOK | wxCENTRE,
          XO("Effect Unavailable") );
@@ -396,12 +394,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectEqualization::CloseUI()
-{
-   return Effect::CloseUI();
-}
-
-std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectEqualization::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
    const EffectOutputs *pOutputs)
 {

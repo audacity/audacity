@@ -15,11 +15,57 @@
 #include "Base64.h"
 
 #include <wx/string.h>
+#include <wx/filename.h>
 #include <wx/sizer.h>
 
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <wx/regex.h>
 
+#include "MemoryX.h"
+
+
+#ifdef __WXMSW__
+#include <shlobj.h>
+#endif
+
+namespace
+{
+   
+wxString GetFactoryPresetsBasePath()
+{
+#ifdef __WXMSW__
+   PWSTR commonFolderPath { nullptr };
+   auto cleanup = finally([&](){ CoTaskMemFree(commonFolderPath); });
+   if(SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_DEFAULT , NULL, &commonFolderPath) == S_OK)
+      return wxString(commonFolderPath) + "\\VST3 Presets\\";
+   return {};
+#elif __WXMAC__
+   return wxString("Library/Audio/Presets/");
+#elif __WXGTK__
+   return wxString("/usr/local/share/vst3/presets/");
+#endif
+}
+
+wxString GetPresetsPath(const wxString& basePath, const VST3::Hosting::ClassInfo& effectClassInfo)
+{
+   wxRegEx fixName(R"([\\*?/:<>|])");
+   wxString companyName = wxString (effectClassInfo.vendor()).Trim();
+   wxString pluginName = wxString (effectClassInfo.name()).Trim();
+
+   fixName.ReplaceAll( &companyName, { "_" });
+   fixName.ReplaceAll( &pluginName, { "_" });
+
+   wxFileName result;
+   result.SetPath(basePath);
+   result.AppendDir(companyName);
+   result.AppendDir(pluginName);
+   auto path = result.GetPath();
+
+   return path;
+}
+
+}
 
 wxString VST3Utils::MakePluginPathString(const wxString& modulePath, const std::string& effectUIDString)
 {
@@ -74,7 +120,35 @@ bool VST3Utils::ParseAutomationParameterKey(const wxString& key, Steinberg::Vst:
       return true;
    }
    return false;
+}
 
+wxString VST3Utils::MakeFactoryPresetID(Steinberg::Vst::UnitID unitId, Steinberg::int32 programIndex)
+{
+   return wxString::Format("%d:%d",
+      static_cast<int>(unitId),
+      static_cast<int>(programIndex));
+}
+
+bool VST3Utils::ParseFactoryPresetID(const wxString& presetId, Steinberg::Vst::UnitID& unitId, Steinberg::int32& programIndex)
+{
+   auto parts = wxSplit(presetId, ':');
+   long nums[2]{};
+   if(parts.size() == 2 && parts[0].ToLong(&nums[0]) && parts[1].ToLong(&nums[1]))
+   {
+      unitId = static_cast<Steinberg::Vst::UnitID>(nums[0]);
+      programIndex = static_cast<Steinberg::int32>(nums[1]);
+      return true;
+   }
+   return false;
+}
+
+
+wxString VST3Utils::GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo)
+{
+   return GetPresetsPath(
+      GetFactoryPresetsBasePath(),
+      effectClassInfo
+   );
 }
 
 Steinberg::IPtr<PresetsBufferStream> PresetsBufferStream::fromString(const wxString& str)

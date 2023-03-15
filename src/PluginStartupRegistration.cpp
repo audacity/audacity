@@ -22,7 +22,7 @@
 
 #include "PluginManager.h"
 #include "PluginDescriptor.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 namespace
 {
@@ -235,6 +235,7 @@ void PluginStartupRegistration::Run(std::chrono::seconds timeout)
       evt.Skip();
       mValidator.reset();
       PluginManager::Get().Save();
+      PluginManager::Get().NotifyPluginsChanged();
    });
 
    dialog.CenterOnScreen();

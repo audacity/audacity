@@ -91,14 +91,14 @@ CommandManager.  It holds the callback for one command.
 #include <wx/menu.h>
 
 #include "../ActiveProject.h"
-#include "../Journal.h"
-#include "../JournalOutput.h"
-#include "../JournalRegistry.h"
+#include "Journal.h"
+#include "JournalOutput.h"
+#include "JournalRegistry.h"
 #include "../Menus.h"
 #include "Project.h"
 #include "ProjectWindows.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "HelpSystem.h"
 
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically

@@ -18,6 +18,8 @@ set( SOURCES
    EffectInterface.h
    PluginProvider.cpp
    PluginProvider.h
+   SettingsVisitor.cpp
+   SettingsVisitor.h
 )
 set( LIBRARIES
    lib-strings-interface

@@ -8,7 +8,7 @@ import hashlib
 from contextlib import contextmanager
 import configparser
 
-required_conan_version = (1, 52, 0)
+required_conan_version = (1, 58, 0)
 
 class ConanVenv(venv.EnvBuilder):
     def post_setup(self, context):
@@ -17,7 +17,7 @@ class ConanVenv(venv.EnvBuilder):
             python_exe = os.path.join(context.bin_path, 'python.exe')
         else:
             python_exe = os.path.join(context.bin_path, 'python')
-        cmd = [python_exe, '-m', 'pip', 'install', 'conan']
+        cmd = [python_exe, '-m', 'pip', 'install', 'conan==1.59.0']
         subprocess.check_call(cmd)
 
 
@@ -75,6 +75,7 @@ def init_args():
     parser.add_argument('--build-types', help='Build types', default=['Release'], nargs="*")
     parser.add_argument('--lib-dir', help='Directory to copy the shared libraries to', default=None)
     parser.add_argument('--min-os-version', help='Minimum OS version', default=None)
+    parser.add_argument('--disallow-prebuilt', help='Disallow prebuilt dependencies', action='store_true')
 
     return parser.parse_args()
 
@@ -330,7 +331,7 @@ if __name__ == '__main__':
                 '--build' if args.force_build else '--build=missing',
                 '--install-folder', os.path.join(args.build_dir, f'conan-install-{build_type.lower()}'),
                 '--output-folder', args.build_dir,
-                '--remote', 'audacity-recipes' if args.force_build else 'audacity-binaries',
+                '--remote', 'audacity-recipes' if (args.force_build or args.disallow_prebuilt) else 'audacity-binaries',
                 '--profile:build', build_profile,
                 '--profile:host', host_profile,
             ]

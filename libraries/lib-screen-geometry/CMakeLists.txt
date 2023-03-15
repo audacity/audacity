@@ -5,15 +5,10 @@ times, or frequencies, or amplitudes.
 
 set( SOURCES
    NumberScale.h
-   SelectedRegion.cpp
-   SelectedRegion.h
-   ViewInfo.cpp
-   ViewInfo.h
    ZoomInfo.cpp
    ZoomInfo.h
 )
 set( LIBRARIES
-   lib-project-interface
 )
 audacity_library( lib-screen-geometry "${SOURCES}" "${LIBRARIES}"
    "" ""

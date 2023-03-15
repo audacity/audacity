@@ -13,10 +13,8 @@
 \brief An Effect to bring the peak level up to a chosen level.
 
 *//*******************************************************************/
-
-
-
 #include "Normalize.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -27,10 +25,10 @@
 
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 const EffectParameterMethods& EffectNormalize::Parameters() const
 {
@@ -210,7 +208,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectNormalize::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -473,7 +471,7 @@ void EffectNormalize::UpdateUI()
    if (!mUIParent->TransferDataFromWindow())
    {
       mWarning->SetLabel(_("(Maximum 0dB)"));
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
    mWarning->SetLabel(wxT(""));
@@ -484,5 +482,5 @@ void EffectNormalize::UpdateUI()
    mStereoIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
-   EffectUIValidator::EnableApply(mUIParent, mGain || mDC);
+   EffectEditor::EnableApply(mUIParent, mGain || mDC);
 }

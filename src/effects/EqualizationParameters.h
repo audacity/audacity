@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EQUALIZATION_PARAMETERS__
 #define __AUDACITY_EQUALIZATION_PARAMETERS__
 
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 
 // Flags to specialise the UI
 const int kEqOptionGraphic = 1;

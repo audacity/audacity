@@ -47,7 +47,7 @@
 #include "SelectUtilities.h"
 #include "Track.h"
 #include "commands/CommandManager.h"
-#include "effects/Effect.h"
+#include "Effect.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
@@ -55,15 +55,15 @@
 
 #include "AllThemeResources.h"
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/AudacityTextEntryDialog.h"
-#include "widgets/HelpSystem.h"
+#include "AudacityMessageBox.h"
+#include "AudacityTextEntryDialog.h"
+#include "HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #define MacrosPaletteTitle XO("Macros Palette")
@@ -1533,7 +1533,7 @@ BaseItemSharedPtr PluginMenuItems()
 {
    using Options = CommandManager::Options;
    static BaseItemSharedPtr items{
-   Items( "",
+   Items( "Macros",
       Section( "RepeatLast",
          // Delayed evaluation:
          [](AudacityProject &project)

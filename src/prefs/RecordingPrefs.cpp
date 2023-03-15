@@ -20,7 +20,7 @@
 
 
 #include "RecordingPrefs.h"
-#include "AudioIOBase.h"
+#include "AudioIO.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
@@ -28,7 +28,7 @@
 
 #include "Decibels.h"
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 using std::min;
 
@@ -125,9 +125,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Sound Activated Recording"));
    {
-      S.TieCheckBox(XXO("&Enable"),
-                    {wxT("/AudioIO/SoundActivatedRecord"),
-                     false});
+      S.TieCheckBox(XXO("&Enable"), SoundActivatedRecord);
 
       S.StartMultiColumn(2, wxEXPAND);
       {
@@ -270,6 +268,8 @@ bool RecordingPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   SoundActivatedRecord.Invalidate();
 
    if (AudioIOLatencyDuration.Read() < 0)
       AudioIOLatencyDuration.Reset();

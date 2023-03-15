@@ -179,6 +179,11 @@ include( AudacityFunctions )
 
 set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
+cmd_option( ${_OPT}crashreport_backend
+            "Crashreport engine [crashpad (default), breakpad]"
+            "crashpad"
+            STRINGS "crashpad" "breakpad")
+
 cmd_option( ${_OPT}bundle_gplv3
             "Bundle GPLv3 license instead of GPLv2 with the resulting binary."
             On)
@@ -608,6 +613,10 @@ endif()
 
 add_subdirectory( "help" )
 
+if(${_OPT}has_crashreports)
+   add_subdirectory( "crashreporter" )
+endif()
+
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
@@ -622,10 +631,6 @@ endif()
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
-
-if(${_OPT}has_crashreports)
-   add_subdirectory( "crashreports" )
-endif()
 
 add_subdirectory( "tests/journals" )
 

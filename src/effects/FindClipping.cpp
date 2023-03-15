@@ -17,21 +17,20 @@
 \brief FindClippingDialog used with EffectFindClipping
 
 *//*******************************************************************/
-
-
-
 #include "FindClipping.h"
+#include "AnalysisTracks.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
 
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 #include "../LabelTrack.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectFindClipping::Parameters() const
 {
@@ -92,9 +91,9 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
 
    LabelTrack *lt{};
    if (!clt)
-      addedTrack = (AddAnalysisTrack(name)), lt = addedTrack->get();
+      addedTrack = (AddAnalysisTrack(*this, name)), lt = addedTrack->get();
    else
-      modifiedTrack.emplace(ModifyAnalysisTrack(clt, name)),
+      modifiedTrack.emplace(ModifyAnalysisTrack(*this, clt, name)),
       lt = modifiedTrack->get();
 
    int count = 0;
@@ -150,7 +149,8 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
       buffer.reinit(blockSize);
    }
    catch( const std::bad_alloc & ) {
-      Effect::MessageBox( XO("Requested value exceeds memory capacity.") );
+      EffectUIServices::DoMessageBox(*this,
+         XO("Requested value exceeds memory capacity."));
       return false;
    }
 
@@ -213,7 +213,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator> EffectFindClipping::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectFindClipping::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {

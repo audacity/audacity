@@ -15,11 +15,12 @@
 #include <wx/choice.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/weakref.h>
 
-#include "Effect.h"
+#include "StatefulEffect.h"
 #include "Biquad.h"
 #include "EBUR128.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include "Track.h"
 
 class wxChoice;
@@ -56,7 +57,7 @@ public:
    // Effect implementation
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

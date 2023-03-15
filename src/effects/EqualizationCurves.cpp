@@ -16,7 +16,7 @@
 #include "EqualizationParameters.h"
 
 #include <wx/log.h>
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "FileNames.h"
 #include "XMLFileReader.h"
 
@@ -41,7 +41,7 @@ int EQUtils::DoMessageBox(
    const TranslatableString &titleStr,
    long style)
 {
-   // Compare with Effect::MessageBox
+   // Compare with EffectUIServices::DoMessageBox
    auto title = titleStr.empty()
       ? name
       : XO("%s: %s").Format( name, titleStr );

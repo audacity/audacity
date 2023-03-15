@@ -31,7 +31,6 @@
 #endif
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
@@ -44,9 +43,9 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "toolbars/SelectionBar.h"
-#include "widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
-#include "widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
 

@@ -45,10 +45,10 @@
 
 #include "LoadEffects.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "Prefs.h"
 #include "FileNames.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include <math.h>
 
@@ -156,7 +156,7 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
  its unusual two-pass nature.  First choose and analyze an example of noise,
  then apply noise reduction to another selection.  That is difficult to fit into
  the framework for managing settings of other effects. */
-int EffectNoiseRemoval::ShowHostInterface(
+int EffectNoiseRemoval::ShowHostInterface(EffectPlugin &,
    wxWindow &parent, const EffectDialogFactory &,
    std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal )

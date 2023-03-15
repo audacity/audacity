@@ -20,12 +20,12 @@
 #include "Prefs.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
 
 #include "TimeWarper.h"
 
-#include "../widgets/AudacityMessageBox.h"
+#include "AudacityMessageBox.h"
 
 bool Generator::Process(EffectInstance &, EffectSettings &settings)
 {
@@ -52,7 +52,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
              !track->IsEmpty(mT0,
                mT0 + duration - (mT1 - mT0) - 1.0 / track->GetRate()))
          {
-            Effect::MessageBox(
+            EffectUIServices::DoMessageBox(*this,
                XO("There is not enough room available to generate the audio"),
                wxICON_STOP,
                XO("Error") );

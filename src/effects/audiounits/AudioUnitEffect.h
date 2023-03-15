@@ -25,7 +25,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../PerTrackEffect.h"
+#include "../StatelessPerTrackEffect.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>
@@ -38,7 +38,7 @@ class AudioUnitEffect;
 class AUControl;
 
 class AudioUnitEffect final
-   : public PerTrackEffect
+   : public StatelessPerTrackEffect
    , AudioUnitWrapper
 {
 public:
@@ -86,26 +86,27 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
 
    bool InitializePlugin();
-   bool FullyInitializePlugin();
-
-   // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
-   bool CloseUI() override;
+      const EffectOutputs *pOutputs) const override;
+   bool CloseUI() const override;
 
-   bool CanExportPresets() override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
+   bool CanExportPresets() const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
 
-   bool HasOptions() override;
-   void ShowOptions() override;
+   bool HasOptions() const override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    // AudioUnitEffect implementation
 
@@ -139,15 +140,16 @@ private:
 #endif
 
 private:
+   //! Will never be called
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const final;
+
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
 
    bool mInteractive{ false };
-   bool mUseLatency{ true };
-
-   wxWindow *mParent{};
-   wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
 };
 
 #endif

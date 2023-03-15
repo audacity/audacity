@@ -6,14 +6,13 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
@@ -174,7 +173,7 @@ void EditByLabel(AudacityProject &project,
    if( regions.size() == 0 )
       return;
 
-   const bool notLocked = (!ProjectSettings::Get(project).IsSyncLocked() &&
+   const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
                            (tracks.Selected<PlayableTrack>()).empty());
 
    //Apply action on tracks starting from
@@ -213,7 +212,7 @@ void EditClipboardByLabel( AudacityProject &project,
    if( regions.size() == 0 )
       return;
 
-   const bool notLocked = (!ProjectSettings::Get(project).IsSyncLocked() &&
+   const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
                            (tracks.Selected<PlayableTrack>()).empty());
 
    auto &clipboard = Clipboard::Get();

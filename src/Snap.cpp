@@ -15,6 +15,7 @@
 #include <cstdlib>
 
 #include "Project.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "Track.h"
@@ -77,10 +78,11 @@ SnapManager::~SnapManager()
 
 void SnapManager::Reinit()
 {
+   const auto &formats = ProjectNumericFormats::Get(*mProject);
    const auto &settings = ProjectSettings::Get( *mProject );
    int snapTo = settings.GetSnapTo();
    auto rate = ProjectRate::Get(*mProject).GetRate();
-   auto format = settings.GetSelectionFormat();
+   auto format = formats.GetSelectionFormat();
 
    // No need to reinit if these are still the same
    if (snapTo == mSnapTo && rate == mRate && format == mFormat)

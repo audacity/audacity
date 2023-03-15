@@ -319,8 +319,13 @@ void OAuthService::DoAuthorise(
          {
             if (handler)
                handler({});
+
+            // Token has expired?
+            if (httpCode == 422)
+               BasicUI::CallAfter([this] { UnlinkAccount(); });
+            else            
+               SafePublish({ {}, body, false });
             
-            SafePublish({ {}, body, false });
             return;
          }
 

@@ -24,10 +24,10 @@
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelResizeHandle.h"
 #include "ViewInfo.h"
-#include "../../../../WaveTrack.h"
-#include "../../../../WaveClip.h"
+#include "WaveTrack.h"
+#include "WaveClip.h"
 #include "UndoManager.h"
-#include "../../../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../commands/AudacityCommand.h"
 
@@ -38,7 +38,7 @@
 
 #include "ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
-#include "../../../../SelectionState.h"
+#include "SelectionState.h"
 #include "../../../../RefreshCode.h"
 #include "Theme.h"
 #include "../../../../../images/Cursors.h"

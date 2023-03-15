@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../widgets/wxWidgetsWindowPlacement.h"
+#include "wxWidgetsWindowPlacement.h"
 
 CommonTrackPanelCell::~CommonTrackPanelCell()
 {

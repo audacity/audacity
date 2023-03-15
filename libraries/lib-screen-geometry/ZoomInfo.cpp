@@ -10,6 +10,7 @@
 
 #include "ZoomInfo.h"
 
+#include <cassert>
 #include <cmath>
 
 namespace {
@@ -31,8 +32,8 @@ ZoomInfo::~ZoomInfo()
 /// Converts a position (mouse X coordinate) to
 /// project time, in seconds.  Needs the left edge of
 /// the track as an additional parameter.
-double ZoomInfo::PositionToTime(wxInt64 position,
-   wxInt64 origin
+double ZoomInfo::PositionToTime(int64 position,
+   int64 origin
    , bool // ignoreFisheye
 ) const
 {
@@ -41,16 +42,16 @@ double ZoomInfo::PositionToTime(wxInt64 position,
 
 
 /// STM: Converts a project time to screen x position.
-wxInt64 ZoomInfo::TimeToPosition(double projectTime,
-   wxInt64 origin
+auto ZoomInfo::TimeToPosition(double projectTime,
+   int64 origin
    , bool // ignoreFisheye
-) const
+) const -> int64
 {
    double t = 0.5 + zoom * (projectTime - h) + origin ;
-   if( t < wxINT64_MIN )
-      return wxINT64_MIN;
-   if( t > wxINT64_MAX )
-      return wxINT64_MAX;
+   if( t < INT64_MIN )
+      return INT64_MIN;
+   if( t > INT64_MAX )
+      return INT64_MAX;
    t = floor( t );
    return t;
 }
@@ -100,18 +101,18 @@ void ZoomInfo::ZoomBy(double multiplier)
 }
 
 void ZoomInfo::FindIntervals
-   (double /*rate*/, Intervals &results, wxInt64 width, wxInt64 origin) const
+   (double /*rate*/, Intervals &results, int64 width, int64 origin) const
 {
    results.clear();
    results.reserve(2);
 
-   const wxInt64 rightmost(origin + (0.5 + width));
-   wxASSERT(origin <= rightmost);
+   const int64 rightmost(origin + (0.5 + width));
+   assert(origin <= rightmost);
    {
       results.push_back(Interval(origin, zoom, false));
    }
 
    if (origin < rightmost)
       results.push_back(Interval(rightmost, 0, false));
-   wxASSERT(!results.empty() && results[0].position == origin);
+   assert(!results.empty() && results[0].position == origin);
 }

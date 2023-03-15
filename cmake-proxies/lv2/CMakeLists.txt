@@ -3,7 +3,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
 
       # lilv
@@ -70,7 +70,7 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/suil/suil/suil.h
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PRIVATE
       ${_PRVDIR}
       ${TARGET_ROOT}/lilv/src
@@ -90,12 +90,12 @@ list( APPEND INCLUDES
       ${TARGET_ROOT}/suil
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PRIVATE
       SUIL_INTERNAL
 )
 
-list( APPEND HEADERS
+set( HEADERS
 
    # lv2
 
@@ -271,3 +271,4 @@ target_sources( ${TARGET} PRIVATE ${SOURCES} ${HEADERS} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 
+set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)

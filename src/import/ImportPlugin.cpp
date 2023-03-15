@@ -11,8 +11,8 @@ Paul Licameli split from Import.cpp
 #include "ImportPlugin.h"
 
 #include <wx/filename.h>
-#include "../WaveTrack.h"
-#include "../widgets/ProgressDialog.h"
+#include "WaveTrack.h"
+#include "ProgressDialog.h"
 #include "QualitySettings.h"
 
 ImportPlugin::ImportPlugin(FileExtensions supportedExtensions):
@@ -31,6 +31,11 @@ bool ImportPlugin::SupportsExtension(const FileExtension &extension)
 {
    // Case-insensitive check if extension is supported
    return mExtensions.Index(extension, false) != wxNOT_FOUND;
+}
+
+TranslatableString ImportPlugin::FailureHint() const
+{
+   return {};
 }
 
 ImportFileHandle::ImportFileHandle(const FilePath & filename)

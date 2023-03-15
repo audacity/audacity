@@ -37,9 +37,9 @@
 #include "Import.h"
 #include "ImportPlugin.h"
 
-#include "../SelectFile.h"
+#include "SelectFile.h"
 #include "Tags.h"
-#include "../widgets/ProgressDialog.h"
+#include "ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
 
@@ -65,7 +65,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "FLAC++/decoder.h"
 
 #include "Prefs.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 #ifdef USE_LIBID3TAG

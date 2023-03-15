@@ -3,6 +3,7 @@
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
 #include "EffectInterface.h"
@@ -54,7 +55,15 @@ class VST3Wrapper
 {
    EffectSettings mDefaultSettings;
    VST3::Hosting::Module& mModule;
+   const VST3::Hosting::ClassInfo& mEffectClassInfo;
 public:
+
+   struct FactoryPresetDesc
+   {
+      wxString id;
+      wxString displayName;
+   };
+
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
    Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
@@ -63,7 +72,7 @@ public:
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    Steinberg::IPtr<Steinberg::Vst::IComponentHandler> mComponentHandler;
 
-   VST3Wrapper(VST3::Hosting::Module& module, VST3::UID effectUID);
+   VST3Wrapper(VST3::Hosting::Module& module, const VST3::Hosting::ClassInfo& effectClassInfo);
    ~VST3Wrapper();
 
    VST3Wrapper(const VST3Wrapper&) = delete;
@@ -71,7 +80,11 @@ public:
    VST3Wrapper& operator=(const VST3Wrapper&) = delete;
    VST3Wrapper& operator=(VST3Wrapper&&) = delete;
 
+   //! Should be called once before almost any other method call
+   void InitializeComponents();
+
    VST3::Hosting::Module& GetModule() const { return mModule; }
+   const VST3::Hosting::ClassInfo& GetEffectClassInfo() const;
 
    bool IsActive() const noexcept;
 
@@ -79,9 +92,9 @@ public:
    void FetchSettings(EffectSettings&);
    //!Saves current state inside settings object, clears all runtime data
    void StoreSettings(EffectSettings&) const;
-   
-   bool LoadPreset(Steinberg::IBStream* fileStream);
-   bool SavePreset(Steinberg::IBStream* fileStream) const;
+
+   void LoadPreset(const wxString& presetId);
+   void SavePresetToFile(const wxString& filepath) const;
 
    //!Initializes effect for processing using settings.
    bool Initialize(EffectSettings& settings,
@@ -111,6 +124,10 @@ public:
    void BeginParameterEdit(EffectSettingsAccess& access);
    void EndParameterEdit();
 
+   //! Returns an array of factory preset ids.
+   //! Safe to call before `InitializeComponents`
+   std::vector<FactoryPresetDesc> FindFactoryPresets() const;
+
    Steinberg::int32 GetLatencySamples() const;
 
    static EffectSettings MakeSettings();
@@ -127,11 +144,13 @@ public:
 
 private:
 
+   bool LoadPresetFromStream(Steinberg::IBStream* fileStream);
+   bool SavePresetToStream(Steinberg::IBStream* fileStream) const;
+
    //Reads runtime data changes to apply them during next processing pass
    void ConsumeChanges(const EffectSettings& settings);
 
    bool mActive {false};
-   const VST3::UID mEffectUID;
 
    std::vector<std::pair<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue>> mParameters;
    //A preallocated array of Steinberg::Vst::IParameterValueQueue
@@ -139,4 +158,6 @@ private:
    //in VST3EffectSettings structure, dynamically assigned during
    //processing
    std::unique_ptr<SingleInputParameterValue[]> mParameterQueues;
+
+   Steinberg::Vst::ProcessContext mProcessContext { };
 };

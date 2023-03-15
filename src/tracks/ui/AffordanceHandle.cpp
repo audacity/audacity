@@ -14,7 +14,7 @@
 #include "ProjectAudioIO.h"
 #include "../../RefreshCode.h"
 #include "ViewInfo.h"
-#include "../../SelectionState.h"
+#include "SelectionState.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "Track.h"
 #include "../../../images/Cursors.h"

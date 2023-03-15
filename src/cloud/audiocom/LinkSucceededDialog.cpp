@@ -17,7 +17,7 @@
 
 #include "ShuttleGui.h"
 
-#include "widgets/HelpSystem.h"
+#include "HelpSystem.h"
 
 
 namespace cloud::audiocom

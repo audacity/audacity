@@ -22,10 +22,13 @@
 
 #include <wx/choice.h>
 #include <wx/defs.h>
+#include <wx/button.h>
 
 #include "PluginManager.h"
+#include "PluginRegistrationDialog.h"
+#include "Menus.h"
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Effects"))
@@ -63,17 +66,16 @@ void EffectsPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-ChoiceSetting EffectsGroupBy{
-   wxT("/Effects/GroupBy"),
-   {
+EnumValueSymbols EffectsGroupSymbols {
       ByColumns,
       {
-         XO("Sorted by Effect Name") ,
-         XO("Sorted by Publisher and Effect Name") ,
-         XO("Sorted by Type and Effect Name") ,
-         XO("Grouped by Publisher") ,
-         XO("Grouped by Type") ,
-         XO("Default")
+         XO("Sort by effect name") ,
+         XO("Sort by publisher and effect name") ,
+         XO("Sort by type and effect name") ,
+         XO("Group by publisher") ,
+         XO("Group by type") ,
+         XO("Group by category"),
+         XO("Group by type and publisher")
       },
       {
          wxT("sortby:name") ,
@@ -81,134 +83,36 @@ ChoiceSetting EffectsGroupBy{
          wxT("sortby:type:name") ,
          wxT("groupby:publisher") ,
          wxT("groupby:type") ,
-         wxT("default")
+         wxT("default"),
+         wxT("groupby:type:publisher")
       }
-   },
+};
+
+ChoiceSetting EffectsGroupBy{
+   wxT("/Effects/GroupBy"),
+   EffectsGroupSymbols,
    5 // "default"
 };
 
-namespace {
-
-// Rather than hard-code an exhaustive list of effect families in this file,
-// pretend we don't know, but discover them instead by querying the module and
-// effect managers.
-
-// But then we would like to have prompts with accelerator characters that are
-// distinct.  We collect some prompts in the following map.
-
-// It is not required that each module be found here, nor that each module
-// mentioned here be found.
-const std::map< wxString, TranslatableString > SuggestedPrompts{
-
-/* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
-   { wxT("AudioUnit"), XXO("Audio Unit") },
-
-/* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-   (Application programming interface)
- */
-   { wxT("LADSPA"),    XXO("&LADSPA") },
-
-/* i18n-hint: abbreviates
-   "Linux Audio Developer's Simple Plugin API (LADSPA) version 2" */
-   { wxT("LV2"),       XXO("LV&2") },
-
-/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
- Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
- In the translations of this and other strings, you may transliterate the
- name into another alphabet.  */
-   { wxT("Nyquist"),   XXO("N&yquist") },
-
-/* i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-   It is not an abbreviation for anything.  See http://vamp-plugins.org */
-   { wxT("Vamp"),      XXO("&Vamp") },
-
-/* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-   developed by Steinberg GmbH */
-   { wxT("VST"),       XXO("V&ST") },
-
+ChoiceSetting RealtimeEffectsGroupBy{
+   wxT("/Effects/RealtimeGroupBy"),
+   EffectsGroupSymbols,
+   6 // "groupby:type:publisher"
 };
-
-// Collect needed prompts and settings paths, at most once, on demand
-struct Entry {
-   TranslatableString prompt;
-   wxString setting;
-};
-static const std::vector< Entry > &GetModuleData()
-{
-   struct ModuleData : public std::vector< Entry > {
-      ModuleData() {
-         auto &pm = PluginManager::Get();
-         for (auto &plug : pm.PluginsOfType(PluginTypeModule)) {
-            auto internal = plug.GetEffectFamily();
-            if ( internal.empty() )
-               continue;
-
-            TranslatableString prompt;
-            auto iter = SuggestedPrompts.find( internal );
-            if ( iter == SuggestedPrompts.end() )
-               // For the built-in modules this Msgid includes " Effects",
-               // but those strings were never shown to the user,
-               // and the prompts in the table above do not include it.
-               // If there should be new modules, it is not important for them
-               // to follow the " Effects" convention, but instead they can
-               // have shorter msgids.
-               prompt = plug.GetSymbol().Msgid();
-            else
-               prompt = iter->second;
-
-            auto setting = pm.GetPluginEnabledSetting( plug );
-
-            push_back( { prompt, setting } );
-         }
-         // Guarantee some determinate ordering
-         std::sort( begin(), end(),
-            []( const Entry &a, const Entry &b ){
-               return a.setting < b.setting;
-            }
-         );
-      }
-   };
-   static ModuleData theData;
-   return theData;
-}
-
-}
 
 void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(XO("Enable Effects"));
-   {
-      for ( const auto &entry : GetModuleData() )
-      {
-         S.TieCheckBox(
-            entry.prompt,
-            {entry.setting,
-             true}
-         );
-      }
-   }
-   S.EndStatic();
-
    S.StartStatic(XO("Effect Options"));
    {
       S.StartMultiColumn(2);
       {
-         wxChoice *c = S
-            .MinSize()
-            .TieChoice( XXO("S&ort or Group:"), EffectsGroupBy);
-
-         S.TieIntegerTextBox(XXO("&Maximum effects per group (0 to disable):"),
-                             {wxT("/Effects/MaxPerGroup"),
-#if defined(__WXGTK__)
-                              15
-#else
-                              0
-#endif
-                             },
-                             5);
+         S.MinSize()
+          .TieChoice( XXO("Effect menu &organization:"), EffectsGroupBy);
+         S.MinSize()
+          .TieChoice( XXO("Realtime effect o&rganization:"), RealtimeEffectsGroupBy);
       }
       S.EndMultiColumn();
    }
@@ -223,6 +127,15 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+
+   S.AddButton(XO("Open Plugin Manager"), wxALIGN_LEFT)->Bind(wxEVT_BUTTON, [this](auto) {
+      //Adding dependency on PluginRegistrationDialog, not good. Alternatively
+      //that could be done with events, though event should be visible here too...
+      PluginRegistrationDialog dialog(wxGetTopLevelParent(this));
+      if(dialog.ShowModal() == wxID_OK)
+         MenuCreator::RebuildAllMenuBars();
+   });
+
    S.EndScroller();
 }
 

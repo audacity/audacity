@@ -608,6 +608,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       SetCaptureMeter( mOwningProject.lock(), options.captureMeter );
    }
 
+   const auto deviceInfo = usePlayback ?
+                              Pa_GetDeviceInfo(playbackParameters.device) :
+                              Pa_GetDeviceInfo(captureParameters.device);
+
+   mUsingAlsa = deviceInfo && deviceInfo->hostApi == paALSA;
+
    SetMeters();
 
 #ifdef USE_PORTMIXER
@@ -620,7 +626,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 #endif
 
    // July 2016 (Carsten and Uwe)
-   // BUG 193: Possibly tell portAudio to use 24 bit with DirectSound. 
+   // BUG 193: Possibly tell portAudio to use 24 bit with DirectSound.
    int  userData = 24;
    int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
 
@@ -644,6 +650,23 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                                     paNoFlag,
                                     audacityAudioCallback, lpUserData );
       if (mLastPaError == paNoError) {
+         const auto stream = Pa_GetStreamInfo(mPortStreamV19);
+         // Use the reported latency as a hint about the hardware buffer size
+         // required for uninterrupted playback.
+         mHardwarePlaybackLatencyFrames = lrint(stream->outputLatency * mRate);         
+#ifdef __WXGTK__
+         // DV: When using ALSA PortAudio does not report the buffer size.
+         // Instead, it reports periodSize * (periodsCount - 1). It is impossible
+         // to retrieve periodSize or periodsCount either. By default PA sets
+         // periodsCount to 4. However it was observed, that PA reports back ~100msec
+         // latency and expects a buffer of ~200msecs on Audacity default settings
+         // which suggests that ALSA changes the periodsCount to suit its needs.
+         // 
+         // Why 3? 2 doesn't work for me, 3 does :-) So similar to PA - this
+         // is the value that works for author setup. 
+         if (mUsingAlsa)
+            mHardwarePlaybackLatencyFrames *= 3;
+#endif
          break;
       }
       wxLogDebug("Attempt %u to open capture stream failed with: %d", 1 + tries, mLastPaError);
@@ -795,14 +818,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       }
    }
 
-#ifdef __WXGTK__
-   // Detect whether ALSA is the chosen host, and do the various involved MIDI
-   // timing compensations only then.
-   mUsingAlsa = (AudioIOHost.Read() == L"ALSA");
-#endif
-
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mPauseRec, false);
+   mPauseRec = SoundActivatedRecord.Read();
    gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
    int silenceLevelDB;
    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
@@ -1139,11 +1156,18 @@ bool AudioIO::AllocateBuffers(
       try
       {
          if( mNumPlaybackChannels > 0 ) {
-            // Allocate output buffers.  For every output track we allocate
-            // a ring buffer of ten seconds
+            // Allocate output buffers.
+            // Allow at least 2x of the buffer latency.
             auto playbackBufferSize =
-               (size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
+               std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
 
+            // Make playbackBufferSize a multiple of mPlaybackSamplesToCopy
+            playbackBufferSize = mPlaybackSamplesToCopy *
+               ((playbackBufferSize + mPlaybackSamplesToCopy - 1) / mPlaybackSamplesToCopy);
+
+            // Adjust mPlaybackRingBufferSecs correspondingly
+            mPlaybackRingBufferSecs = PlaybackPolicy::Duration { playbackBufferSize / mRate };
+            
             // Always make at least one playback buffer
             mPlaybackBuffers.reinit(
                std::max<size_t>(1, mPlaybackTracks.size()));
@@ -1166,6 +1190,14 @@ bool AudioIO::AllocateBuffers(
             mPlaybackQueueMinimum =
                std::min( mPlaybackQueueMinimum, playbackBufferSize );
 
+            // Limit the mPlaybackQueueMinimum to the hardware latency
+            mPlaybackQueueMinimum =
+               std::max(mPlaybackQueueMinimum, mHardwarePlaybackLatencyFrames);
+
+            // Make mPlaybackQueueMinimum a multiple of mPlaybackSamplesToCopy
+            mPlaybackQueueMinimum = mPlaybackSamplesToCopy *
+               ((mPlaybackQueueMinimum + mPlaybackSamplesToCopy - 1) / mPlaybackSamplesToCopy);
+            
             if (mPlaybackTracks.empty())
                // Make at least one playback buffer
                mPlaybackBuffers[0] =
@@ -3297,3 +3329,5 @@ bool AudioIO::IsCapturing() const
       mPlaybackSchedule.GetTrackTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
 }
+
+BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };

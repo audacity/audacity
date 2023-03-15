@@ -14,8 +14,9 @@
 #define __AUDACITY_EFFECT_TONEGEN__
 
 #include "StatefulPerTrackEffect.h"
-#include "../ShuttleAutomation.h"
+#include "ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
+#include <wx/weakref.h>
 
 class NumericTextCtrl;
 class ShuttleGui;
@@ -47,7 +48,7 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

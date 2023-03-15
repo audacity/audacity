@@ -56,8 +56,4 @@ int ShowClippingPrefsID();
 AUDACITY_DLL_API
 int ShowTrackNameInWaveformPrefsID();
 
-extern AUDACITY_DLL_API ChoiceSetting
-     GUIManualLocation
-;
-
 #endif

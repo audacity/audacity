@@ -43,11 +43,11 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "Project.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../prefs/WaveformSettings.h"
 #include "../prefs/SpectrogramSettings.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "SettingsVisitor.h"
+#include "ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "CommandContext.h"
@@ -289,17 +289,20 @@ static const EnumValueSymbol kColourStrings[nColours] =
 
 enum kScaleTypes
 {
-   kLinear,
-   kDb,
+   kLinearAmp,
+   kLogarithmicDb,
+   kLinearDb,
    nScaleTypes
 };
 
 static const EnumValueSymbol kScaleTypeStrings[nScaleTypes] =
 {
-   // These are acceptable dual purpose internal/visible names
-   { XO("Linear") },
+   /* i18n-hint: abbreviates amplitude */
+   { wxT("Linear"), XO("Linear (amp)") },
    /* i18n-hint: abbreviates decibels */
-   { XO("dB") },
+   { wxT("dB"), XO("Logarithmic (dB)") },
+   /* i18n-hint: abbreviates decibels */
+   { wxT("LinearDB"), XO("Linear (dB)")}
 };
 
 enum kZoomTypes
@@ -336,7 +339,7 @@ bool SetTrackVisualsCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
       S.OptionalN( bHasDisplayType    ).DefineEnum( mDisplayType,    wxT("Display"),    0, symbols.data(), symbols.size() );
    }
 
-   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinear,   kScaleTypeStrings, nScaleTypes );
+   S.OptionalN( bHasScaleType      ).DefineEnum( mScaleType,      wxT("Scale"),      kLinearAmp,   kScaleTypeStrings, nScaleTypes );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0,  kColourStrings, nColours );
    S.OptionalN( bHasVZoom          ).DefineEnum( mVZoom,          wxT("VZoom"),      kReset,    kZoomTypeStrings, nZoomTypes );
    S.OptionalN( bHasVZoomTop       ).Define(     mVZoomTop,       wxT("VZoomHigh"),  1.0,  -2.0,  2.0 );
@@ -425,24 +428,30 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          view.SetDisplay( WaveTrackSubViewType::Default(), false );
       }
    }
-   if( wt && bHasScaleType )
-      wt->GetWaveformSettings().scaleType = 
-         (mScaleType==kLinear) ? 
-            WaveformSettings::stLinear
-            : WaveformSettings::stLogarithmic;
+   if (wt && bHasScaleType) {
+      auto &scaleType = WaveformSettings::Get(*wt).scaleType;
+      switch (mScaleType) {
+      default:
+      case kLinearAmp: scaleType = WaveformSettings::stLinearAmp;
+      case kLogarithmicDb: scaleType = WaveformSettings::stLogarithmicDb;
+      case kLinearDb: scaleType = WaveformSettings::stLinearDb;
+      }
+   }
 
    if( wt && bHasVZoom ){
+      auto &cache = WaveformScale::Get(*wt);
       switch( mVZoom ){
          default:
-         case kReset: wt->SetDisplayBounds(-1,1); break;
-         case kTimes2: wt->SetDisplayBounds(-2,2); break;
-         case kHalfWave: wt->SetDisplayBounds(0,1); break;
+         case kReset: cache.SetDisplayBounds(-1,1); break;
+         case kTimes2: cache.SetDisplayBounds(-2,2); break;
+         case kHalfWave: cache.SetDisplayBounds(0,1); break;
       }
    }
 
    if ( wt && (bHasVZoomTop || bHasVZoomBottom) && !bHasVZoom){
       float vzmin, vzmax;
-      wt->GetDisplayBounds(&vzmin, &vzmax);
+      auto &cache = WaveformScale::Get(*wt);
+      cache.GetDisplayBounds(vzmin, vzmax);
 
       if ( !bHasVZoomTop ){
          mVZoomTop = vzmax;
@@ -463,20 +472,26 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          mVZoomBottom = c - ZOOMLIMIT / 2.0;
          mVZoomTop = c + ZOOMLIMIT / 2.0;
       }
-      wt->SetDisplayBounds(mVZoomBottom, mVZoomTop);
+      cache.SetDisplayBounds(mVZoomBottom, mVZoomTop);
       auto &tp = TrackPanel::Get( context.project );
       tp.UpdateVRulers();
    }
 
    if( wt && bHasUseSpecPrefs   ){
-      wt->UseSpectralPrefs( bUseSpecPrefs );
+      if( bUseSpecPrefs ){
+         // reset it, and next we will be getting the defaults.
+         SpectrogramSettings::Reset(*wt);
+      }
+      else {
+         SpectrogramSettings::Own(*wt);
+      }
    }
-   if( wt && bHasSpectralSelect ){
-      wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
-   }
-   if (wt && bHasSpecColorScheme) {
-      wt->GetSpectrogramSettings().colorScheme = (SpectrogramSettings::ColorScheme)mSpecColorScheme;
-   }
+   auto &settings = SpectrogramSettings::Get(*wt);
+   if (wt && bHasSpectralSelect)
+      settings.spectralSelection = bSpectralSelect;
+   if (wt && bHasSpecColorScheme)
+      settings.colorScheme =
+         static_cast<SpectrogramSettings::ColorScheme>(mSpecColorScheme);
 
    return true;
 }

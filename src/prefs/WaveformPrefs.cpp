@@ -25,8 +25,8 @@ Paul Licameli
 #include "Project.h"
 
 #include "../TrackPanel.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "ShuttleGui.h"
+#include "WaveTrack.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
@@ -39,7 +39,7 @@ WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
 , mPopulating(false)
 {
    if (mWt) {
-      WaveformSettings &settings = wt->GetWaveformSettings();
+      auto &settings = WaveformSettings::Get(*wt);
       mDefaulted = (&WaveformSettings::defaults() == &settings);
       mTempSettings = settings;
    }
@@ -168,10 +168,9 @@ bool WaveformPrefs::Commit()
    if (mWt) {
       for (auto channel : TrackList::Channels(mWt)) {
          if (mDefaulted)
-            channel->SetWaveformSettings({});
+            WaveformSettings::Set(*channel, {});
          else {
-            WaveformSettings &settings =
-               channel->GetWaveformSettings();
+            auto &settings = WaveformSettings::Get(*channel);
             settings = mTempSettings;
          }
       }
@@ -242,8 +241,8 @@ void WaveformPrefs::OnDefaults(wxCommandEvent &)
 
 void WaveformPrefs::EnableDisableRange()
 {
-   mRangeChoice->Enable
-      (mScaleChoice->GetSelection() == WaveformSettings::stLogarithmic);
+   mRangeChoice->Enable(
+      mScaleChoice->GetSelection() == WaveformSettings::stLogarithmicDb);
 }
 
 BEGIN_EVENT_TABLE(WaveformPrefs, PrefsPanel)

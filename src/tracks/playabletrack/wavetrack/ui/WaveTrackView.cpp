@@ -19,8 +19,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/graphics.h>
 
 #include "AColor.h"
-#include "../../../../WaveClip.h"
-#include "../../../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 #include "../../../../../images/Cursors.h"
 #include "AllThemeResources.h"
@@ -29,7 +29,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../SyncLock.h"
+#include "SyncLock.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelAx.h"
@@ -786,7 +786,7 @@ void WaveTrackSubView::DrawBoldBoundaries(
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
-   for (const auto loc : track->GetCachedLocations()) {
+   for (const auto loc : WaveTrackLocations::Get(*track).Get()) {
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =
@@ -1633,8 +1633,8 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
        = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
     if (outShowSamples != nullptr)
        *outShowSamples = showIndividualSamples;
-    constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
+    constexpr auto edgeLeft = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
+    constexpr auto edgeRight = static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
     auto left = std::clamp(
        zoomInfo.TimeToPosition(
           clip.GetPlayStartTime(), viewRect.x, true

@@ -20,8 +20,8 @@
 #include "GetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "SettingsVisitor.h"
+#include "ShuttleGui.h"
 #include "CommandContext.h"
 
 const ComponentInterfaceSymbol GetTrackInfoCommand::Symbol

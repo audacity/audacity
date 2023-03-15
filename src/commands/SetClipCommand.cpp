@@ -23,10 +23,10 @@
 #include "CommandManager.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "SettingsVisitor.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol SetClipCommand::Symbol
 { XO("Set Clip") };

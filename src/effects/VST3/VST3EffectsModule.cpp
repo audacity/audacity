@@ -289,10 +289,13 @@ public:
    void Validate(ComponentInterface& component) override
    {
       if(auto vst3effect = dynamic_cast<VST3Effect*>(&component))
+      {
          VST3Wrapper wrapper (
             *vst3effect->mModule,
-            vst3effect->mEffectClassInfo.ID()
+            vst3effect->mEffectClassInfo
          );
+         wrapper.InitializeComponents();
+      }
       else
          throw std::runtime_error("Not a VST3Effect");
    }

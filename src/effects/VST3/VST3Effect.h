@@ -17,7 +17,7 @@
 
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "effects/PerTrackEffect.h"
+#include "effects/StatelessPerTrackEffect.h"
 
 namespace Steinberg
 {
@@ -35,7 +35,7 @@ class VST3ParametersWindow;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public PerTrackEffect
+class VST3Effect final : public StatelessPerTrackEffect
 {
    friend class VST3PluginValidator;
 
@@ -44,11 +44,10 @@ class VST3Effect final : public PerTrackEffect
    std::shared_ptr<VST3::Hosting::Module> mModule;
    const VST3::Hosting::ClassInfo mEffectClassInfo;
 
-   wxWindow* mParent { nullptr };
-
    // Mutable cache fields computed once on demand
    mutable bool mRescanFactoryPresets { true };
-   mutable RegistryPaths mFactoryPresets;
+   mutable RegistryPaths mFactoryPresetNames;
+   mutable std::vector<wxString> mFactoryPresetIDs;
 
 public:
 
@@ -89,26 +88,33 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   int ShowClientInterface(wxWindow &parent, wxDialog &dialog,
-      EffectUIValidator *pValidator, bool forceModal) override;
+   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
+      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
+   const override;
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-   std::unique_ptr<EffectUIValidator> PopulateUI(
+   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) override;
+      const EffectOutputs *pOutputs) const override;
 
-   bool CloseUI() override;
-   bool CanExportPresets() override;
-   void ExportPresets(const EffectSettings &settings) const override;
-   OptionalMessage ImportPresets(EffectSettings &settings) override;
-   bool HasOptions() override;
-   void ShowOptions() override;
+   bool CanExportPresets() const override;
+   void ExportPresets(
+      const EffectPlugin &plugin, const EffectSettings &settings)
+   const override;
+   OptionalMessage ImportPresets(
+      const EffectPlugin &plugin, EffectSettings &settings) const override;
+   bool HasOptions() const override;
+   void ShowOptions(const EffectPlugin &plugin) const override;
 
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
 private:
+   //! Will never be called
+   virtual std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
+      const EffectOutputs *pOutputs) const final;
    
-   bool LoadPreset(const wxString& path, EffectSettings& settings) const;
+   void LoadPreset(const wxString& id, EffectSettings& settings) const;
 };

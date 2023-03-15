@@ -47,9 +47,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # NEW key assignment view for preferences
    KEY_VIEW
 
-   # feature to link audio tracks to a label track
-   SYNC_LOCK
-
    # DA: Enables dark audacity theme and customisations.
    #DA
 

@@ -19,6 +19,7 @@ the pitch without changing the tempo.
 
 #if USE_SOUNDTOUCH
 #include "ChangePitch.h"
+#include "EffectEditor.h"
 #include "LoadEffects.h"
 
 #if USE_SBSMS
@@ -35,9 +36,9 @@ the pitch without changing the tempo.
 #include <wx/valtext.h>
 
 #include "../PitchName.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Spectrum.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
 
@@ -231,7 +232,7 @@ bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
    return (m_dPercentChange == 0.0);
 }
 
-std::unique_ptr<EffectUIValidator> EffectChangePitch::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectChangePitch::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -626,7 +627,7 @@ void EffectChangePitch::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(evt))
 
    if (!m_pTextCtrl_SemitonesChange->GetValidator()->TransferFromWindow())
    {
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
 
@@ -649,7 +650,7 @@ void EffectChangePitch::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(evt))
    // If m_dSemitonesChange is a big enough positive, we can go to 1.#INF (Windows) or inf (Linux).
    // But practically, these are best limits for Soundtouch.
    bool bIsGoodValue = (m_dSemitonesChange > -80.0) && (m_dSemitonesChange <= 60.0);
-   EffectUIValidator::EnableApply(mUIParent, bIsGoodValue);
+   EffectEditor::EnableApply(mUIParent, bIsGoodValue);
 }
 
 void EffectChangePitch::OnText_FromFrequency(wxCommandEvent & WXUNUSED(evt))
@@ -662,7 +663,7 @@ void EffectChangePitch::OnText_FromFrequency(wxCommandEvent & WXUNUSED(evt))
    // so it's not an error, but we do not want to update the values/controls.
    if (!m_pTextCtrl_FromFrequency->GetValidator()->TransferFromWindow())
    {
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
 
@@ -684,7 +685,7 @@ void EffectChangePitch::OnText_FromFrequency(wxCommandEvent & WXUNUSED(evt))
    m_bLoopDetect = false;
 
    // Success. Make sure OK and Preview are enabled, in case we disabled above during editing.
-   EffectUIValidator::EnableApply(mUIParent, true);
+   EffectEditor::EnableApply(mUIParent, true);
 }
 
 void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
@@ -697,7 +698,7 @@ void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
    // so it's not an error, but we do not want to update the values/controls.
    if (!m_pTextCtrl_ToFrequency->GetValidator()->TransferFromWindow())
    {
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
 
@@ -721,7 +722,7 @@ void EffectChangePitch::OnText_ToFrequency(wxCommandEvent & WXUNUSED(evt))
    // Can happen while editing.
    // If the value is good, might also need to re-enable because of above clause.
    bool bIsGoodValue = (m_dPercentChange > Percentage.min) && (m_dPercentChange <= Percentage.max);
-   EffectUIValidator::EnableApply(mUIParent, bIsGoodValue);
+   EffectEditor::EnableApply(mUIParent, bIsGoodValue);
 }
 
 void EffectChangePitch::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
@@ -731,7 +732,7 @@ void EffectChangePitch::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
 
    if (!m_pTextCtrl_PercentChange->GetValidator()->TransferFromWindow())
    {
-      EffectUIValidator::EnableApply(mUIParent, false);
+      EffectEditor::EnableApply(mUIParent, false);
       return;
    }
 
@@ -751,7 +752,7 @@ void EffectChangePitch::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
    m_bLoopDetect = false;
 
    // Success. Make sure OK and Preview are enabled, in case we disabled above during editing.
-   EffectUIValidator::EnableApply(mUIParent, true);
+   EffectEditor::EnableApply(mUIParent, true);
 }
 
 void EffectChangePitch::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(evt))

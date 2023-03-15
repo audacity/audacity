@@ -32,7 +32,7 @@ set( SOURCES
    TrackAttachment.h
 )
 set( LIBRARIES
-   lib-project-interface
+   lib-project-history-interface
 )
 audacity_library( lib-track "${SOURCES}" "${LIBRARIES}"
    "" ""
