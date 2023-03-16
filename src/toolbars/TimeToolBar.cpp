@@ -285,6 +285,8 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
 {
    evt.Skip(false);
 
+   ToolBar::ReCreateButtons();
+
    // Reset to allow resizing to work
    SetMinSize(wxDefaultSize);
    SetMaxSize(wxDefaultSize);

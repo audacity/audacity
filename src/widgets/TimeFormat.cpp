@@ -19,79 +19,79 @@ const TimeFormat &TimeFormat::Instance()
 }
 
 void TimeFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, double& mMinorMinor,
+   double units, double& major, double& minor, double& minorMinor,
    int& mDigits
 ) const
 {
    if (units > 0.5) {
       if (units < 1.0) { // 1 sec
-         mMinor = 1.0;
-         mMajor = 5.0;
+         minor = 1.0;
+         major = 5.0;
          return;
       }
       if (units < 5.0) { // 5 sec
-         mMinor = 5.0;
-         mMajor = 15.0;
+         minor = 5.0;
+         major = 15.0;
          return;
       }
       if (units < 10.0) {
-         mMinor = 10.0;
-         mMajor = 30.0;
+         minor = 10.0;
+         major = 30.0;
          return;
       }
       if (units < 15.0) {
-         mMinor = 15.0;
-         mMajor = 60.0;
+         minor = 15.0;
+         major = 60.0;
          return;
       }
       if (units < 30.0) {
-         mMinor = 30.0;
-         mMajor = 60.0;
+         minor = 30.0;
+         major = 60.0;
          return;
       }
       if (units < 60.0) { // 1 min
-         mMinor = 60.0;
-         mMajor = 300.0;
+         minor = 60.0;
+         major = 300.0;
          return;
       }
       if (units < 300.0) { // 5 min
-         mMinor = 300.0;
-         mMajor = 900.0;
+         minor = 300.0;
+         major = 900.0;
          return;
       }
       if (units < 600.0) { // 10 min
-         mMinor = 600.0;
-         mMajor = 1800.0;
+         minor = 600.0;
+         major = 1800.0;
          return;
       }
       if (units < 900.0) { // 15 min
-         mMinor = 900.0;
-         mMajor = 3600.0;
+         minor = 900.0;
+         major = 3600.0;
          return;
       }
       if (units < 1800.0) { // 30 min
-         mMinor = 1800.0;
-         mMajor = 3600.0;
+         minor = 1800.0;
+         major = 3600.0;
          return;
       }
       if (units < 3600.0) { // 1 hr
-         mMinor = 3600.0;
-         mMajor = 6 * 3600.0;
+         minor = 3600.0;
+         major = 6 * 3600.0;
          return;
       }
       if (units < 6 * 3600.0) { // 6 hrs
-         mMinor = 6 * 3600.0;
-         mMajor = 24 * 3600.0;
+         minor = 6 * 3600.0;
+         major = 24 * 3600.0;
          return;
       }
       if (units < 24 * 3600.0) { // 1 day
-         mMinor = 24 * 3600.0;
-         mMajor = 7 * 24 * 3600.0;
+         minor = 24 * 3600.0;
+         major = 7 * 24 * 3600.0;
          return;
       }
 
-      mMinor = 24.0 * 7.0 * 3600.0; // 1 week
-      mMajor = 24.0 * 7.0 * 3600.0;
+      minor = 24.0 * 7.0 * 3600.0; // 1 week
+      major = 24.0 * 7.0 * 3600.0;
       return;
    }
 
@@ -99,15 +99,15 @@ void TimeFormat::SetTickSizes(
    // (fractions of a second should be dealt with
    // the same way as for RealFormat)
    RealFormat::LinearInstance().SetTickSizes(
-      units, mMajor, mMinor, mMinorMinor, mDigits);
+      units, major, minor, minorMinor, mDigits);
 }
 
 void TimeFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, TickType tickType
+   wxString& s, double d, double, double minor, int mDigits, TickType tickType
 ) const
 {
    // Replace -0 with 0
-   if (d < 0.0 && (d + mMinor > 0.0))
+   if (d < 0.0 && (d + minor > 0.0))
       d = 0.0;
 
    if (tickType == RulerFormat::t_major) {
@@ -131,13 +131,13 @@ void TimeFormat::SetLabelString(
       break;
 #endif
 
-      if (mMinor >= 3600.0) {
+      if (minor >= 3600.0) {
          int hrs = (int)(d / 3600.0 + 0.5);
          wxString h;
          h.Printf(wxT("%d:00:00"), hrs);
          s += h;
       }
-      else if (mMinor >= 60.0) {
+      else if (minor >= 60.0) {
          int minutes = (int)(d / 60.0 + 0.5);
          wxString m;
          if (minutes >= 60)
@@ -146,7 +146,7 @@ void TimeFormat::SetLabelString(
             m.Printf(wxT("%d:00"), minutes);
          s += m;
       }
-      else if (mMinor >= 1.0) {
+      else if (minor >= 1.0) {
          int secs = (int)(d + 0.5);
          wxString t;
          if (secs >= 3600)

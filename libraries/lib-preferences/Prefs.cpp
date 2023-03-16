@@ -202,6 +202,7 @@ void InitPreferences( std::unique_ptr<FileConfig> uPrefs )
    gPrefs = uPrefs.get();
    ugPrefs = std::move(uPrefs);
    wxConfigBase::Set(gPrefs);
+   PrefsListener::Broadcast();
 }
 
 void ResetPreferences()

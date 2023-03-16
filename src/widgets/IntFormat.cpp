@@ -18,7 +18,7 @@ const IntFormat &::IntFormat::Instance()
 }
 
 void IntFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, double& mMinorMinor,
+   double units, double& major, double& minor, double& minorMinor,
    int& mDigits
 ) const
 {
@@ -26,14 +26,14 @@ void IntFormat::SetTickSizes(
    d = 1.0;
    for (;;) {
       if (units < d) {
-         mMinor = d;
-         mMajor = d * 5.0;
+         minor = d;
+         major = d * 5.0;
          return;
       }
       d *= 5.0;
       if (units < d) {
-         mMinor = d;
-         mMajor = d * 2.0;
+         minor = d;
+         major = d * 2.0;
          return;
       }
       d *= 2.0;
@@ -41,11 +41,11 @@ void IntFormat::SetTickSizes(
 }
 
 void IntFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, TickType
+   wxString& s, double d, double, double minor, int mDigits, TickType tickType
 ) const
 {
    // Replace -0 with 0
-   if (d < 0.0 && (d + mMinor > 0.0))
+   if (d < 0.0 && (d + minor > 0.0))
       d = 0.0;
    s.Printf(wxT("%d"), (int)floor(d + 0.5));
 }

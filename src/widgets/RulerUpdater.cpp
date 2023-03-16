@@ -51,12 +51,12 @@ RulerUpdater::TickSizes::TickSizes(
       // minor tick.  We want to show numbers like "-48"
       // in that space.
       // If vertical, we don't need as much space.
-      double units = ((orientation == wxHORIZONTAL) ? 22 : 16) * fabs(UPP);
+      mUnits = ((orientation == wxHORIZONTAL) ? 22 : 16) * fabs(UPP);
 
       mDigits = 0;
 
       if (format)
-         format->SetTickSizes(units, mMajor, mMinor, mMinorMinor, mDigits);
+         format->SetTickSizes(mUnits, mMajor, mMinor, mMinorMinor, mDigits);
    }
 
 TranslatableString RulerUpdater::TickSizes::LabelString(
@@ -67,13 +67,16 @@ TranslatableString RulerUpdater::TickSizes::LabelString(
       // accuracy depends on the resolution of the ruler,
       // i.e. how far zoomed in or out you are.
 
+      // Should not be called unless TickSizes is instantiated
+      wxASSERT(mUnits > 0);
+
       wxString s;
 
       // PRL Todo: are all these cases properly localized?  (Decimal points,
       // hour-minute-second, etc.?)
 
       if (format)
-         format->SetLabelString(s, d, mMinor, mDigits, tickType);
+         format->SetLabelString(s, d, mUnits, mMinor, mDigits, tickType);
 
       auto result = Verbatim(s);
 

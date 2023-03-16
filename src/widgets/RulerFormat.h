@@ -23,12 +23,12 @@ public:
    virtual ~RulerFormat();
 
    virtual void SetTickSizes(
-      double units, double& mMajor, double& mMinor, double &minorMinor,
+      double units, double& major, double& minor, double &minorMinor,
       int &mDigits
    ) const = 0;
 
    virtual void SetLabelString(
-      wxString& s, double d, double mMinor, int mDigits, TickType tickType
+      wxString& s, double d, double units, double minor, int mDigits, TickType tickType
    ) const = 0;
 };
 

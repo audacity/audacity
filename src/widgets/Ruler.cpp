@@ -65,8 +65,6 @@ using std::max;
 
 Ruler::Ruler(const RulerUpdater &updater, const RulerFormat &format)
 {
-   mHasSetSpacing = false;
-
    mbTicksOnly = true;
    mbTicksAtExtremes = false;
    mTickColour = wxColour( theTheme.Colour( clrTrackPanelText ));
@@ -146,9 +144,6 @@ void Ruler::SetOrientation(int orient)
    if (mRulerStruct.mOrientation != orient) {
       mRulerStruct.mOrientation = orient;
 
-      if (mRulerStruct.mOrientation == wxVERTICAL && !mHasSetSpacing)
-         mRulerStruct.mSpacing = 2;
-
       Invalidate();
    }
 }
@@ -175,17 +170,6 @@ void Ruler::SetRange
       mRulerStruct.mMax = max;
       mRulerStruct.mHiddenMin = hiddenMin;
       mRulerStruct.mHiddenMax = hiddenMax;
-
-      Invalidate();
-   }
-}
-
-void Ruler::SetSpacing(int spacing)
-{
-   mHasSetSpacing = true;
-
-   if (mRulerStruct.mSpacing != spacing) {
-      mRulerStruct.mSpacing = spacing;
 
       Invalidate();
    }

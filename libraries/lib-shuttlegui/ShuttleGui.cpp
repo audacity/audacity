@@ -1927,7 +1927,7 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
 
 /// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
-/// This one does it for double values...
+/// This one does it for integer values...
 wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
    const TranslatableString & Prompt,
    const IntSetting &Setting,

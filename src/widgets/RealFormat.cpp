@@ -24,7 +24,7 @@ const RealFormat &RealFormat::LogInstance()
 }
 
 void RealFormat::SetTickSizes(
-   double units, double& mMajor, double& mMinor, double& mMinorMinor,
+   double units, double& major, double& minor, double& minorMinor,
    int& mDigits
 ) const
 {
@@ -32,14 +32,14 @@ void RealFormat::SetTickSizes(
    mDigits = 6;
    for (;;) {
       if (units < d) {
-         mMinor = d;
-         mMajor = d * 5.0;
+         minor = d;
+         major = d * 5.0;
          return;
       }
       d *= 5.0;
       if (units < d) {
-         mMinor = d;
-         mMajor = d * 2.0;
+         minor = d;
+         major = d * 2.0;
          return;
       }
       d *= 2.0;
@@ -53,18 +53,18 @@ void RealFormat::SetTickSizes(
    if (mLog) {
       mDigits++;
    }
-   mMinor = d;
-   mMajor = d * 2.0;
+   minor = d;
+   major = d * 2.0;
 }
 
 void RealFormat::SetLabelString(
-   wxString& s, double d, double mMinor, int mDigits, TickType
+   wxString& s, double d, double, double minor, int mDigits, TickType tickType
 ) const
 {
    // Replace -0 with 0
-   if (d < 0.0 && (d + mMinor > 0.0) && !mLog)
+   if (d < 0.0 && (d + minor > 0.0) && !mLog)
       d = 0.0;
-   if (mMinor >= 1.0)
+   if (minor >= 1.0)
       s.Printf(wxT("%d"), (int)floor(d + 0.5));
    else {
       s.Printf(wxString::Format(wxT("%%.%df"), mDigits), d);
