@@ -70,6 +70,13 @@ if (${_OPT}use_ffmpeg)
       impl/avformat/59/AVFormatImpl.cpp
       impl/avutil/57/AVUtilImpl.cpp
 
+      impl/ffmpeg-6.0.0-single-header.h
+      impl/avutil/58/avconfig.h
+      impl/avcodec/60/AVCodecIDLookup.cpp
+      impl/avcodec/60/AVCodecImpl.cpp
+      impl/avformat/60/AVFormatImpl.cpp
+      impl/avutil/58/AVUtilImpl.cpp
+
       # Loaders
       impl/avcodec/AVCodecFunctionsLoader.cpp
       impl/avcodec/AVCodecFunctionsLoader.h
