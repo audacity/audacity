@@ -23,9 +23,12 @@ qt_add_qml_module(${MODULE_NAME}
    URI "Audacity.UiComponents"
    VERSION 1.0
    RESOURCE_PREFIX /${MODULE_NAME}
+   DEPENDENCIES
+      QtQuick
    QML_FILES
       ${MODULE_QML_SOURCES}
    SOURCES
       ${MODULE_SOURCES}
+   NO_LINT
 )
 

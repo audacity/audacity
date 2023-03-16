@@ -1536,16 +1536,16 @@ endif()
 
 if( ${_OPT}has_crashreports )
    if( ${_OPT}crashreport_backend STREQUAL "crashpad" )
-      list(APPEND DEFINES 
+      list(APPEND DEFINES
          PRIVATE
             CRASHREPORTER_NAME="$<TARGET_FILE_NAME:crashreporter>"
             CRASHPAD_HANDLER_NAME="crashpad_handler${CMAKE_EXECUTABLE_SUFFIX}"
       )
-      list( APPEND AUDACITY_LIBRARIES 
+      list( APPEND AUDACITY_LIBRARIES
          lib-crashpad-configurer-interface
       )
    elseif( ${_OPT}crashreport_backend STREQUAL "breakpad" )
-      list( APPEND AUDACITY_LIBRARIES 
+      list( APPEND AUDACITY_LIBRARIES
          lib-breakpad-configurer-interface
       )
    endif()

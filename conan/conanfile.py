@@ -425,7 +425,8 @@ class AudacityConan(ConanFile):
 
         CrashpadDependency("cci.20220219-audacity"),
 
-        AudacityDependency("catch2", "2.13.8")
+        AudacityDependency("catch2", "2.13.8"),
+
         Qt6Dependency(),
         AudacityDependency("kddockwidgets", "1.6.0", "audacity/testing")
     ]

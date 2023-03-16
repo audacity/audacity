@@ -38,8 +38,12 @@ qt_add_qml_module(
 	${QAUDACITY}
 	URI Audacity
 	VERSION 1.0
+   DEPENDENCIES
+      QtQuick
+      Audacity.UiComponents
 	QML_FILES
 		${QML_SOURCES}
+   NO_LINT
 )
 
 set_target_properties(

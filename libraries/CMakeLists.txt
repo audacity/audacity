@@ -40,9 +40,6 @@ set( LIBRARIES
    lib-numeric-formats
    lib-effects
    lib-time-frequency-selection
-   lib-wx-wrappers
-   lib-shuttlegui
-   lib-wx-init
 )
 
 if( NOT ${_OPT}enable_experimental_qt_support )
@@ -50,6 +47,9 @@ if( NOT ${_OPT}enable_experimental_qt_support )
       lib-theme
       image-compiler # not a library, but has a place in their dependency graph
       lib-theme-resources
+      lib-wx-init
+      lib-wx-wrappers
+      lib-shuttlegui
    )
 endif()
 
