@@ -15,6 +15,7 @@
 #include <wx/defs.h>
 
 #include "BatchCommands.h"
+#include "wxPanelWrapper.h"
 
 class wxWindow;
 class wxTextCtrl;

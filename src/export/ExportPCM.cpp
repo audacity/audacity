@@ -33,6 +33,7 @@
 #include "ProgressDialog.h"
 #include "wxWidgetsWindowPlacement.h"
 #include "wxFileNameWrapper.h"
+#include "ExportFileDialog.h"
 
 #include "Export.h"
 

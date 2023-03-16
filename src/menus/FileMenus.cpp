@@ -26,6 +26,8 @@
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "wxPanelWrapper.h"
 
+#include "export/ExportFileDialog.h"
+
 #include <wx/app.h>
 #include <wx/menu.h>
 
@@ -50,8 +52,10 @@ void DoExport(AudacityProject &project, const FileExtension &format)
    bool success = false;
    if (bPromptingRequired) {
       // Do export with prompting.
-      e.SetDefaultFormat(format);
-      success = e.Process(false, t0, t1);
+      const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&project), e,
+                                                  projectName, format);
+      if(ret == wxID_OK)
+         success = e.Process(false, t0, t1);
    }
    else {
       // We either use a configured output path,
@@ -275,9 +279,11 @@ void OnExportSelection(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    Exporter e{ project };
 
-   e.SetFileDialogTitle( XO("Export Selected Audio") );
-   e.Process(true, selectedRegion.t0(),
-      selectedRegion.t1());
+   const auto ret = ExportFileDialog::RunModal(ProjectWindow::Find(&project), e,
+                                               project.GetProjectName(),
+                                               {}, XO("Export Selected Audio"));
+   if(ret == wxID_OK)
+      e.Process(true, selectedRegion.t0(), selectedRegion.t1());
 }
 
 void OnExportLabels(const CommandContext &context)

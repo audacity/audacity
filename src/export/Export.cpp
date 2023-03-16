@@ -11,26 +11,12 @@
 \class Export
 \brief Main class to control the export function.
 
-*//****************************************************************//**
-
-\class ExportType
-\brief Container for information about supported export types.
-
-*//********************************************************************/
-
-
+*//*****************************************************************/
 
 #include "Export.h"
 
-#include <wx/bmpbuttn.h>
-#include <wx/filectrl.h>
-#include <wx/simplebook.h>
-
 #include "sndfile.h"
 
-#include "FileDialog/FileDialog.h"
-
-#include "AllThemeResources.h"
 #include "BasicUI.h"
 #include "Mix.h"
 #include "MixAndRender.h"
@@ -41,46 +27,15 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
-#include "ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "Theme.h"
 #include "WaveTrack.h"
-#include "AudacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "FileNames.h"
-#include "HelpSystem.h"
 #include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
 #include "ExportMixerDialog.h"
-
-namespace {
-
-bool IsExtension(const ExportPlugin& plugin, int formatIndex, const FileExtension& ext)
-{
-   if(formatIndex >= 0 && formatIndex < plugin.GetFormatCount())
-   {
-      auto formatInfo = plugin.GetFormatInfo(formatIndex);
-      if(formatInfo.mExtensions[0].empty() || formatInfo.mExtensions.Index(ext, false) != wxNOT_FOUND)
-         return true;
-   }
-   return false;
-}
-
-}
-
-//----------------------------------------------------------------------------
-// Export
-//----------------------------------------------------------------------------
-
-
-wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
-
-BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
-   EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
-   EVT_BUTTON(wxID_HELP, Exporter::OnHelp)
-   EVT_COMMAND(wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
-END_EVENT_TABLE()
 
 namespace {
    const auto PathStart = L"Exporters";
@@ -126,7 +81,6 @@ Exporter::Exporter( AudacityProject &project )
    };
 
    mMixerSpec = NULL;
-   mBook = NULL;
 
    // build the list of export plugins.
    for ( const auto &factory : sFactories() )
@@ -151,34 +105,23 @@ Exporter::Exporter( AudacityProject &project )
    } visitor;
 
    mPlugins.swap( visitor.mPlugins );
-
-   SetFileDialogTitle( XO("Export Audio") );
 }
 
 Exporter::~Exporter()
 {
 }
 
-void Exporter::OnExtensionChanged(wxCommandEvent &evt)
-{
-   mDialog->SetFileExtension(evt.GetString().BeforeFirst(' ').Lower());
-}
-
-void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
-{
-   wxWindow * pWin = FindProjectFrame( mProject );
-   HelpSystem::ShowHelp(pWin, L"File_Export_Dialog", true);
-}
-
-void Exporter::SetFileDialogTitle( const TranslatableString & DialogTitle )
-{
-   // The default title is "Export File"
-   mFileDialogTitle = DialogTitle;
-}
-
 const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
+}
+
+void Exporter::Configure(const wxFileName &filename, int pluginIndex, int formatIndex)
+{
+   mFilename = filename;
+   mActualName = filename;
+   mFormat = pluginIndex;
+   mSubFormat = formatIndex;
 }
 
 bool Exporter::Process(bool selectedOnly, double t0, double t1)
@@ -190,11 +133,6 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
 
    // Gather track information
    if (!ExamineTracks()) {
-      return false;
-   }
-
-   // Ask user for file name
-   if (!GetFilename()) {
       return false;
    }
 
@@ -226,13 +164,6 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
    // Get rid of mixerspec
    mMixerSpec.reset();
 
-   if (success) {
-      if (mFormatName.empty()) {
-         gPrefs->Write(wxT("/Export/Format"), exportFormatInfo.mFormat);
-      }
-
-      FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
-   }
 
    return success;
 }
@@ -368,178 +299,6 @@ bool Exporter::ExamineTracks()
    // We still skip silent space at the end
    if (mT1 > latestEnd)
       mT1 = latestEnd;
-
-   return true;
-}
-
-bool Exporter::GetFilename()
-{
-   mFormat = -1;
-
-   FileNames::FileTypes fileTypes;
-   auto defaultFormat = mFormatName;
-   if( defaultFormat.empty() )
-      defaultFormat = gPrefs->Read(wxT("/Export/Format"),
-                                         wxT("WAV"));
-
-   mFilterIndex = 0;
-
-   {
-      int i = -1;
-      for (const auto &pPlugin : mPlugins) {
-         ++i;
-         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
-         {
-            auto formatInfo = pPlugin->GetFormatInfo(j);
-            fileTypes.insert(fileTypes.end(), { formatInfo.mDescription, formatInfo.mExtensions });
-            if (formatInfo.mFormat == defaultFormat) {
-               mFormat = i;
-               mSubFormat = j;
-            }
-            if (mFormat == -1) mFilterIndex++;
-         }
-      }
-   }
-   if (mFormat == -1)
-   {
-      mFormat = 0;
-      mFilterIndex = 0;
-      mSubFormat = 0;
-   }
-   wxString defext = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mExtensions[0].Lower();
-
-   //Bug 1304: Set a default path if none was given.  For Export.
-   mFilename.SetPath(FileNames::FindDefaultPath(FileNames::Operation::Export));
-   mFilename.SetName(mProject->GetProjectName());
-   if (mFilename.GetName().empty())
-      mFilename.SetName(_("untitled"));
-   while (true) {
-      // Must reset each iteration
-      mBook = NULL;
-
-      {
-         auto useFileName = mFilename;
-         if (!useFileName.HasExt())
-            useFileName.SetExt(defext);
-         FileDialogWrapper fd( ProjectWindow::Find( mProject ),
-                       mFileDialogTitle,
-                       mFilename.GetPath(),
-                       useFileName.GetFullName(),
-                       fileTypes,
-                       wxFD_SAVE | wxRESIZE_BORDER);
-         mDialog = &fd;
-         mDialog->PushEventHandler(this);
-
-         fd.SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
-         fd.SetFilterIndex(mFilterIndex);
-
-         int result = fd.ShowModal();
-
-         mDialog->PopEventHandler();
-
-         if (result == wxID_CANCEL) {
-            return false;
-         }
-
-         mFilename = fd.GetPath();
-         if (mFilename == wxT("")) {
-            return false;
-         }
-
-         mFormat = fd.GetFilterIndex();
-         mFilterIndex = fd.GetFilterIndex();
-      }
-
-      {
-         int c = 0;
-         int i = -1;
-         for (const auto &pPlugin : mPlugins)
-         {
-            ++i;
-            for (int j = 0; j < pPlugin->GetFormatCount(); j++)
-            {
-               if (mFilterIndex == c)
-               {
-                  mFormat = i;
-                  mSubFormat = j;
-               }
-               c++;
-            }
-         }
-      }
-
-      const auto ext = mFilename.GetExt();
-      defext = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mExtensions[0].Lower();
-
-      //
-      // Check the extension - add the default if it's not there,
-      // and warn user if it's abnormal.
-      //
-      if (ext.empty()) {
-         //
-         // Make sure the user doesn't accidentally save the file
-         // as an extension with no name, like just plain ".wav".
-         //
-         if (mFilename.GetName().Left(1) == wxT(".")) {
-            auto prompt =
-               XO("Are you sure you want to export the file as \"%s\"?\n")
-                  .Format( mFilename.GetFullName() );
-
-            int action = AudacityMessageBox(
-               prompt,
-               XO("Warning"),
-               wxYES_NO | wxICON_EXCLAMATION);
-            if (action != wxYES) {
-               continue;
-            }
-         }
-
-         mFilename.SetExt(defext);
-      }
-
-      if (!mPlugins[mFormat]->CheckFileName(mFilename, mSubFormat))
-      {
-         continue;
-      }
-      else if (!ext.empty() && IsExtension(*mPlugins[mFormat], mSubFormat, ext) && ext.CmpNoCase(defext)) {
-         auto prompt = XO("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?")
-               .Format(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat,
-                       mFilename.GetFullName(),
-                       defext);
-
-         int action = AudacityMessageBox(
-            prompt,
-            XO("Warning"),
-            wxYES_NO | wxICON_EXCLAMATION);
-         if (action != wxYES) {
-            continue;
-         }
-      }
-
-      if (mFilename.GetFullPath().length() >= 256) {
-         AudacityMessageBox(
-            XO( "Sorry, pathnames longer than 256 characters not supported.") );
-         continue;
-      }
-
-// For Mac, it's handled by the FileDialog
-#if !defined(__WXMAC__)
-      if (mFilename.FileExists()) {
-         auto prompt = XO("A file named \"%s\" already exists. Replace?")
-            .Format( mFilename.GetFullPath() );
-
-         int action = AudacityMessageBox(
-            prompt,
-            XO("Warning"),
-            wxYES_NO | wxICON_EXCLAMATION);
-         if (action != wxYES) {
-            continue;
-         }
-      }
-#endif
-
-      break;
-   }
 
    return true;
 }
@@ -695,97 +454,12 @@ bool Exporter::ExportTracks(
    return success;
 }
 
-void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
-{
-   Exporter *self = (Exporter *) userdata;
-   if (self)
-   {
-      self->CreateUserPane(parent);
-   }
-}
-
-void Exporter::CreateUserPane(wxWindow *parent)
-{
-   ShuttleGui S(parent, eIsCreating);
-
-   S.StartStatic(XO("Format Options"), 1);
-   {
-      S.StartHorizontalLay(wxEXPAND);
-      {
-         mBook = S.Position(wxEXPAND).StartSimplebook();
-         {
-            for (const auto &pPlugin : mPlugins)
-            {
-               for (int j = 0; j < pPlugin->GetFormatCount(); j++)
-               {
-                  // Name of simple book page is not displayed
-                  S.StartNotebookPage( {} );
-                  {
-                     pPlugin->OptionsCreate(S, j);
-                  }
-                  S.EndNotebookPage();
-               }
-            }
-         }
-         S.EndSimplebook();
-
-         auto b = safenew wxBitmapButton(S.GetParent(), wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
-         b->SetToolTip( XO("Help").Translation() );
-         b->SetLabel(XO("Help").Translation());       // for screen readers
-         S.Position(wxALIGN_BOTTOM | wxRIGHT | wxBOTTOM).AddWindow(b);
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndStatic();
-
-   return;
-}
-
-void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
-{
-   int index = evt.GetFilterIndex();
-
-   // On GTK, this event can fire before the userpane is created
-   if (mBook == NULL || index < 0 || index >= (int) mBook->GetPageCount())
-   {
-      return;
-   }
-
-#if defined(__WXGTK__)
-   // On Windows and MacOS, changing the filter in the dialog
-   // automatically changes the extension of the current file
-   // name. GTK doesn't, so do it here.
-   {
-      FileNames::FileTypes fileTypes;
-
-      int i = -1;
-      for (const auto &pPlugin : mPlugins)
-      {
-         ++i;
-         for (int j = 0; j < pPlugin->GetFormatCount(); j++)
-         {
-            const auto formatInfo = pPlugin->GetFormatInfo(j);
-            fileTypes.insert( fileTypes.end(), { formatInfo.mDescription, formatInfo.mExtensions } );
-         }
-      }
-
-      if (index < fileTypes.size())
-      {
-         mDialog->SetFileExtension(fileTypes[index].extensions[0].Lower());
-      }
-   }
-#endif
-
-   mBook->ChangeSelection(index);
-}
-
 bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
                                          double t0,
                                          double t1,
                                          wxFileName fnFile,
                                          int iFormat,
-                                         int iSubFormat,
-                                         int iFilterIndex)
+                                         int iSubFormat)
 {
    // Save parms
    mSelectedOnly = selectedOnly;
@@ -796,7 +470,6 @@ bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
    mFilename = fnFile;
    mFormat = iFormat;
    mSubFormat = iSubFormat;
-   mFilterIndex = iFilterIndex;
 
    // Gather track information
    if (!ExamineTracks()) {
@@ -831,20 +504,11 @@ int Exporter::GetAutoExportSubFormat() {
    return mSubFormat;
 }
 
-int Exporter::GetAutoExportFilterIndex() {
-   return mFormat;
-}
-
 wxFileName Exporter::GetAutoExportFileName() {
    return mFilename;
 }
 
 bool Exporter::SetAutoExportOptions() {
-   mFormat = -1;
-
-   if( GetFilename()==false )
-        return false;
-
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetFormatInfo(mSubFormat).mCanMetaData) {
       if (!TagsEditorDialog::DoEditMetadata( *mProject,
