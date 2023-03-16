@@ -56,8 +56,9 @@ public:
 
    void Configure(const wxFileName& filename, int pluginIndex, int formatIndex);
    
-   bool Process(bool selectedOnly,
-                double t0, double t1);
+   bool SetExportRange(double t0, double t1, bool selectedOnly, bool skipSilenceAtBeginning = false);
+   
+   bool Process();
    bool Process(unsigned numChannels,
                 const FileExtension &type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
@@ -70,9 +71,7 @@ public:
    const ExportPluginArray &GetPlugins();
 
    // Auto Export from Timer Recording
-   bool ProcessFromTimerRecording(double t0,
-                                  double t1,
-                                  wxFileName fnFile,
+   bool ProcessFromTimerRecording(wxFileName fnFile,
                                   int iFormat,
                                   int iSubFormat);
    bool SetAutoExportOptions();
@@ -88,7 +87,6 @@ private:
       Exporter::ExportPluginFactory mFactory;
    };
 
-   bool ExamineTracks();
    void FixFilename();
    bool CheckMix(bool prompt = true);
    bool ExportTracks(std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);

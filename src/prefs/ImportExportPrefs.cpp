@@ -23,6 +23,11 @@
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
+BoolSetting ExportSkipSilenceAtBeginning {
+   L"/AudioFiles/SkipSilenceAtBeginning",
+   false
+};
+
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid, XO("Import / Export"))
 {
@@ -129,8 +134,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
                      true});
       /* i18n-hint 'blank space' is space on the tracks with no audio in it*/
       S.TieCheckBox(XXO("&Ignore blank space at the beginning"),
-                    {wxT("/AudioFiles/SkipSilenceAtBeginning"),
-                     false});
+                    ExportSkipSilenceAtBeginning);
    }
    S.EndStatic();
 
@@ -177,6 +181,8 @@ bool ImportExportPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   ExportSkipSilenceAtBeginning.Invalidate();
+   
    return true;
 }
 

@@ -52,6 +52,7 @@
 #include "AudacityMessageBox.h"
 #include "AudacityTextEntryDialog.h"
 #include "ProgressDialog.h"
+#include "../prefs/ImportExportPrefs.h"
 
 
 namespace {
@@ -934,8 +935,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
 
    bool anySolo = !(( mTracks->Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
 
-   bool skipSilenceAtBeginning;
-   gPrefs->Read(wxT("/AudioFiles/SkipSilenceAtBeginning"), &skipSilenceAtBeginning, false);
+   bool skipSilenceAtBeginning = ExportSkipSilenceAtBeginning.Read();
 
    /* Examine all tracks in turn, collecting export information */
    for (auto tr : mTracks->Leaders<WaveTrack>() - 
