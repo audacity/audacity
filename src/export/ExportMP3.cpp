@@ -128,6 +128,8 @@ enum : int {
 /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
 inline TranslatableString n_kbps( int n ){ return XO("%d kbps").Format( n ); }
 
+static BoolSetting MP3ForceMono { L"/FileFormats/MP3ForceMono", false };
+
 static const TranslatableStrings fixRateNames {
    n_kbps(320),
    n_kbps(256),
@@ -329,9 +331,8 @@ static EnumSetting< MP3ChannelMode > MP3ChannelModeSetting{
 ///
 void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 {
-   bool mono = false;
-   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
-
+   bool mono = MP3ForceMono.Read();
+   
    const TranslatableStrings *choices = nullptr;
    const std::vector< int > *codes = nullptr;
    //bool enable;
@@ -565,7 +566,7 @@ void ExportMP3Options::OnMono(wxCommandEvent& /*evt*/)
    mJoint->Enable(!mono);
    mStereo->Enable(!mono);
 
-   gPrefs->Write(wxT("/FileFormats/MP3ForceMono"), mono);
+   MP3ForceMono.Write(mono);
    gPrefs->Flush();
 }
 
@@ -1723,7 +1724,6 @@ private:
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
-   int SetNumExportChannels() override;
 };
 
 ExportMP3::ExportMP3() = default;
@@ -1735,8 +1735,9 @@ int ExportMP3::GetFormatCount() const
 
 FormatInfo ExportMP3::GetFormatInfo(int) const
 {
+   const bool mono = MP3ForceMono.Read();
    return {
-      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, 2, true
+      wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, mono ? 1u : 2u, true
    };
 }
 
@@ -1756,15 +1757,6 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 
    return true;
 }
-
-int ExportMP3::SetNumExportChannels()
-{
-   bool mono;
-   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
-
-   return (mono)? 1 : -1;
-}
-
 
 ProgressResult ExportMP3::Export(AudacityProject *project,
                        std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
@@ -1816,13 +1808,12 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    int bitrate = 0;
    int brate;
    //int vmode;
-   bool forceMono;
+   bool forceMono = MP3ForceMono.Read();
 
    gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), &brate, 128);
    auto rmode = MP3RateModeSetting.ReadEnumWithDefault( MODE_CBR );
    //gPrefs->Read(wxT("/FileFormats/MP3VarMode"), &vmode, ROUTINE_FAST);
    auto cmode = MP3ChannelModeSetting.ReadEnumWithDefault( CHANNEL_STEREO );
-   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &forceMono, 0);
 
    // Set the bitrate/quality and mode
    if (rmode == MODE_SET) {

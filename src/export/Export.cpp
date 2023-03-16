@@ -325,7 +325,6 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    // and if mixing will occur.
 
    auto downMix = ImportExportPrefs::ExportDownMixSetting.ReadEnum();
-   int exportedChannels = mPlugins[mFormat]->SetNumExportChannels();
 
    if (downMix) {
       if (mNumRight > 0 || mNumLeft > 0) {
@@ -341,11 +340,12 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
       auto numRight = mNumRight + mNumMono;
 
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
-         wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat;
-         if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG") && exportedChannels == -1)
-            exportedChannels = mChannels;
-
          if (prompt) {
+            wxString exportFormat = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mFormat;
+            int exportedChannels = -1;//undefined
+            if (exportFormat != wxT("CL") && exportFormat != wxT("FFMPEG"))
+               exportedChannels = mChannels;
+            
             auto pWindow = ProjectWindow::Find(mProject);
             if (exportedChannels == 1) {
                if (ShowWarningDialog(pWindow,
@@ -373,10 +373,7 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    }
    else
    {
-      constexpr auto MaxExportChannels = 32;
-      
-      if (exportedChannels < 0)
-         exportedChannels = mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels;
+      constexpr auto MaxExportChannels = 32u;
 
       auto exportTracks = ExportUtils::FindExportWaveTracks(TrackList::Get( *mProject ), mSelectedOnly);
       mMixerSpec = std::make_unique<MixerOptions::Downmix>(exportTracks.size(),
@@ -386,8 +383,8 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
                                                            // The downside is that if someone is exporting to a mono device, the dialog
                                                            // will allow them to output to two channels. Hmm.  We may need to revisit this.
                                                            // STF (April 2016): AMR (narrowband) and MP3 may export 1 channel.
-                                                           std::clamp(exportedChannels,
-                                                                      1,
+                                                           std::clamp(mPlugins[mFormat]->GetFormatInfo(mSubFormat).mMaxChannels,
+                                                                      1u,
                                                                       MaxExportChannels));
       if(prompt)
       {
