@@ -26,6 +26,7 @@ class Tags;
 class WaveTrackFactory;
 class Track;
 class ImportPlugin;
+class ImportProgressListener;
 class UnusableImportPlugin;
 typedef bool (*progress_callback_t)( void *userData, float percent );
 
@@ -170,6 +171,7 @@ public:
    // if false, the import failed and errorMessage will be set.
    bool Import( AudacityProject &project,
               const FilePath &fName,
+              ImportProgressListener* importProgressListener,
               WaveTrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,

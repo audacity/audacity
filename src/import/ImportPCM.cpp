@@ -31,20 +31,16 @@
 
 #include "sndfile.h"
 
-#include "ShuttleGui.h"
-
-#include "ProgressDialog.h"
-
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
 #endif
 
 #include "../FileFormats.h"
 #include "Prefs.h"
-#include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "ImportPlugin.h"
 #include "ImportUtils.h"
+#include "ImportProgressListener.h"
 
 #include <algorithm>
 
@@ -79,7 +75,7 @@ public:
 };
 
 
-class PCMImportFileHandle final : public ImportFileHandle
+class PCMImportFileHandle final : public ImportFileHandleEx
 {
 public:
    PCMImportFileHandle(const FilePath &name, SFFile &&file, SF_INFO info);
@@ -87,8 +83,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-              Tags *tags) override;
+   void Import(ImportProgressListener &progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -184,7 +182,7 @@ static Importer::RegisteredImportPlugin registered{ "PCM",
 
 PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
                                          SFFile &&file, SF_INFO info)
-:  ImportFileHandle(name),
+:  ImportFileHandleEx(name),
    mFile(std::move(file)),
    mInfo(info)
 {
@@ -284,15 +282,16 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
-ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
-                                TrackHolders &outTracks,
-                                Tags *tags)
+void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
+                                 WaveTrackFactory *trackFactory,
+                                 TrackHolders &outTracks,
+                                 Tags *tags)
 {
+   BeginImport();
+   
    outTracks.clear();
 
    wxASSERT(mFile.get());
-
-   CreateProgress();
 
    NewChannelGroup channels(mInfo.channels);
 
@@ -306,7 +305,6 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
-   auto updateResult = ProgressResult::Cancelled;
 
    {
       // Otherwise, we're in the "copy" mode, where we read in the actual
@@ -316,14 +314,20 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
       // PRL:  guard against excessive memory buffer allocation in case of many channels
       using type = decltype(maxBlockSize);
       if (mInfo.channels < 1)
-         return ProgressResult::Failed;
+      {
+         progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+         return;
+      }
       auto maxBlock = std::min(maxBlockSize,
          std::numeric_limits<type>::max() /
             (mInfo.channels * SAMPLE_SIZE(mFormat))
       );
       if (maxBlock < 1)
-         return ProgressResult::Failed;
-
+      {
+         progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+         return;
+      }
+      
       SampleBuffer srcbuffer, buffer;
       wxASSERT(mInfo.channels >= 0);
       while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr() ||
@@ -331,7 +335,10 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
       {
          maxBlock /= 2;
          if (maxBlock < 1)
-            return ProgressResult::Failed;
+         {
+            progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+            return;
+         }
       }
 
       decltype(fileTotalFrames) framescompleted = 0;
@@ -372,19 +379,15 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
             }
             framescompleted += block;
          }
-
-         updateResult = mProgress->Update(
-            framescompleted.as_long_long(),
-            fileTotalFrames.as_long_long()
-         );
-         if (updateResult != ProgressResult::Success)
-            break;
-
-      } while (block > 0);
+         if(fileTotalFrames > 0)
+            progressListener.OnImportProgress(framescompleted.as_double() / fileTotalFrames.as_double());
+      } while (block > 0 && !IsCancelled() && !IsStopped());
    }
 
-   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled) {
-      return updateResult;
+   if(IsCancelled())
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+      return;
    }
 
    for(const auto &channel : channels)
@@ -443,7 +446,7 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
 #if defined(USE_LIBID3TAG)
    if (((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
        ((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV)) {
-      wxFFile f(mFilename, wxT("rb"));
+      wxFFile f(GetFilename(), wxT("rb"));
       if (f.IsOpened()) {
          char id[5];
          wxUint32 len;
@@ -583,7 +586,9 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
    }
 #endif
 
-   return updateResult;
+   progressListener.OnImportResult(IsStopped()
+                                   ? ImportProgressListener::ImportResult::Stopped
+                                   : ImportProgressListener::ImportResult::Success);
 }
 
 PCMImportFileHandle::~PCMImportFileHandle()

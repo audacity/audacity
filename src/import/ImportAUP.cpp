@@ -21,6 +21,7 @@
 
 #include "Import.h"
 #include "ImportPlugin.h"
+#include "ImportProgressListener.h"
 
 #include "Envelope.h"
 #include "FileFormats.h"
@@ -47,7 +48,6 @@
 #include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
-#include "ProgressDialog.h"
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
 
@@ -85,7 +85,7 @@ public:
                      AudacityProject *project) override;
 };
 
-class AUPImportFileHandle final : public ImportFileHandle,
+class AUPImportFileHandle final : public ImportFileHandleEx,
                                   public XMLTagHandler
 {
 public:
@@ -97,9 +97,10 @@ public:
 
    ByteCount GetFileUncompressedBytes() override;
 
-   ProgressResult Import(WaveTrackFactory *trackFactory,
-                         TrackHolders &outTracks,
-                         Tags *tags) override;
+   void Import(ImportProgressListener& progressListener,
+               WaveTrackFactory *trackFactory,
+               TrackHolders &outTracks,
+               Tags *tags) override;
 
    wxInt32 GetStreamCount() override;
 
@@ -218,8 +219,8 @@ private:
    WaveClip *mClip;
    std::vector<WaveClip *> mClips;
 
-   ProgressResult mUpdateResult;
    TranslatableString mErrorMsg;
+   bool mHasParseError { false };
 };
 
 namespace
@@ -283,7 +284,7 @@ static Importer::RegisteredImportPlugin registered
 
 AUPImportFileHandle::AUPImportFileHandle(const FilePath &fileName,
                                          AudacityProject *project)
-:  ImportFileHandle(fileName),
+:  ImportFileHandleEx(fileName),
    mProject(*project)
 {
 }
@@ -303,10 +304,15 @@ auto AUPImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFactory),
-                                           TrackHolders &WXUNUSED(outTracks),
-                                           Tags *tags)
+void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
+                                 WaveTrackFactory*,
+                                 TrackHolders&,
+                                 Tags *tags)
 {
+   BeginImport();
+   
+   mHasParseError = false;
+   
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
    auto &viewInfo = ViewInfo::Get(mProject);
@@ -315,7 +321,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    auto oldNumTracks = tracks.size();
    auto cleanup = finally([this, &tracks, oldNumTracks]{
-      if (mUpdateResult != ProgressResult::Success) {
+      if (mHasParseError || IsCancelled()) {
          // Revoke additions of tracks
          while (oldNumTracks < tracks.size()) {
             Track *lastTrack = *tracks.Any().rbegin();
@@ -330,13 +336,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    mTags = tags;
 
-   CreateProgress();
-
-   mUpdateResult = ProgressResult::Success;
-
    XMLFileReader xmlFile;
 
-   bool success = xmlFile.Parse(this, mFilename);
+   bool success = xmlFile.Parse(this, GetFilename());
    if (!success)
    {
       AudacityMessageBox(
@@ -344,10 +346,12 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
          XO("Import Project"),
          wxOK | wxCENTRE,
          &GetProjectFrame(mProject));
-
-      return ProgressResult::Failed;
+      
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
    }
 
+   //Could be set by `SetWarning` but without setting the `mHasParseError` flag
    if (!mErrorMsg.empty())
    {
       // Error or warning
@@ -356,26 +360,28 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
          XO("Import Project"),
          wxOK | wxCENTRE,
          &GetProjectFrame(mProject));
-
-      if (mUpdateResult == ProgressResult::Failed)
-      {
-         // Error
-         return ProgressResult::Failed;
-      }
    }
-
-   // If mUpdateResult had been changed, we would have returned already
-   wxASSERT( mUpdateResult == ProgressResult::Success );
-
+   if(mHasParseError)
+   {
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+      return;
+   }
+   
    sampleCount processed = 0;
    for (auto fi : mFiles)
    {
-      mUpdateResult = mProgress->Update(processed.as_long_long(), mTotalSamples.as_long_long());
-      if (mUpdateResult != ProgressResult::Success)
+      if(mTotalSamples.as_double() > 0)
+         progressListener.OnImportProgress(processed.as_double() / mTotalSamples.as_double());
+      if(IsCancelled())
       {
-         return mUpdateResult;
+         progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+         return;
       }
-
+      else if(IsStopped())
+      {
+         progressListener.OnImportResult(ImportProgressListener::ImportResult::Stopped);
+         return;
+      }
       mClip = fi.clip;
       mWaveTrack = fi.track;
 
@@ -395,13 +401,12 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    for (auto pClip : mClips)
       pClip->UpdateEnvelopeTrackLen();
 
-   wxASSERT( mUpdateResult == ProgressResult::Success );
-
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
    if (isDirty)
    {
-      return mUpdateResult;
+      progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
+      return;
    }
 
    if (mProjectAttrs.haverate)
@@ -482,8 +487,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       viewInfo.selectedRegion.setF1(mProjectAttrs.selHigh);
    }
 #endif
-
-   return mUpdateResult;
+   
+   progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
 }
 
 wxInt32 AUPImportFileHandle::GetStreamCount()
@@ -503,7 +508,7 @@ void AUPImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUS
 
 bool AUPImportFileHandle::Open()
 {
-   wxFFile ff(mFilename, wxT("rb"));
+   wxFFile ff(GetFilename(), wxT("rb"));
    if (ff.IsOpened())
    {
       char buf[256];
@@ -546,7 +551,7 @@ XMLTagHandler *AUPImportFileHandle::HandleXMLChild(const std::string_view& tag)
 
 void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (mUpdateResult != ProgressResult::Success)
+   if (mHasParseError)
    {
       return;
    }
@@ -575,7 +580,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
 
 bool AUPImportFileHandle::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   if (mUpdateResult != ProgressResult::Success)
+   if (mHasParseError)
    {
       return false;
    }
@@ -764,7 +769,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       {
          requiredTags++;
 
-         mProjDir = mFilename;
+         mProjDir = GetFilename();
          wxString altname = mProjDir.GetName() + wxT("_data");
          mProjDir.SetFullName(wxEmptyString);
 
@@ -1342,7 +1347,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    if (!XMLValueChecker::IsGoodPathName(strAttr))
    {
       // Maybe strAttr is just a fileName, not the full path. Try the project data directory.
-      wxFileNameWrapper fileName0{ mFilename };
+      wxFileNameWrapper fileName0{ GetFilename() };
       fileName0.SetExt({});
       wxFileNameWrapper fileName{
          fileName0.GetFullPath() + wxT("_data"), strAttr };
@@ -1661,14 +1666,12 @@ bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 {
    wxLogError(msg.Debug());
 
-   if (mErrorMsg.empty() || mUpdateResult == ProgressResult::Success)
+   if (mErrorMsg.empty() || !mHasParseError)
    {
       mErrorMsg = msg;
    }
 
-   // The only place where mUpdateResult is set during XML handling callbacks
-   mUpdateResult = ProgressResult::Failed;
-
+   mHasParseError = true;
    return false;
 }
 
