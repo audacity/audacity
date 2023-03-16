@@ -70,8 +70,7 @@ public:
    const ExportPluginArray &GetPlugins();
 
    // Auto Export from Timer Recording
-   bool ProcessFromTimerRecording(bool selectedOnly,
-                                  double t0,
+   bool ProcessFromTimerRecording(double t0,
                                   double t1,
                                   wxFileName fnFile,
                                   int iFormat,
@@ -90,7 +89,7 @@ private:
    };
 
    bool ExamineTracks();
-   bool CheckFilename();
+   void FixFilename();
    bool CheckMix(bool prompt = true);
    bool ExportTracks(std::unique_ptr<BasicUI::ProgressDialog>& progressDialog);
 
@@ -107,7 +106,6 @@ private:
    double mT1;
    int mFormat{-1};
    int mSubFormat{-1};
-   int mNumSelected;
    unsigned mNumLeft;
    unsigned mNumRight;
    unsigned mNumMono;

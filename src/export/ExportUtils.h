@@ -17,6 +17,7 @@
 #include "SampleFormat.h"
 
 class TrackList;
+class WaveTrack;
 class Mixer;
 class TranslatableString;
 class wxFileNameWrapper;
@@ -30,6 +31,8 @@ namespace MixerOptions
 {
 class Downmix;
 }
+
+template <typename TrackType> struct TrackIterRange;
 
 class ExportUtils final
 {
@@ -48,5 +51,6 @@ public:
    static void InitProgress(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
          const wxFileNameWrapper &title, const TranslatableString &message);
 
+   static TrackIterRange<const WaveTrack> FindExportWaveTracks(const TrackList& tracks, bool selectedOnly);
 };
 

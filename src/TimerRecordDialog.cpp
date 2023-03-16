@@ -593,7 +593,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    if (m_bAutoExportEnabled) {
       Exporter e{ mProject };
       bExportOK = e.ProcessFromTimerRecording(
-         false, 0.0, TrackList::Get( mProject ).GetEndTime(),
+         0.0, TrackList::Get( mProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
             m_iAutoExportSubFormat);
    }
