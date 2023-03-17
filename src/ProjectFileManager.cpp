@@ -46,7 +46,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ImportPlugin.h"
 #include "import/ImportMIDI.h"
 #include "import/ImportStreamDialog.h"
-#include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
