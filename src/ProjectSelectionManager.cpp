@@ -97,7 +97,6 @@ void ProjectSelectionManager::AS_SetRate(double rate)
 {
    auto &project = mProject;
    ProjectRate::Get( project ).SetRate( rate );
-   SelectionBar::Get( project ).SetRate(rate);
 }
 
 int ProjectSelectionManager::AS_GetSnapTo()

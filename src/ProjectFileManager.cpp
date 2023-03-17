@@ -1017,11 +1017,8 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       selectionManager.SSBL_SetFrequencySelectionFormatName(
       formats.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
-      formats.GetBandwidthSelectionFormatName());
-
-      SelectionBar::Get( project )
-         .SetRate( ProjectRate::Get(project).GetRate() );
-
+         formats.GetBandwidthSelectionFormatName());
+      
       ProjectHistory::Get( project ).InitialState();
       TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();
@@ -1156,7 +1153,6 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // if this is the first file that is imported
    if (initiallyEmpty && newRate > 0) {
       ProjectRate::Get(project).SetRate( newRate );
-      SelectionBar::Get( project ).SetRate( newRate );
    }
 
    history.PushState(XO("Imported '%s'").Format( fileName ),

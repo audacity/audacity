@@ -33,6 +33,7 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
+#include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindows.h"
@@ -399,12 +400,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    {
       return mUpdateResult;
    }
-
+   
    if (mProjectAttrs.haverate)
-   {
-      auto &bar = SelectionBar::Get(mProject);
-      bar.SetRate(mProjectAttrs.rate);
-   }
+      ProjectRate::Get(mProject).SetRate(mProjectAttrs.rate);
 
    if (mProjectAttrs.havesnapto)
    {
