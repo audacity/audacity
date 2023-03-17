@@ -1007,11 +1007,10 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    if (bParseSuccess) {
       auto &formats = ProjectNumericFormats::Get( project );
       auto &settings = ProjectSettings::Get( project );
-      window.mbInitializingScrollbar = true; // this must precede AS_SetSnapTo
-         // to make persistence of the vertical scrollbar position work
+      window.mbInitializingScrollbar = true;
 
       auto &selectionManager = ProjectSelectionManager::Get( project );
-      selectionManager.AS_SetSnapTo(settings.GetSnapTo());
+
       selectionManager.AS_SetSelectionFormat(formats.GetSelectionFormat());
       selectionManager.TT_SetAudioTimeFormat(formats.GetAudioTimeFormat());
       selectionManager.SSBL_SetFrequencySelectionFormatName(
