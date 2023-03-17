@@ -13,7 +13,6 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
-#include "../ProjectSelectionManager.h"
 #include "RealtimeEffectPanel.h"
 #include "SampleTrack.h"
 #include "SyncLock.h"
