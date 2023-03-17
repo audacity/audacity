@@ -55,6 +55,7 @@ with changes in the SelectionBar.
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../Snap.h"
 #include "ViewInfo.h"
@@ -76,7 +77,7 @@ const static wxChar *numbers[] =
 
 enum {
    SelectionBarFirstID = 2700,
-   RateID,
+
    SnapToID,
    OnMenuID,
 
@@ -98,9 +99,8 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
    EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
    EVT_CHOICE(ChoiceID, SelectionBar::OnChoice )
+   
    EVT_IDLE( SelectionBar::OnIdle )
-   EVT_COMBOBOX(RateID, SelectionBar::OnRate)
-   EVT_TEXT(RateID, SelectionBar::OnRate)
 
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, SelectionBar::OnUpdate)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, SelectionBar::OnCaptureKey)
@@ -118,8 +118,10 @@ SelectionBar::SelectionBar( AudacityProject &project )
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0),
   mStartTime(NULL), mCenterTime(NULL), mLengthTime(NULL), mEndTime(NULL),
-  mAudioTime(NULL),
-  mChoice(NULL)
+  mAudioTime(NULL), mChoice(NULL),
+  mRateChangedSubscription(
+     ProjectRate::Get(project).Subscribe(
+         [this](double rate) { UpdateRate(rate); }))
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
@@ -128,7 +130,7 @@ SelectionBar::SelectionBar( AudacityProject &project )
    // Refer to bug #462 for a scenario where the division-by-zero causes
    // Audacity to fail.
    // We expect mRate to be set from the project later.
-   mRate = (double) QualitySettings::DefaultSampleRate.Read();
+   mRate = ProjectRate::Get(project).GetRate();
 
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
@@ -212,14 +214,13 @@ void SelectionBar::Populate()
    // Inner sizers have space on right only.
    // This choice makes for a nice border and internal spacing and places clear responsibility
    // on each sizer as to what spacings it creates.
-   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(5, 1, 1);
+   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(3, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    // Top row (mostly labels)
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   auStaticText *rateLabel = AddTitle( XO("Project Rate (Hz)"), mainSizer );
-   AddVLine( mainSizer );
+
    auStaticText *snapLabel = AddTitle( XO("Snap-To"), mainSizer );
    AddVLine( mainSizer );
 
@@ -240,52 +241,6 @@ void SelectionBar::Populate()
 #endif
       mainSizer->Add(mChoice, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 6);
    }
-
-   // Bottom row, (mostly time controls)
-   mRateBox = safenew wxComboBox(this, RateID,
-                             wxT(""),
-                             wxDefaultPosition, wxDefaultSize);
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   mRateBox->SetAccessible(safenew WindowAccessible(mRateBox));
-#endif
-   mRateBox->SetName(_("Project Rate (Hz)"));
-   //mRateBox->SetForegroundColour( clrText2 );
-   wxTextValidator vld(wxFILTER_INCLUDE_CHAR_LIST);
-   vld.SetIncludes(wxArrayString(10, numbers));
-   mRateBox->SetValidator(vld);
-   mRateBox->SetValue(wxString::Format(wxT("%d"), (int)mRate));
-   UpdateRates(); // Must be done _after_ setting value on mRateBox!
-
-   // We need to capture the SetFocus and KillFocus events to set up
-   // for keyboard capture.  On Windows and GTK it's easy since the
-   // combobox is presented as one control to hook into.
-   mRateText = mRateBox;
-
-#if defined(__WXMAC__)
-   // The Mac uses a standard wxTextCtrl for the edit portion and that's
-   // the control that gets the focus events.  So we have to find the
-   // textctrl.
-   wxWindowList kids = mRateBox->GetChildren();
-   for (unsigned int i = 0; i < kids.size(); i++) {
-      wxClassInfo *ci = kids[i]->GetClassInfo();
-      if (ci->IsKindOf(CLASSINFO(wxTextCtrl))) {
-         mRateText = kids[i];
-         break;
-      }
-   }
-#endif
-
-   mRateText->Bind(wxEVT_SET_FOCUS,
-                      &SelectionBar::OnFocus,
-                      this);
-   mRateText->Bind(wxEVT_KILL_FOCUS,
-                      &SelectionBar::OnFocus,
-                      this);
-
-   mainSizer->Add(mRateBox, 0, wxEXPAND | wxALIGN_TOP | wxRIGHT, 5);
-
-   AddVLine( mainSizer );
 
    mSnapTo = safenew wxChoice(this, SnapToID,
       wxDefaultPosition, wxDefaultSize,
@@ -328,18 +283,14 @@ void SelectionBar::Populate()
    // Ensure the font fits inside (hopefully)
    wxFont font = mChoice->GetFont();
    font.Scale((double) toolbarSingle / mChoice->GetSize().GetHeight());
-
-   rateLabel->SetFont(font);
+   
    snapLabel->SetFont(font);
    mChoice->SetFont(font);
-   mRateBox->SetFont(font);
-   mRateText->SetFont(font);
    mSnapTo->SetFont(font);
 #endif
 
    // Make sure they are fully expanded to the longest item
    mChoice->SetMinSize(wxSize(mChoice->GetBestSize().x, toolbarSingle));
-   mRateBox->SetMinSize(wxSize(mRateBox->GetBestSize().x, toolbarSingle));
    mSnapTo->SetMinSize(wxSize(mSnapTo->GetBestSize().x, toolbarSingle));
 
    mChoice->MoveBeforeInTabOrder( mStartTime );
@@ -385,7 +336,6 @@ void SelectionBar::UpdatePrefs()
 void SelectionBar::SetListener(SelectionBarListener *l)
 {
    mListener = l;
-   SetRate(mListener->AS_GetRate());
    SetSnapTo(mListener->AS_GetSnapTo());
    SetSelectionFormat(mListener->AS_GetSelectionFormat());
 };
@@ -526,8 +476,6 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
       *Ctrls[i]=NULL;
 
    mChoice = NULL;
-   mRateBox = NULL;
-   mRateText = NULL;
    mSnapTo = NULL;
 
    ToolBar::ReCreateButtons();
@@ -720,54 +668,21 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
    }
 }
 
-void SelectionBar::SetRate(double rate)
+void SelectionBar::UpdateRate(double rate)
 {
-   if (rate != mRate) {
+   if (rate != mRate)
+   {
       // if the rate is actually being changed
-      mRate = rate;   // update the stored rate
-      mRateBox->SetValue(wxString::Format(wxT("%d"), (int)rate));
+      mRate = rate; // update the stored rate
 
       // update the TimeTextCtrls if they exist
-      NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
+      NumericTextCtrl** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime,
+                                     &mCenterTime, &mAudioTime };
       int i;
-      for(i=0;i<5;i++)
-         if( *Ctrls[i] )
-            (*Ctrls[i])->SetSampleRate( rate );
+      for (i = 0; i < 5; i++)
+         if (*Ctrls[i])
+            (*Ctrls[i])->SetSampleRate(rate);
    }
-}
-
-void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
-{
-   auto value = mRateBox->GetValue();
-
-   if (value.ToDouble(&mRate) && // is a numeric value
-         (mRate != 0.0))
-   {
-      NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
-      int i;
-      for(i=0;i<5;i++)
-         if( *Ctrls[i] )
-            (*Ctrls[i])->SetSampleRate( mRate );
-      if (mListener) mListener->AS_SetRate(mRate);
-
-      mLastValidText = value;
-   }
-   else
-   {
-      // Bug 2497 - Undo paste into text box if it's not numeric
-      mRateBox->SetValue(mLastValidText);
-   }
-}
-
-void SelectionBar::UpdateRates()
-{
-   wxString oldValue = mRateBox->GetValue();
-   mRateBox->Clear();
-   for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
-      mRateBox->Append(
-         wxString::Format(wxT("%d"), AudioIOBase::StandardRates[i]));
-   }
-   mRateBox->SetValue(oldValue);
 }
 
 void SelectionBar::OnFocus(wxFocusEvent &event)
@@ -788,20 +703,6 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
 
    if (keyCode >= '0' && keyCode <= '9') {
       return;
-   }
-
-   // UP/DOWN/LEFT/RIGHT for mRateText
-   if (w == mRateText) {
-      switch (keyCode)
-      {
-         case WXK_LEFT:
-         case WXK_RIGHT:
-         case WXK_UP:
-         case WXK_DOWN:
-         case WXK_DELETE:
-         case WXK_BACK:
-            return;
-      }
    }
 
    event.Skip();

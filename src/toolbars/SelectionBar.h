@@ -17,6 +17,8 @@
 #include "ToolBar.h"
 #include "widgets/auStaticText.h"
 
+#include "Observer.h"
+
 
 class wxChoice;
 class wxComboBox;
@@ -53,7 +55,6 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void SetTimes(double start, double end, double audio);
    void SetSnapTo(int);
    void SetSelectionFormat(const NumericFormatSymbol & format);
-   void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;
 
@@ -69,8 +70,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
    void OnChangedTime(wxCommandEvent &evt);
-
-   void OnRate(wxCommandEvent & event);
+   
    void OnSnapTo(wxCommandEvent & event);
    void OnChoice(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);
@@ -79,8 +79,9 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void OnIdle( wxIdleEvent &evt );
 
    void ModifySelection(int newDriver, bool done = false);
-   void UpdateRates();
    void SelectionModeUpdated();
+
+   void UpdateRate(double rate);
 
    SelectionBarListener * mListener;
    double mRate;
@@ -101,11 +102,11 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    NumericTextCtrl   *mAudioTime;
    wxChoice          *mChoice;
    wxStaticText      *mProxy;
-   wxComboBox        *mRateBox;
    wxChoice          *mSnapTo;
-   wxWindow          *mRateText;
 
    wxString mLastValidText;
+
+   Observer::Subscription mRateChangedSubscription;
 
  public:
 
