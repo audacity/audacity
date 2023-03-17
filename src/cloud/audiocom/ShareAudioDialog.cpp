@@ -153,6 +153,19 @@ public:
    {
       BasicUI::Yield();
       mResult = result;
+      if(result == ExportResult::Error)
+      {
+         const auto errorString = mPlugin.GetErrorString();
+         if(!errorString.empty())
+         {
+            const auto errorString = mPlugin.GetErrorString();
+            if(!errorString.empty())
+               BasicUI::ShowMessageBox(errorString,
+                                       BasicUI::MessageBoxOptions()
+                                          .IconStyle(BasicUI::Icon::Error)
+                                          .Caption(XO("Error")));
+         }
+      }
    }
 
 private:

@@ -37,10 +37,10 @@
 #include "Track.h"
 #include "float_cast.h"
 #include "../widgets/FileHistory.h"
-#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 #include "../widgets/Warning.h"
 #include "wxFileNameWrapper.h"
+#include "BasicUI.h"
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
@@ -396,10 +396,9 @@ void ExportCL::Export(AudacityProject *project,
 
    rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
    if (!rc) {
-      AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
       process.Detach();
       process.CloseOutput();
-
+      SetErrorString(XO("Cannot export audio to %s").Format( path ));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -764,11 +763,10 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    // Just verify the given path exists if it is absolute.
    if (cmd.IsAbsolute()) {
       if (!cmd.Exists()) {
-         AudacityMessageBox(
-            XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
-            XO("Warning"),
-            wxOK | wxICON_EXCLAMATION);
-
+         BasicUI::ShowMessageBox(XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
+                                 BasicUI::MessageBoxOptions()
+                                    .IconStyle(BasicUI::Icon::Warning)
+                                    .Caption(XO("Warning")));
          return false;
       }
 
@@ -787,11 +785,10 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
 #endif
 
    if (path.empty()) {
-      int action = AudacityMessageBox(
-         XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
-         XO("Warning"),
-         wxOK | wxICON_EXCLAMATION);
-
+      BasicUI::ShowMessageBox(XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
+                              BasicUI::MessageBoxOptions()
+                                 .IconStyle(BasicUI::Icon::Warning)
+                                 .Caption(XO("Warning")));
       return false;
    }
 

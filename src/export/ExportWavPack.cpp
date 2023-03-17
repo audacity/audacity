@@ -28,7 +28,6 @@
 
 #include "ShuttleGui.h"
 #include "../ProjectSettings.h"
-#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 #include "Track.h"
 #include "ProjectRate.h"
@@ -297,7 +296,7 @@ void ExportWavPack::Export(AudacityProject *project,
    outWvFile.file = std::make_unique< wxFile >();
 
    if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file.get()->IsOpened()) {
-      AudacityMessageBox( XO("Unable to open target file for writing") );
+      SetErrorString(XO("Unable to open target file for writing"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -348,7 +347,7 @@ void ExportWavPack::Export(AudacityProject *project,
 
          outWvcFile.file = std::make_unique< wxFile >();
          if (!outWvcFile.file->Create(fName.GetFullPath().Append("c"), true)) {
-            AudacityMessageBox( XO("Unable to create target file for writing") );
+            SetErrorString(XO("Unable to create target file for writing"));
             progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
             return;
          }

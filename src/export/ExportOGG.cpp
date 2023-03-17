@@ -31,7 +31,6 @@
 
 #include "Tags.h"
 #include "Track.h"
-#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
@@ -188,7 +187,7 @@ void ExportOGG::Export(AudacityProject *project,
    FileIO outFile(fName, FileIO::Output);
 
    if (!outFile.IsOpened()) {
-      AudacityMessageBox( XO("Unable to open target file for writing") );
+      SetErrorString(XO("Unable to open target file for writing"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -216,7 +215,7 @@ void ExportOGG::Export(AudacityProject *project,
    vorbis_info_init(&info);
    if (vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality)) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export - rate or quality problem") );
+      SetErrorString(XO("Unable to export - rate or quality problem"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -231,7 +230,7 @@ void ExportOGG::Export(AudacityProject *project,
 
    // Retrieve tags
    if (!FillComment(project, &comment, metadata)) {
-      AudacityMessageBox( XO("Unable to export - problem with metadata") );
+      SetErrorString(XO("Unable to export - problem with metadata"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -239,7 +238,7 @@ void ExportOGG::Export(AudacityProject *project,
    // Set up analysis state and auxiliary encoding storage
    if (vorbis_analysis_init(&dsp, &info) ||
        vorbis_block_init(&dsp, &block)) {
-      AudacityMessageBox( XO("Unable to export - problem initialising") );
+      SetErrorString(XO("Unable to export - problem initialising"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -249,7 +248,7 @@ void ExportOGG::Export(AudacityProject *project,
    // chained streams with concatenation.
    srand(time(NULL));
    if (ogg_stream_init(&stream, rand())) {
-      AudacityMessageBox( XO("Unable to export - problem creating stream") );
+      SetErrorString(XO("Unable to export - problem creating stream"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -272,7 +271,7 @@ void ExportOGG::Export(AudacityProject *project,
       ogg_stream_packetin(&stream, &bitstream_header) ||
       ogg_stream_packetin(&stream, &comment_header) ||
       ogg_stream_packetin(&stream, &codebook_header)) {
-      AudacityMessageBox( XO("Unable to export - problem with packets") );
+      SetErrorString(XO("Unable to export - problem with packets"));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -282,7 +281,7 @@ void ExportOGG::Export(AudacityProject *project,
    while (ogg_stream_flush(&stream, &page)) {
       if ( outFile.Write(page.header, page.header_len).GetLastError() ||
            outFile.Write(page.body, page.body_len).GetLastError()) {
-         AudacityMessageBox( XO("Unable to export - problem with file") );
+         SetErrorString(XO("Unable to export - problem with file"));
          progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
          return;
       }

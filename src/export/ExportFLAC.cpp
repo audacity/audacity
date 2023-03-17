@@ -34,7 +34,6 @@ Joshua Haberman
 #include "Tags.h"
 #include "Track.h"
 
-#include "AudacityMessageBox.h"
 #include "wxPanelWrapper.h"
 #include "wxFileNameWrapper.h"
 
@@ -350,7 +349,7 @@ void ExportFLAC::Export(AudacityProject *project,
    wxFFile f;     // will be closed when it goes out of scope
    const auto path = fName.GetFullPath();
    if (!f.Open(path, wxT("w+b"))) {
-      AudacityMessageBox( XO("FLAC export couldn't open %s").Format( path ) );
+      SetErrorString(XO("FLAC export couldn't open %s").Format( path ));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }
@@ -360,9 +359,8 @@ void ExportFLAC::Export(AudacityProject *project,
    // libflac can't (under Windows).
    int status = encoder.init(f.fp());
    if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-      AudacityMessageBox(
-         XO("FLAC encoder failed to initialize\nStatus: %d")
-            .Format( status ) );
+      SetErrorString(XO("FLAC encoder failed to initialize\nStatus: %d")
+            .Format( status ));
       progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
       return;
    }

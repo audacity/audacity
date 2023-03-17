@@ -12,6 +12,7 @@
 #include "ExportPlugin.h"
 #include "Internat.h"
 #include "BasicUI.h"
+#include "AudacityMessageBox.h"
 
 GenericExportProgressListener::GenericExportProgressListener(ExportPlugin& plugin)
    : mPlugin(plugin)
@@ -44,6 +45,14 @@ void GenericExportProgressListener::OnExportResult(ExportResult result)
 {
    mResult = result;
    mProgressDialog.reset();
+   if(mResult == ExportResult::Error)
+   {
+      const auto errorString = mPlugin.GetErrorString();
+      if(!errorString.empty())
+         AudacityMessageBox(errorString,
+                            XO("Error"),
+                            wxOK | wxCENTRE | wxICON_EXCLAMATION);
+   }
 }
 
 ExportProgressListener::ExportResult GenericExportProgressListener::ConsumeResult() noexcept
