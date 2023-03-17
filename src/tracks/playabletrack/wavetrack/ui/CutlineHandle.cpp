@@ -11,6 +11,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "CutlineHandle.h"
 
+#include <wx/cursor.h>
+#include <wx/event.h>
+
 #include "../../../../HitTestResult.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"

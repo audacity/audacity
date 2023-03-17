@@ -1464,6 +1464,7 @@ set( AUDACITY_LIBRARIES
    lib-effects-interface
    lib-wx-init-interface
    lib-time-track-interface
+   lib-snapping-interface
 )
 
 if (${_OPT}has_vst3)
