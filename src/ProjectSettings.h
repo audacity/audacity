@@ -26,13 +26,6 @@ class AudacityProject;
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
-enum
-{
-   SNAP_OFF,
-   SNAP_NEAREST,
-   SNAP_PRIOR
-};
-
 namespace ToolCodes {
 enum {
    // The buttons that are in the Tools toolbar must be in correspondence
@@ -77,11 +70,6 @@ public:
    bool GetShowId3Dialog() const { return mShowId3Dialog; } //lda
    void SetShowId3Dialog(bool flag) { mShowId3Dialog = flag; } //lda
 
-   // Snap To
-
-   void SetSnapTo(int snap);
-   int GetSnapTo() const;
-
    // Current tool
 
    void SetTool(int tool);
@@ -110,8 +98,6 @@ private:
    AudacityProject &mProject;
 
    wxString mSoloPref;
-
-   int mSnapTo;
 
    int mCurrentTool;
    int mCurrentBrushRadius;
