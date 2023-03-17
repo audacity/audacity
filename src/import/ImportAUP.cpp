@@ -44,7 +44,6 @@
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
 #include "ProgressDialog.h"

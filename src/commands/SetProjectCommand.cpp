@@ -31,7 +31,6 @@
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "CommandContext.h"
-#include "../toolbars/SelectionBar.h"
 
 #include <wx/frame.h>
 
