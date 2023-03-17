@@ -23,6 +23,7 @@
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "NumericConverter.h"
 
 // private helper classes and functions
 namespace {

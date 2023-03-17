@@ -1425,6 +1425,7 @@ set( AUDACITY_LIBRARIES
    lib-vst-interface
    lib-vst3-interface
    lib-time-track-interface
+   lib-snapping-interface
 )
 if (USE_AUDIO_UNITS AND wxIS_MAC)
    list(APPEND AUDACITY_LIBRARIES lib-audio-unit-interface)
