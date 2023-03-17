@@ -62,6 +62,8 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
 
 }
 
+extern IntSetting SelectionToolbarMode;
+
 namespace {
 
 // Menu handler functions
@@ -93,7 +95,7 @@ void OnResetConfig(const CommandContext &context)
    // - Set Zoom sensibly.
    SyncLockTracks.Reset();
    SoundActivatedRecord.Reset();
-   gPrefs->Write("/SelectionToolbarMode", 0);
+   SelectionToolbarMode.Write(0);
    gPrefs->Flush();
    DoReloadPreferences(project);
 
