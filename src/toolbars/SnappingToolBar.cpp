@@ -151,14 +151,18 @@ public:
       mSnapToList = std::move(SnapToListBuilder().List);
 
       UpdateCurrentIndex(ReadSnapTo());
-
-      BasicUI::CallAfter([this]
-                         { GetComboCtrl()->SetValue(GetStringValue()); });
    }
    
    bool Create(wxWindow* parent) override
    {
       mControl = safenew wxWindow(parent, wxID_ANY);
+
+      // This call cannot happen in Init(), because the combobox is not yet in a valid
+      // state. Doing a deferred call from Init() is unsafe,
+      // as in some cases Audacity recreates the combobox multiple times before the next
+      // event loop iteration.
+      GetComboCtrl()->SetValue(GetStringValue());
+      
       return mControl;
    }
 
