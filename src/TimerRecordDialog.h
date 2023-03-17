@@ -20,6 +20,7 @@
 #include <wx/timer.h> // member variable
 #include "export/Export.h"
 #include "wxPanelWrapper.h"
+#include "BasicUI.h"
 
 class wxCheckBox;
 class wxChoice;

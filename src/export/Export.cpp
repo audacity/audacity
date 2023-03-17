@@ -23,10 +23,10 @@
 #include "Project.h"
 #include "WaveTrack.h"
 #include "FileNames.h"
-#include "ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
 #include "ExportUtils.h"
+#include "ExportProgressListener.h"
 
 namespace {
    const auto PathStart = L"Exporters";
@@ -37,6 +37,33 @@ namespace {
       static ExportPluginFactories theList;
       return theList;
    }
+
+   class ExportProgressResultProxy final : public ExportProgressListener
+   {
+      ExportProgressListener& mListener;
+      ExportResult mResult{ExportResult::Error};
+   public:
+      ExportProgressResultProxy(ExportProgressListener& listener)
+         : mListener(listener)
+      {
+         
+      }
+      
+      void OnExportProgress(double value) override
+      {
+         mListener.OnExportProgress(value);
+      }
+      void OnExportResult(ExportResult result) override
+      {
+         mListener.OnExportResult(result);
+         mResult = result;
+      }
+      
+      ExportResult GetResult() const noexcept
+      {
+         return mResult;
+      }
+   };
 }
 
 Registry::GroupItem &Exporter::ExporterItem::Registry()
@@ -103,6 +130,32 @@ Exporter::~Exporter()
 const ExportPluginArray &Exporter::GetPlugins()
 {
    return mPlugins;
+}
+
+ExportPlugin* Exporter::GetPlugin()
+{
+   return mPlugins[mFormat].get();
+}
+
+ExportPlugin* Exporter::GetPlugin(int pluginIndex)
+{
+   if(pluginIndex >= 0 && pluginIndex < mPlugins.size())
+      return mPlugins[pluginIndex].get();
+   return nullptr;
+}
+
+ExportPlugin* Exporter::FindPluginByType(const FileExtension &type)
+{
+   for (const auto& plugin : mPlugins)
+   {
+      for (int j = 0; j < plugin->GetFormatCount(); j++)
+      {
+         auto formatInfo = plugin->GetFormatInfo(j);
+         if (formatInfo.mFormat.IsSameAs(type, false))
+            return plugin.get();
+      }
+   }
+   return nullptr;
 }
 
 void Exporter::Configure(const wxFileName &filename, int pluginIndex, int formatIndex)
@@ -194,43 +247,22 @@ bool Exporter::SetExportRange(double t0, double t1, bool selectedOnly, bool skip
    return true;
 }
 
-bool Exporter::Process()
+void Exporter::Process(ExportProgressListener& progressListener)
 {
    // Ensure filename doesn't interfere with project files.
    FixFilename();
 
-   // Export the tracks
-   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
-   bool success = ExportTracks(pDialog);
+   ExportTracks(progressListener);
 
    // Get rid of mixerspec
    mMixerSpec.reset();
-
-
-   return success;
 }
 
-bool Exporter::Process(unsigned numChannels,
+void Exporter::Process(ExportProgressListener& progressListener,
+                       unsigned numChannels,
                        const FileExtension &type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
 {
-   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
-   return Process(numChannels, type, filename, selectedOnly, t0, t1, pDialog);
-}
-
-bool Exporter::Process(
-   unsigned numChannels, const FileExtension& type, const wxString& filename,
-   bool selectedOnly, double t0, double t1,
-   std::unique_ptr<BasicUI::ProgressDialog>& progressDialog)
-{
-   // Save parms
-   mChannels = numChannels;
-   mFilename = filename;
-   mSelectedOnly = selectedOnly;
-   mT0 = t0;
-   mT1 = t1;
-   mActualName = mFilename;
-
    int i = -1;
    for (const auto& pPlugin : mPlugins)
    {
@@ -240,15 +272,19 @@ bool Exporter::Process(
          auto formatInfo = pPlugin->GetFormatInfo(j);
          if (formatInfo.mFormat.IsSameAs(type, false))
          {
-            mFormat = i;
-            mSubFormat = j;
+            mChannels = numChannels;
+            mSelectedOnly = selectedOnly;
+            mT0 = t0;
+            mT1 = t1;
+            
+            Configure(filename, i, j);
             FixFilename();
-            return ExportTracks(progressDialog);
+            ExportTracks(progressListener);
+            return;
          }
       }
    }
-   
-   return false;
+   progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
 }
 
 //
@@ -274,17 +310,19 @@ void Exporter::FixFilename()
    }
 }
 
-bool Exporter::ExportTracks(
-   std::unique_ptr<BasicUI::ProgressDialog>& progressDialog)
+void Exporter::ExportTracks(ExportProgressListener& progressListener)
 {
    // Keep original in case of failure
    if (mActualName != mFilename) {
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   bool success = false;
+   ExportProgressResultProxy progressProxy(progressListener);
 
    auto cleanup = finally( [&] {
+      const auto success = progressProxy.GetResult() == ExportProgressListener::ExportResult::Success
+         || progressProxy.GetResult() == ExportProgressListener::ExportResult::Stopped;
+      
       if (mActualName != mFilename) {
          // Remove backup
          if ( success )
@@ -304,21 +342,16 @@ bool Exporter::ExportTracks(
       }
    } );
 
-   auto result = mPlugins[mFormat]->Export(mProject,
-                                       progressDialog,
-                                       mChannels,
-                                       mActualName.GetFullPath(),
-                                       mSelectedOnly,
-                                       mT0,
-                                       mT1,
-                                       mMixerSpec.get(),
-                                       NULL,
-                                       mSubFormat);
-
-   success =
-      result == ProgressResult::Success || result == ProgressResult::Stopped;
-
-   return success;
+   mPlugins[mFormat]->Export(mProject,
+                             progressProxy,
+                             mChannels,
+                             mActualName.GetFullPath(),
+                             mSelectedOnly,
+                             mT0,
+                             mT1,
+                             mMixerSpec.get(),
+                             NULL,
+                             mSubFormat);
 }
 
 int Exporter::GetAutoExportFormat() {

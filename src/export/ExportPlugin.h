@@ -25,12 +25,7 @@ class wxFileNameWrapper;
 
 class AudacityProject;
 class Tags;
-
-namespace BasicUI
-{
-class ProgressDialog;
-enum class ProgressResult : unsigned;
-}
+class ExportProgressListener;
 
 namespace MixerOptions{ class Downmix; }
 
@@ -50,8 +45,6 @@ struct AUDACITY_DLL_API FormatInfo
 class AUDACITY_DLL_API ExportPlugin /* not final */
 {
 public:
-   using ProgressResult = BasicUI::ProgressResult;
-
    ExportPlugin();
    virtual ~ExportPlugin();
 
@@ -59,14 +52,15 @@ public:
    virtual FormatInfo GetFormatInfo(int index) const = 0;
 
    virtual void OptionsCreate(ShuttleGui &S, int format) = 0;
+   
+   ///\brief Can be used to retrieve description of current export status in human-readable form
+   virtual TranslatableString GetStatusString() const = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
 
    /** \brief called to export audio into a file.
     *
-    * @param pDialog To be initialized with pointer to a NEW ProgressDialog if
-    * it was null, otherwise gives an existing dialog to be reused
-   *  (working around a problem in wxWidgets for Mac; see bug 1600)
+    * @param progressListener  Used to report on export progress and result
     * @param selectedOnly Set to true if all tracks should be mixed, to false
     * if only the selected tracks should be mixed and exported.
     * @param metadata A Tags object that will over-ride the one in *project and
@@ -83,15 +77,38 @@ public:
     * responsible for alerting the user.  Otherwise ProgressResult::Success or
     * ProgressResult::Stopped
     */
-   virtual ProgressResult Export(AudacityProject *project,
-                       std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
+   virtual void Export(AudacityProject *project,
+                       ExportProgressListener &progressListener,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
                        bool selectedOnly,
                        double t0,
                        double t1,
-                       MixerOptions::Downmix *mixerSpec = NULL,
-                       const Tags *metadata = NULL,
+                       MixerOptions::Downmix *mixerSpec = nullptr,
+                       const Tags *metadata = nullptr,
                        int subformat = 0) = 0;
+   
+   virtual void Cancel() = 0;
+   
+   virtual void Stop() = 0;
 };
 
+class ExportPluginEx : public ExportPlugin
+{
+   TranslatableString mStatus;
+   bool mCancelled{false};
+   bool mStopped{false};
+public:
+   TranslatableString GetStatusString() const override;
+   void Cancel() override;
+   void Stop() override;
+   
+protected:
+   void ExportBegin();
+   void ExportFinish(ExportProgressListener& progressListener);
+   
+   bool IsCancelled() const noexcept;
+   bool IsStopped() const noexcept;
+   
+   void SetStatusString(const TranslatableString& status);
+};

@@ -52,9 +52,10 @@
 #include "Tags.h"
 #include "Track.h"
 #include "AudacityMessageBox.h"
-#include "ProgressDialog.h"
+#include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
+#include "ExportProgressListener.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -195,7 +196,7 @@ bool ExportMP2Options::TransferDataFromWindow()
 // ExportMP2
 //----------------------------------------------------------------------------
 
-class ExportMP2 final : public ExportPlugin
+class ExportMP2 final : public ExportPluginEx
 {
 public:
 
@@ -207,17 +208,17 @@ public:
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
-   ProgressResult Export(AudacityProject *project,
-               std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
+   void Export(AudacityProject *project,
+               ExportProgressListener &progressListener,
                unsigned channels,
                const wxFileNameWrapper &fName,
                bool selectedOnly,
                double t0,
                double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
-               int subformat = 0) override;
 
+               MixerSpec *mixerSpec,
+               const Tags *metadata,
+               int subformat) override;
 private:
 
    int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
@@ -241,12 +242,14 @@ FormatInfo ExportMP2::GetFormatInfo(int) const
    };
 }
 
-ProgressResult ExportMP2::Export(AudacityProject *project,
-   std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
+void ExportMP2::Export(AudacityProject *project,
+   ExportProgressListener &progressListener,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
-   int WXUNUSED(subformat))
+   int)
 {
+   ExportBegin();
+   
    bool stereo = (channels == 2);
    long bitrate = gPrefs->Read(wxT("/FileFormats/MP2Bitrate"), 160);
    double rate = ProjectRate::Get(*project).GetRate();
@@ -269,7 +272,8 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
          XO("Cannot export MP2 with this sample rate and bit rate"),
          XO("Error"),
          wxICON_STOP);
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    // Put ID3 tags at beginning of file
@@ -279,7 +283,8 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
       AudacityMessageBox( XO("Unable to open target file for writing") );
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
    ArrayOf<char> id3buffer;
@@ -290,7 +295,8 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
          // TODO: more precise message
          ShowExportErrorDialog("MP2:292");
-         return ProgressResult::Cancelled;
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
       }
    }
 
@@ -303,22 +309,23 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    // We have to multiply by 4 because one sample is 2 bytes wide!
    ArrayOf<unsigned char> mp2Buffer{ mp2BufferSize };
 
-   auto updateResult = ProgressResult::Success;
+   bool hasError {false};
+   
    {
       auto mixer = ExportUtils::CreateMixer(tracks, selectionOnly,
          t0, t1,
          stereo ? 2 : 1, pcmBufferSize, true,
          rate, int16Sample, mixerSpec);
 
-      ExportUtils::InitProgress( pDialog, fName,
-         selectionOnly
-            ? XO("Exporting selected audio at %ld kbps")
-                 .Format( bitrate )
-            : XO("Exporting the audio at %ld kbps")
-                 .Format( bitrate ) );
-      auto &progress = *pDialog;
+      SetStatusString(selectionOnly
+         ? XO("Exporting selected audio at %ld kbps")
+              .Format( bitrate )
+         : XO("Exporting the audio at %ld kbps")
+              .Format( bitrate ));
+      
+      progressListener.OnExportProgress(0);
 
-      while (updateResult == ProgressResult::Success) {
+      while (!IsCancelled() && !IsStopped()) {
          auto pcmNumSamples = mixer->Process();
          if (pcmNumSamples == 0)
             break;
@@ -335,17 +342,17 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
          if (mp2BufferNumBytes < 0) {
             // TODO: more precise message
             ShowExportErrorDialog("MP2:339");
-            updateResult = ProgressResult::Cancelled;
+            hasError = true;
             break;
          }
 
          if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
             // TODO: more precise message
             ShowDiskFullExportErrorDialog(fName);
-            return ProgressResult::Cancelled;
+            progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+            return;
          }
-
-         updateResult = progress.Poll(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         progressListener.OnExportProgress(ExportUtils::EvalExportProgress(*mixer, t0, t1));
       }
    }
 
@@ -358,7 +365,8 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
          // TODO: more precise message
          ShowExportErrorDialog("MP2:362");
-         return ProgressResult::Cancelled;
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
       }
 
    /* Write ID3 tag if it was supposed to be at the end of the file */
@@ -367,16 +375,21 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
          // TODO: more precise message
          ShowExportErrorDialog("MP2:371");
-         return ProgressResult::Cancelled;
+         progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+         return;
       }
 
    if ( !outFile.Close() ) {
       // TODO: more precise message
       ShowExportErrorDialog("MP2:377");
-      return ProgressResult::Cancelled;
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+      return;
    }
 
-   return updateResult;
+   if(hasError)
+      progressListener.OnExportResult(ExportProgressListener::ExportResult::Error);
+   else
+      ExportFinish(progressListener);
 }
 
 void ExportMP2::OptionsCreate(ShuttleGui &S, int format)

@@ -14,6 +14,7 @@
 #include "Export.h"
 #include "wxFileNameWrapper.h" // member variable
 #include "wxPanelWrapper.h"
+#include "export/ExportProgressListener.h"
 
 class wxButton;
 class wxCheckBox;
@@ -34,8 +35,6 @@ class TrackList;
 class AUDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
 {
 public:
-   using ProgressResult = BasicUI::ProgressResult;
-
    ExportMultipleDialog(AudacityProject *parent);
    virtual ~ExportMultipleDialog();
 
@@ -55,7 +54,7 @@ private:
     * labels that define them (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   ProgressResult ExportMultipleByLabel(bool byName, const wxString &prefix, bool addNumber);
+   ExportProgressListener::ExportResult ExportMultipleByLabel(bool byName, const wxString &prefix, bool addNumber);
 
    /** \brief Export each track in the project to a separate file
     *
@@ -63,7 +62,7 @@ private:
     * (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   ProgressResult ExportMultipleByTrack(bool byName, const wxString &prefix, bool addNumber);
+   ExportProgressListener::ExportResult ExportMultipleByTrack(bool byName, const wxString &prefix, bool addNumber);
 
    /** Export one file of an export multiple set
     *
@@ -75,13 +74,12 @@ private:
     * @param t1 End time for export
     * @param tags Metadata to include in the file (if possible).
     */
-   ProgressResult DoExport(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-                 unsigned channels,
-                 const wxFileName &name,
-                 bool selectedOnly,
-                 double t0,
-                 double t1,
-                 const Tags &tags);
+   ExportProgressListener::ExportResult DoExport(unsigned channels,
+                                                 const wxFileName &name,
+                                                 bool selectedOnly,
+                                                 double t0,
+                                                 double t1,
+                                                 const Tags &tags);
    /** \brief Takes an arbitrary text string and converts it to a form that can
     * be used as a file name, if necessary prompting the user to edit the file
     * name produced */

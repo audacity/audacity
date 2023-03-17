@@ -596,12 +596,16 @@ list( APPEND SOURCES
       export/ExportFileDialog.h
       export/ExportPlugin.cpp
       export/ExportPlugin.h
+      export/ExportProgressListener.cpp
+      export/ExportProgressListener.h
       export/ExportUtils.cpp
       export/ExportUtils.h
       export/ExportMixerPanel.cpp
       export/ExportMixerPanel.h
       export/ExportMixerDialog.cpp
       export/ExportMixerDialog.h
+      export/GenericExportProgressListener.cpp
+      export/GenericExportProgressListener.h
 
       # Standard exporters
       export/ExportCL.cpp

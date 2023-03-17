@@ -53,6 +53,7 @@
 #include "AudacityTextEntryDialog.h"
 #include "ProgressDialog.h"
 #include "../prefs/ImportExportPrefs.h"
+#include "GenericExportProgressListener.h"
 
 
 namespace {
@@ -623,19 +624,19 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
    }
 
 //   bool overwrite = mOverwrite->GetValue();
-   ProgressResult ok = ProgressResult::Failed;
+   auto ok = ExportProgressListener::ExportResult::Error;
    mExported.clear();
 
    // Give 'em the result
    auto cleanup = finally( [&]
    {
-      auto msg = (ok == ProgressResult::Success
+      auto msg = (ok == ExportProgressListener::ExportResult::Success
          ? XO("Successfully exported the following %lld file(s).")
-         : ok == ProgressResult::Failed
+         : ok == ExportProgressListener::ExportResult::Error
             ? XO("Something went wrong after exporting the following %lld file(s).")
-            : ok == ProgressResult::Cancelled
+            : ok == ExportProgressListener::ExportResult::Cancelled
                ? XO("Export canceled after exporting the following %lld file(s).")
-               : ok == ProgressResult::Stopped
+               : ok == ExportProgressListener::ExportResult::Stopped
                   ? XO("Export stopped after exporting the following %lld file(s).")
                   : XO("Something went really wrong after exporting the following %lld file(s).")
          ).Format((long long) mExported.size());
@@ -670,7 +671,7 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
                                  mByNumberAndName->GetValue());
    }
 
-   if (ok == ProgressResult::Success || ok == ProgressResult::Stopped) {
+   if (ok == ExportProgressListener::ExportResult::Success || ok == ExportProgressListener::ExportResult::Stopped) {
       EndModal(1);
    }
 }
@@ -755,7 +756,7 @@ static unsigned GetNumExportChannels( const TrackList &tracks )
 
 // TODO: JKC July2016: Merge labels/tracks duplicated export code.
 // TODO: JKC Apr2019: Doubly so merge these!  Too much duplication.
-ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
+ExportProgressListener::ExportResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
    const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
@@ -865,7 +866,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
             gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
             settings.SetShowId3Dialog( bShowTagsDialog );
             if( bCancelled )
-               return ProgressResult::Cancelled;
+               return ExportProgressListener::ExportResult::Cancelled;
          }
       }
 
@@ -875,12 +876,11 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
       l++;  // next label, count up one
    }
 
-   auto ok = ProgressResult::Success;   // did it work?
+   auto ok = ExportProgressListener::ExportResult::Success;   // did it work?
    int count = 0; // count the number of successful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
    /* Go round again and do the exporting (so this run is slow but
     * non-interactive) */
-   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
    for (count = 0; count < numFiles; count++) {
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
@@ -889,9 +889,9 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
          continue;
 
       // Export it
-      ok = DoExport(pDialog, channels, activeSetting.destfile, false,
+      ok = DoExport(channels, activeSetting.destfile, false,
          activeSetting.t0, activeSetting.t1, activeSetting.filetags);
-      if (ok == ProgressResult::Stopped) {
+      if (ok == ExportProgressListener::ExportResult::Stopped) {
          AudacityMessageDialog dlgMessage(
             nullptr,
             XO("Continue to export remaining files?"),
@@ -902,7 +902,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
             break;
          }
       }
-      else if (ok != ProgressResult::Success) {
+      else if (ok != ExportProgressListener::ExportResult::Success) {
          break;
       }
    }
@@ -910,12 +910,12 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
    return ok;
 }
 
-ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
+ExportProgressListener::ExportResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
    int l = 0;     // track counter
-   auto ok = ProgressResult::Success;
+   auto ok = ExportProgressListener::ExportResult::Success;
    FilePaths otherNames;
    auto formatInfo = mPlugins[mPluginIndex]->GetFormatInfo(mSubFormatIndex);
    std::vector<ExportKit> exportSettings; // dynamic array we will use to store the
@@ -1009,7 +1009,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
             gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &bShowTagsDialog, true);
             settings.SetShowId3Dialog( bShowTagsDialog );
             if( bCancelled )
-               return ProgressResult::Cancelled;
+               return ExportProgressListener::ExportResult::Cancelled;
          }
       }
       /* add the settings to the array of settings to be used for export */
@@ -1021,7 +1021,6 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    // loop
    int count = 0; // count the number of successful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
-   std::unique_ptr<BasicUI::ProgressDialog> pDialog;
 
    for (auto tr : mTracks->Leaders<WaveTrack>() - 
       (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute)) {
@@ -1041,10 +1040,9 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
          channel->SetSelected(true);
 
       // Export the data. "channels" are per track.
-      ok = DoExport(pDialog,
-         activeSetting.channels, activeSetting.destfile, true,
+      ok = DoExport(activeSetting.channels, activeSetting.destfile, true,
          activeSetting.t0, activeSetting.t1, activeSetting.filetags);
-      if (ok == ProgressResult::Stopped) {
+      if (ok == ExportProgressListener::ExportResult::Stopped) {
          AudacityMessageDialog dlgMessage(
             nullptr,
             XO("Continue to export remaining files?"),
@@ -1055,7 +1053,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
             break;
          }
       }
-      else if (ok != ProgressResult::Success) {
+      else if (ok != ExportProgressListener::ExportResult::Success) {
          break;
       }
       // increment export counter
@@ -1066,13 +1064,13 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
    return ok ;
 }
 
-ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<BasicUI::ProgressDialog> &pDialog,
-                              unsigned channels,
-                              const wxFileName &inName,
-                              bool selectedOnly,
-                              double t0,
-                              double t1,
-                              const Tags &tags)
+ExportProgressListener::ExportResult
+ExportMultipleDialog::DoExport(unsigned channels,
+                               const wxFileName &inName,
+                               bool selectedOnly,
+                               double t0,
+                               double t1,
+                               const Tags &tags)
 {
    wxFileName name;
 
@@ -1106,15 +1104,12 @@ ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<BasicUI::ProgressD
       }
    }
 
-   ProgressResult success = ProgressResult::Cancelled;
+   bool success{false};
    const wxString fullPath{name.GetFullPath()};
 
    auto cleanup = finally( [&] {
-      bool ok =
-         success == ProgressResult::Stopped ||
-         success == ProgressResult::Success;
       if (backup.IsOk()) {
-         if ( ok )
+         if ( success )
             // Remove backup
             ::wxRemoveFile(backup.GetFullPath());
          else {
@@ -1124,32 +1119,35 @@ ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<BasicUI::ProgressD
          }
       }
       else {
-         if ( ! ok )
+         if ( ! success )
             // Remove any new, and only partially written, file.
             ::wxRemoveFile(fullPath);
       }
    } );
 
+   auto plugin = mPlugins[mPluginIndex];
+   GenericExportProgressListener progressListener(*plugin);
    // Call the format export routine
-   success = mPlugins[mPluginIndex]->Export(mProject,
-                                            pDialog,
-                                                channels,
-                                                fullPath,
-                                                selectedOnly,
-                                                t0,
-                                                t1,
-                                                NULL,
-                                                &tags,
-                                                mSubFormatIndex);
-
-   if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
+   plugin->Export(mProject,
+                  progressListener,
+                  channels,
+                  fullPath,
+                  selectedOnly,
+                  t0,
+                  t1,
+                  nullptr,
+                  &tags,
+                  mSubFormatIndex);
+   const auto result = progressListener.ConsumeResult();
+   success = result == ExportProgressListener::ExportResult::Success ||
+      result == ExportProgressListener::ExportResult::Stopped;
+   if(success)
       mExported.push_back(fullPath);
-   }
-
+   
    Refresh();
    Update();
 
-   return success;
+   return result;
 }
 
 wxString ExportMultipleDialog::MakeFileName(const wxString &input)
