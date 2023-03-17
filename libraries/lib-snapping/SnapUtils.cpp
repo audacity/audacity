@@ -79,7 +79,9 @@ Identifier ReadSnapTo()
    if (gPrefs->HasEntry(SnapToKey))
       return SnapToSetting.Read();
 
-   return {};
+   // TODO: deduce snap-to based on the selection format
+
+   return SnapToSetting.GetDefault();
 }
 
 Registry::GroupItem& SnapFunctionsRegistry::Registry()
