@@ -12,50 +12,51 @@ Paul Licameli split from ProjectManager.cpp
 #define __AUDACITY_PROJECT_SELECTION_MANAGER__
 
 #include "ClientData.h" // to inherit
-#include "toolbars/SelectionBarListener.h" // to inherit
-#include "toolbars/SpectralSelectionBarListener.h" // to inherit
+#include "Observer.h"
 #include "ComponentInterfaceSymbol.h"
 #include "Observer.h"
 
 class AudacityProject;
+struct ProjectNumericFormatsEvent;
 
+//! This object is useful mostly as an observer of others in the project
+/*!
+ It listens for changes of selection formats and snap-to choices, and reacts
+ by updating persistent preferences, and updating the time selection to be
+ consistent with those choices.
+ */
 class AUDACITY_DLL_API ProjectSelectionManager final
    : public ClientData::Base
-   , public SelectionBarListener
-   , public SpectralSelectionBarListener
-   , public TimeToolBarListener
 {
-public:
+ public:
    static ProjectSelectionManager &Get( AudacityProject &project );
    static const ProjectSelectionManager &Get( const AudacityProject &project );
 
-   explicit ProjectSelectionManager( AudacityProject &project );
-   ProjectSelectionManager( const ProjectSelectionManager & ) PROHIBITED;
+   explicit ProjectSelectionManager(AudacityProject &project);
+   ProjectSelectionManager(const ProjectSelectionManager &) = delete;
    ProjectSelectionManager &operator=(
-      const ProjectSelectionManager & ) PROHIBITED;
+      const ProjectSelectionManager &) = delete;
    ~ProjectSelectionManager() override;
 
-   // SelectionBarListener callback methods
-   const NumericFormatSymbol & AS_GetSelectionFormat() override;
-   void AS_SetSelectionFormat(const NumericFormatSymbol & format) override;
-   const NumericFormatSymbol & TT_GetAudioTimeFormat() override;
-   void TT_SetAudioTimeFormat(const NumericFormatSymbol & format) override;
-   void AS_ModifySelection(double &start, double &end, bool done) override;
-
-   // SpectralSelectionBarListener callback methods
-   double SSBL_GetRate() const override;
-   const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName() override;
-   void SSBL_SetFrequencySelectionFormatName(
-      const NumericFormatSymbol & formatName) override;
-   const NumericFormatSymbol & SSBL_GetBandwidthSelectionFormatName() override;
-   void SSBL_SetBandwidthSelectionFormatName(
-      const NumericFormatSymbol & formatName) override;
-   void SSBL_ModifySpectralSelection(
-      double &bottom, double &top, bool done) override;
+   void ModifySelection(double &start, double &end, bool done);
+   void ModifySpectralSelection(
+      double &bottom, double &top, bool done);
 
 private:
+   void OnFormatsChanged(ProjectNumericFormatsEvent);
+
+   void SetSelectionFormat(const NumericFormatSymbol & format);
+
+   void SetAudioTimeFormat(const NumericFormatSymbol & format);
+
+   void SetFrequencySelectionFormatName(
+      const NumericFormatSymbol & formatName);
+   void SetBandwidthSelectionFormatName(
+      const NumericFormatSymbol & formatName);
+
    void SnapSelection();
 
+   Observer::Subscription mFormatsSubscription;
    AudacityProject &mProject;
 
    Observer::Subscription mSnapModeChangedSubscription;

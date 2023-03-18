@@ -33,8 +33,8 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectSnap.h"
 #include "ProjectWindows.h"
@@ -44,7 +44,6 @@
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "widgets/NumericTextCtrl.h"
 #include "ProgressDialog.h"
@@ -308,8 +307,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
    auto &viewInfo = ViewInfo::Get(mProject);
+   auto &formats = ProjectNumericFormats::Get(mProject);
    auto &settings = ProjectSettings::Get(mProject);
-   auto &selman = ProjectSelectionManager::Get(mProject);
 
    auto oldNumTracks = tracks.size();
    auto cleanup = finally([this, &tracks, oldNumTracks]{
@@ -413,22 +412,30 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.selectionformat));
+      formats.SetSelectionFormat(
+         NumericConverter::LookupFormat(
+            NumericConverter::TIME, mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.audiotimeformat));
+      formats.SetAudioTimeFormat(
+         NumericConverter::LookupFormat(
+            NumericConverter::TIME, mProjectAttrs.audiotimeformat));
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.frequencyformat));
+      formats.SetFrequencySelectionFormatName(
+         NumericConverter::LookupFormat(
+            NumericConverter::FREQUENCY, mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
-      selman.SSBL_SetBandwidthSelectionFormatName(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.bandwidthformat));
+      formats.SetBandwidthSelectionFormatName(
+         NumericConverter::LookupFormat(
+            NumericConverter::BANDWIDTH, mProjectAttrs.bandwidthformat));
    }
 
    // PRL: It seems this must happen after SetSnapTo

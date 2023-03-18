@@ -25,8 +25,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
-#include "ProjectNumericFormats.h"
-#include "ProjectSelectionManager.h"
 #include "ProjectWindows.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
@@ -46,7 +44,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "export/Export.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "toolbars/SelectionBar.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
@@ -1005,19 +1002,8 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const bool err = results.trackError;
 
    if (bParseSuccess) {
-      auto &formats = ProjectNumericFormats::Get( project );
-      auto &settings = ProjectSettings::Get( project );
       window.mbInitializingScrollbar = true;
 
-      auto &selectionManager = ProjectSelectionManager::Get( project );
-
-      selectionManager.AS_SetSelectionFormat(formats.GetSelectionFormat());
-      selectionManager.TT_SetAudioTimeFormat(formats.GetAudioTimeFormat());
-      selectionManager.SSBL_SetFrequencySelectionFormatName(
-      formats.GetFrequencySelectionFormatName());
-      selectionManager.SSBL_SetBandwidthSelectionFormatName(
-         formats.GetBandwidthSelectionFormatName());
-      
       ProjectHistory::Get( project ).InitialState();
       TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();

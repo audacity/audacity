@@ -16,6 +16,7 @@
 
 #include <wx/defs.h>
 
+#include "Observer.h"
 #include "ToolBar.h"
 
 class wxCommandEvent;
@@ -26,6 +27,7 @@ class wxWindow;
 
 class AButton;
 class AudacityProject;
+struct ProjectSettingsEvent;
 
 // Code duplication warning: these apparently need to be in the
 // same order as the enum in ToolsToolBar.cpp
@@ -46,7 +48,7 @@ class ToolsToolBar final : public ToolBar {
    void UpdatePrefs() override;
 
    void OnTool(wxCommandEvent & evt);
-   void OnToolChanged(wxCommandEvent &evt);
+   void OnToolChanged(ProjectSettingsEvent);
    void DoToolChanged();
 
    void Populate() override;
@@ -61,6 +63,8 @@ class ToolsToolBar final : public ToolBar {
    static AButton *MakeTool(
       ToolsToolBar *pBar, teBmps eTool, int id, const TranslatableString &label);
    enum { numTools = 4 };
+
+   Observer::Subscription mSubscription;
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;

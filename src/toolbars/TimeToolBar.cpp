@@ -23,7 +23,6 @@
 #endif
 
 #include "TimeToolBar.h"
-#include "SelectionBarListener.h"
 #include "ToolManager.h"
 
 #include "AudioIO.h"
@@ -55,11 +54,12 @@ Identifier TimeToolBar::ID()
 
 TimeToolBar::TimeToolBar(AudacityProject &project)
 :  ToolBar(project, XO("Time"), ID(), true),
-   mListener(NULL),
    mAudioTime(NULL)
 {
-   mSubscription =
+   mRateSubscription =
       ProjectRate::Get(project).Subscribe(*this, &TimeToolBar::OnRateChanged);
+   mFormatsSubscription = ProjectNumericFormats::Get(project)
+      .Subscribe(*this, &TimeToolBar::OnFormatsChanged);
 }
 
 TimeToolBar::~TimeToolBar()
@@ -108,6 +108,19 @@ void TimeToolBar::Populate()
    // from being used as we want to ensure the saved size is used instead. See SetDocked()
    // and OnUpdate() for more info.
    mSettingInitialSize = true;
+   CallAfter([this]{
+      auto &formats = ProjectNumericFormats::Get(mProject);
+      // Get (and set) the saved time format
+      SetAudioTimeFormat(formats.GetAudioTimeFormat());
+
+      // During initialization, if the saved format is the same as the default,
+      // OnUpdate() will not otherwise be called but we need it to set the
+      // initial size.
+      assert(mSettingInitialSize);
+      wxCommandEvent e;
+      e.SetInt(mAudioTime->GetFormatIndex());
+      OnUpdate(e);
+   });
 
    // Establish initial resizing limits
 //   SetResizingLimits();
@@ -182,23 +195,6 @@ void TimeToolBar::SetDocked(ToolDock *dock, bool pushed)
          // Inform others the toolbar has changed
          Updated();
       }
-   }
-}
-
-void TimeToolBar::SetListener(TimeToolBarListener *l)
-{
-   // Remember the listener
-   mListener = l;
-
-   // Get (and set) the saved time format
-   SetAudioTimeFormat(mListener->TT_GetAudioTimeFormat());
-
-   // During initialization, if the saved format is the same as the default,
-   // OnUpdate() will not be called and need it to set the initial size.
-   if (mSettingInitialSize) {
-      wxCommandEvent e;
-      e.SetInt(mAudioTime->GetFormatIndex());
-      OnUpdate(e);
    }
 }
 
@@ -279,6 +275,18 @@ void TimeToolBar::OnRateChanged(double rate)
       mAudioTime->SetSampleRate(rate);
 }
 
+void TimeToolBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &settings = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedAudioTimeFormat:
+      SetAudioTimeFormat(settings.GetAudioTimeFormat());
+      break;
+   default:
+      break;
+   }
+}
+
 // Called when the format drop downs is changed.
 // This causes recreation of the toolbar contents.
 void TimeToolBar::OnUpdate(wxCommandEvent &evt)
@@ -292,9 +300,9 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    SetMaxSize(wxDefaultSize);
 
    // Save format name before recreating the controls so they resize properly
-   if (mListener) {
-      mListener->TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
-   }
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   formats.SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
+   // Then my subscription is called
 
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force

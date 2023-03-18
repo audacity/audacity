@@ -7,25 +7,17 @@ ProjectSelectionManager.cpp
 Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
-
 #include "ProjectSelectionManager.h"
 
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "ProjectWindows.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
 #include "ProjectTimeSignature.h"
-#include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "Snap.h"
-#include "TrackPanel.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "toolbars/SelectionBar.h"
-#include "toolbars/SpectralSelectionBar.h"
-#include "toolbars/TimeToolBar.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSelectionManagerKey {
@@ -60,6 +52,16 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
     }
 
 {
+   // Be consistent with ProjectNumericFormats
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   SetSelectionFormat(formats.GetSelectionFormat());
+   SetAudioTimeFormat(formats.GetAudioTimeFormat());
+   SetFrequencySelectionFormatName(formats.GetFrequencySelectionFormatName());
+   SetBandwidthSelectionFormatName(formats.GetBandwidthSelectionFormatName());
+
+   // And stay consistent
+   mFormatsSubscription = ProjectNumericFormats::Get(project)
+      .Subscribe(*this, &ProjectSelectionManager::OnFormatsChanged);
 }
 
 ProjectSelectionManager::~ProjectSelectionManager() = default;
@@ -82,143 +84,87 @@ void ProjectSelectionManager::SnapSelection()
    const double t1 = projectSnap.SnapTime(oldt1).time;
 
    if (t0 != oldt0 || t1 != oldt1)
-   {
       selectedRegion.setTimes(t0, t1);
-      TrackPanel::Get(mProject).Refresh(false);
+}
+
+void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedSelectionFormat:
+      return SetSelectionFormat(formats.GetSelectionFormat());
+   case ProjectNumericFormatsEvent::ChangedAudioTimeFormat:
+      return SetAudioTimeFormat(formats.GetAudioTimeFormat());
+   case ProjectNumericFormatsEvent::ChangedFrequencyFormat:
+      return SetFrequencySelectionFormatName(
+         formats.GetFrequencySelectionFormatName());
+   case ProjectNumericFormatsEvent::ChangedBandwidthFormat:
+      return SetBandwidthSelectionFormatName(
+         formats.GetBandwidthSelectionFormatName());
+   default:
+      break;
    }
 }
 
-const NumericFormatSymbol & ProjectSelectionManager::AS_GetSelectionFormat()
-{
-   auto &project = mProject;
-   return ProjectNumericFormats::Get(project).GetSelectionFormat();
-}
-
-void ProjectSelectionManager::AS_SetSelectionFormat(
+void ProjectSelectionManager::SetSelectionFormat(
    const NumericFormatSymbol & format)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   formats.SetSelectionFormat( format );
-
    gPrefs->Write(wxT("/SelectionFormat"), format.Internal());
    gPrefs->Flush();
-
-   SelectionBar::Get( project ).SetSelectionFormat(format);
 }
 
-const NumericFormatSymbol & ProjectSelectionManager::TT_GetAudioTimeFormat()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetAudioTimeFormat();
-}
-
-void ProjectSelectionManager::TT_SetAudioTimeFormat(
+void ProjectSelectionManager::SetAudioTimeFormat(
    const NumericFormatSymbol & format)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   formats.SetAudioTimeFormat( format );
-
    gPrefs->Write(wxT("/AudioTimeFormat"), format.Internal());
    gPrefs->Flush();
-
-   TimeToolBar::Get( project ).SetAudioTimeFormat(format);
 }
 
-void ProjectSelectionManager::AS_ModifySelection(
+void ProjectSelectionManager::ModifySelection(
    double &start, double &end, bool done)
 {
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    viewInfo.selectedRegion.setTimes(start, end);
-   trackPanel.Refresh(false);
-   if (done) {
+   if (done)
       history.ModifyState(false);
-   }
 }
 
-double ProjectSelectionManager::SSBL_GetRate() const
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-   // Return maximum of project rate and all track rates.
-   return std::max( ProjectRate::Get( project ).GetRate(),
-      tracks.Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
-}
-
-const NumericFormatSymbol &
-ProjectSelectionManager::SSBL_GetFrequencySelectionFormatName()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetFrequencySelectionFormatName();
-}
-
-void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
+void ProjectSelectionManager::SetFrequencySelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-
-   formats.SetFrequencySelectionFormatName( formatName );
-
    gPrefs->Write(wxT("/FrequencySelectionFormatName"),
                  formatName.Internal());
    gPrefs->Flush();
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
-#endif
 }
 
-const NumericFormatSymbol &
-ProjectSelectionManager::SSBL_GetBandwidthSelectionFormatName()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetBandwidthSelectionFormatName();
-}
-
-void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
+void ProjectSelectionManager::SetBandwidthSelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-
-   formats.SetBandwidthSelectionFormatName( formatName );
-
    gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
       formatName.Internal());
    gPrefs->Flush();
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetBandwidthSelectionFormatName(formatName);
-#endif
 }
 
-void ProjectSelectionManager::SSBL_ModifySpectralSelection(
+void ProjectSelectionManager::ModifySpectralSelection(
    double &bottom, double &top, bool done)
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    auto &project = mProject;
-   auto &history = ProjectHistory::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-
-   double nyq = SSBL_GetRate() / 2.0;
+   auto &history = ProjectHistory::Get(project);
+   auto &viewInfo = ViewInfo::Get(project);
+   auto &tracks = TrackList::Get(mProject);
+   auto nyq = std::max(ProjectRate::Get(project).GetRate(),
+      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate))
+      / 2.0;
    if (bottom >= 0.0)
       bottom = std::min(nyq, bottom);
    if (top >= 0.0)
       top = std::min(nyq, top);
    viewInfo.selectedRegion.setFrequencies(bottom, top);
-   trackPanel.Refresh(false);
-   if (done) {
+   if (done)
       history.ModifyState(false);
-   }
 #else
    bottom; top; done;
 #endif

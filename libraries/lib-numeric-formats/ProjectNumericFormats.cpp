@@ -63,7 +63,14 @@ ProjectNumericFormats::GetFrequencySelectionFormatName() const
 void ProjectNumericFormats::SetFrequencySelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
-   mFrequencySelectionFormatName = formatName;
+   if (mFrequencySelectionFormatName != formatName) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedFrequencyFormat,
+         mFrequencySelectionFormatName, formatName
+      };
+      mFrequencySelectionFormatName = formatName;
+      Publish(e);
+   }
 }
 
 const NumericFormatSymbol &
@@ -75,13 +82,27 @@ ProjectNumericFormats::GetBandwidthSelectionFormatName() const
 void ProjectNumericFormats::SetBandwidthSelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
-   mBandwidthSelectionFormatName = formatName;
+   if (mBandwidthSelectionFormatName != formatName) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedBandwidthFormat,
+         mBandwidthSelectionFormatName, formatName
+      };
+      mBandwidthSelectionFormatName = formatName;
+      Publish(e);
+   }
 }
 
 void ProjectNumericFormats::SetSelectionFormat(
    const NumericFormatSymbol & format)
 {
-   mSelectionFormat = format;
+   if (mSelectionFormat != format) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedSelectionFormat,
+         mSelectionFormat, format
+      };
+      mSelectionFormat = format;
+      Publish(e);
+   }
 }
 
 const NumericFormatSymbol & ProjectNumericFormats::GetSelectionFormat() const
@@ -91,7 +112,14 @@ const NumericFormatSymbol & ProjectNumericFormats::GetSelectionFormat() const
 
 void ProjectNumericFormats::SetAudioTimeFormat(const NumericFormatSymbol & format)
 {
-   mAudioTimeFormat = format;
+   if (mAudioTimeFormat != format) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedAudioTimeFormat,
+         mAudioTimeFormat, format
+      };
+      mAudioTimeFormat = format;
+      Publish(e);
+   }
 }
 
 const NumericFormatSymbol & ProjectNumericFormats::GetAudioTimeFormat() const

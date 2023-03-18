@@ -15,7 +15,6 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
-#include "../ProjectSelectionManager.h"
 #include "RealtimeEffectPanel.h"
 #include "SyncLock.h"
 #include "../toolbars/ToolManager.h"

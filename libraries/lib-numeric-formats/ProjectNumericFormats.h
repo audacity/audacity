@@ -12,10 +12,24 @@
 
 #include "ClientData.h"
 #include "ComponentInterfaceSymbol.h"
+#include "Observer.h"
 
 class AudacityProject;
 
-class NUMERIC_FORMATS_API ProjectNumericFormats final : public ClientData::Base
+struct ProjectNumericFormatsEvent {
+   const enum Type : int {
+      ChangedSelectionFormat,
+      ChangedAudioTimeFormat,
+      ChangedFrequencyFormat,
+      ChangedBandwidthFormat,
+   } type;
+   const NumericFormatSymbol oldValue;
+   const NumericFormatSymbol newValue;
+};
+
+class NUMERIC_FORMATS_API ProjectNumericFormats final
+   : public ClientData::Base
+   , public Observer::Publisher<ProjectNumericFormatsEvent>
 {
 public:
    static ProjectNumericFormats &Get(AudacityProject &project);
