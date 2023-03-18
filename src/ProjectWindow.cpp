@@ -700,7 +700,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
       theTheme.Subscribe(*this, &ProjectWindow::OnThemeChange);
 
    // Subscribe to title changes published by ProjectFileIO
-   mTitleChangeSubcription = ProjectFileIO::Get(project)
+   mTitleChangeSubscription = ProjectFileIO::Get(project)
       .Subscribe(*this, &ProjectWindow::OnProjectTitleChange);
 
    // Subscribe to snapping changes

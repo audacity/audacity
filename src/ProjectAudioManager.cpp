@@ -70,7 +70,7 @@ ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
 {
    static ProjectStatus::RegisteredStatusWidthFunction
       registerStatusWidthFunction{ StatusWidthFunction };
-   mCheckpointFailureSubcription = ProjectFileIO::Get(project)
+   mCheckpointFailureSubscription = ProjectFileIO::Get(project)
       .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure);
 }
 
