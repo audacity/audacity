@@ -34,7 +34,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
       XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
       OnMidiDeviceInfo, AudioIONotBusyFlag() ),

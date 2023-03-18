@@ -333,7 +333,7 @@ void OnNextTool(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ExtraToolsMenu()
 {
    static auto menu = std::shared_ptr{

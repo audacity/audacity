@@ -73,7 +73,7 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
 };
 
 struct AUDACITY_DLL_API PopupSubMenu
-   : PopupMenuGroupItem, MenuTable::MenuItemProperties
+   : PopupMenuGroupItem, MenuRegistry::ItemProperties
 {
    TranslatableString caption;
    PopupMenuTable &table;
@@ -86,7 +86,7 @@ struct AUDACITY_DLL_API PopupSubMenu
 };
 
 struct PopupMenuSection
-   : PopupMenuGroupItem, MenuTable::MenuItemProperties
+   : PopupMenuGroupItem, MenuRegistry::ItemProperties
 {
    using PopupMenuGroupItem::PopupMenuGroupItem;
    ~PopupMenuSection() override;

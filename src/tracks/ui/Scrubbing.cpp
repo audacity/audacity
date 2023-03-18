@@ -1132,7 +1132,7 @@ static const auto finder =
    [](AudacityProject &project) -> CommandHandlerObject&
      { return Scrubber::Get( project ); };
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ToolbarMenu()
 {
    static auto menu = []{

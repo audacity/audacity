@@ -43,7 +43,7 @@ TimeDisplayMode GetTimeDisplayMode(const AudacityProject& project)
    return panel.GetTimeDisplayMode();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto ExtraSelectionMenu()
 {

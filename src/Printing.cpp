@@ -215,7 +215,7 @@ void OnPrint(const CommandContext &context)
    HandlePrint(&window, name, &tracks, TrackPanel::Get( project ));
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto PrintingItems()
 {
    static auto items = std::shared_ptr{

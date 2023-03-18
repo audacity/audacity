@@ -732,7 +732,7 @@ void OnStopSelect(const CommandContext &context)
 // Menu definitions
 
 // Under /MenuBar
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto TransportMenu()
 {
    static const auto CanStopFlags =

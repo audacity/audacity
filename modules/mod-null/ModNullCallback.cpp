@@ -74,7 +74,7 @@ namespace {
 void RegisterMenuItems()
 {
    // Get here only after the module version check passes
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    // We add two new commands into the Analyze menu.
    static AttachedItem sAttachment{ wxT("Analyze"),
       ( FinderScope( ident ), Section( wxT("NullModule"),

@@ -104,7 +104,7 @@ CommandHandlerObject &findme(AudacityProject&)
 void RegisterMenuItems()
 {
   // Get here only after the module version check passes
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    static AttachedItem sAttachment{ wxT("Tools"),
       ( FinderScope( findme ), Section( wxT("NyquistWorkBench"),
          Command( wxT("NyqBench"), XXO("&Nyquist Workbench..."),

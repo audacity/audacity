@@ -106,7 +106,7 @@ bool SetEnvelopeCommand::ApplyInner(const CommandContext &context, Track &t)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

@@ -1059,7 +1059,7 @@ const ReservedCommandFlag
    CommandFlagOptions{}.DisableDefaultMessage()
 }; return flag; }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto EditMenu()
 {
    static const auto NotBusyTimeAndTracksFlags =

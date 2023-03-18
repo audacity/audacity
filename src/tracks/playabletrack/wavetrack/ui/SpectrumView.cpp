@@ -1178,7 +1178,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
    return project.AttachedObjects::Get< Handler >( key );
 };
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 #define FN(X) (& Handler :: X)
 
 auto SpectralSelectionMenu()

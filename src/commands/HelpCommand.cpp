@@ -139,7 +139,7 @@ void CommentCommand::PopulateOrExchange(ShuttleGui & S)
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

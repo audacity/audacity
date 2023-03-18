@@ -683,10 +683,10 @@ void OnNewLabelTrack(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto LabelEditMenus()
 {
-   using namespace MenuTable;
+   using namespace MenuRegistry;
 
    static const auto NotBusyLabelsAndWaveFlags =
       AudioIONotBusyFlag() |

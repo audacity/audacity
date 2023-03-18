@@ -481,8 +481,8 @@ void OnSpectralEditingPanel(const CommandContext &context)
    dialog.Show( !dialog.IsShown() );
 }
 
-using namespace MenuTable;
-MenuTable::AttachedItem sAttachment{
+using namespace MenuRegistry;
+MenuRegistry::AttachedItem sAttachment{
    wxT("View/Other/Toolbars/Toolbars/Other"),
    Command( wxT("ShowSpectralSelectionPanel"),
       XXO("Spectra&l Selection Panel"),

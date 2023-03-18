@@ -8,7 +8,7 @@ namespace {
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto ToolbarsMenu()
 {

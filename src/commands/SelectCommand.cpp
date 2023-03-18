@@ -306,7 +306,7 @@ bool SelectCommand::VisitSettings( ConstSettingsVisitor & S )
 }
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

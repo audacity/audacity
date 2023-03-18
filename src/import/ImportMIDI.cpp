@@ -133,7 +133,7 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
 #include "../CommonCommandFlags.h"
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnImportMIDI(const CommandContext &context)
 {

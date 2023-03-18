@@ -1324,7 +1324,7 @@ void OnTimerRecord(const CommandContext &context)
 
 const auto CanStopFlags = AudioIONotBusyFlag() | CanStopAudioStreamFlag();
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("TimerRecord"), XXO("&Timer Record..."),
       OnTimerRecord, CanStopFlags, wxT("Shift+T") ),

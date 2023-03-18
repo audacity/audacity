@@ -826,7 +826,7 @@ void OnScreenshot(const CommandContext &context )
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
       OnScreenshot, AudioIONotBusyFlag() ),

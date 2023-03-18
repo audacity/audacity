@@ -140,7 +140,7 @@ void OnLinkAccount(const CommandContext&)
    dialog.ShowModal();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
       Command(
          wxT("LinkAccount"), XXO("L&ink audio.com account..."),

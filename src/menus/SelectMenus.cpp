@@ -939,7 +939,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 #define FN(X) (& SelectActions::Handler :: X)
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto SelectMenu()
 {
    static auto menu = std::shared_ptr{

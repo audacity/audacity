@@ -21,7 +21,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "QualitySettings.h"
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnNewWaveTrack(const CommandContext &context)
 {

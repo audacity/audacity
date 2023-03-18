@@ -2915,7 +2915,7 @@ void OnTogglePinnedHead(const CommandContext &context)
    AdornedRulerPanel::Get( context.project ).TogglePinnedHead();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
       OnTogglePinnedHead,

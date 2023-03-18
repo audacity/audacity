@@ -20,7 +20,7 @@ Paul Licameli split from TrackMenus.cpp
 #include "AudacityMessageBox.h"
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnNewTimeTrack(const CommandContext &context)
 {

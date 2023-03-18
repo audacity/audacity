@@ -149,7 +149,7 @@ void AddEffectMenuItemGroup(
       }
    }
 
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    
    for (int i = 0; i < namesCnt; i++)
    {
@@ -291,7 +291,7 @@ auto MakeAddGroupItems(
 
          if (!groupNames.empty())
          {
-            using namespace MenuTable;
+            using namespace MenuRegistry;
             if (p.first.empty()) {
                auto temp = Items("");
                AddEffectMenuItemGroup(*temp,
@@ -318,7 +318,7 @@ void AddGroupedEffectMenuItems(
    GroupBy groupBy,
    void (*onMenuCommand)(const CommandContext&))
 {
-   using namespace MenuTable;
+   using namespace MenuRegistry;
 
    const auto UnknownGroupName = XO("Unknown");
    auto& effectManager = EffectManager::Get();
@@ -332,7 +332,7 @@ void AddGroupedEffectMenuItems(
 
    auto doAddGroup = [&]
    {
-      using namespace MenuTable;
+      using namespace MenuRegistry;
       if(names.empty())
          return;
 
@@ -763,14 +763,14 @@ void MenuHelper::PopulateEffectsMenu(
          std::sort(section.plugins.begin(), section.plugins.end(), section.compare);
 
       if (menuItems.empty()) {
-         auto group = MenuTable::Items("");
+         auto group = MenuRegistry::Items("");
          section.add(*group, section.plugins);
          if (group->empty())
             continue;
          menuItems.push_back(move(group));
       }
       else {
-         auto group = MenuTable::Section("");
+         auto group = MenuRegistry::Section("");
          section.add(*group, section.plugins);
          if (group->empty())
             continue;

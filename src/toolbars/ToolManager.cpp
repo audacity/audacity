@@ -1558,7 +1558,7 @@ void ToolManager::ModifyToolbarMenus(AudacityProject &project)
    CommandManager::Get(project).UpdateCheckmarks();
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 AttachedToolBarMenuItem::AttachedToolBarMenuItem(
    Identifier id, const CommandID &name, const TranslatableString &label_in,
@@ -1566,10 +1566,10 @@ AttachedToolBarMenuItem::AttachedToolBarMenuItem(
    std::vector< Identifier > excludeIDs
 )  : mId{ id }
    , mAttachedItem{
-      (  MenuTable::FinderScope(
+      (  MenuRegistry::FinderScope(
             [this](AudacityProject &) -> CommandHandlerObject&
                { return *this; } ),
-         MenuTable::Command( name, label_in,
+         MenuRegistry::Command( name, label_in,
             &AttachedToolBarMenuItem::OnShowToolBar,
             AlwaysEnabledFlag,
             Options{}.CheckTest( [id](AudacityProject &project){

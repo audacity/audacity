@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Prefs.h" // to inherit
 #include "../../widgets/Overlay.h" // to inherit
 #include "../../commands/CommandContext.h"
-#include "../../commands/CommandManager.h" // for MenuTable
+#include "../../commands/CommandManager.h" // for MenuRegistry
 #include "Identifier.h"
 
 class AudacityProject;

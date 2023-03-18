@@ -330,7 +330,7 @@ void OnMenuTree(const CommandContext &context)
    auto Indent = [&](){ info += indentation; };
    auto Return = [&](){ info += '\n'; };
 
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    auto visitor = Visitor<Traits>{
       std::tuple{
          [&](const MenuItem &item, const auto&) {
@@ -415,7 +415,7 @@ void OnHelpWelcome(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto HelpMenu()
 {
    static auto menu = std::shared_ptr{

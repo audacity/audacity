@@ -804,7 +804,7 @@ void OnAudioHost(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 // Under /MenuBar/Optional/Extra/Part1
 auto ExtraDeviceMenu()
 {

@@ -56,7 +56,7 @@ const MenuCreator &MenuCreator::Get(const AudacityProject &project)
 
 namespace {
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 struct MenuItemVisitor : Visitor<Traits> {
    MenuItemVisitor(AudacityProject &proj, CommandManager &man)

@@ -17,27 +17,28 @@
 #include "BasicUI.h"
 #include <wx/log.h>
 
-std::pair<bool, bool> MenuTable::detail::VisitorBase::ShouldBeginGroup(
-   const MenuItemProperties *pProperties)
+namespace MenuRegistry {
+std::pair<bool, bool> detail::VisitorBase::ShouldBeginGroup(
+   const ItemProperties *pProperties)
 {
    const auto properties =
-      pProperties ? pProperties->GetProperties() : MenuItemProperties::None;
+      pProperties ? pProperties->GetProperties() : ItemProperties::None;
 
    bool inlined = false;
    bool shouldDoSeparator = false;
 
    switch (properties) {
-   case MenuItemProperties::Inline: {
+   case ItemProperties::Inline: {
       inlined = true;
       break;
    }
-   case MenuItemProperties::Section: {
+   case ItemProperties::Section: {
       if (!needSeparator.empty())
          needSeparator.back() = true;
       break;
    }
-   case MenuItemProperties::Whole:
-   case MenuItemProperties::Extension: {
+   case ItemProperties::Whole:
+   case ItemProperties::Extension: {
       shouldDoSeparator = ShouldDoSeparator();
       break;
    }
@@ -48,20 +49,20 @@ std::pair<bool, bool> MenuTable::detail::VisitorBase::ShouldBeginGroup(
    return { !inlined, shouldDoSeparator };
 }
 
-void MenuTable::detail::VisitorBase::AfterBeginGroup(
-   const MenuItemProperties *pProperties)
+void detail::VisitorBase::AfterBeginGroup(
+   const ItemProperties *pProperties)
 {
    const auto properties =
-      pProperties ? pProperties->GetProperties() : MenuItemProperties::None;
+      pProperties ? pProperties->GetProperties() : ItemProperties::None;
 
    bool isMenu = false;
    bool isExtension = false;
 
    switch (properties) {
-   case MenuItemProperties::Whole:
-   case MenuItemProperties::Extension: {
+   case ItemProperties::Whole:
+   case ItemProperties::Extension: {
       isMenu = true;
-      isExtension = (properties == MenuItemProperties::Extension);
+      isExtension = (properties == ItemProperties::Extension);
       break;
    }
    default:
@@ -74,26 +75,26 @@ void MenuTable::detail::VisitorBase::AfterBeginGroup(
    }
 }
 
-bool MenuTable::detail::VisitorBase::ShouldEndGroup(
-   const MenuItemProperties *pProperties)
+bool detail::VisitorBase::ShouldEndGroup(
+   const ItemProperties *pProperties)
 {
    const auto properties =
-      pProperties ? pProperties->GetProperties() : MenuItemProperties::None;
+      pProperties ? pProperties->GetProperties() : ItemProperties::None;
 
    bool inlined = false;
 
    switch (properties) {
-   case MenuItemProperties::Inline: {
+   case ItemProperties::Inline: {
       inlined = true;
       break;
    }
-   case MenuItemProperties::Section: {
+   case ItemProperties::Section: {
       if ( !needSeparator.empty() )
          needSeparator.back() = true;
       break;
    }
-   case MenuItemProperties::Whole:
-   case MenuItemProperties::Extension: {
+   case ItemProperties::Whole:
+   case ItemProperties::Extension: {
       firstItem.pop_back();
       needSeparator.pop_back();
       break;
@@ -105,7 +106,7 @@ bool MenuTable::detail::VisitorBase::ShouldEndGroup(
    return !inlined;
 }
 
-bool MenuTable::detail::VisitorBase::ShouldDoSeparator()
+bool detail::VisitorBase::ShouldDoSeparator()
 {
    bool separate = false;
    if (!needSeparator.empty()) {
@@ -115,8 +116,6 @@ bool MenuTable::detail::VisitorBase::ShouldDoSeparator()
    }
    return separate;
 }
-
-namespace MenuTable {
 
 MenuItem::~MenuItem() {}
 auto MenuItem::GetProperties() const -> Properties { return Whole; }
@@ -157,7 +156,7 @@ auto MenuItems::GetOrdering() const -> Ordering {
 }
 auto MenuItems::GetProperties() const -> Properties { return Inline; }
 
-MenuItemProperties::~MenuItemProperties() {}
+ItemProperties::~ItemProperties() {}
 
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {
@@ -178,13 +177,13 @@ const auto MenuPathStart = wxT("MenuBar");
 
 }
 
-auto MenuTable::ItemRegistry::Registry() -> Registry::GroupItem<Traits> &
+auto MenuRegistry::ItemRegistry::Registry() -> Registry::GroupItem<Traits> &
 {
    static GroupItem<Traits> registry{ MenuPathStart };
    return registry;
 }
 
-void CommandManager::Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
+void CommandManager::Visit(MenuRegistry::Visitor<MenuRegistry::Traits> &visitor,
    AudacityProject &project)
 {
    // Once only, cause initial population of preferences for the ordering
@@ -229,9 +228,9 @@ void CommandManager::Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
       }
    };
 
-   static const auto menuTree = MenuTable::Items( MenuPathStart );
+   static const auto menuTree = MenuRegistry::Items( MenuPathStart );
 
    wxLogNull nolog;
    Registry::VisitWithFunctions(visitor, menuTree.get(),
-      &MenuTable::ItemRegistry::Registry(), project);
+      &MenuRegistry::ItemRegistry::Registry(), project);
 }

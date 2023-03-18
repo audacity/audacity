@@ -521,7 +521,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 #define FN(X) (& NavigationActions::Handler :: X)
 
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ExtraGlobalCommands()
 {
    // Ceci n'est pas un menu

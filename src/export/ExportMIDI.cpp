@@ -37,7 +37,7 @@ const ReservedCommandFlag&
       }
    }; return flag; }  //gsw
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 void OnExportMIDI(const CommandContext &context)
 {

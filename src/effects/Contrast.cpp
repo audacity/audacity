@@ -686,7 +686,7 @@ namespace {
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("ContrastAnalyser"), XXO("Contrast..."),
       OnContrast,

@@ -1497,13 +1497,13 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 }
 
-void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
+void PopulateMacrosMenu(MenuRegistry::MenuItems &items, CommandFlag flags)
 {
-   using namespace MenuTable;
+   using namespace MenuRegistry;
    auto names = MacroCommands::GetNames(); // these names come from filenames
    for (const auto &name : names) {
       auto MacroID = ApplyMacroDialog::MacroIdOfName(name);
-      items.push_back(MenuTable::Command(MacroID,
+      items.push_back(MenuRegistry::Command(MacroID,
          Verbatim(name), // file name verbatim
          OnApplyMacroDirectly,
          flags,
@@ -1525,7 +1525,7 @@ const ReservedCommandFlag&
 }
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto PluginMenuItems()
 {

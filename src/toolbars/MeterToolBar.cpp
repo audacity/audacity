@@ -591,7 +591,7 @@ void OnInputGainDec(const CommandContext &context)
    tb.AdjustInputGain(-1);
 }
    
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ExtraMixerMenu()
 {
    static auto menu = std::shared_ptr{

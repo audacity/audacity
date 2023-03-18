@@ -255,7 +255,7 @@ struct AUDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
    void OnShowToolBar(const CommandContext &context);
 
    const Identifier mId;
-   const MenuTable::AttachedItem mAttachedItem;
+   const MenuRegistry::AttachedItem mAttachedItem;
    const std::vector< Identifier > mExcludeIds;
 };
 

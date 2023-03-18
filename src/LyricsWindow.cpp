@@ -218,7 +218,7 @@ void OnKaraoke(const CommandContext &context)
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    Command( wxT("Karaoke"), XXO("&Karaoke"), OnKaraoke,
       LabelTracksExistFlag() ),

@@ -259,7 +259,7 @@ void OnWriteJournal(const CommandContext &)
 // Menu definitions
 
 // Under /MenuBar
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 namespace {
 const ReservedCommandFlag&

@@ -1036,7 +1036,7 @@ void OnEditMetadata(const CommandContext &context)
       XO("Edit Metadata Tags"), XO("Metadata Tags"));
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 AttachedItem sAttachment{
    Command( wxT("EditMetaData"), XXO("&Metadata Editor"), OnEditMetadata,

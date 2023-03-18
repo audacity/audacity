@@ -510,7 +510,7 @@ void OnHistory(const CommandContext &context)
 
 // Register that menu item
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 AttachedItem sAttachment{
    // History window should be available either for UndoAvailableFlag
    // or RedoAvailableFlag,

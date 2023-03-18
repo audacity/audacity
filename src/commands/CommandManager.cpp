@@ -548,7 +548,7 @@ void CommandManager::AddItem(const CommandID &name,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
                              CommandFlag flags,
-                             const MenuTable::Options &options)
+                             const MenuRegistry::Options &options)
 {
    if (options.global) {
       //wxASSERT( flags == AlwaysEnabledFlag );
@@ -584,13 +584,13 @@ void CommandManager::AddItem(const CommandID &name,
    mbSeparatorAllowed = true;
 }
 
-auto MenuTable::Options::MakeCheckFn(
+auto MenuRegistry::Options::MakeCheckFn(
    const wxString key, bool defaultValue ) -> CheckFn
 {
    return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
 
-auto MenuTable::Options::MakeCheckFn(
+auto MenuRegistry::Options::MakeCheckFn(
    const BoolSetting &setting ) -> CheckFn
 {
    return MakeCheckFn( setting.GetPath(), setting.GetDefault() );
@@ -620,7 +620,7 @@ void CommandManager::AddItemList(const CommandID & name,
             items[i].Internal(),
             i,
             cnt,
-            MenuTable::Options{}
+            MenuRegistry::Options{}
                .IsEffect(bIsEffect));
       entry->flags = flags;
       CurrentMenu()->Append(entry->id, FormatLabelForMenu(entry));
@@ -632,7 +632,7 @@ void CommandManager::AddGlobalCommand(const CommandID &name,
                                       const TranslatableString &label_in,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
-                                      const MenuTable::Options &options)
+                                      const MenuRegistry::Options &options)
 {
    CommandListEntry *entry =
       NewIdentifier(name, label_in, NULL, finder, callback,
@@ -674,7 +674,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    const CommandID &nameSuffix,
    int index,
    int count,
-   const MenuTable::Options &options)
+   const MenuRegistry::Options &options)
 {
    bool excludeFromMacros =
       (options.allowInMacros == 0) ||

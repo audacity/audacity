@@ -699,7 +699,7 @@ void OnRenderClipStretching(const CommandContext& context)
    }
 }
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

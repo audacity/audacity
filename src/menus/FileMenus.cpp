@@ -427,7 +427,7 @@ void OnExportFLAC(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 auto FileMenu()
 {

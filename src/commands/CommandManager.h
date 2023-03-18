@@ -59,7 +59,8 @@ using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
 class AudacityProject;
 class CommandContext;
 
-namespace MenuTable {
+// Define items that populate tables that specifically describe menu trees
+namespace MenuRegistry {
    struct Traits;
    template<typename MenuTraits> struct Visitor;
 
@@ -165,7 +166,7 @@ public:
    CommandManager &operator=(const CommandManager &) = delete;
    ~CommandManager() override;
 
-   static void Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
+   static void Visit(MenuRegistry::Visitor<MenuRegistry::Traits> &visitor,
       AudacityProject &project);
 
    // If checkActive, do not do complete flags testing on an
@@ -235,7 +236,7 @@ public:
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
                 CommandFlag flags,
-                const MenuTable::Options &options = {});
+                const MenuRegistry::Options &options = {});
 
    void AddSeparator();
 
@@ -358,13 +359,13 @@ private:
                                    const CommandID &nameSuffix,
                                    int index,
                                    int count,
-                                   const MenuTable::Options &options);
+                                   const MenuRegistry::Options &options);
    
    void AddGlobalCommand(const CommandID &name,
                          const TranslatableString &label,
                          CommandHandlerFinder finder,
                          CommandFunctorPointer callback,
-                         const MenuTable::Options &options = {});
+                         const MenuRegistry::Options &options = {});
 
    //
    // Executing commands
@@ -453,11 +454,11 @@ private:
 };
 
 // Define items that populate tables that specifically describe menu trees
-namespace MenuTable {
+namespace MenuRegistry {
 using namespace Registry;
 
    //! A mix-in discovered by dynamic_cast; independent of the Traits
-   struct MenuItemProperties {
+   struct ItemProperties {
       enum Properties {
          None,
          Inline,
@@ -465,16 +466,16 @@ using namespace Registry;
          Whole,
          Extension,
       };
-      virtual ~MenuItemProperties();
+      virtual ~ItemProperties();
       virtual Properties GetProperties() const = 0;
    };
 
 namespace detail {
    struct VisitorBase {
       std::pair<bool, bool>
-         ShouldBeginGroup(const MenuItemProperties *pProperties);
-      void AfterBeginGroup(const MenuItemProperties *pProperties);
-      bool ShouldEndGroup(const MenuItemProperties *pProperties);
+         ShouldBeginGroup(const ItemProperties *pProperties);
+      void AfterBeginGroup(const ItemProperties *pProperties);
+      bool ShouldEndGroup(const ItemProperties *pProperties);
       bool ShouldDoSeparator();
 
       std::vector<bool> firstItem;
@@ -494,8 +495,8 @@ namespace detail {
 
       [this](const GroupItem<MenuTraits> &item, const Path &path)
       {
-         using namespace MenuTable;
-         const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+         using namespace MenuRegistry;
+         const auto pProperties = dynamic_cast<const ItemProperties*>(&item);
          auto [begin, separate] = ShouldBeginGroup(pProperties);
          if (separate)
             mDoSeparator();
@@ -513,8 +514,8 @@ namespace detail {
 
       [this](const GroupItem<MenuTraits> &item, const Path &path)
       {
-         using namespace MenuTable;
-         const auto pProperties = dynamic_cast<const MenuItemProperties*>(&item);
+         using namespace MenuRegistry;
+         const auto pProperties = dynamic_cast<const ItemProperties*>(&item);
          if (ShouldEndGroup(pProperties))
             mWrapped.EndGroup(item, path);
       }
@@ -547,9 +548,9 @@ namespace detail {
 
    template<typename RegistryTraits>
    static inline bool IsSection(const GroupItem<RegistryTraits> &item) {
-      auto pProperties = dynamic_cast<const MenuItemProperties *>(&item);
+      auto pProperties = dynamic_cast<const ItemProperties *>(&item);
       return pProperties && pProperties->GetProperties() ==
-         MenuItemProperties::Section;
+         ItemProperties::Section;
    };
 
    struct MenuItemData {
@@ -562,7 +563,7 @@ namespace detail {
       : Composite::Extension<
          GroupItem<Traits>, MenuItemData, const Identifier&
       >
-      , MenuItemProperties
+      , ItemProperties
    {
       using Extension::Extension;
       ~MenuItem() override;
@@ -724,13 +725,12 @@ namespace detail {
    };
 
    //! Groups of this type are inlined in the menu tree organization.  They
-   //! (but not their contained items) are excluded from visitations using
-   //! MenuVisitor
+   //! (but not their contained items) are excluded from visitations
    struct MenuItems
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
-      , MenuItemProperties
+      , ItemProperties
    {
       using Extension::Extension;
       ~MenuItems() override;
@@ -743,7 +743,7 @@ namespace detail {
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
-      , MenuItemProperties
+      , ItemProperties
    {
       using Extension::Extension;
       ~MenuPart() override;

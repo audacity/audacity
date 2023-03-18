@@ -1133,7 +1133,7 @@ void OnTrackMoveBottom(const CommandContext &context)
 // Menu definitions
 
 // Under /MenuBar
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto TracksMenu()
 {
    // Tracks Menu (formerly Project Menu)

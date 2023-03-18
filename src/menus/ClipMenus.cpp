@@ -746,7 +746,7 @@ void OnClipRight(const CommandContext &context)
 
 // Menu definitions
 
-using namespace MenuTable;
+using namespace MenuRegistry;
 
 // Register menu items
 

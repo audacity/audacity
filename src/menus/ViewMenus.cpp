@@ -398,7 +398,7 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &project) {
 
 // Under /MenuBar
 namespace {
-using namespace MenuTable;
+using namespace MenuRegistry;
 auto ViewMenu()
 {
    static auto menu = std::shared_ptr{
