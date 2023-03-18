@@ -19,7 +19,7 @@
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
 #include "Track.h"
-#include "ViewInfo.h"
+#include "ZoomInfo.h"
 
 inline bool operator < (SnapPoint s1, SnapPoint s2)
 {
@@ -299,17 +299,4 @@ SnapResults SnapManager::Snap
       results.outCoord = mZoomInfo->TimeToPosition(results.outTime);
 
    return results;
-}
-
-#include "AColor.h"
-
-void SnapManager::Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 )
-{
-   AColor::SnapGuidePen(dc);
-   if ( snap0 >= 0 ) {
-      AColor::Line(*dc, (int)snap0, 0, (int)snap0, 30000);
-   }
-   if ( snap1 >= 0 ) {
-      AColor::Line(*dc, (int)snap1, 0, (int)snap1, 30000);
-   }
 }

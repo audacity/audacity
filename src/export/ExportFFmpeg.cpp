@@ -34,7 +34,6 @@ function.
 
 #include "Mix.h"
 #include "ProjectRate.h"
-#include "ProjectSettings.h"
 #include "Tags.h"
 #include "Track.h"
 #include "AudacityMessageBox.h"
@@ -420,7 +419,6 @@ bool ExportFFmpeg::CheckSampleRate(int rate, int lowrate, int highrate, const in
 
 bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 {
-   const auto &settings = ProjectSettings::Get( *project );
    std::unique_ptr<AVCodecWrapper> codec;
 
    AVDictionaryWrapper options(*mFFmpeg);

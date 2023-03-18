@@ -52,7 +52,6 @@ selection range.
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
-#include "../ProjectSettings.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
 #include "ImageManipulation.h"

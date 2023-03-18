@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "SelectionState.h"
 #include "SyncLock.h"
+#include "../../TrackArt.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
@@ -1025,7 +1026,7 @@ void SelectHandle::Draw(
       if ( mSnapManager ) {
          auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
          auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
-         mSnapManager->Draw( &dc, coord1, coord2 );
+         TrackArt::DrawSnapLines(&dc, coord1, coord2);
       }
    }
 }

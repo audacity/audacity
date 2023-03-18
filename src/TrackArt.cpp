@@ -516,3 +516,12 @@ void TrackArt::DrawCursor(TrackPanelDrawingContext& context,
        }
    }
 }
+
+void TrackArt::DrawSnapLines(wxDC *dc, wxInt64 snap0, wxInt64 snap1)
+{
+   AColor::SnapGuidePen(dc);
+   if (snap0 >= 0)
+      AColor::Line(*dc, (int)snap0, 0, (int)snap0, 30000);
+   if (snap1 >= 0)
+      AColor::Line(*dc, (int)snap1, 0, (int)snap1, 30000);
+}

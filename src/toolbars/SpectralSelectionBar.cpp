@@ -47,7 +47,7 @@ frequency selection range.
 #include "Project.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../ProjectSelectionManager.h"
+#include "ProjectSelectionManager.h"
 #include "AllThemeResources.h"
 #include "SelectedRegion.h"
 #include "ViewInfo.h"
@@ -266,9 +266,7 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
 {
    auto &manager = ProjectSelectionManager::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
-   const auto rate = std::max(ProjectRate::Get(mProject).GetRate(),
-      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate));
-   const double nyq = rate / 2.0;
+   const auto nyq = WaveTrack::ProjectNyquistFrequency(mProject);
 
    double bottom, top;
    if (mbCenterAndWidth) {
@@ -332,7 +330,7 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
 
    // Notify project and track panel, which may change
    // the values again, and call back to us in SetFrequencies()
-   manager.ModifySpectralSelection(bottom, top, done);
+   manager.ModifySpectralSelection(nyq, bottom, top, done);
 }
 
 void SpectralSelectionBar::OnCtrl(wxCommandEvent & event)

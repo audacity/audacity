@@ -27,7 +27,6 @@
 #include <wx/stream.h>
 
 #include "ShuttleGui.h"
-#include "../ProjectSettings.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 #include "Track.h"

@@ -93,6 +93,14 @@ Track::LinkType ToLinkType(int value)
 
 }
 
+double WaveTrack::ProjectNyquistFrequency(const AudacityProject &project)
+{
+   auto &tracks = TrackList::Get(project);
+   return std::max(ProjectRate::Get(project).GetRate(),
+      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate))
+      / 2.0;
+}
+
 static auto DefaultName = XO("Audio");
 
 wxString WaveTrack::GetDefaultAudioTrackNamePreference()

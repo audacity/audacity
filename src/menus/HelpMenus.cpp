@@ -17,7 +17,6 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectSnap.h"
-#include "../ProjectSelectionManager.h"
 #include "../ProjectWindows.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
