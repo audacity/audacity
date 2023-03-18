@@ -10,6 +10,8 @@
 #include "../PluginRegistrationDialog.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectRate.h"
+#include "ProjectSnap.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
@@ -62,6 +64,8 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
 
 }
 
+extern IntSetting SelectionToolbarMode;
+
 namespace {
 
 // Menu handler functions
@@ -93,7 +97,7 @@ void OnResetConfig(const CommandContext &context)
    // - Set Zoom sensibly.
    SyncLockTracks.Reset();
    SoundActivatedRecord.Reset();
-   gPrefs->Write("/SelectionToolbarMode", 0);
+   SelectionToolbarMode.Write(0);
    gPrefs->Flush();
    DoReloadPreferences(project);
 
@@ -112,10 +116,11 @@ void OnResetConfig(const CommandContext &context)
 
    gPrefs->Flush();
 
-   ProjectSelectionManager::Get( project )
-      .AS_SetSnapTo(gPrefs->ReadLong("/SnapTo", SNAP_OFF));
-   ProjectSelectionManager::Get( project )
-      .AS_SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
+   ProjectSnap::Get(project).SetSnapTo(SnapToSetting.Read());
+   ProjectSnap::Get(project).SetSnapMode(SnapModeSetting.ReadEnum());
+   
+   ProjectRate::Get( project )
+      .SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
 }
 
 void OnManageGenerators(const CommandContext &context)

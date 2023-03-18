@@ -14,6 +14,8 @@ set( SOURCES
    NumericConverter.h
    ProjectNumericFormats.cpp
    ProjectNumericFormats.h
+   ProjectTimeSignature.cpp
+   ProjectTimeSignature.h
 )
 set( LIBRARIES
    lib-math-interface

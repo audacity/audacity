@@ -24,7 +24,7 @@ class ShuttleGui;
 class DevicePrefs final : public PrefsPanel
 {
  public:
-   DevicePrefs(wxWindow * parent, wxWindowID winid);
+   DevicePrefs(wxWindow * parent, wxWindowID winid, AudacityProject* project);
    virtual ~DevicePrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
@@ -39,6 +39,8 @@ class DevicePrefs final : public PrefsPanel
 
    void OnHost(wxCommandEvent & e);
    void OnDevice(wxCommandEvent & e);
+
+   AudacityProject* mProject;
 
    TranslatableStrings mHostNames;
    wxArrayStringEx mHostLabels;

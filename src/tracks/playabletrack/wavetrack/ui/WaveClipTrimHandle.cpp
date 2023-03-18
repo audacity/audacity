@@ -12,6 +12,7 @@
 #include "ProjectAudioIO.h"
 #include "RefreshCode.h"
 
+#include <wx/event.h>
 
 #include "../../../../TrackArtist.h"
 #include "../../../../Snap.h"

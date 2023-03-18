@@ -10,13 +10,13 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "ProjectSelectionManager.h"
 
-
-
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
+#include "ProjectSnap.h"
+#include "ProjectTimeSignature.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "Snap.h"
@@ -47,91 +47,51 @@ const ProjectSelectionManager &ProjectSelectionManager::Get(
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ProjectSelectionManager::ProjectSelectionManager( AudacityProject &project )
-   : mProject{ project }
+ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
+    : mProject { project }
+    , mSnapModeChangedSubscription { ProjectSnap::Get(project).Subscribe(
+         [this](auto&)
+         {
+            SnapSelection();
+         })}
+    , mTimeSignatureChangedSubscription {
+       ProjectTimeSignature::Get(project).Subscribe([this](auto&)
+                                                    { SnapSelection(); })
+    }
+
 {
 }
 
 ProjectSelectionManager::~ProjectSelectionManager() = default;
 
-bool ProjectSelectionManager::SnapSelection()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   auto &settings = ProjectSettings::Get( project );
-   auto &window = ProjectWindow::Get( project );
-   auto snapTo = settings.GetSnapTo();
-   if (snapTo != SNAP_OFF) {
-      auto &viewInfo = ViewInfo::Get( project );
-      auto &selectedRegion = viewInfo.selectedRegion;
-      NumericConverter nc(NumericConverter::TIME,
-         formats.GetSelectionFormat(), 0, ProjectRate::Get(project).GetRate());
-      const bool nearest = (snapTo == SNAP_NEAREST);
+void ProjectSelectionManager::SnapSelection()
+{   
+   auto& project = mProject;
+   auto& projectSnap = ProjectSnap::Get(mProject);
 
-      const double oldt0 = selectedRegion.t0();
-      const double oldt1 = selectedRegion.t1();
+   if (projectSnap.GetSnapMode() == SnapMode::SNAP_OFF)
+      return;
 
-      nc.ValueToControls(oldt0, nearest);
-      nc.ControlsToValue();
-      const double t0 = nc.GetValue();
+   auto& viewInfo = ViewInfo::Get(project);
+   auto& selectedRegion = viewInfo.selectedRegion;
 
-      nc.ValueToControls(oldt1, nearest);
-      nc.ControlsToValue();
-      const double t1 = nc.GetValue();
+   const double oldt0 = selectedRegion.t0();
+   const double oldt1 = selectedRegion.t1();
 
-      if (t0 != oldt0 || t1 != oldt1) {
-         selectedRegion.setTimes(t0, t1);
-         return true;
-      }
+   const double t0 = projectSnap.SnapTime(oldt0).time;
+   const double t1 = projectSnap.SnapTime(oldt1).time;
+
+   if (t0 != oldt0 || t1 != oldt1)
+   {
+      selectedRegion.setTimes(t0, t1);
+      TrackPanel::Get(mProject).Refresh(false);
    }
-
-   return false;
-}
-
-double ProjectSelectionManager::AS_GetRate()
-{
-   return ProjectRate::Get(mProject).GetRate();
-}
-
-void ProjectSelectionManager::AS_SetRate(double rate)
-{
-   auto &project = mProject;
-   ProjectRate::Get( project ).SetRate( rate );
-   SelectionBar::Get( project ).SetRate(rate);
-}
-
-int ProjectSelectionManager::AS_GetSnapTo()
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetSnapTo();
-}
-
-void ProjectSelectionManager::AS_SetSnapTo(int snap)
-{
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   settings.SetSnapTo( snap );
-
-// LLL: TODO - what should this be changed to???
-// GetCommandManager()->Check(wxT("Snap"), mSnapTo);
-   gPrefs->Write(wxT("/SnapTo"), snap);
-   gPrefs->Flush();
-
-   SnapSelection();
-
-   window.RedrawProject();
-
-   SelectionBar::Get( project ).SetSnapTo(snap);
 }
 
 const NumericFormatSymbol & ProjectSelectionManager::AS_GetSelectionFormat()
 {
    auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetSelectionFormat();
+   return ProjectNumericFormats::Get(project).GetSelectionFormat();
 }
 
 void ProjectSelectionManager::AS_SetSelectionFormat(
@@ -143,9 +103,6 @@ void ProjectSelectionManager::AS_SetSelectionFormat(
 
    gPrefs->Write(wxT("/SelectionFormat"), format.Internal());
    gPrefs->Flush();
-
-   if (SnapSelection())
-      TrackPanel::Get( project ).Refresh(false);
 
    SelectionBar::Get( project ).SetSelectionFormat(format);
 }
@@ -266,3 +223,4 @@ void ProjectSelectionManager::SSBL_ModifySpectralSelection(
    bottom; top; done;
 #endif
 }
+

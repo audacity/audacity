@@ -8,6 +8,7 @@
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
+#include "ProjectSnap.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -23,6 +24,7 @@
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "NumericConverter.h"
 
 // private helper classes and functions
 namespace {
@@ -189,14 +191,14 @@ double GridMove
 
 double OffsetTime
 (AudacityProject &project,
- double t, double offset, TimeUnit timeUnit, int snapToTime)
+ double t, double offset, TimeUnit timeUnit, SnapMode snapMode)
 {
    auto &viewInfo = ViewInfo::Get( project );
 
     if (timeUnit == TIME_UNIT_SECONDS)
         return t + offset; // snapping is currently ignored for non-pixel moves
 
-    if (snapToTime == SNAP_OFF)
+    if (snapMode == SnapMode::SNAP_OFF)
         return viewInfo.OffsetTimeByPixels(t, (int)offset);
 
     return GridMove(project, t, (int)offset);
@@ -210,11 +212,11 @@ void MoveWhenAudioInactive
    auto &trackPanel = TrackPanel::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &ruler = AdornedRulerPanel::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
+   const auto &settings = ProjectSnap::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // If TIME_UNIT_SECONDS, snap-to will be off.
-   int snapToTime = settings.GetSnapTo();
+   auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double end = std::max( 
       tracks.GetEndTime(),
@@ -225,7 +227,7 @@ void MoveWhenAudioInactive
    if( viewInfo.selectedRegion.isPoint() )
    {
       double newT = OffsetTime(project,
-         t0, seekStep, timeUnit, snapToTime);
+         t0, seekStep, timeUnit, snapMode);
       // constrain.
       newT = std::max(0.0, newT);
       newT = std::min(newT, end);
@@ -260,7 +262,7 @@ SelectionOperation operation)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &tracks = TrackList::Get( project );
-   const auto &settings = ProjectSettings::Get( project );
+   const auto &settings = ProjectSnap::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if( operation == CURSOR_MOVE )
@@ -269,7 +271,7 @@ SelectionOperation operation)
       return;
    }
 
-   int snapToTime = settings.GetSnapTo();
+   auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
    const double end = std::max( 
@@ -281,7 +283,7 @@ SelectionOperation operation)
 	   (operation == SELECTION_EXTEND && seekStep < 0);
    // newT is where we want to move to
    double newT = OffsetTime( project,
-      bMoveT0 ? t0 : t1, seekStep, timeUnit, snapToTime);
+      bMoveT0 ? t0 : t1, seekStep, timeUnit, snapMode);
    // constrain to be in the track/screen limits.
    newT = std::max( 0.0, newT );
    newT = std::min( newT, end);
@@ -645,19 +647,19 @@ void OnZeroCrossing(const CommandContext &context)
 void OnSnapToOff(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_OFF);
+   ProjectSnap::Get(project).SetSnapMode(SnapMode::SNAP_OFF);
 }
 
 void OnSnapToNearest(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_NEAREST);
+   ProjectSnap::Get( project ).SetSnapMode(SnapMode::SNAP_NEAREST);
 }
 
 void OnSnapToPrior(const CommandContext &context)
 {
    auto &project = context.project;
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo(SNAP_PRIOR);
+   ProjectSnap::Get(project).SetSnapMode(SnapMode::SNAP_PRIOR);
 }
 
 void OnSelToStart(const CommandContext &context)

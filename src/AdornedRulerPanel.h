@@ -174,6 +174,7 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    static void DragSelection(AudacityProject &project);
    void HandleSnapping(size_t index);
+   void UpdateBeatsAndMeasuresFormat();
    void RefreshTimelineFormat();
    void OnTimelineFormatChange(wxCommandEvent& evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
@@ -253,7 +254,8 @@ private:
 
    Observer::Subscription mAudioIOSubscription,
       mPlayRegionSubscription,
-      mThemeChangeSubscription;
+      mThemeChangeSubscription,
+      mProjectTimeSignatureChangedSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;
