@@ -159,7 +159,7 @@ private:
 
    void OnCheckpointFailure(ProjectFileIOMessage);
 
-   Observer::Subscription mCheckpointFailureSubcription;
+   Observer::Subscription mCheckpointFailureSubscription;
    AudacityProject &mProject;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
