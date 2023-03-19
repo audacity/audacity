@@ -40,11 +40,11 @@ msgstr "未知错误"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Problem Report for Audacity"
-msgstr "Audacity问题报告"
+msgstr "Audacity 问题报告"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr "点击“发送”以向Audacity进行报告。此信息是匿名的。"
+msgstr "点击“发送”以向 Audacity 报告。此信息是匿名的。"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -61,7 +61,7 @@ msgstr "注释"
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
-msgstr "查看%s以获取更多信息。"
+msgstr "更多信息请参见 %s。"
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
@@ -90,7 +90,7 @@ msgstr "发送崩溃报告失败"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "流活动中……不能获得信息。\n"
+msgstr "音频流处于活动状态，无法获得信息。\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
 #, c-format
@@ -185,7 +185,7 @@ msgstr "未找到“%s”的播放设备。\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "不能在没有两个设备时检查互采样率。\n"
+msgstr "在没有两个设备时，无法检查互采样率。\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -256,17 +256,17 @@ msgstr "内部错误"
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity failed to open a file in %s."
-msgstr "Audacity 无法打开文件： %s。"
+msgstr "Audacity 无法打开文件：%s。"
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity failed to read from a file in %s."
-msgstr "Audacity 无法读取文件： %s。"
+msgstr "Audacity 无法读取文件：%s。"
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity 成功写入了文件 %s 但是改名为 %s 时失败。"
+msgstr "Audacity 成功写入了文件 %s，但是无法重命名为 %s。"
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
