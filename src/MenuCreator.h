@@ -12,11 +12,29 @@
 #ifndef __AUDACITY_MENU_CREATOR__
 #define __AUDACITY_MENU_CREATOR__
 
+#include "Callable.h"
 #include "commands/CommandManager.h"
 
 class AUDACITY_DLL_API MenuCreator final : public CommandManager
 {
 public:
+   // For manipulating the enclosing menu or sub-menu directly,
+   // adding any number of items, not using the CommandManager
+   struct SpecialItem final : MenuRegistry::SpecialItem
+   {
+      using Appender = std::function<void(AudacityProject&, wxMenu&)>;
+
+      explicit SpecialItem(const Identifier &internalName, const Appender &fn_)
+      : MenuRegistry::SpecialItem{ internalName }
+      , fn{ fn_ }
+      {}
+      ~SpecialItem() override;
+
+      Appender fn;
+   };
+
+   static constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
+
    static MenuCreator &Get(AudacityProject &project);
    static const MenuCreator &Get(const AudacityProject &project);
 

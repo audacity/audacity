@@ -711,17 +711,10 @@ namespace detail {
 
    // For manipulating the enclosing menu or sub-menu directly,
    // adding any number of items, not using the CommandManager
-   struct SpecialItem final : SingleItem
+   struct SpecialItem : SingleItem
    {
-      using Appender = std::function< void( AudacityProject&, wxMenu& ) >;
-
-      explicit SpecialItem( const Identifier &internalName, const Appender &fn_ )
-      : SingleItem{ internalName }
-      , fn{ fn_ }
-      {}
+      using SingleItem::SingleItem;
       ~SpecialItem() override;
-
-      Appender fn;
    };
 
    //! Groups of this type are inlined in the menu tree organization.  They
@@ -798,8 +791,6 @@ namespace detail {
 
    constexpr auto CommandGroup = Callable::UniqueMaker<CommandGroupItem,
       const Identifier &, std::vector<ComponentInterfaceSymbol>>();
-
-   constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
 
    //! @}
 

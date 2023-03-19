@@ -21,7 +21,6 @@
 #include "WaveClip.h"
 #include "SampleBlock.h"
 #include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
 #include "TimeWarper.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
@@ -1093,7 +1092,7 @@ auto EditMenu()
          Command( wxT("Redo"), XXO("&Redo"), OnRedo,
             AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
 
-         Special( wxT("UndoItemsUpdateStep"),
+         MenuCreator::Special( wxT("UndoItemsUpdateStep"),
          [](AudacityProject &project, wxMenu&) {
             // Change names in the CommandManager as a side-effect
             MenuCreator::Get(project).ModifyUndoMenuItems();

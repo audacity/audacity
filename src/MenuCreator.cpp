@@ -31,6 +31,8 @@
 #include <wx/menu.h>
 #include <wx/windowptr.h>
 
+MenuCreator::SpecialItem::~SpecialItem() = default;
+
 MenuCreator::MenuCreator(AudacityProject &project)
    : CommandManager{ project }
 {
@@ -100,7 +102,9 @@ struct MenuItemVisitor : Visitor<Traits> {
                   commandList.flags, commandList.isEffect);
             },
             [&](const SpecialItem &special) {
-               special.fn(mProject, *pCurrentMenu);
+               if (auto pSpecial =
+                  dynamic_cast<const MenuCreator::SpecialItem*>(&special))
+                  pSpecial->fn(mProject, *pCurrentMenu);
             }
          );
       },
