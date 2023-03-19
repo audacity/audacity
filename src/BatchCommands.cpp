@@ -29,7 +29,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
-#include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "FileNames.h"
@@ -537,7 +536,7 @@ bool MacroCommands::ApplyEffectCommand(
 
 bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    const CommandID & command, const wxString & params,
-   CommandContext const * pContext)
+   CommandContext const *const pContext)
 {
    // Test for an effect.
    const PluginID & ID =
@@ -552,11 +551,10 @@ bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
          ID, friendlyCommand, command, params, context);
    }
 
-   AudacityProject *project = &mProject;
-   auto &manager = CommandManager::Get( *project );
-   if( pContext ){
+   if (pContext) {
+      assert(&pContext->project == &GetProject());
       if( CommandDispatch::HandleTextualCommand(
-         manager, command, *pContext, AlwaysEnabledFlag, true ) )
+         command, *pContext, AlwaysEnabledFlag, true ) )
          return true;
       pContext->Status( wxString::Format(
          _("Your batch command of %s was not recognized."), friendlyCommand.Translation() ));
@@ -566,7 +564,7 @@ bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    {
       const CommandContext context(  mProject );
       if( CommandDispatch::HandleTextualCommand(
-         manager, command, context, AlwaysEnabledFlag, true ) )
+         command, context, AlwaysEnabledFlag, true ) )
          return true;
    }
 
@@ -582,6 +580,7 @@ bool MacroCommands::ApplyCommandInBatchMode(
    const CommandID & command, const wxString &params,
    CommandContext const * pContext)
 {
+   assert(!pContext || &pContext->project == &GetProject());
    AudacityProject *project = &mProject;
    auto &settings = ProjectSettings::Get( *project );
    // Recalc flags and enable items that may have become enabled.

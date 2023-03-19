@@ -133,6 +133,8 @@ public:
    // not configurable for now, but could be later.
    bool mStopIfWasPaused{ true };
 
+   AudacityProject &GetProject() { return mProject; }
+
    void SetMaxList();
    void PurgeData();
 
@@ -278,6 +280,9 @@ public:
       CommandNotFound
    };
 
+   /*!
+    @pre `&context.project == &GetProject()`
+    */
    TextualCommandResult
    HandleTextualCommand(const CommandID & Str,
       const CommandContext & context, CommandFlag flags, bool alwaysEnabled);

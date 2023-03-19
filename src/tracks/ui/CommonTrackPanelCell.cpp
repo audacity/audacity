@@ -44,7 +44,7 @@ auto CommonTrackPanelCell::GetMenuItems(
 }
 
 unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
-   wxWindow *pParent, const wxPoint *pPoint, AudacityProject *pProject)
+   wxWindow *pParent, const wxPoint *pPoint, AudacityProject *const pProject)
 {
    const auto items = GetMenuItems( rect, pPoint, pProject );
    if (items.empty())

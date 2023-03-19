@@ -1357,6 +1357,7 @@ CommandManager::TextualCommandResult
 CommandManager::HandleTextualCommand(const CommandID & Str,
    const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
 {
+   assert(&context.project == &GetProject());
    if( Str.empty() )
       return CommandFailure;
    // Linear search for now...
