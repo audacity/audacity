@@ -295,7 +295,7 @@ protected:
    //
 
 private:
-   void Enable(CommandListEntry *entry, bool enabled);
+   void Enable(CommandListEntry &entry, bool enabled);
    wxMenu *BeginMainMenu(const TranslatableString & tName);
    void EndMainMenu();
    wxMenu* BeginSubMenu(const TranslatableString & tName);
@@ -332,10 +332,6 @@ protected:
    virtual bool ReallyDoQuickCheck();
 
 private:
-   wxString FormatLabelForMenu(const CommandListEntry *entry) const;
-   wxString FormatLabelForMenu(
-      const TranslatableString &translatableLabel,
-      const NormalizedKeyString &keyStr) const;
    wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
    //
@@ -356,6 +352,23 @@ protected:
 
    struct CommandListEntry
    {
+      static wxString FormatLabelForMenu(
+         const TranslatableString &translatableLabel,
+         const NormalizedKeyString &keyStr);
+
+      virtual ~CommandListEntry();
+
+      virtual void UpdateCheckmark(AudacityProject &project);
+      virtual void Modify(const TranslatableString &newLabel);
+      virtual bool GetEnabled() const;
+      virtual void Check(bool checked);
+      virtual void Enable(bool enabled);
+      virtual void EnableMultiItem(bool enabled);
+
+      wxString FormatLabelForMenu() const {
+         return FormatLabelForMenu(label, key);
+      }
+
       int id;
       CommandID name;
       TranslatableString longLabel;

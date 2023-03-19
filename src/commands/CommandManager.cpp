@@ -107,6 +107,8 @@ CommandManager.  It holds the callback for one command.
 #define COMMAND XO("Command")
 
 
+CommandManager::CommandListEntry::~CommandListEntry() = default;
+
 struct MenuBarListEntry
 {
    MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
@@ -487,10 +489,14 @@ wxMenu * CommandManager::CurrentMenu() const
 
 void CommandManager::UpdateCheckmarks()
 {
-   for ( const auto &entry : mCommandList ) {
-      if ( entry->menu && entry->checkmarkFn && !entry->isOccult) {
-         entry->menu->Check(entry->id, entry->checkmarkFn(mProject));
-      }
+   for (const auto &entry : mCommandList)
+      entry->UpdateCheckmark(mProject);
+}
+
+void CommandManager::CommandListEntry::UpdateCheckmark(AudacityProject &project)
+{
+   if (menu && checkmarkFn && !isOccult) {
+      menu->Check(id, checkmarkFn(project));
    }
 }
 
@@ -564,7 +570,7 @@ void CommandManager::AddItemList(const CommandID & name,
             MenuRegistry::Options{}
                .IsEffect(bIsEffect));
       entry->flags = flags;
-      CurrentMenu()->Append(entry->id, FormatLabelForMenu(entry));
+      CurrentMenu()->Append(entry->id, entry->FormatLabelForMenu());
       mbSeparatorAllowed = true;
    }
 }
@@ -773,18 +779,13 @@ wxString CommandManager::FormatLabelForMenu(
       }
    }
    if (pLabel)
-      return FormatLabelForMenu(*pLabel, keyStr);
+      return CommandListEntry::FormatLabelForMenu(*pLabel, keyStr);
    return {};
 }
 
-wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
-{
-   return FormatLabelForMenu( entry->label, entry->key );
-}
-
-wxString CommandManager::FormatLabelForMenu(
+wxString CommandManager::CommandListEntry::FormatLabelForMenu(
    const TranslatableString &translatableLabel,
-   const NormalizedKeyString &keyStr) const
+   const NormalizedKeyString &keyStr)
 {
    auto label = translatableLabel.Translation();
    auto key = keyStr.GET();
@@ -859,61 +860,70 @@ wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *en
 #endif
    return label;
 }
+
 ///Enables or disables a menu item based on its name (not the
 ///label in the menu bar, but the name of the command.)
 ///If you give it the name of a multi-item (one that was
 ///added using AddItemList(), it will enable or disable all
 ///of them at once
-void CommandManager::Enable(CommandListEntry *entry, bool enabled)
+void CommandManager::Enable(CommandListEntry &entry, bool enabled)
 {
-   if (!entry->menu) {
-      entry->enabled = enabled;
+   entry.Enable(enabled);
+   if (entry.multi) {
+      for (int i = 1, ID = entry.id;
+         i < entry.count;
+         ++i, ID = NextIdentifier(ID)
+      ) {
+         // This menu item is not necessarily in the same menu, because
+         // multi-items can be spread across multiple sub menus
+         if (auto iter = mCommandNumericIDHash.find(ID);
+             iter != mCommandNumericIDHash.end())
+            iter->second->EnableMultiItem(enabled);
+         else
+            wxLogDebug(wxT("Warning: Menu entry with id %i not in hash"), ID);
+      }
+   }
+}
+
+void CommandManager::CommandListEntry::Enable(bool b)
+{
+   if (!menu) {
+      enabled = b;
       return;
    }
 
    // LL:  Refresh from real state as we can get out of sync on the
    //      Mac due to its reluctance to enable menus when in a modal
    //      state.
-   entry->enabled = entry->menu->IsEnabled(entry->id);
+   enabled = menu->IsEnabled(id);
 
    // Only enabled if needed
-   if (entry->enabled != enabled) {
-      entry->menu->Enable(entry->id, enabled);
-      entry->enabled = entry->menu->IsEnabled(entry->id);
+   if (enabled != b) {
+      menu->Enable(id, b);
+      enabled = menu->IsEnabled(id);
    }
 
-   if (entry->multi) {
-      int i;
-      int ID = entry->id;
+}
 
-      for(i=1; i<entry->count; i++) {
-         ID = NextIdentifier(ID);
-
-         // This menu item is not necessarily in the same menu, because
-         // multi-items can be spread across multiple sub menus
-         if (auto iter = mCommandNumericIDHash.find(ID);
-             iter != mCommandNumericIDHash.end()
-         ) {
-            const auto item = iter->second->menu->FindItem(ID);
-            if (item) {
-               item->Enable(enabled);
-            } else {
-               // using GET in a log message for devs' eyes only
-               wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
-                   ID, entry->name.GET());
-            }
-         } else {
-            wxLogDebug(wxT("Warning: Menu entry with id %i not in hash"), ID);
-         }
+void CommandManager::CommandListEntry::EnableMultiItem(bool b)
+{
+   if (menu) {
+      const auto item = menu->FindItem(id);
+      if (item) {
+         item->Enable(b);
+         return;
       }
    }
+   // using GET in a log message for devs' eyes only
+   wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
+       id, name.GET());
 }
 
 void CommandManager::Enable(const wxString &name, bool enabled)
 {
    if (auto iter = mCommandNameHash.find(name);
-      iter != mCommandNameHash.end() && iter->second->menu)
-      Enable(iter->second, enabled);
+      iter != mCommandNameHash.end())
+      Enable(*iter->second, enabled);
    else
       wxLogDebug(wxT("Warning: Unknown command enabled: '%s'"),
                  (const wxChar*)name);
@@ -938,7 +948,7 @@ void CommandManager::EnableUsingFlags(
 
       if (entry->flags.any()) {
          bool enable = ((useFlags & entry->flags) == entry->flags);
-         Enable(entry.get(), enable);
+         Enable(*entry, enable);
       }
    }
 }
@@ -946,14 +956,21 @@ void CommandManager::EnableUsingFlags(
 bool CommandManager::GetEnabled(const CommandID &name) const
 {
    if (auto iter = mCommandNameHash.find(name);
-      iter != mCommandNameHash.end() && iter->second->menu)
-      return iter->second->enabled;
+      iter != mCommandNameHash.end())
+      return iter->second->GetEnabled();
    else {
       // using GET in a log message for devs' eyes only
       wxLogDebug(wxT("Warning: command doesn't exist: '%s'"),
                  name.GET());
       return false;
    }
+}
+
+bool CommandManager::CommandListEntry::GetEnabled() const
+{
+   if (!menu)
+      return false;
+   return enabled;
 }
 
 int CommandManager::GetNumberOfKeysRead() const
@@ -964,27 +981,30 @@ int CommandManager::GetNumberOfKeysRead() const
 void CommandManager::Check(const CommandID &name, bool checked)
 {
    if (auto iter = mCommandNameHash.find(name);
-      iter != mCommandNameHash.end()
-   ) {
-      const auto entry = iter->second;
-      if (!entry->menu || entry->isOccult) {
-         return;
-      }
-      entry->menu->Check(entry->id, checked);
-   }
+      iter != mCommandNameHash.end())
+      iter->second->Check(checked);
+}
+
+void CommandManager::CommandListEntry::Check(bool checked)
+{
+   if (!menu || isOccult)
+      return;
+   menu->Check(id, checked);
 }
 
 ///Changes the label text of a menu item
 void CommandManager::Modify(const wxString &name, const TranslatableString &newLabel)
 {
    if (auto iter = mCommandNameHash.find(name);
-      iter != mCommandNameHash.end()
-   ) {
-      const auto entry = iter->second;
-      if (entry->menu) {
-         entry->label = newLabel;
-         entry->menu->SetLabel(entry->id, FormatLabelForMenu(entry));
-      }
+      iter != mCommandNameHash.end())
+      iter->second->Modify(newLabel);
+}
+
+void CommandManager::CommandListEntry::Modify(const TranslatableString &newLabel)
+{
+   if (menu) {
+      label = newLabel;
+      menu->SetLabel(id, FormatLabelForMenu());
    }
 }
 
