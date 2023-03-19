@@ -18,9 +18,6 @@ It would be nice to create a NEW 'Bindings' class which both
 KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
-
-
-
 #include "KeyConfigPrefs.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -34,6 +31,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/textctrl.h>
 
 #include "ActiveProject.h"
+#include "MenuCreator.h" // for KeyEventToKeyString
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectWindows.h"
