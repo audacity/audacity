@@ -75,10 +75,8 @@ CommandManager.  It holds the callback for one command.
 
 *//******************************************************************/
 #include "CommandManager.h"
-
 #include "CommandContext.h"
 
-#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/frame.h>
 #include <wx/hash.h>
@@ -89,7 +87,6 @@ CommandManager.  It holds the callback for one command.
 #include "Project.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
-
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
@@ -996,8 +993,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
    wxString mark;
    // This depends on the language setting and may change in-session after
    // change of preferences:
-   bool rtl = (wxLayout_RightToLeft == wxTheApp->GetLayoutDirection());
-   if (rtl)
+   if (BasicUI::IsUsingRtlLayout())
       mark = wxT("\u200f");
 
    static const wxString &separatorFormat = wxT("%s / %s");
