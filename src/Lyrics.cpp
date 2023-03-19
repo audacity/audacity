@@ -542,9 +542,8 @@ void LyricsPanel::OnShow(wxShowEvent &e)
 
 void LyricsPanel::OnKeyEvent(wxKeyEvent & event)
 {
-   auto project = FindProjectFromWindow( this );
-   auto &commandManager = CommandManager::Get( *project );
-   commandManager.FilterKeyEvent(project, event, true);
+   if (auto project = FindProjectFromWindow(this))
+      CommandManager::FilterKeyEvent(*project, event, true);
    event.Skip();
 }
 

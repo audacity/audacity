@@ -88,7 +88,7 @@ struct MenuItemVisitor : Visitor<Traits> {
          }
          else TypeSwitch::VDispatch<void, LeafTypes>(item,
             [&](const CommandItem &command) {
-               manager.AddItem(mProject,
+               manager.AddItem(
                   command.name, command.label_in,
                   command.finder, command.callback,
                   command.flags, command.options);

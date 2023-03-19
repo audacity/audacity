@@ -1497,9 +1497,8 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 
 void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
 {
-   AudacityProject *project = mMixerBoard->mProject;
-   auto &commandManager = CommandManager::Get( *project );
-   commandManager.FilterKeyEvent(project, event, true);
+   if (auto project = mMixerBoard->mProject)
+      CommandManager::FilterKeyEvent(*project, event, true);
 }
 
 void MixerBoardFrame::Recreate( AudacityProject *pProject )

@@ -532,19 +532,18 @@ wxMenu * CommandManager::CurrentMenu() const
    return tmpCurrentSubMenu;
 }
 
-void CommandManager::UpdateCheckmarks( AudacityProject &project )
+void CommandManager::UpdateCheckmarks()
 {
    for ( const auto &entry : mCommandList ) {
       if ( entry->menu && entry->checkmarkFn && !entry->isOccult) {
-         entry->menu->Check( entry->id, entry->checkmarkFn( project ) );
+         entry->menu->Check(entry->id, entry->checkmarkFn(mProject));
       }
    }
 }
 
 
 
-void CommandManager::AddItem(AudacityProject &project,
-                             const CommandID &name,
+void CommandManager::AddItem(const CommandID &name,
                              const TranslatableString &label_in,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
@@ -576,7 +575,7 @@ void CommandManager::AddItem(AudacityProject &project,
    auto &checker = options.checker;
    if (checker) {
       CurrentMenu()->AppendCheckItem(ID, label);
-      CurrentMenu()->Check(ID, checker( project ));
+      CurrentMenu()->Check(ID, checker(mProject));
    }
    else {
       CurrentMenu()->Append(ID, label);
@@ -1111,13 +1110,12 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
 ///
 ///
 ///
-bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
+bool CommandManager::FilterKeyEvent(AudacityProject &project, const wxKeyEvent & evt, bool permit)
 {
-   if (!project)
-      return false;
+   auto &cm = Get(project);
    
-   auto pWindow = FindProjectFrame( project );
-   CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
+   auto pWindow = FindProjectFrame(&project);
+   CommandListEntry *entry = cm.mCommandKeyHash[KeyEventToKeyString(evt)];
    if (entry == NULL)
    {
       return false;
@@ -1134,7 +1132,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // LL:  Why do they need to be disabled???
       entry->enabled = false;
       auto cleanup = valueRestorer( entry->enabled, true );
-      return HandleCommandEntry(*project, entry, NoFlagsSpecified, false, &evt);
+      return cm.HandleCommandEntry(entry, NoFlagsSpecified, false, &evt);
    }
 
    wxWindow * pFocus = wxWindow::FindFocus();
@@ -1154,7 +1152,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   auto flags = GetUpdateFlags();
+   auto flags = cm.GetUpdateFlags();
 
    wxKeyEvent temp = evt;
 
@@ -1212,12 +1210,12 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       {
          return true;
       }
-      return HandleCommandEntry(*project, entry, flags, false, &temp);
+      return cm.HandleCommandEntry(entry, flags, false, &temp);
    }
 
    if (type == wxEVT_KEY_UP && entry->wantKeyup)
    {
-      return HandleCommandEntry(*project, entry, flags, false, &temp);
+      return cm.HandleCommandEntry(entry, flags, false, &temp);
    }
 
    return false;
@@ -1254,8 +1252,7 @@ Journal::RegisteredCommand sCommand{ JournalCode,
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(AudacityProject &project,
-   const CommandListEntry * entry,
+bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    CommandFlag flags, bool alwaysEnabled, const wxEvent * evt,
    const CommandContext *pGivenContext)
 {
@@ -1284,12 +1281,12 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 
    Journal::Output({ JournalCode, entry->name.GET() });
 
-   CommandContext context{ project, evt, entry->index, entry->parameter };
+   CommandContext context{ mProject, evt, entry->index, entry->parameter };
    if (pGivenContext)
       context.temporarySelection = pGivenContext->temporarySelection;
    // Discriminate the union entry->callback by entry->finder
    if (auto &finder = entry->finder) {
-      auto &handler = finder(project);
+      auto &handler = finder(mProject);
       (handler.*(entry->callback.memberFn))(context);
    }
    else
@@ -1342,7 +1339,7 @@ void CommandManager::DoRepeatProcess(const CommandContext& context, int id) {
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
 bool CommandManager::HandleMenuID(
-   AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled)
+   int id, CommandFlag flags, bool alwaysEnabled)
 {
    mLastProcessId = id;
    CommandListEntry *entry = mCommandNumericIDHash[id];
@@ -1350,7 +1347,7 @@ bool CommandManager::HandleMenuID(
    if (GlobalMenuHook::Call(entry->name))
       return true;
 
-   return HandleCommandEntry( project, entry, flags, alwaysEnabled );
+   return HandleCommandEntry(entry, flags, alwaysEnabled);
 }
 
 /// HandleTextualCommand() allows us a limited version of script/batch
@@ -1375,7 +1372,7 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
             Str == entry->labelPrefix.Translation() )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled,
+               entry.get(), flags, alwaysEnabled,
                nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
@@ -1386,7 +1383,7 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
          if( Str == entry->name )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled,
+               entry.get(), flags, alwaysEnabled,
                nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
@@ -1395,7 +1392,7 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
    return CommandNotFound;
 }
 
-TranslatableStrings CommandManager::GetCategories( AudacityProject& )
+TranslatableStrings CommandManager::GetCategories()
 {
    TranslatableStrings cats;
 
@@ -1888,8 +1885,7 @@ static KeyboardCapture::PostFilter::Scope scope2{
 []( wxKeyEvent &key ) {
    // Capture handler window didn't want it, so ask the CommandManager.
    if (auto project = GetActiveProject().lock()) {
-      auto &manager = CommandManager::Get( *project );
-      return manager.FilterKeyEvent(project.get(), key);
+      return CommandManager::FilterKeyEvent(*project, key);
    }
    else
       return false;

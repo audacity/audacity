@@ -24,7 +24,7 @@ void SetTimeDisplayMode(const CommandContext& context, TimeDisplayMode type)
    auto& ruler = AdornedRulerPanel::Get(project);
    ruler.SetTimeDisplayMode(type);
 
-   CommandManager::Get(project).UpdateCheckmarks(project);
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void OnSetMinutesSeconds(const CommandContext& context)

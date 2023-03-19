@@ -1605,7 +1605,7 @@ void ProjectWindow::OnMenu(wxCommandEvent & event)
       return;
    auto &project = *pProject;
    auto &commandManager = CommandManager::Get( project );
-   bool handled = commandManager.HandleMenuID( project,
+   bool handled = commandManager.HandleMenuID(
       event.GetId(), CommandManager::Get( project ).GetUpdateFlags(),
       false);
 

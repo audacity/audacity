@@ -227,8 +227,7 @@ public:
                     CommandFlag flags,
                     bool bIsEffect = false);
 
-   void AddItem(AudacityProject &project,
-                const CommandID & name,
+   void AddItem(const CommandID & name,
                 const TranslatableString &label_in,
                 CommandHandlerFinder finder,
                 CommandFunctorPointer callback,
@@ -267,8 +266,8 @@ public:
 
    // "permit" allows filtering even if the active window isn't a child of the project.
    // Lyrics and MixerTrackCluster classes use it.
-   bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
-   bool HandleMenuID(AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled);
+   static bool FilterKeyEvent(AudacityProject &project, const wxKeyEvent & evt, bool permit = false);
+   bool HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled);
    void RegisterLastAnalyzer(const CommandContext& context);
    void RegisterLastTool(const CommandContext& context);
    void DoRepeatProcess(const CommandContext& context, int);
@@ -287,7 +286,7 @@ public:
    // Accessing
    //
 
-   TranslatableStrings GetCategories( AudacityProject& );
+   TranslatableStrings GetCategories();
    void GetAllCommandNames(CommandIDs &names, bool includeMultis) const;
    void GetAllCommandLabels(
       TranslatableStrings &labels, std::vector<bool> &vExcludeFromMacros,
@@ -365,7 +364,7 @@ private:
    // Executing commands
    //
 
-   bool HandleCommandEntry(AudacityProject &project,
+   bool HandleCommandEntry(
       const CommandListEntry * entry, CommandFlag flags,
       bool alwaysEnabled, const wxEvent * evt = nullptr,
       const CommandContext *pGivenContext = nullptr );
@@ -390,7 +389,7 @@ private:
 public:
    wxMenu * CurrentMenu() const;
 
-   void UpdateCheckmarks( AudacityProject &project );
+   void UpdateCheckmarks();
 
    //! Format a string appropriate for insertion in a menu
    /*!

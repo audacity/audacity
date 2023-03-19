@@ -183,7 +183,7 @@ void ActivatePlayRegion(AudacityProject &project)
    }
 
    // Ensure the proper state of looping in the menu
-   CommandManager::Get( project ).UpdateCheckmarks( project );
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void InactivatePlayRegion(AudacityProject &project)
@@ -197,7 +197,7 @@ void InactivatePlayRegion(AudacityProject &project)
    playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
 
    // Ensure the proper state of looping in the menu
-   CommandManager::Get( project ).UpdateCheckmarks( project );
+   CommandManager::Get(project).UpdateCheckmarks();
 }
 
 void TogglePlayRegion(AudacityProject &project)
