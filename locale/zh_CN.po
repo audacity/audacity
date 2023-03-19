@@ -5481,15 +5481,15 @@ msgstr "不能打开流派文件。"
 
 #: src/TagsEditor.cpp
 msgid "Load Metadata As:"
-msgstr "载入元信息为："
+msgstr "载入元数据为："
 
 #: src/TagsEditor.cpp
 msgid "Error Loading Metadata"
-msgstr "无法读入元信息"
+msgstr "无法读入元数据"
 
 #: src/TagsEditor.cpp
 msgid "Save Metadata As:"
-msgstr "保存元信息为："
+msgstr "保存元数据为："
 
 #: src/TagsEditor.cpp
 msgid "Error Saving Tags File"
@@ -15791,7 +15791,7 @@ msgstr "当导出轨道到音频文件时"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
-msgstr "导出时显示元信息编辑器(&H)"
+msgstr "导出时显示元数据编辑器(&H)"
 
 #. i18n-hint 'blank space' is space on the tracks with no audio in it
 #: src/prefs/ImportExportPrefs.cpp
@@ -19961,7 +19961,7 @@ msgstr "未找到声音。~%尝试减少“阈值”或“最小声音持续时�
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
-msgstr "声音之间的标签区域需要~%到少2个声音。~%只检测到一个声音。"
+msgstr "声音之间的标签区域需要~%至少 2 个声音。~%只检测到一个声音。"
 
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -20977,7 +20977,7 @@ msgstr "音高和速度"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "EQ and Filters"
-msgstr "EQ和滤波器"
+msgstr "EQ 和滤波器"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Noise Removal and Repair"
@@ -23393,7 +23393,7 @@ msgstr "频谱工具"
 #~ msgstr "以上所有的在线资料都是<b>可搜索的</b>，您可利用搜索引擎更快地找到答案。"
 
 #~ msgid "Edit Metadata"
-#~ msgstr "编辑元信息"
+#~ msgstr "编辑元数据"
 
 #~ msgid "Disk space remains for recording %d hours and %d minutes."
 #~ msgstr "磁盘空间还够录制 %d 时 %d 分。"
