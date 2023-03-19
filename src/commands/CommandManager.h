@@ -42,18 +42,9 @@ class BoolSetting;
 
 struct MenuBarListEntry;
 struct SubMenuListEntry;
-struct CommandListEntry;
 
 using MenuBarList = std::vector < MenuBarListEntry >;
 using SubMenuList = std::vector < SubMenuListEntry >;
-
-// This is an array of pointers, not structures, because the hash maps also point to them,
-// so we don't want the structures to relocate with vector operations.
-using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
-
-using CommandKeyHash = std::unordered_map<NormalizedKeyString, CommandListEntry*>;
-using CommandNameHash = std::unordered_map<CommandID, CommandListEntry*>;
-using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
 
 class AudacityProject;
 class CommandContext;
@@ -185,9 +176,6 @@ public:
    // Executing commands
    //
 
-   // "permit" allows filtering even if the active window isn't a child of the project.
-   // Lyrics and MixerTrackCluster classes use it.
-   static bool FilterKeyEvent(AudacityProject &project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, CommandFlag flags, bool alwaysEnabled);
    void RegisterLastAnalyzer(const CommandContext& context);
    void RegisterLastTool(const CommandContext& context);
@@ -261,6 +249,9 @@ public:
    // Sorted list of the shortcut keys to be excluded from the standard defaults
    static const std::vector<NormalizedKeyString> &ExcludedList();
 
+protected:
+   struct CommandListEntry;
+
 private:
 
    //
@@ -288,15 +279,20 @@ private:
    // Executing commands
    //
 
+protected:
    bool HandleCommandEntry(
       const CommandListEntry * entry, CommandFlag flags,
       bool alwaysEnabled, const wxEvent * evt = nullptr,
       const CommandContext *pGivenContext = nullptr );
 
+   virtual void ExecuteCommand(const CommandContext &context,
+      const wxEvent *evt, const CommandListEntry &entry);
+
    //
    // Modifying
    //
 
+private:
    void Enable(CommandListEntry *entry, bool enabled);
    wxMenu *BeginMainMenu(const TranslatableString & tName);
    void EndMainMenu();
@@ -344,6 +340,43 @@ private:
 protected:
    AudacityProject &mProject;
 
+   struct CommandListEntry
+   {
+      int id;
+      CommandID name;
+      TranslatableString longLabel;
+      NormalizedKeyString key;
+      NormalizedKeyString defaultKey;
+      TranslatableString label;
+      TranslatableString labelPrefix;
+      TranslatableString labelTop;
+      wxMenu *menu;
+      CommandHandlerFinder finder;
+      CommandFunctorPointer callback;
+      CommandParameter parameter;
+
+      // type of a function that determines checkmark state
+      using CheckFn = std::function< bool(AudacityProject&) >;
+      CheckFn checkmarkFn;
+
+      bool multi;
+      int index;
+      int count;
+      bool enabled;
+      bool skipKeydown;
+      bool wantKeyup;
+      bool allowDup;
+      bool isGlobal;
+      bool isOccult;
+      bool isEffect;
+      bool excludeFromMacros;
+      CommandFlag flags;
+      bool useStrictFlags{ false };
+   };
+   using CommandKeyHash =
+      std::unordered_map<NormalizedKeyString, CommandListEntry*>;
+   CommandKeyHash mCommandKeyHash;
+
 private:
    // mMaxList only holds shortcuts that should not be added (by default)
    // and is sorted.
@@ -351,9 +384,17 @@ private:
 
    MenuBarList  mMenuBarList;
    SubMenuList  mSubMenuList;
+
+   // This is an array of pointers, not structures, because the hash maps also
+   // point to them,
+   // so we don't want the structures to relocate with vector operations.
+   using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
    CommandList  mCommandList;
+
+   using CommandNameHash = std::unordered_map<CommandID, CommandListEntry*>;
    CommandNameHash  mCommandNameHash;
-   CommandKeyHash mCommandKeyHash;
+
+   using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
    CommandNumericIDHash  mCommandNumericIDHash;
    int mCurrentID;
    int mXMLKeysRead;

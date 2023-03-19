@@ -267,6 +267,7 @@ list( APPEND SOURCES
       commands/CommandHandler.h
       commands/CommandManager.cpp
       commands/CommandManager.h
+      commands/CommandManagerWindowClasses.cpp
       commands/CommandManagerWindowClasses.h
       commands/CommandMisc.h
       commands/CommandSignature.cpp

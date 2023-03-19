@@ -35,6 +35,12 @@ public:
 
    static constexpr auto Special = Callable::UniqueMaker<SpecialItem>();
 
+   // "permit" allows filtering even if the active window isn't a child of the
+   // project.
+   // Lyrics and MixerTrackCluster classes use it.
+   static bool FilterKeyEvent(AudacityProject &project,
+      const wxKeyEvent & evt, bool permit = false);
+
    static MenuCreator &Get(AudacityProject &project);
    static const MenuCreator &Get(const AudacityProject &project);
 
@@ -53,6 +59,9 @@ public:
    void RemoveDuplicateShortcuts();
 
 private:
+   void ExecuteCommand(const CommandContext &context,
+      const wxEvent *evt, const CommandListEntry &entry) override;
+
    void OnUndoRedo(struct UndoRedoMessage);
    Observer::Subscription mUndoSubscription;
 };

@@ -22,12 +22,22 @@
 
 *//*******************************************************************/
 #include "MenuCreator.h"
+
+#include "ActiveProject.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManagerWindowClasses.h"
+#include "KeyboardCapture.h"
+#include "Journal.h"
+#include "JournalOutput.h"
+#include "JournalRegistry.h"
 #include "Registry.h"
-#include <wx/frame.h>
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "AudacityMessageBox.h"
+
+#include <wx/evtloop.h>
+#include <wx/frame.h>
 #include <wx/menu.h>
 #include <wx/windowptr.h>
 
@@ -224,6 +234,15 @@ void MenuCreator::RebuildMenuBar()
    CreateMenusAndCommands();
 }
 
+constexpr auto JournalCode = wxT("CM");  // for CommandManager
+
+void MenuCreator::ExecuteCommand(const CommandContext &context,
+   const wxEvent *evt, const CommandListEntry &entry)
+{
+   Journal::Output({ JournalCode, entry.name.GET() });
+   return CommandManager::ExecuteCommand(context, evt, entry);
+}
+
 void MenuCreator::OnUndoRedo(UndoRedoMessage message)
 {
    switch (message.type) {
@@ -317,3 +336,157 @@ void MenuCreator::RemoveDuplicateShortcuts()
 }
 
 static CommandManager::Factory::SubstituteInShared<MenuCreator> scope;
+
+namespace {
+
+// Register a callback for the journal
+Journal::RegisteredCommand sCommand{ JournalCode,
+[]( const wxArrayStringEx &fields )
+{
+   // Expect JournalCode and the command name.
+   // To do, perhaps, is to include some parameters.
+   bool handled = false;
+   if ( fields.size() == 2 ) {
+      if (auto project = GetActiveProject().lock()) {
+         auto pManager = &CommandManager::Get( *project );
+         auto flags = CommandManager::Get( *project ).GetUpdateFlags();
+         const CommandContext context( *project );
+         auto &command = fields[1];
+         handled =
+            pManager->HandleTextualCommand( command, context, flags, false );
+      }
+   }
+   return handled;
+}
+};
+
+}
+
+bool MenuCreator::FilterKeyEvent(
+   AudacityProject &project, const wxKeyEvent & evt, bool permit)
+{
+   auto &cm = Get(project);
+   
+   auto pWindow = FindProjectFrame(&project);
+   CommandListEntry *entry = cm.mCommandKeyHash[KeyEventToKeyString(evt)];
+   if (entry == NULL)
+   {
+      return false;
+   }
+
+   int type = evt.GetEventType();
+
+   // Global commands aren't tied to any specific project
+   if (entry->isGlobal && type == wxEVT_KEY_DOWN)
+   {
+      // Global commands are always disabled so they do not interfere with the
+      // rest of the command handling.  But, to use the common handler, we
+      // enable them temporarily and then disable them again after handling.
+      // LL:  Why do they need to be disabled???
+      entry->enabled = false;
+      auto cleanup = valueRestorer( entry->enabled, true );
+      return cm.HandleCommandEntry(entry, NoFlagsSpecified, false, &evt);
+   }
+
+   wxWindow * pFocus = wxWindow::FindFocus();
+   wxWindow * pParent = wxGetTopLevelParent( pFocus );
+   bool validTarget = pParent == pWindow;
+   // Bug 1557.  MixerBoard should count as 'destined for project'
+   // MixerBoard IS a TopLevelWindow, and its parent is the project.
+   if( pParent && pParent->GetParent() == pWindow ){
+      if(auto keystrokeHandlingWindow = dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ))
+         validTarget = keystrokeHandlingWindow->HandleCommandKeystrokes();
+   }
+   validTarget = validTarget && wxEventLoop::GetActive()->IsMain();
+
+   // Any other keypresses must be destined for this project window
+   if (!permit && !validTarget )
+   {
+      return false;
+   }
+
+   auto flags = cm.GetUpdateFlags();
+
+   wxKeyEvent temp = evt;
+
+   // Possibly let wxWidgets do its normal key handling IF it is one of
+   // the standard navigation keys.
+   if((type == wxEVT_KEY_DOWN) || (type == wxEVT_KEY_UP ))
+   {
+      wxWindow * pWnd = wxWindow::FindFocus();
+      bool bIntercept =
+         pWnd && !dynamic_cast< NonKeystrokeInterceptingWindow * >( pWnd );
+
+      //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
+      // We allow the keystrokes below to be handled by wxWidgets controls IF we are
+      // in some sub window rather than in the TrackPanel itself.
+      // Otherwise they will go to our command handler and if it handles them
+      // they will NOT be available to wxWidgets.
+      if( bIntercept ){
+         switch( evt.GetKeyCode() ){
+         case WXK_LEFT:
+         case WXK_RIGHT:
+         case WXK_UP:
+         case WXK_DOWN:
+         // Don't trap WXK_SPACE (Bug 1727 - SPACE not starting/stopping playback
+         // when cursor is in a time control)
+         // case WXK_SPACE:
+         case WXK_TAB:
+         case WXK_BACK:
+         case WXK_HOME:
+         case WXK_END:
+         case WXK_RETURN:
+         case WXK_NUMPAD_ENTER:
+         case WXK_DELETE:
+         case '0':
+         case '1':
+         case '2':
+         case '3':
+         case '4':
+         case '5':
+         case '6':
+         case '7':
+         case '8':
+         case '9':
+            return false;
+         case ',':
+         case '.':
+            if (!evt.HasAnyModifiers())
+               return false;
+         }
+      }
+   }
+
+   if (type == wxEVT_KEY_DOWN)
+   {
+      if (entry->skipKeydown)
+      {
+         return true;
+      }
+      return cm.HandleCommandEntry(entry, flags, false, &temp);
+   }
+
+   if (type == wxEVT_KEY_UP && entry->wantKeyup)
+   {
+      return cm.HandleCommandEntry(entry, flags, false, &temp);
+   }
+
+   return false;
+}
+
+static KeyboardCapture::PreFilter::Scope scope1{
+[]( wxKeyEvent & ) {
+   // We must have a project since we will be working with the
+   // CommandManager, which is tied to individual projects.
+   auto project = GetActiveProject().lock();
+   return project && GetProjectFrame( *project ).IsEnabled();
+} };
+static KeyboardCapture::PostFilter::Scope scope2{
+[]( wxKeyEvent &key ) {
+   // Capture handler window didn't want it, so ask the CommandManager.
+   if (auto project = GetActiveProject().lock()) {
+      return MenuCreator::FilterKeyEvent(*project, key);
+   }
+   else
+      return false;
+} };

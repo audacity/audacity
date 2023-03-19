@@ -63,7 +63,7 @@
    #include "../images/AudacityLogo48x48.xpm"
 #endif
 
-#include "commands/CommandManager.h"
+#include "MenuCreator.h"
 
 #include <numeric> // accumulate
 
@@ -1498,7 +1498,7 @@ void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 void MixerBoardFrame::OnKeyEvent(wxKeyEvent & event)
 {
    if (auto project = mMixerBoard->mProject)
-      CommandManager::FilterKeyEvent(*project, event, true);
+      MenuCreator::FilterKeyEvent(*project, event, true);
 }
 
 void MixerBoardFrame::Recreate( AudacityProject *pProject )
