@@ -10,7 +10,7 @@
 #include "../TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
 #include "../prefs/TracksPrefs.h"

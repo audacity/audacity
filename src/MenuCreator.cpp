@@ -24,7 +24,7 @@
 #include "MenuCreator.h"
 
 #include "ActiveProject.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "commands/CommandManagerWindowClasses.h"
 #include "KeyboardCapture.h"
 #include "Journal.h"

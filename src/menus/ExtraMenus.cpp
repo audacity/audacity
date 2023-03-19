@@ -2,7 +2,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../toolbars/ToolManager.h"
 
 #include <wx/frame.h>

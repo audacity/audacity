@@ -18,7 +18,7 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 #include "Import.h"

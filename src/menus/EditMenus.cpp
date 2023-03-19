@@ -20,7 +20,7 @@
 #include "WaveTrackUtilities.h"
 #include "WaveClip.h"
 #include "SampleBlock.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "TimeWarper.h"
 #include "../prefs/PrefsDialog.h"
 #include "../prefs/TracksBehaviorsPrefs.h"

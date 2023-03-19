@@ -17,6 +17,8 @@
 
 class CommandContext;
 
+using PluginID = wxString;
+
 namespace CommandDispatch {
 AUDACITY_DLL_API bool HandleTextualCommand(
    const CommandID & Str,

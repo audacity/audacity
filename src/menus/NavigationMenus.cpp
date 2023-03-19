@@ -11,7 +11,7 @@
 #include "SelectionState.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../toolbars/ToolManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"

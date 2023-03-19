@@ -13,7 +13,7 @@
 #include "Project.h"
 
 #include "../commands/CommandManager.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace
 {

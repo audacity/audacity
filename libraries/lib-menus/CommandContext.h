@@ -34,7 +34,7 @@ struct TemporarySelection {
    Track *pTrack = nullptr;
 };
 
-class AUDACITY_DLL_API CommandContext {
+class MENUS_API CommandContext {
 public:
    struct TargetFactory : DefaultedGlobalHook< TargetFactory,
       Callable::UniquePtrFactory<CommandOutputTargets>::Function

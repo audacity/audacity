@@ -2905,7 +2905,7 @@ void AdornedRulerPanel::SetTimeDisplayMode(TimeDisplayMode type)
 
 // Attach menu item
 
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "CommonCommandFlags.h"
 
 namespace {

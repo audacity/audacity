@@ -22,7 +22,7 @@
 #include "../TrackPanelAx.h"
 #include "TempDirectory.h"
 #include "UndoManager.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"

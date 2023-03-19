@@ -1024,7 +1024,7 @@ bool TagsEditorDialog::EditProjectMetadata(AudacityProject &project,
 }
 
 // Attach menu item
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 

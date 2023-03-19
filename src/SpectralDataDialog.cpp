@@ -41,7 +41,7 @@
 #include "AudioIO.h"
 #include "ClientData.h"
 #include "Clipboard.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "commands/CommandManager.h"
 #include "UndoManager.h"
 #include "Prefs.h"

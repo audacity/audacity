@@ -1,5 +1,5 @@
 #include "../ProjectSettings.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../toolbars/ToolManager.h"
 
 /// Namespace for functions for View Toolbar menu

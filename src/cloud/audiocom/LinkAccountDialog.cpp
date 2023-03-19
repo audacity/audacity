@@ -129,7 +129,7 @@ void LinkAccountDialog::OnTextChanged()
 } // namespace cloud::audiocom
 
 // Remaining code hooks this add-on into the application
-#include "../../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "MenuRegistry.h"
 
 namespace {

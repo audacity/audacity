@@ -1381,7 +1381,7 @@ void MacrosWindow::UpdatePrefs()
 // The rest of this file installs hooks
 
 #include "CommonCommandFlags.h"
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "effects/EffectManager.h"
 #include "ProjectWindows.h"
 namespace {

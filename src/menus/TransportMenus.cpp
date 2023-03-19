@@ -20,7 +20,7 @@
 #include "../prefs/TracksPrefs.h"
 #include "WaveTrack.h"
 #include "ViewInfo.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/ToolManager.h"
 #include "AudacityMessageBox.h"

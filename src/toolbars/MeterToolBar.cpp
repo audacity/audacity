@@ -546,7 +546,7 @@ AttachedToolBarMenuItem sAttachment2{
 }
 
 // Now define other related menu items
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 
 namespace {
 void OnOutputGain(const CommandContext &context)

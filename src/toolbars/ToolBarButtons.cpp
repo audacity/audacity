@@ -18,7 +18,7 @@
 #include "../widgets/AButton.h"
 #include "Project.h"
 
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/CommandDispatch.h"
 

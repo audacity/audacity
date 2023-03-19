@@ -485,7 +485,7 @@ void HistoryDialog::UpdatePrefs()
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "MenuRegistry.h"
 
 namespace {

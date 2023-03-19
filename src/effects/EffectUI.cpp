@@ -103,7 +103,7 @@ private:
 #include "ShuttleGui.h"
 #include "ViewInfo.h"
 #include "../commands/AudacityCommand.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
 #include "../widgets/AButton.h"

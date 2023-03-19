@@ -15,8 +15,8 @@
 
 #include "Callable.h"
 #include "MemoryX.h"
-#include "commands/CommandFunctors.h"
-#include "commands/CommandFlag.h"
+#include "CommandFunctors.h"
+#include "CommandFlag.h"
 #include "Registry.h"
 #include <functional>
 
@@ -33,7 +33,7 @@ namespace MenuRegistry {
    // type of a function that determines checkmark state
    using CheckFn = std::function< bool(AudacityProject&) >;
 
-   struct AUDACITY_DLL_API Options
+   struct MENUS_API Options
    {
       Options() {}
       // Allow implicit construction from an accelerator string, which is
@@ -98,14 +98,12 @@ namespace MenuRegistry {
       int allowInMacros{ -1 };
 
    private:
-      static CheckFn
-         MakeCheckFn( const wxString key, bool defaultValue );
-      static CheckFn
-         MakeCheckFn( const BoolSetting &setting );
+      static CheckFn MakeCheckFn(const wxString key, bool defaultValue);
+      static CheckFn MakeCheckFn(const BoolSetting &setting);
    };
 
    //! A mix-in discovered by dynamic_cast; independent of the Traits
-   struct ItemProperties {
+   struct MENUS_API ItemProperties {
       enum Properties {
          None,
          Inline,
@@ -118,7 +116,7 @@ namespace MenuRegistry {
    };
 
    namespace detail {
-      struct VisitorBase {
+      struct MENUS_API VisitorBase {
          std::pair<bool, bool>
             ShouldBeginGroup(const ItemProperties *pProperties);
          void AfterBeginGroup(const ItemProperties *pProperties);
@@ -200,15 +198,24 @@ namespace MenuRegistry {
       auto pProperties = dynamic_cast<const ItemProperties *>(&item);
       return pProperties && pProperties->GetProperties() ==
          ItemProperties::Section;
-   };
+   }
 
    struct MenuItemData {
       MenuItemData(TranslatableString title) : mTitle{ std::move(title) } {}
       const TranslatableString mTitle;
    };
+}
 
+#ifdef _WIN32
+template struct __declspec(dllexport) Composite::Extension<
+   Registry::GroupItem<MenuRegistry::Traits>,
+   MenuRegistry::MenuItemData, const Identifier&
+>;
+#endif
+
+namespace  MenuRegistry {
    // Describes a main menu in the toolbar, or a sub-menu
-   struct AUDACITY_DLL_API MenuItem final
+   struct MENUS_API MenuItem final
       : Composite::Extension<
          GroupItem<Traits>, MenuItemData, const Identifier&
       >
@@ -221,10 +228,20 @@ namespace MenuRegistry {
    };
 
    using Condition = std::function<bool()>;
+}
+
+#ifdef _WIN32
+template struct __declspec(dllexport) Composite::Extension<
+   Registry::GroupItem<MenuRegistry::Traits>,
+   MenuRegistry::Condition, const Identifier&
+>;
+#endif
+
+namespace  MenuRegistry {
 
    // Collects other items that are conditionally shown or hidden, but are
    // always available to macro programming
-   struct ConditionalGroupItem final
+   struct MENUS_API ConditionalGroupItem final
       : Composite::Extension<
          GroupItem<Traits>, Condition, const Identifier &
       >
@@ -245,7 +262,7 @@ namespace MenuRegistry {
    // This is used before a sequence of many calls to Command() and
    // CommandGroup(), so that the finder argument need not be specified
    // in each call.
-   class AUDACITY_DLL_API FinderScope : ValueRestorer< CommandHandlerFinder >
+   class MENUS_API FinderScope : ValueRestorer< CommandHandlerFinder >
    {
       static CommandHandlerFinder sFinder;
 
@@ -261,7 +278,7 @@ namespace MenuRegistry {
    };
 
    // Describes one command in a menu
-   struct AUDACITY_DLL_API CommandItem final : SingleItem {
+   struct MENUS_API CommandItem final : SingleItem {
       CommandItem(const CommandID &name_,
                const TranslatableString &label_in_,
                CommandFunctorPointer callback_,
@@ -311,7 +328,7 @@ namespace MenuRegistry {
    // Describes several successive commands in a menu that are closely related
    // and dispatch to one common callback, which will be passed a number
    // in the CommandContext identifying the command
-   struct AUDACITY_DLL_API CommandGroupItem final : SingleItem {
+   struct MENUS_API CommandGroupItem final : SingleItem {
       CommandGroupItem(const Identifier &name_,
                std::vector<ComponentInterfaceSymbol> items_,
                CommandFunctorPointer callback_,
@@ -360,7 +377,7 @@ namespace MenuRegistry {
 
    // For manipulating the enclosing menu or sub-menu directly,
    // adding any number of items, not using the CommandManager
-   struct SpecialItem : SingleItem
+   struct MENUS_API SpecialItem : SingleItem
    {
       using SingleItem::SingleItem;
       ~SpecialItem() override;
@@ -368,7 +385,7 @@ namespace MenuRegistry {
 
    //! Groups of this type are inlined in the menu tree organization.  They
    //! (but not their contained items) are excluded from visitations
-   struct MenuItems
+   struct MENUS_API MenuItems
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
@@ -381,7 +398,7 @@ namespace MenuRegistry {
       Properties GetProperties() const override;
    };
 
-   struct MenuPart
+   struct MENUS_API MenuPart
       : Composite::Extension<
          GroupItem<Traits>, void, const Identifier &
       >
@@ -443,7 +460,7 @@ namespace MenuRegistry {
 
    //! @}
 
-   struct ItemRegistry {
+   struct MENUS_API ItemRegistry {
       static GroupItem<Traits> &Registry();
    };
 
@@ -452,7 +469,7 @@ namespace MenuRegistry {
    // pItem can be specified by an expression using the inline functions above.
    using AttachedItem = RegisteredItem<ItemRegistry>;
 
-   void Visit(Visitor<Traits> &visitor, AudacityProject &project);
+   MENUS_API void Visit(Visitor<Traits> &visitor, AudacityProject &project);
 }
 
 #endif

@@ -21,7 +21,7 @@
 #include "WaveClip.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "QualitySettings.h"

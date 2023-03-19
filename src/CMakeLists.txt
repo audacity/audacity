@@ -134,8 +134,6 @@ list( APPEND SOURCES
       LyricsWindow.h
       MenuCreator.cpp
       MenuCreator.h
-      MenuRegistry.cpp
-      MenuRegistry.h
       MIDIPlay.cpp
       MIDIPlay.h
       MixerBoard.cpp
@@ -254,13 +252,8 @@ list( APPEND SOURCES
       commands/Command.h
       commands/CommandBuilder.cpp
       commands/CommandBuilder.h
-      commands/CommandContext.cpp
-      commands/CommandContext.h
       commands/CommandDirectory.cpp
       commands/CommandDirectory.h
-      commands/CommandFlag.cpp
-      commands/CommandFlag.h
-      commands/CommandFunctors.h
       commands/CommandDispatch.cpp
       commands/CommandDispatch.h
       commands/CommandHandler.cpp
@@ -272,8 +265,6 @@ list( APPEND SOURCES
       commands/CommandMisc.h
       commands/CommandSignature.cpp
       commands/CommandSignature.h
-      commands/CommandTargets.cpp
-      commands/CommandTargets.h
       commands/CommandType.cpp
       commands/CommandType.h
       commands/CompareAudioCommand.cpp
@@ -290,8 +281,6 @@ list( APPEND SOURCES
       commands/HelpCommand.h
       commands/ImportExportCommands.cpp
       commands/ImportExportCommands.h
-      commands/Keyboard.cpp
-      commands/Keyboard.h
       commands/LoadCommands.cpp
       commands/LoadCommands.h
       commands/MessageCommand.cpp
@@ -1355,6 +1344,7 @@ set( AUDACITY_LIBRARIES
    lib-import-export-interface
    lib-export-ui-interface
    lib-file-formats-interface
+   lib-menus-interface
 )
 
 if (USE_VST)

@@ -34,7 +34,7 @@
 
 #include "tracks/ui/ChannelView.h"
 
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "CommonCommandFlags.h"
 #include "Project.h"

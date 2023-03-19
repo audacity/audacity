@@ -41,6 +41,7 @@ class wxMenuBar;
 class BoolSetting;
 
 struct MenuBarListEntry;
+using PluginID = wxString;
 struct SubMenuListEntry;
 
 using MenuBarList = std::vector < MenuBarListEntry >;

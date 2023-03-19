@@ -12,9 +12,7 @@
 
 *//*******************************************************************/
 #include "MenuRegistry.h"
-#include <wx/frame.h>
 #include "Project.h"
-#include "ProjectWindows.h"
 #include "BasicUI.h"
 #include <wx/log.h>
 

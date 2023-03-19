@@ -25,7 +25,7 @@ SetPreferenceCommand classes
 #include "Prefs.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../prefs/PrefsDialog.h"
 
 const ComponentInterfaceSymbol GetPreferenceCommand::Symbol

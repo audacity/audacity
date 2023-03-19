@@ -770,7 +770,7 @@ AttachedToolBarMenuItem sAttachment{
 
 
 // Define some related menu items
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../CommonCommandFlags.h"
 
 namespace {

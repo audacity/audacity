@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 #include "../../widgets/Overlay.h" // to inherit
-#include "../../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "Identifier.h"
 
 class AudacityProject;

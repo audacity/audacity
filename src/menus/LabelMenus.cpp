@@ -15,7 +15,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
-#include "../commands/CommandContext.h"
+#include "CommandContext.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "toolbars/ToolManager.h"
 

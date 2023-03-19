@@ -20,7 +20,7 @@ struct NormalizedKeyStringTag;
 // Case insensitive comparisons
 using NormalizedKeyStringBase = TaggedIdentifier<NormalizedKeyStringTag, false>;
 
-struct AUDACITY_DLL_API NormalizedKeyString : NormalizedKeyStringBase
+struct MENUS_API NormalizedKeyString : NormalizedKeyStringBase
 {
    NormalizedKeyString() = default;
    explicit NormalizedKeyString( const wxString &key );

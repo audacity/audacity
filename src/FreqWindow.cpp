@@ -1219,7 +1219,7 @@ void FreqPlot::OnMouseEvent(wxMouseEvent & event)
 }
 
 // Remaining code hooks this add-on into the application
-#include "commands/CommandContext.h"
+#include "CommandContext.h"
 #include "commands/CommandManager.h"
 #include "ProjectWindows.h"
 
