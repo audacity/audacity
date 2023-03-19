@@ -1239,7 +1239,7 @@ AttachedWindows::RegisteredFactory sFrequencyWindowKey{
 void OnPlotSpectrum(const CommandContext &context)
 {
    auto &project = context.project;
-   CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Plot Spectrum as Last Analyzer
+   CommandManager::Get(project).RegisterLastAnalyzer(context);
    auto freqWindow = &GetAttachedWindows(project)
       .Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 

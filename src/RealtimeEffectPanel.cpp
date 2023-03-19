@@ -47,7 +47,6 @@
 #include "ListNavigationPanel.h"
 #include "MovableControl.h"
 #include "menus/MenuHelper.h"
-#include "Menus.h"
 #include "prefs/EffectsPrefs.h"
 
 #if wxUSE_ACCESSIBILITY

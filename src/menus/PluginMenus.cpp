@@ -71,13 +71,13 @@ namespace {
 void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &menuManager = MenuManager::Get(project);
-   menuManager.mLastAnalyzerRegistration = MenuManager::repeattypenone;
-   menuManager.mLastToolRegistration = MenuManager::repeattypenone;
-   menuManager.mLastGenerator = "";
-   menuManager.mLastEffect = "";
-   menuManager.mLastAnalyzer = "";
-   menuManager.mLastTool = "";
+   auto &commandManager = CommandManager::Get(project);
+   commandManager.mLastAnalyzerRegistration = CommandManager::repeattypenone;
+   commandManager.mLastToolRegistration = CommandManager::repeattypenone;
+   commandManager.mLastGenerator = "";
+   commandManager.mLastEffect = "";
+   commandManager.mLastAnalyzer = "";
+   commandManager.mLastTool = "";
 
    ResetPreferences();
 
@@ -149,43 +149,43 @@ void OnAnalyzer2(wxCommandEvent& evt) { return; }
 
 void OnRepeatLastGenerator(const CommandContext &context)
 {
-   auto& menuManager = MenuManager::Get(context.project);
-   auto lastEffect = menuManager.mLastGenerator;
+   auto& commandManager = CommandManager::Get(context.project);
+   auto lastEffect = commandManager.mLastGenerator;
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, menuManager.mRepeatGeneratorFlags | EffectManager::kRepeatGen);
+         lastEffect, context, commandManager.mRepeatGeneratorFlags | EffectManager::kRepeatGen);
    }
 }
 
 void OnRepeatLastEffect(const CommandContext &context)
 {
-   auto& menuManager = MenuManager::Get(context.project);
-   auto lastEffect = menuManager.mLastEffect;
+   auto& commandManager = CommandManager::Get(context.project);
+   auto lastEffect = commandManager.mLastEffect;
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, menuManager.mRepeatEffectFlags);
+         lastEffect, context, commandManager.mRepeatEffectFlags);
    }
 }
 
 void OnRepeatLastAnalyzer(const CommandContext& context)
 {
-   auto& menuManager = MenuManager::Get(context.project);
-   switch (menuManager.mLastAnalyzerRegistration) {
-   case MenuManager::repeattypeplugin:
+   auto& commandManager = CommandManager::Get(context.project);
+   switch (commandManager.mLastAnalyzerRegistration) {
+   case CommandManager::repeattypeplugin:
      {
-       auto lastEffect = menuManager.mLastAnalyzer;
+       auto lastEffect = commandManager.mLastAnalyzer;
        if (!lastEffect.empty())
        {
          EffectUI::DoEffect(
-            lastEffect, context, menuManager.mRepeatAnalyzerFlags);
+            lastEffect, context, commandManager.mRepeatAnalyzerFlags);
        }
      }
       break;
-   case MenuManager::repeattypeunique:
+   case CommandManager::repeattypeunique:
       CommandManager::Get(context.project).DoRepeatProcess(context,
-         menuManager.mLastAnalyzerRegisteredId);
+         commandManager.mLastAnalyzerRegisteredId);
       break;
    }
 }
@@ -265,7 +265,7 @@ namespace {
 const ReservedCommandFlag&
    HasLastGeneratorFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return !MenuManager::Get( project ).mLastGenerator.empty();
+         return !CommandManager::Get( project ).mLastGenerator.empty();
       }
    }; return flag; }
 
@@ -285,7 +285,8 @@ auto GenerateMenu()
          // Delayed evaluation:
          [](AudacityProject &project)
          {
-            const auto &lastGenerator = MenuManager::Get(project).mLastGenerator;
+            const auto &lastGenerator =
+               CommandManager::Get(project).mLastGenerator;
             TranslatableString buildMenuLabel;
             if (!lastGenerator.empty())
                buildMenuLabel = XO("Repeat %s")
@@ -330,7 +331,7 @@ AttachedItem sAttachment1{ Indirect(GenerateMenu()) };
 const ReservedCommandFlag&
    HasLastEffectFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
-         return !MenuManager::Get(project).mLastEffect.empty();
+         return !CommandManager::Get(project).mLastEffect.empty();
       }
    }; return flag;
 }
@@ -365,7 +366,7 @@ auto EffectMenu()
          // Delayed evaluation:
          [](AudacityProject &project)
          {
-            const auto &lastEffect = MenuManager::Get(project).mLastEffect;
+            const auto &lastEffect = CommandManager::Get(project).mLastEffect;
             TranslatableString buildMenuLabel;
             if (!lastEffect.empty())
                buildMenuLabel = XO("Repeat %s")
@@ -403,8 +404,10 @@ AttachedItem sAttachment2{ Indirect(EffectMenu()) };
 const ReservedCommandFlag&
    HasLastAnalyzerFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
-         if (MenuManager::Get(project).mLastAnalyzerRegistration == MenuManager::repeattypeunique) return true;
-         return !MenuManager::Get(project).mLastAnalyzer.empty();
+         if (CommandManager::Get(project).mLastAnalyzerRegistration
+            == CommandManager::repeattypeunique)
+            return true;
+         return !CommandManager::Get(project).mLastAnalyzer.empty();
       }
    }; return flag;
 }
@@ -425,7 +428,8 @@ auto AnalyzeMenu()
          // Delayed evaluation:
          [](AudacityProject &project)
          {
-            const auto &lastAnalyzer = MenuManager::Get(project).mLastAnalyzer;
+            const auto &lastAnalyzer =
+               CommandManager::Get(project).mLastAnalyzer;
             TranslatableString buildMenuLabel;
             if (!lastAnalyzer.empty())
                buildMenuLabel = XO("Repeat %s")

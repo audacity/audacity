@@ -27,13 +27,12 @@
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "UndoManager.h"
-#include "commands/CommandManager.h"
 #include "AudacityMessageBox.h"
 #include <wx/menu.h>
 #include <wx/windowptr.h>
 
 MenuCreator::MenuCreator(AudacityProject &project)
-   : MenuManager{ project }
+   : CommandManager{ project }
 {
    mUndoSubscription = UndoManager::Get(project)
       .Subscribe(*this, &MenuCreator::OnUndoRedo);
@@ -43,12 +42,12 @@ MenuCreator::~MenuCreator() = default;
 
 MenuCreator &MenuCreator::Get(AudacityProject &project)
 {
-   return static_cast<MenuCreator&>(MenuManager::Get(project));
+   return static_cast<MenuCreator&>(CommandManager::Get(project));
 }
 
 const MenuCreator &MenuCreator::Get(const AudacityProject &project)
 {
-   return static_cast<const MenuCreator&>(MenuManager::Get(project));
+   return static_cast<const MenuCreator&>(CommandManager::Get(project));
 }
 
 /// CreateMenusAndCommands builds the menus, and also rebuilds them after
@@ -139,16 +138,15 @@ struct MenuItemVisitor : Visitor<Traits> {
 void MenuCreator::CreateMenusAndCommands()
 {
    auto &project = mProject;
-   auto &commandManager = CommandManager::Get( project );
 
    // The list of defaults to exclude depends on
    // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
-   commandManager.SetMaxList();
+   SetMaxList();
 
-   auto menubar = commandManager.AddMenuBar(wxT("appmenu"));
+   auto menubar = AddMenuBar(wxT("appmenu"));
    wxASSERT(menubar);
 
-   MenuItemVisitor visitor{ project, commandManager };
+   MenuItemVisitor visitor{ project, *this };
    Visit(visitor, project);
 
    GetProjectFrame( project ).SetMenuBar(menubar.release());
@@ -166,34 +164,25 @@ void MenuCreator::ModifyUndoMenuItems()
    auto &project = mProject;
    TranslatableString desc;
    auto &undoManager = UndoManager::Get( project );
-   auto &commandManager = CommandManager::Get( project );
    int cur = undoManager.GetCurrentState();
 
    if (undoManager.UndoAvailable()) {
       undoManager.GetShortDescription(cur, &desc);
-      commandManager.Modify(wxT("Undo"),
-         XXO("&Undo %s")
-            .Format( desc ));
-      commandManager.Enable(wxT("Undo"),
-         ProjectHistory::Get( project ).UndoAvailable());
+      Modify(wxT("Undo"), XXO("&Undo %s").Format(desc));
+      Enable(wxT("Undo"), ProjectHistory::Get(project).UndoAvailable());
    }
    else {
-      commandManager.Modify(wxT("Undo"),
-                            XXO("&Undo"));
+      Modify(wxT("Undo"), XXO("&Undo"));
    }
 
    if (undoManager.RedoAvailable()) {
       undoManager.GetShortDescription(cur+1, &desc);
-      commandManager.Modify(wxT("Redo"),
-         XXO("&Redo %s")
-            .Format( desc ));
-      commandManager.Enable(wxT("Redo"),
-         ProjectHistory::Get( project ).RedoAvailable());
+      Modify(wxT("Redo"), XXO("&Redo %s").Format( desc ));
+      Enable(wxT("Redo"), ProjectHistory::Get(project).RedoAvailable());
    }
    else {
-      commandManager.Modify(wxT("Redo"),
-                            XXO("&Redo"));
-      commandManager.Enable(wxT("Redo"), false);
+      Modify(wxT("Redo"), XXO("&Redo"));
+      Enable(wxT("Redo"), false);
    }
 }
 
@@ -227,8 +216,7 @@ void MenuCreator::RebuildMenuBar()
       // menuBar gets deleted here
    }
 
-   CommandManager::Get( project ).PurgeData();
-
+   PurgeData();
    CreateMenusAndCommands();
 }
 
@@ -276,12 +264,10 @@ void MenuCreator::UpdateMenus( bool checkActive )
          flags2 |= enabler.possibleFlags();
    }
 
-   auto &commandManager = CommandManager::Get( project );
-
    // With select-all-on-none, some items that we don't want enabled may have
    // been enabled, since we changed the flags.  Here we manually disable them.
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   commandManager.EnableUsingFlags(
+   EnableUsingFlags(
       flags2, // the "lax" flags
       (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
    );
@@ -313,8 +299,7 @@ void MenuCreator::RebuildAllMenuBars()
 
 void MenuCreator::RemoveDuplicateShortcuts()
 {
-   const auto disabledShortcuts =
-      CommandManager::Get(mProject).ReportDuplicateShortcuts();
+   const auto disabledShortcuts = ReportDuplicateShortcuts();
    if (!disabledShortcuts.Translation().empty()) {
       TranslatableString message = XO("The following commands have had their shortcuts removed,"
       " because their default shortcut is new or changed, and is the same shortcut"
@@ -327,4 +312,4 @@ void MenuCreator::RemoveDuplicateShortcuts()
    }
 }
 
-static MenuManager::Factory::SubstituteInShared<MenuCreator> scope;
+static CommandManager::Factory::SubstituteInShared<MenuCreator> scope;

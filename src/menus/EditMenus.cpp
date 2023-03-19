@@ -1207,9 +1207,9 @@ auto ExtraEditMenu()
 }
 
 auto canSelectAll = [](const AudacityProject &project){
-   return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
+   return CommandManager::Get( project ).mWhatIfNoSelection != 0; };
 auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
-   if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
+   if ( CommandManager::Get( project ).mWhatIfNoSelection == 1 &&
       (flagsRqd & NoAutoSelect()).none() )
       SelectUtilities::DoSelectAllAudio(project);
 };

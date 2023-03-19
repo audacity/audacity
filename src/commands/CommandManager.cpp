@@ -91,10 +91,10 @@ CommandManager.  It holds the callback for one command.
 #include <wx/menu.h>
 
 #include "../ActiveProject.h"
+#include "BasicUI.h"
 #include "Journal.h"
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
-#include "../Menus.h"
 #include "Project.h"
 #include "ProjectWindows.h"
 #include "AudacityMessageBox.h"
@@ -196,34 +196,49 @@ SubMenuListEntry::~SubMenuListEntry()
 {
 }
 
-///
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   [](AudacityProject&) {
-      return std::make_unique<CommandManager>();
-   }
+  [](AudacityProject &project){
+     return CommandManager::Factory::Call(project); }
 };
 
-CommandManager &CommandManager::Get( AudacityProject &project )
+CommandManager &CommandManager::Get(AudacityProject &project)
 {
-   return project.AttachedObjects::Get< CommandManager >( key );
+   return project.AttachedObjects::Get<CommandManager>(key);
 }
 
-const CommandManager &CommandManager::Get( const AudacityProject &project )
+const CommandManager &CommandManager::Get(const AudacityProject &project)
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get(const_cast<AudacityProject &>(project));
 }
 
 ///
 ///  Standard Constructor
 ///
-CommandManager::CommandManager():
-   mCurrentID(17000),
-   mCurrentMenuName(COMMAND),
-   bMakingOccultCommands( false )
+CommandManager::CommandManager(AudacityProject &project)
+   : mProject{ project }
+   , mCurrentID(17000)
+   , mCurrentMenuName(COMMAND)
+   , bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
    SetMaxList();
    mLastProcessId = 0;
+
+   UpdatePrefs();
+}
+
+void CommandManager::UpdatePrefs()
+{
+   bool bSelectAllIfNone;
+   gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &bSelectAllIfNone, false);
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+#ifdef EXPERIMENTAL_DA
+   // DA warns or greys out.
+   mWhatIfNoSelection = bSelectAllIfNone ? 2 : 0;
+#else
+   // Audacity autoselects or warns.
+   mWhatIfNoSelection = bSelectAllIfNone ? 1 : 2;
+#endif
 }
 
 ///
@@ -1139,7 +1154,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   auto flags = MenuManager::Get(*project).GetUpdateFlags();
+   auto flags = GetUpdateFlags();
 
    wxKeyEvent temp = evt;
 
@@ -1222,7 +1237,7 @@ Journal::RegisteredCommand sCommand{ JournalCode,
    if ( fields.size() == 2 ) {
       if (auto project = GetActiveProject().lock()) {
          auto pManager = &CommandManager::Get( *project );
-         auto flags = MenuManager::Get( *project ).GetUpdateFlags();
+         auto flags = pManager->GetUpdateFlags();
          const CommandContext context( *project );
          auto &command = fields[1];
          handled =
@@ -1255,9 +1270,7 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
       const auto NiceName = entry->label.Stripped(
          TranslatableString::Ellipses | TranslatableString::MenuCodes );
       // NB: The call may have the side effect of changing flags.
-      bool allowed =
-         MenuManager::Get(project).ReportIfActionNotAllowed(
-            NiceName, flags, entry->flags );
+      bool allowed = ReportIfActionNotAllowed(NiceName, flags, entry->flags);
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
       // Otherwise we may get other handlers having a go at obeying the command.
@@ -1289,9 +1302,8 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 // Note that Repeat data has previously been collected
 void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
    if (mLastProcessId != 0) {
-      auto& menuManager = MenuManager::Get(context.project);
-      menuManager.mLastAnalyzerRegistration = MenuManager::repeattypeunique;
-      menuManager.mLastAnalyzerRegisteredId = mLastProcessId;
+      mLastAnalyzerRegistration = repeattypeunique;
+      mLastAnalyzerRegisteredId = mLastProcessId;
       auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
       Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
    }
@@ -1302,9 +1314,8 @@ void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
 // Note that Repeat data has previously been collected
 void CommandManager::RegisterLastTool(const CommandContext& context) {
    if (mLastProcessId != 0) {
-      auto& menuManager = MenuManager::Get(context.project);
-      menuManager.mLastToolRegistration = MenuManager::repeattypeunique;
-      menuManager.mLastToolRegisteredId = mLastProcessId;
+      mLastToolRegistration = repeattypeunique;
+      mLastToolRegisteredId = mLastProcessId;
       auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
       Modify(wxT("RepeatLastTool"), lastEffectDesc);
    }
@@ -1705,6 +1716,163 @@ TranslatableString CommandManager::ReportDuplicateShortcuts()
    }
 
    return disabledShortcuts;
+}
+
+CommandFlag CommandManager::GetUpdateFlags( bool checkActive ) const
+{
+   // This method determines all of the flags that determine whether
+   // certain menu items and commands should be enabled or disabled,
+   // and returns them in a bitfield.  Note that if none of the flags
+   // have changed, it's not necessary to even check for updates.
+
+   // static variable, used to remember flags for next time.
+   static CommandFlag lastFlags;
+
+   CommandFlag flags, quickFlags;
+
+   const auto &options = ReservedCommandFlag::Options();
+   size_t ii = 0;
+   for ( const auto &predicate : ReservedCommandFlag::RegisteredPredicates() ) {
+      if ( options[ii].quickTest ) {
+         quickFlags[ii] = true;
+         if( predicate( mProject ) )
+            flags[ii] = true;
+      }
+      ++ii;
+   }
+
+   if ( checkActive && !GetProjectFrame( mProject ).IsActive() )
+      // quick 'short-circuit' return.
+      flags = (lastFlags & ~quickFlags) | flags;
+   else {
+      ii = 0;
+      for ( const auto &predicate
+           : ReservedCommandFlag::RegisteredPredicates() ) {
+         if ( !options[ii].quickTest && predicate( mProject ) )
+            flags[ii] = true;
+         ++ii;
+      }
+   }
+
+   lastFlags = flags;
+   return flags;
+}
+
+bool CommandManager::ReportIfActionNotAllowed(
+   const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd )
+{
+   auto &project = mProject;
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
+   if( bAllowed )
+      return true;
+   TellUserWhyDisallowed( Name, flags & flagsRqd, flagsRqd);
+   return false;
+}
+
+/// Determines if flags for command are compatible with current state.
+/// If not, then try some recovery action to make it so.
+/// @return whether compatible or not after any actions taken.
+bool CommandManager::TryToMakeActionAllowed(
+   CommandFlag & flags, CommandFlag flagsRqd )
+{
+   auto &project = mProject;
+
+   if( flags.none() )
+      flags = GetUpdateFlags();
+
+   // Visit the table of recovery actions
+   auto &enablers = RegisteredMenuItemEnabler::Enablers();
+   auto iter = enablers.begin(), end = enablers.end();
+   while ((flags & flagsRqd) != flagsRqd && iter != end) {
+      const auto &enabler = *iter;
+      auto actual = enabler.actualFlags();
+      auto MissingFlags = (~flags & flagsRqd);
+      if (
+         // Do we have the right precondition?
+         (flags & actual) == actual
+      &&
+         // Can we get the condition we need?
+         (MissingFlags & enabler.possibleFlags()).any()
+      ) {
+         // Then try the function
+         enabler.tryEnable( project, flagsRqd );
+         flags = GetUpdateFlags();
+      }
+      ++iter;
+   }
+   return (flags & flagsRqd) == flagsRqd;
+}
+
+void CommandManager::TellUserWhyDisallowed(
+   const TranslatableString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
+{
+   // The default string for 'reason' is a catch all.  I hope it won't ever be seen
+   // and that we will get something more specific.
+   auto reason = XO("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
+   // The default title string is 'Disallowed'.
+   auto untranslatedTitle = XO("Disallowed");
+   wxString helpPage;
+
+   bool enableDefaultMessage = true;
+   bool defaultMessage = true;
+
+   auto doOption = [&](const CommandFlagOptions &options) {
+      if ( options.message ) {
+         reason = options.message( Name );
+         defaultMessage = false;
+         if ( !options.title.empty() )
+            untranslatedTitle = options.title;
+         helpPage = options.helpPage;
+         return true;
+      }
+      else {
+         enableDefaultMessage =
+            enableDefaultMessage && options.enableDefaultMessage;
+         return false;
+      }
+   };
+
+   const auto &alloptions = ReservedCommandFlag::Options();
+   auto missingFlags = flagsRequired & ~flagsGot;
+
+   // Find greatest priority
+   unsigned priority = 0;
+   for ( const auto &options : alloptions )
+      priority = std::max( priority, options.priority );
+
+   // Visit all unsatisfied conditions' options, by descending priority,
+   // stopping when we find a message
+   ++priority;
+   while( priority-- ) {
+      size_t ii = 0;
+      for ( const auto &options : alloptions ) {
+         if (
+            priority == options.priority
+         &&
+            missingFlags[ii]
+         &&
+            doOption( options ) )
+            goto done;
+
+         ++ii;
+      }
+   }
+   done:
+
+   if (
+      // didn't find a message
+      defaultMessage
+   &&
+      // did find a condition that suppresses the default message
+      !enableDefaultMessage
+   )
+      return;
+
+   // Does not have the warning icon...
+   BasicUI::ShowErrorDialog( {},
+      untranslatedTitle,
+      reason,
+      helpPage);
 }
 
 #include "../KeyboardCapture.h"

@@ -673,7 +673,7 @@ namespace {
    void OnContrast(const CommandContext &context)
    {
       auto &project = context.project;
-      CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Contrast as Last Analyzer
+      CommandManager::Get(project).RegisterLastAnalyzer(context);
       auto contrastDialog = &GetAttachedWindows(project)
          .Get< ContrastDialog >( sContrastDialogKey );
 

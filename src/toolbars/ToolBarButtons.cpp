@@ -16,7 +16,6 @@
 
 #include "AllThemeResources.h"
 #include "../widgets/AButton.h"
-#include "../Menus.h"
 #include "Project.h"
 
 #include "../commands/CommandContext.h"
@@ -47,7 +46,7 @@ void ToolBarButtons::OnButton(wxCommandEvent & event)
 
    auto &cm = CommandManager::Get( mProject );
 
-   auto flags = MenuManager::Get(mProject).GetUpdateFlags();
+   auto flags = CommandManager::Get(mProject).GetUpdateFlags();
    const CommandContext context( mProject );
 
    CommandDispatch::HandleTextualCommand(cm,

@@ -17,9 +17,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/BasicMenu.h"
 #include "BasicUI.h"
 #include "../../commands/CommandContext.h"
-#include "../../commands/CommandManager.h"
 #include "../../HitTestResult.h"
-#include "../../MenuCreator.h"
+#include "MenuCreator.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "Track.h"
@@ -65,7 +64,7 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    context.temporarySelection.pTrack = FindTrack().get();
 
    auto &commandManager = CommandManager::Get(*pProject);
-   auto flags = menuCreator.GetUpdateFlags();
+   auto flags = CommandManager::Get(*pProject).GetUpdateFlags();
 
    // Common dispatcher for the menu items
    auto dispatcher = [&]( wxCommandEvent &evt ){

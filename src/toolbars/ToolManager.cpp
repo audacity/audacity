@@ -51,7 +51,6 @@
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "ImageManipulation.h"
-#include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
@@ -474,7 +473,7 @@ void ToolManager::CreateWindows()
 
    wxEvtHandler::AddFilter(this);
 
-   mMenuManagerSubscription = MenuManager::Get(*mParent)
+   mMenuManagerSubscription = CommandManager::Get(*mParent)
       .Subscribe(*this, &ToolManager::OnMenuUpdate);
 }
 

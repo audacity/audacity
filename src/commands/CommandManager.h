@@ -22,6 +22,7 @@
 
 #include "Keyboard.h"
 
+#include "Observer.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Registry.h"
@@ -57,11 +58,25 @@ using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
 class AudacityProject;
 class CommandContext;
 
-class AUDACITY_DLL_API CommandManager final
+namespace MenuTable {
+   struct Traits;
+   template<typename MenuTraits> struct Visitor;
+}
+
+//! Sent when menus update (such as for changing enablement of items)
+struct MenuUpdateMessage {};
+
+class AUDACITY_DLL_API CommandManager /* not final */
    : public XMLTagHandler
    , public ClientData::Base
+   , public Observer::Publisher<MenuUpdateMessage>
+   , private PrefsListener
 {
- public:
+public:
+   struct Factory : DefaultedGlobalHook<Factory,
+      Callable::SharedPtrFactory<CommandManager, AudacityProject &>::Function
+   >{};
+
    static CommandManager &Get( AudacityProject &project );
    static const CommandManager &Get( const AudacityProject &project );
 
@@ -71,15 +86,52 @@ class AUDACITY_DLL_API CommandManager final
       bool(const CommandID&)
    >{};
 
-   //
-   // Constructor / Destructor
-   //
+   explicit CommandManager(AudacityProject &project);
+   CommandManager(const CommandManager &) = delete;
+   CommandManager &operator=(const CommandManager &) = delete;
+   ~CommandManager() override;
 
-   CommandManager();
-   virtual ~CommandManager();
+   static void Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
+      AudacityProject &project);
 
-   CommandManager(const CommandManager&) = delete;
-   CommandManager &operator= (const CommandManager&) = delete;
+   // If checkActive, do not do complete flags testing on an
+   // inactive project as it is needlessly expensive.
+   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
+   void UpdatePrefs() override;
+
+   // Command Handling
+   bool ReportIfActionNotAllowed(
+      const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd );
+   bool TryToMakeActionAllowed(
+      CommandFlag & flags, CommandFlag flagsRqd );
+
+   CommandFlag mLastFlags = AlwaysEnabledFlag;
+   
+   // Last effect applied to this project
+   PluginID mLastGenerator{};
+   PluginID mLastEffect{};
+   PluginID mLastAnalyzer{};
+   int mLastAnalyzerRegistration = repeattypenone;
+   int mLastAnalyzerRegisteredId = -1;
+   PluginID mLastTool{};
+   int mLastToolRegistration = repeattypenone;
+   int mLastToolRegisteredId = -1;
+   enum {
+      repeattypenone = 0,
+      repeattypeplugin = 1,
+      repeattypeunique = 2,
+      repeattypeapplymacro = 3
+   };
+   unsigned mRepeatGeneratorFlags = 0;
+   unsigned mRepeatEffectFlags = 0;
+   unsigned mRepeatAnalyzerFlags = 0;
+   unsigned mRepeatToolFlags = 0;
+
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+   int  mWhatIfNoSelection;
+
+   // not configurable for now, but could be later.
+   bool mStopIfWasPaused{ true };
 
    void SetMaxList();
    void PurgeData();
@@ -362,6 +414,12 @@ private:
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+
+   void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
+      CommandFlag flagsRequired);
+
+protected:
+   AudacityProject &mProject;
 
 private:
    // mMaxList only holds shortcuts that should not be added (by default)

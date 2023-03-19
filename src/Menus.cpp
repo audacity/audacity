@@ -8,61 +8,14 @@
   Brian Gunlogson
   et al.
 
-*******************************************************************//**
-
-\class MenuManager
-\brief MenuManager handles updates to menu state.
-
 *//*******************************************************************/
 #include "Menus.h"
-
 #include <wx/frame.h>
 #include "Project.h"
 #include "ProjectWindows.h"
 #include "commands/CommandManager.h"
 #include "BasicUI.h"
 #include <wx/log.h>
-
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   [](AudacityProject &project){
-      return MenuManager::Factory::Call(project);
-   }
-};
-
-MenuManager &MenuManager::Get( AudacityProject &project )
-{
-   return project.AttachedObjects::Get< MenuManager >( key );
-}
-
-const MenuManager &MenuManager::Get( const AudacityProject &project )
-{
-   return Get( const_cast< AudacityProject & >( project ) );
-}
-
-MenuManager::MenuManager( AudacityProject &project )
-   : mProject{ project }
-{
-   UpdatePrefs();
-}
-
-MenuManager::~MenuManager()
-{
-}
-
-void MenuManager::UpdatePrefs()
-{
-   bool bSelectAllIfNone;
-   gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &bSelectAllIfNone, false);
-   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-#ifdef EXPERIMENTAL_DA
-   // DA warns or greys out.
-   mWhatIfNoSelection = bSelectAllIfNone ? 2 : 0;
-#else
-   // Audacity autoselects or warns.
-   mWhatIfNoSelection = bSelectAllIfNone ? 1 : 2;
-#endif
-   mStopIfWasPaused = true;  // not configurable for now, but could be later.
-}
 
 std::pair<bool, bool> MenuTable::detail::VisitorBase::ShouldBeginGroup(
    const MenuItemProperties *pProperties)
@@ -231,7 +184,7 @@ auto MenuTable::ItemRegistry::Registry() -> Registry::GroupItem<Traits> &
    return registry;
 }
 
-void MenuManager::Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
+void CommandManager::Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
    AudacityProject &project)
 {
    // Once only, cause initial population of preferences for the ordering
@@ -281,161 +234,4 @@ void MenuManager::Visit(MenuTable::Visitor<MenuTable::Traits> &visitor,
    wxLogNull nolog;
    Registry::VisitWithFunctions(visitor, menuTree.get(),
       &MenuTable::ItemRegistry::Registry(), project);
-}
-
-CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
-{
-   // This method determines all of the flags that determine whether
-   // certain menu items and commands should be enabled or disabled,
-   // and returns them in a bitfield.  Note that if none of the flags
-   // have changed, it's not necessary to even check for updates.
-
-   // static variable, used to remember flags for next time.
-   static CommandFlag lastFlags;
-
-   CommandFlag flags, quickFlags;
-
-   const auto &options = ReservedCommandFlag::Options();
-   size_t ii = 0;
-   for ( const auto &predicate : ReservedCommandFlag::RegisteredPredicates() ) {
-      if ( options[ii].quickTest ) {
-         quickFlags[ii] = true;
-         if( predicate( mProject ) )
-            flags[ii] = true;
-      }
-      ++ii;
-   }
-
-   if ( checkActive && !GetProjectFrame( mProject ).IsActive() )
-      // quick 'short-circuit' return.
-      flags = (lastFlags & ~quickFlags) | flags;
-   else {
-      ii = 0;
-      for ( const auto &predicate
-           : ReservedCommandFlag::RegisteredPredicates() ) {
-         if ( !options[ii].quickTest && predicate( mProject ) )
-            flags[ii] = true;
-         ++ii;
-      }
-   }
-
-   lastFlags = flags;
-   return flags;
-}
-
-bool MenuManager::ReportIfActionNotAllowed(
-   const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd )
-{
-   auto &project = mProject;
-   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
-   if( bAllowed )
-      return true;
-   TellUserWhyDisallowed( Name, flags & flagsRqd, flagsRqd);
-   return false;
-}
-
-/// Determines if flags for command are compatible with current state.
-/// If not, then try some recovery action to make it so.
-/// @return whether compatible or not after any actions taken.
-bool MenuManager::TryToMakeActionAllowed(
-   CommandFlag & flags, CommandFlag flagsRqd )
-{
-   auto &project = mProject;
-
-   if( flags.none() )
-      flags = GetUpdateFlags();
-
-   // Visit the table of recovery actions
-   auto &enablers = RegisteredMenuItemEnabler::Enablers();
-   auto iter = enablers.begin(), end = enablers.end();
-   while ((flags & flagsRqd) != flagsRqd && iter != end) {
-      const auto &enabler = *iter;
-      auto actual = enabler.actualFlags();
-      auto MissingFlags = (~flags & flagsRqd);
-      if (
-         // Do we have the right precondition?
-         (flags & actual) == actual
-      &&
-         // Can we get the condition we need?
-         (MissingFlags & enabler.possibleFlags()).any()
-      ) {
-         // Then try the function
-         enabler.tryEnable( project, flagsRqd );
-         flags = GetUpdateFlags();
-      }
-      ++iter;
-   }
-   return (flags & flagsRqd) == flagsRqd;
-}
-
-void MenuManager::TellUserWhyDisallowed(
-   const TranslatableString & Name, CommandFlag flagsGot, CommandFlag flagsRequired )
-{
-   // The default string for 'reason' is a catch all.  I hope it won't ever be seen
-   // and that we will get something more specific.
-   auto reason = XO("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
-   // The default title string is 'Disallowed'.
-   auto untranslatedTitle = XO("Disallowed");
-   wxString helpPage;
-
-   bool enableDefaultMessage = true;
-   bool defaultMessage = true;
-
-   auto doOption = [&](const CommandFlagOptions &options) {
-      if ( options.message ) {
-         reason = options.message( Name );
-         defaultMessage = false;
-         if ( !options.title.empty() )
-            untranslatedTitle = options.title;
-         helpPage = options.helpPage;
-         return true;
-      }
-      else {
-         enableDefaultMessage =
-            enableDefaultMessage && options.enableDefaultMessage;
-         return false;
-      }
-   };
-
-   const auto &alloptions = ReservedCommandFlag::Options();
-   auto missingFlags = flagsRequired & ~flagsGot;
-
-   // Find greatest priority
-   unsigned priority = 0;
-   for ( const auto &options : alloptions )
-      priority = std::max( priority, options.priority );
-
-   // Visit all unsatisfied conditions' options, by descending priority,
-   // stopping when we find a message
-   ++priority;
-   while( priority-- ) {
-      size_t ii = 0;
-      for ( const auto &options : alloptions ) {
-         if (
-            priority == options.priority
-         &&
-            missingFlags[ii]
-         &&
-            doOption( options ) )
-            goto done;
-
-         ++ii;
-      }
-   }
-   done:
-
-   if (
-      // didn't find a message
-      defaultMessage
-   &&
-      // did find a condition that suppresses the default message
-      !enableDefaultMessage
-   )
-      return;
-
-   // Does not have the warning icon...
-   BasicUI::ShowErrorDialog( {},
-      untranslatedTitle,
-      reason,
-      helpPage);
 }

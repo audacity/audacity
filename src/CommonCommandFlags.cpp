@@ -18,7 +18,6 @@ Paul Licameli split from Menus.cpp
 #include "AudioIO.h"
 #include "Clipboard.h"
 #include "LabelTrack.h"
-#include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"

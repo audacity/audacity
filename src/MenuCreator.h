@@ -12,10 +12,9 @@
 #ifndef __AUDACITY_MENU_CREATOR__
 #define __AUDACITY_MENU_CREATOR__
 
-#include "Menus.h"
-#include "Identifier.h"
+#include "commands/CommandManager.h"
 
-class AUDACITY_DLL_API MenuCreator final : public MenuManager
+class AUDACITY_DLL_API MenuCreator final : public CommandManager
 {
 public:
    static MenuCreator &Get(AudacityProject &project);

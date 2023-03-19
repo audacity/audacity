@@ -1402,24 +1402,24 @@ void OnApplyMacroDirectlyByName(
 
 void OnRepeatLastTool(const CommandContext& context)
 {
-   auto& menuManager = MenuManager::Get(context.project);
-   switch (menuManager.mLastToolRegistration) {
-     case MenuManager::repeattypeplugin:
+   auto& commandManager = CommandManager::Get(context.project);
+   switch (commandManager.mLastToolRegistration) {
+     case CommandManager::repeattypeplugin:
      {
-        auto lastEffect = menuManager.mLastTool;
+        auto lastEffect = commandManager.mLastTool;
         if (!lastEffect.empty())
         {
            EffectUI::DoEffect(
-              lastEffect, context, menuManager.mRepeatToolFlags);
+              lastEffect, context, commandManager.mRepeatToolFlags);
         }
      }
        break;
-     case MenuManager::repeattypeunique:
+     case CommandManager::repeattypeunique:
         CommandManager::Get(context.project).DoRepeatProcess(context,
-           menuManager.mLastToolRegisteredId);
+           commandManager.mLastToolRegisteredId);
         break;
-     case MenuManager::repeattypeapplymacro:
-        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
+     case CommandManager::repeattypeapplymacro:
+        OnApplyMacroDirectlyByName(context, commandManager.mLastTool);
         break;
    }
 }
@@ -1489,9 +1489,10 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
        undoManager.GetShortDescription(cur, &desc);
        commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
           .Format(desc));
-       auto& menuManager = MenuManager::Get(project);
-       menuManager.mLastTool = Name;
-       menuManager.mLastToolRegistration = MenuManager::repeattypeapplymacro;
+       auto& commandManager = CommandManager::Get(project);
+       commandManager.mLastTool = Name;
+       commandManager.mLastToolRegistration =
+          CommandManager::repeattypeapplymacro;
    }
 
 }
@@ -1513,9 +1514,11 @@ void PopulateMacrosMenu(MenuTable::MenuItems &items, CommandFlag flags)
 const ReservedCommandFlag&
    HasLastToolFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project) {
-      auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuManager::repeattypeunique) return true;
-         return !menuManager.mLastTool.empty();
+      auto& commandManager = CommandManager::Get(project);
+         if (commandManager.mLastToolRegistration ==
+             CommandManager::repeattypeunique)
+            return true;
+         return !commandManager.mLastTool.empty();
       }
    }; return flag;
 }
@@ -1532,7 +1535,7 @@ auto PluginMenuItems()
          // Delayed evaluation:
          [](AudacityProject &project)
          {
-            const auto &lastTool = MenuManager::Get(project).mLastTool;
+            const auto &lastTool = CommandManager::Get(project).mLastTool;
             TranslatableString buildMenuLabel;
             if (!lastTool.empty())
                buildMenuLabel = XO("Repeat %s")

@@ -2,7 +2,6 @@
 #include "../CommonCommandFlags.h"
 #include "DeviceManager.h"
 #include "../LabelTrack.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"

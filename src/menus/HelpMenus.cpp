@@ -13,7 +13,6 @@
 #include "HelpText.h"
 #include "../HelpUtilities.h"
 #include "LogWindow.h"
-#include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectSnap.h"
@@ -360,7 +359,7 @@ void OnMenuTree(const CommandContext &context)
          Return();
       }
    };
-   MenuManager::Visit(visitor, project);
+   CommandManager::Visit(visitor, project);
 
    ShowDiagnostics( project, info,
       Verbatim("Menu Tree"), wxT("menutree.txt"), true );
