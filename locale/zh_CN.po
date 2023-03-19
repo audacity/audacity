@@ -335,7 +335,7 @@ msgid ""
 "%s does not have write permissions."
 msgstr ""
 "\n"
-"%s无写入权限。"
+"%s 无写入权限。"
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
@@ -354,14 +354,14 @@ msgstr "错误"
 
 #: libraries/lib-files/TempDirectory.cpp
 msgid "Unsuitable"
-msgstr "不合适"
+msgstr "不适用"
 
 #: libraries/lib-files/TempDirectory.cpp
 msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
 msgstr ""
-"临时文件目录位于FAT文件系统的驱动器上。\n"
+"临时文件目录位于 FAT 文件系统的驱动器上。\n"
 "重置到默认位置。"
 
 #: libraries/lib-files/TempDirectory.cpp
@@ -464,18 +464,18 @@ msgstr "最高质量（最慢）"
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: libraries/lib-math/SampleFormat.cpp
 msgid "16-bit PCM"
-msgstr "16位 PCM"
+msgstr "16 位 PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 24-bit integers
 #: libraries/lib-math/SampleFormat.cpp
 msgid "24-bit PCM"
-msgstr "24位 PCM"
+msgstr "24 位 PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: libraries/lib-math/SampleFormat.cpp
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "32-bit float"
-msgstr "32位 浮点"
+msgstr "32 位 浮点"
 
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
@@ -483,7 +483,7 @@ msgstr "未知格式"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
-msgstr "模块不合适"
+msgstr "模块不适用"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -503,7 +503,7 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"模块 “%s” 未包含版本信息。\n"
+"模块 “%s” 缺少版本信息。\n"
 "\n"
 "它将不会被加载。"
 
@@ -514,7 +514,7 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"模块 “%s” 只匹配 Audacity 版本 “%s”。\n"
+"模块 “%s” 只适用于 Audacity 版本 “%s”。\n"
 "\n"
 "它将不会被加载。"
 
@@ -542,7 +542,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"仅使用信任源的模块"
+"仅使用来自信任源的模块"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
 #: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
@@ -749,7 +749,7 @@ msgid ""
 "  %s\n"
 "for writing."
 msgstr ""
-"Audacity 无法为写打开文件：\n"
+"Audacity 无法打开文件进行写入：\n"
 "  %s\n"
 "。"
 
@@ -783,15 +783,15 @@ msgid ""
 msgstr ""
 "Audacity 无法载入文件：\n"
 "  %s.\n"
-"也许png格式错误？"
+"也许 png 格式错误？"
 
 #: libraries/lib-theme/Theme.cpp
 msgid ""
 "Audacity could not read its default theme.\n"
 "Please report the problem."
 msgstr ""
-"Audacity 无法读默认主题.\n"
-"请报告这个问题。"
+"Audacity 无法读取默认主题。\n"
+"请报告此问题。"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -805,7 +805,7 @@ msgid ""
 " were found in:\n"
 "  %s."
 msgstr ""
-"%s中找不到期望的任何主题元件文件\n"
+"在 %s 中没有找到预期的任何主题组件文件\n"
 "。"
 
 #: libraries/lib-theme/Theme.cpp
@@ -1045,7 +1045,7 @@ msgstr "Nyquist 脚本 (*.ny)|*.ny|Lisp 脚本 (*.lsp)|*.lsp|所有文件|*"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
-msgstr "脚本未被保存。"
+msgstr "脚本未保存。"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Save Nyquist script"
@@ -1061,7 +1061,7 @@ msgstr "Harvey Lubin (LOGO)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr "Tango 图标库 （工具栏图标）"
+msgstr "Tango 图标库（工具栏图标）"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
