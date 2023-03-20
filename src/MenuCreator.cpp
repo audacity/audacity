@@ -122,8 +122,10 @@ struct MenuItemVisitor final : CommandManager::Populator {
          }
       }},
 
-      [this]() {
-         AddSeparator();
+      [this]{
+         if (mbSeparatorAllowed)
+            CurrentMenu()->AppendSeparator();
+         Populator::DoSeparator();
       }
    }
    {

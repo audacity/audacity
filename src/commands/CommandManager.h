@@ -156,6 +156,8 @@ public:
       virtual void VisitEntry(CommandListEntry &entry,
          const MenuRegistry::Options *options);
 
+      void DoSeparator();
+
       std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
       wxMenu *BeginMenu(const TranslatableString & tName);
       void EndMenu();
@@ -173,9 +175,6 @@ public:
                    CommandFunctorPointer callback,
                    CommandFlag flags,
                    const MenuRegistry::Options &options = {});
-   protected:
-      void AddSeparator();
-   private:
       void PopMenuBar();
    protected:
       void BeginOccultCommands();
@@ -211,8 +210,10 @@ public:
       MenuBarList  mMenuBarList;
       SubMenuList  mSubMenuList;
       int mCurrentID{ 17000 };
+   protected:
       // false at the start of a menu and immediately after a separator.
       bool mbSeparatorAllowed{ false };
+   private:
       TranslatableString mCurrentMenuName{ COMMAND };
       std::unique_ptr<wxMenu> uCurrentMenu;
       wxMenu *mCurrentMenu {};

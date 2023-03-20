@@ -599,10 +599,8 @@ void CommandManager::Populator::AddGlobalCommand(const CommandID &name,
    VisitEntry(*entry, &options);
 }
 
-void CommandManager::Populator::AddSeparator()
+void CommandManager::Populator::DoSeparator()
 {
-   if( mbSeparatorAllowed )
-      CurrentMenu()->AppendSeparator();
    mbSeparatorAllowed = false; // boolean to prevent too many separators.
 }
 
