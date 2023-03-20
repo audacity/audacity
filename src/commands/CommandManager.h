@@ -35,17 +35,10 @@
 #include <unordered_map>
 
 class wxEvent;
-class wxMenu;
-class wxMenuBar;
 
 class BoolSetting;
 
-struct MenuBarListEntry;
 using PluginID = wxString;
-struct SubMenuListEntry;
-
-using MenuBarList = std::vector < MenuBarListEntry >;
-using SubMenuList = std::vector < SubMenuListEntry >;
 
 class AudacityProject;
 class CommandContext;
@@ -144,6 +137,22 @@ public:
       void DoVisit(const Registry::SingleItem &item);
       void DoEndGroup(
          const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
+      
+      //! Called by DoBeginGroup
+      //! Default implementation does nothing
+      virtual void BeginMenu(const TranslatableString & tName);
+
+      //! Called by DoBeginGroup
+      //! Default implementation does nothing
+      virtual void BeginOccultCommands();
+
+      //! Called by DoEndGroup
+      //! Default implementation does nothing
+      virtual void EndMenu();
+
+      //! Called by DoEndGroup
+      //! Default implementation does nothing
+      virtual void EndOccultCommands();
 
       //! Called by DoVisit
       //! Override to make entries that carry extra information.
@@ -164,9 +173,6 @@ public:
 
       void DoSeparator();
 
-      std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
-      wxMenu *BeginMenu(const TranslatableString & tName);
-      void EndMenu();
    private:
       void AddItemList(const CommandID & name,
                        const ComponentInterfaceSymbol items[],
@@ -181,11 +187,6 @@ public:
                    CommandFunctorPointer callback,
                    CommandFlag flags,
                    const MenuRegistry::Options &options = {});
-      void PopMenuBar();
-   protected:
-      void BeginOccultCommands();
-      void EndOccultCommands();
-   private:
       CommandListEntry *NewIdentifier(const CommandID & name,
                                       const TranslatableString & label,
                                       CommandHandlerFinder finder,
@@ -199,15 +200,7 @@ public:
                             CommandHandlerFinder finder,
                             CommandFunctorPointer callback,
                             const MenuRegistry::Options &options = {});
-      wxMenu *BeginMainMenu(const TranslatableString & tName);
-      void EndMainMenu();
-      wxMenu* BeginSubMenu(const TranslatableString & tName);
-      void EndSubMenu();
-      wxMenuBar * CurrentMenuBar() const;
-      wxMenuBar * GetMenuBar(const wxString & sMenu) const;
-      wxMenu * CurrentSubMenu() const;
    protected:
-      wxMenu * CurrentMenu() const;
       //! Stack of names of menus that were begun and not yet ended
       const TranslatableStrings &MenuNames() const { return mMenuNames; }
    private:
@@ -215,18 +208,13 @@ public:
       // mMaxList only holds shortcuts that should not be added (by default)
       // and is sorted.
       std::vector<NormalizedKeyString> mMaxListOnly;
-      MenuBarList  mMenuBarList;
-      SubMenuList  mSubMenuList;
       TranslatableStrings mMenuNames;
       int mCurrentID{ 17000 };
    protected:
       // false at the start of a menu and immediately after a separator.
       bool mbSeparatorAllowed{ false };
    private:
-      std::unique_ptr<wxMenu> uCurrentMenu;
-      wxMenu *mCurrentMenu {};
       bool bMakingOccultCommands{ false };
-      std::unique_ptr< wxMenuBar > mTempMenuBar;
       std::vector<bool> mFlags;
    };
 

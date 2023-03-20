@@ -45,28 +45,8 @@ CommandManager.  It holds the callback for one command.
 
 *//****************************************************************//**
 
-\class MenuBarListEntry
-\brief MenuBarListEntry is a structure used by CommandManager.
-
-*//****************************************************************//**
-
-\class SubMenuListEntry
-\brief SubMenuListEntry is a structure used by CommandManager.
-
-*//****************************************************************//**
-
 \class CommandListEntry
 \brief CommandListEntry is a structure used by CommandManager.
-
-*//****************************************************************//**
-
-\class MenuBarList
-\brief List of MenuBarListEntry.
-
-*//****************************************************************//**
-
-\class SubMenuList
-\brief List of SubMenuListEntry.
 
 *//****************************************************************//**
 
@@ -77,11 +57,7 @@ CommandManager.  It holds the callback for one command.
 #include "CommandManager.h"
 #include "CommandContext.h"
 
-#include <wx/defs.h>
-#include <wx/frame.h>
-#include <wx/hash.h>
 #include <wx/log.h>
-#include <wx/menu.h>
 
 #include "BasicUI.h"
 #include "Project.h"
@@ -107,42 +83,6 @@ CommandManager.  It holds the callback for one command.
 const TranslatableString CommandManager::COMMAND = XO("Command");
 
 CommandManager::CommandListEntry::~CommandListEntry() = default;
-
-struct MenuBarListEntry
-{
-   MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_);
-   ~MenuBarListEntry();
-
-   wxString name;
-   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
-};
-
-struct SubMenuListEntry
-{
-   SubMenuListEntry();
-   SubMenuListEntry(SubMenuListEntry&&) = default;
-   ~SubMenuListEntry();
-
-   std::unique_ptr<wxMenu> menu;
-};
-
-MenuBarListEntry::MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
-   : name(name_), menubar(menubar_)
-{
-}
-
-MenuBarListEntry::~MenuBarListEntry()
-{
-}
-
-SubMenuListEntry::SubMenuListEntry()
-   : menu{ std::make_unique<wxMenu>() }
-{
-}
-
-SubMenuListEntry::~SubMenuListEntry()
-{
-}
 
 CommandManager::Populator::Populator(AudacityProject &project,
    LeafVisitor leafVisitor,
@@ -327,8 +267,10 @@ void CommandManager::Populator::DoBeginGroup(
       dynamic_cast<const ConditionalGroupItem*>( pItem )
    ) {
       const auto flag = (*pConditionalGroup)();
-      if (!flag)
+      if (!flag) {
+         bMakingOccultCommands = true;
          BeginOccultCommands();
+      }
       // to avoid repeated call of condition predicate in EndGroup():
       mFlags.push_back(flag);
    }
@@ -358,6 +300,10 @@ void CommandManager::Populator::DoVisit(const Registry::SingleItem &item)
       wxASSERT( false );
 }
 
+void CommandManager::Populator::BeginMenu(const TranslatableString &)
+{
+}
+
 void CommandManager::Populator::DoEndGroup(
    const MenuRegistry::GroupItem<MenuRegistry::Traits> &item)
 {
@@ -372,12 +318,18 @@ void CommandManager::Populator::DoEndGroup(
       dynamic_cast<const ConditionalGroupItem*>(pItem)
    ) {
       const bool flag = mFlags.back();
-      if (!flag)
+      if (!flag) {
          EndOccultCommands();
+         bMakingOccultCommands = false;
+      }
       mFlags.pop_back();
    }
    else
       assert(IsSection(item));
+}
+
+void CommandManager::Populator::EndMenu()
+{
 }
 
 auto CommandManager::Populator::AllocateEntry(const MenuRegistry::Options &)
@@ -389,178 +341,6 @@ auto CommandManager::Populator::AllocateEntry(const MenuRegistry::Options &)
 void CommandManager::Populator::VisitEntry(CommandListEntry &,
    const MenuRegistry::Options *)
 {
-}
-
-///
-/// Makes a NEW menubar for placement on the top of a project
-/// Names it according to the passed-in string argument.
-///
-/// If the menubar already exists, that's unexpected.
-std::unique_ptr<wxMenuBar>
-CommandManager::Populator::AddMenuBar(const wxString & sMenu)
-{
-   wxMenuBar *menuBar = GetMenuBar(sMenu);
-   if (menuBar) {
-      wxASSERT(false);
-      return {};
-   }
-
-   auto result = std::make_unique<wxMenuBar>();
-   mMenuBarList.emplace_back(sMenu, result.get());
-
-   return result;
-}
-
-///
-/// Retrieves the menubar based on the name given in AddMenuBar(name)
-///
-wxMenuBar * CommandManager::Populator::GetMenuBar(const wxString & sMenu) const
-{
-   for (const auto &entry : mMenuBarList)
-   {
-      if(entry.name == sMenu)
-         return entry.menubar;
-   }
-
-   return NULL;
-}
-
-///
-/// Retrieve the 'current' menubar; either NULL or the
-/// last on in the mMenuBarList.
-wxMenuBar * CommandManager::Populator::CurrentMenuBar() const
-{
-   if(mMenuBarList.empty())
-      return NULL;
-
-   return mMenuBarList.back().menubar;
-}
-
-///
-/// Typically used to switch back and forth
-/// between adding to a hidden menu bar and
-/// adding to one that is visible
-///
-void CommandManager::Populator::PopMenuBar()
-{
-   auto iter = mMenuBarList.end();
-   if ( iter != mMenuBarList.begin() )
-      mMenuBarList.erase( --iter );
-   else
-      wxASSERT( false );
-}
-
-
-///
-/// This starts a NEW menu
-///
-wxMenu *CommandManager::Populator::BeginMenu(const TranslatableString & tName)
-{
-   if (mCurrentMenu)
-      return BeginSubMenu(tName);
-   else
-      return BeginMainMenu(tName);
-}
-
-
-///
-/// This attaches a menu, if it's main, to the menubar
-//  and in all cases ends the menu
-///
-void CommandManager::Populator::EndMenu()
-{
-   if (mSubMenuList.empty())
-      EndMainMenu();
-   else
-      EndSubMenu();
-}
-
-
-///
-/// This starts a NEW menu
-///
-wxMenu *CommandManager::Populator::BeginMainMenu(const TranslatableString & tName)
-{
-   uCurrentMenu = std::make_unique<wxMenu>();
-   mCurrentMenu = uCurrentMenu.get();
-   return mCurrentMenu;
-}
-
-
-///
-/// This attaches a menu to the menubar and ends the menu
-///
-void CommandManager::Populator::EndMainMenu()
-{
-   // Add the menu to the menubar after all menu items have been
-   // added to the menu to allow OSX to rearrange special menu
-   // items like Preferences, About, and Quit.
-   wxASSERT(uCurrentMenu);
-   CurrentMenuBar()->Append(
-      uCurrentMenu.release(), MenuNames()[0].Translation());
-   mCurrentMenu = nullptr;
-}
-
-
-///
-/// This starts a NEW submenu, and names it according to
-/// the function's argument.
-wxMenu* CommandManager::Populator::BeginSubMenu(const TranslatableString & tName)
-{
-   mSubMenuList.emplace_back();
-   mbSeparatorAllowed = false;
-   return mSubMenuList.back().menu.get();
-}
-
-
-///
-/// This function is called after the final item of a SUBmenu is added.
-/// Submenu items are added just like regular menu items; they just happen
-/// after BeginSubMenu() is called but before EndSubMenu() is called.
-void CommandManager::Populator::EndSubMenu()
-{
-   //Save the submenu's information
-   SubMenuListEntry tmpSubMenu{ std::move( mSubMenuList.back() ) };
-
-   //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
-   mSubMenuList.pop_back();
-
-   //Add the submenu to the current menu
-   auto name = MenuNames().back().Translation();
-   CurrentMenu()->Append(0, name, tmpSubMenu.menu.release(),
-      name /* help string */ );
-   mbSeparatorAllowed = true;
-}
-
-
-///
-/// This returns the 'Current' Submenu, which is the one at the
-///  end of the mSubMenuList (or NULL, if it doesn't exist).
-wxMenu * CommandManager::Populator::CurrentSubMenu() const
-{
-   if(mSubMenuList.empty())
-      return NULL;
-
-   return mSubMenuList.back().menu.get();
-}
-
-///
-/// This returns the current menu that we're appending to - note that
-/// it could be a submenu if BeginSubMenu was called and we haven't
-/// reached EndSubMenu yet.
-wxMenu * CommandManager::Populator::CurrentMenu() const
-{
-   if(!mCurrentMenu)
-      return NULL;
-
-   wxMenu * tmpCurrentSubMenu = CurrentSubMenu();
-
-   if(!tmpCurrentSubMenu)
-   {
-      return mCurrentMenu;
-   }
-
-   return tmpCurrentSubMenu;
 }
 
 void CommandManager::UpdateCheckmarks()
@@ -1425,22 +1205,10 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
 
 void CommandManager::Populator::BeginOccultCommands()
 {
-   // To do:  perhaps allow occult item switching at lower levels of the
-   // menu tree.
-   wxASSERT( !CurrentMenu() );
-
-   // Make a temporary menu bar collecting items added after.
-   // This bar will be discarded but other side effects on the command
-   // manager persist.
-   mTempMenuBar = AddMenuBar(wxT("ext-menu"));
-   bMakingOccultCommands = true;
 }
 
 void CommandManager::Populator::EndOccultCommands()
 {
-   PopMenuBar();
-   bMakingOccultCommands = false;
-   mTempMenuBar.reset();
 }
 
 void CommandManager::SetCommandFlags(const CommandID &name,

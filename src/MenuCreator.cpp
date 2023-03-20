@@ -40,6 +40,45 @@
 #include <wx/menu.h>
 #include <wx/windowptr.h>
 
+namespace {
+struct MenuBarListEntry
+{
+   MenuBarListEntry(const wxString &name, wxMenuBar *menubar);
+   ~MenuBarListEntry();
+
+   wxString name;
+   wxWeakRef<wxMenuBar> menubar; // This structure does not assume memory ownership!
+};
+
+struct SubMenuListEntry
+{
+   SubMenuListEntry();
+   SubMenuListEntry(SubMenuListEntry&&) = default;
+   ~SubMenuListEntry();
+
+   TranslatableString name;
+   std::unique_ptr<wxMenu> menu;
+};
+
+MenuBarListEntry::MenuBarListEntry(const wxString &name, wxMenuBar *menubar)
+   : name{ name }, menubar{ menubar }
+{
+}
+
+MenuBarListEntry::~MenuBarListEntry()
+{
+}
+
+SubMenuListEntry::SubMenuListEntry()
+   : menu{ std::make_unique<wxMenu>() }
+{
+}
+
+SubMenuListEntry::~SubMenuListEntry()
+{
+}
+}
+
 MenuCreator::SpecialItem::~SpecialItem() = default;
 
 MenuCreator::MenuCreator(AudacityProject &project)
@@ -117,10 +156,31 @@ struct MenuItemVisitor final : CommandManager::Populator {
       wxMenu *menu{};
    };
 
+private:
    std::unique_ptr<CommandManager::CommandListEntry>
       AllocateEntry(const MenuRegistry::Options &options) final;
    void VisitEntry(CommandManager::CommandListEntry &,
       const MenuRegistry::Options *pOptions) final;
+   void BeginMenu(const TranslatableString & tName) final;
+   void EndMenu() final;
+   void BeginMainMenu(const TranslatableString & tName);
+   void EndMainMenu();
+   void BeginSubMenu(const TranslatableString & tName);
+   void EndSubMenu();
+   void BeginOccultCommands() final;
+   void EndOccultCommands() final;
+
+   std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
+   wxMenuBar * CurrentMenuBar() const;
+   wxMenuBar * GetMenuBar(const wxString & sMenu) const;
+   wxMenu * CurrentSubMenu() const;
+   wxMenu * CurrentMenu() const;
+
+   std::vector<MenuBarListEntry> mMenuBarList;
+   std::vector<SubMenuListEntry> mSubMenuList;
+   std::unique_ptr<wxMenuBar> mTempMenuBar;
+   std::unique_ptr<wxMenu> uCurrentMenu;
+   wxMenu *mCurrentMenu {};
 };
 
 MenuItemVisitor::CommandListEntryEx::~CommandListEntryEx() = default;
@@ -284,6 +344,91 @@ void MenuItemVisitor::VisitEntry(CommandManager::CommandListEntry &entry,
 }
 
 MenuItemVisitor::~MenuItemVisitor() = default;
+
+void MenuItemVisitor::BeginMenu(const TranslatableString & tName)
+{
+   if (mCurrentMenu)
+      return BeginSubMenu(tName);
+   else
+      return BeginMainMenu(tName);
+}
+
+/// This attaches a menu, if it's main, to the menubar
+//  and in all cases ends the menu
+void MenuItemVisitor::EndMenu()
+{
+   if (mSubMenuList.empty())
+      EndMainMenu();
+   else
+      EndSubMenu();
+}
+
+void MenuItemVisitor::BeginMainMenu(const TranslatableString & tName)
+{
+   uCurrentMenu = std::make_unique<wxMenu>();
+   mCurrentMenu = uCurrentMenu.get();
+}
+
+/// This attaches a menu to the menubar and ends the menu
+void MenuItemVisitor::EndMainMenu()
+{
+   // Add the menu to the menubar after all menu items have been
+   // added to the menu to allow OSX to rearrange special menu
+   // items like Preferences, About, and Quit.
+   assert(uCurrentMenu);
+   CurrentMenuBar()->Append(
+      uCurrentMenu.release(), MenuNames()[0].Translation());
+   mCurrentMenu = nullptr;
+}
+
+/// This starts a new submenu, and names it according to
+/// the function's argument.
+void MenuItemVisitor::BeginSubMenu(const TranslatableString & tName)
+{
+   mSubMenuList.emplace_back();
+   mbSeparatorAllowed = false;
+}
+
+/// This function is called after the final item of a SUBmenu is added.
+/// Submenu items are added just like regular menu items; they just happen
+/// after BeginSubMenu() is called but before EndSubMenu() is called.
+void MenuItemVisitor::EndSubMenu()
+{
+   //Save the submenu's information
+   SubMenuListEntry tmpSubMenu{ std::move( mSubMenuList.back() ) };
+
+   //Pop off the NEW submenu so CurrentMenu returns the parent of the submenu
+   mSubMenuList.pop_back();
+
+   //Add the submenu to the current menu
+   auto name = MenuNames().back().Translation();
+   CurrentMenu()->Append(0, name, tmpSubMenu.menu.release(),
+      name /* help string */ );
+   mbSeparatorAllowed = true;
+}
+
+void MenuItemVisitor::BeginOccultCommands()
+{
+   // To do:  perhaps allow occult item switching at lower levels of the
+   // menu tree.
+   assert(!CurrentMenu());
+
+   // Make a temporary menu bar collecting items added after.
+   // This bar will be discarded but other side effects on the command
+   // manager persist.
+   mTempMenuBar = AddMenuBar(wxT("ext-menu"));
+}
+
+void MenuItemVisitor::EndOccultCommands()
+{
+   auto iter = mMenuBarList.end();
+   if (iter != mMenuBarList.begin())
+      mMenuBarList.erase(--iter);
+   else
+      assert(false);
+   mTempMenuBar.reset();
+}
+
 }
 
 void MenuCreator::CreateMenusAndCommands()
@@ -316,7 +461,7 @@ void MenuCreator::RebuildMenuBar()
    {
       wxDialog *dlg =
          wxDynamicCast(wxGetTopLevelParent(wxWindow::FindFocus()), wxDialog);
-      wxASSERT((!dlg || !dlg->IsModal()));
+      assert((!dlg || !dlg->IsModal()));
    }
 #endif
 
@@ -805,4 +950,77 @@ NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & event)
    }
 
    return NormalizedKeyString{ newStr };
+}
+
+///
+/// Makes a NEW menubar for placement on the top of a project
+/// Names it according to the passed-in string argument.
+///
+/// If the menubar already exists, that's unexpected.
+std::unique_ptr<wxMenuBar> MenuItemVisitor::AddMenuBar(const wxString & sMenu)
+{
+   wxMenuBar *menuBar = GetMenuBar(sMenu);
+   if (menuBar) {
+      wxASSERT(false);
+      return {};
+   }
+
+   auto result = std::make_unique<wxMenuBar>();
+   mMenuBarList.emplace_back(sMenu, result.get());
+
+   return result;
+}
+
+///
+/// Retrieves the menubar based on the name given in AddMenuBar(name)
+///
+wxMenuBar *MenuItemVisitor::GetMenuBar(const wxString & sMenu) const
+{
+   for (const auto &entry : mMenuBarList)
+   {
+      if(entry.name == sMenu)
+         return entry.menubar;
+   }
+
+   return NULL;
+}
+
+///
+/// Retrieve the 'current' menubar; either NULL or the
+/// last on in the mMenuBarList.
+wxMenuBar *MenuItemVisitor::CurrentMenuBar() const
+{
+   if(mMenuBarList.empty())
+      return NULL;
+
+   return mMenuBarList.back().menubar;
+}
+
+/// This returns the 'Current' Submenu, which is the one at the
+///  end of the mSubMenuList (or NULL, if it doesn't exist).
+wxMenu *MenuItemVisitor::CurrentSubMenu() const
+{
+   if(mSubMenuList.empty())
+      return NULL;
+
+   return mSubMenuList.back().menu.get();
+}
+
+///
+/// This returns the current menu that we're appending to - note that
+/// it could be a submenu if BeginSubMenu was called and we haven't
+/// reached EndSubMenu yet.
+wxMenu * MenuItemVisitor::CurrentMenu() const
+{
+   if(!mCurrentMenu)
+      return NULL;
+
+   wxMenu * tmpCurrentSubMenu = CurrentSubMenu();
+
+   if(!tmpCurrentSubMenu)
+   {
+      return mCurrentMenu;
+   }
+
+   return tmpCurrentSubMenu;
 }
