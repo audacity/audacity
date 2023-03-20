@@ -144,6 +144,13 @@ public:
        */
       virtual std::unique_ptr<CommandListEntry>
          AllocateEntry(const MenuRegistry::Options &options);
+      //! Override to intercept all visits of items;
+      //! default implementation is noop
+      /*!
+       @param options null if a member of a list of commands
+       */
+      virtual void VisitEntry(CommandListEntry &entry,
+         const MenuRegistry::Options *options);
 
       std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
       wxMenu *BeginMenu(const TranslatableString & tName);
@@ -343,7 +350,6 @@ protected:
    virtual bool ReallyDoQuickCheck();
 
 private:
-   static wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry);
 
    //
    // Loading/Saving

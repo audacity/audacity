@@ -162,6 +162,8 @@ struct MenuItemVisitor final : CommandManager::Populator {
 
    std::unique_ptr<CommandManager::CommandListEntry>
       AllocateEntry(const MenuRegistry::Options &options) final;
+   void VisitEntry(CommandManager::CommandListEntry &,
+      const MenuRegistry::Options *pOptions) final;
 
    std::vector<bool> flags;
 };
@@ -239,6 +241,91 @@ auto MenuItemVisitor::AllocateEntry(const MenuRegistry::Options &options)
    if (!options.global)
       result->menu = CurrentMenu();
    return result;
+}
+
+// A label that may have its accelerator disabled.
+// The problem is that as soon as we show accelerators in the menu, the menu might
+// catch them in normal wxWidgets processing, rather than passing the key presses on
+// to the controls that had the focus.  We would like all the menu accelerators to be
+// disabled, in fact.
+static wxString
+FormatLabelWithDisabledAccel(const CommandManager::CommandListEntry &entry)
+{
+   auto label = entry.label.Translation();
+#if 1
+   wxString Accel;
+   do{
+      if (!entry.key.empty())
+      {
+         // Dummy accelerator that looks Ok in menus but is non functional.
+         // Note the space before the key.
+#ifdef __WXMSW__
+         // using GET to compose menu item name for wxWidgets
+         auto key = entry.key.GET();
+         Accel = wxString("\t ") + key;
+         if( key.StartsWith("Left" )) break;
+         if( key.StartsWith("Right")) break;
+         if( key.StartsWith("Up" )) break;
+         if( key.StartsWith("Down")) break;
+         if( key.StartsWith("Return")) break;
+         if( key.StartsWith("Tab")) break;
+         if( key.StartsWith("Shift+Tab")) break;
+         if( key.StartsWith("0")) break;
+         if( key.StartsWith("1")) break;
+         if( key.StartsWith("2")) break;
+         if( key.StartsWith("3")) break;
+         if( key.StartsWith("4")) break;
+         if( key.StartsWith("5")) break;
+         if( key.StartsWith("6")) break;
+         if( key.StartsWith("7")) break;
+         if( key.StartsWith("8")) break;
+         if( key.StartsWith("9")) break;
+         // Uncomment the below so as not to add the illegal accelerators.
+         // Accel = "";
+         //if( entry.key.StartsWith("Space" )) break;
+         // These ones appear to be illegal already and mess up accelerator processing.
+         if( key.StartsWith("NUMPAD_ENTER" )) break;
+         if( key.StartsWith("Backspace" )) break;
+         if( key.StartsWith("Delete" )) break;
+
+         // https://github.com/audacity/audacity/issues/4457
+         // This code was proposed by David Bailes to fix
+         // the decimal separator input in wxTextCtrls that
+         // are children of the main window.
+         if( key.StartsWith(",") ) break;
+         if( key.StartsWith(".") ) break;
+
+#endif
+         //wxLogDebug("Added Accel:[%s][%s]", entry.label, entry.key );
+         // Normal accelerator.
+         // using GET to compose menu item name for wxWidgets
+         Accel = wxString("\t") + entry.key.GET();
+      }
+   } while (false );
+   label += Accel;
+#endif
+   return label;
+}
+
+void MenuItemVisitor::VisitEntry(CommandManager::CommandListEntry &entry,
+   const MenuRegistry::Options *pOptions)
+{
+   if (!pOptions)
+      // command list item
+      CurrentMenu()->Append(entry.id, entry.FormatLabelForMenu());
+   else if (pOptions->global)
+      ;
+   else {
+      auto ID = entry.id;
+      auto label = FormatLabelWithDisabledAccel(entry);
+      auto &checker = pOptions->checker;
+      if (checker) {
+         CurrentMenu()->AppendCheckItem(ID, label);
+         CurrentMenu()->Check(ID, checker(mProject));
+      }
+      else
+         CurrentMenu()->Append(ID, label);
+   }
 }
 
 MenuItemVisitor::~MenuItemVisitor() = default;
