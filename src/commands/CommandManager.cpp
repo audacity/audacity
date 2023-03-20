@@ -307,6 +307,11 @@ void CommandManager::PurgeData()
    mCommandNumericIDHash.clear();
 }
 
+auto CommandManager::Populator::AllocateEntry(const MenuRegistry::Options &)
+   -> std::unique_ptr<CommandListEntry>
+{
+   return std::make_unique<CommandListEntry>();
+}
 
 ///
 /// Makes a NEW menubar for placement on the top of a project
@@ -488,14 +493,9 @@ void CommandManager::UpdateCheckmarks()
       entry->UpdateCheckmark(mProject);
 }
 
-void CommandManager::CommandListEntry::UpdateCheckmark(AudacityProject &project)
+void CommandManager::CommandListEntry::UpdateCheckmark(AudacityProject &)
 {
-   if (menu && checkmarkFn && !isOccult) {
-      menu->Check(id, checkmarkFn(project));
-   }
 }
-
-
 
 void CommandManager::Populator::AddItem(const CommandID &name,
                              const TranslatableString &label_in,
@@ -516,7 +516,7 @@ void CommandManager::Populator::AddItem(const CommandID &name,
    CommandListEntry *entry =
       NewIdentifier(name,
          label_in,
-         CurrentMenu(), finder, callback,
+         finder, callback,
          {}, 0, 0,
          options);
    entry->useStrictFlags = options.useStrictFlags;
@@ -556,7 +556,6 @@ void CommandManager::Populator::AddItemList(const CommandID & name,
       CommandListEntry *entry =
          NewIdentifier(name,
             items[i].Msgid(),
-            CurrentMenu(),
             finder,
             callback,
             items[i].Internal(),
@@ -577,7 +576,7 @@ void CommandManager::Populator::AddGlobalCommand(const CommandID &name,
                                       const MenuRegistry::Options &options)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, NULL, finder, callback,
+      NewIdentifier(name, label_in, finder, callback,
                     {}, 0, 0, options);
 
    entry->enabled = false;
@@ -610,7 +609,6 @@ int CommandManager::NextIdentifier(int ID)
 ///and keep menus above wxID_HIGHEST
 auto CommandManager::Populator::NewIdentifier(const CommandID & nameIn,
    const TranslatableString & label,
-   wxMenu *menu,
    CommandHandlerFinder finder,
    CommandFunctorPointer callback,
    const CommandID &nameSuffix,
@@ -644,7 +642,8 @@ auto CommandManager::Populator::NewIdentifier(const CommandID & nameIn,
       return prev;
 
    {
-      auto entry = std::make_unique<CommandListEntry>();
+      auto entry = AllocateEntry(options);
+      assert(entry);
 
       TranslatableString labelPrefix;
       if (!mSubMenuList.empty())
@@ -691,7 +690,6 @@ auto CommandManager::Populator::NewIdentifier(const CommandID & nameIn,
       entry->defaultKey = entry->key;
       entry->labelPrefix = labelPrefix;
       entry->labelTop = mCurrentMenuName.Stripped();
-      entry->menu = menu;
       entry->finder = finder;
       entry->callback = callback;
       entry->isEffect = bIsEffect;
@@ -885,36 +883,12 @@ void CommandManager::Enable(CommandListEntry &entry, bool enabled)
 
 void CommandManager::CommandListEntry::Enable(bool b)
 {
-   if (!menu) {
-      enabled = b;
-      return;
-   }
-
-   // LL:  Refresh from real state as we can get out of sync on the
-   //      Mac due to its reluctance to enable menus when in a modal
-   //      state.
-   enabled = menu->IsEnabled(id);
-
-   // Only enabled if needed
-   if (enabled != b) {
-      menu->Enable(id, b);
-      enabled = menu->IsEnabled(id);
-   }
-
+   enabled = b;
 }
 
 void CommandManager::CommandListEntry::EnableMultiItem(bool b)
 {
-   if (menu) {
-      const auto item = menu->FindItem(id);
-      if (item) {
-         item->Enable(b);
-         return;
-      }
-   }
-   // using GET in a log message for devs' eyes only
-   wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
-       id, name.GET());
+   enabled = b;
 }
 
 void CommandManager::Enable(const wxString &name, bool enabled)
@@ -966,8 +940,6 @@ bool CommandManager::GetEnabled(const CommandID &name) const
 
 bool CommandManager::CommandListEntry::GetEnabled() const
 {
-   if (!menu)
-      return false;
    return enabled;
 }
 
@@ -983,11 +955,8 @@ void CommandManager::Check(const CommandID &name, bool checked)
       iter->second->Check(checked);
 }
 
-void CommandManager::CommandListEntry::Check(bool checked)
+void CommandManager::CommandListEntry::Check(bool)
 {
-   if (!menu || isOccult)
-      return;
-   menu->Check(id, checked);
 }
 
 ///Changes the label text of a menu item
@@ -1000,11 +969,9 @@ void CommandManager::Modify(const wxString &name, const TranslatableString &newL
 
 void CommandManager::CommandListEntry::Modify(const TranslatableString &newLabel)
 {
-   if (menu) {
-      label = newLabel;
-      menu->SetLabel(id, FormatLabelForMenu());
-   }
+   label = newLabel;
 }
+
 
 void CommandManager::SetKeyFromName(const CommandID &name,
                                     const NormalizedKeyString &key)

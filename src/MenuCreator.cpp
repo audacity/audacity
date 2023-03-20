@@ -36,6 +36,7 @@
 
 #include <wx/evtloop.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/menu.h>
 #include <wx/windowptr.h>
 
@@ -147,8 +148,98 @@ struct MenuItemVisitor final : CommandManager::Populator {
 
    ~MenuItemVisitor() override;
 
+   struct CommandListEntryEx final : CommandManager::CommandListEntry {
+      ~CommandListEntryEx() final;
+      void UpdateCheckmark(AudacityProject &project) final;
+      void Modify(const TranslatableString &newLabel) final;
+      bool GetEnabled() const final;
+      void Check(bool checked) final;
+      void Enable(bool enabled) final;
+      void EnableMultiItem(bool enabled) final;
+
+      wxMenu *menu{};
+   };
+
+   std::unique_ptr<CommandManager::CommandListEntry>
+      AllocateEntry(const MenuRegistry::Options &options) final;
+
    std::vector<bool> flags;
 };
+
+MenuItemVisitor::CommandListEntryEx::~CommandListEntryEx() = default;
+
+void
+MenuItemVisitor::CommandListEntryEx::UpdateCheckmark(AudacityProject &project)
+{
+   if (menu && checkmarkFn && !isOccult) {
+      menu->Check(id, checkmarkFn(project));
+   }
+}
+
+void
+MenuItemVisitor::CommandListEntryEx::Modify(const TranslatableString &newLabel)
+{
+   if (menu) {
+      label = newLabel;
+      menu->SetLabel(id, FormatLabelForMenu());
+   }
+}
+
+bool MenuItemVisitor::CommandListEntryEx::GetEnabled() const
+{
+   if (!menu)
+      return false;
+   return enabled;
+}
+
+void MenuItemVisitor::CommandListEntryEx::Check(bool checked)
+{
+   if (!menu || isOccult)
+      return;
+   menu->Check(id, checked);
+}
+
+void MenuItemVisitor::CommandListEntryEx::Enable(bool b)
+{
+   if (!menu) {
+      enabled = b;
+      return;
+   }
+
+   // LL:  Refresh from real state as we can get out of sync on the
+   //      Mac due to its reluctance to enable menus when in a modal
+   //      state.
+   enabled = menu->IsEnabled(id);
+
+   // Only enabled if needed
+   if (enabled != b) {
+      menu->Enable(id, b);
+      enabled = menu->IsEnabled(id);
+   }
+}
+
+void MenuItemVisitor::CommandListEntryEx::EnableMultiItem(bool b)
+{
+   if (menu) {
+      const auto item = menu->FindItem(id);
+      if (item) {
+         item->Enable(b);
+         return;
+      }
+   }
+   // using GET in a log message for devs' eyes only
+   wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
+       id, name.GET());
+}
+
+auto MenuItemVisitor::AllocateEntry(const MenuRegistry::Options &options)
+   -> std::unique_ptr<CommandManager::CommandListEntry>
+{
+   auto result = std::make_unique<CommandListEntryEx>();
+   if (!options.global)
+      result->menu = CurrentMenu();
+   return result;
+}
 
 MenuItemVisitor::~MenuItemVisitor() = default;
 }

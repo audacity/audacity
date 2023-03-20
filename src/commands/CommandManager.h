@@ -60,10 +60,11 @@ class AUDACITY_DLL_API CommandManager /* not final */
    , private PrefsListener
 {
 protected:
-   struct CommandListEntry;
    static const TranslatableString COMMAND;
 
 public:
+   struct CommandListEntry;
+
    struct Factory : DefaultedGlobalHook<Factory,
       Callable::SharedPtrFactory<CommandManager, AudacityProject &>::Function
    >{};
@@ -136,6 +137,14 @@ public:
    protected:
       AudacityProject &mProject;
 
+      //! Override to make entries that carry extra information.
+      //! Not called for every visit, because existing items may be reused
+      /*!
+       @post result: `result != nullptr`
+       */
+      virtual std::unique_ptr<CommandListEntry>
+         AllocateEntry(const MenuRegistry::Options &options);
+
       std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
       wxMenu *BeginMenu(const TranslatableString & tName);
       void EndMenu();
@@ -161,7 +170,6 @@ public:
    private:
       CommandListEntry *NewIdentifier(const CommandID & name,
                                       const TranslatableString & label,
-                                      wxMenu *menu,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
                                       const CommandID &nameSuffix,
@@ -353,6 +361,7 @@ private:
 protected:
    AudacityProject &mProject;
 
+public:
    struct CommandListEntry
    {
       static wxString FormatLabelForMenu(
@@ -361,11 +370,17 @@ protected:
 
       virtual ~CommandListEntry();
 
+      //! Default implementation does nothing
       virtual void UpdateCheckmark(AudacityProject &project);
+      //! Default implementation simply assigns `this->label`
       virtual void Modify(const TranslatableString &newLabel);
+      //! Default implementation simply returns `this->enabled`
       virtual bool GetEnabled() const;
+      //! Default implementation does nothing
       virtual void Check(bool checked);
+      //! Default implementation simply assigns `this->enabled`
       virtual void Enable(bool enabled);
+      //! Default implementation simply assigns `this->enabled`
       virtual void EnableMultiItem(bool enabled);
 
       wxString FormatLabelForMenu() const {
@@ -380,7 +395,6 @@ protected:
       TranslatableString label;
       TranslatableString labelPrefix;
       TranslatableString labelTop;
-      wxMenu *menu;
       CommandHandlerFinder finder;
       CommandFunctorPointer callback;
       CommandParameter parameter;
@@ -403,6 +417,8 @@ protected:
       CommandFlag flags;
       bool useStrictFlags{ false };
    };
+
+protected:
    using CommandKeyHash =
       std::unordered_map<NormalizedKeyString, CommandListEntry*>;
    //! @invariant for each [key, value]: for some 0 <= i < NCommands():
