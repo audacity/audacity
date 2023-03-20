@@ -90,6 +90,8 @@ CommandManager.  It holds the callback for one command.
 #include "HelpSystem.h"
 #include "UndoManager.h"
 
+#include <cassert>
+
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
 // MAX_MENU_LEN, we put things in submenus that have MAX_SUBMENU_LEN items in them.
@@ -289,16 +291,19 @@ void CommandManager::SetMaxList()
 
 void CommandManager::PurgeData()
 {
-   // mCommandList contains pointers to CommandListEntrys
-   // mMenuBarList contains MenuBarListEntrys.
-   // mSubMenuList contains SubMenuListEntrys
+   // mCommandList contains unique pointers to CommandListEntrys
    mCommandList.clear();
-   mMenuBarList.clear();
-   mSubMenuList.clear();
-
+ 
+   // Then clear the three hashes of dangling pointers
    mCommandNameHash.clear();
    mCommandKeyHash.clear();
    mCommandNumericIDHash.clear();
+
+   // mMenuBarList contains MenuBarListEntrys.
+   // mSubMenuList contains SubMenuListEntrys
+   mMenuBarList.clear();
+   mSubMenuList.clear();
+
 
    mCurrentMenuName = COMMAND;
    mCurrentID = 17000;
@@ -886,17 +891,17 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
 
          // This menu item is not necessarily in the same menu, because
          // multi-items can be spread across multiple sub menus
-         CommandListEntry *multiEntry = mCommandNumericIDHash[ID];
-         if (multiEntry) {
-            wxMenuItem *item = multiEntry->menu->FindItem(ID);
-
-         if (item) {
-            item->Enable(enabled);
-         } else {
-            // using GET in a log message for devs' eyes only
-            wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
-                ID, entry->name.GET());
-         }
+         if (auto iter = mCommandNumericIDHash.find(ID);
+             iter != mCommandNumericIDHash.end()
+         ) {
+            const auto item = iter->second->menu->FindItem(ID);
+            if (item) {
+               item->Enable(enabled);
+            } else {
+               // using GET in a log message for devs' eyes only
+               wxLogDebug(wxT("Warning: Menu entry with id %i in %s not found"),
+                   ID, entry->name.GET());
+            }
          } else {
             wxLogDebug(wxT("Warning: Menu entry with id %i not in hash"), ID);
          }
@@ -906,14 +911,12 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
 
 void CommandManager::Enable(const wxString &name, bool enabled)
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry || !entry->menu) {
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end() && iter->second->menu)
+      Enable(iter->second, enabled);
+   else
       wxLogDebug(wxT("Warning: Unknown command enabled: '%s'"),
                  (const wxChar*)name);
-      return;
-   }
-
-   Enable(entry, enabled);
 }
 
 void CommandManager::EnableUsingFlags(
@@ -940,16 +943,17 @@ void CommandManager::EnableUsingFlags(
    }
 }
 
-bool CommandManager::GetEnabled(const CommandID &name)
+bool CommandManager::GetEnabled(const CommandID &name) const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry || !entry->menu) {
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end() && iter->second->menu)
+      return iter->second->enabled;
+   else {
       // using GET in a log message for devs' eyes only
       wxLogDebug(wxT("Warning: command doesn't exist: '%s'"),
                  name.GET());
       return false;
    }
-   return entry->enabled;
 }
 
 int CommandManager::GetNumberOfKeysRead() const
@@ -959,34 +963,45 @@ int CommandManager::GetNumberOfKeysRead() const
 
 void CommandManager::Check(const CommandID &name, bool checked)
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry || !entry->menu || entry->isOccult) {
-      return;
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end()
+   ) {
+      const auto entry = iter->second;
+      if (!entry->menu || entry->isOccult) {
+         return;
+      }
+      entry->menu->Check(entry->id, checked);
    }
-   entry->menu->Check(entry->id, checked);
 }
 
 ///Changes the label text of a menu item
 void CommandManager::Modify(const wxString &name, const TranslatableString &newLabel)
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (entry && entry->menu) {
-      entry->label = newLabel;
-      entry->menu->SetLabel(entry->id, FormatLabelForMenu(entry));
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end()
+   ) {
+      const auto entry = iter->second;
+      if (entry->menu) {
+         entry->label = newLabel;
+         entry->menu->SetLabel(entry->id, FormatLabelForMenu(entry));
+      }
    }
 }
 
 void CommandManager::SetKeyFromName(const CommandID &name,
                                     const NormalizedKeyString &key)
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (entry) {
-      entry->key = key;
-   }
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end())
+      iter->second->key = key;
 }
 
 void CommandManager::SetKeyFromIndex(int i, const NormalizedKeyString &key)
 {
+   if (!(0 <= i && i < NCommands())) {
+      assert(false);
+      return;
+   }
    const auto &entry = mCommandList[i];
    entry->key = key;
 }
@@ -1119,16 +1134,21 @@ void CommandManager::RegisterLastTool(const CommandContext& context) {
 }
 
 // Used to invoke Repeat Last Analyzer Process for built-in, non-nyquist plug-ins.
-void CommandManager::DoRepeatProcess(const CommandContext& context, int id) {
+void CommandManager::DoRepeatProcess(const CommandContext& context, int id)
+{
    mLastProcessId = 0;  //Don't Process this as repeat
-   CommandListEntry* entry = mCommandNumericIDHash[id];
-   // Discriminate the union entry->callback by entry->finder
-   if (auto &finder = entry->finder) {
-      auto &handler = finder(context.project);
-      (handler.*(entry->callback.memberFn))(context);
+   if (auto iter = mCommandNumericIDHash.find(id);
+      iter != mCommandNumericIDHash.end()
+   ) {
+      const auto entry = iter->second;
+      // Discriminate the union entry->callback by entry->finder
+      if (auto &finder = entry->finder) {
+         auto &handler = finder(context.project);
+         (handler.*(entry->callback.memberFn))(context);
+      }
+      else
+         (entry->callback.nonMemberFn)(context);
    }
-   else
-      (entry->callback.nonMemberFn)(context);
 }
 
 
@@ -1141,12 +1161,16 @@ bool CommandManager::HandleMenuID(
    int id, CommandFlag flags, bool alwaysEnabled)
 {
    mLastProcessId = id;
-   CommandListEntry *entry = mCommandNumericIDHash[id];
+   if (auto iter = mCommandNumericIDHash.find(id);
+      iter != mCommandNumericIDHash.end()
+   ) {
+      const auto entry = iter->second;
+      if (GlobalMenuHook::Call(entry->name))
+         return true;
 
-   if (GlobalMenuHook::Call(entry->name))
-      return true;
-
-   return HandleCommandEntry(entry, flags, alwaysEnabled);
+      return HandleCommandEntry(entry, flags, alwaysEnabled);
+   }
+   return false;
 }
 
 /// HandleTextualCommand() allows us a limited version of script/batch
@@ -1286,64 +1310,63 @@ void CommandManager::GetAllCommandData(
    }
 }
 
-CommandID CommandManager::GetNameFromNumericID(int id)
+CommandID CommandManager::GetNameFromNumericID(int id) const
 {
-   CommandListEntry *entry = mCommandNumericIDHash[id];
-   if (!entry)
-      return {};
-   return entry->name;
+   if (auto iter = mCommandNumericIDHash.find(id);
+      iter != mCommandNumericIDHash.end())
+      return iter->second->name;
+   return {};
 }
 
-TranslatableString CommandManager::GetLabelFromName(const CommandID &name)
+TranslatableString CommandManager::GetLabelFromName(const CommandID &name) const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry)
-      return {};
-
-   return entry->longLabel;
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end())
+      return iter->second->longLabel;
+   return {};
 }
 
-TranslatableString CommandManager::GetPrefixedLabelFromName(const CommandID &name)
+TranslatableString
+CommandManager::GetPrefixedLabelFromName(const CommandID &name) const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry)
-      return {};
-
-   if (!entry->labelPrefix.empty())
-      return Verbatim( wxT("%s - %s") )
-         .Format(entry->labelPrefix, entry->label)
-            .Stripped();
-   else
-      return entry->label.Stripped();
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end()
+   ) {
+      const auto entry = iter->second;
+      if (!entry->labelPrefix.empty())
+         return Verbatim( wxT("%s - %s") )
+            .Format(entry->labelPrefix, entry->label)
+               .Stripped();
+      else
+         return entry->label.Stripped();
+   }
+   return {};
 }
 
-TranslatableString CommandManager::GetCategoryFromName(const CommandID &name)
+TranslatableString
+CommandManager::GetCategoryFromName(const CommandID &name) const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry)
-      return {};
-
-   return entry->labelTop;
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end())
+      return iter->second->labelTop;
+   return {};
 }
 
 NormalizedKeyString CommandManager::GetKeyFromName(const CommandID &name) const
 {
-   CommandListEntry *entry =
-      // May create a NULL entry
-      const_cast<CommandManager*>(this)->mCommandNameHash[name];
-   if (!entry)
-      return {};
-
-   return entry->key;
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end())
+      return iter->second->key;
+   return {};
 }
 
 NormalizedKeyString CommandManager::GetDefaultKeyFromName(const CommandID &name)
+const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry)
-      return {};
-
-   return entry->defaultKey;
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end())
+      return iter->second->defaultKey;
+   return {};
 }
 
 bool CommandManager::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
@@ -1372,9 +1395,11 @@ bool CommandManager::HandleXMLTag(const std::string_view& tag, const AttributesL
          }
       }
 
-      if (mCommandNameHash[name]) {
-         mCommandNameHash[name]->key = key;
-         mXMLKeysRead++;
+      if (auto iter = mCommandNameHash.find(name);
+         iter != mCommandNameHash.end()
+      ) {
+         iter->second->key = key;
+         ++mXMLKeysRead;
       }
    }
 
@@ -1440,9 +1465,9 @@ void CommandManager::EndOccultCommands()
 void CommandManager::SetCommandFlags(const CommandID &name,
                                      CommandFlag flags)
 {
-   CommandListEntry *entry = mCommandNameHash[name];
-   if (entry)
-      entry->flags = flags;
+   if (auto iter = mCommandNameHash.find(name);
+      iter != mCommandNameHash.end())
+      iter->second->flags = flags;
 }
 
 #if defined(_DEBUG)

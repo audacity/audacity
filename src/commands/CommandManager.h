@@ -117,6 +117,7 @@ public:
    bool mStopIfWasPaused{ true };
 
    AudacityProject &GetProject() { return mProject; }
+   size_t NCommands() const { return mCommandList.size(); }
 
    void SetMaxList();
    void PurgeData();
@@ -170,6 +171,7 @@ public:
    //
 
    void SetKeyFromName(const CommandID &name, const NormalizedKeyString &key);
+   //! @pre `0 <= i && i < NCommands()`
    void SetKeyFromIndex(int i, const NormalizedKeyString &key);
 
    //
@@ -215,15 +217,15 @@ public:
 
    // Each command is assigned a numerical ID for use in wxMenu and wxEvent,
    // which need not be the same across platforms or sessions
-   CommandID GetNameFromNumericID( int id );
+   CommandID GetNameFromNumericID(int id) const;
 
-   TranslatableString GetLabelFromName(const CommandID &name);
-   TranslatableString GetPrefixedLabelFromName(const CommandID &name);
-   TranslatableString GetCategoryFromName(const CommandID &name);
+   TranslatableString GetLabelFromName(const CommandID &name) const;
+   TranslatableString GetPrefixedLabelFromName(const CommandID &name) const;
+   TranslatableString GetCategoryFromName(const CommandID &name) const;
    NormalizedKeyString GetKeyFromName(const CommandID &name) const;
-   NormalizedKeyString GetDefaultKeyFromName(const CommandID &name);
+   NormalizedKeyString GetDefaultKeyFromName(const CommandID &name) const;
 
-   bool GetEnabled(const CommandID &name);
+   bool GetEnabled(const CommandID &name) const;
    int GetNumberOfKeysRead() const;
 
 #if defined(_DEBUG)
@@ -387,6 +389,8 @@ protected:
    };
    using CommandKeyHash =
       std::unordered_map<NormalizedKeyString, CommandListEntry*>;
+   //! @invariant for each [key, value]: for some 0 <= i < NCommands():
+   //! `value == mCommandList[i].get()`
    CommandKeyHash mCommandKeyHash;
 
 private:
@@ -401,12 +405,17 @@ private:
    // point to them,
    // so we don't want the structures to relocate with vector operations.
    using CommandList = std::vector<std::unique_ptr<CommandListEntry>>;
+   //! @invariant for all 0 <= i < NCommands(): `mCommandList[i] != nullptr`
    CommandList  mCommandList;
 
    using CommandNameHash = std::unordered_map<CommandID, CommandListEntry*>;
+   //! @invariant for each [key, value]: for some 0 <= i < NCommands():
+   //! `value == mCommandList[i].get()`
    CommandNameHash  mCommandNameHash;
 
    using CommandNumericIDHash = std::unordered_map<int, CommandListEntry*>;
+   //! @invariant for each [key, value]: for some 0 <= i < NCommands():
+   //! `value == mCommandList[i].get()`
    CommandNumericIDHash  mCommandNumericIDHash;
    int mCurrentID;
    int mXMLKeysRead;
