@@ -58,7 +58,7 @@ private:
 
    AudacityProject &mProject;
 
-   Observer::Subscription mSnapModeChangedSubscription;
+   Observer::Subscription mSnappingChangedSubscription;
    Observer::Subscription mTimeSignatureChangedSubscription;
 };
 

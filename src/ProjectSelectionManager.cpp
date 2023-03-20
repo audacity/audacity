@@ -49,7 +49,7 @@ const ProjectSelectionManager &ProjectSelectionManager::Get(
 
 ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
     : mProject { project }
-    , mSnapModeChangedSubscription { ProjectSnap::Get(project).Subscribe(
+    , mSnappingChangedSubscription { ProjectSnap::Get(project).Subscribe(
          [this](auto&)
          {
             SnapSelection();
