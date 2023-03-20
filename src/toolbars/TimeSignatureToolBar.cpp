@@ -34,6 +34,9 @@
 #include "ProjectTimeSignature.h"
 #include "wxArrayStringEx.h"
 
+#include "ProjectHistory.h"
+#include "UndoManager.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 #endif
@@ -147,16 +150,27 @@ void TimeSignatureToolBar::Populate()
       wxEVT_SPINCTRL,
       [this](auto)
       {
+         const auto tempo = mTempoControl->GetValue();
+         
          ProjectTimeSignature::Get(mProject).SetTempo(
             mTempoControl->GetValue());
+
+         ProjectHistory::Get(mProject).PushState(
+            XO("Tempo Changed"), XO("Tempo Changed"), UndoPush::CONSOLIDATE);
       });
 
    mUpperSignatureControl->Bind(
       wxEVT_SPINCTRL,
       [this](auto)
       {
+         const auto upper = mUpperSignatureControl->GetValue();
+
          ProjectTimeSignature::Get(mProject).SetUpperTimeSignature(
             mUpperSignatureControl->GetValue());
+
+         ProjectHistory::Get(mProject).PushState(
+            XO("Upper Time Signature Changed"),
+            XO("Upper Time Signature Changed"), UndoPush::CONSOLIDATE);
       });
 
    mLowerSignatureControl->Bind(
@@ -164,8 +178,15 @@ void TimeSignatureToolBar::Populate()
       [this](auto)
       {
          long value;
-         if (mLowerSignatureControl->GetValue().ToLong(&value))
-            ProjectTimeSignature::Get(mProject).SetLowerTimeSignature(value);
+         
+         if (!mLowerSignatureControl->GetValue().ToLong(&value))
+            return;
+
+         ProjectTimeSignature::Get(mProject).SetLowerTimeSignature(value);
+
+         ProjectHistory::Get(mProject).PushState(
+            XO("Lower Time Signature Changed"),
+            XO("Lower Time Signature Changed"), UndoPush::CONSOLIDATE);
       });
 
 #if wxUSE_ACCESSIBILITY
@@ -227,6 +248,36 @@ AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a time range of audio */
    TimeSignatureToolBar::ID(), wxT("ShowTimeSignatureTB"), XXO("Time Signature Toolbar (Beta)")
+};
+
+// Undo/redo handling of time signature changes
+// DV: where should this really go?
+
+struct TimeSignatureRestorer final : UndoStateExtension
+{
+   explicit TimeSignatureRestorer(AudacityProject& project)
+       : mTempo { ProjectTimeSignature::Get(project).GetTempo() }
+       , mUpper { ProjectTimeSignature::Get(project).GetUpperTimeSignature() }
+       , mLower { ProjectTimeSignature::Get(project).GetLowerTimeSignature() }
+   {
+   }
+   void RestoreUndoRedoState(AudacityProject& project) override
+   {
+      auto& timeSignature = ProjectTimeSignature::Get(project);
+
+      timeSignature.SetTempo(mTempo);
+      timeSignature.SetUpperTimeSignature(mUpper);
+      timeSignature.SetLowerTimeSignature(mLower);
+   }
+   
+   double mTempo;
+   int mUpper;
+   int mLower;
+};
+
+UndoRedoExtensionRegistry::Entry sEntry {
+   [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
+   { return std::make_shared<TimeSignatureRestorer>(project); }
 };
 }
 
