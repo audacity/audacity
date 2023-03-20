@@ -66,18 +66,19 @@ namespace {
 
 using namespace MenuRegistry;
 
-struct MenuItemVisitor : Visitor<Traits> {
-   MenuItemVisitor(AudacityProject &proj, CommandManager &man)
-   : Visitor<Traits> { std::tuple{
+struct MenuItemVisitor final : CommandManager::Populator {
+   explicit MenuItemVisitor(AudacityProject &proj)
+   : CommandManager::Populator { proj,
+   std::tuple{
       // pre-visit
       std::tuple {
          [this](const MenuItem &menu, auto&) {
-            manager.BeginMenu(menu.GetTitle());
+            BeginMenu(menu.GetTitle());
          },
          [this](const ConditionalGroupItem &conditionalGroup, auto&) {
             const auto flag = conditionalGroup();
             if (!flag)
-               manager.BeginOccultCommands();
+               BeginOccultCommands();
             // to avoid repeated call of condition predicate in EndGroup():
             flags.push_back(flag);
          },
@@ -88,7 +89,7 @@ struct MenuItemVisitor : Visitor<Traits> {
 
       // leaf visit
       [this](const auto &item, const auto&) {
-         const auto pCurrentMenu = manager.CurrentMenu();
+         const auto pCurrentMenu = CurrentMenu();
          if (!pCurrentMenu) {
             // There may have been a mistake in the placement hint that registered
             // this single item.  It's not within any menu.
@@ -96,13 +97,13 @@ struct MenuItemVisitor : Visitor<Traits> {
          }
          else TypeSwitch::VDispatch<void, LeafTypes>(item,
             [&](const CommandItem &command) {
-               manager.AddItem(
+               AddItem(
                   command.name, command.label_in,
                   command.finder, command.callback,
                   command.flags, command.options);
             },
             [&](const CommandGroupItem &commandList) {
-               manager.AddItemList(commandList.name,
+               AddItemList(commandList.name,
                   commandList.items.data(), commandList.items.size(),
                   commandList.finder, commandList.callback,
                   commandList.flags, commandList.isEffect);
@@ -118,12 +119,12 @@ struct MenuItemVisitor : Visitor<Traits> {
       // post-visit
       std::tuple {
          [this](const MenuItem &, const auto&) {
-            manager.EndMenu();
+            EndMenu();
          },
          [this](const ConditionalGroupItem &, const auto&) {
             const bool flag = flags.back();
             if (!flag)
-               manager.EndOccultCommands();
+               EndOccultCommands();
             flags.pop_back();
          },
          [this](auto &item, auto&) {
@@ -132,34 +133,31 @@ struct MenuItemVisitor : Visitor<Traits> {
       }},
 
       [this]() {
-         manager.AddSeparator();
+         AddSeparator();
       }
    }
-   , mProject{ proj }
-   , manager{ man }
-   {}
+   {
+      auto menubar = AddMenuBar(wxT("appmenu"));
+      assert(menubar);
 
-   AudacityProject &mProject;
-   CommandManager &manager;
+      MenuRegistry::Visit(*this, mProject);
+
+      GetProjectFrame(mProject).SetMenuBar(menubar.release());
+   }
+
+   ~MenuItemVisitor() override;
+
    std::vector<bool> flags;
 };
+
+MenuItemVisitor::~MenuItemVisitor() = default;
 }
 
 void MenuCreator::CreateMenusAndCommands()
 {
-   auto &project = mProject;
-
-   // The list of defaults to exclude depends on
-   // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
-   SetMaxList();
-
-   auto menubar = AddMenuBar(wxT("appmenu"));
-   wxASSERT(menubar);
-
-   MenuItemVisitor visitor{ project, *this };
-   MenuRegistry::Visit(visitor, project);
-
-   GetProjectFrame( project ).SetMenuBar(menubar.release());
+   {
+      MenuItemVisitor visitor{ mProject };
+   }
 
    mLastFlags = AlwaysEnabledFlag;
 

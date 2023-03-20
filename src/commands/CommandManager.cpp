@@ -104,8 +104,7 @@ CommandManager.  It holds the callback for one command.
 #define MAX_SUBMENU_LEN 1000
 #endif
 
-#define COMMAND XO("Command")
-
+const TranslatableString CommandManager::COMMAND = XO("Command");
 
 CommandManager::CommandListEntry::~CommandListEntry() = default;
 
@@ -146,6 +145,19 @@ SubMenuListEntry::~SubMenuListEntry()
 {
 }
 
+CommandManager::Populator::Populator(AudacityProject &project,
+   VisitorFunctions<MenuRegistry::Traits> functions,
+   std::function<void()> doSeparator
+)  : Visitor{ move(functions), move(doSeparator) }
+   , mProject{ project }
+{
+   // The list of defaults to exclude depends on
+   // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
+   SetMaxList();
+}
+
+CommandManager::Populator::~Populator() = default;
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   [](AudacityProject &project){
      return CommandManager::Factory::Call(project); }
@@ -166,14 +178,9 @@ const CommandManager &CommandManager::Get(const AudacityProject &project)
 ///
 CommandManager::CommandManager(AudacityProject &project)
    : mProject{ project }
-   , mCurrentID(17000)
-   , mCurrentMenuName(COMMAND)
-   , bMakingOccultCommands( false )
    , mUndoSubscription{ UndoManager::Get(project)
       .Subscribe(*this, &CommandManager::OnUndoRedo) }
 {
-   mbSeparatorAllowed = false;
-   SetMaxList();
    mLastProcessId = 0;
 
    UpdatePrefs();
@@ -198,7 +205,6 @@ void CommandManager::UpdatePrefs()
 ///  menubars
 CommandManager::~CommandManager()
 {
-   //WARNING: This removes menubars that could still be assigned to windows!
    PurgeData();
 }
 
@@ -270,9 +276,8 @@ const std::vector<NormalizedKeyString> &CommandManager::ExcludedList()
 
 // CommandManager needs to know which defaults are standard and which are in the
 // full (max) list.
-void CommandManager::SetMaxList()
+void CommandManager::Populator::SetMaxList()
 {
-
    // This list is a DUPLICATE of the list in
    // KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 
@@ -300,15 +305,6 @@ void CommandManager::PurgeData()
    mCommandNameHash.clear();
    mCommandKeyHash.clear();
    mCommandNumericIDHash.clear();
-
-   // mMenuBarList contains MenuBarListEntrys.
-   // mSubMenuList contains SubMenuListEntrys
-   mMenuBarList.clear();
-   mSubMenuList.clear();
-
-
-   mCurrentMenuName = COMMAND;
-   mCurrentID = 17000;
 }
 
 
@@ -317,7 +313,8 @@ void CommandManager::PurgeData()
 /// Names it according to the passed-in string argument.
 ///
 /// If the menubar already exists, that's unexpected.
-std::unique_ptr<wxMenuBar> CommandManager::AddMenuBar(const wxString & sMenu)
+std::unique_ptr<wxMenuBar>
+CommandManager::Populator::AddMenuBar(const wxString & sMenu)
 {
    wxMenuBar *menuBar = GetMenuBar(sMenu);
    if (menuBar) {
@@ -331,11 +328,10 @@ std::unique_ptr<wxMenuBar> CommandManager::AddMenuBar(const wxString & sMenu)
    return result;
 }
 
-
 ///
 /// Retrieves the menubar based on the name given in AddMenuBar(name)
 ///
-wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
+wxMenuBar * CommandManager::Populator::GetMenuBar(const wxString & sMenu) const
 {
    for (const auto &entry : mMenuBarList)
    {
@@ -346,11 +342,10 @@ wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
    return NULL;
 }
 
-
 ///
 /// Retrieve the 'current' menubar; either NULL or the
 /// last on in the mMenuBarList.
-wxMenuBar * CommandManager::CurrentMenuBar() const
+wxMenuBar * CommandManager::Populator::CurrentMenuBar() const
 {
    if(mMenuBarList.empty())
       return NULL;
@@ -363,7 +358,7 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 /// between adding to a hidden menu bar and
 /// adding to one that is visible
 ///
-void CommandManager::PopMenuBar()
+void CommandManager::Populator::PopMenuBar()
 {
    auto iter = mMenuBarList.end();
    if ( iter != mMenuBarList.begin() )
@@ -376,7 +371,7 @@ void CommandManager::PopMenuBar()
 ///
 /// This starts a NEW menu
 ///
-wxMenu *CommandManager::BeginMenu(const TranslatableString & tName)
+wxMenu *CommandManager::Populator::BeginMenu(const TranslatableString & tName)
 {
    if ( mCurrentMenu )
       return BeginSubMenu( tName );
@@ -389,7 +384,7 @@ wxMenu *CommandManager::BeginMenu(const TranslatableString & tName)
 /// This attaches a menu, if it's main, to the menubar
 //  and in all cases ends the menu
 ///
-void CommandManager::EndMenu()
+void CommandManager::Populator::EndMenu()
 {
    if ( mSubMenuList.empty() )
       EndMainMenu();
@@ -401,7 +396,7 @@ void CommandManager::EndMenu()
 ///
 /// This starts a NEW menu
 ///
-wxMenu *CommandManager::BeginMainMenu(const TranslatableString & tName)
+wxMenu *CommandManager::Populator::BeginMainMenu(const TranslatableString & tName)
 {
    uCurrentMenu = std::make_unique<wxMenu>();
    mCurrentMenu = uCurrentMenu.get();
@@ -413,7 +408,7 @@ wxMenu *CommandManager::BeginMainMenu(const TranslatableString & tName)
 ///
 /// This attaches a menu to the menubar and ends the menu
 ///
-void CommandManager::EndMainMenu()
+void CommandManager::Populator::EndMainMenu()
 {
    // Add the menu to the menubar after all menu items have been
    // added to the menu to allow OSX to rearrange special menu
@@ -429,7 +424,7 @@ void CommandManager::EndMainMenu()
 ///
 /// This starts a NEW submenu, and names it according to
 /// the function's argument.
-wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
+wxMenu* CommandManager::Populator::BeginSubMenu(const TranslatableString & tName)
 {
    mSubMenuList.emplace_back( tName );
    mbSeparatorAllowed = false;
@@ -441,7 +436,7 @@ wxMenu* CommandManager::BeginSubMenu(const TranslatableString & tName)
 /// This function is called after the final item of a SUBmenu is added.
 /// Submenu items are added just like regular menu items; they just happen
 /// after BeginSubMenu() is called but before EndSubMenu() is called.
-void CommandManager::EndSubMenu()
+void CommandManager::Populator::EndSubMenu()
 {
    //Save the submenu's information
    SubMenuListEntry tmpSubMenu{ std::move( mSubMenuList.back() ) };
@@ -460,7 +455,7 @@ void CommandManager::EndSubMenu()
 ///
 /// This returns the 'Current' Submenu, which is the one at the
 ///  end of the mSubMenuList (or NULL, if it doesn't exist).
-wxMenu * CommandManager::CurrentSubMenu() const
+wxMenu * CommandManager::Populator::CurrentSubMenu() const
 {
    if(mSubMenuList.empty())
       return NULL;
@@ -472,7 +467,7 @@ wxMenu * CommandManager::CurrentSubMenu() const
 /// This returns the current menu that we're appending to - note that
 /// it could be a submenu if BeginSubMenu was called and we haven't
 /// reached EndSubMenu yet.
-wxMenu * CommandManager::CurrentMenu() const
+wxMenu * CommandManager::Populator::CurrentMenu() const
 {
    if(!mCurrentMenu)
       return NULL;
@@ -502,7 +497,7 @@ void CommandManager::CommandListEntry::UpdateCheckmark(AudacityProject &project)
 
 
 
-void CommandManager::AddItem(const CommandID &name,
+void CommandManager::Populator::AddItem(const CommandID &name,
                              const TranslatableString &label_in,
                              CommandHandlerFinder finder,
                              CommandFunctorPointer callback,
@@ -528,7 +523,7 @@ void CommandManager::AddItem(const CommandID &name,
    int ID = entry->id;
    wxString label = FormatLabelWithDisabledAccel(entry);
 
-   SetCommandFlags(name, flags);
+   Get(mProject).SetCommandFlags(name, flags);
 
 
    auto &checker = options.checker;
@@ -549,7 +544,7 @@ void CommandManager::AddItem(const CommandID &name,
 /// with its position in the list as the index number.
 /// When you call Enable on this command name, it will enable or disable
 /// all of the items at once.
-void CommandManager::AddItemList(const CommandID & name,
+void CommandManager::Populator::AddItemList(const CommandID & name,
                                  const ComponentInterfaceSymbol items[],
                                  size_t nItems,
                                  CommandHandlerFinder finder,
@@ -575,7 +570,7 @@ void CommandManager::AddItemList(const CommandID & name,
    }
 }
 
-void CommandManager::AddGlobalCommand(const CommandID &name,
+void CommandManager::Populator::AddGlobalCommand(const CommandID &name,
                                       const TranslatableString &label_in,
                                       CommandHandlerFinder finder,
                                       CommandFunctorPointer callback,
@@ -590,7 +585,7 @@ void CommandManager::AddGlobalCommand(const CommandID &name,
    entry->flags = AlwaysEnabledFlag;
 }
 
-void CommandManager::AddSeparator()
+void CommandManager::Populator::AddSeparator()
 {
    if( mbSeparatorAllowed )
       CurrentMenu()->AppendSeparator();
@@ -613,7 +608,7 @@ int CommandManager::NextIdentifier(int ID)
 ///WARNING: Does this conflict with the identifiers set for controls/windows?
 ///If it does, a workaround may be to keep controls below wxID_LOWEST
 ///and keep menus above wxID_HIGHEST
-auto CommandManager::NewIdentifier(const CommandID & nameIn,
+auto CommandManager::Populator::NewIdentifier(const CommandID & nameIn,
    const TranslatableString & label,
    wxMenu *menu,
    CommandHandlerFinder finder,
@@ -624,6 +619,8 @@ auto CommandManager::NewIdentifier(const CommandID & nameIn,
    const MenuRegistry::Options &options)
    -> CommandListEntry*
 {
+   auto &cm = Get(mProject);
+
    bool excludeFromMacros =
       (options.allowInMacros == 0) ||
       ((options.allowInMacros == -1) && label.MSGID().GET().Contains("..."));
@@ -639,7 +636,7 @@ auto CommandManager::NewIdentifier(const CommandID & nameIn,
    auto name = nameIn;
 
    // If we have the identifier already, reuse it.
-   CommandListEntry *prev = mCommandNameHash[name];
+   CommandListEntry *prev = cm.mCommandNameHash[name];
    if (!prev);
    else if( prev->label != label );
    else if( multi );
@@ -728,16 +725,16 @@ auto CommandManager::NewIdentifier(const CommandID & nameIn,
             NormalizedKeyString{ gPrefs->Read(path, entry->key) };
       }
 
-      mCommandList.push_back(std::move(entry));
+      cm.mCommandList.push_back(std::move(entry));
       // Don't use the variable entry eny more!
    }
 
    // New variable
-   CommandListEntry *entry = &*mCommandList.back();
-   mCommandNumericIDHash[entry->id] = entry;
+   CommandListEntry *entry = &*cm.mCommandList.back();
+   cm.mCommandNumericIDHash[entry->id] = entry;
 
 #if defined(_DEBUG)
-   prev = mCommandNameHash[entry->name];
+   prev = cm.mCommandNameHash[entry->name];
    if (prev) {
       // Under Linux it looks as if we may ask for a newID for the same command
       // more than once.  So it's only an error if two different commands
@@ -758,10 +755,10 @@ auto CommandManager::NewIdentifier(const CommandID & nameIn,
       }
    }
 #endif
-   mCommandNameHash[entry->name] = entry;
+   cm.mCommandNameHash[entry->name] = entry;
 
    if (!entry->key.empty()) {
-      mCommandKeyHash[entry->key] = entry;
+      cm.mCommandKeyHash[entry->key] = entry;
    }
 
    return entry;
@@ -803,7 +800,8 @@ wxString CommandManager::CommandListEntry::FormatLabelForMenu(
 // catch them in normal wxWidgets processing, rather than passing the key presses on
 // to the controls that had the focus.  We would like all the menu accelerators to be
 // disabled, in fact.
-wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *entry) const
+wxString
+CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *entry)
 {
    auto label = entry->label.Translation();
 #if 1
@@ -1462,7 +1460,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("audacitykeyboard"));
 }
 
-void CommandManager::BeginOccultCommands()
+void CommandManager::Populator::BeginOccultCommands()
 {
    // To do:  perhaps allow occult item switching at lower levels of the
    // menu tree.
@@ -1475,7 +1473,7 @@ void CommandManager::BeginOccultCommands()
    bMakingOccultCommands = true;
 }
 
-void CommandManager::EndOccultCommands()
+void CommandManager::Populator::EndOccultCommands()
 {
    PopMenuBar();
    bMakingOccultCommands = false;
