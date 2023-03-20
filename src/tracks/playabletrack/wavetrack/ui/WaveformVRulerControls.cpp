@@ -54,31 +54,30 @@ void RegenerateLinearDBValues(int dBRange, float min, float max, int height)
 
    double centerSpacingMark = 0;
 
-   for (double major = 0.1; major < 2; major += .1) {
+   for (double major = 0.1; major < .95; major += .1) {
       double val = std::round(major * 10) / 10;
       double mappedVal = std::trunc(-dBRange * val);
-      double pixVal = mappedVal < -dBRange ? - 2 * dBRange - mappedVal : mappedVal;
-      double pixDist = fabs(CENTER - ((1 - DB_TO_LINEAR(pixVal)) * CENTER)) / SIZE_SCALE;
+      double pixDist = CENTER - ((1 - DB_TO_LINEAR(mappedVal)) * CENTER) / SIZE_SCALE;
       if (pixDist > CENTER_SPACING) {
-         if (major - EPSILON <= 1)
-            centerSpacingMark = major;
-         if (fabs(major - 1) > EPSILON)
-            majorValues.push_back(mappedVal);
+         centerSpacingMark = major;
+         majorValues.push_back(mappedVal);
+         majorValues.push_back(-2 * dBRange - mappedVal);
       }
    }
-   for (double minor = 0.05; minor <= 1.95 + EPSILON; minor += .1) {
+   for (double minor = 0.05; minor < 1 ; minor += .1) {
       double val = std::round(minor * 100) / 100;
       double mappedVal = std::trunc(-dBRange * val);
-      double spacing = fabs(fabs(1 - minor) - 1);
-      if (spacing < centerSpacingMark) {
+      if (minor < centerSpacingMark) {
          minorValues.push_back(mappedVal);
+         minorValues.push_back(-2 * dBRange - mappedVal);
       }
    }
-   for (int minorMinor = 1; minorMinor < 2 * dBRange; minorMinor++) {
+   for (int minorMinor = 1; minorMinor < dBRange - EPSILON; minorMinor++) {
       double absDist = fabs(fabs(dBRange - minorMinor) - dBRange) / dBRange;
       if (absDist < centerSpacingMark) {
          if ((minorMinor % (int)std::round(dBRange / 20)) != 0) {
             minorMinorValues.push_back(-minorMinor);
+            minorMinorValues.push_back(-2 * dBRange + minorMinor);
          }
       }
    }
