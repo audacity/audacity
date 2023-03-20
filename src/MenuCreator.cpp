@@ -97,23 +97,12 @@ struct MenuItemVisitor final : CommandManager::Populator {
             assert(false);
          }
          else TypeSwitch::VDispatch<void, LeafTypes>(item,
-            [&](const CommandItem &command) {
-               AddItem(
-                  command.name, command.label_in,
-                  command.finder, command.callback,
-                  command.flags, command.options);
-            },
-            [&](const CommandGroupItem &commandList) {
-               AddItemList(commandList.name,
-                  commandList.items.data(), commandList.items.size(),
-                  commandList.finder, commandList.callback,
-                  commandList.flags, commandList.isEffect);
-            },
             [&](const SpecialItem &special) {
                if (auto pSpecial =
                   dynamic_cast<const MenuCreator::SpecialItem*>(&special))
                   pSpecial->fn(mProject, *pCurrentMenu);
-            }
+            },
+            [this](auto &item){ DoVisit(item); }
          );
       },
 

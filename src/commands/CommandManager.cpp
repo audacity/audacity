@@ -307,6 +307,28 @@ void CommandManager::PurgeData()
    mCommandNumericIDHash.clear();
 }
 
+void CommandManager::Populator::DoVisit(const Registry::SingleItem &item)
+{
+   using namespace MenuRegistry;
+   auto pItem = &item;
+   if (const auto pCommand = dynamic_cast<const CommandItem*>(pItem)) {
+      auto &options = pCommand->options;
+      AddItem(
+         pCommand->name, pCommand->label_in,
+         pCommand->finder, pCommand->callback,
+         pCommand->flags, options);
+   }
+   else
+   if (const auto pCommandList = dynamic_cast<const CommandGroupItem*>(pItem)) {
+      AddItemList(pCommandList->name,
+         pCommandList->items.data(), pCommandList->items.size(),
+         pCommandList->finder, pCommandList->callback,
+         pCommandList->flags, pCommandList->isEffect);
+   }
+   else
+      wxASSERT( false );
+}
+
 auto CommandManager::Populator::AllocateEntry(const MenuRegistry::Options &)
    -> std::unique_ptr<CommandListEntry>
 {

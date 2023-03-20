@@ -137,6 +137,9 @@ public:
    protected:
       AudacityProject &mProject;
 
+      void DoVisit(const Registry::SingleItem &item);
+
+      //! Called by DoVisit
       //! Override to make entries that carry extra information.
       //! Not called for every visit, because existing items may be reused
       /*!
@@ -144,6 +147,7 @@ public:
        */
       virtual std::unique_ptr<CommandListEntry>
          AllocateEntry(const MenuRegistry::Options &options);
+      //! Called by DoVisit
       //! Override to intercept all visits of items;
       //! default implementation is noop
       /*!
@@ -155,6 +159,7 @@ public:
       std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
       wxMenu *BeginMenu(const TranslatableString & tName);
       void EndMenu();
+   private:
       void AddItemList(const CommandID & name,
                        const ComponentInterfaceSymbol items[],
                        size_t nItems,
@@ -168,6 +173,7 @@ public:
                    CommandFunctorPointer callback,
                    CommandFlag flags,
                    const MenuRegistry::Options &options = {});
+   protected:
       void AddSeparator();
    private:
       void PopMenuBar();
