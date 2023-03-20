@@ -70,30 +70,12 @@ using namespace MenuRegistry;
 struct MenuItemVisitor final : CommandManager::Populator {
    explicit MenuItemVisitor(AudacityProject &proj)
    : CommandManager::Populator { proj,
-   std::tuple{
-      // pre-visit
-      std::tuple {
-         [this](const MenuItem &menu, auto&) {
-            BeginMenu(menu.GetTitle());
-         },
-         [this](const ConditionalGroupItem &conditionalGroup, auto&) {
-            const auto flag = conditionalGroup();
-            if (!flag)
-               BeginOccultCommands();
-            // to avoid repeated call of condition predicate in EndGroup():
-            flags.push_back(flag);
-         },
-         [this](auto &item, auto&) {
-            assert(IsSection(item));
-         }
-      },
-
       // leaf visit
       [this](const auto &item, const auto&) {
          const auto pCurrentMenu = CurrentMenu();
          if (!pCurrentMenu) {
-            // There may have been a mistake in the placement hint that registered
-            // this single item.  It's not within any menu.
+            // There may have been a mistake in the placement hint that
+            // registered this single item.  It's not within any menu.
             assert(false);
          }
          else TypeSwitch::VDispatch<void, LeafTypes>(item,
@@ -105,22 +87,6 @@ struct MenuItemVisitor final : CommandManager::Populator {
             [this](auto &item){ DoVisit(item); }
          );
       },
-
-      // post-visit
-      std::tuple {
-         [this](const MenuItem &, const auto&) {
-            EndMenu();
-         },
-         [this](const ConditionalGroupItem &, const auto&) {
-            const bool flag = flags.back();
-            if (!flag)
-               EndOccultCommands();
-            flags.pop_back();
-         },
-         [this](auto &item, auto&) {
-            assert(IsSection(item));
-         }
-      }},
 
       [this]{
          if (mbSeparatorAllowed)
@@ -155,8 +121,6 @@ struct MenuItemVisitor final : CommandManager::Populator {
       AllocateEntry(const MenuRegistry::Options &options) final;
    void VisitEntry(CommandManager::CommandListEntry &,
       const MenuRegistry::Options *pOptions) final;
-
-   std::vector<bool> flags;
 };
 
 MenuItemVisitor::CommandListEntryEx::~CommandListEntryEx() = default;

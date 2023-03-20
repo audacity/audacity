@@ -146,9 +146,16 @@ SubMenuListEntry::~SubMenuListEntry()
 }
 
 CommandManager::Populator::Populator(AudacityProject &project,
-   VisitorFunctions<MenuRegistry::Traits> functions,
+   LeafVisitor leafVisitor,
    std::function<void()> doSeparator
-)  : Visitor{ move(functions), move(doSeparator) }
+)  : Visitor{
+      std::tuple {
+         [this](auto &item, auto &){ DoBeginGroup(item); },
+         move(leafVisitor),
+         [this](auto &item, auto &){ DoEndGroup(item); },
+      },
+      move(doSeparator)
+   }
    , mProject{ project }
 {
    // The list of defaults to exclude depends on
@@ -307,6 +314,27 @@ void CommandManager::PurgeData()
    mCommandNumericIDHash.clear();
 }
 
+void CommandManager::Populator::DoBeginGroup(
+   const MenuRegistry::GroupItem<MenuRegistry::Traits> &item)
+{
+   using namespace MenuRegistry;
+   auto pItem = &item;
+   if (const auto pMenu = dynamic_cast<const MenuItem*>( pItem )) {
+      BeginMenu(pMenu->GetTitle());
+   }
+   else if (const auto pConditionalGroup =
+      dynamic_cast<const ConditionalGroupItem*>( pItem )
+   ) {
+      const auto flag = (*pConditionalGroup)();
+      if (!flag)
+         BeginOccultCommands();
+      // to avoid repeated call of condition predicate in EndGroup():
+      mFlags.push_back(flag);
+   }
+   else
+      assert(IsSection(item));
+}
+
 void CommandManager::Populator::DoVisit(const Registry::SingleItem &item)
 {
    using namespace MenuRegistry;
@@ -327,6 +355,27 @@ void CommandManager::Populator::DoVisit(const Registry::SingleItem &item)
    }
    else
       wxASSERT( false );
+}
+
+void CommandManager::Populator::DoEndGroup(
+   const MenuRegistry::GroupItem<MenuRegistry::Traits> &item)
+{
+   using namespace MenuRegistry;
+   auto pItem = &item;
+   if (const auto pMenu = dynamic_cast<const MenuItem*>(pItem)) {
+      EndMenu();
+   }
+   else
+   if (const auto pConditionalGroup =
+      dynamic_cast<const ConditionalGroupItem*>(pItem)
+   ) {
+      const bool flag = mFlags.back();
+      if (!flag)
+         EndOccultCommands();
+      mFlags.pop_back();
+   }
+   else
+      assert(IsSection(item));
 }
 
 auto CommandManager::Populator::AllocateEntry(const MenuRegistry::Options &)

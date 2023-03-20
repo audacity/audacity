@@ -129,15 +129,21 @@ public:
    struct AUDACITY_DLL_API Populator
       : MenuRegistry::Visitor<MenuRegistry::Traits>
    {
+      using LeafVisitor = std::function<
+         void(const Registry::SingleItem &, const Registry::Path&)>;
       Populator(AudacityProject &project,
-         VisitorFunctions<MenuRegistry::Traits> functions,
+         LeafVisitor leafVisitor,
          std::function<void()> doSeparator);
       virtual ~Populator();
 
    protected:
       AudacityProject &mProject;
 
+      void DoBeginGroup(
+         const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
       void DoVisit(const Registry::SingleItem &item);
+      void DoEndGroup(
+         const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
 
       //! Called by DoVisit
       //! Override to make entries that carry extra information.
@@ -219,6 +225,7 @@ public:
       wxMenu *mCurrentMenu {};
       bool bMakingOccultCommands{ false };
       std::unique_ptr< wxMenuBar > mTempMenuBar;
+      std::vector<bool> mFlags;
    };
 
 public:
