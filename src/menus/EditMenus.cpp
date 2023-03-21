@@ -1095,7 +1095,7 @@ auto EditMenu()
          MenuCreator::Special( wxT("UndoItemsUpdateStep"),
          [](AudacityProject &project, wxMenu&) {
             // Change names in the CommandManager as a side-effect
-            MenuCreator::Get(project).ModifyUndoMenuItems();
+            CommandManager::Get(project).ModifyUndoMenuItems();
          })
       ),
 

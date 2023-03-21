@@ -319,6 +319,16 @@ public:
    wxString FormatLabelForMenu(
       const CommandID &id, const TranslatableString *pLabel) const;
 
+   void ModifyUndoMenuItems();
+
+   // checkActive is a temporary hack that should be removed as soon as we
+   // get multiple effect preview working
+   void UpdateMenus(bool checkActive = true);
+
+protected:
+   //! Default implementation returns true
+   virtual bool ReallyDoQuickCheck();
+
 private:
    wxString FormatLabelForMenu(const CommandListEntry *entry) const;
    wxString FormatLabelForMenu(
@@ -336,6 +346,8 @@ private:
 
    void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
       CommandFlag flagsRequired);
+
+   void OnUndoRedo(struct UndoRedoMessage);
 
 protected:
    AudacityProject &mProject;
@@ -409,5 +421,7 @@ private:
 
    bool bMakingOccultCommands;
    std::unique_ptr< wxMenuBar > mTempMenuBar;
+
+   const Observer::Subscription mUndoSubscription;
 };
 #endif

@@ -32,7 +32,6 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "FileNames.h"
-#include "MenuCreator.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "SelectFile.h"
@@ -47,6 +46,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #include "CommandContext.h"
 #include "commands/CommandDispatch.h"
+#include "commands/CommandManager.h"
 
 MacroCommands::MacroCommands( AudacityProject &project )
 : mProject{ project }
@@ -584,7 +584,7 @@ bool MacroCommands::ApplyCommandInBatchMode(
    AudacityProject *project = &mProject;
    auto &settings = ProjectSettings::Get( *project );
    // Recalc flags and enable items that may have become enabled.
-   MenuCreator::Get(*project).UpdateMenus(false);
+   CommandManager::Get(*project).UpdateMenus(false);
    // enter batch mode...
    project->mBatchMode++;
    auto cleanup = finally( [&] {

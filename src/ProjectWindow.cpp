@@ -12,7 +12,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "MenuCreator.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -27,6 +26,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
+#include "commands/CommandManager.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
@@ -1223,7 +1223,7 @@ void ProjectWindow::FixScrollbars()
       trackPanel.Refresh(false);
    }
 
-   MenuCreator::Get( project ).UpdateMenus();
+   CommandManager::Get(project).UpdateMenus();
 
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
@@ -1623,7 +1623,7 @@ void ProjectWindow::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
    if (!pProject)
       return;
    auto &project = *pProject;
-   MenuCreator::Get( project ).UpdateMenus();
+   CommandManager::Get(project).UpdateMenus();
 }
 
 void ProjectWindow::OnActivate(wxActivateEvent & event)

@@ -85,8 +85,10 @@ CommandManager.  It holds the callback for one command.
 
 #include "BasicUI.h"
 #include "Project.h"
+#include "ProjectHistory.h"
 #include "AudacityMessageBox.h"
 #include "HelpSystem.h"
+#include "UndoManager.h"
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
@@ -163,6 +165,8 @@ CommandManager::CommandManager(AudacityProject &project)
    , mCurrentID(17000)
    , mCurrentMenuName(COMMAND)
    , bMakingOccultCommands( false )
+   , mUndoSubscription{ UndoManager::Get(project)
+      .Subscribe(*this, &CommandManager::OnUndoRedo) }
 {
    mbSeparatorAllowed = false;
    SetMaxList();
@@ -1666,4 +1670,92 @@ void CommandManager::TellUserWhyDisallowed(
       untranslatedTitle,
       reason,
       helpPage);
+}
+
+void CommandManager::ModifyUndoMenuItems()
+{
+   auto &project = mProject;
+   TranslatableString desc;
+   auto &undoManager = UndoManager::Get( project );
+   int cur = undoManager.GetCurrentState();
+
+   if (undoManager.UndoAvailable()) {
+      undoManager.GetShortDescription(cur, &desc);
+      Modify(wxT("Undo"), XXO("&Undo %s").Format(desc));
+      Enable(wxT("Undo"), ProjectHistory::Get(project).UndoAvailable());
+   }
+   else {
+      Modify(wxT("Undo"), XXO("&Undo"));
+   }
+
+   if (undoManager.RedoAvailable()) {
+      undoManager.GetShortDescription(cur+1, &desc);
+      Modify(wxT("Redo"), XXO("&Redo %s").Format( desc ));
+      Enable(wxT("Redo"), ProjectHistory::Get(project).RedoAvailable());
+   }
+   else {
+      Modify(wxT("Redo"), XXO("&Redo"));
+      Enable(wxT("Redo"), false);
+   }
+}
+
+void CommandManager::OnUndoRedo(UndoRedoMessage message)
+{
+   switch (message.type) {
+   case UndoRedoMessage::UndoOrRedo:
+   case UndoRedoMessage::Reset:
+   case UndoRedoMessage::Pushed:
+   case UndoRedoMessage::Renamed:
+      break;
+   default:
+      return;
+   }
+   ModifyUndoMenuItems();
+   UpdateMenus();
+}
+
+// checkActive is a temporary hack that should be removed as soon as we
+// get multiple effect preview working
+void CommandManager::UpdateMenus(bool checkActive)
+{
+   auto &project = mProject;
+
+   bool quick = checkActive && ReallyDoQuickCheck();
+   auto flags = GetUpdateFlags(quick);
+   // Return from this function if nothing's changed since
+   // the last time we were here.
+   if (flags == mLastFlags)
+      return;
+   mLastFlags = flags;
+
+   auto flags2 = flags;
+
+   // We can enable some extra items if we have select-all-on-none.
+   //EXPLAIN-ME: Why is this here rather than in GetUpdateFlags()?
+   //ANSWER: Because flags2 is used in the menu enable/disable.
+   //The effect still needs flags to determine whether it will need
+   //to actually do the 'select all' to make the command valid.
+
+   for ( const auto &enabler : RegisteredMenuItemEnabler::Enablers() ) {
+      auto actual = enabler.actualFlags();
+      if (
+         enabler.applicable( project ) && (flags & actual) == actual
+      )
+         flags2 |= enabler.possibleFlags();
+   }
+
+   // With select-all-on-none, some items that we don't want enabled may have
+   // been enabled, since we changed the flags.  Here we manually disable them.
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+   EnableUsingFlags(
+      flags2, // the "lax" flags
+      (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
+   );
+
+   Publish({});
+}
+
+bool CommandManager::ReallyDoQuickCheck()
+{
+   return true;
 }

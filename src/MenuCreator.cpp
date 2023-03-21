@@ -31,9 +31,7 @@
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
 #include "Registry.h"
-#include "ProjectHistory.h"
 #include "ProjectWindows.h"
-#include "UndoManager.h"
 #include "AudacityMessageBox.h"
 
 #include <wx/evtloop.h>
@@ -46,8 +44,6 @@ MenuCreator::SpecialItem::~SpecialItem() = default;
 MenuCreator::MenuCreator(AudacityProject &project)
    : CommandManager{ project }
 {
-   mUndoSubscription = UndoManager::Get(project)
-      .Subscribe(*this, &MenuCreator::OnUndoRedo);
 }
 
 MenuCreator::~MenuCreator() = default;
@@ -172,34 +168,6 @@ void MenuCreator::CreateMenusAndCommands()
 #endif
 }
 
-// TODO: This surely belongs in CommandManager?
-void MenuCreator::ModifyUndoMenuItems()
-{
-   auto &project = mProject;
-   TranslatableString desc;
-   auto &undoManager = UndoManager::Get( project );
-   int cur = undoManager.GetCurrentState();
-
-   if (undoManager.UndoAvailable()) {
-      undoManager.GetShortDescription(cur, &desc);
-      Modify(wxT("Undo"), XXO("&Undo %s").Format(desc));
-      Enable(wxT("Undo"), ProjectHistory::Get(project).UndoAvailable());
-   }
-   else {
-      Modify(wxT("Undo"), XXO("&Undo"));
-   }
-
-   if (undoManager.RedoAvailable()) {
-      undoManager.GetShortDescription(cur+1, &desc);
-      Modify(wxT("Redo"), XXO("&Redo %s").Format( desc ));
-      Enable(wxT("Redo"), ProjectHistory::Get(project).RedoAvailable());
-   }
-   else {
-      Modify(wxT("Redo"), XXO("&Redo"));
-      Enable(wxT("Redo"), false);
-   }
-}
-
 // Get hackcess to a protected method
 class wxFrameEx : public wxFrame
 {
@@ -243,60 +211,11 @@ void MenuCreator::ExecuteCommand(const CommandContext &context,
    return CommandManager::ExecuteCommand(context, evt, entry);
 }
 
-void MenuCreator::OnUndoRedo(UndoRedoMessage message)
-{
-   switch (message.type) {
-   case UndoRedoMessage::UndoOrRedo:
-   case UndoRedoMessage::Reset:
-   case UndoRedoMessage::Pushed:
-   case UndoRedoMessage::Renamed:
-      break;
-   default:
-      return;
-   }
-   ModifyUndoMenuItems();
-   UpdateMenus();
-}
-
-// checkActive is a temporary hack that should be removed as soon as we
+// a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void MenuCreator::UpdateMenus( bool checkActive )
+bool MenuCreator::ReallyDoQuickCheck()
 {
-   auto &project = mProject;
-
-   bool quick = checkActive && !GetProjectFrame(mProject).IsActive();
-   auto flags = GetUpdateFlags(quick);
-   // Return from this function if nothing's changed since
-   // the last time we were here.
-   if (flags == mLastFlags)
-      return;
-   mLastFlags = flags;
-
-   auto flags2 = flags;
-
-   // We can enable some extra items if we have select-all-on-none.
-   //EXPLAIN-ME: Why is this here rather than in GetUpdateFlags()?
-   //ANSWER: Because flags2 is used in the menu enable/disable.
-   //The effect still needs flags to determine whether it will need
-   //to actually do the 'select all' to make the command valid.
-
-   for ( const auto &enabler : RegisteredMenuItemEnabler::Enablers() ) {
-      auto actual = enabler.actualFlags();
-      if (
-         enabler.applicable( project ) && (flags & actual) == actual
-      )
-         flags2 |= enabler.possibleFlags();
-   }
-
-   // With select-all-on-none, some items that we don't want enabled may have
-   // been enabled, since we changed the flags.  Here we manually disable them.
-   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-   EnableUsingFlags(
-      flags2, // the "lax" flags
-      (mWhatIfNoSelection == 0 ? flags2 : flags) // the "strict" flags
-   );
-
-   Publish({});
+   return !GetProjectFrame(mProject).IsActive();
 }
 
 /// The following method moves to the previous track
