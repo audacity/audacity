@@ -16,6 +16,8 @@
 #ifndef __AUDACITY_NUMERIC_CONVERTER__
 #define __AUDACITY_NUMERIC_CONVERTER__
 
+#include <memory>
+
 #include "NumericConverterType.h"
 #include "NumericConverterFormatter.h"
 
@@ -62,7 +64,6 @@ public:
                     const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
-   NumericConverter(const NumericConverter&);
 
    virtual ~NumericConverter();
 
@@ -80,8 +81,6 @@ private:
    void ParseFormatString(const TranslatableString & untranslatedFormat);
 
 public:
-   void PrintDebugInfo();
-
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
 
@@ -122,20 +121,19 @@ protected:
    double         mMaxValue;
    double         mInvalidValue;
 
+   double         mSampleRate { 1.0 };
+
+   std::unique_ptr<NumericConverterFormatter>
+                 mFormatter;
+   
    FormatStrings mFormatString;
 
-   std::vector<NumericField> mFields;
-   wxString       mPrefix;
    // Formatted mValue, by ValueToControls().
    wxString       mValueString;
-
-   double         mScalingFactor;
-   double         mSampleRate;
-   bool           mNtscDrop;
-
-   std::vector<DigitInfo> mDigits;
+   std::vector<wxString> mFieldValueStrings;
 
    const BuiltinFormatString *mBuiltinFormatStrings;
+   
    const size_t mNBuiltins;
    int mDefaultNdx;
 
