@@ -33,7 +33,7 @@ namespace Steinberg
 /**
  * \brief Provides a set of useful functions, used across the Audacity VST3 module
  */
-class VST3Utils final
+class VST3_API VST3Utils final
 {
 public:
 
