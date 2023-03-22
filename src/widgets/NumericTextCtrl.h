@@ -64,7 +64,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
    };
 
    NumericTextCtrl(wxWindow *parent, wxWindowID winid,
-                   NumericConverter::Type type,
+                   NumericConverterType type,
                    const NumericFormatSymbol &formatName = {},
                    double value = 0.0,
                    double sampleRate = 44100,
@@ -170,7 +170,7 @@ private:
    // Keeps track of extra fractional scrollwheel steps
    double         mScrollRemainder;
 
-   NumericConverter::Type mType;
+   NumericConverterType mType;
 
    bool           mAllowInvalidValue;
 

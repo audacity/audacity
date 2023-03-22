@@ -250,7 +250,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
          CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
-         NumericConverter::TIME, formatId );
+         NumericConverterType::TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(),
@@ -329,7 +329,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
             mpFromLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), wxID_ANY,
-                                 NumericConverter::TIME,
+                                 NumericConverterType::TIME,
                                  mFormat,
                                  mFromLength,
                                  mProjectRate,
@@ -347,7 +347,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
             mpToLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), ID_ToLength,
-                                 NumericConverter::TIME,
+                                 NumericConverterType::TIME,
                                  mFormat,
                                  mToLength,
                                  mProjectRate);
@@ -676,7 +676,7 @@ void EffectChangeSpeed::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(evt))
 void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
    mFormat = NumericConverter::LookupFormat(
-      NumericConverter::TIME, evt.GetString() );
+      NumericConverterType::TIME, evt.GetString() );
 
    mpFromLengthCtrl->SetFormatName(mFormat);
    // Update From/To Length controls (precision has changed).

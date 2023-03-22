@@ -16,6 +16,7 @@
 #ifndef __AUDACITY_NUMERIC_CONVERTER__
 #define __AUDACITY_NUMERIC_CONVERTER__
 
+#include "NumericConverterType.h"
 #include "ComponentInterfaceSymbol.h"
 #include "TranslatableString.h"
 
@@ -92,9 +93,9 @@ public:
    static NumericFormatSymbol HundredthsFormat();
    static NumericFormatSymbol HertzFormat();
    
-   static NumericFormatSymbol LookupFormat( Type type, const wxString& id);
+   static NumericFormatSymbol LookupFormat(NumericConverterType type, const wxString& id);
 
-   NumericConverter(Type type,
+   NumericConverter(NumericConverterType type,
                     const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
@@ -150,7 +151,7 @@ public:
    void Decrement(int focusedDigit = -1);
 
 protected:
-   Type           mType;
+   NumericConverterType mType;
 
    double         mValue;
 

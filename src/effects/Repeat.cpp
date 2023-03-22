@@ -233,7 +233,7 @@ void EffectRepeat::DisplayNewTime()
    wxString str;
    mRepeatCount->GetValue().ToLong(&l);
 
-   NumericConverter nc(NumericConverter::TIME,
+   NumericConverter nc(NumericConverterType::TIME,
                        GetSelectionFormat(),
                        mT1 - mT0,
                        mProjectRate);

@@ -364,7 +364,7 @@ void EffectDtmf::Editor::PopulateOrExchange(ShuttleGui & S,
       auto &extra = settings.extra;
       mDtmfDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
-                         NumericConverter::TIME,
+                         NumericConverterType::TIME,
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
                          projectRate,

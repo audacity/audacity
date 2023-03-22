@@ -214,7 +214,7 @@ void SelectionBar::AddTime(
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
       : NumericFormatSymbol{};
    auto pCtrl = safenew NumericTextCtrl(
-      this, id, NumericConverter::TIME, formatName, 0.0, mRate);
+      this, id, NumericConverterType::TIME, formatName, 0.0, mRate);
 
    pCtrl->Bind(
       wxEVT_TEXT,
@@ -312,7 +312,7 @@ void SelectionBar::UpdatePrefs()
    // update.
    wxCommandEvent e;
    e.SetString(NumericTextCtrl::LookupFormat(
-               NumericConverter::TIME,
+               NumericConverterType::TIME,
                gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
 
@@ -420,7 +420,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
          std::distance(mTimeControls.begin(), focusedCtrlIt) :
          -1;
 
-   auto format = NumericTextCtrl::LookupFormat(NumericConverter::TIME, evt.GetString());
+   auto format = NumericTextCtrl::LookupFormat(NumericConverterType::TIME, evt.GetString());
 
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())

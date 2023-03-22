@@ -544,29 +544,29 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
 };
 
    const BuiltinFormatString *ChooseBuiltinFormatStrings
-      (NumericConverter::Type type)
+      (NumericConverterType type)
    {
       switch (type) {
          default:
-         case NumericConverter::TIME:
+      case NumericConverterType::TIME:
             return TimeConverterFormats_;
-         case NumericConverter::FREQUENCY:
+      case NumericConverterType::FREQUENCY:
             return FrequencyConverterFormats_;
-         case NumericConverter::BANDWIDTH:
+      case NumericConverterType::BANDWIDTH:
             return BandwidthConverterFormats_;
       }
    }
 
    size_t ChooseNBuiltinFormatStrings
-      (NumericConverter::Type type)
+      (NumericConverterType type)
    {
       switch (type) {
          default:
-         case NumericConverter::TIME:
+      case NumericConverterType::TIME:
             return WXSIZEOF(TimeConverterFormats_);
-         case NumericConverter::FREQUENCY:
+      case NumericConverterType::FREQUENCY:
             return WXSIZEOF(FrequencyConverterFormats_);
-         case NumericConverter::BANDWIDTH:
+      case NumericConverterType::BANDWIDTH:
             return WXSIZEOF(BandwidthConverterFormats_);
       }
    }
@@ -591,10 +591,11 @@ NumericFormatSymbol NumericConverter::HundredthsFormat()
 NumericFormatSymbol NumericConverter::HertzFormat()
 { return FrequencyConverterFormats_[0].name; }
 
-NumericFormatSymbol NumericConverter::LookupFormat( Type type, const wxString& id)
+NumericFormatSymbol
+NumericConverter::LookupFormat(NumericConverterType type, const wxString& id)
 {
    if (id.empty()) {
-      if (type == TIME)
+            if (type == NumericConverterType::TIME)
          return DefaultSelectionFormat();
       else
          return ChooseBuiltinFormatStrings(type)[0].name;
@@ -609,7 +610,7 @@ NumericFormatSymbol NumericConverter::LookupFormat( Type type, const wxString& i
    }
 }
 
-NumericConverter::NumericConverter(Type type,
+NumericConverter::NumericConverter(NumericConverterType type,
                                    const NumericFormatSymbol & formatName,
                                    double value,
                                    double sampleRate)
@@ -624,7 +625,7 @@ NumericConverter::NumericConverter(Type type,
 
    mType = type;
 
-   if (type == NumericConverter::TIME )
+   if (type == NumericConverterType::TIME )
       mDefaultNdx = 5; // Default to "hh:mm:ss + milliseconds".
 
    mScalingFactor = 1.0f;
@@ -829,7 +830,7 @@ void NumericConverter::ValueToControls()
 void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true */)
 {
    //rawValue = 4.9995f; Only for testing!
-   if (mType == TIME)
+   if (mType == NumericConverterType::TIME)
       rawValue =
          floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f))
             / mSampleRate; // put on a sample

@@ -196,7 +196,7 @@ std::unique_ptr<EffectEditor> EffectNoise::PopulateOrExchange(
       auto &extra = access.Get().extra;
       mNoiseDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
-                         NumericConverter::TIME,
+                         NumericConverterType::TIME,
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
                          mProjectRate,

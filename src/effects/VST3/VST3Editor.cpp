@@ -30,7 +30,7 @@ VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
       auto &extra = access.Get().extra;
       mDuration = safenew NumericTextCtrl(
             parent, wxID_ANY,
-            NumericConverter::TIME,
+            NumericConverterType::TIME,
             extra.GetDurationFormat(),
             extra.GetDuration(),
             mWrapper.mSetup.sampleRate,

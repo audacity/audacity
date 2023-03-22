@@ -171,7 +171,7 @@ double GridMove
    auto &viewInfo = ViewInfo::Get( project );
    auto format = formats.GetSelectionFormat();
 
-   NumericConverter nc(NumericConverter::TIME, format, t, rate);
+   NumericConverter nc(NumericConverterType::TIME, format, t, rate);
 
    // Try incrementing/decrementing the value; if we've moved far enough we're
    // done

@@ -35,19 +35,19 @@ const ProjectNumericFormats &ProjectNumericFormats::Get(
 
 ProjectNumericFormats::ProjectNumericFormats()
    : mSelectionFormat{ NumericConverter::LookupFormat(
-      NumericConverter::TIME,
+      NumericConverterType::TIME,
       gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
    }
    , mFrequencySelectionFormatName{ NumericConverter::LookupFormat(
-      NumericConverter::FREQUENCY,
+      NumericConverterType::FREQUENCY,
       gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
    }
    , mBandwidthSelectionFormatName{ NumericConverter::LookupFormat(
-      NumericConverter::BANDWIDTH,
+      NumericConverterType::BANDWIDTH,
       gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
    }
    , mAudioTimeFormat{ NumericConverter::LookupFormat(
-      NumericConverter::TIME,
+      NumericConverterType::TIME,
       gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
    }
 {}
@@ -119,16 +119,16 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
    // preference file.
    { "selectionformat", [](auto &formats, auto value){
       formats.SetSelectionFormat(NumericConverter::LookupFormat(
-              NumericConverter::TIME, value.ToWString()));
+              NumericConverterType::TIME, value.ToWString()));
    } },
    { "frequencyformat", [](auto &formats, auto value){
       formats.SetFrequencySelectionFormatName(
               NumericConverter::LookupFormat(
-                 NumericConverter::FREQUENCY, value.ToWString()));
+                 NumericConverterType::FREQUENCY, value.ToWString()));
    } },
    { "bandwidthformat", [](auto &formats, auto value){
       formats.SetBandwidthSelectionFormatName(
               NumericConverter::LookupFormat(
-                 NumericConverter::BANDWIDTH, value.ToWString()));
+                 NumericConverterType::BANDWIDTH, value.ToWString()));
    } },
 } };

@@ -181,7 +181,7 @@ void SpectralSelectionBar::Populate()
 
       mCenterCtrl = safenew NumericTextCtrl(
          this, OnCenterID,
-         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericConverterType::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
@@ -190,7 +190,7 @@ void SpectralSelectionBar::Populate()
 
       mWidthCtrl = safenew NumericTextCtrl(
          this, OnWidthID,
-         NumericConverter::BANDWIDTH, bandwidthFormatName, 0.0, 44100.0,
+         NumericConverterType::BANDWIDTH, bandwidthFormatName, 0.0, 44100.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, -1.0 )
       );
@@ -199,7 +199,7 @@ void SpectralSelectionBar::Populate()
 
       mLowCtrl = safenew NumericTextCtrl(
          this, OnLowID,
-         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericConverterType::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
@@ -208,7 +208,7 @@ void SpectralSelectionBar::Populate()
 
       mHighCtrl = safenew NumericTextCtrl(
          this, OnHighID,
-         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericConverterType::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );

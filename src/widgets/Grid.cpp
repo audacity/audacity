@@ -119,7 +119,7 @@ class GridAx final : public WindowAccessible
 #endif
 
 NumericEditor::NumericEditor
-   (NumericConverter::Type type, const NumericFormatSymbol &format, double rate)
+   (NumericConverterType type, const NumericFormatSymbol &format, double rate)
 {
    mType = type;
    mFormat = format;
@@ -142,7 +142,7 @@ void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handle
       mRate,
       NumericTextCtrl::Options{}
          .AutoPos(true)
-         .InvalidValue(mType == NumericTextCtrl::FREQUENCY,
+         .InvalidValue(mType == NumericConverterType::FREQUENCY,
                        SelectedRegion::UndefinedFrequency)
    );
    m_control = control;
@@ -485,15 +485,15 @@ Grid::Grid(wxWindow *parent,
    // RegisterDataType takes ownership of renderer and editor
 
    RegisterDataType(GRID_VALUE_TIME,
-                    safenew NumericRenderer{ NumericConverter::TIME },
+                    safenew NumericRenderer{ NumericConverterType::TIME },
                     safenew NumericEditor
-                      { NumericTextCtrl::TIME,
+                      { NumericConverterType::TIME,
                         NumericConverter::SecondsFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
-                    safenew NumericRenderer{ NumericConverter::FREQUENCY },
+                    safenew NumericRenderer{ NumericConverterType::FREQUENCY },
                     safenew NumericEditor
-                    { NumericTextCtrl::FREQUENCY,
+                    { NumericConverterType::FREQUENCY,
                       NumericConverter::HertzFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_CHOICE,
@@ -968,7 +968,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
       if (c && dt && df && ( c == dt || c == df)) {        
          double value;
          v.ToDouble(&value);
-         NumericConverter converter(c == dt ? NumericConverter::TIME : NumericConverter::FREQUENCY,
+         NumericConverter converter(c == dt ? NumericConverterType::TIME : NumericConverterType::FREQUENCY,
                         c->GetFormat(),
                         value,
                         c->GetRate() );

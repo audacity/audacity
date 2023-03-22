@@ -417,7 +417,7 @@ bool LV2Editor::BuildPlain(EffectSettingsAccess &access)
          sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
          auto &extra = settings.extra;
          mDuration = safenew NumericTextCtrl(w, ID_Duration,
-            NumericConverter::TIME, extra.GetDurationFormat(),
+            NumericConverterType::TIME, extra.GetDurationFormat(),
             extra.GetDuration(), mSampleRate,
             NumericTextCtrl::Options{}.AutoPos(true));
          mDuration->SetName( XO("Duration") );

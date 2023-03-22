@@ -39,7 +39,7 @@ class AUDACITY_DLL_API NumericEditor /* not final */ : public wxGridCellEditor
 public:
 
    NumericEditor
-      (NumericConverter::Type type, const NumericFormatSymbol &format, double rate);
+      (NumericConverterType type, const NumericFormatSymbol &format, double rate);
 
    ~NumericEditor();
 
@@ -73,7 +73,7 @@ public:
 
    NumericFormatSymbol mFormat;
    double mRate;
-   NumericConverter::Type mType;
+   NumericConverterType mType;
    double mOld;
    wxString mOldString;
    wxString mValueAsString;
@@ -86,7 +86,7 @@ public:
 class NumericRenderer final : public wxGridCellRenderer
 {
  public:
-   NumericRenderer(NumericConverter::Type type) : mType{ type } {}
+   NumericRenderer(NumericConverterType type) : mType{ type } {}
    ~NumericRenderer() override;
 
    void Draw(wxGrid &grid,
@@ -106,7 +106,7 @@ class NumericRenderer final : public wxGridCellRenderer
    wxGridCellRenderer *Clone() const override;
 
 private:
-   NumericConverter::Type mType;
+   NumericConverterType mType;
 };
 
 /**********************************************************************//**

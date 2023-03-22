@@ -530,7 +530,7 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFormat = NumericConverter::LookupFormat(
-      NumericConverter::TIME, event.GetString() );
+      NumericConverterType::TIME, event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);
@@ -540,7 +540,7 @@ void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFreqFormat = NumericConverter::LookupFormat(
-      NumericConverter::FREQUENCY, event.GetString() );
+      NumericConverterType::FREQUENCY, event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);

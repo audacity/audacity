@@ -142,7 +142,7 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 
 NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
-                           NumericConverter::Type type,
+                           NumericConverterType type,
                            const NumericFormatSymbol &formatName,
                            double timeValue,
                            double sampleRate,
@@ -578,13 +578,13 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
       
          int eventType = 0;
          switch (mType) {
-            case NumericConverter::TIME:
+            case NumericConverterType::TIME:
                eventType = EVT_TIMETEXTCTRL_UPDATED;
                break;
-            case NumericConverter::FREQUENCY:
+            case NumericConverterType::FREQUENCY:
                eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
                break;
-            case NumericConverter::BANDWIDTH:
+            case NumericConverterType::BANDWIDTH:
                eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
                break;
             default:
@@ -1106,7 +1106,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
          // it represents fractions of a second.
          // PRL: click a digit of the control and use left and right arrow keys
          // to exercise this code
-         const bool isTime = (mCtrl->mType == NumericTextCtrl::TIME);
+         const bool isTime = (mCtrl->mType == NumericConverterType::TIME);
          if (field > 1 && field == cnt) {
             if (mFields[field - 2].label == decimal) {
                int digits = mFields[field - 1].digits;

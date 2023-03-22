@@ -12,6 +12,7 @@ set( SOURCES
    Beats.h
    NumericConverter.cpp
    NumericConverter.h
+   NumericConverterType.h
    ProjectNumericFormats.cpp
    ProjectNumericFormats.h
    ProjectTimeSignature.cpp

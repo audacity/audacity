@@ -2649,7 +2649,7 @@ void VSTEffectEditor::BuildPlain(EffectSettingsAccess &access, EffectType effect
             auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(scroller, ID_Duration,
-                  NumericConverter::TIME,
+                  NumericConverterType::TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
                   projectRate,
