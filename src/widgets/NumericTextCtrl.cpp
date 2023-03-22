@@ -638,7 +638,7 @@ void NumericTextCtrl::OnMouse(wxMouseEvent &event)
       mScrollRemainder = steps - floor(steps);
       steps = floor(steps);
 
-      Adjust((int)fabs(steps), steps < 0.0 ? -1 : 1);
+      Adjust((int)fabs(steps), steps < 0.0 ? -1 : 1, mFocusedDigit);
       Updated();
    }
 }
@@ -787,12 +787,12 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    }
 
    else if (!mReadOnly && keyCode == WXK_UP) {
-      Adjust(1, 1);
+      Adjust(1, 1, mFocusedDigit);
       Updated();
    }
 
    else if (!mReadOnly && keyCode == WXK_DOWN) {
-      Adjust(1, -1);
+      Adjust(1, -1, mFocusedDigit);
       Updated();
    }
 

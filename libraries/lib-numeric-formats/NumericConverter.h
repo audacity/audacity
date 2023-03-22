@@ -155,10 +155,10 @@ public:
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
-   void Adjust(int steps, int dir);
+   void Adjust(int steps, int dir, int focusedDigit);
 
-   void Increment();
-   void Decrement();
+   void Increment(int focusedDigit = -1);
+   void Decrement(int focusedDigit = -1);
 
 protected:
    Type           mType;
@@ -182,11 +182,13 @@ protected:
    double         mSampleRate;
    bool           mNtscDrop;
 
-   int            mFocusedDigit;
    std::vector<DigitInfo> mDigits;
 
    const BuiltinFormatString *mBuiltinFormatStrings;
    const size_t mNBuiltins;
    int mDefaultNdx;
+
+private:
+   int GetSafeFocusedDigit(int focusedDigit) const noexcept;
 };
 #endif // __AUDACITY_NUMERIC_CONVERTER__

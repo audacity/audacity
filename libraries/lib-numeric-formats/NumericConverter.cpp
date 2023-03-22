@@ -620,8 +620,6 @@ NumericConverter::NumericConverter(Type type,
    mSampleRate = 1.0f;
    mNtscDrop = false;
 
-   mFocusedDigit = 0;
-
    mValue = value; // used in SetSampleRate, reassigned later
 
    SetSampleRate(sampleRate);
@@ -1113,25 +1111,33 @@ wxString NumericConverter::GetString()
    return mValueString;
 }
 
-void NumericConverter::Increment()
+int NumericConverter::GetSafeFocusedDigit(int focusedDigit) const noexcept
 {
-   mFocusedDigit = mDigits.size() - 1;
-   Adjust(1, 1);
+   if (focusedDigit < 0)
+      return int(mDigits.size() - 1);
+   else
+      return std::clamp<int>(focusedDigit, 0, mDigits.size() - 1);
 }
 
-void NumericConverter::Decrement()
+void NumericConverter::Increment(int focusedDigit)
 {
-   mFocusedDigit = mDigits.size() - 1;
-   Adjust(1, -1);
+   Adjust(1, 1, focusedDigit);
 }
 
-void NumericConverter::Adjust(int steps, int dir)
+void NumericConverter::Decrement(int focusedDigit)
+{
+   Adjust(1, -1, focusedDigit);
+}
+
+void NumericConverter::Adjust(int steps, int dir, int focusedDigit)
 {
    // It is possible and "valid" for steps to be zero if a
    // high precision device is being used and wxWidgets supports
    // reporting a higher precision...Mac wx3 does.
    if (steps == 0)
       return;
+
+   focusedDigit = GetSafeFocusedDigit(focusedDigit);
 
    wxASSERT(dir == -1 || dir == 1);
    wxASSERT(steps > 0);
@@ -1142,8 +1148,8 @@ void NumericConverter::Adjust(int steps, int dir)
    {
       for (size_t i = 0; i < mFields.size(); i++)
       {
-         if ((mDigits[mFocusedDigit].pos >= mFields[i].pos) &&
-             (mDigits[mFocusedDigit].pos < mFields[i].pos + mFields[i].digits))
+         if ((mDigits[focusedDigit].pos >= mFields[i].pos) &&
+             (mDigits[focusedDigit].pos < mFields[i].pos + mFields[i].digits))
          {   //it's this field
             if (!mNtscDrop)
             {
@@ -1161,7 +1167,7 @@ void NumericConverter::Adjust(int steps, int dir)
 
             mValue *= mScalingFactor;
 
-            double mult = pow(10., mFields[i].digits - (mDigits[mFocusedDigit].pos - mFields[i].pos) - 1);
+            double mult = pow(10., mFields[i].digits - (mDigits[focusedDigit].pos - mFields[i].pos) - 1);
             if (mFields[i].frac)
             {
                mValue += ((mult / (double)mFields[i].base) * dir);

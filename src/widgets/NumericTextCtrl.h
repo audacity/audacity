@@ -154,6 +154,8 @@ private:
 
    int            mLastField;
 
+   int            mFocusedDigit { 0 };
+
    // If true, the focus will be set to the first non-zero digit
    bool           mAutoPos;
 
