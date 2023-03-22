@@ -10,7 +10,6 @@ Paul Licameli split from TimeTrackVZoomHandle.cpp
 
 
 #include "TimeTrackVZoomHandle.h"
-#include "TimeTrackVRulerControls.h"
 #include "TimeTrackControls.h"
 
 #include "../../../HitTestResult.h"
@@ -19,7 +18,7 @@ Paul Licameli split from TimeTrackVZoomHandle.cpp
 #include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
-#include "../../../TimeTrack.h"
+#include "TimeTrack.h"
 
 TimeTrackVZoomHandle::TimeTrackVZoomHandle(
    const std::shared_ptr<TimeTrack> &pTrack, const wxRect &rect, int y)

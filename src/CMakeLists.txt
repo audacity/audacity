@@ -231,8 +231,6 @@ list( APPEND SOURCES
       ThemedWrappers.h
       TimeDialog.cpp
       TimeDialog.h
-      TimeTrack.cpp
-      TimeTrack.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TrackArt.cpp
@@ -1508,6 +1506,7 @@ set( AUDACITY_LIBRARIES
    lib-project-file-io-interface
    lib-effects-interface
    lib-wx-init-interface
+   lib-time-track-interface
 )
 
 if (${_OPT}use_ffmpeg)

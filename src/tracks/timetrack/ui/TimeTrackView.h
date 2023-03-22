@@ -21,13 +21,13 @@ class TimeTrackView final : public CommonTrackView
    TimeTrackView &operator=( const TimeTrackView& ) = delete;
 
 public:
-   explicit
-   TimeTrackView( const std::shared_ptr<Track> &pTrack );
+   explicit TimeTrackView(const std::shared_ptr<Track> &pTrack);
    ~TimeTrackView() override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
 private:
+
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
