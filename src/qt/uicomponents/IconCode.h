@@ -41,6 +41,8 @@ class IconCode
 
 public:
    enum class Code : char16_t {
+      SMALL_ARROW_DOWN = 0xEF12,
+
       ZOOM_OUT = 0xEF16,
       ZOOM_IN = 0xEF18,
 

@@ -21,6 +21,8 @@ set(MODULE_QML_SOURCES
    qml/StyledIconLabel.qml
    qml/StyledTextLabel.qml
    qml/ToolbarGrip.qml
+   qml/TimeControl.qml
+   qml/TimeControlTester.qml
    qml/ToolbarSeparator.qml
    qml/VolumeControl.qml
    qml/VolumeControlTester.qml
