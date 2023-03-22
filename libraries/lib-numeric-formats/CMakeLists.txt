@@ -19,6 +19,9 @@ set( SOURCES
    ProjectNumericFormats.h
    ProjectTimeSignature.cpp
    ProjectTimeSignature.h
+
+   formatters/ParsedNumericConverterFormatter.cpp
+   formatters/ParsedNumericConverterFormatter.h
 )
 set( LIBRARIES
    lib-math-interface
