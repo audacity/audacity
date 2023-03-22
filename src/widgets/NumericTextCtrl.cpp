@@ -366,8 +366,6 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
       // Set the character position past the prefix
       int pos = mPrefix.length();
 
-      // Reset digits array
-      mDigits.clear();
       mBoxes.clear();
 
       // Figure out the x-position of each field and label in the box
@@ -380,7 +378,6 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 
          // Remember metrics for each digit
          for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
-            mDigits.push_back(DigitInfo { i, j, pos });
             mBoxes.push_back(wxRect { x, mBorderTop, boxW, boxH });
             x += boxW;
             pos++;
