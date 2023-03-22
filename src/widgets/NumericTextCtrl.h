@@ -130,8 +130,16 @@ private:
    void Updated(bool keyup = false);
 
 private:
+   struct FieldPosition final
+   {
+         int fieldX; // x-position of the field on-screen
+         int fieldW; // width of the field on-screen
+         int labelX; // x-position of the label on-screen
+   };
 
    std::vector<wxRect> mBoxes;
+   std::vector<FieldPosition> mFieldPositions;
+   
    wxRect GetBox(size_t ii) const;
 
    bool           mMenuEnabled;

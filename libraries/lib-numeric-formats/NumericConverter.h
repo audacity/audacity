@@ -45,9 +45,6 @@ public:
    int range; // then take modulo this
    int digits;
    int pos;   // Index of this field in the ValueString
-   int fieldX; // x-position of the field on-screen
-   int fieldW; // width of the field on-screen
-   int labelX; // x-position of the label on-screen
    bool zeropad;
    wxString label;
    wxString formatStr;

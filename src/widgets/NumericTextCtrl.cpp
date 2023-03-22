@@ -367,6 +367,8 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
       int pos = mPrefix.length();
 
       mBoxes.clear();
+      // No need to clear - all the data will be reinitialized anyway
+      mFieldPositions.resize(mFields.size());
 
       // Figure out the x-position of each field and label in the box
       for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
@@ -374,7 +376,7 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
          dc.GetTextExtent(mFields[i].label, &strW, &strH);
 
          // Remember this field's x-position
-         mFields[i].fieldX = x;
+         mFieldPositions[i].fieldX = x;
 
          // Remember metrics for each digit
          for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
@@ -384,13 +386,13 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
          }
 
          // Remember the label's x-position
-         mFields[i].labelX = x;
+         mFieldPositions[i].labelX = x;
 
          // Bump to end of label
          x += strW;
 
          // Remember the label's width
-         mFields[i].fieldW = x;
+         mFieldPositions[i].fieldW = x;
 
          // Bump character position to end of label
          pos += mFields[i].label.length();
@@ -460,8 +462,7 @@ bool NumericTextCtrl::Layout()
    memDC.SetBrush( wxNullBrush );
 
    for(i = 0; i < mFields.size(); i++)
-      memDC.DrawText(mFields[i].label,
-                     mFields[i].labelX, labelTop);
+      memDC.DrawText(mFields[i].label, mFieldPositions[i].labelX, labelTop);
 
    if (mMenuEnabled) {
       wxRect r(mWidth, 0, mButtonWidth - 1, mHeight - 1);
