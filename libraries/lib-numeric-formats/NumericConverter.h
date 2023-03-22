@@ -63,7 +63,6 @@ public:
 
    enum Type {
       TIME,
-      ATIME, // for Audio time control.
       FREQUENCY,
       BANDWIDTH,
    };
