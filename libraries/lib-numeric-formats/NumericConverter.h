@@ -54,14 +54,8 @@ public:
    wxString str;
 };
 
-struct DigitInfo
+struct NUMERIC_FORMATS_API DigitInfo final
 {
-   DigitInfo(int _field, int _index, int _pos)
-   {
-      field = _field;
-      index = _index;
-      pos = _pos;
-   }
    int field; // Which field
    int index; // Index of this digit within the field
    int pos;   // Position in the ValueString

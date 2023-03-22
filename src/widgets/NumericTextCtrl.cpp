@@ -380,8 +380,8 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 
          // Remember metrics for each digit
          for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
-            mDigits.push_back(DigitInfo(i, j, pos));
-            mBoxes.push_back(wxRect{ x, mBorderTop, boxW, boxH });
+            mDigits.push_back(DigitInfo { i, j, pos });
+            mBoxes.push_back(wxRect { x, mBorderTop, boxW, boxH });
             x += boxW;
             pos++;
          }

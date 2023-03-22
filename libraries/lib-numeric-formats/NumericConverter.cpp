@@ -779,7 +779,7 @@ void NumericConverter::ParseFormatString(
       mFields[i].pos = pos;
 
       for(j=0; j<mFields[i].digits; j++) {
-         mDigits.push_back(DigitInfo(i, j, pos));
+         mDigits.push_back(DigitInfo { int(i), j, pos });
          mValueTemplate += wxT("0");
          mValueMask += wxT("0");
          pos++;
