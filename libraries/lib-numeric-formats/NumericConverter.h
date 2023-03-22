@@ -162,8 +162,6 @@ protected:
 
    std::vector<NumericField> mFields;
    wxString       mPrefix;
-   wxString       mValueTemplate;
-   wxString       mValueMask;
    // Formatted mValue, by ValueToControls().
    wxString       mValueString;
 

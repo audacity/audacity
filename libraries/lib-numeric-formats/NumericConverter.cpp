@@ -643,9 +643,10 @@ void NumericConverter::ParseFormatString(
 {
    auto format = untranslatedFormat.Translation();
 
-   mPrefix = wxT("");
+   mPrefix.clear();
    mFields.clear();
    mDigits.clear();
+   
    mScalingFactor = 1.0;
 
    // We will change inFrac to true when we hit our first decimal point.
@@ -774,12 +775,7 @@ void NumericConverter::ParseFormatString(
    
    int pos = 0;
    int j;
-   mValueMask = wxT("");
-   mValueTemplate = wxT("");
-
-   mValueTemplate += mPrefix;
-   for(j=0; j<(int)mPrefix.length(); j++)
-      mValueMask += wxT(".");
+   
    pos += mPrefix.length();
 
    for(i = 0; i < mFields.size(); i++) {
@@ -787,15 +783,10 @@ void NumericConverter::ParseFormatString(
 
       for(j=0; j<mFields[i].digits; j++) {
          mDigits.push_back(DigitInfo { int(i), j, pos });
-         mValueTemplate += wxT("0");
-         mValueMask += wxT("0");
          pos++;
       }
 
       pos += mFields[i].label.length();
-      mValueTemplate += mFields[i].label;
-      for(j=0; j<(int)mFields[i].label.length(); j++)
-         mValueMask += wxT(".");
    }
 }
 
