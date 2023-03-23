@@ -553,9 +553,7 @@ UIHandle::Result TimeShiftHandle::Click
    mSnapManager =
    std::make_shared<SnapManager>(*trackList.GetOwner(),
        FindCandidates( trackList, mClipMoveState.shifters ),
-       viewInfo,
-       true, // don't snap to time
-       kPixelTolerance);
+       viewInfo);
    mClipMoveState.snapLeft = -1;
    mClipMoveState.snapRight = -1;
    auto pInterval = mClipMoveState.CapturedInterval();
