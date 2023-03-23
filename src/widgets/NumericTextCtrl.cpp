@@ -1114,6 +1114,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
    // Slightly messy trick to save us some prefixing.
    auto & mFields = mCtrl->mFormatter->GetFields();
    auto & mDigits = mCtrl->mFormatter->GetDigitInfos();
+   auto & mFieldValueStrings = mCtrl->mFieldValueStrings;
 
    wxString ctrlString = mCtrl->GetString();
    int field = mCtrl->GetFocusedField();
@@ -1168,7 +1169,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
             label = mFields[field].label;
          }
 
-         *name = mFields[field - 1].str +
+         *name = mFieldValueStrings[field - 1] +
                  wxT(" ") +
                  label +
                  wxT(", ") +     // comma inserts a slight pause
@@ -1186,7 +1187,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
       // value only.
       else if (field > 0)
       {
-         *name = mFields[field - 1].str;
+         *name = mFieldValueStrings[field - 1];
       }
 
       mCachedName = *name;

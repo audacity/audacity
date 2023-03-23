@@ -32,7 +32,6 @@ public:
 
    wxString label;
    wxString formatStr;
-   wxString str;
 
    int pos { -1 }; // Index of this field in the ValueString
    bool zeropad;
