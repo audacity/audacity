@@ -52,6 +52,8 @@ private:
    wxSize ComputeSizing(int digitH);
 
    void OnRateChanged(double);
+   void UpdateTimeSignature();
+   
    void OnUpdate(wxCommandEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnIdle(wxIdleEvent &evt);
@@ -65,6 +67,7 @@ private:
    static const int maxDigitH = 100;
 
    Observer::Subscription mSubscription;
+   Observer::Subscription mTimeSignatureChangedSubscription;
 
 public:
    

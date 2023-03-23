@@ -66,6 +66,8 @@ public:
    bool SetCustomFormat(const TranslatableString& customFormat);
 
    void SetSampleRate(double sampleRate);
+   void SetTimeSignature(double tempo, int upper, int lower);
+
    void SetValue(double newValue);
    void SetMinValue(double minValue);
    void ResetMinValue();
@@ -94,6 +96,9 @@ protected:
    double         mInvalidValue;
 
    double         mSampleRate { 1.0 };
+   double         mTempo;
+   int            mUpperTimeSignature;
+   int            mLowerTimeSignature;
 
    std::unique_ptr<NumericConverterFormatter>
                  mFormatter;

@@ -264,6 +264,16 @@ void NumericTextCtrl::SetSampleRate(double sampleRate)
    ControlsToValue();
 }
 
+void NumericTextCtrl::SetTimeSignature(double tempo, int upper, int lower)
+{
+   NumericConverter::SetTimeSignature(tempo, upper, lower);
+   mBoxes.clear();
+   Layout();
+   Fit();
+   ValueToControls();
+   ControlsToValue();
+}
+
 void NumericTextCtrl::SetValue(double newValue)
 {
    NumericConverter::SetValue(newValue);

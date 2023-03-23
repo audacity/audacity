@@ -31,6 +31,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
 #include "ViewInfo.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
@@ -60,6 +61,10 @@ TimeToolBar::TimeToolBar(AudacityProject &project)
 {
    mSubscription =
       ProjectRate::Get(project).Subscribe(*this, &TimeToolBar::OnRateChanged);
+
+   mTimeSignatureChangedSubscription =
+      ProjectTimeSignature::Get(project).Subscribe([this](auto)
+                                                   { UpdateTimeSignature(); });
 }
 
 TimeToolBar::~TimeToolBar()
@@ -279,6 +284,18 @@ void TimeToolBar::OnRateChanged(double rate)
       mAudioTime->SetSampleRate(rate);
 }
 
+void TimeToolBar::UpdateTimeSignature()
+{
+   const auto& timeSignature = ProjectTimeSignature::Get(mProject);
+
+   const auto tempo = timeSignature.GetTempo();
+   const auto uts = timeSignature.GetUpperTimeSignature();
+   const auto lts = timeSignature.GetLowerTimeSignature();
+
+   if (mAudioTime)
+      mAudioTime->SetTimeSignature(tempo, uts, lts);
+}
+
 // Called when the format drop downs is changed.
 // This causes recreation of the toolbar contents.
 void TimeToolBar::OnUpdate(wxCommandEvent &evt)
@@ -295,6 +312,8 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    if (mListener) {
       mListener->TT_SetAudioTimeFormat(evt.GetString());
    }
+
+   UpdateTimeSignature();
 
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force

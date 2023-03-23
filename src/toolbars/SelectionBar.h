@@ -89,6 +89,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void SelectionModeUpdated();
 
    void UpdateRate(double rate);
+   void UpdateTimeSignature();
 
    SelectionBarListener * mListener;
    double mRate;
@@ -102,6 +103,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    wxString mLastValidText;
 
    Observer::Subscription mRateChangedSubscription;
+   Observer::Subscription mTimeSignatureChangedSubscription;
 
  public:
 

@@ -86,6 +86,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
    void Fit() override;
 
    void SetSampleRate(double sampleRate);
+   void SetTimeSignature(double tempo, int upper, int lower);
    void SetValue(double newValue);
    
    // returns true iff the format name really changed:

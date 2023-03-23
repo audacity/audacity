@@ -109,6 +109,9 @@ NumericConverter::NumericConverter(NumericConverterType type,
    mValue = value; // used in SetSampleRate, reassigned later
 
    SetSampleRate(sampleRate);
+   SetTimeSignature(
+      BeatsPerMinute.Read(), UpperTimeSignature.Read(),
+      LowerTimeSignature.Read());
    SetFormatName(formatName);
    SetValue(value); // mValue got overridden to -1 in ControlsToValue(), reassign
 }
@@ -203,6 +206,17 @@ void NumericConverter::SetSampleRate(double sampleRate)
    ControlsToValue();
 }
 
+void NumericConverter::SetTimeSignature(double tempo, int upper, int lower)
+{
+   mTempo = tempo;
+   mUpperTimeSignature = upper;
+   mLowerTimeSignature = lower;
+
+   UpdateFormatter();
+   ValueToControls();
+   ControlsToValue();
+}
+
 void NumericConverter::SetValue(double newValue)
 {
    mValue = newValue;
@@ -282,7 +296,7 @@ bool NumericConverter::UpdateFormatter()
          return false;
       }
 
-      mFormatter = formatterItem->factory({ mSampleRate });
+      mFormatter = formatterItem->factory({ mSampleRate, mTempo, mLowerTimeSignature, mUpperTimeSignature });
    }
    else if (!mCustomFormat.empty ())
    {

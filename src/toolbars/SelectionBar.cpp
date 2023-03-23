@@ -57,6 +57,7 @@ with changes in the SelectionBar.
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
 #include "../ProjectSettings.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -124,7 +125,10 @@ SelectionBar::SelectionBar( AudacityProject &project )
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
   mRateChangedSubscription(
      ProjectRate::Get(project).Subscribe(
-         [this](double rate) { UpdateRate(rate); }))
+         [this](double rate) { UpdateRate(rate); })),
+   mTimeSignatureChangedSubscription(
+            ProjectTimeSignature::Get(project).Subscribe(
+               [this](auto) { UpdateTimeSignature(); }))
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
@@ -288,6 +292,7 @@ void SelectionBar::Populate()
    
    // Update the selection mode before the layout
    SetSelectionMode(mSelectionMode);
+   UpdateTimeSignature();
    mainSizer->Layout();
    RegenerateTooltips();
    Layout();
@@ -555,6 +560,21 @@ void SelectionBar::UpdateRate(double rate)
          if (ctrl != nullptr)
             ctrl->SetSampleRate(rate);
       }
+   }
+}
+
+void SelectionBar::UpdateTimeSignature()
+{
+   const auto& timeSignature = ProjectTimeSignature::Get(mProject);
+   
+   const auto tempo = timeSignature.GetTempo();
+   const auto uts = timeSignature.GetUpperTimeSignature();
+   const auto lts = timeSignature.GetLowerTimeSignature();
+
+   for (auto ctrl : mTimeControls)
+   {
+      if (ctrl != nullptr)
+         ctrl->SetTimeSignature(tempo, uts, lts);
    }
 }
 
