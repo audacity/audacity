@@ -22,6 +22,8 @@ set( SOURCES
    ProjectTimeSignature.cpp
    ProjectTimeSignature.h
 
+   formatters/BeatsNumericConverterFormatter.cpp
+   formatters/BeatsNumericConverterFormatter.h
    formatters/ParsedNumericConverterFormatter.cpp
    formatters/ParsedNumericConverterFormatter.h
 )
