@@ -782,7 +782,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
-                  .Format(strFormat)
+                  .CustomFormat(strFormat)
                   .Value(true, wxDateTime_to_AudacityTime(m_DateTime_Start)));
             S.Name(XO("Start Time"))
                .AddWindow(m_pTimeTextCtrl_Start);
@@ -811,7 +811,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
-                  .Format(strFormat)
+                  .CustomFormat(strFormat)
                   .Value(true, wxDateTime_to_AudacityTime(m_DateTime_End)));
             S.Name(XO("End Time"))
                .AddWindow(m_pTimeTextCtrl_End);
@@ -825,7 +825,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
-                  .Format(strFormat1)
+                  .CustomFormat(strFormat1)
                   .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
             /* i18n-hint: This string is used to configure the controls which shows the recording
             * duration. As such it is important that only the alphabetic parts of the string

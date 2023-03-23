@@ -24,39 +24,16 @@
 #include "ComponentInterfaceSymbol.h"
 #include "TranslatableString.h"
 
-/** \brief struct to hold a formatting control string and its user facing name
- * Used in an array to hold the built-in time formats that are always available
- * to the user */
-struct BuiltinFormatString;
-
 class NUMERIC_FORMATS_API NumericConverter /* not final */
 {
 public:
-
-   struct FormatStrings {
-      TranslatableString formatStr;
-      // How to name the fraction of the unit; not necessary for time formats
-      // or when the format string has no decimal point
-      TranslatableString fraction;
-
-      FormatStrings(
-         const TranslatableString &format = {},
-         const TranslatableString &fraction = {})
-         : formatStr{ format }, fraction{ fraction }
-      {}
-
-      friend bool operator == ( const FormatStrings &x, const FormatStrings &y )
-         { return x.formatStr == y.formatStr && x.fraction == y.fraction; }
-      friend bool operator != ( const FormatStrings &x, const FormatStrings &y )
-         { return !(x == y); }
-   };
-
    static NumericFormatSymbol DefaultSelectionFormat();
    static NumericFormatSymbol TimeAndSampleFormat();
    static NumericFormatSymbol SecondsFormat();
    static NumericFormatSymbol HoursMinsSecondsFormat();
    static NumericFormatSymbol HundredthsFormat();
    static NumericFormatSymbol HertzFormat();
+   static NumericFormatSymbol DefaultFormat(NumericConverterType type);
    
    static NumericFormatSymbol LookupFormat(NumericConverterType type, const wxString& id);
 
@@ -65,7 +42,7 @@ public:
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
 
-   virtual ~NumericConverter();
+   virtual ~NumericConverter();  
 
    // ValueToControls() formats a raw value (either provided as
    // argument, or mValue, depending on the version of the function
@@ -81,11 +58,12 @@ private:
    void ParseFormatString(const TranslatableString & untranslatedFormat);
 
 public:
-   // returns true iff the format name really changed:
+   // returns true if the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
+   // Could be empty if custom format is used
+   NumericFormatSymbol GetFormatName() const;
 
-   // returns true iff the format string really changed:
-   bool SetFormatString(const FormatStrings & formatString);
+   bool SetCustomFormat(const TranslatableString& customFormat);
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -95,15 +73,7 @@ public:
    void ResetMaxValue();
 
    double GetValue();
-
    wxString GetString();
-
-   int GetFormatIndex();
-
-   int GetNumBuiltins();
-   NumericFormatSymbol GetBuiltinName(const int index);
-   FormatStrings GetBuiltinFormat(const int index);
-   FormatStrings GetBuiltinFormat(const NumericFormatSymbol & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -113,6 +83,8 @@ public:
    void Decrement(int focusedDigit = -1);
 
 protected:
+   bool UpdateFormatter();
+   
    NumericConverterType mType;
 
    double         mValue;
@@ -126,16 +98,12 @@ protected:
    std::unique_ptr<NumericConverterFormatter>
                  mFormatter;
    
-   FormatStrings mFormatString;
+   NumericFormatSymbol mFormatSymbol;
+   TranslatableString mCustomFormat;
 
    // Formatted mValue, by ValueToControls().
    wxString       mValueString;
    std::vector<wxString> mFieldValueStrings;
-
-   const BuiltinFormatString *mBuiltinFormatStrings;
-   
-   const size_t mNBuiltins;
-   int mDefaultNdx;
 
 private:
    int GetSafeFocusedDigit(int focusedDigit) const noexcept;

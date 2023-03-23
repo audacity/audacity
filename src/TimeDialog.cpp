@@ -76,7 +76,7 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
 
 bool TimeDialog::TransferDataToWindow()
 {
-   mTimeCtrl->SetFormatString(mTimeCtrl->GetBuiltinFormat(mFormat));
+   mTimeCtrl->SetFormatName(mFormat);
    mTimeCtrl->SetSampleRate(mRate);
    mTimeCtrl->SetValue(mTime);
    mTimeCtrl->SetFocus();

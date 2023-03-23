@@ -118,7 +118,7 @@ void TimeToolBar::UpdatePrefs()
    // Since the language may have changed, we need to force an update to accommodate
    // different length text
    wxCommandEvent e;
-   e.SetInt(mAudioTime->GetFormatIndex());
+   e.SetString(mAudioTime->GetFormatName().Internal());
    OnUpdate(e);
 
    // Language may have changed so reset label
@@ -197,7 +197,7 @@ void TimeToolBar::SetListener(TimeToolBarListener *l)
    // OnUpdate() will not be called and need it to set the initial size.
    if (mSettingInitialSize) {
       wxCommandEvent e;
-      e.SetInt(mAudioTime->GetFormatIndex());
+      e.SetString(mAudioTime->GetFormatName().Internal());
       OnUpdate(e);
    }
 }
@@ -205,10 +205,10 @@ void TimeToolBar::SetListener(TimeToolBarListener *l)
 void TimeToolBar::SetAudioTimeFormat(const NumericFormatSymbol & format)
 {
    // Set the format if it's different from previous
-   if (mAudioTime->SetFormatString(mAudioTime->GetBuiltinFormat(format))) {
+   if (mAudioTime->SetFormatName(format)) {
       // Simulate an update since the format has changed.
       wxCommandEvent e;
-      e.SetInt(mAudioTime->GetFormatIndex());
+      e.SetString(format.Internal());
       OnUpdate(e);
    }
 }
@@ -293,7 +293,7 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
 
    // Save format name before recreating the controls so they resize properly
    if (mListener) {
-      mListener->TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
+      mListener->TT_SetAudioTimeFormat(evt.GetString());
    }
 
    // During initialization, the desired size will have already been set at this point

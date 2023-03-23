@@ -532,8 +532,7 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
    if (mTimeControls.front() == nullptr)
       return;
    
-   const bool changed = mTimeControls.front()->SetFormatString(
-      mTimeControls.front()->GetBuiltinFormat(format));
+   const bool changed = mTimeControls.front()->SetFormatName(format);
 
    // Test first whether changed, to avoid infinite recursion from OnUpdate
    if ( changed ) {

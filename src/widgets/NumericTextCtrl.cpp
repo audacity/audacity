@@ -20,6 +20,7 @@
 #include "../KeyboardCapture.h"
 #include "Theme.h"
 #include "wxWidgetsWindowPlacement.h"
+#include "NumericConverterRegistry.h"
 
 #include <algorithm>
 #include <math.h>
@@ -194,8 +195,11 @@ NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
    if (options.hasInvalidValue)
       SetInvalidValue( options.invalidValue );
 
-   if (!options.format.formatStr.empty())
-      SetFormatString( options.format );
+   if (!options.formatSymbol.empty())
+      SetFormatName( options.formatSymbol );
+
+   if (!options.customFormat.empty())
+      SetCustomFormat( options.customFormat );
 
    if (options.hasValue)
       SetValue( options.value );
@@ -230,25 +234,24 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
-bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol & formatName)
+bool NumericTextCtrl::SetFormatName(const NumericFormatSymbol& formatName)
 {
-   return
-      SetFormatString(GetBuiltinFormat(formatName));
+   if (!NumericConverter::SetFormatName(formatName))
+      return false;
+
+   HandleFormatterChanged();
+
+   return true;
 }
 
-bool NumericTextCtrl::SetFormatString(const FormatStrings & formatString)
+bool NumericTextCtrl::SetCustomFormat(const TranslatableString& customFormat)
 {
-   auto result =
-      NumericConverter::SetFormatString(formatString);
-   if (result) {
-      mBoxes.clear();
-      Layout();
-      Fit();
-      ValueToControls();
-      ControlsToValue();
-      UpdateAutoFocus();
-   }
-   return result;
+   if (!NumericConverter::SetCustomFormat(customFormat))
+   return false;
+
+   HandleFormatterChanged();
+
+   return true;
 }
 
 void NumericTextCtrl::SetSampleRate(double sampleRate)
@@ -562,24 +565,30 @@ void NumericTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
 
 void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 {
-   wxMenu menu;
-   int i;
 
    if (!mMenuEnabled) {
       event.Skip();
       return;
    }
 
+   wxMenu menu;
+
    SetFocus();
 
-   int currentSelection = -1;
-   for (i = 0; i < GetNumBuiltins(); i++) {
-      menu.AppendRadioItem(ID_MENU + i, GetBuiltinName(i).Translation());
-      if (mFormatString == GetBuiltinFormat(i)) {
-         menu.Check(ID_MENU + i, true);
-         currentSelection = i;
-      }
-   }
+   std::vector<NumericFormatSymbol> symbols;
+
+   NumericConverterRegistry::Visit(
+      mType,
+      [&menu, &symbols, this, i = ID_MENU](auto& item) mutable
+      {
+         symbols.push_back(item.symbol);
+         menu.AppendRadioItem(i, item.symbol.Translation());
+
+         if (mFormatSymbol == item.symbol)
+            menu.Check(i, true);
+
+         ++i;
+      });
 
    menu.Bind(wxEVT_MENU, [](auto&){});
    BasicMenu::Handle{ &menu }.Popup(
@@ -592,33 +601,38 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
    // user happens to check the first menuitem and then is 
    // moving down the menu when the ...CTRL_UPDATED event
    // handler kicks in.
-   for (i = 0; i < GetNumBuiltins(); i++) {
-      if (menu.IsChecked(ID_MENU + i) && i != currentSelection) {
-         SetFormatString(GetBuiltinFormat(i));
-      
-         int eventType = 0;
-         switch (mType) {
-            case NumericConverterType::TIME:
-               eventType = EVT_TIMETEXTCTRL_UPDATED;
-               break;
-            case NumericConverterType::FREQUENCY:
-               eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
-               break;
-            case NumericConverterType::BANDWIDTH:
-               eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
-               break;
-            default:
-               wxASSERT(false);
-               break;
-         }
-      
-         wxCommandEvent e(eventType, GetId());
-         e.SetInt(i);
-         e.SetString(GetBuiltinName(i).Internal());
-         GetParent()->GetEventHandler()->AddPendingEvent(e);
-      }
-   }
+   auto menuIndex = ID_MENU;
 
+   for (const auto& symbol : symbols)
+   {
+      if (!menu.IsChecked(menuIndex++) || mFormatSymbol == symbol)
+         continue;
+
+      int eventType = 0;
+      switch (mType)
+      {
+      case NumericConverterType::TIME:
+         eventType = EVT_TIMETEXTCTRL_UPDATED;
+         break;
+      case NumericConverterType::FREQUENCY:
+         eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
+         break;
+      case NumericConverterType::BANDWIDTH:
+         eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
+         break;
+      default:
+         wxASSERT(false);
+         break;
+      }
+
+      SetFormatName(symbol);
+
+      wxCommandEvent e(eventType, GetId());
+      e.SetString(symbol.Internal());
+      GetParent()->GetEventHandler()->AddPendingEvent(e);
+
+      break;
+   }
 }
 
 void NumericTextCtrl::OnMouse(wxMouseEvent &event)
@@ -674,7 +688,17 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
    event.Skip( false ); // PRL: not sure why, but preserving old behavior
 }
 
-void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
+void NumericTextCtrl::HandleFormatterChanged()
+{
+   mBoxes.clear();
+   Layout();
+   Fit();
+   ValueToControls();
+   ControlsToValue();
+   UpdateAutoFocus();
+}
+
+void NumericTextCtrl::OnCaptureKey(wxCommandEvent& event)
 {
    wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
    int keyCode = kevent->GetKeyCode();
@@ -1053,7 +1077,7 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
          // We subtract 1, below, and need to avoid neg index to mDigits.
          (elementId > 0))
    {
-//      rect.x += mCtrl->mFields[elementId - 1].fieldX;
+//      rect.x += mCtrl->mFields[elementId - 1].fieldX;B
 //      rect.width =  mCtrl->mFields[elementId - 1].fieldW;
         rect = mCtrl->GetBox(elementId - 1);
         rect.SetPosition(mCtrl->ClientToScreen(rect.GetPosition()));
@@ -1067,18 +1091,16 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
    return wxACC_OK;
 }
 
-static void GetFraction( wxString &label,
-   const NumericConverter::FormatStrings &formatStrings,
-   bool isTime, int digits )
+static void GetFraction( wxString &label, NumericConverterType type,
+   const NumericFormatSymbol &formatSymbol )
 {
-   TranslatableString tr = formatStrings.fraction;
-   if ( tr.empty() ) {
-      wxASSERT( isTime );
-      if (digits == 2)
-         tr = XO("centiseconds");
-      else if (digits == 3)
-         tr = XO("milliseconds");
-   }
+   auto result = NumericConverterRegistry::Find(type, formatSymbol);
+
+   if (result == nullptr)
+      return;
+
+   auto& tr = result->fractionLabel;
+   
    if (!tr.empty())
       label = tr.Translation();
 }
@@ -1134,12 +1156,10 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
          // it represents fractions of a second.
          // PRL: click a digit of the control and use left and right arrow keys
          // to exercise this code
-         const bool isTime = (mCtrl->mType == NumericConverterType::TIME);
+
          if (field > 1 && field == cnt) {
             if (mFields[field - 2].label == decimal) {
-               int digits = mFields[field - 1].digits;
-               GetFraction( label, mCtrl->mFormatString,
-                  isTime, digits );
+               GetFraction( label, mCtrl->mType, mCtrl->mFormatSymbol );
             }
          }
          // If the field following this one represents fractions of a

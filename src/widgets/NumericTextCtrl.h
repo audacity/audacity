@@ -45,7 +45,8 @@ class AUDACITY_DLL_API NumericTextCtrl final
       bool menuEnabled { true };
       bool hasInvalidValue { false };
       double invalidValue { -1.0 };
-      FormatStrings format {};
+      NumericFormatSymbol formatSymbol {};
+      TranslatableString customFormat {};
       bool hasValue { false };
       double value{ -1.0 };
 
@@ -57,8 +58,10 @@ class AUDACITY_DLL_API NumericTextCtrl final
       Options &InvalidValue (bool has, double v = -1.0)
          { hasInvalidValue = has, invalidValue = v; return *this; }
       // use a custom format not in the tables:
-      Options &Format (const FormatStrings &f)
-         { format = f; return *this; }
+      Options& FormatSymbol(const NumericFormatSymbol& f)
+         { formatSymbol = f; return *this; }
+      Options& CustomFormat(const TranslatableString& f)
+         { customFormat = f; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
    };
@@ -78,17 +81,16 @@ class AUDACITY_DLL_API NumericTextCtrl final
    void SetName( const TranslatableString &name );
 
    wxSize ComputeSizing(bool update = true, wxCoord digitW = 0, wxCoord digitH = 0);
+
    bool Layout() override;
    void Fit() override;
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
-
-   // returns true iff the format string really changed:
-   bool SetFormatString(const FormatStrings & formatString);
-
+   
    // returns true iff the format name really changed:
    bool SetFormatName(const NumericFormatSymbol & formatName);
+   bool SetCustomFormat(const TranslatableString& customFormat);
 
    void SetFieldFocus(int /* digit */);
 
@@ -108,6 +110,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
    int GetFocusedDigit() { return mFocusedDigit; }
 
 private:
+   void HandleFormatterChanged();
 
    void OnCaptureKey(wxCommandEvent &event);
    void OnKeyDown(wxKeyEvent &event);
