@@ -142,6 +142,13 @@ in the selection bar of Audacity.
   - The special character 'N' after '|' is only used for NTSC drop-frame.
 
 *******************************************************************/
+
+struct FieldConfig final
+{
+   bool frac; // is it a fractional field
+   int base;  // divide by this (multiply, after decimal point)
+};
+
 class ParsedNumericConverterFormatter final : public NumericConverterFormatter
 {
 public:
@@ -243,7 +250,8 @@ public:
             if (inFrac)
             {
                int base = fracMult * range;
-               mFields.push_back(NumericField(inFrac, base, range, zeropad));
+               mFieldConfigs.push_back({ inFrac, base });
+               mFields.push_back(NumericField(range, zeropad));
                fracMult *= range;
                numFracFields++;
             }
@@ -251,8 +259,9 @@ public:
             {
                unsigned int j;
                for (j = 0; j < mFields.size(); j++)
-                  mFields[j].base *= range;
-               mFields.push_back(NumericField(inFrac, 1, range, zeropad));
+                  mFieldConfigs[j].base *= range;
+               mFieldConfigs.push_back({ inFrac, 1 });
+               mFields.push_back(NumericField(range, zeropad));
                numWholeFields++;
             }
             numStr = wxT("");
@@ -341,7 +350,7 @@ public:
       // using it. Otherwise we round to nearest integer.
       for (unsigned int i = 0; i < mFields.size(); i++)
       {
-         if (mFields[i].frac)
+         if (mFieldConfigs[i].frac)
             round = false;
       }
       if (theValue < 0)
@@ -350,8 +359,8 @@ public:
          t_int = sampleCount(theValue + (nearest ? 0.5f : 0.0f));
       else
       {
-         wxASSERT(mFields.back().frac);
-         theValue += (nearest ? 0.5f : 0.0f) / mFields.back().base;
+         wxASSERT(mFieldConfigs.back().frac);
+         theValue += (nearest ? 0.5f : 0.0f) / mFieldConfigs.back().base;
          t_int = sampleCount(theValue);
       }
       double t_frac;
@@ -403,7 +412,7 @@ public:
       {
          long long value = -1;
 
-         if (mFields[i].frac)
+         if (mFieldConfigs[i].frac)
          {
             // JKC: This old code looks bogus to me.
             // The rounding is not propagating to earlier fields in the frac
@@ -412,7 +421,7 @@ public:
             // rounding required
             // I did the rounding earlier.
             if (t_frac >= 0)
-               value = t_frac * mFields[i].base;
+               value = t_frac * mFieldConfigs[i].base;
             // JKC: TODO: Find out what the range is supposed to do.
             // It looks bogus too.
             // if (mFields[i].range > 0)
@@ -422,7 +431,7 @@ public:
          {
             if (t_int >= 0)
             {
-               value = t_int.as_long_long() / mFields[i].base;
+               value = t_int.as_long_long() / mFieldConfigs[i].base;
                if (mFields[i].range > 0)
                   value = value % mFields[i].range;
             }
@@ -474,10 +483,10 @@ public:
          if (!fieldStringValue.ToLong(&val))
             return std::nullopt;
 
-         if (mFields[i].frac)
-            t += (val / (double)mFields[i].base);
+         if (mFieldConfigs[i].frac)
+            t += (val / (double)mFieldConfigs[i].base);
          else
-            t += (val * (double)mFields[i].base);
+            t += (val * (double)mFieldConfigs[i].base);
       }
 
       t /= mScalingFactor;
@@ -531,13 +540,13 @@ public:
                10., mFields[i].digits -
                        (mDigits[digitIndex].pos - mFields[i].pos) - 1);
 
-            if (mFields[i].frac)
+            if (mFieldConfigs[i].frac)
             {
-               value += ((mult / (double)mFields[i].base) * dir);
+               value += ((mult / (double)mFieldConfigs[i].base) * dir);
             }
             else
             {
-               value += ((mult * (double)mFields[i].base) * dir);
+               value += ((mult * (double)mFieldConfigs[i].base) * dir);
             }
 
             if (mNtscDrop)
@@ -575,6 +584,8 @@ public:
 
 private:
    NumericConverterType mType;
+
+   std::vector<FieldConfig> mFieldConfigs;
 
    double mScalingFactor;
    double mSampleRate;

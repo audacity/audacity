@@ -35,9 +35,8 @@ public:
    {
       mFields.reserve(mFracPart > 0 ? 3 : 2);
 
-      // Create "bars" field and digits. We don't really care about frac and base,
       // Range is assumed to allow 999 bars. 
-      auto& barsField = mFields.emplace_back(NumericField { false, 1, 1000, true });
+      auto& barsField = mFields.emplace_back(NumericField { 1000, true });
       barsField.label = L" " + XO("bar").Translation() + L" ";
 
       // Beats format is 1 based. For the time point "0" the expected output is "1 bar 1 beat [1]"
@@ -46,7 +45,7 @@ public:
       // where on digit will be calculated instead of 2.
 
       auto& beatsField = mFields.emplace_back(
-         NumericField { false, 1, std::max(12, mUpperTimeSignature + 1), true });
+         NumericField { std::max(12, mUpperTimeSignature + 1), true });
       beatsField.label = L" " + XO("beat").Translation();
 
       if (mFracPart > 0)
@@ -54,7 +53,7 @@ public:
          beatsField.label += L" ";
          // See the reasoning above about the range
          auto& fracField = mFields.emplace_back(
-            NumericField { false, 1, std::max(12, mFracPart / mLowerTimeSignature + 1), true });
+            NumericField { std::max(12, mFracPart / mLowerTimeSignature + 1), true });
       }
 
       // Fill the aux mDigits structure

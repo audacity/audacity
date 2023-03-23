@@ -12,11 +12,8 @@
 
 #include <cmath>
 
-NumericField::NumericField(
-   bool _frac, int _base, int _range, bool _zeropad) noexcept
-    : frac { _frac }
-    , base { _base }
-    , range { _range }
+NumericField::NumericField(int _range, bool _zeropad) noexcept
+    : range { _range }
     , zeropad { _zeropad }
 {
    CreateDigitFormatStr();

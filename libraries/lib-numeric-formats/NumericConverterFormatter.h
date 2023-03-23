@@ -18,15 +18,13 @@
 struct NUMERIC_FORMATS_API NumericField final
 {
 public:
-   NumericField(bool _frac, int _base, int _range, bool _zeropad) noexcept;
+   NumericField(int _range, bool _zeropad) noexcept;
 
    NumericField(const NumericField&) = default;
    NumericField& operator=(const NumericField&) = default;
    // NumericField( NumericField && ) = default;
    // NumericField &operator = ( NumericField && ) = default;
 
-   bool frac; // is it a fractional field
-   int base;  // divide by this (multiply, after decimal point)
    int range; // then take modulo this
    int digits { 0 };
 
