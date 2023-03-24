@@ -371,7 +371,6 @@ void SpectralSelectionBar::OnIdle( wxIdleEvent &evt )
 
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 {
-   int index = evt.GetInt();
    wxWindow *w = FindFocus();
    bool centerFocus = (w && w == mCenterCtrl);
    bool widthFocus = (w && w == mWidthCtrl);
