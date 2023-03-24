@@ -1,4 +1,4 @@
-#include <QDebug>
+#include <QtGlobal>
 #include "VolumeControlHandler.h"
 
 VolumeControlHandler::VolumeControlHandler(QObject* parent)
@@ -13,15 +13,7 @@ qreal VolumeControlHandler::Volume() const
 
 void VolumeControlHandler::SetVolume(qreal volume)
 {
-   if (volume < 0.0) {
-      qDebug() << "volume cannot be less than 0";
-      return;
-   }
-
-   if (volume > 1.0) {
-      qDebug() << "volume cannot be greater than 1";
-      return;
-   }
+   Q_ASSERT(volume >= 0.0 && volume <= 1.0);
 
    if (m_volume != volume) {
       m_volume = volume;
@@ -36,15 +28,7 @@ qreal VolumeControlHandler::LeftValue() const
 
 void VolumeControlHandler::SetLeftValue(qreal value)
 {
-   if (value < 0.0) {
-      qDebug() << "VolumeControlHandler left value cannot be less than 0";
-      return;
-   }
-
-   if (value > 1.0) {
-      qDebug() << "VolumeControlHandler left value cannot be greater than 1";
-      return;
-   }
+   Q_ASSERT(value >= 0.0 && value <= 1.0);
 
    m_leftValue = value;
    emit leftValueChanged(value);
@@ -57,15 +41,7 @@ qreal VolumeControlHandler::RightValue() const
 
 void VolumeControlHandler::SetRightValue(qreal value)
 {
-   if (value < 0.0) {
-      qDebug() << "VolumeControlHandler right value cannot be less than 0";
-      return;
-   }
-
-   if (value > 1.0) {
-      qDebug() << "VolumeControlHandler right value cannot be greater than 1";
-      return;
-   }
+   Q_ASSERT(value >= 0.0 && value <= 1.0);
 
    m_rightValue = value;
    emit rightValueChanged(value);
@@ -81,6 +57,5 @@ void VolumeControlHandler::Reset()
 
 void VolumeControlHandler::ChangeVolume(qreal volume)
 {
-   //qDebug() << "Changing volume level" << volume;
    m_volume = volume;
 }
