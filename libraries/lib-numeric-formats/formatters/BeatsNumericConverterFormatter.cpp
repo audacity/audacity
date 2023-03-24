@@ -71,7 +71,9 @@ public:
          pos += mFields[i].label.length();
       }
 
-      const auto beatLength = 60.0 / mTempo;
+      // 1/4 = BPM is used for now
+      const auto quarterLength = 60.0 / mTempo;
+      const auto beatLength = quarterLength * 4.0 / mLowerTimeSignature;
       const auto barLength = mUpperTimeSignature * beatLength;
       const auto fracLength = beatLength * mLowerTimeSignature / mFracPart;
 
