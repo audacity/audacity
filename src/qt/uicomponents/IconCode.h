@@ -46,6 +46,9 @@ public:
 
       LOOP = 0xEF1F,
 
+      SPEAKER_ON = 0xEF4E,
+      SPEAKER_OFF = 0xEF52,
+
       SETUP = 0xEF55,
 
       TOOLBAR_GRIP = 0xF3A2,
