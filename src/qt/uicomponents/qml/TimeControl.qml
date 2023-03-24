@@ -27,11 +27,12 @@ Rectangle {
       onFormatTypeChanged: update()
 
       property var formatType: TimeControl.FormatType.HoursMinutesSeconds
+      property var groupSeparator: ' '
       property int value: 0
 
       function displaySeconds() {
          var text = String(display.value).padStart(6, '0')
-         seconds.text = text.slice(0, 3) + ',' + text.slice(3)
+         seconds.text = text.slice(0, 3) + display.groupSeparator + text.slice(3)
       }
 
       function displayHoursMinutesSeconds() {
@@ -240,5 +241,9 @@ Rectangle {
             }
          }
       }
+   }
+
+   Component.onCompleted: {
+      display.groupSeparator = Qt.locale().groupSeparator
    }
 }
