@@ -72,13 +72,19 @@ void BeatsFormat::SetTickSizes(
       // quarter notes
       minorMinor = 60 / (mBpm * ((double)mTimeSigLower / 4));
    }
+   else if (units < 8 * (60 / mBpm) * (4 / (double)mTimeSigLower))
+   {
+      // four-measures
+      major = (60 * mTimeSigUpper) / (mBpm * ((double)mTimeSigLower / 16));
+      // measures
+      minor = 60 / (mBpm * ((double)mTimeSigLower / 16));
+      // half measures
+      minorMinor = 60 / (mBpm * ((double)mTimeSigLower / 8));
+   }
    else {
-      // Introduce a scaling factor so space is maintained between
-      // measures as the units increase
-      int factor = std::ceil(mTimeSigLower * units / 16);
-      major = (60 * mTimeSigUpper * factor) / (mBpm * ((double)mTimeSigLower / 8));
-      minor = (60 * factor) / (mBpm * ((double)mTimeSigLower / 16));
-      minorMinor = (60 * factor) / (mBpm * ((double)mTimeSigLower / 4));
+      int factor = pow(2, std::floor(log2(std::ceil(units) * (mBpm / 60) * (mTimeSigLower / 4))) - 2);
+      major = (60 * mTimeSigUpper) / (mBpm * ((double)mTimeSigLower / (16 * factor)));
+      minorMinor = 60 / (mBpm * ((double)mTimeSigLower / (8 * factor)));
    }
 
    mDigits = 0;
