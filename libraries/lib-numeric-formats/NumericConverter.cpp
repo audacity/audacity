@@ -317,7 +317,7 @@ bool NumericConverter::UpdateFormatter()
 
 void NumericConverter::Adjust(int steps, int dir, int focusedDigit)
 {
-   if (!mFormatter)
+   if (!mFormatter || mFormatter->GetDigitInfos().empty())
       return;
    // It is possible and "valid" for steps to be zero if a
    // high precision device is being used and wxWidgets supports
