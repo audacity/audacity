@@ -1305,7 +1305,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
             SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
- 
+
    # Add our required frameworks
    list( APPEND LIBRARIES
       PRIVATE
@@ -1464,8 +1464,13 @@ set( AUDACITY_LIBRARIES
    lib-effects-interface
    lib-wx-init-interface
    lib-time-track-interface
-   lib-vst3-interface
 )
+
+if (${_OPT}has_vst3)
+   list( APPEND AUDACITY_LIBRARIES
+      lib-vst3-interface
+   )
+endif()
 
 if (${_OPT}use_ffmpeg)
    list( APPEND AUDACITY_LIBRARIES
@@ -1493,16 +1498,16 @@ endif()
 
 if( ${_OPT}has_crashreports )
    if( ${_OPT}crashreport_backend STREQUAL "crashpad" )
-      list(APPEND DEFINES 
+      list(APPEND DEFINES
          PRIVATE
             CRASHREPORTER_NAME="$<TARGET_FILE_NAME:crashreporter>"
             CRASHPAD_HANDLER_NAME="crashpad_handler${CMAKE_EXECUTABLE_SUFFIX}"
       )
-      list( APPEND AUDACITY_LIBRARIES 
+      list( APPEND AUDACITY_LIBRARIES
          lib-crashpad-configurer-interface
       )
    elseif( ${_OPT}crashreport_backend STREQUAL "breakpad" )
-      list( APPEND AUDACITY_LIBRARIES 
+      list( APPEND AUDACITY_LIBRARIES
          lib-breakpad-configurer-interface
       )
    endif()
