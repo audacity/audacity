@@ -201,5 +201,44 @@ Rectangle {
          family: appConfig.iconFont.family
          pixelSize: 16
       }
+
+      MouseArea {
+         id: mouseArea
+         anchors.fill: parent
+         acceptedButtons: Qt.LeftButton
+         onClicked: menu.open()
+
+         Menu {
+            id: menu
+            x: downArrow.x - menu.width
+            y: root.height
+
+            RadioButton {
+               id: hoursMinutesSecondsMenuItem
+               text: qsTr("Hours Minutes Seconds")
+               checked: formatType === TimeControl.FormatType.HoursMinutesSeconds
+
+               onClicked: {
+                  if (formatType !==  TimeControl.FormatType.HoursMinutesSeconds) {
+                     formatType = TimeControl.FormatType.HoursMinutesSeconds
+                  }
+                  menu.close()
+               }
+            }
+
+            RadioButton {
+               id: secondsMenuItem
+               text: qsTr("Seconds")
+               checked: formatType === TimeControl.FormatType.Seconds
+
+               onClicked: {
+                  if (formatType !==  TimeControl.FormatType.Seconds) {
+                     formatType = TimeControl.FormatType.Seconds
+                  }
+                  menu.close()
+               }
+            }
+         }
+      }
    }
 }
