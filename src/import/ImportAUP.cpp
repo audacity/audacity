@@ -413,22 +413,30 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(NumericConverter::LookupFormat(NumericConverterType::TIME, mProjectAttrs.selectionformat));
+      selman.AS_SetSelectionFormat(
+         NumericConverter::LookupFormat(NumericConverterType::TIME,
+         mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(NumericConverter::LookupFormat(NumericConverterType::TIME, mProjectAttrs.audiotimeformat));
+      selman.TT_SetAudioTimeFormat(
+         NumericConverter::LookupFormat(NumericConverterType::TIME,
+         mProjectAttrs.audiotimeformat));
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(NumericConverter::LookupFormat(NumericConverterType::TIME, mProjectAttrs.frequencyformat));
+      selman.SSBL_SetFrequencySelectionFormatName(
+         NumericConverter::LookupFormat(NumericConverterType::FREQUENCY,
+         mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
-      selman.SSBL_SetBandwidthSelectionFormatName(NumericConverter::LookupFormat(NumericConverterType::TIME, mProjectAttrs.bandwidthformat));
+      selman.SSBL_SetBandwidthSelectionFormatName(
+         NumericConverter::LookupFormat(NumericConverterType::BANDWIDTH,
+         mProjectAttrs.bandwidthformat));
    }
 
    // PRL: It seems this must happen after SetSnapTo
