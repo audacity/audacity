@@ -152,8 +152,7 @@ void TimeSignatureToolBar::Populate()
       {
          const auto tempo = mTempoControl->GetValue();
          
-         ProjectTimeSignature::Get(mProject).SetTempo(
-            mTempoControl->GetValue());
+         ProjectTimeSignature::Get(mProject).SetTempo(tempo);
 
          ProjectHistory::Get(mProject).PushState(
             XO("Tempo Changed"), XO("Tempo Changed"), UndoPush::CONSOLIDATE);
@@ -165,8 +164,7 @@ void TimeSignatureToolBar::Populate()
       {
          const auto upper = mUpperSignatureControl->GetValue();
 
-         ProjectTimeSignature::Get(mProject).SetUpperTimeSignature(
-            mUpperSignatureControl->GetValue());
+         ProjectTimeSignature::Get(mProject).SetUpperTimeSignature(upper);
 
          ProjectHistory::Get(mProject).PushState(
             XO("Upper Time Signature Changed"),
