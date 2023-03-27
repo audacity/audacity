@@ -2292,6 +2292,7 @@ bool WaveTrack::CanInsertClip(
 {
    for (const auto &c : mClips)
    {
+      //VS: Do we need to take into account sample rate difference?
       double d1 = c->GetPlayStartTime() - (clip->GetPlayEndTime()+slideBy);
       double d2 = (clip->GetPlayStartTime()+slideBy) - c->GetPlayEndTime();
       if ( (d1<0) &&  (d2<0) )
@@ -2302,6 +2303,9 @@ bool WaveTrack::CanInsertClip(
          // move the clip at most once.  
          // We divide by 1000 rather than set to 0, to allow for 
          // a second 'micro move' that is really about rounding error.
+
+         // VS: clip could be moved more than once, moving it in opposite
+         // direction may reintroduce overlapping condition
          if( -d1 < tolerance ){
             // right edge of clip overlaps slightly.
             // slide clip left a small amount.

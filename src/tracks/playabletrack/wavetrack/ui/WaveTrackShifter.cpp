@@ -153,7 +153,7 @@ public:
       return ok;
    }
 
-   bool Attach( Intervals intervals ) override
+   bool Attach( Intervals intervals, double offset ) override
    {
       for (auto &interval : intervals) {
          auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
@@ -161,7 +161,16 @@ public:
          if ( !mpTrack->AddClip( pClip ) )
             return false;
          mMigrated.insert( pClip.get() );
-         mMoving.emplace_back( std::move( interval ) );
+         if(offset == .0)
+            mMoving.emplace_back( std::move( interval ) );
+         else
+         {
+            pClip->Offset(offset);
+            mMoving.emplace_back(
+               pClip->GetPlayStartTime(),
+               pClip->GetPlayEndTime(),
+               std::make_unique<WaveTrack::IntervalData>(pClip));
+         }
       }
       return true;
    }
