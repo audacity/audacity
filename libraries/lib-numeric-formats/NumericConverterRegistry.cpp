@@ -89,7 +89,7 @@ void NumericConverterRegistry::Visit(const NumericConverterType& type, Visitor v
 {
    static Registry::OrderingPreferenceInitializer init {
       PathStart,
-      { { L"", L"" } },
+      { { L"", L"parsedTime,beats,parsedFrequency,parsedBandwith" } },
    };
 
    RegistryVisitor registryVisitor { std::move(visitor), type };

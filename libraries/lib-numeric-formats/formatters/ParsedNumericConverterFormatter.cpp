@@ -971,21 +971,21 @@ Registry::BaseItemPtr MakeGroup (
 }
 
 NumericConverterItemRegistrator parsedTime {
-   Registry::Placement { {}, { Registry::OrderingHint::Begin } },
+   Registry::Placement { {}, {} },
    MakeGroup(
       "parsedTime", NumericConverterType_TIME, TimeConverterFormats_,
       WXSIZEOF(TimeConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedFrequency {
-   Registry::Placement { {}, { Registry::OrderingHint::Begin } },
+   Registry::Placement { {}, {} },
    MakeGroup(
       "parsedFrequency", NumericConverterType_FREQUENCY,
       FrequencyConverterFormats_, WXSIZEOF(FrequencyConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedBandwith {
-   Registry::Placement { {}, { Registry::OrderingHint::Begin } },
+   Registry::Placement { {}, {} },
    MakeGroup(
       "parsedBandwith", NumericConverterType_BANDWIDTH,
       BandwidthConverterFormats_, WXSIZEOF(BandwidthConverterFormats_))
