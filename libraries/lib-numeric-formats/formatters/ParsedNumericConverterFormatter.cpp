@@ -959,11 +959,12 @@ Registry::BaseItemPtr MakeGroup (
       group->items.push_back(std::make_unique<NumericConverterRegistryItem>(
          functionIdentfier, formatString.name,
          formatString.formatStrings.fraction,
-         [&formatString, type](const auto& cfg)
+         [format = formatString.formatStrings.formatStr,
+          type](const auto& cfg)
             -> std::unique_ptr<NumericConverterFormatter>
          {
             return std::make_unique<ParsedNumericConverterFormatter>(
-               type, formatString.formatStrings.formatStr.Translation(), cfg.sampleRate);
+               type, format.Translation(), cfg.sampleRate);
          }));
    }
 
