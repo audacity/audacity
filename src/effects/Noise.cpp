@@ -156,7 +156,7 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
       float scaling = (9.0 / sqrt(mSampleRate) > 0.01)
          ? 9.0 / sqrt(mSampleRate)
          : 0.01f;
- 
+
       for (decltype(size) i = 0; i < size; i++)
       {
          white = (rand() / div) - 1.0f;
@@ -196,7 +196,7 @@ std::unique_ptr<EffectEditor> EffectNoise::PopulateOrExchange(
       auto &extra = access.Get().extra;
       mNoiseDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
-                         NumericConverterType::TIME,
+                         NumericConverterType_TIME,
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
                          mProjectRate,

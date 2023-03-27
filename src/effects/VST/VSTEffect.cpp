@@ -76,7 +76,7 @@
 #include <dlfcn.h>
 #endif
 
-// TODO:  Unfortunately we have some dependencies on Audacity provided 
+// TODO:  Unfortunately we have some dependencies on Audacity provided
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
 
 #include "FileNames.h"
@@ -148,7 +148,7 @@ DECLARE_PROVIDER_ENTRY(AudacityModule)
 // ============================================================================
 //
 // Register this as a builtin module
-// 
+//
 // We also take advantage of the fact that wxModules are initialized before
 // the wxApp::OnInit() method is called.  We check to see if Audacity was
 // executed to scan a VST effect in a different process.
@@ -260,7 +260,7 @@ PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
       }
    }
 
-#if defined(__WXMAC__)  
+#if defined(__WXMAC__)
 #define VSTPATH wxT("/Library/Audio/Plug-Ins/VST")
 
    // Look in ~/Library/Audio/Plug-Ins/VST and /Library/Audio/Plug-Ins/VST
@@ -1052,8 +1052,8 @@ std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
    bool useLatency;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), useLatency, true);
-  
- 
+
+
    return std::make_shared<VSTEffectInstance>(
       *this, mPath, userBlockSizeC, userBlockSizeC, useLatency);
 }
@@ -1255,7 +1255,7 @@ void VSTEffectInstance::DeferChunkApplication()
    std::lock_guard<std::mutex> guard(mDeferredChunkMutex);
 
    if (! mChunkToSetAtIdleTime.empty() )
-   {    
+   {
       ApplyChunk(mChunkToSetAtIdleTime);
       mChunkToSetAtIdleTime.resize(0);
    }
@@ -1283,7 +1283,7 @@ bool VSTEffectInstance::ChunkMustBeAppliedInMainThread() const
    // This is why we defer the setting of the chunk in the main thread.
 
    const bool IsAudioThread = (mMainThreadId != std::this_thread::get_id());
-   
+
    return IsAudioThread && mIsMeldaPlugin;
 }
 
@@ -1847,7 +1847,7 @@ bool VSTEffectWrapper::Load()
 
       // Try to load the library
       auto lib = std::make_unique<wxDynamicLibrary>(realPath);
-      if (!lib) 
+      if (!lib)
          return false;
 
       // Bail if it wasn't successful
@@ -1873,7 +1873,7 @@ bool VSTEffectWrapper::Load()
    //
    // Spent a few days trying to figure out why some VSTs where running okay and
    // others were hit or miss.  The cause was that we export all of Audacity's
-   // symbols and some of the loaded libraries were picking up Audacity's and 
+   // symbols and some of the loaded libraries were picking up Audacity's and
    // not their own.
    //
    // So far, I've only seen this issue on Linux, but we might just be getting
@@ -1892,7 +1892,7 @@ bool VSTEffectWrapper::Load()
       (char*) dlopen((const char *)wxString(realPath).ToUTF8(),
                      RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND)
    };
-   if (!lib) 
+   if (!lib)
    {
       return false;
    }
@@ -2232,7 +2232,7 @@ void VSTEffectEditor::OnTimer()
 }
 
 void VSTEffectUIWrapper::NeedIdle()
-{   
+{
 }
 
 void VSTEffectInstance::NeedIdle()
@@ -2334,7 +2334,7 @@ void VSTEffectEditor::NotifyParameterChanged(int index, float value)
          auto it = settings.mParamsMap.find(pi.mName);
 
          // For consistency with other plugin families
-         constexpr float epsilon = 1.0e-5f; 
+         constexpr float epsilon = 1.0e-5f;
 
          if (
             it == settings.mParamsMap.end() || !it->second.has_value() ||
@@ -2591,8 +2591,8 @@ void VSTEffectEditor::BuildFancy(EffectInstance& instance)
    NeedEditIdle(true);
 
    mDialog->Bind(wxEVT_SIZE, OnSize);
-   
-   
+
+
    BindTo(*mDialog, EVT_SIZEWINDOW, &VSTEffectEditor::OnSizeWindow);
 
 #ifdef __WXMAC__
@@ -2649,7 +2649,7 @@ void VSTEffectEditor::BuildPlain(EffectSettingsAccess &access, EffectType effect
             auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(scroller, ID_Duration,
-                  NumericConverterType::TIME,
+                  NumericConverterType_TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
                   projectRate,
@@ -3125,7 +3125,7 @@ bool VSTEffectWrapper::LoadFXProgram(unsigned char **bptr, ssize_t & len, int in
             return false;
          }
       }
-         
+
       // They look okay...time to start changing things
       if (!dryrun)
       {
@@ -3191,7 +3191,7 @@ bool VSTEffectWrapper::LoadFXProgram(unsigned char **bptr, ssize_t & len, int in
       // Unknown type
       return false;
    }
-   
+
    if (!dryrun)
    {
       SetString(effSetProgramName, wxString(progName), index);
@@ -3873,7 +3873,7 @@ bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vstSettings) const
          return true;
       }
    );
-   
+
    constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
    return true;
@@ -3923,7 +3923,7 @@ VSTEffectWrapper::MakeMessageFS(const VSTEffectSettings &settings) const
             slot = iter->second;
          return true;
       }
-   );   
+   );
 
    return std::make_unique<VSTEffectMessage>(
       settings.mChunk /* vector copy */, std::move(paramVector));

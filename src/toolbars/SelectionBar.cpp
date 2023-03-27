@@ -107,7 +107,7 @@ IMPLEMENT_CLASS(SelectionBar, ToolBar);
 
 BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_SIZE(SelectionBar::OnSize)
-   
+
    EVT_IDLE( SelectionBar::OnIdle )
 
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, SelectionBar::OnUpdate)
@@ -190,11 +190,11 @@ AButton* SelectionBar::MakeSetupButton()
    hiliteUp.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
    wxImage hiliteDown = theTheme.Image(bmpRecoloredHiliteSmall);
    hiliteDown.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
-   
+
    auto btn = safenew AButton(
       this, wxID_ANY, wxDefaultPosition, wxSize { 20, 20 }, up, hiliteUp, down,
       hiliteDown, up, false);
-   
+
    btn->SetButtonType(AButton::FrameButton);
    btn->SetIcon(theTheme.Image(bmpCogwheel));
    btn->SetLabel({});
@@ -218,12 +218,12 @@ void SelectionBar::AddTime(
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
       : NumericFormatSymbol{};
    auto pCtrl = safenew NumericTextCtrl(
-      this, id, NumericConverterType::TIME, formatName, 0.0, mRate);
+      this, id, NumericConverterType_TIME, formatName, 0.0, mRate);
 
    pCtrl->Bind(
       wxEVT_TEXT,
       [this, id](auto& evt) { ModifySelection(id, evt.GetInt() != 0); });
-   
+
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
 
    mTimeControls[id] = pCtrl;
@@ -289,7 +289,7 @@ void SelectionBar::Populate()
    AddTime(0, mainSizer);
    AddSelectionSetupButton(mainSizer);
    AddTime(1, mainSizer);
-   
+
    // Update the selection mode before the layout
    SetSelectionMode(mSelectionMode);
    UpdateTimeSignature();
@@ -304,7 +304,7 @@ void SelectionBar::UpdatePrefs()
    // When preferences change, the Project learns about it too.
    // If necessary we can drive the SelectionBar mRate via the Project
    // calling our SetRate().
-   // As of 13-Sep-2018, changes to the sample rate pref will only affect 
+   // As of 13-Sep-2018, changes to the sample rate pref will only affect
    // creation of new projects, not the sample rate in existing ones.
 
    // This will only change the selection mode during a "Reset Configuration"
@@ -317,7 +317,7 @@ void SelectionBar::UpdatePrefs()
    // update.
    wxCommandEvent e;
    e.SetString(NumericTextCtrl::LookupFormat(
-               NumericConverterType::TIME,
+               NumericConverterType_TIME,
                gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
 
@@ -414,18 +414,18 @@ void SelectionBar::ModifySelection(int driver, bool done)
 void SelectionBar::OnUpdate(wxCommandEvent &evt)
 {
    evt.Skip(false);
-   
+
    wxWindow *w = FindFocus();
 
    auto focusedCtrlIt =
       std::find(mTimeControls.begin(), mTimeControls.end(), w);
-   
+
    const auto focusedCtrlIdx =
       focusedCtrlIt != mTimeControls.end() ?
          std::distance(mTimeControls.begin(), focusedCtrlIt) :
          -1;
 
-   auto format = NumericTextCtrl::LookupFormat(NumericConverterType::TIME, evt.GetString());
+   auto format = NumericTextCtrl::LookupFormat(NumericConverterType_TIME, evt.GetString());
 
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())
@@ -437,7 +437,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    // ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    std::fill(mTimeControls.begin(), mTimeControls.end(), nullptr);
-   
+
    ToolBar::ReCreateButtons();
 
    ValuesToControls();
@@ -492,7 +492,7 @@ void SelectionBar::SetSelectionMode(SelectionMode mode)
 
    if (mTimeControls[1])
       mTimeControls[1]->SetName(modeName.second);
-   
+
    ValuesToControls();
 }
 
@@ -503,7 +503,7 @@ void SelectionBar::ValuesToControls()
       { mStart, mLength },
       { mLength, mEnd },
       { mLength, mCenter } };
-   
+
    const auto value = valuePairs[static_cast<size_t>(mSelectionMode)];
 
    size_t i = 0;
@@ -511,7 +511,7 @@ void SelectionBar::ValuesToControls()
    {
       if (ctrl != nullptr)
          ctrl->SetValue(value[i]);
-      
+
       i++;
    }
 }
@@ -536,7 +536,7 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
 {
    if (mTimeControls.front() == nullptr)
       return;
-   
+
    const bool changed = mTimeControls.front()->SetFormatName(format);
 
    // Test first whether changed, to avoid infinite recursion from OnUpdate
@@ -566,7 +566,7 @@ void SelectionBar::UpdateRate(double rate)
 void SelectionBar::UpdateTimeSignature()
 {
    const auto& timeSignature = ProjectTimeSignature::Get(mProject);
-   
+
    const auto tempo = timeSignature.GetTempo();
    const auto uts = timeSignature.GetUpperTimeSignature();
    const auto lts = timeSignature.GetLowerTimeSignature();

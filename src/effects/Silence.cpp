@@ -74,7 +74,7 @@ std::unique_ptr<EffectEditor> EffectSilence::PopulateOrExchange(
          auto &extra = access.Get().extra;
          mDurationT = safenew
             NumericTextCtrl(S.GetParent(), wxID_ANY,
-                              NumericConverterType::TIME,
+                              NumericConverterType_TIME,
                               extra.GetDurationFormat(),
                               extra.GetDuration(),
                                mProjectRate,

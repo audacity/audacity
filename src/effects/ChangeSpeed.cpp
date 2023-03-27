@@ -250,7 +250,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
          CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
-         NumericConverterType::TIME, formatId );
+         NumericConverterType_TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(),
@@ -329,7 +329,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
             mpFromLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), wxID_ANY,
-                                 NumericConverterType::TIME,
+                                 NumericConverterType_TIME,
                                  mFormat,
                                  mFromLength,
                                  mProjectRate,
@@ -347,7 +347,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
 
             mpToLengthCtrl = safenew
                   NumericTextCtrl(S.GetParent(), ID_ToLength,
-                                 NumericConverterType::TIME,
+                                 NumericConverterType_TIME,
                                  mFormat,
                                  mToLength,
                                  mProjectRate);
@@ -444,7 +444,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // initialization, per examples of Mixer::Mixer and
    // EffectSoundTouch::ProcessOne
 
-   
+
    auto outputTrack = track->EmptyCopy();
 
    //Get the length of the selection (as double). len is
@@ -676,7 +676,7 @@ void EffectChangeSpeed::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(evt))
 void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
    mFormat = NumericConverter::LookupFormat(
-      NumericConverterType::TIME, evt.GetString() );
+      NumericConverterType_TIME, evt.GetString() );
 
    mpFromLengthCtrl->SetFormatName(mFormat);
    // Update From/To Length controls (precision has changed).

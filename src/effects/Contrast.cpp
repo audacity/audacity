@@ -126,7 +126,7 @@ bool ContrastDialog::GetDB(float &dB)
 
    // Gives warning C4056, Overflow in floating-point constant arithmetic
    // -INFINITY is intentional here.
-   // Looks like we are stuck with this warning, as 
+   // Looks like we are stuck with this warning, as
    // #pragma warning( disable : 4056)
    // even around the whole function does not disable it successfully.
 
@@ -249,7 +249,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          {
             mForegroundStartT = safenew
                NumericTextCtrl(S.GetParent(), ID_FOREGROUNDSTART_T,
-                         NumericConverterType::TIME,
+                         NumericConverterType_TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
@@ -262,7 +262,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          {
             mForegroundEndT = safenew
                NumericTextCtrl(S.GetParent(), ID_FOREGROUNDEND_T,
-                         NumericConverterType::TIME,
+                         NumericConverterType_TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
@@ -283,7 +283,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          {
             mBackgroundStartT = safenew
                NumericTextCtrl(S.GetParent(), ID_BACKGROUNDSTART_T,
-                         NumericConverterType::TIME,
+                         NumericConverterType_TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
@@ -296,7 +296,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          {
             mBackgroundEndT = safenew
                NumericTextCtrl(S.GetParent(), ID_BACKGROUNDEND_T,
-                         NumericConverterType::TIME,
+                         NumericConverterType_TIME,
                          NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,

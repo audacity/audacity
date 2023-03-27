@@ -1,14 +1,14 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  TimeToolBar.cpp
- 
+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
- 
+
  *//*******************************************************************/
 
 
@@ -98,7 +98,7 @@ void TimeToolBar::Populate()
    auto format = formats.GetAudioTimeFormat();
 
    // Create the read-only time control
-   mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverterType::TIME, format, 0.0, rate);
+   mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverterType_TIME, format, 0.0, rate);
    mAudioTime->SetName(XO("Audio Position"));
    mAudioTime->SetReadOnly(true);
 
@@ -135,7 +135,7 @@ void TimeToolBar::UpdatePrefs()
 
 void TimeToolBar::SetToDefaultSize()
 {
-   // Reset 
+   // Reset
    SetMaxSize(wxDefaultSize);
    SetMinSize(wxDefaultSize);
 

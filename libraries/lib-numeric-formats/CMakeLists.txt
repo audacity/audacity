@@ -16,6 +16,7 @@ set( SOURCES
    NumericConverterFormatter.h
    NumericConverterRegistry.cpp
    NumericConverterRegistry.h
+   NumericConverterType.cpp
    NumericConverterType.h
    ProjectNumericFormats.cpp
    ProjectNumericFormats.h

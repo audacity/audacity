@@ -178,7 +178,7 @@ void LabelDialog::PopulateLabels()
    attr->SetAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
 
    mGrid->SetColAttr(Col_Hfreq, attr->Clone());
-   
+
    // Seems there's a bug in wxGrid.  Adding only 1 row does not
    // allow SetCellSize() to work properly and you will not get
    // the expected 1 row by 4 column cell.
@@ -530,7 +530,7 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFormat = NumericConverter::LookupFormat(
-      NumericConverterType::TIME, event.GetString() );
+      NumericConverterType_TIME, event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);
@@ -540,7 +540,7 @@ void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFreqFormat = NumericConverter::LookupFormat(
-      NumericConverterType::FREQUENCY, event.GetString() );
+      NumericConverterType_FREQUENCY, event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);
@@ -892,7 +892,7 @@ void LabelDialog::OnChangeHfreq(wxGridEvent & WXUNUSED(event), int row, RowData 
    rd->selectedRegion.setF1(f, false);
    mGrid->SetCellValue(row, Col_Lfreq, wxString::Format(wxT("%g"),
                                                         rd->selectedRegion.f0()));
-   
+
    return;
 }
 
@@ -901,7 +901,7 @@ void LabelDialog::ReadSize(){
    int prefWidth, prefHeight;
    gPrefs->Read(wxT("/LabelEditor/Width"), &prefWidth, sz.x);
    gPrefs->Read(wxT("/LabelEditor/Height"), &prefHeight, sz.y);
-   
+
    wxRect screenRect(wxGetClientDisplayRect());
    wxSize prefSize = wxSize(prefWidth, prefHeight);
    prefSize.DecTo(screenRect.GetSize());

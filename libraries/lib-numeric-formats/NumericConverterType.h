@@ -10,9 +10,10 @@
  **********************************************************************/
 #pragma once
 
-enum class NumericConverterType
-{
-   TIME,
-   FREQUENCY,
-   BANDWIDTH,
-};
+#include "Identifier.h"
+
+using NumericConverterType = Identifier;
+
+NUMERIC_FORMATS_API extern const NumericConverterType NumericConverterType_TIME;
+NUMERIC_FORMATS_API extern const NumericConverterType NumericConverterType_FREQUENCY;
+NUMERIC_FORMATS_API extern const NumericConverterType NumericConverterType_BANDWIDTH;

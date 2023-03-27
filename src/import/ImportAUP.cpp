@@ -76,7 +76,7 @@ public:
    ~AUPImportPlugin();
 
    wxString GetPluginStringID() override;
-   
+
    TranslatableString GetPluginFormatDescription() override;
 
    ImportHandle Open(const FilePath &fileName,
@@ -254,7 +254,7 @@ wxString AUPImportPlugin::GetPluginStringID()
 {
    return wxT("legacyaup");
 }
-   
+
 TranslatableString AUPImportPlugin::GetPluginFormatDescription()
 {
    return DESC;
@@ -401,7 +401,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    {
       return mUpdateResult;
    }
-   
+
    if (mProjectAttrs.haverate)
       ProjectRate::Get(mProject).SetRate(mProjectAttrs.rate);
 
@@ -414,28 +414,28 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    if (mProjectAttrs.haveselectionformat)
    {
       selman.AS_SetSelectionFormat(
-         NumericConverter::LookupFormat(NumericConverterType::TIME,
+         NumericConverter::LookupFormat(NumericConverterType_TIME,
          mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
       selman.TT_SetAudioTimeFormat(
-         NumericConverter::LookupFormat(NumericConverterType::TIME,
+         NumericConverter::LookupFormat(NumericConverterType_TIME,
          mProjectAttrs.audiotimeformat));
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
       selman.SSBL_SetFrequencySelectionFormatName(
-         NumericConverter::LookupFormat(NumericConverterType::FREQUENCY,
+         NumericConverter::LookupFormat(NumericConverterType_FREQUENCY,
          mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
       selman.SSBL_SetBandwidthSelectionFormatName(
-         NumericConverter::LookupFormat(NumericConverterType::BANDWIDTH,
+         NumericConverter::LookupFormat(NumericConverterType_BANDWIDTH,
          mProjectAttrs.bandwidthformat));
    }
 
@@ -503,7 +503,7 @@ bool AUPImportFileHandle::Open()
       char buf[256];
 
       int numRead = ff.Read(buf, sizeof(buf));
-      
+
       ff.Close();
 
       buf[sizeof(buf) - 1] = '\0';
@@ -556,7 +556,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
    {
       node.handler->HandleXMLEndTag(tag);
    }
-   
+
    mHandlers.pop_back();
 
    if (mHandlers.size())
@@ -1469,8 +1469,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
 
 #ifndef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
    const auto uncaughtExceptionsCount = std::uncaught_exceptions();
-#endif  
-   
+#endif
+
    auto cleanup = finally([&]
    {
       // Do this before any throwing might happen
@@ -1534,7 +1534,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    samplePtr bufptr = buffer.ptr();
 
    size_t framesRead = 0;
-   
+
    // These cases preserve the logic formerly in BlockFile.cpp,
    // which was deleted at commit 98d1468.
    if (channels == 1 && format == int16Sample && sf_subtype_is_integer(info.format))

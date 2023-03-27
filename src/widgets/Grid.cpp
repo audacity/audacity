@@ -142,7 +142,7 @@ void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handle
       mRate,
       NumericTextCtrl::Options{}
          .AutoPos(true)
-         .InvalidValue(mType == NumericConverterType::FREQUENCY,
+         .InvalidValue(mType == NumericConverterType_FREQUENCY,
                        SelectedRegion::UndefinedFrequency)
    );
    m_control = control;
@@ -485,15 +485,15 @@ Grid::Grid(wxWindow *parent,
    // RegisterDataType takes ownership of renderer and editor
 
    RegisterDataType(GRID_VALUE_TIME,
-                    safenew NumericRenderer{ NumericConverterType::TIME },
+                    safenew NumericRenderer{ NumericConverterType_TIME },
                     safenew NumericEditor
-                      { NumericConverterType::TIME,
+                      { NumericConverterType_TIME,
                         NumericConverter::SecondsFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
-                    safenew NumericRenderer{ NumericConverterType::FREQUENCY },
+                    safenew NumericRenderer{ NumericConverterType_FREQUENCY },
                     safenew NumericEditor
-                    { NumericConverterType::FREQUENCY,
+                    { NumericConverterType_FREQUENCY,
                       NumericConverter::HertzFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_CHOICE,
@@ -965,10 +965,10 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
       NumericEditor *c =
          static_cast<NumericEditor *>(mGrid->GetCellEditor(row, col));
 
-      if (c && dt && df && ( c == dt || c == df)) {        
+      if (c && dt && df && ( c == dt || c == df)) {
          double value;
          v.ToDouble(&value);
-         NumericConverter converter(c == dt ? NumericConverterType::TIME : NumericConverterType::FREQUENCY,
+         NumericConverter converter(c == dt ? NumericConverterType_TIME : NumericConverterType_FREQUENCY,
                         c->GetFormat(),
                         value,
                         c->GetRate() );
@@ -1045,7 +1045,7 @@ wxAccStatus GridAx::GetState(int childId, long *state)
 
       if (mGrid->IsReadOnly(row, col)) {
          // It would be more logical to also include the state
-         // wxACC_STATE_SYSTEM_FOCUSABLE, but this causes Window-Eyes to 
+         // wxACC_STATE_SYSTEM_FOCUSABLE, but this causes Window-Eyes to
          // no longer read the cell as disabled
          flag = wxACC_STATE_SYSTEM_UNAVAILABLE | wxACC_STATE_SYSTEM_FOCUSED;
       }

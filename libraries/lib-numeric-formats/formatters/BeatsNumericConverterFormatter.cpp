@@ -35,7 +35,7 @@ public:
    {
       mFields.reserve(mFracPart > 0 ? 3 : 2);
 
-      // Range is assumed to allow 999 bars. 
+      // Range is assumed to allow 999 bars.
       auto& barsField = mFields.emplace_back(NumericField { 1000, true });
       barsField.label = L" " + XO("bar").Translation() + L" ";
 
@@ -121,13 +121,13 @@ public:
 
          value = value - fieldValue * fieldLength;
       }
-      
+
       UpdateResultString(result);
       return result;
    }
 
    std::optional<double> StringToValue(const wxString& valueString) const override
-   {      
+   {
       if (
          mFields.size() > 0 &&
          valueString.Mid(mFields[0].pos, 1) == wxChar('-'))
@@ -192,7 +192,7 @@ NumericConverterItemRegistrator beatsTime
 {
    Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedTime" } },
       NumericConverterFormatterGroup(
-         "beats", NumericConverterType::TIME,
+         "beats", NumericConverterType_TIME,
          NumericConverterFormatterItem(
             "beats", XO("beats"),
          [](const auto& config)

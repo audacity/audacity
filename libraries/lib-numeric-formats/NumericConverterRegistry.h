@@ -39,7 +39,7 @@ struct NUMERIC_FORMATS_API NumericConverterRegistryGroup :
       const Identifier& internalName, NumericConverterType _type,
       Args&&... args)
        : InlineGroupItem { internalName, std::forward<Args>(args)... }
-       , type { _type }
+       , type { std::move(_type) }
    {
    }
 
@@ -75,10 +75,10 @@ struct NUMERIC_FORMATS_API NumericConverterRegistry final
 
    using Visitor = std::function<void(const NumericConverterRegistryItem&)>;
    
-   static void Visit(NumericConverterType type, Visitor visitor);
+   static void Visit(const NumericConverterType& type, Visitor visitor);
 
    static const NumericConverterRegistryItem*
-   Find(NumericConverterType type, const NumericFormatSymbol& symbol);
+   Find(const NumericConverterType& type, const NumericFormatSymbol& symbol);
 };
 
 NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
@@ -92,7 +92,7 @@ NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
 
 template <typename... Args>
 Registry::BaseItemPtr NumericConverterFormatterGroup(
-   const Identifier& groupId, NumericConverterType type,
+   const Identifier& groupId, const NumericConverterType& type,
    Args&&... args)
 {
    return std::make_unique<NumericConverterRegistryGroup>(

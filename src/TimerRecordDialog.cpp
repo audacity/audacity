@@ -403,7 +403,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    // complete this Timer Recording.
    // If we don't think there is enough space then ask the user
    // if they want to continue.
-   // We don't stop the user from starting the recording 
+   // We don't stop the user from starting the recording
    // as its possible that they plan to free up some
    // space before the recording begins
    auto &projectManager = ProjectManager::Get( mProject );
@@ -555,8 +555,8 @@ int TimerRecordDialog::RunWaitDialog()
 }
 
 int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
-   // MY: We no longer automatically (and silently) call ->Save() when the 
-   // timer recording is completed.  We can now Save and/or Export depending 
+   // MY: We no longer automatically (and silently) call ->Save() when the
+   // timer recording is completed.  We can now Save and/or Export depending
    // on the options selected by the user.
    // Once completed, we can also close Audacity, restart the system or
    // shutdown the system.
@@ -778,7 +778,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                .AddWindow(m_pDatePickerCtrl_Start);
 
             m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
-               S.GetParent(), ID_TIMETEXT_START, NumericConverterType::TIME,
+               S.GetParent(), ID_TIMETEXT_START, NumericConverterType_TIME,
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
@@ -796,7 +796,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                ID_DATEPICKER_END, // wxWindowID id,
                m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
             // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-            //                            long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, 
+            //                            long style = wxDP_DEFAULT | wxDP_SHOWCENTURY,
             //                            const wxValidator& validator = wxDefaultValidator,
             //                            const wxString& name = "datectrl")
             m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
@@ -807,7 +807,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                .AddWindow(m_pDatePickerCtrl_End);
 
             m_pTimeTextCtrl_End = safenew NumericTextCtrl(
-               S.GetParent(), ID_TIMETEXT_END, NumericConverterType::TIME,
+               S.GetParent(), ID_TIMETEXT_END, NumericConverterType_TIME,
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
@@ -821,7 +821,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartStatic(XO("Duration"), true);
          {
             m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
-               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverterType::TIME,
+               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverterType_TIME,
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
@@ -979,13 +979,13 @@ void TimerRecordDialog::UpdateEnd()
 {
    //v Use remaining disk -> record time calcs from AudacityProject::OnTimer to set range?
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
-   //wxLogDebug( "Time start %s end %s", 
+   //wxLogDebug( "Time start %s end %s",
    //   m_DateTime_Start.FormatISOCombined(' '),
    //   m_DateTime_End.FormatISOCombined(' ') );
 
    // Disable the range limitation (to fix Bug 1749 and 1978)
    // Otherwise SetVallue asserts when going back in time.
-   m_pDatePickerCtrl_End->SetRange(wxInvalidDateTime, wxInvalidDateTime); 
+   m_pDatePickerCtrl_End->SetRange(wxInvalidDateTime, wxInvalidDateTime);
    m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
    // Re-enable range limitation to constrain user input.
    m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
@@ -1171,7 +1171,7 @@ void OnTimerRecord(const CommandContext &context)
          return;
       }
    }
-   
+
    // We use this variable to display "Current Project" in the Timer Recording
    // save project field
    bool bProjectSaved = !ProjectFileIO::Get( project ).IsModified();

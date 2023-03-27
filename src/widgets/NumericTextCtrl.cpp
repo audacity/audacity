@@ -325,7 +325,7 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 {
    if (!mFormatter)
       return {};
-   
+
    // Get current box size
    if (boxW == 0) {
       boxW = mDigitBoxW;
@@ -368,7 +368,7 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 
    // Use the label font for all remaining measurements since only non-digit text is left
    dc.SetFont(*labelFont);
- 
+
    // Remember the pointer if updating
    if (update) {
       mLabelFont = std::move(labelFont);
@@ -446,7 +446,7 @@ bool NumericTextCtrl::Layout()
 {
    if (!mFormatter)
       return {};
-   
+
    ComputeSizing();
 
    auto& prefix = mFormatter->GetPrefix();
@@ -525,7 +525,7 @@ void NumericTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    if (!mFormatter)
       return;
-   
+
    wxBufferedPaintDC dc(this);
    bool focused = (FindFocus() == this);
 
@@ -608,33 +608,30 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    // This used to be in an EVT_MENU() event handler, but GTK
    // is sensitive to what is done within the handler if the
-   // user happens to check the first menuitem and then is 
+   // user happens to check the first menuitem and then is
    // moving down the menu when the ...CTRL_UPDATED event
    // handler kicks in.
    auto menuIndex = ID_MENU;
+
+   int eventType = 0;
+
+   if (mType == NumericConverterType_TIME)
+      eventType = EVT_TIMETEXTCTRL_UPDATED;
+   else if (mType == NumericConverterType_FREQUENCY)
+      eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
+   else if (mType == NumericConverterType_BANDWIDTH)
+      eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
+   else
+   {
+      assert(false); // unsupported control type, skip it
+      return;
+   }
 
    for (const auto& symbol : symbols)
    {
       if (!menu.IsChecked(menuIndex++) || mFormatSymbol == symbol)
          continue;
-
-      int eventType = 0;
-      switch (mType)
-      {
-      case NumericConverterType::TIME:
-         eventType = EVT_TIMETEXTCTRL_UPDATED;
-         break;
-      case NumericConverterType::FREQUENCY:
-         eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
-         break;
-      case NumericConverterType::BANDWIDTH:
-         eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
-         break;
-      default:
-         wxASSERT(false);
-         break;
-      }
-
+         
       SetFormatName(symbol);
 
       wxCommandEvent e(eventType, GetId());
@@ -1110,7 +1107,7 @@ static void GetFraction( wxString &label, NumericConverterType type,
       return;
 
    auto& tr = result->fractionLabel;
-   
+
    if (!tr.empty())
       label = tr.Translation();
 }
@@ -1120,7 +1117,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 {
    if (!mCtrl->mFormatter)
       return wxACC_FAIL;
-   
+
    // Slightly messy trick to save us some prefixing.
    auto & mFields = mCtrl->mFormatter->GetFields();
    auto & mDigits = mCtrl->mFormatter->GetDigitInfos();

@@ -85,7 +85,7 @@ Registry::GroupItem& NumericConverterRegistry::Registry()
    return registry;
 }
 
-void NumericConverterRegistry::Visit(NumericConverterType type, Visitor visitor)
+void NumericConverterRegistry::Visit(const NumericConverterType& type, Visitor visitor)
 {
    static Registry::OrderingPreferenceInitializer init {
       PathStart,
@@ -98,8 +98,8 @@ void NumericConverterRegistry::Visit(NumericConverterType type, Visitor visitor)
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 
-const NumericConverterRegistryItem*
-NumericConverterRegistry::Find(NumericConverterType type, const NumericFormatSymbol& symbol)
+const NumericConverterRegistryItem* NumericConverterRegistry::Find(
+   const NumericConverterType& type, const NumericFormatSymbol& symbol)
 {
    const NumericConverterRegistryItem* result = nullptr;
 

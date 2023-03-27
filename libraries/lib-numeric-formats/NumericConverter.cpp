@@ -74,17 +74,14 @@ NumericFormatSymbol NumericConverter::HertzFormat()
 
 NumericFormatSymbol NumericConverter::DefaultFormat(NumericConverterType type)
 {
-   switch (type)
-   {
-   case NumericConverterType::TIME:
+   if (type == NumericConverterType_TIME)
       return DefaultSelectionFormat();
-   case NumericConverterType::FREQUENCY:
+   else if (type == NumericConverterType_FREQUENCY)
       return HertzFormat();
-   case NumericConverterType::BANDWIDTH:
+   else if (type == NumericConverterType_BANDWIDTH)
       return L"octaves";
-   default:
+   else
       return DefaultSelectionFormat();
-   }
 }
 
 NumericFormatSymbol
@@ -103,7 +100,7 @@ NumericConverter::NumericConverter(NumericConverterType type,
 {
    ResetMinValue();
    ResetMaxValue();
-   
+
    mInvalidValue = -1.0;
    mType = type;
    mValue = value; // used in SetSampleRate, reassigned later
@@ -138,7 +135,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
       return;
 
    auto result = mFormatter->ValueToString(rawValue, nearest);
-   
+
    mValueString = std::move(result.valueString);
    mFieldValueStrings = std::move(result.fieldValueStrings);
 }
@@ -162,7 +159,7 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
 {
    if (mFormatSymbol == formatName && !formatName.empty())
       return false;
-   
+
    const auto newFormat = LookupFormat(mType, formatName.Internal());
 
    if (mFormatSymbol == newFormat)
@@ -170,9 +167,9 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
 
    mFormatSymbol = newFormat;
    mCustomFormat = {};
-   
+
    UpdateFormatter();
-   
+
    return true;
 }
 

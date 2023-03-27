@@ -336,14 +336,14 @@ public:
    {
       ConversionResult result;
 
-      if (mType == NumericConverterType::TIME)
+      if (mType == NumericConverterType_TIME)
          rawValue = floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f)) /
                     mSampleRate; // put on a sample
       double theValue = rawValue * mScalingFactor
          // PRL:  what WAS this .000001 for?  Nobody could explain.
          // + .000001
          ;
-      
+
       sampleCount t_int;
       bool round = true;
       // We round on the last field.  If we have a fractional field we round
@@ -654,7 +654,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Name of time display format that shows time in seconds
     * and milliseconds (1/1000 second) */
    { XO("seconds + milliseconds") },
-   /* i18n-hint: Format string for displaying time in seconds and milliseconds 
+   /* i18n-hint: Format string for displaying time in seconds and milliseconds
     * as fractional seconds. Change the comma in the middle to the 1000s separator
     * for your locale, and the 'seconds' on the end to the word for seconds.
     * Don't change the numbers. The decimal separator is specified using '<' if
@@ -804,7 +804,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    { XO("NTSC frames") },
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
-    * in the middle to the 1000s separator for your locale, 
+    * in the middle to the 1000s separator for your locale,
     * translate 'frames' and leave the rest alone. That really is the frame
     * rate! */
    XO("01000,01000 frames|29.97002997")
@@ -829,7 +829,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    { XO("PAL frames (25 fps)") },
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
-    * in the middle to the 1000s separator for your locale, 
+    * in the middle to the 1000s separator for your locale,
     * translate 'frames' and leave the rest alone. */
    XO("01000,01000 frames|25")
    },
@@ -853,7 +853,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    { XO("CDDA frames (75 fps)") },
    /* i18n-hint: Format string for displaying time in frames with CD Audio
     * frames. Change the comma
-    * in the middle to the 1000s separator for your locale, 
+    * in the middle to the 1000s separator for your locale,
     * translate 'frames' and leave the rest alone */
    XO("01000,01000 frames|75")
    },
@@ -927,7 +927,7 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
       XO("hundredths of cents")
    }
    },
-   
+
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in decades */
@@ -952,7 +952,7 @@ Registry::BaseItemPtr MakeGroup (
    {
       const auto functionIdentfier =
          wxString::Format(L"%s_%zu", identifier.GET(), index);
-      
+
       auto& formatString = formatStrings[index];
 
       group->items.push_back(std::make_unique<NumericConverterRegistryItem>(
@@ -972,21 +972,21 @@ Registry::BaseItemPtr MakeGroup (
 NumericConverterItemRegistrator parsedTime {
    Registry::Placement { {}, { Registry::OrderingHint::Begin } },
    MakeGroup(
-      "parsedTime", NumericConverterType::TIME, TimeConverterFormats_,
+      "parsedTime", NumericConverterType_TIME, TimeConverterFormats_,
       WXSIZEOF(TimeConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedFrequency {
    Registry::Placement { {}, { Registry::OrderingHint::Begin } },
    MakeGroup(
-      "parsedFrequency", NumericConverterType::FREQUENCY,
+      "parsedFrequency", NumericConverterType_FREQUENCY,
       FrequencyConverterFormats_, WXSIZEOF(FrequencyConverterFormats_))
 };
 
 NumericConverterItemRegistrator parsedBandwith {
    Registry::Placement { {}, { Registry::OrderingHint::Begin } },
    MakeGroup(
-      "parsedBandwith", NumericConverterType::BANDWIDTH,
+      "parsedBandwith", NumericConverterType_BANDWIDTH,
       BandwidthConverterFormats_, WXSIZEOF(BandwidthConverterFormats_))
 };
 } // namespace

@@ -17,7 +17,7 @@
 TEST_CASE("ParsedNumericConverterFormatter", "")
 {
    auto hhmmssFormatter = CreateParsedNumericConverterFormatter(
-      NumericConverterType::TIME, "0100 h 060 m 060 s", 44100.0);
+      NumericConverterType_TIME, "0100 h 060 m 060 s", 44100.0);
 
    REQUIRE(
       hhmmssFormatter->ValueToString(0.0, false).valueString ==
@@ -38,11 +38,11 @@ TEST_CASE("ParsedNumericConverterFormatter", "")
    REQUIRE(
       hhmmssFormatter->ValueToString(60.0, false).fieldValueStrings[0] ==
       "00");
-   
+
    REQUIRE(
       hhmmssFormatter->ValueToString(60.0, false).fieldValueStrings[1] ==
       "01");
-   
+
    REQUIRE(
       hhmmssFormatter->ValueToString(60.0, false).fieldValueStrings[2] ==
       "00");
@@ -59,11 +59,11 @@ TEST_CASE("ParsedNumericConverterFormatter", "")
 TEST_CASE("BeatsNumericConverterFormatter", "")
 {
    auto basicFormatter = CreateBeatsNumericConverterFormatter(120, 3, 4);
-   
+
    REQUIRE(
       basicFormatter->ValueToString(-1.0, false).valueString ==
       "--- bar -- beat");
-   
+
    REQUIRE(
       basicFormatter->ValueToString(0.0, false).valueString ==
       "001 bar 01 beat");

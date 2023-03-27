@@ -53,7 +53,7 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
          mTimeCtrl = safenew
             NumericTextCtrl(
                S.GetParent(), wxID_ANY,
-                         NumericConverterType::TIME,
+                         NumericConverterType_TIME,
                          mFormat,
                          mTime,
                          mRate,

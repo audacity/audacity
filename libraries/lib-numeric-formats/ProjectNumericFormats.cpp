@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file ProjectNumericFormats.cpp
- 
+
  Paul Licameli split from ProjectNumericFormats.cpp
- 
+
  **********************************************************************/
 #include "ProjectNumericFormats.h"
 #include "Prefs.h"
@@ -35,19 +35,19 @@ const ProjectNumericFormats &ProjectNumericFormats::Get(
 
 ProjectNumericFormats::ProjectNumericFormats()
    : mSelectionFormat{ NumericConverter::LookupFormat(
-      NumericConverterType::TIME,
+      NumericConverterType_TIME,
       gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
    }
    , mFrequencySelectionFormatName{ NumericConverter::LookupFormat(
-      NumericConverterType::FREQUENCY,
+      NumericConverterType_FREQUENCY,
       gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
    }
    , mBandwidthSelectionFormatName{ NumericConverter::LookupFormat(
-      NumericConverterType::BANDWIDTH,
+      NumericConverterType_BANDWIDTH,
       gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
    }
    , mAudioTimeFormat{ NumericConverter::LookupFormat(
-      NumericConverterType::TIME,
+      NumericConverterType_TIME,
       gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
    }
 {}
@@ -119,16 +119,16 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
    // preference file.
    { "selectionformat", [](auto &formats, auto value){
       formats.SetSelectionFormat(NumericConverter::LookupFormat(
-              NumericConverterType::TIME, value.ToWString()));
+              NumericConverterType_TIME, value.ToWString()));
    } },
    { "frequencyformat", [](auto &formats, auto value){
       formats.SetFrequencySelectionFormatName(
               NumericConverter::LookupFormat(
-                 NumericConverterType::FREQUENCY, value.ToWString()));
+                 NumericConverterType_FREQUENCY, value.ToWString()));
    } },
    { "bandwidthformat", [](auto &formats, auto value){
       formats.SetBandwidthSelectionFormatName(
               NumericConverter::LookupFormat(
-                 NumericConverterType::BANDWIDTH, value.ToWString()));
+                 NumericConverterType_BANDWIDTH, value.ToWString()));
    } },
 } };

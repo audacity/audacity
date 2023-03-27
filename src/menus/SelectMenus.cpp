@@ -74,7 +74,7 @@ double NearestZeroCrossing
 
          dist[i] += oneDist[j];
          // Apply a small penalty for distance from the original endpoint
-         // We'll always prefer an upward  
+         // We'll always prefer an upward
          dist[i] +=
             0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
       }
@@ -171,7 +171,7 @@ double GridMove
    auto &viewInfo = ViewInfo::Get( project );
    auto format = formats.GetSelectionFormat();
 
-   NumericConverter nc(NumericConverterType::TIME, format, t, rate);
+   NumericConverter nc(NumericConverterType_TIME, format, t, rate);
 
    // Try incrementing/decrementing the value; if we've moved far enough we're
    // done
@@ -218,7 +218,7 @@ void MoveWhenAudioInactive
    // If TIME_UNIT_SECONDS, snap-to will be off.
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
-   const double end = std::max( 
+   const double end = std::max(
       tracks.GetEndTime(),
       viewInfo.GetScreenEndTime());
 
@@ -231,7 +231,7 @@ void MoveWhenAudioInactive
       // constrain.
       newT = std::max(0.0, newT);
       newT = std::min(newT, end);
-      // Move 
+      // Move
       viewInfo.selectedRegion.setT0(
          newT,
          false); // do not swap selection boundaries
@@ -274,7 +274,7 @@ SelectionOperation operation)
    auto snapMode = settings.GetSnapMode();
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
-   const double end = std::max( 
+   const double end = std::max(
       tracks.GetEndTime(),
       viewInfo.GetScreenEndTime());
 
@@ -294,7 +294,7 @@ SelectionOperation operation)
    // Actually move
    if( bMoveT0 )
       viewInfo.selectedRegion.setT0( newT );
-   else 
+   else
       viewInfo.selectedRegion.setT1( newT );
 
    // Ensure it is visible
@@ -394,7 +394,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
 
    const double t0 = viewInfo.selectedRegion.t0();
    const double t1 = viewInfo.selectedRegion.t1();
-   const double end = std::max( 
+   const double end = std::max(
       tracks.GetEndTime(),
       viewInfo.GetScreenEndTime());
 
@@ -409,7 +409,7 @@ void DoBoundaryMove(AudacityProject &project, int step, SeekInfo &info)
    // Actually move
    if( bMoveT0 )
       viewInfo.selectedRegion.setT0( newT );
-   else 
+   else
       viewInfo.selectedRegion.setT1( newT );
 
    // Ensure it is visible
@@ -435,7 +435,7 @@ void OnSelectAll(const CommandContext &context)
 {
    auto& trackPanel = TrackPanel::Get(context.project);
    auto& tracks = TrackList::Get(context.project);
-   
+
    for (auto lt : tracks.Selected< LabelTrack >()) {
       auto& view = LabelTrackView::Get(*lt);
       if (view.SelectAllText(context.project)) {
