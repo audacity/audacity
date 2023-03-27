@@ -118,7 +118,7 @@ void NumericConverter::ControlsToValue()
    auto result = mFormatter->StringToValue(mValueString);
 
    mValue = result.has_value() ?
-               std::max(mMinValue, std::min(mMaxValue, *result)) :
+               std::clamp(*result, mMinValue, mMaxValue) :
                mInvalidValue;
 }
 
