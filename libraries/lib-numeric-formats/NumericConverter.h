@@ -17,6 +17,8 @@
 #define __AUDACITY_NUMERIC_CONVERTER__
 
 #include "NumericConverterType.h"
+#include "NumericConverterFormatter.h"
+
 #include "ComponentInterfaceSymbol.h"
 #include "TranslatableString.h"
 
@@ -25,48 +27,9 @@
  * to the user */
 struct BuiltinFormatString;
 
-struct NUMERIC_FORMATS_API NumericField final
-{
-public:
-   NumericField(bool _frac, int _base, int _range, bool _zeropad) noexcept;
-   
-   NumericField( const NumericField & ) = default;
-   NumericField &operator = ( const NumericField & ) = default;
-   //NumericField( NumericField && ) = default;
-   //NumericField &operator = ( NumericField && ) = default;
-   
-   bool frac; // is it a fractional field
-   int base;  // divide by this (multiply, after decimal point)
-   int range; // then take modulo this
-   int digits { 0 };
-      
-   wxString label;
-   wxString formatStr;
-   wxString str;
-
-   int pos { -1 }; // Index of this field in the ValueString
-   bool zeropad;
-
-private:
-   void CreateDigitFormatStr();
-};
-
-struct NUMERIC_FORMATS_API DigitInfo final
-{
-   int field; // Which field
-   int index; // Index of this digit within the field
-   int pos;   // Position in the ValueString
-};
-
 class NUMERIC_FORMATS_API NumericConverter /* not final */
 {
 public:
-
-   enum Type {
-      TIME,
-      FREQUENCY,
-      BANDWIDTH,
-   };
 
    struct FormatStrings {
       TranslatableString formatStr;
