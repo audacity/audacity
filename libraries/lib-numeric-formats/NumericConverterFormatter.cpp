@@ -12,7 +12,28 @@
 
 #include <cmath>
 
-NumericField::NumericField(int _range, bool _zeropad) noexcept
+namespace
+{
+size_t CalculateDigits(size_t rangeEnd)
+{
+   if (rangeEnd == 0)
+      return 0;
+
+   --rangeEnd;
+
+   size_t digitsCount = 0;
+
+   while (rangeEnd > 0)
+   {
+      rangeEnd /= 10;
+      ++digitsCount;
+   }
+
+   return digitsCount;
+}
+}
+
+NumericField::NumericField(size_t _range, bool _zeropad) noexcept
     : range { _range }
     , zeropad { _zeropad }
 {
@@ -22,16 +43,14 @@ NumericField::NumericField(int _range, bool _zeropad) noexcept
 void NumericField::CreateDigitFormatStr()
 {
    if (range > 1)
-      digits = (int)ceil(log10(range - 1.0));
+      digits = CalculateDigits(range);
    else
       digits = 5; // hack: default
 
    if (zeropad && range > 1)
-      formatStr.Printf(wxT("%%0%dd"), digits); // ex. "%03d" if digits is 3
+      formatStr.Printf(wxT("%%0%zud"), digits); // ex. "%03d" if digits is 3
    else
-   {
-      formatStr.Printf(wxT("%%0%dd"), digits);
-   }
+      formatStr = "%d";
 }
 
 NumericConverterFormatter::~NumericConverterFormatter()

@@ -41,19 +41,19 @@ public:
 
       // Beats format is 1 based. For the time point "0" the expected output is "1 bar 1 beat [1]"
       // For this reason we use (uts + 1) as the "range".
-      // On top of that, we want at least two digits to be shown. Audacity has a bug with the range of 11,
-      // where on digit will be calculated instead of 2.
+      // On top of that, we want at least two digits to be shown. NumericField accepts range as in
+      // [0, range), so add 1.
 
       auto& beatsField = mFields.emplace_back(
-         NumericField { std::max(12, mUpperTimeSignature + 1), true });
+         NumericField { std::max<size_t>(12, mUpperTimeSignature + 1), true });
       beatsField.label = L" " + XO("beat").Translation();
 
       if (mFracPart > 0)
       {
          beatsField.label += L" ";
          // See the reasoning above about the range
-         auto& fracField = mFields.emplace_back(
-            NumericField { std::max(12, mFracPart / mLowerTimeSignature + 1), true });
+         auto& fracField = mFields.emplace_back(NumericField {
+            std::max<size_t>(11, mFracPart / mLowerTimeSignature + 1), true });
       }
 
       // Fill the aux mDigits structure

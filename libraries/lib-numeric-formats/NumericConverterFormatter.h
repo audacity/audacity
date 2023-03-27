@@ -18,15 +18,15 @@
 struct NUMERIC_FORMATS_API NumericField final
 {
 public:
-   NumericField(int _range, bool _zeropad) noexcept;
+   NumericField(size_t _range, bool _zeropad) noexcept;
 
    NumericField(const NumericField&) = default;
    NumericField& operator=(const NumericField&) = default;
    // NumericField( NumericField && ) = default;
    // NumericField &operator = ( NumericField && ) = default;
 
-   int range; // then take modulo this
-   int digits { 0 };
+   size_t range; // then take modulo this
+   size_t digits { 0 };
 
    wxString label;
    wxString formatStr;
