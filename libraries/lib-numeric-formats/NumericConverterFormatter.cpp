@@ -33,14 +33,8 @@ size_t CalculateDigits(size_t rangeEnd)
 }
 }
 
-NumericField::NumericField(size_t _range, bool _zeropad) noexcept
+NumericField::NumericField(size_t _range, bool zeropad) noexcept
     : range { _range }
-    , zeropad { _zeropad }
-{
-   CreateDigitFormatStr();
-}
-
-void NumericField::CreateDigitFormatStr()
 {
    if (range > 1)
       digits = CalculateDigits(range);

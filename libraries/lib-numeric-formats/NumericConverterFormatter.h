@@ -32,10 +32,6 @@ public:
    wxString formatStr;
 
    size_t pos { wxString::npos }; // Index of this field in the ValueString
-   bool zeropad;
-
-private:
-   void CreateDigitFormatStr();
 };
 
 using NumericFields = std::vector<NumericField>;
