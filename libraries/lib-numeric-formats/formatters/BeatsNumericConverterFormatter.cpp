@@ -57,14 +57,14 @@ public:
       }
 
       // Fill the aux mDigits structure
-      int pos = 0;
+      size_t pos = 0;
       for (size_t i = 0; i < mFields.size(); i++)
       {
          mFields[i].pos = pos;
 
-         for (int j = 0; j < mFields[i].digits; j++)
+         for (size_t j = 0; j < mFields[i].digits; j++)
          {
-            mDigits.push_back(DigitInfo { int(i), j, pos });
+            mDigits.push_back(DigitInfo { i, j, pos });
             pos++;
          }
 

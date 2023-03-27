@@ -31,7 +31,7 @@ public:
    wxString label;
    wxString formatStr;
 
-   int pos { -1 }; // Index of this field in the ValueString
+   size_t pos { wxString::npos }; // Index of this field in the ValueString
    bool zeropad;
 
 private:
@@ -42,9 +42,9 @@ using NumericFields = std::vector<NumericField>;
 
 struct NUMERIC_FORMATS_API DigitInfo final
 {
-   int field; // Which field
-   int index; // Index of this digit within the field
-   int pos;   // Position in the ValueString
+   size_t field; // Which field
+   size_t index; // Index of this digit within the field
+   size_t pos;   // Position in the ValueString
 };
 
 using DigitInfos = std::vector<DigitInfo>;

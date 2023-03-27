@@ -313,8 +313,7 @@ public:
          }
       }
 
-      int pos = 0;
-      int j;
+      size_t pos = 0;
 
       pos += mPrefix.length();
 
@@ -322,9 +321,9 @@ public:
       {
          mFields[i].pos = pos;
 
-         for (j = 0; j < mFields[i].digits; j++)
+         for (size_t j = 0; j < mFields[i].digits; j++)
          {
-            mDigits.push_back(DigitInfo { int(i), j, pos });
+            mDigits.push_back(DigitInfo { i, j, pos });
             pos++;
          }
 
@@ -349,7 +348,7 @@ public:
       bool round = true;
       // We round on the last field.  If we have a fractional field we round
       // using it. Otherwise we round to nearest integer.
-      for (unsigned int i = 0; i < mFields.size(); i++)
+      for (size_t i = 0; i < mFields.size(); i++)
       {
          if (mFieldConfigs[i].frac)
             round = false;
@@ -369,7 +368,7 @@ public:
          t_frac = -1;
       else
          t_frac = (theValue - t_int.as_double());
-      unsigned int i;
+      
       int tenMins;
       int mins;
       int addMins;
@@ -409,7 +408,7 @@ public:
          t_frac = frames / 30.;
       }
 
-      for (i = 0; i < mFields.size(); i++)
+      for (size_t i = 0; i < mFields.size(); i++)
       {
          long long value = -1;
 
