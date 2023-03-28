@@ -826,6 +826,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       // Use No-fail-guarantee in these steps
       mSequence = std::move(newSequence);
       mRate = rate;
+      Flush();
       Caches::ForEach( std::mem_fn( &WaveClipListener::Invalidate ) );
    }
 }
