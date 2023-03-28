@@ -17,15 +17,17 @@
 
 struct NUMERIC_FORMATS_API NumericField final
 {
-public:
-   NumericField(size_t _range, bool _zeropad) noexcept;
+private:
+   NumericField(size_t digits, bool zeropad);
 
+public:
+   static NumericField ForRange(size_t range, bool zeropad = true);
+   static NumericField WithDigits(size_t digits, bool zeropad = true);
+   
    NumericField(const NumericField&) = default;
    NumericField& operator=(const NumericField&) = default;
    // NumericField( NumericField && ) = default;
    // NumericField &operator = ( NumericField && ) = default;
-
-   size_t range; // then take modulo this
    size_t digits { 0 };
 
    wxString label;

@@ -148,6 +148,8 @@ struct FieldConfig final
 {
    bool frac; // is it a fractional field
    int base;  // divide by this (multiply, after decimal point)
+   // Code in the parser converts range to `long`
+   long range; // then take modulo this
 };
 
 class ParsedNumericConverterFormatter final : public NumericConverterFormatter
@@ -251,8 +253,8 @@ public:
             if (inFrac)
             {
                int base = fracMult * range;
-               mFieldConfigs.push_back({ inFrac, base });
-               mFields.push_back(NumericField(range, zeropad));
+               mFieldConfigs.push_back({ inFrac, base, range });
+               mFields.push_back(NumericField::ForRange(range, zeropad));
                fracMult *= range;
                numFracFields++;
             }
@@ -261,8 +263,8 @@ public:
                unsigned int j;
                for (j = 0; j < mFields.size(); j++)
                   mFieldConfigs[j].base *= range;
-               mFieldConfigs.push_back({ inFrac, 1 });
-               mFields.push_back(NumericField(range, zeropad));
+               mFieldConfigs.push_back({ inFrac, 1, range });
+               mFields.push_back(NumericField::ForRange(range, zeropad));
                numWholeFields++;
             }
             numStr = wxT("");
@@ -432,8 +434,8 @@ public:
             if (t_int >= 0)
             {
                value = t_int.as_long_long() / mFieldConfigs[i].base;
-               if (mFields[i].range > 0)
-                  value = value % mFields[i].range;
+               if (mFieldConfigs[i].range > 0)
+                  value = value % mFieldConfigs[i].range;
             }
          }
 

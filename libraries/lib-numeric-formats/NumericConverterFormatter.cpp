@@ -33,18 +33,24 @@ size_t CalculateDigits(size_t rangeEnd)
 }
 }
 
-NumericField::NumericField(size_t _range, bool zeropad) noexcept
-    : range { _range }
+NumericField::NumericField(size_t _digits, bool zeropad)
+    : digits { _digits }
 {
-   if (range > 1)
-      digits = CalculateDigits(range);
-   else
-      digits = 5; // hack: default
-
-   if (zeropad && range > 1)
+   if (zeropad && digits > 1)
       formatStr.Printf(wxT("%%0%zud"), digits); // ex. "%03d" if digits is 3
    else
       formatStr = "%d";
+}
+
+NumericField NumericField::ForRange(size_t range, bool zeropad)
+{
+   // Previously, Audacity used 5 digits by default (why?)
+   return NumericField(range > 1 ? CalculateDigits(range) : 5, zeropad);
+}
+
+NumericField NumericField::WithDigits(size_t digits, bool zeropad)
+{
+   return NumericField(digits, zeropad);
 }
 
 NumericConverterFormatter::~NumericConverterFormatter()
