@@ -27,16 +27,6 @@
 class NUMERIC_FORMATS_API NumericConverter /* not final */
 {
 public:
-   static NumericFormatSymbol DefaultSelectionFormat();
-   static NumericFormatSymbol TimeAndSampleFormat();
-   static NumericFormatSymbol SecondsFormat();
-   static NumericFormatSymbol HoursMinsSecondsFormat();
-   static NumericFormatSymbol HundredthsFormat();
-   static NumericFormatSymbol HertzFormat();
-   static NumericFormatSymbol DefaultFormat(NumericConverterType type);
-   
-   static NumericFormatSymbol LookupFormat(NumericConverterType type, const wxString& id);
-
    NumericConverter(NumericConverterType type,
                     const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,

@@ -36,6 +36,8 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
+#include "NumericConverterFormats.h"
+
 enum
 {
    ID_PercentChange = 10000,
@@ -104,7 +106,7 @@ EffectChangeSpeed::EffectChangeSpeed()
    mToVinyl = kVinyl_33AndAThird;
    mFromLength = 0.0;
    mToLength = 0.0;
-   mFormat = NumericConverter::DefaultSelectionFormat();
+   mFormat = NumericConverterFormats::DefaultSelectionFormat();
    mbLoopDetect = false;
 
    SetLinearEffectFlag(true);
@@ -149,7 +151,7 @@ OptionalMessage
 EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mFromVinyl = kVinyl_33AndAThird;
-   mFormat = NumericConverter::DefaultSelectionFormat();
+   mFormat = NumericConverterFormats::DefaultSelectionFormat();
 
    return Effect::LoadFactoryDefaults(settings);
 }
@@ -249,7 +251,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
       GetConfig(GetDefinition(), PluginSettings::Private,
          CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
-      mFormat = NumericConverter::LookupFormat(
+      mFormat = NumericConverterFormats::Lookup(
          NumericConverterType_TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
@@ -675,7 +677,7 @@ void EffectChangeSpeed::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(evt))
 
 void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
-   mFormat = NumericConverter::LookupFormat(
+   mFormat = NumericConverterFormats::Lookup(
       NumericConverterType_TIME, evt.GetString() );
 
    mpFromLengthCtrl->SetFormatName(mFormat);

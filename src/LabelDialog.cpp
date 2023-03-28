@@ -37,6 +37,7 @@
 #include "AudacityTextEntryDialog.h"
 #include "widgets/Grid.h"
 #include "HelpSystem.h"
+#include "NumericConverterFormats.h"
 
 #include "FileNames.h"
 #include <limits>
@@ -529,7 +530,7 @@ void LabelDialog::FindInitialRow()
 void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
-   mFormat = NumericConverter::LookupFormat(
+   mFormat = NumericConverterFormats::Lookup(
       NumericConverterType_TIME, event.GetString() );
    TransferDataToWindow();
 
@@ -539,7 +540,7 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
-   mFreqFormat = NumericConverter::LookupFormat(
+   mFreqFormat = NumericConverterFormats::Lookup(
       NumericConverterType_FREQUENCY, event.GetString() );
    TransferDataToWindow();
 

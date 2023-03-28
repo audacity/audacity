@@ -10,7 +10,7 @@
 #include "ProjectNumericFormats.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "NumericConverter.h"
+#include "NumericConverterFormats.h"
 #include "XMLAttributeValueView.h"
 #include "XMLWriter.h"
 
@@ -34,19 +34,19 @@ const ProjectNumericFormats &ProjectNumericFormats::Get(
 }
 
 ProjectNumericFormats::ProjectNumericFormats()
-   : mSelectionFormat{ NumericConverter::LookupFormat(
+   : mSelectionFormat{ NumericConverterFormats::Lookup(
       NumericConverterType_TIME,
       gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
    }
-   , mFrequencySelectionFormatName{ NumericConverter::LookupFormat(
+   , mFrequencySelectionFormatName{ NumericConverterFormats::Lookup(
       NumericConverterType_FREQUENCY,
       gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
    }
-   , mBandwidthSelectionFormatName{ NumericConverter::LookupFormat(
+   , mBandwidthSelectionFormatName{ NumericConverterFormats::Lookup(
       NumericConverterType_BANDWIDTH,
       gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
    }
-   , mAudioTimeFormat{ NumericConverter::LookupFormat(
+   , mAudioTimeFormat{ NumericConverterFormats::Lookup(
       NumericConverterType_TIME,
       gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
    }
@@ -118,17 +118,17 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
    // Maybe that should be abandoned.  Enough to save changes in the user
    // preference file.
    { "selectionformat", [](auto &formats, auto value){
-      formats.SetSelectionFormat(NumericConverter::LookupFormat(
+      formats.SetSelectionFormat(NumericConverterFormats::Lookup(
               NumericConverterType_TIME, value.ToWString()));
    } },
    { "frequencyformat", [](auto &formats, auto value){
       formats.SetFrequencySelectionFormatName(
-              NumericConverter::LookupFormat(
+              NumericConverterFormats::Lookup(
                  NumericConverterType_FREQUENCY, value.ToWString()));
    } },
    { "bandwidthformat", [](auto &formats, auto value){
       formats.SetBandwidthSelectionFormatName(
-              NumericConverter::LookupFormat(
+              NumericConverterFormats::Lookup(
                  NumericConverterType_BANDWIDTH, value.ToWString()));
    } },
 } };

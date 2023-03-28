@@ -28,7 +28,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "NumericConverter.h"
+#include "NumericConverterFormats.h"
 
 #include <unordered_map>
 
@@ -196,7 +196,7 @@ NumericFormatSymbol Effect::GetSelectionFormat()
 {
    if( !IsBatchProcessing() && FindProject() )
       return ProjectNumericFormats::Get( *FindProject() ).GetSelectionFormat();
-   return NumericConverter::HoursMinsSecondsFormat();
+   return NumericConverterFormats::HoursMinsSecondsFormat();
 }
 
 wxString Effect::GetSavedStateGroup()

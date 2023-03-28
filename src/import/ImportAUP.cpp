@@ -51,6 +51,8 @@
 #include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
 
+#include "NumericConverterFormats.h"
+
 #include <map>
 
 #define DESC XO("AUP project files (*.aup)")
@@ -414,28 +416,28 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    if (mProjectAttrs.haveselectionformat)
    {
       selman.AS_SetSelectionFormat(
-         NumericConverter::LookupFormat(NumericConverterType_TIME,
+         NumericConverterFormats::Lookup(NumericConverterType_TIME,
          mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
       selman.TT_SetAudioTimeFormat(
-         NumericConverter::LookupFormat(NumericConverterType_TIME,
+         NumericConverterFormats::Lookup(NumericConverterType_TIME,
          mProjectAttrs.audiotimeformat));
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
       selman.SSBL_SetFrequencySelectionFormatName(
-         NumericConverter::LookupFormat(NumericConverterType_FREQUENCY,
+         NumericConverterFormats::Lookup(NumericConverterType_FREQUENCY,
          mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
       selman.SSBL_SetBandwidthSelectionFormatName(
-         NumericConverter::LookupFormat(NumericConverterType_BANDWIDTH,
+         NumericConverterFormats::Lookup(NumericConverterType_BANDWIDTH,
          mProjectAttrs.bandwidthformat));
    }
 

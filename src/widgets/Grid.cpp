@@ -26,6 +26,8 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
+#include "NumericConverterFormats.h"
+
 #include "SelectedRegion.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -488,13 +490,13 @@ Grid::Grid(wxWindow *parent,
                     safenew NumericRenderer{ NumericConverterType_TIME },
                     safenew NumericEditor
                       { NumericConverterType_TIME,
-                        NumericConverter::SecondsFormat(), 44100.0 });
+                        NumericConverterFormats::SecondsFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
                     safenew NumericRenderer{ NumericConverterType_FREQUENCY },
                     safenew NumericEditor
                     { NumericConverterType_FREQUENCY,
-                      NumericConverter::HertzFormat(), 44100.0 });
+                      NumericConverterFormats::HertzFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_CHOICE,
                     safenew wxGridCellStringRenderer,

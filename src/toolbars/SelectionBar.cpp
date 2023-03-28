@@ -67,6 +67,7 @@ with changes in the SelectionBar.
 #include "../widgets/BasicMenu.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "wxWidgetsWindowPlacement.h"
+#include "NumericConverterFormats.h"
 
 
 extern IntSetting SelectionToolbarMode;
@@ -316,7 +317,7 @@ void SelectionBar::UpdatePrefs()
    // action since the read value will be the same during a normal preferences
    // update.
    wxCommandEvent e;
-   e.SetString(NumericTextCtrl::LookupFormat(
+   e.SetString(NumericConverterFormats::Lookup(
                NumericConverterType_TIME,
                gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
@@ -425,7 +426,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
          std::distance(mTimeControls.begin(), focusedCtrlIt) :
          -1;
 
-   auto format = NumericTextCtrl::LookupFormat(NumericConverterType_TIME, evt.GetString());
+   auto format = NumericConverterFormats::Lookup(NumericConverterType_TIME, evt.GetString());
 
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())

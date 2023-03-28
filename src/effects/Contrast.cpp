@@ -45,6 +45,8 @@
 
 #include "PlatformCompatibility.h"
 
+#include "NumericConverterFormats.h"
+
 #define DB_MAX_LIMIT 0.0   // Audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
 
@@ -250,7 +252,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundStartT = safenew
                NumericTextCtrl(S.GetParent(), ID_FOREGROUNDSTART_T,
                          NumericConverterType_TIME,
-                         NumericConverter::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);
@@ -263,7 +265,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundEndT = safenew
                NumericTextCtrl(S.GetParent(), ID_FOREGROUNDEND_T,
                          NumericConverterType_TIME,
-                         NumericConverter::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);
@@ -284,7 +286,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundStartT = safenew
                NumericTextCtrl(S.GetParent(), ID_BACKGROUNDSTART_T,
                          NumericConverterType_TIME,
-                         NumericConverter::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);
@@ -297,7 +299,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundEndT = safenew
                NumericTextCtrl(S.GetParent(), ID_BACKGROUNDEND_T,
                          NumericConverterType_TIME,
-                         NumericConverter::HundredthsFormat(),
+                         NumericConverterFormats::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);

@@ -27,6 +27,7 @@ different formats.
 
 **********************************************************************/
 #include "NumericConverter.h"
+#include "NumericConverterFormats.h"
 #include "NumericConverterRegistry.h"
 #include "SampleCount.h"
 #include "Beats.h"
@@ -58,40 +59,6 @@ static const TranslatableString BuildBeatsFormat() {
 // NumericConverter Class
 // ----------------------------------------------------------------------------
 //
-NumericFormatSymbol NumericConverter::DefaultSelectionFormat()
-{ return L"hh:mm:ss + milliseconds"; }
-NumericFormatSymbol NumericConverter::TimeAndSampleFormat()
-{ return L"hh:mm:ss + samples"; }
-NumericFormatSymbol NumericConverter::SecondsFormat()
-{ return L"seconds"; }
-NumericFormatSymbol NumericConverter::HoursMinsSecondsFormat()
-{ return L"hh:mm:ss"; }
-NumericFormatSymbol NumericConverter::HundredthsFormat()
-{ return L"hh:mm:ss + hundredths"; }
-
-NumericFormatSymbol NumericConverter::HertzFormat()
-{ return L"Hz"; }
-
-NumericFormatSymbol NumericConverter::DefaultFormat(NumericConverterType type)
-{
-   if (type == NumericConverterType_TIME)
-      return DefaultSelectionFormat();
-   else if (type == NumericConverterType_FREQUENCY)
-      return HertzFormat();
-   else if (type == NumericConverterType_BANDWIDTH)
-      return L"octaves";
-   else
-      return DefaultSelectionFormat();
-}
-
-NumericFormatSymbol
-NumericConverter::LookupFormat(NumericConverterType type, const wxString& id)
-{
-   if (id.empty() || !NumericConverterRegistry::Find(type, id))
-      return DefaultFormat(type);
-
-   return id;
-}
 
 NumericConverter::NumericConverter(NumericConverterType type,
                                    const NumericFormatSymbol & formatName,
@@ -102,7 +69,7 @@ NumericConverter::NumericConverter(NumericConverterType type,
    ResetMaxValue();
 
    mInvalidValue = -1.0;
-   mType = type;
+   mType = std::move(type);
    mValue = value; // used in SetSampleRate, reassigned later
 
    SetSampleRate(sampleRate);
@@ -160,7 +127,7 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
    if (mFormatSymbol == formatName && !formatName.empty())
       return false;
 
-   const auto newFormat = LookupFormat(mType, formatName.Internal());
+   const auto newFormat = NumericConverterFormats::Lookup(mType, formatName);
 
    if (mFormatSymbol == newFormat)
       return false;

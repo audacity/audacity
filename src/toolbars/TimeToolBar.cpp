@@ -34,6 +34,8 @@
 #include "ProjectTimeSignature.h"
 #include "ViewInfo.h"
 
+#include "NumericConverterFormats.h"
+
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
 
 // Having a fixed ID for the Audio Position is helpful for
@@ -140,7 +142,7 @@ void TimeToolBar::SetToDefaultSize()
    SetMinSize(wxDefaultSize);
 
    // Set the default time format
-   SetAudioTimeFormat(NumericConverter::HoursMinsSecondsFormat());
+   SetAudioTimeFormat(NumericConverterFormats::HoursMinsSecondsFormat());
 
    // Set the default size
    SetSize(GetInitialWidth(), 48);

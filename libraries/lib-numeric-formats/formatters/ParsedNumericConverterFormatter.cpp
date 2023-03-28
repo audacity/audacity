@@ -12,6 +12,7 @@
 #include "NumericConverterRegistry.h"
 
 #include "SampleCount.h"
+#include "NumericConverterFormats.h"
 
 #include <cmath>
 
@@ -642,8 +643,7 @@ struct BuiltinFormatString
  *  list of formats to choose from in the control.          */
 static BuiltinFormatString TimeConverterFormats_[] =  {
    {
-   /* i18n-hint: Name of time display format that shows time in seconds */
-   { XO("seconds") },
+   NumericConverterFormats::SecondsFormat(),
    /* i18n-hint: Format string for displaying time in seconds. Change the comma
     * in the middle to the 1000s separator for your locale, and the 'seconds'
     * on the end to the word for seconds. Don't change the numbers. */
@@ -664,9 +664,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    },
 
    {
-   /* i18n-hint: Name of time display format that shows time in hours, minutes
-    * and seconds */
-   { XO("hh:mm:ss") },
+   NumericConverterFormats::HoursMinsSecondsFormat(),
    /* i18n-hint: Format string for displaying time in hours, minutes and
     * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
@@ -688,9 +686,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    },
 
    {
-   /* i18n-hint: Name of time display format that shows time in hours,
-    * minutes, seconds and hundredths of a second (1/100 second) */
-   { XO("hh:mm:ss + hundredths") },
+   NumericConverterFormats::HundredthsFormat(),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and hundredths of a second. Change the 'h' to the abbreviation for hours,
     * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
@@ -703,9 +699,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    },
 
    {
-   /* i18n-hint: Name of time display format that shows time in hours,
-    * minutes, seconds and milliseconds (1/1000 second) */
-   { XO("hh:mm:ss + milliseconds") },
+   NumericConverterFormats::MillisecondsFormat(),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -718,9 +712,7 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
    },
 
    {
-   /* i18n-hint: Name of time display format that shows time in hours,
-    * minutes, seconds and samples (at the current project sample rate) */
-   { XO("hh:mm:ss + samples") },
+   NumericConverterFormats::TimeAndSampleFormat(),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes, 's' to the abbreviation for seconds and
@@ -860,14 +852,17 @@ static BuiltinFormatString TimeConverterFormats_[] =  {
 
 };
 
+NumericConverterFormats::DefaultFormatRegistrator timeDefault {
+   NumericConverterType_TIME, NumericConverterFormats::MillisecondsFormat()
+};
+
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
 static const BuiltinFormatString FrequencyConverterFormats_[] = {
    {
-      /* i18n-hint: Name of display format that shows frequency in hertz */
-      { XO("Hz") },
+      NumericConverterFormats::HertzFormat(),
       {
          /* i18n-hint: Format string for displaying frequency in hertz. Change
          * the decimal point for your locale. Don't change the numbers.
@@ -892,15 +887,17 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
    },
 };
 
+NumericConverterFormats::DefaultFormatRegistrator frequencyDefault {
+   NumericConverterType_FREQUENCY, NumericConverterFormats::HertzFormat()
+};
+
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
 static const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
-   /* i18n-hint: Name of display format that shows log of frequency
-    * in octaves */
-   { XO("octaves") },
+   NumericConverterFormats::OctavesFormat(),
    {
       /* i18n-hint: Format string for displaying log of frequency in octaves.
        * Change the decimal points for your locale. Don't change the numbers.
@@ -940,6 +937,10 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
       XO("thousandths of decades")
    }
    },
+};
+
+NumericConverterFormats::DefaultFormatRegistrator bandwidthDefault {
+   NumericConverterType_BANDWIDTH, NumericConverterFormats::OctavesFormat()
 };
 
 Registry::BaseItemPtr MakeGroup (

@@ -12,6 +12,8 @@ set( SOURCES
    Beats.h
    NumericConverter.cpp
    NumericConverter.h
+   NumericConverterFormats.cpp
+   NumericConverterFormats.h
    NumericConverterFormatter.cpp
    NumericConverterFormatter.h
    NumericConverterRegistry.cpp
