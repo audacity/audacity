@@ -431,6 +431,7 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
 
       dest->Append(
          buffer.ptr(), format, blocklen, 1, mSampleFormats.Effective());
+      dest->Flush();
    }
    else
       --b0;
@@ -454,6 +455,7 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
          Get(b1, buffer.ptr(), format, block.start, blocklen, true);
          dest->Append(
             buffer.ptr(), format, blocklen, 1, mSampleFormats.Effective());
+         dest->Flush();
       }
       else
          // Special case of a whole block
