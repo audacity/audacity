@@ -548,14 +548,16 @@ static struct DefaultConfigEntry {
    { wxT("CombinedMeter"),     {},                     {}                },
 
    // Bottom dock
-   { wxT("Selection"),         {},                     {}                },
-   { wxT("Time"),              wxT("Selection"),       {}                },
+   { wxT("TimeSignature"),     {},                     {},               }, 
+   { wxT("Snapping"),          wxT("TimeSignature"),   {},               },
+   { wxT("Time"),              wxT("Snapping"),        {}                },
+   { wxT("Selection"),         wxT("Time"),            {}                },
 
 // DA: Transcription Toolbar not docked, by default.
 #ifdef EXPERIMENTAL_DA
    { wxT("Transcription"),     {},                     {}                },
 #else
-   { wxT("Transcription"),     wxT("Time"),            {}                },
+   { wxT("Transcription"),     wxT("Selection"),       {}                },
 #endif
 
    // Hidden by default in bottom dock
