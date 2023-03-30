@@ -202,3 +202,43 @@ TEST_CASE("Variant visitors returning T const")
 {
    Tester<true, noref>{}.DoTests();
 }
+
+struct TestVisitor {
+   static int x;
+   int & operator () (std::monostate) const { return x; }
+};
+
+using TestVariant = std::variant<std::monostate>;
+
+void compileTest()
+{
+   // Test compilation of all 16 combinations of constness and value category
+   // of the visitor and the variant
+
+   // This is an example that fails to compile when decltype(auto) in Variant.h
+   // is replaced with auto
+   TestVariant var;
+   const TestVariant cvar;
+   TestVisitor vis;
+   const TestVisitor cvis;
+
+   static_assert(std::is_same_v<int&, decltype(Visit(vis, var))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(cvis, var))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(vis), var))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(cvis), var))>);
+
+   static_assert(std::is_same_v<int&, decltype(Visit(vis, cvar))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(cvis, cvar))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(vis), cvar))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(cvis), cvar))>);
+
+   static_assert(std::is_same_v<int&, decltype(Visit(vis, std::move(var)))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(cvis, std::move(var)))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(vis), std::move(var)))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(cvis), std::move(var)))>);
+
+   static_assert(std::is_same_v<int&, decltype(Visit(vis, std::move(cvar)))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(cvis, std::move(cvar)))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(vis), std::move(cvar)))>);
+   static_assert(std::is_same_v<int&, decltype(Visit(std::move(cvis), std::move(cvar)))>);
+}
