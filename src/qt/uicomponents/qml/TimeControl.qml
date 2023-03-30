@@ -207,6 +207,59 @@ Item {
       height: root.height
       color: appConfig.timecodeColor
 
+      states: [
+         State {
+            name: "HOVER"
+            when: mouseArea.containsMouse && !mouseArea.pressed && !menu.visible
+
+            PropertyChanges {
+               target: buttonPart
+               color: appConfig.backgroundColor3
+               opacity: 1.0
+            }
+
+            PropertyChanges {
+               target: buttonPartLeftEdge
+               color: appConfig.backgroundColor3
+               opacity: 1.0
+            }
+         },
+
+         State {
+            name: "PRESSED"
+            when: mouseArea.pressed && !menu.visible
+
+            PropertyChanges {
+               target: buttonPart
+               color: appConfig.backgroundColor3
+               opacity: 0.5
+            }
+
+            PropertyChanges {
+               target: buttonPartLeftEdge
+               color: appConfig.backgroundColor3
+               opacity: 0.5
+            }
+         },
+
+         State {
+            name: "ACTIVE"
+            when: menu.visible
+
+            PropertyChanges {
+               target: buttonPart
+               color: "black"
+               opacity: 1.0
+            }
+
+            PropertyChanges {
+               target: buttonPartLeftEdge
+               color: "black"
+               opacity: 1.0
+            }
+         }
+      ]
+
       Rectangle {
          id: buttonPartLeftEdge
          width: buttonPart.radius
