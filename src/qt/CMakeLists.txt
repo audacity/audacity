@@ -30,6 +30,7 @@ set(QML_SOURCES
    qml/main.qml
    qml/EditToolbar.qml
    qml/MasterVolumeToolbar.qml
+   qml/Sidebar.qml
    qml/TimeToolbar.qml
    qml/ToolsToolbar.qml
    qml/TransportToolbar.qml
