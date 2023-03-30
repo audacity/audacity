@@ -37,6 +37,7 @@ for shared and private configs - which need to move out.
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
 #include "Base64.h"
+#include "Variant.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
