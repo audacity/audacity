@@ -69,8 +69,6 @@ with changes in the SelectionBar.
 #include "wxWidgetsWindowPlacement.h"
 #include "NumericConverterFormats.h"
 
-
-extern IntSetting SelectionToolbarMode;
 IntSetting SelectionToolbarMode { "/SelectionToolbarMode", 0 };
 
 namespace

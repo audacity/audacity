@@ -33,6 +33,8 @@ class AudacityProject;
 class SelectionBarListener;
 class NumericTextCtrl;
 
+extern IntSetting SelectionToolbarMode;
+
 class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
  public:

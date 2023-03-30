@@ -19,6 +19,7 @@
 #include "RealtimeEffectPanel.h"
 #include "SyncLock.h"
 #include "../toolbars/ToolManager.h"
+#include "../toolbars/SelectionBar.h"
 #include "../TrackPanelAx.h"
 #include "TempDirectory.h"
 #include "UndoManager.h"
@@ -64,8 +65,6 @@ void DoManageRealtimeEffectsSidePanel(AudacityProject &project)
 
 }
 
-extern IntSetting SelectionToolbarMode;
-
 namespace {
 
 // Menu handler functions
@@ -97,7 +96,7 @@ void OnResetConfig(const CommandContext &context)
    // - Set Zoom sensibly.
    SyncLockTracks.Reset();
    SoundActivatedRecord.Reset();
-   SelectionToolbarMode.Write(0);
+   SelectionToolbarMode.Reset();
    gPrefs->Flush();
    DoReloadPreferences(project);
 
