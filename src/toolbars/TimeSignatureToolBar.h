@@ -21,9 +21,9 @@
 
 #include "Observer.h"
 
-class wxSpinCtrl;
 class wxComboBox;
 class wxSizeEvent;
+class SpinControl;
 
 class AudacityProject;
 
@@ -61,8 +61,8 @@ class TimeSignatureToolBar final : public ToolBar
    
    Observer::Subscription mTimeSignatureChangedSubscription;
 
-   wxWeakRef<wxSpinCtrl> mTempoControl;
-   wxWeakRef<wxSpinCtrl> mUpperSignatureControl;
+   wxWeakRef<SpinControl> mTempoControl;
+   wxWeakRef<SpinControl> mUpperSignatureControl;
    wxWeakRef<wxComboBox> mLowerSignatureControl;
 
  public:

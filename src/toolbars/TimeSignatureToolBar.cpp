@@ -37,6 +37,8 @@
 #include "ProjectHistory.h"
 #include "UndoManager.h"
 
+#include "SpinControl.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 #endif
@@ -102,7 +104,10 @@ void TimeSignatureToolBar::Create(wxWindow* parent)
 
 void TimeSignatureToolBar::Populate()
 {
-   const auto size = wxSize(45, -1);
+   const auto tempoSigSize = wxSize(60, -1);
+   auto timeSigSize = wxSize(50, -1);
+
+   auto& projectTimeSignature = ProjectTimeSignature::Get(mProject);
    
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 
@@ -112,33 +117,35 @@ void TimeSignatureToolBar::Populate()
    AddTitle(XO("Tempo"), sizer);
    AddTitle(XO("Time Signature"), sizer);
 
-   mTempoControl = safenew wxSpinCtrl(
-      this, wxID_ANY, {}, wxDefaultPosition, size, wxSP_ARROW_KEYS, 1,
-      1000, ProjectTimeSignature::Get(mProject).GetTempo());
+   mTempoControl = safenew SpinControl(
+      this, wxID_ANY, projectTimeSignature.GetTempo(), 1.0, 999.0, 1.0, true,
+      wxDefaultPosition, tempoSigSize);
 
-   mTempoControl->SetName(XO("Tempo").Translation());
+   mTempoControl->SetName(XO("Tempo"));
    
    sizer->Add(mTempoControl, 0, wxEXPAND | wxRIGHT, 5);
 
    auto tempoSizer = safenew wxBoxSizer(wxHORIZONTAL);
    sizer->Add(tempoSizer, 0, wxEXPAND | wxRIGHT, 5);
 
-   mUpperSignatureControl = safenew wxSpinCtrl(
-      this, wxID_ANY, {}, wxDefaultPosition, size, wxSP_ARROW_KEYS, 1,
-      128, ProjectTimeSignature::Get(mProject).GetUpperTimeSignature());
+   mUpperSignatureControl = safenew SpinControl(
+      this, wxID_ANY, projectTimeSignature.GetUpperTimeSignature(), 1.0, 128.0, 1.0, false,
+      wxDefaultPosition, timeSigSize);
 
-   mUpperSignatureControl->SetName(XO("Upper Time Signature").Translation());
+   mUpperSignatureControl->SetName(XO("Upper Time Signature"));
 
    tempoSizer->Add(mUpperSignatureControl, 0, wxEXPAND | wxRIGHT, 5);
 
    AddTitle(
       Verbatim(L"/"), tempoSizer, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5, 1.5);
 
+   timeSigSize.y = mUpperSignatureControl->GetSize().y;
+
    mLowerSignatureControl = safenew wxComboBox(
       this, wxID_ANY,
       wxString::Format(
          "%d", ProjectTimeSignature::Get(mProject).GetLowerTimeSignature()),
-      wxDefaultPosition, size,
+      wxDefaultPosition, timeSigSize,
       wxArrayStringEx { L"1", L"2", L"4", L"8", L"16", L"32", L"64" },
       wxCB_READONLY);
 
@@ -162,7 +169,7 @@ void TimeSignatureToolBar::Populate()
       wxEVT_SPINCTRL,
       [this](auto)
       {
-         const auto upper = mUpperSignatureControl->GetValue();
+         const auto upper = int(mUpperSignatureControl->GetValue());
 
          ProjectTimeSignature::Get(mProject).SetUpperTimeSignature(upper);
 
