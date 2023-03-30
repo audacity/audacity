@@ -88,7 +88,7 @@ class NumericRenderer final : public wxGridCellRenderer
 {
  public:
    NumericRenderer(const FormatterContext& context, NumericConverterType type)
-        : mType { type }
+        : mType { std::move(type) }
         , mContext { context }
    {
    }

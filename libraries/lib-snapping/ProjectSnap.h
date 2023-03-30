@@ -22,7 +22,7 @@ struct SnapChangedMessage final
    Identifier newSnapTo { "seconds" };
 };
 
-///\brief Holds project sample rate
+//! Project snapping settings
 class SNAPPING_API ProjectSnap final :
     public ClientData::Base,
     public Observer::Publisher<SnapChangedMessage>

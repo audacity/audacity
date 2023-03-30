@@ -1072,8 +1072,6 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
          // We subtract 1, below, and need to avoid neg index to mDigits.
          (elementId > 0))
    {
-//      rect.x += mCtrl->mFields[elementId - 1].fieldX;B
-//      rect.width =  mCtrl->mFields[elementId - 1].fieldW;
         rect = mCtrl->GetBox(elementId - 1);
         rect.SetPosition(mCtrl->ClientToScreen(rect.GetPosition()));
    }
