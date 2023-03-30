@@ -26,6 +26,7 @@ set(MODULE_QML_SOURCES
    qml/ToolbarGrip.qml
    qml/TimeControl.qml
    qml/TimeControlTester.qml
+   qml/TrackControlBody.qml
    qml/ToolbarSeparator.qml
    qml/VolumeControl.qml
    qml/VolumeControlTester.qml

@@ -42,6 +42,7 @@ class IconCode
 public:
    enum class Code : char16_t {
       SMALL_ARROW_DOWN = 0xEF12,
+      MENU_THREE_DOTS = 0xEF13,
 
       ZOOM_OUT = 0xEF16,
       ZOOM_IN = 0xEF18,
@@ -55,7 +56,12 @@ public:
 
       TOOLBAR_GRIP = 0xF3A2,
 
+      TV = 0xF35E,
+      FLAG = 0xF3C7,
+
       AUTOMATION = 0xF3CB,
+
+      MICROPHONE = 0xF41B,
 
       ZOOM_TOGGLE = 0xF437,
       ZOOM_FIT_PROJECT = 0xF438,
