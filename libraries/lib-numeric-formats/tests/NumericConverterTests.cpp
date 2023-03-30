@@ -14,6 +14,7 @@
 #include "formatters/ParsedNumericConverterFormatter.h"
 #include "formatters/BeatsNumericConverterFormatter.h"
 
+
 TEST_CASE("ParsedNumericConverterFormatter", "")
 {
    auto hhmmssFormatter = CreateParsedNumericConverterFormatter(
@@ -55,6 +56,7 @@ TEST_CASE("ParsedNumericConverterFormatter", "")
       *hhmmssFormatter->StringToValue("01 h 30 m 15 s") ==
       Approx(60 * 60 + 30 * 60 + 15));
 }
+
 
 TEST_CASE("BeatsNumericConverterFormatter", "")
 {
@@ -129,4 +131,7 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
    REQUIRE(fracFormatter->SingleStep(0.0, 1, true) == Approx(15.0));
    REQUIRE(fracFormatter->SingleStep(0.0, 4, true) == Approx(0.5));
    REQUIRE(fracFormatter->SingleStep(0.0, 3, true) == Approx(5));
+   
 }
+
+
