@@ -56,8 +56,9 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
          })}
     , mTimeSignatureChangedSubscription {
        ProjectTimeSignature::Get(project).Subscribe([this](auto&)
-                                                    { SnapSelection(); })
-    }
+                                                    { SnapSelection(); }) }
+    , mProjectRateChangedSubscription { ProjectRate::Get(project).Subscribe(
+         [this](auto&) { SnapSelection(); }) } 
 
 {
 }

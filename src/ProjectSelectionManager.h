@@ -60,6 +60,7 @@ private:
 
    Observer::Subscription mSnappingChangedSubscription;
    Observer::Subscription mTimeSignatureChangedSubscription;
+   Observer::Subscription mProjectRateChangedSubscription;
 };
 
 #endif
