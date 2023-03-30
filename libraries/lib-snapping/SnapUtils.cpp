@@ -317,9 +317,9 @@ SnapFunctor SnapToTriplets(int divisor)
 SnapRegistryItemRegistrator beats {
    Registry::Placement { {}, { Registry::OrderingHint::Begin } },
    SnapFunctionGroup(
-      /* i18-hint: The music theory "beat"*/
+      /* i18n-hint: The music theory "beat"*/
       "beats", XO("Beats"), true,
-      /* i18-hint: The music theory "bar"*/
+      /* i18n-hint: The music theory "bar"*/
       SnapFunction("bar", XO("Bar"), SnapToBar()),
       SnapFunction("bar_1_2", XO("1/2"), SnapToBeat(2)),
       SnapFunction("bar_1_4", XO("1/4"), SnapToBeat(4)),
@@ -334,7 +334,7 @@ SnapRegistryItemRegistrator triplets {
    Registry::Placement { {},
                          { Registry::OrderingHint::After, "beats" } },
    SnapFunctionGroup(
-      /* i18-hint: The music theory "triplet"*/
+      /* i18n-hint: The music theory "triplet"*/
       "triplets", XO("Triplets"), true,
       SnapFunction("triplet_1_2", XO("1/2 (triplets)"), SnapToTriplets(2)),
       SnapFunction("triplet_1_4", XO("1/4 (triplets)"), SnapToTriplets(4)),

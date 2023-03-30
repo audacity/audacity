@@ -342,7 +342,7 @@ NumericConverterItemRegistrator beatsTime {
          "beats", XO("beats"),
          std::make_unique<BeatsNumericConverterFormatterFactory>(0)),
       NumericConverterFormatterItem(
-         /* i18n-hint: The music theory "beats". 16th is a not duration. */
+         /* i18n-hint: The music theory "beats". 16th is a note duration. */
          "beats16", XO("beats and 16th"),
          std::make_unique<BeatsNumericConverterFormatterFactory>(16)))
 };
