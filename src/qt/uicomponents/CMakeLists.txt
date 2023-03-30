@@ -13,6 +13,7 @@ set(MODULE_SOURCES
    MeterPanelHandler.cpp
    MeterPanelHandler.h
    IconCode.h
+   TrackType.h
 )
 
 set(MODULE_QML_SOURCES
