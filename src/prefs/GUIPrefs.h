@@ -40,12 +40,6 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
       int *pDefaultRangeIndex = nullptr
    );
 
-   static void GetLTSChoices(
-      TranslatableStrings* pChoices,
-      wxArrayStringEx* pCodes,
-      int* pDefaultIndex = nullptr
-   );
-
  private:
    void Populate();
 
@@ -55,13 +49,6 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
    wxArrayStringEx mRangeCodes;
    TranslatableStrings mRangeChoices;
    int mDefaultRangeIndex;
-
-   TranslatableStrings mUTSNames;
-   std::vector<int> mUTSLabels;
-
-   wxArrayStringEx mLTSCodes;
-   TranslatableStrings mLTSChoices;
-   int mDefaultLTSIndex;
 };
 
 AUDACITY_DLL_API
