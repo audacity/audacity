@@ -1431,6 +1431,7 @@ bool PluginManager::HasConfigValue(const RegistryPath & key)
 bool PluginManager::GetConfigValue(
    const RegistryPath & key, ConfigReference var, ConfigConstReference defval)
 {
+   using namespace Variant;
    if (key.empty())
       return false;
    const auto visitor = [&](const auto var){
@@ -1447,6 +1448,7 @@ bool PluginManager::GetConfigValue(
 bool PluginManager::SetConfigValue(
    const RegistryPath & key, ConfigConstReference value)
 {
+   using namespace Variant;
    if (key.empty())
       return false;
    const auto visitor = [&](const auto value){
