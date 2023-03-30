@@ -20,6 +20,7 @@ set(MODULE_QML_SOURCES
    qml/FlatButton.qml
    qml/MeterPanel.qml
    qml/StyledIconLabel.qml
+   qml/StyledSlider.qml
    qml/StyledTextLabel.qml
    qml/ToolbarGrip.qml
    qml/TimeControl.qml
