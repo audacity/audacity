@@ -50,9 +50,6 @@ public:
 private:
    void SetResizingLimits();
    wxSize ComputeSizing(int digitH);
-
-   void OnRateChanged(double);
-   void UpdateTimeSignature();
    
    void OnUpdate(wxCommandEvent &evt);
    void OnSize(wxSizeEvent &evt);
@@ -65,10 +62,7 @@ private:
 
    static const int minDigitH = 17;
    static const int maxDigitH = 100;
-
-   Observer::Subscription mSubscription;
-   Observer::Subscription mTimeSignatureChangedSubscription;
-
+   
 public:
    
    DECLARE_CLASS(TimeToolBar)

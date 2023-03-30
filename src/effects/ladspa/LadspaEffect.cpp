@@ -1290,11 +1290,11 @@ void LadspaEffect::Editor::PopulateUI(ShuttleGui &S)
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
             auto &extra = mAccess.Get().extra;
             mDuration = safenew
-               NumericTextCtrl(w, ID_Duration,
+               NumericTextCtrl(FormatterContext::SampleRateContext(mSampleRate),
+                  w, ID_Duration,
                   NumericConverterType_TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
-                  mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
             mDuration->SetName( XO("Duration") );

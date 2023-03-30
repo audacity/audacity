@@ -250,11 +250,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mForegroundStartT = safenew
-               NumericTextCtrl(S.GetParent(), ID_FOREGROUNDSTART_T,
+               NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                         S.GetParent(), ID_FOREGROUNDSTART_T,
                          NumericConverterType_TIME,
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
-                         mProjectRate,
                          options);
          }
          S.Name(XO("Foreground start time"))
@@ -263,11 +263,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mForegroundEndT = safenew
-               NumericTextCtrl(S.GetParent(), ID_FOREGROUNDEND_T,
+               NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                         S.GetParent(), ID_FOREGROUNDEND_T,
                          NumericConverterType_TIME,
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
-                         mProjectRate,
                          options);
          }
          S.Name(XO("Foreground end time"))
@@ -284,11 +284,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundStartT = safenew
-               NumericTextCtrl(S.GetParent(), ID_BACKGROUNDSTART_T,
+               NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                         S.GetParent(), ID_BACKGROUNDSTART_T,
                          NumericConverterType_TIME,
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
-                         mProjectRate,
                          options);
          }
          S.Name(XO("Background start time"))
@@ -297,11 +297,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundEndT = safenew
-               NumericTextCtrl(S.GetParent(), ID_BACKGROUNDEND_T,
+               NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                         S.GetParent(), ID_BACKGROUNDEND_T,
                          NumericConverterType_TIME,
                          NumericConverterFormats::HundredthsFormat(),
                          0.0,
-                         mProjectRate,
                          options);
          }
          S.Name(XO("Background end time"))

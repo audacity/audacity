@@ -42,7 +42,7 @@ class GridAx final : public WindowAccessible
 
  public:
 
-   GridAx(Grid *grid);
+   GridAx(const FormatterContext& project, Grid *grid);
 
    void SetCurrentCell(int row, int col);
    void TableUpdated();
@@ -113,6 +113,7 @@ class GridAx final : public WindowAccessible
    // Selects the object or child.
    wxAccStatus Select(int childId, wxAccSelectionFlags selectFlags) override;
 #endif
+   FormatterContext mContext;
 
    Grid *mGrid;
    int mLastId;
@@ -120,12 +121,13 @@ class GridAx final : public WindowAccessible
 };
 #endif
 
-NumericEditor::NumericEditor
-   (NumericConverterType type, const NumericFormatSymbol &format, double rate)
+NumericEditor::NumericEditor(
+   const FormatterContext& context, NumericConverterType type,
+   const NumericFormatSymbol& format)
+    : mContext { context }
 {
-   mType = type;
+   mType = std::move(type);
    mFormat = format;
-   mRate = rate;
    mOld = 0.0;
 }
 
@@ -136,12 +138,11 @@ NumericEditor::~NumericEditor()
 void NumericEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
    wxASSERT(parent); // to justify safenew
-   auto control = safenew NumericTextCtrl(
+   auto control = safenew NumericTextCtrl(mContext,
       parent, wxID_ANY,
       mType,
       mFormat,
       mOld,
-      mRate,
       NumericTextCtrl::Options{}
          .AutoPos(true)
          .InvalidValue(mType == NumericConverterType_FREQUENCY,
@@ -215,7 +216,7 @@ bool NumericEditor::IsAcceptedKey(wxKeyEvent &event)
 // Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellEditor *NumericEditor::Clone() const
 {
-   return safenew NumericEditor{ mType, mFormat, mRate };
+   return safenew NumericEditor{ mContext, mType, mFormat };
 }
 
 wxString NumericEditor::GetValue() const
@@ -228,19 +229,9 @@ NumericFormatSymbol NumericEditor::GetFormat() const
    return mFormat;
 }
 
-double NumericEditor::GetRate() const
-{
-   return mRate;
-}
-
 void NumericEditor::SetFormat(const NumericFormatSymbol &format)
 {
    mFormat = format;
-}
-
-void NumericEditor::SetRate(double rate)
-{
-   mRate = rate;
 }
 
 NumericRenderer::~NumericRenderer()
@@ -267,11 +258,10 @@ void NumericRenderer::Draw(wxGrid &grid,
 
       table->GetValue(row, col).ToDouble(&value);
 
-      NumericTextCtrl tt(&grid, wxID_ANY,
+      NumericTextCtrl tt(mContext, &grid, wxID_ANY,
                       mType,
                       ne->GetFormat(),
                       value,
-                      ne->GetRate(),
                       NumericTextCtrl::Options{}.AutoPos(true),
                       wxPoint(10000, 10000));  // create offscreen
       tstr = tt.GetString();
@@ -323,11 +313,10 @@ wxSize NumericRenderer::GetBestSize(wxGrid &grid,
    if (ne) {
       double value;
       table->GetValue(row, col).ToDouble(&value);
-      NumericTextCtrl tt(&grid, wxID_ANY,
+      NumericTextCtrl tt(mContext, &grid, wxID_ANY,
                       mType,
                       ne->GetFormat(),
                       value,
-                      ne->GetRate(),
                       NumericTextCtrl::Options{}.AutoPos(true),
                       wxPoint(10000, 10000));  // create offscreen
       sz = tt.GetSize();
@@ -341,7 +330,7 @@ wxSize NumericRenderer::GetBestSize(wxGrid &grid,
 // Clone is required by wxwidgets; implemented via copy constructor
 wxGridCellRenderer *NumericRenderer::Clone() const
 {
-   return safenew NumericRenderer{ mType };
+   return safenew NumericRenderer{ mContext, mType };
 }
 
 ChoiceEditor::ChoiceEditor(size_t count, const wxString choices[])
@@ -472,31 +461,33 @@ BEGIN_EVENT_TABLE(Grid, wxGrid)
    EVT_GRID_EDITOR_SHOWN(Grid::OnEditorShown)
 END_EVENT_TABLE()
 
-Grid::Grid(wxWindow *parent,
+Grid::Grid(
+           const FormatterContext& context,
+           wxWindow* parent,
            wxWindowID id,
            const wxPoint& pos,
            const wxSize& size,
            long style,
            const wxString& name)
-: wxGrid(parent, id, pos, size, style | wxWANTS_CHARS, name)
+: wxGrid(parent, id, pos, size, style | wxWANTS_CHARS, name), mContext(context)
 {
 #if wxUSE_ACCESSIBILITY
-   GetGridWindow()->SetAccessible(mAx = safenew GridAx(this));
+   GetGridWindow()->SetAccessible(mAx = safenew GridAx(mContext, this));
 #endif
 
    // RegisterDataType takes ownership of renderer and editor
 
    RegisterDataType(GRID_VALUE_TIME,
-                    safenew NumericRenderer{ NumericConverterType_TIME },
+                    safenew NumericRenderer{ mContext, NumericConverterType_TIME },
                     safenew NumericEditor
-                      { NumericConverterType_TIME,
-                        NumericConverterFormats::SecondsFormat(), 44100.0 });
+                      { mContext, NumericConverterType_TIME,
+                        NumericConverterFormats::SecondsFormat() });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
-                    safenew NumericRenderer{ NumericConverterType_FREQUENCY },
+                    safenew NumericRenderer{ mContext, NumericConverterType_FREQUENCY },
                     safenew NumericEditor
-                    { NumericConverterType_FREQUENCY,
-                      NumericConverterFormats::HertzFormat(), 44100.0 });
+                    { mContext, NumericConverterType_FREQUENCY,
+                      NumericConverterFormats::HertzFormat() });
 
    RegisterDataType(GRID_VALUE_CHOICE,
                     safenew wxGridCellStringRenderer,
@@ -809,8 +800,9 @@ bool Grid::DeleteCols(int pos, int numCols, bool updateLabels)
    return res;
 }
 
-GridAx::GridAx(Grid *grid)
-: WindowAccessible(grid->GetGridWindow())
+GridAx::GridAx(const FormatterContext& context, Grid* grid)
+    : WindowAccessible(grid->GetGridWindow())
+    , mContext(context)
 {
    mGrid = grid;
    mLastId = -1;
@@ -970,10 +962,9 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
       if (c && dt && df && ( c == dt || c == df)) {
          double value;
          v.ToDouble(&value);
-         NumericConverter converter(c == dt ? NumericConverterType_TIME : NumericConverterType_FREQUENCY,
+         NumericConverter converter(mContext, c == dt ? NumericConverterType_TIME : NumericConverterType_FREQUENCY,
                         c->GetFormat(),
-                        value,
-                        c->GetRate() );
+                        value);
 
          v = converter.GetString();
       }

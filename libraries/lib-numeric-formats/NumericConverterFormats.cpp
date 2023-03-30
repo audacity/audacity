@@ -11,6 +11,7 @@
 
 #include "NumericConverterFormats.h"
 #include "NumericConverterRegistry.h"
+#include "NumericConverterFormatterContext.h"
 
 #include <cassert>
 #include <unordered_map>
@@ -59,13 +60,14 @@ NumericFormatSymbol Default(const NumericConverterType& type)
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
+   const FormatterContext& context, 
    const NumericConverterType& type,
    const NumericFormatSymbol& formatIdentifier)
 {
    if (formatIdentifier.empty())
       return Default(type);
 
-   auto result = NumericConverterRegistry::Find(type, { formatIdentifier });
+   auto result = NumericConverterRegistry::Find(context, type, { formatIdentifier });
 
    if (result == nullptr)
       return Default(type);
@@ -73,10 +75,11 @@ NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
    return result->symbol;
 }
 
-NUMERIC_FORMATS_API NumericFormatSymbol
-Lookup(const NumericConverterType& type, const wxString& formatIdentifier)
+NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
+   const FormatterContext& context, const NumericConverterType& type,
+   const wxString& formatIdentifier)
 {
-   return Lookup(type, NumericFormatSymbol { formatIdentifier });
+   return Lookup(context, type, NumericFormatSymbol { formatIdentifier });
 }
 
 

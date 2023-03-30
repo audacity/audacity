@@ -15,40 +15,147 @@
 #include <cmath>
 
 #include "NumericConverterRegistry.h"
+#include "NumericConverterFormatterContext.h"
 
 #include "SampleCount.h"
 
+#include "Project.h"
+#include "ProjectTimeSignature.h"
+
 namespace
 {
+// This function will return 10^pow
+// No overflow checks are performed, it is assumed that 10^pow
+// does not overflow
+constexpr size_t Get10Pow (size_t pow)
+{
+   return pow > 0 ? 10 * Get10Pow(pow - 1) : 1;
+}
+
+/* i18n-hint: The music theory "bar" */
+const auto BarString = XO("bar");
+/* i18n-hint: The music theory "beat" */
+const auto BeatString = XO("beat");
 
 class BeatsFormatter final :
-    public NumericConverterFormatter
+    public NumericConverterFormatter,
+    public PrefsListener
 {
 public:
-   BeatsFormatter(
-      double tempo, int upperTimeSignature, int lowerTimeSignature,
-      int fracPart)
-       : mTempo { tempo }
-       , mUpperTimeSignature { upperTimeSignature }
-       , mLowerTimeSignature { lowerTimeSignature }
+   static constexpr std::array<size_t, 3> MIN_DIGITS { 3, 2, 2 };
+   static constexpr std::array<size_t, 3> UPPER_BOUNDS {
+      Get10Pow(MIN_DIGITS[0] - 1) + 1, Get10Pow(MIN_DIGITS[1] - 1) + 1,
+      Get10Pow(MIN_DIGITS[2] - 1) + 1
+   };
+   
+   BeatsFormatter(const FormatterContext& context, int fracPart)
+       : mContext { context }
        , mFracPart { fracPart }
    {
-      mFields.reserve(mFracPart > 0 ? 3 : 2);
+      auto project = mContext.GetProject();
 
+      if (!project)
+         return;
+
+      mBarString = BarString.Translation();
+      mBeatString = BeatString.Translation();
+
+      UpdateFormat(*project);
+
+      // Subscribing requires non-const reference
+      mTimeSignatureChangedSubscription =
+         const_cast<ProjectTimeSignature&>(ProjectTimeSignature::Get(*project))
+            .Subscribe(
+               [this](const auto&)
+               {
+                  // Receiving this message means that project is
+                  // alive and well
+                  UpdateFormat(*mContext.GetProject());
+                  Publish({});
+               });
+   }
+
+   //! Check that field exists and has enough digits to fit the value
+   bool CheckField(size_t fieldIndex, int value) const noexcept
+   {
+      if (fieldIndex >= mFields.size())
+         return false;
+
+      const auto digitsCount = mFields[fieldIndex].digits;
+
+      // Format always allows at least two digits
+      const auto lowerRange =
+         digitsCount > MIN_DIGITS[fieldIndex] ? Get10Pow(digitsCount - 1) : 0;
+
+      const auto upperRange = Get10Pow(digitsCount);
+
+      return value >= int(lowerRange) && value < int(upperRange);
+   }
+
+   bool CheckFracField (int newLts) const noexcept
+   {
+      if (mFracPart > newLts)
+         return CheckField(2, mFracPart / mLowerTimeSignature);
+      else
+         return mFields.size() == 2;
+   }
+
+   void UpdateFormat(const AudacityProject& project)
+   {
+      auto& timeSignature = ProjectTimeSignature::Get(project);
+
+      const double newTempo = timeSignature.GetTempo();
+      const int newUts = timeSignature.GetUpperTimeSignature();
+      const int newLts = timeSignature.GetLowerTimeSignature();
+
+      if (newTempo == mTempo && newUts == mUpperTimeSignature && newLts == mLowerTimeSignature)
+         return ;
+
+      const bool formatOk = CheckField(1, newUts) && CheckFracField(newLts);
+      
+      mTempo = newTempo;
+      mUpperTimeSignature = newUts;
+      mLowerTimeSignature = newLts;
+
+      // 1/4 = BPM is used for now
+      const auto quarterLength = 60.0 / mTempo;
+      const auto beatLength = quarterLength * 4.0 / mLowerTimeSignature;
+      const auto barLength = mUpperTimeSignature * beatLength;
+
+      mFieldLengths[0] = barLength;
+      mFieldLengths[1] = beatLength;
+
+      const auto hasFracPart = mFracPart > mLowerTimeSignature;
+
+      if (hasFracPart)
+      {
+         const auto fracLength = beatLength * mLowerTimeSignature / mFracPart;
+         mFieldLengths[2] = fracLength;
+      }
+
+      if (formatOk)
+         return ;
+      
+      mFields.clear();
+      mDigits.clear();
+      
       // Range is assumed to allow 999 bars.
-      auto& barsField = mFields.emplace_back(NumericField::WithDigits(3));
-      barsField.label = L" " + XO("bar").Translation() + L" ";
+      auto& barsField =
+         mFields.emplace_back(NumericField::WithDigits(MIN_DIGITS[0]));
+      
+      barsField.label = L" " + mBarString + L" ";
 
-      // Beats format is 1 based. For the time point "0" the expected output is "1 bar 1 beat [1]"
-      // For this reason we use (uts + 1) as the "range".
-      // On top of that, we want at least two digits to be shown. NumericField accepts range as in
-      // [0, range), so add 1.
+      // Beats format is 1 based. For the time point "0" the expected output is
+      // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
+      // top of that, we want at least two digits to be shown. NumericField
+      // accepts range as in [0, range), so add 1.
 
-      auto& beatsField = mFields.emplace_back(
-         NumericField::ForRange(std::max(11, mUpperTimeSignature + 1)));
-      beatsField.label = L" " + XO("beat").Translation();
+      auto& beatsField = mFields.emplace_back(NumericField::ForRange(
+         std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
+      
+      beatsField.label = L" " + mBeatString;
 
-      if (mFracPart > 0)
+      if (hasFracPart)
       {
          beatsField.label += L" ";
          // See the reasoning above about the range
@@ -70,16 +177,6 @@ public:
 
          pos += mFields[i].label.length();
       }
-
-      // 1/4 = BPM is used for now
-      const auto quarterLength = 60.0 / mTempo;
-      const auto beatLength = quarterLength * 4.0 / mLowerTimeSignature;
-      const auto barLength = mUpperTimeSignature * beatLength;
-      const auto fracLength = beatLength * mLowerTimeSignature / mFracPart;
-
-      mFieldLengths[0] = barLength;
-      mFieldLengths[1] = beatLength;
-      mFieldLengths[2] = fracLength;
    }
 
    void UpdateResultString(ConversionResult& result) const
@@ -172,64 +269,87 @@ public:
       return upwards ? value + stepSize : value - stepSize;
    }
 
+   void UpdatePrefs() override
+   {
+      auto project = mContext.GetProject();
+
+      if (!project)
+         return;
+
+      auto barString = BarString.Translation();
+      auto beatString = BeatString.Translation();
+
+      if (barString == mBarString && beatString == mBeatString)
+         return;
+
+      mBarString = barString;
+      mBeatString = beatString;
+      
+      UpdateFormat(*project);
+   }
+
 private:
-   double mTempo;
+   const FormatterContext mContext;
 
-   int mUpperTimeSignature;
-   int mLowerTimeSignature;
+   Observer::Subscription mTimeSignatureChangedSubscription;
+   
+   double mTempo { 0.0 };
 
-   int mFracPart;
+   int mUpperTimeSignature { 0 };
+   int mLowerTimeSignature { 0 };
+   
+   const int mFracPart;
 
-   std::array<double, 3> mFieldLengths;
+   std::array<double, 3> mFieldLengths {};
+
+   wxString mBarString;
+   wxString mBeatString;
 };
 
-bool IsValidTimeSignatureDenom (int value)
+class BeatsNumericConverterFormatterFactory final :
+    public NumericConverterFormatterFactory
 {
-   return value >= 1 && ((value & (value - 1)) == 0);
-}
+public:
+   explicit BeatsNumericConverterFormatterFactory (int fracPart)
+      : mFracPart { fracPart }
+   {
+   }
 
-NumericConverterItemRegistrator beatsTime
-{
+   std::unique_ptr<NumericConverterFormatter>
+   Create(const FormatterContext& context) const override
+   {
+      if (!IsAcceptableInContext(context))
+         return {};
+
+      return std::make_unique<BeatsFormatter>(context, mFracPart);
+   }
+
+   bool IsAcceptableInContext(const FormatterContext& context) const override
+   {
+      return context.HasProject();
+   }
+
+private:
+   const int mFracPart;
+};
+
+NumericConverterItemRegistrator beatsTime {
    Registry::Placement { {}, { Registry::OrderingHint::After, L"parsedTime" } },
-      NumericConverterFormatterGroup(
-         "beats", NumericConverterType_TIME,
-         NumericConverterFormatterItem(
-            "beats", XO("beats"),
-         [](const auto& config)
-         {
-            return CreateBeatsNumericConverterFormatter(
-               config.tempo, config.upperTimeSignature,
-               config.lowerTimeSignature);
-         }),
+   NumericConverterFormatterGroup(
+      "beats", NumericConverterType_TIME,
       NumericConverterFormatterItem(
+         /* i18n-hint: The music theory "beats" */
+         "beats", XO("beats"),
+         std::make_unique<BeatsNumericConverterFormatterFactory>(0)),
+      NumericConverterFormatterItem(
+         /* i18n-hint: The music theory "beats". 16th is a not duration. */
          "beats16", XO("beats and 16th"),
-         [](const auto& config)
-         {
-            return CreateBeatsNumericConverterFormatter(
-               config.tempo, config.upperTimeSignature,
-               config.lowerTimeSignature, 16);
-         }))
+         std::make_unique<BeatsNumericConverterFormatterFactory>(16)))
 };
 } // namespace
 
-std::unique_ptr<NumericConverterFormatter>
-CreateBeatsNumericConverterFormatter(
-   double tempo, int upperTimeSignature, int lowerTimeSignature,
-   int fracPart /*= 0*/)
+std::unique_ptr<NumericConverterFormatter> CreateBeatsNumericConverterFormatter(
+   const FormatterContext& context, int fracPart /*= 0*/)
 {
-   if (tempo <= 0 ||
-      upperTimeSignature < 1 ||
-      !IsValidTimeSignatureDenom(lowerTimeSignature))
-      return {};
-
-   // Fraction should be "less" than beat size, i. e.
-   // 1 / fracPart < 1 / lts.
-   // Otherwise, we will pass 0 to the formatter and no fraction will be shown.
-   if (fracPart < lowerTimeSignature)
-      fracPart = 0;
-   else if (!IsValidTimeSignatureDenom(fracPart))
-      return {};
-
-   return std::make_unique<BeatsFormatter>(
-      tempo, upperTimeSignature, lowerTimeSignature, fracPart);
+   return std::make_unique<BeatsFormatter>(context, fracPart);
 }

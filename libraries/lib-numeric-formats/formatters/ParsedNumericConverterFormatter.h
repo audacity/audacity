@@ -14,7 +14,11 @@
 
 #include "NumericConverterType.h"
 #include "NumericConverterFormatter.h"
+#include "TranslatableString.h"
+
+class FormatterContext;
 
 NUMERIC_FORMATS_API std::unique_ptr<NumericConverterFormatter>
 CreateParsedNumericConverterFormatter(
-   NumericConverterType type, const wxString& format, double sampleRate);
+   const FormatterContext& context, NumericConverterType type,
+   const TranslatableString& format);

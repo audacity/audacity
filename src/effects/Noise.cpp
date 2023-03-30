@@ -195,11 +195,11 @@ std::unique_ptr<EffectEditor> EffectNoise::PopulateOrExchange(
       S.AddPrompt(XXO("&Duration:"));
       auto &extra = access.Get().extra;
       mNoiseDurationT = safenew
-         NumericTextCtrl(S.GetParent(), wxID_ANY,
+         NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                         S.GetParent(), wxID_ANY,
                          NumericConverterType_TIME,
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
-                         mProjectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))

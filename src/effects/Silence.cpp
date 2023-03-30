@@ -73,11 +73,11 @@ std::unique_ptr<EffectEditor> EffectSilence::PopulateOrExchange(
          S.AddPrompt(XXO("&Duration:"));
          auto &extra = access.Get().extra;
          mDurationT = safenew
-            NumericTextCtrl(S.GetParent(), wxID_ANY,
+            NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                              S.GetParent(), wxID_ANY,
                               NumericConverterType_TIME,
                               extra.GetDurationFormat(),
                               extra.GetDuration(),
-                               mProjectRate,
                                NumericTextCtrl::Options{}
                                   .AutoPos(true));
          S.Name(XO("Duration"))

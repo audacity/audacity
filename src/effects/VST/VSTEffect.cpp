@@ -2648,11 +2648,11 @@ void VSTEffectEditor::BuildPlain(EffectSettingsAccess &access, EffectType effect
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
             auto &extra = access.Get().extra;
             mDuration = safenew
-               NumericTextCtrl(scroller, ID_Duration,
+               NumericTextCtrl(FormatterContext::SampleRateContext(projectRate),
+                  scroller, ID_Duration,
                   NumericConverterType_TIME,
                   extra.GetDurationFormat(),
                   extra.GetDuration(),
-                  projectRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
             mDuration->SetName( XO("Duration") );

@@ -777,9 +777,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.Name(XO("Start Date"))
                .AddWindow(m_pDatePickerCtrl_Start);
 
-            m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
+            m_pTimeTextCtrl_Start = safenew NumericTextCtrl(FormatterContext::EmptyContext(),
                S.GetParent(), ID_TIMETEXT_START, NumericConverterType_TIME,
-               {}, 0, 44100,
+               {}, 0,
                Options{}
                   .MenuEnabled(false)
                   .CustomFormat(strFormat)
@@ -806,9 +806,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.Name(XO("End Date"))
                .AddWindow(m_pDatePickerCtrl_End);
 
-            m_pTimeTextCtrl_End = safenew NumericTextCtrl(
+            m_pTimeTextCtrl_End = safenew NumericTextCtrl(FormatterContext::EmptyContext(),
                S.GetParent(), ID_TIMETEXT_END, NumericConverterType_TIME,
-               {}, 0, 44100,
+               {}, 0,
                Options{}
                   .MenuEnabled(false)
                   .CustomFormat(strFormat)
@@ -820,9 +820,9 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
          S.StartStatic(XO("Duration"), true);
          {
-            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
+            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(FormatterContext::EmptyContext(),
                S.GetParent(), ID_TIMETEXT_DURATION, NumericConverterType_TIME,
-               {}, 0, 44100,
+               {}, 0,
                Options{}
                   .MenuEnabled(false)
                   .CustomFormat(strFormat1)

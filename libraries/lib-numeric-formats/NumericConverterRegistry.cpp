@@ -17,8 +17,10 @@ const auto PathStart = L"NumericConverterRegistry";
 struct RegistryVisitor : public Registry::Visitor
 {
    RegistryVisitor(
-      NumericConverterRegistry::Visitor _visitor, NumericConverterType requestedType)
+      NumericConverterRegistry::Visitor _visitor,
+      const FormatterContext& context, NumericConverterType requestedType)
        : visitor { std::move(_visitor) }
+       , mContext { context }
        , requestedType { std::move(requestedType) }
    {
    }
@@ -44,6 +46,14 @@ struct RegistryVisitor : public Registry::Visitor
       auto concreteItem = dynamic_cast<NumericConverterRegistryItem*>(&item);
 
       if (concreteItem == nullptr)
+      {
+         // This is unexpected so fail the debug build early
+         assert(false);
+         return;
+      }
+
+      // Skip the items that are not acceptable in this context
+      if (!concreteItem->factory->IsAcceptableInContext(mContext))
          return;
 
       visitor(*concreteItem);
@@ -51,13 +61,16 @@ struct RegistryVisitor : public Registry::Visitor
 
    NumericConverterRegistry::Visitor visitor;
    const NumericConverterType requestedType;
+   // Visitor life time is always shorter than the Visit has,
+   // which guarantees that FormatterContext outlives the visitor
+   const FormatterContext& mContext;
    bool mInMatchingGroup { false };
 };
 }
 
  NumericConverterRegistryItem::NumericConverterRegistryItem(
    const Identifier& internalName, const NumericFormatSymbol& _symbol,
-   NumericConverterFormatterFactory _factory)
+   NumericConverterFormatterFactoryPtr _factory)
     : SingleItem { internalName }
     , symbol { _symbol }
     , factory { std::move(_factory) }
@@ -67,7 +80,7 @@ struct RegistryVisitor : public Registry::Visitor
  NumericConverterRegistryItem::NumericConverterRegistryItem(
     const Identifier& internalName, const NumericFormatSymbol& _symbol,
     const TranslatableString& _fractionLabel,
-    NumericConverterFormatterFactory _factory)
+    NumericConverterFormatterFactoryPtr _factory)
      : SingleItem { internalName }
      , symbol { _symbol }
      , fractionLabel { _fractionLabel }
@@ -85,25 +98,29 @@ Registry::GroupItem& NumericConverterRegistry::Registry()
    return registry;
 }
 
-void NumericConverterRegistry::Visit(const NumericConverterType& type, Visitor visitor)
+void NumericConverterRegistry::Visit(
+   const FormatterContext& context, const NumericConverterType& type,
+   Visitor visitor)
 {
    static Registry::OrderingPreferenceInitializer init {
       PathStart,
       { { L"", L"parsedTime,beats,parsedFrequency,parsedBandwith" } },
    };
 
-   RegistryVisitor registryVisitor { std::move(visitor), type };
+   RegistryVisitor registryVisitor { std::move(visitor), context, type };
 
    Registry::TransparentGroupItem<> top { PathStart };
    Registry::Visit(registryVisitor, &top, &Registry());
 }
 
 const NumericConverterRegistryItem* NumericConverterRegistry::Find(
+   const FormatterContext& context, 
    const NumericConverterType& type, const NumericFormatSymbol& symbol)
 {
    const NumericConverterRegistryItem* result = nullptr;
 
    Visit(
+      context,
       type,
       [&result, symbol](const NumericConverterRegistryItem& item)
       {
@@ -131,7 +148,7 @@ NumericConverterItemRegistrator::NumericConverterItemRegistrator(
 
 NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
    const Identifier& functionId, const TranslatableString& label,
-   NumericConverterFormatterFactory factory)
+   NumericConverterFormatterFactoryPtr factory)
 {
    return std::make_unique<NumericConverterRegistryItem>(
       functionId, label, std::move(factory));
@@ -140,8 +157,9 @@ NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
 NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
    const Identifier& functionId, const TranslatableString& label,
    const TranslatableString& fractionLabel,
-   NumericConverterFormatterFactory factory)
+   NumericConverterFormatterFactoryPtr factory)
 {
    return std::make_unique<NumericConverterRegistryItem>(
       functionId, label, fractionLabel, std::move(factory));
 }
+

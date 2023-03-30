@@ -233,10 +233,10 @@ void EffectRepeat::DisplayNewTime()
    wxString str;
    mRepeatCount->GetValue().ToLong(&l);
 
-   NumericConverter nc(NumericConverterType_TIME,
+   NumericConverter nc(FormatterContext::SampleRateContext(mProjectRate),
+                       NumericConverterType_TIME,
                        GetSelectionFormat(),
-                       mT1 - mT0,
-                       mProjectRate);
+                       mT1 - mT0);
 
    str = wxString::Format( _("Current selection length: %s"), nc.GetString() );
 

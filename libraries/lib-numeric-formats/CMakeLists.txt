@@ -16,6 +16,8 @@ set( SOURCES
    NumericConverterFormats.h
    NumericConverterFormatter.cpp
    NumericConverterFormatter.h
+   NumericConverterFormatterContext.cpp
+   NumericConverterFormatterContext.h
    NumericConverterRegistry.cpp
    NumericConverterRegistry.h
    NumericConverterType.cpp
@@ -32,7 +34,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-math-interface
-   lib-project-interface
+   lib-project-rate-interface
 )
 audacity_library( lib-numeric-formats "${SOURCES}" "${LIBRARIES}"
    "" ""

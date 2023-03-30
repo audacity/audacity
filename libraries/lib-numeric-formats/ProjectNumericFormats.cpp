@@ -10,7 +10,10 @@
 #include "ProjectNumericFormats.h"
 #include "Prefs.h"
 #include "Project.h"
+
 #include "NumericConverterFormats.h"
+#include "NumericConverterFormatterContext.h"
+
 #include "XMLAttributeValueView.h"
 #include "XMLWriter.h"
 
@@ -18,7 +21,7 @@ static const AttachedProjectObjects::RegisteredFactory key
 {
    [](AudacityProject &project)
    {
-      return std::make_shared<ProjectNumericFormats>();
+      return std::make_shared<ProjectNumericFormats>(project);
    }
 };
 
@@ -33,20 +36,25 @@ const ProjectNumericFormats &ProjectNumericFormats::Get(
    return Get(const_cast<AudacityProject &>(project));
 }
 
-ProjectNumericFormats::ProjectNumericFormats()
-   : mSelectionFormat{ NumericConverterFormats::Lookup(
+ProjectNumericFormats::ProjectNumericFormats(const AudacityProject& project)
+   : mProject { project }
+   , mSelectionFormat{ NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(project),
       NumericConverterType_TIME,
       gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
    }
    , mFrequencySelectionFormatName{ NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(project),
       NumericConverterType_FREQUENCY,
       gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
    }
    , mBandwidthSelectionFormatName{ NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(project),
       NumericConverterType_BANDWIDTH,
       gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
    }
    , mAudioTimeFormat{ NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(project),
       NumericConverterType_TIME,
       gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
    }
@@ -70,6 +78,13 @@ const NumericFormatSymbol &
 ProjectNumericFormats::GetBandwidthSelectionFormatName() const
 {
    return mBandwidthSelectionFormatName;
+}
+
+NumericFormatSymbol ProjectNumericFormats::LookupFormat(
+   const NumericConverterType& type, const wxString& identifier)
+{
+   return NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(mProject), type, identifier);
 }
 
 void ProjectNumericFormats::SetBandwidthSelectionFormatName(
@@ -118,17 +133,15 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
    // Maybe that should be abandoned.  Enough to save changes in the user
    // preference file.
    { "selectionformat", [](auto &formats, auto value){
-      formats.SetSelectionFormat(NumericConverterFormats::Lookup(
+      formats.SetSelectionFormat(formats.LookupFormat(
               NumericConverterType_TIME, value.ToWString()));
    } },
    { "frequencyformat", [](auto &formats, auto value){
-      formats.SetFrequencySelectionFormatName(
-              NumericConverterFormats::Lookup(
-                 NumericConverterType_FREQUENCY, value.ToWString()));
+           formats.SetFrequencySelectionFormatName(formats.LookupFormat(
+              NumericConverterType_FREQUENCY, value.ToWString()));
    } },
    { "bandwidthformat", [](auto &formats, auto value){
-      formats.SetBandwidthSelectionFormatName(
-              NumericConverterFormats::Lookup(
-                 NumericConverterType_BANDWIDTH, value.ToWString()));
+           formats.SetBandwidthSelectionFormatName(formats.LookupFormat(
+              NumericConverterType_BANDWIDTH, value.ToWString()));
    } },
 } };

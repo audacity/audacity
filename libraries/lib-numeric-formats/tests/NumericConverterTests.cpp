@@ -13,12 +13,22 @@
 
 #include "formatters/ParsedNumericConverterFormatter.h"
 #include "formatters/BeatsNumericConverterFormatter.h"
+#include "NumericConverterFormatterContext.h"
+
+#include "Project.h"
+#include "ProjectRate.h"
+#include "ProjectTimeSignature.h"
+
+#include "MockedPrefs.h"
+#include "MockedAudio.h"
 
 
 TEST_CASE("ParsedNumericConverterFormatter", "")
 {
+   auto context = FormatterContext::SampleRateContext(44100.0);
+   
    auto hhmmssFormatter = CreateParsedNumericConverterFormatter(
-      NumericConverterType_TIME, "0100 h 060 m 060 s", 44100.0);
+      context, NumericConverterType_TIME, Verbatim("0100 h 060 m 060 s"));
 
    REQUIRE(
       hhmmssFormatter->ValueToString(0.0, false).valueString ==
@@ -60,7 +70,17 @@ TEST_CASE("ParsedNumericConverterFormatter", "")
 
 TEST_CASE("BeatsNumericConverterFormatter", "")
 {
-   auto basicFormatter = CreateBeatsNumericConverterFormatter(120, 3, 4);
+   MockedPrefs mockedPrefs;
+   MockedAudio mockedAudio;
+   
+   auto project = AudacityProject::Create();
+   auto& timeSignature = ProjectTimeSignature::Get(*project);
+   
+   timeSignature.SetTempo(120.0);
+   timeSignature.SetUpperTimeSignature(3);
+   timeSignature.SetLowerTimeSignature(4);
+   
+   auto basicFormatter = CreateBeatsNumericConverterFormatter(FormatterContext::ProjectContext(*project));
 
    REQUIRE(
       basicFormatter->ValueToString(-1.0, false).valueString ==
@@ -92,7 +112,12 @@ TEST_CASE("BeatsNumericConverterFormatter", "")
    REQUIRE(
       *basicFormatter->StringToValue("002 bar 01 beat") == Approx(1.5));
 
-   auto fracFormatter = CreateBeatsNumericConverterFormatter(120, 3, 4, 16);
+   timeSignature.SetTempo(120.0);
+   timeSignature.SetUpperTimeSignature(3);
+   timeSignature.SetLowerTimeSignature(4);
+
+   auto fracFormatter = CreateBeatsNumericConverterFormatter(
+      FormatterContext::ProjectContext(*project), 16);
 
    REQUIRE(
       fracFormatter->ValueToString(-1.0, false).valueString ==

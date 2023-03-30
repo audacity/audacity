@@ -363,11 +363,11 @@ void EffectDtmf::Editor::PopulateOrExchange(ShuttleGui & S,
       S.AddPrompt(XXO("&Duration:"));
       auto &extra = settings.extra;
       mDtmfDurationT = safenew
-         NumericTextCtrl(S.GetParent(), wxID_ANY,
+         NumericTextCtrl(FormatterContext::SampleRateContext(projectRate),
+                         S.GetParent(), wxID_ANY,
                          NumericConverterType_TIME,
                          extra.GetDurationFormat(),
                          extra.GetDuration(),
-                         projectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))

@@ -97,7 +97,6 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          LabelTrack *selectedTrack,
                          int index,
                          ViewInfo &viewinfo,
-                         double rate,
                          const NumericFormatSymbol & format,
                          const NumericFormatSymbol &freqFormat)
 : wxDialogWrapper(parent,
@@ -110,9 +109,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
   , mTracks(tracks)
   , mSelectedTrack(selectedTrack)
   , mIndex(index)
-  , mViewInfo(&viewinfo),
-  mRate(rate),
-  mFormat(format)
+  , mViewInfo(&viewinfo)
+  , mFormat(format)
   , mFreqFormat(freqFormat)
 {
    SetName();
@@ -257,8 +255,10 @@ void LabelDialog::PopulateOrExchange( ShuttleGui & S )
    {
       S.StartVerticalLay(wxEXPAND,1);
       {
-         mGrid = safenew Grid(S.GetParent(), wxID_ANY);
-         S.Prop(1).AddWindow( mGrid );
+         mGrid = safenew Grid(
+            FormatterContext::ProjectContext(mProject), S.GetParent(),
+            wxID_ANY);
+         S.Prop(1).AddWindow(mGrid);
       }
       S.EndVerticalLay();
       S.StartVerticalLay(0);
@@ -294,13 +294,10 @@ bool LabelDialog::TransferDataToWindow()
    int i;
 
    // Set the editor parameters.  Do this each time since they may change
-   // due to NEW tracks and change in NumericTextCtrl format.  Rate won't
-   // change but might as well leave it here.
+   // due to NEW tracks and change in NumericTextCtrl format.
    mChoiceEditor->SetChoices(mTrackNames);
    mTimeEditor->SetFormat(mFormat);
-   mTimeEditor->SetRate(mRate);
    mFrequencyEditor->SetFormat(mFreqFormat);
-   mFrequencyEditor->SetRate(mRate);
 
    // Disable redrawing until we're done
    mGrid->BeginBatch();
@@ -531,6 +528,7 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFormat = NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(mProject),
       NumericConverterType_TIME, event.GetString() );
    TransferDataToWindow();
 
@@ -541,6 +539,7 @@ void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
    mFreqFormat = NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(mProject),
       NumericConverterType_FREQUENCY, event.GetString() );
    TransferDataToWindow();
 

@@ -3,6 +3,8 @@
 add_unit_test(
    NAME
       lib-numeric-formats
+   MOCK_PREFS
+   MOCK_AUDIO
    SOURCES
       NumericConverterTests.cpp
    LIBRARIES

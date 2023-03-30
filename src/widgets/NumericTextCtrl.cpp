@@ -142,16 +142,17 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 
-NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
+NumericTextCtrl::NumericTextCtrl(
+                           const FormatterContext& context,
+                           wxWindow *parent, wxWindowID id,
                            NumericConverterType type,
                            const NumericFormatSymbol &formatName,
                            double timeValue,
-                           double sampleRate,
                            const Options &options,
                            const wxPoint &pos,
                            const wxSize &size):
    wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
-   NumericConverter(type, formatName, timeValue, sampleRate),
+   NumericConverter(context, type, formatName, timeValue),
    mBackgroundBitmap{},
    mDigitFont{},
    mLabelFont{},
@@ -252,26 +253,6 @@ bool NumericTextCtrl::SetCustomFormat(const TranslatableString& customFormat)
    HandleFormatterChanged();
 
    return true;
-}
-
-void NumericTextCtrl::SetSampleRate(double sampleRate)
-{
-   NumericConverter::SetSampleRate(sampleRate);
-   mBoxes.clear();
-   Layout();
-   Fit();
-   ValueToControls();
-   ControlsToValue();
-}
-
-void NumericTextCtrl::SetTimeSignature(double tempo, int upper, int lower)
-{
-   NumericConverter::SetTimeSignature(tempo, upper, lower);
-   mBoxes.clear();
-   Layout();
-   Fit();
-   ValueToControls();
-   ControlsToValue();
 }
 
 void NumericTextCtrl::SetValue(double newValue)
@@ -588,6 +569,7 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
    std::vector<NumericFormatSymbol> symbols;
 
    NumericConverterRegistry::Visit(
+      mContext,
       mType,
       [&menu, &symbols, this, i = ID_MENU](auto& item) mutable
       {
@@ -693,6 +675,12 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
       UpdateAutoFocus();
 
    event.Skip( false ); // PRL: not sure why, but preserving old behavior
+}
+
+void NumericTextCtrl::OnFormatUpdated()
+{
+   NumericConverter::OnFormatUpdated();
+   HandleFormatterChanged();
 }
 
 void NumericTextCtrl::HandleFormatterChanged()
@@ -1098,10 +1086,10 @@ wxAccStatus NumericTextCtrlAx::GetLocation(wxRect & rect, int elementId)
    return wxACC_OK;
 }
 
-static void GetFraction( wxString &label, NumericConverterType type,
+static void GetFraction( const FormatterContext& context, wxString &label, NumericConverterType type,
    const NumericFormatSymbol &formatSymbol )
 {
-   auto result = NumericConverterRegistry::Find(type, formatSymbol);
+   auto result = NumericConverterRegistry::Find(context, type, formatSymbol);
 
    if (result == nullptr)
       return;
@@ -1167,7 +1155,7 @@ wxAccStatus NumericTextCtrlAx::GetName(int childId, wxString *name)
 
          if (field > 1 && field == cnt) {
             if (mFields[field - 2].label == decimal) {
-               GetFraction( label, mCtrl->mType, mCtrl->mFormatSymbol );
+               GetFraction( mCtrl->mContext, label, mCtrl->mType, mCtrl->mFormatSymbol );
             }
          }
          // If the field following this one represents fractions of a

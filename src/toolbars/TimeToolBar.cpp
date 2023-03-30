@@ -58,15 +58,8 @@ Identifier TimeToolBar::ID()
 
 TimeToolBar::TimeToolBar(AudacityProject &project)
 :  ToolBar(project, XO("Time"), ID(), true),
-   mListener(NULL),
-   mAudioTime(NULL)
+   mListener(NULL), mAudioTime(NULL)
 {
-   mSubscription =
-      ProjectRate::Get(project).Subscribe(*this, &TimeToolBar::OnRateChanged);
-
-   mTimeSignatureChangedSubscription =
-      ProjectTimeSignature::Get(project).Subscribe([this](auto)
-                                                   { UpdateTimeSignature(); });
 }
 
 TimeToolBar::~TimeToolBar()
@@ -93,14 +86,11 @@ void TimeToolBar::Populate()
 {
    const auto &formats = ProjectNumericFormats::Get(mProject);
 
-   // Get the default sample rate
-   auto rate = ProjectRate::Get(mProject).GetRate();
-
    // Get the default time format
    auto format = formats.GetAudioTimeFormat();
 
    // Create the read-only time control
-   mAudioTime = safenew NumericTextCtrl(this, AudioPositionID, NumericConverterType_TIME, format, 0.0, rate);
+   mAudioTime = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject), this, AudioPositionID, NumericConverterType_TIME, format, 0.0);
    mAudioTime->SetName(XO("Audio Position"));
    mAudioTime->SetReadOnly(true);
 
@@ -279,25 +269,6 @@ void TimeToolBar::SetResizingLimits()
    SetMaxSize(maxSize);
 }
 
-// Called when the project rate changes
-void TimeToolBar::OnRateChanged(double rate)
-{
-   if (mAudioTime)
-      mAudioTime->SetSampleRate(rate);
-}
-
-void TimeToolBar::UpdateTimeSignature()
-{
-   const auto& timeSignature = ProjectTimeSignature::Get(mProject);
-
-   const auto tempo = timeSignature.GetTempo();
-   const auto uts = timeSignature.GetUpperTimeSignature();
-   const auto lts = timeSignature.GetLowerTimeSignature();
-
-   if (mAudioTime)
-      mAudioTime->SetTimeSignature(tempo, uts, lts);
-}
-
 // Called when the format drop downs is changed.
 // This causes recreation of the toolbar contents.
 void TimeToolBar::OnUpdate(wxCommandEvent &evt)
@@ -314,9 +285,7 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    if (mListener) {
       mListener->TT_SetAudioTimeFormat(evt.GetString());
    }
-
-   UpdateTimeSignature();
-
+   
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force
    // the content to fit inside the toolbar.

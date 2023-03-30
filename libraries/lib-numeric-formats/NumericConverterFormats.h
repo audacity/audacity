@@ -13,6 +13,8 @@
 #include "NumericConverterType.h"
 #include "ComponentInterfaceSymbol.h"
 
+class FormatterContext;
+
 namespace NumericConverterFormats
 {
 struct DefaultFormatRegistrator final
@@ -25,10 +27,14 @@ struct DefaultFormatRegistrator final
 NUMERIC_FORMATS_API NumericFormatSymbol Default(const NumericConverterType& type);
 
 //! Looks up the format, returns Default for the type if the format is not registered
-NUMERIC_FORMATS_API NumericFormatSymbol Lookup(const NumericConverterType& type, const wxString& formatIdentifier);
+NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
+   const FormatterContext& context, const NumericConverterType& type,
+   const wxString& formatIdentifier);
 
 //! Looks up the format, returns Default for the type if the format is not registered
-NUMERIC_FORMATS_API NumericFormatSymbol Lookup(const NumericConverterType& type, const NumericFormatSymbol& formatIdentifier);
+NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
+   const FormatterContext& context, const NumericConverterType& type,
+   const NumericFormatSymbol& formatIdentifier);
 
 NUMERIC_FORMATS_API NumericFormatSymbol DefaultSelectionFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol TimeAndSampleFormat();

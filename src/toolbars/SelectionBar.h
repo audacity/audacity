@@ -88,9 +88,6 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void ModifySelection(int driver, bool done = false);
    void SelectionModeUpdated();
 
-   void UpdateRate(double rate);
-   void UpdateTimeSignature();
-
    SelectionBarListener * mListener;
    double mRate;
    double mStart, mEnd, mLength, mCenter;
@@ -101,10 +98,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    std::array<NumericTextCtrl*, 2> mTimeControls {};
 
    wxString mLastValidText;
-
-   Observer::Subscription mRateChangedSubscription;
-   Observer::Subscription mTimeSignatureChangedSubscription;
-
+   
  public:
 
    DECLARE_CLASS(SelectionBar)

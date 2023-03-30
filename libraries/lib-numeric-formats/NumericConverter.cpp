@@ -29,8 +29,8 @@ different formats.
 #include "NumericConverter.h"
 #include "NumericConverterFormats.h"
 #include "NumericConverterRegistry.h"
-#include "SampleCount.h"
-#include "Beats.h"
+
+#include "Project.h"
 
 #include "formatters/ParsedNumericConverterFormatter.h"
 
@@ -38,53 +38,32 @@ different formats.
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wx.h>
 
-static const TranslatableString BuildBeatsFormat() {
-   double bpm = BeatsPerMinute.Read();
-   int uts = UpperTimeSignature.Read();
-   int lts = LowerTimeSignature.Read();
-
-   // Check that all data is positive
-   if (bpm <= 0) return XO("Invalid tempo");
-   if (uts <= 0 || lts <= 0) return XO("Invalid time signature");
-   // Also check that the lower time signature is valid (power of 2)
-   if (lts & (lts - 1)) return XO("Invalid time signature");
-
-   return XO("01000 bars 0%d beats|%f").Format(
-      uts, (((double)lts / 4) * bpm) / 60
-   );
-}
-
 //
 // ----------------------------------------------------------------------------
 // NumericConverter Class
 // ----------------------------------------------------------------------------
 //
 
-NumericConverter::NumericConverter(NumericConverterType type,
+NumericConverter::NumericConverter(const FormatterContext& context, NumericConverterType type,
                                    const NumericFormatSymbol & formatName,
-                                   double value,
-                                   double sampleRate)
+                                   double value)
+    : mContext { context }
+    , mType { std::move(type) }
 {
    ResetMinValue();
    ResetMaxValue();
 
-   mInvalidValue = -1.0;
-   mType = std::move(type);
-   mValue = value; // used in SetSampleRate, reassigned later
-
-   SetSampleRate(sampleRate);
-   SetTimeSignature(
-      BeatsPerMinute.Read(), UpperTimeSignature.Read(),
-      LowerTimeSignature.Read());
    SetFormatName(formatName);
-   SetValue(value); // mValue got overridden to -1 in ControlsToValue(), reassign
+   SetValue(value);
 }
 
-void NumericConverter::ParseFormatString(
-   const TranslatableString & untranslatedFormat)
+bool NumericConverter::ParseFormatString(
+   const TranslatableString& untranslatedFormat)
 {
-   mFormatter =
-      CreateParsedNumericConverterFormatter(mType, untranslatedFormat.Translation(), mSampleRate);
+   mFormatter = CreateParsedNumericConverterFormatter(
+      mContext, mType, untranslatedFormat);
+
+   return mFormatter != nullptr;
 }
 
 NumericConverter::~NumericConverter()
@@ -127,7 +106,7 @@ bool NumericConverter::SetFormatName(const NumericFormatSymbol& formatName)
    if (mFormatSymbol == formatName && !formatName.empty())
       return false;
 
-   const auto newFormat = NumericConverterFormats::Lookup(mType, formatName);
+   const auto newFormat = NumericConverterFormats::Lookup(mContext, mType, formatName);
 
    if (mFormatSymbol == newFormat)
       return false;
@@ -150,8 +129,7 @@ bool NumericConverter::SetCustomFormat(const TranslatableString& customFormat)
    if (mCustomFormat == customFormat)
       return false;
 
-   if (!CreateParsedNumericConverterFormatter(
-          mType, customFormat.Translation(), mSampleRate))
+   if (!ParseFormatString(customFormat))
       return false;
 
    mFormatSymbol = {};
@@ -160,25 +138,6 @@ bool NumericConverter::SetCustomFormat(const TranslatableString& customFormat)
    UpdateFormatter();
 
    return true;
-}
-
-void NumericConverter::SetSampleRate(double sampleRate)
-{
-   mSampleRate = sampleRate;
-   UpdateFormatter();
-   ValueToControls();
-   ControlsToValue();
-}
-
-void NumericConverter::SetTimeSignature(double tempo, int upper, int lower)
-{
-   mTempo = tempo;
-   mUpperTimeSignature = upper;
-   mLowerTimeSignature = lower;
-
-   UpdateFormatter();
-   ValueToControls();
-   ControlsToValue();
 }
 
 void NumericConverter::SetValue(double newValue)
@@ -252,7 +211,7 @@ bool NumericConverter::UpdateFormatter()
 {
    if (!mFormatSymbol.empty())
    {
-      auto formatterItem = NumericConverterRegistry::Find(mType, mFormatSymbol);
+      auto formatterItem = NumericConverterRegistry::Find(mContext, mType, mFormatSymbol);
 
       if (formatterItem == nullptr)
       {
@@ -260,23 +219,30 @@ bool NumericConverter::UpdateFormatter()
          return false;
       }
 
-      mFormatter = formatterItem->factory({ mSampleRate, mTempo, mLowerTimeSignature, mUpperTimeSignature });
+      mFormatter = formatterItem->factory->Create(mContext);
    }
    else if (!mCustomFormat.empty ())
    {
-      auto formatter = CreateParsedNumericConverterFormatter(
-         mType, mCustomFormat.Translation(), mSampleRate);
-
-      if (formatter == nullptr)
-      {
-         assert(formatter != nullptr);
-         return false;
-      }
-
-      mFormatter = std::move(formatter);
+      ParseFormatString(mCustomFormat);
    }
 
+   if (mFormatter)
+   {
+      mFormatUpdatedSubscription =
+         mFormatter->Subscribe([this](auto) { OnFormatUpdated(); });
+   }
+
+   OnFormatUpdated();
    return mFormatter != nullptr;
+}
+
+void NumericConverter::OnFormatUpdated()
+{
+   if (!mFormatter)
+      return;
+   
+   ValueToControls();
+   ControlsToValue();
 }
 
 void NumericConverter::Adjust(int steps, int dir, int focusedDigit)

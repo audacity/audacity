@@ -15,6 +15,10 @@
 
 #include <wx/string.h>
 
+#include "Observer.h"
+
+class AudacityProject;
+
 struct NUMERIC_FORMATS_API NumericField final
 {
 private:
@@ -47,7 +51,12 @@ struct NUMERIC_FORMATS_API DigitInfo final
 
 using DigitInfos = std::vector<DigitInfo>;
 
-struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */
+struct NumericConverterFormatChangedMessage final
+{
+};
+
+struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */ :
+    public Observer::Publisher<NumericConverterFormatChangedMessage>
 {
    virtual ~NumericConverterFormatter();
 
@@ -65,7 +74,7 @@ struct NUMERIC_FORMATS_API NumericConverterFormatter /* not final */
    StringToValue(const wxString& value) const = 0;
 
    virtual double SingleStep(double value, int digitIndex, bool upwards) const = 0;
-
+   
    const wxString& GetPrefix() const;
    const NumericFields& GetFields() const;
    const DigitInfos& GetDigitInfos() const;

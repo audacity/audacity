@@ -179,9 +179,9 @@ void SpectralSelectionBar::Populate()
    {
       auto subSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
-      mCenterCtrl = safenew NumericTextCtrl(
+      mCenterCtrl = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject),
          this, OnCenterID,
-         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
@@ -189,8 +189,9 @@ void SpectralSelectionBar::Populate()
       subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mWidthCtrl = safenew NumericTextCtrl(
+         FormatterContext::ProjectContext(mProject),
          this, OnWidthID,
-         NumericConverterType_BANDWIDTH, bandwidthFormatName, 0.0, 44100.0,
+         NumericConverterType_BANDWIDTH, bandwidthFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, -1.0 )
       );
@@ -198,8 +199,9 @@ void SpectralSelectionBar::Populate()
       subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mLowCtrl = safenew NumericTextCtrl(
+         FormatterContext::ProjectContext(mProject),
          this, OnLowID,
-         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );
@@ -207,8 +209,9 @@ void SpectralSelectionBar::Populate()
       subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mHighCtrl = safenew NumericTextCtrl(
+         FormatterContext::ProjectContext(mProject),
          this, OnHighID,
-         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericConverterType_FREQUENCY, frequencyFormatName, 0.0,
          NumericTextCtrl::Options{}
             .InvalidValue( true, SelectedRegion::UndefinedFrequency )
       );

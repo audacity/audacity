@@ -252,6 +252,7 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
          CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverterFormats::Lookup(
+         FormatterContext::SampleRateContext(mProjectRate),
          NumericConverterType_TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
@@ -330,11 +331,11 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
             S.AddPrompt(XXO("C&urrent Length:"));
 
             mpFromLengthCtrl = safenew
-                  NumericTextCtrl(S.GetParent(), wxID_ANY,
+                  NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                                 S.GetParent(), wxID_ANY,
                                  NumericConverterType_TIME,
                                  mFormat,
                                  mFromLength,
-                                 mProjectRate,
                                  NumericTextCtrl::Options{}
                                   .ReadOnly(true)
                                   .MenuEnabled(false));
@@ -348,11 +349,11 @@ std::unique_ptr<EffectEditor> EffectChangeSpeed::PopulateOrExchange(
             S.AddPrompt(XXO("&New Length:"));
 
             mpToLengthCtrl = safenew
-                  NumericTextCtrl(S.GetParent(), ID_ToLength,
+                  NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                                 S.GetParent(), ID_ToLength,
                                  NumericConverterType_TIME,
                                  mFormat,
-                                 mToLength,
-                                 mProjectRate);
+                                 mToLength);
 
             /* i18n-hint: changing speed of audio "from" one value "to" another */
             S.Name(XC("to", "change speed"))
@@ -678,6 +679,7 @@ void EffectChangeSpeed::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(evt))
 void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
    mFormat = NumericConverterFormats::Lookup(
+      FormatterContext::SampleRateContext(mProjectRate),
       NumericConverterType_TIME, evt.GetString() );
 
    mpFromLengthCtrl->SetFormatName(mFormat);

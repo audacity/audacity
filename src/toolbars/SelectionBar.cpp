@@ -123,13 +123,7 @@ Identifier SelectionBar::ID()
 SelectionBar::SelectionBar( AudacityProject &project )
 : ToolBar(project, XO("Selection"), ID()),
   mListener(NULL), mRate(0.0),
-  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
-  mRateChangedSubscription(
-     ProjectRate::Get(project).Subscribe(
-         [this](double rate) { UpdateRate(rate); })),
-   mTimeSignatureChangedSubscription(
-            ProjectTimeSignature::Get(project).Subscribe(
-               [this](auto) { UpdateTimeSignature(); }))
+  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0)
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
@@ -218,8 +212,8 @@ void SelectionBar::AddTime(
    int id, wxSizer * pSizer ){
    auto formatName = mListener ? mListener->AS_GetSelectionFormat()
       : NumericFormatSymbol{};
-   auto pCtrl = safenew NumericTextCtrl(
-      this, id, NumericConverterType_TIME, formatName, 0.0, mRate);
+   auto pCtrl = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject),
+      this, id, NumericConverterType_TIME, formatName, 0.0);
 
    pCtrl->Bind(
       wxEVT_TEXT,
@@ -293,7 +287,6 @@ void SelectionBar::Populate()
 
    // Update the selection mode before the layout
    SetSelectionMode(mSelectionMode);
-   UpdateTimeSignature();
    mainSizer->Layout();
    RegenerateTooltips();
    Layout();
@@ -318,6 +311,7 @@ void SelectionBar::UpdatePrefs()
    // update.
    wxCommandEvent e;
    e.SetString(NumericConverterFormats::Lookup(
+               FormatterContext::ProjectContext(mProject),
                NumericConverterType_TIME,
                gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
@@ -426,7 +420,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
          std::distance(mTimeControls.begin(), focusedCtrlIt) :
          -1;
 
-   auto format = NumericConverterFormats::Lookup(NumericConverterType_TIME, evt.GetString());
+   auto format = NumericConverterFormats::Lookup(
+      FormatterContext::ProjectContext(mProject), NumericConverterType_TIME,
+      evt.GetString());
 
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())
@@ -545,37 +541,6 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
       wxCommandEvent e;
       e.SetString(format.Internal());
       OnUpdate(e);
-   }
-}
-
-void SelectionBar::UpdateRate(double rate)
-{
-   if (rate != mRate)
-   {
-      // if the rate is actually being changed
-      mRate = rate; // update the stored rate
-
-      // update the TimeTextCtrls if they exist
-      for (auto ctrl : mTimeControls)
-      {
-         if (ctrl != nullptr)
-            ctrl->SetSampleRate(rate);
-      }
-   }
-}
-
-void SelectionBar::UpdateTimeSignature()
-{
-   const auto& timeSignature = ProjectTimeSignature::Get(mProject);
-
-   const auto tempo = timeSignature.GetTempo();
-   const auto uts = timeSignature.GetUpperTimeSignature();
-   const auto lts = timeSignature.GetLowerTimeSignature();
-
-   for (auto ctrl : mTimeControls)
-   {
-      if (ctrl != nullptr)
-         ctrl->SetTimeSignature(tempo, uts, lts);
    }
 }
 

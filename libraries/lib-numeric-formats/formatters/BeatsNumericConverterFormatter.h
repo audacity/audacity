@@ -3,7 +3,7 @@
 
  Audacity: A Digital Audio Editor
 
- @file ParsedNumericConverterFormatter.h
+ @file BeatsNumericConverterFormatter.h
 
  Dmitry Vedenko
 
@@ -13,9 +13,10 @@
 #include <memory>
 #include "NumericConverterFormatter.h"
 
+class FormatterContext;
+
 NUMERIC_FORMATS_API std::unique_ptr<NumericConverterFormatter>
 CreateBeatsNumericConverterFormatter(
-   double tempo, int upperTimeSignature, int lowerTimeSignature,
-   int fracPart = 0);
+   const FormatterContext& context, int fracPart = 0);
 
 

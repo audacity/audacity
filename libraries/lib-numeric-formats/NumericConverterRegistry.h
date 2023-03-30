@@ -12,27 +12,33 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 
 #include "Registry.h"
 #include "NumericConverterType.h"
 
 struct NumericConverterFormatter;
+class FormatterContext;
 
-struct NUMERIC_FORMATS_API NumericConverterConfig final
+class NumericConverterFormatterFactory /* not final */
 {
-   double sampleRate { 44100.0 };
+public:
+   virtual ~NumericConverterFormatterFactory() = default;
 
-   double tempo { 120.0 };
-   int upperTimeSignature { 4 };
-   int lowerTimeSignature { 4 };
+   virtual std::unique_ptr<NumericConverterFormatter>
+   Create(const FormatterContext& context) const = 0;
+
+   virtual bool IsAcceptableInContext(const FormatterContext& context) const = 0;
 };
 
-using NumericConverterFormatterFactory =
-   std::function<std::unique_ptr<NumericConverterFormatter>(
-      const NumericConverterConfig&)>;
+using NumericConverterFormatterFactoryPtr =
+   std::unique_ptr<NumericConverterFormatterFactory>;
+
+// NumericConverterRegistryGroupTag is a fake type needed to fix the link on Windows
+struct NumericConverterRegistryGroupTag {};
 
 struct NUMERIC_FORMATS_API NumericConverterRegistryGroup :
-    public Registry::InlineGroupItem<NumericConverterRegistryGroup>
+    public Registry::InlineGroupItem<NumericConverterRegistryGroupTag>
 {
    template <typename... Args>
    NumericConverterRegistryGroup(
@@ -54,19 +60,19 @@ struct NUMERIC_FORMATS_API NumericConverterRegistryItem : public Registry::Singl
 {
    NumericConverterRegistryItem(
       const Identifier& internalName, const NumericFormatSymbol& symbol,
-      NumericConverterFormatterFactory factory);
+      NumericConverterFormatterFactoryPtr factory);
 
    NumericConverterRegistryItem(
       const Identifier& internalName, const NumericFormatSymbol& symbol,
       const TranslatableString& fractionLabel,
-      NumericConverterFormatterFactory factory);
+      NumericConverterFormatterFactoryPtr factory);
    
    ~NumericConverterRegistryItem() override;
 
    const NumericFormatSymbol symbol;
    const TranslatableString fractionLabel;
    
-   const NumericConverterFormatterFactory factory;
+   const NumericConverterFormatterFactoryPtr factory;
 };
 
 struct NUMERIC_FORMATS_API NumericConverterRegistry final
@@ -75,20 +81,23 @@ struct NUMERIC_FORMATS_API NumericConverterRegistry final
 
    using Visitor = std::function<void(const NumericConverterRegistryItem&)>;
    
-   static void Visit(const NumericConverterType& type, Visitor visitor);
+   static void Visit(
+      const FormatterContext& context, const NumericConverterType& type,
+      Visitor visitor);
 
-   static const NumericConverterRegistryItem*
-   Find(const NumericConverterType& type, const NumericFormatSymbol& symbol);
+   static const NumericConverterRegistryItem* Find(
+      const FormatterContext& context, const NumericConverterType& type,
+      const NumericFormatSymbol& symbol);
 };
 
 NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
    const Identifier& functionId, const TranslatableString& label,
-   NumericConverterFormatterFactory factory);
+   NumericConverterFormatterFactoryPtr factory);
 
 NUMERIC_FORMATS_API Registry::BaseItemPtr NumericConverterFormatterItem(
    const Identifier& functionId, const TranslatableString& label,
    const TranslatableString& fractionLabel,
-   NumericConverterFormatterFactory factory);
+   NumericConverterFormatterFactoryPtr factory);
 
 template <typename... Args>
 Registry::BaseItemPtr NumericConverterFormatterGroup(

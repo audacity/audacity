@@ -20,17 +20,18 @@
 
 #include "NumericConverterType.h"
 #include "NumericConverterFormatter.h"
+#include "NumericConverterFormatterContext.h"
 
 #include "ComponentInterfaceSymbol.h"
 #include "TranslatableString.h"
 
+
 class NUMERIC_FORMATS_API NumericConverter /* not final */
 {
 public:
-   NumericConverter(NumericConverterType type,
+   NumericConverter(const FormatterContext& context, NumericConverterType type,
                     const NumericFormatSymbol & formatName = {},
-                    double value = 0.0f,
-                    double sampleRate = 1.0f /* to prevent div by 0 */);
+                    double value = 0.0f);
 
    virtual ~NumericConverter();  
 
@@ -45,7 +46,7 @@ public:
    virtual void ControlsToValue();
 
 private:
-   void ParseFormatString(const TranslatableString & untranslatedFormat);
+   bool ParseFormatString(const TranslatableString & untranslatedFormat);
 
 public:
    // returns true if the format name really changed:
@@ -54,9 +55,6 @@ public:
    NumericFormatSymbol GetFormatName() const;
 
    bool SetCustomFormat(const TranslatableString& customFormat);
-
-   void SetSampleRate(double sampleRate);
-   void SetTimeSignature(double tempo, int upper, int lower);
 
    void SetValue(double newValue);
    void SetMinValue(double minValue);
@@ -76,19 +74,17 @@ public:
 
 protected:
    bool UpdateFormatter();
-   
-   NumericConverterType mType;
+   virtual void OnFormatUpdated();
+
+   FormatterContext mContext;
+
+   const NumericConverterType mType;
 
    double         mValue;
 
    double         mMinValue;
    double         mMaxValue;
-   double         mInvalidValue;
-
-   double         mSampleRate { 1.0 };
-   double         mTempo;
-   int            mUpperTimeSignature;
-   int            mLowerTimeSignature;
+   double         mInvalidValue { -1 };
 
    std::unique_ptr<NumericConverterFormatter>
                  mFormatter;
@@ -99,6 +95,8 @@ protected:
    // Formatted mValue, by ValueToControls().
    wxString       mValueString;
    std::vector<wxString> mFieldValueStrings;
+
+   Observer::Subscription mFormatUpdatedSubscription;
 
 private:
    int GetSafeFocusedDigit(int focusedDigit) const noexcept;

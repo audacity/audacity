@@ -415,29 +415,33 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(
-         NumericConverterFormats::Lookup(NumericConverterType_TIME,
+      selman.AS_SetSelectionFormat(NumericConverterFormats::Lookup(
+         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME,
          mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(
-         NumericConverterFormats::Lookup(NumericConverterType_TIME,
+      selman.TT_SetAudioTimeFormat(NumericConverterFormats::Lookup(
+         FormatterContext::ProjectContext(mProject), NumericConverterType_TIME,
          mProjectAttrs.audiotimeformat));
    }
 
    if (mProjectAttrs.havefrequencyformat)
    {
       selman.SSBL_SetFrequencySelectionFormatName(
-         NumericConverterFormats::Lookup(NumericConverterType_FREQUENCY,
+         NumericConverterFormats::Lookup(
+            FormatterContext::ProjectContext(mProject),
+            NumericConverterType_FREQUENCY,
          mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)
    {
       selman.SSBL_SetBandwidthSelectionFormatName(
-         NumericConverterFormats::Lookup(NumericConverterType_BANDWIDTH,
+         NumericConverterFormats::Lookup(
+            FormatterContext::ProjectContext(mProject),
+            NumericConverterType_BANDWIDTH,
          mProjectAttrs.bandwidthformat));
    }
 

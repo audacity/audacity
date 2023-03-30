@@ -66,11 +66,11 @@ class AUDACITY_DLL_API NumericTextCtrl final
          { hasValue = has, value = v; return *this; }
    };
 
-   NumericTextCtrl(wxWindow *parent, wxWindowID winid,
+   NumericTextCtrl(
+      const FormatterContext& context, wxWindow* parent, wxWindowID winid,
                    NumericConverterType type,
                    const NumericFormatSymbol &formatName = {},
                    double value = 0.0,
-                   double sampleRate = 44100,
                    const Options &options = {},
                    const wxPoint &pos = wxDefaultPosition,
                    const wxSize &size = wxDefaultSize);
@@ -85,8 +85,6 @@ class AUDACITY_DLL_API NumericTextCtrl final
    bool Layout() override;
    void Fit() override;
 
-   void SetSampleRate(double sampleRate);
-   void SetTimeSignature(double tempo, int upper, int lower);
    void SetValue(double newValue);
    
    // returns true iff the format name really changed:
@@ -111,6 +109,7 @@ class AUDACITY_DLL_API NumericTextCtrl final
    int GetFocusedDigit() { return mFocusedDigit; }
 
 private:
+   void OnFormatUpdated() override;
    void HandleFormatterChanged();
 
    void OnCaptureKey(wxCommandEvent &event);

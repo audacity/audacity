@@ -17,6 +17,8 @@
 #include <wx/grid.h> // to inherit wxGridCellEditor
 #include "NumericTextCtrl.h" // for NumericConverter::Type
 
+class AudacityProject;
+
 #if wxUSE_ACCESSIBILITY
 class GridAx;
 #endif
@@ -39,7 +41,7 @@ class AUDACITY_DLL_API NumericEditor /* not final */ : public wxGridCellEditor
 public:
 
    NumericEditor
-      (NumericConverterType type, const NumericFormatSymbol &format, double rate);
+      (const FormatterContext& context, NumericConverterType type, const NumericFormatSymbol &format);
 
    ~NumericEditor();
 
@@ -59,9 +61,7 @@ public:
    void Reset() override;
 
    NumericFormatSymbol GetFormat() const;
-   double GetRate() const;
    void SetFormat(const NumericFormatSymbol &format);
-   void SetRate(double rate);
 
    wxGridCellEditor *Clone() const override;
    wxString GetValue() const override;
@@ -72,11 +72,12 @@ public:
  private:
 
    NumericFormatSymbol mFormat;
-   double mRate;
    NumericConverterType mType;
    double mOld;
    wxString mOldString;
    wxString mValueAsString;
+
+   FormatterContext mContext;
 };
 
 /**********************************************************************//**
@@ -86,7 +87,11 @@ public:
 class NumericRenderer final : public wxGridCellRenderer
 {
  public:
-   NumericRenderer(NumericConverterType type) : mType{ type } {}
+   NumericRenderer(const FormatterContext& context, NumericConverterType type)
+        : mType { type }
+        , mContext { context }
+   {
+   }
    ~NumericRenderer() override;
 
    void Draw(wxGrid &grid,
@@ -107,6 +112,7 @@ class NumericRenderer final : public wxGridCellRenderer
 
 private:
    NumericConverterType mType;
+   FormatterContext mContext;
 };
 
 /**********************************************************************//**
@@ -123,7 +129,6 @@ public:
 
    ChoiceEditor(size_t count = 0,
                 const wxString choices[] = NULL);
-
    ChoiceEditor(const wxArrayString &choices);
 
    ~ChoiceEditor();
@@ -186,7 +191,8 @@ class AUDACITY_DLL_API Grid final : public wxGrid
 
  public:
 
-   Grid(wxWindow *parent,
+   Grid(
+       const FormatterContext& context, wxWindow* parent,
         wxWindowID id,
         const wxPoint& pos = wxDefaultPosition,
         const wxSize& size = wxDefaultSize,
@@ -215,6 +221,8 @@ class AUDACITY_DLL_API Grid final : public wxGrid
    void OnKeyDown(wxKeyEvent &event);
 
  private:
+
+    FormatterContext mContext;
 
 #if wxUSE_ACCESSIBILITY
    GridAx *mAx;

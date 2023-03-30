@@ -13,6 +13,10 @@
 
 #include "SampleCount.h"
 #include "NumericConverterFormats.h"
+#include "NumericConverterFormatterContext.h"
+
+#include "Project.h"
+#include "ProjectRate.h"
 
 #include <cmath>
 
@@ -152,18 +156,36 @@ struct FieldConfig final
    long range; // then take modulo this
 };
 
-class ParsedNumericConverterFormatter final : public NumericConverterFormatter
+class ParsedNumericConverterFormatter final :
+   public NumericConverterFormatter,
+   public PrefsListener
 {
 public:
    ParsedNumericConverterFormatter(
-      NumericConverterType type, const wxString& format, double sampleRate)
-       : mType { type }
-       , mSampleRate { sampleRate }
+      NumericConverterType type, const TranslatableString& untranslatedFormat, const FormatterContext& context)
+       : mContext { context }
+       , mType { type }
+       , mFormat { untranslatedFormat.Translation() }
+       , mUntranslatedFormat { untranslatedFormat }
    {
-      ParseFormatString(format);
+      UpdateFormat();
+
+      if (mType == NumericConverterType_TIME)
+      {
+         auto project = mContext.GetProject();
+
+         if (project != nullptr)
+         {
+            // We need a non const object to subscribe...
+            mProjectRateChangedSubscription =
+               const_cast<ProjectRate&>(ProjectRate::Get(*project))
+                  .Subscribe([this](const auto&) { UpdateFormat(); });
+         }
+      }
    }
 
-   void ParseFormatString(const wxString& format)
+   void
+   ParseFormatString()
    {
       mPrefix.clear();
       mFields.clear();
@@ -181,19 +203,23 @@ public:
       unsigned int i;
 
       mNtscDrop = false;
-      for (i = 0; i < format.length(); i++)
+      for (i = 0; i < mFormat.length(); i++)
       {
          bool handleDelim = false;
          bool handleNum = false;
 
-         if (format[i] == '|')
+         if (mFormat[i] == '|')
          {
-            wxString remainder = format.Right(format.length() - i - 1);
+            wxString remainder = mFormat.Right(mFormat.length() - i - 1);
             // For languages which use , as a separator.
             remainder.Replace(wxT(","), wxT("."));
 
-            if (remainder == wxT("#"))
+            mScalingFactorIsSamples = remainder == wxT("#");
+
+            if (mScalingFactorIsSamples)
+            {
                mScalingFactor = mSampleRate;
+            }
             else if (remainder == wxT("N"))
             {
                mNtscDrop = true;
@@ -204,28 +230,28 @@ public:
                // We can't rely on the correct ',' or '.' in the
                // translation, so we work based on '.' for decimal point.
                remainder.ToCDouble(&mScalingFactor);
-            i = format.length() - 1; // force break out of loop
+            i = mFormat.length() - 1; // force break out of loop
             if (!delimStr.empty())
                handleDelim = true;
             if (!numStr.empty())
                handleNum = true;
          }
          else if (
-            (format[i] >= '0' && format[i] <= '9') || format[i] == wxT('*') ||
-            format[i] == wxT('#'))
+            (mFormat[i] >= '0' && mFormat[i] <= '9') ||
+            mFormat[i] == wxT('*') || mFormat[i] == wxT('#'))
          {
-            numStr += format[i];
+            numStr += mFormat[i];
             if (!delimStr.empty())
                handleDelim = true;
          }
          else
          {
-            delimStr += format[i];
+            delimStr += mFormat[i];
             if (!numStr.empty())
                handleNum = true;
          }
 
-         if (i == format.length() - 1)
+         if (i == mFormat.length() - 1)
          {
             if (!numStr.empty())
                handleNum = true;
@@ -239,7 +265,7 @@ public:
             long range = 0;
 
             if (numStr.Right(1) == wxT("#"))
-               range = (long int)mSampleRate;
+               range = static_cast<long int>(mSampleRate);
             else if (numStr.Right(1) != wxT("*"))
             {
                numStr.ToLong(&range);
@@ -331,6 +357,23 @@ public:
 
          pos += mFields[i].label.length();
       }
+
+      // This Publish will happen from the
+      // constructor as well, despite it is not
+      // possible to catch it there
+      Publish({});
+   }
+
+   void UpdateFormat()
+   {
+      const auto newSampleRate = mContext.GetSampleRate();
+
+      const bool sampleRateChanged = newSampleRate != mSampleRate;
+
+      mSampleRate = newSampleRate;
+
+      if (mFields.empty() || (sampleRateChanged && mScalingFactorIsSamples))
+         ParseFormatString();
    }
 
    ConversionResult ValueToString(
@@ -338,7 +381,7 @@ public:
    {
       ConversionResult result;
 
-      if (mType == NumericConverterType_TIME)
+      if (mType == NumericConverterType_TIME && mContext.HasSampleRate())
          rawValue = floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f)) /
                     mSampleRate; // put on a sample
       double theValue = rawValue * mScalingFactor
@@ -584,13 +627,30 @@ public:
       return value;
    }
 
+   void UpdatePrefs() override
+   {
+      auto newFormat = mUntranslatedFormat.Translation();
+
+      if (mFormat == newFormat)
+         return;
+
+      mFormat = newFormat;
+      ParseFormatString();
+   }
 private:
-   NumericConverterType mType;
+   const FormatterContext mContext;
+   const NumericConverterType mType;
+   wxString mFormat;
+   const TranslatableString mUntranslatedFormat;
 
    std::vector<FieldConfig> mFieldConfigs;
 
    double mScalingFactor;
-   double mSampleRate;
+   double mSampleRate { 1.0 };
+
+   Observer::Subscription mProjectRateChangedSubscription;
+
+   bool mScalingFactorIsSamples { false };
 
    mutable bool mNtscDrop;
 };
@@ -944,6 +1004,42 @@ NumericConverterFormats::DefaultFormatRegistrator bandwidthDefault {
    NumericConverterType_BANDWIDTH, NumericConverterFormats::OctavesFormat()
 };
 
+class ParsedNumericConverterFormatterFactory final :
+    public NumericConverterFormatterFactory
+{
+public:
+   ParsedNumericConverterFormatterFactory(
+      NumericConverterType type, TranslatableString format)
+       : mType { std::move(type) }
+       , mFormat { std::move(format) }
+   {
+      // Only TIME with # in the format depends on sample rate now
+      mDependsOnSampleRate = mType != NumericConverterType_TIME ||
+                             mFormat.Debug().find(L'#') != wxString::npos;
+   }
+   
+   std::unique_ptr<NumericConverterFormatter>
+   Create(const FormatterContext& context) const override
+   {
+      if (!IsAcceptableInContext(context))
+         return {};
+
+      return std::make_unique<ParsedNumericConverterFormatter>(
+         mType, mFormat, context);
+   }
+
+   bool IsAcceptableInContext(const FormatterContext& context) const override
+   {
+      return !mDependsOnSampleRate || context.HasSampleRate();
+   }
+
+private:
+   NumericConverterType mType;
+   TranslatableString mFormat;
+
+   bool mDependsOnSampleRate;
+};
+
 Registry::BaseItemPtr MakeGroup (
    const Identifier& identifier, NumericConverterType type, const BuiltinFormatString* formatStrings, const size_t count)
 {
@@ -952,21 +1048,15 @@ Registry::BaseItemPtr MakeGroup (
 
    for (size_t index = 0; index < count; ++index)
    {
-      const auto functionIdentfier =
+      const auto functionIdentifier =
          wxString::Format(L"%s_%zu", identifier.GET(), index);
 
       auto& formatString = formatStrings[index];
 
       group->items.push_back(std::make_unique<NumericConverterRegistryItem>(
-         functionIdentfier, formatString.name,
+         functionIdentifier, formatString.name,
          formatString.formatStrings.fraction,
-         [format = formatString.formatStrings.formatStr,
-          type](const auto& cfg)
-            -> std::unique_ptr<NumericConverterFormatter>
-         {
-            return std::make_unique<ParsedNumericConverterFormatter>(
-               type, format.Translation(), cfg.sampleRate);
-         }));
+         std::make_unique<ParsedNumericConverterFormatterFactory>(type, formatString.formatStrings.formatStr)));
    }
 
    return group;
@@ -996,7 +1086,8 @@ NumericConverterItemRegistrator parsedBandwith {
 
 std::unique_ptr<NumericConverterFormatter>
 CreateParsedNumericConverterFormatter(
-   NumericConverterType type, const wxString& format, double sampleRate)
+   const FormatterContext& context, NumericConverterType type,
+   const TranslatableString& format)
 {
-   return std::make_unique<ParsedNumericConverterFormatter>(type, format, sampleRate);
+   return std::make_unique<ParsedNumericConverterFormatter>(type, format, context);
 }

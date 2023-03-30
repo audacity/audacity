@@ -120,7 +120,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
          bool fillRuleTable = false;
          if (RuleTable == NULL)
          {
-            RuleTable = safenew Grid(S.GetParent(),EIPRuleTable);
+            RuleTable = safenew Grid(FormatterContext::EmptyContext(), S.GetParent(),EIPRuleTable);
 
             RuleTable->SetColLabelSize(RuleTable->GetDefaultRowSize());
 #if EXTIMPORT_MIME_SUPPORT

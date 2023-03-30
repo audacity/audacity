@@ -29,11 +29,11 @@ VST3Editor::VST3Editor(wxWindow* parent, VST3Wrapper& wrapper,
 
       auto &extra = access.Get().extra;
       mDuration = safenew NumericTextCtrl(
+            FormatterContext::SampleRateContext(mWrapper.mSetup.sampleRate),
             parent, wxID_ANY,
             NumericConverterType_TIME,
             extra.GetDurationFormat(),
             extra.GetDuration(),
-            mWrapper.mSetup.sampleRate,
             NumericTextCtrl::Options{}
                .AutoPos(true)
          );

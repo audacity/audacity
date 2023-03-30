@@ -52,11 +52,11 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
       {
          mTimeCtrl = safenew
             NumericTextCtrl(
-               S.GetParent(), wxID_ANY,
+                         FormatterContext::SampleRateContext(mRate),
+                         S.GetParent(), wxID_ANY,
                          NumericConverterType_TIME,
                          mFormat,
                          mTime,
-                         mRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
          S.AddWindow(mTimeCtrl);
@@ -77,7 +77,6 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
 bool TimeDialog::TransferDataToWindow()
 {
    mTimeCtrl->SetFormatName(mFormat);
-   mTimeCtrl->SetSampleRate(mRate);
    mTimeCtrl->SetValue(mTime);
    mTimeCtrl->SetFocus();
 

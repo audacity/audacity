@@ -167,11 +167,10 @@ double GridMove
 (AudacityProject &project, double t, int minPix)
 {
    auto &formats = ProjectNumericFormats::Get(project);
-   auto rate = ProjectRate::Get(project).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto format = formats.GetSelectionFormat();
 
-   NumericConverter nc(NumericConverterType_TIME, format, t, rate);
+   NumericConverter nc(FormatterContext::ProjectContext(project), NumericConverterType_TIME, format, t);
 
    // Try incrementing/decrementing the value; if we've moved far enough we're
    // done
