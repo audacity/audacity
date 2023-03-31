@@ -19,18 +19,15 @@ function.
 *//*******************************************************************/
 
 
-
-
 #include "../FFmpeg.h"
 #include "FFmpegFunctions.h"
 
-#include <wx/choice.h>
+#include <wx/app.h>
 #include <wx/log.h>
-#include <wx/textctrl.h>
-#include <wx/listbox.h>
+
 #include <wx/window.h>
-#include <wx/spinctrl.h>
-#include <wx/combobox.h>
+#include <wx/button.h>
+#include <wx/textctrl.h>
 
 #include "Mix.h"
 #include "ProjectRate.h"
@@ -42,11 +39,13 @@ function.
 #include "Export.h"
 
 #include "ExportFFmpegDialogs.h"
+#include "ExportFFmpegOptions.h"
 #include "SelectFile.h"
 
 #include "ExportUtils.h"
 #include "ExportProgressListener.h"
 #include "ExportOptionsEditor.h"
+#include "FFmpegTypes.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
