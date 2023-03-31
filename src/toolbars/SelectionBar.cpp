@@ -346,16 +346,21 @@ void SelectionBar::ModifySelection(int driver, bool done)
    // Only update a value if user typed something in.
    // The reason is the controls may be less accurate than
    // the values.
+   double start = mStart;
+   double end = mEnd;
+   double center = mCenter;
+   double length = mLength;
+   
    if (driver == 0)
    {
       if (
          mSelectionMode == SelectionMode::StartEnd ||
          mSelectionMode == SelectionMode::StartLength)
-         mStart = mTimeControls[0]->GetValue();
+         start = mTimeControls[0]->GetValue();
       else if (
          mSelectionMode == SelectionMode::LengthCenter ||
          mSelectionMode == SelectionMode::LengthEnd)
-         mLength = mTimeControls[0]->GetValue();
+         length = mTimeControls[0]->GetValue();
       else
          wxFAIL_MSG("Unexpected selection mode");
    }
@@ -364,11 +369,11 @@ void SelectionBar::ModifySelection(int driver, bool done)
       if (
          mSelectionMode == SelectionMode::StartEnd ||
          mSelectionMode == SelectionMode::LengthEnd)
-         mEnd = mTimeControls[1]->GetValue();
+         end = mTimeControls[1]->GetValue();
       else if (mSelectionMode == SelectionMode::StartLength)
-         mLength = mTimeControls[1]->GetValue();
+         length = mTimeControls[1]->GetValue();
       else if (mSelectionMode == SelectionMode::LengthCenter)
-         mCenter = mTimeControls[1]->GetValue();
+         center = mTimeControls[1]->GetValue();
       else
          wxFAIL_MSG("Unexpected selection mode");
    }
@@ -380,27 +385,50 @@ void SelectionBar::ModifySelection(int driver, bool done)
    switch (mSelectionMode)
    {
    case SelectionBar::SelectionMode::StartEnd:
-      mLength = mEnd - mStart;
-      mCenter = (mStart + mEnd) / 2.0;
+      if (driver == 0 && end < start)
+         end = start;
+      else if (driver == 1 && start > end)
+         start = end;
       break;
    case SelectionBar::SelectionMode::StartLength:
-      mEnd = mStart + mLength;
-      mCenter = (mStart + mEnd) / 2.0;
+      // Nothing can go wrong here
+      end = start + length;
       break;
    case SelectionBar::SelectionMode::LengthEnd:
-      mStart = mEnd - mLength;
-      mCenter = (mStart + mEnd) / 2.0;
+      start = end - length;
+
+      if (start < 0)
+      {
+         // Length is set by user
+         if (driver == 0)
+            end -= start;
+         
+         start = 0;
+      }
       break;
    case SelectionBar::SelectionMode::LengthCenter:
-      mStart = mCenter - mLength / 2.0;
-      mEnd = mCenter + mLength / 2.0;
+      start = center - length / 2.0;
+
+      if (start < 0)
+      {
+         // Length is set by user
+         if (driver == 0)
+            center = length / 2.0;
+         else
+         // Center is set by user
+            length = center * 2.0;
+
+         start = 0;
+      }
+      
+      end = center + length / 2.0;
       break;
    default:
       break;
    }
 
    // Places the start-end markers on the track panel.
-   mListener->AS_ModifySelection(mStart, mEnd, done);
+   mListener->AS_ModifySelection(start, end, done);
 }
 
 // Called when one of the format drop downs is changed.
