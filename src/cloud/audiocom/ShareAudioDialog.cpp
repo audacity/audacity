@@ -347,6 +347,7 @@ wxString ShareAudioDialog::ExportProject()
       mExportProgressUpdater = std::make_unique<ExportProgressUpdater>(*this, *plugin);
       
       e.Process(*mExportProgressUpdater.get(),
+                {},
                 nChannels,                 // numChannels,
                 exporter->GetExporterID(), // type,
                 path,                      // full path,

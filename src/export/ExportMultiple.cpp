@@ -1130,6 +1130,7 @@ ExportMultipleDialog::DoExport(unsigned channels,
    // Call the format export routine
    plugin->Export(mProject,
                   progressListener,
+                  {},
                   channels,
                   fullPath,
                   selectedOnly,

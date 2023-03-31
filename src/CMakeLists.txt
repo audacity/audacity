@@ -594,10 +594,13 @@ list( APPEND SOURCES
       export/Export.h
       export/ExportFileDialog.cpp
       export/ExportFileDialog.h
+      export/ExportOptionsEditor.h
+      export/ExportOptionsEditor.cpp
       export/ExportPlugin.cpp
       export/ExportPlugin.h
       export/ExportProgressListener.cpp
       export/ExportProgressListener.h
+      export/ExportTypes.h
       export/ExportUtils.cpp
       export/ExportUtils.h
       export/ExportMixerPanel.cpp

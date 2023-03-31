@@ -128,7 +128,7 @@ bool ExportCommand::Apply(const CommandContext & context)
    if(plugin != nullptr)
    {
       GenericExportProgressListener progressListener(*plugin);
-      exporter.Process(progressListener, std::max(0, mnChannels),
+      exporter.Process(progressListener, {}, std::max(0, mnChannels),
                        extension, mFileName,
                        true, t0, t1);
       const auto result = progressListener.ConsumeResult();
