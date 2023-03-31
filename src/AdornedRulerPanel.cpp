@@ -39,6 +39,7 @@
 #include "ProjectAudioManager.h"
 #include "ProjectWindows.h"
 #include "ProjectStatus.h"
+#include "ProjectTimeSignature.h"
 #include "ProjectWindow.h"
 #include "RefreshCode.h"
 #include "SelectUtilities.h"
@@ -1332,6 +1333,18 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mPlayRegionSubscription = mViewInfo->selectedRegion.Subscribe(
       *this, &AdornedRulerPanel::OnSelectionChange);
 
+   // Bind event that updates the time signature
+   mProjectTimeSignatureChangedSubscription =
+      ProjectTimeSignature::Get(*project).Subscribe(
+         [this](auto)
+         {
+            if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures)
+            {
+               UpdateBeatsAndMeasuresFormat();
+               Refresh();
+            }
+         });
+
    // And call it once to initialize it
    DoSelectionChange( mViewInfo->selectedRegion );
 }
@@ -2344,12 +2357,21 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
    mIsSnapped[index] = results.Snapped();
 }
 
+void AdornedRulerPanel::UpdateBeatsAndMeasuresFormat()
+{
+   auto& timeSignature = ProjectTimeSignature::Get(*mProject);
+
+   mBeatsFormat.SetData(
+      timeSignature.GetTempo(), timeSignature.GetUpperTimeSignature(),
+      timeSignature.GetLowerTimeSignature());
+
+   mRuler.Invalidate();
+}
+
 void AdornedRulerPanel::RefreshTimelineFormat()
 {
    if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures) {
-      mBeatsFormat.SetData(BeatsPerMinute.Read(),
-         UpperTimeSignature.Read(), LowerTimeSignature.Read());
-      mRuler.Invalidate();
+      UpdateBeatsAndMeasuresFormat();
       mRuler.SetFormat(&mBeatsFormat);
    }
    else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds) {
@@ -2367,9 +2389,7 @@ void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
       AdornedRulerPanel::stBeatsAndMeasures : AdornedRulerPanel::stMinutesAndSeconds;
    RulerPanelViewPreference.WriteEnum(mRulerType);
    if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures){
-      mBeatsFormat.SetData(BeatsPerMinute.Read(),
-         UpperTimeSignature.Read(), LowerTimeSignature.Read());
-      mRuler.Invalidate();
+      UpdateBeatsAndMeasuresFormat();
       mRuler.SetFormat(&mBeatsFormat);
    }
    else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds){
