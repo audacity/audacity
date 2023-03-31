@@ -93,6 +93,20 @@ enum {
    ProperRulerHeight = 29
 };
 
+EnumSetting<AdornedRulerPanel::RulerTypeValues> RulerPanelViewPreference{
+   L"/GUI/RulerType",
+   {
+      { wxT("MinutesAndSeconds"), XO("Minutes and Seconds") },
+      { wxT("BeatsAndMeasures"), XO("Beats and Measures") },
+   },
+
+   0, // minutes and seconds
+   {
+      AdornedRulerPanel::stMinutesAndSeconds,
+      AdornedRulerPanel::stBeatsAndMeasures,
+   }
+};
+
 inline int IndicatorHeightForWidth(int width)
 {
    return ((width / 2) * 3) / 2;
@@ -1288,7 +1302,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mOuter = GetClientRect();
 
-   mBeatsAndMeasures = false;
+   mRulerType = RulerPanelViewPreference.ReadEnum();
 
    mUpdater.SetData(mViewInfo, mLeftOffset);
 
@@ -2246,13 +2260,13 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    {
       auto item = rulerMenu.AppendRadioItem(OnMinutesAndSecondsID,
          _("Minutes and Seconds"));
-      item->Check(!mBeatsAndMeasures);
+      item->Check(mRulerType == AdornedRulerPanel::stMinutesAndSeconds);
    }
 
    {
       auto item = rulerMenu.AppendRadioItem(OnBeatsAndMeasuresID,
          _("Beats and Measures"));
-      item->Check(mBeatsAndMeasures);
+      item->Check(mRulerType == AdornedRulerPanel::stBeatsAndMeasures);
    }
 
    rulerMenu.AppendSeparator();
@@ -2332,12 +2346,13 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
 
 void AdornedRulerPanel::RefreshTimelineFormat()
 {
-   if (mBeatsAndMeasures) {
+   if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures) {
       mBeatsFormat.SetData(BeatsPerMinute.Read(),
          UpperTimeSignature.Read(), LowerTimeSignature.Read());
       mRuler.Invalidate();
+      mRuler.SetFormat(&mBeatsFormat);
    }
-   else {
+   else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds) {
       mRuler.SetFormat(&TimeFormat::Instance());
    }
    Refresh();
@@ -2346,19 +2361,21 @@ void AdornedRulerPanel::RefreshTimelineFormat()
 void AdornedRulerPanel::OnTimelineFormatChange(wxCommandEvent& event)
 {
    int id = event.GetId();
-   bool changeFlag = mBeatsAndMeasures;
+   RulerTypeValues changeFlag = mRulerType;
    wxASSERT(id == OnMinutesAndSecondsID || id == OnBeatsAndMeasuresID);
-   mBeatsAndMeasures = (id == OnBeatsAndMeasuresID);
-   if (mBeatsAndMeasures) {
+   mRulerType = id == OnBeatsAndMeasuresID ?
+      AdornedRulerPanel::stBeatsAndMeasures : AdornedRulerPanel::stMinutesAndSeconds;
+   RulerPanelViewPreference.WriteEnum(mRulerType);
+   if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures){
       mBeatsFormat.SetData(BeatsPerMinute.Read(),
          UpperTimeSignature.Read(), LowerTimeSignature.Read());
       mRuler.Invalidate();
       mRuler.SetFormat(&mBeatsFormat);
    }
-   else {
+   else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds){
       mRuler.SetFormat(&TimeFormat::Instance());
    }
-   if (changeFlag != mBeatsAndMeasures)
+   if (changeFlag != mRulerType)
       Refresh();
 }
 
@@ -2512,11 +2529,11 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 
    mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
-   if (mBeatsAndMeasures)
+   if (mRulerType == AdornedRulerPanel::stBeatsAndMeasures)
    {
       mRuler.SetTickLengths({ 5, 3, 1 });
    }
-   else
+   else if (mRulerType == AdornedRulerPanel::stMinutesAndSeconds)
    {
       mRuler.SetTickLengths({ 4, 2, 2 });
    }
