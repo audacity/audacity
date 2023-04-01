@@ -33,6 +33,8 @@ set( SOURCES
    Observer.h
    PackedArray.h
    spinlock.h
+   TypeList.cpp
+   TypeList.h
    TypedAny.h
 )
 audacity_library( lib-utility "${SOURCES}" ""
