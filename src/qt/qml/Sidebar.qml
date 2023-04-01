@@ -19,43 +19,30 @@ Rectangle {
       color: appConfig.strokeColor1
    }
 
-   Column {
-      spacing: 0
+   ListModel {
+      id: trackControlPanelsModel
+
+      ListElement { type: TrackType.Label; label: qsTr("Label track 1"); isMuted: false; isSoloed: false }
+      ListElement { type: TrackType.Stereo; label: qsTr("Stereo track 1"); isMuted: false; isSoloed: false }
+      ListElement { type: TrackType.Mono; label: qsTr("Mono track 1"); isMuted: false; isSoloed: false }
+      ListElement { type: TrackType.Video; label: qsTr("Video track 1"); isMuted: false; isSoloed: false }
+   }
+
+   Component {
+      id: trackControlPanelsDelegate
 
       TrackControlPanel {
-         id: trackControlPanel1
          width: root.width
-         trackType: TrackType.Label
-         name: qsTr("Label track 1")
-         muted: false
-         soloed: false
+         trackType: type
+         name: label
+         muted: isMuted
+         soloed: isSoloed
       }
+   }
 
-      TrackControlPanel {
-         id: trackControlPanel2
-         width: root.width
-         trackType: TrackType.Stereo
-         name: qsTr("Stereo track 1")
-         muted: false
-         soloed: false
-      }
-
-      TrackControlPanel {
-         id: trackControlPanel3
-         width: root.width
-         trackType: TrackType.Mono
-         name: qsTr("Mono track 1")
-         muted: false
-         soloed: false
-      }
-
-      TrackControlPanel {
-         id: trackControlPanel4
-         width: root.width
-         trackType: TrackType.Video
-         name: qsTr("Video track 1")
-         muted: false
-         soloed: false
-      }
+   ListView {
+      anchors.fill: parent
+      model: trackControlPanelsModel
+      delegate: trackControlPanelsDelegate
    }
 }
