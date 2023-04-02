@@ -103,7 +103,15 @@ ApplicationWindow {
       id: toolsToolbar
       onUpdateStatusBar: function(status) {
          statusBar.text = status
+         timer.restart()
       }
+   }
+
+   Timer {
+      id: timer
+      interval: 1000
+      repeat: false
+      onTriggered: statusBar.text = ""
    }
 
    footer: Rectangle {
