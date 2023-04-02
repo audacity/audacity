@@ -11,6 +11,8 @@ Rectangle {
    color: appConfig.backgroundColor2
    objectName: "Sidebar"
 
+   signal updateStatusBar(status: string)
+
    Rectangle {
       id: verticalSeparator
       x: parent.width
@@ -37,6 +39,29 @@ Rectangle {
          name: label
          muted: isMuted
          soloed: isSoloed
+
+         onOptionsClicked: {
+            var track = trackControlPanelsModel.get(index).label
+            trackControlPanelsModel.remove(index)
+
+            root.updateStatusBar("Removed '%1'".arg(track))
+         }
+
+         onMuteClicked: {
+            var isMuted = trackControlPanelsModel.get(index).isMuted
+            trackControlPanelsModel.setProperty(index, "isMuted", !isMuted)
+
+            root.updateStatusBar("%1 mute button clicked".arg(name))
+         }
+
+         onSoloClicked: {
+            var isSoloed = trackControlPanelsModel.get(index).isSoloed
+            trackControlPanelsModel.setProperty(index, "isSoloed", !isSoloed)
+
+            root.updateStatusBar("%1 solo button clicked".arg(name))
+         }
+
+         onAddClicked: root.updateStatusBar("%1 add button clicked".arg(name))
       }
    }
 

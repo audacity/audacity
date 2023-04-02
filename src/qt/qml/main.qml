@@ -120,6 +120,10 @@ ApplicationWindow {
       id: sidebar
       anchors.top: toolsToolbar.bottom
       anchors.bottom: footerId.top
+      onUpdateStatusBar: function(status) {
+         statusBar.text = status
+         timer.restart()
+      }
    }
 
    Timer {
