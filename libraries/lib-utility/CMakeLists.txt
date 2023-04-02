@@ -35,6 +35,7 @@ set( SOURCES
    spinlock.h
    TypeList.cpp
    TypeList.h
+   TypeListVisitor.h
    TypedAny.h
 )
 audacity_library( lib-utility "${SOURCES}" ""
