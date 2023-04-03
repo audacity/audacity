@@ -117,10 +117,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - name: Ubuntu 18.04 AppImage (x86_64)
-          os: ubuntu-18.04
-          force_gcc11: false
-          postfix: '-18.04'
         - name: Ubuntu 20.04 AppImage (x86_64)
           os: ubuntu-20.04
           force_gcc11: false
@@ -129,6 +125,10 @@ jobs:
           os: ubuntu-20.04
           force_gcc11: true
           postfix: '-20.04-gcc11'
+        - name: Ubuntu 22.04 AppImage (x86_64)
+          os: ubuntu-22.04
+          force_gcc11: false
+          postfix: '-22.04'
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
